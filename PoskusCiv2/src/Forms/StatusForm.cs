@@ -258,7 +258,7 @@ namespace PoskusCiv2.Forms
                     new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }.Civ2xy();
 
 
-                    unitShieldPicture.Image = Images.UnitShield;
+                    unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
                     unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
                 }
                 else    //end of units, display wait for enter for new turn

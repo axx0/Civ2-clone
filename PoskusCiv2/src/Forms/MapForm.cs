@@ -122,13 +122,13 @@ namespace PoskusCiv2.Forms
                 {
                     if (stej % 2 == 1)
                     {
-                        e.Graphics.DrawImage(Images.UnitShield, 32 * (unit.X - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (unit.Y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                        e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (unit.X - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (unit.Y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
                         e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (unit.X - offsetX), 16 * (unit.Y - offsetY) - 16);    //draw unit pulsating
                     }
                 }
                 else
                 {
-                    e.Graphics.DrawImage(Images.UnitShield, 32 * (unit.X - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (unit.Y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                    e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (unit.X - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (unit.Y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
                     e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (unit.X - offsetX), 16 * (unit.Y - offsetY) - 16);    //draw other units not pulsating
                 }
             }

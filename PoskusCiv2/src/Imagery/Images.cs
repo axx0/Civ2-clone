@@ -9,11 +9,11 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield;
         public static Bitmap[,] Coast;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces, UnitShield, WallpaperMapForm, WallpaperStatusForm;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm;
         public static int[,] unitShieldLocation = new int[63, 2];
-
+      
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
         {
             Bitmap terrain1 = new Bitmap(terrainLoc1);
@@ -174,9 +174,10 @@ namespace PoskusCiv2.Imagery
 
         public static void LoadUnits(string unitLoc)
         {
-            Bitmap units = new Bitmap(unitLoc);
+            Bitmap units = new Bitmap(unitLoc);            
 
             Units = new Bitmap[63];
+            UnitShield = new Bitmap[8];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -206,8 +207,37 @@ namespace PoskusCiv2.Imagery
             }
 
             //Extract unit shield
-            UnitShield = (Bitmap)units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
-            UnitShield.MakeTransparent(transparentGray);  //gray
+            Bitmap _unitShield = (Bitmap)units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
+            _unitShield.MakeTransparent(transparentGray);  //gray
+
+            //Make shields of different colors for 8 different civs
+            UnitShield[0] = CreateNonIndexedImage(_unitShield); //convert GIF to non-indexed picture
+            UnitShield[1] = CreateNonIndexedImage(_unitShield);
+            UnitShield[2] = CreateNonIndexedImage(_unitShield);
+            UnitShield[3] = CreateNonIndexedImage(_unitShield);
+            UnitShield[4] = CreateNonIndexedImage(_unitShield);
+            UnitShield[5] = CreateNonIndexedImage(_unitShield);
+            UnitShield[6] = CreateNonIndexedImage(_unitShield);
+            UnitShield[7] = CreateNonIndexedImage(_unitShield);
+            //Replace colors
+            for (int x = 0; x < 12; x++)
+            {
+                for (int y = 0; y < 20; y++)
+                {
+                    if (_unitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 255))    //pink
+                    {
+                        UnitShield[0].SetPixel(x, y, Color.FromArgb(243, 0, 0));  //red
+                        UnitShield[1].SetPixel(x, y, Color.FromArgb(239, 239, 239));  //white
+                        UnitShield[2].SetPixel(x, y, Color.FromArgb(87, 171, 39));    //green
+                        UnitShield[3].SetPixel(x, y, Color.FromArgb(75, 95, 183));    //blue
+                        UnitShield[4].SetPixel(x, y, Color.FromArgb(255, 255, 0));    //yellow
+                        UnitShield[5].SetPixel(x, y, Color.FromArgb(55, 175, 191));   //cyan
+                        UnitShield[6].SetPixel(x, y, Color.FromArgb(235, 131, 11));   //orange
+                        UnitShield[7].SetPixel(x, y, Color.FromArgb(131, 103, 179));   //violet
+                    }
+                }
+            }
+
         }
 
         public static void LoadIcons(string iconLoc)
@@ -225,6 +255,19 @@ namespace PoskusCiv2.Imagery
 
             WallpaperMapForm = (Bitmap)icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = (Bitmap)icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+        }
+
+        //Converting GIFs to non-indexed images (required for SetPixel method)
+        private static Bitmap CreateNonIndexedImage(Image src)
+        {
+            Bitmap newBmp = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            using (Graphics gfx = Graphics.FromImage(newBmp))
+            {
+                gfx.DrawImage(src, 0, 0);
+            }
+
+            return newBmp;
         }
     }
 }
