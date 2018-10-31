@@ -515,7 +515,7 @@ namespace PoskusCiv2
 
                 //Unit civ
                 int unitCiv = dataArray[ofsetU + multipl * i + 7];
-                Console.WriteLine("UNIT CIV: " + unitCiv.ToString());
+                //Console.WriteLine("UNIT CIV: " + unitCiv.ToString());
 
                 //Unit moves made
                 int unitMovesMade = dataArray[ofsetU + multipl * i + 8];

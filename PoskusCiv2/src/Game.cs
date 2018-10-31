@@ -17,7 +17,7 @@ namespace PoskusCiv2
         public static List<IUnit> Units = new List<IUnit>();
         public static List<City> Cities = new List<City>();
         public static List<Civilization> Civs = new List<Civilization>();        
-        public static ITerrain[,] Terrain;// = new ITerrain[5, 5];
+        public static ITerrain[,] Terrain;
         public static Options Options;
         public static Data Data;
 
@@ -25,6 +25,13 @@ namespace PoskusCiv2
 
         public static void StartGame()
         {
+            //int stej = 0;
+            //foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            //{
+            //    Console.WriteLine("Unit{0}: {1}, {2}", stej++, unit.Name, Game.Civs[unit.Civ].TribeName);
+            //    Game.Instance.ActiveUnit = unit;
+            //}
+
             Game.Instance.ActiveUnit = Units[Data.UnitSelectedAtGameStart];
 
         }
@@ -66,39 +73,70 @@ namespace PoskusCiv2
 
         public static void NewTurn()
         {
-            gameTurn += 1;
-            gameYear += 20;
-
-            //update game year text in Status form
-            if (gameYear < 0)
+            //At beginning of turn, set all units to active
+            foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
-                Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateGameYearLabel(Math.Abs(gameYear).ToString() + " B.C. (Turn " + gameTurn.ToString() + ")");
-            }
-            else
-            {
-                Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateGameYearLabel(gameYear.ToString() + " A.D. (Turn " + gameTurn.ToString() + ")");
+                unit.TurnEnded = false;
             }
 
+            //gameTurn += 1;
+            //gameYear += 20;
+
+            ////update game year text in Status form
+            //if (gameYear < 0)
+            //{
+            //    Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateGameYearLabel(Math.Abs(gameYear).ToString() + " B.C. (Turn " + gameTurn.ToString() + ")");
+            //}
+            //else
+            //{
+            //    Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateGameYearLabel(gameYear.ToString() + " A.D. (Turn " + gameTurn.ToString() + ")");
+            //}
+
+        }
+
+        public static void Update()
+        {
+            if (Game.Instance.ActiveUnit.TurnEnded)
+            {
+                NextUnit();
+            }
+        }
+
+        //Chose next unit for orders
+        public static void NextUnit()
+        {
+            bool allUnitsEndedTurn = true;
+            foreach (IUnit _unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            {
+                if (!_unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
+                {
+                    Game.Instance.ActiveUnit = _unit;
+                    allUnitsEndedTurn = false;
+                    break;
+                }
+            }
+
+            if (allUnitsEndedTurn) { NewTurn(); }
         }
 
         public static void UserInput(char pressedKey)
         {
             switch (pressedKey)
             {
-                case (char)Keys.Enter: MoveUnit(pressedKey); break;
-                case (char)Keys.D6: MoveUnit(pressedKey); break;
+                case (char)Keys.Enter: break;
+                case (char)Keys.D1: Game.Instance.ActiveUnit.Move(-1, 1); break;
+                case (char)Keys.D2: Game.Instance.ActiveUnit.Move(0, 2); break;
+                case (char)Keys.D3: Game.Instance.ActiveUnit.Move(1, 1); break;
+                case (char)Keys.D4: Game.Instance.ActiveUnit.Move(-2, 0); break;
+                case (char)Keys.D6: Game.Instance.ActiveUnit.Move(2, 0); break;
+                case (char)Keys.D7: Game.Instance.ActiveUnit.Move(-1, -1); break;
+                case (char)Keys.D8: Game.Instance.ActiveUnit.Move(0, -2); break;
+                case (char)Keys.D9: Game.Instance.ActiveUnit.Move(1, -1); break;
+                case (char)Keys.Space: { Game.Instance.ActiveUnit.TurnEnded = true; Update(); break; }
                 default: break;
             }
-        }
 
-        public static void MoveUnit(char pressedKey)
-        {
-            //if (Game.Terrain[XY[0], XY[1] - 1].Type != TerrainType.Ocean)
-            //{
-                Game.Instance.ActiveUnit.X += 2;
-            //} 
-            int[] XY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }.Civ2xy();
-            Console.WriteLine(Game.Terrain[XY[0] + 1, XY[1]].Type);
+            Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
         }
 
         //User pressed a key

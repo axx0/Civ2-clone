@@ -50,28 +50,28 @@ namespace PoskusCiv2.Forms
         private void MapForm_Load(object sender, EventArgs e)
         {
             
-            //TESTING...
-            foreach (Civilization civ in Game.Civs)
-            {
-                Console.WriteLine("Civ " + civ.TribeName + ", " + civ.LeaderName + ", " + civ.Adjective);
-            }
-            //TESTING...
-            foreach (City city in Game.Cities)
-            {
-                Console.WriteLine("City " + city.Name + " X=" + city.X.ToString() + " Y=" + city.Y.ToString());
-            }
-            Console.WriteLine("The following are units:");
-            foreach (IUnit unit in Game.Units)
-            {
-                Console.WriteLine(unit.Type + " X=" + unit.X.ToString() + " Y=" + unit.Y.ToString());
-            }
-            ////TESTING...Importing savegame....
-            Console.WriteLine("Bloodlust= " + importMap.Bloodlust);
-            Console.WriteLine("Simplified combat= " + importMap.SimplifiedCombat);
-            Console.WriteLine("Flat earth= " + importMap.FlatEarth);
-            Console.WriteLine("Turn number= {0}", importMap.TurnNumber);
-            Console.WriteLine("No of units= {0}", importMap.NumberOfUnits);
-            Console.WriteLine("No of cities= {0}", importMap.NumberOfCities);
+            ////TESTING...
+            //foreach (Civilization civ in Game.Civs)
+            //{
+            //    Console.WriteLine("Civ " + civ.TribeName + ", " + civ.LeaderName + ", " + civ.Adjective);
+            //}
+            ////TESTING...
+            //foreach (City city in Game.Cities)
+            //{
+            //    Console.WriteLine("City " + city.Name + " X=" + city.X.ToString() + " Y=" + city.Y.ToString());
+            //}
+            //Console.WriteLine("The following are units:");
+            //foreach (IUnit unit in Game.Units)
+            //{
+            //    Console.WriteLine(unit.Type + " X=" + unit.X.ToString() + " Y=" + unit.Y.ToString());
+            //}
+            //////TESTING...Importing savegame....
+            //Console.WriteLine("Bloodlust= " + importMap.Bloodlust);
+            //Console.WriteLine("Simplified combat= " + importMap.SimplifiedCombat);
+            //Console.WriteLine("Flat earth= " + importMap.FlatEarth);
+            //Console.WriteLine("Turn number= {0}", importMap.TurnNumber);
+            //Console.WriteLine("No of units= {0}", importMap.NumberOfUnits);
+            //Console.WriteLine("No of cities= {0}", importMap.NumberOfCities);
 
             //timer for animating units
             t.Interval = 200; // specify interval time as you want (ms)
@@ -118,7 +118,7 @@ namespace PoskusCiv2.Forms
             //Draw all units
             foreach (IUnit unit in Game.Units)
             {
-                int x = 2 * unit.X + unit.Y % 2;
+                int x = 2 * unit.X + unit.Y % 2;    //convert XY to civ2-style
                 int y = unit.Y;
                 if (unit == Game.Instance.ActiveUnit)
                 {
@@ -173,7 +173,6 @@ namespace PoskusCiv2.Forms
                 drawBrush.Dispose();
                 formGraphics.Dispose();
             }
-
       
             //Draw viewing pieces
             if (viewingPiecesMode & stej % 2 == 1)

@@ -10,11 +10,25 @@ namespace PoskusCiv2.Units
     internal class BaseUnit : IUnit
     {
         public UnitType Type { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+
+        private int _x;
+        public int X
+        {
+            get { return _x; }
+            set { _x = value; }
+        }
+
+        private int _y;
+        public int Y
+        {
+            get { return _y; }
+            set { _y = value; }
+        }
+
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
-        public bool Veteran { get; set; }        
+        public bool Veteran { get; set; }
+        public bool TurnEnded { get; set; }
         public int Civ { get; set; }
         public int MovesMade { get; set; }
         public int HitpointsLost { get; set; }
@@ -34,13 +48,38 @@ namespace PoskusCiv2.Units
         public int MovementRate { get; }
         public int LandSeaAirUnit { get; }
 
-        private int movesLeft;
+        private int _movesLeft;
         public int MovesLeft
         {
-            get { return movesLeft; }
-            set { movesLeft = 3 * value; }
+            get { return _movesLeft; }
+            set { _movesLeft = value; }
         }
         
+        public void Move(int moveX, int moveY)
+        {
+            int xTo = 2 * X + Y % 2 + moveX;    //new coordinates in Civ2-style
+            int yTo = Y + moveY;
+            int Xto = (xTo - yTo % 2) / 2;  //from civ2-style to real coords
+            int Yto = yTo;
+
+            if (Game.Terrain[Xto, Yto].Type != TerrainType.Ocean)
+            {
+                if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent)) //From & To must be cities or road (movement reduced)
+                {
+                    MovesLeft = MovesLeft - 1;
+                }
+                else
+                {
+                    MovesLeft = MovesLeft - 3;
+                }
+                X = Xto;
+                Y = Yto;                
+            }
+
+            if (MovesLeft <= 0) { TurnEnded = true; }
+
+            Game.Update();
+        }
 
         public string Name { get; set; }
 
@@ -67,7 +106,7 @@ namespace PoskusCiv2.Units
             Firepower = firepower;
             MovementRate = move;
             LandSeaAirUnit = 1;
-            MovesLeft = move;
+            MovesLeft = 3 * move;
         }
     }
 }

@@ -25,6 +25,8 @@ namespace PoskusCiv2.Units
         int GoToY { get; set; }
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
+        void Move(int moveX, int moveY);
+        bool TurnEnded { get; set; }
 
 
         int Attack { get;  }
