@@ -490,6 +490,9 @@ namespace PoskusCiv2
                 intVal2 = dataArray[ofsetU + multipl * i + 3];
                 int unitYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
+                //Transform x-units from civ2-style to real coordiantes
+                unitXlocation = (unitXlocation - (unitYlocation % 2)) / 2;
+
                 //If this is the unit's first move
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 4], 2).PadLeft(8, '0');
                 bool unitFirstMove;
@@ -539,6 +542,9 @@ namespace PoskusCiv2
                 intVal2 = dataArray[ofsetU + multipl * i + 21];
                 int unitGoToY = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
+                //Transform x-goto units from civ2-style to real coordiantes
+                unitGoToX = (unitGoToX - (unitGoToY % 2)) / 2;
+
                 //Unit link to other units on top of it
                 intVal1 = dataArray[ofsetU + multipl * i + 22];
                 intVal2 = dataArray[ofsetU + multipl * i + 23];
@@ -575,6 +581,9 @@ namespace PoskusCiv2
                 intVal1 = dataArray[ofsetC + multipl * i + 2];
                 intVal2 = dataArray[ofsetC + multipl * i + 3];
                 int cityYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+
+                //Transform x city location from civ2-style to real coordiantes
+                cityXlocation = (cityXlocation - (cityYlocation % 2)) / 2;
 
                 //Can build coastal improvements
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 4], 2).PadLeft(8, '0');

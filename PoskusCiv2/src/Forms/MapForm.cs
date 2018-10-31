@@ -118,18 +118,20 @@ namespace PoskusCiv2.Forms
             //Draw all units
             foreach (IUnit unit in Game.Units)
             {
+                int x = 2 * unit.X + unit.Y % 2;
+                int y = unit.Y;
                 if (unit == Game.Instance.ActiveUnit)
                 {
                     if (stej % 2 == 1)
                     {
-                        e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (unit.X - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (unit.Y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
-                        e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (unit.X - offsetX), 16 * (unit.Y - offsetY) - 16);    //draw unit pulsating
+                        e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                        e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw unit pulsating
                     }
                 }
                 else
                 {
-                    e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (unit.X - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (unit.Y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
-                    e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (unit.X - offsetX), 16 * (unit.Y - offsetY) - 16);    //draw other units not pulsating
+                    e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                    e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw other units not pulsating
                 }
             }
 
@@ -153,10 +155,10 @@ namespace PoskusCiv2.Forms
             //Draw (x,y) locations on grid
             if (DrawXYnumbers)
             {
-                System.Drawing.Graphics formGraphics = this.CreateGraphics();
-                System.Drawing.Font drawFont = new System.Drawing.Font("Arial", 8);
-                System.Drawing.SolidBrush drawBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Yellow);
-                System.Drawing.StringFormat drawFormat = new System.Drawing.StringFormat();
+                Graphics formGraphics = this.CreateGraphics();
+                Font drawFont = new Font("Arial", 8);
+                SolidBrush drawBrush = new SolidBrush(Color.Yellow);
+                StringFormat drawFormat = new StringFormat();
                 for (int i = 0; i < BoxNoX; i++)
                 {
                     for (int j = 0; j < BoxNoY; j++)
@@ -230,7 +232,6 @@ namespace PoskusCiv2.Forms
             //this.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
             this.Invalidate();
         }
-
 
     }
 

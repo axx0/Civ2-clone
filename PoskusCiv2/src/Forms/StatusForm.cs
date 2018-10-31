@@ -250,8 +250,7 @@ namespace PoskusCiv2.Forms
                     unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
                     if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }                    
                     else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
-                    int[] XY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }.Civ2xy();   //convert XY coordinates from Civ2 notation using extension method
-                    unitTerrainLabel.Text = "(" + Game.Terrain[XY[0], XY[1]].Name + ")";
+                    unitTerrainLabel.Text = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
                     unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
                     unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
                 }
