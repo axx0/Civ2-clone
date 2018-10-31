@@ -490,6 +490,12 @@ namespace PoskusCiv2
                 intVal2 = dataArray[ofsetU + multipl * i + 3];
                 int unitYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
+                //If this is the unit's first move
+                bin = Convert.ToString(dataArray[ofsetU + multipl * i + 4], 2).PadLeft(8, '0');
+                bool unitFirstMove;
+                if (bin[1] == '1') { unitFirstMove = true; }
+                else { unitFirstMove = false; }
+
                 //Grey star to the shield
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 5], 2).PadLeft(8, '0');
                 bool unitGreyStarShield;
@@ -507,6 +513,9 @@ namespace PoskusCiv2
                 //Unit civ
                 int unitCiv = dataArray[ofsetU + multipl * i + 7];
                 Console.WriteLine("UNIT CIV: " + unitCiv.ToString());
+
+                //Unit moves made
+                int unitMovesMade = dataArray[ofsetU + multipl * i + 8];
 
                 //Unit hitpoints lost
                 int unitHitpointsLost = dataArray[ofsetU + multipl * i + 11];
@@ -540,7 +549,7 @@ namespace PoskusCiv2
                 intVal2 = dataArray[ofsetU + multipl * i + 25];
                 int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unitGreyStarShield, unitVeteranStatus, unitCiv, unitHitpointsLost, unitCaravanCommodity, unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
+                IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovesMade, unitHitpointsLost, unitCaravanCommodity, unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
 
 

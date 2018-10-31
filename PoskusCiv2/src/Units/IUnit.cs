@@ -12,9 +12,11 @@ namespace PoskusCiv2.Units
         UnitType Type { get; }
         int X { get; set; }
         int Y { get; set; }
+        bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
         int Civ { get; set; }
+        int MovesMade { get; set; }
         int HitpointsLost { get; set; }
         int CaravanCommodity { get; set; }
         int Orders { get; set; }

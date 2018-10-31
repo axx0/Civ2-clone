@@ -81,8 +81,28 @@ namespace PoskusCiv2
 
         }
 
-        //User pressed a key
         public static void UserInput(char pressedKey)
+        {
+            switch (pressedKey)
+            {
+                case (char)Keys.Enter: MoveUnit(pressedKey); break;
+                case (char)Keys.D6: MoveUnit(pressedKey); break;
+                default: break;
+            }
+        }
+
+        public static void MoveUnit(char pressedKey)
+        {
+            //if (Game.Terrain[XY[0], XY[1] - 1].Type != TerrainType.Ocean)
+            //{
+                Game.Instance.ActiveUnit.X += 2;
+            //} 
+            int[] XY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }.Civ2xy();
+            Console.WriteLine(Game.Terrain[XY[0] + 1, XY[1]].Type);
+        }
+
+        //User pressed a key
+        public static void _UserInput(char pressedKey)
         {
 
             //if it is not end of turn, give orders for unit movement, otherwise wait for enter
@@ -273,7 +293,7 @@ namespace PoskusCiv2
             Terrain[x, y] = terrain;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool greyStarShield, bool veteran, int civ, int hitpointsLost, int caravanCommodity, int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int caravanCommodity, int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
             switch (type)
@@ -333,9 +353,11 @@ namespace PoskusCiv2
             }
             unit.X = x;
             unit.Y = y;
+            unit.FirstMove = firstMove;
             unit.GreyStarShield = greyStarShield;
             unit.Veteran = veteran;
             unit.Civ = civ;
+            unit.MovesMade = movesMade;
             unit.HitpointsLost = hitpointsLost;
             unit.CaravanCommodity = caravanCommodity;
             unit.Orders = orders;

@@ -244,20 +244,14 @@ namespace PoskusCiv2.Forms
                     unitTerrainLabel.Visible = true;
                     unitTypeLabel.Visible = true;
                     unitPicture.Visible = true;
-                    //unitNoMovesLabel.Text = "Moves: " + Units_.unitTurnsLeft[unitInLine].ToString();
-                    unitNoMovesLabel.Text = "Moves: TODO";
+                    unitNoMovesLabel.Text = "Moves: " + Game.Instance.ActiveUnit.MovesLeft.ToString();
                     if (Game.Instance.ActiveUnit.HomeCity == 255) { unitCityLabel.Text = "NONE"; }  //FF in hex
                     else { unitCityLabel.Text = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
-                    //unitCivLabel.Text = Civilizations.civNames[Units_.unitCiv[unitInLine]];
                     unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
                     if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }                    
                     else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
                     int[] XY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }.Civ2xy();   //convert XY coordinates from Civ2 notation using extension method
                     unitTerrainLabel.Text = "(" + Game.Terrain[XY[0], XY[1]].Name + ")";
-                    new int[] { 0, 1 }.Civ2xy();
-                    new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }.Civ2xy();
-
-
                     unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
                     unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
                 }

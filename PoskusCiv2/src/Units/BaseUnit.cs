@@ -12,9 +12,11 @@ namespace PoskusCiv2.Units
         public UnitType Type { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }        
         public int Civ { get; set; }
+        public int MovesMade { get; set; }
         public int HitpointsLost { get; set; }
         public int CaravanCommodity { get; set; }
         public int Orders { get; set; }
@@ -31,7 +33,15 @@ namespace PoskusCiv2.Units
         public int Firepower { get; }
         public int MovementRate { get; }
         public int LandSeaAirUnit { get; }
-        public int MovesLeft { get; set; }        
+
+        private int movesLeft;
+        public int MovesLeft
+        {
+            get { return movesLeft; }
+            set { movesLeft = 3 * value; }
+        }
+        
+
         public string Name { get; set; }
 
         protected BaseUnit(int cost = 1, int attack = 1, int defense = 1, int hitpoints = 1, int firepower = 1, int move = 1)
