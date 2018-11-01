@@ -150,15 +150,22 @@ namespace PoskusCiv2.Forms
                 else if (city.Size > 5 && city.Size <= 7) { sizeStyle = 2; }
                 else { sizeStyle = 3; }
 
+                //Draw city
                 e.Graphics.DrawImage(Images.City[Game.Civs[city.Owner].CityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
 
-                //Draw city name
+                //Draw city size window
+                e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.citySizeWindowLoc[Game.Civs[city.Owner].CityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[Game.Civs[city.Owner].CityStyle, sizeStyle, 1] - 1, 9, 13);
+                e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.citySizeWindowLoc[Game.Civs[city.Owner].CityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[Game.Civs[city.Owner].CityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
+                e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.citySizeWindowLoc[Game.Civs[city.Owner].CityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[Game.Civs[city.Owner].CityStyle, sizeStyle, 1] + 6, sf);    //Size text
+
+                //Draw city name
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 1, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 1, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
+
             }
 
             //Draw active unit

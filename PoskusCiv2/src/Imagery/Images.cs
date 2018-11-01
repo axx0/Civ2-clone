@@ -13,6 +13,8 @@ namespace PoskusCiv2.Imagery
         public static Bitmap[,] Coast, City, CityWall;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm, BlackUnitShield;
         public static int[,] unitShieldLocation = new int[63, 2];
+        public static int[,,] citySizeWindowLoc = new int[6, 4, 2];
+        public static int[,,] cityWallSizeWindowLoc = new int[6, 4, 2];
         public static Color[] CivColors;
       
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
@@ -170,13 +172,25 @@ namespace PoskusCiv2.Imagery
             {
                 for (int col = 0; col < 4; col++)
                 {
-                    City[row, col] = (Bitmap)cities.Clone(new Rectangle(1 + 64 * col + 1 * col, 39 + 48 * row + 1 * row, 64, 48), cities.PixelFormat);
+                    City[row, col] = (Bitmap)cities.Clone(new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48), cities.PixelFormat);
                     City[row, col].MakeTransparent(transparentGray);
                     City[row, col].MakeTransparent(transparentPink);
 
-                    CityWall[row, col] = (Bitmap)cities.Clone(new Rectangle(334 + 64 * col + 1 * col, 39 + 48 * row + 1 * row, 64, 48), cities.PixelFormat);
+                    CityWall[row, col] = (Bitmap)cities.Clone(new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), cities.PixelFormat);
                     CityWall[row, col].MakeTransparent(transparentGray);
                     CityWall[row, col].MakeTransparent(transparentPink);
+
+                    //determine where the city size window is located (x-y)
+                    for (int ix = 0; ix < 64; ix++) //in x-direction
+                    {
+                        if (cities.GetPixel(65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { citySizeWindowLoc[row, col, 0] = ix; }  //if pixel on border is blue
+                        if (cities.GetPixel(333 + 65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { cityWallSizeWindowLoc[row, col, 0] = ix; }  //for cities with wall
+                    }
+                    for (int iy = 0; iy < 48; iy++) //in y-direction
+                    {
+                        if (cities.GetPixel(65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { citySizeWindowLoc[row, col, 1] = iy; }
+                        if (cities.GetPixel(333 + 65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { cityWallSizeWindowLoc[row, col, 1] = iy; }
+                    }
                 }
             }
 
@@ -187,6 +201,7 @@ namespace PoskusCiv2.Imagery
             Airbase = (Bitmap)cities.Clone(new Rectangle(273, 423, 64, 48), cities.PixelFormat);
             Airbase.MakeTransparent(transparentGray);
             Airbase.MakeTransparent(transparentPink);
+                       
         }
 
         public static void LoadUnits(string unitLoc)
@@ -197,10 +212,8 @@ namespace PoskusCiv2.Imagery
             UnitShield = new Bitmap[8];
             CivColors = new Color[8];
             CivColors[0] = Color.FromArgb(243, 0, 0);       //Red
-            //CivColors[1] = Color.FromArgb(239, 239, 239);   //White
-            CivColors[1] = Color.FromArgb(229, 229, 229);   //White
-            //CivColors[2] = Color.FromArgb(87, 171, 39);     //Green
-            CivColors[2] = Color.FromArgb(111, 219, 51);     //Green
+            CivColors[1] = Color.FromArgb(255, 255, 255);   //White
+            CivColors[2] = Color.FromArgb(0, 255, 0);     //Green
             //CivColors[3] = Color.FromArgb(75, 95, 183);     //Blue
             CivColors[3] = Color.FromArgb(0, 115, 255);     //Blue
             CivColors[4] = Color.FromArgb(255, 255, 0);     //Yellow
