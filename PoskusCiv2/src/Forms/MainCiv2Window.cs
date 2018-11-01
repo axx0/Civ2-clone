@@ -22,19 +22,12 @@ namespace PoskusCiv2.Forms
         {
             InitializeComponent();
 
-            //Load background icons
-            Bitmap iconsGIF = new Bitmap(@"C:\DOS\CIV 2\Civ2\ICONS.GIF");
-            Rectangle srcRect1 = new Rectangle(199, 322, 64, 32);
-            Bitmap wallpaperMapForm = (Bitmap)iconsGIF.Clone(srcRect1, iconsGIF.PixelFormat);
-            Rectangle srcRect2 = new Rectangle(299, 190, 31, 31);
-            Bitmap wallpaperStatusForm = (Bitmap)iconsGIF.Clone(srcRect2, iconsGIF.PixelFormat);
-
             mapForm = new MapForm(this);
             statusForm = new StatusForm(this);
             worldMapForm = new WorldMapForm(this);
             
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(1100, 30);
+            label1.Location = new Point(1100, 30);
             label1.ForeColor = Color.Black;
             label1.Text = "WAITING...";
             this.Controls.Add(label1);
@@ -43,12 +36,12 @@ namespace PoskusCiv2.Forms
         private void MainCiv2Window_Load(object sender, EventArgs e)
         {
             //Load the icon
-            System.Drawing.Icon ico = Properties.Resources.civ2;
+            Icon ico = Properties.Resources.civ2;
             this.Icon = ico;
 
             //Load forms
             mapForm.MdiParent = this;
-            mapForm.Size = new System.Drawing.Size(1260, 770);
+            mapForm.Size = new Size(1260, 770);
             mapForm.BackColor = Color.Black;
             mapForm.Show();
 

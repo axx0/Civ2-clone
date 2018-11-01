@@ -11,7 +11,7 @@ namespace PoskusCiv2.Imagery
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield;
         public static Bitmap[,] Coast, City, CityWall;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm, BlackUnitShield;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] citySizeWindowLoc = new int[6, 4, 2];
         public static int[,,] cityWallSizeWindowLoc = new int[6, 4, 2];
@@ -301,6 +301,14 @@ namespace PoskusCiv2.Imagery
             ViewingPieces = (Bitmap)icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
             ViewingPieces.MakeTransparent(transparentLightPink);  //light pink
             ViewingPieces.MakeTransparent(transparentPink);  //pink
+
+            GridLines = (Bitmap)icons.Clone(new Rectangle(183, 430, 64, 32), icons.PixelFormat);
+            GridLines.MakeTransparent(transparentLightPink);  //light pink
+            GridLines.MakeTransparent(transparentPink);  //pink
+
+            GridLinesVisible = (Bitmap)icons.Clone(new Rectangle(248, 430, 64, 32), icons.PixelFormat);
+            GridLinesVisible.MakeTransparent(transparentLightPink);  //light pink
+            GridLinesVisible.MakeTransparent(transparentPink);  //pink
 
             WallpaperMapForm = (Bitmap)icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = (Bitmap)icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);

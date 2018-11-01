@@ -166,6 +166,7 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 1, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
 
+                sf.Dispose();
             }
 
             //Draw active unit
@@ -178,22 +179,18 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawImage(Images.Units[(int)Game.Instance.ActiveUnit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw unit pulsating
             }
 
-            //Draw grid lines
-            Pen blackPen = new Pen(Color.White, 1);
-            if (GridIsChecked) { blackPen.Color = Color.Black; }
-            else { blackPen.Color = Color.Transparent; }
-            for (int i = 0; i < BoxNoX + BoxNoY; i++)
+            //Draw gridlines
+            if (GridIsChecked)
             {
-                //lines in one direction:
-                Point point1 = new Point(Math.Min(64 * i + 32 - 1, 64 * BoxNoX + 32 - 1), Math.Max(0, 32 * (i - BoxNoX) - 1));
-                Point point2 = new Point(Math.Max(0, 64 * (i - BoxNoY) - 1), Math.Min(32 * i + 16 - 1, 32 * BoxNoY + 16 - 1));
-                e.Graphics.DrawLine(blackPen, point1, point2);
-                //lines in other direction:
-                Point point3 = new Point(-Math.Min(0, 64 * (BoxNoY - i) + 32 - 1), Math.Max(0, 32 * (BoxNoY - i) + 16 - 1));
-                Point point4 = new Point(Math.Min(64 * i + 32 - 1, 64 * BoxNoX + 32 - 1), Math.Min(32 * (BoxNoY + 1) - 1, 32 * (BoxNoX + BoxNoY + 1 - i) - 1));
-                e.Graphics.DrawLine(blackPen, point3, point4);
+                for (int col = 0; col < Game.Data.MapXdim / 2; col++)
+                {
+                    for (int row = 0; row < Game.Data.MapYdim; row++)
+                    {
+                        e.Graphics.DrawImage(Images.GridLines, 64 * col + 32 * (row % 2), 16 * row);
+                    }
+                }
             }
-            blackPen.Dispose();
+
 
             //Draw (x,y) locations on grid
             if (DrawXYnumbers)

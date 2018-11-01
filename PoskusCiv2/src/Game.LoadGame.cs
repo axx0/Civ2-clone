@@ -42,8 +42,7 @@ namespace PoskusCiv2
             bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');    //you have to pad zeros to the left because ToString doesn't write first zeros
             if (bin[0] == '1') { bloodlust = true; }
             else { bloodlust = false; }
-
-            
+                        
             //Simplified combat on/off
             bool simplifiedCombat;
             if (bin[3] == '1') { simplifiedCombat = true; }
