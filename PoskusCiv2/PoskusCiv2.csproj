@@ -50,6 +50,7 @@
     <Compile Include="src\Civilizations.cs" />
     <Compile Include="src\BaseInstance.cs" />
     <Compile Include="src\Data.cs" />
+    <Compile Include="src\Enums\ImprovementType.cs" />
     <Compile Include="src\Forms\CreateUnitForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +78,46 @@
     </Compile>
     <Compile Include="src\Game.LoadGame.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
+    <Compile Include="src\Improvements\Capitalization.cs" />
+    <Compile Include="src\Improvements\SSmodule.cs" />
+    <Compile Include="src\Improvements\SScomponent.cs" />
+    <Compile Include="src\Improvements\SSstructural.cs" />
+    <Compile Include="src\Improvements\PortFacil.cs" />
+    <Compile Include="src\Improvements\PoliceStat.cs" />
+    <Compile Include="src\Improvements\Airport.cs" />
+    <Compile Include="src\Improvements\OffshorePlat.cs" />
+    <Compile Include="src\Improvements\Harbour.cs" />
+    <Compile Include="src\Improvements\SolarPlant.cs" />
+    <Compile Include="src\Improvements\CoastalFort.cs" />
+    <Compile Include="src\Improvements\SAMbattery.cs" />
+    <Compile Include="src\Improvements\ResearchLab.cs" />
+    <Compile Include="src\Improvements\Superhighways.cs" />
+    <Compile Include="src\Improvements\Supermarket.cs" />
+    <Compile Include="src\Improvements\SewerSystem.cs" />
+    <Compile Include="src\Improvements\StockExch.cs" />
+    <Compile Include="src\Improvements\NuclearPlant.cs" />
+    <Compile Include="src\Improvements\HydroPlant.cs" />
+    <Compile Include="src\Improvements\PowerPlant.cs" />
+    <Compile Include="src\Improvements\RecyclCentre.cs" />
+    <Compile Include="src\Improvements\SDIdefense.cs" />
+    <Compile Include="src\Improvements\MfgPlant.cs" />
+    <Compile Include="src\Improvements\Factory.cs" />
+    <Compile Include="src\Improvements\Colosseum.cs" />
+    <Compile Include="src\Improvements\MassTransit.cs" />
+    <Compile Include="src\Improvements\University.cs" />
+    <Compile Include="src\Improvements\Cathedral.cs" />
+    <Compile Include="src\Improvements\Bank.cs" />
+    <Compile Include="src\Improvements\Aqueduct.cs" />
+    <Compile Include="src\Improvements\CityWalls.cs" />
+    <Compile Include="src\Improvements\Courthouse.cs" />
+    <Compile Include="src\Improvements\Library.cs" />
+    <Compile Include="src\Improvements\Marketplace.cs" />
+    <Compile Include="src\Improvements\Temple.cs" />
+    <Compile Include="src\Improvements\Granary.cs" />
+    <Compile Include="src\Improvements\BaseImprovement.cs" />
+    <Compile Include="src\Improvements\IImprovement.cs" />
+    <Compile Include="src\Improvements\Barracks.cs" />
+    <Compile Include="src\Improvements\Palace.cs" />
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
