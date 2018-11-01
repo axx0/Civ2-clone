@@ -13,6 +13,7 @@ namespace PoskusCiv2.Imagery
         public static Bitmap[,] Coast, City, CityWall;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm;
         public static int[,] unitShieldLocation = new int[63, 2];
+        public static Color[] CivColors;
       
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
         {
@@ -194,6 +195,15 @@ namespace PoskusCiv2.Imagery
 
             Units = new Bitmap[63];
             UnitShield = new Bitmap[8];
+            CivColors = new Color[8];
+            CivColors[0] = Color.FromArgb(243, 0, 0);       //Red
+            CivColors[1] = Color.FromArgb(239, 239, 239);   //White
+            CivColors[2] = Color.FromArgb(87, 171, 39);     //Green
+            CivColors[3] = Color.FromArgb(75, 95, 183);     //Blue
+            CivColors[4] = Color.FromArgb(255, 255, 0);     //Yellow
+            CivColors[5] = Color.FromArgb(55, 175, 191);    //Cyan
+            CivColors[6] = Color.FromArgb(235, 131, 11);    //Orange
+            CivColors[7] = Color.FromArgb(131, 103, 179);   //Violet
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -240,16 +250,16 @@ namespace PoskusCiv2.Imagery
             {
                 for (int y = 0; y < 20; y++)
                 {
-                    if (_unitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 255))    //pink
+                    if (_unitShield.GetPixel(x, y) == transparentPink)    //pink
                     {
-                        UnitShield[0].SetPixel(x, y, Color.FromArgb(243, 0, 0));  //red
-                        UnitShield[1].SetPixel(x, y, Color.FromArgb(239, 239, 239));  //white
-                        UnitShield[2].SetPixel(x, y, Color.FromArgb(87, 171, 39));    //green
-                        UnitShield[3].SetPixel(x, y, Color.FromArgb(75, 95, 183));    //blue
-                        UnitShield[4].SetPixel(x, y, Color.FromArgb(255, 255, 0));    //yellow
-                        UnitShield[5].SetPixel(x, y, Color.FromArgb(55, 175, 191));   //cyan
-                        UnitShield[6].SetPixel(x, y, Color.FromArgb(235, 131, 11));   //orange
-                        UnitShield[7].SetPixel(x, y, Color.FromArgb(131, 103, 179));   //violet
+                        UnitShield[0].SetPixel(x, y, CivColors[0]);  //red
+                        UnitShield[1].SetPixel(x, y, CivColors[1]);  //white
+                        UnitShield[2].SetPixel(x, y, CivColors[2]);    //green
+                        UnitShield[3].SetPixel(x, y, CivColors[3]);    //blue
+                        UnitShield[4].SetPixel(x, y, CivColors[4]);    //yellow
+                        UnitShield[5].SetPixel(x, y, CivColors[5]);   //cyan
+                        UnitShield[6].SetPixel(x, y, CivColors[6]);   //orange
+                        UnitShield[7].SetPixel(x, y, CivColors[7]);   //violet
                     }
                 }
             }

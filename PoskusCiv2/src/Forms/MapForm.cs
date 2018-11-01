@@ -115,36 +115,16 @@ namespace PoskusCiv2.Forms
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
                 GraphicsUnit.Pixel);
 
-            //Draw cities
-            foreach (City city in Game.Cities)
-            {
-                int x = 2 * city.X + city.Y % 2;    //convert XY to civ2-style
-                int y = city.Y;
-
-                int sizeStyle;
-                if (city.Size <= 3) { sizeStyle = 0; }
-                else if (city.Size > 3 && city.Size <= 5) { sizeStyle = 1; }
-                else if (city.Size > 5 && city.Size <= 7) { sizeStyle = 2; }
-                else { sizeStyle = 3; }
-
-                e.Graphics.DrawImage(Images.City[Game.Civs[city.Owner].CityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
-            }
 
             //Draw all units
+            int x, y;
             foreach (IUnit unit in Game.Units)
             {
-                int x = 2 * unit.X + unit.Y % 2;    //convert XY to civ2-style
-                int y = unit.Y;
-                if (unit == Game.Instance.ActiveUnit)
+                if (unit != Game.Instance.ActiveUnit)
                 {
-                    if (stej % 2 == 1)
-                    {
-                        e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
-                        e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw unit pulsating
-                    }
-                }
-                else
-                {
+                    x = 2 * unit.X + unit.Y % 2;    //convert XY to civ2-style
+                    y = unit.Y;
+
                     //Determine if unit inside city
                     bool unitOnTopOfCity = false;
                     foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
@@ -154,8 +134,37 @@ namespace PoskusCiv2.Forms
                         e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
                         e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw other units not pulsating
                     }
-
                 }
+            }
+
+            //Draw cities
+            foreach (City city in Game.Cities)
+            {
+                x = 2 * city.X + city.Y % 2;    //convert XY to civ2-style
+                y = city.Y;
+
+                int sizeStyle;
+                if (city.Size <= 3) { sizeStyle = 0; }
+                else if (city.Size > 3 && city.Size <= 5) { sizeStyle = 1; }
+                else if (city.Size > 5 && city.Size <= 7) { sizeStyle = 2; }
+                else { sizeStyle = 3; }
+
+                e.Graphics.DrawImage(Images.City[Game.Civs[city.Owner].CityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+
+                //Draw city name
+                StringFormat sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
+            }
+
+            //Draw active unit
+            x = 2 * Game.Instance.ActiveUnit.X + Game.Instance.ActiveUnit.Y % 2;    //convert XY to civ2-style
+            y = Game.Instance.ActiveUnit.Y;
+            if (stej % 2 == 1)
+            {
+                e.Graphics.DrawImage(Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 1]); //draw shield
+                e.Graphics.DrawImage(Images.Units[(int)Game.Instance.ActiveUnit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw unit pulsating
             }
 
             //Draw grid lines
@@ -186,8 +195,8 @@ namespace PoskusCiv2.Forms
                 {
                     for (int j = 0; j < BoxNoY; j++)
                     {
-                        int x = i * 64 + 12;
-                        int y = j * 32 + 8;
+                        x = i * 64 + 12;
+                        y = j * 32 + 8;
                         e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + offsetX, 2 * j + offsetY), drawFont, drawBrush, x, y, drawFormat); //for first horizontal line
                         e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + 1 + offsetX, 2 * j + 1 + offsetY), drawFont, drawBrush, x + 32, y + 16, drawFormat); //for second horizontal line
                     }
