@@ -115,6 +115,21 @@ namespace PoskusCiv2.Forms
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
                 GraphicsUnit.Pixel);
 
+            //Draw cities
+            foreach (City city in Game.Cities)
+            {
+                int x = 2 * city.X + city.Y % 2;    //convert XY to civ2-style
+                int y = city.Y;
+
+                int sizeStyle;
+                if (city.Size <= 3) { sizeStyle = 0; }
+                else if (city.Size > 3 && city.Size <= 5) { sizeStyle = 1; }
+                else if (city.Size > 5 && city.Size <= 7) { sizeStyle = 2; }
+                else { sizeStyle = 3; }
+
+                e.Graphics.DrawImage(Images.City[Game.Civs[city.Owner].CityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+            }
+
             //Draw all units
             foreach (IUnit unit in Game.Units)
             {
@@ -130,8 +145,16 @@ namespace PoskusCiv2.Forms
                 }
                 else
                 {
-                    e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
-                    e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw other units not pulsating
+                    //Determine if unit inside city
+                    bool unitOnTopOfCity = false;
+                    foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
+
+                    if (!unitOnTopOfCity)   //Draw only if unit NOT inside city
+                    {
+                        e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                        e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw other units not pulsating
+                    }
+
                 }
             }
 

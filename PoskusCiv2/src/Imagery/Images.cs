@@ -10,7 +10,7 @@ namespace PoskusCiv2.Imagery
     public static class Images
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield;
-        public static Bitmap[,] Coast;
+        public static Bitmap[,] Coast, City, CityWall;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm;
         public static int[,] unitShieldLocation = new int[63, 2];
       
@@ -157,11 +157,27 @@ namespace PoskusCiv2.Imagery
         public static void LoadCities(string cityLoc)
         {
             Bitmap cities = new Bitmap(cityLoc);
+            City = new Bitmap[6, 4];
+            CityWall = new Bitmap[6, 4];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
             Color transparentCyan = Color.FromArgb(0, 255, 255);    //define transparent back color (cyan)
+
+            for (int row = 0; row < 6; row++)
+            {
+                for (int col = 0; col < 4; col++)
+                {
+                    City[row, col] = (Bitmap)cities.Clone(new Rectangle(1 + 64 * col + 1 * col, 39 + 48 * row + 1 * row, 64, 48), cities.PixelFormat);
+                    City[row, col].MakeTransparent(transparentGray);
+                    City[row, col].MakeTransparent(transparentPink);
+
+                    CityWall[row, col] = (Bitmap)cities.Clone(new Rectangle(334 + 64 * col + 1 * col, 39 + 48 * row + 1 * row, 64, 48), cities.PixelFormat);
+                    CityWall[row, col].MakeTransparent(transparentGray);
+                    CityWall[row, col].MakeTransparent(transparentPink);
+                }
+            }
 
             Fortress = (Bitmap)cities.Clone(new Rectangle(208, 423, 64, 48), cities.PixelFormat);
             Fortress.MakeTransparent(transparentGray);
