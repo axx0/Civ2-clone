@@ -131,6 +131,7 @@ namespace PoskusCiv2.Forms
 
                     if (!unitOnTopOfCity)   //Draw only if unit NOT inside city
                     {
+                        e.Graphics.DrawImage(Images.BlackUnitShield, 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0] - 1, 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw border shield (offset for 1 pixel to left) 
                         e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
                         e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw other units not pulsating
                     }
@@ -155,6 +156,8 @@ namespace PoskusCiv2.Forms
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 1, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 1, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
             }
 
@@ -163,6 +166,7 @@ namespace PoskusCiv2.Forms
             y = Game.Instance.ActiveUnit.Y;
             if (stej % 2 == 1)
             {
+                e.Graphics.DrawImage(Images.BlackUnitShield, 32 * (x - offsetX) + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 0] - 1, 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 1]); //draw black shield border
                 e.Graphics.DrawImage(Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 1]); //draw shield
                 e.Graphics.DrawImage(Images.Units[(int)Game.Instance.ActiveUnit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw unit pulsating
             }

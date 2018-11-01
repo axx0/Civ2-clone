@@ -11,7 +11,7 @@ namespace PoskusCiv2.Imagery
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield;
         public static Bitmap[,] Coast, City, CityWall;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm, BlackUnitShield;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static Color[] CivColors;
       
@@ -197,13 +197,18 @@ namespace PoskusCiv2.Imagery
             UnitShield = new Bitmap[8];
             CivColors = new Color[8];
             CivColors[0] = Color.FromArgb(243, 0, 0);       //Red
-            CivColors[1] = Color.FromArgb(239, 239, 239);   //White
-            CivColors[2] = Color.FromArgb(87, 171, 39);     //Green
-            CivColors[3] = Color.FromArgb(75, 95, 183);     //Blue
+            //CivColors[1] = Color.FromArgb(239, 239, 239);   //White
+            CivColors[1] = Color.FromArgb(229, 229, 229);   //White
+            //CivColors[2] = Color.FromArgb(87, 171, 39);     //Green
+            CivColors[2] = Color.FromArgb(111, 219, 51);     //Green
+            //CivColors[3] = Color.FromArgb(75, 95, 183);     //Blue
+            CivColors[3] = Color.FromArgb(0, 115, 255);     //Blue
             CivColors[4] = Color.FromArgb(255, 255, 0);     //Yellow
-            CivColors[5] = Color.FromArgb(55, 175, 191);    //Cyan
-            CivColors[6] = Color.FromArgb(235, 131, 11);    //Orange
-            CivColors[7] = Color.FromArgb(131, 103, 179);   //Violet
+            //CivColors[5] = Color.FromArgb(55, 175, 191);    //Cyan
+            CivColors[5] = Color.FromArgb(63, 187, 199);    //Cyan
+            CivColors[6] = Color.FromArgb(243, 183, 7);    //Orange
+            //CivColors[7] = Color.FromArgb(131, 103, 179);   //Violet
+            CivColors[7] = Color.FromArgb(183, 147, 255);   //Violet
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -231,6 +236,11 @@ namespace PoskusCiv2.Imagery
                     stej += 1;
                 }
             }
+
+            //Extract shield with black border
+            BlackUnitShield = (Bitmap)units.Clone(new Rectangle(599, 1, 12, 20), units.PixelFormat);
+            BlackUnitShield.MakeTransparent(transparentGray);
+            BlackUnitShield.MakeTransparent(transparentPink);
 
             //Extract unit shield
             Bitmap _unitShield = (Bitmap)units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
