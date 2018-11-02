@@ -9,12 +9,12 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
         public static Bitmap[,] Coast, City, CityWall;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible;
         public static int[,] unitShieldLocation = new int[63, 2];
-        public static int[,,] citySizeWindowLoc = new int[6, 4, 2];
-        public static int[,,] cityWallSizeWindowLoc = new int[6, 4, 2];
+        public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
+        //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
         public static Color[] CivColors;
       
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
@@ -161,13 +161,19 @@ namespace PoskusCiv2.Imagery
         {
             Bitmap cities = new Bitmap(cityLoc);
             City = new Bitmap[6, 4];
+            CityFlag = new Bitmap[9];
             CityWall = new Bitmap[6, 4];
+            cityFlagLoc = new int[6, 4, 2];
+            cityWallFlagLoc = new int[6, 4, 2];
+            citySizeWindowLoc = new int[6, 4, 2];
+            cityWallSizeWindowLoc = new int[6, 4, 2];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
             Color transparentCyan = Color.FromArgb(0, 255, 255);    //define transparent back color (cyan)
 
+            //Get city bitmaps
             for (int row = 0; row < 6; row++)
             {
                 for (int col = 0; col < 4; col++)
@@ -183,19 +189,26 @@ namespace PoskusCiv2.Imagery
                     //determine where the city size window is located (x-y)
                     for (int ix = 0; ix < 64; ix++) //in x-direction
                     {
-                        if (cities.GetPixel(65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { citySizeWindowLoc[row, col, 0] = ix; }  //if pixel on border is blue
-                        if (cities.GetPixel(333 + 65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { cityWallSizeWindowLoc[row, col, 0] = ix; }  //for cities with wall
+                        if (cities.GetPixel(65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { cityFlagLoc[row, col, 0] = ix; }  //if pixel on border is blue
+                        if (cities.GetPixel(333 + 65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { cityWallFlagLoc[row, col, 0] = ix; }  //for cities with wall
                     }
                     for (int iy = 0; iy < 48; iy++) //in y-direction
                     {
-                        if (cities.GetPixel(65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { citySizeWindowLoc[row, col, 1] = iy; }
-                        if (cities.GetPixel(333 + 65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { cityWallSizeWindowLoc[row, col, 1] = iy; }
+                        if (cities.GetPixel(65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { cityFlagLoc[row, col, 1] = iy; }
+                        if (cities.GetPixel(333 + 65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { cityWallFlagLoc[row, col, 1] = iy; }
                     }
                 }
             }
-            // !!! NOTE !!! 
-            // it turns out that the positioning of the window is not based on coords in UNITS.GIF (as is the case with units), so just define approximate coordinates based on comparison with the original game
-            citySizeWindowLoc[0, 0, 0] = 13;    //stone
+
+            //Get flag bitmaps
+            for (int col = 0; col < 9; col++)
+            {
+                CityFlag[col] = (Bitmap)cities.Clone(new Rectangle(1 + 15 * col, 425, 14, 22), cities.PixelFormat);
+                CityFlag[col].MakeTransparent(transparentGray);
+            }
+
+            //Locations of city size windows
+            citySizeWindowLoc[0, 0, 0] = 13;    //stone age
             citySizeWindowLoc[0, 0, 1] = 23;
             citySizeWindowLoc[0, 1, 0] = 52;
             citySizeWindowLoc[0, 1, 1] = 18;
@@ -291,7 +304,6 @@ namespace PoskusCiv2.Imagery
             cityWallSizeWindowLoc[5, 2, 1] = 20;
             cityWallSizeWindowLoc[5, 3, 0] = 27;
             cityWallSizeWindowLoc[5, 3, 1] = 30;
-
 
             Fortress = (Bitmap)cities.Clone(new Rectangle(208, 423, 64, 48), cities.PixelFormat);
             Fortress.MakeTransparent(transparentGray);
