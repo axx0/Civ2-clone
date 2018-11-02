@@ -193,6 +193,105 @@ namespace PoskusCiv2.Imagery
                     }
                 }
             }
+            // !!! NOTE !!! 
+            // it turns out that the positioning of the window is not based on coords in UNITS.GIF (as is the case with units), so just define approximate coordinates based on comparison with the original game
+            citySizeWindowLoc[0, 0, 0] = 13;    //stone
+            citySizeWindowLoc[0, 0, 1] = 23;
+            citySizeWindowLoc[0, 1, 0] = 52;
+            citySizeWindowLoc[0, 1, 1] = 18;
+            citySizeWindowLoc[0, 2, 0] = 0;
+            citySizeWindowLoc[0, 2, 1] = 23;
+            citySizeWindowLoc[0, 3, 0] = 24;
+            citySizeWindowLoc[0, 3, 1] = 29;
+            citySizeWindowLoc[1, 0, 0] = 10;    //ancient
+            citySizeWindowLoc[1, 0, 1] = 23;
+            citySizeWindowLoc[1, 1, 0] = 50;
+            citySizeWindowLoc[1, 1, 1] = 25;
+            citySizeWindowLoc[1, 2, 0] = 1;
+            citySizeWindowLoc[1, 2, 1] = 17;
+            citySizeWindowLoc[1, 3, 0] = 12;
+            citySizeWindowLoc[1, 3, 1] = 27;
+            citySizeWindowLoc[2, 0, 0] = 3;    //far east
+            citySizeWindowLoc[2, 0, 1] = 20;
+            citySizeWindowLoc[2, 1, 0] = 48;
+            citySizeWindowLoc[2, 1, 1] = 7;
+            citySizeWindowLoc[2, 2, 0] = 50;
+            citySizeWindowLoc[2, 2, 1] = 5;
+            citySizeWindowLoc[2, 3, 0] = 28;
+            citySizeWindowLoc[2, 3, 1] = 27;
+            citySizeWindowLoc[3, 0, 0] = 5;    //medieval
+            citySizeWindowLoc[3, 0, 1] = 22;
+            citySizeWindowLoc[3, 1, 0] = 2;
+            citySizeWindowLoc[3, 1, 1] = 18;
+            citySizeWindowLoc[3, 2, 0] = 0;
+            citySizeWindowLoc[3, 2, 1] = 18;
+            citySizeWindowLoc[3, 3, 0] = 27;
+            citySizeWindowLoc[3, 3, 1] = 27;
+            citySizeWindowLoc[4, 0, 0] = 4;    //industrial
+            citySizeWindowLoc[4, 0, 1] = 20;
+            citySizeWindowLoc[4, 1, 0] = 1;
+            citySizeWindowLoc[4, 1, 1] = 20;
+            citySizeWindowLoc[4, 2, 0] = 2;
+            citySizeWindowLoc[4, 2, 1] = 22;
+            citySizeWindowLoc[4, 3, 0] = 28;
+            citySizeWindowLoc[4, 3, 1] = 30;
+            citySizeWindowLoc[5, 0, 0] = 8;    //modern
+            citySizeWindowLoc[5, 0, 1] = 18;
+            citySizeWindowLoc[5, 1, 0] = 2;
+            citySizeWindowLoc[5, 1, 1] = 19;
+            citySizeWindowLoc[5, 2, 0] = 8;
+            citySizeWindowLoc[5, 2, 1] = 20;
+            citySizeWindowLoc[5, 3, 0] = 27;
+            citySizeWindowLoc[5, 3, 1] = 30;
+            cityWallSizeWindowLoc[0, 0, 0] = 12;    //stone + wall
+            cityWallSizeWindowLoc[0, 0, 1] = 23;
+            cityWallSizeWindowLoc[0, 1, 0] = 52;
+            cityWallSizeWindowLoc[0, 1, 1] = 22;
+            cityWallSizeWindowLoc[0, 2, 0] = 0;
+            cityWallSizeWindowLoc[0, 2, 1] = 19;
+            cityWallSizeWindowLoc[0, 3, 0] = 24;
+            cityWallSizeWindowLoc[0, 3, 1] = 29;
+            cityWallSizeWindowLoc[1, 0, 0] = 10;    //ancient + wall
+            cityWallSizeWindowLoc[1, 0, 1] = 13;
+            cityWallSizeWindowLoc[1, 1, 0] = 50;
+            cityWallSizeWindowLoc[1, 1, 1] = 21;
+            cityWallSizeWindowLoc[1, 2, 0] = 1;
+            cityWallSizeWindowLoc[1, 2, 1] = 17;
+            cityWallSizeWindowLoc[1, 3, 0] = 11;
+            cityWallSizeWindowLoc[1, 3, 1] = 22;
+            cityWallSizeWindowLoc[2, 0, 0] = 4;    //far east + wall
+            cityWallSizeWindowLoc[2, 0, 1] = 18;
+            cityWallSizeWindowLoc[2, 1, 0] = 48;
+            cityWallSizeWindowLoc[2, 1, 1] = 6;
+            cityWallSizeWindowLoc[2, 2, 0] = 51;
+            cityWallSizeWindowLoc[2, 2, 1] = 4;
+            cityWallSizeWindowLoc[2, 3, 0] = 28;
+            cityWallSizeWindowLoc[2, 3, 1] = 27;
+            cityWallSizeWindowLoc[3, 0, 0] = 3;    //medieval + wall
+            cityWallSizeWindowLoc[3, 0, 1] = 18;
+            cityWallSizeWindowLoc[3, 1, 0] = 2;
+            cityWallSizeWindowLoc[3, 1, 1] = 20;
+            cityWallSizeWindowLoc[3, 2, 0] = 1;
+            cityWallSizeWindowLoc[3, 2, 1] = 15;
+            cityWallSizeWindowLoc[3, 3, 0] = 27;
+            cityWallSizeWindowLoc[3, 3, 1] = 29;
+            cityWallSizeWindowLoc[4, 0, 0] = 4;    //industrial + wall
+            cityWallSizeWindowLoc[4, 0, 1] = 18;
+            cityWallSizeWindowLoc[4, 1, 0] = 1;
+            cityWallSizeWindowLoc[4, 1, 1] = 20;
+            cityWallSizeWindowLoc[4, 2, 0] = 1;
+            cityWallSizeWindowLoc[4, 2, 1] = 18;
+            cityWallSizeWindowLoc[4, 3, 0] = 26;
+            cityWallSizeWindowLoc[4, 3, 1] = 28;
+            cityWallSizeWindowLoc[5, 0, 0] = 3;    //modern + wall
+            cityWallSizeWindowLoc[5, 0, 1] = 21;
+            cityWallSizeWindowLoc[5, 1, 0] = 0;
+            cityWallSizeWindowLoc[5, 1, 1] = 20;
+            cityWallSizeWindowLoc[5, 2, 0] = 8;
+            cityWallSizeWindowLoc[5, 2, 1] = 20;
+            cityWallSizeWindowLoc[5, 3, 0] = 27;
+            cityWallSizeWindowLoc[5, 3, 1] = 30;
+
 
             Fortress = (Bitmap)cities.Clone(new Rectangle(208, 423, 64, 48), cities.PixelFormat);
             Fortress.MakeTransparent(transparentGray);
@@ -249,7 +348,7 @@ namespace PoskusCiv2.Imagery
                     stej += 1;
                 }
             }
-
+            
             //Extract shield with black border
             BlackUnitShield = (Bitmap)units.Clone(new Rectangle(599, 1, 12, 20), units.PixelFormat);
             BlackUnitShield.MakeTransparent(transparentGray);

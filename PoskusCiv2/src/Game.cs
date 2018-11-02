@@ -331,7 +331,7 @@ namespace PoskusCiv2
             Terrain[x, y] = terrain;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int caravanCommodity, int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int lastMove, int caravanCommodity, int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
             switch (type)
@@ -397,6 +397,7 @@ namespace PoskusCiv2
             unit.Civ = civ;
             unit.MovesMade = movesMade;
             unit.HitpointsLost = hitpointsLost;
+            unit.LastMove = lastMove;
             unit.CaravanCommodity = caravanCommodity;
             unit.Orders = orders;
             unit.HomeCity = homeCity;

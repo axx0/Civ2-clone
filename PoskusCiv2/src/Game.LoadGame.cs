@@ -513,14 +513,16 @@ namespace PoskusCiv2
                 int unitType = dataArray[ofsetU + multipl * i + 6];
 
                 //Unit civ
-                int unitCiv = dataArray[ofsetU + multipl * i + 7];
-                //Console.WriteLine("UNIT CIV: " + unitCiv.ToString());
-
+                int unitCiv = dataArray[ofsetU + multipl * i + 7];  //00 = barbarians
+               
                 //Unit moves made
                 int unitMovesMade = dataArray[ofsetU + multipl * i + 8];
 
                 //Unit hitpoints lost
-                int unitHitpointsLost = dataArray[ofsetU + multipl * i + 11];
+                int unitHitpointsLost = dataArray[ofsetU + multipl * i + 10];
+
+                //Unit previous move
+                int unitLastMove = dataArray[ofsetU + multipl * i + 11];    //06=right, 02=down, ...
 
                 //Unit caravan commodity
                 int unitCaravanCommodity = dataArray[ofsetU + multipl * i + 13];
@@ -554,7 +556,7 @@ namespace PoskusCiv2
                 intVal2 = dataArray[ofsetU + multipl * i + 25];
                 int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovesMade, unitHitpointsLost, unitCaravanCommodity, unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
+                IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovesMade, unitHitpointsLost, unitLastMove, unitCaravanCommodity, unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
 
 

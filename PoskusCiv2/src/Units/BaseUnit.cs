@@ -32,6 +32,7 @@ namespace PoskusCiv2.Units
         public int Civ { get; set; }
         public int MovesMade { get; set; }
         public int HitpointsLost { get; set; }
+        public int LastMove { get; set; }
         public int CaravanCommodity { get; set; }
         public int Orders { get; set; }
         public int HomeCity { get; set; }

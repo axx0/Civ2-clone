@@ -18,6 +18,7 @@ namespace PoskusCiv2.Units
         int Civ { get; set; }
         int MovesMade { get; set; }
         int HitpointsLost { get; set; }
+        int LastMove { get; set; }
         int CaravanCommodity { get; set; }
         int Orders { get; set; }
         int HomeCity { get; set; }
