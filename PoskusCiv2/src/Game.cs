@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using PoskusCiv2.Enums;
 using PoskusCiv2.Units;
 using PoskusCiv2.Terrains;
+using PoskusCiv2.Improvements;
 using PoskusCiv2.Imagery;
 using ExtensionMethods;
 
@@ -411,7 +412,7 @@ namespace PoskusCiv2
         }
 
 
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodBox, int shieldBox, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4)
+        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodBox, int shieldBox, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements)
         {
             City city = new City
             {
@@ -436,8 +437,13 @@ namespace PoskusCiv2
                 WorkersInnerCircle = workersInnerCircle,
                 WorkersOn8 = workersOn8,
                 WorkersOn4 = workersOn4,
-                NoOfSpecialistsx4 = noOfSpecialistsx4
+                NoOfSpecialistsx4 = noOfSpecialistsx4                
             };
+
+            if (improvements[6] == '1')
+            {
+                city.AddImprovement(new Palace());                
+            }            
 
             Cities.Add(city);
             return city;

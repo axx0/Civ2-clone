@@ -672,7 +672,6 @@ namespace PoskusCiv2
                 }
                 string cityName = new string(asciichar);
                 cityName = cityName.Replace("\0", string.Empty);
-                //Console.WriteLine(cityName[i]);
 
                 //Workers in inner circle
                 int cityWorkersInnerCircle = dataArray[ofsetC + multipl * i + 48];
@@ -687,7 +686,7 @@ namespace PoskusCiv2
                 int cityNoOfSpecialistsx4 = dataArray[ofsetC + multipl * i + 51];
 
                 //Improvements
-                //...
+                string cityImprovements = Convert.ToString(dataArray[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');
 
                 //Item in production
                 //...
@@ -731,7 +730,7 @@ namespace PoskusCiv2
                 //Sequence number of the city
                 //...
 
-                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodBox, cityShieldBox, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4);
+                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodBox, cityShieldBox, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements);
             }
 
 

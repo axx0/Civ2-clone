@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PoskusCiv2.Enums;
+using PoskusCiv2.Improvements;
 
 namespace PoskusCiv2
 {
@@ -31,5 +33,10 @@ namespace PoskusCiv2
         public int WorkersOn4 { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
 
+        public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
+
+        private List<IImprovement> _improvements = new List<IImprovement>();
+
+        public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
     }
 }
