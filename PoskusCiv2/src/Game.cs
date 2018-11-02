@@ -440,10 +440,40 @@ namespace PoskusCiv2
                 NoOfSpecialistsx4 = noOfSpecialistsx4                
             };
 
-            if (improvements[6] == '1')
-            {
-                city.AddImprovement(new Palace());                
-            }            
+            if (improvements[0] == '1') { city.AddImprovement(new Palace()); }
+            if (improvements[1] == '1') { city.AddImprovement(new Barracks()); }
+            if (improvements[2] == '1') { city.AddImprovement(new Granary()); }
+            if (improvements[3] == '1') { city.AddImprovement(new Temple()); }
+            if (improvements[4] == '1') { city.AddImprovement(new Marketplace()); }
+            if (improvements[5] == '1') { city.AddImprovement(new Library()); }
+            if (improvements[6] == '1') { city.AddImprovement(new Courthouse()); }
+            if (improvements[7] == '1') { city.AddImprovement(new CityWalls()); }
+            if (improvements[8] == '1') { city.AddImprovement(new Aqueduct()); }
+            if (improvements[9] == '1') { city.AddImprovement(new Bank()); }
+            if (improvements[10] == '1') { city.AddImprovement(new Cathedral()); }
+            if (improvements[11] == '1') { city.AddImprovement(new University()); }
+            if (improvements[12] == '1') { city.AddImprovement(new MassTransit()); }
+            if (improvements[13] == '1') { city.AddImprovement(new Colosseum()); }
+            if (improvements[14] == '1') { city.AddImprovement(new Factory()); }
+            if (improvements[15] == '1') { city.AddImprovement(new MfgPlant()); }
+            if (improvements[16] == '1') { city.AddImprovement(new SDIdefense()); }
+            if (improvements[17] == '1') { city.AddImprovement(new RecyclCentre()); }
+            if (improvements[18] == '1') { city.AddImprovement(new PowerPlant()); }
+            if (improvements[19] == '1') { city.AddImprovement(new HydroPlant()); }
+            if (improvements[20] == '1') { city.AddImprovement(new NuclearPlant()); }
+            if (improvements[21] == '1') { city.AddImprovement(new StockExch()); }
+            if (improvements[22] == '1') { city.AddImprovement(new SewerSystem()); }
+            if (improvements[23] == '1') { city.AddImprovement(new Supermarket()); }
+            if (improvements[24] == '1') { city.AddImprovement(new Superhighways()); }
+            if (improvements[25] == '1') { city.AddImprovement(new ResearchLab()); }
+            if (improvements[26] == '1') { city.AddImprovement(new SAMbattery()); }
+            if (improvements[27] == '1') { city.AddImprovement(new CoastalFort()); }
+            if (improvements[28] == '1') { city.AddImprovement(new SolarPlant()); }
+            if (improvements[29] == '1') { city.AddImprovement(new Harbour()); }
+            if (improvements[30] == '1') { city.AddImprovement(new OffsehorePlat()); }
+            if (improvements[31] == '1') { city.AddImprovement(new Airport()); }
+            if (improvements[32] == '1') { city.AddImprovement(new PoliceStat()); }
+            if (improvements[33] == '1') { city.AddImprovement(new PortFacil()); }
 
             Cities.Add(city);
             return city;

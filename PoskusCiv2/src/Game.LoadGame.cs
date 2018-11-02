@@ -686,7 +686,22 @@ namespace PoskusCiv2
                 int cityNoOfSpecialistsx4 = dataArray[ofsetC + multipl * i + 51];
 
                 //Improvements
-                string cityImprovements = Convert.ToString(dataArray[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');
+                string cityImprovements1 = Convert.ToString(dataArray[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');   //bit6=palace (1st improvement), bit7=not important
+                cityImprovements1 = cityImprovements1.Remove(cityImprovements1.Length - 1); //remove last bit, it is not important
+                string cityImprovements2 = Convert.ToString(dataArray[ofsetC + multipl * i + 53], 2).PadLeft(8, '0');
+                string cityImprovements3 = Convert.ToString(dataArray[ofsetC + multipl * i + 54], 2).PadLeft(8, '0');
+                string cityImprovements4 = Convert.ToString(dataArray[ofsetC + multipl * i + 55], 2).PadLeft(8, '0');
+                string cityImprovements5 = Convert.ToString(dataArray[ofsetC + multipl * i + 56], 2).PadLeft(8, '0');   //bit0-bit4=not important, bit5=port facility (last improvement)
+                //Put all improvements into one large string, where bit0=palace, bit1=barracks, ..., bit33=port facility
+                //First reverse bit order in all strings
+                cityImprovements1 = Reverse(cityImprovements1);
+                cityImprovements2 = Reverse(cityImprovements2);
+                cityImprovements3 = Reverse(cityImprovements3);
+                cityImprovements4 = Reverse(cityImprovements4);
+                cityImprovements5 = Reverse(cityImprovements5);
+                cityImprovements5 = cityImprovements5.Remove(cityImprovements5.Length - 5); //remove last 5 bits, they are not important
+                //Merge all strings into a large string
+                string cityImprovements = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
 
                 //Item in production
                 //...
@@ -739,5 +754,14 @@ namespace PoskusCiv2
             //=========================
 
         }
+        
+        //Reverse a string
+        public static string Reverse(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
     }
 }

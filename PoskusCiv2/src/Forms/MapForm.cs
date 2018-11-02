@@ -205,30 +205,32 @@ namespace PoskusCiv2.Forms
                         else { sizeStyle = 3; }
                     }
                 }
-                
-                //Draw city
-                e.Graphics.DrawImage(Images.City[cityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
-                //e.Graphics.DrawImage(Images.CityWall[cityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
 
-                //Draw city size window
-                e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);
-                e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
 
-                //Draw city (+Wall) size window
-                //e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);
-                //e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
-                //StringFormat sf = new StringFormat();
-                //sf.LineAlignment = StringAlignment.Center;
-                //sf.Alignment = StringAlignment.Center;
-                //e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
-
-                //Draw city flag
-                e.Graphics.DrawImage(Images.CityFlag[city.Owner], 32 * (x - offsetX) + Images.cityFlagLoc[cityStyle, sizeStyle, 0] - 3, 16 * (y - offsetY) - 16 + Images.cityFlagLoc[cityStyle, sizeStyle, 1] - 17);
-                //e.Graphics.DrawImage(Images.CityFlag[city.Owner], 32 * (x - offsetX) + Images.cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, 16 * (y - offsetY) - 16 + Images.cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);
+                //Draw city
+                if (!Array.Exists(city.Improvements, element => element.Type == ImprovementType.CityWalls))  //no city walls
+                {
+                    e.Graphics.DrawImage(Images.City[cityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                    //Draw city size window
+                    e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);
+                    e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
+                    e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
+                    //Draw city flag
+                    e.Graphics.DrawImage(Images.CityFlag[city.Owner], 32 * (x - offsetX) + Images.cityFlagLoc[cityStyle, sizeStyle, 0] - 3, 16 * (y - offsetY) - 16 + Images.cityFlagLoc[cityStyle, sizeStyle, 1] - 17);
+                }
+                else
+                {
+                    e.Graphics.DrawImage(Images.CityWall[cityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                    //Draw city (+Wall) size window
+                    e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);
+                    e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
+                    e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
+                    //Draw city flag
+                    e.Graphics.DrawImage(Images.CityFlag[city.Owner], 32 * (x - offsetX) + Images.cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, 16 * (y - offsetY) - 16 + Images.cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);
+                }
 
                 //Draw city name
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 1, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
