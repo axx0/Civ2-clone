@@ -11,12 +11,13 @@ namespace PoskusCiv2.Imagery
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
         public static Bitmap[,] Coast, City, CityWall;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces,  WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
         public static Color[] CivColors;
-      
+        public static Bitmap CityWallpaper;
+
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
         {
             Bitmap terrain1 = new Bitmap(terrainLoc1);
@@ -312,12 +313,12 @@ namespace PoskusCiv2.Imagery
             Airbase = (Bitmap)cities.Clone(new Rectangle(273, 423, 64, 48), cities.PixelFormat);
             Airbase.MakeTransparent(transparentGray);
             Airbase.MakeTransparent(transparentPink);
-                       
+
         }
 
         public static void LoadUnits(string unitLoc)
         {
-            Bitmap units = new Bitmap(unitLoc);            
+            Bitmap units = new Bitmap(unitLoc);
 
             Units = new Bitmap[63];
             UnitShield = new Bitmap[8];
@@ -360,7 +361,7 @@ namespace PoskusCiv2.Imagery
                     stej += 1;
                 }
             }
-            
+
             //Extract shield with black border
             BlackUnitShield = (Bitmap)units.Clone(new Rectangle(599, 1, 12, 20), units.PixelFormat);
             BlackUnitShield.MakeTransparent(transparentGray);
@@ -423,6 +424,13 @@ namespace PoskusCiv2.Imagery
 
             WallpaperMapForm = (Bitmap)icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = (Bitmap)icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+        }
+
+        public static void LoadWallpapers(string cityWallpaperLoc)
+        {
+            Bitmap cityWallpaper = new Bitmap(cityWallpaperLoc);
+
+            CityWallpaper = (Bitmap)cityWallpaper;
         }
 
         //Converting GIFs to non-indexed images (required for SetPixel method)

@@ -27,7 +27,7 @@ namespace PoskusCiv2.Forms
         public bool CreateUnit;
         
         //timer
-        System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+        Timer t = new Timer();
         int stej = 0;   //records no of timer ticks
 
         ImportSavegame importMap = new ImportSavegame();
@@ -328,6 +328,9 @@ namespace PoskusCiv2.Forms
             {
                 //send mouse click location to status form
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm(ClickedBoxX, ClickedBoxY);
+
+                CityForm cityForm = new CityForm();
+                cityForm.Show();
             }
         }
 

@@ -15,6 +15,7 @@ namespace PoskusCiv2.Forms
         public MapForm mapForm;
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
+        public CityForm cityForm;
 
         Label label1 = new Label(); //for testing
 
@@ -25,7 +26,8 @@ namespace PoskusCiv2.Forms
             mapForm = new MapForm(this);
             statusForm = new StatusForm(this);
             worldMapForm = new WorldMapForm(this);
-            
+            cityForm = new CityForm(this);
+
             label1.AutoSize = true;
             label1.Location = new Point(1100, 30);
             label1.ForeColor = Color.Black;
@@ -54,6 +56,10 @@ namespace PoskusCiv2.Forms
             worldMapForm.StartPosition = FormStartPosition.Manual;
             worldMapForm.Location = new Point(1260, 0);
             worldMapForm.Show();
+
+            cityForm.MdiParent = this;
+            cityForm.StartPosition = FormStartPosition.Manual;
+            cityForm.Location = new Point(1260, 0);
 
             mapForm.Focus();
         }

@@ -24,6 +24,7 @@ namespace PoskusCiv2
             Images.LoadCities(@"C:\DOS\CIV 2\Civ2\CITIES.GIF");
             Images.LoadUnits(@"C:\DOS\CIV 2\Civ2\UNITS.GIF");
             Images.LoadIcons(@"C:\DOS\CIV 2\Civ2\ICONS.GIF");
+            Images.LoadWallpapers(@"C:\DOS\CIV 2\Civ2\CITY.GIF");
             Game.StartGame();
 
             Application.EnableVisualStyles();

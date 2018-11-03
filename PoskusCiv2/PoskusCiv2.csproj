@@ -51,6 +51,12 @@
     <Compile Include="src\BaseInstance.cs" />
     <Compile Include="src\Data.cs" />
     <Compile Include="src\Enums\ImprovementType.cs" />
+    <Compile Include="src\Forms\CityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\CityForm.Designer.cs">
+      <DependentUpon>CityForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\CreateUnitForm.cs">
       <SubType>Form</SubType>
     </Compile>
