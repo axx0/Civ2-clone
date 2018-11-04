@@ -230,14 +230,12 @@ namespace PoskusCiv2.Forms
 
         //Receive and display X-Y coordinates on right-click on Map
         public void ReceiveMousePositionFromMapForm(int X_coord_mouse, int Y_coord_mouse)
-        {
-            
-            int i = (X_coord_mouse - Y_coord_mouse % 2) / 2;
-            int j = Y_coord_mouse;
-
-            cursorPositionLabel.Text = "Loc: (" + X_coord_mouse.ToString() + ", " + Y_coord_mouse.ToString() + ") ";
-            
-            // + DrawMap.Map.TerrainIsland[Y_coord_mouse * DrawMap.Map.MapXdimension + (int)Math.Floor((double)X_coord_mouse / 2)] + " \n" + "(" + DrawMap.terrainName[DrawMap.Map.Terrain[Y_coord_mouse * DrawMap.Map.MapXdimension + (int)Math.Floor((double)X_coord_mouse / 2)]] + ")";
+        {            
+            int x = 2 * X_coord_mouse + Y_coord_mouse % 2;    //convert from real to civ-2 style coordinates
+            int y = Y_coord_mouse;
+            string sec_line = null;
+            if (Game.Terrain[X_coord_mouse, Y_coord_mouse].River) { sec_line = ", River"; }
+            cursorPositionLabel.Text = "Loc: (" + x.ToString() + ", " + y.ToString() + ") " + Game.Terrain[X_coord_mouse, Y_coord_mouse].Island.ToString() + " \n" + "(" + Game.Terrain[X_coord_mouse, Y_coord_mouse].Type + sec_line + ")";
         }
 
         //Update game year label

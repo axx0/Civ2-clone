@@ -307,10 +307,12 @@ namespace PoskusCiv2.Forms
             int nY = Convert.ToInt32(Math.Floor((ny - 16) / 32));   //converting crossing to int
             ClickedBoxX = nX + nY + offsetX;
             ClickedBoxY = nY - nX + offsetY;
-
             offsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
             Invalidate();
+
+            //Convert coordinates from Civ-2 style to real coordinates (only x, y is OK)
+            ClickedBoxX = (ClickedBoxX - (ClickedBoxY % 2)) / 2;
 
             if (e.Button == MouseButtons.Right)
             {
@@ -325,9 +327,9 @@ namespace PoskusCiv2.Forms
                 //send mouse click location to status form
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm(ClickedBoxX, ClickedBoxY);
 
-                if (Game.Cities.Any(city => city.X == ClickedBoxX && city.Y == ClickedBoxY))
+                if (Game.Cities.Any(city => city.X == ClickedBoxX && city.Y == ClickedBoxY))    //if city is clicked => open form
                 {
-                    CityForm cityForm = new CityForm();
+                    CityForm cityForm = new CityForm(ClickedBoxX, ClickedBoxY);
                     cityForm.Show();
                 }
             }
