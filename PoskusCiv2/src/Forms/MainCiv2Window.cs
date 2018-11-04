@@ -43,8 +43,6 @@ namespace PoskusCiv2.Forms
 
             //Load forms
             mapForm.MdiParent = this;
-            mapForm.Size = new Size(1260, 770);
-            mapForm.BackColor = Color.Black;
             mapForm.Show();
 
             statusForm.MdiParent = this;

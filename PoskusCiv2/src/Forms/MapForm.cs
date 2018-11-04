@@ -36,54 +36,49 @@ namespace PoskusCiv2.Forms
         CreateUnitForm createUnitForm = new CreateUnitForm();
 
         //a helpful label
-        Label label1 = new Label();
+        Label helpfulLabel;
 
         Pen pulsatingRectPen = new Pen(Color.White, 1);
 
         public MapForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
+            this.Size = new Size(1260, 770);
+            this.BackColor = Color.Black;
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.BackgroundImage = Images.WallpaperMapForm;
             this.DoubleBuffered = true;
             mainCiv2Window = _mainCiv2Window;
+
+            //Panel for map
+            Panel MapPanel = new Panel
+            {
+                Location = new Point(5, 35),
+                Size = new Size(1250, 730),
+                //BackgroundImage = Images.CityWallpaper,
+                BorderStyle = BorderStyle.Fixed3D
+            };
+            Controls.Add(MapPanel);
+            MapPanel.Paint += new PaintEventHandler(MapPanel_Paint);
+            MapPanel.MouseClick += MapPanel_MouseClick;
         }
 
         private void MapForm_Load(object sender, EventArgs e)
         {
-            
-            ////TESTING...
-            //foreach (Civilization civ in Game.Civs)
-            //{
-            //    Console.WriteLine("Civ " + civ.TribeName + ", " + civ.LeaderName + ", " + civ.Adjective);
-            //}
-            ////TESTING...
-            //foreach (City city in Game.Cities)
-            //{
-            //    Console.WriteLine("City " + city.Name + " X=" + city.X.ToString() + " Y=" + city.Y.ToString());
-            //}
-            //Console.WriteLine("The following are units:");
-            //foreach (IUnit unit in Game.Units)
-            //{
-            //    Console.WriteLine(unit.Type + " X=" + unit.X.ToString() + " Y=" + unit.Y.ToString());
-            //}
-            //////TESTING...Importing savegame....
-            //Console.WriteLine("Bloodlust= " + importMap.Bloodlust);
-            //Console.WriteLine("Simplified combat= " + importMap.SimplifiedCombat);
-            //Console.WriteLine("Flat earth= " + importMap.FlatEarth);
-            //Console.WriteLine("Turn number= {0}", importMap.TurnNumber);
-            //Console.WriteLine("No of units= {0}", importMap.NumberOfUnits);
-            //Console.WriteLine("No of cities= {0}", importMap.NumberOfCities);
-
             //timer for animating units
             t.Interval = 200; // specify interval time as you want (ms)
             t.Tick += new EventHandler(timer_Tick);
             t.Start();
 
             //a helpful label
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(1100, 700);
-            label1.ForeColor = Color.White;
-            label1.Text = "WAITING...";
-            this.Controls.Add(label1);
+            helpfulLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(1100, 700),
+                ForeColor = Color.White,
+                Text = "WAITING..."
+            };
+            Controls.Add(helpfulLabel);
 
             CreateUnit = false; //for start
             
@@ -106,6 +101,10 @@ namespace PoskusCiv2.Forms
         }
 
         private void MapForm_Paint(object sender, PaintEventArgs e)
+        {
+        }
+
+        private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
             //e.Graphics.DrawImage(Images.Ocean[3], 0, 0);
             e.Graphics.DrawImage(
@@ -294,6 +293,9 @@ namespace PoskusCiv2.Forms
 
         //click with a mouse --> center MapForm on the square
         private void MapForm_MouseClick(object sender, MouseEventArgs e)
+        { }
+
+        private void MapPanel_MouseClick(object sender, MouseEventArgs e)
         {
             BoxNoX = (int)Math.Floor((double)this.ClientSize.Width / 64);//Calculate No of squares in the form in X and Y
             BoxNoY = (int)Math.Floor((double)this.ClientSize.Height / 32);            
@@ -339,8 +341,8 @@ namespace PoskusCiv2.Forms
         {
             //helpful label
             stej += 1;
-            this.label1.Text = Convert.ToString(stej/5) + " sec";
-            label1.Refresh();
+            helpfulLabel.Text = Convert.ToString(stej/5) + " sec";
+            helpfulLabel.Refresh();
 
             //update viewing pieces
             //this.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
