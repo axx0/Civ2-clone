@@ -18,8 +18,7 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        Label viewingPiecesLabel = new Label();
-        Label cursorPositionLabel = new Label();
+        Label viewingPiecesLabel, cursorPositionLabel;        
         Label peopleLabel = new Label();
         Label gameYearLabel = new Label();
         Label goldLabel = new Label();
@@ -53,13 +52,16 @@ namespace PoskusCiv2.Forms
             panel2.BackgroundImage = Images.WallpaperStatusForm;
 
             //Viewing pieces label
-            viewingPiecesLabel.AutoSize = true;
-            viewingPiecesLabel.Location = new Point(70, 115);
-            viewingPiecesLabel.Font = new Font("Times New Roman", 12);
-            viewingPiecesLabel.ForeColor = Color.White;
-            viewingPiecesLabel.Text = "Moving Units";
-            viewingPiecesLabel.BackColor = Color.Transparent;
-            this.Controls.Add(viewingPiecesLabel);
+            viewingPiecesLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(70, 115),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.White,
+                Text = "Moving Units",
+                BackColor = Color.Transparent
+            };
+            Controls.Add(viewingPiecesLabel);
             var pos4 = this.PointToScreen(viewingPiecesLabel.Location);            //making the label transparent in panel
             pos4 = panel1.PointToClient(pos4);
             viewingPiecesLabel.Parent = panel1;
@@ -67,11 +69,14 @@ namespace PoskusCiv2.Forms
             viewingPiecesLabel.BackColor = Color.Transparent;
 
             //Cursor position label
-            cursorPositionLabel.AutoSize = true;
-            cursorPositionLabel.Location = new Point(13, 140);
-            cursorPositionLabel.Font = new Font("Times New Roman", 12);
-            cursorPositionLabel.BackColor = Color.Transparent;
-            this.Controls.Add(cursorPositionLabel);
+            cursorPositionLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 140),
+                Font = new Font("Times New Roman", 12),
+                BackColor = Color.Transparent
+            };
+            Controls.Add(cursorPositionLabel);
             var pos5 = this.PointToScreen(cursorPositionLabel.Location);            //making the label transparent in panel
             pos5 = panel1.PointToClient(pos5);
             cursorPositionLabel.Parent = panel1;
@@ -230,7 +235,7 @@ namespace PoskusCiv2.Forms
             int i = (X_coord_mouse - Y_coord_mouse % 2) / 2;
             int j = Y_coord_mouse;
 
-            this.cursorPositionLabel.Text = "Loc: (" + X_coord_mouse.ToString() + ", " + Y_coord_mouse.ToString() + ") " + Game.Terrain[i, j].Hexvalue;
+            cursorPositionLabel.Text = "Loc: (" + X_coord_mouse.ToString() + ", " + Y_coord_mouse.ToString() + ") ";
             
             // + DrawMap.Map.TerrainIsland[Y_coord_mouse * DrawMap.Map.MapXdimension + (int)Math.Floor((double)X_coord_mouse / 2)] + " \n" + "(" + DrawMap.terrainName[DrawMap.Map.Terrain[Y_coord_mouse * DrawMap.Map.MapXdimension + (int)Math.Floor((double)X_coord_mouse / 2)]] + ")";
         }

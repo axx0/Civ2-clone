@@ -261,8 +261,7 @@ namespace PoskusCiv2.Forms
                     }
                 }
             }
-
-
+            
             //Draw (x,y) locations on grid
             if (DrawXYnumbers)
             {
@@ -296,9 +295,6 @@ namespace PoskusCiv2.Forms
         //click with a mouse --> center MapForm on the square
         private void MapForm_MouseClick(object sender, MouseEventArgs e)
         {
-            //TO-DO:
-            // 1) map should draw only to borders
-
             BoxNoX = (int)Math.Floor((double)this.ClientSize.Width / 64);//Calculate No of squares in the form in X and Y
             BoxNoY = (int)Math.Floor((double)this.ClientSize.Height / 32);            
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2);//Determine the square in the center of figure
@@ -329,8 +325,11 @@ namespace PoskusCiv2.Forms
                 //send mouse click location to status form
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm(ClickedBoxX, ClickedBoxY);
 
-                CityForm cityForm = new CityForm();
-                cityForm.Show();
+                if (Game.Cities.Any(city => city.X == ClickedBoxX && city.Y == ClickedBoxY))
+                {
+                    CityForm cityForm = new CityForm();
+                    cityForm.Show();
+                }
             }
         }
 
