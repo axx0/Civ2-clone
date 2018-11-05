@@ -325,9 +325,9 @@ namespace PoskusCiv2
                 //Console.WriteLine(civAdjective);
 
                 //Before adding civs, add a barbarian civ in the beginning (Civ2 gives units civ=1 for 1st civ (and not civ=0), so civ=0 is obviously reserved for barbarians)
-                if (i == 0) { Civilization civ1 = CreateCiv(0, "NULL", "Barbarian", "Barbarians"); }
+                if (i == 0) { Civilization civ1 = CreateCiv(0, 0, "NULL", "Barbarian", "Barbarians"); }
 
-                Civilization civ = CreateCiv(civCityStyle, civLeaderName, civTribeName, civAdjective);                
+                Civilization civ = CreateCiv(i + 1, civCityStyle, civLeaderName, civTribeName, civAdjective);                
             }
 
 

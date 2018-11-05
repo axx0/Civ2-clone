@@ -18,14 +18,7 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        Label viewingPiecesLabel, cursorPositionLabel;        
-        Label peopleLabel = new Label();
-        Label gameYearLabel = new Label();
-        Label goldLabel = new Label();
-        Label unitNoMovesLabel = new Label();
-        Label unitCityLabel = new Label();
-        Label unitCivLabel = new Label();
-        Label unitTypeLabel = new Label();
+        Label viewingPiecesLabel, cursorPositionLabel, peopleLabel, gameYearLabel, goldLabel, unitNoMovesLabel, unitCityLabel, unitCivLabel, unitTypeLabel;
         Label unitTerrainLabel = new Label();
         Label roadPresentLabel = new Label();
         Label endOfTurnLabel = new Label();
@@ -85,12 +78,15 @@ namespace PoskusCiv2.Forms
             cursorPositionLabel.Visible = false;
 
             //No of people label
-            peopleLabel.AutoSize = true;
-            peopleLabel.Location = new Point(13, 45);
-            peopleLabel.Font = new Font("Times New Roman", 12);
-            peopleLabel.ForeColor = Color.FromArgb(25,25,25);
-            peopleLabel.Text = Game.people.ToString("#,##") + " People";
-            this.Controls.Add(peopleLabel);
+            peopleLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 45),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                Text = Game.people.ToString("#,##") + " People"
+            };
+            Controls.Add(peopleLabel);
             var pos1 = this.PointToScreen(peopleLabel.Location);            //making the label transparent in panel
             pos1 = panel2.PointToClient(pos1);
             peopleLabel.Parent = panel2;
@@ -98,13 +94,16 @@ namespace PoskusCiv2.Forms
             peopleLabel.BackColor = Color.Transparent;
 
             //Game year label
-            gameYearLabel.AutoSize = true;
-            gameYearLabel.Location = new Point(13, 63);
-            gameYearLabel.Font = new Font("Times New Roman", 12);
-            gameYearLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            gameYearLabel.BackColor = Color.Transparent;
-            gameYearLabel.Text = Math.Abs(Game.gameYear).ToString() + " B.C. (Turn " + Game.gameTurn.ToString() + ")";
-            this.Controls.Add(gameYearLabel);
+            gameYearLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 63),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = Math.Abs(Game.gameYear).ToString() + " B.C. (Turn " + Game.gameTurn.ToString() + ")"
+            };
+            Controls.Add(gameYearLabel);
             var pos2 = this.PointToScreen(gameYearLabel.Location);            //making the label transparent in panel
             pos2 = panel2.PointToClient(pos2);
             gameYearLabel.Parent = panel2;
@@ -112,13 +111,16 @@ namespace PoskusCiv2.Forms
             gameYearLabel.BackColor = Color.Transparent;
 
             //No of gold pieces label
-            goldLabel.AutoSize = true;
-            goldLabel.Location = new Point(13, 81);
-            goldLabel.Font = new Font("Times New Roman", 12);
-            goldLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            goldLabel.BackColor = Color.Transparent;
-            goldLabel.Text = Game.gold.ToString() + " Gold";
-            this.Controls.Add(goldLabel);
+            Label goldLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 81),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = Game.gold.ToString() + " Gold"
+            };
+            Controls.Add(goldLabel);
             var pos3 = this.PointToScreen(goldLabel.Location);            //making the label transparent in panel
             pos3 = panel2.PointToClient(pos3);
             goldLabel.Parent = panel2;
@@ -126,12 +128,16 @@ namespace PoskusCiv2.Forms
             goldLabel.BackColor = Color.Transparent;
 
             //Unit no of moves label
-            unitNoMovesLabel.AutoSize = true;
-            unitNoMovesLabel.Location = new Point(90, 140);
-            unitNoMovesLabel.Font = new Font("Times New Roman", 12);
-            unitNoMovesLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            unitNoMovesLabel.BackColor = Color.Transparent;
-            unitNoMovesLabel.Text = "Moves:";
+            Label unitNoMovesLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(90, 140),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = "Moves:"
+            };
+            Controls.Add(unitNoMovesLabel);
             var pos6 = this.PointToScreen(unitNoMovesLabel.Location);            //making the label transparent in panel
             pos6 = panel1.PointToClient(pos6);
             unitNoMovesLabel.Parent = panel1;
@@ -139,12 +145,16 @@ namespace PoskusCiv2.Forms
             unitNoMovesLabel.BackColor = Color.Transparent;
 
             //Unit city label
-            unitCityLabel.AutoSize = true;
-            unitCityLabel.Location = new Point(90, 140+18);
-            unitCityLabel.Font = new Font("Times New Roman", 12);
-            unitCityLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            unitCityLabel.BackColor = Color.Transparent;
-            unitCityLabel.Text = "City";
+            Label unitCityLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(90, 140 + 18),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = "City"
+            };
+            Controls.Add(unitCityLabel);
             var pos7 = this.PointToScreen(unitCityLabel.Location);            //making the label transparent in panel
             pos7 = panel1.PointToClient(pos7);
             unitCityLabel.Parent = panel1;
@@ -152,12 +162,16 @@ namespace PoskusCiv2.Forms
             unitCityLabel.BackColor = Color.Transparent;
 
             //Unit civ label
-            unitCivLabel.AutoSize = true;
-            unitCivLabel.Location = new Point(90, 140 + 18 + 18);
-            unitCivLabel.Font = new Font("Times New Roman", 12);
-            unitCivLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            unitCivLabel.BackColor = Color.Transparent;
-            unitCivLabel.Text = "Civ";
+            Label unitCivLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(90, 140 + 18 + 18),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = "Civ"
+            };
+            Controls.Add(unitCivLabel);
             var pos8 = this.PointToScreen(unitCivLabel.Location);            //making the label transparent in panel
             pos8 = panel1.PointToClient(pos8);
             unitCivLabel.Parent = panel1;
@@ -165,12 +179,16 @@ namespace PoskusCiv2.Forms
             unitCivLabel.BackColor = Color.Transparent;
 
             //Unit type label
-            unitTypeLabel.AutoSize = true;
-            unitTypeLabel.Location = new Point(13, 140 + 18 + 18 + 18);
-            unitTypeLabel.Font = new Font("Times New Roman", 12);
-            unitTypeLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            unitTypeLabel.BackColor = Color.Transparent;
-            unitTypeLabel.Text = "Type";
+            Label unitTypeLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 140 + 18 + 18 + 18),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = "Type"
+            };
+            Controls.Add(unitTypeLabel);
             var pos9 = this.PointToScreen(unitTypeLabel.Location);            //making the label transparent in panel
             pos9 = panel1.PointToClient(pos9);
             unitTypeLabel.Parent = panel1;
@@ -249,55 +267,55 @@ namespace PoskusCiv2.Forms
         {
             if (MapForm.viewingPiecesMode == false)
             {
-                if (unitInLine != Units_.unitNumber) //cycle through all units
-                {
-                    viewingPiecesLabel.Text = "Moving Units";
-                    cursorPositionLabel.Visible = false;
-                    endOfTurnLabel.Visible = false;
-                    unitNoMovesLabel.Visible = true;
-                    unitCityLabel.Visible = true;
-                    unitCivLabel.Visible = true;
-                    unitTerrainLabel.Visible = true;
-                    unitTypeLabel.Visible = true;
-                    unitPicture.Visible = true;
-                    int _movesLeft = Game.Instance.ActiveUnit.MovesLeft;
-                    if (_movesLeft % 3 == 0)
-                    {
-                        unitNoMovesLabel.Text = "Moves: " + (_movesLeft / 3).ToString();
-                    }
-                    else
-                    {
-                        unitNoMovesLabel.Text = "Moves: " + Convert.ToInt32(Math.Floor((double)_movesLeft / 3)).ToString() + " " + (_movesLeft % 3).ToString() + "/3";
-                    }
-                    if (Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Road && !Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].CityPresent) { roadPresentLabel.Text = "(Road)"; }
-                    else { roadPresentLabel.Text = null; }
-                    if (Game.Instance.ActiveUnit.HomeCity == 255) { unitCityLabel.Text = "NONE"; }  //FF in hex
-                    else { unitCityLabel.Text = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
-                    unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
-                    if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
-                    else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
-                    unitTerrainLabel.Text = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
-                    unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
-                    unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
-                }
-                else    //end of units, display wait for enter for new turn
-                {
-                    endOfTurnLabel.Visible = true;
-                    cursorPositionLabel.Visible = false;
-                    unitNoMovesLabel.Visible = false;
-                    unitCityLabel.Visible = false;
-                    unitCivLabel.Visible = false;
-                    roadPresentLabel.Visible = false;
-                    unitTerrainLabel.Visible = false;
-                    unitTypeLabel.Visible = false;
-                    unitPicture.Visible = false;
-                    unitShieldPicture.Visible = false;
+                //if (unitInLine != Units_.unitNumber) //cycle through all units
+                //{
+                //    viewingPiecesLabel.Text = "Moving Units";
+                //    cursorPositionLabel.Visible = false;
+                //    endOfTurnLabel.Visible = false;
+                //    unitNoMovesLabel.Visible = true;
+                //    unitCityLabel.Visible = true;
+                //    unitCivLabel.Visible = true;
+                //    unitTerrainLabel.Visible = true;
+                //    unitTypeLabel.Visible = true;
+                //    unitPicture.Visible = true;
+                //    int _movesLeft = Game.Instance.ActiveUnit.MovesLeft;
+                //    if (_movesLeft % 3 == 0)
+                //    {
+                //        unitNoMovesLabel.Text = "Moves: " + (_movesLeft / 3).ToString();
+                //    }
+                //    else
+                //    {
+                //        unitNoMovesLabel.Text = "Moves: " + Convert.ToInt32(Math.Floor((double)_movesLeft / 3)).ToString() + " " + (_movesLeft % 3).ToString() + "/3";
+                //    }
+                //    if (Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Road && !Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].CityPresent) { roadPresentLabel.Text = "(Road)"; }
+                //    else { roadPresentLabel.Text = null; }
+                //    if (Game.Instance.ActiveUnit.HomeCity == 255) { unitCityLabel.Text = "NONE"; }  //FF in hex
+                //    else { unitCityLabel.Text = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
+                //    unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
+                //    if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
+                //    else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
+                //    unitTerrainLabel.Text = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
+                //    unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
+                //    unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
+                //}
+                //else    //end of units, display wait for enter for new turn
+                //{
+                //    endOfTurnLabel.Visible = true;
+                //    cursorPositionLabel.Visible = false;
+                //    unitNoMovesLabel.Visible = false;
+                //    unitCityLabel.Visible = false;
+                //    unitCivLabel.Visible = false;
+                //    roadPresentLabel.Visible = false;
+                //    unitTerrainLabel.Visible = false;
+                //    unitTypeLabel.Visible = false;
+                //    unitPicture.Visible = false;
+                //    unitShieldPicture.Visible = false;
 
-                    //timer for animating text
-                    t.Interval = 500; // specify interval time as you want (ms)
-                    t.Tick += new EventHandler(timer_Tick);
-                    t.Start();
-                }
+                //    //timer for animating text
+                //    t.Interval = 500; // specify interval time as you want (ms)
+                //    t.Tick += new EventHandler(timer_Tick);
+                //    t.Start();
+                //}
             }
             else
             {
@@ -321,7 +339,7 @@ namespace PoskusCiv2.Forms
             endOfTurnLabel.Visible = false;
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
             stej += 1;
 

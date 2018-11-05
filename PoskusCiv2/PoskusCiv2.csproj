@@ -45,9 +45,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\City.cs" />
     <Compile Include="src\Civilization.cs" />
-    <Compile Include="src\Civilizations.cs" />
     <Compile Include="src\BaseInstance.cs" />
     <Compile Include="src\Data.cs" />
     <Compile Include="src\Enums\ImprovementType.cs" />
@@ -127,7 +129,6 @@
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\GameData.cs" />
     <Compile Include="src\Forms\StatusForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,7 +148,6 @@
     <Compile Include="src\Terrains\Forest.cs" />
     <Compile Include="src\Terrains\Desert.cs" />
     <Compile Include="src\Terrains\ITerrain.cs" />
-    <Compile Include="src\Unit.cs" />
     <Compile Include="src\Units\AEGISCruiser.cs" />
     <Compile Include="src\Units\AlpineTroops.cs" />
     <Compile Include="src\Units\Archers.cs" />
@@ -200,7 +200,6 @@
     <Compile Include="src\Units\IUnit.cs" />
     <Compile Include="src\Units\Engineers.cs" />
     <Compile Include="src\Units\Settlers.cs" />
-    <Compile Include="src\Units_.cs" />
     <Compile Include="src\Units\BaseUnit.cs" />
     <Compile Include="src\Forms\WorldMapForm.cs">
       <SubType>Form</SubType>

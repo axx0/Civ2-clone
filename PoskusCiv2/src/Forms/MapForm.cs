@@ -35,15 +35,14 @@ namespace PoskusCiv2.Forms
         
         CreateUnitForm createUnitForm = new CreateUnitForm();
 
-        //a helpful label
-        Label helpfulLabel;
+        DoubleBufferedPanel MapPanel;
 
         Pen pulsatingRectPen = new Pen(Color.White, 1);
 
         public MapForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
-            this.Size = new Size(1260, 770);
+            this.Size = new Size(1270, 810);
             this.BackColor = Color.Black;
             this.FormBorderStyle = FormBorderStyle.None;
             this.BackgroundImage = Images.WallpaperMapForm;
@@ -51,15 +50,15 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
 
             //Panel for map
-            Panel MapPanel = new Panel
+            MapPanel = new DoubleBufferedPanel
             {
                 Location = new Point(5, 35),
-                Size = new Size(1250, 730),
+                Size = new Size(1245, 730),
                 //BackgroundImage = Images.CityWallpaper,
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(MapPanel);
-            MapPanel.Paint += new PaintEventHandler(MapPanel_Paint);
+            MapPanel.Paint += MapPanel_Paint;
             MapPanel.MouseClick += MapPanel_MouseClick;
         }
 
@@ -67,31 +66,20 @@ namespace PoskusCiv2.Forms
         {
             //timer for animating units
             t.Interval = 200; // specify interval time as you want (ms)
-            t.Tick += new EventHandler(timer_Tick);
+            t.Tick += new EventHandler(Timer_Tick);
             t.Start();
 
-            //a helpful label
-            helpfulLabel = new Label
-            {
-                AutoSize = true,
-                Location = new Point(1100, 700),
-                ForeColor = Color.White,
-                Text = "WAITING..."
-            };
-            Controls.Add(helpfulLabel);
-
             CreateUnit = false; //for start
-            
-            //for calculation of moving with mouse in MapForm
-            BoxNoX = (int)Math.Floor((double)this.ClientSize.Width / 64);   //No of squares in X and Y direction
-            BoxNoY = (int)Math.Floor((double)this.ClientSize.Height / 32);            
+
+            //for calculation of moving with mouse in MapForm   
+            BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);   //No of squares in X and Y direction
+            BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2); //Determine the square in the center of figure
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
             offsetX = 0; //starting offset from (0,0)
             offsetY = 0;
         }
 
-        //At press enter update game turn+year in status form
         private void MapForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             //Play movement sound for unit
@@ -102,6 +90,13 @@ namespace PoskusCiv2.Forms
 
         private void MapForm_Paint(object sender, PaintEventArgs e)
         {
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            Civilization myCiv = Game.Civs.Find(civ => civ.Id == Game.Data.PlayersCivilizationNumberUsed);
+            e.Graphics.DrawString(myCiv.Adjective + " Map", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString(myCiv.Adjective + " Map", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            sf.Dispose();
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -113,7 +108,6 @@ namespace PoskusCiv2.Forms
                 0,
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
                 GraphicsUnit.Pixel);
-
 
             //Draw all units
             int x, y;
@@ -264,23 +258,16 @@ namespace PoskusCiv2.Forms
             //Draw (x,y) locations on grid
             if (DrawXYnumbers)
             {
-                Graphics formGraphics = this.CreateGraphics();
-                Font drawFont = new Font("Arial", 8);
-                SolidBrush drawBrush = new SolidBrush(Color.Yellow);
-                StringFormat drawFormat = new StringFormat();
                 for (int i = 0; i < BoxNoX; i++)
                 {
                     for (int j = 0; j < BoxNoY; j++)
                     {
                         x = i * 64 + 12;
                         y = j * 32 + 8;
-                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + offsetX, 2 * j + offsetY), drawFont, drawBrush, x, y, drawFormat); //for first horizontal line
-                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + 1 + offsetX, 2 * j + 1 + offsetY), drawFont, drawBrush, x + 32, y + 16, drawFormat); //for second horizontal line
+                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + offsetX, 2 * j + offsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x, y, new StringFormat()); //for first horizontal line
+                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + 1 + offsetX, 2 * j + 1 + offsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x + 32, y + 16, new StringFormat()); //for second horizontal line
                     }
                 }
-                drawFont.Dispose();
-                drawBrush.Dispose();
-                formGraphics.Dispose();
             }
       
             //Draw viewing pieces
@@ -296,9 +283,9 @@ namespace PoskusCiv2.Forms
         { }
 
         private void MapPanel_MouseClick(object sender, MouseEventArgs e)
-        {
-            BoxNoX = (int)Math.Floor((double)this.ClientSize.Width / 64);//Calculate No of squares in the form in X and Y
-            BoxNoY = (int)Math.Floor((double)this.ClientSize.Height / 32);            
+        {           
+            BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);//Calculate No of squares in the form in X and Y
+            BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2);//Determine the square in the center of figure
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
 
@@ -311,7 +298,7 @@ namespace PoskusCiv2.Forms
             ClickedBoxY = nY - nX + offsetY;
             offsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
-            Invalidate();
+            MapPanel.Invalidate();
 
             //Convert coordinates from Civ-2 style to real coordinates (only x, y is OK)
             ClickedBoxX = (ClickedBoxX - (ClickedBoxY % 2)) / 2;
@@ -337,16 +324,12 @@ namespace PoskusCiv2.Forms
             }
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        void Timer_Tick(object sender, EventArgs e)
         {
-            //helpful label
             stej += 1;
-            helpfulLabel.Text = Convert.ToString(stej/5) + " sec";
-            helpfulLabel.Refresh();
-
             //update viewing pieces
-            //this.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
-            this.Invalidate();
+            //MapPanel.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
+            MapPanel.Invalidate();
         }
 
     }

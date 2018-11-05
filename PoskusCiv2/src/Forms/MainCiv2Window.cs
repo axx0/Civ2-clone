@@ -17,8 +17,6 @@ namespace PoskusCiv2.Forms
         public WorldMapForm worldMapForm;
         public CityForm cityForm;
 
-        Label label1 = new Label(); //for testing
-
         public MainCiv2Window()
         {
             InitializeComponent();
@@ -27,12 +25,6 @@ namespace PoskusCiv2.Forms
             statusForm = new StatusForm(this);
             worldMapForm = new WorldMapForm(this);
             cityForm = new CityForm(this);
-
-            label1.AutoSize = true;
-            label1.Location = new Point(1100, 30);
-            label1.ForeColor = Color.Black;
-            label1.Text = "WAITING...";
-            this.Controls.Add(label1);
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)

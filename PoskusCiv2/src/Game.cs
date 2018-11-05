@@ -74,6 +74,8 @@ namespace PoskusCiv2
 
         public static void NewTurn()
         {
+            Data.TurnNumber += 1;
+
             //At beginning of turn, set all units to active
             foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
@@ -141,155 +143,155 @@ namespace PoskusCiv2
         }
 
         //User pressed a key
-        public static void _UserInput(char pressedKey)
-        {
+        //public static void _UserInput(char pressedKey)
+        //{
 
-            //if it is not end of turn, give orders for unit movement, otherwise wait for enter
-            if (unitInLine != Units_.unitNumber)
-            {
-                //determine what happens to the moved unit
-                Game.DetermineUnitMovementOutcome(pressedKey);                
+        //    //if it is not end of turn, give orders for unit movement, otherwise wait for enter
+        //    if (unitInLine != Units_.unitNumber)
+        //    {
+        //        //determine what happens to the moved unit
+        //        Game.DetermineUnitMovementOutcome(pressedKey);                
 
-                //TO-DO:
-                //If there are multiple units on top another, determine which ones are to be drawn
-                //Currently active unit always has to be on top
-                //Also draw only units in visual range of screen
+        //        //TO-DO:
+        //        //If there are multiple units on top another, determine which ones are to be drawn
+        //        //Currently active unit always has to be on top
+        //        //Also draw only units in visual range of screen
 
-                Application.OpenForms.OfType<Forms.MapForm>().First().Invalidate();   //redraw MapForm because of movement
-            }
-            else    
-            {
-                //last unit has moved. Wait for enter and then reset movement counter.
-                //currently: unitInLine = Units_.unitNumber
-                if (pressedKey == (char)Keys.Enter)
-                {
-                    unitInLine = 0; //start over
-                    Application.OpenForms.OfType<Forms.StatusForm>().First().StopTimerInStatusForm(); //stop animating text in status form
-                    Game.NewTurn();
-                }
-            }
+        //        Application.OpenForms.OfType<Forms.MapForm>().First().Invalidate();   //redraw MapForm because of movement
+        //    }
+        //    else    
+        //    {
+        //        //last unit has moved. Wait for enter and then reset movement counter.
+        //        //currently: unitInLine = Units_.unitNumber
+        //        if (pressedKey == (char)Keys.Enter)
+        //        {
+        //            unitInLine = 0; //start over
+        //            Application.OpenForms.OfType<Forms.StatusForm>().First().StopTimerInStatusForm(); //stop animating text in status form
+        //            Game.NewTurn();
+        //        }
+        //    }
 
-            Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
+        //    Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
 
-        }
+        //}
 
         //Determine what happens to the unit when a key is pressed
-        public static void DetermineUnitMovementOutcome(char pressedKey)
-        {
-            int intendedX = 0, intendedY = 0, indexAttackedEnemy = 0, indeks = 0;
-            bool wrongKeyIsPressed = false, enemyIsThere = false, movementAllowed = true;
+        //public static void DetermineUnitMovementOutcome(char pressedKey)
+        //{
+        //    int intendedX = 0, intendedY = 0, indexAttackedEnemy = 0, indeks = 0;
+        //    bool wrongKeyIsPressed = false, enemyIsThere = false, movementAllowed = true;
 
-            //1) calculate intended x-y locations
-            if (pressedKey == '4') { intendedX = -2; intendedY = 0; }
-            else if (pressedKey == '6') { intendedX = 2; intendedY = 0; }
-            else if (pressedKey == '8') { intendedX = 0; intendedY = -2; }
-            else if (pressedKey == '2') { intendedX = 0; intendedY = 2; }
-            else if (pressedKey == '9') { intendedX = 1; intendedY = -1; }
-            else if (pressedKey == '7') { intendedX = -1; intendedY = -1; }
-            else if (pressedKey == '1') { intendedX = -1; intendedY = 1; }
-            else if (pressedKey == '3') { intendedX = 1; intendedY = 1; }
-            else if (pressedKey == (char)Keys.Space) { intendedX = 0; intendedY = 0; }
-            else { wrongKeyIsPressed = true; }
+        //    //1) calculate intended x-y locations
+        //    if (pressedKey == '4') { intendedX = -2; intendedY = 0; }
+        //    else if (pressedKey == '6') { intendedX = 2; intendedY = 0; }
+        //    else if (pressedKey == '8') { intendedX = 0; intendedY = -2; }
+        //    else if (pressedKey == '2') { intendedX = 0; intendedY = 2; }
+        //    else if (pressedKey == '9') { intendedX = 1; intendedY = -1; }
+        //    else if (pressedKey == '7') { intendedX = -1; intendedY = -1; }
+        //    else if (pressedKey == '1') { intendedX = -1; intendedY = 1; }
+        //    else if (pressedKey == '3') { intendedX = 1; intendedY = 1; }
+        //    else if (pressedKey == (char)Keys.Space) { intendedX = 0; intendedY = 0; }
+        //    else { wrongKeyIsPressed = true; }
 
-            //2) determine what happens to the units 
-            if (pressedKey == (char)Keys.Space)   //SPACE is pressed
-            {
-                Units_.unitTurnsLeft[unitInLine] = 0;
-            }
-            else if (wrongKeyIsPressed == true) //wrong key is pressed? Then do nothing.
-            {
+        //    //2) determine what happens to the units 
+        //    if (pressedKey == (char)Keys.Space)   //SPACE is pressed
+        //    {
+        //        Units_.unitTurnsLeft[unitInLine] = 0;
+        //    }
+        //    else if (wrongKeyIsPressed == true) //wrong key is pressed? Then do nothing.
+        //    {
 
-            }
-            else  //Movement key is pressed. Determine if enemy civ is in square (then attack it) or not (then just move)
-            {
-                //Determine if enemy is on the intended moved square
-                for (int i = 0; i < Units_.unitNumber; i++)
-                {
-                    if (i != unitInLine)    //skip yourself
-                    {
-                        if ((Units_.locationX[unitInLine] + intendedX == Units_.locationX[i]) && (Units_.locationY[unitInLine] + intendedY == Units_.locationY[i]) && (Units_.unitCiv[unitInLine] != Units_.unitCiv[i])) { enemyIsThere = true; indexAttackedEnemy = i; }  //if X and Y locations are the same and unit is not of same Civ
-                    }                    
-                }
+        //    }
+        //    else  //Movement key is pressed. Determine if enemy civ is in square (then attack it) or not (then just move)
+        //    {
+        //        //Determine if enemy is on the intended moved square
+        //        for (int i = 0; i < Units_.unitNumber; i++)
+        //        {
+        //            if (i != unitInLine)    //skip yourself
+        //            {
+        //                if ((Units_.locationX[unitInLine] + intendedX == Units_.locationX[i]) && (Units_.locationY[unitInLine] + intendedY == Units_.locationY[i]) && (Units_.unitCiv[unitInLine] != Units_.unitCiv[i])) { enemyIsThere = true; indexAttackedEnemy = i; }  //if X and Y locations are the same and unit is not of same Civ
+        //            }                    
+        //        }
 
-                //If enemy is in the new square, delete it, else just move
-                if (enemyIsThere)
-                {
-                    Units_.locationX[unitInLine] += 0;
-                    Units_.locationY[unitInLine] += 0;
-                    Units_.unitTurnsLeft[unitInLine] -= 1;
-                    // attack! Delete the unit which lost (attacker or defender).
-                    Game.AttackUnit(unitInLine, indexAttackedEnemy);
-                    //Game.fightSound.Play();
-                    if (unitInLine == Units_.unitNumber) { unitInLine = 0; } //unit destroyed was last unit. Restart counter.
-                }
-                else    // just movement
-                {
-                    //determine if movement is forbidden
-                    indeks = (Units_.locationY[unitInLine] + intendedY) * Game.Data.MapXdim + (int)Math.Floor((double)Units_.locationX[unitInLine] + (double)intendedX) / 2; //index of map terrain of intended movement
+        //        //If enemy is in the new square, delete it, else just move
+        //        if (enemyIsThere)
+        //        {
+        //            Units_.locationX[unitInLine] += 0;
+        //            Units_.locationY[unitInLine] += 0;
+        //            Units_.unitTurnsLeft[unitInLine] -= 1;
+        //            // attack! Delete the unit which lost (attacker or defender).
+        //            Game.AttackUnit(unitInLine, indexAttackedEnemy);
+        //            //Game.fightSound.Play();
+        //            if (unitInLine == Units_.unitNumber) { unitInLine = 0; } //unit destroyed was last unit. Restart counter.
+        //        }
+        //        else    // just movement
+        //        {
+        //            //determine if movement is forbidden
+        //            indeks = (Units_.locationY[unitInLine] + intendedY) * Game.Data.MapXdim + (int)Math.Floor((double)Units_.locationX[unitInLine] + (double)intendedX) / 2; //index of map terrain of intended movement
 
-                    //Land unit cannot move into ocean:
-                    //if ((Units_.landseaairUnit[Units_.unitType[unitInLine]] == 1) && ((Game.Terrain[indeks] == 10) || (DrawMap.Map.Terrain[indeks] == 74)))
-                    //{
-                    //    movementAllowed = false;
-                    //}
-                    //Sea unit cannot move into land:
-                    //if ((Units_.landseaairUnit[Units_.unitType[unitInLine]] == 2) && ((DrawMap.Map.Terrain[indeks] != 10) && (DrawMap.Map.Terrain[indeks] != 74)))
-                    //{
-                    //    movementAllowed = false;
-                    //}
+        //            //Land unit cannot move into ocean:
+        //            //if ((Units_.landseaairUnit[Units_.unitType[unitInLine]] == 1) && ((Game.Terrain[indeks] == 10) || (DrawMap.Map.Terrain[indeks] == 74)))
+        //            //{
+        //            //    movementAllowed = false;
+        //            //}
+        //            //Sea unit cannot move into land:
+        //            //if ((Units_.landseaairUnit[Units_.unitType[unitInLine]] == 2) && ((DrawMap.Map.Terrain[indeks] != 10) && (DrawMap.Map.Terrain[indeks] != 74)))
+        //            //{
+        //            //    movementAllowed = false;
+        //            //}
 
-                    //move if allowed, else do nothing
-                    if (movementAllowed == true)
-                    {
-                        //Game.moveSound.Play();
-                        Units_.locationX[unitInLine] += intendedX;
-                        Units_.locationY[unitInLine] += intendedY;
-                        Units_.unitTurnsLeft[unitInLine] -= 1;
-                    }
-                }
-            }
+        //            //move if allowed, else do nothing
+        //            if (movementAllowed == true)
+        //            {
+        //                //Game.moveSound.Play();
+        //                Units_.locationX[unitInLine] += intendedX;
+        //                Units_.locationY[unitInLine] += intendedY;
+        //                Units_.unitTurnsLeft[unitInLine] -= 1;
+        //            }
+        //        }
+        //    }
 
-            //3) If no moves are left --> move to next unit and reset no of turns of this unit
-            if (Units_.unitTurnsLeft[unitInLine] == 0)
-            {
-                Units_.unitTurnsLeft[unitInLine] = Units_.unitTurns[Units_.unitType[unitInLine]];  //reset turns counter
-                unitInLine = unitInLine + 1;
-            }
+        //    //3) If no moves are left --> move to next unit and reset no of turns of this unit
+        //    if (Units_.unitTurnsLeft[unitInLine] == 0)
+        //    {
+        //        Units_.unitTurnsLeft[unitInLine] = Units_.unitTurns[Units_.unitType[unitInLine]];  //reset turns counter
+        //        unitInLine = unitInLine + 1;
+        //    }
 
-        }
+        //}
 
         //Unit in line is attacking another one
-        public static void AttackUnit(int attackerIndex, int defenderIndex)
-        {
-            bool attackerWon;
-            int indeks = 0;
+        //public static void AttackUnit(int attackerIndex, int defenderIndex)
+        //{
+        //    bool attackerWon;
+        //    int indeks = 0;
 
-            //1) Determine outcome of attack
-            attackerWon = true;
+        //    //1) Determine outcome of attack
+        //    attackerWon = true;
 
-            //2) Defeated unit should be removed from list
-            if (attackerWon)
-            {
-                indeks = defenderIndex; //attacker won, remove defender
-            }
-            else
-            {
-                indeks = attackerIndex; //defender won, remove attacker
-            }
-            Units_.unitNumber -= 1;
-            Units_.unitType = Units_.unitType.RemoveAt(indeks);  //remove unit elements from arrays
-            Units_.unitTurnsLeft = Units_.unitTurnsLeft.RemoveAt(indeks);
-            Units_.veteranStatus = Units_.veteranStatus.RemoveAt(indeks);
-            Units_.locationX = Units_.locationX.RemoveAt(indeks);
-            Units_.locationY = Units_.locationY.RemoveAt(indeks);
-            Units_.unitCity = Units_.unitCity.RemoveAt(indeks);
-            Units_.unitCiv = Units_.unitCiv.RemoveAt(indeks);
+        //    //2) Defeated unit should be removed from list
+        //    if (attackerWon)
+        //    {
+        //        indeks = defenderIndex; //attacker won, remove defender
+        //    }
+        //    else
+        //    {
+        //        indeks = attackerIndex; //defender won, remove attacker
+        //    }
+        //    Units_.unitNumber -= 1;
+        //    Units_.unitType = Units_.unitType.RemoveAt(indeks);  //remove unit elements from arrays
+        //    Units_.unitTurnsLeft = Units_.unitTurnsLeft.RemoveAt(indeks);
+        //    Units_.veteranStatus = Units_.veteranStatus.RemoveAt(indeks);
+        //    Units_.locationX = Units_.locationX.RemoveAt(indeks);
+        //    Units_.locationY = Units_.locationY.RemoveAt(indeks);
+        //    Units_.unitCity = Units_.unitCity.RemoveAt(indeks);
+        //    Units_.unitCiv = Units_.unitCiv.RemoveAt(indeks);
             
-            //3) Update index of current unit in line
-            if (unitInLine == indeks) { }   //Attacker lost. No need to change index.
-            else if (unitInLine < indeks) { }   //Defender (who lost) has higher index. Do nothing.
-            else { unitInLine -= 1; }   //Defender (who lost) has lower index. Reduce current unit index by 1.
-        }
+        //    //3) Update index of current unit in line
+        //    if (unitInLine == indeks) { }   //Attacker lost. No need to change index.
+        //    else if (unitInLine < indeks) { }   //Defender (who lost) has higher index. Do nothing.
+        //    else { unitInLine -= 1; }   //Defender (who lost) has lower index. Reduce current unit index by 1.
+        //}
 
         public IUnit ActiveUnit
         {
@@ -479,10 +481,11 @@ namespace PoskusCiv2
             return city;
         }
 
-        public static Civilization CreateCiv(int style, string leaderName, string tribeName, string adjective)
+        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective)
         {
             Civilization civ = new Civilization
             {
+                Id = id,
                 CityStyle = style,
                 LeaderName = leaderName,
                 TribeName = tribeName,

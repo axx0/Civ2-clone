@@ -8,6 +8,7 @@ namespace PoskusCiv2
 {
     public class Civilization
     {
+        public int Id { get; set; }
         public int CityStyle { get; set; }
         public string LeaderName { get; set; }
         public string TribeName { get; set; }
