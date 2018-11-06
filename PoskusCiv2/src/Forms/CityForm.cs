@@ -14,7 +14,7 @@ namespace PoskusCiv2.Forms
     public partial class CityForm : Form
     {
         public MainCiv2Window mainCiv2Window;
-        City City;
+        City ThisCity;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -32,7 +32,7 @@ namespace PoskusCiv2.Forms
             CenterToParent();  //the parent form is not MapForm, so this is not really centered
             Paint += CityForm_Paint;
 
-            City = Game.Cities.Find(city => city.X == cityX && city.Y == cityY);   //find a city for the opened form
+            ThisCity = Game.Cities.Find(city => city.X == cityX && city.Y == cityY);   //find a city for the opened form
 
             //Sizes & locations of 6 buttons in bottom right corner
             Size buttonSize = new Size(55, 25); //size
@@ -152,7 +152,6 @@ namespace PoskusCiv2.Forms
             ExitButton.BringToFront();
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
-
         }
 
         private void CityForm_Paint(object sender, PaintEventArgs e)
@@ -160,8 +159,8 @@ namespace PoskusCiv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("City of " + City.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 13 + 1), sf);
-            e.Graphics.DrawString("City of " + City.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
+            e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 13 + 1), sf);
+            e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
             sf.Dispose();
         }
 
@@ -173,11 +172,17 @@ namespace PoskusCiv2.Forms
         {
         }
 
-
         private void RenameButton_Click(object sender, EventArgs e)
         {
+            CityRenameForm CityRenameForm = new CityRenameForm(ThisCity);
+            CityRenameForm.RefreshCityForm += RefreshThis;
+            CityRenameForm.Show();
         }
 
+        void RefreshThis()
+        {
+            Refresh();
+        }
 
         private void HappyButton_Click(object sender, EventArgs e)
         {
