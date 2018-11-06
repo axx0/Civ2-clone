@@ -176,7 +176,7 @@ namespace PoskusCiv2.Forms
         {
             CityRenameForm CityRenameForm = new CityRenameForm(ThisCity);
             CityRenameForm.RefreshCityForm += RefreshThis;
-            CityRenameForm.Show();
+            CityRenameForm.ShowDialog();
         }
 
         void RefreshThis()

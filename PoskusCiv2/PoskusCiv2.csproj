@@ -141,6 +141,7 @@
     <Compile Include="src\Forms\StatusForm.Designer.cs">
       <DependentUpon>StatusForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Sounds\Sound.cs" />
     <Compile Include="src\Terrains\BaseTerrain.cs" />
     <Compile Include="src\Terrains\Tundra.cs" />
     <Compile Include="src\Terrains\Swamp.cs" />

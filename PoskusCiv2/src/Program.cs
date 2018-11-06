@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using PoskusCiv2.Imagery;
+using PoskusCiv2.Sounds;
 
 namespace PoskusCiv2
 {
@@ -25,6 +26,7 @@ namespace PoskusCiv2
             Images.LoadUnits(@"C:\DOS\CIV 2\Civ2\UNITS.GIF");
             Images.LoadIcons(@"C:\DOS\CIV 2\Civ2\ICONS.GIF");
             Images.LoadWallpapers(@"C:\DOS\CIV 2\Civ2\CITY.GIF");
+            Sound.LoadSounds(@"C:\DOS\CIV 2\Civ2");
             Game.StartGame();
 
             Application.EnableVisualStyles();
