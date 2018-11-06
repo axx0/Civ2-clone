@@ -132,6 +132,7 @@
     <Compile Include="src\Improvements\IImprovement.cs" />
     <Compile Include="src\Improvements\Barracks.cs" />
     <Compile Include="src\Improvements\Palace.cs" />
+    <Compile Include="src\Resources.cs" />
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
