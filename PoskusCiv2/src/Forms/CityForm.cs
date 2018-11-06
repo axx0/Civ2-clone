@@ -14,6 +14,7 @@ namespace PoskusCiv2.Forms
     public partial class CityForm : Form
     {
         public MainCiv2Window mainCiv2Window;
+        City City;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -25,26 +26,13 @@ namespace PoskusCiv2.Forms
         {
             InitializeComponent();
 
-            this.Size = new Size(650, 455);
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.BackgroundImage = Images.WallpaperMapForm;
-            this.CenterToParent();  //the parent form is not MapForm, so this is not really centered
+            Size = new Size(650, 455);
+            FormBorderStyle = FormBorderStyle.None;
+            BackgroundImage = Images.WallpaperMapForm;
+            CenterToParent();  //the parent form is not MapForm, so this is not really centered
+            Paint += CityForm_Paint;
 
-            City City = Game.Cities.Find(city => city.X == cityX && city.Y == cityY);   //find a city for the opened form
-
-            //Text of form
-            Label CityText = new Label
-            {
-                Size = new Size(this.Width, 25),
-                Location = new Point(0, 0),
-                AutoSize = false,
-                TextAlign = ContentAlignment.MiddleCenter,
-                Text = "City of " + City.Name + ", 278 B.C. (Treasury: 250 Gold)",
-                BackColor = Color.Transparent,
-                Font = new Font("Times New Roman", 12.0f),
-                ForeColor = Color.Black
-            };
-            Controls.Add(CityText);
+            City = Game.Cities.Find(city => city.X == cityX && city.Y == cityY);   //find a city for the opened form
 
             //Sizes & locations of 6 buttons in bottom right corner
             Size buttonSize = new Size(55, 25); //size
@@ -74,6 +62,7 @@ namespace PoskusCiv2.Forms
                 Text = "Info"
             };
             InfoButton.FlatAppearance.BorderSize = 0;
+            InfoButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(InfoButton);
             InfoButton.BringToFront();
             InfoButton.Click += new EventHandler(InfoButton_Click);
@@ -90,6 +79,7 @@ namespace PoskusCiv2.Forms
                 Text = "Map"
             };
             MapButton.FlatAppearance.BorderSize = 0;
+            MapButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(MapButton);
             MapButton.BringToFront();
             MapButton.Click += new EventHandler(MapButton_Click);
@@ -106,6 +96,7 @@ namespace PoskusCiv2.Forms
                 Text = "Rename"
             };
             RenameButton.FlatAppearance.BorderSize = 0;
+            RenameButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(RenameButton);
             RenameButton.BringToFront();
             RenameButton.Click += new EventHandler(RenameButton_Click);
@@ -122,6 +113,7 @@ namespace PoskusCiv2.Forms
                 Text = "Happy"
             };
             HappyButton.FlatAppearance.BorderSize = 0;
+            HappyButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(HappyButton);
             HappyButton.BringToFront();
             HappyButton.Click += new EventHandler(HappyButton_Click);
@@ -138,6 +130,7 @@ namespace PoskusCiv2.Forms
                 Text = "View"
             };
             ViewButton.FlatAppearance.BorderSize = 0;
+            ViewButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(ViewButton);
             ViewButton.BringToFront();
             ViewButton.Click += new EventHandler(ViewButton_Click);
@@ -154,11 +147,22 @@ namespace PoskusCiv2.Forms
                 Text = "Exit"
             };
             ExitButton.FlatAppearance.BorderSize = 0;
+            ExitButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(ExitButton);
             ExitButton.BringToFront();
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
+        }
+
+        private void CityForm_Paint(object sender, PaintEventArgs e)
+        {
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            e.Graphics.DrawString("City of " + City.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 13 + 1), sf);
+            e.Graphics.DrawString("City of " + City.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
+            sf.Dispose();
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
@@ -169,9 +173,11 @@ namespace PoskusCiv2.Forms
         {
         }
 
+
         private void RenameButton_Click(object sender, EventArgs e)
         {
         }
+
 
         private void HappyButton_Click(object sender, EventArgs e)
         {

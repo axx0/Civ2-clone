@@ -18,12 +18,8 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        Label viewingPiecesLabel, cursorPositionLabel, peopleLabel, gameYearLabel, goldLabel, unitNoMovesLabel, unitCityLabel, unitCivLabel, unitTypeLabel;
-        Label unitTerrainLabel = new Label();
-        Label roadPresentLabel = new Label();
-        Label endOfTurnLabel = new Label();
-        PictureBox unitPicture = new PictureBox();
-        PictureBox unitShieldPicture = new PictureBox();
+        Label viewingPiecesLabel, cursorPositionLabel, peopleLabel, gameYearLabel, goldLabel, unitNoMovesLabel, unitCityLabel, unitCivLabel, unitTypeLabel, unitTerrainLabel, roadPresentLabel, endOfTurnLabel;
+        PictureBox unitPicture, unitShieldPicture;
         DrawUnits drawUnit = new DrawUnits();
 
         //timer
@@ -196,12 +192,16 @@ namespace PoskusCiv2.Forms
             unitTypeLabel.BackColor = Color.Transparent;
 
             //Unit terrain label
-            unitTerrainLabel.AutoSize = true;
-            unitTerrainLabel.Location = new Point(13, 140 + 18 + 18 + 18 + 18);
-            unitTerrainLabel.Font = new Font("Times New Roman", 12);
-            unitTerrainLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            unitTerrainLabel.BackColor = Color.Transparent;
-            unitTerrainLabel.Text = "()";
+            Label unitTerrainLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 140 + 18 + 18 + 18 + 18),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = "()"
+            };
+            Controls.Add(unitTerrainLabel);
             var pos10 = this.PointToScreen(unitTerrainLabel.Location);            //making the label transparent in panel
             pos10 = panel1.PointToClient(pos10);
             unitTerrainLabel.Parent = panel1;
@@ -209,11 +209,15 @@ namespace PoskusCiv2.Forms
             unitTerrainLabel.BackColor = Color.Transparent;
 
             //Road present label
-            roadPresentLabel.AutoSize = true;
-            roadPresentLabel.Location = new Point(13, 140 + 18 + 18 + 18 + 18 + 18);
-            roadPresentLabel.Font = new Font("Times New Roman", 12);
-            roadPresentLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            roadPresentLabel.BackColor = Color.Transparent;
+            Label roadPresentLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(13, 140 + 18 + 18 + 18 + 18 + 18),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent
+            };
+            Controls.Add(roadPresentLabel);
             var pos11 = this.PointToScreen(roadPresentLabel.Location);            //making the label transparent in panel
             pos11 = panel1.PointToClient(pos11);
             roadPresentLabel.Parent = panel1;
@@ -221,12 +225,16 @@ namespace PoskusCiv2.Forms
             roadPresentLabel.BackColor = Color.Transparent;
 
             //End-of-turn label
-            endOfTurnLabel.AutoSize = true;
-            endOfTurnLabel.Location = new Point(20, 510);
-            endOfTurnLabel.Font = new Font("Times New Roman", 12);
-            endOfTurnLabel.ForeColor = Color.FromArgb(25, 25, 25);
-            endOfTurnLabel.BackColor = Color.Transparent;
-            endOfTurnLabel.Text = "End of Turn \n (Press ENTER)";
+            Label endOfTurnLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point(20, 510),
+                Font = new Font("Times New Roman", 12),
+                ForeColor = Color.FromArgb(25, 25, 25),
+                BackColor = Color.Transparent,
+                Text = "End of Turn \n (Press ENTER)"
+            };
+            Controls.Add(endOfTurnLabel);
             var pos12 = this.PointToScreen(endOfTurnLabel.Location);            //making the label transparent in panel
             pos12 = panel1.PointToClient(pos12);
             endOfTurnLabel.Parent = panel1;
@@ -235,12 +243,19 @@ namespace PoskusCiv2.Forms
             endOfTurnLabel.Visible = false;
 
             //Picture of unit in status form
-            unitShieldPicture.Location = new Point(5, 30);
-            unitShieldPicture.BackColor = Color.Transparent;
-            unitPicture.Location = new Point(10, 30);
-            unitPicture.BackColor = Color.Transparent;
-            unitPicture.Parent = unitShieldPicture;
+            PictureBox unitShieldPicture = new PictureBox
+            {
+                Location = new Point(5, 30),
+                BackColor = Color.Transparent
+            };
             //panel1.Controls.Add(unitShieldPicture);
+
+            PictureBox unitPicture = new PictureBox
+            {
+                Location = new Point(10, 30),
+                BackColor = Color.Transparent,
+                Parent = unitShieldPicture
+            };
             panel1.Controls.Add(unitPicture);
 
             UpdateUnitLabels(0);    //show unit labels in the beginning
