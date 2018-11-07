@@ -30,7 +30,6 @@ namespace PoskusCiv2.Forms
             Bitmap wallpaperStatusForm = (Bitmap)iconsGIF.Clone(srcRect2, iconsGIF.PixelFormat);
             tableLayoutPanel1.BackgroundImage = wallpaperMapForm;
             panel1.BackgroundImage = wallpaperStatusForm;   //Panel background image
-
         }
 
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)

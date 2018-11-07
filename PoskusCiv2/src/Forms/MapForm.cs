@@ -31,7 +31,8 @@ namespace PoskusCiv2.Forms
         int stej = 0;   //records no of timer ticks
 
         ImportSavegame importMap = new ImportSavegame();
-        DrawMap MapBitmap = new DrawMap();
+        Draw MapBitmap = new Draw();
+        Bitmap Map;
         
         CreateUnitForm createUnitForm = new CreateUnitForm();
 
@@ -48,6 +49,8 @@ namespace PoskusCiv2.Forms
             this.BackgroundImage = Images.WallpaperMapForm;
             this.DoubleBuffered = true;
             mainCiv2Window = _mainCiv2Window;
+
+            Map = MapBitmap.DrawMap();
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
@@ -103,7 +106,7 @@ namespace PoskusCiv2.Forms
         {
             //e.Graphics.DrawImage(Images.Ocean[3], 0, 0);
             e.Graphics.DrawImage(
-                MapBitmap.Map,
+                Map,
                 0,
                 0,
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),

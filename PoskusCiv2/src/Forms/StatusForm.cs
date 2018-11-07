@@ -30,6 +30,7 @@ namespace PoskusCiv2.Forms
         public StatusForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
+            this.Paint += StatusForm_Paint;
             mainCiv2Window = _mainCiv2Window;
         }
 
@@ -39,7 +40,7 @@ namespace PoskusCiv2.Forms
             tableLayoutPanel1.BackgroundImage = Images.WallpaperMapForm;            
             panel1.BackgroundImage = Images.WallpaperStatusForm;   //Panel background image
             panel2.BackgroundImage = Images.WallpaperStatusForm;
-
+            
             //Viewing pieces label
             viewingPiecesLabel = new Label
             {
@@ -259,6 +260,17 @@ namespace PoskusCiv2.Forms
             panel1.Controls.Add(unitPicture);
 
             UpdateUnitLabels(0);    //show unit labels in the beginning
+        }
+
+        private void StatusForm_Paint(object sender, PaintEventArgs e)
+        {
+            //NOT WORKING -- BEHIND PANEL!
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 11), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 10), sf);
+            sf.Dispose();
         }
 
         //Receive and display X-Y coordinates on right-click on Map
