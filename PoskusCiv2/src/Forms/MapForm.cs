@@ -104,7 +104,6 @@ namespace PoskusCiv2.Forms
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
-            //e.Graphics.DrawImage(Images.Ocean[3], 0, 0);
             e.Graphics.DrawImage(
                 Map,
                 0,

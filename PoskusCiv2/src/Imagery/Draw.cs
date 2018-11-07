@@ -12,7 +12,7 @@ namespace PoskusCiv2.Imagery
         //draw entire game map
         public Bitmap DrawMap()
         {
-            //define a bitmap for drawing in MapForm
+            //define a bitmap for drawing map
             Bitmap map = new Bitmap(Game.Data.MapXdim * 64, Game.Data.MapYdim * 32);
 
             DrawTerrain drawTerrain = new DrawTerrain();
@@ -27,12 +27,18 @@ namespace PoskusCiv2.Imagery
                     }
                 }
             }
-
+            
             return map;
         }
 
         //Draw city
         public Bitmap DrawCity()
+        {
+            return null;
+        }
+
+        //Draw unit
+        public Bitmap DrawUnit()
         {
             return null;
         }
