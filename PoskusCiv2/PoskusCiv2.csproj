@@ -74,8 +74,8 @@
     <Compile Include="src\Enums\TerrainType.cs" />
     <Compile Include="src\Enums\UnitType.cs" />
     <Compile Include="src\Game.cs" />
-    <Compile Include="src\Imagery\DrawMap.cs" />
     <Compile Include="src\Imagery\Draw.cs" />
+    <Compile Include="src\Imagery\Squares.cs" />
     <Compile Include="src\Imagery\Images.cs" />
     <Compile Include="src\ImportSavegame.cs" />
     <Compile Include="src\Imagery\DrawUnits.cs" />
