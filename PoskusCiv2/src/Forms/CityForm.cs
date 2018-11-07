@@ -14,7 +14,9 @@ namespace PoskusCiv2.Forms
     public partial class CityForm : Form
     {
         public MainCiv2Window mainCiv2Window;
-        
+        Draw Drawing = new Draw();
+        Bitmap CityDrawing;
+
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
@@ -149,6 +151,8 @@ namespace PoskusCiv2.Forms
             ExitButton.BringToFront();
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
+
+            CityDrawing = Drawing.DrawCityFormMap(ThisCity);
         }
 
         private void CityForm_Paint(object sender, PaintEventArgs e, City ThisCity)
@@ -160,7 +164,7 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
             sf.Dispose();
 
-            
+            e.Graphics.DrawImage(CityDrawing, new Point(0, 0));
         }
 
         private void InfoButton_Click(object sender, EventArgs e)

@@ -9,11 +9,10 @@ namespace PoskusCiv2.Imagery
 {
     class Draw
     {
-        //draw entire game map
+        //Draw entire game map
         public Bitmap DrawMap()
         {
-            //define a bitmap for drawing map
-            Bitmap map = new Bitmap(Game.Data.MapXdim * 64, Game.Data.MapYdim * 32);
+            Bitmap map = new Bitmap(Game.Data.MapXdim * 64, Game.Data.MapYdim * 32);    //define a bitmap for drawing map
 
             Squares square = new Squares();
                        
@@ -29,6 +28,22 @@ namespace PoskusCiv2.Imagery
             }
             
             return map;
+        }
+
+        //Draw terrain in city form
+        public Bitmap DrawCityFormMap(City city)
+        {
+            Bitmap map = new Bitmap(1 * 64, 1 * 32);    //define a bitmap for drawing map
+
+            Squares square = new Squares();
+
+            using (Graphics graphics = Graphics.FromImage(map))
+            {
+                graphics.DrawImage(square.Terrain(city.X, city.Y), 0, 0);
+            }
+
+            return map;
+
         }
     }
 }
