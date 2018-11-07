@@ -318,7 +318,7 @@ namespace PoskusCiv2.Forms
 
                 if (Game.Cities.Any(city => city.X == ClickedBoxX && city.Y == ClickedBoxY))    //if city is clicked => open form
                 {
-                    CityForm cityForm = new CityForm(ClickedBoxX, ClickedBoxY);
+                    CityForm cityForm = new CityForm(Game.Cities.Find(city => city.X == ClickedBoxX && city.Y == ClickedBoxY));
                     cityForm.Show();
                 }
             }

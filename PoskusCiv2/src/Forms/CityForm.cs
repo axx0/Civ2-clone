@@ -14,15 +14,14 @@ namespace PoskusCiv2.Forms
     public partial class CityForm : Form
     {
         public MainCiv2Window mainCiv2Window;
-        City ThisCity;
-
+        
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
             mainCiv2Window = _mainCiv2Window;
         }
 
-        public CityForm(int cityX, int cityY)
+        public CityForm(City ThisCity)
         {
             InitializeComponent();
 
@@ -30,10 +29,8 @@ namespace PoskusCiv2.Forms
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             CenterToParent();  //the parent form is not MapForm, so this is not really centered
-            Paint += CityForm_Paint;
-
-            ThisCity = Game.Cities.Find(city => city.X == cityX && city.Y == cityY);   //find a city for the opened form
-
+            this.Paint += new PaintEventHandler((sender, e) => CityForm_Paint(this, e, ThisCity));
+            
             //Sizes & locations of 6 buttons in bottom right corner
             Size buttonSize = new Size(55, 25); //size
             Point buttonXYloc = new Point(465, 390);    //location of 1st button
@@ -99,7 +96,7 @@ namespace PoskusCiv2.Forms
             RenameButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(RenameButton);
             RenameButton.BringToFront();
-            RenameButton.Click += new EventHandler(RenameButton_Click);
+            RenameButton.Click += new EventHandler((sender, e) => RenameButton_Click(this, e, ThisCity));
             RenameButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Happy button
@@ -154,7 +151,7 @@ namespace PoskusCiv2.Forms
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
         }
 
-        private void CityForm_Paint(object sender, PaintEventArgs e)
+        private void CityForm_Paint(object sender, PaintEventArgs e, City ThisCity)
         {
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
@@ -162,6 +159,8 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 13 + 1), sf);
             e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
             sf.Dispose();
+
+            
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
@@ -172,7 +171,7 @@ namespace PoskusCiv2.Forms
         {
         }
 
-        private void RenameButton_Click(object sender, EventArgs e)
+        private void RenameButton_Click(object sender, EventArgs e, City ThisCity)
         {
             CityRenameForm CityRenameForm = new CityRenameForm(ThisCity);
             CityRenameForm.RefreshCityForm += RefreshThis;
