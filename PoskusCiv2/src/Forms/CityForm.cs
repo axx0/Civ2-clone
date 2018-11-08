@@ -14,8 +14,9 @@ namespace PoskusCiv2.Forms
     public partial class CityForm : Form
     {
         public MainCiv2Window mainCiv2Window;
-        Draw Drawing = new Draw();
+        Draw Draw = new Draw();
         Bitmap CityDrawing;
+        Panel CityPanel;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -31,6 +32,7 @@ namespace PoskusCiv2.Forms
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             CenterToParent();  //the parent form is not MapForm, so this is not really centered
+            this.Load += new EventHandler(CityForm_Load);
             this.Paint += new PaintEventHandler((sender, e) => CityForm_Paint(this, e, ThisCity));
             
             //Sizes & locations of 6 buttons in bottom right corner
@@ -41,7 +43,7 @@ namespace PoskusCiv2.Forms
             Font buttonFont = new Font("Arial", 8.2f);
 
             //Panel for wallpaper
-            Panel CityPanel = new Panel
+            CityPanel = new Panel
             {
                 Location = new Point(5, 25),
                 Size = new Size(640, 425),
@@ -49,6 +51,7 @@ namespace PoskusCiv2.Forms
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(CityPanel);
+            CityPanel.Paint += new PaintEventHandler(CityPanel_Paint);
 
             //Info button
             Button InfoButton = new Button
@@ -152,8 +155,10 @@ namespace PoskusCiv2.Forms
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
-            CityDrawing = Drawing.DrawCityFormMap(ThisCity);
+            CityDrawing = Draw.DrawCityFormMap(ThisCity);
         }
+
+        private void CityForm_Load(object sender, EventArgs e) { }
 
         private void CityForm_Paint(object sender, PaintEventArgs e, City ThisCity)
         {
@@ -163,8 +168,11 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 13 + 1), sf);
             e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
             sf.Dispose();
+        }
 
-            e.Graphics.DrawImage(CityDrawing, new Point(0, 0));
+        private void CityPanel_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(CityDrawing, new Point(40, 80));
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
