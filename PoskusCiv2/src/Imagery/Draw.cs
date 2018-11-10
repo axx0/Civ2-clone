@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using PoskusCiv2.Units;
 using PoskusCiv2.Enums;
 
 namespace PoskusCiv2.Imagery
@@ -29,6 +30,21 @@ namespace PoskusCiv2.Imagery
             }
             
             return map;
+        }
+
+        //Draw unit
+        public Bitmap DrawUnit(IUnit unit)
+        {
+            Bitmap square = new Bitmap(64, 48);    //define a bitmap for drawing
+
+            using (Graphics graphics = Graphics.FromImage(square))
+            {
+                graphics.DrawImage(Images.BlackUnitShield, Images.unitShieldLocation[(int)unit.Type, 0] - 1, Images.unitShieldLocation[(int)unit.Type, 1]); //draw black shield border
+                graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
+            }
+
+            return square;
         }
 
         //Draw city

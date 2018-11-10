@@ -17,6 +17,7 @@ namespace PoskusCiv2.Forms
         Draw Draw = new Draw();
         Bitmap CityDrawing;
         Panel CityPanel;
+        Form CallingForm;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -24,14 +25,16 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
         }
 
-        public CityForm(Form callingForm, City ThisCity)
+        public CityForm(Form _callingForm, City ThisCity)
         {
             InitializeComponent();
 
+            CallingForm = _callingForm;
+
             Size = new Size(976, 680);  //normalen zoom = (650,453)
-            Location = new Point(callingForm.Width / 2 - this.Width / 2, callingForm.Height / 2 - this.Height / 2);
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
+            
             //CenterToParent();  //the parent form is not MapForm, so this is not really centered
             this.Load += new EventHandler(CityForm_Load);
             this.Paint += new PaintEventHandler((sender, e) => CityForm_Paint(this, e, ThisCity));
@@ -159,21 +162,20 @@ namespace PoskusCiv2.Forms
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
             CityDrawing = Draw.DrawCityFormMap(ThisCity);
-
-            //Console.WriteLine("CFW: {0}, TW: {1}, CFH: {2}, TH: {3}", callingForm.Width / 2, this.Width / 2, callingForm.Height / 2, this.Height / 2);
-            //Console.WriteLine("LOCATION: {0},{1}", Location.X, Location.Y);
-            Console.WriteLine("LOCATION: {0},{1}", this.Location.X, this.Location.Y);
         }
 
-        private void CityForm_Load(object sender, EventArgs e) { }
+        private void CityForm_Load(object sender, EventArgs e)
+        {
+            Location = new Point(CallingForm.Width / 2 - this.Width / 2, CallingForm.Height / 2 - this.Height / 2 + 60);
+        }
 
         private void CityForm_Paint(object sender, PaintEventArgs e, City ThisCity)
         {
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 13 + 1), sf);
-            e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 13), sf);
+            e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString("City of " + ThisCity.Name + ", 278 B.C., Population 30,000 (Treasury: 250 Gold)", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
         }
 
@@ -181,7 +183,8 @@ namespace PoskusCiv2.Forms
         {
             //The city image is stretched by 12,5%
             int x = 8, y = 125;
-            e.Graphics.DrawImage(ImageChange.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), new Point(x, y));
+            e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), new Point(x, y));
+            e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(100, 280));
         }
 
         private void InfoButton_Click(object sender, EventArgs e)

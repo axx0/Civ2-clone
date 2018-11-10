@@ -8,6 +8,7 @@ using PoskusCiv2.Enums;
 using PoskusCiv2.Units;
 using PoskusCiv2.Terrains;
 using PoskusCiv2.Improvements;
+using PoskusCiv2.Forms;
 using PoskusCiv2.Imagery;
 using ExtensionMethods;
 
@@ -24,6 +25,8 @@ namespace PoskusCiv2
 
         private int _activeUnit;
 
+        MapForm mapForm;
+
         public static void StartGame()
         {
             //int stej = 0;
@@ -34,7 +37,6 @@ namespace PoskusCiv2
             //}
 
             Game.Instance.ActiveUnit = Units[Data.UnitSelectedAtGameStart];
-
         }
 
         public static int gameTurn = 0;
@@ -48,29 +50,29 @@ namespace PoskusCiv2
         System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
         System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
 
-        public static void defineStartGameParameters()
-        {
-            gameTurn = 0;
-            gameYear = -4000;
-            people = 20000;
-            gold = 400;
-            unitNo = 2;
-        }
+        //public static void defineStartGameParameters()
+        //{
+        //    gameTurn = 0;
+        //    gameYear = -4000;
+        //    people = 20000;
+        //    gold = 400;
+        //    unitNo = 2;
+        //}
 
-        //Define map coordinates
-        public int[,] ConstructMap(int height, int width)
-        {
-            int i, j;
-            int[,] grid = new int[height + 1, width + 1];
-            for (i = 0; i <= height; i++)
-            {
-                for (j = 0; j <= width; j++)
-                {
-                    grid[i, j] = 1;
-                }
-            }
-            return grid;
-        }
+        ////Define map coordinates
+        //public int[,] ConstructMap(int height, int width)
+        //{
+        //    int i, j;
+        //    int[,] grid = new int[height + 1, width + 1];
+        //    for (i = 0; i <= height; i++)
+        //    {
+        //        for (j = 0; j <= width; j++)
+        //        {
+        //            grid[i, j] = 1;
+        //        }
+        //    }
+        //    return grid;
+        //}
 
         public static void NewTurn()
         {
@@ -103,6 +105,9 @@ namespace PoskusCiv2
             {
                 NextUnit();
             }
+
+            Application.OpenForms.OfType<StatusForm>().First().InvalidatePanel();
+            //Application.OpenForms.OfType<MapForm>().First().Invalidate();
         }
 
         //Chose next unit for orders

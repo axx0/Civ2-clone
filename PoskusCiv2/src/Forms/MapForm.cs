@@ -43,14 +43,12 @@ namespace PoskusCiv2.Forms
         public MapForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
-            this.Size = new Size(1270, 810);
-            this.BackColor = Color.Black;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.BackgroundImage = Images.WallpaperMapForm;
-            this.DoubleBuffered = true;
+            Size = new Size(1270, 810);
+            BackColor = Color.Black;
+            FormBorderStyle = FormBorderStyle.None;
+            BackgroundImage = Images.WallpaperMapForm;
+            DoubleBuffered = true;
             mainCiv2Window = _mainCiv2Window;
-
-            Map = Draw.DrawMap(); //prepare whole game map
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
@@ -63,6 +61,8 @@ namespace PoskusCiv2.Forms
             Controls.Add(MapPanel);
             MapPanel.Paint += MapPanel_Paint;
             MapPanel.MouseClick += MapPanel_MouseClick;
+
+            Map = Draw.DrawMap(); //prepare whole game map
         }
 
         private void MapForm_Load(object sender, EventArgs e)
@@ -126,9 +126,7 @@ namespace PoskusCiv2.Forms
 
                     if (!unitOnTopOfCity)   //Draw only if unit NOT inside city
                     {
-                        e.Graphics.DrawImage(Images.BlackUnitShield, 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0] - 1, 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw border shield (offset for 1 pixel to left) 
-                        e.Graphics.DrawImage(Images.UnitShield[(int)unit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)unit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
-                        e.Graphics.DrawImage(Images.Units[(int)unit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw other units not pulsating
+                        e.Graphics.DrawImage(Draw.DrawUnit(unit), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
                     }
                 }
             }
@@ -157,9 +155,7 @@ namespace PoskusCiv2.Forms
             y = Game.Instance.ActiveUnit.Y;
             if (stej % 2 == 1)
             {
-                e.Graphics.DrawImage(Images.BlackUnitShield, 32 * (x - offsetX) + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 0] - 1, 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 1]); //draw black shield border
-                e.Graphics.DrawImage(Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ], 32 * (x - offsetX) + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 0], 16 * (y - offsetY) - 16 + Images.unitShieldLocation[(int)Game.Instance.ActiveUnit.Type, 1]); //draw shield
-                e.Graphics.DrawImage(Images.Units[(int)Game.Instance.ActiveUnit.Type], 32 * (x - offsetX), 16 * (y - offsetY) - 16);    //draw unit pulsating
+                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
             }
 
             //Draw gridlines

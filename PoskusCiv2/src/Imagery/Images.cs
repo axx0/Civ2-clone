@@ -435,7 +435,7 @@ namespace PoskusCiv2.Imagery
             Bitmap cityWallpaper = new Bitmap(cityWallpaperLoc);
             
             CityWallpaper = (Bitmap)cityWallpaper;
-            CityWallpaper = ImageChange.CropImage(CityWallpaper, new Rectangle(0, 0, 640, 420));
+            CityWallpaper = ModifyImage.CropImage(CityWallpaper, new Rectangle(0, 0, 640, 420));
         }
 
         //Converting GIFs to non-indexed images (required for SetPixel method)
