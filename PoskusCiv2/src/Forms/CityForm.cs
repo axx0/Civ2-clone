@@ -24,40 +24,43 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
         }
 
-        public CityForm(City ThisCity)
+        public CityForm(Form callingForm, City ThisCity)
         {
             InitializeComponent();
 
-            Size = new Size(650, 455);
+            Size = new Size(976, 680);  //normalen zoom = (650,453)
+            Location = new Point(callingForm.Width / 2 - this.Width / 2, callingForm.Height / 2 - this.Height / 2);
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
-            CenterToParent();  //the parent form is not MapForm, so this is not really centered
+            //CenterToParent();  //the parent form is not MapForm, so this is not really centered
             this.Load += new EventHandler(CityForm_Load);
             this.Paint += new PaintEventHandler((sender, e) => CityForm_Paint(this, e, ThisCity));
             
             //Sizes & locations of 6 buttons in bottom right corner
-            Size buttonSize = new Size(55, 25); //size
-            Point buttonXYloc = new Point(465, 390);    //location of 1st button
-            int buttonSepX = 3; //separation between buttons in X
-            int buttonSepY = 3; //separation between buttons in Y
-            Font buttonFont = new Font("Arial", 8.2f);
+            Size buttonSize = new Size(84, 35); //size
+            Point buttonXYloc = new Point(695, 580);    //location of 1st button
+            int buttonSepX = 5; //separation between buttons in X
+            int buttonSepY = 5; //separation between buttons in Y
+            Font buttonFont = new Font("Arial", 13);
 
             //Panel for wallpaper
             CityPanel = new Panel
             {
-                Location = new Point(5, 25),
-                Size = new Size(640, 425),
+                Location = new Point(12, 37),    //normal zoom = (8,25)
+                Size = new Size(960, 630),      //normal zoom = (640,420)
                 BackgroundImage = Images.CityWallpaper,
+                BackgroundImageLayout = ImageLayout.Stretch,
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(CityPanel);
-            CityPanel.Paint += new PaintEventHandler(CityPanel_Paint);
+            CityPanel.Paint += new PaintEventHandler((sender, e) => CityPanel_Paint(this, e, ThisCity));
 
             //Info button
             Button InfoButton = new Button
             {
                 Location = new Point(buttonXYloc.X, buttonXYloc.Y),
                 Size = buttonSize,
+                ForeColor = Color.Black,
                 BackColor = Color.FromArgb(192, 192, 192),
                 Font = buttonFont,
                 FlatStyle = FlatStyle.Flat,                
@@ -156,6 +159,10 @@ namespace PoskusCiv2.Forms
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
             CityDrawing = Draw.DrawCityFormMap(ThisCity);
+
+            //Console.WriteLine("CFW: {0}, TW: {1}, CFH: {2}, TH: {3}", callingForm.Width / 2, this.Width / 2, callingForm.Height / 2, this.Height / 2);
+            //Console.WriteLine("LOCATION: {0},{1}", Location.X, Location.Y);
+            Console.WriteLine("LOCATION: {0},{1}", this.Location.X, this.Location.Y);
         }
 
         private void CityForm_Load(object sender, EventArgs e) { }
@@ -170,9 +177,11 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
         }
 
-        private void CityPanel_Paint(object sender, PaintEventArgs e)
+        private void CityPanel_Paint(object sender, PaintEventArgs e, City ThisCity)
         {
-            e.Graphics.DrawImage(CityDrawing, new Point(40, 80));
+            //The city image is stretched by 12,5%
+            int x = 8, y = 125;
+            e.Graphics.DrawImage(ImageChange.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), new Point(x, y));
         }
 
         private void InfoButton_Click(object sender, EventArgs e)

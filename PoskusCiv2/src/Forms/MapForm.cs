@@ -31,7 +31,7 @@ namespace PoskusCiv2.Forms
         int stej = 0;   //records no of timer ticks
 
         ImportSavegame importMap = new ImportSavegame();
-        Draw Drawing = new Draw();
+        Draw Draw = new Draw();
         Bitmap Map;
         
         CreateUnitForm createUnitForm = new CreateUnitForm();
@@ -50,7 +50,7 @@ namespace PoskusCiv2.Forms
             this.DoubleBuffered = true;
             mainCiv2Window = _mainCiv2Window;
 
-            Map = Drawing.DrawMap(); //prepare whole game map
+            Map = Draw.DrawMap(); //prepare whole game map
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
@@ -139,97 +139,14 @@ namespace PoskusCiv2.Forms
                 x = 2 * city.X + city.Y % 2;    //convert XY to civ2-style
                 y = city.Y;
 
-                int cityStyle = Game.Civs[city.Owner].CityStyle;
-
-                int sizeStyle = 0;
-                //Determine city bitmap
-                //For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
-                //If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
-                if (cityStyle < 4)
-                {
-                    if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
-                    {
-                        if (city.Size <= 3) { sizeStyle = 1; }
-                        else if (city.Size > 3 && city.Size <= 5) { sizeStyle = 2; }
-                        else { sizeStyle = 3; }
-
-                    }
-                    else
-                    {
-                        if (city.Size <= 3) { sizeStyle = 0; }
-                        else if (city.Size > 3 && city.Size <= 5) { sizeStyle = 1; }
-                        else if (city.Size > 5 && city.Size <= 7) { sizeStyle = 2; }
-                        else { sizeStyle = 3; }
-                    }
-                }
-                //If city is industrial => 4 city size styles (0=sizes 1...4, 1=sizes 5...7, 2=sizes 8...10, 3=sizes >= 11)
-                //If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...7, 3=sizes >= 8)
-                else if (cityStyle == 4)
-                {
-                    if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
-                    {
-                        if (city.Size <= 4) { sizeStyle = 1; }
-                        else if (city.Size > 4 && city.Size <= 7) { sizeStyle = 2; }
-                        else { sizeStyle = 3; }
-
-                    }
-                    else
-                    {
-                        if (city.Size <= 4) { sizeStyle = 0; }
-                        else if (city.Size > 4 && city.Size <= 7) { sizeStyle = 1; }
-                        else if (city.Size > 7 && city.Size <= 10) { sizeStyle = 2; }
-                        else { sizeStyle = 3; }
-                    }
-                }
-                //If city is modern => 4 city size styles (0=sizes 1...4, 1=sizes 5...10, 2=sizes 11...18, 3=sizes >= 19)
-                //If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...10, 3=sizes >= 11)
-                else
-                {
-                    if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
-                    {
-                        if (city.Size <= 4) { sizeStyle = 1; }
-                        else if (city.Size > 4 && city.Size <= 10) { sizeStyle = 2; }
-                        else { sizeStyle = 3; }
-
-                    }
-                    else
-                    {
-                        if (city.Size <= 4) { sizeStyle = 0; }
-                        else if (city.Size > 4 && city.Size <= 10) { sizeStyle = 1; }
-                        else if (city.Size > 10 && city.Size <= 18) { sizeStyle = 2; }
-                        else { sizeStyle = 3; }
-                    }
-                }
+                e.Graphics.DrawImage(Draw.DrawCity(city, true), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
 
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
-
-                //Draw city
-                if (!Array.Exists(city.Improvements, element => element.Type == ImprovementType.CityWalls))  //no city walls
-                {
-                    e.Graphics.DrawImage(Images.City[cityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
-                    //Draw city size window
-                    e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);
-                    e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
-                    e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
-                    //Draw city flag
-                    e.Graphics.DrawImage(Images.CityFlag[city.Owner], 32 * (x - offsetX) + Images.cityFlagLoc[cityStyle, sizeStyle, 0] - 3, 16 * (y - offsetY) - 16 + Images.cityFlagLoc[cityStyle, sizeStyle, 1] - 17);
-                }
-                else
-                {
-                    e.Graphics.DrawImage(Images.CityWall[cityStyle, sizeStyle], 32 * (x - offsetX), 16 * (y - offsetY) - 16);
-                    //Draw city (+Wall) size window
-                    e.Graphics.DrawRectangle(new Pen(Color.Black), 32 * (x - offsetX) - 1 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);
-                    e.Graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
-                    e.Graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), 32 * (x - offsetX) + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] + 4, 16 * (y - offsetY) - 16 + Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
-                    //Draw city flag
-                    e.Graphics.DrawImage(Images.CityFlag[city.Owner], 32 * (x - offsetX) + Images.cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, 16 * (y - offsetY) - 16 + Images.cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);
-                }
-
                 //Draw city name
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 1, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 1, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 2, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 2, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
 
                 sf.Dispose();
@@ -320,7 +237,7 @@ namespace PoskusCiv2.Forms
 
                 if (Game.Cities.Any(city => city.X == ClickedBoxX && city.Y == ClickedBoxY))    //if city is clicked => open form
                 {
-                    CityForm cityForm = new CityForm(Game.Cities.Find(city => city.X == ClickedBoxX && city.Y == ClickedBoxY));
+                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedBoxX && city.Y == ClickedBoxY));
                     cityForm.Show();
                 }
             }

@@ -9,9 +9,9 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
         public static Bitmap[,] Coast, City, CityWall;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible, Blank;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -84,6 +84,10 @@ namespace PoskusCiv2.Imagery
                 Ocean[i].MakeTransparent(transparentGray);
                 Ocean[i].MakeTransparent(transparentPink);
             }
+
+            //Blank tile
+            Blank = (Bitmap)terrain1.Clone(new Rectangle(131, 447, 64, 32), terrain1.PixelFormat);
+            Blank.MakeTransparent(transparentGray);
 
             //Rivers, Forest, Mountains, Hills
             for (int i = 0; i < 16; i++)
@@ -429,8 +433,9 @@ namespace PoskusCiv2.Imagery
         public static void LoadWallpapers(string cityWallpaperLoc)
         {
             Bitmap cityWallpaper = new Bitmap(cityWallpaperLoc);
-
+            
             CityWallpaper = (Bitmap)cityWallpaper;
+            CityWallpaper = ImageChange.CropImage(CityWallpaper, new Rectangle(0, 0, 640, 420));
         }
 
         //Converting GIFs to non-indexed images (required for SetPixel method)
