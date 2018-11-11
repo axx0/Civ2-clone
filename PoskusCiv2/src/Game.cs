@@ -39,40 +39,16 @@ namespace PoskusCiv2
             Game.Instance.ActiveUnit = Units[Data.UnitSelectedAtGameStart];
         }
 
-        public static int gameTurn = 0;
-        public static int gameYear = -4000;
-        public static int people = 20000;
-        public static int gold = 400;
-        public static int unitNo = 2;
+        //public static int gameTurn = 0;
+        //public static int gameYear = -4000;
+        //public static int people = 20000;
+        //public static int gold = 400;
+        //public static int unitNo = 2;
         public static int unitInLine = 0;  //which unit's turn it is
 
         //load sound for moving piece
-        System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
-        System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
-
-        //public static void defineStartGameParameters()
-        //{
-        //    gameTurn = 0;
-        //    gameYear = -4000;
-        //    people = 20000;
-        //    gold = 400;
-        //    unitNo = 2;
-        //}
-
-        ////Define map coordinates
-        //public int[,] ConstructMap(int height, int width)
-        //{
-        //    int i, j;
-        //    int[,] grid = new int[height + 1, width + 1];
-        //    for (i = 0; i <= height; i++)
-        //    {
-        //        for (j = 0; j <= width; j++)
-        //        {
-        //            grid[i, j] = 1;
-        //        }
-        //    }
-        //    return grid;
-        //}
+        //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
+        //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
 
         public static void NewTurn()
         {
@@ -103,11 +79,11 @@ namespace PoskusCiv2
         {
             if (Game.Instance.ActiveUnit.TurnEnded)
             {
-                NextUnit();
+                NextUnit();                
             }
 
             Application.OpenForms.OfType<StatusForm>().First().InvalidatePanel();
-            //Application.OpenForms.OfType<MapForm>().First().Invalidate();
+            Application.OpenForms.OfType<MapForm>().First().InvalidatePanel();
         }
 
         //Chose next unit for orders
@@ -120,6 +96,11 @@ namespace PoskusCiv2
                 {
                     Game.Instance.ActiveUnit = _unit;
                     allUnitsEndedTurn = false;
+
+                    //Center view on new unit in MapForm
+                    MapForm.offsetX = 2 * _unit.X + (_unit.Y % 2) - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
+                    MapForm.offsetY = _unit.Y - 2 * (MapForm.CenterBoxY - 1);
+
                     break;
                 }
             }
@@ -144,7 +125,7 @@ namespace PoskusCiv2
                 default: break;
             }
 
-            Application.OpenForms.OfType<Forms.StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
+            Application.OpenForms.OfType<StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
         }
 
         //User pressed a key

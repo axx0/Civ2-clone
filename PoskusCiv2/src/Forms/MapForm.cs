@@ -17,8 +17,9 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        public int offsetX, offsetY, BoxNoX, BoxNoY;
-        public static int CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY;
+        public static int offsetX, offsetY, CenterBoxX, CenterBoxY;
+        public int BoxNoX, BoxNoY;
+        public static int ClickedBoxX, ClickedBoxY;
         Random randomNo = new Random();
 
         public bool GridIsChecked = false;
@@ -104,6 +105,8 @@ namespace PoskusCiv2.Forms
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
+            Console.WriteLine("OFFSETXY={0},{1}", offsetX, offsetY);
+            Console.WriteLine("CenterboxXY={0},{1}", CenterBoxX, CenterBoxY);
             e.Graphics.DrawImage(
                 Map,
                 0,
@@ -215,13 +218,14 @@ namespace PoskusCiv2.Forms
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
             MapPanel.Invalidate();
 
-            Console.WriteLine("OFFSET XY: {0},{1}", offsetX, offsetY);
+            //Do not allow to move out of map bounds by limiting offset
             if (offsetX < 0) { offsetX = 0; }
             if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) { offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX; }
             if (offsetY < 0) { offsetY = 0; }
             if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }
 
-            if (Math.Abs((offsetX - offsetY) % 2) == 1) //after limiting offset, do not allow some combinations, e.g. (2,1)
+            //After limiting offset, do not allow some combinations, e.g. (2,1)
+            if (Math.Abs((offsetX - offsetY) % 2) == 1)
             {
                 if (offsetX + 1 < Game.Data.MapXdim) { offsetX += 1; }
                 else if (offsetY + 1 < Game.Data.MapYdim) { offsetY += 1; }
@@ -254,11 +258,16 @@ namespace PoskusCiv2.Forms
             }
         }
 
-        void Timer_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
             stej += 1;
             //update viewing pieces
             //MapPanel.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
+            InvalidatePanel();
+        }
+
+        public void InvalidatePanel()
+        {
             MapPanel.Invalidate();
         }
 
