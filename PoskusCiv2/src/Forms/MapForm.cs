@@ -215,6 +215,21 @@ namespace PoskusCiv2.Forms
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
             MapPanel.Invalidate();
 
+            Console.WriteLine("OFFSET XY: {0},{1}", offsetX, offsetY);
+            if (offsetX < 0) { offsetX = 0; }
+            if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) { offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX; }
+            if (offsetY < 0) { offsetY = 0; }
+            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }
+
+            if (Math.Abs((offsetX - offsetY) % 2) == 1) //after limiting offset, do not allow some combinations, e.g. (2,1)
+            {
+                if (offsetX + 1 < Game.Data.MapXdim) { offsetX += 1; }
+                else if (offsetY + 1 < Game.Data.MapYdim) { offsetY += 1; }
+                else if (offsetX - 1 > 0) { offsetX -= 1; }
+                else { offsetY -= 1; }
+            }
+
+
             //Convert coordinates from Civ-2 style to real coordinates (only x, y is OK)
             ClickedBoxX = (ClickedBoxX - (ClickedBoxY % 2)) / 2;
 
