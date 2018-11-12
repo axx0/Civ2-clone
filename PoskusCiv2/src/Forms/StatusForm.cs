@@ -302,6 +302,13 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
         }
 
+        private void StatsPanel_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawString("640,000 People", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 2));
+            e.Graphics.DrawString("278 B.C. (Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
+            e.Graphics.DrawString("250 Gold 5.0.5", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
+        }
+
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
             if (!MapForm.viewingPiecesMode)
@@ -355,10 +362,6 @@ namespace PoskusCiv2.Forms
             }
         }
 
-        private void StatsPanel_Paint(object sender, PaintEventArgs e)
-        {
-        }
-
         //Receive and display X-Y coordinates on right-click on Map
         public void ReceiveMousePositionFromMapForm(int X_coord_mouse, int Y_coord_mouse)
         {            
@@ -376,10 +379,10 @@ namespace PoskusCiv2.Forms
         }
 
         //Update unit labels
-        public void UpdateUnitLabels(int unitInLine)
-        {
-            if (MapForm.viewingPiecesMode == false)
-            {
+        //public void UpdateUnitLabels()
+        //{
+        //    if (MapForm.viewingPiecesMode == false)
+        //    {
                 //if (unitInLine != Units_.unitNumber) //cycle through all units
                 //{
                 //    viewingPiecesLabel.Text = "Moving Units";
@@ -429,9 +432,9 @@ namespace PoskusCiv2.Forms
                 //    t.Tick += new EventHandler(timer_Tick);
                 //    t.Start();
                 //}
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 //viewingPiecesLabel.Text = "Viewing Pieces";
                 //cursorPositionLabel.Visible = true;
                 //unitNoMovesLabel.Visible = false;
@@ -442,8 +445,8 @@ namespace PoskusCiv2.Forms
                 //unitTypeLabel.Visible = false;
                 //unitPicture.Visible = false;
                 //unitShieldPicture.Visible = false;
-            }
-        }
+        //    }
+        //}
 
         //command to stop animating "press enter for next turn" text
         public void StopTimerInStatusForm()
@@ -505,8 +508,8 @@ namespace PoskusCiv2.Forms
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
         {
-            MapForm.viewingPiecesMode = false;
-            UpdateUnitLabels(Game.unitInLine);
+            //MapForm.viewingPiecesMode = false;
+            //UpdateUnitLabels(Game.unitInLine);
         }
 
         public void InvalidatePanel()

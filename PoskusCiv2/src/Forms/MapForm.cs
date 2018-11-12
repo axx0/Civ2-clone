@@ -239,7 +239,7 @@ namespace PoskusCiv2.Forms
             if (e.Button == MouseButtons.Right)
             {
                 viewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form
-                mainCiv2Window.statusForm.UpdateUnitLabels(Game.unitInLine);    //update status form
+                //mainCiv2Window.statusForm.UpdateUnitLabels(Game.unitInLine);    //update status form
 
                //send mouse click location to status form
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm(ClickedBoxX, ClickedBoxY);

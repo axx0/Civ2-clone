@@ -23,9 +23,11 @@ namespace PoskusCiv2
         public static Options Options;
         public static Data Data;
 
-        private int _activeUnit;
+        //load sound for moving piece
+        //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
+        //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
 
-        MapForm mapForm;
+        private int _activeUnit;
 
         public static void StartGame()
         {
@@ -39,16 +41,42 @@ namespace PoskusCiv2
             Game.Instance.ActiveUnit = Units[Data.UnitSelectedAtGameStart];
         }
 
-        //public static int gameTurn = 0;
-        //public static int gameYear = -4000;
-        //public static int people = 20000;
-        //public static int gold = 400;
-        //public static int unitNo = 2;
-        public static int unitInLine = 0;  //which unit's turn it is
+        //public static int unitInLine = 0;  //which unit's turn it is
 
-        //load sound for moving piece
-        //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
-        //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
+        public static void Update()
+        {
+            if (Game.Instance.ActiveUnit.TurnEnded)
+            {
+                NextUnit();                
+            }
+
+            Application.OpenForms.OfType<StatusForm>().First().InvalidatePanel();
+            Application.OpenForms.OfType<MapForm>().First().InvalidatePanel();
+        }
+
+        //Chose next unit for orders
+        public static void NextUnit()
+        {
+            bool allUnitsEndedTurn = true;
+            foreach (IUnit _unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            {
+                if (!_unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
+                {
+                    Game.Instance.ActiveUnit = _unit;
+                    Game.Instance.ActiveUnit.FirstMove = true;
+
+                    allUnitsEndedTurn = false;
+
+                    //Center view on new unit in MapForm
+                    MapForm.offsetX = 2 * _unit.X + (_unit.Y % 2) - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
+                    MapForm.offsetY = _unit.Y - 2 * (MapForm.CenterBoxY - 1);
+
+                    break;
+                }
+            }
+
+            if (allUnitsEndedTurn) { NewTurn(); }
+        }
 
         public static void NewTurn()
         {
@@ -75,39 +103,6 @@ namespace PoskusCiv2
 
         }
 
-        public static void Update()
-        {
-            if (Game.Instance.ActiveUnit.TurnEnded)
-            {
-                NextUnit();                
-            }
-
-            Application.OpenForms.OfType<StatusForm>().First().InvalidatePanel();
-            Application.OpenForms.OfType<MapForm>().First().InvalidatePanel();
-        }
-
-        //Chose next unit for orders
-        public static void NextUnit()
-        {
-            bool allUnitsEndedTurn = true;
-            foreach (IUnit _unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
-            {
-                if (!_unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
-                {
-                    Game.Instance.ActiveUnit = _unit;
-                    allUnitsEndedTurn = false;
-
-                    //Center view on new unit in MapForm
-                    MapForm.offsetX = 2 * _unit.X + (_unit.Y % 2) - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
-                    MapForm.offsetY = _unit.Y - 2 * (MapForm.CenterBoxY - 1);
-
-                    break;
-                }
-            }
-
-            if (allUnitsEndedTurn) { NewTurn(); }
-        }
-
         public static void UserInput(char pressedKey)
         {
             switch (pressedKey)
@@ -125,7 +120,7 @@ namespace PoskusCiv2
                 default: break;
             }
 
-            Application.OpenForms.OfType<StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
+            //Application.OpenForms.OfType<StatusForm>().First().UpdateUnitLabels(unitInLine);    //Update StatusForm with new unit info
         }
 
         //User pressed a key
