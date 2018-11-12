@@ -38,13 +38,9 @@ namespace PoskusCiv2.Forms
             mapForm.Show();
 
             statusForm.MdiParent = this;
-            statusForm.StartPosition = FormStartPosition.Manual;
-            statusForm.Location = new Point(1260, 205);
             statusForm.Show();
 
             worldMapForm.MdiParent = this;
-            worldMapForm.StartPosition = FormStartPosition.Manual;
-            worldMapForm.Location = new Point(1260, 0);
             worldMapForm.Show();
 
             cityForm.MdiParent = this;

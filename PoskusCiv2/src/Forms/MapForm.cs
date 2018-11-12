@@ -44,7 +44,7 @@ namespace PoskusCiv2.Forms
         public MapForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
-            Size = new Size(1270, 810);
+            Size = new Size(1280, 810);
             BackColor = Color.Black;
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
@@ -55,7 +55,7 @@ namespace PoskusCiv2.Forms
             MapPanel = new DoubleBufferedPanel
             {
                 Location = new Point(5, 35),
-                Size = new Size(1245, 730),
+                Size = new Size(1255, 730),
                 //BackgroundImage = Images.CityWallpaper,
                 BorderStyle = BorderStyle.Fixed3D
             };
@@ -98,8 +98,8 @@ namespace PoskusCiv2.Forms
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             Civilization myCiv = Game.Civs.Find(civ => civ.Id == Game.Data.PlayersCivilizationNumberUsed);
-            e.Graphics.DrawString(myCiv.Adjective + " Map", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString(myCiv.Adjective + " Map", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.DrawString(myCiv.Adjective + " Map", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString(myCiv.Adjective + " Map", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
         }
 

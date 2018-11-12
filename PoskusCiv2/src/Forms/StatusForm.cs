@@ -34,7 +34,9 @@ namespace PoskusCiv2.Forms
             InitializeComponent();            
             mainCiv2Window = _mainCiv2Window;
 
-            Size = new Size(270, 565);
+            Size = new Size(262, 620);
+            StartPosition = FormStartPosition.Manual;
+            Location = new Point(1268, 150);
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             Paint += new PaintEventHandler(StatusForm_Paint);
@@ -43,7 +45,7 @@ namespace PoskusCiv2.Forms
             StatsPanel = new DoubleBufferedPanel
             {
                 Location = new Point(8, 35),
-                Size = new Size(255, 80),
+                Size = new Size(248, 62),
                 BackgroundImage = Images.WallpaperStatusForm,
                 BorderStyle = BorderStyle.Fixed3D
             };
@@ -53,8 +55,8 @@ namespace PoskusCiv2.Forms
             //Unit panel
             UnitPanel = new DoubleBufferedPanel
             {
-                Location = new Point(8, 120),
-                Size = new Size(255, 440),
+                Location = new Point(8, 102),
+                Size = new Size(248, 512),
                 BackgroundImage = Images.WallpaperStatusForm,
                 BorderStyle = BorderStyle.Fixed3D
             };
@@ -295,8 +297,8 @@ namespace PoskusCiv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20), sf);
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 19), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 19), sf);
             sf.Dispose();
         }
 
