@@ -55,8 +55,7 @@ namespace PoskusCiv2.Forms
             MapPanel = new DoubleBufferedPanel
             {
                 Location = new Point(5, 35),
-                Size = new Size(1255, 730),
-                //BackgroundImage = Images.CityWallpaper,
+                Size = new Size(1255, 730),          
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(MapPanel);

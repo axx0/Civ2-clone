@@ -52,11 +52,11 @@ namespace PoskusCiv2.Imagery
         {
             Bitmap map = new Bitmap(64, 48);    //define a bitmap for drawing map
 
-            int cityStyle = Game.Civs[city.Owner].CityStyle;
-            int sizeStyle = 0;
             //Determine city bitmap
             //For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
             //If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
+            int cityStyle = Game.Civs[city.Owner].CityStyle;
+            int sizeStyle = 0;
             if (cityStyle < 4)
             {
                 if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
@@ -113,6 +113,10 @@ namespace PoskusCiv2.Imagery
                 }
             }
 
+            //If no units are in the city, draw no flag
+            bool flagPresent = false;
+            if (Game.Units.Any(unit => unit.X == city.X && unit.Y == city.Y)) { flagPresent = true; }
+
             using (Graphics graphics = Graphics.FromImage(map))
             {
                 StringFormat sf = new StringFormat();
@@ -128,18 +132,24 @@ namespace PoskusCiv2.Imagery
                         graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
                         graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] + 4, Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
                     }
-                    graphics.DrawImage(Images.CityFlag[city.Owner], Images.cityFlagLoc[cityStyle, sizeStyle, 0] - 3, Images.cityFlagLoc[cityStyle, sizeStyle, 1] - 17);     //Draw city flag
+                    if (flagPresent)    //Draw city flag
+                    {
+                        graphics.DrawImage(Images.CityFlag[city.Owner], Images.cityFlagLoc[cityStyle, sizeStyle, 0] - 3, Images.cityFlagLoc[cityStyle, sizeStyle, 1] - 17);
+                    }
                 }
                 else
                 {
-                    graphics.DrawImage(Images.CityWall[cityStyle, sizeStyle], 0, 0);         
+                    graphics.DrawImage(Images.CityWall[cityStyle, sizeStyle], 0, 0);
                     if (citySizeWindow)
                     {
                         graphics.DrawRectangle(new Pen(Color.Black), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] - 1, Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13); //Draw city (+Wall) size window
                         graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
                         graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] + 4, Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text    
-                    }                
-                    graphics.DrawImage(Images.CityFlag[city.Owner], Images.cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, Images.cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);    //Draw city flag
+                    }
+                    if (flagPresent)    //Draw city flag
+                    {
+                        graphics.DrawImage(Images.CityFlag[city.Owner], Images.cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, Images.cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);    //Draw city flag
+                    }
                 }
 
                 sf.Dispose();
