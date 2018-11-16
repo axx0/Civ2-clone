@@ -80,7 +80,46 @@ namespace PoskusCiv2.Units
 
             if (MovesLeft <= 0) { TurnEnded = true; }
 
-            Game.Update();
+            Actions.Update();
+        }
+
+        public void SkipTurn()
+        {
+            MovesLeft = 0;
+            TurnEnded = true;
+            Actions.Update();
+        }
+
+        public void Fortify()
+        {
+            Action = UnitAction.Fortify;
+            MovesLeft = 0;
+            TurnEnded = true;
+            Actions.Update();
+        }
+
+        public void Irrigate()
+        {
+            Action = UnitAction.BuildIrrigation;
+            MovesLeft = 0;
+            TurnEnded = true;
+            Actions.Update();
+        }
+
+        public void Terraform()
+        {
+            Action = UnitAction.TransformTerr;
+            MovesLeft = 0;
+            TurnEnded = true;
+            Actions.Update();
+        }
+
+        public void Sentry()
+        {
+            Action = UnitAction.Sentry;
+            MovesLeft = 0;
+            TurnEnded = true;
+            Actions.Update();
         }
 
         public string Name { get; set; }

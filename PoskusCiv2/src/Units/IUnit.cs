@@ -28,7 +28,13 @@ namespace PoskusCiv2.Units
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
         void Move(int moveX, int moveY);
+        void SkipTurn();
+        void Fortify();
+        void Irrigate();
+        void Terraform();
+        void Sentry();
         bool TurnEnded { get; set; }
+        
 
 
         int Attack { get;  }

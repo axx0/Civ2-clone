@@ -88,7 +88,8 @@ namespace PoskusCiv2.Forms
             //Play movement sound for unit
             //if (new char[] { '1', '2', '3', '4', '6', '7', '8', '9'}.Contains(e.KeyChar)) { player.Play(); };
 
-            Game.UserInput(e.KeyChar);
+            //Game.UserInput(e.KeyChar);
+            Actions.UnitKeyboardAction(e.KeyChar);
         }
 
         private void MapForm_Paint(object sender, PaintEventArgs e)

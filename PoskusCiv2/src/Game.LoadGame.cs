@@ -529,18 +529,6 @@ namespace PoskusCiv2
 
                 //Unit orders
                 int unitOrders = dataArray[ofsetU + multipl * i + 15];
-                //bool unit_fortify = false, unit_fortified = false, unit_sentry = false, unit_buildFortress = false, unit_buildRoadRR = false, unit_buildIrrigation = false, unit_buildMine = false, unit_transformTerrain = false, unit_cleanPollution = false;
-                //bin = Convert.ToString(unitOrders, 2).PadLeft(8, '0');
-                //if (bin[7] == '1') { unit_fortify = true; }
-                //if (bin[6] == '1') { unit_fortified = true; }
-                //if (bin[5] == '1') { unit_sentry = true; }
-                //if (bin[4] == '1') { unit_buildFortress = true; }
-                //if (bin[3] == '1') { unit_buildRoadRR = true; }
-                //if (bin[2] == '1') { unit_buildIrrigation = true; }
-                //if (bin[1] == '1') { unit_buildMine = true; }
-                //if (bin[0] == '1') { unit_transformTerrain = true; }
-                //if (bin[0] == '1' && bin[3] == '1') { unit_cleanPollution = true; }
-                //if (bin[0] == '1' && bin[3] == '1') { unit_cleanPollution = true; }
 
                 //Unit home city
                 int unitHomeCity = dataArray[ofsetU + multipl * i + 16];
