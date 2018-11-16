@@ -39,9 +39,33 @@ namespace PoskusCiv2.Imagery
 
             using (Graphics graphics = Graphics.FromImage(square))
             {
+                StringFormat sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+
+                string shieldText;
+                switch (unit.Action)
+                {
+                    case UnitAction.Fortify: shieldText = "f"; break;
+                    case UnitAction.Fortified: shieldText = "F"; break;
+                    case UnitAction.Sentry: shieldText = "S"; break;
+                    case UnitAction.BuildFortress: shieldText = "bf"; break;
+                    case UnitAction.BuildRoadRR: shieldText = "R"; break;
+                    case UnitAction.BuildIrrigation: shieldText = "I"; break;
+                    case UnitAction.BuildMine: shieldText = "M"; break;
+                    case UnitAction.TransformTerr: shieldText = "O"; break;
+                    case UnitAction.CleanPollution: shieldText = "P"; break;
+                    case UnitAction.BuildAirbase: shieldText = "A"; break;
+                    case UnitAction.GoTo: shieldText = "G"; break;
+                    case UnitAction.NoOrders: shieldText = "-"; break;
+                    default: shieldText = "/"; break;
+                }
                 graphics.DrawImage(Images.BlackUnitShield, Images.unitShieldLocation[(int)unit.Type, 0] - 1, Images.unitShieldLocation[(int)unit.Type, 1]); //draw black shield border
                 graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+                graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    //Action on shield
                 graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
+
+                sf.Dispose();
             }
 
             return square;

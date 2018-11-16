@@ -18,9 +18,9 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        Label viewingPiecesLabel, cursorPositionLabel, peopleLabel, gameYearLabel, goldLabel, unitNoMovesLabel, unitCityLabel, unitCivLabel, unitTypeLabel, unitTerrainLabel, roadPresentLabel, endOfTurnLabel;
-        PictureBox unitPicture, unitShieldPicture;
-        DrawUnits drawUnit = new DrawUnits();
+        //Label viewingPiecesLabel, cursorPositionLabel, peopleLabel, gameYearLabel, goldLabel, unitNoMovesLabel, unitCityLabel, unitCivLabel, unitTypeLabel, unitTerrainLabel, roadPresentLabel, endOfTurnLabel;
+        //PictureBox unitPicture, unitShieldPicture;
+        //DrawUnits drawUnit = new DrawUnits();
         DoubleBufferedPanel UnitPanel, StatsPanel;
 
         Draw Draw = new Draw();
@@ -375,7 +375,7 @@ namespace PoskusCiv2.Forms
         //Update game year label
         public void UpdateGameYearLabel(string myText)
         {
-            this.gameYearLabel.Text = myText;
+            //this.gameYearLabel.Text = myText;
         }
 
         //Update unit labels
