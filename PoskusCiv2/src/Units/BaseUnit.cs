@@ -10,6 +10,7 @@ namespace PoskusCiv2.Units
     internal class BaseUnit : IUnit
     {
         public UnitType Type { get; set; }
+        public UnitAction Action { get; set; }
 
         private int _x;
         public int X

@@ -10,6 +10,7 @@ namespace PoskusCiv2.Units
     public interface IUnit
     {
         UnitType Type { get; }
+        UnitAction Action { get; set; }
         int X { get; set; }
         int Y { get; set; }
         bool FirstMove { get; set; }

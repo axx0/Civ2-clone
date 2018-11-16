@@ -48,11 +48,13 @@
     <Compile Include="DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Actions.cs" />
     <Compile Include="src\City.cs" />
     <Compile Include="src\Civilization.cs" />
     <Compile Include="src\BaseInstance.cs" />
     <Compile Include="src\Data.cs" />
     <Compile Include="src\Enums\ImprovementType.cs" />
+    <Compile Include="src\Enums\UnitAction.cs" />
     <Compile Include="src\Forms\CityForm.cs">
       <SubType>Form</SubType>
     </Compile>

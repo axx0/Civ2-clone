@@ -41,7 +41,10 @@ namespace PoskusCiv2
             Game.Instance.ActiveUnit = Units[Data.UnitSelectedAtGameStart];
         }
 
-        //public static int unitInLine = 0;  //which unit's turn it is
+        public static void NextAction()
+        {
+            Update();
+        }
 
         public static void Update()
         {
@@ -315,7 +318,7 @@ namespace PoskusCiv2
             Terrain[x, y] = terrain;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int lastMove, int caravanCommodity, int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int lastMove, int caravanCommodity, UnitAction orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
             switch (type)
@@ -373,6 +376,11 @@ namespace PoskusCiv2
                 case UnitType.Explorer: unit = new Explorer(); break;
                 default: return null;
             }
+            //switch (orders)
+            //{
+            //    case UnitAction.Fortify: unit.Action = UnitAction.Fortify; break;
+            //    default: return null;
+            //};
             unit.X = x;
             unit.Y = y;
             unit.FirstMove = firstMove;
@@ -383,7 +391,8 @@ namespace PoskusCiv2
             unit.HitpointsLost = hitpointsLost;
             unit.LastMove = lastMove;
             unit.CaravanCommodity = caravanCommodity;
-            unit.Orders = orders;
+            //unit.Orders = orders;
+            unit.Action = orders;
             unit.HomeCity = homeCity;
             unit.GoToX = goToX;
             unit.GoToY = goToY;
