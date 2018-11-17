@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Horsemen() : base(20, 2, 1, 1, 1, 2)
         {
             Type = UnitType.Horsemen;
+            LSA = UnitLSA.Land;
             Name = "Horsemen";
         }
     }

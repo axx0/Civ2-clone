@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Armor() : base(80, 10, 5, 3, 1, 3)
         {
             Type = UnitType.Armor;
+            LSA = UnitLSA.Land;
             Name = "Armor";
         }
     }

@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Helicopter() : base(100, 10, 3, 2, 2, 6)
         {
             Type = UnitType.Helicopter;
+            LSA = UnitLSA.Air;
             Name = "Helicopter";
         }
     }

@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Legions() : base(40, 4, 2, 1, 1, 1)
         {
             Type = UnitType.Legions;
+            LSA = UnitLSA.Land;
             Name = "Legion";
         }
     }

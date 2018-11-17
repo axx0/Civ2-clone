@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
 using PoskusCiv2.Units;
 using PoskusCiv2.Enums;
 
@@ -63,7 +64,21 @@ namespace PoskusCiv2.Imagery
                 graphics.DrawImage(Images.BlackUnitShield, Images.unitShieldLocation[(int)unit.Type, 0] - 1, Images.unitShieldLocation[(int)unit.Type, 1]); //draw black shield border
                 graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
                 graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    //Action on shield
-                graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
+
+                if (unit.Action != UnitAction.Sentry)
+                {
+                    graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
+                }
+                else
+                {
+                    graphics.DrawImage(Images.Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit
+                }
+
+
+                if (unit.Action == UnitAction.Fortified)
+                {
+                    graphics.DrawImage(Images.Fortified, 0, 0); //draw fortification
+                }
 
                 sf.Dispose();
             }

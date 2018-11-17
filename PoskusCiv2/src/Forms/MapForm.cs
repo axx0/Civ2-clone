@@ -105,8 +105,6 @@ namespace PoskusCiv2.Forms
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
-            Console.WriteLine("OFFSETXY={0},{1}", offsetX, offsetY);
-            Console.WriteLine("CenterboxXY={0},{1}", CenterBoxX, CenterBoxY);
             e.Graphics.DrawImage(
                 Map,
                 0,

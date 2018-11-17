@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Bomber() : base(120, 12, 1, 2, 2, 8)
         {
             Type = UnitType.Bomber;
+            LSA = UnitLSA.Air;
             Name = "Bomber";
         }
     }

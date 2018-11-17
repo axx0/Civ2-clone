@@ -49,5 +49,27 @@ namespace PoskusCiv2.Imagery
             Bitmap bmpImage = new Bitmap(img);
             return bmpImage.Clone(cropArea, bmpImage.PixelFormat);
         }
+
+        //Grey out an image
+        public static ImageAttributes ConvertToGray()
+        {
+            ImageAttributes imageAttributes = new ImageAttributes();
+
+            float[][] colorMatrixElements = {
+                new float[] { 0, 0, 0, 0, 0},        // red
+                new float[] { 0, 0, 0,  0, 0},        // green
+                new float[] { 0, 0, 0, 0, 0},        // blue
+                new float[] { 0,  0,  0,  1, 0},        // alpha scaling
+                new float[] { 0.529f, 0.529f, 0.529f,  0, 1}};    // translations
+            
+            ColorMatrix colorMatrix = new ColorMatrix(colorMatrixElements);
+
+            imageAttributes.SetColorMatrix(
+               colorMatrix,
+               ColorMatrixFlag.Default,
+               ColorAdjustType.Bitmap);
+
+            return imageAttributes;
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Galleon() : base(40, 0, 2, 2, 1, 4)
         {
             Type = UnitType.Galleon;
+            LSA = UnitLSA.Sea;
             Name = "Galleon";
         }
     }

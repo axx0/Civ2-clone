@@ -10,6 +10,7 @@ namespace PoskusCiv2.Units
     public interface IUnit
     {
         UnitType Type { get; }
+        UnitLSA LSA { get; }
         UnitAction Action { get; set; }
         int X { get; set; }
         int Y { get; set; }
@@ -27,21 +28,19 @@ namespace PoskusCiv2.Units
         int GoToY { get; set; }
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
+
         void Move(int moveX, int moveY);
         void SkipTurn();
         void Fortify();
         void Irrigate();
         void Terraform();
         void Sentry();
+        void BuildRoad();
         bool TurnEnded { get; set; }
-        
-
 
         int Attack { get;  }
         int Defense { get; }
-        int MovesLeft { get; }
+        int StartingMoves { get; }
         string Name { get; }
-        
-
     }
 }

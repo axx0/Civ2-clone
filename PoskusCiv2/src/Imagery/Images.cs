@@ -11,7 +11,7 @@ namespace PoskusCiv2.Imagery
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
         public static Bitmap[,] Coast, City, CityWall;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortress, Airbase, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible, Blank;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible, Blank;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -309,6 +309,10 @@ namespace PoskusCiv2.Imagery
             cityWallSizeWindowLoc[5, 2, 1] = 20;
             cityWallSizeWindowLoc[5, 3, 0] = 27;
             cityWallSizeWindowLoc[5, 3, 1] = 30;
+            
+            Fortified = (Bitmap)cities.Clone(new Rectangle(143, 423, 64, 48), cities.PixelFormat);
+            Fortified.MakeTransparent(transparentGray);
+            Fortified.MakeTransparent(transparentPink);
 
             Fortress = (Bitmap)cities.Clone(new Rectangle(208, 423, 64, 48), cities.PixelFormat);
             Fortress.MakeTransparent(transparentGray);
@@ -317,6 +321,10 @@ namespace PoskusCiv2.Imagery
             Airbase = (Bitmap)cities.Clone(new Rectangle(273, 423, 64, 48), cities.PixelFormat);
             Airbase.MakeTransparent(transparentGray);
             Airbase.MakeTransparent(transparentPink);
+
+            AirbasePlane = (Bitmap)cities.Clone(new Rectangle(338, 423, 64, 48), cities.PixelFormat);
+            AirbasePlane.MakeTransparent(transparentGray);
+            AirbasePlane.MakeTransparent(transparentPink);
 
         }
 

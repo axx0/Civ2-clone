@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Caravan() : base(50, 0, 1, 1, 1, 1)
         {
             Type = UnitType.Caravan;
+            LSA = UnitLSA.Land;
             Name = "Caravan";
         }
     }

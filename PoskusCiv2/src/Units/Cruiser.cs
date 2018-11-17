@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Cruiser() : base(80, 6, 6, 3, 2, 5)
         {
             Type = UnitType.Cruiser;
+            LSA = UnitLSA.Sea;
             Name = "Cruiser";
         }
     }

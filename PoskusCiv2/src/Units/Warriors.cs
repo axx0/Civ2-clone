@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Warriors() : base(10, 1, 1, 1, 1, 1)
         {
             Type = UnitType.Warriors;
+            LSA = UnitLSA.Land;
             Name = "Warriors";
         }
     }

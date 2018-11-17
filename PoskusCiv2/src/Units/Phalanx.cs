@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Phalanx() : base(20, 1, 2, 1, 1, 1)
         {
             Type = UnitType.Phalanx;
+            LSA = UnitLSA.Land;
             Name = "Phalanx";
         }
     }

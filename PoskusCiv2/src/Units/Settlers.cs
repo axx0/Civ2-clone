@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Settlers() : base(40, 0, 1, 2, 1, 1)
         {
             Type = UnitType.Settlers;
+            LSA = UnitLSA.Land;
             Name = "Settlers";
         }
     }

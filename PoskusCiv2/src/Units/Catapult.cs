@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Catapult() : base(40, 6, 1, 1, 1, 1)
         {
             Type = UnitType.Catapult;
+            LSA = UnitLSA.Land;
             Name = "Catapult";
         }
     }

@@ -31,14 +31,12 @@ namespace PoskusCiv2
 
         public static void StartGame()
         {
-            //int stej = 0;
-            //foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
-            //{
-            //    Console.WriteLine("Unit{0}: {1}, {2}", stej++, unit.Name, Game.Civs[unit.Civ].TribeName);
-            //    Game.Instance.ActiveUnit = unit;
-            //}
-
-            Game.Instance.ActiveUnit = Units[Data.UnitSelectedAtGameStart];
+            //At game start, set turn ended to all units until you get to the active unit
+            foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            {
+                if (unit == Units[Data.UnitSelectedAtGameStart]) { Game.Instance.ActiveUnit = unit; }
+                else { unit.TurnEnded = true; }
+            }
         }
 
         

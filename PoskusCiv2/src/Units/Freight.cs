@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Freight() : base(50, 0, 1, 1, 1, 2)
         {
             Type = UnitType.Freight;
+            LSA = UnitLSA.Land;
             Name = "Freight";
         }
     }

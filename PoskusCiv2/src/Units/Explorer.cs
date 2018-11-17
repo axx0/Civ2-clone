@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Explorer() : base(30, 0, 1, 1, 1, 1)
         {
             Type = UnitType.Explorer;
+            LSA = UnitLSA.Land;
             Name = "Explorer";
         }
     }

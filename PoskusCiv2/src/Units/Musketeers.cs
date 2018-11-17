@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Musketeers() : base(30, 3, 3, 2, 1, 1)
         {
             Type = UnitType.Musketeers;
+            LSA = UnitLSA.Land;
             Name = "Musketeers";
         }
     }

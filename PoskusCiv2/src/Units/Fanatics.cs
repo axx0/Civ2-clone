@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Fanatics() : base(20, 4, 4, 2, 1, 1)
         {
             Type = UnitType.Fanatics;
+            LSA = UnitLSA.Land;
             Name = "Fanatics";
         }
     }

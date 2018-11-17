@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Paratroopers() : base(60, 6, 4, 2, 1, 1)
         {
             Type = UnitType.Paratroopers;
+            LSA = UnitLSA.Air;
             Name = "Paratroopers";
         }
     }

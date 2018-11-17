@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Artillery() : base(50, 10, 1, 2, 2, 1)
         {
             Type = UnitType.Artillery;
+            LSA = UnitLSA.Land;
             Name = "Artillery";
         }
     }

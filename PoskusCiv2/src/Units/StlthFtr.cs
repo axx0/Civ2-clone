@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public StlthFtr() : base(80, 8, 4, 2, 2, 14)
         {
             Type = UnitType.StlthFtr;
+            LSA = UnitLSA.Air;
             Name = "Stlth Ftr.";
         }
     }

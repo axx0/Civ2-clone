@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Howitzer() : base(70, 12, 2, 3, 2, 2)
         {
             Type = UnitType.Howitzer;
+            LSA = UnitLSA.Land;
             Name = "Howitzer";
         }
     }

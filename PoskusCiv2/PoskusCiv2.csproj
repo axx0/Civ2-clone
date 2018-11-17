@@ -55,6 +55,7 @@
     <Compile Include="src\Data.cs" />
     <Compile Include="src\Enums\ImprovementType.cs" />
     <Compile Include="src\Enums\UnitAction.cs" />
+    <Compile Include="src\Enums\UnitLSA.cs" />
     <Compile Include="src\Forms\CityForm.cs">
       <SubType>Form</SubType>
     </Compile>

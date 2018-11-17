@@ -15,8 +15,9 @@ namespace PoskusCiv2
 {
     static class Actions
     {
-        public static void Update()
+        public static void UpdateUnit()
         {
+            //If unit has ended turn
             if (Game.Instance.ActiveUnit.TurnEnded || (Game.Instance.ActiveUnit.Action == UnitAction.Fortified) || (Game.Instance.ActiveUnit.Action == UnitAction.Fortify) || (Game.Instance.ActiveUnit.Action == UnitAction.TransformTerr) || (Game.Instance.ActiveUnit.Action == UnitAction.Sentry))
             {
                 Game.Instance.ActiveUnit.TurnEnded = true;
@@ -51,7 +52,7 @@ namespace PoskusCiv2
 
             if (allUnitsEndedTurn) { NewTurn(); }
 
-            Update();
+            UpdateUnit();
         }
 
         public static void NewTurn()
@@ -62,8 +63,8 @@ namespace PoskusCiv2
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
                 unit.TurnEnded = false;
+                unit.MovesMade = 0;
             }
-
         }
 
         public static void UnitKeyboardAction(char pressedKey)
@@ -84,6 +85,7 @@ namespace PoskusCiv2
                 case 'f': Game.Instance.ActiveUnit.Fortify(); break;
                 case 'i': Game.Instance.ActiveUnit.Irrigate(); break;
                 case 'o': Game.Instance.ActiveUnit.Terraform(); break;
+                case 'r': Game.Instance.ActiveUnit.BuildRoad(); break;
                 default: break;
             }
         }

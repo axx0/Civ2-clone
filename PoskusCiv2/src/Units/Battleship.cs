@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Battleship() : base(160, 12, 12, 4, 2, 4)
         {
             Type = UnitType.Battleship;
+            LSA = UnitLSA.Sea;
             Name = "Battleship";
         }
     }

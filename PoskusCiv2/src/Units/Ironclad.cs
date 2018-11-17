@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Ironclad() : base(60, 4, 4, 3, 1, 4)
         {
             Type = UnitType.Ironclad;
+            LSA = UnitLSA.Sea;
             Name = "Ironclad";
         }
     }

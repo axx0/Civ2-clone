@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Dragoons() : base(50, 5, 2, 2, 1, 2)
         {
             Type = UnitType.Dragoons;
+            LSA = UnitLSA.Land;
             Name = "Dragoons";
         }
     }

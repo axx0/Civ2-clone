@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public NuclearMsl() : base(160, 99, 0, 1, 1, 16)
         {
             Type = UnitType.NuclearMsl;
+            LSA = UnitLSA.Air;
             Name = "Nuclear Msl.";
         }
     }

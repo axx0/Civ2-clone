@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Engineers() : base(40, 0, 2, 2, 1, 2)
         {
             Type = UnitType.Engineers;
+            LSA = UnitLSA.Land;
             Name = "Engineers";
         }
     }

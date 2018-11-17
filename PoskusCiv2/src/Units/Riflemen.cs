@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Riflemen() : base(40, 5, 4, 2, 1, 1)
         {
             Type = UnitType.Riflemen;
+            LSA = UnitLSA.Land;
             Name = "Riflemen";
         }
     }

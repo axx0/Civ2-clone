@@ -319,7 +319,7 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(126, 13), sf);
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(125, 12), sf);
 
-                int _movesLeft = Game.Instance.ActiveUnit.MovesLeft;
+                int _movesLeft = 3 * Game.Instance.ActiveUnit.StartingMoves - Game.Instance.ActiveUnit.MovesMade;
                 string movesLeft;
                 if (_movesLeft % 3 == 0)
                 {
@@ -515,6 +515,7 @@ namespace PoskusCiv2.Forms
         public void InvalidatePanel()
         {
             UnitPanel.Invalidate();
+            StatsPanel.Invalidate();
         }
     }
 }

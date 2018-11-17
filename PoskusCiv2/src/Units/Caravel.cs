@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Caravel() : base(40, 2, 1, 1, 1, 3)
         {
             Type = UnitType.Caravel;
+            LSA = UnitLSA.Sea;
             Name = "Caravel";
         }
     }

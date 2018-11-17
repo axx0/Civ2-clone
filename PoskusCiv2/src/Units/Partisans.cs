@@ -12,6 +12,7 @@ namespace PoskusCiv2.Units
         public Partisans() : base(50, 4, 4, 2, 1, 1)
         {
             Type = UnitType.Partisans;
+            LSA = UnitLSA.Land;
             Name = "Partisans";
         }
     }
