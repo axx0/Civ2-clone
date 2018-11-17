@@ -100,17 +100,33 @@ namespace PoskusCiv2.Units
 
         public void Irrigate()
         {
-            Action = UnitAction.BuildIrrigation;
-            MovesLeft = 0;
-            TurnEnded = true;
+            if ((Type == UnitType.Settlers) || (Type == UnitType.Engineers))
+            {
+                Action = UnitAction.BuildIrrigation;
+                MovesLeft = 0;
+                TurnEnded = true;
+            }
+            else
+            {
+                Action = UnitAction.Wait;
+            }
+
             Actions.Update();
         }
 
         public void Terraform()
         {
-            Action = UnitAction.TransformTerr;
-            MovesLeft = 0;
-            TurnEnded = true;
+            if (Type == UnitType.Engineers)
+            {
+                Action = UnitAction.TransformTerr;
+                MovesLeft = 0;
+                TurnEnded = true;
+            }
+            else
+            {
+                Action = UnitAction.Wait;
+            }
+
             Actions.Update();
         }
 
