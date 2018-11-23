@@ -304,8 +304,12 @@ namespace PoskusCiv2.Forms
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
+            string bcad;
+            if (Game.Data.GameYear < 0) { bcad = "B.C."; }
+            else { bcad = "A.D."; }
+
             e.Graphics.DrawString("640,000 People", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 2));
-            e.Graphics.DrawString("278 B.C. (Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
+            e.Graphics.DrawString(Math.Abs(Game.Data.GameYear).ToString() + " " + bcad + "(Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
             e.Graphics.DrawString("250 Gold 5.0.5", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
         }
 
