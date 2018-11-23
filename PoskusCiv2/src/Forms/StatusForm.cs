@@ -363,17 +363,36 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(126, 13), sf);
                 e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(125, 12), sf);
                 sf.Dispose();
+
+                int clickedX = (MapForm.ClickedBoxX - MapForm.ClickedBoxY % 2) / 2;    //convert from real to civ-2 style coordinates
+                int clickedY = MapForm.ClickedBoxY;
+                string sec_line = null;
+                if (Game.Terrain[clickedX, clickedY].River) { sec_line = ", River"; }
+                e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Terrain[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Terrain[clickedX, clickedY].Type + sec_line + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
+
+                //Draw all units on the clicked square
+                int ypos = 90;
+                IEnumerable<IUnit> unitMatches = Game.Units.Where(unit => unit.X == clickedX && unit.Y == clickedY);
+                foreach (IUnit unit in unitMatches)
+                {
+                    e.Graphics.DrawImage(Draw.DrawUnit(unit), 10, ypos);
+                    //Game.Cities[unit.HomeCity].Name
+                    //Game.Cities[0].Name
+                    Console.WriteLine("HomeCity={0}", unit.HomeCity);
+                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, ypos));
+                    e.Graphics.DrawString(unit.Action.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, ypos + 18));
+                    e.Graphics.DrawString(unit.Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, ypos + 2 * 18));
+                    ypos += 3 * 18;
+                }
+
+                
             }
         }
 
         //Receive and display X-Y coordinates on right-click on Map
-        public void ReceiveMousePositionFromMapForm(int X_coord_mouse, int Y_coord_mouse)
-        {            
-            int x = 2 * X_coord_mouse + Y_coord_mouse % 2;    //convert from real to civ-2 style coordinates
-            int y = Y_coord_mouse;
-            string sec_line = null;
-            //if (Game.Terrain[X_coord_mouse, Y_coord_mouse].River) { sec_line = ", River"; }
-            //cursorPositionLabel.Text = "Loc: (" + x.ToString() + ", " + y.ToString() + ") " + Game.Terrain[X_coord_mouse, Y_coord_mouse].Island.ToString() + " \n" + "(" + Game.Terrain[X_coord_mouse, Y_coord_mouse].Type + sec_line + ")";
+        public void ReceiveMousePositionFromMapForm()
+        {
+            InvalidatePanel();
         }
 
         //Update game year label

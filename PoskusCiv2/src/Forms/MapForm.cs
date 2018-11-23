@@ -17,15 +17,12 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        public static int offsetX, offsetY, CenterBoxX, CenterBoxY;
+        public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY;
         public int BoxNoX, BoxNoY;
-        public static int ClickedBoxX, ClickedBoxY;
         Random randomNo = new Random();
 
-        public bool GridIsChecked = false;
-        public bool DrawXYnumbers = false;
+        public bool CreateUnit, GridIsChecked = false, DrawXYnumbers = false;
         public static bool viewingPiecesMode = false;
-        public bool CreateUnit;
         
         //timer
         Timer t = new Timer();
@@ -187,9 +184,9 @@ namespace PoskusCiv2.Forms
             }
       
             //Draw viewing pieces
-            if (viewingPiecesMode & stej % 2 == 1)
+            if (viewingPiecesMode && stej % 2 == 1)
             {
-                e.Graphics.DrawImage(Images.ViewingPieces, 64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32);
+                e.Graphics.DrawImage(Images.ViewingPieces, 32 * (ClickedBoxX - offsetX), 16 * (ClickedBoxY - offsetY), 64, 32);
             }
 
         }
@@ -214,13 +211,12 @@ namespace PoskusCiv2.Forms
             ClickedBoxY = nY - nX + offsetY;
             offsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
-            MapPanel.Invalidate();
-
+            
             //Do not allow to move out of map bounds by limiting offset
             if (offsetX < 0) { offsetX = 0; }
             if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) { offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX; }
             if (offsetY < 0) { offsetY = 0; }
-            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }
+            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }            
 
             //After limiting offset, do not allow some combinations, e.g. (2,1)
             if (Math.Abs((offsetX - offsetY) % 2) == 1)
@@ -230,27 +226,21 @@ namespace PoskusCiv2.Forms
                 else if (offsetX - 1 > 0) { offsetX -= 1; }
                 else { offsetY -= 1; }
             }
+            MapPanel.Invalidate();
 
-
-            //Convert coordinates from Civ-2 style to real coordinates (only x, y is OK)
-            ClickedBoxX = (ClickedBoxX - (ClickedBoxY % 2)) / 2;
-
+            //int ClickedBoxX2 = (ClickedBoxX - (ClickedBoxY % 2)) / 2;   
+            int ClickedBoxX2 = ClickedBoxX; //TEST
             if (e.Button == MouseButtons.Right)
             {
-                viewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form
-                //mainCiv2Window.statusForm.UpdateUnitLabels(Game.unitInLine);    //update status form
-
-               //send mouse click location to status form
-                mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm(ClickedBoxX, ClickedBoxY);
+                viewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form                             
+                mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();  //send mouse click location to status form
             }
             else
-            {
-                //send mouse click location to status form
-                mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm(ClickedBoxX, ClickedBoxY);
-
-                if (Game.Cities.Any(city => city.X == ClickedBoxX && city.Y == ClickedBoxY))    //if city is clicked => open form
+            {                
+                mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();   //send mouse click location to status form
+                if (Game.Cities.Any(city => city.X == ClickedBoxX2 && city.Y == ClickedBoxY))    //if city is clicked => open form
                 {
-                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedBoxX && city.Y == ClickedBoxY));
+                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedBoxX2 && city.Y == ClickedBoxY));
                     cityForm.Show();
                 }
             }
