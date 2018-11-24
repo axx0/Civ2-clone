@@ -371,18 +371,23 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Terrain[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Terrain[clickedX, clickedY].Type + sec_line + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
 
                 //Draw all units on the clicked square
-                int ypos = 90;
-                IEnumerable<IUnit> unitMatches = Game.Units.Where(unit => unit.X == clickedX && unit.Y == clickedY);
+                int count = 0;
+                List<IUnit> unitMatches = Game.Units.FindAll(unit => unit.X == clickedX && unit.Y == clickedY);
                 foreach (IUnit unit in unitMatches)
                 {
-                    e.Graphics.DrawImage(Draw.DrawUnit(unit), 10, ypos);
+                    e.Graphics.DrawImage(Draw.DrawUnit(unit), 10, 90 + count * 3 * 18);
                     //Game.Cities[unit.HomeCity].Name
                     //Game.Cities[0].Name
-                    Console.WriteLine("HomeCity={0}", unit.HomeCity);
-                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, ypos));
-                    e.Graphics.DrawString(unit.Action.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, ypos + 18));
-                    e.Graphics.DrawString(unit.Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, ypos + 2 * 18));
-                    ypos += 3 * 18;
+                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18));
+                    e.Graphics.DrawString(unit.Action.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 18));
+                    e.Graphics.DrawString(unit.Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 2 * 18));
+                    count++;
+                    if (count > 6)
+                    {
+                        int c = unitMatches.Count - 7;
+                        e.Graphics.DrawString("(" + c.ToString() + " More Units)", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point (10, 90 + count * 3 * 18));
+                        break;
+                    }
                 }
 
                 
