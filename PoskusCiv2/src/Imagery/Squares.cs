@@ -36,6 +36,37 @@ namespace PoskusCiv2.Imagery
                 }
                 graphics.DrawImage(maptype, 0, 0);
 
+                //Dither
+                int col_ = 2 * col + row % 2;   //to civ2-style
+                //First check if you are on map edge. If not, look at type of terrain in all 4 directions.
+                TerrainType[,] tiletype = new TerrainType[2, 2];
+                if ((col_ != 0) && (row != 0)) { tiletype[0, 0] = Game.Terrain[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type; }
+                if ((col_ != 2 * Game.Data.MapXdim - 1) && (row != 0)) { tiletype[1, 0] = Game.Terrain[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type; }
+                if ((col_ != 0) && (row != Game.Data.MapYdim - 1)) { tiletype[0, 1] = Game.Terrain[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type; }
+                if ((col_ != 2 * Game.Data.MapXdim - 1) && (row != Game.Data.MapYdim - 1)) { tiletype[1, 1] = Game.Terrain[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type; }
+                //implement dither on 4 locations in square
+                for (int tileX = 0; tileX < 2; tileX++)    //for 4 directions
+                {
+                    for (int tileY = 0; tileY < 2; tileY++)
+                    {
+                        switch(tiletype[tileX, tileY])
+                        {
+                            case TerrainType.Desert: graphics.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Plains: graphics.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Grassland: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Forest: graphics.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Hills: graphics.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Mountains: graphics.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Tundra: graphics.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Glacier: graphics.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Swamp: graphics.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Jungle: graphics.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Ocean: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            default: break;
+                        }
+                    }
+                }
+                
                 //Draw coast & river mouth
                 if (Game.Terrain[col, row].Type == TerrainType.Ocean)
                 {
@@ -81,7 +112,7 @@ namespace PoskusCiv2.Imagery
 
                     //River mouth
                     //if next to ocean is river, draw river mouth on this tile                            
-                    int col_ = 2 * col + row % 2; //rewrite indexes in Civ2-style
+                    col_ = 2 * col + row % 2; //rewrite indexes in Civ2-style
                     int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
                     int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
                     if (col_ + 1 < Xdim && row - 1 >= 0)    //NE there is no edge of map
@@ -219,8 +250,6 @@ namespace PoskusCiv2.Imagery
 
                     if (Game.Terrain[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
                 }
-
-
 
                 //Special Resources (not grassland)
                 //(not yet 100% sure how this works)
@@ -480,7 +509,6 @@ namespace PoskusCiv2.Imagery
 
                         }
                     }
-
 
                     //Ce se izkaze da je tocka special, potem jo narisi
                     if (special == 1)

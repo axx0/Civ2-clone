@@ -10,8 +10,8 @@ namespace PoskusCiv2.Imagery
     public static class Images
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
-        public static Bitmap[,] Coast, City, CityWall;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible, Blank;
+        public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -85,9 +85,78 @@ namespace PoskusCiv2.Imagery
                 Ocean[i].MakeTransparent(transparentPink);
             }
 
+            //Dither
+            DitherBlank = (Bitmap)terrain1.Clone(new Rectangle(1, 447, 64, 32), terrain1.PixelFormat);
+
             //Blank tile
             Blank = (Bitmap)terrain1.Clone(new Rectangle(131, 447, 64, 32), terrain1.PixelFormat);
             Blank.MakeTransparent(transparentGray);
+
+            //Dither base (only useful for grasland?)
+            DitherBase = (Bitmap)terrain1.Clone(new Rectangle(196, 447, 64, 32), terrain1.PixelFormat);
+
+            //Replace black dither pixels with base pixels
+            DitherDesert = new Bitmap[2, 2];   //4 dither tiles for one 64x32 map tile
+            DitherPlains = new Bitmap[2, 2];
+            DitherGrassland = new Bitmap[2, 2];
+            DitherForest = new Bitmap[2, 2];
+            DitherHills = new Bitmap[2, 2];
+            DitherMountains = new Bitmap[2, 2];
+            DitherTundra = new Bitmap[2, 2];
+            DitherGlacier = new Bitmap[2, 2];
+            DitherSwamp = new Bitmap[2, 2];
+            DitherJungle = new Bitmap[2, 2];
+            Color replacementColor;
+            for (int tileX = 0; tileX < 2; tileX++)    //for 4 directions (NE, SE, SW, NW)
+            {
+                for (int tileY = 0; tileY < 2; tileY++)
+                {
+                    DitherDesert[tileX, tileY] = new Bitmap(32, 16);
+                    DitherPlains[tileX, tileY] = new Bitmap(32, 16);
+                    DitherGrassland[tileX, tileY] = new Bitmap(32, 16);
+                    DitherForest[tileX, tileY] = new Bitmap(32, 16);
+                    DitherHills[tileX, tileY] = new Bitmap(32, 16);
+                    DitherMountains[tileX, tileY] = new Bitmap(32, 16);
+                    DitherTundra[tileX, tileY] = new Bitmap(32, 16);
+                    DitherGlacier[tileX, tileY] = new Bitmap(32, 16);
+                    DitherSwamp[tileX, tileY] = new Bitmap(32, 16);
+                    DitherJungle[tileX, tileY] = new Bitmap(32, 16);
+                    for (int col = 0; col < 32; col++)
+                    {
+                        for (int row = 0; row < 16; row++)
+                        {
+                            replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
+                            if (replacementColor == Color.FromArgb(0, 0, 0))
+                            {
+                                DitherDesert[tileX, tileY].SetPixel(col, row, Desert[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherPlains[tileX, tileY].SetPixel(col, row, Plains[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherGrassland[tileX, tileY].SetPixel(col, row, Grassland[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherForest[tileX, tileY].SetPixel(col, row, ForestBase[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherHills[tileX, tileY].SetPixel(col, row, HillsBase[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherMountains[tileX, tileY].SetPixel(col, row, MtnsBase[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherTundra[tileX, tileY].SetPixel(col, row, Tundra[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherGlacier[tileX, tileY].SetPixel(col, row, Glacier[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherSwamp[tileX, tileY].SetPixel(col, row, Swamp[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherJungle[tileX, tileY].SetPixel(col, row, Jungle[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                            }
+                            else
+                            {
+                                DitherDesert[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherPlains[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherGrassland[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherForest[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherHills[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherMountains[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherTundra[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherGlacier[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherSwamp[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                                DitherJungle[tileX, tileY].SetPixel(col, row, Color.Transparent);
+                            }
+                        }
+                    }
+                }
+            }
+
 
             //Rivers, Forest, Mountains, Hills
             for (int i = 0; i < 16; i++)
