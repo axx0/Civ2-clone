@@ -168,7 +168,7 @@ namespace PoskusCiv2.Imagery
                     if (citySizeWindow) //Draw city size window
                     {
                         graphics.DrawRectangle(new Pen(Color.Black), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] - 1, Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);  //rectangle
-                        graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
+                        graphics.FillRectangle(new SolidBrush(CivColors.Light[city.Owner]), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
                         graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] + 4, Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
                     }
                     if (flagPresent)    //Draw city flag
@@ -182,7 +182,7 @@ namespace PoskusCiv2.Imagery
                     if (citySizeWindow)
                     {
                         graphics.DrawRectangle(new Pen(Color.Black), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] - 1, Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13); //Draw city (+Wall) size window
-                        graphics.FillRectangle(new SolidBrush(Images.CivColors[city.Owner]), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
+                        graphics.FillRectangle(new SolidBrush(CivColors.Light[city.Owner]), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
                         graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] + 4, Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text    
                     }
                     if (flagPresent)    //Draw city flag

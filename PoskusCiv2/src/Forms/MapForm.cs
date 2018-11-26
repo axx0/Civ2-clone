@@ -143,7 +143,7 @@ namespace PoskusCiv2.Forms
                 //Draw city name
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 2, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 2, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Images.CivColors[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
 
                 sf.Dispose();
             }
