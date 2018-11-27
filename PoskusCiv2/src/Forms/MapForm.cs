@@ -65,7 +65,7 @@ namespace PoskusCiv2.Forms
         private void MapForm_Load(object sender, EventArgs e)
         {
             //timer for animating units
-            t.Interval = 200; // specify interval time as you want (ms)
+            t.Interval = 2000; // specify interval time as you want (ms)
             t.Tick += new EventHandler(Timer_Tick);
             t.Start();
 
@@ -122,9 +122,17 @@ namespace PoskusCiv2.Forms
                     bool unitOnTopOfCity = false;
                     foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
 
-                    if (!unitOnTopOfCity)   //Draw only if unit NOT inside city
+                    if (!unitOnTopOfCity && unit.X != Game.Instance.ActiveUnit.X && unit.Y != Game.Instance.ActiveUnit.Y)   //Draw only if unit NOT inside city AND if active unit is not on same square
                     {
-                        e.Graphics.DrawImage(Draw.DrawUnit(unit), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                        List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
+                        if (unitsInXY.Count > 1)    //if units are stacked, draw only the last unit in the list
+                        {
+                            e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                        }
+                        else    //if units aren't stacked, draw normally
+                        {
+                            e.Graphics.DrawImage(Draw.DrawUnit(unit, false), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                        }                       
                     }
                 }
             }
@@ -153,7 +161,12 @@ namespace PoskusCiv2.Forms
             y = Game.Instance.ActiveUnit.Y;
             if (stej % 2 == 1)
             {
-                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                //Determine if active unit is stacked
+                bool stacked = false;
+                List<IUnit> unitsInXY = ListOfUnitsIn(Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
+                if (unitsInXY.Count > 1) { stacked = true; }
+
+                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
             }
 
             //Draw gridlines
@@ -257,6 +270,17 @@ namespace PoskusCiv2.Forms
         public void InvalidatePanel()
         {
             MapPanel.Invalidate();
+        }
+
+        //Return list of units on a X-Y square
+        private List<IUnit> ListOfUnitsIn(int x, int y)
+        {
+            List<IUnit> unitsInXY = new List<IUnit>();
+            foreach(IUnit unit in Game.Units)
+            {
+                if (unit.X == x && unit.Y == y) { unitsInXY.Add(unit); }
+            }
+            return unitsInXY;
         }
 
     }

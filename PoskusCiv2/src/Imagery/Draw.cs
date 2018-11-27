@@ -34,7 +34,7 @@ namespace PoskusCiv2.Imagery
         }
 
         //Draw unit
-        public Bitmap DrawUnit(IUnit unit)
+        public Bitmap DrawUnit(IUnit unit, bool stacked)
         {
             Bitmap square = new Bitmap(64, 48);    //define a bitmap for drawing
 
@@ -61,8 +61,28 @@ namespace PoskusCiv2.Imagery
                     case UnitAction.NoOrders: shieldText = "-"; break;
                     default: shieldText = "/"; break;
                 }
-                graphics.DrawImage(Images.BlackUnitShield, Images.unitShieldLocation[(int)unit.Type, 0] - 1, Images.unitShieldLocation[(int)unit.Type, 1]); //draw black shield border
-                graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //draw shield
+
+                //draw unit shields
+                if (stacked)    //draw dark shield if unit is stacked on top of others
+                {
+                    int firstShieldXLoc = Images.unitShieldLocation[(int)unit.Type, 0];
+                    int secondShieldXLoc = firstShieldXLoc;
+                    int secondShieldBorderXLoc;
+                    if (firstShieldXLoc < 32)//if main shield is on left side, move 10px to left
+                    {
+                        secondShieldXLoc -= 4;
+                        secondShieldBorderXLoc = secondShieldXLoc - 1;
+                    }  
+                    else
+                    {
+                        secondShieldXLoc += 4;
+                        secondShieldBorderXLoc = secondShieldXLoc + 1;
+                    }
+                    graphics.DrawImage(Images.BorderUnitShield, secondShieldBorderXLoc, Images.unitShieldLocation[(int)unit.Type, 1]); //black shield border
+                    graphics.DrawImage(Images.NoBorderUnitShield[(int)unit.Civ], secondShieldXLoc, Images.unitShieldLocation[(int)unit.Type, 1]);   //dark shield
+                }
+                graphics.DrawImage(Images.BorderUnitShield, Images.unitShieldLocation[(int)unit.Type, 0] - 1, Images.unitShieldLocation[(int)unit.Type, 1]); //black shield border
+                graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //main shield
                 graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    //Action on shield
 
                 if (unit.Action != UnitAction.Sentry)

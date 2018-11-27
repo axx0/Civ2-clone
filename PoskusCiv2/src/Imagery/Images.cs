@@ -9,9 +9,9 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, CityFlag;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BlackUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -402,6 +402,7 @@ namespace PoskusCiv2.Imagery
 
             Units = new Bitmap[63];
             UnitShield = new Bitmap[8];
+            NoBorderUnitShield = new Bitmap[8];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -430,10 +431,13 @@ namespace PoskusCiv2.Imagery
                 }
             }
 
+            //Extract shield without black border (used for stacked units)
+            Bitmap _noBorderUnitShield = (Bitmap)units.Clone(new Rectangle(586, 1, 12, 20), units.PixelFormat);
+            _noBorderUnitShield.MakeTransparent(transparentGray);
+
             //Extract shield with black border
-            BlackUnitShield = (Bitmap)units.Clone(new Rectangle(599, 1, 12, 20), units.PixelFormat);
-            BlackUnitShield.MakeTransparent(transparentGray);
-            BlackUnitShield.MakeTransparent(transparentPink);
+            BorderUnitShield = (Bitmap)units.Clone(new Rectangle(599, 1, 12, 20), units.PixelFormat);
+            BorderUnitShield.MakeTransparent(transparentGray);
 
             //Extract unit shield
             Bitmap _unitShield = (Bitmap)units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
@@ -448,12 +452,20 @@ namespace PoskusCiv2.Imagery
             UnitShield[5] = CreateNonIndexedImage(_unitShield);
             UnitShield[6] = CreateNonIndexedImage(_unitShield);
             UnitShield[7] = CreateNonIndexedImage(_unitShield);
-            //Replace colors
+            NoBorderUnitShield[0] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[1] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[2] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[3] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[4] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[5] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[6] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[7] = CreateNonIndexedImage(_noBorderUnitShield);
+            //Replace colors for unit shield and dark unit shield
             for (int x = 0; x < 12; x++)
             {
                 for (int y = 0; y < 20; y++)
                 {
-                    if (_unitShield.GetPixel(x, y) == transparentPink)    //pink
+                    if (_unitShield.GetPixel(x, y) == transparentPink)    //if color is pink, replace it
                     {
                         UnitShield[0].SetPixel(x, y, CivColors.Light[0]);  //red
                         UnitShield[1].SetPixel(x, y, CivColors.Light[1]);  //white
@@ -463,6 +475,19 @@ namespace PoskusCiv2.Imagery
                         UnitShield[5].SetPixel(x, y, CivColors.Light[5]);  //cyan
                         UnitShield[6].SetPixel(x, y, CivColors.Light[6]);  //orange
                         UnitShield[7].SetPixel(x, y, CivColors.Light[7]);  //purple
+
+                    }
+
+                    if (_noBorderUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    //if color is red, replace it
+                    {
+                        NoBorderUnitShield[0].SetPixel(x, y, CivColors.Dark[0]);  //red
+                        NoBorderUnitShield[1].SetPixel(x, y, CivColors.Dark[1]);  //white
+                        NoBorderUnitShield[2].SetPixel(x, y, CivColors.Dark[2]);  //green
+                        NoBorderUnitShield[3].SetPixel(x, y, CivColors.Dark[3]);  //blue
+                        NoBorderUnitShield[4].SetPixel(x, y, CivColors.Dark[4]);  //yellow
+                        NoBorderUnitShield[5].SetPixel(x, y, CivColors.Dark[5]);  //cyan
+                        NoBorderUnitShield[6].SetPixel(x, y, CivColors.Dark[6]);  //orange
+                        NoBorderUnitShield[7].SetPixel(x, y, CivColors.Dark[7]);  //purple
                     }
                 }
             }
