@@ -51,6 +51,16 @@ namespace PoskusCiv2.Units
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
 
+        public int X2   //Civ2 style
+        {
+            get { return 2 * X + (Y % 2); }
+        }
+
+        public int Y2   //Civ2 style
+        {
+            get { return Y; }
+        }
+
         private int _movesMade;
         public int MovesMade
         {

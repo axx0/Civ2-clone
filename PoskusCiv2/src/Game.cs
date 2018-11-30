@@ -31,6 +31,8 @@ namespace PoskusCiv2
 
         public static void StartGame()
         {
+            foreach(IUnit unit in Game.Units) { Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2); }
+
             //At game start, set turn ended to all units until you get to the active unit
             foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
@@ -156,10 +158,11 @@ namespace PoskusCiv2
             unit.LinkOtherUnitsOnTop = linkOtherUnitsOnTop;
             unit.LinkOtherUnitsUnder = linkOtherUnitsUnder;
 
+            Console.WriteLine("UnitXY: ({0},{1}) {2} {3}", unit.X, unit.Y, unit.Name, unit.Civ);
+
             Units.Add(unit);
             return unit;
         }
-
 
         public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodBox, int shieldBox, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements)
         {
@@ -238,7 +241,7 @@ namespace PoskusCiv2
                 TribeName = tribeName,
                 Adjective = adjective
             };
-
+            
             Civs.Add(civ);
             return civ;
         }

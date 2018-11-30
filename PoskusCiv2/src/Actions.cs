@@ -43,8 +43,8 @@ namespace PoskusCiv2
                     allUnitsEndedTurn = false;
 
                     //Center view on new unit in MapForm
-                    MapForm.offsetX = 2 * _unit.X + (_unit.Y % 2) - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
-                    MapForm.offsetY = _unit.Y - 2 * (MapForm.CenterBoxY - 1);
+                    MapForm.offsetX = _unit.X2 - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
+                    MapForm.offsetY = _unit.Y2 - 2 * (MapForm.CenterBoxY - 1);
 
                     break;
                 }

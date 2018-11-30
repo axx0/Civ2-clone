@@ -12,6 +12,17 @@ namespace PoskusCiv2
     {
         public int X { get; set; }
         public int Y { get; set; }
+
+        public int X2   //Civ2 style
+        {
+            get { return 2 * X + (Y % 2); }
+        }
+
+        public int Y2   //Civ2 style
+        {
+            get { return Y; }
+        }
+
         public bool CanBuildCoastal { get; set; }
         public bool AutobuildMilitaryRule { get; set; }
         public bool StolenTech { get; set; }

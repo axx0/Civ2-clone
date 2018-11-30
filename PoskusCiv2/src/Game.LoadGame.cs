@@ -555,7 +555,7 @@ namespace PoskusCiv2
                 intVal1 = dataArray[ofsetU + multipl * i + 24];
                 intVal2 = dataArray[ofsetU + multipl * i + 25];
                 int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-
+                
                 IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovesMade, unitHitpointsLost, unitLastMove, unitCaravanCommodity, (UnitAction)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
 

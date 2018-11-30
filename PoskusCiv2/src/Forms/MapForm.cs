@@ -113,11 +113,10 @@ namespace PoskusCiv2.Forms
             int x, y;
             foreach (IUnit unit in Game.Units)
             {
+                //Console.WriteLine("XY={0},{1}", unit.X, unit.Y);
+
                 if (unit != Game.Instance.ActiveUnit)
                 {
-                    x = 2 * unit.X + unit.Y % 2;    //convert XY to civ2-style
-                    y = unit.Y;
-
                     //Determine if unit inside city
                     bool unitOnTopOfCity = false;
                     foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
@@ -127,11 +126,12 @@ namespace PoskusCiv2.Forms
                         List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
                         if (unitsInXY.Count > 1)    //if units are stacked, draw only the last unit in the list
                         {
-                            e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                            //Console.WriteLine("Stacked units: ({0},{1}) {2}", unitsInXY.Last().X, unitsInXY.Last().Y, unitsInXY.Last().Name);
+                            e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
                         }
                         else    //if units aren't stacked, draw normally
                         {
-                            e.Graphics.DrawImage(Draw.DrawUnit(unit, false), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                            e.Graphics.DrawImage(Draw.DrawUnit(unit, false), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
                         }                       
                     }
                 }
@@ -140,25 +140,20 @@ namespace PoskusCiv2.Forms
             //Draw cities
             foreach (City city in Game.Cities)
             {
-                x = 2 * city.X + city.Y % 2;    //convert XY to civ2-style
-                y = city.Y;
-
-                e.Graphics.DrawImage(Draw.DrawCity(city, true), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                e.Graphics.DrawImage(Draw.DrawCity(city, true), 32 * (city.X2 - offsetX), 16 * (city.Y2 - offsetY) - 16);
 
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
                 //Draw city name
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32 + 2, 16 * (y - offsetY) + 32, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32 + 2, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (x - offsetX) + 32, 16 * (y - offsetY) + 32, sf);
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - offsetX) + 32 + 2, 16 * (city.Y2 - offsetY) + 32, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - offsetX) + 32, 16 * (city.Y2 - offsetY) + 32 + 2, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (city.X2 - offsetX) + 32, 16 * (city.Y2 - offsetY) + 32, sf);
 
                 sf.Dispose();
             }
 
             //Draw active unit
-            x = 2 * Game.Instance.ActiveUnit.X + Game.Instance.ActiveUnit.Y % 2;    //convert XY to civ2-style
-            y = Game.Instance.ActiveUnit.Y;
             if (stej % 2 == 1)
             {
                 //Determine if active unit is stacked
@@ -166,7 +161,7 @@ namespace PoskusCiv2.Forms
                 List<IUnit> unitsInXY = ListOfUnitsIn(Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
                 if (unitsInXY.Count > 1) { stacked = true; }
 
-                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked), 32 * (x - offsetX), 16 * (y - offsetY) - 16);
+                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked), 32 * (Game.Instance.ActiveUnit.X2 - offsetX), 16 * (Game.Instance.ActiveUnit.Y2 - offsetY) - 16);
             }
 
             //Draw gridlines
