@@ -82,7 +82,6 @@
     <Compile Include="src\Imagery\ModifyImage.cs" />
     <Compile Include="src\Imagery\Squares.cs" />
     <Compile Include="src\Imagery\Images.cs" />
-    <Compile Include="src\ImportSavegame.cs" />
     <Compile Include="src\Forms\MainCiv2Window.cs">
       <SubType>Form</SubType>
     </Compile>

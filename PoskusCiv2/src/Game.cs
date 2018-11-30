@@ -31,7 +31,10 @@ namespace PoskusCiv2
 
         public static void StartGame()
         {
-            foreach(IUnit unit in Game.Units) { Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2); }
+            foreach(IUnit unit in Game.Units)
+            {
+                Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4}), dead={5}", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2, unit.Dead);
+            }
 
             //At game start, set turn ended to all units until you get to the active unit
             foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
@@ -83,7 +86,7 @@ namespace PoskusCiv2
             Terrain[x, y] = terrain;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int lastMove, int caravanCommodity, UnitAction orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int lastMove, int caravanCommodity, UnitAction orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
             switch (type)
@@ -143,6 +146,7 @@ namespace PoskusCiv2
             }
             unit.X = x;
             unit.Y = y;
+            unit.Dead = dead;
             unit.FirstMove = firstMove;
             unit.GreyStarShield = greyStarShield;
             unit.Veteran = veteran;
@@ -157,8 +161,6 @@ namespace PoskusCiv2
             unit.GoToY = goToY;
             unit.LinkOtherUnitsOnTop = linkOtherUnitsOnTop;
             unit.LinkOtherUnitsUnder = linkOtherUnitsUnder;
-
-            Console.WriteLine("UnitXY: ({0},{1}) {2} {3}", unit.X, unit.Y, unit.Name, unit.Civ);
 
             Units.Add(unit);
             return unit;

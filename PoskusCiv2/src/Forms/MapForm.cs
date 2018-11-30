@@ -28,7 +28,6 @@ namespace PoskusCiv2.Forms
         Timer t = new Timer();
         int stej = 0;   //records no of timer ticks
 
-        ImportSavegame importMap = new ImportSavegame();
         Draw Draw = new Draw();
         Bitmap Map;
         

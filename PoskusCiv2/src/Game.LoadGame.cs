@@ -479,12 +479,17 @@ namespace PoskusCiv2
 
             for (int i = 0; i < numberOfUnits; i++)
             {
-                //Unit X locatioin
+                //Unit X location (civ2-style)
                 intVal1 = dataArray[ofsetU + multipl * i + 0];
                 intVal2 = dataArray[ofsetU + multipl * i + 1];
                 int unitXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Unit Y locatioin
+                //Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
+                bool unit_dead = false;
+                bin = Convert.ToString(intVal2, 2).PadLeft(8, '0');
+                if (bin[0] == '1') { unit_dead = true; }
+
+                //Unit Y location (civ2-style)
                 intVal1 = dataArray[ofsetU + multipl * i + 2];
                 intVal2 = dataArray[ofsetU + multipl * i + 3];
                 int unitYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
@@ -556,7 +561,7 @@ namespace PoskusCiv2
                 intVal2 = dataArray[ofsetU + multipl * i + 25];
                 int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
                 
-                IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovesMade, unitHitpointsLost, unitLastMove, unitCaravanCommodity, (UnitAction)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
+                IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovesMade, unitHitpointsLost, unitLastMove, unitCaravanCommodity, (UnitAction)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
 
 
@@ -573,12 +578,12 @@ namespace PoskusCiv2
             char[] asciichar = new char[15];            
             for (int i = 0; i < numberOfCities; i++)
             {
-                //City X location
+                //City X location (civ2-style)
                 intVal1 = dataArray[ofsetC + multipl * i + 0];
                 intVal2 = dataArray[ofsetC + multipl * i + 1];
                 int cityXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //City Y location
+                //City Y location (civ2-style)
                 intVal1 = dataArray[ofsetC + multipl * i + 2];
                 intVal2 = dataArray[ofsetC + multipl * i + 3];
                 int cityYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);

@@ -36,6 +36,7 @@ namespace PoskusCiv2.Units
             set { _y = value; }
         }
 
+        public bool Dead { get; set; }
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
@@ -61,6 +62,16 @@ namespace PoskusCiv2.Units
             get { return Y; }
         }
 
+        public int GoToX2   //Civ2 style
+        {
+            get { return 2 * GoToX + (GoToY % 2); }
+        }
+
+        public int GoToY2   //Civ2 style
+        {
+            get { return GoToY; }
+        }
+
         private int _movesMade;
         public int MovesMade
         {
@@ -70,8 +81,8 @@ namespace PoskusCiv2.Units
         
         public void Move(int moveX, int moveY)
         {
-            int xTo = 2 * X + Y % 2 + moveX;    //new coordinates in Civ2-style
-            int yTo = Y + moveY;
+            int xTo = X2 + moveX;    //Civ2-style
+            int yTo = Y2 + moveY;
             int Xto = (xTo - yTo % 2) / 2;  //from civ2-style to real coords
             int Yto = yTo;
 
