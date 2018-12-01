@@ -64,7 +64,7 @@ namespace PoskusCiv2.Forms
         private void MapForm_Load(object sender, EventArgs e)
         {
             //timer for animating units
-            t.Interval = 2000; // specify interval time as you want (ms)
+            t.Interval = 200; // specify interval time as you want (ms)
             t.Tick += new EventHandler(Timer_Tick);
             t.Start();
 
@@ -109,23 +109,21 @@ namespace PoskusCiv2.Forms
                 GraphicsUnit.Pixel);
 
             //Draw all units
-            int x, y;
             foreach (IUnit unit in Game.Units)
             {
-                //Console.WriteLine("XY={0},{1}", unit.X, unit.Y);
-
                 if (unit != Game.Instance.ActiveUnit)
                 {
                     //Determine if unit inside city
                     bool unitOnTopOfCity = false;
                     foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
 
-                    if (!unitOnTopOfCity && unit.X != Game.Instance.ActiveUnit.X && unit.Y != Game.Instance.ActiveUnit.Y)   //Draw only if unit NOT inside city AND if active unit is not on same square
-                    {
+                    Console.WriteLine("Active unit: {0}, {1}, {2}", Game.Instance.ActiveUnit.Name, Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
+
+                    if (!unitOnTopOfCity && (unit.X != Game.Instance.ActiveUnit.X || unit.Y != Game.Instance.ActiveUnit.Y))   //Draw only if unit NOT inside city AND if active unit is not on same square
+                    {                        
                         List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
                         if (unitsInXY.Count > 1)    //if units are stacked, draw only the last unit in the list
                         {
-                            //Console.WriteLine("Stacked units: ({0},{1}) {2}", unitsInXY.Last().X, unitsInXY.Last().Y, unitsInXY.Last().Name);
                             e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
                         }
                         else    //if units aren't stacked, draw normally
@@ -174,8 +172,9 @@ namespace PoskusCiv2.Forms
                     }
                 }
             }
-            
+
             //Draw (x,y) locations on grid
+            int x, y;
             if (DrawXYnumbers)
             {
                 for (int i = 0; i < BoxNoX; i++)

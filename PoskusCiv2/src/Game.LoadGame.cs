@@ -569,7 +569,7 @@ namespace PoskusCiv2
             //CITIES
             //=========================
             int ofsetC = ofsetU + multipl * numberOfUnits;
-            Console.WriteLine("offset Cities=" + ofsetC.ToString());
+            //Console.WriteLine("offset Cities=" + ofsetC.ToString());
 
             if (version <= 2) { multipl = 84; } //FW or CiC
             else if (version == 3) { multipl = 88; }    //MGE

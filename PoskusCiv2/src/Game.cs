@@ -17,6 +17,7 @@ namespace PoskusCiv2
     public partial class Game
     {
         public static List<IUnit> Units = new List<IUnit>();
+        public static List<IUnit> DeadUnits = new List<IUnit>();
         public static List<City> Cities = new List<City>();
         public static List<Civilization> Civs = new List<Civilization>();        
         public static ITerrain[,] Terrain;
@@ -31,9 +32,15 @@ namespace PoskusCiv2
 
         public static void StartGame()
         {
-            foreach(IUnit unit in Game.Units)
+            Console.WriteLine("Active units:");
+            foreach (IUnit unit in Game.Units)  //Active units
             {
-                Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4}), dead={5}", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2, unit.Dead);
+                Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
+            }
+            Console.WriteLine("Dead units:");
+            foreach (IUnit unit in Game.DeadUnits)  //Dead units
+            {
+                Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
             }
 
             //At game start, set turn ended to all units until you get to the active unit
@@ -162,7 +169,8 @@ namespace PoskusCiv2
             unit.LinkOtherUnitsOnTop = linkOtherUnitsOnTop;
             unit.LinkOtherUnitsUnder = linkOtherUnitsUnder;
 
-            Units.Add(unit);
+            if (dead) { DeadUnits.Add(unit); }
+            else { Units.Add(unit); }            
             return unit;
         }
 
