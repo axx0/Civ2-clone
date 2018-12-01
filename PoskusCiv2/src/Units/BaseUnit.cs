@@ -36,11 +36,9 @@ namespace PoskusCiv2.Units
             set { _y = value; }
         }
 
-        public bool Dead { get; set; }
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
-        public bool TurnEnded { get; set; }
         public int Civ { get; set; }
         public int HitpointsLost { get; set; }
         public int LastMove { get; set; }
@@ -51,6 +49,7 @@ namespace PoskusCiv2.Units
         public int GoToY { get; set; }
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
+        public int Counter { get; set; }
 
         public int X2   //Civ2 style
         {
@@ -72,11 +71,11 @@ namespace PoskusCiv2.Units
             get { return GoToY; }
         }
 
-        private int _movesMade;
-        public int MovesMade
+        private int _movePointsLost;
+        public int MovePointsLost
         {
-            get { return _movesMade; }
-            set { _movesMade = value; }
+            get { return _movePointsLost; }
+            set { _movePointsLost = value; }
         }
         
         public void Move(int moveX, int moveY)
@@ -90,36 +89,53 @@ namespace PoskusCiv2.Units
             {
                 if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent)) //From & To must be cities or road (movement reduced)
                 {
-                    MovesMade = MovesMade + 1;
+                    MovePointsLost = MovePointsLost + 1;
                 }
                 else
                 {
-                    MovesMade = MovesMade + 3;
+                    MovePointsLost = MovePointsLost + 3;
                 }
                 X = Xto;
                 Y = Yto;                
             }
 
-            if (MovesMade >= 3 * StartingMoves)
+            if (MovePointsLost >= 3 * StartingMoves)
             {
                 TurnEnded = true;
-                MovesMade = 3 * StartingMoves;
+                MovePointsLost = 3 * StartingMoves;
             }
 
-            Actions.UpdateUnit();
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
+        }
+
+        private bool _turnEnded;
+        public bool TurnEnded
+        {
+            get
+            {
+                if (MovePointsLost >= 3 * StartingMoves)
+                {
+                    MovePointsLost = 3 * StartingMoves;
+                    _turnEnded = true;
+                }
+                else if (Action == UnitAction.Fortified || Action == UnitAction.Sentry || Action == UnitAction.TransformTerr || Action == UnitAction.Fortify || Action == UnitAction.BuildIrrigation || Action == UnitAction.BuildRoadRR || Action == UnitAction.BuildAirbase || Action == UnitAction.BuildFortress || Action == UnitAction.BuildMine) { _turnEnded = true; }
+                else { _turnEnded = false; }
+
+                return _turnEnded;
+            }
+            set { _turnEnded = value; }
         }
 
         public void SkipTurn()
         {
             TurnEnded = true;
-            Actions.UpdateUnit();
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Fortify()
         {
             Action = UnitAction.Fortify;
-            TurnEnded = true;
-            Actions.UpdateUnit();
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Irrigate()
@@ -127,14 +143,13 @@ namespace PoskusCiv2.Units
             if ((Type == UnitType.Settlers) || (Type == UnitType.Engineers))
             {
                 Action = UnitAction.BuildIrrigation;
-                TurnEnded = true;
+                Counter = 0;    //reset counter
             }
             else
             {
-                Action = UnitAction.Wait;
+                //Warning!
             }
-
-            Actions.UpdateUnit();
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Terraform()
@@ -142,27 +157,20 @@ namespace PoskusCiv2.Units
             if (Type == UnitType.Engineers)
             {
                 Action = UnitAction.TransformTerr;
-                TurnEnded = true;
             }
-            else
-            {
-                Action = UnitAction.Wait;
-            }
-
-            Actions.UpdateUnit();
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Sentry()
         {
             Action = UnitAction.Sentry;
-            TurnEnded = true;
-            Actions.UpdateUnit();
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void BuildRoad()
         {
             Action = UnitAction.BuildRoadRR;
-
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         protected BaseUnit(int cost = 1, int attack = 1, int defense = 1, int hitpoints = 1, int firepower = 1, int moves = 1)

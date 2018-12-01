@@ -16,12 +16,11 @@ namespace PoskusCiv2.Units
         int Y { get; set; }
         int X2 { get; }
         int Y2 { get; }
-        bool Dead { get; set; }
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
         int Civ { get; set; }
-        int MovesMade { get; set; }
+        int MovePointsLost { get; set; }
         int HitpointsLost { get; set; }
         int LastMove { get; set; }
         int CaravanCommodity { get; set; }
@@ -33,6 +32,7 @@ namespace PoskusCiv2.Units
         int GoToY2 { get; }
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
+        int Counter { get; set; }
 
         void Move(int moveX, int moveY);
         void SkipTurn();

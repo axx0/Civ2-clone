@@ -323,15 +323,15 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(126, 13), sf);
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(125, 12), sf);
 
-                int _movesLeft = 3 * Game.Instance.ActiveUnit.StartingMoves - Game.Instance.ActiveUnit.MovesMade;
+                int _movePointsLeft = 3 * Game.Instance.ActiveUnit.StartingMoves - Game.Instance.ActiveUnit.MovePointsLost;
                 string movesLeft;
-                if (_movesLeft % 3 == 0)
+                if (_movePointsLeft % 3 == 0)
                 {
-                    movesLeft = "Moves: " + (_movesLeft / 3).ToString();
+                    movesLeft = "Moves: " + (_movePointsLeft / 3).ToString();
                 }
                 else
                 {
-                    movesLeft = "Moves: " + Convert.ToInt32(Math.Floor((double)_movesLeft / 3)).ToString() + " " + (_movesLeft % 3).ToString() + "/3";
+                    movesLeft = "Moves: " + Convert.ToInt32(Math.Floor((double)_movePointsLeft / 3)).ToString() + " " + (_movePointsLeft % 3).ToString() + "/3";
                 }
                 e.Graphics.DrawString(movesLeft, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 30));
 

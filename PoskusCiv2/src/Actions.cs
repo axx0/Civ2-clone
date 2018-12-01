@@ -15,13 +15,19 @@ namespace PoskusCiv2
 {
     static class Actions
     {
-        public static void UpdateUnit()
+        public static void UpdateUnit(IUnit unit)
         {
             //If unit has ended turn
-            if (Game.Instance.ActiveUnit.TurnEnded || (Game.Instance.ActiveUnit.Action == UnitAction.Fortified) || (Game.Instance.ActiveUnit.Action == UnitAction.Fortify) || (Game.Instance.ActiveUnit.Action == UnitAction.TransformTerr) || (Game.Instance.ActiveUnit.Action == UnitAction.Sentry))
+            if (unit.TurnEnded) { NextUnit(); }
+
+            //Check if unit has done irrigating
+            if (unit.Action == UnitAction.BuildIrrigation)
             {
-                Game.Instance.ActiveUnit.TurnEnded = true;
-                NextUnit();
+                if (unit.Counter == 2)
+                {                    
+                    //Game.Terrain[unit.X, unit.Y] = TerrainType.Ir
+                    unit.Action = UnitAction.NoOrders;
+                }
             }
 
             Application.OpenForms.OfType<StatusForm>().First().InvalidatePanel();
@@ -33,18 +39,18 @@ namespace PoskusCiv2
         {
             //Move on to next unit
             bool allUnitsEndedTurn = true;
-            foreach (IUnit _unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
-                if (!_unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
+                if (!unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
                 {
-                    Game.Instance.ActiveUnit = _unit;
-                    Game.Instance.ActiveUnit.FirstMove = true;
+                    Game.Instance.ActiveUnit = unit;
+                    //Game.Instance.ActiveUnit.FirstMove = true;
 
                     allUnitsEndedTurn = false;
 
                     //Center view on new unit in MapForm
-                    MapForm.offsetX = _unit.X2 - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
-                    MapForm.offsetY = _unit.Y2 - 2 * (MapForm.CenterBoxY - 1);
+                    MapForm.offsetX = Game.Instance.ActiveUnit.X2 - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
+                    MapForm.offsetY = Game.Instance.ActiveUnit.Y2 - 2 * (MapForm.CenterBoxY - 1);
 
                     break;
                 }
@@ -52,7 +58,7 @@ namespace PoskusCiv2
 
             if (allUnitsEndedTurn) { NewTurn(); }
 
-            UpdateUnit();
+            UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public static void NewTurn()
@@ -62,8 +68,15 @@ namespace PoskusCiv2
             //At beginning of turn, set all units to active
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
+                //Increase counters
+                if (unit.Action == UnitAction.BuildIrrigation)
+                {
+                    unit.Counter += 1;
+                    UpdateUnit(unit);
+                }
+
                 unit.TurnEnded = false;
-                unit.MovesMade = 0;
+                unit.MovePointsLost = 0;
             }
         }
 

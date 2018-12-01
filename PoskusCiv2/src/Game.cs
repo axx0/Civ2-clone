@@ -28,30 +28,23 @@ namespace PoskusCiv2
         //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
         //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
 
-        private int _activeUnit;
-
         public static void StartGame()
         {
             Console.WriteLine("Active units:");
-            foreach (IUnit unit in Game.Units)  //Active units
+            foreach (IUnit unit in Game.Units)  //List active units
             {
                 Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
             }
             Console.WriteLine("Dead units:");
-            foreach (IUnit unit in Game.DeadUnits)  //Dead units
+            foreach (IUnit unit in Game.DeadUnits)  //List dead units
             {
                 Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
             }
 
-            //At game start, set turn ended to all units until you get to the active unit
-            foreach (IUnit unit in Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
-            {
-                if (unit == Units[Data.UnitSelectedAtGameStart]) { Game.Instance.ActiveUnit = unit; }
-                else { unit.TurnEnded = true; }
-            }
+            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];    //Set active unit at game start
         }
 
-        
+        private int _activeUnit;
         public IUnit ActiveUnit
         {
             get { return Units[_activeUnit]; }
@@ -93,7 +86,7 @@ namespace PoskusCiv2
             Terrain[x, y] = terrain;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movesMade, int hitpointsLost, int lastMove, int caravanCommodity, UnitAction orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, UnitAction orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
             switch (type)
@@ -153,12 +146,11 @@ namespace PoskusCiv2
             }
             unit.X = x;
             unit.Y = y;
-            unit.Dead = dead;
             unit.FirstMove = firstMove;
             unit.GreyStarShield = greyStarShield;
             unit.Veteran = veteran;
             unit.Civ = civ;
-            unit.MovesMade = movesMade;
+            unit.MovePointsLost = movePointsLost;
             unit.HitpointsLost = hitpointsLost;
             unit.LastMove = lastMove;
             unit.CaravanCommodity = caravanCommodity;

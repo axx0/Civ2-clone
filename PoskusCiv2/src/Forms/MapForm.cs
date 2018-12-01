@@ -117,8 +117,6 @@ namespace PoskusCiv2.Forms
                     bool unitOnTopOfCity = false;
                     foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
 
-                    Console.WriteLine("Active unit: {0}, {1}, {2}", Game.Instance.ActiveUnit.Name, Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
-
                     if (!unitOnTopOfCity && (unit.X != Game.Instance.ActiveUnit.X || unit.Y != Game.Instance.ActiveUnit.Y))   //Draw only if unit NOT inside city AND if active unit is not on same square
                     {                        
                         List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
