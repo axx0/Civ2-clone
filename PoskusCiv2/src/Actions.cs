@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoskusCiv2.Enums;
 using PoskusCiv2.Units;
+using PoskusCiv2.Imagery;
 using PoskusCiv2.Terrains;
 using PoskusCiv2.Improvements;
 using PoskusCiv2.Forms;
@@ -24,8 +25,41 @@ namespace PoskusCiv2
             if (unit.Action == UnitAction.BuildIrrigation)
             {
                 if (unit.Counter == 2)
-                {                    
-                    //Game.Terrain[unit.X, unit.Y] = TerrainType.Ir
+                {
+                    if (Game.Terrain[unit.X, unit.Y].Irrigation == false) //Build irrigation
+                    {
+                        Game.Terrain[unit.X, unit.Y].Irrigation = true;
+                    }
+                    else if ((Game.Terrain[unit.X, unit.Y].Irrigation == true) && (Game.Terrain[unit.X, unit.Y].Farmland == false)) //Build farms
+                    {
+                        Game.Terrain[unit.X, unit.Y].Farmland = true;
+                    }
+                    Game.Map = Draw.DrawMap();  //Update game map
+                    unit.Action = UnitAction.NoOrders;
+                }
+            }
+            else if (unit.Action == UnitAction.BuildRoadRR)
+            {
+                if (unit.Counter == 2)
+                {
+                    if (Game.Terrain[unit.X, unit.Y].Road == false) //Build road
+                    {
+                        Game.Terrain[unit.X, unit.Y].Road = true;
+                    }
+                    else if ((Game.Terrain[unit.X, unit.Y].Road == true) && (Game.Terrain[unit.X, unit.Y].Railroad == false)) //Build railroad
+                    {
+                        Game.Terrain[unit.X, unit.Y].Railroad = true;
+                    }
+                    Game.Map = Draw.DrawMap();  //Update game map
+                    unit.Action = UnitAction.NoOrders;
+                }
+            }
+            else if (unit.Action == UnitAction.BuildMine)
+            {
+                if (unit.Counter == 2)
+                {
+                    Game.Terrain[unit.X, unit.Y].Mining = true;
+                    Game.Map = Draw.DrawMap();  //Update game map
                     unit.Action = UnitAction.NoOrders;
                 }
             }
@@ -69,7 +103,7 @@ namespace PoskusCiv2
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
             {
                 //Increase counters
-                if (unit.Action == UnitAction.BuildIrrigation)
+                if ((unit.Action == UnitAction.BuildIrrigation) || (unit.Action == UnitAction.BuildRoadRR) || (unit.Action == UnitAction.BuildMine))
                 {
                     unit.Counter += 1;
                     UpdateUnit(unit);
@@ -99,8 +133,10 @@ namespace PoskusCiv2
                 case 'i': Game.Instance.ActiveUnit.Irrigate(); break;
                 case 'o': Game.Instance.ActiveUnit.Terraform(); break;
                 case 'r': Game.Instance.ActiveUnit.BuildRoad(); break;
+                case 'm': Game.Instance.ActiveUnit.BuildMines(); break;
                 default: break;
             }
         }
+
     }
 }

@@ -41,6 +41,7 @@ namespace PoskusCiv2.Units
         void Terraform();
         void Sentry();
         void BuildRoad();
+        void BuildMines();
         bool TurnEnded { get; set; }
 
         int Attack { get;  }

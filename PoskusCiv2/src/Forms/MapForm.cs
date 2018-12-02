@@ -18,6 +18,7 @@ namespace PoskusCiv2.Forms
         public MainCiv2Window mainCiv2Window;
 
         public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY;
+        //public static Bitmap Map;
         public int BoxNoX, BoxNoY;
         Random randomNo = new Random();
 
@@ -29,7 +30,6 @@ namespace PoskusCiv2.Forms
         int stej = 0;   //records no of timer ticks
 
         Draw Draw = new Draw();
-        Bitmap Map;
         
         CreateUnitForm createUnitForm = new CreateUnitForm();
 
@@ -58,7 +58,10 @@ namespace PoskusCiv2.Forms
             MapPanel.Paint += MapPanel_Paint;
             MapPanel.MouseClick += MapPanel_MouseClick;
 
-            Map = Draw.DrawMap(); //prepare whole game map
+            //Map = Draw.DrawMap(); //prepare whole game map
+
+
+
         }
 
         private void MapForm_Load(object sender, EventArgs e)
@@ -102,7 +105,7 @@ namespace PoskusCiv2.Forms
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.DrawImage(
-                Map,
+                Game.Map,
                 0,
                 0,
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),

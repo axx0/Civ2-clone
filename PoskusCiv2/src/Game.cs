@@ -11,6 +11,7 @@ using PoskusCiv2.Improvements;
 using PoskusCiv2.Forms;
 using PoskusCiv2.Imagery;
 using ExtensionMethods;
+using System.Drawing;
 
 namespace PoskusCiv2
 {
@@ -23,6 +24,7 @@ namespace PoskusCiv2
         public static ITerrain[,] Terrain;
         public static Options Options;
         public static Data Data;
+        public static Bitmap Map;
 
         //load sound for moving piece
         //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
@@ -41,7 +43,12 @@ namespace PoskusCiv2
                 Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
             }
 
-            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];    //Set active unit at game start
+            //Draw game map
+            //Draw Draw = new Draw();
+            Map = Draw.DrawMap(); //prepare whole game map
+
+            //Set active unit at game start
+            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];
         }
 
         private int _activeUnit;

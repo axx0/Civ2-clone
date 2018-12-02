@@ -140,9 +140,23 @@ namespace PoskusCiv2.Units
 
         public void Irrigate()
         {
-            if ((Type == UnitType.Settlers) || (Type == UnitType.Engineers))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Irrigation == false) || (Game.Terrain[X, Y].Farmland == false)))
             {
                 Action = UnitAction.BuildIrrigation;
+                Counter = 0;    //reset counter
+            }
+            else
+            {
+                //Warning!
+            }
+            Actions.UpdateUnit(Game.Instance.ActiveUnit);
+        }
+
+        public void BuildMines()
+        {
+            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.Terrain[X, Y].Mining == false && (Game.Terrain[X, Y].Type == TerrainType.Mountains || Game.Terrain[X, Y].Type == TerrainType.Hills))
+            {
+                Action = UnitAction.BuildMine;
                 Counter = 0;    //reset counter
             }
             else
@@ -169,7 +183,15 @@ namespace PoskusCiv2.Units
 
         public void BuildRoad()
         {
-            Action = UnitAction.BuildRoadRR;
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Road == false) || (Game.Terrain[X, Y].Railroad == false)))
+            {
+                Action = UnitAction.BuildRoadRR;
+                Counter = 0;    //reset counter
+            }
+            else
+            {
+                //Warning!
+            }
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 

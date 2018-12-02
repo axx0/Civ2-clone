@@ -13,10 +13,10 @@ namespace PoskusCiv2.Imagery
     class Draw
     {
         //Draw entire game map
-        public Bitmap DrawMap()
+        public static Bitmap DrawMap()
         {
             Bitmap map = new Bitmap(Game.Data.MapXdim * 64 + 32, Game.Data.MapYdim * 32 + 16);    //define a bitmap for drawing map
-
+            
             Squares square = new Squares();
                        
             using (Graphics graphics = Graphics.FromImage(map))
