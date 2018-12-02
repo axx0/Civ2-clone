@@ -12,7 +12,8 @@ namespace PoskusCiv2.Terrains
         public Jungle() : base(1, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15)
         {
             Type = TerrainType.Jungle;
-            Name = "Jungle";            
+            Name = "Jungle";
+            SpecialName = "";
         }
     }
 }

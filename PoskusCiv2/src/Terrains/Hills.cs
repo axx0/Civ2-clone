@@ -12,7 +12,8 @@ namespace PoskusCiv2.Terrains
         public Hills() : base(1, 0, 0, 1, 0, 0, 0, 3, 0, 10, 10)
         {
             Type = TerrainType.Hills;
-            Name = "Hills";            
+            Name = "Hills";
+            SpecialName = "";
         }
     }
 }

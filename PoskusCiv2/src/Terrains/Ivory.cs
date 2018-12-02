@@ -7,13 +7,13 @@ using PoskusCiv2.Enums;
 
 namespace PoskusCiv2.Terrains
 {
-    internal class Desert : BaseTerrain
+    internal class Ivory : BaseTerrain
     {
-        public Desert() : base(0, 1, 0, 1, 0, 0, 0, 1, 0, 5, 5)
+        public Ivory() : base(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15)
         {
-            Type = TerrainType.Desert;
-            Name = "Desert";
-            SpecialName = "";
+            Type = TerrainType.Ivory;
+            Name = "Glacier";
+            SpecialName = "Ivory";
         }
     }
 }
