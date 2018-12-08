@@ -147,27 +147,6 @@
     </Compile>
     <Compile Include="src\Sounds\Sound.cs" />
     <Compile Include="src\Terrains\BaseTerrain.cs" />
-    <Compile Include="src\Terrains\Coal.cs" />
-    <Compile Include="src\Terrains\Buffalo.cs" />
-    <Compile Include="src\Terrains\Wine.cs" />
-    <Compile Include="src\Terrains\Wheat.cs" />
-    <Compile Include="src\Terrains\Whales.cs" />
-    <Compile Include="src\Terrains\Spice.cs" />
-    <Compile Include="src\Terrains\Silk.cs" />
-    <Compile Include="src\Terrains\Pheasant.cs" />
-    <Compile Include="src\Terrains\Oasis.cs" />
-    <Compile Include="src\Terrains\DesertOil.cs" />
-    <Compile Include="src\Terrains\Fish.cs" />
-    <Compile Include="src\Terrains\Fruit.cs" />
-    <Compile Include="src\Terrains\Game.cs" />
-    <Compile Include="src\Terrains\Furs.cs" />
-    <Compile Include="src\Terrains\Gems.cs" />
-    <Compile Include="src\Terrains\Ivory.cs" />
-    <Compile Include="src\Terrains\GlacierOil.cs" />
-    <Compile Include="src\Terrains\Gold.cs" />
-    <Compile Include="src\Terrains\GrasslandShield.cs" />
-    <Compile Include="src\Terrains\Iron.cs" />
-    <Compile Include="src\Terrains\Peat.cs" />
     <Compile Include="src\Terrains\Tundra.cs" />
     <Compile Include="src\Terrains\Swamp.cs" />
     <Compile Include="src\Terrains\Plains.cs" />

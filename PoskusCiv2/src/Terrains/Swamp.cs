@@ -12,8 +12,7 @@ namespace PoskusCiv2.Terrains
         public Swamp() : base(1, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15)
         {
             Type = TerrainType.Swamp;
-            Name = "Swamp";
-            SpecialName = "";
+            Name = "Swamp";            
         }
     }
 }

@@ -12,8 +12,7 @@ namespace PoskusCiv2.Terrains
         public Ocean() : base(1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0)
         {
             Type = TerrainType.Ocean;
-            Name = "Ocean";
-            SpecialName = "";
+            Name = "Ocean";            
         }
     }
 }

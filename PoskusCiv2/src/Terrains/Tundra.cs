@@ -12,8 +12,7 @@ namespace PoskusCiv2.Terrains
         public Tundra() : base(1, 0, 0, 1, 0, 0, 0, 0, 0, 10, 0)
         {
             Type = TerrainType.Tundra;
-            Name = "Tundra";
-            SpecialName = "";
+            Name = "Tundra";            
         }
     }
 }

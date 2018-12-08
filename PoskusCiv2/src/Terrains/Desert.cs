@@ -13,7 +13,6 @@ namespace PoskusCiv2.Terrains
         {
             Type = TerrainType.Desert;
             Name = "Desert";
-            SpecialName = "";
         }
     }
 }

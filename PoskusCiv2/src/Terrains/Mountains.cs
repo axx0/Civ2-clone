@@ -12,8 +12,7 @@ namespace PoskusCiv2.Terrains
         public Mountains() : base(0, 1, 0, 1, 0, 0, 0, 1, 0, 10, 10)
         {
             Type = TerrainType.Mountains;
-            Name = "Mountains";
-            SpecialName = "";
+            Name = "Mountains";            
         }
     }
 }
