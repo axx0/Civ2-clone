@@ -23,7 +23,6 @@ namespace PoskusCiv2.Terrains
         bool Farmland { get; set; }
         bool Airbase { get; set; }
         string Name { get; set; }
-        string SpecialName { get; set; }
         int Special { get; set; }
         int Island { get; set; }
         int Food { get; }

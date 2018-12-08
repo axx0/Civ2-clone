@@ -12,8 +12,7 @@ namespace PoskusCiv2.Terrains
         public Glacier() : base(0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 15)
         {
             Type = TerrainType.Glacier;
-            Name = "Glacier";
-            SpecialName = "";
+            Name = "Glacier";            
         }
     }
 }

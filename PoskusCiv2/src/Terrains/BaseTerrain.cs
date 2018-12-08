@@ -35,7 +35,6 @@ namespace PoskusCiv2.Terrains
         public int TurnsToIrrigate { get; }
         public int TurnsToMine { get; }
         public string Name { get; set; }
-        public string SpecialName { get; set; }
         public TerrainType Type { get; set; }
 
         public string Hexvalue { get; set; }
