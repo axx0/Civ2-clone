@@ -86,6 +86,21 @@ namespace PoskusCiv2
                     MapForm.offsetX = Game.Instance.ActiveUnit.X2 - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
                     MapForm.offsetY = Game.Instance.ActiveUnit.Y2 - 2 * (MapForm.CenterBoxY - 1);
 
+                    //Do not allow to move out of map bounds by limiting offset
+                    if (MapForm.offsetX < 0) { MapForm.offsetX = 0; }
+                    if (MapForm.offsetX >= 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX) { MapForm.offsetX = 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX; }
+                    if (MapForm.offsetY < 0) { MapForm.offsetY = 0; }
+                    if (MapForm.offsetY >= Game.Data.MapYdim - 2 * MapForm.BoxNoY) { MapForm.offsetY = Game.Data.MapYdim - 2 * MapForm.BoxNoY; }
+
+                    //After limiting offset, do not allow some combinations, e.g. (2,1)
+                    if (Math.Abs((MapForm.offsetX - MapForm.offsetY) % 2) == 1)
+                    {
+                        if (MapForm.offsetX + 1 < Game.Data.MapXdim) { MapForm.offsetX += 1; }
+                        else if (MapForm.offsetY + 1 < Game.Data.MapYdim) { MapForm.offsetY += 1; }
+                        else if (MapForm.offsetX - 1 > 0) { MapForm.offsetX -= 1; }
+                        else { MapForm.offsetY -= 1; }
+                    }
+
                     break;
                 }
             }

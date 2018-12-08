@@ -17,9 +17,9 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY;
+        public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY, BoxNoX, BoxNoY;
         //public static Bitmap Map;
-        public int BoxNoX, BoxNoY;
+        //public int BoxNoX, BoxNoY;
         Random randomNo = new Random();
 
         public bool CreateUnit, GridIsChecked = false, DrawXYnumbers = false;
