@@ -235,8 +235,6 @@ namespace PoskusCiv2.Forms
             }
             MapPanel.Invalidate();
 
-            //int ClickedBoxX2 = (ClickedBoxX - (ClickedBoxY % 2)) / 2;   
-            int ClickedBoxX2 = ClickedBoxX; //TEST
             if (e.Button == MouseButtons.Right)
             {
                 viewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form                             
@@ -245,9 +243,9 @@ namespace PoskusCiv2.Forms
             else
             {                
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();   //send mouse click location to status form
-                if (Game.Cities.Any(city => city.X == ClickedBoxX2 && city.Y == ClickedBoxY))    //if city is clicked => open form
+                if (Game.Cities.Any(city => city.X2 == ClickedBoxX && city.Y2 == ClickedBoxY))    //if city is clicked => open form
                 {
-                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedBoxX2 && city.Y == ClickedBoxY));
+                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X2 == ClickedBoxX && city.Y2 == ClickedBoxY));
                     cityForm.Show();
                 }
             }
