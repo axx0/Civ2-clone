@@ -9,9 +9,9 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -475,7 +475,6 @@ namespace PoskusCiv2.Imagery
                         UnitShield[5].SetPixel(x, y, CivColors.Light[5]);  //cyan
                         UnitShield[6].SetPixel(x, y, CivColors.Light[6]);  //orange
                         UnitShield[7].SetPixel(x, y, CivColors.Light[7]);  //purple
-
                     }
 
                     if (_noBorderUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    //if color is red, replace it
@@ -498,22 +497,40 @@ namespace PoskusCiv2.Imagery
         {
             Bitmap icons = new Bitmap(iconLoc);
 
+            Improvements = new Bitmap[38];
+
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
             Color transparentLightPink = Color.FromArgb(255, 159, 163);//define transparent back color (light pink)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
 
+            //Improvement icons
+            int stej = 0;
+            for (int row = 0; row < 5; row++)
+            {
+                for (int col = 0; col < 8; col++)
+                {
+                    Improvements[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
+
+                    stej += 1;
+                    if (stej == 37) { break; }
+                }
+            }
+
+            SellIcon = (Bitmap)icons.Clone(new Rectangle(16, 320, 14, 14), icons.PixelFormat);
+            SellIcon.MakeTransparent(transparentLightPink);
+
             ViewingPieces = (Bitmap)icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
-            ViewingPieces.MakeTransparent(transparentLightPink);  //light pink
-            ViewingPieces.MakeTransparent(transparentPink);  //pink
+            ViewingPieces.MakeTransparent(transparentLightPink);
+            ViewingPieces.MakeTransparent(transparentPink);
 
             GridLines = (Bitmap)icons.Clone(new Rectangle(183, 430, 64, 32), icons.PixelFormat);
-            GridLines.MakeTransparent(transparentLightPink);  //light pink
-            GridLines.MakeTransparent(transparentPink);  //pink
+            GridLines.MakeTransparent(transparentLightPink);
+            GridLines.MakeTransparent(transparentPink);
 
             GridLinesVisible = (Bitmap)icons.Clone(new Rectangle(248, 430, 64, 32), icons.PixelFormat);
-            GridLinesVisible.MakeTransparent(transparentLightPink);  //light pink
-            GridLinesVisible.MakeTransparent(transparentPink);  //pink
+            GridLinesVisible.MakeTransparent(transparentLightPink);
+            GridLinesVisible.MakeTransparent(transparentPink);
 
             WallpaperMapForm = (Bitmap)icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = (Bitmap)icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoskusCiv2.Imagery;
+using PoskusCiv2.Improvements;
 
 namespace PoskusCiv2.Forms
 {
@@ -185,6 +186,19 @@ namespace PoskusCiv2.Forms
             int x = 8, y = 125;
             e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), new Point(x, y));
             e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(100, 280));
+
+            //Draw city improvements
+            x = 12;
+            y = 458;
+            int stej = 0;
+            foreach (IImprovement improvements in ThisCity.Improvements)
+            { 
+                e.Graphics.DrawImage(Images.Improvements[(int)improvements.Type], new Point(x, y + 20 * stej + 2 * stej));
+                e.Graphics.DrawImage(Images.SellIcon, new Point(x + 220, y + 20 * stej + 2 * stej + 5));
+                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 46, y + 20 * stej + 2 * stej));
+                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 45, y + 20 * stej + 2 * stej));
+                stej += 1;
+            }
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
