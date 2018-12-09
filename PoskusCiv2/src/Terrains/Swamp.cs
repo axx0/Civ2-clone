@@ -9,7 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class Swamp : BaseTerrain
     {
-        public Swamp() : base(1, 0, 0, 0, 0, 0, 0, 0, 0, 15, 15)
+        public Swamp() : base(1, 0, 0, 1, 4, 0, 3, 0, 4, 0, 0, 0, 0, 0, 0, 15, 15)
         {
             Type = TerrainType.Swamp;
             Name = "Swamp";            

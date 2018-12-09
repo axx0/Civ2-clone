@@ -368,7 +368,9 @@ namespace PoskusCiv2.Forms
                 int clickedY = MapForm.ClickedBoxY;
                 string sec_line = null;
                 if (Game.Terrain[clickedX, clickedY].River) { sec_line = ", River"; }
-                e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Terrain[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Terrain[clickedX, clickedY].Type + sec_line + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
+                string third_line = null;
+                if (Game.Terrain[clickedX, clickedY].SpecialType != SpecialType.NoSpecial && Game.Terrain[clickedX, clickedY].SpecialType != SpecialType.GrasslandShield) { third_line = "(" + Game.Terrain[clickedX, clickedY].SpecialName + ")"; }
+                e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Terrain[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Terrain[clickedX, clickedY].Type + sec_line + ")" + "\n" + third_line, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
 
                 //Draw all units on the clicked square
                 int count = 0;

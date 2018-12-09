@@ -9,7 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class Ocean : BaseTerrain
     {
-        public Ocean() : base(1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0)
+        public Ocean() : base(1, 0, 2, 3, 0, 2, 2, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0)
         {
             Type = TerrainType.Ocean;
             Name = "Ocean";            

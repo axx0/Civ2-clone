@@ -10,6 +10,7 @@ namespace PoskusCiv2.Terrains
     public interface ITerrain
     {
         TerrainType Type { get; set; }
+        SpecialType SpecialType { get; set; }
         bool Resource { get; set; }
         bool River { get; set; }
         bool UnitPresent { get; set; }
@@ -23,11 +24,18 @@ namespace PoskusCiv2.Terrains
         bool Farmland { get; set; }
         bool Airbase { get; set; }
         string Name { get; set; }
+        string SpecialName { get; }
         int Special { get; set; }
         int Island { get; set; }
         int Food { get; }
+        int SpecialFood1 { get; }
+        int SpecialFood2 { get; }
         int Shields { get; }
+        int SpecialShields1 { get; }
+        int SpecialShields2 { get; }
         int Trade { get; }
+        int SpecialTrade1 { get; }
+        int SpecialTrade2 { get; }
         int IrrigEffectsFood { get; }
         int IrrigEffectsShields { get; }
         int IrrigEffectsTrade { get; }

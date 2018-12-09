@@ -9,7 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class Hills : BaseTerrain
     {
-        public Hills() : base(1, 0, 0, 1, 0, 0, 0, 3, 0, 10, 10)
+        public Hills() : base(1, 0, 0, 1, 2, 0, 1, 0, 4, 1, 0, 0, 0, 3, 0, 10, 10)
         {
             Type = TerrainType.Hills;
             Name = "Hills";            

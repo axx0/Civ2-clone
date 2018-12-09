@@ -54,6 +54,7 @@
     <Compile Include="src\BaseInstance.cs" />
     <Compile Include="src\Data.cs" />
     <Compile Include="src\Enums\ImprovementType.cs" />
+    <Compile Include="src\Enums\SpecialType.cs" />
     <Compile Include="src\Enums\UnitAction.cs" />
     <Compile Include="src\Enums\UnitLSA.cs" />
     <Compile Include="src\Forms\CityForm.cs">
@@ -147,12 +148,12 @@
     </Compile>
     <Compile Include="src\Sounds\Sound.cs" />
     <Compile Include="src\Terrains\BaseTerrain.cs" />
+    <Compile Include="src\Terrains\Jungle.cs" />
     <Compile Include="src\Terrains\Tundra.cs" />
     <Compile Include="src\Terrains\Swamp.cs" />
     <Compile Include="src\Terrains\Plains.cs" />
     <Compile Include="src\Terrains\Ocean.cs" />
     <Compile Include="src\Terrains\Mountains.cs" />
-    <Compile Include="src\Terrains\Jungle.cs" />
     <Compile Include="src\Terrains\Hills.cs" />
     <Compile Include="src\Terrains\Grassland.cs" />
     <Compile Include="src\Terrains\Glacier.cs" />

@@ -230,328 +230,77 @@ namespace PoskusCiv2.Imagery
                     if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 1, 1 })) { graphics.DrawImage(Images.River[15], 0, 0); }
                 }
 
-                //Special Resources (only grassland)
-                //Grassland shield is present in pattern 1100110011... in 1st line, in 3rd line shifted by 1 to right (01100110011...), in 5th line shifted by 1 to right (001100110011...) etc.
-                //In 2nd line 00110011..., in 4th line shifted right by 1 (1001100...), in 6th line shifted by 1 to right (11001100...) etc.
-                //For grassland special = 0 (no shield), special = 1 (shield).
-                if (Game.Terrain[col, row].Type == TerrainType.Grassland)
+                //Draw special resources if they exist
+                if (Game.Terrain[col, row].SpecialType != SpecialType.NoSpecial)
                 {
-                    if (row % 2 == 0) //odd lines
+                    switch (Game.Terrain[col, row].SpecialType)
                     {
-                        if ((col + 4 - (row % 8) / 2) % 4 == 0 || (col + 4 - (row % 8) / 2) % 4 == 1) { Game.Terrain[col, row].Special = 1; }
-                        else { Game.Terrain[col, row].Special = 0; }
+                        case SpecialType.Oasis: maptype = Images.Desert[2]; break;
+                        case SpecialType.DesertOil: maptype = Images.Desert[3]; break;
+                        case SpecialType.Buffalo: maptype = Images.Plains[2]; break;
+                        case SpecialType.Wheat: maptype = Images.Plains[3]; break;
+                        case SpecialType.GrasslandShield: maptype = Images.Shield; break;
+                        case SpecialType.Pheasant: maptype = Images.ForestBase[2]; break;
+                        case SpecialType.Silk: maptype = Images.ForestBase[3]; break;
+                        case SpecialType.Coal: maptype = Images.HillsBase[2]; break;
+                        case SpecialType.Wine: maptype = Images.HillsBase[3]; break;
+                        case SpecialType.Gold: maptype = Images.MtnsBase[2]; break;
+                        case SpecialType.Iron: maptype = Images.MtnsBase[3]; break;
+                        case SpecialType.Game: maptype = Images.Tundra[2]; break;
+                        case SpecialType.Furs: maptype = Images.Tundra[3]; break;
+                        case SpecialType.Ivory: maptype = Images.Glacier[2]; break;
+                        case SpecialType.GlacierOil: maptype = Images.Glacier[3]; break;
+                        case SpecialType.Peat: maptype = Images.Swamp[2]; break;
+                        case SpecialType.Spice: maptype = Images.Swamp[3]; break;
+                        case SpecialType.Gems: maptype = Images.Jungle[2]; break;
+                        case SpecialType.Fruit: maptype = Images.Jungle[3]; break;
+                        case SpecialType.Fish: maptype = Images.Ocean[2]; break;
+                        case SpecialType.Whales: maptype = Images.Ocean[3]; break;
+                        default: throw new ArgumentOutOfRangeException();
                     }
-                    else    //even lines
-                    {
-                        if ((col + 4 - (row % 8) / 2) % 4 == 2 || (col + 4 - (row % 8) / 2) % 4 == 3) { Game.Terrain[col, row].Special = 1; }
-                        else { Game.Terrain[col, row].Special = 0; }
-                    }
-
-
-                    if (Game.Terrain[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
+                    graphics.DrawImage(maptype, 0, 0);
                 }
 
-                //Special Resources (not grassland)
-                //(not yet 100% sure how this works)
-                //No matter which terrain tile it is (except grassland). 2 special resources R1 & R2 (e.g. palm & oil for desert). R1 is (in x-direction) always followed by R2, then R1, R2, R1, ... First 2 (j=1,3) are special as they do not belong to other blocks described below. Next block has 7 y-coordinates (j=8,10,...20), next block has 6 (j=25,27,...35), next block 7 (j=40,42,...52), next block 6 (j=57,59,...67), ... Blocks are always 5 tiles appart in y-direction. In x-direction for j=1 the resources are 3/5/3/5 etc. tiles appart. For j=3 they are 8 tiles appart in x-direction. For the next block they are 8-8-8-(3/5/3/5)-8-8-8 tiles appart in x-direction. For the next block they are 8-(3/5/3/5)-8-8-(3/5/3/5)-8 tiles appart. Then these 4 blocks start repeating again. Starting points: For j=1 it is (0,1), for j=3 it is (6,3). The starting (x) points for the next block are x=3,6,4,2,5,3,6. For next block they are x=2,0,3,1,4,2. For the next block they are x=7,2,0,3,1,7,2. For next block they are x=6,1,7,5,3,6. These 4 patterns then start repeating again. So the next block has again pattern 3,6,4,2,5,3,6, the next block has x=2,0,3,1,4,2, etc.
-                //For these tiles special=0 (no special, e.g. only desert), special=1 (special #1, e.g. oasis for desert), special=2 (special #2, e.g. oil for desert)
-                int special = 0;
-                int[] startx_B1 = new int[] { 3, 6, 4, 2, 5, 3, 6 };  //starting x-points for 4 blocks
-                int[] startx_B2 = new int[] { 2, 0, 3, 1, 4, 2 };
-                int[] startx_B3 = new int[] { 7, 2, 0, 3, 1, 7, 2 };
-                int[] startx_B4 = new int[] { 6, 1, 7, 5, 3, 6 };
-                if (Game.Terrain[col, row].Type != TerrainType.Grassland)
-                {
-                    special = 0;    //for start we presume this 
-                    bool found = false;
 
-                    if (row == 1) //prva posebna tocka
-                    {
-                        int novi_i = 0; //zacetna tocka pri j=1 (0,1)
-                        while (novi_i < Game.Data.MapXdim)  //keep jumping in x-direction till map end
-                        {
-                            if (novi_i < Game.Data.MapXdim && col == novi_i) { special = 2; break; }   //tocke (3,1), (11,1), (19,1), ...
-                            novi_i += 3;
-                            if (novi_i < Game.Data.MapXdim && col == novi_i) { special = 1; break; }   //tocke (8,1), (16,1), (24,1), ...
-                            novi_i += 5;
-                        }
-
-                    }
-                    else if (row == 3)    //druga posebna tocka
-                    {
-                        int novi_i = 6; //zacetna tocka pri j=3 je (6,3)
-                        while (novi_i < Game.Data.MapXdim)
-                        {
-                            if (novi_i < Game.Data.MapXdim && col == novi_i) { special = 1; break; }
-                            novi_i += 8;
-                            if (novi_i < Game.Data.MapXdim && col == novi_i) { special = 2; break; }
-                            novi_i += 8;
-                        }
-
-                    }
-                    else
-                    {
-                        int novi_j = 3;
-                        while (novi_j < Game.Data.MapYdim)  //skakanje za 4 bloke naprej
-                        {
-                            if (found) break;
-
-                            //BLOCK 1
-                            int counter = 0;
-                            novi_j += 5;   //jump to block beginning
-                            while (novi_j < Game.Data.MapYdim && counter < 7)  //7 jumps in y-direction
-                            {
-                                if (found) break;
-
-                                if (row == novi_j)    //correct y-loc found, now start looking for x
-                                {
-                                    int novi_i = startx_B1[counter];
-                                    //set which resources will be and jumps
-                                    int res1, res2;
-                                    int skok_x1, skok_x2;
-                                    if (counter == 3)
-                                    {
-                                        skok_x1 = 5;
-                                        skok_x2 = 3;
-                                        res1 = 2;
-                                        res2 = 1;
-                                    }
-                                    else if (counter == 0 || counter == 1 || counter == 4)
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 2;
-                                        res2 = 2;
-                                    }
-                                    else
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 1;
-                                        res2 = 1;
-                                    }
-
-                                    while (novi_i < Game.Data.MapXdim)
-                                    {
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res1; found = true; break; }
-                                        novi_i += skok_x1;
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res2; found = true; break; }
-                                        novi_i += skok_x2;
-
-                                        if (found) break;
-                                    }
-                                    break;   //terminate search
-                                }
-                                novi_j += 2;
-                                counter += 1;
-                            }
-                            if (found) break;
-
-                            //BLOCK 2
-                            counter = 0;
-                            novi_j += 5;   //jump to block beginning
-                            while (novi_j < Game.Data.MapYdim && counter < 6)  //6 jumps in y-direction
-                            {
-                                if (found) break;
-
-                                if (row == novi_j)    //correct y-loc found, now start looking for x
-                                {
-                                    int novi_i = startx_B2[counter];
-                                    //set which resources will be and jumps
-                                    int res1, res2;
-                                    int skok_x1, skok_x2;
-                                    if (counter == 1)   //1st jump
-                                    {
-                                        skok_x1 = 5;
-                                        skok_x2 = 3;
-                                        res1 = 1;
-                                        res2 = 2;
-                                    }
-                                    else if (counter == 4)  //4th jump
-                                    {
-                                        skok_x1 = 3;
-                                        skok_x2 = 5;
-                                        res1 = 2;
-                                        res2 = 1;
-                                    }
-                                    else if (counter == 0 || counter == 3)
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 2;
-                                        res2 = 2;
-                                    }
-                                    else
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 1;
-                                        res2 = 1;
-                                    }
-
-                                    while (novi_i < Game.Data.MapXdim)
-                                    {
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res1; found = true; break; }
-                                        novi_i += skok_x1;
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res2; found = true; break; }
-                                        novi_i += skok_x2;
-
-                                        if (found) break;
-                                    }
-                                    break;   //terminate search
-                                }
-                                novi_j += 2;
-                                counter += 1;
-                            }
-                            if (found) break;
-
-                            //BLOCK 3
-                            counter = 0;
-                            novi_j += 5;   //jump to block beginning
-                            while (novi_j < Game.Data.MapYdim && counter < 7)  //7 jumps in y-direction
-                            {
-                                if (found) break;
-
-                                if (row == novi_j)    //correct y-loc found, now start looking for x
-                                {
-                                    int novi_i = startx_B3[counter];
-                                    //set which resources will be and jumps
-                                    int res1, res2;
-                                    int skok_x1, skok_x2;
-                                    if (counter == 3)   //3rd jump
-                                    {
-                                        skok_x1 = 3;
-                                        skok_x2 = 5;
-                                        res1 = 1;
-                                        res2 = 2;
-                                    }
-                                    else if (counter == 0 || counter == 1 || counter == 4)
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 2;
-                                        res2 = 2;
-                                    }
-                                    else
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 1;
-                                        res2 = 1;
-                                    }
-
-                                    while (novi_i < Game.Data.MapXdim)
-                                    {
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res1; found = true; break; }
-                                        novi_i += skok_x1;
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res2; found = true; break; }
-                                        novi_i += skok_x2;
-
-                                        if (found) break;
-                                    }
-                                    break;   //terminate search
-                                }
-                                novi_j += 2;
-                                counter += 1;
-                            }
-                            if (found) break;
-
-                            //BLOCK 4
-                            counter = 0;
-                            novi_j += 5;   //jump to block beginning
-                            while (novi_j < Game.Data.MapYdim && counter < 6)  //6 jumps in y-direction
-                            {
-                                if (found) break;
-
-                                if (row == novi_j)    //correct y-loc found, now start looking for x
-                                {
-                                    int novi_i = startx_B4[counter];
-                                    //set which resources will be and jumps
-                                    int res1, res2;
-                                    int skok_x1, skok_x2;
-                                    if (counter == 1 || counter == 4)   //1st & 3rd jump
-                                    {
-                                        skok_x1 = 3;
-                                        skok_x2 = 5;
-                                        res1 = 2;
-                                        res2 = 1;
-                                    }
-                                    else if (counter == 0 || counter == 3)
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 2;
-                                        res2 = 2;
-                                    }
-                                    else
-                                    {
-                                        skok_x1 = 8;
-                                        skok_x2 = 8;
-                                        res1 = 1;
-                                        res2 = 1;
-                                    }
-
-                                    while (novi_i < Game.Data.MapXdim)
-                                    {
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res1; found = true; break; }
-                                        novi_i += skok_x1;
-                                        if (novi_i < Game.Data.MapXdim && col == novi_i) { special = res2; found = true; break; }
-                                        novi_i += skok_x2;
-
-                                        if (found) break;
-                                    }
-                                    break;   //terminate search
-                                }
-                                novi_j += 2;
-                                counter += 1;
-                            }
-                            if (found) break;
-
-                        }
-                    }
-
-                    //Ce se izkaze da je tocka special, potem jo narisi
-                    if (special == 1)
-                    {
-                        Game.Terrain[col, row].Special = 1;
-                        switch (Game.Terrain[col, row].Type)
-                        {
-                            case TerrainType.Desert: maptype = Images.Desert[2]; break;     //Oasis
-                            case TerrainType.Forest: maptype = Images.ForestBase[2]; break; //Fazan
-                            case TerrainType.Glacier: maptype = Images.Glacier[2]; break;   //Walrus
-                            case TerrainType.Hills: maptype = Images.HillsBase[2]; break;   //Coal
-                            case TerrainType.Jungle: maptype = Images.Jungle[2]; break;     //Gems
-                            case TerrainType.Mountains: maptype = Images.MtnsBase[2]; break;//Gold
-                            case TerrainType.Ocean: maptype = Images.Ocean[2]; break;       //Fish
-                            case TerrainType.Plains: maptype = Images.Plains[2]; break;     //Buffalo
-                            case TerrainType.Swamp: maptype = Images.Swamp[2]; break;       //Peat
-                            case TerrainType.Tundra: maptype = Images.Tundra[2]; break;     //Musox
-                            default: throw new ArgumentOutOfRangeException();
-                        }
-                        graphics.DrawImage(maptype, 0, 0);
-                    }
-                    else if (special == 2)
-                    {
-                        Game.Terrain[col, row].Special = 2;
-                        switch (Game.Terrain[col, row].Type)
-                        {
-                            case TerrainType.Desert: maptype = Images.Desert[3]; break;     //Oil
-                            case TerrainType.Forest: maptype = Images.ForestBase[3]; break; //Silk
-                            case TerrainType.Glacier: maptype = Images.Glacier[3]; break;   //Oil
-                            case TerrainType.Hills: maptype = Images.HillsBase[3]; break;   //Grapes
-                            case TerrainType.Jungle: maptype = Images.Jungle[3]; break;     //Banana
-                            case TerrainType.Mountains: maptype = Images.MtnsBase[3]; break;//Iron
-                            case TerrainType.Ocean: maptype = Images.Ocean[3]; break;       //Whale
-                            case TerrainType.Plains: maptype = Images.Plains[3]; break;     //Wheat
-                            case TerrainType.Swamp: maptype = Images.Swamp[3]; break;       //Spice
-                            case TerrainType.Tundra: maptype = Images.Tundra[3]; break;     //Furs
-                            default: throw new ArgumentOutOfRangeException();
-                        }
-                        graphics.DrawImage(maptype, 0, 0);
-                    }
-                    else { Game.Terrain[col, row].Special = 0; }
-
-                }
+                //if (special == 1)
+                //{
+                //    Game.Terrain[col, row].Special = 1;
+                //    switch (Game.Terrain[col, row].Type)
+                //    {
+                //        case TerrainType.Desert: maptype = Images.Desert[2]; break;     //Oasis
+                //        case TerrainType.Forest: maptype = Images.ForestBase[2]; break; //Fazan
+                //        case TerrainType.Glacier: maptype = Images.Glacier[2]; break;   //Walrus
+                //        case TerrainType.Hills: maptype = Images.HillsBase[2]; break;   //Coal
+                //        case TerrainType.Jungle: maptype = Images.Jungle[2]; break;     //Gems
+                //        case TerrainType.Mountains: maptype = Images.MtnsBase[2]; break;//Gold
+                //        case TerrainType.Ocean: maptype = Images.Ocean[2]; break;       //Fish
+                //        case TerrainType.Plains: maptype = Images.Plains[2]; break;     //Buffalo
+                //        case TerrainType.Swamp: maptype = Images.Swamp[2]; break;       //Peat
+                //        case TerrainType.Tundra: maptype = Images.Tundra[2]; break;     //Musox
+                //        default: throw new ArgumentOutOfRangeException();
+                //    }
+                //    graphics.DrawImage(maptype, 0, 0);
+                //}
+                //else if (special == 2)
+                //{
+                //    Game.Terrain[col, row].Special = 2;
+                //    switch (Game.Terrain[col, row].Type)
+                //    {
+                //        case TerrainType.Desert: maptype = Images.Desert[3]; break;     //Oil
+                //        case TerrainType.Forest: maptype = Images.ForestBase[3]; break; //Silk
+                //        case TerrainType.Glacier: maptype = Images.Glacier[3]; break;   //Oil
+                //        case TerrainType.Hills: maptype = Images.HillsBase[3]; break;   //Grapes
+                //        case TerrainType.Jungle: maptype = Images.Jungle[3]; break;     //Banana
+                //        case TerrainType.Mountains: maptype = Images.MtnsBase[3]; break;//Iron
+                //        case TerrainType.Ocean: maptype = Images.Ocean[3]; break;       //Whale
+                //        case TerrainType.Plains: maptype = Images.Plains[3]; break;     //Wheat
+                //        case TerrainType.Swamp: maptype = Images.Swamp[3]; break;       //Spice
+                //        case TerrainType.Tundra: maptype = Images.Tundra[3]; break;     //Furs
+                //        default: throw new ArgumentOutOfRangeException();
+                //    }
+                //    graphics.DrawImage(maptype, 0, 0);
+                //}
+                //else { Game.Terrain[col, row].Special = 0; }
 
                 //Roads (cites also act as road tiles)
                 if (Game.Terrain[col, row].Road || Game.Terrain[col, row].CityPresent)
