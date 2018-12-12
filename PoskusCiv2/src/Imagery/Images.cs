@@ -9,7 +9,7 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsSmall;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon;
         public static int[,] unitShieldLocation = new int[63, 2];
@@ -498,6 +498,7 @@ namespace PoskusCiv2.Imagery
             Bitmap icons = new Bitmap(iconLoc);
 
             Improvements = new Bitmap[38];
+            ImprovementsSmall = new Bitmap[38];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -511,6 +512,7 @@ namespace PoskusCiv2.Imagery
                 for (int col = 0; col < 8; col++)
                 {
                     Improvements[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
+                    ImprovementsSmall[stej] = ModifyImage.ResizeImage(Improvements[stej], 27, 15);
 
                     stej += 1;
                     if (stej == 37) { break; }

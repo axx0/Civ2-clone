@@ -162,6 +162,28 @@ namespace PoskusCiv2.Forms
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
+            //Improvements panel
+            TransparentPanel ImprovementsPanel = new TransparentPanel()
+            {
+                Location = new Point(10, 10),
+                AutoScroll = true
+            };
+            CityPanel.Controls.Add(ImprovementsPanel);
+            ImprovementsPanel.Paint += new PaintEventHandler(ImprovementsPanel_Paint);
+            for (int i = 0; i <= 5; i++)
+            {
+                PictureBox temp = new PictureBox();
+                ImprovementsPanel.Controls.Add(temp);
+                temp.Width = 20;
+                temp.Height = 20;
+                temp.BorderStyle = BorderStyle.FixedSingle;
+                temp.BackColor = Color.Red;
+                temp.Top = temp.Height * ImprovementsPanel.Controls.Count;
+                temp.Left = 10;
+                //topPipe[i] = temp;
+                //topPipe[i].Visible = true;
+            }
+
             CityDrawing = Draw.DrawCityFormMap(ThisCity);
         }
 
@@ -188,17 +210,26 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(100, 280));
 
             //Draw city improvements
+            e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
             x = 12;
-            y = 458;
+            y = 460;
             int stej = 0;
             foreach (IImprovement improvements in ThisCity.Improvements)
             { 
-                e.Graphics.DrawImage(Images.Improvements[(int)improvements.Type], new Point(x, y + 20 * stej + 2 * stej));
-                e.Graphics.DrawImage(Images.SellIcon, new Point(x + 220, y + 20 * stej + 2 * stej + 5));
-                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 46, y + 20 * stej + 2 * stej));
-                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 45, y + 20 * stej + 2 * stej));
+                e.Graphics.DrawImage(Images.ImprovementsSmall[(int)improvements.Type], new Point(x, y + 15 * stej + 2 * stej));
+                e.Graphics.DrawImage(Images.SellIcon, new Point(x + 220, y + 15 * stej + 2 * stej + 2));
+                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * stej + 2 * stej - 3));
+                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * stej + 2 * stej - 3));
                 stej += 1;
             }
+        }
+
+        private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
+        {
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    e.Graphics.DrawString("HELLO", new Font("Arial", 13), new SolidBrush(Color.Black), new Point(0, 20 * i));
+            //}            
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
