@@ -45,9 +45,12 @@ namespace PoskusCiv2
         public int NoOfSpecialistsx4 { get; set; }
 
         public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
+        public IImprovement[] Wonders => _wonders.OrderBy(i => i.WId).ToArray();
 
         private List<IImprovement> _improvements = new List<IImprovement>();
+        private List<IImprovement> _wonders = new List<IImprovement>();
 
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
+        public void AddWonder(IImprovement wonder) => _wonders.Add(wonder);
     }
 }

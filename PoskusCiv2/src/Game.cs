@@ -249,7 +249,7 @@ namespace PoskusCiv2
             return unit;
         }
 
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodBox, int shieldBox, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements)
+        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodBox, int shieldBox, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int[] wonders)
         {
             City city = new City
             {
@@ -311,6 +311,35 @@ namespace PoskusCiv2
             if (improvements[31] == '1') { city.AddImprovement(new Airport()); }
             if (improvements[32] == '1') { city.AddImprovement(new PoliceStat()); }
             if (improvements[33] == '1') { city.AddImprovement(new PortFacil()); }
+
+            if (wonders[0] == 1) { city.AddWonder(new Pyramids()); }
+            if (wonders[1] == 1) { city.AddWonder(new HangingGardens()); }
+            if (wonders[2] == 1) { city.AddWonder(new Colossus()); }
+            if (wonders[3] == 1) { city.AddWonder(new Lighthouse()); }
+            if (wonders[4] == 1) { city.AddWonder(new GreatLibrary()); }
+            if (wonders[5] == 1) { city.AddWonder(new Oracle()); }
+            if (wonders[6] == 1) { city.AddWonder(new GreatWall()); }
+            if (wonders[7] == 1) { city.AddWonder(new WarAcademy()); }
+            if (wonders[8] == 1) { city.AddWonder(new KR_Crusade()); }
+            if (wonders[9] == 1) { city.AddWonder(new MP_Embassy()); }
+            if (wonders[10] == 1) { city.AddWonder(new MichChapel()); }
+            if (wonders[11] == 1) { city.AddWonder(new CoperObserv()); }
+            if (wonders[12] == 1) { city.AddWonder(new MagellExped()); }
+            if (wonders[13] == 1) { city.AddWonder(new ShakespTheat()); }
+            if (wonders[14] == 1) { city.AddWonder(new DV_Workshop()); }
+            if (wonders[15] == 1) { city.AddWonder(new JSB_Cathedral()); }
+            if (wonders[16] == 1) { city.AddWonder(new IN_College()); }
+            if (wonders[17] == 1) { city.AddWonder(new TradingCompany()); }
+            if (wonders[18] == 1) { city.AddWonder(new DarwinVoyage()); }
+            if (wonders[19] == 1) { city.AddWonder(new StatueLiberty()); }
+            if (wonders[20] == 1) { city.AddWonder(new EiffelTower()); }
+            if (wonders[21] == 1) { city.AddWonder(new HooverDam()); }
+            if (wonders[22] == 1) { city.AddWonder(new WomenSuffrage()); }
+            if (wonders[23] == 1) { city.AddWonder(new ManhattanProj()); }
+            if (wonders[24] == 1) { city.AddWonder(new UnitedNations()); }
+            if (wonders[25] == 1) { city.AddWonder(new ApolloProgr()); }
+            if (wonders[26] == 1) { city.AddWonder(new SETIProgr()); }
+            if (wonders[27] == 1) { city.AddWonder(new CureCancer()); }
 
             Cities.Add(city);
             return city;

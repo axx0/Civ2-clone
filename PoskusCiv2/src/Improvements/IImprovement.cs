@@ -10,6 +10,7 @@ namespace PoskusCiv2.Improvements
     public interface IImprovement
     {
         int Id { get; }
+        int WId { get; }
         string Name { get; set; }
         ImprovementType Type { get; set; }
         WonderType WType { get; set; }

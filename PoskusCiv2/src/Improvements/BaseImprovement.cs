@@ -13,6 +13,7 @@ namespace PoskusCiv2.Improvements
         public ImprovementType Type { get; set; }
         public WonderType WType { get; set; }
         public int Id => (int)Type;
+        public int WId => (int)WType;
 
         protected BaseImprovement()
         {

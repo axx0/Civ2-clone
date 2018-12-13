@@ -753,7 +753,15 @@ namespace PoskusCiv2
                 //Sequence number of the city
                 //...
 
-                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodBox, cityShieldBox, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements);
+                //Check if wonder is in city (28 possible wonders)
+                int[] cityWonders = new int[28];
+                for (int wndr = 0; wndr < 28; wndr++)
+                {
+                    if (wonderCity[wndr] == i) { cityWonders[wndr] = 1; }
+                    else { cityWonders[wndr] = 0; }
+                }
+
+                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodBox, cityShieldBox, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityWonders);
             }
 
 
