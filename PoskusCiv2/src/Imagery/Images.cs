@@ -11,7 +11,7 @@ namespace PoskusCiv2.Imagery
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsSmall;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -521,6 +521,8 @@ namespace PoskusCiv2.Imagery
 
             SellIcon = (Bitmap)icons.Clone(new Rectangle(16, 320, 14, 14), icons.PixelFormat);
             SellIcon.MakeTransparent(transparentLightPink);
+
+            SellIconLarge = ModifyImage.ResizeImage(SellIcon, 16, 16);
 
             ViewingPieces = (Bitmap)icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
             ViewingPieces.MakeTransparent(transparentLightPink);

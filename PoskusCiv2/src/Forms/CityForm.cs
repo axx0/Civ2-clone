@@ -19,6 +19,8 @@ namespace PoskusCiv2.Forms
         Bitmap CityDrawing;
         Panel CityPanel;
         Form CallingForm;
+        Label ok;
+        VScrollBar ImprovementsBar;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -57,7 +59,8 @@ namespace PoskusCiv2.Forms
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(CityPanel);
-            CityPanel.Paint += new PaintEventHandler((sender, e) => CityPanel_Paint(this, e, ThisCity));
+            CityPanel.Paint += new PaintEventHandler((sender, e) => CityPanel_Paint(this, e));
+            CityPanel.Paint += new PaintEventHandler((sender, e) => PaintImprovementsList(this, e, ThisCity));
 
             //Info button
             Button InfoButton = new Button
@@ -162,29 +165,23 @@ namespace PoskusCiv2.Forms
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
-            //Improvements panel
-            TransparentPanel ImprovementsPanel = new TransparentPanel()
+            //TESTING ...
+            ImprovementsBar = new VScrollBar()
             {
-                Location = new Point(10, 10),
-                AutoScroll = true
+                Location = new Point(270, 433),
+                Size = new Size(15, 190),
+                Maximum = 38 - 9 + 9    //max improvements=38, 9 can be shown, because of slider size it's 9 elements smaller
             };
-            CityPanel.Controls.Add(ImprovementsPanel);
-            ImprovementsPanel.Paint += new PaintEventHandler(ImprovementsPanel_Paint);
-            for (int i = 0; i <= 5; i++)
-            {
-                PictureBox temp = new PictureBox();
-                ImprovementsPanel.Controls.Add(temp);
-                temp.Width = 20;
-                temp.Height = 20;
-                temp.BorderStyle = BorderStyle.FixedSingle;
-                temp.BackColor = Color.Red;
-                temp.Top = temp.Height * ImprovementsPanel.Controls.Count;
-                temp.Left = 10;
-                //topPipe[i] = temp;
-                //topPipe[i].Visible = true;
-            }
+            CityPanel.Controls.Add(ImprovementsBar);
+            ImprovementsBar.ValueChanged += new EventHandler(ImprovementsBarValueChanged);
 
             CityDrawing = Draw.DrawCityFormMap(ThisCity);
+        }
+
+        //Once slider value changes --> redraw improvements list
+        private void ImprovementsBarValueChanged(object sender, EventArgs e)
+        {
+            CityPanel.Invalidate();
         }
 
         private void CityForm_Load(object sender, EventArgs e)
@@ -202,25 +199,30 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
         }
 
-        private void CityPanel_Paint(object sender, PaintEventArgs e, City ThisCity)
+        private void CityPanel_Paint(object sender, PaintEventArgs e)
         {
             //The city image is stretched by 12,5%
             int x = 8, y = 125;
             e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), new Point(x, y));
             e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(100, 280));
 
-            //Draw city improvements
             e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
-            x = 12;
-            y = 460;
-            int stej = 0;
-            foreach (IImprovement improvements in ThisCity.Improvements)
-            { 
-                e.Graphics.DrawImage(Images.ImprovementsSmall[(int)improvements.Type], new Point(x, y + 15 * stej + 2 * stej));
-                e.Graphics.DrawImage(Images.SellIcon, new Point(x + 220, y + 15 * stej + 2 * stej + 2));
-                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * stej + 2 * stej - 3));
-                e.Graphics.DrawString(improvements.Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * stej + 2 * stej - 3));
-                stej += 1;
+        }
+
+        private void PaintImprovementsList(object sender, PaintEventArgs e, City ThisCity)
+        {
+            //Draw city improvements
+            int x = 12;
+            int y = 460;
+            int starting = ImprovementsBar.Value;   //starting improvement to draw (changes with slider)
+            for (int i = 0; i < 9; i++)
+            {
+                if (i + starting >= ThisCity.Improvements.Count()) { break; }  //break if no of improvements to small
+                
+                e.Graphics.DrawImage(Images.ImprovementsSmall[(int)ThisCity.Improvements[i + starting].Type], new Point(x, y + 15 * i + 2 * i));
+                e.Graphics.DrawImage(Images.SellIconLarge, new Point(x + 220, y + 15 * i + 2 * i - 2));
+                e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
+                e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
             }
         }
 
