@@ -57,6 +57,7 @@
     <Compile Include="src\Enums\SpecialType.cs" />
     <Compile Include="src\Enums\UnitAction.cs" />
     <Compile Include="src\Enums\UnitLSA.cs" />
+    <Compile Include="src\Enums\WonderType.cs" />
     <Compile Include="src\Forms\CityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,7 +101,30 @@
     </Compile>
     <Compile Include="src\Game.LoadGame.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
+    <Compile Include="src\Improvements\ApolloProgr.cs" />
     <Compile Include="src\Improvements\Capitalization.cs" />
+    <Compile Include="src\Improvements\Colossus.cs" />
+    <Compile Include="src\Improvements\CoperObserv.cs" />
+    <Compile Include="src\Improvements\CureCancer.cs" />
+    <Compile Include="src\Improvements\DarwinVoyage.cs" />
+    <Compile Include="src\Improvements\DV_Workshop.cs" />
+    <Compile Include="src\Improvements\EiffelTower.cs" />
+    <Compile Include="src\Improvements\GreatLibrary.cs" />
+    <Compile Include="src\Improvements\GreatWall.cs" />
+    <Compile Include="src\Improvements\HangingGardens.cs" />
+    <Compile Include="src\Improvements\HooverDam.cs" />
+    <Compile Include="src\Improvements\IN_College.cs" />
+    <Compile Include="src\Improvements\JSB_Cathedral.cs" />
+    <Compile Include="src\Improvements\KR_Crusade.cs" />
+    <Compile Include="src\Improvements\Lighthouse.cs" />
+    <Compile Include="src\Improvements\MagellExped.cs" />
+    <Compile Include="src\Improvements\ManhattanProj.cs" />
+    <Compile Include="src\Improvements\MichChapel.cs" />
+    <Compile Include="src\Improvements\MP_Embassy.cs" />
+    <Compile Include="src\Improvements\Oracle.cs" />
+    <Compile Include="src\Improvements\Pyramids.cs" />
+    <Compile Include="src\Improvements\SETIProgr.cs" />
+    <Compile Include="src\Improvements\ShakespTheat.cs" />
     <Compile Include="src\Improvements\SSmodule.cs" />
     <Compile Include="src\Improvements\SScomponent.cs" />
     <Compile Include="src\Improvements\SSstructural.cs" />
@@ -113,6 +137,7 @@
     <Compile Include="src\Improvements\CoastalFort.cs" />
     <Compile Include="src\Improvements\SAMbattery.cs" />
     <Compile Include="src\Improvements\ResearchLab.cs" />
+    <Compile Include="src\Improvements\StatueLiberty.cs" />
     <Compile Include="src\Improvements\Superhighways.cs" />
     <Compile Include="src\Improvements\Supermarket.cs" />
     <Compile Include="src\Improvements\SewerSystem.cs" />
@@ -126,6 +151,8 @@
     <Compile Include="src\Improvements\Factory.cs" />
     <Compile Include="src\Improvements\Colosseum.cs" />
     <Compile Include="src\Improvements\MassTransit.cs" />
+    <Compile Include="src\Improvements\TradingCompany.cs" />
+    <Compile Include="src\Improvements\UnitedNations.cs" />
     <Compile Include="src\Improvements\University.cs" />
     <Compile Include="src\Improvements\Cathedral.cs" />
     <Compile Include="src\Improvements\Bank.cs" />
@@ -140,6 +167,8 @@
     <Compile Include="src\Improvements\IImprovement.cs" />
     <Compile Include="src\Improvements\Barracks.cs" />
     <Compile Include="src\Improvements\Palace.cs" />
+    <Compile Include="src\Improvements\WarAcademy.cs" />
+    <Compile Include="src\Improvements\WomenSuffrage.cs" />
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
