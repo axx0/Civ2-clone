@@ -170,7 +170,7 @@ namespace PoskusCiv2.Forms
             {
                 Location = new Point(270, 433),
                 Size = new Size(15, 190),
-                Maximum = 38 - 9 + 9    //max improvements=38, 9 can be shown, because of slider size it's 9 elements smaller
+                Maximum = 66 - 9 + 9    //max improvements=66, 9 can be shown, because of slider size it's 9 elements smaller
             };
             CityPanel.Controls.Add(ImprovementsBar);
             ImprovementsBar.ValueChanged += new EventHandler(ImprovementsBarValueChanged);
@@ -211,18 +211,32 @@ namespace PoskusCiv2.Forms
 
         private void PaintImprovementsList(object sender, PaintEventArgs e, City ThisCity)
         {
+            Console.WriteLine("Count improements={0}, count wonders={1}", ThisCity.Improvements.Count(), ThisCity.Wonders.Count());
+
             //Draw city improvements
             int x = 12;
             int y = 460;
             int starting = ImprovementsBar.Value;   //starting improvement to draw (changes with slider)
             for (int i = 0; i < 9; i++)
             {
-                if (i + starting >= ThisCity.Improvements.Count()) { break; }  //break if no of improvements to small
-                
-                e.Graphics.DrawImage(Images.ImprovementsSmall[(int)ThisCity.Improvements[i + starting].Type], new Point(x, y + 15 * i + 2 * i));
-                e.Graphics.DrawImage(Images.SellIconLarge, new Point(x + 220, y + 15 * i + 2 * i - 2));
-                e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
-                e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
+                if ((i + starting) >= (ThisCity.Improvements.Count() + ThisCity.Wonders.Count())) { break; }  //break if no of improvements+wonders to small
+
+                //first draw improvements
+                if (i + starting < ThisCity.Improvements.Count())
+                {
+                    e.Graphics.DrawImage(Images.ImprovementsSmall[(int)ThisCity.Improvements[i + starting].Type], new Point(x, y + 15 * i + 2 * i));
+                    e.Graphics.DrawImage(Images.SellIconLarge, new Point(x + 220, y + 15 * i + 2 * i - 2));
+                    e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
+                    e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
+                }
+                //if all improvements are drawn, start drawing wonders (w/o sell icon)
+                else
+                {
+                    int j = i - ThisCity.Improvements.Count();
+                    e.Graphics.DrawImage(Images.WondersSmall[(int)ThisCity.Wonders[j + starting].WType], new Point(x, y + 15 * i + 2 * i));
+                    e.Graphics.DrawString(ThisCity.Wonders[j + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
+                    e.Graphics.DrawString(ThisCity.Wonders[j + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
+                }
             }
         }
 

@@ -32,16 +32,16 @@ namespace PoskusCiv2
 
         public static void StartGame()
         {
-            Console.WriteLine("Active units:");
-            foreach (IUnit unit in Game.Units)  //List active units
-            {
-                Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
-            }
-            Console.WriteLine("Dead units:");
-            foreach (IUnit unit in Game.DeadUnits)  //List dead units
-            {
-                Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
-            }
+            //Console.WriteLine("Active units:");
+            //foreach (IUnit unit in Game.Units)  //List active units
+            //{
+            //    Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
+            //}
+            //Console.WriteLine("Dead units:");
+            //foreach (IUnit unit in Game.DeadUnits)  //List dead units
+            //{
+            //    Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
+            //}
 
             //Draw game map
             //Draw Draw = new Draw();
@@ -340,6 +340,8 @@ namespace PoskusCiv2
             if (wonders[25] == 1) { city.AddWonder(new ApolloProgr()); }
             if (wonders[26] == 1) { city.AddWonder(new SETIProgr()); }
             if (wonders[27] == 1) { city.AddWonder(new CureCancer()); }
+
+            if (wonders[6] == 1) { Console.WriteLine("FOUND! City={0}", city.Name); }
 
             Cities.Add(city);
             return city;

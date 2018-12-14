@@ -516,7 +516,7 @@ namespace PoskusCiv2.Imagery
                     Improvements[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
                     ImprovementsSmall[stej] = ModifyImage.ResizeImage(Improvements[stej], 27, 15);
 
-                    stej += 1;
+                    stej++;
                     if (stej == 37) { break; }
                 }
             }
@@ -527,8 +527,9 @@ namespace PoskusCiv2.Imagery
             {
                 for (int col = 0; col < 7; col++)
                 {
-                    Wonders[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 120 * row + row, 36, 20), icons.PixelFormat);
+                    Wonders[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 100 + 1 + 20 * row + row, 36, 20), icons.PixelFormat);
                     WondersSmall[stej] = ModifyImage.ResizeImage(Wonders[stej], 27, 15);
+                    stej++;
                 }
             }
 
