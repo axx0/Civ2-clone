@@ -229,31 +229,29 @@ namespace PoskusCiv2.Imagery
 
             Squares square = new Squares();
 
-            int x = 2 * city.X + (city.Y % 2);  //first convert coordinates to civ2-style
-            int y = city.Y;
             Bitmap image;
             using (Graphics graphics = Graphics.FromImage(map))
             {
-                for (int col = 0; col < 4; col++)
+                for (int x_ = -3; x_ <= 3; x_++)
                 {
-                    for (int row = 0; row < 7; row++)
+                    for (int y_ = -3; y_ <= 3; y_++)
                     {
-                        int x_ = x - 3 + 2 * col + (y % 2);
-                        int y_ = y - 3 + row;
-                        if (!((row == 0 & col == 0) || (row == 0 & col == 3) || (row == 6 & col == 0) || (row == 6 & col == 3) || (col == 3 & (row == 1 || row == 3 || row == 5))))
+                        if ((x_ == -1 & y_ == -3) || (x_ == 1 & y_ == -3) || (x_ == -2 & y_ == -2) || (x_ == 0 & y_ == -2) || (x_ == 2 & y_ == -2) || (x_ == -3 & y_ == -1) || (x_ == -1 & y_ == -1) || (x_ == 1 & y_ == -1) || (x_ == 3 & y_ == -1) || (x_ == -2 & y_ == 0) || (x_ == 0 & y_ == 0) || (x_ == 2 & y_ == 0) || (x_ == -3 & y_ == 1) || (x_ == -1 & y_ == 1) || (x_ == 1 & y_ == 1) || (x_ == 3 & y_ == 1) || (x_ == -2 & y_ == 2) || (x_ == 0 & y_ == 2) || (x_ == 2 & y_ == 2) || (x_ == -1 & y_ == 3) || (x_ == 1 & y_ == 3))
                         {
-                            if (x_ >= 0 && x_ < 2 * Game.Data.MapXdim && y_ >= 0 && y_ < Game.Data.MapYdim)
+                            int newX = city.X2 + x_;
+                            int newY = city.Y2 + y_;
+                            if (newX >= 0 && newX < 2 * Game.Data.MapXdim && newY >= 0 && newY < Game.Data.MapYdim)
                             {
-                                image = square.Terrain((x_ - (y_ % 2)) / 2, y_);
+                                image = square.Terrain((newX - (newY % 2)) / 2, newY);
                             }
                             else
                             {
-                                image = Images.Blank; 
+                                image = Images.Blank;
                             }
-                            graphics.DrawImage(image, 64 * col + 32 * (row % 2), 16 * row);
+                            graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
                         }
                     }
-                }                
+                }
                 graphics.DrawImage(DrawCity(city, false), 64 * 1 + 32 * (3 % 2) + 1, 16 * 2 + 1);
             }
 

@@ -303,18 +303,18 @@ namespace PoskusCiv2
             string[] civLeaderName = new string[8];
             string[] civTribeName = new string[8];
             string[] civAdjective = new string[8];
-            for (int i = 1; i < 8; i++) //for 7 civs, but NOT for barbarians (barbarians have i=0, so begin count at 1)
+            for (int i = 0; i < 7; i++) //for 7 civs, but NOT for barbarians (barbarians have i=0, so begin count at 1)
             {
                 //City style
-                civCityStyle[i] = dataArray[584 + 242 * i];
+                civCityStyle[i + 1] = dataArray[584 + 242 * i];
 
                 //Leader names
                 for (int j = 0; j < 23; j++)
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 242 * i + j]);
                 }
-                civLeaderName[i] = new string(asciich);
-                civLeaderName[i] = civLeaderName[i].Replace("\0", string.Empty);  //remove null characters
+                civLeaderName[i + 1] = new string(asciich);
+                civLeaderName[i + 1] = civLeaderName[i + 1].Replace("\0", string.Empty);  //remove null characters
                 //Console.WriteLine(civLeaderName);
 
                 //Tribe name
@@ -322,8 +322,8 @@ namespace PoskusCiv2
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 242 * i + j]);
                 }
-                civTribeName[i] = new string(asciich);
-                civTribeName[i] = civTribeName[i].Replace("\0", string.Empty);
+                civTribeName[i + 1] = new string(asciich);
+                civTribeName[i + 1] = civTribeName[i + 1].Replace("\0", string.Empty);
                 //Console.WriteLine(civTribeName);
 
                 //Adjective
@@ -331,8 +331,8 @@ namespace PoskusCiv2
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 23 + 242 * i + j]);
                 }
-                civAdjective[i] = new string(asciich);
-                civAdjective[i] = civAdjective[i].Replace("\0", string.Empty);
+                civAdjective[i + 1] = new string(asciich);
+                civAdjective[i + 1] = civAdjective[i + 1].Replace("\0", string.Empty);
                 //Console.WriteLine(civAdjective);
 
                 //Leader titles (Anarchy, Despotism, ...)
@@ -352,10 +352,11 @@ namespace PoskusCiv2
             int[] rulerGender = new int[8];
             int[] civMoney = new int[8];
             int[] civResearchProgress = new int[8];
-            int[] civResearchedTech = new int[8];
+            int[] civResearchingTech = new int[8];
             int[] civTaxRate = new int[8];
             int[] civGovernment = new int[8];
             int[] civReputation = new int[8];
+            string[] civTechs = new string[8];
             //starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
             for (int i = 0; i < 8; i++) //for each civ
             {
@@ -373,7 +374,7 @@ namespace PoskusCiv2
                 civResearchProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Tech currently being researched
-                civResearchedTech[i] = dataArray[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
+                civResearchingTech[i] = dataArray[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
 
                 //Tax/science percentages
                 civTaxRate[i] = dataArray[2278 + 1428 * i + 20]; //21st byte in tribe block
@@ -421,9 +422,9 @@ namespace PoskusCiv2
                 civTechs12 = Reverse(civTechs12);
                 civTechs13 = Reverse(civTechs13);
                 //Merge all strings into a large string
-                string civTechs = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
+                civTechs[i] = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
 
-                Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], civMoney[i]);
+                Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs[i]);
             }
 
 
