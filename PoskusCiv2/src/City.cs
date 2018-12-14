@@ -44,6 +44,17 @@ namespace PoskusCiv2
         public int WorkersOn4 { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
 
+        private int _population;
+        public int Population
+        {
+            get
+            {
+                 _population = 0;
+                for (int i = 1; i <= Size; i++) { _population += i * 10000; }
+                return _population;
+            }
+        }
+
         public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public IImprovement[] Wonders => _wonders.OrderBy(i => i.WId).ToArray();
 
