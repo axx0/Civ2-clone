@@ -340,7 +340,7 @@ namespace PoskusCiv2
 
             }
 
-            //Add data for barbarians
+            //Manually add data for barbarians
             civCityStyle[0] = 0;
             civLeaderName[0] = "NULL";
             civTribeName[0] = "Barbarian";
@@ -352,6 +352,10 @@ namespace PoskusCiv2
             int[] rulerGender = new int[8];
             int[] civMoney = new int[8];
             int[] civResearchProgress = new int[8];
+            int[] civResearchedTech = new int[8];
+            int[] civTaxRate = new int[8];
+            int[] civGovernment = new int[8];
+            int[] civReputation = new int[8];
             //starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
             for (int i = 0; i < 8; i++) //for each civ
             {
@@ -364,9 +368,60 @@ namespace PoskusCiv2
                 civMoney[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Research progress
-                intVal1 = dataArray[2278 + 1428 * i + 2];    //3rd byte in tribe block
-                intVal2 = dataArray[2278 + 1428 * i + 3];    //4th byte in tribe block
+                intVal1 = dataArray[2278 + 1428 * i + 8];    //9th byte in tribe block
+                intVal2 = dataArray[2278 + 1428 * i + 9];    //10th byte in tribe block
                 civResearchProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+
+                //Tech currently being researched
+                civResearchedTech[i] = dataArray[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
+
+                //Tax/science percentages
+                civTaxRate[i] = dataArray[2278 + 1428 * i + 20]; //21st byte in tribe block
+
+                //Government
+                civGovernment[i] = dataArray[2278 + 1428 * i + 21]; //22nd byte in tribe block (0=anarchy, ...)
+
+                //Reputation
+                civReputation[i] = dataArray[2278 + 1428 * i + 30]; //31st byte in tribe block
+
+                //Treaties
+                // ..... TO-DO .....
+
+                //Attitudes
+                // ..... TO-DO .....
+
+                //Technologies
+                string civTechs1 = Convert.ToString(dataArray[2278 + 1428 * i + 88], 2).PadLeft(8, '0');    //89th byte
+                string civTechs2 = Convert.ToString(dataArray[2278 + 1428 * i + 89], 2).PadLeft(8, '0');
+                string civTechs3 = Convert.ToString(dataArray[2278 + 1428 * i + 90], 2).PadLeft(8, '0');
+                string civTechs4 = Convert.ToString(dataArray[2278 + 1428 * i + 91], 2).PadLeft(8, '0');
+                string civTechs5 = Convert.ToString(dataArray[2278 + 1428 * i + 92], 2).PadLeft(8, '0');
+                string civTechs6 = Convert.ToString(dataArray[2278 + 1428 * i + 93], 2).PadLeft(8, '0');
+                string civTechs7 = Convert.ToString(dataArray[2278 + 1428 * i + 94], 2).PadLeft(8, '0');
+                string civTechs8 = Convert.ToString(dataArray[2278 + 1428 * i + 95], 2).PadLeft(8, '0');
+                string civTechs9 = Convert.ToString(dataArray[2278 + 1428 * i + 96], 2).PadLeft(8, '0');
+                string civTechs10 = Convert.ToString(dataArray[2278 + 1428 * i + 97], 2).PadLeft(8, '0');
+                string civTechs11 = Convert.ToString(dataArray[2278 + 1428 * i + 98], 2).PadLeft(8, '0');
+                string civTechs12 = Convert.ToString(dataArray[2278 + 1428 * i + 99], 2).PadLeft(8, '0');
+                string civTechs13 = Convert.ToString(dataArray[2278 + 1428 * i + 100], 2).PadLeft(8, '0');   //101st byte
+                civTechs13 = civTechs13.Remove(civTechs13.Length - 4); //remove last 4 bits, they are not important
+                //Put all techs into one large string, where bit0=1st tech, bit1=2nd tech, ..., bit99=100th tech
+                //First reverse bit order in all strings
+                civTechs1 = Reverse(civTechs1);
+                civTechs2 = Reverse(civTechs2);
+                civTechs3 = Reverse(civTechs3);
+                civTechs4 = Reverse(civTechs4);
+                civTechs5 = Reverse(civTechs5);
+                civTechs6 = Reverse(civTechs6);
+                civTechs7 = Reverse(civTechs7);
+                civTechs8 = Reverse(civTechs8);
+                civTechs9 = Reverse(civTechs9);
+                civTechs10 = Reverse(civTechs10);
+                civTechs11 = Reverse(civTechs11);
+                civTechs12 = Reverse(civTechs12);
+                civTechs13 = Reverse(civTechs13);
+                //Merge all strings into a large string
+                string civTechs = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
 
                 Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], civMoney[i]);
             }

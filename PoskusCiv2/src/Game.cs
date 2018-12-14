@@ -341,8 +341,6 @@ namespace PoskusCiv2
             if (wonders[26] == 1) { city.AddWonder(new SETIProgr()); }
             if (wonders[27] == 1) { city.AddWonder(new CureCancer()); }
 
-            if (wonders[6] == 1) { Console.WriteLine("FOUND! City={0}", city.Name); }
-
             Cities.Add(city);
             return city;
         }
