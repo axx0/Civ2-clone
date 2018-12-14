@@ -347,7 +347,7 @@ namespace PoskusCiv2
             return city;
         }
 
-        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective)
+        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective, int money)
         {
             Civilization civ = new Civilization
             {
@@ -355,9 +355,10 @@ namespace PoskusCiv2
                 CityStyle = style,
                 LeaderName = leaderName,
                 TribeName = tribeName,
-                Adjective = adjective
+                Adjective = adjective,
+                Money = money
             };
-            
+
             Civs.Add(civ);
             return civ;
         }
@@ -414,7 +415,7 @@ namespace PoskusCiv2
                 TurnNumber = turnNumber,
                 TurnNumberForGameYear = turnNumberForGameYear,
                 UnitSelectedAtGameStart = unitSelectedAtGameStart,
-                WhichHumanPlayerIsUsed = whichHumanPlayerIsUsed,
+                HumanPlayerUsed = whichHumanPlayerIsUsed,
                 PlayersMapUsed = playersMapUsed,
                 PlayersCivilizationNumberUsed = playersCivilizationNumberUsed,
                 MapRevealed = mapRevealed,

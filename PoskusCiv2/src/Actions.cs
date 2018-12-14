@@ -73,7 +73,7 @@ namespace PoskusCiv2
         {
             //Move on to next unit
             bool allUnitsEndedTurn = true;
-            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
             {
                 if (!unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
                 {
@@ -115,7 +115,7 @@ namespace PoskusCiv2
             Game.Data.TurnNumber += 1;
 
             //At beginning of turn, set all units to active
-            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.WhichHumanPlayerIsUsed))
+            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
             {
                 //Increase counters
                 if ((unit.Action == UnitAction.BuildIrrigation) || (unit.Action == UnitAction.BuildRoadRR) || (unit.Action == UnitAction.BuildMine))

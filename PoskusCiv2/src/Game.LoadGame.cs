@@ -279,31 +279,42 @@ namespace PoskusCiv2
             //=========================
             //WONDERS
             //=========================
-            int[] wonderCity = new int[28]; //28 wonders
+            int[] wonderCity = new int[28]; //city which has wonder
+            bool[] wonderBuilt = new bool[28];  //has the wonder been built
+            bool[] wonderDestroyed = new bool[28];  //has the wonder been destroyed
             for (int i = 0; i < 28; i++)
             {
                 //City number with the wonder
                 intVal1 = dataArray[266 + 2 * i];
                 intVal2 = dataArray[266 + 2 * i + 1];
                 wonderCity[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+
+                //determine if wonder is built/destroyed
+                if (wonderCity[i] == 65535) { wonderBuilt[i] = false; } //FFFF(hex)
+                else if (wonderCity[i] == 65279) { wonderDestroyed[i] = true; } //FEFF(hex)
+                else { wonderBuilt[i] = true; wonderDestroyed[i] = false; }
             }
 
             //=========================
             //CIVS
             //=========================
-            char[] asciich = new char[23];            
-            for (int i = 0; i < 7; i++) //7 civs
+            char[] asciich = new char[23];
+            int[] civCityStyle = new int[8];
+            string[] civLeaderName = new string[8];
+            string[] civTribeName = new string[8];
+            string[] civAdjective = new string[8];
+            for (int i = 1; i < 8; i++) //for 7 civs, but NOT for barbarians (barbarians have i=0, so begin count at 1)
             {
                 //City style
-                int civCityStyle = dataArray[584 + 242 * i];
+                civCityStyle[i] = dataArray[584 + 242 * i];
 
                 //Leader names
                 for (int j = 0; j < 23; j++)
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 242 * i + j]);
                 }
-                string civLeaderName = new string(asciich);
-                civLeaderName = civLeaderName.Replace("\0", string.Empty);  //remove null characters
+                civLeaderName[i] = new string(asciich);
+                civLeaderName[i] = civLeaderName[i].Replace("\0", string.Empty);  //remove null characters
                 //Console.WriteLine(civLeaderName);
 
                 //Tribe name
@@ -311,8 +322,8 @@ namespace PoskusCiv2
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 242 * i + j]);
                 }
-                string civTribeName = new string(asciich);
-                civTribeName = civTribeName.Replace("\0", string.Empty);
+                civTribeName[i] = new string(asciich);
+                civTribeName[i] = civTribeName[i].Replace("\0", string.Empty);
                 //Console.WriteLine(civTribeName);
 
                 //Adjective
@@ -320,21 +331,46 @@ namespace PoskusCiv2
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 23 + 242 * i + j]);
                 }
-                string civAdjective = new string(asciich);
-                civAdjective = civAdjective.Replace("\0", string.Empty);
+                civAdjective[i] = new string(asciich);
+                civAdjective[i] = civAdjective[i].Replace("\0", string.Empty);
                 //Console.WriteLine(civAdjective);
 
-                //Before adding civs, add a barbarian civ in the beginning (Civ2 gives units civ=1 for 1st civ (and not civ=0), so civ=0 is obviously reserved for barbarians)
-                if (i == 0) { Civilization civ1 = CreateCiv(0, 0, "NULL", "Barbarian", "Barbarians"); }
+                //Leader titles (Anarchy, Despotism, ...)
+                // .... TO-DO ....
 
-                Civilization civ = CreateCiv(i + 1, civCityStyle, civLeaderName, civTribeName, civAdjective);                
             }
 
-
+            //Add data for barbarians
+            civCityStyle[0] = 0;
+            civLeaderName[0] = "NULL";
+            civTribeName[0] = "Barbarian";
+            civAdjective[0] = "Barbarians";
 
             //=========================
             //TECH & MONEY
             //=========================
+            int[] rulerGender = new int[8];
+            int[] civMoney = new int[8];
+            int[] civResearchProgress = new int[8];
+            //starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
+            for (int i = 0; i < 8; i++) //for each civ
+            {
+                //Gender (0=male, 2=female)
+                rulerGender[i] = dataArray[2278 + 1428 * i + 1]; //2nd byte in tribe block
+
+                //Money
+                intVal1 = dataArray[2278 + 1428 * i + 2];    //3rd byte in tribe block
+                intVal2 = dataArray[2278 + 1428 * i + 3];    //4th byte in tribe block
+                civMoney[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+
+                //Research progress
+                intVal1 = dataArray[2278 + 1428 * i + 2];    //3rd byte in tribe block
+                intVal2 = dataArray[2278 + 1428 * i + 3];    //4th byte in tribe block
+                civResearchProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+
+                Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], civMoney[i]);
+            }
+
 
 
             //=========================

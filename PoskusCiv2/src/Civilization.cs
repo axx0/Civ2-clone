@@ -13,5 +13,6 @@ namespace PoskusCiv2
         public string LeaderName { get; set; }
         public string TribeName { get; set; }
         public string Adjective { get; set; }
+        public int Money { get; set; }
     }
 }
