@@ -9,9 +9,9 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsSmall, Wonders, WondersSmall;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall, Wonders, WondersLarge, WondersSmall;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFood, CitymapShield, CitymapTrade;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -498,8 +498,10 @@ namespace PoskusCiv2.Imagery
             Bitmap icons = new Bitmap(iconLoc);
 
             Improvements = new Bitmap[38];
+            ImprovementsLarge = new Bitmap[38];
             ImprovementsSmall = new Bitmap[38];
             Wonders = new Bitmap[28];
+            WondersLarge = new Bitmap[28];
             WondersSmall = new Bitmap[28];
 
             //define transparent colors
@@ -514,7 +516,8 @@ namespace PoskusCiv2.Imagery
                 for (int col = 0; col < 8; col++)
                 {
                     Improvements[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
-                    ImprovementsSmall[stej] = ModifyImage.ResizeImage(Improvements[stej], 27, 15);
+                    ImprovementsLarge[stej] = ModifyImage.ResizeImage(Improvements[stej], 54, 30);    //50% larger
+                    ImprovementsSmall[stej] = ModifyImage.ResizeImage(Improvements[stej], 29, 16);    //25% smaller
 
                     stej++;
                     if (stej == 37) { break; }
@@ -528,7 +531,8 @@ namespace PoskusCiv2.Imagery
                 for (int col = 0; col < 7; col++)
                 {
                     Wonders[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 100 + 1 + 20 * row + row, 36, 20), icons.PixelFormat);
-                    WondersSmall[stej] = ModifyImage.ResizeImage(Wonders[stej], 27, 15);
+                    WondersLarge[stej] = ModifyImage.ResizeImage(Wonders[stej], 54, 30);    //50% larger
+                    WondersSmall[stej] = ModifyImage.ResizeImage(Wonders[stej], 29, 16);    //25% smaller
                     stej++;
                 }
             }
@@ -552,6 +556,15 @@ namespace PoskusCiv2.Imagery
 
             WallpaperMapForm = (Bitmap)icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = (Bitmap)icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+
+            CitymapFood = (Bitmap)icons.Clone(new Rectangle(49, 334, 10, 10), icons.PixelFormat);
+            CitymapFood.MakeTransparent(transparentLightPink);
+
+            CitymapShield = (Bitmap)icons.Clone(new Rectangle(60, 334, 10, 10), icons.PixelFormat);
+            CitymapShield.MakeTransparent(transparentLightPink);
+
+            CitymapTrade = (Bitmap)icons.Clone(new Rectangle(71, 334, 10, 10), icons.PixelFormat);
+            CitymapTrade.MakeTransparent(transparentLightPink);
         }
 
         public static void LoadWallpapers(string cityWallpaperLoc)
