@@ -9,10 +9,54 @@ namespace PoskusCiv2.Terrains
 {
     internal class Desert : BaseTerrain
     {
-        public Desert() : base(1, 2, 0, 1, 0, true, 1, 5, 5, true, 1, 5, 3, TerrainType.Plains)
+        public Desert(SpecialType SpecType)
         {
             Type = TerrainType.Desert;
             Name = "Desert";
+            switch (SpecType)
+            {
+                case SpecialType.NoSpecial:
+                    {
+                        SpecName = "";
+                        Movecost = 1;
+                        Defense = 2;
+                        Food = 0;
+                        Shields = 1;
+                        Trade = 0;
+                        break;
+                    }
+                case SpecialType.Oasis:
+                    {
+                        SpecName = "Oasis";
+                        Movecost = 1;
+                        Defense = 2;
+                        Food = 3;
+                        Shields = 1;
+                        Trade = 0;
+                        break;
+                    }
+                case SpecialType.DesertOil:
+                    {
+                        SpecName = "Desert Oil";
+                        Movecost = 1;
+                        Defense = 2;
+                        Food = 0;
+                        Shields = 4;
+                        Trade = 0;
+                        break;
+                    }
+            }
+            CanIrrigate = true;
+            IrrigationResult = null;
+            IrrigationBonus = 1;
+            TurnsToIrrigate = 5;
+            AIirrigation = 5;
+            CanMine = true;
+            MiningResult = null;
+            MiningBonus = 1;
+            TurnsToMine = 5;
+            AImining = 3;
+            TransformResult = TerrainType.Plains;
         }
     }
 }

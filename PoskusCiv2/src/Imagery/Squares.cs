@@ -231,9 +231,9 @@ namespace PoskusCiv2.Imagery
                 }
 
                 //Draw special resources if they exist
-                if (Game.Terrain[col, row].SpecialType != SpecialType.NoSpecial)
+                if (Game.Terrain[col, row].SpecType != SpecialType.NoSpecial)
                 {
-                    switch (Game.Terrain[col, row].SpecialType)
+                    switch (Game.Terrain[col, row].SpecType)
                     {
                         case SpecialType.Oasis: maptype = Images.Desert[2]; break;
                         case SpecialType.DesertOil: maptype = Images.Desert[3]; break;

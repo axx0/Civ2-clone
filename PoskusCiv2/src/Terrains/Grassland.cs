@@ -9,10 +9,44 @@ namespace PoskusCiv2.Terrains
 {
     internal class Grassland : BaseTerrain
     {
-        public Grassland() : base(1, 2, 2, 1, 0, true, 1, 5, 2, TerrainType.Forest, 0, 10, 0, TerrainType.Hills)
+        public Grassland(SpecialType SpecType)
         {
             Type = TerrainType.Grassland;
-            Name = "Grassland";            
+            Name = "Grassland";
+            switch (SpecType)
+            {
+                case SpecialType.NoSpecial:
+                    {
+                        SpecName = "";
+                        Movecost = 1;
+                        Defense = 2;
+                        Food = 2;
+                        Shields = 1;
+                        Trade = 0;
+                        break;
+                    }
+                case SpecialType.GrasslandShield:
+                    {
+                        SpecName = "Shield";
+                        Movecost = 1;
+                        Defense = 2;
+                        Food = 2;
+                        Shields = 1;
+                        Trade = 0;
+                        break;
+                    }
+            }
+            CanIrrigate = true;
+            IrrigationResult = null;
+            IrrigationBonus = 1;
+            TurnsToIrrigate = 5;
+            AIirrigation = 2;
+            CanMine = true;
+            MiningResult = TerrainType.Forest;
+            MiningBonus = 0;
+            TurnsToMine = 10;
+            AImining = 0;
+            TransformResult = TerrainType.Hills;
         }
     }
 }

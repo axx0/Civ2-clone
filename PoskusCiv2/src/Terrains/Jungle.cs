@@ -9,10 +9,54 @@ namespace PoskusCiv2.Terrains
 {
     internal class Jungle : BaseTerrain
     {
-        public Jungle() : base(2, 3, 1, 0, 0, TerrainType.Grassland, 0, 15, 6, TerrainType.Forest, 0, 15, 0, TerrainType.Plains)
+        public Jungle(SpecialType SpecType)
         {
             Type = TerrainType.Jungle;
-            Name = "Jungle";            
+            Name = "Jungle";
+            switch (SpecType)
+            {
+                case SpecialType.NoSpecial:
+                    {
+                        SpecName = "";
+                        Movecost = 2;
+                        Defense = 3;
+                        Food = 1;
+                        Shields = 0;
+                        Trade = 0;
+                        break;
+                    }
+                case SpecialType.Gems:
+                    {
+                        SpecName = "Gems";
+                        Movecost = 2;
+                        Defense = 3;
+                        Food = 1;
+                        Shields = 0;
+                        Trade = 4;
+                        break;
+                    }
+                case SpecialType.Fruit:
+                    {
+                        SpecName = "Fruit";
+                        Movecost = 2;
+                        Defense = 3;
+                        Food = 4;
+                        Shields = 0;
+                        Trade = 1;
+                        break;
+                    }
+            }
+            CanIrrigate = true;
+            IrrigationResult = TerrainType.Grassland;
+            IrrigationBonus = 0;
+            TurnsToIrrigate = 15;
+            AIirrigation = 6;
+            CanMine = true;
+            MiningResult = TerrainType.Forest;
+            MiningBonus = 0;
+            TurnsToMine = 15;
+            AImining = 0;
+            TransformResult = TerrainType.Plains;
         }
     }
 }

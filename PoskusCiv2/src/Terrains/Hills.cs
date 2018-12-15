@@ -9,10 +9,54 @@ namespace PoskusCiv2.Terrains
 {
     internal class Hills : BaseTerrain
     {
-        public Hills() : base(2, 4, 1, 0, 0, true, 1, 10, 0, true, 3, 10, 1, TerrainType.Plains)
+        public Hills(SpecialType SpecType)
         {
             Type = TerrainType.Hills;
-            Name = "Hills";            
+            Name = "Hills";
+            switch (SpecType)
+            {
+                case SpecialType.NoSpecial:
+                    {
+                        SpecName = "";
+                        Movecost = 2;
+                        Defense = 4;
+                        Food = 1;
+                        Shields = 0;
+                        Trade = 0;
+                        break;
+                    }
+                case SpecialType.Coal:
+                    {
+                        SpecName = "Coal";
+                        Movecost = 2;
+                        Defense = 4;
+                        Food = 1;
+                        Shields = 2;
+                        Trade = 0;
+                        break;
+                    }
+                case SpecialType.Wine:
+                    {
+                        SpecName = "Wine";
+                        Movecost = 2;
+                        Defense = 4;
+                        Food = 1;
+                        Shields = 0;
+                        Trade = 4;
+                        break;
+                    }
+            }
+            CanIrrigate = true;
+            IrrigationResult = null;
+            IrrigationBonus = 1;
+            TurnsToIrrigate = 10;
+            AIirrigation = 0;
+            CanMine = true;
+            MiningResult = null;
+            MiningBonus = 3;
+            TurnsToMine = 10;
+            AImining = 1;
+            TransformResult = TerrainType.Plains;
         }
     }
 }

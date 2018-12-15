@@ -10,9 +10,9 @@ namespace PoskusCiv2.Terrains
     public interface ITerrain
     {
         TerrainType Type { get; set; }
-        SpecialType SpecialType { get; set; }
+        SpecialType SpecType { get; set; }
         string Name { get; set; }
-        string SpecialName { get; }
+        string SpecName { get; }
         bool Resource { get; set; }
         bool River { get; set; }
         bool UnitPresent { get; set; }
