@@ -11,6 +11,8 @@ namespace PoskusCiv2.Terrains
     {
         TerrainType Type { get; set; }
         SpecialType SpecialType { get; set; }
+        string Name { get; set; }
+        string SpecialName { get; }
         bool Resource { get; set; }
         bool River { get; set; }
         bool UnitPresent { get; set; }
@@ -22,28 +24,33 @@ namespace PoskusCiv2.Terrains
         bool Fortress { get; set; }
         bool Pollution { get; set; }
         bool Farmland { get; set; }
-        bool Airbase { get; set; }
-        string Name { get; set; }
-        string SpecialName { get; }
+        bool Airbase { get; set; }        
+        
+        int Movecost { get; }
+        int Defense { get; }
+        int Food { get; }
+        int Shields { get; }
+        int Trade { get; }
+        bool CanIrrigate { get; }
+        TerrainType? IrrigationResult { get; }
+        int IrrigationBonus { get; }
+        int TurnsToIrrigate { get; }
+        int AIirrigation { get; }
+        bool CanMine { get; }
+        TerrainType? MiningResult { get; }
+        int MiningBonus { get; }
+        int TurnsToMine { get; }
+        int AImining { get; }
+        TerrainType? TransformResult { get; }
+
         int Special { get; set; }
         int Island { get; set; }
-        int Food { get; }
         int SpecialFood1 { get; }
         int SpecialFood2 { get; }
-        int Shields { get; }
         int SpecialShields1 { get; }
         int SpecialShields2 { get; }
-        int Trade { get; }
         int SpecialTrade1 { get; }
         int SpecialTrade2 { get; }
-        int IrrigEffectsFood { get; }
-        int IrrigEffectsShields { get; }
-        int IrrigEffectsTrade { get; }
-        int MiningEffectsFood { get; }
-        int MiningEffectsShields { get; }
-        int MiningEffectsTrade { get; }
-        int TurnsToIrrigate { get; }
-        int TurnsToMine { get; }
 
         string Hexvalue { get; set; }
     }

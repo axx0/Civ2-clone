@@ -9,6 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class BaseTerrain : ITerrain
     {
+        public string Name { get; set; }
         public bool Resource { get; set; }
         public bool River { get; set; }
         public bool UnitPresent { get; set; }
@@ -21,26 +22,33 @@ namespace PoskusCiv2.Terrains
         public bool Pollution { get; set; }
         public bool Farmland { get; set; }
         public bool Airbase { get; set; }
+
+        public int Movecost { get; }
+        public int Defense { get; }
+        public int Food { get; }
+        public int Shields { get; }
+        public int Trade { get; }
+        public bool CanIrrigate { get; }
+        public TerrainType? IrrigationResult { get; }
+        public int IrrigationBonus { get; }
+        public int TurnsToIrrigate { get; }
+        public int AIirrigation { get; }
+        public bool CanMine { get; }
+        public TerrainType? MiningResult { get; }
+        public int MiningBonus { get; }
+        public int TurnsToMine { get; }
+        public int AImining { get; }
+        public TerrainType? TransformResult { get; }
+
         public int Special { get; set; }    //0...no, 1...special1, 2...special2
         public int Island { get; set; }
-        public int Food { get; }
         public int SpecialFood1 { get; }
         public int SpecialFood2 { get; }
-        public int Shields { get; }
         public int SpecialShields1 { get; }
         public int SpecialShields2 { get; }
-        public int Trade { get; }
         public int SpecialTrade1 { get; }
         public int SpecialTrade2 { get; }
-        public int IrrigEffectsFood { get; }
-        public int IrrigEffectsShields { get; }
-        public int IrrigEffectsTrade { get; }
-        public int MiningEffectsFood { get; }
-        public int MiningEffectsShields { get; }
-        public int MiningEffectsTrade { get; }
-        public int TurnsToIrrigate { get; }
-        public int TurnsToMine { get; }
-        public string Name { get; set; }
+
 
         public string SpecialName
         {
@@ -76,25 +84,95 @@ namespace PoskusCiv2.Terrains
 
         public string Hexvalue { get; set; }
 
-        protected BaseTerrain(int food = 1, int shields = 1, int trade = 1, int spec_food1 = 1, int spec_shields1 = 1, int spec_trade1 = 1, int spec_food2 = 1, int spec_shields2 = 1, int spec_trade2 = 1, int irrig_effects_food = 1, int irrig_effects_shields = 1, int irrig_effects_trade = 1, int mining_effects_food = 1, int mining_effects_shields = 1, int mining_effects_trade = 1, int turns_to_irrigate = 1, int turns_to_mine = 1)
+        protected BaseTerrain(int movecost, int defense, int food, int shields, int trade, bool can_irrigate, int irrigate_bonus, int irrigate_settler_turns, int ai_irrigate, bool can_mine, int mine_bonus, int mine_settler_turns, int ai_mine, TerrainType transform)
         {
+            Movecost = movecost;
+            Defense = defense;
             Food = food;
-            SpecialFood1 = spec_food1;
-            SpecialFood2 = spec_food2;
             Shields = shields;
-            SpecialShields1 = spec_shields1;
-            SpecialShields2 = spec_shields2;
             Trade = trade;
-            SpecialTrade1 = spec_trade1;
-            SpecialTrade2 = spec_trade2;
-            IrrigEffectsFood = irrig_effects_food;
-            IrrigEffectsShields = irrig_effects_shields;
-            IrrigEffectsTrade = irrig_effects_trade;
-            MiningEffectsFood = mining_effects_food;
-            MiningEffectsShields = mining_effects_shields;
-            MiningEffectsTrade = mining_effects_trade;
-            TurnsToIrrigate = turns_to_irrigate;
-            TurnsToMine = turns_to_mine;
+            CanIrrigate = can_irrigate;
+            IrrigationResult = null;
+            IrrigationBonus = irrigate_bonus;
+            TurnsToIrrigate = irrigate_settler_turns;
+            AIirrigation = ai_irrigate;
+            CanMine = can_mine;
+            MiningResult = null;
+            MiningBonus = mine_bonus;
+            TurnsToMine = mine_settler_turns;
+            AImining = ai_mine;
+            if (transform == TerrainType.Ocean) { TransformResult = null; }
+            else { TransformResult = transform; }
+
+            //SpecialFood1 = spec_food1;
+            //SpecialFood2 = spec_food2;
+            //SpecialShields1 = spec_shields1;
+            //SpecialShields2 = spec_shields2;
+            //SpecialTrade1 = spec_trade1;
+            //SpecialTrade2 = spec_trade2;
+        }
+
+        protected BaseTerrain(int movecost, int defense, int food, int shields, int trade, TerrainType irrigate_change, int irrigate_bonus, int irrigate_settler_turns, int ai_irrigate, bool can_mine, int mine_bonus, int mine_settler_turns, int ai_mine, TerrainType transform)
+        {
+            Movecost = movecost;
+            Defense = defense;
+            Food = food;
+            Shields = shields;
+            Trade = trade;
+            CanIrrigate = true;
+            IrrigationResult = irrigate_change;
+            IrrigationBonus = irrigate_bonus;
+            TurnsToIrrigate = irrigate_settler_turns;
+            AIirrigation = ai_irrigate;
+            CanMine = can_mine;
+            MiningResult = null;
+            MiningBonus = mine_bonus;
+            TurnsToMine = mine_settler_turns;
+            AImining = ai_mine;
+            if (transform == TerrainType.Ocean) { TransformResult = null; }
+            else { TransformResult = transform; }
+        }
+
+        protected BaseTerrain(int movecost, int defense, int food, int shields, int trade, bool can_irrigate, int irrigate_bonus, int irrigate_settler_turns, int ai_irrigate, TerrainType mine_change, int mine_bonus, int mine_settler_turns, int ai_mine, TerrainType transform)
+        {
+            Movecost = movecost;
+            Defense = defense;
+            Food = food;
+            Shields = shields;
+            Trade = trade;
+            CanIrrigate = can_irrigate;
+            IrrigationResult = null;
+            IrrigationBonus = irrigate_bonus;
+            TurnsToIrrigate = irrigate_settler_turns;
+            AIirrigation = ai_irrigate;
+            CanMine = true;
+            MiningResult = mine_change;
+            MiningBonus = mine_bonus;
+            TurnsToMine = mine_settler_turns;
+            AImining = ai_mine;
+            if (transform == TerrainType.Ocean) { TransformResult = null; }
+            else { TransformResult = transform; }
+        }
+
+        protected BaseTerrain(int movecost, int defense, int food, int shields, int trade, TerrainType irrigate_change, int irrigate_bonus, int irrigate_settler_turns, int ai_irrigate, TerrainType mine_change, int mine_bonus, int mine_settler_turns, int ai_mine, TerrainType transform)
+        {
+            Movecost = movecost;
+            Defense = defense;
+            Food = food;
+            Shields = shields;
+            Trade = trade;
+            CanIrrigate = true;
+            IrrigationResult = irrigate_change;
+            IrrigationBonus = irrigate_bonus;
+            TurnsToIrrigate = irrigate_settler_turns;
+            AIirrigation = ai_irrigate;
+            CanMine = true;
+            MiningResult = mine_change;
+            MiningBonus = mine_bonus;
+            TurnsToMine = mine_settler_turns;
+            AImining = ai_mine;
+            if (transform == TerrainType.Ocean) { TransformResult = null; }
+            else { TransformResult = transform; }
         }
     }
 }

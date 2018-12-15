@@ -9,7 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class Jungle : BaseTerrain
     {
-        public Jungle() : base(1, 0, 0, 1, 0, 4, 4, 0, 1, 0, 0, 0, 0, 0, 0, 15, 15)
+        public Jungle() : base(2, 3, 1, 0, 0, TerrainType.Grassland, 0, 15, 6, TerrainType.Forest, 0, 15, 0, TerrainType.Plains)
         {
             Type = TerrainType.Jungle;
             Name = "Jungle";            

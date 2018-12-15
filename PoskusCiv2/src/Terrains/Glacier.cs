@@ -9,7 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class Glacier : BaseTerrain
     {
-        public Glacier() : base(0, 0, 0, 1, 1, 4, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 15)
+        public Glacier() : base(2, 2, 0, 0, 0, false, 0, 0, 0, true, 1, 15, 3, TerrainType.Tundra)
         {
             Type = TerrainType.Glacier;
             Name = "Glacier";            

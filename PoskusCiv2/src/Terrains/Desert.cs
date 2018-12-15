@@ -9,7 +9,7 @@ namespace PoskusCiv2.Terrains
 {
     internal class Desert : BaseTerrain
     {
-        public Desert() : base(0, 1, 0, 3, 1, 0, 0, 4, 0, 1, 0, 0, 0, 1, 0, 5, 5)
+        public Desert() : base(1, 2, 0, 1, 0, true, 1, 5, 5, true, 1, 5, 3, TerrainType.Plains)
         {
             Type = TerrainType.Desert;
             Name = "Desert";

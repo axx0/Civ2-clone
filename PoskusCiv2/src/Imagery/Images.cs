@@ -11,7 +11,7 @@ namespace PoskusCiv2.Imagery
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall, Wonders, WondersLarge, WondersSmall;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFood, CitymapShield, CitymapTrade;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, CitymapTradeSmallBigger;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -557,14 +557,29 @@ namespace PoskusCiv2.Imagery
             WallpaperMapForm = (Bitmap)icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = (Bitmap)icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
 
-            CitymapFood = (Bitmap)icons.Clone(new Rectangle(49, 334, 10, 10), icons.PixelFormat);
-            CitymapFood.MakeTransparent(transparentLightPink);
+            CitymapFoodLarge = (Bitmap)icons.Clone(new Rectangle(1, 305, 14, 14), icons.PixelFormat);
+            CitymapFoodLarge.MakeTransparent(transparentLightPink);
+            CitymapFoodLargeBigger = ModifyImage.ResizeImage(CitymapFoodLarge, 21, 21);    //50% larger
 
-            CitymapShield = (Bitmap)icons.Clone(new Rectangle(60, 334, 10, 10), icons.PixelFormat);
-            CitymapShield.MakeTransparent(transparentLightPink);
+            CitymapFoodSmall = (Bitmap)icons.Clone(new Rectangle(49, 334, 10, 10), icons.PixelFormat);
+            CitymapFoodSmall.MakeTransparent(transparentLightPink);
+            CitymapFoodSmallBigger = ModifyImage.ResizeImage(CitymapFoodSmall, 15, 15);    //50% larger
 
-            CitymapTrade = (Bitmap)icons.Clone(new Rectangle(71, 334, 10, 10), icons.PixelFormat);
-            CitymapTrade.MakeTransparent(transparentLightPink);
+            CitymapShieldLarge = (Bitmap)icons.Clone(new Rectangle(16, 305, 14, 14), icons.PixelFormat);
+            CitymapShieldLarge.MakeTransparent(transparentLightPink);
+            CitymapShieldLargeBigger = ModifyImage.ResizeImage(CitymapShieldLarge, 21, 21);    //50% larger
+
+            CitymapShieldSmall = (Bitmap)icons.Clone(new Rectangle(60, 334, 10, 10), icons.PixelFormat);
+            CitymapShieldSmall.MakeTransparent(transparentLightPink);
+            CitymapShieldSmallBigger = ModifyImage.ResizeImage(CitymapShieldSmall, 15, 15);    //50% larger
+
+            CitymapTradeLarge = (Bitmap)icons.Clone(new Rectangle(31, 305, 14, 14), icons.PixelFormat);
+            CitymapTradeLarge.MakeTransparent(transparentLightPink);
+            CitymapTradeLargeBigger = ModifyImage.ResizeImage(CitymapTradeLarge, 21, 21);    //50% larger
+
+            CitymapTradeSmall = (Bitmap)icons.Clone(new Rectangle(71, 334, 10, 10), icons.PixelFormat);
+            CitymapTradeSmall.MakeTransparent(transparentLightPink);
+            CitymapTradeSmallBigger = ModifyImage.ResizeImage(CitymapTradeSmall, 15, 15);    //50% larger
         }
 
         public static void LoadWallpapers(string cityWallpaperLoc)
