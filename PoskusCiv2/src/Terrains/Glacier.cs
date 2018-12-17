@@ -9,10 +9,11 @@ namespace PoskusCiv2.Terrains
 {
     internal class Glacier : BaseTerrain
     {
-        public Glacier(SpecialType SpecType)
+        public Glacier(SpecialType spec)
         {
             Type = TerrainType.Glacier;
             Name = "Glacier";
+            SpecType = spec;
             switch (SpecType)
             {
                 case SpecialType.NoSpecial:

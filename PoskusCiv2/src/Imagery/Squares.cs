@@ -261,47 +261,6 @@ namespace PoskusCiv2.Imagery
                     graphics.DrawImage(maptype, 0, 0);
                 }
 
-
-                //if (special == 1)
-                //{
-                //    Game.Terrain[col, row].Special = 1;
-                //    switch (Game.Terrain[col, row].Type)
-                //    {
-                //        case TerrainType.Desert: maptype = Images.Desert[2]; break;     //Oasis
-                //        case TerrainType.Forest: maptype = Images.ForestBase[2]; break; //Fazan
-                //        case TerrainType.Glacier: maptype = Images.Glacier[2]; break;   //Walrus
-                //        case TerrainType.Hills: maptype = Images.HillsBase[2]; break;   //Coal
-                //        case TerrainType.Jungle: maptype = Images.Jungle[2]; break;     //Gems
-                //        case TerrainType.Mountains: maptype = Images.MtnsBase[2]; break;//Gold
-                //        case TerrainType.Ocean: maptype = Images.Ocean[2]; break;       //Fish
-                //        case TerrainType.Plains: maptype = Images.Plains[2]; break;     //Buffalo
-                //        case TerrainType.Swamp: maptype = Images.Swamp[2]; break;       //Peat
-                //        case TerrainType.Tundra: maptype = Images.Tundra[2]; break;     //Musox
-                //        default: throw new ArgumentOutOfRangeException();
-                //    }
-                //    graphics.DrawImage(maptype, 0, 0);
-                //}
-                //else if (special == 2)
-                //{
-                //    Game.Terrain[col, row].Special = 2;
-                //    switch (Game.Terrain[col, row].Type)
-                //    {
-                //        case TerrainType.Desert: maptype = Images.Desert[3]; break;     //Oil
-                //        case TerrainType.Forest: maptype = Images.ForestBase[3]; break; //Silk
-                //        case TerrainType.Glacier: maptype = Images.Glacier[3]; break;   //Oil
-                //        case TerrainType.Hills: maptype = Images.HillsBase[3]; break;   //Grapes
-                //        case TerrainType.Jungle: maptype = Images.Jungle[3]; break;     //Banana
-                //        case TerrainType.Mountains: maptype = Images.MtnsBase[3]; break;//Iron
-                //        case TerrainType.Ocean: maptype = Images.Ocean[3]; break;       //Whale
-                //        case TerrainType.Plains: maptype = Images.Plains[3]; break;     //Wheat
-                //        case TerrainType.Swamp: maptype = Images.Swamp[3]; break;       //Spice
-                //        case TerrainType.Tundra: maptype = Images.Tundra[3]; break;     //Furs
-                //        default: throw new ArgumentOutOfRangeException();
-                //    }
-                //    graphics.DrawImage(maptype, 0, 0);
-                //}
-                //else { Game.Terrain[col, row].Special = 0; }
-
                 //Roads (cites also act as road tiles)
                 if (Game.Terrain[col, row].Road || Game.Terrain[col, row].CityPresent)
                 {

@@ -9,10 +9,11 @@ namespace PoskusCiv2.Terrains
 {
     internal class Swamp : BaseTerrain
     {
-        public Swamp(SpecialType SpecType)
+        public Swamp(SpecialType spec)
         {
             Type = TerrainType.Swamp;
             Name = "Swamp";
+            SpecType = spec;
             switch (SpecType)
             {
                 case SpecialType.NoSpecial:

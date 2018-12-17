@@ -9,10 +9,11 @@ namespace PoskusCiv2.Terrains
 {
     internal class Ocean : BaseTerrain
     {
-        public Ocean(SpecialType SpecType)
+        public Ocean(SpecialType spec)
         {
             Type = TerrainType.Ocean;
             Name = "Ocean";
+            SpecType = spec;
             switch (SpecType)
             {
                 case SpecialType.NoSpecial:

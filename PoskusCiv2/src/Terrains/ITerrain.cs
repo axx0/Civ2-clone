@@ -24,8 +24,9 @@ namespace PoskusCiv2.Terrains
         bool Fortress { get; set; }
         bool Pollution { get; set; }
         bool Farmland { get; set; }
-        bool Airbase { get; set; }        
-        
+        bool Airbase { get; set; }
+        int Island { get; set; }
+
         int Movecost { get; }
         int Defense { get; }
         int Food { get; }
@@ -42,15 +43,6 @@ namespace PoskusCiv2.Terrains
         int TurnsToMine { get; }
         int AImining { get; }
         TerrainType? TransformResult { get; }
-
-        int Special { get; set; }
-        int Island { get; set; }
-        int SpecialFood1 { get; }
-        int SpecialFood2 { get; }
-        int SpecialShields1 { get; }
-        int SpecialShields2 { get; }
-        int SpecialTrade1 { get; }
-        int SpecialTrade2 { get; }
 
         string Hexvalue { get; set; }
     }

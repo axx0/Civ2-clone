@@ -257,5 +257,49 @@ namespace PoskusCiv2.Imagery
 
             return map;
         }
+
+        //Draw food/shields/trade icons in city form sqare which is offset (offsetX, offsetY) from the square with the city
+        public Bitmap DrawCityFormMapIcons(City city, int offsetX, int offsetY)
+        {            
+            offsetX = (offsetX - (offsetY % 2)) / 2;    //First turn offsetX/Y from Civ2 to real coordinates
+
+            Bitmap icons = new Bitmap(64, 32);    //define a bitmap for drawing icons
+            using (Graphics graphics = Graphics.FromImage(icons))
+            {
+                //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
+                int spacing;
+                int countF = Game.Terrain[city.X + offsetX, city.Y + offsetY].Food;
+                int countS = Game.Terrain[city.X + offsetX, city.Y + offsetY].Shields;
+                int countT = Game.Terrain[city.X + offsetX, city.Y + offsetY].Trade;
+                switch (countF + countS + countT)
+                {
+                    case 1:
+                    case 2: { spacing = 17; break; }    //50 % larger (orignal = 11, 1 pixel gap)
+                    case 3: { spacing = 15; break; }    //50 % larger (orignal = 10, no gap)
+                    case 4: { spacing = 11; break; }    //50 % larger (orignal = 7)
+                    case 5: { spacing = 8; break; }    //50 % larger (orignal = 5)
+                    case 6: { spacing = 6; break; }    //50 % larger (orignal = 4)
+                    case 7:
+                    case 8: { spacing = 5; break; }    //50 % larger (orignal = 3)
+                    case 9: { spacing = 3; break; }    //50 % larger (orignal = 2)
+                    case 10: { spacing = 2; break; }    //50 % larger (orignal = 1)
+                    default: { spacing = 2; break; }    //50 % larger (orignal = 1)
+                }
+                //First draw food, then shields, then trade icons
+                for (int i = 0; i < countF; i++)
+                {
+                    graphics.DrawImage(Images.CitymapFoodSmallBigger, i * spacing, 0);
+                }
+                for (int i = 0; i < countS; i++)
+                {
+                    graphics.DrawImage(Images.CitymapShieldSmallBigger, (countF + i) * spacing, 0);
+                }
+                for (int i = 0; i < countT; i++)
+                {
+                    graphics.DrawImage(Images.CitymapTradeSmallBigger, (countF + countS + i) * spacing, 0);
+                }
+            }
+            return icons;
+        }
     }
 }

@@ -63,5 +63,45 @@ namespace PoskusCiv2
 
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
         public void AddWonder(IImprovement wonder) => _wonders.Add(wonder);
-    }
+        
+        
+        //offsets of squares around the city (0,0) in civ2-format
+        private int[,] offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
+        //Returns coordinates (offsets) of city-surrounding squares according to most FST they have
+        private int[,] _priorityOffsets = new int[21, 2];
+        public int[,] PriorityOffsets
+        {
+            get
+            {
+                //Distribute on those squares that have max(FST)
+                int[] countFST = new int[20];
+                int[] prioritySquareIndexes = new int[20] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
+                int x, y, x2, y2;
+                for (int square = 0; square < 20; square++)
+                {
+                    x2 = X2 + offsets[square, 0];   //Civ2 format
+                    y2 = Y2 + offsets[square, 1];
+                    x = (x2 - (y2 % 2)) / 2;    //Real format
+                    y = y2;
+                    countFST[square] = Game.Terrain[x, y].Food + Game.Terrain[x, y].Shields + Game.Terrain[x, y].Trade;
+                }
+                Array.Sort(countFST, prioritySquareIndexes);  //this sorts countFST and indexes shows the correct index order
+                Array.Reverse(prioritySquareIndexes);   //because it's sorted in wrong order
+                //Now with sorted offset indexes make _priorityOffsets (element 0 is always city square itself with index (0,0))
+                _priorityOffsets[0, 0] = 0;
+                _priorityOffsets[0, 1] = 0;
+                for (int i = 0; i < 20; i++)
+                {
+                    _priorityOffsets[i + 1, 0] = offsets[prioritySquareIndexes[i], 0];
+                    _priorityOffsets[i + 1, 1] = offsets[prioritySquareIndexes[i], 1];
+                }
+
+                return _priorityOffsets;
+            }
+            set
+            {
+                _priorityOffsets = value;
+            }
+        }
+}
 }

@@ -9,10 +9,11 @@ namespace PoskusCiv2.Terrains
 {
     internal class Mountains : BaseTerrain
     {
-        public Mountains(SpecialType SpecType)
+        public Mountains(SpecialType spec)
         {
             Type = TerrainType.Mountains;
             Name = "Mountains";
+            SpecType = spec;
             switch (SpecType)
             {
                 case SpecialType.NoSpecial:

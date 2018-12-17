@@ -9,10 +9,11 @@ namespace PoskusCiv2.Terrains
 {
     internal class Tundra : BaseTerrain
     {
-        public Tundra(SpecialType SpecType)
+        public Tundra(SpecialType spec)
         {
             Type = TerrainType.Tundra;
             Name = "Tundra";
+            SpecType = spec;
             switch (SpecType)
             {
                 case SpecialType.NoSpecial:

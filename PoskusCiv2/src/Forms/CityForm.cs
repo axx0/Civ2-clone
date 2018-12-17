@@ -16,11 +16,12 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
         Draw Draw = new Draw();
+        City ThisCity;
         Bitmap CityDrawing;
-        Panel CityPanel;
+        Panel WallpaperPanel, CityMapPanel;
         Form CallingForm;
-        Label ok;
         VScrollBar ImprovementsBar;
+        int[,] offsets;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -28,9 +29,11 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
         }
 
-        public CityForm(Form _callingForm, City ThisCity)
+        public CityForm(Form _callingForm, City city)
         {
             InitializeComponent();
+
+            ThisCity = city;
 
             CallingForm = _callingForm;
 
@@ -50,7 +53,7 @@ namespace PoskusCiv2.Forms
             Font buttonFont = new Font("Arial", 13);
 
             //Panel for wallpaper
-            CityPanel = new Panel
+            WallpaperPanel = new Panel
             {
                 Location = new Point(12, 37),    //normal zoom = (8,25)
                 Size = new Size(960, 630),      //normal zoom = (640,420)
@@ -58,9 +61,19 @@ namespace PoskusCiv2.Forms
                 BackgroundImageLayout = ImageLayout.Stretch,
                 BorderStyle = BorderStyle.Fixed3D
             };
-            Controls.Add(CityPanel);
-            CityPanel.Paint += new PaintEventHandler((sender, e) => CityPanel_Paint(this, e));
-            CityPanel.Paint += new PaintEventHandler((sender, e) => PaintImprovementsList(this, e, ThisCity));
+            Controls.Add(WallpaperPanel);
+            WallpaperPanel.Paint += new PaintEventHandler((sender, e) => WallpaperPanel_Paint(this, e));
+            WallpaperPanel.Paint += new PaintEventHandler((sender, e) => PaintImprovementsList(this, e, ThisCity));
+
+            //City map panel
+            CityMapPanel = new Panel
+            {
+                Location = new Point(7, 125),
+                Size = new Size(4 * 72, 4 * 36),    //stretched by 12.5 %
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(CityMapPanel);
+            CityMapPanel.Paint += new PaintEventHandler(CityMapPanel_Paint);
 
             //Info button
             Button InfoButton = new Button
@@ -172,16 +185,20 @@ namespace PoskusCiv2.Forms
                 Size = new Size(15, 190),
                 Maximum = 66 - 9 + 9    //max improvements=66, 9 can be shown, because of slider size it's 9 elements smaller
             };
-            CityPanel.Controls.Add(ImprovementsBar);
+            WallpaperPanel.Controls.Add(ImprovementsBar);
             ImprovementsBar.ValueChanged += new EventHandler(ImprovementsBarValueChanged);
 
+            //Initialize city drawing
             CityDrawing = Draw.DrawCityFormMap(ThisCity);
-        }
+
+            //Define offset map array
+            offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
+    }
 
         //Once slider value changes --> redraw improvements list
         private void ImprovementsBarValueChanged(object sender, EventArgs e)
         {
-            CityPanel.Invalidate();
+            WallpaperPanel.Invalidate();
         }
 
         private void CityForm_Load(object sender, EventArgs e)
@@ -204,14 +221,22 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
         }
 
-        private void CityPanel_Paint(object sender, PaintEventArgs e)
+        private void WallpaperPanel_Paint(object sender, PaintEventArgs e)
         {
-            //The city image is stretched by 12,5%
-            int x = 8, y = 125;
-            e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), new Point(x, y));
             e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(100, 280));
-
             e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
+        }
+
+        //Draw city map
+        private void CityMapPanel_Paint(object sender, PaintEventArgs e)
+        {
+            //map around city
+            e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), 0, 0);
+            //Food/shield/trade icons around the city (21 of them altogether)
+            for (int i = 0; i <= ThisCity.Size; i++)
+            {
+                e.Graphics.DrawImage(Draw.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+            }
         }
 
         private void PaintImprovementsList(object sender, PaintEventArgs e, City ThisCity)
