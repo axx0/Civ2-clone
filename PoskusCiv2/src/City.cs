@@ -103,5 +103,113 @@ namespace PoskusCiv2
                 _priorityOffsets = value;
             }
         }
-}
+
+        private int _foodtotal;
+        public int FoodTotal
+        {
+            get
+            {
+                _foodtotal = 0;
+                for (int i = 0; i <= Size; i++)
+                {
+                    int x2 = X2 + PriorityOffsets[i, 0];   //Civ2 format
+                    int y2 = Y2 + PriorityOffsets[i, 1];
+                    int x = (x2 - (y2 % 2)) / 2;    //Real format
+                    int y = y2;
+                    _foodtotal += Game.Terrain[x, y].Food;
+                }
+                return _foodtotal;
+            }
+        }
+
+        private int _food;
+        public int Food
+        {
+            get
+            {
+                _food = Size * 2;
+                return _food;
+            }
+        }
+
+        private int _surplus;
+        public int Surplus
+        {
+            get
+            {
+                _surplus = FoodTotal - Food;
+                return _surplus;
+            }
+        }
+
+        private int _trade;
+        public int Trade
+        {
+            get
+            {
+                _trade = 5;
+                return _trade;
+            }
+        }
+
+        private int _corruption;
+        public int Corruption
+        {
+            get
+            {
+                _corruption = 3;
+                return _corruption;
+            }
+        }
+
+        private int _tax;
+        public int Tax
+        {
+            get
+            {
+                _tax = 7;
+                return _tax;
+            }
+        }
+
+        private int _lux;
+        public int Lux
+        {
+            get
+            {
+                _lux = 3;
+                return _lux;
+            }
+        }
+
+        private int _sci;
+        public int Sci
+        {
+            get
+            {
+                _sci = 6;
+                return _sci;
+            }
+        }
+
+        private int _support;
+        public int Support
+        {
+            get
+            {
+                _support = 5;
+                return _support;
+            }
+        }
+
+        private int _production;
+        public int Production
+        {
+            get
+            {
+                _production = 3;
+                return _production;
+            }
+        }
+    }
 }

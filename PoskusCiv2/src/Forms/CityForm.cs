@@ -18,7 +18,7 @@ namespace PoskusCiv2.Forms
         Draw Draw = new Draw();
         City ThisCity;
         Bitmap CityDrawing;
-        Panel WallpaperPanel, CityMapPanel;
+        Panel WallpaperPanel, ResourceMap, CityResources;
         Form CallingForm;
         VScrollBar ImprovementsBar;
         int[,] offsets;
@@ -65,15 +65,25 @@ namespace PoskusCiv2.Forms
             WallpaperPanel.Paint += new PaintEventHandler((sender, e) => WallpaperPanel_Paint(this, e));
             WallpaperPanel.Paint += new PaintEventHandler((sender, e) => PaintImprovementsList(this, e, ThisCity));
 
-            //City map panel
-            CityMapPanel = new Panel
+            //Resource map panel
+            ResourceMap = new Panel
             {
                 Location = new Point(7, 125),
                 Size = new Size(4 * 72, 4 * 36),    //stretched by 12.5 %
                 BackColor = Color.Transparent
             };
-            WallpaperPanel.Controls.Add(CityMapPanel);
-            CityMapPanel.Paint += new PaintEventHandler(CityMapPanel_Paint);
+            WallpaperPanel.Controls.Add(ResourceMap);
+            ResourceMap.Paint += new PaintEventHandler(ResourceMap_Paint);
+
+            //City resources panel
+            CityResources = new Panel
+            {
+                Location = new Point(300, 70),
+                Size = new Size(350, 245),    //stretched by 12.5 %
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(CityResources);
+            CityResources.Paint += new PaintEventHandler(CityResources_Paint);
 
             //Info button
             Button InfoButton = new Button
@@ -223,12 +233,13 @@ namespace PoskusCiv2.Forms
 
         private void WallpaperPanel_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(100, 280));
+            e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(90, 280));
+            e.Graphics.DrawString("City Resources", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(400, 70));
             e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
         }
 
         //Draw city map
-        private void CityMapPanel_Paint(object sender, PaintEventArgs e)
+        private void ResourceMap_Paint(object sender, PaintEventArgs e)
         {
             //map around city
             e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), 0, 0);
@@ -237,6 +248,47 @@ namespace PoskusCiv2.Forms
             {
                 e.Graphics.DrawImage(Draw.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
             }
+        }
+
+        //Draw city resources
+        private void CityResources_Paint(object sender, PaintEventArgs e)
+        {
+            StringFormat sf1 = new StringFormat();
+            StringFormat sf2 = new StringFormat();
+            sf1.Alignment = StringAlignment.Far;
+            sf2.Alignment = StringAlignment.Center;
+
+            //Draw food+surplus/hunger strings
+            e.Graphics.DrawString("Food: " + ThisCity.Food.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 21));
+            e.Graphics.DrawString("Food: " + ThisCity.Food.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(87, 171, 39)), new Point(5, 20));
+            e.Graphics.DrawString("Surplus: " + ThisCity.Surplus.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 21), sf1);
+            e.Graphics.DrawString("Surplus: " + ThisCity.Surplus.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 139, 31)), new Point(345, 20), sf1);
+
+            //Draw trade+corruption strings
+            e.Graphics.DrawString("Trade: " + ThisCity.Trade.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 83));
+            e.Graphics.DrawString("Trade: " + ThisCity.Trade.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(5, 82));
+            e.Graphics.DrawString("Corruption: " + ThisCity.Corruption.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 83), sf1);
+            e.Graphics.DrawString("Corruption: " + ThisCity.Corruption.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(345, 82), sf1);
+
+            //Draw tax/lux/sci strings
+            e.Graphics.DrawString("50% Tax: " + ThisCity.Tax.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 164));
+            e.Graphics.DrawString("50% Tax: " + ThisCity.Tax.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(5, 163));
+            e.Graphics.DrawString("0% Lux: " + ThisCity.Lux.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(180, 164), sf2);
+            e.Graphics.DrawString("0% Lux: " + ThisCity.Lux.ToString(), new Font("Arial", 14), new SolidBrush(Color.White), new Point(179, 163), sf2);
+            e.Graphics.DrawString("50% Sci: " + ThisCity.Sci.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 164), sf1);
+            e.Graphics.DrawString("50% Sci: " + ThisCity.Sci.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(345, 163), sf1);
+
+            //Support + production icons
+            e.Graphics.DrawString("Support: " + ThisCity.Support.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 224));
+            e.Graphics.DrawString("Support: " + ThisCity.Support.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), new Point(5, 223));
+            e.Graphics.DrawString("Production: " + ThisCity.Production.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 224), sf1);
+            e.Graphics.DrawString("Production: " + ThisCity.Production.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(7, 11, 103)), new Point(345, 223), sf1);
+
+            //Draw icons
+            e.Graphics.DrawImage(Draw.DrawCityIcons(ThisCity, 5, -2, 5, 3, 7, 2, 6, 5, 3), new Point(7, 42));
+
+            sf1.Dispose();
+            sf2.Dispose();
         }
 
         private void PaintImprovementsList(object sender, PaintEventArgs e, City ThisCity)
