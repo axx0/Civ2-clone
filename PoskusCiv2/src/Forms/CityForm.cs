@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoskusCiv2.Imagery;
+using PoskusCiv2.Units;
 using PoskusCiv2.Improvements;
 
 namespace PoskusCiv2.Forms
@@ -18,7 +19,7 @@ namespace PoskusCiv2.Forms
         Draw Draw = new Draw();
         City ThisCity;
         Bitmap CityDrawing;
-        Panel WallpaperPanel, ResourceMap, CityResources;
+        Panel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage;
         Form CallingForm;
         VScrollBar ImprovementsBar;
         int[,] offsets;
@@ -41,7 +42,6 @@ namespace PoskusCiv2.Forms
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             
-            //CenterToParent();  //the parent form is not MapForm, so this is not really centered
             this.Load += new EventHandler(CityForm_Load);
             this.Paint += new PaintEventHandler((sender, e) => CityForm_Paint(this, e, ThisCity));
             
@@ -65,6 +65,16 @@ namespace PoskusCiv2.Forms
             WallpaperPanel.Paint += new PaintEventHandler((sender, e) => WallpaperPanel_Paint(this, e));
             WallpaperPanel.Paint += new PaintEventHandler((sender, e) => PaintImprovementsList(this, e, ThisCity));
 
+            //Faces panel
+            Faces = new Panel
+            {
+                Location = new Point(10, 10),
+                Size = new Size(630, 50),    //stretched by 12.5 %
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(Faces);
+            Faces.Paint += new PaintEventHandler(Faces_Paint);
+
             //Resource map panel
             ResourceMap = new Panel
             {
@@ -84,6 +94,36 @@ namespace PoskusCiv2.Forms
             };
             WallpaperPanel.Controls.Add(CityResources);
             CityResources.Paint += new PaintEventHandler(CityResources_Paint);
+
+            //Units from city panel
+            UnitsFromCity = new Panel
+            {
+                Location = new Point(10, 321),
+                Size = new Size(270, 104),
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(UnitsFromCity);
+            UnitsFromCity.Paint += new PaintEventHandler(UnitsFromCity_Paint);
+
+            //Units in city panel
+            UnitsInCity = new Panel
+            {
+                Location = new Point(288, 322),
+                Size = new Size(360, 245),
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(UnitsInCity);
+            UnitsInCity.Paint += new PaintEventHandler(UnitsInCity_Paint);
+
+            //Food storage panel
+            FoodStorage = new Panel
+            {
+                Location = new Point(653, 0),
+                Size = new Size(291, 244),
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(FoodStorage);
+            FoodStorage.Paint += new PaintEventHandler(FoodStorage_Paint);
 
             //Info button
             Button InfoButton = new Button
@@ -238,6 +278,12 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
         }
 
+        //Draw faces
+        private void Faces_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(Draw.DrawFaces(ThisCity, 1.5), 0, 0);
+        }
+
         //Draw city map
         private void ResourceMap_Paint(object sender, PaintEventArgs e)
         {
@@ -291,10 +337,45 @@ namespace PoskusCiv2.Forms
             sf2.Dispose();
         }
 
+        private void UnitsFromCity_Paint(object sender, PaintEventArgs e)
+        {
+            int count = 0;
+            int row = 0;
+            int col = 0;
+            double resize_factor = 1;  //orignal images are 0.67 of original, because of 50% scaling it is 0.67*1.5=1
+            foreach (IUnit unit in Game.Units.Where(n => n.HomeCity == Game.Cities.FindIndex(x => x == ThisCity)))
+            {
+                col = count % 5;
+                row = count / 5;
+                e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row)));
+                count++;
+
+                if (count >= 10) { break; }
+            }
+        }
+
+        private void UnitsInCity_Paint(object sender, PaintEventArgs e)
+        {
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+
+            int count = 0;
+            int row = 0;
+            int col = 0;
+            double resize_factor = 1.125;  //orignal images are 25% smaller, because of 50% scaling it is 0.75*1.5=1.125
+            foreach (IUnit unit in Game.Units.Where(unit => unit.X == ThisCity.X && unit.Y == ThisCity.Y ))
+            {
+                col = count % 5;
+                row = count / 5;
+                e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row) + 5 * row));
+                e.Graphics.DrawString(ThisCity.Name.Substring(0, 3), new Font("Arial", 12), new SolidBrush(Color.Black), new Point((int)(64 * resize_factor * col) + (int)(64 * resize_factor / 2), (int)(48 * resize_factor * row) + 5 * row + (int)(48 * resize_factor)), sf);
+                count++;
+            }
+            sf.Dispose();
+        }
+
         private void PaintImprovementsList(object sender, PaintEventArgs e, City ThisCity)
         {
-            Console.WriteLine("Count improements={0}, count wonders={1}", ThisCity.Improvements.Count(), ThisCity.Wonders.Count());
-
             //Draw city improvements
             int x = 12;
             int y = 460;
@@ -320,6 +401,11 @@ namespace PoskusCiv2.Forms
                     e.Graphics.DrawString(ThisCity.Wonders[j + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
                 }
             }
+        }
+
+        private void FoodStorage_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(Draw.DrawFoodStorage(ThisCity), new Point(0, 0));
         }
 
         private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)

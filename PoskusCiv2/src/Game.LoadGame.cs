@@ -750,15 +750,15 @@ namespace PoskusCiv2
                 //Specialists
                 //??????????????????
 
-                //Food in food box
+                //Food in storage
                 intVal1 = dataArray[ofsetC + multipl * i + 26];
                 intVal2 = dataArray[ofsetC + multipl * i + 27];
-                int cityFoodBox = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                int cityFoodInStorage = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Shield in shield box
+                //Shield progress
                 intVal1 = dataArray[ofsetC + multipl * i + 28];
                 intVal2 = dataArray[ofsetC + multipl * i + 29];
-                int cityShieldBox = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                int cityShieldsInProduction = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Net trade
                 intVal1 = dataArray[ofsetC + multipl * i + 30];
@@ -853,7 +853,7 @@ namespace PoskusCiv2
                     else { cityWonders[wndr] = 0; }
                 }
 
-                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodBox, cityShieldBox, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityWonders);
+                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsInProduction, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityWonders);
             }
 
 

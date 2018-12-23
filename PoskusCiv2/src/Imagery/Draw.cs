@@ -34,9 +34,9 @@ namespace PoskusCiv2.Imagery
         }
 
         //Draw unit
-        public Bitmap DrawUnit(IUnit unit, bool stacked)
-        {
-            Bitmap square = new Bitmap(64, 48);    //define a bitmap for drawing
+        public Bitmap DrawUnit(IUnit unit, bool stacked, double scale_factor)
+        {            
+            Bitmap square = new Bitmap(64, 48);     //define a bitmap for drawing       
 
             using (Graphics graphics = Graphics.FromImage(square))
             {
@@ -83,10 +83,10 @@ namespace PoskusCiv2.Imagery
 
                 if (stacked)    //draw dark shield if unit is stacked on top of others
                 {
-                    graphics.DrawImage(Images.BorderUnitShield, secondShieldBorderXLoc, Images.unitShieldLocation[(int)unit.Type, 1]); //black shield border
+                    graphics.DrawImage(Images.UnitShieldShadow, secondShieldBorderXLoc, Images.unitShieldLocation[(int)unit.Type, 1]); //shield shadow
                     graphics.DrawImage(Images.NoBorderUnitShield[(int)unit.Civ], secondShieldXLoc, Images.unitShieldLocation[(int)unit.Type, 1]);   //dark shield
                 }
-                graphics.DrawImage(Images.BorderUnitShield, Images.unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, Images.unitShieldLocation[(int)unit.Type, 1]); //black shield border
+                graphics.DrawImage(Images.UnitShieldShadow, Images.unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, Images.unitShieldLocation[(int)unit.Type, 1]); //shield shadow
                 graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //main shield
                 graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    //Action on shield
 
@@ -107,6 +107,9 @@ namespace PoskusCiv2.Imagery
 
                 sf.Dispose();
             }
+
+            //Resize image if required
+            square = ModifyImage.ResizeImage(square, (int)(64 * scale_factor), (int)(48 * scale_factor));
 
             return square;
         }
@@ -302,6 +305,51 @@ namespace PoskusCiv2.Imagery
             return icons;
         }
 
+        //Draw faces in cityform
+        public Bitmap DrawFaces(City city, double scale_factor)
+        {
+            Bitmap faces = new Bitmap(630, 50);
+            using (Graphics graphics = Graphics.FromImage(faces))
+            {
+                int spacing;
+                switch (city.Size)
+                {
+                    case int n when (n <= 15): { spacing = 42; break; }    //50 % larger (orignal = 28)
+                    case int n when (n == 16): { spacing = 39; break; }    //50 % larger (orignal = 26)
+                    case int n when (n == 17): { spacing = 36; break; }    //50 % larger (orignal = 24)
+                    case int n when (n == 18): { spacing = 35; break; }    //50 % larger (orignal = 23)
+                    case int n when (n == 19): { spacing = 32; break; }    //50 % larger (orignal = 21)
+                    case int n when (n == 20): { spacing = 30; break; }    //50 % larger (orignal = 20)
+                    case int n when (n == 21): { spacing = 29; break; }   //50 % larger (orignal = 19)
+                    case int n when (n == 22): { spacing = 27; break; }   //50 % larger (orignal = 18)
+                    case int n when (n == 23 || n == 24): { spacing = 26; break; }   //50 % larger (orignal = 17)
+                    case int n when (n == 25): { spacing = 24; break; }   //50 % larger (orignal = 16)
+                    case int n when (n == 26 || n == 27): { spacing = 23; break; }   //50 % larger (orignal = 15)
+                    case int n when (n == 28 || n == 29): { spacing = 21; break; }   //50 % larger (orignal = 14)
+                    case int n when (n == 30 || n == 31): { spacing = 20; break; }   //50 % larger (orignal = 13)
+                    case int n when (n == 32 || n == 33): { spacing = 18; break; }   //50 % larger (orignal = 12)
+                    case int n when (n >= 34 && n <= 36): { spacing = 17; break; }   //50 % larger (orignal = 11)
+                    case int n when (n >= 37 && n <= 41): { spacing = 15; break; }   //50 % larger (orignal = 10)
+                    case int n when (n == 42 || n == 43): { spacing = 14; break; }   //50 % larger (orignal = 9)
+                    case int n when (n >= 44 && n <= 50): { spacing = 12; break; }   //50 % larger (orignal = 8)
+                    case int n when (n >= 51 && n <= 57): { spacing = 11; break; }   //50 % larger (orignal = 7)
+                    case int n when (n >= 58 && n <= 66): { spacing = 9; break; }   //50 % larger (orignal = 6)
+                    case int n when (n >= 67 && n <= 79): { spacing = 8; break; }   //50 % larger (orignal = 5)
+                    case int n when (n >= 80 && n <= 99): { spacing = 6; break; }   //50 % larger (orignal = 4)
+                    case int n when (n >= 100): { spacing = 5; break; }   //50 % larger (orignal = 3)
+                    default: { spacing = 30; break; }
+                }
+                //Draw icons
+                for (int i = 0; i < city.Size; i++)
+                {
+                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleLshadow[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing + 1, 1);  //shadow
+                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleL[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing, 0);  //man-woman exchange turns
+                }
+            }            
+
+            return faces;
+        }
+
         //Draw icons in city resources (surplus < 0 is hunger)
         public Bitmap DrawCityIcons(City city, int foodIcons, int surplusIcons, int tradeIcons, int corruptionIcons, int taxIcons, int luxIcons, int sciIcons, int supportIcons, int productionIcons)
         {
@@ -446,6 +494,87 @@ namespace PoskusCiv2.Imagery
                 }
 
             }
+            return icons;
+        }
+
+        //Draw food in storage
+        public Bitmap DrawFoodStorage(City city)
+        {
+            Bitmap icons = new Bitmap(291, 244);    //define a bitmap for drawing icons
+            using (Graphics graphics = Graphics.FromImage(icons))
+            {
+                int wheatW = 21;   //width. Original=14 (50% scaling).
+                int wheatH = 21;   //height. Original=14 (50% scaling).
+
+                //First determine spacing between wheat icons
+                //NOTE (not 100% accurate, spacing also tends to switch between two numbers)
+                int wheat_spacing;
+                switch (city.Size)
+                {
+                    case int n when (n <= 9): { wheat_spacing = 26; break; }  //original=17 (50% scaled)
+                    case int n when (n == 10): { wheat_spacing = 24; break; }  //original=16 (50% scaled)
+                    case int n when (n == 11): { wheat_spacing = 20; break; }  //original=13 (50% scaled)
+                    case int n when (n == 12): { wheat_spacing = 18; break; }  //original=12 (50% scaled)
+                    case int n when (n == 13): { wheat_spacing = 17; break; }  //original=11 (50% scaled)
+                    case int n when (n == 14): { wheat_spacing = 15; break; }  //original=10 (50% scaled)
+                    case int n when (n == 15 || n == 16): { wheat_spacing = 14; break; }  //original=9 (50% scaled)
+                    case int n when (n == 17): { wheat_spacing = 12; break; }  //original=8 (50% scaled)
+                    case int n when (n >= 18 && n <= 20): { wheat_spacing = 11; break; }  //original=7 (50% scaled)
+                    case int n when (n == 21 || n == 22): { wheat_spacing = 9; break; }  //original=6 (50% scaled)
+                    case int n when (n >= 23 && n <= 26): { wheat_spacing = 8; break; }  //original=5 (50% scaled)
+                    case int n when (n >= 27 && n <= 33): { wheat_spacing = 6; break; }  //original=4 (50% scaled)
+                    case int n when (n >= 34 && n <= 40): { wheat_spacing = 5; break; }  //original=3 (50% scaled)
+                    case int n when (n >= 41 && n <= 80): { wheat_spacing = 3; break; }  //original=2 (50% scaled)
+                    case int n when (n >= 81): { wheat_spacing = 2; break; }  //original=1 (50% scaled)
+                    default: { wheat_spacing = 26; break; }
+                }
+
+                //Draw rectangle around wheat icons     
+                //1st horizontal line
+                int line_width = (city.Size + 1) * wheat_spacing + wheatW - wheat_spacing + 2 + 5;
+                int starting_x = (int)((291 - line_width) / 2);   //291 = width of drawing panel
+                int starting_y = 23;    //original=15, this is 50 % scaled
+                graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
+                //3rd horizontal line
+                starting_y = 240;    //original=160, this is 50 % scaled
+                graphics.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x, starting_y, starting_x + line_width, starting_y);
+                //1st vertical line
+                starting_y = 23;
+                int line_height = 216;  //original=144 (50% scaled)
+                graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x, starting_y + line_height);
+                //2nd vertical line
+                graphics.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x + line_width, starting_y, starting_x + line_width, starting_y + line_height);
+
+                //Draw wheat icons
+                int count = 0;
+                starting_x += 3;    //wheat icons 2px to the right in original (50% scaled)
+                for (int row = 0; row < 10; row++)
+                {
+                    for (int col = 0; col <= city.Size; col++)
+                    {
+                        graphics.DrawImage(Images.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
+                        count++;
+
+                        if (count == city.FoodInStorage) { break; }
+                    }
+                    if (count == city.FoodInStorage) { break; }
+                }
+
+                //3rd horizontal line (shorter)
+                line_width -= 12;   //orignal=8 px shorter (50% scaled)
+                starting_x -= 3;    //correct from above
+                starting_x += 6;
+                starting_y = 131;   //orignal=87 (50% scaled)
+                graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
+
+                //Draw string
+                StringFormat sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.Black), new Point(147, 5), sf);
+                graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(146, 4), sf);
+                sf.Dispose();
+            }
+
             return icons;
         }
     }

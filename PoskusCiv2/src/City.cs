@@ -35,8 +35,8 @@ namespace PoskusCiv2
         public int Owner { get; set; }
         public int Size { get; set; }
         public int WhoBuiltIt { get; set; }
-        public int FoodBox { get; set; }
-        public int ShieldBox { get; set; }
+        public int FoodInStorage { get; set; }
+        public int ShieldsInProduction { get; set; }
         public int NetTrade { get; set; }
         public string Name { get; set; }
         public int WorkersInnerCircle { get; set; }

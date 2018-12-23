@@ -353,7 +353,7 @@ namespace PoskusCiv2.Forms
 
                 sf.Dispose();
 
-                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false), 10, 30);
+                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false, 1), 10, 30);
             }
             else
             {
@@ -377,7 +377,7 @@ namespace PoskusCiv2.Forms
                 List<IUnit> unitMatches = Game.Units.FindAll(unit => unit.X == clickedX && unit.Y == clickedY);
                 foreach (IUnit unit in unitMatches)
                 {
-                    e.Graphics.DrawImage(Draw.DrawUnit(unit, false), 10, 90 + count * 3 * 18);
+                    e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 10, 90 + count * 3 * 18);
                     //Game.Cities[unit.HomeCity].Name
                     //Game.Cities[0].Name
                     e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18));

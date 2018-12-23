@@ -239,7 +239,7 @@ namespace PoskusCiv2
             return unit;
         }
 
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodBox, int shieldBox, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int[] wonders)
+        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsInProduction, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int[] wonders)
         {
             City city = new City
             {
@@ -257,8 +257,8 @@ namespace PoskusCiv2
                 Owner = owner,
                 Size = size,
                 WhoBuiltIt = whoBuiltIt,
-                FoodBox = foodBox,
-                ShieldBox = shieldBox,
+                FoodInStorage = foodInStorage,
+                ShieldsInProduction = shieldsInProduction,
                 NetTrade = netTrade,
                 Name = name,
                 WorkersInnerCircle = workersInnerCircle,

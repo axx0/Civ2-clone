@@ -10,8 +10,8 @@ namespace PoskusCiv2.Imagery
     public static class Images
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall, Wonders, WondersLarge, WondersSmall;
-        public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle;
-        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, BorderUnitShield, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger;
+        public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow;
+        public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
@@ -432,12 +432,8 @@ namespace PoskusCiv2.Imagery
             }
 
             //Extract shield without black border (used for stacked units)
-            Bitmap _noBorderUnitShield = (Bitmap)units.Clone(new Rectangle(586, 1, 12, 20), units.PixelFormat);
-            _noBorderUnitShield.MakeTransparent(transparentGray);
-
-            //Extract shield with black border
-            BorderUnitShield = (Bitmap)units.Clone(new Rectangle(599, 1, 12, 20), units.PixelFormat);
-            BorderUnitShield.MakeTransparent(transparentGray);
+            Bitmap _backUnitShield = (Bitmap)units.Clone(new Rectangle(586, 1, 12, 20), units.PixelFormat);
+            _backUnitShield.MakeTransparent(transparentGray);
 
             //Extract unit shield
             Bitmap _unitShield = (Bitmap)units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
@@ -452,14 +448,15 @@ namespace PoskusCiv2.Imagery
             UnitShield[5] = CreateNonIndexedImage(_unitShield);
             UnitShield[6] = CreateNonIndexedImage(_unitShield);
             UnitShield[7] = CreateNonIndexedImage(_unitShield);
-            NoBorderUnitShield[0] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[1] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[2] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[3] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[4] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[5] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[6] = CreateNonIndexedImage(_noBorderUnitShield);
-            NoBorderUnitShield[7] = CreateNonIndexedImage(_noBorderUnitShield);
+            NoBorderUnitShield[0] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[1] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[2] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[3] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[4] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[5] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[6] = CreateNonIndexedImage(_backUnitShield);
+            NoBorderUnitShield[7] = CreateNonIndexedImage(_backUnitShield);
+            UnitShieldShadow = CreateNonIndexedImage(_backUnitShield); //convert GIF to non-indexed picture
             //Replace colors for unit shield and dark unit shield
             for (int x = 0; x < 12; x++)
             {
@@ -477,7 +474,7 @@ namespace PoskusCiv2.Imagery
                         UnitShield[7].SetPixel(x, y, CivColors.Light[7]);  //purple
                     }
 
-                    if (_noBorderUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    //if color is red, replace it
+                    if (_backUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    //if color is red, replace it
                     {
                         NoBorderUnitShield[0].SetPixel(x, y, CivColors.Dark[0]);  //red
                         NoBorderUnitShield[1].SetPixel(x, y, CivColors.Dark[1]);  //white
@@ -487,10 +484,50 @@ namespace PoskusCiv2.Imagery
                         NoBorderUnitShield[5].SetPixel(x, y, CivColors.Dark[5]);  //cyan
                         NoBorderUnitShield[6].SetPixel(x, y, CivColors.Dark[6]);  //orange
                         NoBorderUnitShield[7].SetPixel(x, y, CivColors.Dark[7]);  //purple
+                        UnitShieldShadow.SetPixel(x, y, Color.FromArgb(51, 51, 51));    //color of the shield shadow
                     }
                 }
             }
 
+        }
+
+        public static void LoadPeople(string peopleLoc)
+        {
+            Bitmap icons = new Bitmap(peopleLoc);
+
+            PeopleL = new Bitmap[11, 4];
+            PeopleLshadow = new Bitmap[11, 4];
+
+            //define transparent colors
+            Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
+
+            //Make shadows of faces
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 11; col++)
+                {
+                    PeopleL[col, row] = (Bitmap)icons.Clone(new Rectangle(27 * col + 2 + col, 30 * row + 6 + row, 27, 30), icons.PixelFormat);
+
+                    PeopleLshadow[col, row] = CreateNonIndexedImage(PeopleL[col, row]); //convert GIF to non-indexed picture
+                                                                                        
+                    //If color is non-pink, replace it with black to get shadow (otherwise make transparent)
+                    for (int x = 0; x < 27; x++)
+                    {
+                        for (int y = 0; y < 30; y++)
+                        {
+                            if (PeopleL[col, row].GetPixel(x, y) != transparentPink)
+                            {
+                                PeopleLshadow[col, row].SetPixel(x, y, Color.Black);
+                            }
+                            else
+                            {
+                                PeopleLshadow[col, row].SetPixel(x, y, Color.Transparent);
+                            }
+                        }
+                    }
+                    PeopleL[col, row].MakeTransparent(transparentPink);
+                }
+            }
         }
 
         public static void LoadIcons(string iconLoc)

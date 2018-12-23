@@ -126,11 +126,11 @@ namespace PoskusCiv2.Forms
                         List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
                         if (unitsInXY.Count > 1)    //if units are stacked, draw only the last unit in the list
                         {
-                            e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
+                            e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true, 1), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
                         }
                         else    //if units aren't stacked, draw normally
                         {
-                            e.Graphics.DrawImage(Draw.DrawUnit(unit, false), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
+                            e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
                         }                       
                     }
                 }
@@ -160,7 +160,7 @@ namespace PoskusCiv2.Forms
                 List<IUnit> unitsInXY = ListOfUnitsIn(Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
                 if (unitsInXY.Count > 1) { stacked = true; }
 
-                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked), 32 * (Game.Instance.ActiveUnit.X2 - offsetX), 16 * (Game.Instance.ActiveUnit.Y2 - offsetY) - 16);
+                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked, 1), 32 * (Game.Instance.ActiveUnit.X2 - offsetX), 16 * (Game.Instance.ActiveUnit.Y2 - offsetY) - 16);
             }
 
             //Draw gridlines
