@@ -9,9 +9,10 @@ namespace PoskusCiv2.Units
 {
     internal class Warriors : BaseUnit
     {
-        public Warriors() : base(TechType.Feudalism, UnitGAS.Ground, 1, 0, 1, 1, 1, 1, 1, 0, TechType.None, "000000000000000")
+        public Warriors() : base(40, 5, 4, 2, 1, 1)
         {
             Type = UnitType.Warriors;
+            GAS = UnitGAS.Air;
             Name = "Warriors";
         }
     }

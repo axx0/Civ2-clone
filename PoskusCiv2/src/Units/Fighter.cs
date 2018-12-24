@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Fighter() : base(60, 4, 3, 2, 2, 10)
         {
             Type = UnitType.Fighter;
-            LSA = UnitLSA.Air;
+            GAS = UnitGAS.Air;
             Name = "Fighter";
         }
     }

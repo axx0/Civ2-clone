@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Cannon() : base(40, 8, 1, 2, 1, 1)
         {
             Type = UnitType.Cannon;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Cannon";
         }
     }

@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Knights() : base(40, 4, 2, 1, 1, 2)
         {
             Type = UnitType.Knights;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Knights";
         }
     }

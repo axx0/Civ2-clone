@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public CruiseMsl() : base(60, 18, 0, 1, 3, 12)
         {
             Type = UnitType.CruiseMsl;
-            LSA = UnitLSA.Air;
+            GAS = UnitGAS.Air;
             Name = "Cruise Msl.";
         }
     }

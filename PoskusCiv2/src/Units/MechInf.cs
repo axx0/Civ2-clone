@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public MechInf() : base(50, 6, 6, 3, 1, 3)
         {
             Type = UnitType.MechInf;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Mech. Inf.";
         }
     }

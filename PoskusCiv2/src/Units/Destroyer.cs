@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Destroyer() : base(60, 4, 4, 3, 1, 6)
         {
             Type = UnitType.Destroyer;
-            LSA = UnitLSA.Sea;
+            GAS = UnitGAS.Air;
             Name = "Destroyer";
         }
     }

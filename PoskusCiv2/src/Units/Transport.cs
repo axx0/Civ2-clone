@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Transport() : base(50, 0, 3, 3, 1, 5)
         {
             Type = UnitType.Transport;
-            LSA = UnitLSA.Sea;
+            GAS = UnitGAS.Air;
             Name = "Transport";
         }
     }

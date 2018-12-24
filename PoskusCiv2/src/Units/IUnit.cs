@@ -10,7 +10,7 @@ namespace PoskusCiv2.Units
     public interface IUnit
     {
         UnitType Type { get; }
-        UnitLSA LSA { get; }
+        UnitGAS GAS { get; }
         UnitAction Action { get; set; }
         int X { get; set; }
         int Y { get; set; }

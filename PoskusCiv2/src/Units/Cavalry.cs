@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Cavalry() : base(60, 8, 3, 2, 1, 2)
         {
             Type = UnitType.Cavalry;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Cavalry";
         }
     }

@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public AlpineTroops() : base(50, 5, 5, 2, 1, 1)
         {
             Type = UnitType.AlpineTroops;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Alpine Troops";
         }
     }

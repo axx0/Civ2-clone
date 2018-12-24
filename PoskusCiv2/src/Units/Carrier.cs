@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Carrier() : base(160, 1, 9, 4, 2, 5)
         {
             Type = UnitType.Carrier;
-            LSA = UnitLSA.Sea;
+            GAS = UnitGAS.Air;
             Name = "Carrier";
         }
     }

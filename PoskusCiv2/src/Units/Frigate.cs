@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Frigate() : base(50, 4, 2, 2, 1, 4)
         {
             Type = UnitType.Frigate;
-            LSA = UnitLSA.Sea;
+            GAS = UnitGAS.Air;
             Name = "Frigate";
         }
     }

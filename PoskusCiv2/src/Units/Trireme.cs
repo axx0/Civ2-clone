@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Trireme() : base(40, 1, 1, 1, 1, 3)
         {
             Type = UnitType.Trireme;
-            LSA = UnitLSA.Sea;
+            GAS = UnitGAS.Air;
             Name = "Trireme";
         }
     }

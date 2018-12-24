@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Submarine() : base(60, 10, 2, 3, 2, 3)
         {
             Type = UnitType.Submarine;
-            LSA = UnitLSA.Sea;
+            GAS = UnitGAS.Air;
             Name = "Submarine";
         }
     }

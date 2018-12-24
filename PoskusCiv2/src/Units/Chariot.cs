@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Chariot() : base(30, 3, 1, 1, 1, 2)
         {
             Type = UnitType.Chariot;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Chariot";
         }
     }

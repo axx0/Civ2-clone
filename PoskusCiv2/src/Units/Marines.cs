@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Marines() : base(60, 8, 5, 2, 1, 1)
         {
             Type = UnitType.Marines;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Marines";
         }
     }

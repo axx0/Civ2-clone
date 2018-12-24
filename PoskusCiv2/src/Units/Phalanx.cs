@@ -9,9 +9,10 @@ namespace PoskusCiv2.Units
 {
     internal class Phalanx : BaseUnit
     {
-        public Phalanx() : base(TechType.Feudalism, 0, 1, 0, 1, 2, 1, 1, 2, 0, 1, TechType.BronzeWork, "000000000000000")
+        public Phalanx() : base(40, 5, 4, 2, 1, 1)
         {
             Type = UnitType.Phalanx;
+            GAS = UnitGAS.Air;
             Name = "Phalanx";
         }
     }

@@ -333,6 +333,7 @@
     <Compile Include="src\Units\Submarine.cs" />
     <Compile Include="src\Units\Transport.cs" />
     <Compile Include="src\Units\Trireme.cs" />
+    <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\Warriors.cs" />
     <Compile Include="src\Units\IUnit.cs" />
     <Compile Include="src\Units\Engineers.cs" />

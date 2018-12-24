@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Pikemen() : base(20, 1, 2, 1, 1, 1)
         {
             Type = UnitType.Pikemen;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Pikemen";
         }
     }

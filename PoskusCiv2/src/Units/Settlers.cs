@@ -9,9 +9,10 @@ namespace PoskusCiv2.Units
 {
     internal class Settlers : BaseUnit
     {
-        public Settlers() : base(TechType.Explosives, UnitGAS.Ground, 1, 0, 0, 1, 2, 1, 40, 0, TechType.None, "000000000000000")
+        public Settlers() : base(40, 5, 4, 2, 1, 1)
         {
             Type = UnitType.Settlers;
+            GAS = UnitGAS.Air;
             Name = "Settlers";
         }
     }

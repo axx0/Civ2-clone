@@ -196,7 +196,7 @@ namespace PoskusCiv2.Units
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
-        protected BaseUnit(TechType untilTech, UnitGAS domainGAS, int moveRate, int rangeFuel, int attackFactor, int defenseFactor, int hitPoints, int firepwr, int cost, int AIrole, TechType prereqTech, string flags)
+        protected BaseUnit(int cost, int attackFactor, int defenseFactor, int hitPoints, int firepwr, int moveRate)
         {
             X = -1;
             Y = -1;
@@ -212,7 +212,6 @@ namespace PoskusCiv2.Units
             LinkOtherUnitsOnTop = 0;
             LinkOtherUnitsUnder = 0;
 
-            GAS = domainGAS;
             Cost = cost;
             Attack = attackFactor;
             Defense = defenseFactor;

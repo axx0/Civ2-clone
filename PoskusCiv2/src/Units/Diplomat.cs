@@ -12,7 +12,7 @@ namespace PoskusCiv2.Units
         public Diplomat() : base(30, 0, 0, 1, 1, 2)
         {
             Type = UnitType.Diplomat;
-            LSA = UnitLSA.Land;
+            GAS = UnitGAS.Air;
             Name = "Diplomat";
         }
     }
