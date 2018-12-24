@@ -56,7 +56,7 @@
     <Compile Include="src\Enums\ImprovementType.cs" />
     <Compile Include="src\Enums\SpecialType.cs" />
     <Compile Include="src\Enums\UnitAction.cs" />
-    <Compile Include="src\Enums\UnitLSA.cs" />
+    <Compile Include="src\Enums\UnitGAS.cs" />
     <Compile Include="src\Enums\TechType.cs" />
     <Compile Include="src\Enums\WonderType.cs" />
     <Compile Include="src\Forms\CityForm.cs">

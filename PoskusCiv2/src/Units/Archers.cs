@@ -9,10 +9,9 @@ namespace PoskusCiv2.Units
 {
     internal class Archers : BaseUnit
     {
-        public Archers() : base(30, 3, 2, 1, 1, 1)
+        public Archers() : base(TechType.Gunpowder, 0, 1, 0, 3, 2, 1, 1, 3, 0, 1, TechType.WarriorCode, "000000000000000")
         {
             Type = UnitType.Archers;
-            LSA = UnitLSA.Land;
             Name = "Archers";
         }
     }

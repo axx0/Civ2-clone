@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PoskusCiv2.Enums;
+using PoskusCiv2.Techs;
 
 namespace PoskusCiv2.Units
 {
@@ -18,7 +19,7 @@ namespace PoskusCiv2.Units
         public int StartingMoves { get; }
 
         public UnitType Type { get; set; }
-        public UnitLSA LSA { get; set; }
+        public UnitGAS GAS { get; set; }
         public UnitAction Action { get; set; }
         public string Name { get; set; }
 
@@ -195,7 +196,7 @@ namespace PoskusCiv2.Units
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
-        protected BaseUnit(int cost = 1, int attack = 1, int defense = 1, int hitpoints = 1, int firepower = 1, int moves = 1)
+        protected BaseUnit(TechType untilTech, UnitGAS domainGAS, int moveRate, int rangeFuel, int attackFactor, int defenseFactor, int hitPoints, int firepwr, int cost, int AIrole, TechType prereqTech, string flags)
         {
             X = -1;
             Y = -1;
@@ -211,12 +212,13 @@ namespace PoskusCiv2.Units
             LinkOtherUnitsOnTop = 0;
             LinkOtherUnitsUnder = 0;
 
+            GAS = domainGAS;
             Cost = cost;
-            Attack = attack;
-            Defense = defense;
-            HitPoints = hitpoints;
-            Firepower = firepower;
-            StartingMoves = moves;
+            Attack = attackFactor;
+            Defense = defenseFactor;
+            HitPoints = hitPoints;
+            Firepower = firepwr;
+            StartingMoves = moveRate;
         }
     }
 }
