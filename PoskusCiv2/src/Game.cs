@@ -61,184 +61,129 @@ namespace PoskusCiv2
         public static void CreateTerrain(int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, string hexvalue)
         {
             ITerrain terrain;
-            SpecialType special = SpecialType.NoSpecial;
+            SpecialType? stype = null;
             switch (type)
             {
                 case TerrainType.Desert:
                     {
-                        if (specialtype == 1) { special = SpecialType.Oasis; }
-                        if (specialtype == 2) { special = SpecialType.DesertOil; }
-                        terrain = new Desert(special);
+                        if (specialtype == 1) { stype = SpecialType.Oasis; }
+                        if (specialtype == 2) { stype = SpecialType.DesertOil; }
                         break;
                     }
                 case TerrainType.Plains:
                     {
-                        if (specialtype == 1) { special = SpecialType.Buffalo; }
-                        if (specialtype == 2) { special = SpecialType.Wheat; }
-                        terrain = new Plains(special);
+                        if (specialtype == 1) { stype = SpecialType.Buffalo; }
+                        if (specialtype == 2) { stype = SpecialType.Wheat; }
                         break;
                     }
                 case TerrainType.Grassland:
                     {
-                        if (specialtype == 1) { special = SpecialType.GrasslandShield; }
-                        terrain = new Grassland(special);
+                        if (specialtype == 1) { stype = SpecialType.GrasslandShield; }
+                        if (specialtype == 2) { stype = SpecialType.Grassland; }
                         break;
                     }
                 case TerrainType.Forest:
                     {
-                        if (specialtype == 1) { special = SpecialType.Pheasant; }
-                        if (specialtype == 2) { special = SpecialType.Silk; }
-                        terrain = new Forest(special);
+                        if (specialtype == 1) { stype = SpecialType.Pheasant; }
+                        if (specialtype == 2) { stype = SpecialType.Silk; }
                         break;
                     }
                 case TerrainType.Hills:
                     {
-                        if (specialtype == 1) { special = SpecialType.Coal; }
-                        if (specialtype == 2) { special = SpecialType.Wine; }
-                        terrain = new Hills(special);
+                        if (specialtype == 1) { stype = SpecialType.Coal; }
+                        if (specialtype == 2) { stype = SpecialType.Wine; }
                         break;
                     }
                 case TerrainType.Mountains:
                     {
-                        if (specialtype == 1) { special = SpecialType.Gold; }
-                        if (specialtype == 2) { special = SpecialType.Iron; }
-                        terrain = new Mountains(special);
+                        if (specialtype == 1) { stype = SpecialType.Gold; }
+                        if (specialtype == 2) { stype = SpecialType.Iron; }
                         break;
                     }
                 case TerrainType.Tundra:
                     {
-                        if (specialtype == 1) { special = SpecialType.Game; }
-                        if (specialtype == 2) { special = SpecialType.Furs; }
-                        terrain = new Tundra(special);
+                        if (specialtype == 1) { stype = SpecialType.Game; }
+                        if (specialtype == 2) { stype = SpecialType.Furs; }
                         break;
                     }
                 case TerrainType.Glacier:
                     {
-                        if (specialtype == 1) { special = SpecialType.Ivory; }
-                        if (specialtype == 2) { special = SpecialType.GlacierOil; }
-                        terrain = new Glacier(special);
+                        if (specialtype == 1) { stype = SpecialType.Ivory; }
+                        if (specialtype == 2) { stype = SpecialType.GlacierOil; }
                         break;
                     }
                 case TerrainType.Swamp:
                     {
-                        if (specialtype == 1) { special = SpecialType.Peat; }
-                        if (specialtype == 2) { special = SpecialType.Spice; }
-                        terrain = new Swamp(special);
+                        if (specialtype == 1) { stype = SpecialType.Peat; }
+                        if (specialtype == 2) { stype = SpecialType.Spice; }
                         break;
                     }
                 case TerrainType.Jungle:
                     {
-                        if (specialtype == 1) { special = SpecialType.Gems; }
-                        if (specialtype == 2) { special = SpecialType.Fruit; }
-                        terrain = new Jungle(special);
+                        if (specialtype == 1) { stype = SpecialType.Gems; }
+                        if (specialtype == 2) { stype = SpecialType.Fruit; }
                         break;
                     }
                 case TerrainType.Ocean:
                     {
-                        if (specialtype == 1) { special = SpecialType.Fish; }
-                        if (specialtype == 2) { special = SpecialType.Whales; }
-                        terrain = new Ocean(special);
+                        if (specialtype == 1) { stype = SpecialType.Fish; }
+                        if (specialtype == 2) { stype = SpecialType.Whales; }
                         break;
                     }
                 default: return ;
             }
-            terrain.Resource = resource;
-            terrain.River = river;
-            terrain.Island = island;
-            terrain.UnitPresent = unit_present;
-            terrain.CityPresent = city_present;
-            terrain.Irrigation = irrigation;
-            terrain.Mining = mining;
-            terrain.Road = road;
-            terrain.Railroad = railroad;
-            terrain.Fortress = fortress;
-            terrain.Pollution = pollution;
-            terrain.Farmland = farmland;
-            terrain.Airbase = airbase;
-            terrain.Hexvalue = hexvalue;
+            terrain = new Terrain(type, stype)
+            {
+                Type = type,
+                SpecType = stype,
+                Resource = resource,
+                River = river,
+                Island = island,
+                UnitPresent = unit_present,
+                CityPresent = city_present,
+                Irrigation = irrigation,
+                Mining = mining,
+                Road = road,
+                Railroad = railroad,
+                Fortress = fortress,
+                Pollution = pollution,
+                Farmland = farmland,
+                Airbase = airbase,
+                Hexvalue = hexvalue
+            };
             Terrain[x, y] = terrain;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, UnitAction orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
-            switch (type)
+            unit = new Unit(type)
             {
-                case UnitType.Settlers: unit = new Settlers(); break;
-                case UnitType.Engineers: unit = new Engineers(); break;
-                case UnitType.Warriors: unit = new Warriors(); break;
-                case UnitType.Phalanx: unit = new Phalanx(); break;
-                case UnitType.Archers: unit = new Archers(); break;
-                case UnitType.Legions: unit = new Legions(); break;
-                case UnitType.Pikemen: unit = new Pikemen(); break;
-                case UnitType.Musketeers: unit = new Musketeers(); break;
-                case UnitType.Fanatics: unit = new Fanatics(); break;
-                case UnitType.Partisans: unit = new Partisans(); break;
-                case UnitType.AlpineTroops: unit = new AlpineTroops(); break;
-                case UnitType.Riflemen: unit = new Riflemen(); break;
-                case UnitType.Marines: unit = new Marines(); break;
-                case UnitType.Paratroopers: unit = new Paratroopers(); break;
-                case UnitType.MechInf: unit = new MechInf(); break;
-                case UnitType.Horsemen: unit = new Horsemen(); break;
-                case UnitType.Chariot: unit = new Chariot(); break;
-                case UnitType.Elephant: unit = new Elephant(); break;
-                case UnitType.Crusaders: unit = new Crusaders(); break;
-                case UnitType.Knights: unit = new Knights(); break;
-                case UnitType.Dragoons: unit = new Dragoons(); break;
-                case UnitType.Cavalry: unit = new Cavalry(); break;
-                case UnitType.Armor: unit = new Armor(); break;
-                case UnitType.Catapult: unit = new Catapult(); break;
-                case UnitType.Cannon: unit = new Cannon(); break;
-                case UnitType.Artillery: unit = new Artillery(); break;
-                case UnitType.Howitzer: unit = new Howitzer(); break;
-                case UnitType.Fighter: unit = new Fighter(); break;
-                case UnitType.Bomber: unit = new Bomber(); break;
-                case UnitType.Helicopter: unit = new Helicopter(); break;
-                case UnitType.StlthFtr: unit = new StlthFtr(); break;
-                case UnitType.StlthBmbr: unit = new StlthBmbr(); break;
-                case UnitType.Trireme: unit = new Trireme(); break;
-                case UnitType.Caravel: unit = new Caravel(); break;
-                case UnitType.Galleon: unit = new Galleon(); break;
-                case UnitType.Frigate: unit = new Frigate(); break;
-                case UnitType.Ironclad: unit = new Ironclad(); break;
-                case UnitType.Destroyer: unit = new Destroyer(); break;
-                case UnitType.Cruiser: unit = new Cruiser(); break;
-                case UnitType.AEGISCruiser: unit = new AEGISCruiser(); break;
-                case UnitType.Battleship: unit = new Battleship(); break;
-                case UnitType.Submarine: unit = new Submarine(); break;
-                case UnitType.Carrier: unit = new Carrier(); break;
-                case UnitType.Transport: unit = new Transport(); break;
-                case UnitType.CruiseMsl: unit = new CruiseMsl(); break;
-                case UnitType.NuclearMsl: unit = new NuclearMsl(); break;
-                case UnitType.Diplomat: unit = new Diplomat(); break;
-                case UnitType.Spy: unit = new Spy(); break;
-                case UnitType.Caravan: unit = new Caravan(); break;
-                case UnitType.Freight: unit = new Freight(); break;
-                case UnitType.Explorer: unit = new Explorer(); break;
-                default: return null;
-            }
-            unit.X = x;
-            unit.Y = y;
-            unit.FirstMove = firstMove;
-            unit.GreyStarShield = greyStarShield;
-            unit.Veteran = veteran;
-            unit.Civ = civ;
-            unit.MovePointsLost = movePointsLost;
-            unit.HitpointsLost = hitpointsLost;
-            unit.LastMove = lastMove;
-            unit.CaravanCommodity = caravanCommodity;
-            unit.Action = orders;
-            unit.HomeCity = homeCity;
-            unit.GoToX = goToX;
-            unit.GoToY = goToY;
-            unit.LinkOtherUnitsOnTop = linkOtherUnitsOnTop;
-            unit.LinkOtherUnitsUnder = linkOtherUnitsUnder;
+                Type = type,
+                X = x,
+                Y = y,
+                FirstMove = firstMove,
+                GreyStarShield = greyStarShield,
+                Veteran = veteran,
+                Civ = civ,
+                MovePointsLost = movePointsLost,
+                HitpointsLost = hitpointsLost,
+                LastMove = lastMove,
+                CaravanCommodity = caravanCommodity,
+                Action = orders,
+                HomeCity = homeCity,
+                GoToX = goToX,
+                GoToY = goToY,
+                LinkOtherUnitsOnTop = linkOtherUnitsOnTop,
+                LinkOtherUnitsUnder = linkOtherUnitsUnder
+            };
 
             if (dead) { DeadUnits.Add(unit); }
-            else { Units.Add(unit); }            
+            else { Units.Add(unit); }
+
             return unit;
         }
-
+        
         public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsInProduction, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int[] wonders)
         {
             City city = new City
@@ -267,69 +212,69 @@ namespace PoskusCiv2
                 NoOfSpecialistsx4 = noOfSpecialistsx4                
             };
 
-            if (improvements[0] == '1') { city.AddImprovement(new Palace()); }
-            if (improvements[1] == '1') { city.AddImprovement(new Barracks()); }
-            if (improvements[2] == '1') { city.AddImprovement(new Granary()); }
-            if (improvements[3] == '1') { city.AddImprovement(new Temple()); }
-            if (improvements[4] == '1') { city.AddImprovement(new Marketplace()); }
-            if (improvements[5] == '1') { city.AddImprovement(new Library()); }
-            if (improvements[6] == '1') { city.AddImprovement(new Courthouse()); }
-            if (improvements[7] == '1') { city.AddImprovement(new CityWalls()); }
-            if (improvements[8] == '1') { city.AddImprovement(new Aqueduct()); }
-            if (improvements[9] == '1') { city.AddImprovement(new Bank()); }
-            if (improvements[10] == '1') { city.AddImprovement(new Cathedral()); }
-            if (improvements[11] == '1') { city.AddImprovement(new University()); }
-            if (improvements[12] == '1') { city.AddImprovement(new MassTransit()); }
-            if (improvements[13] == '1') { city.AddImprovement(new Colosseum()); }
-            if (improvements[14] == '1') { city.AddImprovement(new Factory()); }
-            if (improvements[15] == '1') { city.AddImprovement(new MfgPlant()); }
-            if (improvements[16] == '1') { city.AddImprovement(new SDIdefense()); }
-            if (improvements[17] == '1') { city.AddImprovement(new RecyclCentre()); }
-            if (improvements[18] == '1') { city.AddImprovement(new PowerPlant()); }
-            if (improvements[19] == '1') { city.AddImprovement(new HydroPlant()); }
-            if (improvements[20] == '1') { city.AddImprovement(new NuclearPlant()); }
-            if (improvements[21] == '1') { city.AddImprovement(new StockExch()); }
-            if (improvements[22] == '1') { city.AddImprovement(new SewerSystem()); }
-            if (improvements[23] == '1') { city.AddImprovement(new Supermarket()); }
-            if (improvements[24] == '1') { city.AddImprovement(new Superhighways()); }
-            if (improvements[25] == '1') { city.AddImprovement(new ResearchLab()); }
-            if (improvements[26] == '1') { city.AddImprovement(new SAMbattery()); }
-            if (improvements[27] == '1') { city.AddImprovement(new CoastalFort()); }
-            if (improvements[28] == '1') { city.AddImprovement(new SolarPlant()); }
-            if (improvements[29] == '1') { city.AddImprovement(new Harbour()); }
-            if (improvements[30] == '1') { city.AddImprovement(new OffsehorePlat()); }
-            if (improvements[31] == '1') { city.AddImprovement(new Airport()); }
-            if (improvements[32] == '1') { city.AddImprovement(new PoliceStat()); }
-            if (improvements[33] == '1') { city.AddImprovement(new PortFacil()); }
+            if (improvements[0] == '1') { city.AddImprovement(new Improvement(ImprovementType.Palace)); }
+            if (improvements[1] == '1') { city.AddImprovement(new Improvement(ImprovementType.Barracks)); }
+            if (improvements[2] == '1') { city.AddImprovement(new Improvement(ImprovementType.Granary)); }
+            if (improvements[3] == '1') { city.AddImprovement(new Improvement(ImprovementType.Temple)); }
+            if (improvements[4] == '1') { city.AddImprovement(new Improvement(ImprovementType.Marketplace)); }
+            if (improvements[5] == '1') { city.AddImprovement(new Improvement(ImprovementType.Library)); }
+            if (improvements[6] == '1') { city.AddImprovement(new Improvement(ImprovementType.Courthouse)); }
+            if (improvements[7] == '1') { city.AddImprovement(new Improvement(ImprovementType.CityWalls)); }
+            if (improvements[8] == '1') { city.AddImprovement(new Improvement(ImprovementType.Aqueduct)); }
+            if (improvements[9] == '1') { city.AddImprovement(new Improvement(ImprovementType.Bank)); }
+            if (improvements[10] == '1') { city.AddImprovement(new Improvement(ImprovementType.Cathedral)); }
+            if (improvements[11] == '1') { city.AddImprovement(new Improvement(ImprovementType.University)); }
+            if (improvements[12] == '1') { city.AddImprovement(new Improvement(ImprovementType.MassTransit)); }
+            if (improvements[13] == '1') { city.AddImprovement(new Improvement(ImprovementType.Colosseum)); }
+            if (improvements[14] == '1') { city.AddImprovement(new Improvement(ImprovementType.Factory)); }
+            if (improvements[15] == '1') { city.AddImprovement(new Improvement(ImprovementType.MfgPlant)); }
+            if (improvements[16] == '1') { city.AddImprovement(new Improvement(ImprovementType.SDIdefense)); }
+            if (improvements[17] == '1') { city.AddImprovement(new Improvement(ImprovementType.RecyclCentre)); }
+            if (improvements[18] == '1') { city.AddImprovement(new Improvement(ImprovementType.PowerPlant)); }
+            if (improvements[19] == '1') { city.AddImprovement(new Improvement(ImprovementType.HydroPlant)); }
+            if (improvements[20] == '1') { city.AddImprovement(new Improvement(ImprovementType.NuclearPlant)); }
+            if (improvements[21] == '1') { city.AddImprovement(new Improvement(ImprovementType.StockExch)); }
+            if (improvements[22] == '1') { city.AddImprovement(new Improvement(ImprovementType.SewerSystem)); }
+            if (improvements[23] == '1') { city.AddImprovement(new Improvement(ImprovementType.Supermarket)); }
+            if (improvements[24] == '1') { city.AddImprovement(new Improvement(ImprovementType.Superhighways)); }
+            if (improvements[25] == '1') { city.AddImprovement(new Improvement(ImprovementType.ResearchLab)); }
+            if (improvements[26] == '1') { city.AddImprovement(new Improvement(ImprovementType.SAMbattery)); }
+            if (improvements[27] == '1') { city.AddImprovement(new Improvement(ImprovementType.CoastalFort)); }
+            if (improvements[28] == '1') { city.AddImprovement(new Improvement(ImprovementType.SolarPlant)); }
+            if (improvements[29] == '1') { city.AddImprovement(new Improvement(ImprovementType.Harbour)); }
+            if (improvements[30] == '1') { city.AddImprovement(new Improvement(ImprovementType.OffshorePlat)); }
+            if (improvements[31] == '1') { city.AddImprovement(new Improvement(ImprovementType.Airport)); }
+            if (improvements[32] == '1') { city.AddImprovement(new Improvement(ImprovementType.PoliceStat)); }
+            if (improvements[33] == '1') { city.AddImprovement(new Improvement(ImprovementType.PortFacil)); }
 
-            if (wonders[0] == 1) { city.AddWonder(new Pyramids()); }
-            if (wonders[1] == 1) { city.AddWonder(new HangingGardens()); }
-            if (wonders[2] == 1) { city.AddWonder(new Colossus()); }
-            if (wonders[3] == 1) { city.AddWonder(new Lighthouse()); }
-            if (wonders[4] == 1) { city.AddWonder(new GreatLibrary()); }
-            if (wonders[5] == 1) { city.AddWonder(new Oracle()); }
-            if (wonders[6] == 1) { city.AddWonder(new GreatWall()); }
-            if (wonders[7] == 1) { city.AddWonder(new WarAcademy()); }
-            if (wonders[8] == 1) { city.AddWonder(new KR_Crusade()); }
-            if (wonders[9] == 1) { city.AddWonder(new MP_Embassy()); }
-            if (wonders[10] == 1) { city.AddWonder(new MichChapel()); }
-            if (wonders[11] == 1) { city.AddWonder(new CoperObserv()); }
-            if (wonders[12] == 1) { city.AddWonder(new MagellExped()); }
-            if (wonders[13] == 1) { city.AddWonder(new ShakespTheat()); }
-            if (wonders[14] == 1) { city.AddWonder(new DV_Workshop()); }
-            if (wonders[15] == 1) { city.AddWonder(new JSB_Cathedral()); }
-            if (wonders[16] == 1) { city.AddWonder(new IN_College()); }
-            if (wonders[17] == 1) { city.AddWonder(new TradingCompany()); }
-            if (wonders[18] == 1) { city.AddWonder(new DarwinVoyage()); }
-            if (wonders[19] == 1) { city.AddWonder(new StatueLiberty()); }
-            if (wonders[20] == 1) { city.AddWonder(new EiffelTower()); }
-            if (wonders[21] == 1) { city.AddWonder(new HooverDam()); }
-            if (wonders[22] == 1) { city.AddWonder(new WomenSuffrage()); }
-            if (wonders[23] == 1) { city.AddWonder(new ManhattanProj()); }
-            if (wonders[24] == 1) { city.AddWonder(new UnitedNations()); }
-            if (wonders[25] == 1) { city.AddWonder(new ApolloProgr()); }
-            if (wonders[26] == 1) { city.AddWonder(new SETIProgr()); }
-            if (wonders[27] == 1) { city.AddWonder(new CureCancer()); }
+            if (wonders[0] == 1) { city.AddImprovement(new Improvement(ImprovementType.Pyramids)); }
+            if (wonders[1] == 1) { city.AddImprovement(new Improvement(ImprovementType.HangingGardens)); }
+            if (wonders[2] == 1) { city.AddImprovement(new Improvement(ImprovementType.Colossus)); }
+            if (wonders[3] == 1) { city.AddImprovement(new Improvement(ImprovementType.Lighthouse)); }
+            if (wonders[4] == 1) { city.AddImprovement(new Improvement(ImprovementType.GreatLibrary)); }
+            if (wonders[5] == 1) { city.AddImprovement(new Improvement(ImprovementType.Oracle)); }
+            if (wonders[6] == 1) { city.AddImprovement(new Improvement(ImprovementType.GreatWall)); }
+            if (wonders[7] == 1) { city.AddImprovement(new Improvement(ImprovementType.WarAcademy)); }
+            if (wonders[8] == 1) { city.AddImprovement(new Improvement(ImprovementType.KR_Crusade)); }
+            if (wonders[9] == 1) { city.AddImprovement(new Improvement(ImprovementType.MP_Embassy)); }
+            if (wonders[10] == 1) { city.AddImprovement(new Improvement(ImprovementType.MichChapel)); }
+            if (wonders[11] == 1) { city.AddImprovement(new Improvement(ImprovementType.CoperObserv)); }
+            if (wonders[12] == 1) { city.AddImprovement(new Improvement(ImprovementType.MagellExped)); }
+            if (wonders[13] == 1) { city.AddImprovement(new Improvement(ImprovementType.ShakespTheat)); }
+            if (wonders[14] == 1) { city.AddImprovement(new Improvement(ImprovementType.DV_Workshop)); }
+            if (wonders[15] == 1) { city.AddImprovement(new Improvement(ImprovementType.JSB_Cathedral)); }
+            if (wonders[16] == 1) { city.AddImprovement(new Improvement(ImprovementType.IN_College)); }
+            if (wonders[17] == 1) { city.AddImprovement(new Improvement(ImprovementType.TradingCompany)); }
+            if (wonders[18] == 1) { city.AddImprovement(new Improvement(ImprovementType.DarwinVoyage)); }
+            if (wonders[19] == 1) { city.AddImprovement(new Improvement(ImprovementType.StatueLiberty)); }
+            if (wonders[20] == 1) { city.AddImprovement(new Improvement(ImprovementType.EiffelTower)); }
+            if (wonders[21] == 1) { city.AddImprovement(new Improvement(ImprovementType.HooverDam)); }
+            if (wonders[22] == 1) { city.AddImprovement(new Improvement(ImprovementType.WomenSuffrage)); }
+            if (wonders[23] == 1) { city.AddImprovement(new Improvement(ImprovementType.ManhattanProj)); }
+            if (wonders[24] == 1) { city.AddImprovement(new Improvement(ImprovementType.UnitedNations)); }
+            if (wonders[25] == 1) { city.AddImprovement(new Improvement(ImprovementType.ApolloProgr)); }
+            if (wonders[26] == 1) { city.AddImprovement(new Improvement(ImprovementType.SETIProgr)); }
+            if (wonders[27] == 1) { city.AddImprovement(new Improvement(ImprovementType.CureCancer)); }
 
             Cities.Add(city);
             return city;

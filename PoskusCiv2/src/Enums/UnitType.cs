@@ -59,17 +59,16 @@ namespace PoskusCiv2.Enums
         Caravan = 48,
         Freight = 49,
         Explorer = 50,
-        Extra1 = 51,
-        Extra2 = 52,
-        Extra3 = 53,
-        Extra4 = 54,
-        Extra5 = 55,
-        Extra6 = 56,
-        Extra7 = 57,
-        Extra8 = 58,
-        Extra9 = 59,
-        Extra10 = 60,
-        Extra11 = 61,
-        Extra12 = 62
+        ExtraLands = 51,
+        ExtraShip = 52,
+        ExtraAir = 53,
+        Test1 = 54,
+        Test2 = 55,
+        Test3 = 56,
+        Test4 = 57,
+        Test5 = 58,
+        Test6 = 59,
+        Test7 = 60,
+        Test8 = 61
     }
 }

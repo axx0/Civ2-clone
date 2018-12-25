@@ -10,9 +10,28 @@ namespace PoskusCiv2.Terrains
     public interface ITerrain
     {
         TerrainType Type { get; set; }
-        SpecialType SpecType { get; set; }
+        SpecialType? SpecType { get; set; }
+
+        //From RULES.TXT
         string Name { get; set; }
-        string SpecName { get; }
+        string SpecName { get; set; }
+        int MoveCost { get; set; }
+        int Defense { get; set; }
+        int Food { get; set; }
+        int Shields { get; set; }
+        int Trade { get; set; }
+        bool CanIrrigate { get; set; }
+        TerrainType? IrrigationResult { get; set; }
+        int IrrigationBonus { get; set; }
+        int TurnsToIrrigate { get; set; }
+        int AIirrigation { get; set; }
+        bool CanMine { get; set; }
+        TerrainType? MiningResult { get; set; }
+        int MiningBonus { get; set; }
+        int TurnsToMine { get; set; }
+        int AImining { get; set; }
+        TerrainType? TransformResult { get; set; }
+
         bool Resource { get; set; }
         bool River { get; set; }
         bool UnitPresent { get; set; }
@@ -26,23 +45,6 @@ namespace PoskusCiv2.Terrains
         bool Farmland { get; set; }
         bool Airbase { get; set; }
         int Island { get; set; }
-
-        int Movecost { get; }
-        int Defense { get; }
-        int Food { get; }
-        int Shields { get; }
-        int Trade { get; }
-        bool CanIrrigate { get; }
-        TerrainType? IrrigationResult { get; }
-        int IrrigationBonus { get; }
-        int TurnsToIrrigate { get; }
-        int AIirrigation { get; }
-        bool CanMine { get; }
-        TerrainType? MiningResult { get; }
-        int MiningBonus { get; }
-        int TurnsToMine { get; }
-        int AImining { get; }
-        TerrainType? TransformResult { get; }
 
         string Hexvalue { get; set; }
     }

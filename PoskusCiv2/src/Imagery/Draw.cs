@@ -47,18 +47,17 @@ namespace PoskusCiv2.Imagery
                 string shieldText;
                 switch (unit.Action)
                 {
-                    case UnitAction.Fortify: shieldText = "f"; break;
-                    case UnitAction.Fortified: shieldText = "F"; break;
-                    case UnitAction.Sentry: shieldText = "S"; break;
-                    case UnitAction.BuildFortress: shieldText = "bf"; break;
-                    case UnitAction.BuildRoadRR: shieldText = "R"; break;
-                    case UnitAction.BuildIrrigation: shieldText = "I"; break;
-                    case UnitAction.BuildMine: shieldText = "M"; break;
-                    case UnitAction.TransformTerr: shieldText = "O"; break;
-                    case UnitAction.CleanPollution: shieldText = "P"; break;
-                    case UnitAction.BuildAirbase: shieldText = "A"; break;
-                    case UnitAction.GoTo: shieldText = "G"; break;
-                    case UnitAction.NoOrders: shieldText = "-"; break;
+                    case OrderType.Fortify: shieldText = "f"; break;
+                    case OrderType.Fortified: shieldText = "F"; break;
+                    case OrderType.Sleep: shieldText = "S"; break;
+                    case OrderType.BuildFortress: shieldText = "bf"; break;
+                    case OrderType.BuildRoad: shieldText = "R"; break;
+                    case OrderType.BuildIrrigation: shieldText = "I"; break;
+                    case OrderType.BuildMine: shieldText = "M"; break;
+                    case OrderType.Transform: shieldText = "O"; break;
+                    case OrderType.CleanPollution: shieldText = "P"; break;
+                    case OrderType.BuildAirbase: shieldText = "A"; break;
+                    case OrderType.GoTo: shieldText = "G"; break;
                     default: shieldText = "/"; break;
                 }
 
@@ -90,7 +89,7 @@ namespace PoskusCiv2.Imagery
                 graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]); //main shield
                 graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    //Action on shield
 
-                if (unit.Action != UnitAction.Sentry)
+                if (unit.Action != OrderType.Sleep)
                 {
                     graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
                 }
@@ -100,7 +99,7 @@ namespace PoskusCiv2.Imagery
                 }
 
 
-                if (unit.Action == UnitAction.Fortified)
+                if (unit.Action == OrderType.Fortified)
                 {
                     graphics.DrawImage(Images.Fortified, 0, 0); //draw fortification
                 }

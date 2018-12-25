@@ -22,7 +22,7 @@ namespace PoskusCiv2
             if (unit.TurnEnded) { NextUnit(); }
 
             //Check if unit has done irrigating
-            if (unit.Action == UnitAction.BuildIrrigation)
+            if (unit.Action == OrderType.BuildIrrigation)
             {
                 if (unit.Counter == 2)
                 {
@@ -35,10 +35,10 @@ namespace PoskusCiv2
                         Game.Terrain[unit.X, unit.Y].Farmland = true;
                     }
                     Game.Map = Draw.DrawMap();  //Update game map
-                    unit.Action = UnitAction.NoOrders;
+                    //unit.Action = OrderType.NoOrders;
                 }
             }
-            else if (unit.Action == UnitAction.BuildRoadRR)
+            else if (unit.Action == OrderType.BuildRoad)
             {
                 if (unit.Counter == 2)
                 {
@@ -51,16 +51,16 @@ namespace PoskusCiv2
                         Game.Terrain[unit.X, unit.Y].Railroad = true;
                     }
                     Game.Map = Draw.DrawMap();  //Update game map
-                    unit.Action = UnitAction.NoOrders;
+                    //unit.Action = OrderType.NoOrders;
                 }
             }
-            else if (unit.Action == UnitAction.BuildMine)
+            else if (unit.Action == OrderType.BuildMine)
             {
                 if (unit.Counter == 2)
                 {
                     Game.Terrain[unit.X, unit.Y].Mining = true;
                     Game.Map = Draw.DrawMap();  //Update game map
-                    unit.Action = UnitAction.NoOrders;
+                    //unit.Action = OrderType.NoOrders;
                 }
             }
 
@@ -118,7 +118,7 @@ namespace PoskusCiv2
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
             {
                 //Increase counters
-                if ((unit.Action == UnitAction.BuildIrrigation) || (unit.Action == UnitAction.BuildRoadRR) || (unit.Action == UnitAction.BuildMine))
+                if ((unit.Action == OrderType.BuildIrrigation) || (unit.Action == OrderType.BuildRoad) || (unit.Action == OrderType.BuildMine))
                 {
                     unit.Counter += 1;
                     UpdateUnit(unit);
@@ -143,10 +143,10 @@ namespace PoskusCiv2
                 case (char)Keys.D8: Game.Instance.ActiveUnit.Move(0, -2); break;
                 case (char)Keys.D9: Game.Instance.ActiveUnit.Move(1, -1); break;
                 case (char)Keys.Space: Game.Instance.ActiveUnit.SkipTurn(); break;
-                case 's': Game.Instance.ActiveUnit.Sentry(); break;
+                case 's': Game.Instance.ActiveUnit.Sleep(); break;
                 case 'f': Game.Instance.ActiveUnit.Fortify(); break;
                 case 'i': Game.Instance.ActiveUnit.Irrigate(); break;
-                case 'o': Game.Instance.ActiveUnit.Terraform(); break;
+                case 'o': Game.Instance.ActiveUnit.Transform(); break;
                 case 'r': Game.Instance.ActiveUnit.BuildRoad(); break;
                 case 'm': Game.Instance.ActiveUnit.BuildMines(); break;
                 default: break;

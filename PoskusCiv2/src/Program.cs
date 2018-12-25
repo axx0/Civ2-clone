@@ -17,6 +17,7 @@ namespace PoskusCiv2
         [STAThread]
         static void Main()
         {
+            ReadFiles.ReadRULES(@"C:\DOS\CIV 2\Civ2\RULES.TXT");
             Game.LoadGame("C:/DOS/CIV 2/Civ2/Rome01.SAV");
             //Game.LoadGame("C:/DOS/CIV 2/Civ2/English01.SAV");
             Images.LoadTerrain(@"C:\DOS\CIV 2\Civ2\TERRAIN1.GIF", @"C:\DOS\CIV 2\Civ2\TERRAIN2.GIF");

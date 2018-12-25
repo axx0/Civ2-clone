@@ -9,10 +9,14 @@ namespace PoskusCiv2.Improvements
 {
     public interface IImprovement
     {
-        int Id { get; }
-        int WId { get; }
+        //From RULES.TXT
         string Name { get; set; }
+        int Cost { get; set; }
+        int Upkeep { get; set; }
+        TechType Prerequisite { get; set; }
+        TechType AdvanceExpiration { get; set; }
+
+        int Id { get; }
         ImprovementType Type { get; set; }
-        WonderType WType { get; set; }
     }
 }

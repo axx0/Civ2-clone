@@ -231,7 +231,7 @@ namespace PoskusCiv2.Imagery
                 }
 
                 //Draw special resources if they exist
-                if (Game.Terrain[col, row].SpecType != SpecialType.NoSpecial)
+                if (Game.Terrain[col, row].SpecType != null)
                 {
                     switch (Game.Terrain[col, row].SpecType)
                     {

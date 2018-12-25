@@ -9,8 +9,16 @@ namespace PoskusCiv2.Techs
 {
     public interface ITech
     {
-        int Id { get; }
+        //From RULES.TXT
         string Name { get; set; }
+        int AIvalue { get; set; }
+        int Modifier { get; set; }
+        TechType Prereq1 { get; set; }
+        TechType Prereq2 { get; set; }
+        int Epoch { get; set; }
+        int Category { get; set; }
+
+        int Id { get; }
         TechType Type { get; set; }
     }
 }

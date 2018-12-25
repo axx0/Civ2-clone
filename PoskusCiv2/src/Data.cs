@@ -8,6 +8,32 @@ namespace PoskusCiv2
 {
     public class Data
     {
+        //Cosmic rules from RULES.TXT
+        public int RoadMultiplier = ReadFiles.CosmicRules[0];
+        public int ChanceTriremeLost = ReadFiles.CosmicRules[1];
+        public int FoodEatenPerTurn = ReadFiles.CosmicRules[2];
+        public int RowsFoodBox = ReadFiles.CosmicRules[3];
+        public int RowsShieldBox = ReadFiles.CosmicRules[4];
+        public int SettlersEatTillMonarchy = ReadFiles.CosmicRules[5];
+        public int SettlersEatFromCommunism = ReadFiles.CosmicRules[6];
+        public int CitySizeUnhappyChieftain = ReadFiles.CosmicRules[7];
+        public int RiotFactor = ReadFiles.CosmicRules[8];
+        public int AqueductNeeded = ReadFiles.CosmicRules[9];
+        public int SewerNeeded = ReadFiles.CosmicRules[10];
+        public int TechParadigm = ReadFiles.CosmicRules[11];
+        public int BaseTimeEngineersTransform = ReadFiles.CosmicRules[12];
+        public int MonarchyPaysSupport = ReadFiles.CosmicRules[13];
+        public int CommunismPaysSupport = ReadFiles.CosmicRules[14];
+        public int FundamentalismPaysSupport = ReadFiles.CosmicRules[15];
+        public int CommunismEquivalentPalaceDistance = ReadFiles.CosmicRules[16];
+        public int FundamentalismScienceLost = ReadFiles.CosmicRules[17];
+        public int ShieldPenaltyTypeChange = ReadFiles.CosmicRules[18];
+        public int MaxParadropRange = ReadFiles.CosmicRules[19];
+        public int MassThrustParadigm = ReadFiles.CosmicRules[20];
+        public int MaxEffectiveScienceRate = ReadFiles.CosmicRules[21];
+
+
+
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
         public int UnitSelectedAtGameStart { get; set; }

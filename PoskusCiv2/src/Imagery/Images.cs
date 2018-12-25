@@ -9,7 +9,7 @@ namespace PoskusCiv2.Imagery
 {
     public static class Images
     {
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall, Wonders, WondersLarge, WondersSmall;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall;
         public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger;
         public static int[,] unitShieldLocation = new int[63, 2];
@@ -534,12 +534,9 @@ namespace PoskusCiv2.Imagery
         {
             Bitmap icons = new Bitmap(iconLoc);
 
-            Improvements = new Bitmap[38];
-            ImprovementsLarge = new Bitmap[38];
-            ImprovementsSmall = new Bitmap[38];
-            Wonders = new Bitmap[28];
-            WondersLarge = new Bitmap[28];
-            WondersSmall = new Bitmap[28];
+            Improvements = new Bitmap[67];
+            ImprovementsLarge = new Bitmap[67];
+            ImprovementsSmall = new Bitmap[67];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -547,30 +544,28 @@ namespace PoskusCiv2.Imagery
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
 
             //Improvement icons
-            int stej = 0;
+            int count = 1;  //start at 1. 0 is for no improvement.
             for (int row = 0; row < 5; row++)
             {
                 for (int col = 0; col < 8; col++)
                 {
-                    Improvements[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
-                    ImprovementsLarge[stej] = ModifyImage.ResizeImage(Improvements[stej], 54, 30);    //50% larger
-                    ImprovementsSmall[stej] = ModifyImage.ResizeImage(Improvements[stej], 29, 16);    //25% smaller
+                    Improvements[count] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
+                    ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
+                    ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
 
-                    stej++;
-                    if (stej == 37) { break; }
+                    count++;
+                    if (count == 39) { break; }
                 }
             }
-
             //WondersIcons
-            stej = 0;
             for (int row = 0; row < 4; row++)
             {
                 for (int col = 0; col < 7; col++)
                 {
-                    Wonders[stej] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 100 + 1 + 20 * row + row, 36, 20), icons.PixelFormat);
-                    WondersLarge[stej] = ModifyImage.ResizeImage(Wonders[stej], 54, 30);    //50% larger
-                    WondersSmall[stej] = ModifyImage.ResizeImage(Wonders[stej], 29, 16);    //25% smaller
-                    stej++;
+                    Improvements[count] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 106 + 20 * row + row, 36, 20), icons.PixelFormat);
+                    ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
+                    ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
+                    count++;
                 }
             }
 

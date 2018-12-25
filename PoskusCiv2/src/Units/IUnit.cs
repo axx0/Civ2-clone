@@ -9,9 +9,24 @@ namespace PoskusCiv2.Units
 {
     public interface IUnit
     {
+        //From RULES.TXT
+        string Name { get; set; }
+        TechType UntilTech { get; set; }
+        int MoveRate { get; set; }
+        int Range { get; set; }
+        int Attack { get; set; }
+        int Defense { get; set; }
+        int HitPoints { get; set; }
+        int Firepower { get; set; }
+        int Cost { get; set; }
+        int ShipHold { get; set; }
+        int AIrole { get; set; }
+        TechType PrereqTech { get; set; }
+        string Flags { get; set; }
+
         UnitType Type { get; }
         UnitGAS GAS { get; }
-        UnitAction Action { get; set; }
+        OrderType Action { get; set; }
         int X { get; set; }
         int Y { get; set; }
         int X2 { get; }
@@ -38,15 +53,13 @@ namespace PoskusCiv2.Units
         void SkipTurn();
         void Fortify();
         void Irrigate();
-        void Terraform();
-        void Sentry();
+        void Transform();
+        void Sleep();
         void BuildRoad();
         void BuildMines();
         bool TurnEnded { get; set; }
 
-        int Attack { get;  }
-        int Defense { get; }
-        int StartingMoves { get; }
-        string Name { get; }
+
+
     }
 }

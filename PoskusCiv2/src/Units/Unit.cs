@@ -4,24 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PoskusCiv2.Enums;
-using PoskusCiv2.Techs;
 
 namespace PoskusCiv2.Units
 {
-    internal class BaseUnit : IUnit
+    internal class Unit : IUnit
     {
-        //Original data (should be read from txt files)
-        public int Cost { get; }
-        public int Attack { get; }
-        public int Defense { get; }
-        public int HitPoints { get; }
-        public int Firepower { get; }
-        public int MoveRate { get; }
+        //From RULES.TXT
+        public string Name { get; set; }
+        public TechType UntilTech { get; set; }
+        public int MoveRate { get; set; }
+        public int Range { get; set; }
+        public int Attack { get; set; }
+        public int Defense { get; set; }
+        public int HitPoints { get; set; }
+        public int Firepower { get; set; }
+        public int Cost { get; set; }
+        public int ShipHold { get; set; }
+        public int AIrole { get; set; }
+        public TechType PrereqTech { get; set; }
+        public string Flags { get; set; }
 
         public UnitType Type { get; set; }
         public UnitGAS GAS { get; set; }
-        public UnitAction Action { get; set; }
-        public string Name { get; set; }
+        public OrderType Action { get; set; }
 
         private int _x;
         public int X
@@ -78,7 +83,7 @@ namespace PoskusCiv2.Units
             get { return _movePointsLost; }
             set { _movePointsLost = value; }
         }
-        
+
         public void Move(int moveX, int moveY)
         {
             int xTo = X2 + moveX;    //Civ2-style
@@ -97,7 +102,7 @@ namespace PoskusCiv2.Units
                     MovePointsLost = MovePointsLost + 3;
                 }
                 X = Xto;
-                Y = Yto;                
+                Y = Yto;
             }
 
             if (MovePointsLost >= 3 * MoveRate)
@@ -119,7 +124,7 @@ namespace PoskusCiv2.Units
                     MovePointsLost = 3 * MoveRate;
                     _turnEnded = true;
                 }
-                else if (Action == UnitAction.Fortified || Action == UnitAction.Sentry || Action == UnitAction.TransformTerr || Action == UnitAction.Fortify || Action == UnitAction.BuildIrrigation || Action == UnitAction.BuildRoadRR || Action == UnitAction.BuildAirbase || Action == UnitAction.BuildFortress || Action == UnitAction.BuildMine) { _turnEnded = true; }
+                else if (Action == OrderType.Fortified || Action == OrderType.Sleep || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) { _turnEnded = true; }
                 else { _turnEnded = false; }
 
                 return _turnEnded;
@@ -135,7 +140,7 @@ namespace PoskusCiv2.Units
 
         public void Fortify()
         {
-            Action = UnitAction.Fortify;
+            Action = OrderType.Fortify;
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
@@ -143,7 +148,7 @@ namespace PoskusCiv2.Units
         {
             if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Irrigation == false) || (Game.Terrain[X, Y].Farmland == false)))
             {
-                Action = UnitAction.BuildIrrigation;
+                Action = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
             }
             else
@@ -157,7 +162,7 @@ namespace PoskusCiv2.Units
         {
             if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.Terrain[X, Y].Mining == false && (Game.Terrain[X, Y].Type == TerrainType.Mountains || Game.Terrain[X, Y].Type == TerrainType.Hills))
             {
-                Action = UnitAction.BuildMine;
+                Action = OrderType.BuildMine;
                 Counter = 0;    //reset counter
             }
             else
@@ -167,18 +172,18 @@ namespace PoskusCiv2.Units
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
-        public void Terraform()
+        public void Transform()
         {
             if (Type == UnitType.Engineers)
             {
-                Action = UnitAction.TransformTerr;
+                Action = OrderType.Transform;
             }
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
-        public void Sentry()
+        public void Sleep()
         {
-            Action = UnitAction.Sentry;
+            Action = OrderType.Sleep;
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
@@ -186,7 +191,7 @@ namespace PoskusCiv2.Units
         {
             if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Road == false) || (Game.Terrain[X, Y].Railroad == false)))
             {
-                Action = UnitAction.BuildRoadRR;
+                Action = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
             }
             else
@@ -196,28 +201,26 @@ namespace PoskusCiv2.Units
             Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
-        protected BaseUnit(int cost, int attackFactor, int defenseFactor, int hitPoints, int firepwr, int moveRate)
+        //When making a new unit
+        public Unit(UnitType type)
         {
-            X = -1;
-            Y = -1;
-            GreyStarShield = false;
-            Veteran = false;
-            Civ = -1;
-            HitpointsLost = 0;
-            CaravanCommodity = 0;
-            Orders = 0;
-            HomeCity = 0;
-            GoToX = -1;
-            GoToY = -1;
-            LinkOtherUnitsOnTop = 0;
-            LinkOtherUnitsUnder = 0;
-
-            Cost = cost;
-            Attack = attackFactor;
-            Defense = defenseFactor;
-            HitPoints = hitPoints;
-            Firepower = firepwr;
-            MoveRate = moveRate;
+            Name = ReadFiles.UnitName[(int)(type)];
+            //UntilTech = TO-DO
+            if (ReadFiles.UnitDomain[(int)(type)] == 0) { GAS = UnitGAS.Ground; }
+            else if (ReadFiles.UnitDomain[(int)(type)] == 1) { GAS = UnitGAS.Air; }
+            else { GAS = UnitGAS.Sea; }
+            MoveRate = ReadFiles.UnitMove[(int)(type)];
+            Range = ReadFiles.UnitRange[(int)(type)];
+            Attack = ReadFiles.UnitAttack[(int)(type)];
+            Defense = ReadFiles.UnitDefense[(int)(type)];
+            HitPoints = ReadFiles.UnitHitp[(int)(type)];
+            Firepower = ReadFiles.UnitFirepwr[(int)(type)];
+            Cost = ReadFiles.UnitCost[(int)(type)];
+            ShipHold = ReadFiles.UnitHold[(int)(type)];
+            AIrole = ReadFiles.UnitAIrole[(int)(type)];
+            //PrereqTech = TO-DO
+            Flags = ReadFiles.UnitFlags[(int)(type)];
         }
+
     }
 }

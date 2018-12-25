@@ -43,7 +43,7 @@ namespace PoskusCiv2.Forms
             BackgroundImage = Images.WallpaperMapForm;
             
             this.Load += new EventHandler(CityForm_Load);
-            this.Paint += new PaintEventHandler((sender, e) => CityForm_Paint(this, e, ThisCity));
+            this.Paint += new PaintEventHandler(CityForm_Paint);
             
             //Sizes & locations of 6 buttons in bottom right corner
             Size buttonSize = new Size(84, 35); //size
@@ -62,8 +62,8 @@ namespace PoskusCiv2.Forms
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(WallpaperPanel);
-            WallpaperPanel.Paint += new PaintEventHandler((sender, e) => WallpaperPanel_Paint(this, e));
-            WallpaperPanel.Paint += new PaintEventHandler((sender, e) => PaintImprovementsList(this, e, ThisCity));
+            WallpaperPanel.Paint += new PaintEventHandler(WallpaperPanel_Paint);
+            WallpaperPanel.Paint += new PaintEventHandler(ImprovementsList_Paint);
 
             //Faces panel
             Faces = new Panel
@@ -256,7 +256,7 @@ namespace PoskusCiv2.Forms
             Location = new Point(CallingForm.Width / 2 - this.Width / 2, CallingForm.Height / 2 - this.Height / 2 + 60);
         }
 
-        private void CityForm_Paint(object sender, PaintEventArgs e, City ThisCity)
+        private void CityForm_Paint(object sender, PaintEventArgs e)
         {
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
@@ -374,7 +374,7 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
         }
 
-        private void PaintImprovementsList(object sender, PaintEventArgs e, City ThisCity)
+        private void ImprovementsList_Paint(object sender, PaintEventArgs e)
         {
             //Draw city improvements
             int x = 12;
@@ -382,24 +382,16 @@ namespace PoskusCiv2.Forms
             int starting = ImprovementsBar.Value;   //starting improvement to draw (changes with slider)
             for (int i = 0; i < 9; i++)
             {
-                if ((i + starting) >= (ThisCity.Improvements.Count() + ThisCity.Wonders.Count())) { break; }  //break if no of improvements+wonders to small
+                if ((i + starting) >= (ThisCity.Improvements.Count())) { break; }  //break if no of improvements+wonders to small
 
-                //first draw improvements
-                if (i + starting < ThisCity.Improvements.Count())
+                //draw improvements
+                e.Graphics.DrawImage(Images.ImprovementsSmall[(int)ThisCity.Improvements[i + starting].Type], new Point(x, y + 15 * i + 2 * i));
+                if ((int)ThisCity.Improvements[i + starting].Type < 39) //wonders don't have a sell icon
                 {
-                    e.Graphics.DrawImage(Images.ImprovementsSmall[(int)ThisCity.Improvements[i + starting].Type], new Point(x, y + 15 * i + 2 * i));
                     e.Graphics.DrawImage(Images.SellIconLarge, new Point(x + 220, y + 15 * i + 2 * i - 2));
-                    e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
-                    e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
                 }
-                //if all improvements are drawn, start drawing wonders (w/o sell icon)
-                else
-                {
-                    int j = i - ThisCity.Improvements.Count();
-                    e.Graphics.DrawImage(Images.WondersSmall[(int)ThisCity.Wonders[j + starting].WType], new Point(x, y + 15 * i + 2 * i));
-                    e.Graphics.DrawString(ThisCity.Wonders[j + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
-                    e.Graphics.DrawString(ThisCity.Wonders[j + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
-                }
+                e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
+                e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
             }
         }
 
