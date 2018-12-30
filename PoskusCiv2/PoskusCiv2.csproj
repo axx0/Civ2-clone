@@ -69,11 +69,26 @@
     <Compile Include="src\Forms\CityForm.Designer.cs">
       <DependentUpon>CityForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\CityChangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\CityChangeForm.Designer.cs">
+      <DependentUpon>CityChangeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\CityRenameForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\Forms\CityRenameForm.Designer.cs">
       <DependentUpon>CityRenameForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\Civ2button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\Civ2form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\Civ2form.Designer.cs">
+      <DependentUpon>Civ2form.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\CreateUnitForm.cs">
       <SubType>Form</SubType>
@@ -131,8 +146,14 @@
     <Compile Include="src\Forms\WorldMapForm.Designer.cs">
       <DependentUpon>WorldMapForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="src\Forms\CityChangeForm.resx">
+      <DependentUpon>CityChangeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\CityRenameForm.resx">
       <DependentUpon>CityRenameForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\Civ2form.resx">
+      <DependentUpon>Civ2form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\CreateUnitForm.resx">
       <DependentUpon>CreateUnitForm.cs</DependentUpon>

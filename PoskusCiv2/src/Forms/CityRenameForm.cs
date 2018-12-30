@@ -20,7 +20,7 @@ namespace PoskusCiv2.Forms
         {
             InitializeComponent();
 
-            Size = new Size(480, 120);
+            //Size = new Size(480, 120);
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             CenterToParent();
@@ -108,7 +108,6 @@ namespace PoskusCiv2.Forms
 
         private void CityRenameForm_Load(object sender, EventArgs e)
         {
-
         }
 
         private void CityRenameForm_Paint(object sender, PaintEventArgs e)

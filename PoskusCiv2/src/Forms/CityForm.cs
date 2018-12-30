@@ -19,7 +19,7 @@ namespace PoskusCiv2.Forms
         Draw Draw = new Draw();
         City ThisCity;
         Bitmap CityDrawing;
-        Panel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage;
+        Panel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, Production;
         Form CallingForm;
         VScrollBar ImprovementsBar;
         int[,] offsets;
@@ -125,6 +125,53 @@ namespace PoskusCiv2.Forms
             WallpaperPanel.Controls.Add(FoodStorage);
             FoodStorage.Paint += new PaintEventHandler(FoodStorage_Paint);
 
+            //Production panel
+            Production = new Panel
+            {
+                Location = new Point(653, 246),
+                Size = new Size(291, 285),
+                BackColor = Color.Transparent
+            };
+            WallpaperPanel.Controls.Add(Production);
+            Production.Paint += new PaintEventHandler(Production_Paint);
+
+            //Buy button
+            //Button BuyButton = new Button
+            Civ2button BuyButton = new Civ2button
+            {
+                Location = new Point(8, 24),
+                Size = new Size(102, 36),
+                ForeColor = Color.Black,
+                BackColor = Color.FromArgb(192, 192, 192),
+                Font = buttonFont,
+                FlatStyle = FlatStyle.Flat,
+                Text = "Buy"
+            };
+            BuyButton.FlatAppearance.BorderSize = 0;
+            BuyButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
+            Production.Controls.Add(BuyButton);
+            BuyButton.BringToFront();
+            BuyButton.Click += new EventHandler(BuyButton_Click);
+            BuyButton.Paint += new PaintEventHandler(Button_Paint);
+
+            //Change button
+            Button ChangeButton = new Button
+            {
+                Location = new Point(180, 24),
+                Size = new Size(102, 36),
+                ForeColor = Color.Black,
+                BackColor = Color.FromArgb(192, 192, 192),
+                Font = buttonFont,
+                FlatStyle = FlatStyle.Flat,
+                Text = "Change"
+            };
+            ChangeButton.FlatAppearance.BorderSize = 0;
+            ChangeButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
+            Production.Controls.Add(ChangeButton);
+            ChangeButton.BringToFront();
+            ChangeButton.Click += new EventHandler(ChangeButton_Click);
+            ChangeButton.Paint += new PaintEventHandler(Button_Paint);
+
             //Info button
             Button InfoButton = new Button
             {
@@ -174,7 +221,7 @@ namespace PoskusCiv2.Forms
             RenameButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Controls.Add(RenameButton);
             RenameButton.BringToFront();
-            RenameButton.Click += new EventHandler((sender, e) => RenameButton_Click(this, e, ThisCity));
+            RenameButton.Click += new EventHandler(RenameButton_Click);
             RenameButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Happy button
@@ -228,7 +275,7 @@ namespace PoskusCiv2.Forms
             ExitButton.Click += new EventHandler(ExitButton_Click);
             ExitButton.Paint += new PaintEventHandler(Button_Paint);
 
-            //TESTING ...
+            //Improvements vertical bar
             ImprovementsBar = new VScrollBar()
             {
                 Location = new Point(270, 433),
@@ -400,12 +447,43 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawImage(Draw.DrawFoodStorage(ThisCity), new Point(0, 0));
         }
 
+        private void Production_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
         private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
         {
             //for (int i = 0; i < 7; i++)
             //{
             //    e.Graphics.DrawString("HELLO", new Font("Arial", 13), new SolidBrush(Color.Black), new Point(0, 20 * i));
             //}            
+        }
+
+        private void BuyButton_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void ChangeButton_Click(object sender, EventArgs e)
+        {
+            //Use this so the form returns a chosen value (what it has chosen to produce)
+            using (var CityChangeForm = new CityChangeForm(ThisCity))
+            {
+                CityChangeForm.Load += new EventHandler(CityChangeForm_Load);   //so you set the correct size of form
+                var result = CityChangeForm.ShowDialog();
+                if (result == DialogResult.OK)  //when form is closed
+                {
+                    int val = CityChangeForm.ChosenValue;   //chosen value from other form
+                }
+            }
+        }
+
+        private void CityChangeForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Width = 686;
+            frm.Height = 458;
+            frm.Location = new Point(200, 100);
         }
 
         private void InfoButton_Click(object sender, EventArgs e)
@@ -416,7 +494,7 @@ namespace PoskusCiv2.Forms
         {
         }
 
-        private void RenameButton_Click(object sender, EventArgs e, City ThisCity)
+        private void RenameButton_Click(object sender, EventArgs e)
         {
             CityRenameForm CityRenameForm = new CityRenameForm(ThisCity);
             CityRenameForm.RefreshCityForm += RefreshThis;
