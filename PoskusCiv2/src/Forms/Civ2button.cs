@@ -14,6 +14,7 @@ namespace PoskusCiv2.Forms
         {
             FlatStyle = FlatStyle.Flat;
             BackColor = Color.FromArgb(192, 192, 192);
+            FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
         }
 
         protected override void OnPaint(PaintEventArgs pe)

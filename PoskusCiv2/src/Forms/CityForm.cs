@@ -13,13 +13,14 @@ using PoskusCiv2.Improvements;
 
 namespace PoskusCiv2.Forms
 {
-    public partial class CityForm : Form
+    //public partial class CityForm : Form
+    public partial class CityForm : Civ2form
     {
         public MainCiv2Window mainCiv2Window;
         Draw Draw = new Draw();
         City ThisCity;
         Bitmap CityDrawing;
-        Panel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, Production;
+        DoubleBufferedPanel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, Production;
         Form CallingForm;
         VScrollBar ImprovementsBar;
         int[,] offsets;
@@ -38,35 +39,26 @@ namespace PoskusCiv2.Forms
 
             CallingForm = _callingForm;
 
-            Size = new Size(976, 680);  //normalen zoom = (650,453)
+            Size = new Size(986, 689);  //normalen zoom = (657,459)
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             
             this.Load += new EventHandler(CityForm_Load);
             this.Paint += new PaintEventHandler(CityForm_Paint);
-            
-            //Sizes & locations of 6 buttons in bottom right corner
-            Size buttonSize = new Size(84, 35); //size
-            Point buttonXYloc = new Point(695, 580);    //location of 1st button
-            int buttonSepX = 5; //separation between buttons in X
-            int buttonSepY = 5; //separation between buttons in Y
-            Font buttonFont = new Font("Arial", 13);
 
             //Panel for wallpaper
-            WallpaperPanel = new Panel
+            WallpaperPanel = new DoubleBufferedPanel
             {
                 Location = new Point(12, 37),    //normal zoom = (8,25)
                 Size = new Size(960, 630),      //normal zoom = (640,420)
-                BackgroundImage = Images.CityWallpaper,
-                BackgroundImageLayout = ImageLayout.Stretch,
-                BorderStyle = BorderStyle.Fixed3D
+                BackgroundImage = ModifyImage.ResizeImage(Images.CityWallpaper, 960, 630),
             };
             Controls.Add(WallpaperPanel);
             WallpaperPanel.Paint += new PaintEventHandler(WallpaperPanel_Paint);
             WallpaperPanel.Paint += new PaintEventHandler(ImprovementsList_Paint);
 
             //Faces panel
-            Faces = new Panel
+            Faces = new DoubleBufferedPanel
             {
                 Location = new Point(10, 10),
                 Size = new Size(630, 50),    //stretched by 12.5 %
@@ -76,7 +68,7 @@ namespace PoskusCiv2.Forms
             Faces.Paint += new PaintEventHandler(Faces_Paint);
 
             //Resource map panel
-            ResourceMap = new Panel
+            ResourceMap = new DoubleBufferedPanel
             {
                 Location = new Point(7, 125),
                 Size = new Size(4 * 72, 4 * 36),    //stretched by 12.5 %
@@ -86,7 +78,7 @@ namespace PoskusCiv2.Forms
             ResourceMap.Paint += new PaintEventHandler(ResourceMap_Paint);
 
             //City resources panel
-            CityResources = new Panel
+            CityResources = new DoubleBufferedPanel
             {
                 Location = new Point(300, 70),
                 Size = new Size(350, 245),    //stretched by 12.5 %
@@ -96,7 +88,7 @@ namespace PoskusCiv2.Forms
             CityResources.Paint += new PaintEventHandler(CityResources_Paint);
 
             //Units from city panel
-            UnitsFromCity = new Panel
+            UnitsFromCity = new DoubleBufferedPanel
             {
                 Location = new Point(10, 321),
                 Size = new Size(270, 104),
@@ -106,7 +98,7 @@ namespace PoskusCiv2.Forms
             UnitsFromCity.Paint += new PaintEventHandler(UnitsFromCity_Paint);
 
             //Units in city panel
-            UnitsInCity = new Panel
+            UnitsInCity = new DoubleBufferedPanel
             {
                 Location = new Point(288, 322),
                 Size = new Size(360, 245),
@@ -116,7 +108,7 @@ namespace PoskusCiv2.Forms
             UnitsInCity.Paint += new PaintEventHandler(UnitsInCity_Paint);
 
             //Food storage panel
-            FoodStorage = new Panel
+            FoodStorage = new DoubleBufferedPanel
             {
                 Location = new Point(653, 0),
                 Size = new Size(291, 244),
@@ -126,7 +118,7 @@ namespace PoskusCiv2.Forms
             FoodStorage.Paint += new PaintEventHandler(FoodStorage_Paint);
 
             //Production panel
-            Production = new Panel
+            Production = new DoubleBufferedPanel
             {
                 Location = new Point(653, 246),
                 Size = new Size(291, 285),
@@ -136,144 +128,116 @@ namespace PoskusCiv2.Forms
             Production.Paint += new PaintEventHandler(Production_Paint);
 
             //Buy button
-            //Button BuyButton = new Button
             Civ2button BuyButton = new Civ2button
             {
                 Location = new Point(8, 24),
                 Size = new Size(102, 36),
-                ForeColor = Color.Black,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Arial", 13),
                 Text = "Buy"
             };
-            BuyButton.FlatAppearance.BorderSize = 0;
-            BuyButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Production.Controls.Add(BuyButton);
-            BuyButton.BringToFront();
             BuyButton.Click += new EventHandler(BuyButton_Click);
-            BuyButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Change button
-            Button ChangeButton = new Button
+            Civ2button ChangeButton = new Civ2button
             {
                 Location = new Point(180, 24),
                 Size = new Size(102, 36),
-                ForeColor = Color.Black,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Arial", 13),
                 Text = "Change"
             };
-            ChangeButton.FlatAppearance.BorderSize = 0;
-            ChangeButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             Production.Controls.Add(ChangeButton);
-            ChangeButton.BringToFront();
             ChangeButton.Click += new EventHandler(ChangeButton_Click);
-            ChangeButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Info button
-            Button InfoButton = new Button
+            Civ2button InfoButton = new Civ2button
             {
-                Location = new Point(buttonXYloc.X, buttonXYloc.Y),
-                Size = buttonSize,
-                ForeColor = Color.Black,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,                
+                Location = new Point(692, 549), //original (461, 366)
+                Size = new Size(86, 36),  //original (57, 24)
+                Font = new Font("Arial", 13),
                 Text = "Info"
             };
-            InfoButton.FlatAppearance.BorderSize = 0;
-            InfoButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
-            Controls.Add(InfoButton);
-            InfoButton.BringToFront();
+            WallpaperPanel.Controls.Add(InfoButton);
             InfoButton.Click += new EventHandler(InfoButton_Click);
-            InfoButton.Paint += new PaintEventHandler(Button_Paint);
-            
+
             //Map button
-            Button MapButton = new Button
+            Civ2button MapButton = new Civ2button
             {
-                Location = new Point(buttonXYloc.X + buttonSize.Width + buttonSepX, buttonXYloc.Y),
-                Size = buttonSize,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Location = new Point(779, 549), //original (519, 366)
+                Size = new Size(86, 36),  //original (57, 24)
+                Font = new Font("Arial", 13),
                 Text = "Map"
             };
-            MapButton.FlatAppearance.BorderSize = 0;
-            MapButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
-            Controls.Add(MapButton);
-            MapButton.BringToFront();
+            WallpaperPanel.Controls.Add(MapButton);
             MapButton.Click += new EventHandler(MapButton_Click);
-            MapButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Rename button
-            Button RenameButton = new Button
+            Civ2button RenameButton = new Civ2button
             {
-                Location = new Point(buttonXYloc.X + 2 * buttonSize.Width + 2 * buttonSepX, buttonXYloc.Y),
-                Size = buttonSize,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Location = new Point(866, 549), //original (577, 366)
+                Size = new Size(86, 36),  //original (57, 24)
+                Font = new Font("Arial", 13),
                 Text = "Rename"
             };
-            RenameButton.FlatAppearance.BorderSize = 0;
-            RenameButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
-            Controls.Add(RenameButton);
-            RenameButton.BringToFront();
+            WallpaperPanel.Controls.Add(RenameButton);
             RenameButton.Click += new EventHandler(RenameButton_Click);
-            RenameButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Happy button
-            Button HappyButton = new Button
+            Civ2button HappyButton = new Civ2button
             {
-                Location = new Point(buttonXYloc.X, buttonXYloc.Y + buttonSize.Height + buttonSepY),
-                Size = buttonSize,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Location = new Point(692, 587), //original (461, 391)
+                Size = new Size(86, 36),  //original (57, 24)
+                Font = new Font("Arial", 13),
                 Text = "Happy"
             };
-            HappyButton.FlatAppearance.BorderSize = 0;
-            HappyButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
-            Controls.Add(HappyButton);
-            HappyButton.BringToFront();
+            WallpaperPanel.Controls.Add(HappyButton);
             HappyButton.Click += new EventHandler(HappyButton_Click);
-            HappyButton.Paint += new PaintEventHandler(Button_Paint);
 
             //View button
-            Button ViewButton = new Button
+            Civ2button ViewButton = new Civ2button
             {
-                Location = new Point(buttonXYloc.X + buttonSize.Width + buttonSepX, buttonXYloc.Y + buttonSize.Height + buttonSepY),
-                Size = buttonSize,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Location = new Point(779, 587), //original (519, 391)
+                Size = new Size(86, 36),  //original (57, 24)
+                Font = new Font("Arial", 13),
                 Text = "View"
             };
-            ViewButton.FlatAppearance.BorderSize = 0;
-            ViewButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
-            Controls.Add(ViewButton);
-            ViewButton.BringToFront();
+            WallpaperPanel.Controls.Add(ViewButton);
             ViewButton.Click += new EventHandler(ViewButton_Click);
-            ViewButton.Paint += new PaintEventHandler(Button_Paint);
 
             //Exit button
-            Button ExitButton = new Button
+            Civ2button ExitButton = new Civ2button
             {
-                Location = new Point(buttonXYloc.X + 2 * buttonSize.Width + 2 * buttonSepX, buttonXYloc.Y + buttonSize.Height + buttonSepY),
-                Size = buttonSize,
-                BackColor = Color.FromArgb(192, 192, 192),
-                Font = buttonFont,
-                FlatStyle = FlatStyle.Flat,
+                Location = new Point(866, 587), //original (577, 391)
+                Size = new Size(86, 36),  //original (57, 24)
+                Font = new Font("Arial", 13),
                 Text = "Exit"
             };
-            ExitButton.FlatAppearance.BorderSize = 0;
-            ExitButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
-            Controls.Add(ExitButton);
-            ExitButton.BringToFront();
+            WallpaperPanel.Controls.Add(ExitButton);
             ExitButton.Click += new EventHandler(ExitButton_Click);
-            ExitButton.Paint += new PaintEventHandler(Button_Paint);
+
+            //Next city (UP) button
+            Button NextCityButton = new Button
+            {
+                Location = new Point(660, 550), //original (440, 367)
+                Size = new Size(32, 36),  //original (21, 24)
+                BackColor = Color.FromArgb(107, 107, 107)
+            };
+            NextCityButton.FlatStyle = FlatStyle.Flat;
+            WallpaperPanel.Controls.Add(NextCityButton);
+            NextCityButton.Click += new EventHandler(NextCityButton_Click);
+            NextCityButton.Paint += new PaintEventHandler(NextCityButton_Paint);
+
+            //Previous city (DOWN) button
+            Button PrevCityButton = new Button
+            {
+                Location = new Point(660, 588), //original (440, 392)
+                Size = new Size(32, 36),  //original (21, 24)
+                BackColor = Color.FromArgb(107, 107, 107)
+            };
+            PrevCityButton.FlatStyle = FlatStyle.Flat;
+            WallpaperPanel.Controls.Add(PrevCityButton);
+            PrevCityButton.Click += new EventHandler(PrevCityButton_Click);
+            PrevCityButton.Paint += new PaintEventHandler(PrevCityButton_Paint);
 
             //Improvements vertical bar
             ImprovementsBar = new VScrollBar()
@@ -290,7 +254,7 @@ namespace PoskusCiv2.Forms
 
             //Define offset map array
             offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
-    }
+        }
 
         //Once slider value changes --> redraw improvements list
         private void ImprovementsBarValueChanged(object sender, EventArgs e)
@@ -320,6 +284,17 @@ namespace PoskusCiv2.Forms
 
         private void WallpaperPanel_Paint(object sender, PaintEventArgs e)
         {
+            //Borders of panel
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, WallpaperPanel.Height - 2, WallpaperPanel.Width, WallpaperPanel.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, WallpaperPanel.Height - 1, WallpaperPanel.Width, WallpaperPanel.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), WallpaperPanel.Width - 2, 0, WallpaperPanel.Width - 2, WallpaperPanel.Height);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), WallpaperPanel.Width - 1, 0, WallpaperPanel.Width - 1, WallpaperPanel.Height);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, WallpaperPanel.Width, 0);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 1, WallpaperPanel.Width, 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, WallpaperPanel.Height);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 0, 1, WallpaperPanel.Height);
+
+            //Texts
             e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(90, 280));
             e.Graphics.DrawString("City Resources", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(400, 70));
             e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
@@ -506,27 +481,47 @@ namespace PoskusCiv2.Forms
             Refresh();
         }
 
-        private void HappyButton_Click(object sender, EventArgs e)
-        {
-        }
+        private void HappyButton_Click(object sender, EventArgs e) { }
 
-        private void ViewButton_Click(object sender, EventArgs e)
+        private void ViewButton_Click(object sender, EventArgs e) { }
+
+        private void NextCityButton_Click(object sender, EventArgs e) { }
+
+        private void PrevCityButton_Click(object sender, EventArgs e) { }
+
+        private void NextCityButton_Paint(object sender, PaintEventArgs e)
         {
+            //Draw lines in button
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
+            //Draw the arrow icon
+            e.Graphics.DrawImage(Images.NextCityLarge, 2, 1);
+        }
+                
+        private void PrevCityButton_Paint(object sender, PaintEventArgs e)
+        {
+            //Draw lines in button
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
+            //Draw the arrow icon
+            e.Graphics.DrawImage(Images.PrevCityLarge, 2, 1);
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-        private void Button_Paint(object sender, PaintEventArgs e)
-        {
-            ControlPaint.DrawBorder(e.Graphics, this.ClientRectangle,
-                SystemColors.ControlLightLight, 1, ButtonBorderStyle.Outset,
-                SystemColors.ControlLightLight, 1, ButtonBorderStyle.Outset,
-                SystemColors.ControlLightLight, 1, ButtonBorderStyle.Outset,
-                SystemColors.ControlLightLight, 1, ButtonBorderStyle.Outset);
-        }
-
     }
 }
