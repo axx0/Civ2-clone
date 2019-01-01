@@ -554,9 +554,9 @@ namespace PoskusCiv2.Imagery
                         graphics.DrawImage(Images.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
                         count++;
 
-                        if (count == city.FoodInStorage) { break; }
+                        if (count >= city.FoodInStorage) break;
                     }
-                    if (count == city.FoodInStorage) { break; }
+                    if (count >= city.FoodInStorage) break;
                 }
 
                 //3rd horizontal line (shorter)
@@ -572,6 +572,43 @@ namespace PoskusCiv2.Imagery
                 graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.Black), new Point(147, 5), sf);
                 graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(146, 4), sf);
                 sf.Dispose();
+            }
+
+            return icons;
+        }
+
+        //Draw food in storage
+        public Bitmap DrawCityProduction(City city)
+        {
+            Bitmap icons = new Bitmap(293, 287);    //same size as production panel in city form
+            using (Graphics graphics = Graphics.FromImage(icons))
+            {
+                //Draw rectangle around icons
+                int IIP = city.ItemInProduction;
+                int cost;
+                if (IIP < 62) { cost = ReadFiles.UnitCost[IIP]; }   //Item is unit
+                else { cost = ReadFiles.ImprovementCost[IIP - 62 + 1]; }    //Item is improvement (first 62 are units, +1 because first improfement is "Nothing")
+                int vertSpacing = Math.Min(10, cost);    //max 10 lines
+                graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9 + 271, 65);   //1st horizontal
+                graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9, 65 + 27 + (vertSpacing - 1) * 21);   //1st vertical
+                graphics.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 9, 65 + 27 + (vertSpacing - 1) * 21, 9 + 271, 65 + 27 + (vertSpacing - 1) * 21);   //2nd horizontal
+                graphics.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 9 + 271, 65, 9 + 271, 65 + 27 + (vertSpacing - 1) * 21);   //2nd vertical
+
+                //Draw icons
+                int count = 0;
+                for (int row = 0; row < Math.Min(cost, 10); row++)   //there are never more than 10 rows
+                {
+                    for (int col = 0; col < Math.Max(cost, 10); col++)  //there are never less than 10 columns
+                    {
+                        int dx = Convert.ToInt32(2 + col * (272 - 21 - 4) / ((float)Math.Max(cost, 10) - 1)); //horizontal separation between icons
+                        int dy = 21;    //vertical separation of icons (space between icons in y-directions is always 0)
+                        graphics.DrawImage(Images.CitymapSupportLargeBigger, 10 + dx, 65 + 3 + dy * row);
+
+                        count++;
+                        if (count >= city.ShieldsProgress) break;
+                    }
+                    if (count >= city.ShieldsProgress) break;
+                }
             }
 
             return icons;

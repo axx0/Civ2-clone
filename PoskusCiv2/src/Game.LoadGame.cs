@@ -758,7 +758,7 @@ namespace PoskusCiv2
                 //Shield progress
                 intVal1 = dataArray[ofsetC + multipl * i + 28];
                 intVal2 = dataArray[ofsetC + multipl * i + 29];
-                int cityShieldsInProduction = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                int cityShieldsProgress = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Net trade
                 intVal1 = dataArray[ofsetC + multipl * i + 30];
@@ -804,7 +804,13 @@ namespace PoskusCiv2
                 string cityImprovements = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
 
                 //Item in production
-                //...
+                //0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
+                //convert this notation of improvements, so that 62(dec) is 1st improvement, 63(dec) is 2nd, ...
+                int cityItemInProduction = dataArray[ofsetC + multipl * i + 57];
+                if (cityItemInProduction > 70)  //if it is improvement
+                {
+                    cityItemInProduction = 255 - cityItemInProduction + 62; //62 because 0...61 are units
+                }
 
                 //No of active trade routes
                 //...
@@ -831,10 +837,10 @@ namespace PoskusCiv2
                 //...
 
                 //Total food production
-                //...
+                int cityFoodProduction = dataArray[ofsetC + multipl * i + 80];
 
                 //Total shield production
-                //...
+                int cityShieldProduction = dataArray[ofsetC + multipl * i + 81];
 
                 //No of happy citizens
                 //...
@@ -853,7 +859,7 @@ namespace PoskusCiv2
                     else { cityWonders[wndr] = 0; }
                 }
 
-                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsInProduction, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityWonders);
+                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityFoodProduction, cityShieldProduction, cityWonders);
             }
 
 

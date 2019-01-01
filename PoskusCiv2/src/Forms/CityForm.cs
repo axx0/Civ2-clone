@@ -20,10 +20,11 @@ namespace PoskusCiv2.Forms
         Draw Draw = new Draw();
         City ThisCity;
         Bitmap CityDrawing;
-        DoubleBufferedPanel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, Production;
+        DoubleBufferedPanel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
         Form CallingForm;
         VScrollBar ImprovementsBar;
         int[,] offsets;
+        int ProductionItem;
 
         public CityForm(MainCiv2Window _mainCiv2Window)
         {
@@ -118,14 +119,14 @@ namespace PoskusCiv2.Forms
             FoodStorage.Paint += new PaintEventHandler(FoodStorage_Paint);
 
             //Production panel
-            Production = new DoubleBufferedPanel
+            ProductionPanel = new DoubleBufferedPanel
             {
-                Location = new Point(653, 246),
-                Size = new Size(291, 285),
+                Location = new Point(657, 249),
+                Size = new Size(293, 287),
                 BackColor = Color.Transparent
             };
-            WallpaperPanel.Controls.Add(Production);
-            Production.Paint += new PaintEventHandler(Production_Paint);
+            WallpaperPanel.Controls.Add(ProductionPanel);
+            ProductionPanel.Paint += new PaintEventHandler(ProductionPanel_Paint);
 
             //Buy button
             Civ2button BuyButton = new Civ2button
@@ -135,7 +136,7 @@ namespace PoskusCiv2.Forms
                 Font = new Font("Arial", 13),
                 Text = "Buy"
             };
-            Production.Controls.Add(BuyButton);
+            ProductionPanel.Controls.Add(BuyButton);
             BuyButton.Click += new EventHandler(BuyButton_Click);
 
             //Change button
@@ -146,7 +147,7 @@ namespace PoskusCiv2.Forms
                 Font = new Font("Arial", 13),
                 Text = "Change"
             };
-            Production.Controls.Add(ChangeButton);
+            ProductionPanel.Controls.Add(ChangeButton);
             ChangeButton.Click += new EventHandler(ChangeButton_Click);
 
             //Info button
@@ -254,6 +255,8 @@ namespace PoskusCiv2.Forms
 
             //Define offset map array
             offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
+
+            ProductionItem = 0; //item appearing in production menu on loadgame
         }
 
         //Once slider value changes --> redraw improvements list
@@ -289,10 +292,10 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, WallpaperPanel.Height - 1, WallpaperPanel.Width, WallpaperPanel.Height - 1);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), WallpaperPanel.Width - 2, 0, WallpaperPanel.Width - 2, WallpaperPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), WallpaperPanel.Width - 1, 0, WallpaperPanel.Width - 1, WallpaperPanel.Height);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, WallpaperPanel.Width, 0);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 1, WallpaperPanel.Width, 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, WallpaperPanel.Height);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 0, 1, WallpaperPanel.Height);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, WallpaperPanel.Width - 2, 0);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 1, WallpaperPanel.Width - 3, 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, WallpaperPanel.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 0, 1, WallpaperPanel.Height - 3);
 
             //Texts
             e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(90, 280));
@@ -422,9 +425,25 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawImage(Draw.DrawFoodStorage(ThisCity), new Point(0, 0));
         }
 
-        private void Production_Paint(object sender, PaintEventArgs e)
+        private void ProductionPanel_Paint(object sender, PaintEventArgs e)
         {
+            //Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
+            //Units are scaled by 1.15 compared to original, improvements are size 54x30
+            if (ThisCity.ItemInProduction < 62)    //units
+            {
+                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[ThisCity.ItemInProduction], 74, 55), new Point(106, 7));
+            }
+            else    //improvements
+            {
+                StringFormat sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 146 + 1, 3 + 1, sf);
+                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 146, 3, sf);
+                e.Graphics.DrawImage(Images.ImprovementsLarge[ThisCity.ItemInProduction - 62 + 1], new Point(119, 28));
+                sf.Dispose();
+            }
 
+            e.Graphics.DrawImage(Draw.DrawCityProduction(ThisCity), new Point(0, 0));  //draw production shields and sqare around them
         }
 
         private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
@@ -437,6 +456,24 @@ namespace PoskusCiv2.Forms
 
         private void BuyButton_Click(object sender, EventArgs e)
         {
+            //Use this so the form returns a chosen value (what it has chosen to produce)
+            using (var CityBuyForm = new CityBuyForm(ThisCity))
+            {
+                CityBuyForm.Load += new EventHandler(CityBuyForm_Load);   //so you set the correct size of form
+                var result = CityBuyForm.ShowDialog();
+                if (result == DialogResult.OK)  //when form is closed
+                {
+                    ProductionPanel.Refresh();
+                }
+            }
+        }
+
+        private void CityBuyForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Location = new Point(250, 300);
+            frm.Width = 758;
+            frm.Height = 212;
         }
 
         private void ChangeButton_Click(object sender, EventArgs e)
@@ -448,7 +485,7 @@ namespace PoskusCiv2.Forms
                 var result = CityChangeForm.ShowDialog();
                 if (result == DialogResult.OK)  //when form is closed
                 {
-                    int val = CityChangeForm.ChosenValue;   //chosen value from other form
+                    ProductionPanel.Refresh();
                 }
             }
         }

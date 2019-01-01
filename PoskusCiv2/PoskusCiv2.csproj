@@ -63,6 +63,12 @@
     <Compile Include="src\Enums\OrderType.cs" />
     <Compile Include="src\Enums\UnitGAS.cs" />
     <Compile Include="src\Enums\TechType.cs" />
+    <Compile Include="src\Forms\CityBuyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\CityBuyForm.Designer.cs">
+      <DependentUpon>CityBuyForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\CityForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +152,9 @@
     <Compile Include="src\Forms\WorldMapForm.Designer.cs">
       <DependentUpon>WorldMapForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="src\Forms\CityBuyForm.resx">
+      <DependentUpon>CityBuyForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\CityChangeForm.resx">
       <DependentUpon>CityChangeForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -17,7 +17,6 @@ namespace PoskusCiv2.Forms
         DoubleBufferedPanel BackgroundPanel, ChoicePanel;
         City ThisCity;
         VScrollBar VerticalBar;
-        public int ChosenValue { get; set; }    //highlights the current selection of unit/improvement
         public int BarValue { get; set; }       //starting value of view of vertical bar
         int totalNoUnits;
         int totalNoImprov;
@@ -29,8 +28,13 @@ namespace PoskusCiv2.Forms
             ThisCity = thisCity;
 
             //Initial states
-            ChosenValue = 0;
-            BarValue = 0;
+            //Calculate here total number of choices
+            //TO-DO
+            totalNoUnits = 62;
+            totalNoImprov = 66;
+            //BarValue should always be so that the chosen item is in the center. But the BarValue should be corrected once you are at the edges.
+            BarValue = Math.Max(0, ThisCity.ItemInProduction - 8);  //correction for the lower value
+            BarValue = Math.Min(totalNoUnits + totalNoImprov - 16, BarValue);   //correction for the upper value
 
             //StartPosition = FormStartPosition.CenterParent;
             Paint += new PaintEventHandler(CityChangeForm_Paint);
@@ -102,11 +106,6 @@ namespace PoskusCiv2.Forms
             Controls.Add(OKButton);
             OKButton.Click += new EventHandler(OKButton_Click);
 
-            //Calculate here total number of choices
-            //TO-DO
-            totalNoUnits = 62;
-            totalNoImprov = 66;
-
             //Vertical bar for choosing production
             VerticalBar = new VScrollBar()
             {
@@ -138,22 +137,22 @@ namespace PoskusCiv2.Forms
             switch (keyData)
             {
                 case Keys.Down:
-                    if (ChosenValue < totalNoUnits + totalNoImprov - 1) { ChosenValue++; }
+                    if (ThisCity.ItemInProduction < totalNoUnits + totalNoImprov - 1) ThisCity.ItemInProduction++;
                     break;
                 case Keys.Up:
-                    if (ChosenValue > 0) { ChosenValue--; }
+                    if (ThisCity.ItemInProduction > 0) ThisCity.ItemInProduction--;
                     break;
                 case Keys.PageDown:
-                    ChosenValue = Math.Min(ChosenValue + 16, totalNoUnits + totalNoImprov - 1);
+                    ThisCity.ItemInProduction = Math.Min(ThisCity.ItemInProduction + 16, totalNoUnits + totalNoImprov - 1);
                     break;
                 case Keys.PageUp:
-                    ChosenValue = Math.Max(ChosenValue - 16, 0);
+                    ThisCity.ItemInProduction = Math.Max(ThisCity.ItemInProduction - 16, 0);
                     break;
             }
 
             //Update relations between chosen value & bar value
-            if (ChosenValue > BarValue + 15) { BarValue = ChosenValue - 15; }
-            else if (ChosenValue < BarValue) { BarValue = ChosenValue; }
+            if (ThisCity.ItemInProduction > BarValue + 15) BarValue = ThisCity.ItemInProduction - 15;
+            else if (ThisCity.ItemInProduction < BarValue) BarValue = ThisCity.ItemInProduction;
             VerticalBar.Value = BarValue;   //also update the bar value of control
 
             ChoicePanel.Refresh();  //refresh the panel
@@ -163,7 +162,7 @@ namespace PoskusCiv2.Forms
 
         private void ChoicePanel_MouseDown(object sender, MouseEventArgs e)
         {
-            ChosenValue = BarValue + e.Location.Y / 23;
+            ThisCity.ItemInProduction = BarValue + e.Location.Y / 23;
             ChoicePanel.Refresh();  //refresh the panel
         }
 
@@ -196,7 +195,7 @@ namespace PoskusCiv2.Forms
             for (int row = 0; row < 16; row++)
             {
                 //Draw selection rectangle & determine font of text in it
-                if (BarValue + row == ChosenValue)
+                if (BarValue + row == ThisCity.ItemInProduction)
                 {
                     e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(107, 107, 107)), new Rectangle(85, 2 + row * 23, 556, 21));
                     e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 84, 1 + row * 23, 84 + 556 + 1, 1 + row * 23);  //border line
@@ -214,7 +213,7 @@ namespace PoskusCiv2.Forms
 
                 if (BarValue + row < totalNoUnits)   //draw units
                 {
-                    if (BarValue + row == ChosenValue)   //draw shadow of text for chosen line
+                    if (BarValue + row == ThisCity.ItemInProduction)   //draw shadow of text for chosen line
                     {
                         e.Graphics.DrawString(ReadFiles.UnitName[BarValue + row], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(85 + 1, row * 23 + 1));
                         e.Graphics.DrawString("(20 Turns, ADM: " + ReadFiles.UnitAttack[BarValue + row] + "/" + ReadFiles.UnitDefense[BarValue + row] + "/" + ReadFiles.UnitMove[BarValue + row] + " HP: " + ReadFiles.UnitHitp[BarValue + row] + "/" + ReadFiles.UnitFirepwr[BarValue + row] + ")", new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(ChoicePanel.Width - VerticalBar.Width, row * 23 + 1), sf);
@@ -226,7 +225,7 @@ namespace PoskusCiv2.Forms
                 else    //draw improvements
                 {
                     int improvNo = BarValue + row - totalNoUnits + 1;
-                    if (BarValue + row == ChosenValue)   //draw shadow of text for chosen line
+                    if (BarValue + row == ThisCity.ItemInProduction)   //draw shadow of text for chosen line
                     {
                         e.Graphics.DrawString(ReadFiles.ImprovementName[improvNo], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(85 + 1, row * 23 + 1));
                         e.Graphics.DrawString("(20 Turns)", new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(ChoicePanel.Width - VerticalBar.Width, row * 23 + 1), sf);
@@ -256,7 +255,7 @@ namespace PoskusCiv2.Forms
         private void VerticalBarValueChanged(object sender, EventArgs e)
         {
             BarValue = VerticalBar.Value;
-            ChoicePanel.Invalidate();
+            ChoicePanel.Refresh();
         }
     }
 }

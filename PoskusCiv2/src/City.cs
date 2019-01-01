@@ -36,13 +36,16 @@ namespace PoskusCiv2
         public int Size { get; set; }
         public int WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
-        public int ShieldsInProduction { get; set; }
+        public int ShieldsProgress { get; set; }
         public int NetTrade { get; set; }
         public string Name { get; set; }
         public int WorkersInnerCircle { get; set; }
         public int WorkersOn8 { get; set; }
         public int WorkersOn4 { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
+        public int ItemInProduction { get; set; }
+        public int FoodProduction { get; set; }
+        public int ShieldProduction { get; set; }
 
         private int _population;
         public int Population
