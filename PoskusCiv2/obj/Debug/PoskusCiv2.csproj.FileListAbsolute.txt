@@ -31,3 +31,7 @@ C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.pdb
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityChangeForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.Civ2form.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityBuyForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityBuyForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityChangeForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.Civ2form.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.ScienceAdvisorForm.resources

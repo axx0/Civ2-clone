@@ -104,6 +104,12 @@
     </Compile>
     <Compile Include="src\Enums\TerrainType.cs" />
     <Compile Include="src\Enums\UnitType.cs" />
+    <Compile Include="src\Forms\ScienceAdvisorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\ScienceAdvisorForm.Designer.cs">
+      <DependentUpon>ScienceAdvisorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -183,6 +189,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="src\Forms\ScienceAdvisorForm.resx">
+      <DependentUpon>ScienceAdvisorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\StatusForm.resx">
       <DependentUpon>StatusForm.cs</DependentUpon>
     </EmbeddedResource>

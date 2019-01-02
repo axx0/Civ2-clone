@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Reflection;
+using System.IO;
 
 namespace PoskusCiv2.Imagery
 {

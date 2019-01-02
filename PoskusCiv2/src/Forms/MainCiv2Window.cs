@@ -25,6 +25,31 @@ namespace PoskusCiv2.Forms
             statusForm = new StatusForm(this);
             worldMapForm = new WorldMapForm(this);
             cityForm = new CityForm(this);
+            
+            //Advisors menu
+            ToolStripMenuItem AdvisorsMenu = new ToolStripMenuItem("Advisors");
+            ToolStripMenuItem ChatWithKingsItem = new ToolStripMenuItem("Chat with Kings", null, ChatWithKings_Click, (Keys)Shortcut.CtrlC);
+            ToolStripMenuItem ConsultHighCouncilItem = new ToolStripMenuItem("Consult High Council", null, ConsultHighCouncil_Click);
+            ToolStripMenuItem CityStatusItem = new ToolStripMenuItem("City Status", null, CityStatus_Click, (Keys)Shortcut.F1);
+            ToolStripMenuItem DefenseMinisterItem = new ToolStripMenuItem("Defense Minister", null, DefenseMinister_Click, (Keys)Shortcut.F2);
+            ToolStripMenuItem ForeignMinisterItem = new ToolStripMenuItem("Foreign Minister", null, ForeignMinister_Click, (Keys)Shortcut.F3);
+            ToolStripMenuItem AttitudeAdvisorItem = new ToolStripMenuItem("Attitude Advisor", null, AttitudeAdvisor_Click, (Keys)Shortcut.F4);
+            ToolStripMenuItem TradeAdvisorItem = new ToolStripMenuItem("Trade Advisor", null, TradeAdvisor_Click, (Keys)Shortcut.F5);
+            ToolStripMenuItem ScienecAdvisorItem = new ToolStripMenuItem("Science Advisor", null, ScienceAdvisor_Click, (Keys)Shortcut.F6);
+            ToolStripMenuItem CasualtyTimelineItem = new ToolStripMenuItem("Casualty Timeline", null, CasualtyTimeline_Click, (Keys)Shortcut.CtrlD);
+            menuStrip1.Items.Add(AdvisorsMenu);
+            AdvisorsMenu.DropDownItems.Add(ConsultHighCouncilItem);
+            AdvisorsMenu.DropDownItems.Add(ChatWithKingsItem);
+            AdvisorsMenu.DropDownItems.Add(new ToolStripSeparator());
+            AdvisorsMenu.DropDownItems.Add(CityStatusItem);
+            AdvisorsMenu.DropDownItems.Add(DefenseMinisterItem);
+            AdvisorsMenu.DropDownItems.Add(ForeignMinisterItem);
+            AdvisorsMenu.DropDownItems.Add(new ToolStripSeparator());
+            AdvisorsMenu.DropDownItems.Add(AttitudeAdvisorItem);
+            AdvisorsMenu.DropDownItems.Add(TradeAdvisorItem);
+            AdvisorsMenu.DropDownItems.Add(ScienecAdvisorItem);
+            AdvisorsMenu.DropDownItems.Add(new ToolStripSeparator());
+            AdvisorsMenu.DropDownItems.Add(CasualtyTimelineItem);
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -114,6 +139,30 @@ namespace PoskusCiv2.Forms
         {
 
         }
+
+        private void ScienceAdvisor_Click(object sender, EventArgs e)
+        {
+            ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
+            ScienceAdvisorForm.Load += new EventHandler(ScienceAdvisorForm_Load);   //so you set the correct size of form
+            ScienceAdvisorForm.ShowDialog();
+        }
+
+        private void ScienceAdvisorForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Location = new Point(250, 300);
+            frm.Width = 622;
+            frm.Height = 421;
+        }
+
+        private void ChatWithKings_Click(object sender, EventArgs e) { }
+        private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
+        private void CityStatus_Click(object sender, EventArgs e) { }
+        private void DefenseMinister_Click(object sender, EventArgs e) { }
+        private void ForeignMinister_Click(object sender, EventArgs e) { }
+        private void AttitudeAdvisor_Click(object sender, EventArgs e) { }
+        private void TradeAdvisor_Click(object sender, EventArgs e) { }
+        private void CasualtyTimeline_Click(object sender, EventArgs e) { }
     }
 }
 ;
