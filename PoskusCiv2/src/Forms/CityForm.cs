@@ -447,11 +447,7 @@ namespace PoskusCiv2.Forms
         }
 
         private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
-        {
-            //for (int i = 0; i < 7; i++)
-            //{
-            //    e.Graphics.DrawString("HELLO", new Font("Arial", 13), new SolidBrush(Color.Black), new Point(0, 20 * i));
-            //}            
+        {          
         }
 
         private void BuyButton_Click(object sender, EventArgs e)
@@ -461,8 +457,13 @@ namespace PoskusCiv2.Forms
             {
                 CityBuyForm.Load += new EventHandler(CityBuyForm_Load);   //so you set the correct size of form
                 var result = CityBuyForm.ShowDialog();
-                if (result == DialogResult.OK)  //when form is closed
+                if (result == DialogResult.OK)  //buying item activated
                 {
+                    int cost = 0;
+                    if (ThisCity.ItemInProduction < 62) cost = ReadFiles.UnitCost[ThisCity.ItemInProduction];
+                    else cost = ReadFiles.ImprovementCost[ThisCity.ItemInProduction - 62 + 1];
+                    Game.Civs[1].Money -= 10 * cost - ThisCity.ShieldsProgress;
+                    ThisCity.ShieldsProgress = 10 * cost;
                     ProductionPanel.Refresh();
                 }
             }
