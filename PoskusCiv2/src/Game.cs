@@ -283,7 +283,7 @@ namespace PoskusCiv2
             return city;
         }
 
-        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective, int gender, int money, int researchProgress, int researchingTech, int taxRate, int government, int reputation, bool[] techs)
+        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective, int gender, int money, int researchProgress, int researchingTech, int taxRate, int government, int reputation, int[] techs)
         {
             Civilization civ = new Civilization
             {

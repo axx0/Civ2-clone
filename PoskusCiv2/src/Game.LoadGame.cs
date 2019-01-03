@@ -356,7 +356,7 @@ namespace PoskusCiv2
             int[] civTaxRate = new int[8];
             int[] civGovernment = new int[8];
             int[] civReputation = new int[8];
-            bool[] civTechs = new bool[89];
+            int[] civTechs = new int[89];
             //starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
             for (int i = 0; i < 8; i++) //for each civ
             {
@@ -426,8 +426,8 @@ namespace PoskusCiv2
                 //True = tech researched, false = not researched
                 for (int no = 0; no < 89; no++)
                 {
-                    if (civTechs_[no] == '1') civTechs[no] = true;
-                    else civTechs[no] = false;
+                    if (civTechs_[no] == '1') civTechs[no] = 1;
+                    else civTechs[no] = 0;
                 }
 
                 Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);

@@ -16,6 +16,7 @@ namespace PoskusCiv2.Forms
         DoubleBufferedPanel MainPanel;
         HScrollBar HorizontalBar;
         public int BarValue { get; set; }       //starting value of view of horizontal bar
+        List<int> DiscoveredTechs;
 
         public ScienceAdvisorForm()
         {
@@ -59,10 +60,18 @@ namespace PoskusCiv2.Forms
             {
                 Location = new Point(4, 355),
                 Size = new Size(596, 17),
-                Maximum = 5
+                LargeChange = 1,
+                Maximum = Game.Civs[1].Techs.Sum() / 8  //8 techs shown per column. Maximum=0 if no of techs <= 8, maximum=1 for techs=9...16, etc. (slider cannot move if maximum=0, it can move 1 move if maximum=1, it can move 2 moves if maximum=2, ...)
             };
             MainPanel.Controls.Add(HorizontalBar);
             HorizontalBar.ValueChanged += new EventHandler(HorizontalBarValueChanged);
+
+            //Create a list of discovered techs
+            DiscoveredTechs = new List<int>();
+            for (int i = 0; i < 89; i++)    //browse through all techs
+            {
+                if (Game.Civs[1].Techs[i] == 1) { DiscoveredTechs.Add(i); Console.WriteLine("Discovered={0}", i); }
+            }
         }
 
         private void ScienceAdvisorForm_Load(object sender, EventArgs e) { }
@@ -101,18 +110,15 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
             //Write discovered techs
             int count = 0;
-            for (int i = 0; i < 89; i++)
+            for (int i = BarValue * 8; i < DiscoveredTechs.Count(); i++)
             {
-                if (Game.Civs[1].Techs[i] == true)
-                {
-                    int x = 198 * (count / 8);
-                    int y = 22 * (count % 8);
-                    e.Graphics.DrawImage(Images.ResearchIcons[0, 0], new Point(4 + x, 159 + y));
-                    e.Graphics.DrawString(ReadFiles.TechName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(x + 42 + 2, y + 160 + 1));
-                    e.Graphics.DrawString(ReadFiles.TechName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(x + 42, y + 160));
-                    count++;
-                    if (count == 24) break;
-                }
+                int x = 198 * (count / 8);
+                int y = 22 * (count % 8);
+                e.Graphics.DrawImage(Images.ResearchIcons[ReadFiles.TechCategory[DiscoveredTechs[i]], ReadFiles.TechEpoch[DiscoveredTechs[i]]], new Point(4 + x, 159 + y));
+                e.Graphics.DrawString(ReadFiles.TechName[DiscoveredTechs[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(x + 42 + 2, y + 160 + 1));
+                e.Graphics.DrawString(ReadFiles.TechName[DiscoveredTechs[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(x + 42, y + 160));
+                count++;
+                if (count == 24) break; //only 24 can be shown at a time (3 columns)
             }
         }
 

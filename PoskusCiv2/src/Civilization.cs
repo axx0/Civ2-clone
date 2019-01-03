@@ -15,6 +15,6 @@ namespace PoskusCiv2
         public string Adjective { get; set; }
         public int Money { get; set; }
         public int ReseachingTech { get; set; }
-        public bool[] Techs { get; set; }
+        public int[] Techs { get; set; }
     }
 }
