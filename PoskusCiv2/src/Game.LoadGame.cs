@@ -324,7 +324,7 @@ namespace PoskusCiv2
                 }
                 civTribeName[i + 1] = new string(asciich);
                 civTribeName[i + 1] = civTribeName[i + 1].Replace("\0", string.Empty);
-                //Console.WriteLine(civTribeName);
+                //Console.WriteLine(civTribeName[i + 1]);
 
                 //Adjective
                 for (int j = 0; j < 23; j++)
@@ -333,7 +333,7 @@ namespace PoskusCiv2
                 }
                 civAdjective[i + 1] = new string(asciich);
                 civAdjective[i + 1] = civAdjective[i + 1].Replace("\0", string.Empty);
-                //Console.WriteLine(civAdjective);
+                //Console.WriteLine(civAdjective[i + 1]);
 
                 //Leader titles (Anarchy, Despotism, ...)
                 // .... TO-DO ....
@@ -356,7 +356,7 @@ namespace PoskusCiv2
             int[] civTaxRate = new int[8];
             int[] civGovernment = new int[8];
             int[] civReputation = new int[8];
-            string[] civTechs = new string[8];
+            bool[] civTechs = new bool[89];
             //starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
             for (int i = 0; i < 8; i++) //for each civ
             {
@@ -422,9 +422,15 @@ namespace PoskusCiv2
                 civTechs12 = Reverse(civTechs12);
                 civTechs13 = Reverse(civTechs13);
                 //Merge all strings into a large string
-                civTechs[i] = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
+                string civTechs_ = String.Concat(civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
+                //True = tech researched, false = not researched
+                for (int no = 0; no < 89; no++)
+                {
+                    if (civTechs_[no] == '1') civTechs[no] = true;
+                    else civTechs[no] = false;
+                }
 
-                Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs[i]);
+                Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
             }
 
 

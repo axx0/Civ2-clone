@@ -12,7 +12,7 @@ namespace PoskusCiv2.Imagery
     public static class Images
     {
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall;
-        public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow;
+        public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Bitmap Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger, NextCity, NextCityLarge, PrevCity, PrevCityLarge;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
@@ -21,7 +21,9 @@ namespace PoskusCiv2.Imagery
 
         public static void LoadDLLimages(string loc)
         {
-            Bitmap ScienceAdvWallpaper = new Bitmap(String.Concat(loc, "Image #6.GIF"));
+            Bitmap scienceAdvWallpaper = new Bitmap(String.Concat(loc, "Image #6.GIF"));
+            ScienceAdvWallpaper = (Bitmap)scienceAdvWallpaper;
+            ScienceAdvWallpaper = ModifyImage.CropImage(ScienceAdvWallpaper, new Rectangle(0, 0, 600, 400));
         }
 
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
@@ -544,6 +546,7 @@ namespace PoskusCiv2.Imagery
             Improvements = new Bitmap[67];
             ImprovementsLarge = new Bitmap[67];
             ImprovementsSmall = new Bitmap[67];
+            ResearchIcons = new Bitmap[5, 4];
 
             //define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -573,6 +576,14 @@ namespace PoskusCiv2.Imagery
                     ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
                     ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
                     count++;
+                }
+            }
+            //Research icons
+            for (int row = 0; row < 4; row++)
+            {
+                for (int col = 0; col < 5; col++)
+                {
+                    ResearchIcons[col, row] = (Bitmap)icons.Clone(new Rectangle(343 + 36 * col + col, 211 + 20 * row + row, 36, 20), icons.PixelFormat);
                 }
             }
 

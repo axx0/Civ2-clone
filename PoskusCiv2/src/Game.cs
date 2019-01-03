@@ -283,7 +283,7 @@ namespace PoskusCiv2
             return city;
         }
 
-        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective, int gender, int money, int researchProgress, int researchingTech, int taxRate, int government, int reputation, string techs)
+        public static Civilization CreateCiv(int id, int style, string leaderName, string tribeName, string adjective, int gender, int money, int researchProgress, int researchingTech, int taxRate, int government, int reputation, bool[] techs)
         {
             Civilization civ = new Civilization
             {
@@ -292,7 +292,9 @@ namespace PoskusCiv2
                 LeaderName = leaderName,
                 TribeName = tribeName,
                 Adjective = adjective,
-                Money = money
+                Money = money,
+                ReseachingTech = researchingTech,
+                Techs = techs
             };
 
             Civs.Add(civ);

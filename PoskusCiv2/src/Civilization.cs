@@ -14,5 +14,7 @@ namespace PoskusCiv2
         public string TribeName { get; set; }
         public string Adjective { get; set; }
         public int Money { get; set; }
+        public int ReseachingTech { get; set; }
+        public bool[] Techs { get; set; }
     }
 }
