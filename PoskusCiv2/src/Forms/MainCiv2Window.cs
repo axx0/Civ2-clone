@@ -140,6 +140,21 @@ namespace PoskusCiv2.Forms
 
         }
 
+        private void CityStatus_Click(object sender, EventArgs e)
+        {
+            CityStatusForm CityStatusForm = new CityStatusForm();
+            CityStatusForm.Load += new EventHandler(CityStatusForm_Load);   //so you set the correct size of form
+            CityStatusForm.ShowDialog();
+        }
+
+        private void CityStatusForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Location = new Point(320, 250);
+            frm.Width = 622;
+            frm.Height = 421;
+        }
+
         private void ScienceAdvisor_Click(object sender, EventArgs e)
         {
             ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
@@ -150,14 +165,13 @@ namespace PoskusCiv2.Forms
         private void ScienceAdvisorForm_Load(object sender, EventArgs e)
         {
             Form frm = sender as Form;
-            frm.Location = new Point(250, 300);
+            frm.Location = new Point(320, 250);
             frm.Width = 622;
             frm.Height = 421;
         }
 
         private void ChatWithKings_Click(object sender, EventArgs e) { }
         private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
-        private void CityStatus_Click(object sender, EventArgs e) { }
         private void DefenseMinister_Click(object sender, EventArgs e) { }
         private void ForeignMinister_Click(object sender, EventArgs e) { }
         private void AttitudeAdvisor_Click(object sender, EventArgs e) { }

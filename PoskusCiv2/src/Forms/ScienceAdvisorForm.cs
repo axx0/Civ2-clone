@@ -70,7 +70,7 @@ namespace PoskusCiv2.Forms
             DiscoveredTechs = new List<int>();
             for (int i = 0; i < 89; i++)    //browse through all techs
             {
-                if (Game.Civs[1].Techs[i] == 1) { DiscoveredTechs.Add(i); Console.WriteLine("Discovered={0}", i); }
+                if (Game.Civs[1].Techs[i] == 1) DiscoveredTechs.Add(i);
             }
         }
 
@@ -97,12 +97,12 @@ namespace PoskusCiv2.Forms
             else { bcad = "A.D."; }
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("SCIENCE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 5 + 1), sf);
-            e.Graphics.DrawString("SCIENCE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 5), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 26 + 1), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 26), sf);
-            e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Game.Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 47 + 1), sf);
-            e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Game.Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 47), sf);
+            e.Graphics.DrawString("SCIENCE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
+            e.Graphics.DrawString("SCIENCE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
+            e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Game.Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Game.Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             e.Graphics.DrawString("Researching: " + ReadFiles.TechName[Game.Civs[1].ReseachingTech], new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 74 + 1), sf);
             e.Graphics.DrawString("Researching: " + ReadFiles.TechName[Game.Civs[1].ReseachingTech], new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 74), sf);
             e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 130 + 1), sf);
