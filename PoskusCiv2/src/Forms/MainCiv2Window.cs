@@ -143,41 +143,25 @@ namespace PoskusCiv2.Forms
         private void CityStatus_Click(object sender, EventArgs e)
         {
             CityStatusForm CityStatusForm = new CityStatusForm();
-            CityStatusForm.Load += new EventHandler(CityStatusForm_Load);   //so you set the correct size of form
+            CityStatusForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
             CityStatusForm.ShowDialog();
-        }
-
-        private void CityStatusForm_Load(object sender, EventArgs e)
-        {
-            Form frm = sender as Form;
-            frm.Location = new Point(320, 250);
-            frm.Width = 622;
-            frm.Height = 421;
         }
 
         private void DefenseMinister_Click(object sender, EventArgs e)
         {
             DefenseMinisterForm DefenseMinisterForm = new DefenseMinisterForm();
-            DefenseMinisterForm.Load += new EventHandler(DefenseMinisterForm_Load);   //so you set the correct size of form
+            DefenseMinisterForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
             DefenseMinisterForm.ShowDialog();
-        }
-
-        private void DefenseMinisterForm_Load(object sender, EventArgs e)
-        {
-            Form frm = sender as Form;
-            frm.Location = new Point(320, 250);
-            frm.Width = 622;
-            frm.Height = 421;
         }
 
         private void ScienceAdvisor_Click(object sender, EventArgs e)
         {
             ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
-            ScienceAdvisorForm.Load += new EventHandler(ScienceAdvisorForm_Load);   //so you set the correct size of form
+            ScienceAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
             ScienceAdvisorForm.ShowDialog();
         }
 
-        private void ScienceAdvisorForm_Load(object sender, EventArgs e)
+        private void AdvisorsForm_Load(object sender, EventArgs e)
         {
             Form frm = sender as Form;
             frm.Location = new Point(320, 250);

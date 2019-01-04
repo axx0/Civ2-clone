@@ -15,13 +15,18 @@ namespace PoskusCiv2.Forms
     public partial class DefenseMinisterForm : Civ2form
     {
         DoubleBufferedPanel MainPanel;
+        VScrollBar VerticalBar;
+        public int BarValue { get; set; }       //starting value of view of horizontal bar
+        Civ2button CasualtiesButton;
         Draw Draw = new Draw();
         int[] ActiveUnitCount = new int[62];
         int[] UnitInProductionCount = new int[62];
+        bool StatisticsActive;  //true=statistics are shown, false=casualties are shown
 
         public DefenseMinisterForm()
         {
             InitializeComponent();
+            StatisticsActive = true;
 
             //Main panel
             MainPanel = new DoubleBufferedPanel
@@ -33,7 +38,7 @@ namespace PoskusCiv2.Forms
             MainPanel.Paint += new PaintEventHandler(MainPanel_Paint);
 
             //Casualties button
-            Civ2button CasualtiesButton = new Civ2button
+            CasualtiesButton = new Civ2button
             {
                 Location = new Point(4, 376),
                 Size = new Size(297, 24),
@@ -53,6 +58,17 @@ namespace PoskusCiv2.Forms
             };
             MainPanel.Controls.Add(CloseButton);
             CloseButton.Click += new EventHandler(CloseButton_Click);
+
+            //Vertical bar
+            VerticalBar = new VScrollBar()
+            {
+                Location = new Point(583, 69),
+                Size = new Size(17, 305),
+                LargeChange = 1
+                //Maximum = TO-DO...
+            };
+            MainPanel.Controls.Add(VerticalBar);
+            VerticalBar.ValueChanged += new EventHandler(VerticalBarValueChanged);
 
             //Count active units, units in production
             for (int i = 0; i < 62; i++)
@@ -86,52 +102,83 @@ namespace PoskusCiv2.Forms
             //Draw background
             e.Graphics.DrawImage(Images.DefenseMinWallpaper, new Rectangle(2, 2, 600, 400));
             //Draw text
+            string statText;
+            if (StatisticsActive) { statText = "Statistics"; }
+            else { statText = "Casualties"; }
             string bcad;
             if (Game.Data.GameYear < 0) { bcad = "B.C."; }
             else { bcad = "A.D."; }
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("DEFENSE MINISTER: Statistics", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
-            e.Graphics.DrawString("DEFENSE MINISTER: Statistics", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
+            e.Graphics.DrawString("DEFENSE MINISTER: " + statText, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
+            e.Graphics.DrawString("DEFENSE MINISTER: " + statText, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
             e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
             e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
             e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Game.Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
             e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Game.Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             //Units
-            int count = 0;
-            for (int i = 0; i < 62; i++)
+            if (StatisticsActive)
             {
-                if (ActiveUnitCount[i] > 0)
+                int count = 0;
+                for (int i = 0; i < 62; i++)
                 {
-                    int civId = 1;  //your civ only
-                    //Image of unit
-                    e.Graphics.DrawImage(Draw.DrawUnitType(i, civId), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
-                    //Unit name
-                    e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
-                    e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
-                    //Unit attack/defense/movement
-                    e.Graphics.DrawString(ReadFiles.UnitAttack[i] + "/" + ReadFiles.UnitDefense[i] + "/" + ReadFiles.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
-                    e.Graphics.DrawString(ReadFiles.UnitAttack[i] + "/" + ReadFiles.UnitDefense[i] + "/" + ReadFiles.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
-                    //Hitpoints/firepower
-                    e.Graphics.DrawString(ReadFiles.UnitHitp[i] + "/" + ReadFiles.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);
-                    e.Graphics.DrawString(ReadFiles.UnitHitp[i] + "/" + ReadFiles.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(300, 85 + 24 * count), sf);
-                    //No of active units
-                    e.Graphics.DrawString(ActiveUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(325 + 1, 85 + 24 * count + 1));
-                    e.Graphics.DrawString(ActiveUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(325, 85 + 24 * count));
-                    //No of units in production
-                    if (UnitInProductionCount[i] > 0)
+                    if (ActiveUnitCount[i] > 0)
                     {
-                        e.Graphics.DrawString(UnitInProductionCount[i].ToString() + " in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(390 + 1, 85 + 24 * count + 1));
-                        e.Graphics.DrawString(UnitInProductionCount[i].ToString() + " in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(390, 85 + 24 * count));
+                        int civId = 1;  //your civ only
+                                        //Image of unit
+                        e.Graphics.DrawImage(Draw.DrawUnitType(i, civId), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
+                        //Unit name
+                        e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
+                        e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
+                        //Unit attack/defense/movement
+                        e.Graphics.DrawString(ReadFiles.UnitAttack[i] + "/" + ReadFiles.UnitDefense[i] + "/" + ReadFiles.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString(ReadFiles.UnitAttack[i] + "/" + ReadFiles.UnitDefense[i] + "/" + ReadFiles.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
+                        //Hitpoints/firepower
+                        e.Graphics.DrawString(ReadFiles.UnitHitp[i] + "/" + ReadFiles.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString(ReadFiles.UnitHitp[i] + "/" + ReadFiles.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(300, 85 + 24 * count), sf);
+                        //No of active units
+                        e.Graphics.DrawString(ActiveUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(325 + 1, 85 + 24 * count + 1));
+                        e.Graphics.DrawString(ActiveUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(325, 85 + 24 * count));
+                        //No of units in production
+                        if (UnitInProductionCount[i] > 0)
+                        {
+                            e.Graphics.DrawString(UnitInProductionCount[i].ToString() + " in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(390 + 1, 85 + 24 * count + 1));
+                            e.Graphics.DrawString(UnitInProductionCount[i].ToString() + " in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(390, 85 + 24 * count));
+                        }
+                        count++;
                     }
-                    count++;
                 }
+            }
+            else
+            {
+                //TO-DO show casualties
             }
             sf.Dispose();
         }
 
-        private void CasualtiesButton_Click(object sender, EventArgs e) { }
+        //Switch between statistics (shows active units) & casualties (shows dead units)
+        private void CasualtiesButton_Click(object sender, EventArgs e)
+        {
+            if (StatisticsActive)
+            {
+                StatisticsActive = false;
+                CasualtiesButton.Text = "Statistics";
+            }
+            else
+            {
+                StatisticsActive = true;
+                CasualtiesButton.Text = "Casualties";
+            }
+            MainPanel.Refresh();
+        }
 
         private void CloseButton_Click(object sender, EventArgs e) { Close(); }
+
+        //Once slider value changes --> redraw list
+        private void VerticalBarValueChanged(object sender, EventArgs e)
+        {
+            BarValue = VerticalBar.Value;
+            Refresh();
+        }
     }
 }
