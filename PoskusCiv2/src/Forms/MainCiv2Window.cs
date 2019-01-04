@@ -163,6 +163,13 @@ namespace PoskusCiv2.Forms
             AttitudeAdvisorForm.ShowDialog();
         }
 
+        private void TradeAdvisor_Click(object sender, EventArgs e)
+        {
+            TradeAdvisorForm TradeAdvisorForm = new TradeAdvisorForm();
+            TradeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            TradeAdvisorForm.ShowDialog();
+        }
+
         private void ScienceAdvisor_Click(object sender, EventArgs e)
         {
             ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
@@ -173,14 +180,13 @@ namespace PoskusCiv2.Forms
         private void AdvisorsForm_Load(object sender, EventArgs e)
         {
             Form frm = sender as Form;
-            frm.Location = new Point(320, 250);
+            frm.Location = new Point(330, 250);
             frm.Width = 622;
             frm.Height = 421;
         }
 
         private void ChatWithKings_Click(object sender, EventArgs e) { }
         private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
-        private void TradeAdvisor_Click(object sender, EventArgs e) { }
         private void CasualtyTimeline_Click(object sender, EventArgs e) { }
     }
 }

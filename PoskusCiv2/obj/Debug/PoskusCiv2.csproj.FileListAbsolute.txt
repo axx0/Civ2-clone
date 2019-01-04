@@ -39,3 +39,4 @@ C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.Scienc
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityStatusForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.DefenseMinisterForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.AttitudeAdvisorForm.resources
+C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.TradeAdvisorForm.resources
