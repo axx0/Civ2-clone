@@ -63,6 +63,12 @@
     <Compile Include="src\Enums\OrderType.cs" />
     <Compile Include="src\Enums\UnitGAS.cs" />
     <Compile Include="src\Enums\TechType.cs" />
+    <Compile Include="src\Forms\AttitudeAdvisorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\AttitudeAdvisorForm.Designer.cs">
+      <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\CityBuyForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +176,9 @@
     <Compile Include="src\Forms\WorldMapForm.Designer.cs">
       <DependentUpon>WorldMapForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="src\Forms\AttitudeAdvisorForm.resx">
+      <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\CityBuyForm.resx">
       <DependentUpon>CityBuyForm.cs</DependentUpon>
     </EmbeddedResource>

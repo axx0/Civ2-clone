@@ -154,6 +154,15 @@ namespace PoskusCiv2.Forms
             DefenseMinisterForm.ShowDialog();
         }
 
+        private void ForeignMinister_Click(object sender, EventArgs e) { }
+
+        private void AttitudeAdvisor_Click(object sender, EventArgs e)
+        {
+            AttitudeAdvisorForm AttitudeAdvisorForm = new AttitudeAdvisorForm();
+            AttitudeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            AttitudeAdvisorForm.ShowDialog();
+        }
+
         private void ScienceAdvisor_Click(object sender, EventArgs e)
         {
             ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
@@ -171,8 +180,6 @@ namespace PoskusCiv2.Forms
 
         private void ChatWithKings_Click(object sender, EventArgs e) { }
         private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
-        private void ForeignMinister_Click(object sender, EventArgs e) { }
-        private void AttitudeAdvisor_Click(object sender, EventArgs e) { }
         private void TradeAdvisor_Click(object sender, EventArgs e) { }
         private void CasualtyTimeline_Click(object sender, EventArgs e) { }
     }
