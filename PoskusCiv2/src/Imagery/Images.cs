@@ -17,13 +17,17 @@ namespace PoskusCiv2.Imagery
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
-        public static Bitmap CityWallpaper, CityStatusWallpaper, ScienceAdvWallpaper;
+        public static Bitmap CityWallpaper, CityStatusWallpaper, DefenseMinWallpaper, ScienceAdvWallpaper;
 
         public static void LoadDLLimages(string loc)
         {
             Bitmap cityStatusWallpaper = new Bitmap(String.Concat(loc, "Image #1.GIF"));
             CityStatusWallpaper = (Bitmap)cityStatusWallpaper;
             CityStatusWallpaper = ModifyImage.CropImage(CityStatusWallpaper, new Rectangle(0, 0, 600, 400));
+
+            Bitmap defenseMinWallpaper = new Bitmap(String.Concat(loc, "Image #2.GIF"));
+            DefenseMinWallpaper = (Bitmap)defenseMinWallpaper;
+            DefenseMinWallpaper = ModifyImage.CropImage(DefenseMinWallpaper, new Rectangle(0, 0, 600, 400));
 
             Bitmap scienceAdvWallpaper = new Bitmap(String.Concat(loc, "Image #6.GIF"));
             ScienceAdvWallpaper = (Bitmap)scienceAdvWallpaper;

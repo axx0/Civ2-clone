@@ -110,6 +110,12 @@
     </Compile>
     <Compile Include="src\Enums\TerrainType.cs" />
     <Compile Include="src\Enums\UnitType.cs" />
+    <Compile Include="src\Forms\DefenseMinisterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\DefenseMinisterForm.Designer.cs">
+      <DependentUpon>DefenseMinisterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\ScienceAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,6 +187,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\CreateUnitForm.resx">
       <DependentUpon>CreateUnitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\DefenseMinisterForm.resx">
+      <DependentUpon>DefenseMinisterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>

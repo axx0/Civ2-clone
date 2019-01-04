@@ -33,6 +33,45 @@ namespace PoskusCiv2.Imagery
             return map;
         }
 
+        //Draw unit type (not in game units and their stats, just unit types for e.g. defense minister statistics)
+        public Bitmap DrawUnitType(int Id, int civId)  //Id = order from RULES.TXT, civId = id of civ (0=barbarian)
+        {
+            Bitmap square = new Bitmap(64, 48);     //define a bitmap for drawing
+
+            using (Graphics graphics = Graphics.FromImage(square))
+            {
+                StringFormat sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                sf.Alignment = StringAlignment.Center;
+
+                //draw unit shields
+                //First determine if the shield is on the left or right side
+                int firstShieldXLoc = Images.unitShieldLocation[Id, 0];
+                int secondShieldXLoc = firstShieldXLoc;
+                int secondShieldBorderXLoc;
+                int borderShieldOffset;
+                if (firstShieldXLoc < 32)
+                {
+                    borderShieldOffset = -1;
+                    secondShieldXLoc -= 4;
+                    secondShieldBorderXLoc = secondShieldXLoc - 1;
+                }
+                else
+                {
+                    borderShieldOffset = 1;
+                    secondShieldXLoc += 4;
+                    secondShieldBorderXLoc = secondShieldXLoc + 1;
+                }
+                graphics.DrawImage(Images.UnitShieldShadow, Images.unitShieldLocation[Id, 0] + borderShieldOffset, Images.unitShieldLocation[Id, 1]); //shield shadow
+                graphics.DrawImage(Images.UnitShield[civId], Images.unitShieldLocation[Id, 0], Images.unitShieldLocation[Id, 1]); //main shield
+                graphics.DrawString("-", new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[Id, 0] + 6, Images.unitShieldLocation[Id, 1] + 12, sf);    //Action on shield
+                graphics.DrawImage(Images.Units[Id], 0, 0);    //draw unit
+                sf.Dispose();
+            }
+
+            return square;
+        }
+
         //Draw unit
         public Bitmap DrawUnit(IUnit unit, bool stacked, double scale_factor)
         {            
@@ -97,8 +136,7 @@ namespace PoskusCiv2.Imagery
                 {
                     graphics.DrawImage(Images.Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit
                 }
-
-
+                
                 if (unit.Action == OrderType.Fortified)
                 {
                     graphics.DrawImage(Images.Fortified, 0, 0); //draw fortification
