@@ -22,7 +22,7 @@ namespace PoskusCiv2.Imagery
         };
 
         public static readonly Color[] Dark =
-{
+        {
             Color.FromArgb(167, 0, 0),      //RED
             Color.FromArgb(175, 175, 175),  //WHITE
             Color.FromArgb(23, 83, 11),     //GREEN

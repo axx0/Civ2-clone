@@ -52,7 +52,6 @@
             this.drawMapGridWithNumbersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.kingdomToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ordersToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.worldToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.cheatToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleCheatModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,14 +77,13 @@
             this.viewToolStripMenuItem1,
             this.kingdomToolStripMenuItem1,
             this.ordersToolStripMenuItem1,
-            this.worldToolStripMenuItem1,
             this.cheatToolStripMenuItem1,
             this.editorToolStripMenuItem,
             this.civilopediaToolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1426, 24);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(1901, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -111,112 +109,112 @@
             this.retireToolStripMenuItem,
             this.quitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(60, 24);
             this.fileToolStripMenuItem.Text = "&Game";
             this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // gameOptionsToolStripMenuItem
             // 
             this.gameOptionsToolStripMenuItem.Name = "gameOptionsToolStripMenuItem";
-            this.gameOptionsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.gameOptionsToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.gameOptionsToolStripMenuItem.Text = "Game Options";
             // 
             // graphicOptionsToolStripMenuItem
             // 
             this.graphicOptionsToolStripMenuItem.Name = "graphicOptionsToolStripMenuItem";
-            this.graphicOptionsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.graphicOptionsToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.graphicOptionsToolStripMenuItem.Text = "Graphic Options";
             // 
             // cityReportOptionsToolStripMenuItem
             // 
             this.cityReportOptionsToolStripMenuItem.BackColor = System.Drawing.SystemColors.Control;
             this.cityReportOptionsToolStripMenuItem.Name = "cityReportOptionsToolStripMenuItem";
-            this.cityReportOptionsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.cityReportOptionsToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.cityReportOptionsToolStripMenuItem.Text = "City Report Options";
             // 
             // multiplayerOptionsToolStripMenuItem
             // 
             this.multiplayerOptionsToolStripMenuItem.Enabled = false;
             this.multiplayerOptionsToolStripMenuItem.Name = "multiplayerOptionsToolStripMenuItem";
-            this.multiplayerOptionsToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.multiplayerOptionsToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.multiplayerOptionsToolStripMenuItem.Text = "Multiplayer Options";
             // 
             // gameProfileToolStripMenuItem
             // 
             this.gameProfileToolStripMenuItem.Enabled = false;
             this.gameProfileToolStripMenuItem.Name = "gameProfileToolStripMenuItem";
-            this.gameProfileToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.gameProfileToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.gameProfileToolStripMenuItem.Text = "Game Profile";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(212, 6);
             // 
             // pickMusicToolStripMenuItem
             // 
             this.pickMusicToolStripMenuItem.Name = "pickMusicToolStripMenuItem";
-            this.pickMusicToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.pickMusicToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.pickMusicToolStripMenuItem.Text = "Pick Music";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(212, 6);
             // 
             // saveGameToolStripMenuItem
             // 
             this.saveGameToolStripMenuItem.Name = "saveGameToolStripMenuItem";
-            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.saveGameToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.saveGameToolStripMenuItem.Text = "Save Game";
             // 
             // loadGameToolStripMenuItem
             // 
             this.loadGameToolStripMenuItem.Name = "loadGameToolStripMenuItem";
-            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.loadGameToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.loadGameToolStripMenuItem.Text = "Load Game";
             // 
             // joinGameToolStripMenuItem
             // 
             this.joinGameToolStripMenuItem.Enabled = false;
             this.joinGameToolStripMenuItem.Name = "joinGameToolStripMenuItem";
-            this.joinGameToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.joinGameToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.joinGameToolStripMenuItem.Text = "Join Game";
             this.joinGameToolStripMenuItem.Click += new System.EventHandler(this.joinGameToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(212, 6);
             // 
             // setPasswordToolStripMenuItem
             // 
             this.setPasswordToolStripMenuItem.Name = "setPasswordToolStripMenuItem";
-            this.setPasswordToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.setPasswordToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.setPasswordToolStripMenuItem.Text = "Set Password";
             // 
             // changeTimerToolStripMenuItem
             // 
             this.changeTimerToolStripMenuItem.Enabled = false;
             this.changeTimerToolStripMenuItem.Name = "changeTimerToolStripMenuItem";
-            this.changeTimerToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.changeTimerToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.changeTimerToolStripMenuItem.Text = "Change Timer";
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(176, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(212, 6);
             // 
             // retireToolStripMenuItem
             // 
             this.retireToolStripMenuItem.Name = "retireToolStripMenuItem";
-            this.retireToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.retireToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.retireToolStripMenuItem.Text = "Retire";
             // 
             // quitToolStripMenuItem
             // 
             this.quitToolStripMenuItem.Name = "quitToolStripMenuItem";
-            this.quitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.quitToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.quitToolStripMenuItem.Text = "Quit";
             this.quitToolStripMenuItem.Click += new System.EventHandler(this.quitToolStripMenuItem_Click);
             // 
@@ -228,14 +226,14 @@
             this.drawMapGridToolStripMenuItem,
             this.drawMapGridWithNumbersToolStripMenuItem});
             this.viewToolStripMenuItem1.Name = "viewToolStripMenuItem1";
-            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem1.Size = new System.Drawing.Size(53, 24);
             this.viewToolStripMenuItem1.Text = "View";
             // 
             // drawMapGridToolStripMenuItem
             // 
             this.drawMapGridToolStripMenuItem.CheckOnClick = true;
             this.drawMapGridToolStripMenuItem.Name = "drawMapGridToolStripMenuItem";
-            this.drawMapGridToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.drawMapGridToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
             this.drawMapGridToolStripMenuItem.Text = "Draw Map Grid";
             this.drawMapGridToolStripMenuItem.CheckedChanged += new System.EventHandler(this.drawMapGridToolStripMenuItem_CheckedChanged);
             this.drawMapGridToolStripMenuItem.Click += new System.EventHandler(this.drawMapGridToolStripMenuItem_Click);
@@ -244,7 +242,7 @@
             // 
             this.drawMapGridWithNumbersToolStripMenuItem.CheckOnClick = true;
             this.drawMapGridWithNumbersToolStripMenuItem.Name = "drawMapGridWithNumbersToolStripMenuItem";
-            this.drawMapGridWithNumbersToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.drawMapGridWithNumbersToolStripMenuItem.Size = new System.Drawing.Size(284, 26);
             this.drawMapGridWithNumbersToolStripMenuItem.Text = "Draw Map Grid With Numbers";
             this.drawMapGridWithNumbersToolStripMenuItem.CheckedChanged += new System.EventHandler(this.drawMapGridWithNumbersToolStripMenuItem_CheckedChanged);
             this.drawMapGridWithNumbersToolStripMenuItem.Click += new System.EventHandler(this.drawMapGridWithNumbersToolStripMenuItem_Click);
@@ -252,20 +250,14 @@
             // kingdomToolStripMenuItem1
             // 
             this.kingdomToolStripMenuItem1.Name = "kingdomToolStripMenuItem1";
-            this.kingdomToolStripMenuItem1.Size = new System.Drawing.Size(68, 20);
+            this.kingdomToolStripMenuItem1.Size = new System.Drawing.Size(82, 24);
             this.kingdomToolStripMenuItem1.Text = "Kingdom";
             // 
             // ordersToolStripMenuItem1
             // 
             this.ordersToolStripMenuItem1.Name = "ordersToolStripMenuItem1";
-            this.ordersToolStripMenuItem1.Size = new System.Drawing.Size(54, 20);
+            this.ordersToolStripMenuItem1.Size = new System.Drawing.Size(65, 24);
             this.ordersToolStripMenuItem1.Text = "Orders";
-            // 
-            // worldToolStripMenuItem1
-            // 
-            this.worldToolStripMenuItem1.Name = "worldToolStripMenuItem1";
-            this.worldToolStripMenuItem1.Size = new System.Drawing.Size(51, 20);
-            this.worldToolStripMenuItem1.Text = "World";
             // 
             // cheatToolStripMenuItem1
             // 
@@ -273,33 +265,33 @@
             this.toggleCheatModeToolStripMenuItem,
             this.createUnitToolStripMenuItem});
             this.cheatToolStripMenuItem1.Name = "cheatToolStripMenuItem1";
-            this.cheatToolStripMenuItem1.Size = new System.Drawing.Size(50, 20);
+            this.cheatToolStripMenuItem1.Size = new System.Drawing.Size(59, 24);
             this.cheatToolStripMenuItem1.Text = "Cheat";
             // 
             // toggleCheatModeToolStripMenuItem
             // 
             this.toggleCheatModeToolStripMenuItem.Name = "toggleCheatModeToolStripMenuItem";
-            this.toggleCheatModeToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.toggleCheatModeToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.toggleCheatModeToolStripMenuItem.Text = "Toggle Cheat Mode";
             this.toggleCheatModeToolStripMenuItem.Click += new System.EventHandler(this.toggleCheatModeToolStripMenuItem_Click);
             // 
             // createUnitToolStripMenuItem
             // 
             this.createUnitToolStripMenuItem.Name = "createUnitToolStripMenuItem";
-            this.createUnitToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.createUnitToolStripMenuItem.Size = new System.Drawing.Size(215, 26);
             this.createUnitToolStripMenuItem.Text = "Create Unit";
             this.createUnitToolStripMenuItem.Click += new System.EventHandler(this.createUnitToolStripMenuItem_Click);
             // 
             // editorToolStripMenuItem
             // 
             this.editorToolStripMenuItem.Name = "editorToolStripMenuItem";
-            this.editorToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.editorToolStripMenuItem.Size = new System.Drawing.Size(61, 24);
             this.editorToolStripMenuItem.Text = "Editor";
             // 
             // civilopediaToolStripMenuItem1
             // 
             this.civilopediaToolStripMenuItem1.Name = "civilopediaToolStripMenuItem1";
-            this.civilopediaToolStripMenuItem1.Size = new System.Drawing.Size(78, 20);
+            this.civilopediaToolStripMenuItem1.Size = new System.Drawing.Size(96, 24);
             this.civilopediaToolStripMenuItem1.Text = "Civilopedia";
             // 
             // gameToolStripMenuItem
@@ -352,13 +344,13 @@
             // 
             // MainCiv2Window
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1426, 839);
+            this.ClientSize = new System.Drawing.Size(1901, 1033);
             this.Controls.Add(this.menuStrip1);
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainCiv2Window";
             this.Text = "Sid Meier\'s Civilization II";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -384,7 +376,6 @@
         private System.Windows.Forms.ToolStripMenuItem kingdomToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem ordersToolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem worldToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem cheatToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem editorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem civilopediaToolStripMenuItem1;

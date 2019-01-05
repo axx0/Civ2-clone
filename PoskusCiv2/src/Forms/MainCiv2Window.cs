@@ -50,6 +50,21 @@ namespace PoskusCiv2.Forms
             AdvisorsMenu.DropDownItems.Add(ScienecAdvisorItem);
             AdvisorsMenu.DropDownItems.Add(new ToolStripSeparator());
             AdvisorsMenu.DropDownItems.Add(CasualtyTimelineItem);
+
+            //World menu
+            ToolStripMenuItem WorldMenu = new ToolStripMenuItem("World");
+            ToolStripMenuItem WondersOfWorldItem = new ToolStripMenuItem("Wonders of the World", null, WondersOfWorld_Click, (Keys)Shortcut.F7);
+            ToolStripMenuItem Top5CitiesItem = new ToolStripMenuItem("Top 5 Cities", null, Top5Cities_Click, (Keys)Shortcut.F8);
+            ToolStripMenuItem CivScoreItem = new ToolStripMenuItem("Civilization Score", null, CivScore_Click, (Keys)Shortcut.F9);
+            ToolStripMenuItem DemographicsItem = new ToolStripMenuItem("Demographics", null, Demographics_Click, (Keys)Shortcut.F11);
+            ToolStripMenuItem SpaceshipsItem = new ToolStripMenuItem("Spaceships", null, Spaceships_Click, (Keys)Shortcut.F12);
+            menuStrip1.Items.Add(WorldMenu);
+            WorldMenu.DropDownItems.Add(WondersOfWorldItem);
+            WorldMenu.DropDownItems.Add(Top5CitiesItem);
+            WorldMenu.DropDownItems.Add(CivScoreItem);
+            WorldMenu.DropDownItems.Add(new ToolStripSeparator());
+            WorldMenu.DropDownItems.Add(DemographicsItem);
+            WorldMenu.DropDownItems.Add(SpaceshipsItem);
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -140,6 +155,10 @@ namespace PoskusCiv2.Forms
 
         }
 
+        // ADVISORS MENU
+        private void ChatWithKings_Click(object sender, EventArgs e) { }
+        private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
+
         private void CityStatus_Click(object sender, EventArgs e)
         {
             CityStatusForm CityStatusForm = new CityStatusForm();
@@ -177,6 +196,21 @@ namespace PoskusCiv2.Forms
             ScienceAdvisorForm.ShowDialog();
         }
 
+        private void CasualtyTimeline_Click(object sender, EventArgs e) { }
+
+        // WORLD MENU
+        private void WondersOfWorld_Click(object sender, EventArgs e)
+        {
+            WondersOfWorldForm WondersOfWorldForm = new WondersOfWorldForm();
+            WondersOfWorldForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            WondersOfWorldForm.ShowDialog();
+        }
+
+        private void Top5Cities_Click(object sender, EventArgs e) { }
+        private void CivScore_Click(object sender, EventArgs e) { }
+        private void Demographics_Click(object sender, EventArgs e) { }
+        private void Spaceships_Click(object sender, EventArgs e) { }
+
         private void AdvisorsForm_Load(object sender, EventArgs e)
         {
             Form frm = sender as Form;
@@ -184,10 +218,5 @@ namespace PoskusCiv2.Forms
             frm.Width = 622;
             frm.Height = 421;
         }
-
-        private void ChatWithKings_Click(object sender, EventArgs e) { }
-        private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
-        private void CasualtyTimeline_Click(object sender, EventArgs e) { }
     }
 }
-;
