@@ -208,7 +208,14 @@ namespace PoskusCiv2.Forms
 
         private void Top5Cities_Click(object sender, EventArgs e) { }
         private void CivScore_Click(object sender, EventArgs e) { }
-        private void Demographics_Click(object sender, EventArgs e) { }
+
+        private void Demographics_Click(object sender, EventArgs e)
+        {
+            DemographicsForm DemographicsForm = new DemographicsForm();
+            DemographicsForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            DemographicsForm.ShowDialog();
+        }
+
         private void Spaceships_Click(object sender, EventArgs e) { }
 
         private void AdvisorsForm_Load(object sender, EventArgs e)

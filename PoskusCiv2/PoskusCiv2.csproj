@@ -99,6 +99,12 @@
     <Compile Include="src\Forms\Menu Advisors\CityStatusForm.Designer.cs">
       <DependentUpon>CityStatusForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\Menu World\DemographicsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\Menu World\DemographicsForm.Designer.cs">
+      <DependentUpon>DemographicsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\Menu World\WondersOfWorldForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -202,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\CityStatusForm.resx">
       <DependentUpon>CityStatusForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\Menu World\DemographicsForm.resx">
+      <DependentUpon>DemographicsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu World\WondersOfWorldForm.resx">
       <DependentUpon>WondersOfWorldForm.cs</DependentUpon>

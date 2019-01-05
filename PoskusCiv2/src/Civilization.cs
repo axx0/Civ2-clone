@@ -16,5 +16,18 @@ namespace PoskusCiv2
         public int Money { get; set; }
         public int ReseachingTech { get; set; }
         public int[] Techs { get; set; }
+
+        private int _population;
+        public int Population
+        {
+            get
+            {
+                foreach (City city in Game.Cities.Where(n => n.Owner == Id))
+                {
+                    _population += city.Population;
+                }
+                return _population;
+            }
+        }
     }
 }

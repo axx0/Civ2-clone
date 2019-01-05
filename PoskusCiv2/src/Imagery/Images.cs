@@ -17,7 +17,7 @@ namespace PoskusCiv2.Imagery
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
-        public static Bitmap CityWallpaper, CityStatusWallpaper, DefenseMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper, ScienceAdvWallpaper, WondersOfWorldWallpaper;
+        public static Bitmap CityWallpaper, CityStatusWallpaper, DefenseMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper, ScienceAdvWallpaper, WondersOfWorldWallpaper, DemographicsWallpaper;
 
         public static void LoadDLLimages(string loc)
         {
@@ -44,6 +44,10 @@ namespace PoskusCiv2.Imagery
             Bitmap wowWallpaper = new Bitmap(String.Concat(loc, "Image #7.GIF"));
             WondersOfWorldWallpaper = (Bitmap)wowWallpaper;
             WondersOfWorldWallpaper = ModifyImage.CropImage(WondersOfWorldWallpaper, new Rectangle(0, 0, 600, 400));
+
+            Bitmap demographicsWallpaper = new Bitmap(String.Concat(loc, "Image #9.GIF"));
+            DemographicsWallpaper = (Bitmap)demographicsWallpaper;
+            DemographicsWallpaper = ModifyImage.CropImage(DemographicsWallpaper, new Rectangle(0, 0, 600, 400));
         }
 
         public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
