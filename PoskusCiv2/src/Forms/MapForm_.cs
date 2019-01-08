@@ -13,40 +13,45 @@ using PoskusCiv2.Imagery;
 
 namespace PoskusCiv2.Forms
 {
-    public partial class MapForm : Civ2form
+    public partial class MapForm_ : Civ2form
     {
         public MainCiv2Window mainCiv2Window;
 
         public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY, BoxNoX, BoxNoY;
+        //public static Bitmap Map;
+        //public int BoxNoX, BoxNoY;
         Random randomNo = new Random();
 
         public bool CreateUnit, GridIsChecked = false, DrawXYnumbers = false;
         public static bool viewingPiecesMode = false;
-
+        
         //timer
         Timer t = new Timer();
         int stej = 0;   //records no of timer ticks
 
         Draw Draw = new Draw();
-
+        
         CreateUnitForm createUnitForm = new CreateUnitForm();
 
         DoubleBufferedPanel MapPanel;
 
         Pen pulsatingRectPen = new Pen(Color.White, 1);
 
-        public MapForm(MainCiv2Window _mainCiv2Window)
+        public MapForm_(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
+            //Size = new Size(1280, 810);
+            //BackColor = Color.Black;
+            //FormBorderStyle = FormBorderStyle.None;
+            //BackgroundImage = Images.WallpaperMapForm;
+            //DoubleBuffered = true;
             mainCiv2Window = _mainCiv2Window;
-            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.8625), _mainCiv2Window.ClientSize.Height - 80);
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
             {
-                Location = new Point(8, 34),
-                Size = new Size(this.ClientSize.Width - 18, this.ClientSize.Height - 47),
-                BackColor = Color.Black
+                Location = new Point(5, 35),
+                Size = new Size(1255, 730)
             };
             Controls.Add(MapPanel);
             MapPanel.Paint += new PaintEventHandler(MapPanel_Paint);
@@ -62,7 +67,7 @@ namespace PoskusCiv2.Forms
 
             CreateUnit = false; //for start
 
-            //for calculation of moving with mouse in MapForm   
+            //for calculation of moving with mouse in MapForm_   
             BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);   //No of squares in X and Y direction
             BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2); //Determine the square in the center of figure
@@ -112,13 +117,6 @@ namespace PoskusCiv2.Forms
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
                 GraphicsUnit.Pixel);
 
-            //e.Graphics.DrawImage(
-            //    Draw.GetMapPart(Game.Map, offsetX * 32, offsetY * 16, MapPanel.Size),
-            //    2,
-            //    2,
-            //    new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
-            //    GraphicsUnit.Pixel);
-
             //Draw all units
             foreach (IUnit unit in Game.Units)
             {
@@ -129,7 +127,7 @@ namespace PoskusCiv2.Forms
                     foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
 
                     if (!unitOnTopOfCity && (unit.X != Game.Instance.ActiveUnit.X || unit.Y != Game.Instance.ActiveUnit.Y))   //Draw only if unit NOT inside city AND if active unit is not on same square
-                    {
+                    {                        
                         List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
                         if (unitsInXY.Count > 1)    //if units are stacked, draw only the last unit in the list
                         {
@@ -138,7 +136,7 @@ namespace PoskusCiv2.Forms
                         else    //if units aren't stacked, draw normally
                         {
                             e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
-                        }
+                        }                       
                     }
                 }
             }
@@ -197,7 +195,7 @@ namespace PoskusCiv2.Forms
                     }
                 }
             }
-
+      
             //Draw viewing pieces
             if (viewingPiecesMode && stej % 2 == 1)
             {
@@ -206,8 +204,12 @@ namespace PoskusCiv2.Forms
 
         }
 
+        //click with a mouse --> center MapForm_ on the square
+        private void MapForm_MouseClick(object sender, MouseEventArgs e)
+        { }
+
         private void MapPanel_MouseClick(object sender, MouseEventArgs e)
-        {
+        {           
             BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);//Calculate No of squares in the form in X and Y
             BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2);//Determine the square in the center of figure
@@ -222,12 +224,12 @@ namespace PoskusCiv2.Forms
             ClickedBoxY = nY - nX + offsetY;
             offsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
-
+            
             //Do not allow to move out of map bounds by limiting offset
             if (offsetX < 0) { offsetX = 0; }
             if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) { offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX; }
             if (offsetY < 0) { offsetY = 0; }
-            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }
+            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }            
 
             //After limiting offset, do not allow some combinations, e.g. (2,1)
             if (Math.Abs((offsetX - offsetY) % 2) == 1)
@@ -245,7 +247,7 @@ namespace PoskusCiv2.Forms
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();  //send mouse click location to status form
             }
             else
-            {
+            {                
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();   //send mouse click location to status form
                 if (Game.Cities.Any(city => city.X2 == ClickedBoxX && city.Y2 == ClickedBoxY))    //if city is clicked => open form
                 {
@@ -272,7 +274,7 @@ namespace PoskusCiv2.Forms
         private List<IUnit> ListOfUnitsIn(int x, int y)
         {
             List<IUnit> unitsInXY = new List<IUnit>();
-            foreach (IUnit unit in Game.Units)
+            foreach(IUnit unit in Game.Units)
             {
                 if (unit.X == x && unit.Y == y) { unitsInXY.Add(unit); }
             }

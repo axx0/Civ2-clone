@@ -63,6 +63,18 @@
     <Compile Include="src\Enums\OrderType.cs" />
     <Compile Include="src\Enums\UnitGAS.cs" />
     <Compile Include="src\Enums\TechType.cs" />
+    <Compile Include="src\Forms\MainCiv2Window.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
+      <DependentUpon>MainCiv2Window.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\MapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\MapForm.Designer.cs">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,18 +167,6 @@
     <Compile Include="src\Imagery\ModifyImage.cs" />
     <Compile Include="src\Imagery\Squares.cs" />
     <Compile Include="src\Imagery\Images.cs" />
-    <Compile Include="src\Forms\MainCiv2Window.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
-      <DependentUpon>MainCiv2Window.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\MapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MapForm.Designer.cs">
-      <DependentUpon>MapForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Game.LoadGame.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />
@@ -194,6 +194,12 @@
     <Compile Include="src\Forms\WorldMapForm.Designer.cs">
       <DependentUpon>WorldMapForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
+      <DependentUpon>MainCiv2Window.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\MapForm.resx">
+      <DependentUpon>MapForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.resx">
       <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -223,12 +229,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\DefenseMinisterForm.resx">
       <DependentUpon>DefenseMinisterForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
-      <DependentUpon>MainCiv2Window.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\MapForm.resx">
-      <DependentUpon>MapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

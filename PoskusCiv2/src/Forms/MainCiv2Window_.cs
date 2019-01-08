@@ -10,30 +10,21 @@ using System.Windows.Forms;
 
 namespace PoskusCiv2.Forms
 {
-    public partial class MainCiv2Window : Form
+    public partial class MainCiv2Window_ : Form
     {
-        MenuStrip MainMenuStrip;
-        //public MapForm mapForm;
+        public MapForm mapForm;
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
         public CityForm cityForm;
 
-        public MainCiv2Window()
+        public MainCiv2Window_()
         {
             InitializeComponent();
-            IsMdiContainer = true;
-            WindowState = FormWindowState.Maximized;
-
-            //Load the icon
-            Icon ico = Properties.Resources.civ2;
-            this.Icon = ico;
-
-            //Menustrip
-            MainMenuStrip = new MenuStrip
-            {
-                BackColor = Color.White
-            };
-            Controls.Add(MainMenuStrip);
+            
+            mapForm = new MapForm(this);
+            statusForm = new StatusForm(this);
+            worldMapForm = new WorldMapForm(this);
+            cityForm = new CityForm(this);
 
             //Advisors menu
             ToolStripMenuItem AdvisorsMenu = new ToolStripMenuItem("Advisors");
@@ -46,7 +37,7 @@ namespace PoskusCiv2.Forms
             ToolStripMenuItem TradeAdvisorItem = new ToolStripMenuItem("Trade Advisor", null, TradeAdvisor_Click, (Keys)Shortcut.F5);
             ToolStripMenuItem ScienecAdvisorItem = new ToolStripMenuItem("Science Advisor", null, ScienceAdvisor_Click, (Keys)Shortcut.F6);
             ToolStripMenuItem CasualtyTimelineItem = new ToolStripMenuItem("Casualty Timeline", null, CasualtyTimeline_Click, (Keys)Shortcut.CtrlD);
-            MainMenuStrip.Items.Add(AdvisorsMenu);
+            menuStrip1.Items.Add(AdvisorsMenu);
             AdvisorsMenu.DropDownItems.Add(ConsultHighCouncilItem);
             AdvisorsMenu.DropDownItems.Add(ChatWithKingsItem);
             AdvisorsMenu.DropDownItems.Add(new ToolStripSeparator());
@@ -67,7 +58,7 @@ namespace PoskusCiv2.Forms
             ToolStripMenuItem CivScoreItem = new ToolStripMenuItem("Civilization Score", null, CivScore_Click, (Keys)Shortcut.F9);
             ToolStripMenuItem DemographicsItem = new ToolStripMenuItem("Demographics", null, Demographics_Click, (Keys)Shortcut.F11);
             ToolStripMenuItem SpaceshipsItem = new ToolStripMenuItem("Spaceships", null, Spaceships_Click, (Keys)Shortcut.F12);
-            MainMenuStrip.Items.Add(WorldMenu);
+            menuStrip1.Items.Add(WorldMenu);
             WorldMenu.DropDownItems.Add(WondersOfWorldItem);
             WorldMenu.DropDownItems.Add(Top5CitiesItem);
             WorldMenu.DropDownItems.Add(CivScoreItem);
@@ -78,24 +69,33 @@ namespace PoskusCiv2.Forms
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
         {
-            //Forms
-            MapForm mapForm = new MapForm(this);
-            mapForm.MdiParent = this;
-            //mapForm.Size = new Size((int)((ClientSize.Width) * 0.8625), ClientSize.Height - 80);
-            mapForm.Location = new Point(0, 0);
-            mapForm.Show();
-            Console.WriteLine("Mapformsize={0}", mapForm.Size);
-            
+            //Load the icon
+            Icon ico = Properties.Resources.civ2;
+            this.Icon = ico;
 
-            statusForm = new StatusForm(this);
-            worldMapForm = new WorldMapForm(this);
-            cityForm = new CityForm(this);
+            Console.WriteLine("Formsize={0}", this.Size);
+            Console.WriteLine("Clientsize={0}", ClientSize);
+            Console.WriteLine("Menustrip height={0}", menuStrip1.Height);
+            Console.WriteLine("SystemInformation.CaptionHeight={0}", SystemInformation.CaptionHeight);
+            Console.WriteLine("SystemInformation.BorderSize.Height={0}", SystemInformation.BorderSize.Height);
 
+            //Determine titlebar height
+            Rectangle screenRectangle = RectangleToScreen(this.ClientRectangle);
+            int titleHeight = screenRectangle.Top - this.Top;
+
+            Console.WriteLine("SCREEN BOUND={0}", Screen.PrimaryScreen.Bounds);
+            Console.WriteLine("SCREEN WORKING AREA={0}", Screen.PrimaryScreen.WorkingArea);
+            Console.WriteLine("Title height = {0}", titleHeight);
+            Console.WriteLine("Taskbar height = {0}", Screen.PrimaryScreen.Bounds.Height - Screen.PrimaryScreen.WorkingArea.Height);
+
+            //Get screen resolution
+            int screenW = Screen.PrimaryScreen.WorkingArea.Width;
+            int screenH = Screen.PrimaryScreen.WorkingArea.Height;
 
             //Load forms
-            //mapForm.MdiParent = this;
+            mapForm.MdiParent = this;
             //mapForm.Size = new Size((int)(screenW * 0.8625), screenH - titleHeight);
-            //mapForm.Size = new Size(ClientSize.Width, ClientSize.Height);
+            mapForm.Size = new Size(ClientSize.Width, ClientSize.Height);
             //mapForm.Show();
 
             //statusForm.MdiParent = this;
@@ -108,12 +108,26 @@ namespace PoskusCiv2.Forms
             //cityForm.StartPosition = FormStartPosition.Manual;
             //cityForm.Location = new Point(1260, 0);
 
-            //mapForm.Focus();
+            mapForm.Focus();
         }
-
+        
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        //when grid is checked, pass value to MapForm to draw
+        private void drawMapGridToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            mapForm.GridIsChecked = drawMapGridToolStripMenuItem.Checked;
+            mapForm.Invalidate();
+        }
+
+        private void drawMapGridWithNumbersToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
+        {
+            mapForm.GridIsChecked = drawMapGridWithNumbersToolStripMenuItem.Checked;
+            mapForm.DrawXYnumbers = drawMapGridWithNumbersToolStripMenuItem.Checked;
+            mapForm.Invalidate();
         }
 
         //Create unit from cheat menu!

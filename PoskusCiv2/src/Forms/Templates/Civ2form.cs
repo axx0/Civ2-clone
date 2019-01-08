@@ -16,14 +16,13 @@ namespace PoskusCiv2.Forms
         public Civ2form()
         {
             InitializeComponent();
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
             BackgroundImage = Images.WallpaperMapForm;
             this.Paint += new PaintEventHandler(Civ2form_Paint);
         }
 
-        private void Civ2form_Load(object sender, EventArgs e)
-        {
-        }
+        private void Civ2form_Load(object sender, EventArgs e) { }
 
         private void Civ2form_Paint(object sender, PaintEventArgs e)
         {
