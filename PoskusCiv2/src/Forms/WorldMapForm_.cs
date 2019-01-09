@@ -11,32 +11,39 @@ using PoskusCiv2.Imagery;
 
 namespace PoskusCiv2.Forms
 {
-    public partial class WorldMapForm : Civ2form
+    public partial class WorldMapForm_ : Civ2form
     {
         public MainCiv2Window mainCiv2Window;
         DoubleBufferedPanel MinimapPanel;
 
-        public WorldMapForm(MainCiv2Window _mainCiv2Window)
+        public WorldMapForm_(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
             mainCiv2Window = _mainCiv2Window;
-
             Paint += new PaintEventHandler(WorldMapForm_Paint);
-            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.1375), 148);    //-4 is experience setting
+
+            StartPosition = FormStartPosition.Manual;
+            Location = new Point(1268, 0);
+            Size = new Size(262, 148);
+            FormBorderStyle = FormBorderStyle.None;
+            BackgroundImage = Images.WallpaperMapForm;
 
             //Minimap panel
             MinimapPanel = new DoubleBufferedPanel
             {
                 Location = new Point(8, 35),
-                Size = new Size(248, 107),  //correct this!
+                Size = new Size(248, 107),
                 BackColor = Color.Black,
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(MinimapPanel);
             MinimapPanel.Paint += new PaintEventHandler(MinimapPanel_Paint);
+
         }
 
-        private void WorldMapForm_Load(object sender, EventArgs e) { }
+        private void WorldMapForm_Load(object sender, EventArgs e)
+        {
+        }
 
         private void WorldMapForm_Paint(object sender, PaintEventArgs e)
         {
@@ -48,7 +55,8 @@ namespace PoskusCiv2.Forms
             sf.Dispose();
         }
 
-        private void MinimapPanel_Paint(object sender, PaintEventArgs e) { }
+        private void MinimapPanel_Paint(object sender, PaintEventArgs e)
+        { }
 
     }
 }

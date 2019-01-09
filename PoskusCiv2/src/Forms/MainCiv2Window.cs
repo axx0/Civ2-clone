@@ -81,14 +81,20 @@ namespace PoskusCiv2.Forms
             //Forms
             MapForm mapForm = new MapForm(this);
             mapForm.MdiParent = this;
-            //mapForm.Size = new Size((int)((ClientSize.Width) * 0.8625), ClientSize.Height - 80);
             mapForm.Location = new Point(0, 0);
             mapForm.Show();
-            Console.WriteLine("Mapformsize={0}", mapForm.Size);
-            
+
+            worldMapForm = new WorldMapForm(this);
+            worldMapForm.MdiParent = this;
+            worldMapForm.StartPosition = FormStartPosition.Manual;
+            worldMapForm.Location = new Point((int)(ClientSize.Width * 0.8625 -4 + 1), 0);
+            worldMapForm.Show();
 
             statusForm = new StatusForm(this);
-            worldMapForm = new WorldMapForm(this);
+            statusForm.MdiParent = this;
+            statusForm.Location = new Point(mapForm.Width + 1, 200);
+            statusForm.Show();
+
             cityForm = new CityForm(this);
 
 
@@ -111,22 +117,22 @@ namespace PoskusCiv2.Forms
             //mapForm.Focus();
         }
 
-        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        //private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    Close();
+        //}
 
-        //Create unit from cheat menu!
-        private void createUnitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //Load unit create form
-            CreateUnitForm newMDIChild = new CreateUnitForm();
-            newMDIChild.MdiParent = this;
-            //newMDIChild1.Size = new System.Drawing.Size(1260, 770);
-            //newMDIChild1.BackColor = Color.Black;
-            newMDIChild.Show();
+        ////Create unit from cheat menu!
+        //private void createUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
+        //    //Load unit create form
+        //    CreateUnitForm newMDIChild = new CreateUnitForm();
+        //    newMDIChild.MdiParent = this;
+        //    //newMDIChild1.Size = new System.Drawing.Size(1260, 770);
+        //    //newMDIChild1.BackColor = Color.Black;
+        //    newMDIChild.Show();
 
-        }
+        //}
 
         // ADVISORS MENU
         private void ChatWithKings_Click(object sender, EventArgs e) { }

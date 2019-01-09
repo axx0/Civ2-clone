@@ -42,3 +42,9 @@ C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.Attitu
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.TradeAdvisorForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.WondersOfWorldForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.DemographicsForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.AttitudeAdvisorForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityStatusForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.DemographicsForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.WondersOfWorldForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.DefenseMinisterForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.TradeAdvisorForm.resources

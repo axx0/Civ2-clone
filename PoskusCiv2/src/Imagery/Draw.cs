@@ -15,7 +15,7 @@ namespace PoskusCiv2.Imagery
         //Return a part of original map
         public static Bitmap GetMapPart(Bitmap originalMap, int offsetX, int offsetY, Size panelSize)
         {
-            Bitmap mapPart = new Bitmap(sizeX, sizeY);    //define a bitmap for drawing map
+            Bitmap mapPart = new Bitmap(offsetX, offsetY);    //define a bitmap for drawing map
             return mapPart;
         }
 

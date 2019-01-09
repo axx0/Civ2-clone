@@ -123,6 +123,12 @@
     <Compile Include="src\Forms\Menu World\WondersOfWorldForm.Designer.cs">
       <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\StatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\StatusForm.Designer.cs">
+      <DependentUpon>StatusForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\Templates\Civ2button.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -161,6 +167,12 @@
     <Compile Include="src\Forms\Templates\TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Forms\WorldMapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\WorldMapForm.Designer.cs">
+      <DependentUpon>WorldMapForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Game.cs" />
     <Compile Include="src\Imagery\CivColors.cs" />
     <Compile Include="src\Imagery\Draw.cs" />
@@ -174,12 +186,6 @@
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Forms\StatusForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\StatusForm.Designer.cs">
-      <DependentUpon>StatusForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\ReadRULES.cs" />
     <Compile Include="src\Sounds\Sound.cs" />
     <Compile Include="src\Techs\Tech.cs" />
@@ -188,12 +194,6 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
-    <Compile Include="src\Forms\WorldMapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\WorldMapForm.Designer.cs">
-      <DependentUpon>WorldMapForm.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
     </EmbeddedResource>
@@ -221,6 +221,9 @@
     <EmbeddedResource Include="src\Forms\Menu World\WondersOfWorldForm.resx">
       <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\StatusForm.resx">
+      <DependentUpon>StatusForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Templates\Civ2form.resx">
       <DependentUpon>Civ2form.cs</DependentUpon>
     </EmbeddedResource>
@@ -242,9 +245,6 @@
     </Compile>
     <EmbeddedResource Include="src\Forms\Menu Advisors\ScienceAdvisorForm.resx">
       <DependentUpon>ScienceAdvisorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\StatusForm.resx">
-      <DependentUpon>StatusForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\TradeAdvisorForm.resx">
       <DependentUpon>TradeAdvisorForm.cs</DependentUpon>

@@ -1,6 +1,6 @@
 ﻿namespace PoskusCiv2.Forms
 {
-    partial class WorldMapForm
+    partial class StatusForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,14 +30,18 @@
         {
             this.SuspendLayout();
             // 
-            // WorldMapForm
+            // StatusForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "WorldMapForm";
-            this.Text = "WorldMapForm";
-            this.Load += new System.EventHandler(this.WorldMapForm_Load);
+            this.ClientSize = new System.Drawing.Size(360, 700);
+            this.ControlBox = false;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Name = "StatusForm";
+            this.Text = "StatusForm";
+            this.Load += new System.EventHandler(this.StatusForm_Load);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.StatusForm_MouseClick);
             this.ResumeLayout(false);
 
         }

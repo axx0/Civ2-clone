@@ -1,6 +1,6 @@
 ﻿namespace PoskusCiv2.Forms
 {
-    partial class WorldMapForm
+    partial class WorldMapForm_
     {
         /// <summary>
         /// Required designer variable.
@@ -32,9 +32,12 @@
             // 
             // WorldMapForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(360, 250);
+            this.ControlBox = false;
+            this.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "WorldMapForm";
             this.Text = "WorldMapForm";
             this.Load += new System.EventHandler(this.WorldMapForm_Load);

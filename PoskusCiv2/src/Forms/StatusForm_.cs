@@ -14,7 +14,7 @@ using PoskusCiv2.Units;
 
 namespace PoskusCiv2.Forms
 {
-    public partial class StatusForm : Civ2form
+    public partial class StatusForm : Form
     {
         public MainCiv2Window mainCiv2Window;
 
@@ -28,10 +28,10 @@ namespace PoskusCiv2.Forms
         //timer
         Timer t = new Timer();
         int stej = 0;   //records no of timer ticks
-
+        
         public StatusForm(MainCiv2Window _mainCiv2Window)
         {
-            InitializeComponent();
+            InitializeComponent();            
             mainCiv2Window = _mainCiv2Window;
 
             Size = new Size(262, 620);
@@ -70,7 +70,7 @@ namespace PoskusCiv2.Forms
         }
 
         private void StatusForm_Load(object sender, EventArgs e)
-        {
+        {            
             ////Viewing pieces label
             //viewingPiecesLabel = new Label
             //{
@@ -387,12 +387,12 @@ namespace PoskusCiv2.Forms
                     if (count > 6)
                     {
                         int c = unitMatches.Count - 7;
-                        e.Graphics.DrawString("(" + c.ToString() + " More Units)", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 90 + count * 3 * 18));
+                        e.Graphics.DrawString("(" + c.ToString() + " More Units)", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point (10, 90 + count * 3 * 18));
                         break;
                     }
                 }
 
-
+                
             }
         }
 
@@ -413,68 +413,68 @@ namespace PoskusCiv2.Forms
         //{
         //    if (MapForm.viewingPiecesMode == false)
         //    {
-        //if (unitInLine != Units_.unitNumber) //cycle through all units
-        //{
-        //    viewingPiecesLabel.Text = "Moving Units";
-        //    cursorPositionLabel.Visible = false;
-        //    endOfTurnLabel.Visible = false;
-        //    unitNoMovesLabel.Visible = true;
-        //    unitCityLabel.Visible = true;
-        //    unitCivLabel.Visible = true;
-        //    unitTerrainLabel.Visible = true;
-        //    unitTypeLabel.Visible = true;
-        //    unitPicture.Visible = true;
-        //    int _movesLeft = Game.Instance.ActiveUnit.MovesLeft;
-        //    if (_movesLeft % 3 == 0)
-        //    {
-        //        unitNoMovesLabel.Text = "Moves: " + (_movesLeft / 3).ToString();
-        //    }
-        //    else
-        //    {
-        //        unitNoMovesLabel.Text = "Moves: " + Convert.ToInt32(Math.Floor((double)_movesLeft / 3)).ToString() + " " + (_movesLeft % 3).ToString() + "/3";
-        //    }
-        //    if (Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Road && !Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].CityPresent) { roadPresentLabel.Text = "(Road)"; }
-        //    else { roadPresentLabel.Text = null; }
-        //    if (Game.Instance.ActiveUnit.HomeCity == 255) { unitCityLabel.Text = "NONE"; }  //FF in hex
-        //    else { unitCityLabel.Text = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
-        //    unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
-        //    if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
-        //    else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
-        //    unitTerrainLabel.Text = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
-        //    unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
-        //    unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
-        //}
-        //else    //end of units, display wait for enter for new turn
-        //{
-        //    endOfTurnLabel.Visible = true;
-        //    cursorPositionLabel.Visible = false;
-        //    unitNoMovesLabel.Visible = false;
-        //    unitCityLabel.Visible = false;
-        //    unitCivLabel.Visible = false;
-        //    roadPresentLabel.Visible = false;
-        //    unitTerrainLabel.Visible = false;
-        //    unitTypeLabel.Visible = false;
-        //    unitPicture.Visible = false;
-        //    unitShieldPicture.Visible = false;
+                //if (unitInLine != Units_.unitNumber) //cycle through all units
+                //{
+                //    viewingPiecesLabel.Text = "Moving Units";
+                //    cursorPositionLabel.Visible = false;
+                //    endOfTurnLabel.Visible = false;
+                //    unitNoMovesLabel.Visible = true;
+                //    unitCityLabel.Visible = true;
+                //    unitCivLabel.Visible = true;
+                //    unitTerrainLabel.Visible = true;
+                //    unitTypeLabel.Visible = true;
+                //    unitPicture.Visible = true;
+                //    int _movesLeft = Game.Instance.ActiveUnit.MovesLeft;
+                //    if (_movesLeft % 3 == 0)
+                //    {
+                //        unitNoMovesLabel.Text = "Moves: " + (_movesLeft / 3).ToString();
+                //    }
+                //    else
+                //    {
+                //        unitNoMovesLabel.Text = "Moves: " + Convert.ToInt32(Math.Floor((double)_movesLeft / 3)).ToString() + " " + (_movesLeft % 3).ToString() + "/3";
+                //    }
+                //    if (Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Road && !Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].CityPresent) { roadPresentLabel.Text = "(Road)"; }
+                //    else { roadPresentLabel.Text = null; }
+                //    if (Game.Instance.ActiveUnit.HomeCity == 255) { unitCityLabel.Text = "NONE"; }  //FF in hex
+                //    else { unitCityLabel.Text = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
+                //    unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
+                //    if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
+                //    else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
+                //    unitTerrainLabel.Text = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
+                //    unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
+                //    unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
+                //}
+                //else    //end of units, display wait for enter for new turn
+                //{
+                //    endOfTurnLabel.Visible = true;
+                //    cursorPositionLabel.Visible = false;
+                //    unitNoMovesLabel.Visible = false;
+                //    unitCityLabel.Visible = false;
+                //    unitCivLabel.Visible = false;
+                //    roadPresentLabel.Visible = false;
+                //    unitTerrainLabel.Visible = false;
+                //    unitTypeLabel.Visible = false;
+                //    unitPicture.Visible = false;
+                //    unitShieldPicture.Visible = false;
 
-        //    //timer for animating text
-        //    t.Interval = 500; // specify interval time as you want (ms)
-        //    t.Tick += new EventHandler(timer_Tick);
-        //    t.Start();
-        //}
-        //}
-        //else
-        //{
-        //viewingPiecesLabel.Text = "Viewing Pieces";
-        //cursorPositionLabel.Visible = true;
-        //unitNoMovesLabel.Visible = false;
-        //unitCityLabel.Visible = false;
-        //unitCivLabel.Visible = false;
-        //roadPresentLabel.Visible = false;
-        //unitTerrainLabel.Visible = false;
-        //unitTypeLabel.Visible = false;
-        //unitPicture.Visible = false;
-        //unitShieldPicture.Visible = false;
+                //    //timer for animating text
+                //    t.Interval = 500; // specify interval time as you want (ms)
+                //    t.Tick += new EventHandler(timer_Tick);
+                //    t.Start();
+                //}
+            //}
+            //else
+            //{
+                //viewingPiecesLabel.Text = "Viewing Pieces";
+                //cursorPositionLabel.Visible = true;
+                //unitNoMovesLabel.Visible = false;
+                //unitCityLabel.Visible = false;
+                //unitCivLabel.Visible = false;
+                //roadPresentLabel.Visible = false;
+                //unitTerrainLabel.Visible = false;
+                //unitTypeLabel.Visible = false;
+                //unitPicture.Visible = false;
+                //unitShieldPicture.Visible = false;
         //    }
         //}
 
@@ -533,7 +533,7 @@ namespace PoskusCiv2.Forms
 
         private void StatusForm_MouseClick(object sender, MouseEventArgs e)
         {
-
+            
         }
 
         private void panel1_MouseClick(object sender, MouseEventArgs e)
