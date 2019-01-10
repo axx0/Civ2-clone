@@ -34,12 +34,8 @@ namespace PoskusCiv2.Forms
             InitializeComponent();
             mainCiv2Window = _mainCiv2Window;
 
-            Size = new Size(262, 620);
-            StartPosition = FormStartPosition.Manual;
-            Location = new Point(1268, 150);
-            FormBorderStyle = FormBorderStyle.None;
-            BackgroundImage = Images.WallpaperMapForm;
             Paint += new PaintEventHandler(StatusForm_Paint);
+            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.1375), _mainCiv2Window.ClientSize.Height - 80 - 148);    //-4 is experience setting
 
             //Stats panel
             StatsPanel = new DoubleBufferedPanel

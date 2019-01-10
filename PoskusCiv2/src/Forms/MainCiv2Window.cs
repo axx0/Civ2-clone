@@ -87,52 +87,21 @@ namespace PoskusCiv2.Forms
             worldMapForm = new WorldMapForm(this);
             worldMapForm.MdiParent = this;
             worldMapForm.StartPosition = FormStartPosition.Manual;
-            worldMapForm.Location = new Point((int)(ClientSize.Width * 0.8625 -4 + 1), 0);
+            worldMapForm.Location = new Point((int)(ClientSize.Width * 0.8625) - 6 + 1, 0);
             worldMapForm.Show();
 
             statusForm = new StatusForm(this);
             statusForm.MdiParent = this;
-            statusForm.Location = new Point(mapForm.Width + 1, 200);
+            statusForm.StartPosition = FormStartPosition.Manual;
+            statusForm.Location = new Point((int)(ClientSize.Width * 0.8625) - 6 + 1, worldMapForm.Height + 1);
             statusForm.Show();
 
             cityForm = new CityForm(this);
 
-
-            //Load forms
-            //mapForm.MdiParent = this;
-            //mapForm.Size = new Size((int)(screenW * 0.8625), screenH - titleHeight);
-            //mapForm.Size = new Size(ClientSize.Width, ClientSize.Height);
-            //mapForm.Show();
-
-            //statusForm.MdiParent = this;
-            //statusForm.Show();
-
-            //worldMapForm.MdiParent = this;
-            //worldMapForm.Show();
-
             //cityForm.MdiParent = this;
             //cityForm.StartPosition = FormStartPosition.Manual;
             //cityForm.Location = new Point(1260, 0);
-
-            //mapForm.Focus();
         }
-
-        //private void quitToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    Close();
-        //}
-
-        ////Create unit from cheat menu!
-        //private void createUnitToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-        //    //Load unit create form
-        //    CreateUnitForm newMDIChild = new CreateUnitForm();
-        //    newMDIChild.MdiParent = this;
-        //    //newMDIChild1.Size = new System.Drawing.Size(1260, 770);
-        //    //newMDIChild1.BackColor = Color.Black;
-        //    newMDIChild.Show();
-
-        //}
 
         // ADVISORS MENU
         private void ChatWithKings_Click(object sender, EventArgs e) { }
