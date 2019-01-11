@@ -39,14 +39,14 @@ namespace PoskusCiv2.Forms
         {
             InitializeComponent();
             mainCiv2Window = _mainCiv2Window;
-            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.8625 - 6), _mainCiv2Window.ClientSize.Height - 80);    //-4 is experience setting
+            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.8625 - 6), _mainCiv2Window.ClientSize.Height - 30);    //-4 is experience setting
             Paint += new PaintEventHandler(MapForm_Paint);
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
             {
-                Location = new Point(8, 34),
-                Size = new Size(this.ClientSize.Width - 18, this.ClientSize.Height - 47),
+                Location = new Point(8, 38),
+                Size = new Size(this.ClientSize.Width - 19, this.ClientSize.Height - 47),
                 BackColor = Color.Black
             };
             Controls.Add(MapPanel);

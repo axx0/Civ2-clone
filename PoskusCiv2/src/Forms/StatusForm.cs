@@ -34,16 +34,15 @@ namespace PoskusCiv2.Forms
             InitializeComponent();
             mainCiv2Window = _mainCiv2Window;
 
+            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.1375), (int)((_mainCiv2Window.ClientSize.Height - 30) * 0.85));
             Paint += new PaintEventHandler(StatusForm_Paint);
-            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.1375), _mainCiv2Window.ClientSize.Height - 80 - 148);    //-4 is experience setting
 
             //Stats panel
             StatsPanel = new DoubleBufferedPanel
             {
-                Location = new Point(8, 35),
-                Size = new Size(248, 62),
-                BackgroundImage = Images.WallpaperStatusForm,
-                BorderStyle = BorderStyle.Fixed3D
+                Location = new Point(9, 38),
+                Size = new Size(this.ClientSize.Width - 19, 64),
+                BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(StatsPanel);
             StatsPanel.Paint += StatsPanel_Paint;
@@ -51,18 +50,12 @@ namespace PoskusCiv2.Forms
             //Unit panel
             UnitPanel = new DoubleBufferedPanel
             {
-                Location = new Point(8, 102),
-                Size = new Size(248, 512),
-                BackgroundImage = Images.WallpaperStatusForm,
-                BorderStyle = BorderStyle.Fixed3D
+                Location = new Point(9, 106),
+                Size = new Size(this.ClientSize.Width - 19, this.ClientSize.Height - 114),
+                BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(UnitPanel);
             UnitPanel.Paint += UnitPanel_Paint;
-
-            //Wallpaper
-            //tableLayoutPanel1.BackgroundImage = Images.WallpaperMapForm;
-            //UnitPanel.BackgroundImage = Images.WallpaperStatusForm;   //Panel background image
-            //StatPanel.BackgroundImage = Images.WallpaperStatusForm;
         }
 
         private void StatusForm_Load(object sender, EventArgs e)
@@ -293,8 +286,8 @@ namespace PoskusCiv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20), sf);
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 19), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
         }
 
@@ -303,21 +296,43 @@ namespace PoskusCiv2.Forms
             string bcad;
             if (Game.Data.GameYear < 0) { bcad = "B.C."; }
             else { bcad = "A.D."; }
-
-            e.Graphics.DrawString("640,000 People", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 2));
-            e.Graphics.DrawString(Math.Abs(Game.Data.GameYear).ToString() + " " + bcad + "(Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
-            e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
+            e.Graphics.DrawString(Game.Civs[1].Population + " People", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 2 + 1));
+            e.Graphics.DrawString(Game.Civs[1].Population + " People", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 2));
+            e.Graphics.DrawString(Math.Abs(Game.Data.GameYear).ToString() + " " + bcad + "(Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 20 + 1));
+            e.Graphics.DrawString(Math.Abs(Game.Data.GameYear).ToString() + " " + bcad + "(Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
+            e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
+            e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
+            //Draw line borders
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, StatsPanel.Width - 2, 0);   //1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, StatsPanel.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), StatsPanel.Width - 1, 0, StatsPanel.Width - 1, StatsPanel.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, StatsPanel.Height - 1, StatsPanel.Width - 1, StatsPanel.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, StatsPanel.Width - 3, 1);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, StatsPanel.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), StatsPanel.Width - 2, 1, StatsPanel.Width - 2, StatsPanel.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, StatsPanel.Height - 2, StatsPanel.Width - 2, StatsPanel.Height - 2);
         }
 
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
+            //Draw line borders
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, UnitPanel.Width - 2, 0);   //1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, UnitPanel.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), UnitPanel.Width - 1, 0, UnitPanel.Width - 1, UnitPanel.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, UnitPanel.Height - 1, UnitPanel.Width - 1, UnitPanel.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, UnitPanel.Width - 3, 1);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, UnitPanel.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), UnitPanel.Width - 2, 1, UnitPanel.Width - 2, UnitPanel.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, UnitPanel.Height - 2, UnitPanel.Width - 2, UnitPanel.Height - 2);
+
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+
             if (!MapForm.viewingPiecesMode)
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(126, 13), sf);
-                e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(125, 12), sf);
+                e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
+                e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
 
                 int _movePointsLeft = 3 * Game.Instance.ActiveUnit.MoveRate - Game.Instance.ActiveUnit.MovePointsLost;
                 string movesLeft;
@@ -347,18 +362,12 @@ namespace PoskusCiv2.Forms
                 string unitTerrain = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
                 e.Graphics.DrawString(unitTerrain, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 103));
 
-                sf.Dispose();
-
                 e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false, 1), 10, 30);
             }
             else
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(126, 13), sf);
-                e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(125, 12), sf);
-                sf.Dispose();
+                e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
+                e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
 
                 int clickedX = (MapForm.ClickedBoxX - MapForm.ClickedBoxY % 2) / 2;    //convert from real to civ-2 style coordinates
                 int clickedY = MapForm.ClickedBoxY;
@@ -387,9 +396,8 @@ namespace PoskusCiv2.Forms
                         break;
                     }
                 }
-
-
             }
+            sf.Dispose();
         }
 
         //Receive and display X-Y coordinates on right-click on Map

@@ -13,7 +13,7 @@ namespace PoskusCiv2.Forms
     public partial class MainCiv2Window : Form
     {
         MenuStrip MainMenuStrip;
-        //public MapForm mapForm;
+        public MapForm mapForm;
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
         public CityForm cityForm;
@@ -34,6 +34,62 @@ namespace PoskusCiv2.Forms
                 BackColor = Color.White
             };
             Controls.Add(MainMenuStrip);
+
+            //Game menu
+            ToolStripMenuItem GameMenu = new ToolStripMenuItem("Game");
+            ToolStripMenuItem GameOptionsItem = new ToolStripMenuItem("Game Options", null, GameOptions_Click, (Keys)Shortcut.CtrlO);
+            ToolStripMenuItem GraphicOptionsItem = new ToolStripMenuItem("Graphic Options", null, GraphicOptions_Click, (Keys)Shortcut.CtrlP);
+            ToolStripMenuItem CityReportOptionsItem = new ToolStripMenuItem("City Report Options", null, CityReportOptions_Click, (Keys)Shortcut.CtrlE);
+            ToolStripMenuItem MultiplayerOptionsItem = new ToolStripMenuItem("Multiplayer Options", null, MultiplayerOptions_Click, (Keys)Shortcut.CtrlY);
+            ToolStripMenuItem GameProfileItem = new ToolStripMenuItem("Game Profile", null, GameProfile_Click);
+            ToolStripMenuItem PickMusicItem = new ToolStripMenuItem("Pick Music", null, PickMusic_Click);
+            ToolStripMenuItem SaveGameItem = new ToolStripMenuItem("Save Game", null, SaveGame_Click, (Keys)Shortcut.CtrlS);
+            ToolStripMenuItem LoadGameItem = new ToolStripMenuItem("Load Game", null, LoadGame_Click, (Keys)Shortcut.CtrlL);
+            ToolStripMenuItem JoinGameItem = new ToolStripMenuItem("Join Game", null, JoinGame_Click, (Keys)Shortcut.CtrlJ);
+            ToolStripMenuItem SetPasswordItem = new ToolStripMenuItem("Set Password", null, SetPassword_Click, (Keys)Shortcut.CtrlW);
+            ToolStripMenuItem ChangeTimerItem = new ToolStripMenuItem("Change Timer", null, ChangeTimer_Click, (Keys)Shortcut.CtrlT);
+            ToolStripMenuItem RetireItem = new ToolStripMenuItem("Retire", null, Retire_Click, (Keys)Shortcut.CtrlR);
+            ToolStripMenuItem QuitItem = new ToolStripMenuItem("Quit", null, Quit_Click, (Keys)Shortcut.CtrlQ);
+            MainMenuStrip.Items.Add(GameMenu);
+            GameMenu.DropDownItems.Add(GameOptionsItem);
+            GameMenu.DropDownItems.Add(GraphicOptionsItem);
+            GameMenu.DropDownItems.Add(CityReportOptionsItem);
+            GameMenu.DropDownItems.Add(MultiplayerOptionsItem);
+            GameMenu.DropDownItems.Add(GameProfileItem);
+            GameMenu.DropDownItems.Add(new ToolStripSeparator());
+            GameMenu.DropDownItems.Add(PickMusicItem);
+            GameMenu.DropDownItems.Add(new ToolStripSeparator());
+            GameMenu.DropDownItems.Add(SaveGameItem);
+            GameMenu.DropDownItems.Add(LoadGameItem);
+            GameMenu.DropDownItems.Add(JoinGameItem);
+            GameMenu.DropDownItems.Add(new ToolStripSeparator());
+            GameMenu.DropDownItems.Add(SetPasswordItem);
+            GameMenu.DropDownItems.Add(ChangeTimerItem);
+            GameMenu.DropDownItems.Add(new ToolStripSeparator());
+            GameMenu.DropDownItems.Add(RetireItem);
+            GameMenu.DropDownItems.Add(QuitItem);
+
+            //Kingdom menu
+            ToolStripMenuItem KingdomMenu = new ToolStripMenuItem("Kingdom");
+            ToolStripMenuItem TaxRateItem = new ToolStripMenuItem("Tax Rate", null, TaxRate_Click);
+            ToolStripMenuItem ViewThroneRoomItem = new ToolStripMenuItem("View Throne Room", null, ViewThroneRoom_Click);
+            ToolStripMenuItem FindCityItem = new ToolStripMenuItem("Find City", null, FindCity_Click);
+            ToolStripMenuItem RevolutionItem = new ToolStripMenuItem("REVOLUTION", null, Revolution_Click);
+            MainMenuStrip.Items.Add(KingdomMenu);
+            KingdomMenu.DropDownItems.Add(TaxRateItem);
+            KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
+            KingdomMenu.DropDownItems.Add(ViewThroneRoomItem);
+            KingdomMenu.DropDownItems.Add(FindCityItem);
+            KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
+            KingdomMenu.DropDownItems.Add(RevolutionItem);
+
+            //View menu
+            ToolStripMenuItem ViewMenu = new ToolStripMenuItem("View");
+            MainMenuStrip.Items.Add(ViewMenu);
+
+            //Orders
+            ToolStripMenuItem OrdersMenu = new ToolStripMenuItem("Orders");
+            MainMenuStrip.Items.Add(OrdersMenu);
 
             //Advisors menu
             ToolStripMenuItem AdvisorsMenu = new ToolStripMenuItem("Advisors");
@@ -79,7 +135,7 @@ namespace PoskusCiv2.Forms
         private void MainCiv2Window_Load(object sender, EventArgs e)
         {
             //Forms
-            MapForm mapForm = new MapForm(this);
+            mapForm = new MapForm(this);
             mapForm.MdiParent = this;
             mapForm.Location = new Point(0, 0);
             mapForm.Show();
@@ -102,6 +158,27 @@ namespace PoskusCiv2.Forms
             //cityForm.StartPosition = FormStartPosition.Manual;
             //cityForm.Location = new Point(1260, 0);
         }
+
+        // GAME MENU
+        private void GameOptions_Click(object sender, EventArgs e) { }
+        private void GraphicOptions_Click(object sender, EventArgs e) { }
+        private void CityReportOptions_Click(object sender, EventArgs e) { }
+        private void MultiplayerOptions_Click(object sender, EventArgs e) { }
+        private void GameProfile_Click(object sender, EventArgs e) { }
+        private void PickMusic_Click(object sender, EventArgs e) { }
+        private void SaveGame_Click(object sender, EventArgs e) { }
+        private void LoadGame_Click(object sender, EventArgs e) { }
+        private void JoinGame_Click(object sender, EventArgs e) { }
+        private void SetPassword_Click(object sender, EventArgs e) { }
+        private void ChangeTimer_Click(object sender, EventArgs e) { }
+        private void Retire_Click(object sender, EventArgs e) { }
+        private void Quit_Click(object sender, EventArgs e) { Close(); }
+
+        // KINGDOM MENU
+        private void TaxRate_Click(object sender, EventArgs e) { }
+        private void ViewThroneRoom_Click(object sender, EventArgs e) { }
+        private void FindCity_Click(object sender, EventArgs e) { }
+        private void Revolution_Click(object sender, EventArgs e) { }
 
         // ADVISORS MENU
         private void ChatWithKings_Click(object sender, EventArgs e) { }

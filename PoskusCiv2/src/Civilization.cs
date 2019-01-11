@@ -22,6 +22,7 @@ namespace PoskusCiv2
         {
             get
             {
+                _population = 0;
                 foreach (City city in Game.Cities.Where(n => n.Owner == Id))
                 {
                     _population += city.Population;
