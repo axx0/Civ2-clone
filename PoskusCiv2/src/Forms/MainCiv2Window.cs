@@ -190,7 +190,21 @@ namespace PoskusCiv2.Forms
             frm.Location = new Point(330, 250);
         }
 
-        private void CityReportOptions_Click(object sender, EventArgs e) { }
+        private void CityReportOptions_Click(object sender, EventArgs e)
+        {
+            CityReportOptionsForm CityReportOptionsForm = new CityReportOptionsForm();
+            CityReportOptionsForm.Load += new EventHandler(CityReportOptionsForm_Load);   //so you set the correct size of form
+            CityReportOptionsForm.ShowDialog();
+        }
+
+        private void CityReportOptionsForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Width = 746;
+            frm.Height = 440;
+            frm.Location = new Point(330, 250);
+        }
+
         private void MultiplayerOptions_Click(object sender, EventArgs e) { }
         private void GameProfile_Click(object sender, EventArgs e) { }
         private void PickMusic_Click(object sender, EventArgs e) { }
