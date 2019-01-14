@@ -160,7 +160,21 @@ namespace PoskusCiv2.Forms
         }
 
         // GAME MENU
-        private void GameOptions_Click(object sender, EventArgs e) { }
+        private void GameOptions_Click(object sender, EventArgs e)
+        {
+            GameOptionsForm GameOptionsForm = new GameOptionsForm();
+            GameOptionsForm.Load += new EventHandler(GameOptionsForm_Load);   //so you set the correct size of form
+            GameOptionsForm.ShowDialog();
+        }
+
+        private void GameOptionsForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Width = 746;
+            frm.Height = 440;
+            frm.Location = new Point(330, 250);
+        }
+
         private void GraphicOptions_Click(object sender, EventArgs e) { }
         private void CityReportOptions_Click(object sender, EventArgs e) { }
         private void MultiplayerOptions_Click(object sender, EventArgs e) { }

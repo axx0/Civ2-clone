@@ -403,7 +403,7 @@ namespace PoskusCiv2.Forms
         //Receive and display X-Y coordinates on right-click on Map
         public void ReceiveMousePositionFromMapForm()
         {
-            InvalidatePanel();
+            RefreshStatusForm();
         }
 
         //Update game year label
@@ -546,10 +546,10 @@ namespace PoskusCiv2.Forms
             //UpdateUnitLabels(Game.unitInLine);
         }
 
-        public void InvalidatePanel()
+        public void RefreshStatusForm()
         {
-            UnitPanel.Invalidate();
-            StatsPanel.Invalidate();
+            UnitPanel.Refresh();
+            StatsPanel.Refresh();
         }
     }
 }

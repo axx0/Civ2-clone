@@ -63,9 +63,8 @@ namespace PoskusCiv2
                     //unit.Action = OrderType.NoOrders;
                 }
             }
-
-            Application.OpenForms.OfType<StatusForm>().First().InvalidatePanel();
-            Application.OpenForms.OfType<MapForm>().First().InvalidatePanel();
+            Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
+            Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
         }
 
         //Chose next unit for orders

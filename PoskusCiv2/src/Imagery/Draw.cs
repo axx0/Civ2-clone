@@ -12,13 +12,6 @@ namespace PoskusCiv2.Imagery
 {
     class Draw
     {
-        //Return a part of original map
-        public static Bitmap GetMapPart(Bitmap originalMap, int offsetX, int offsetY, Size panelSize)
-        {
-            Bitmap mapPart = new Bitmap(offsetX, offsetY);    //define a bitmap for drawing map
-            return mapPart;
-        }
-
         //Draw entire game map
         public static Bitmap DrawMap()
         {

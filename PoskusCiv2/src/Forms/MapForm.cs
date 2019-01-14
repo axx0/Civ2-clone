@@ -45,8 +45,8 @@ namespace PoskusCiv2.Forms
             //Panel for map
             MapPanel = new DoubleBufferedPanel
             {
-                Location = new Point(8, 38),
-                Size = new Size(this.ClientSize.Width - 19, this.ClientSize.Height - 47),
+                Location = new Point(8 + 2, 38 + 2),    //2 because of panel border
+                Size = new Size(this.ClientSize.Width - 19 - 4, this.ClientSize.Height - 47 - 4),   //4 because of panel border
                 BackColor = Color.Black
             };
             Controls.Add(MapPanel);
@@ -72,6 +72,26 @@ namespace PoskusCiv2.Forms
             offsetY = 0;
         }
 
+        private void MapForm_Paint(object sender, PaintEventArgs e)
+        {
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            Civilization humanPlayer = Game.Civs.Find(civ => civ.Id == Game.Data.HumanPlayerUsed);
+            e.Graphics.DrawString(humanPlayer.Adjective + " Map", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString(humanPlayer.Adjective + " Map", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            sf.Dispose();
+            //Draw line borders of panel
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 8, 38, 8 + MapPanel.Width + 3, 38);   //1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 8, 38, 8, 38 + MapPanel.Height + 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 8, 38 + MapPanel.Height + 3, 8 + MapPanel.Width + 3, 38 + MapPanel.Height + 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 8 + MapPanel.Width + 3, 38, 8 + MapPanel.Width + 3, 38 + MapPanel.Height + 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 39, 9 + MapPanel.Width + 1, 39);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 39, 9, 39 + MapPanel.Height + 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, 38 + MapPanel.Height + 2, 9 + MapPanel.Width + 2, 38 + MapPanel.Height + 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 8 + MapPanel.Width + 2, 39, 8 + MapPanel.Width + 2, 39 + MapPanel.Height + 2);
+        }
+
         private void MapForm_KeyPress(object sender, KeyPressEventArgs e)
         {
             //Play movement sound for unit
@@ -81,44 +101,15 @@ namespace PoskusCiv2.Forms
             Actions.UnitKeyboardAction(e.KeyChar);
         }
 
-        private void MapForm_Paint(object sender, PaintEventArgs e)
-        {
-            StringFormat sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-            Civilization humanPlayer = Game.Civs.Find(civ => civ.Id == Game.Data.HumanPlayerUsed);
-
-            e.Graphics.DrawString(humanPlayer.Adjective + " Map", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString(humanPlayer.Adjective + " Map", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
-            sf.Dispose();
-        }
-
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
-            //Draw line borders
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, MapPanel.Width - 2, 0);   //1st layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, MapPanel.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MapPanel.Width - 1, 0, MapPanel.Width - 1, MapPanel.Height - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, MapPanel.Height - 1, MapPanel.Width - 1, MapPanel.Height - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, MapPanel.Width - 3, 1);   //2nd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, MapPanel.Height - 3);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MapPanel.Width - 2, 1, MapPanel.Width - 2, MapPanel.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, MapPanel.Height - 2, MapPanel.Width - 2, MapPanel.Height - 2);
-
             //Draw map
             e.Graphics.DrawImage(
                 Game.Map,
-                2,
-                2,
+                0,
+                0,
                 new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
                 GraphicsUnit.Pixel);
-
-            //e.Graphics.DrawImage(
-            //    Draw.GetMapPart(Game.Map, offsetX * 32, offsetY * 16, MapPanel.Size),
-            //    2,
-            //    2,
-            //    new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
-            //    GraphicsUnit.Pixel);
 
             //Draw all units
             foreach (IUnit unit in Game.Units)
@@ -261,12 +252,12 @@ namespace PoskusCiv2.Forms
             stej += 1;
             //update viewing pieces
             //MapPanel.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
-            InvalidatePanel();
+            RefreshMapForm();
         }
 
-        public void InvalidatePanel()
+        public void RefreshMapForm()
         {
-            MapPanel.Invalidate();
+            MapPanel.Refresh();
         }
 
         //Return list of units on a X-Y square

@@ -111,6 +111,12 @@
     <Compile Include="src\Forms\Menu Advisors\CityStatusForm.Designer.cs">
       <DependentUpon>CityStatusForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\Menu Game\GameOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\Menu Game\GameOptionsForm.Designer.cs">
+      <DependentUpon>GameOptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\Menu World\DemographicsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\CityStatusForm.resx">
       <DependentUpon>CityStatusForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\Menu Game\GameOptionsForm.resx">
+      <DependentUpon>GameOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu World\DemographicsForm.resx">
       <DependentUpon>DemographicsForm.cs</DependentUpon>
