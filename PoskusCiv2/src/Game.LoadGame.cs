@@ -29,196 +29,161 @@ namespace PoskusCiv2
             //=========================
             //Determine version        
             int version;
-            if (dataArray[10] == 39) { version = 1; }    //Conflicts (27 hex)
-            else if (dataArray[10] == 40) { version = 2; } //FW (28 hex)
-            else if (dataArray[10] == 44) { version = 3; }    //MGE (2C hex)
-            else if (dataArray[10] == 49) { version = 4; }    //ToT1.0 (31 hex)
-            else if (dataArray[10] == 50) { version = 5; }    //ToT1.1 (32 hex)
-            else { version = 1; }   //lower than Conflicts
+            if (dataArray[10] == 39) version = 1;    //Conflicts (27 hex)
+            else if (dataArray[10] == 40) version = 2; //FW (28 hex)
+            else if (dataArray[10] == 44) version = 3;    //MGE (2C hex)
+            else if (dataArray[10] == 49) version = 4;    //ToT1.0 (31 hex)
+            else if (dataArray[10] == 50) version = 5;    //ToT1.1 (32 hex)
+            else version = 1;   //lower than Conflicts
             Console.WriteLine("Game Version = {0}", version);
                         
             //Bloodlust on/off
-            bool bloodlust;
+            bool bloodlust = false;
             bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');    //you have to pad zeros to the left because ToString doesn't write first zeros
-            if (bin[0] == '1') { bloodlust = true; }
-            else { bloodlust = false; }
+            if (bin[0] == '1') bloodlust = true;
                         
             //Simplified combat on/off
-            bool simplifiedCombat;
-            if (bin[3] == '1') { simplifiedCombat = true; }
-            else { simplifiedCombat = false; }
+            bool simplifiedCombat = false;
+            if (bin[3] == '1') simplifiedCombat = true;
                         
             //Flat/round earth
-            bool flatEarth;
+            bool flatEarth = false;
             bin = Convert.ToString(dataArray[13], 2).PadLeft(8, '0');
-            if (bin[0] == '1') { flatEarth = true; }
-            else { flatEarth = false; }
+            if (bin[0] == '1') flatEarth = true;
 
             //Don't restart if eliminated
-            bool dontRestartIfEliminated;
-            if (bin[7] == '1') { dontRestartIfEliminated = true; }
-            else { dontRestartIfEliminated = false; }
+            bool dontRestartIfEliminated = false;
+            if (bin[7] == '1') dontRestartIfEliminated = true;
 
             //Move units without mouse
-            bool moveUnitsWithoutMouse;
+            bool moveUnitsWithoutMouse = false;
             bin = Convert.ToString(dataArray[14], 2).PadLeft(8, '0');
-            if (bin[0] == '1') { moveUnitsWithoutMouse = true; }
-            else { moveUnitsWithoutMouse = false; }
+            if (bin[0] == '1') moveUnitsWithoutMouse = true;
 
             //Enter closes city screen
-            bool enterClosestCityScreen;
-            if (bin[1] == '1') { enterClosestCityScreen = true; }
-            else { enterClosestCityScreen = false; }
+            bool enterClosestCityScreen = false;
+            if (bin[1] == '1') enterClosestCityScreen = true;
                         
             //Grid on/off
-            bool grid;
-            if (bin[2] == '1') { grid = true; }
-            else { grid = false; }
+            bool grid = false;
+            if (bin[2] == '1') grid = true;
 
             //Sound effects on/off
-            bool soundEffects;
-            if (bin[3] == '1') { soundEffects = true; }
-            else { soundEffects = false; }
+            bool soundEffects = false;
+            if (bin[3] == '1') soundEffects = true;
 
             //Music on/off
-            bool music;
-            if (bin[4] == '1') { music = true; }
-            else { music = false; }
+            bool music = false;
+            if (bin[4] == '1') music = true;
 
             //Cheat menu on/off
-            bool cheatMenu;
+            bool cheatMenu = false;
             bin = Convert.ToString(dataArray[15], 2).PadLeft(8, '0');
-            if (bin[0] == '1') { cheatMenu = true; }
-            else { cheatMenu = false; }
+            if (bin[0] == '1') cheatMenu = true;
 
             //Always wait at end of turn on/off
-            bool alwaysWaitAtEndOfTurn;
-            if (bin[1] == '1') { alwaysWaitAtEndOfTurn = true; }
-            else { alwaysWaitAtEndOfTurn = false; }
+            bool alwaysWaitAtEndOfTurn = false;
+            if (bin[1] == '1') alwaysWaitAtEndOfTurn = true;
 
             //Autosave each turn on/off
-            bool autosaveEachTurn;
-            if (bin[2] == '1') { autosaveEachTurn = true; }
-            else { autosaveEachTurn = false; }
+            bool autosaveEachTurn = false;
+            if (bin[2] == '1') autosaveEachTurn = true;
 
             //Show enemy moves on/off
-            bool showEnemyMoves;
-            if (bin[3] == '1') { showEnemyMoves = true; }
-            else { showEnemyMoves = false; }
+            bool showEnemyMoves = false;
+            if (bin[3] == '1') showEnemyMoves = true;
 
             //No pause after enemy moves on/off
-            bool noPauseAfterEnemyMoves;
-            if (bin[4] == '1') { noPauseAfterEnemyMoves = true; }
-            else { noPauseAfterEnemyMoves = false; }
+            bool noPauseAfterEnemyMoves = false;
+            if (bin[4] == '1') noPauseAfterEnemyMoves = true;
 
             //Fast piece slide on/off
-            bool fastPieceSlide;
-            if (bin[5] == '1') { fastPieceSlide = true; }
-            else { fastPieceSlide = false; }
+            bool fastPieceSlide = false;
+            if (bin[5] == '1') fastPieceSlide = true;
 
             //Instant advice on/off
-            bool instantAdvice;
-            if (bin[6] == '1') { instantAdvice = true; }
-            else { instantAdvice = false; }
+            bool instantAdvice = false;
+            if (bin[6] == '1') instantAdvice = true;
 
             //Tutorial help on/off
-            bool tutorialHelp;
-            if (bin[7] == '1') { tutorialHelp = true; }
-            else { tutorialHelp = false; }
+            bool tutorialHelp = false;
+            if (bin[7] == '1') tutorialHelp = true;
 
             //Animated heralds on/off
-            bool animatedHeralds;
+            bool animatedHeralds = false;
             bin = Convert.ToString(dataArray[16], 2).PadLeft(8, '0');
-            if (bin[2] == '1') { animatedHeralds = true; }
-            else { animatedHeralds = false; }
+            if (bin[2] == '1') animatedHeralds = true;
 
             //High council on/off
-            bool highCouncil;
-            if (bin[3] == '1') { highCouncil = true; }
-            else { highCouncil = false; }
+            bool highCouncil = false;
+            if (bin[3] == '1') highCouncil = true;
 
             //Civilopedia for advances on/off
-            bool civilopediaForAdvances;
-            if (bin[4] == '1') { civilopediaForAdvances = true; }
-            else { civilopediaForAdvances = false; }
+            bool civilopediaForAdvances = false;
+            if (bin[4] == '1') civilopediaForAdvances = true;
 
             //Throne room graphics on/off
-            bool throneRoomGraphics;
-            if (bin[5] == '1') { throneRoomGraphics = true; }
-            else { throneRoomGraphics = false; }
-
+            bool throneRoomGraphics = false;
+            if (bin[5] == '1') throneRoomGraphics = true;
+            
             //Diplomacy screen graphics on/off
-            bool diplomacyScreenGraphics;
-            if (bin[6] == '1') { diplomacyScreenGraphics = true; }
-            else { diplomacyScreenGraphics = false; }
+            bool diplomacyScreenGraphics = false;
+            if (bin[6] == '1') diplomacyScreenGraphics = true;
 
             //Wonder movies on/off
-            bool wonderMovies;
-            if (bin[7] == '1') { wonderMovies = true; }
-            else { wonderMovies = false; }
+            bool wonderMovies = false;
+            if (bin[7] == '1') wonderMovies = true;
 
             //Cheat penalty/warning on/off
-            bool cheatPenaltyWarning;
+            bool cheatPenaltyWarning = false;
             bin = Convert.ToString(dataArray[20], 2).PadLeft(8, '0');
-            if (bin[3] == '1') { cheatPenaltyWarning = true; }
-            else { cheatPenaltyWarning = false; }
+            if (bin[3] == '1') cheatPenaltyWarning = true;
 
             //Announce we love king day on/off
-            bool announceWeLoveKingDay;
+            bool announceWeLoveKingDay = false;
             bin = Convert.ToString(dataArray[22], 2).PadLeft(8, '0');
-            if (bin[0] == '1') { announceWeLoveKingDay = true; }
-            else { announceWeLoveKingDay = false; }
+            if (bin[0] == '1') announceWeLoveKingDay = true;
 
             //Warn when food dangerously low on/off
-            bool warnWhenFoodDangerouslyLow;
-            if (bin[1] == '1') { warnWhenFoodDangerouslyLow = true; }
-            else { warnWhenFoodDangerouslyLow = false; }
+            bool warnWhenFoodDangerouslyLow = false;
+            if (bin[1] == '1') warnWhenFoodDangerouslyLow = true;
 
             //Announce cities in disorder on/off
-            bool announceCitiesInDisorder;
-            if (bin[2] == '1') { announceCitiesInDisorder = true; }
-            else { announceCitiesInDisorder = false; }
+            bool announceCitiesInDisorder = false;
+            if (bin[2] == '1') announceCitiesInDisorder = true;
 
             //Announce order restored in cities on/off
-            bool announceOrderRestored;
-            if (bin[3] == '1') { announceOrderRestored = true; }
-            else { announceOrderRestored = false; }
+            bool announceOrderRestored = false;
+            if (bin[3] == '1') announceOrderRestored = true;
 
             //Show non combat units build on/off
-            bool showNonCombatUnitsBuilt;
-            if (bin[4] == '1') { showNonCombatUnitsBuilt = true; }
-            else { showNonCombatUnitsBuilt = false; }
+            bool showNonCombatUnitsBuilt = false;
+            if (bin[4] == '1') showNonCombatUnitsBuilt = true;
 
             //Show invalid build instructions on/off
-            bool showInvalidBuildInstructions;
-            if (bin[5] == '1') { showInvalidBuildInstructions = true; }
-            else { showInvalidBuildInstructions = false; }
+            bool showInvalidBuildInstructions = false;
+            if (bin[5] == '1') showInvalidBuildInstructions = true;
 
             //Warn when city growth halted on/off
-            bool warnWhenCityGrowthHalted;
-            if (bin[6] == '1') { warnWhenCityGrowthHalted = true; }
-            else { warnWhenCityGrowthHalted = false; }
+            bool warnWhenCityGrowthHalted = false;
+            if (bin[6] == '1') warnWhenCityGrowthHalted = true;
 
             //Show city improvements built on/off
-            bool showCityImprovementsBuilt;
-            if (bin[7] == '1') { showCityImprovementsBuilt = true; }
-            else { showCityImprovementsBuilt = false; }
+            bool showCityImprovementsBuilt = false;
+            if (bin[7] == '1') showCityImprovementsBuilt = true;
 
             //Zoom to city not default action on/off
-            bool zoomToCityNotDefaultAction;
+            bool zoomToCityNotDefaultAction = false;
             bin = Convert.ToString(dataArray[23], 2).PadLeft(8, '0');
-            if (bin[5] == '1') { zoomToCityNotDefaultAction = true; }
-            else { zoomToCityNotDefaultAction = false; }
+            if (bin[5] == '1') zoomToCityNotDefaultAction = true;
 
             //Warn when pollution occurs on/off
-            bool warnWhenPollutionOccurs;
-            if (bin[6] == '1') { warnWhenPollutionOccurs = true; }
-            else { warnWhenPollutionOccurs = false; }
+            bool warnWhenPollutionOccurs = false;
+            if (bin[6] == '1') warnWhenPollutionOccurs = true;
 
             //Warn when changing production will cost shileds on/off
-            bool warnWhenChangingProductionWillCostShields;
-            if (bin[7] == '1') { warnWhenChangingProductionWillCostShields = true; }
-            else { warnWhenChangingProductionWillCostShields = false; }
+            bool warnWhenChangingProductionWillCostShields = false;
+            if (bin[7] == '1') warnWhenChangingProductionWillCostShields = true;
 
             //Number of turns passed
             int intVal1 = dataArray[28];
@@ -245,9 +210,8 @@ namespace PoskusCiv2
             int playersCivilizationNumberUsed = dataArray[41];
 
             //Map revealed
-            bool mapRevealed;
-            if (dataArray[43] == 1) { mapRevealed = true; }
-            else { mapRevealed = false; }
+            bool mapRevealed = false;
+            if (dataArray[43] == 1) mapRevealed = true;
 
             //Difficulty level
             int difficultyLevel = dataArray[44];
@@ -290,8 +254,8 @@ namespace PoskusCiv2
                 wonderCity[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //determine if wonder is built/destroyed
-                if (wonderCity[i] == 65535) { wonderBuilt[i] = false; } //FFFF(hex)
-                else if (wonderCity[i] == 65279) { wonderDestroyed[i] = true; } //FEFF(hex)
+                if (wonderCity[i] == 65535) wonderBuilt[i] = false; //FFFF(hex)
+                else if (wonderCity[i] == 65279) wonderDestroyed[i] = true; //FEFF(hex)
                 else { wonderBuilt[i] = true; wonderDestroyed[i] = false; }
             }
 
@@ -532,16 +496,16 @@ namespace PoskusCiv2
                 int tile_improv = dataArray[ofsetB2 + i * 6 + 1];
                 bool unit_present = false, city_present = false, irrigation = false, mining = false, road = false, railroad = false, fortress = false, pollution = false, farmland = false, airbase = false;
                 bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
-                if (bin[7] == '1') { unit_present = true; }
-                if (bin[6] == '1') { city_present = true; }
-                if (bin[5] == '1') { irrigation = true; }
-                if (bin[4] == '1') { mining = true; }
-                if (bin[3] == '1') { road = true; }
-                if (bin[2] == '1' && bin[3] == '1') { railroad = true; }
-                if (bin[1] == '1') { fortress = true; }
-                if (bin[0] == '1') { pollution = true; }
-                if (bin[4] == '1' && bin[5] == '1') { farmland = true; }
-                if (bin[1] == '1' && bin[6] == '1') { airbase = true; }
+                if (bin[7] == '1') unit_present = true;
+                if (bin[6] == '1') city_present = true;
+                if (bin[5] == '1') irrigation = true;
+                if (bin[4] == '1') mining = true;
+                if (bin[3] == '1') road = true;
+                if (bin[2] == '1' && bin[3] == '1') railroad = true;
+                if (bin[1] == '1') fortress = true;
+                if (bin[0] == '1') pollution = true;
+                if (bin[4] == '1' && bin[5] == '1') farmland = true;
+                if (bin[1] == '1' && bin[6] == '1') airbase = true;
 
                 //City radius (TO-DO)
                 int intValueB23 = dataArray[ofsetB2 + i * 6 + 2];
@@ -574,9 +538,9 @@ namespace PoskusCiv2
 
             //determine byte length of units
             int multipl;
-            if (version <= 2) { multipl = 26; } //FW or CiC
-            else if (version == 3) { multipl = 32; }    //MGE
-            else { multipl = 40; }  //ToT
+            if (version <= 2) multipl = 26; //FW or CiC
+            else if (version == 3) multipl = 32;    //MGE
+            else multipl = 40;  //ToT
 
             for (int i = 0; i < numberOfUnits; i++)
             {
@@ -600,20 +564,17 @@ namespace PoskusCiv2
 
                 //If this is the unit's first move
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 4], 2).PadLeft(8, '0');
-                bool unitFirstMove;
-                if (bin[1] == '1') { unitFirstMove = true; }
-                else { unitFirstMove = false; }
+                bool unitFirstMove = false;
+                if (bin[1] == '1') unitFirstMove = true;
 
                 //Grey star to the shield
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 5], 2).PadLeft(8, '0');
-                bool unitGreyStarShield;
-                if (bin[0] == '1') { unitGreyStarShield = true; }
-                else { unitGreyStarShield = false; }
+                bool unitGreyStarShield = false;
+                if (bin[0] == '1') unitGreyStarShield = true;
 
                 //Veteran status
-                bool unitVeteranStatus;
-                if (bin[2] == '1') { unitVeteranStatus = true; }
-                else { unitVeteranStatus = false; }
+                bool unitVeteranStatus = false;
+                if (bin[2] == '1') unitVeteranStatus = true;
 
                 //Unit type
                 int unitType = dataArray[ofsetU + multipl * i + 6];
@@ -672,9 +633,9 @@ namespace PoskusCiv2
             int ofsetC = ofsetU + multipl * numberOfUnits;
             //Console.WriteLine("offset Cities=" + ofsetC.ToString());
 
-            if (version <= 2) { multipl = 84; } //FW or CiC
-            else if (version == 3) { multipl = 88; }    //MGE
-            else { multipl = 92; }  //ToT
+            if (version <= 2) multipl = 84; //FW or CiC
+            else if (version == 3) multipl = 88;    //MGE
+            else multipl = 92;  //ToT
                         
             char[] asciichar = new char[15];            
             for (int i = 0; i < numberOfCities; i++)
@@ -694,52 +655,43 @@ namespace PoskusCiv2
 
                 //Can build coastal improvements
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 4], 2).PadLeft(8, '0');
-                bool cityCanBuildCoastal;
-                if (bin[0] == '1') { cityCanBuildCoastal = true; }
-                else { cityCanBuildCoastal = false; }
+                bool cityCanBuildCoastal = false;
+                if (bin[0] == '1') cityCanBuildCoastal = true;
 
                 //Auto build under military rule
-                bool cityAutobuildMilitaryRule;
-                if (bin[3] == '1') { cityAutobuildMilitaryRule = true; }
-                else { cityAutobuildMilitaryRule = false; }
+                bool cityAutobuildMilitaryRule = false;
+                if (bin[3] == '1') cityAutobuildMilitaryRule = true;
 
                 //Stolen tech
-                bool cityStolenTech;
-                if (bin[4] == '1') { cityStolenTech = true; }
-                else { cityStolenTech = false; }
+                bool cityStolenTech = false;
+                if (bin[4] == '1') cityStolenTech = true;
 
                 //Improvement sold
-                bool cityImprovementSold;
-                if (bin[5] == '1') { cityImprovementSold = true; }
-                else { cityImprovementSold = false; }
+                bool cityImprovementSold = false;
+                if (bin[5] == '1') cityImprovementSold = true;
 
                 //We love king day
-                bool cityWeLoveKingDay;
-                if (bin[6] == '1') { cityWeLoveKingDay = true; }
-                else { cityWeLoveKingDay = false; }
+                bool cityWeLoveKingDay = false;
+                if (bin[6] == '1') cityWeLoveKingDay = true;
 
                 //Civil disorder
-                bool cityCivilDisorder;
-                if (bin[7] == '1') { cityCivilDisorder = true; }
-                else { cityCivilDisorder = false; }
+                bool cityCivilDisorder = false;
+                if (bin[7] == '1') cityCivilDisorder = true;
 
                 //Can build ships
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 6], 2).PadLeft(8, '0');
-                bool cityCanBuildShips;
-                if (bin[2] == '1') { cityCanBuildShips = true; }
-                else { cityCanBuildShips = false; }
+                bool cityCanBuildShips = false;
+                if (bin[2] == '1') cityCanBuildShips = true;
 
                 //Objective x3
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex3;
-                if (bin[3] == '1') { cityObjectivex3 = true; }
-                else { cityObjectivex3 = false; }
+                bool cityObjectivex3 = false;
+                if (bin[3] == '1') cityObjectivex3 = true;
 
                 //Objective x1
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex1;
-                if (bin[5] == '1') { cityObjectivex1 = true; }
-                else { cityObjectivex1 = false; }
+                bool cityObjectivex1 = false;
+                if (bin[5] == '1') cityObjectivex1 = true;
 
                 //Owner
                 int cityOwner = dataArray[ofsetC + multipl * i + 8];
@@ -861,8 +813,8 @@ namespace PoskusCiv2
                 int[] cityWonders = new int[28];
                 for (int wndr = 0; wndr < 28; wndr++)
                 {
-                    if (wonderCity[wndr] == i) { cityWonders[wndr] = 1; }
-                    else { cityWonders[wndr] = 0; }
+                    if (wonderCity[wndr] == i) cityWonders[wndr] = 1;
+                    else cityWonders[wndr] = 0;
                 }
 
                 City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityFoodProduction, cityShieldProduction, cityWonders);
@@ -897,13 +849,13 @@ namespace PoskusCiv2
             {
                 if (row % 2 == 0) //odd lines
                 {
-                    if ((col + 4 - (row % 8) / 2) % 4 == 0 || (col + 4 - (row % 8) / 2) % 4 == 1) { special = 1; }
-                    else { special = 0; }
+                    if ((col + 4 - (row % 8) / 2) % 4 == 0 || (col + 4 - (row % 8) / 2) % 4 == 1) special = 1;
+                    else special = 0;
                 }
                 else    //even lines
                 {
-                    if ((col + 4 - (row % 8) / 2) % 4 == 2 || (col + 4 - (row % 8) / 2) % 4 == 3) { special = 1; }
-                    else { special = 0; }
+                    if ((col + 4 - (row % 8) / 2) % 4 == 2 || (col + 4 - (row % 8) / 2) % 4 == 3) special = 1;
+                    else special = 0;
                 }
 
                 //if (Game.Terrain[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
@@ -927,9 +879,9 @@ namespace PoskusCiv2
                     int novi_i = 0; //zacetna tocka pri j=1 (0,1)
                     while (novi_i < mapXdim)  //keep jumping in x-direction till map end
                     {
-                        if (novi_i < mapXdim && col == novi_i) { special = 2; break; }   //tocke (3,1), (11,1), (19,1), ...
+                        if (novi_i < mapXdim && col == novi_i) special = 2; break;   //tocke (3,1), (11,1), (19,1), ...
                         novi_i += 3;
-                        if (novi_i < mapXdim && col == novi_i) { special = 1; break; }   //tocke (8,1), (16,1), (24,1), ...
+                        if (novi_i < mapXdim && col == novi_i) special = 1; break;   //tocke (8,1), (16,1), (24,1), ...
                         novi_i += 5;
                     }
 
