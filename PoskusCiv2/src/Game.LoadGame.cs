@@ -771,7 +771,7 @@ namespace PoskusCiv2
                 }
 
                 //No of active trade routes
-                //...
+                int cityActiveTradeRoutes = dataArray[ofsetC + multipl * i + 58];
 
                 //1st, 2nd, 3rd trade commodities available
                 //...
@@ -786,13 +786,19 @@ namespace PoskusCiv2
                 //...
 
                 //Science
-                //...
+                intVal1 = dataArray[ofsetC + multipl * i + 74];
+                intVal2 = dataArray[ofsetC + multipl * i + 75];
+                int cityScience = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Tax
-                //...
+                intVal1 = dataArray[ofsetC + multipl * i + 76];
+                intVal2 = dataArray[ofsetC + multipl * i + 77];
+                int cityTax = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //No of trade icons
-                //...
+                intVal1 = dataArray[ofsetC + multipl * i + 78];
+                intVal2 = dataArray[ofsetC + multipl * i + 79];
+                int cityNoOfTradeIcons = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Total food production
                 int cityFoodProduction = dataArray[ofsetC + multipl * i + 80];
@@ -801,10 +807,10 @@ namespace PoskusCiv2
                 int cityShieldProduction = dataArray[ofsetC + multipl * i + 81];
 
                 //No of happy citizens
-                //...
+                int cityHappyCitizens = dataArray[ofsetC + multipl * i + 82];
 
                 //No of unhappy citizens
-                //...
+                int cityUnhappyCitizens = dataArray[ofsetC + multipl * i + 83];
 
                 //Sequence number of the city
                 //...
@@ -817,7 +823,7 @@ namespace PoskusCiv2
                     else cityWonders[wndr] = 0;
                 }
 
-                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityFoodProduction, cityShieldProduction, cityWonders);
+                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);
             }
 
 

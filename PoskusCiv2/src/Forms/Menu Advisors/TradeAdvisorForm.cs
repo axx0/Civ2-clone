@@ -81,7 +81,7 @@ namespace PoskusCiv2.Forms
                     TotalCost += city.Improvements[i].Upkeep;
                 }
                 TotalIncome += city.Trade;
-                TotalScience += city.Sci;
+                TotalScience += city.Science;
                 Discoveries += 0;               
             }
         }
@@ -132,8 +132,8 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 108 + 24 * count), sf);
                 e.Graphics.DrawImage(Images.CitymapTaxLarge, new Point(260, 111 + 24 * count));
                 //Science
-                e.Graphics.DrawString(city.Sci.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(290 + 1, 108 + 24 * count + 1), sf);
-                e.Graphics.DrawString(city.Sci.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(290, 108 + 24 * count), sf);
+                e.Graphics.DrawString(city.Science.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(290 + 1, 108 + 24 * count + 1), sf);
+                e.Graphics.DrawString(city.Science.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(290, 108 + 24 * count), sf);
                 e.Graphics.DrawImage(Images.CitymapSciLarge, new Point(295, 111 + 24 * count));
                 count++;
 

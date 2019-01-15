@@ -346,8 +346,8 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawString("50% Tax: " + ThisCity.Tax.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(5, 163));
             e.Graphics.DrawString("0% Lux: " + ThisCity.Lux.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(180, 164), sf2);
             e.Graphics.DrawString("0% Lux: " + ThisCity.Lux.ToString(), new Font("Arial", 14), new SolidBrush(Color.White), new Point(179, 163), sf2);
-            e.Graphics.DrawString("50% Sci: " + ThisCity.Sci.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 164), sf1);
-            e.Graphics.DrawString("50% Sci: " + ThisCity.Sci.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(345, 163), sf1);
+            e.Graphics.DrawString("50% Sci: " + ThisCity.Science.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 164), sf1);
+            e.Graphics.DrawString("50% Sci: " + ThisCity.Science.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(345, 163), sf1);
 
             //Support + production icons
             e.Graphics.DrawString("Support: " + ThisCity.Support.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 224));

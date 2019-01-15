@@ -44,8 +44,12 @@ namespace PoskusCiv2
         public int WorkersOn4 { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
         public int ItemInProduction { get; set; }
+        public int ActiveTradeRoutes { get; set; }
+        public int NoOfTradeIcons { get; set; }
         public int FoodProduction { get; set; }
         public int ShieldProduction { get; set; }
+        public int HappyCitizens { get; set; }
+        public int UnhappyCitizens { get; set; }
 
         private int _population;
         public int Population
@@ -167,8 +171,11 @@ namespace PoskusCiv2
         {
             get
             {
-                _tax = 7;
                 return _tax;
+            }
+            set
+            {
+                _tax = value;
             }
         }
 
@@ -182,13 +189,16 @@ namespace PoskusCiv2
             }
         }
 
-        private int _sci;
-        public int Sci
+        private int _science;
+        public int Science
         {
             get
             {
-                _sci = 6;
-                return _sci;
+                return _science;
+            }
+            set
+            {
+                _science = value;
             }
         }
 

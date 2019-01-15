@@ -104,9 +104,18 @@ namespace PoskusCiv2
                 }
             }
 
-            if (allUnitsEndedTurn) { NewTurn(); }
+            if (allUnitsEndedTurn) CitiesTurn();
 
             UpdateUnit(Game.Instance.ActiveUnit);
+        }
+
+        public static void CitiesTurn()
+        {
+            foreach (City city in Game.Cities.Where(a => a.Owner == Game.Data.HumanPlayerUsed))
+            {
+                //city.NewTurn();
+            }
+            NewTurn();
         }
 
         public static void NewTurn()

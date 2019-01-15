@@ -184,7 +184,7 @@ namespace PoskusCiv2
             return unit;
         }
         
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int itemInProduction, int foodProduction, int shieldProduction, int[] wonders)
+        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int itemInProduction, int activeTradeRoutes, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, int happyCitizens, int unhappyCitizens, int[] wonders)
         {
             City city = new City
             {
@@ -211,8 +211,14 @@ namespace PoskusCiv2
                 WorkersOn4 = workersOn4,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction,
+                ActiveTradeRoutes = activeTradeRoutes,
+                Science = science,
+                Tax = tax,
+                NoOfTradeIcons = noOfTradeIcons,
                 FoodProduction = foodProduction,
-                ShieldProduction = shieldProduction
+                ShieldProduction = shieldProduction,
+                HappyCitizens = happyCitizens,
+                UnhappyCitizens = unhappyCitizens
             };
 
             if (improvements[0] == '1') { city.AddImprovement(new Improvement(ImprovementType.Palace)); }
