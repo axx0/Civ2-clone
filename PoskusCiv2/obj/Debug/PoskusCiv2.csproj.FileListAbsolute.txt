@@ -51,3 +51,6 @@ C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.TradeAdvisorForm.resour
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.GameOptionsForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.GraphicOptionsForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityReportOptionsForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.CityReportOptionsForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.GameOptionsForm.resources
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.GraphicOptionsForm.resources

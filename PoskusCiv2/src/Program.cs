@@ -18,8 +18,8 @@ namespace PoskusCiv2
         static void Main()
         {
             ReadFiles.ReadRULES(@"C:\DOS\CIV 2\Civ2\RULES.TXT");
-            Game.LoadGame("C:/DOS/CIV 2/Civ2/Rome01.SAV");
-            //Game.LoadGame("C:/DOS/CIV 2/Civ2/Rome02.SAV");
+            //Game.LoadGame("C:/DOS/CIV 2/Civ2/Rome01.SAV");
+            Game.LoadGame("C:/DOS/CIV 2/Civ2/Persia01.SAV");
             Images.LoadTerrain(@"C:\DOS\CIV 2\Civ2\TERRAIN1.GIF", @"C:\DOS\CIV 2\Civ2\TERRAIN2.GIF");
             Images.LoadCities(@"C:\DOS\CIV 2\Civ2\CITIES.GIF");
             Images.LoadUnits(@"C:\DOS\CIV 2\Civ2\UNITS.GIF");

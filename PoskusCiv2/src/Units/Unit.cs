@@ -28,20 +28,6 @@ namespace PoskusCiv2.Units
         public UnitGAS GAS { get; set; }
         public OrderType Action { get; set; }
 
-        private int _x;
-        public int X
-        {
-            get { return _x; }
-            set { _x = value; }
-        }
-
-        private int _y;
-        public int Y
-        {
-            get { return _y; }
-            set { _y = value; }
-        }
-
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
@@ -56,6 +42,9 @@ namespace PoskusCiv2.Units
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
+
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public int X2   //Civ2 style
         {
@@ -95,11 +84,11 @@ namespace PoskusCiv2.Units
             {
                 if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent)) //From & To must be cities or road (movement reduced)
                 {
-                    MovePointsLost = MovePointsLost + 1;
+                    MovePointsLost += 1;
                 }
                 else
                 {
-                    MovePointsLost = MovePointsLost + 3;
+                    MovePointsLost += 3;
                 }
                 X = Xto;
                 Y = Yto;
@@ -110,8 +99,6 @@ namespace PoskusCiv2.Units
                 TurnEnded = true;
                 MovePointsLost = 3 * MoveRate;
             }
-
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         private bool _turnEnded;
@@ -124,8 +111,8 @@ namespace PoskusCiv2.Units
                     MovePointsLost = 3 * MoveRate;
                     _turnEnded = true;
                 }
-                else if (Action == OrderType.Fortified || Action == OrderType.Sleep || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) { _turnEnded = true; }
-                else { _turnEnded = false; }
+                else if (Action == OrderType.Fortified || Action == OrderType.Sleep || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) _turnEnded = true;
+                else _turnEnded = false;
 
                 return _turnEnded;
             }
@@ -135,13 +122,11 @@ namespace PoskusCiv2.Units
         public void SkipTurn()
         {
             TurnEnded = true;
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Fortify()
         {
             Action = OrderType.Fortify;
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Irrigate()
@@ -155,7 +140,6 @@ namespace PoskusCiv2.Units
             {
                 //Warning!
             }
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void BuildMines()
@@ -169,7 +153,6 @@ namespace PoskusCiv2.Units
             {
                 //Warning!
             }
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Transform()
@@ -178,13 +161,11 @@ namespace PoskusCiv2.Units
             {
                 Action = OrderType.Transform;
             }
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void Sleep()
         {
             Action = OrderType.Sleep;
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         public void BuildRoad()
@@ -198,7 +179,6 @@ namespace PoskusCiv2.Units
             {
                 //Warning!
             }
-            Actions.UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         //When making a new unit

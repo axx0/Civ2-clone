@@ -552,7 +552,7 @@ namespace PoskusCiv2
                 //Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
                 bool unit_dead = false;
                 bin = Convert.ToString(intVal2, 2).PadLeft(8, '0');
-                if (bin[0] == '1') { unit_dead = true; }
+                if (bin[0] == '1') unit_dead = true;
 
                 //Unit Y location (civ2-style)
                 intVal1 = dataArray[ofsetU + multipl * i + 2];

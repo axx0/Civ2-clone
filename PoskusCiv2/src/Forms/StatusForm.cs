@@ -18,23 +18,21 @@ namespace PoskusCiv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
 
-        //Label viewingPiecesLabel, cursorPositionLabel, peopleLabel, gameYearLabel, goldLabel, unitNoMovesLabel, unitCityLabel, unitCivLabel, unitTypeLabel, unitTerrainLabel, roadPresentLabel, endOfTurnLabel;
-        //PictureBox unitPicture, unitShieldPicture;
-        //DrawUnits drawUnit = new DrawUnits();
         DoubleBufferedPanel UnitPanel, StatsPanel;
-
-        Draw Draw = new Draw();
+        
+         Draw Draw = new Draw();
 
         //timer
-        Timer t = new Timer();
-        int stej = 0;   //records no of timer ticks
+        Timer timer = new Timer();
+        int TimerCounter { get; set; }   //records no of timer ticks
+        bool EndOfTurnMessage { get; set; }   //records no of timer ticks
 
         public StatusForm(MainCiv2Window _mainCiv2Window)
         {
             InitializeComponent();
             mainCiv2Window = _mainCiv2Window;
 
-            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.1375), (int)((_mainCiv2Window.ClientSize.Height - 30) * 0.85));
+            Size = new Size((int)(_mainCiv2Window.ClientSize.Width * 0.1375), (int)((_mainCiv2Window.ClientSize.Height - 30) * 0.85));
             Paint += new PaintEventHandler(StatusForm_Paint);
 
             //Stats panel
@@ -56,230 +54,15 @@ namespace PoskusCiv2.Forms
             };
             Controls.Add(UnitPanel);
             UnitPanel.Paint += UnitPanel_Paint;
+
+            //Timer properties
+            timer.Interval = 500;   //500 ms
+            timer.Tick += new EventHandler(TimerTick);
+
+            EndOfTurnMessage = false;
         }
 
-        private void StatusForm_Load(object sender, EventArgs e)
-        {
-            ////Viewing pieces label
-            //viewingPiecesLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(70, 115),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.White,
-            //    Text = "Moving Units",
-            //    BackColor = Color.Transparent
-            //};
-            //Controls.Add(viewingPiecesLabel);
-            //var pos4 = this.PointToScreen(viewingPiecesLabel.Location);            //making the label transparent in panel
-            //pos4 = UnitPanel.PointToClient(pos4);
-            //viewingPiecesLabel.Parent = UnitPanel;
-            //viewingPiecesLabel.Location = pos4;
-            //viewingPiecesLabel.BackColor = Color.Transparent;
-
-            ////Cursor position label
-            //cursorPositionLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 140),
-            //    Font = new Font("Times New Roman", 12),
-            //    BackColor = Color.Transparent
-            //};
-            //Controls.Add(cursorPositionLabel);
-            //var pos5 = this.PointToScreen(cursorPositionLabel.Location);            //making the label transparent in panel
-            //pos5 = UnitPanel.PointToClient(pos5);
-            //cursorPositionLabel.Parent = UnitPanel;
-            //cursorPositionLabel.Location = pos5;
-            //cursorPositionLabel.BackColor = Color.Transparent;
-            //cursorPositionLabel.Visible = false;
-
-            ////No of people label
-            //peopleLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 45),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    Text = Game.people.ToString("#,##") + " People"
-            //};
-            //Controls.Add(peopleLabel);
-            //var pos1 = this.PointToScreen(peopleLabel.Location);            //making the label transparent in panel
-            //pos1 = StatPanel.PointToClient(pos1);
-            //peopleLabel.Parent = StatPanel;
-            //peopleLabel.Location = pos1;
-            //peopleLabel.BackColor = Color.Transparent;
-
-            ////Game year label
-            //gameYearLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 63),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = Math.Abs(Game.gameYear).ToString() + " B.C. (Turn " + Game.gameTurn.ToString() + ")"
-            //};
-            //Controls.Add(gameYearLabel);
-            //var pos2 = this.PointToScreen(gameYearLabel.Location);            //making the label transparent in panel
-            //pos2 = StatPanel.PointToClient(pos2);
-            //gameYearLabel.Parent = StatPanel;
-            //gameYearLabel.Location = pos2;
-            //gameYearLabel.BackColor = Color.Transparent;
-
-            ////No of gold pieces label
-            //Label goldLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 81),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = Game.gold.ToString() + " Gold"
-            //};
-            //Controls.Add(goldLabel);
-            //var pos3 = this.PointToScreen(goldLabel.Location);            //making the label transparent in panel
-            //pos3 = StatPanel.PointToClient(pos3);
-            //goldLabel.Parent = StatPanel;
-            //goldLabel.Location = pos3;
-            //goldLabel.BackColor = Color.Transparent;
-
-            ////Unit no of moves label
-            //Label unitNoMovesLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(90, 140),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = "Moves:"
-            //};
-            //Controls.Add(unitNoMovesLabel);
-            //var pos6 = this.PointToScreen(unitNoMovesLabel.Location);            //making the label transparent in panel
-            //pos6 = UnitPanel.PointToClient(pos6);
-            //unitNoMovesLabel.Parent = UnitPanel;
-            //unitNoMovesLabel.Location = pos6;
-            //unitNoMovesLabel.BackColor = Color.Transparent;
-
-            ////Unit city label
-            //Label unitCityLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(90, 140 + 18),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = "City"
-            //};
-            //Controls.Add(unitCityLabel);
-            //var pos7 = this.PointToScreen(unitCityLabel.Location);            //making the label transparent in panel
-            //pos7 = UnitPanel.PointToClient(pos7);
-            //unitCityLabel.Parent = UnitPanel;
-            //unitCityLabel.Location = pos7;
-            //unitCityLabel.BackColor = Color.Transparent;
-
-            ////Unit civ label
-            //Label unitCivLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(90, 140 + 18 + 18),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = "Civ"
-            //};
-            //Controls.Add(unitCivLabel);
-            //var pos8 = this.PointToScreen(unitCivLabel.Location);            //making the label transparent in panel
-            //pos8 = UnitPanel.PointToClient(pos8);
-            //unitCivLabel.Parent = UnitPanel;
-            //unitCivLabel.Location = pos8;
-            //unitCivLabel.BackColor = Color.Transparent;
-
-            ////Unit type label
-            //Label unitTypeLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 140 + 18 + 18 + 18),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = "Type"
-            //};
-            //Controls.Add(unitTypeLabel);
-            //var pos9 = this.PointToScreen(unitTypeLabel.Location);            //making the label transparent in panel
-            //pos9 = UnitPanel.PointToClient(pos9);
-            //unitTypeLabel.Parent = UnitPanel;
-            //unitTypeLabel.Location = pos9;
-            //unitTypeLabel.BackColor = Color.Transparent;
-
-            ////Unit terrain label
-            //Label unitTerrainLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 140 + 18 + 18 + 18 + 18),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = "()"
-            //};
-            //Controls.Add(unitTerrainLabel);
-            //var pos10 = this.PointToScreen(unitTerrainLabel.Location);            //making the label transparent in panel
-            //pos10 = UnitPanel.PointToClient(pos10);
-            //unitTerrainLabel.Parent = UnitPanel;
-            //unitTerrainLabel.Location = pos10;
-            //unitTerrainLabel.BackColor = Color.Transparent;
-
-            ////Road present label
-            //Label roadPresentLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(13, 140 + 18 + 18 + 18 + 18 + 18),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent
-            //};
-            //Controls.Add(roadPresentLabel);
-            //var pos11 = this.PointToScreen(roadPresentLabel.Location);            //making the label transparent in panel
-            //pos11 = UnitPanel.PointToClient(pos11);
-            //roadPresentLabel.Parent = UnitPanel;
-            //roadPresentLabel.Location = pos11;
-            //roadPresentLabel.BackColor = Color.Transparent;
-
-            ////End-of-turn label
-            //Label endOfTurnLabel = new Label
-            //{
-            //    AutoSize = true,
-            //    Location = new Point(20, 510),
-            //    Font = new Font("Times New Roman", 12),
-            //    ForeColor = Color.FromArgb(25, 25, 25),
-            //    BackColor = Color.Transparent,
-            //    Text = "End of Turn \n (Press ENTER)"
-            //};
-            //Controls.Add(endOfTurnLabel);
-            //var pos12 = this.PointToScreen(endOfTurnLabel.Location);            //making the label transparent in panel
-            //pos12 = UnitPanel.PointToClient(pos12);
-            //endOfTurnLabel.Parent = UnitPanel;
-            //endOfTurnLabel.Location = pos12;
-            //endOfTurnLabel.BackColor = Color.Transparent;
-            //endOfTurnLabel.Visible = false;
-
-            ////Picture of unit in status form
-            //PictureBox unitShieldPicture = new PictureBox
-            //{
-            //    Location = new Point(5, 30),
-            //    BackColor = Color.Transparent
-            //};
-            ////panel1.Controls.Add(unitShieldPicture);
-
-            //PictureBox unitPicture = new PictureBox
-            //{
-            //    Location = new Point(10, 30),
-            //    BackColor = Color.Transparent,
-            //    Parent = unitShieldPicture
-            //};
-            //UnitPanel.Controls.Add(unitPicture);
-
-            //UpdateUnitLabels(0);    //show unit labels in the beginning
-        }
+        private void StatusForm_Load(object sender, EventArgs e) { }
 
         private void StatusForm_Paint(object sender, PaintEventArgs e)
         {
@@ -324,6 +107,16 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, UnitPanel.Height - 3);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), UnitPanel.Width - 2, 1, UnitPanel.Width - 2, UnitPanel.Height - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, UnitPanel.Height - 2, UnitPanel.Width - 2, UnitPanel.Height - 2);
+
+            //End turn message
+            if (EndOfTurnMessage)
+            {
+                Color brushColor;
+                if (TimerCounter % 2 == 1) brushColor = Color.FromArgb(135, 135, 135);
+                else brushColor = Color.White;
+                e.Graphics.DrawString("End of Turn\n(Press ENTER)", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(10 + 1, UnitPanel.Height - 50));
+                e.Graphics.DrawString("End of Turn\n(Press ENTER)", new Font("Times New Roman", 12), new SolidBrush(brushColor), new Point(10, UnitPanel.Height - 50));
+            }
 
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
@@ -406,144 +199,24 @@ namespace PoskusCiv2.Forms
             RefreshStatusForm();
         }
 
-        //Update game year label
-        public void UpdateGameYearLabel(string myText)
+        public void ShowEndOfTurnMessage()
         {
-            //this.gameYearLabel.Text = myText;
+            EndOfTurnMessage = true;
+            timer.Start();
+            TimerCounter = 0;
         }
 
-        //Update unit labels
-        //public void UpdateUnitLabels()
-        //{
-        //    if (MapForm.viewingPiecesMode == false)
-        //    {
-        //if (unitInLine != Units_.unitNumber) //cycle through all units
-        //{
-        //    viewingPiecesLabel.Text = "Moving Units";
-        //    cursorPositionLabel.Visible = false;
-        //    endOfTurnLabel.Visible = false;
-        //    unitNoMovesLabel.Visible = true;
-        //    unitCityLabel.Visible = true;
-        //    unitCivLabel.Visible = true;
-        //    unitTerrainLabel.Visible = true;
-        //    unitTypeLabel.Visible = true;
-        //    unitPicture.Visible = true;
-        //    int _movesLeft = Game.Instance.ActiveUnit.MovesLeft;
-        //    if (_movesLeft % 3 == 0)
-        //    {
-        //        unitNoMovesLabel.Text = "Moves: " + (_movesLeft / 3).ToString();
-        //    }
-        //    else
-        //    {
-        //        unitNoMovesLabel.Text = "Moves: " + Convert.ToInt32(Math.Floor((double)_movesLeft / 3)).ToString() + " " + (_movesLeft % 3).ToString() + "/3";
-        //    }
-        //    if (Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Road && !Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].CityPresent) { roadPresentLabel.Text = "(Road)"; }
-        //    else { roadPresentLabel.Text = null; }
-        //    if (Game.Instance.ActiveUnit.HomeCity == 255) { unitCityLabel.Text = "NONE"; }  //FF in hex
-        //    else { unitCityLabel.Text = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
-        //    unitCivLabel.Text = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
-        //    if (Game.Instance.ActiveUnit.Veteran) { unitTypeLabel.Text = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
-        //    else { unitTypeLabel.Text = unitTypeLabel.Text = Game.Instance.ActiveUnit.Name; };
-        //    unitTerrainLabel.Text = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
-        //    unitShieldPicture.Image = Images.UnitShield[(int)Game.Instance.ActiveUnit.Civ];
-        //    unitPicture.Image = Images.Units[(int)Game.Instance.ActiveUnit.Type];
-        //}
-        //else    //end of units, display wait for enter for new turn
-        //{
-        //    endOfTurnLabel.Visible = true;
-        //    cursorPositionLabel.Visible = false;
-        //    unitNoMovesLabel.Visible = false;
-        //    unitCityLabel.Visible = false;
-        //    unitCivLabel.Visible = false;
-        //    roadPresentLabel.Visible = false;
-        //    unitTerrainLabel.Visible = false;
-        //    unitTypeLabel.Visible = false;
-        //    unitPicture.Visible = false;
-        //    unitShieldPicture.Visible = false;
-
-        //    //timer for animating text
-        //    t.Interval = 500; // specify interval time as you want (ms)
-        //    t.Tick += new EventHandler(timer_Tick);
-        //    t.Start();
-        //}
-        //}
-        //else
-        //{
-        //viewingPiecesLabel.Text = "Viewing Pieces";
-        //cursorPositionLabel.Visible = true;
-        //unitNoMovesLabel.Visible = false;
-        //unitCityLabel.Visible = false;
-        //unitCivLabel.Visible = false;
-        //roadPresentLabel.Visible = false;
-        //unitTerrainLabel.Visible = false;
-        //unitTypeLabel.Visible = false;
-        //unitPicture.Visible = false;
-        //unitShieldPicture.Visible = false;
-        //    }
-        //}
-
-        //command to stop animating "press enter for next turn" text
-        public void StopTimerInStatusForm()
+        public void HideEndOfTurnMessage()
         {
-            t.Stop();
-            //endOfTurnLabel.Visible = false;
+            EndOfTurnMessage = false;
+            timer.Stop();
         }
 
-        void Timer_Tick(object sender, EventArgs e)
+        void TimerTick(object sender, EventArgs e)
         {
-            stej += 1;
-
             //Make pulsating "Press enter for next turn" text
-            //if (stej % 2 == 1) { endOfTurnLabel.ForeColor = Color.FromArgb(25, 25, 25); }
-            //else { endOfTurnLabel.ForeColor = Color.White; }
-
-        }
-
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void pictureBox1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void flowLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label2_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void StatusForm_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void panel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            //MapForm.viewingPiecesMode = false;
-            //UpdateUnitLabels(Game.unitInLine);
+            TimerCounter++;
+            UnitPanel.Refresh();
         }
 
         public void RefreshStatusForm()

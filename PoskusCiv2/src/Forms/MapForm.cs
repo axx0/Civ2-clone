@@ -41,6 +41,7 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
             Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.8625 - 6), _mainCiv2Window.ClientSize.Height - 30);    //-4 is experience setting
             Paint += new PaintEventHandler(MapForm_Paint);
+            KeyPress += new KeyPressEventHandler(MapForm_KeyPress);
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel

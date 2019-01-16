@@ -16,10 +16,12 @@ namespace PoskusCiv2
 {
     static class Actions
     {
+        static bool allUnitsEndedTurn;
+
         public static void UpdateUnit(IUnit unit)
         {
             //If unit has ended turn
-            if (unit.TurnEnded) { NextUnit(); }
+            if (unit.TurnEnded) ChooseNextUnit();
 
             //Check if unit has done irrigating
             if (unit.Action == OrderType.BuildIrrigation)
@@ -67,11 +69,11 @@ namespace PoskusCiv2
             Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
         }
 
-        //Chose next unit for orders
-        public static void NextUnit()
+        //Chose next unit for orders. If all units ended turn, update cities.
+        public static void ChooseNextUnit()
         {
             //Move on to next unit
-            bool allUnitsEndedTurn = true;
+            allUnitsEndedTurn = true;
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
             {
                 if (!unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
@@ -86,78 +88,103 @@ namespace PoskusCiv2
                     MapForm.offsetY = Game.Instance.ActiveUnit.Y2 - 2 * (MapForm.CenterBoxY - 1);
 
                     //Do not allow to move out of map bounds by limiting offset
-                    if (MapForm.offsetX < 0) { MapForm.offsetX = 0; }
-                    if (MapForm.offsetX >= 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX) { MapForm.offsetX = 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX; }
-                    if (MapForm.offsetY < 0) { MapForm.offsetY = 0; }
-                    if (MapForm.offsetY >= Game.Data.MapYdim - 2 * MapForm.BoxNoY) { MapForm.offsetY = Game.Data.MapYdim - 2 * MapForm.BoxNoY; }
+                    if (MapForm.offsetX < 0) MapForm.offsetX = 0;
+                    if (MapForm.offsetX >= 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX) MapForm.offsetX = 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX;
+                    if (MapForm.offsetY < 0) MapForm.offsetY = 0;
+                    if (MapForm.offsetY >= Game.Data.MapYdim - 2 * MapForm.BoxNoY) MapForm.offsetY = Game.Data.MapYdim - 2 * MapForm.BoxNoY;
 
                     //After limiting offset, do not allow some combinations, e.g. (2,1)
                     if (Math.Abs((MapForm.offsetX - MapForm.offsetY) % 2) == 1)
                     {
-                        if (MapForm.offsetX + 1 < Game.Data.MapXdim) { MapForm.offsetX += 1; }
-                        else if (MapForm.offsetY + 1 < Game.Data.MapYdim) { MapForm.offsetY += 1; }
-                        else if (MapForm.offsetX - 1 > 0) { MapForm.offsetX -= 1; }
-                        else { MapForm.offsetY -= 1; }
+                        if (MapForm.offsetX + 1 < Game.Data.MapXdim) MapForm.offsetX += 1;
+                        else if (MapForm.offsetY + 1 < Game.Data.MapYdim) MapForm.offsetY += 1;
+                        else if (MapForm.offsetX - 1 > 0) MapForm.offsetX -= 1;
+                        else MapForm.offsetY -= 1;
                     }
 
                     break;
                 }
             }
-
-            if (allUnitsEndedTurn) CitiesTurn();
-
-            UpdateUnit(Game.Instance.ActiveUnit);
+            
+            //If all units ended turn ==> start new turn. If not, update unit stats.
+            if (allUnitsEndedTurn)
+            {
+                //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
+                if (Game.Options.AlwaysWaitAtEndOfTurn) Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage();
+                else NewTurn();
+            }
+            else UpdateUnit(Game.Instance.ActiveUnit);
         }
 
+        //Update stats of all cities
         public static void CitiesTurn()
         {
             foreach (City city in Game.Cities.Where(a => a.Owner == Game.Data.HumanPlayerUsed))
             {
                 //city.NewTurn();
             }
-            NewTurn();
         }
 
         public static void NewTurn()
         {
             Game.Data.TurnNumber += 1;
 
-            //At beginning of turn, set all units to active
+            //Set all units to active
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
             {
-                //Increase counters
-                if ((unit.Action == OrderType.BuildIrrigation) || (unit.Action == OrderType.BuildRoad) || (unit.Action == OrderType.BuildMine))
-                {
-                    unit.Counter += 1;
-                    UpdateUnit(unit);
-                }
-
                 unit.TurnEnded = false;
                 unit.MovePointsLost = 0;
+
+                //Increase counters
+                if ((unit.Action == OrderType.BuildIrrigation) || (unit.Action == OrderType.BuildRoad) || (unit.Action == OrderType.BuildMine)) unit.Counter += 1;
             }
+
+            //Update all cities
+            CitiesTurn();
+
+            //Choose next unit
+            ChooseNextUnit();
         }
 
         public static void UnitKeyboardAction(char pressedKey)
         {
-            switch (pressedKey)
+            //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
+            if (Game.Options.AlwaysWaitAtEndOfTurn && allUnitsEndedTurn)
             {
-                case (char)Keys.Enter: break;
-                case (char)Keys.D1: Game.Instance.ActiveUnit.Move(-1, 1); break;
-                case (char)Keys.D2: Game.Instance.ActiveUnit.Move(0, 2); break;
-                case (char)Keys.D3: Game.Instance.ActiveUnit.Move(1, 1); break;
-                case (char)Keys.D4: Game.Instance.ActiveUnit.Move(-2, 0); break;
-                case (char)Keys.D6: Game.Instance.ActiveUnit.Move(2, 0); break;
-                case (char)Keys.D7: Game.Instance.ActiveUnit.Move(-1, -1); break;
-                case (char)Keys.D8: Game.Instance.ActiveUnit.Move(0, -2); break;
-                case (char)Keys.D9: Game.Instance.ActiveUnit.Move(1, -1); break;
-                case (char)Keys.Space: Game.Instance.ActiveUnit.SkipTurn(); break;
-                case 's': Game.Instance.ActiveUnit.Sleep(); break;
-                case 'f': Game.Instance.ActiveUnit.Fortify(); break;
-                case 'i': Game.Instance.ActiveUnit.Irrigate(); break;
-                case 'o': Game.Instance.ActiveUnit.Transform(); break;
-                case 'r': Game.Instance.ActiveUnit.BuildRoad(); break;
-                case 'm': Game.Instance.ActiveUnit.BuildMines(); break;
-                default: break;
+                switch (pressedKey)
+                {
+                    case (char)Keys.Enter:
+                        {
+                            Application.OpenForms.OfType<StatusForm>().First().HideEndOfTurnMessage();
+                            NewTurn();
+                            break;
+                        }
+                    default: break;
+                }
+            }
+            else
+            { 
+                switch (pressedKey)
+                {
+                    case (char)Keys.Enter: break;
+                    case (char)Keys.D1: Game.Instance.ActiveUnit.Move(-1, 1); break;
+                    case (char)Keys.D2: Game.Instance.ActiveUnit.Move(0, 2); break;
+                    case (char)Keys.D3: Game.Instance.ActiveUnit.Move(1, 1); break;
+                    case (char)Keys.D4: Game.Instance.ActiveUnit.Move(-2, 0); break;
+                    case (char)Keys.D6: Game.Instance.ActiveUnit.Move(2, 0); break;
+                    case (char)Keys.D7: Game.Instance.ActiveUnit.Move(-1, -1); break;
+                    case (char)Keys.D8: Game.Instance.ActiveUnit.Move(0, -2); break;
+                    case (char)Keys.D9: Game.Instance.ActiveUnit.Move(1, -1); break;
+                    case (char)Keys.Space: Game.Instance.ActiveUnit.SkipTurn(); break;
+                    case 's': Game.Instance.ActiveUnit.Sleep(); break;
+                    case 'f': Game.Instance.ActiveUnit.Fortify(); break;
+                    case 'i': Game.Instance.ActiveUnit.Irrigate(); break;
+                    case 'o': Game.Instance.ActiveUnit.Transform(); break;
+                    case 'r': Game.Instance.ActiveUnit.BuildRoad(); break;
+                    case 'm': Game.Instance.ActiveUnit.BuildMines(); break;
+                    default: break;
+                }
+                UpdateUnit(Game.Instance.ActiveUnit);
             }
         }
 
