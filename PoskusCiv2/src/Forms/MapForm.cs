@@ -18,6 +18,7 @@ namespace PoskusCiv2.Forms
         public MainCiv2Window mainCiv2Window;
 
         public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY, BoxNoX, BoxNoY;
+        public static bool IsUnitPulsating;
         Random randomNo = new Random();
 
         public bool CreateUnit, GridIsChecked = false, DrawXYnumbers = false;
@@ -41,7 +42,7 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
             Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.8625 - 6), _mainCiv2Window.ClientSize.Height - 30);    //-4 is experience setting
             Paint += new PaintEventHandler(MapForm_Paint);
-            KeyPress += new KeyPressEventHandler(MapForm_KeyPress);
+            KeyDown += new KeyEventHandler(MapForm_KeyDown);
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
@@ -53,6 +54,8 @@ namespace PoskusCiv2.Forms
             Controls.Add(MapPanel);
             MapPanel.Paint += new PaintEventHandler(MapPanel_Paint);
             MapPanel.MouseClick += new MouseEventHandler(MapPanel_MouseClick);
+
+            IsUnitPulsating = true; //initialize
         }
 
         private void MapForm_Load(object sender, EventArgs e)
@@ -93,13 +96,12 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 8 + MapPanel.Width + 2, 39, 8 + MapPanel.Width + 2, 39 + MapPanel.Height + 2);
         }
 
-        private void MapForm_KeyPress(object sender, KeyPressEventArgs e)
+        private void MapForm_KeyDown(object sender, KeyEventArgs e)
         {
             //Play movement sound for unit
             //if (new char[] { '1', '2', '3', '4', '6', '7', '8', '9'}.Contains(e.KeyChar)) { player.Play(); };
 
-            //Game.UserInput(e.KeyChar);
-            Actions.UnitKeyboardAction(e.KeyChar);
+            Actions.UnitKeyboardAction(e.KeyCode);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -148,17 +150,17 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - offsetX) + 32 + 2, 16 * (city.Y2 - offsetY) + 32, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - offsetX) + 32, 16 * (city.Y2 - offsetY) + 32 + 2, sf);    //Draw shadow around font
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (city.X2 - offsetX) + 32, 16 * (city.Y2 - offsetY) + 32, sf);
-
                 sf.Dispose();
             }
 
             //Draw active unit
+            if (!IsUnitPulsating) stej = 1;
             if (stej % 2 == 1)
             {
                 //Determine if active unit is stacked
                 bool stacked = false;
                 List<IUnit> unitsInXY = ListOfUnitsIn(Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
-                if (unitsInXY.Count > 1) { stacked = true; }
+                if (unitsInXY.Count > 1) stacked = true;
 
                 e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked, 1), 32 * (Game.Instance.ActiveUnit.X2 - offsetX), 16 * (Game.Instance.ActiveUnit.Y2 - offsetY) - 16);
             }
@@ -217,18 +219,18 @@ namespace PoskusCiv2.Forms
             offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
 
             //Do not allow to move out of map bounds by limiting offset
-            if (offsetX < 0) { offsetX = 0; }
-            if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) { offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX; }
-            if (offsetY < 0) { offsetY = 0; }
-            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) { offsetY = Game.Data.MapYdim - 2 * BoxNoY; }
+            if (offsetX < 0) offsetX = 0;
+            if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX;
+            if (offsetY < 0) offsetY = 0;
+            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) offsetY = Game.Data.MapYdim - 2 * BoxNoY;
 
             //After limiting offset, do not allow some combinations, e.g. (2,1)
             if (Math.Abs((offsetX - offsetY) % 2) == 1)
             {
-                if (offsetX + 1 < Game.Data.MapXdim) { offsetX += 1; }
-                else if (offsetY + 1 < Game.Data.MapYdim) { offsetY += 1; }
-                else if (offsetX - 1 > 0) { offsetX -= 1; }
-                else { offsetY -= 1; }
+                if (offsetX + 1 < Game.Data.MapXdim) offsetX += 1;
+                else if (offsetY + 1 < Game.Data.MapYdim) offsetY += 1;
+                else if (offsetX - 1 > 0) offsetX -= 1;
+                else offsetY -= 1;
             }
             MapPanel.Invalidate();
 
@@ -267,7 +269,7 @@ namespace PoskusCiv2.Forms
             List<IUnit> unitsInXY = new List<IUnit>();
             foreach (IUnit unit in Game.Units)
             {
-                if (unit.X == x && unit.Y == y) { unitsInXY.Add(unit); }
+                if (unit.X == x && unit.Y == y) unitsInXY.Add(unit);
             }
             return unitsInXY;
         }

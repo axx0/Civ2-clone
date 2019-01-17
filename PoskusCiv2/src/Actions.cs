@@ -105,12 +105,12 @@ namespace PoskusCiv2
                     break;
                 }
             }
-            
+
             //If all units ended turn ==> start new turn. If not, update unit stats.
             if (allUnitsEndedTurn)
             {
                 //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
-                if (Game.Options.AlwaysWaitAtEndOfTurn) Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage();
+                if (Game.Options.AlwaysWaitAtEndOfTurn) { Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage(); MapForm.IsUnitPulsating = false; }
                 else NewTurn();
             }
             else UpdateUnit(Game.Instance.ActiveUnit);
@@ -146,16 +146,17 @@ namespace PoskusCiv2
             ChooseNextUnit();
         }
 
-        public static void UnitKeyboardAction(char pressedKey)
+        public static void UnitKeyboardAction(Keys pressedKey)
         {
             //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
             if (Game.Options.AlwaysWaitAtEndOfTurn && allUnitsEndedTurn)
             {
                 switch (pressedKey)
                 {
-                    case (char)Keys.Enter:
+                    case Keys.Enter:
                         {
                             Application.OpenForms.OfType<StatusForm>().First().HideEndOfTurnMessage();
+                            MapForm.IsUnitPulsating = true; //reset it
                             NewTurn();
                             break;
                         }
@@ -163,25 +164,25 @@ namespace PoskusCiv2
                 }
             }
             else
-            { 
+            {
                 switch (pressedKey)
                 {
-                    case (char)Keys.Enter: break;
-                    case (char)Keys.D1: Game.Instance.ActiveUnit.Move(-1, 1); break;
-                    case (char)Keys.D2: Game.Instance.ActiveUnit.Move(0, 2); break;
-                    case (char)Keys.D3: Game.Instance.ActiveUnit.Move(1, 1); break;
-                    case (char)Keys.D4: Game.Instance.ActiveUnit.Move(-2, 0); break;
-                    case (char)Keys.D6: Game.Instance.ActiveUnit.Move(2, 0); break;
-                    case (char)Keys.D7: Game.Instance.ActiveUnit.Move(-1, -1); break;
-                    case (char)Keys.D8: Game.Instance.ActiveUnit.Move(0, -2); break;
-                    case (char)Keys.D9: Game.Instance.ActiveUnit.Move(1, -1); break;
-                    case (char)Keys.Space: Game.Instance.ActiveUnit.SkipTurn(); break;
-                    case 's': Game.Instance.ActiveUnit.Sleep(); break;
-                    case 'f': Game.Instance.ActiveUnit.Fortify(); break;
-                    case 'i': Game.Instance.ActiveUnit.Irrigate(); break;
-                    case 'o': Game.Instance.ActiveUnit.Transform(); break;
-                    case 'r': Game.Instance.ActiveUnit.BuildRoad(); break;
-                    case 'm': Game.Instance.ActiveUnit.BuildMines(); break;
+                    case Keys.Enter: break;
+                    case Keys.NumPad1: Game.Instance.ActiveUnit.Move(-1, 1); break;
+                    case Keys.NumPad2: Game.Instance.ActiveUnit.Move(0, 2); break;
+                    case Keys.NumPad3: Game.Instance.ActiveUnit.Move(1, 1); break;
+                    case Keys.NumPad4: Game.Instance.ActiveUnit.Move(-2, 0); break;
+                    case Keys.NumPad6: Game.Instance.ActiveUnit.Move(2, 0); break;
+                    case Keys.NumPad7: Game.Instance.ActiveUnit.Move(-1, -1); break;
+                    case Keys.NumPad8: Game.Instance.ActiveUnit.Move(0, -2); break;
+                    case Keys.NumPad9: Game.Instance.ActiveUnit.Move(1, -1); break;
+                    case Keys.Space: Game.Instance.ActiveUnit.SkipTurn(); break;
+                    case Keys.S: Game.Instance.ActiveUnit.Sleep(); break;
+                    case Keys.F: Game.Instance.ActiveUnit.Fortify(); break;
+                    case Keys.I: Game.Instance.ActiveUnit.Irrigate(); break;
+                    case Keys.O: Game.Instance.ActiveUnit.Transform(); break;
+                    case Keys.R: Game.Instance.ActiveUnit.BuildRoad(); break;
+                    case Keys.M: Game.Instance.ActiveUnit.BuildMines(); break;
                     default: break;
                 }
                 UpdateUnit(Game.Instance.ActiveUnit);

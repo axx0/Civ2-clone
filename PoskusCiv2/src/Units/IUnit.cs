@@ -58,8 +58,5 @@ namespace PoskusCiv2.Units
         void BuildRoad();
         void BuildMines();
         bool TurnEnded { get; set; }
-
-
-
     }
 }
