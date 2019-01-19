@@ -49,14 +49,14 @@ namespace PoskusCiv2.Units
         int LinkOtherUnitsUnder { get; set; }
         int Counter { get; set; }
 
+        void BuildRoad();
+        void BuildMines();
+        void BuildIrrigation();
         void Move(int moveX, int moveY);
         void SkipTurn();
         void Fortify();
-        void Irrigate();
         void Transform();
         void Sleep();
-        void BuildRoad();
-        void BuildMines();
         bool TurnEnded { get; set; }
     }
 }

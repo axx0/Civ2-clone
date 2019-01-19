@@ -35,7 +35,6 @@ namespace PoskusCiv2
             else if (dataArray[10] == 49) version = 4;    //ToT1.0 (31 hex)
             else if (dataArray[10] == 50) version = 5;    //ToT1.1 (32 hex)
             else version = 1;   //lower than Conflicts
-            Console.WriteLine("Game Version = {0}", version);
                         
             //Bloodlust on/off
             bool bloodlust = false;
@@ -454,7 +453,6 @@ namespace PoskusCiv2
             //...........
             //block 2 - terrain type
             int ofsetB2 = ofsetB1 + 7 * mapArea; //offset for block 2 values
-            Console.WriteLine("MapArea=" + mapArea.ToString() + " X=" + mapXdimension.ToString() + " Y=" + mapYdimension);
             for (int i = 0; i < mapArea; i++)
             {
                 int x = i % mapXdimension;

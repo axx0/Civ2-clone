@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PoskusCiv2.Enums;
 
 namespace PoskusCiv2.Forms
 {
@@ -17,6 +18,10 @@ namespace PoskusCiv2.Forms
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
         public CityForm cityForm;
+        ToolStripMenuItem OrdersMenu;
+        ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
+        List<ToolStripItem> SettlerItems, NoSettlerItems;
+        Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem;
 
         public MainCiv2Window()
         {
@@ -71,10 +76,10 @@ namespace PoskusCiv2.Forms
 
             //Kingdom menu
             ToolStripMenuItem KingdomMenu = new ToolStripMenuItem("Kingdom");
-            ToolStripMenuItem TaxRateItem = new ToolStripMenuItem("Tax Rate", null, TaxRate_Click);
-            ToolStripMenuItem ViewThroneRoomItem = new ToolStripMenuItem("View Throne Room", null, ViewThroneRoom_Click);
-            ToolStripMenuItem FindCityItem = new ToolStripMenuItem("Find City", null, FindCity_Click);
-            ToolStripMenuItem RevolutionItem = new ToolStripMenuItem("REVOLUTION", null, Revolution_Click);
+            TaxRateItem = new Civ2ToolStripMenuItem("Tax Rate", TaxRate_Click, "Shift+T");
+            ViewThroneRoomItem = new Civ2ToolStripMenuItem("View Throne Room", ViewThroneRoom_Click, "Shift+H");
+            FindCityItem = new Civ2ToolStripMenuItem("Find City", FindCity_Click, "Shift+C");
+            RevolutionItem = new Civ2ToolStripMenuItem("REVOLUTION", Revolution_Click, "Shift+R");
             MainMenuStrip.Items.Add(KingdomMenu);
             KingdomMenu.DropDownItems.Add(TaxRateItem);
             KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
@@ -88,8 +93,55 @@ namespace PoskusCiv2.Forms
             MainMenuStrip.Items.Add(ViewMenu);
 
             //Orders
-            ToolStripMenuItem OrdersMenu = new ToolStripMenuItem("Orders");
+            OrdersMenu = new ToolStripMenuItem("Orders");
+            BuildRoadItem = new Civ2ToolStripMenuItem("Build Road", BuildRoad_Click, "r");
+            BuildIrrigationItem = new Civ2ToolStripMenuItem("Build Irrigation", BuildIrrigation_Click, "i");
+            BuildMinesChangeForestItem = new ToolStripMenuItem("Build Mines", null, BuildMinesChangeForest_Click);
+            CleanUpPollutionItem = new ToolStripMenuItem("Clean Up Pollution", null, CleanUpPollution_Click);
+            PillageItem = new ToolStripMenuItem("Pillage", null, Pillage_Click);
+            UnloadItem = new ToolStripMenuItem("Unload", null, Unload_Click);
+            GoToItem = new ToolStripMenuItem("Go To", null, GoTo_Click);
+            GoHomeToNearestCityItem = new ToolStripMenuItem("Go Home To Nearest City", null, GoHomeToNearestCity_Click);
+            FortifyItem = new ToolStripMenuItem("Fortify", null, Fortify_Click);
+            SleepItem = new ToolStripMenuItem("Sleep", null, Sleep_Click);
+            DisbandItem = new ToolStripMenuItem("Disband", null, Disband_Click);
+            ActivateUnitItem = new ToolStripMenuItem("Activate Unit", null, ActivateUnit_Click);
+            WaitItem = new ToolStripMenuItem("Wait", null, Wait_Click);
+            SkipTurnItem = new ToolStripMenuItem("Skip Turn", null, SkipTurn_Click);
+            EndPlayerTurnItem = new ToolStripMenuItem("End Player Turn", null, EndPlayerTurn_Click, (Keys)Shortcut.CtrlN);
+            BuildNewCityItem = new ToolStripMenuItem("Build New City", null, BuildNewCity_Click);   //Settlers only items
+            AutomateSettlerItem = new ToolStripMenuItem("Automate Settler", null, AutomateSettler_Click);
+            ParadropItem = new ToolStripMenuItem("Paradrop", null, Paradrop_Click);   //Paratroopers only item
             MainMenuStrip.Items.Add(OrdersMenu);
+
+            
+            SettlerItems = new List<ToolStripItem> { BuildNewCityItem, BuildRoadItem, BuildIrrigationItem, BuildMinesChangeForestItem, new ToolStripSeparator(), AutomateSettlerItem, CleanUpPollutionItem, new ToolStripSeparator(), GoToItem, GoHomeToNearestCityItem, new ToolStripSeparator(), SleepItem, new ToolStripSeparator(), DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, new ToolStripSeparator(), EndPlayerTurnItem };
+
+            NoSettlerItems = new List<ToolStripItem> { BuildRoadItem, BuildIrrigationItem, BuildMinesChangeForestItem, new ToolStripSeparator(), CleanUpPollutionItem, PillageItem, new ToolStripSeparator(), UnloadItem, GoToItem, ParadropItem, GoHomeToNearestCityItem, new ToolStripSeparator(), FortifyItem, SleepItem, new ToolStripSeparator(), DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, new ToolStripSeparator(), EndPlayerTurnItem };
+
+            OrdersMenu.DropDownItems.Add(BuildNewCityItem);
+            OrdersMenu.DropDownItems.Add(BuildRoadItem);
+            OrdersMenu.DropDownItems.Add(BuildIrrigationItem);
+            OrdersMenu.DropDownItems.Add(BuildMinesChangeForestItem);
+            OrdersMenu.DropDownItems.Add(new ToolStripSeparator());
+            OrdersMenu.DropDownItems.Add(AutomateSettlerItem);
+            OrdersMenu.DropDownItems.Add(CleanUpPollutionItem);
+            OrdersMenu.DropDownItems.Add(PillageItem);
+            OrdersMenu.DropDownItems.Add(new ToolStripSeparator());
+            OrdersMenu.DropDownItems.Add(UnloadItem);
+            OrdersMenu.DropDownItems.Add(GoToItem);
+            OrdersMenu.DropDownItems.Add(ParadropItem);
+            OrdersMenu.DropDownItems.Add(GoHomeToNearestCityItem);
+            OrdersMenu.DropDownItems.Add(new ToolStripSeparator());
+            OrdersMenu.DropDownItems.Add(FortifyItem);
+            OrdersMenu.DropDownItems.Add(SleepItem);
+            OrdersMenu.DropDownItems.Add(new ToolStripSeparator());
+            OrdersMenu.DropDownItems.Add(DisbandItem);
+            OrdersMenu.DropDownItems.Add(ActivateUnitItem);
+            OrdersMenu.DropDownItems.Add(WaitItem);
+            OrdersMenu.DropDownItems.Add(SkipTurnItem);
+            OrdersMenu.DropDownItems.Add(new ToolStripSeparator());
+            OrdersMenu.DropDownItems.Add(EndPlayerTurnItem);
 
             //Advisors menu
             ToolStripMenuItem AdvisorsMenu = new ToolStripMenuItem("Advisors");
@@ -103,8 +155,8 @@ namespace PoskusCiv2.Forms
             ToolStripMenuItem ScienecAdvisorItem = new ToolStripMenuItem("Science Advisor", null, ScienceAdvisor_Click, (Keys)Shortcut.F6);
             ToolStripMenuItem CasualtyTimelineItem = new ToolStripMenuItem("Casualty Timeline", null, CasualtyTimeline_Click, (Keys)Shortcut.CtrlD);
             MainMenuStrip.Items.Add(AdvisorsMenu);
-            AdvisorsMenu.DropDownItems.Add(ConsultHighCouncilItem);
             AdvisorsMenu.DropDownItems.Add(ChatWithKingsItem);
+            AdvisorsMenu.DropDownItems.Add(ConsultHighCouncilItem);
             AdvisorsMenu.DropDownItems.Add(new ToolStripSeparator());
             AdvisorsMenu.DropDownItems.Add(CityStatusItem);
             AdvisorsMenu.DropDownItems.Add(DefenseMinisterItem);
@@ -130,6 +182,12 @@ namespace PoskusCiv2.Forms
             WorldMenu.DropDownItems.Add(new ToolStripSeparator());
             WorldMenu.DropDownItems.Add(DemographicsItem);
             WorldMenu.DropDownItems.Add(SpaceshipsItem);
+
+            //Disable some item
+            MultiplayerOptionsItem.Enabled = false;
+            GameProfileItem.Enabled = false;
+            JoinGameItem.Enabled = false;
+            ChangeTimerItem.Enabled = false;
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -153,10 +211,6 @@ namespace PoskusCiv2.Forms
             statusForm.Show();
 
             cityForm = new CityForm(this);
-
-            //cityForm.MdiParent = this;
-            //cityForm.StartPosition = FormStartPosition.Manual;
-            //cityForm.Location = new Point(1260, 0);
         }
 
         // GAME MENU
@@ -221,6 +275,71 @@ namespace PoskusCiv2.Forms
         private void ViewThroneRoom_Click(object sender, EventArgs e) { }
         private void FindCity_Click(object sender, EventArgs e) { }
         private void Revolution_Click(object sender, EventArgs e) { }
+
+        // ORDERS MENU
+        private void BuildRoad_Click(object sender, EventArgs e) { }
+
+        private void BuildIrrigation_Click(object sender, EventArgs e)
+        {
+            if (BuildIrrigationItem.Enabled) Actions.GiveCommand("Build irrigation");
+        }
+
+        private void BuildMinesChangeForest_Click(object sender, EventArgs e)
+        {
+            if (BuildMinesChangeForestItem.Enabled) Actions.GiveCommand("Build mines/Change forest");
+        }
+
+        private void CleanUpPollution_Click(object sender, EventArgs e) { }
+        private void Pillage_Click(object sender, EventArgs e) { }
+        private void Unload_Click(object sender, EventArgs e) { }
+
+        private void GoTo_Click(object sender, EventArgs e)
+        {
+            if (GoToItem.Enabled) Actions.GiveCommand("Go To");
+        }
+
+        private void GoHomeToNearestCity_Click(object sender, EventArgs e)
+        {
+            if (GoHomeToNearestCityItem.Enabled) Actions.GiveCommand("Go Home");
+        }
+
+        private void Fortify_Click(object sender, EventArgs e)
+        {
+            if (FortifyItem.Enabled) Actions.GiveCommand("Fortify");
+        }
+
+        private void Sleep_Click(object sender, EventArgs e)
+        {
+            if (SleepItem.Enabled) Actions.GiveCommand("Sleep");
+        }
+
+        private void Disband_Click(object sender, EventArgs e) { }
+
+        private void ActivateUnit_Click(object sender, EventArgs e)
+        {
+            if (ActivateUnitItem.Enabled) Actions.GiveCommand("Activate unit");
+        }
+
+        private void Wait_Click(object sender, EventArgs e) { }
+
+        private void SkipTurn_Click(object sender, EventArgs e)
+        {
+            Actions.GiveCommand("Skip turn");
+        }
+
+        private void EndPlayerTurn_Click(object sender, EventArgs e) { }
+
+        private void BuildNewCity_Click(object sender, EventArgs e)
+        {
+            if(BuildNewCityItem.Enabled) Actions.GiveCommand("Build city");
+        }
+
+        private void AutomateSettler_Click(object sender, EventArgs e)
+        {
+            if (AutomateSettlerItem.Enabled) Actions.GiveCommand("Automate");
+        }
+
+        private void Paradrop_Click(object sender, EventArgs e) { }
 
         // ADVISORS MENU
         private void ChatWithKings_Click(object sender, EventArgs e) { }
@@ -291,6 +410,86 @@ namespace PoskusCiv2.Forms
             frm.Location = new Point(330, 250);
             frm.Width = 622;
             frm.Height = 421;
+        }
+
+        //If a new unit or no unit is active, update orders menu accordingly
+        public void UpdateOrdersMenu()
+        {
+            if (MapForm.ViewingPiecesMode)  //disable all menus except disband & activate unit
+            {
+                foreach (ToolStripItem item in OrdersMenu.DropDownItems) item.Enabled = false;
+                DisbandItem.Enabled = true;
+                ActivateUnitItem.Enabled = true;
+            }
+            else if (Game.Instance.ActiveUnit.Type == UnitType.Settlers)
+            {
+                OrdersMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in SettlerItems)
+                {
+                    OrdersMenu.DropDownItems.Add(item);
+                    item.Enabled = true;
+                }
+            }
+            else
+            {
+                OrdersMenu.DropDownItems.Clear();
+                foreach (ToolStripItem item in NoSettlerItems)
+                {
+                    OrdersMenu.DropDownItems.Add(item);
+                    item.Enabled = true;
+                }
+                if (Game.Instance.ActiveUnit.Type != UnitType.Paratroopers) OrdersMenu.DropDownItems.Remove(ParadropItem);
+                if (Game.Instance.ActiveUnit.GAS == (UnitGAS.Air | UnitGAS.Sea)) PillageItem.Enabled = false;
+                BuildRoadItem.Enabled = false;
+                BuildIrrigationItem.Enabled = false;
+                BuildMinesChangeForestItem.Enabled = false;
+                CleanUpPollutionItem.Enabled = false;
+                UnloadItem.Enabled = false;
+            }
+        }
+
+        //Shome shortcuts keys are not supported. Grab them with this method.
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.NumPad1: Actions.GiveCommand("Move SW"); break;
+                case Keys.NumPad2: Actions.GiveCommand("Move S"); break;
+                case Keys.NumPad3: Actions.GiveCommand("Move SE"); break;
+                case Keys.NumPad4: Actions.GiveCommand("Move W"); break;
+                case Keys.NumPad6: Actions.GiveCommand("Move E"); break;
+                case Keys.NumPad7: Actions.GiveCommand("Move NW"); break;
+                case Keys.NumPad8: Actions.GiveCommand("Move N"); break;
+                case Keys.NumPad9: Actions.GiveCommand("Move NE"); break;
+                case Keys.Down: Actions.GiveCommand("Move S"); break;
+                case Keys.Left: Actions.GiveCommand("Move W"); break;
+                case Keys.Right: Actions.GiveCommand("Move E"); break;
+                case Keys.Up: Actions.GiveCommand("Move N"); break;
+                case Keys.A: ActivateUnit_Click(null, null); break;
+                case Keys.B: BuildNewCity_Click(null, null); break;
+                case Keys.F: Fortify_Click(null, null); break;
+                case Keys.G: GoTo_Click(null, null); break;
+                case Keys.H: GoHomeToNearestCity_Click(null, null); break;
+                case Keys.I: BuildIrrigation_Click(null, null); break;
+                case Keys.K: AutomateSettler_Click(null, null); break;
+                case Keys.M: BuildMinesChangeForest_Click(null, null); break;
+                case Keys.O: Actions.GiveCommand("Terraform"); break;
+                case Keys.P: CleanUpPollution_Click(null, null); break; //paradrop!!!
+                case Keys.R: BuildRoad_Click(null, null); break;
+                case Keys.S: Sleep_Click(null, null); break;
+                case Keys.U: Unload_Click(null, null); break;
+                case Keys.W: Wait_Click(null, null); break;
+                case Keys.Space: SkipTurn_Click(null, null); break;
+                case Keys.Enter: Actions.GiveCommand("ENTER"); break;
+                case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
+                case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
+                case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
+                case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
+                case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
+                case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
+                case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

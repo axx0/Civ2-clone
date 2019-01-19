@@ -18,15 +18,14 @@ namespace PoskusCiv2.Forms
         public MainCiv2Window mainCiv2Window;
 
         public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY, BoxNoX, BoxNoY;
-        public static bool IsUnitPulsating;
+        public static bool ViewingPiecesMode;
         Random randomNo = new Random();
 
         public bool CreateUnit, GridIsChecked = false, DrawXYnumbers = false;
-        public static bool viewingPiecesMode = false;
 
         //timer
         Timer t = new Timer();
-        int stej = 0;   //records no of timer ticks
+        int timerCount = 0;   //records no of timer ticks
 
         Draw Draw = new Draw();
 
@@ -55,7 +54,7 @@ namespace PoskusCiv2.Forms
             MapPanel.Paint += new PaintEventHandler(MapPanel_Paint);
             MapPanel.MouseClick += new MouseEventHandler(MapPanel_MouseClick);
 
-            IsUnitPulsating = true; //initialize
+            ViewingPiecesMode = false; //initialize
         }
 
         private void MapForm_Load(object sender, EventArgs e)
@@ -101,7 +100,7 @@ namespace PoskusCiv2.Forms
             //Play movement sound for unit
             //if (new char[] { '1', '2', '3', '4', '6', '7', '8', '9'}.Contains(e.KeyChar)) { player.Play(); };
 
-            Actions.UnitKeyboardAction(e.KeyCode);
+            //Actions.UnitKeyboardAction(e.KeyCode);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -154,8 +153,7 @@ namespace PoskusCiv2.Forms
             }
 
             //Draw active unit
-            if (!IsUnitPulsating) stej = 1;
-            if (stej % 2 == 1)
+            if (timerCount % 2 == 1 || ViewingPiecesMode)
             {
                 //Determine if active unit is stacked
                 bool stacked = false;
@@ -194,7 +192,7 @@ namespace PoskusCiv2.Forms
             }
 
             //Draw viewing pieces
-            if (viewingPiecesMode && stej % 2 == 1)
+            if (ViewingPiecesMode && timerCount % 2 == 1)
             {
                 e.Graphics.DrawImage(Images.ViewingPieces, 32 * (ClickedBoxX - offsetX), 16 * (ClickedBoxY - offsetY), 64, 32);
             }
@@ -236,7 +234,8 @@ namespace PoskusCiv2.Forms
 
             if (e.Button == MouseButtons.Right)
             {
-                viewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form                             
+                ViewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form
+                Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();  //update orders menu in main screen
                 mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();  //send mouse click location to status form
             }
             else
@@ -252,7 +251,7 @@ namespace PoskusCiv2.Forms
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            stej += 1;
+            timerCount += 1;
             //update viewing pieces
             //MapPanel.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
             RefreshMapForm();

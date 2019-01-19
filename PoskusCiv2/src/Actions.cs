@@ -110,10 +110,21 @@ namespace PoskusCiv2
             if (allUnitsEndedTurn)
             {
                 //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
-                if (Game.Options.AlwaysWaitAtEndOfTurn) { Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage(); MapForm.IsUnitPulsating = false; }
+                if (Game.Options.AlwaysWaitAtEndOfTurn)
+                {
+                    MapForm.ViewingPiecesMode = true;
+                    Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage();
+                    Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();
+                }
                 else NewTurn();
             }
-            else UpdateUnit(Game.Instance.ActiveUnit);
+            else
+            {
+                //Unit is active. Make sure the menus are enabled.
+                MapForm.ViewingPiecesMode = false;
+                UpdateUnit(Game.Instance.ActiveUnit);
+                Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();
+            }
         }
 
         //Update stats of all cities
@@ -146,48 +157,47 @@ namespace PoskusCiv2
             ChooseNextUnit();
         }
 
-        public static void UnitKeyboardAction(Keys pressedKey)
+        public static void GiveCommand(string action)
         {
             //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
             if (Game.Options.AlwaysWaitAtEndOfTurn && allUnitsEndedTurn)
             {
-                switch (pressedKey)
+                if (action == "ENTER")
                 {
-                    case Keys.Enter:
-                        {
-                            Application.OpenForms.OfType<StatusForm>().First().HideEndOfTurnMessage();
-                            MapForm.IsUnitPulsating = true; //reset it
-                            NewTurn();
-                            break;
-                        }
-                    default: break;
+                    Application.OpenForms.OfType<StatusForm>().First().HideEndOfTurnMessage();
+                    MapForm.ViewingPiecesMode = false; //reset it
+                    NewTurn();
                 }
+
             }
             else
             {
-                switch (pressedKey)
+                switch (action)
                 {
-                    case Keys.Enter: break;
-                    case Keys.NumPad1: Game.Instance.ActiveUnit.Move(-1, 1); break;
-                    case Keys.NumPad2: Game.Instance.ActiveUnit.Move(0, 2); break;
-                    case Keys.NumPad3: Game.Instance.ActiveUnit.Move(1, 1); break;
-                    case Keys.NumPad4: Game.Instance.ActiveUnit.Move(-2, 0); break;
-                    case Keys.NumPad6: Game.Instance.ActiveUnit.Move(2, 0); break;
-                    case Keys.NumPad7: Game.Instance.ActiveUnit.Move(-1, -1); break;
-                    case Keys.NumPad8: Game.Instance.ActiveUnit.Move(0, -2); break;
-                    case Keys.NumPad9: Game.Instance.ActiveUnit.Move(1, -1); break;
-                    case Keys.Space: Game.Instance.ActiveUnit.SkipTurn(); break;
-                    case Keys.S: Game.Instance.ActiveUnit.Sleep(); break;
-                    case Keys.F: Game.Instance.ActiveUnit.Fortify(); break;
-                    case Keys.I: Game.Instance.ActiveUnit.Irrigate(); break;
-                    case Keys.O: Game.Instance.ActiveUnit.Transform(); break;
-                    case Keys.R: Game.Instance.ActiveUnit.BuildRoad(); break;
-                    case Keys.M: Game.Instance.ActiveUnit.BuildMines(); break;
+                    case "Activate unit": break;
+                    case "Automate": break;
+                    case "Build city": break;
+                    case "Build road": Game.Instance.ActiveUnit.BuildRoad(); break;
+                    case "Build irrigation": Game.Instance.ActiveUnit.BuildIrrigation(); break;
+                    case "Build mines/Change forest": Game.Instance.ActiveUnit.BuildMines(); break;
+                    case "Fortify": Game.Instance.ActiveUnit.Fortify(); break;
+                    case "Go Home": break;
+                    case "Go To": Game.Instance.ActiveUnit.GoToX = 5; break;    //TO-DO
+                    case "Move SW": Game.Instance.ActiveUnit.Move(-1, 1); break;
+                    case "Move S": Game.Instance.ActiveUnit.Move(0, 2); break;
+                    case "Move SE": Game.Instance.ActiveUnit.Move(1, 1); break;
+                    case "Move E": Game.Instance.ActiveUnit.Move(2, 0); break;
+                    case "Move W": Game.Instance.ActiveUnit.Move(-2, 0); break;
+                    case "Move NW": Game.Instance.ActiveUnit.Move(-1, -1); break;
+                    case "Move N": Game.Instance.ActiveUnit.Move(0, -2); break;
+                    case "Move NE": Game.Instance.ActiveUnit.Move(1, -1); break;
+                    case "Sleep": Game.Instance.ActiveUnit.Sleep(); break;
+                    case "Skip turn": Game.Instance.ActiveUnit.SkipTurn(); break;
+                    case "Terraform": Game.Instance.ActiveUnit.Transform(); break;
                     default: break;
                 }
                 UpdateUnit(Game.Instance.ActiveUnit);
             }
         }
-
     }
 }

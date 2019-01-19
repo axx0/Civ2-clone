@@ -122,7 +122,7 @@ namespace PoskusCiv2.Forms
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
 
-            if (!MapForm.viewingPiecesMode)
+            if (!MapForm.ViewingPiecesMode)
             {
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);

@@ -128,7 +128,7 @@ namespace PoskusCiv2.Units
             Action = OrderType.Fortify;
         }
 
-        public void Irrigate()
+        public void BuildIrrigation()
         {
             if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Irrigation == false) || (Game.Terrain[X, Y].Farmland == false)))
             {

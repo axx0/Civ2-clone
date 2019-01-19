@@ -182,6 +182,9 @@
     <Compile Include="src\Forms\Menu Advisors\TradeAdvisorForm.Designer.cs">
       <DependentUpon>TradeAdvisorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\Templates\Civ2ToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Forms\Templates\TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
