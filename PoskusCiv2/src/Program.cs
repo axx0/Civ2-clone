@@ -26,7 +26,7 @@ namespace PoskusCiv2
             Images.LoadPeople(@"C:\DOS\CIV 2\Civ2\PEOPLE.GIF");
             Images.LoadIcons(@"C:\DOS\CIV 2\Civ2\ICONS.GIF");
             Images.LoadCityWallpaper(@"C:\DOS\CIV 2\Civ2\CITY.GIF");
-            Sound.LoadSounds(@"C:\DOS\CIV 2\Civ2");
+            Sound.LoadSounds(@"C:\DOS\CIV 2\Civ2\SOUND\");
             Images.LoadDLLimages(@"C:\DOS\CIV 2\DLLs\");
 
             Game.StartGame();

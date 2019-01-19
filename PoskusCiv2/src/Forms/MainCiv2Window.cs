@@ -183,6 +183,49 @@ namespace PoskusCiv2.Forms
             WorldMenu.DropDownItems.Add(DemographicsItem);
             WorldMenu.DropDownItems.Add(SpaceshipsItem);
 
+            //Cheat menu
+            ToolStripMenuItem CheatMenu = new ToolStripMenuItem("Cheat");
+            ToolStripMenuItem ToggleCheatModeItem = new ToolStripMenuItem("Toggle Cheat Mode", null, ToggleCheatMode_Click, (Keys)Shortcut.CtrlK);
+            ToolStripMenuItem CreateUnitItem = new ToolStripMenuItem("Create Unit", null, CreateUnit_Click, (Keys)Shortcut.ShiftF1);
+            ToolStripMenuItem RevealMapItem = new ToolStripMenuItem("Reveal Map", null, RevealMap_Click, (Keys)Shortcut.ShiftF2);
+            ToolStripMenuItem SetHumanPlayerItem = new ToolStripMenuItem("Set Human Player", null, SetHumanPlayer_Click, (Keys)Shortcut.ShiftF3);
+            ToolStripMenuItem SetGameYearItem = new ToolStripMenuItem("Set Game Year", null, SetGameYear_Click, (Keys)Shortcut.ShiftF4);
+            ToolStripMenuItem KillCivilizationItem = new ToolStripMenuItem("Kill Civilization", null, KillCivilization_Click, (Keys)Shortcut.ShiftF5);
+            ToolStripMenuItem TechnologyAdvanceItem = new ToolStripMenuItem("Technology Advance", null, TechnologyAdvance_Click, (Keys)Shortcut.ShiftF6);
+            ToolStripMenuItem EditTechnologiesItem = new ToolStripMenuItem("Edit Technologies", null, EditTechnologies_Click, (Keys)Shortcut.CtrlShiftF6);
+            ToolStripMenuItem ForceGovernmentItem = new ToolStripMenuItem("Force Government", null, ForceGovernment_Click, (Keys)Shortcut.ShiftF7);
+            ToolStripMenuItem ChangeTerrainAtCursorItem = new ToolStripMenuItem("Change Terrain At Cursor", null, ChangeTerrainAtCursor_Click, (Keys)Shortcut.ShiftF8);
+            ToolStripMenuItem DestroyAllUnitsAtCursorItem = new ToolStripMenuItem("Destroy All Units At Cursor", null, DestroyAllUnitsAtCursor_Click, (Keys)Shortcut.CtrlShiftD);
+            ToolStripMenuItem ChangeMoneyItem = new ToolStripMenuItem("Change Money", null, ChangeMoney_Click, (Keys)Shortcut.ShiftF9);
+            ToolStripMenuItem EditUnitItem = new ToolStripMenuItem("Edit Unit", null, EditUnit_Click, (Keys)Shortcut.CtrlShiftU);
+            ToolStripMenuItem EditCityItem = new ToolStripMenuItem("Edit City", null, EditCity_Click, (Keys)Shortcut.CtrlShiftC);
+            ToolStripMenuItem EditKingItem = new ToolStripMenuItem("Edit King", null, EditKing_Click, (Keys)Shortcut.CtrlShiftK);
+            ToolStripMenuItem ScenarioParametersItem = new ToolStripMenuItem("Scenario Parameters", null, ScenarioParameters_Click, (Keys)Shortcut.CtrlShiftP);
+            ToolStripMenuItem SaveAsScenarioItem = new ToolStripMenuItem("Save As Scenario", null, SaveAsScenario_Click, (Keys)Shortcut.CtrlShiftS);
+            MainMenuStrip.Items.Add(CheatMenu);
+            CheatMenu.DropDownItems.Add(ToggleCheatModeItem);
+            CheatMenu.DropDownItems.Add(new ToolStripSeparator());
+            CheatMenu.DropDownItems.Add(CreateUnitItem);
+            CheatMenu.DropDownItems.Add(RevealMapItem);
+            CheatMenu.DropDownItems.Add(SetGameYearItem);
+            CheatMenu.DropDownItems.Add(new ToolStripSeparator());
+            CheatMenu.DropDownItems.Add(SetGameYearItem);
+            CheatMenu.DropDownItems.Add(KillCivilizationItem);
+            CheatMenu.DropDownItems.Add(new ToolStripSeparator());
+            CheatMenu.DropDownItems.Add(TechnologyAdvanceItem);
+            CheatMenu.DropDownItems.Add(EditTechnologiesItem);
+            CheatMenu.DropDownItems.Add(ForceGovernmentItem);
+            CheatMenu.DropDownItems.Add(ChangeTerrainAtCursorItem);
+            CheatMenu.DropDownItems.Add(DestroyAllUnitsAtCursorItem);
+            CheatMenu.DropDownItems.Add(ChangeMoneyItem);
+            CheatMenu.DropDownItems.Add(new ToolStripSeparator());
+            CheatMenu.DropDownItems.Add(EditUnitItem);
+            CheatMenu.DropDownItems.Add(EditCityItem);
+            CheatMenu.DropDownItems.Add(EditKingItem);
+            CheatMenu.DropDownItems.Add(new ToolStripSeparator());
+            CheatMenu.DropDownItems.Add(ScenarioParametersItem);
+            CheatMenu.DropDownItems.Add(SaveAsScenarioItem);
+
             //Disable some item
             MultiplayerOptionsItem.Enabled = false;
             GameProfileItem.Enabled = false;
@@ -403,6 +446,40 @@ namespace PoskusCiv2.Forms
         }
 
         private void Spaceships_Click(object sender, EventArgs e) { }
+
+        // CHEAT MENU
+        private void ToggleCheatMode_Click(object sender, EventArgs e) { }
+        private void CreateUnit_Click(object sender, EventArgs e) { }
+        private void RevealMap_Click(object sender, EventArgs e) { }
+        private void SetHumanPlayer_Click(object sender, EventArgs e) { }
+
+        private void SetGameYear_Click(object sender, EventArgs e)
+        {
+            SetGameYearForm SetGameYearForm = new SetGameYearForm();
+            SetGameYearForm.Load += new EventHandler(SetGameYearForm_Load);   //so you set the correct size of form
+            SetGameYearForm.ShowDialog();
+        }
+
+        private void SetGameYearForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Location = new Point(400, 350);
+            frm.Width = 476;
+            frm.Height = 158;
+        }
+
+        private void KillCivilization_Click(object sender, EventArgs e) { }
+        private void TechnologyAdvance_Click(object sender, EventArgs e) { }
+        private void EditTechnologies_Click(object sender, EventArgs e) { }
+        private void ForceGovernment_Click(object sender, EventArgs e) { }
+        private void ChangeTerrainAtCursor_Click(object sender, EventArgs e) { }
+        private void DestroyAllUnitsAtCursor_Click(object sender, EventArgs e) { }
+        private void ChangeMoney_Click(object sender, EventArgs e) { }
+        private void EditUnit_Click(object sender, EventArgs e) { }
+        private void EditCity_Click(object sender, EventArgs e) { }
+        private void EditKing_Click(object sender, EventArgs e) { }
+        private void ScenarioParameters_Click(object sender, EventArgs e) { }
+        private void SaveAsScenario_Click(object sender, EventArgs e) { }
 
         private void AdvisorsForm_Load(object sender, EventArgs e)
         {

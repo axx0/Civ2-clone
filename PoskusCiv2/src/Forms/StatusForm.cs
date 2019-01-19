@@ -76,13 +76,13 @@ namespace PoskusCiv2.Forms
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
-            string bcad;
-            if (Game.Data.GameYear < 0) { bcad = "B.C."; }
-            else { bcad = "A.D."; }
+            string showYear;
+            if (Game.Data.GameYear < 0) showYear = Math.Abs(Game.Data.GameYear).ToString() + " B.C. (Turn " + Game.Data.TurnNumber + ")";
+            else showYear = "A.D. " + Math.Abs(Game.Data.GameYear).ToString() + " (Turn " + Game.Data.TurnNumber + ")";
             e.Graphics.DrawString(Game.Civs[1].Population + " People", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 2 + 1));
             e.Graphics.DrawString(Game.Civs[1].Population + " People", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 2));
-            e.Graphics.DrawString(Math.Abs(Game.Data.GameYear).ToString() + " " + bcad + "(Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 20 + 1));
-            e.Graphics.DrawString(Math.Abs(Game.Data.GameYear).ToString() + " " + bcad + "(Turn " + Game.Data.TurnNumber + ")", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
+            e.Graphics.DrawString(showYear, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 20 + 1));
+            e.Graphics.DrawString(showYear, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
             e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
             e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
             //Draw line borders

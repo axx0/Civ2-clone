@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PoskusCiv2.Enums;
+using PoskusCiv2.Sounds;
 
 namespace PoskusCiv2.Units
 {
@@ -92,13 +93,15 @@ namespace PoskusCiv2.Units
                 }
                 X = Xto;
                 Y = Yto;
+
+                Sound.MoveSound.Play();
             }
 
             if (MovePointsLost >= 3 * MoveRate)
             {
                 TurnEnded = true;
                 MovePointsLost = 3 * MoveRate;
-            }
+            }            
         }
 
         private bool _turnEnded;

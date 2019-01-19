@@ -41,7 +41,6 @@ namespace PoskusCiv2.Forms
             mainCiv2Window = _mainCiv2Window;
             Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.8625 - 6), _mainCiv2Window.ClientSize.Height - 30);    //-4 is experience setting
             Paint += new PaintEventHandler(MapForm_Paint);
-            KeyDown += new KeyEventHandler(MapForm_KeyDown);
 
             //Panel for map
             MapPanel = new DoubleBufferedPanel
@@ -93,14 +92,6 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 39, 9, 39 + MapPanel.Height + 1);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, 38 + MapPanel.Height + 2, 9 + MapPanel.Width + 2, 38 + MapPanel.Height + 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 8 + MapPanel.Width + 2, 39, 8 + MapPanel.Width + 2, 39 + MapPanel.Height + 2);
-        }
-
-        private void MapForm_KeyDown(object sender, KeyEventArgs e)
-        {
-            //Play movement sound for unit
-            //if (new char[] { '1', '2', '3', '4', '6', '7', '8', '9'}.Contains(e.KeyChar)) { player.Play(); };
-
-            //Actions.UnitKeyboardAction(e.KeyCode);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
