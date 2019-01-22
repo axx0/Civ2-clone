@@ -449,7 +449,22 @@ namespace PoskusCiv2.Forms
 
         // CHEAT MENU
         private void ToggleCheatMode_Click(object sender, EventArgs e) { }
-        private void CreateUnit_Click(object sender, EventArgs e) { }
+
+        private void CreateUnit_Click(object sender, EventArgs e)
+        {
+            CreateUnitForm CreateUnitForm = new CreateUnitForm();
+            CreateUnitForm.Load += new EventHandler(CreateUnitForm_Load);   //so you set the correct size of form
+            CreateUnitForm.ShowDialog();
+        }
+
+        private void CreateUnitForm_Load(object sender, EventArgs e)
+        {
+            Form frm = sender as Form;
+            frm.Location = new Point(300, 200);
+            frm.Width = 746;
+            frm.Height = 459;
+        }
+
         private void RevealMap_Click(object sender, EventArgs e) { }
         private void SetHumanPlayer_Click(object sender, EventArgs e) { }
 

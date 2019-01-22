@@ -216,6 +216,9 @@ namespace PoskusCiv2
             int difficultyLevel = dataArray[44];
 
             //Barbarian activity
+            int civsInPlay = dataArray[46];
+
+            //Barbarian activity
             int barbarianActivity = dataArray[45];
 
             //Amount of pollution
