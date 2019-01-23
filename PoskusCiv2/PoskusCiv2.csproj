@@ -111,11 +111,17 @@
     <Compile Include="src\Forms\Menu Advisors\CityStatusForm.Designer.cs">
       <DependentUpon>CityStatusForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\Menu Cheat\CreateUnitForm.cs">
+    <Compile Include="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Forms\Menu Cheat\CreateUnitForm.Designer.cs">
+    <Compile Include="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.Designer.cs">
       <DependentUpon>CreateUnitForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.Designer.cs">
+      <DependentUpon>ForeignCreateUnitForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\Menu Cheat\SetGameYearForm.cs">
       <SubType>Form</SubType>
@@ -242,8 +248,11 @@
     <EmbeddedResource Include="src\Forms\Menu Advisors\CityStatusForm.resx">
       <DependentUpon>CityStatusForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Cheat\CreateUnitForm.resx">
+    <EmbeddedResource Include="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.resx">
       <DependentUpon>CreateUnitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.resx">
+      <DependentUpon>ForeignCreateUnitForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Cheat\SetGameYearForm.resx">
       <DependentUpon>SetGameYearForm.cs</DependentUpon>
