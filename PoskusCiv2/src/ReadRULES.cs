@@ -106,7 +106,7 @@ namespace PoskusCiv2
                     {
                         line = file.ReadLine();
                         List<string> text = line.Split(';').ToList();
-                        CosmicRules[row] = Int32.Parse(text[0].Replace(" ", string.Empty));
+                        CosmicRules[row] = Int32.Parse(text[0].Trim());
                     }
                 }
 
@@ -118,13 +118,13 @@ namespace PoskusCiv2
                         line = file.ReadLine();
                         List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         TechName[row] = text[0];
-                        TechAIvalue[row] = Int32.Parse(text[1].Replace(" ", string.Empty));
-                        TechModifier[row] = Int32.Parse(text[2].Replace(" ", string.Empty));
-                        TechPrereq1[row] = text[3].Replace(" ", string.Empty);
-                        TechPrereq2[row] = text[4].Replace(" ", string.Empty);
-                        TechEpoch[row] = Int32.Parse(text[5].Replace(" ", string.Empty));
-                        TechCategory[row] = Int32.Parse(text[6].Replace(" ", string.Empty));
-                        TechShortName[row] = text[7].Replace(" ", string.Empty);
+                        TechAIvalue[row] = Int32.Parse(text[1].Trim());
+                        TechModifier[row] = Int32.Parse(text[2].Trim());
+                        TechPrereq1[row] = text[3].Trim();
+                        TechPrereq2[row] = text[4].Trim();
+                        TechEpoch[row] = Int32.Parse(text[5].Trim());
+                        TechCategory[row] = Int32.Parse(text[6].Trim());
+                        TechShortName[row] = text[7].Trim();
                     }
                 }
 
@@ -136,9 +136,9 @@ namespace PoskusCiv2
                         line = file.ReadLine();
                         List<string> text = line.Split(',').ToList();
                         ImprovementName[row] = text[0];
-                        ImprovementCost[row] = Int32.Parse(text[1].Replace(" ", string.Empty));
-                        ImprovementUpkeep[row] = Int32.Parse(text[2].Replace(" ", string.Empty));
-                        ImprovementPrereq[row] = text[3].Replace(" ", string.Empty);
+                        ImprovementCost[row] = Int32.Parse(text[1].Trim());
+                        ImprovementUpkeep[row] = Int32.Parse(text[2].Trim());
+                        ImprovementPrereq[row] = text[3].Trim();
                     }
                 }
 
@@ -166,16 +166,16 @@ namespace PoskusCiv2
                         List<string> text = line.Split(',').ToList();
                         UnitName[row] = text[0];
                         UnitUntil[row] = text[1];
-                        UnitDomain[row] = Int32.Parse(text[2].Replace(" ", string.Empty));
-                        UnitMove[row] = Int32.Parse((text[3].Replace(" ", string.Empty)).Replace(".", string.Empty));
-                        UnitRange[row] = Int32.Parse(text[4].Replace(" ", string.Empty));
-                        UnitAttack[row] = Int32.Parse((text[5].Replace(" ", string.Empty)).Replace("a", string.Empty));
-                        UnitDefense[row] = Int32.Parse((text[6].Replace(" ", string.Empty)).Replace("d", string.Empty));
-                        UnitHitp[row] = Int32.Parse((text[7].Replace(" ", string.Empty)).Replace("h", string.Empty));
-                        UnitFirepwr[row] = Int32.Parse((text[8].Replace(" ", string.Empty)).Replace("f", string.Empty));
-                        UnitCost[row] = Int32.Parse(text[9].Replace(" ", string.Empty));
-                        UnitHold[row] = Int32.Parse(text[10].Replace(" ", string.Empty));
-                        UnitAIrole[row] = Int32.Parse(text[11].Replace(" ", string.Empty));
+                        UnitDomain[row] = Int32.Parse(text[2].Trim());
+                        UnitMove[row] = Int32.Parse(text[3].Trim().Replace(".", string.Empty));
+                        UnitRange[row] = Int32.Parse(text[4].Trim());
+                        UnitAttack[row] = Int32.Parse(text[5].Trim().Replace("a", string.Empty));
+                        UnitDefense[row] = Int32.Parse(text[6].Trim().Replace("d", string.Empty));
+                        UnitHitp[row] = Int32.Parse(text[7].Trim().Replace("h", string.Empty));
+                        UnitFirepwr[row] = Int32.Parse(text[8].Trim().Replace("f", string.Empty));
+                        UnitCost[row] = Int32.Parse(text[9].Trim());
+                        UnitHold[row] = Int32.Parse(text[10].Trim());
+                        UnitAIrole[row] = Int32.Parse(text[11].Trim());
                         UnitPrereq[row] = text[12];
                         UnitFlags[row] = text[13];
                     }
@@ -189,22 +189,22 @@ namespace PoskusCiv2
                     {
                         line = file.ReadLine();
                         List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TerrainName[row] = text[0];
-                        TerrainMovecost[row] = Int32.Parse(text[1].Replace(" ", string.Empty));
-                        TerrainDefense[row] = Int32.Parse(text[2].Replace(" ", string.Empty));
-                        TerrainFood[row] = Int32.Parse(text[3].Replace(" ", string.Empty));
-                        TerrainShields[row] = Int32.Parse(text[4].Replace(" ", string.Empty));
-                        TerrainTrade[row] = Int32.Parse(text[5].Replace(" ", string.Empty));
-                        TerrainIrrigate[row] = text[6].Replace(" ", string.Empty);
-                        TerrainIrrigateBonus[row] = Int32.Parse(text[7].Replace(" ", string.Empty));
-                        TerrainIrrigateTurns[row] = Int32.Parse(text[8].Replace(" ", string.Empty));
-                        TerrainIrrigateAI[row] = Int32.Parse(text[9].Replace(" ", string.Empty));
-                        TerrainMine[row] = text[10].Replace(" ", string.Empty);
-                        TerrainMineBonus[row] = Int32.Parse(text[11].Replace(" ", string.Empty));
-                        TerrainMineTurns[row] = Int32.Parse(text[12].Replace(" ", string.Empty));
-                        TerrainMineAI[row] = Int32.Parse(text[13].Replace(" ", string.Empty));
-                        TerrainTransform[row] = text[14].Replace(" ", string.Empty);
-                        TerrainShortName[row] = text[16].Replace(" ", string.Empty);
+                        TerrainName[row] = text[0].Trim();
+                        TerrainMovecost[row] = Int32.Parse(text[1].Trim());
+                        TerrainDefense[row] = Int32.Parse(text[2].Trim());
+                        TerrainFood[row] = Int32.Parse(text[3].Trim());
+                        TerrainShields[row] = Int32.Parse(text[4].Trim());
+                        TerrainTrade[row] = Int32.Parse(text[5].Trim());
+                        TerrainIrrigate[row] = text[6].Trim();
+                        TerrainIrrigateBonus[row] = Int32.Parse(text[7].Trim());
+                        TerrainIrrigateTurns[row] = Int32.Parse(text[8].Trim());
+                        TerrainIrrigateAI[row] = Int32.Parse(text[9].Trim());
+                        TerrainMine[row] = text[10].Trim();
+                        TerrainMineBonus[row] = Int32.Parse(text[11].Trim());
+                        TerrainMineTurns[row] = Int32.Parse(text[12].Trim());
+                        TerrainMineAI[row] = Int32.Parse(text[13].Trim());
+                        TerrainTransform[row] = text[14].Trim();
+                        TerrainShortName[row] = text[16].Trim();
                     }
 
                     //Next read special terrain
@@ -213,11 +213,11 @@ namespace PoskusCiv2
                         line = file.ReadLine();
                         List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
                         TerrainSpecName[row] = text[0];
-                        TerrainSpecMovecost[row] = Int32.Parse(text[1].Replace(" ", string.Empty));
-                        TerrainSpecDefense[row] = Int32.Parse(text[2].Replace(" ", string.Empty));
-                        TerrainSpecFood[row] = Int32.Parse(text[3].Replace(" ", string.Empty));
-                        TerrainSpecShields[row] = Int32.Parse(text[4].Replace(" ", string.Empty));
-                        TerrainSpecTrade[row] = Int32.Parse(text[5].Replace(" ", string.Empty));
+                        TerrainSpecMovecost[row] = Int32.Parse(text[1].Trim());
+                        TerrainSpecDefense[row] = Int32.Parse(text[2].Trim());
+                        TerrainSpecFood[row] = Int32.Parse(text[3].Trim());
+                        TerrainSpecShields[row] = Int32.Parse(text[4].Trim());
+                        TerrainSpecTrade[row] = Int32.Parse(text[5].Trim());
                     }
                 }
 
@@ -228,9 +228,9 @@ namespace PoskusCiv2
                     {
                         line = file.ReadLine();
                         List<string> text = line.Split(',').ToList();
-                        GovernmentName[row] = text[0].Replace(" ", string.Empty);
-                        GovernmentTitleHIS[row] = text[1].Replace(" ", string.Empty);
-                        GovernmentTitleHER[row] = text[2].Replace(" ", string.Empty);
+                        GovernmentName[row] = text[0].Trim();
+                        GovernmentTitleHIS[row] = text[1].Trim();
+                        GovernmentTitleHER[row] = text[2].Trim();
                     }
                 }
 
@@ -241,16 +241,16 @@ namespace PoskusCiv2
                     {
                         line = file.ReadLine();
                         List<string> text = line.Split(',').ToList();
-                        LeaderNameHIS[row] = text[0];
-                        LeaderNameHER[row] = text[1].Replace(" ", string.Empty);
-                        LeaderFemale[row] = Int32.Parse(text[2].Replace(" ", string.Empty));
-                        LeaderColor[row] = Int32.Parse(text[3].Replace(" ", string.Empty));
-                        LeaderCityStyle[row] = Int32.Parse(text[4].Replace(" ", string.Empty));
-                        LeaderPlural[row] = text[5].Replace(" ", string.Empty);
-                        LeaderAdjective[row] = text[6].Replace(" ", string.Empty);
-                        LeaderAttack[row] = Int32.Parse(text[7].Replace(" ", string.Empty));
-                        LeaderExpand[row] = Int32.Parse(text[8].Replace(" ", string.Empty));
-                        LeaderCivilize[row] = Int32.Parse(text[9].Replace(" ", string.Empty));
+                        LeaderNameHIS[row] = text[0].Trim();
+                        LeaderNameHER[row] = text[1].Trim();
+                        LeaderFemale[row] = Int32.Parse(text[2].Trim());
+                        LeaderColor[row] = Int32.Parse(text[3].Trim());
+                        LeaderCityStyle[row] = Int32.Parse(text[4].Trim());
+                        LeaderPlural[row] = text[5].Trim();
+                        LeaderAdjective[row] = text[6].Trim();
+                        LeaderAttack[row] = Int32.Parse(text[7].Trim());
+                        LeaderExpand[row] = Int32.Parse(text[8].Trim());
+                        LeaderCivilize[row] = Int32.Parse(text[9].Trim());
                     }
                 }
 
@@ -261,7 +261,7 @@ namespace PoskusCiv2
                     {
                         line = file.ReadLine();
                         List<string> text = line.Split(',').ToList();
-                        CaravanCommoditie[row] = text[0].Replace(" ", string.Empty);
+                        CaravanCommoditie[row] = text[0].Trim();
                     }
                 }
 
@@ -273,7 +273,7 @@ namespace PoskusCiv2
                         line = file.ReadLine();
                         List<string> text = line.Split(',').ToList();
                         OrderName[row] = text[0];
-                        OrderShortcut[row] = text[1].Replace(" ", string.Empty);
+                        OrderShortcut[row] = text[1].Trim();
                     }
                 }
 

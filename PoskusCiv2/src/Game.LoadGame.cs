@@ -216,10 +216,13 @@ namespace PoskusCiv2
             int difficultyLevel = dataArray[44];
 
             //Barbarian activity
-            int civsInPlay = dataArray[46];
-
-            //Barbarian activity
             int barbarianActivity = dataArray[45];
+
+            //Civs in play
+            string civsInPley = Convert.ToString(dataArray[46], 2).PadLeft(8, '0');
+
+            //Human player played (multiplayer)
+            string humanPlayerPlayed = Convert.ToString(dataArray[47], 2).PadLeft(8, '0');
 
             //Amount of pollution
             int pollutionAmount = dataArray[50];
@@ -274,7 +277,7 @@ namespace PoskusCiv2
                 //City style
                 civCityStyle[i + 1] = dataArray[584 + 242 * i];
 
-                //Leader names
+                //Leader names (if empty, get the name from RULES.TXT)
                 for (int j = 0; j < 23; j++)
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 242 * i + j]);
@@ -283,7 +286,7 @@ namespace PoskusCiv2
                 civLeaderName[i + 1] = civLeaderName[i + 1].Replace("\0", string.Empty);  //remove null characters
                 //Console.WriteLine(civLeaderName);
 
-                //Tribe name
+                //Tribe name (if empty, get the name from RULES.TXT)
                 for (int j = 0; j < 23; j++)
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 242 * i + j]);
@@ -292,7 +295,7 @@ namespace PoskusCiv2
                 civTribeName[i + 1] = civTribeName[i + 1].Replace("\0", string.Empty);
                 //Console.WriteLine(civTribeName[i + 1]);
 
-                //Adjective
+                //Adjective (if empty, get the name from RULES.TXT)
                 for (int j = 0; j < 23; j++)
                 {
                     asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 23 + 242 * i + j]);
@@ -317,6 +320,7 @@ namespace PoskusCiv2
             //=========================
             int[] rulerGender = new int[8];
             int[] civMoney = new int[8];
+            int[] tribeNumber = new int[8];
             int[] civResearchProgress = new int[8];
             int[] civResearchingTech = new int[8];
             int[] civTaxRate = new int[8];
@@ -333,6 +337,9 @@ namespace PoskusCiv2
                 intVal1 = dataArray[2278 + 1428 * i + 2];    //3rd byte in tribe block
                 intVal2 = dataArray[2278 + 1428 * i + 3];    //4th byte in tribe block
                 civMoney[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+
+                //Tribe number as per @Leaders table in RULES.TXT
+                tribeNumber[i] = dataArray[2278 + 1428 * i + 6];    //7th byte in tribe block
 
                 //Research progress
                 intVal1 = dataArray[2278 + 1428 * i + 8];    //9th byte in tribe block
@@ -396,7 +403,7 @@ namespace PoskusCiv2
                     else civTechs[no] = 0;
                 }
 
-                Civilization civ = CreateCiv(i, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
+                Civilization civ = CreateCiv(i, whichHumanPlayerIsUsed, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
             }
 
 
@@ -406,8 +413,8 @@ namespace PoskusCiv2
             //=========================
             //Map header ofset
             int ofset;
-            if (version > 1) { ofset = 13702; }  //FW and later (offset=3586hex)
-            else { ofset = 13432; } //Conflicts (offset=3478hex)
+            if (version > 1) ofset = 13702;  //FW and later (offset=3586hex)
+            else ofset = 13432; //Conflicts (offset=3478hex)
 
             //Map X dimension
             intVal1 = dataArray[ofset + 0];
@@ -446,8 +453,7 @@ namespace PoskusCiv2
             int locatorMapYDimension = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             SetGameData(turnNumber, turnNumberForGameYear, unitSelectedAtGameStart, whichHumanPlayerIsUsed, playersMapUsed, playersCivilizationNumberUsed, mapRevealed, difficultyLevel, barbarianActivity, pollutionAmount, globalTempRiseOccured, noOfTurnsOfPeace, numberOfUnits, numberOfCities, mapXdimension, mapYdimension, mapArea, mapSeed, locatorMapXDimension, locatorMapYDimension);
-            //Console.WriteLine("MAP Xdim=" + mapXdimension.ToString() + " Ydim=" + mapYdimension.ToString());
-
+            
             //Initialize Terrain array now that you know its size
             Terrain = new ITerrain[mapXdimension, mapYdimension];
 
