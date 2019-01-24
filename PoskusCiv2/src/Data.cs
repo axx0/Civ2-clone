@@ -38,6 +38,7 @@ namespace PoskusCiv2
         public int TurnNumberForGameYear { get; set; }
         public int UnitSelectedAtGameStart { get; set; }
         public int HumanPlayerUsed { get; set; }
+        public int[] CivsInPlay { get; set; }
         public int PlayersMapUsed { get; set; }
         public int PlayersCivilizationNumberUsed { get; set; }
         public bool MapRevealed { get; set; }

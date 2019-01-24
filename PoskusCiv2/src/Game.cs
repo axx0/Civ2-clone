@@ -104,7 +104,7 @@ namespace PoskusCiv2
         }
 
 
-        public static void SetGameData(int turnNumber, int turnNumberForGameYear, int unitSelectedAtGameStart, int whichHumanPlayerIsUsed, int playersMapUsed, int playersCivilizationNumberUsed, bool mapRevealed, int difficultyLevel, int barbarianActivity, int pollutionAmount, int globalTempRiseOccured, int noOfTurnsOfPeace, int numberOfUnits, int numberOfCities, int mapxdim, int mapydim, int mapArea, int mapSeed, int locatorX, int locatorY)
+        public static void SetGameData(int turnNumber, int turnNumberForGameYear, int unitSelectedAtGameStart, int whichHumanPlayerIsUsed, int[] civsInPlay, int playersMapUsed, int playersCivilizationNumberUsed, bool mapRevealed, int difficultyLevel, int barbarianActivity, int pollutionAmount, int globalTempRiseOccured, int noOfTurnsOfPeace, int numberOfUnits, int numberOfCities, int mapxdim, int mapydim, int mapArea, int mapSeed, int locatorX, int locatorY)
         {
             Data data = new Data
             {
@@ -112,6 +112,7 @@ namespace PoskusCiv2
                 TurnNumberForGameYear = turnNumberForGameYear,
                 UnitSelectedAtGameStart = unitSelectedAtGameStart,
                 HumanPlayerUsed = whichHumanPlayerIsUsed,
+                CivsInPlay = civsInPlay,
                 PlayersMapUsed = playersMapUsed,
                 PlayersCivilizationNumberUsed = playersCivilizationNumberUsed,
                 MapRevealed = mapRevealed,

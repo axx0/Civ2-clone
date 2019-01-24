@@ -219,9 +219,11 @@ namespace PoskusCiv2
             int barbarianActivity = dataArray[45];
 
             //Civs in play
-            string civsInPley = Convert.ToString(dataArray[46], 2).PadLeft(8, '0');
+            int[] civsInPlay = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            string conv = Convert.ToString(dataArray[46], 2).PadLeft(8, '0');
+            for (int i = 0; i < 8; i++) if (conv[i] == '1') civsInPlay[i] = 1;
 
-            //Human player played (multiplayer)
+            //Civs with human player playing (multiplayer)
             string humanPlayerPlayed = Convert.ToString(dataArray[47], 2).PadLeft(8, '0');
 
             //Amount of pollution
@@ -312,8 +314,8 @@ namespace PoskusCiv2
             //Manually add data for barbarians
             civCityStyle[0] = 0;
             civLeaderName[0] = "NULL";
-            civTribeName[0] = "Barbarian";
-            civAdjective[0] = "Barbarians";
+            civTribeName[0] = "Barbarians";
+            civAdjective[0] = "Barbarian";
 
             //=========================
             //TECH & MONEY
@@ -452,7 +454,7 @@ namespace PoskusCiv2
             int intValue12 = dataArray[ofset + 13];
             int locatorMapYDimension = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            SetGameData(turnNumber, turnNumberForGameYear, unitSelectedAtGameStart, whichHumanPlayerIsUsed, playersMapUsed, playersCivilizationNumberUsed, mapRevealed, difficultyLevel, barbarianActivity, pollutionAmount, globalTempRiseOccured, noOfTurnsOfPeace, numberOfUnits, numberOfCities, mapXdimension, mapYdimension, mapArea, mapSeed, locatorMapXDimension, locatorMapYDimension);
+            SetGameData(turnNumber, turnNumberForGameYear, unitSelectedAtGameStart, whichHumanPlayerIsUsed, civsInPlay, playersMapUsed, playersCivilizationNumberUsed, mapRevealed, difficultyLevel, barbarianActivity, pollutionAmount, globalTempRiseOccured, noOfTurnsOfPeace, numberOfUnits, numberOfCities, mapXdimension, mapYdimension, mapArea, mapSeed, locatorMapXDimension, locatorMapYDimension);
             
             //Initialize Terrain array now that you know its size
             Terrain = new ITerrain[mapXdimension, mapYdimension];

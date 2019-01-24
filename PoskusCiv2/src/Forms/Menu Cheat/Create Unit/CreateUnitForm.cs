@@ -240,17 +240,17 @@ namespace PoskusCiv2.Forms
 
         private void ForeignButton_Click(object sender, EventArgs e)
         {
+            Close();
             ForeignCreateUnitForm ForeignCreateUnitForm = new ForeignCreateUnitForm();
             ForeignCreateUnitForm.Load += new EventHandler(ForeignCreateUnitForm_Load);   //so you set the correct size of form
             ForeignCreateUnitForm.ShowDialog();
-            Close();
         }
 
         private void ForeignCreateUnitForm_Load(object sender, EventArgs e)
         {
             Form frm = sender as Form;
             frm.Width = 686;
-            frm.Height = 248;
+            frm.Height = Game.Data.CivsInPlay.Sum() * 32 + 84;   //dependent on the number of civs in play * 32 + the height of frames
             frm.Location = new Point(330, 250);
         }
 
