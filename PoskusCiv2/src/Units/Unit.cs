@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using PoskusCiv2.Enums;
 using PoskusCiv2.Sounds;
+using PoskusCiv2.Forms;
 
 namespace PoskusCiv2.Units
 {
@@ -94,6 +96,8 @@ namespace PoskusCiv2.Units
                 X = Xto;
                 Y = Yto;
 
+                MapForm.UnitIsMoving = true;    //for animation of movement
+                Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X2 - moveX, Y2 - moveY);    //send coords of unit starting loc
                 Sound.MoveSound.Play();
             }
 

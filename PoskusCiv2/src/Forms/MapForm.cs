@@ -19,7 +19,8 @@ namespace PoskusCiv2.Forms
         CreateUnitForm createUnitForm = new CreateUnitForm();
         DoubleBufferedPanel MapPanel;
         Random randomNo = new Random();
-        Timer t = new Timer();
+        Timer t_VP = new Timer();   //viewing pieces timer
+        Timer t_Unit = new Timer(); //unit animation timer
         Draw Draw = new Draw();
         Pen pulsatingRectPen = new Pen(Color.White, 1);
 
@@ -32,10 +33,15 @@ namespace PoskusCiv2.Forms
         public static int BoxNoX { get; set; }
         public static int BoxNoY { get; set; }
         public static bool ViewingPiecesMode { get; set; }
-        public int TimerCount { get; set; }
+        public static bool UnitIsMoving { get; set; }
+        public int TimerVPCount { get; set; }
+        public int TimerUnitCount { get; set; }
+        public int AnimationStartX { get; set; }
+        public int AnimationStartY { get; set; }
         public bool CreateUnit { get; set; }
         public bool GridIsChecked { get; set; }
         public bool DrawXYnumbers { get; set; }
+        public IUnit MovingUnit { get; set; }
 
         public MapForm(MainCiv2Window _mainCiv2Window)
         {
@@ -60,19 +66,28 @@ namespace PoskusCiv2.Forms
             DrawXYnumbers = false;
             ViewingPiecesMode = false;
             CreateUnit = false;
-            TimerCount = 0;   //records no of timer ticks
+            UnitIsMoving = false;
+            TimerVPCount = 0;   //records no of timer ticks
+            TimerUnitCount = 0;
+            AnimationStartX = 0;
+            AnimationStartY = 0;
+            MovingUnit = null;
             //for calculation of moving with mouse in MapForm   
             BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);   //No of squares in X and Y direction
             BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2); //Determine the square in the center of figure
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
             OffsetX = 0; //starting offset from (0,0)
-            OffsetY = 0;    
+            OffsetY = 0;
 
-            //timer for animating units
-            t.Interval = 200; // specify interval time as you want (ms)
-            t.Tick += new EventHandler(Timer_Tick);
-            t.Start();
+            //timer for viewing pieces
+            t_VP.Interval = 200; // specify interval time as you want (ms)
+            t_VP.Tick += new EventHandler(TimerVP_Tick);
+            t_VP.Start();
+
+            //timer for animating units (don't start it until the unit has to move)
+            t_Unit.Interval = 40;
+            t_Unit.Tick += new EventHandler(TimerUnit_Tick);
         }
 
         private void MapForm_Load(object sender, EventArgs e) { }
@@ -110,7 +125,7 @@ namespace PoskusCiv2.Forms
             //Draw all units
             foreach (IUnit unit in Game.Units)
             {
-                if (unit != Game.Instance.ActiveUnit)
+                if (unit != Game.Instance.ActiveUnit && unit != MovingUnit)
                 {
                     //Determine if unit inside city
                     bool unitOnTopOfCity = false;
@@ -142,7 +157,15 @@ namespace PoskusCiv2.Forms
             }
 
             //Draw active unit
-            if (TimerCount % 2 == 1 || ViewingPiecesMode)
+            if (UnitIsMoving)
+            {
+                int moveToX = MovingUnit.X2 - AnimationStartX;
+                int moveToY = MovingUnit.Y2 - AnimationStartY;
+                e.Graphics.DrawImage(Draw.DrawUnit(MovingUnit, false, 1), 32 * (AnimationStartX - OffsetX) + TimerUnitCount * moveToX * 8, 16 * (AnimationStartY - OffsetY) + TimerUnitCount * moveToY * 4 - 16);
+
+                if (TimerUnitCount == 4) { UnitIsMoving = false; t_Unit.Stop(); TimerUnitCount = 0; MovingUnit = null; }   //stop the animation when unit moved
+            }
+            else if (TimerVPCount % 2 == 1 || ViewingPiecesMode)
             {
                 //Determine if active unit is stacked
                 bool stacked = false;
@@ -181,7 +204,7 @@ namespace PoskusCiv2.Forms
             }
 
             //Draw viewing pieces
-            if (ViewingPiecesMode && TimerCount % 2 == 1)
+            if (ViewingPiecesMode && TimerVPCount % 2 == 1)
             {
                 e.Graphics.DrawImage(Images.ViewingPieces, 32 * (ClickedBoxX - OffsetX), 16 * (ClickedBoxY - OffsetY), 64, 32);
             }
@@ -238,17 +261,31 @@ namespace PoskusCiv2.Forms
             }
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void TimerVP_Tick(object sender, EventArgs e)
         {
-            TimerCount += 1;
-            //update viewing pieces
+            TimerVPCount += 1;
             //MapPanel.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
+            MapPanel.Refresh();
+        }
+
+        private void TimerUnit_Tick(object sender, EventArgs e)
+        {
+            TimerUnitCount += 1;
             MapPanel.Refresh();
         }
 
         public void RefreshMapForm()
         {
-            TimerCount = 1; //set this so that when this method is called everything in form is refreshed immediately
+            TimerVPCount = 1; //set this so that when this method is called everything in form is refreshed immediately
+            MapPanel.Refresh();
+        }
+
+        public void AnimateUnit(IUnit movingUnit, int startX, int startY)
+        {
+            MovingUnit = movingUnit;
+            AnimationStartX = startX;
+            AnimationStartY = startY;
+            t_Unit.Start();
             MapPanel.Refresh();
         }
 
