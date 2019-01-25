@@ -85,7 +85,9 @@ namespace PoskusCiv2.Units
 
             if (Game.Terrain[Xto, Yto].Type != TerrainType.Ocean)
             {
-                if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent)) //From & To must be cities or road (movement reduced)
+                if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent) ||   //From & To must be cities, road
+                    (Game.Terrain[X, Y].River && Game.Terrain[Xto, Yto].River && moveX < 2 && moveY < 2)    //For rivers only for diagonal movement
+                    )
                 {
                     MovePointsLost += 1;
                 }
