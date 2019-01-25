@@ -24,14 +24,16 @@ namespace PoskusCiv2.Forms
         Draw Draw = new Draw();
         Pen pulsatingRectPen = new Pen(Color.White, 1);
 
-        public static int OffsetX { get; set; }
-        public static int OffsetY { get; set; }
-        public static int CenterBoxX { get; set; }
-        public static int CenterBoxY { get; set; }
-        public static int ClickedBoxX { get; set; }
-        public static int ClickedBoxY { get; set; }
-        public static int BoxNoX { get; set; }
+        public static int BoxNoX { get; set; }      //No of visible squares on map
         public static int BoxNoY { get; set; }
+        public static int CenterBoxX { get; set; }  //Square in the center of figure
+        public static int CenterBoxY { get; set; }
+        public static int OffsetX { get; set; }     //Offset squares from (0,0) for showing map
+        public static int OffsetY { get; set; }
+        public static int ClickedBoxX { get; set; } //Currently clicked box with mouse
+        public static int ClickedBoxY { get; set; }
+        public static int ActiveBoxX { get; set; }  //Currently active box (active unit or viewing piece)
+        public static int ActiveBoxY { get; set; }
         public static bool ViewingPiecesMode { get; set; }
         public static bool UnitIsMoving { get; set; }
         public int TimerVPCount { get; set; }
@@ -69,7 +71,7 @@ namespace PoskusCiv2.Forms
             UnitIsMoving = false;
             TimerVPCount = 0;   //records no of timer ticks
             TimerUnitCount = 0;
-            AnimationStartX = 0;
+            AnimationStartX = 0;    //starting tile for animating unit movement
             AnimationStartY = 0;
             MovingUnit = null;
             //for calculation of moving with mouse in MapForm   
@@ -79,6 +81,8 @@ namespace PoskusCiv2.Forms
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
             OffsetX = 0; //starting offset from (0,0)
             OffsetY = 0;
+            ActiveBoxX = Game.Instance.ActiveUnit.X2;   //set active box coords to active unit coords
+            ActiveBoxY = Game.Instance.ActiveUnit.Y2;
 
             //timer for viewing pieces
             t_VP.Interval = 200; // specify interval time as you want (ms)
@@ -242,7 +246,7 @@ namespace PoskusCiv2.Forms
                 else if (OffsetX - 1 > 0) OffsetX -= 1;
                 else OffsetY -= 1;
             }
-            MapPanel.Invalidate();
+            MapPanel.Refresh();
 
             if (e.Button == MouseButtons.Right)
             {
@@ -258,6 +262,18 @@ namespace PoskusCiv2.Forms
                     CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X2 == ClickedBoxX && city.Y2 == ClickedBoxY));
                     cityForm.Show();
                 }
+            }
+
+            //Update active box coordinates. If viewing pieces mode is off, the active unit determines coords.
+            if (ViewingPiecesMode)
+            {
+                ActiveBoxX = ClickedBoxX;
+                ActiveBoxY = ClickedBoxY;
+            }
+            else
+            {
+                ActiveBoxX = Game.Instance.ActiveUnit.X2;
+                ActiveBoxY = Game.Instance.ActiveUnit.Y2;
             }
         }
 

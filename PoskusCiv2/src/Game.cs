@@ -396,6 +396,7 @@ namespace PoskusCiv2
             };
 
             Civs.Add(civ);
+            Console.WriteLine("Civ#{0} {1}", id, tribeName);
             return civ;
         }
 

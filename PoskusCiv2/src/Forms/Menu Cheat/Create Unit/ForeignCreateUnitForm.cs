@@ -106,7 +106,11 @@ namespace PoskusCiv2.Forms
             {
                 if (RadioButton[i].Checked)
                 {
-                    Game.CreateUnit((UnitType)ChosenUnit, 5, 5, false, true, false, IsVeteran, ActiveCivId[i], 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
+                    //unit should be placed on activebox coords (convert it from civ2-style)
+                    int x = (MapForm.ActiveBoxX - MapForm.ActiveBoxY % 2) / 2; 
+                    int y = MapForm.ActiveBoxY;
+
+                    Game.CreateUnit((UnitType)ChosenUnit, x, y, false, true, false, IsVeteran, ActiveCivId[i], 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
                     Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
                     Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
                     Close();

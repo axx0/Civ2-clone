@@ -102,6 +102,10 @@ namespace PoskusCiv2
                         else MapForm.OffsetY -= 1;
                     }
 
+                    //Set active box coords to next unit
+                    MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
+                    MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
+
                     break;
                 }
             }
