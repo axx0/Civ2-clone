@@ -57,3 +57,4 @@ C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.GraphicOptionsForm.reso
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.SetGameYearForm.resources
 C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.SetGameYearForm.resources
 C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.ForeignCreateUnitForm.resources
+C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.ForeignCreateUnitForm.resources

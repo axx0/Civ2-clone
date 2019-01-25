@@ -16,24 +16,26 @@ namespace PoskusCiv2.Forms
     public partial class MapForm : Civ2form
     {
         public MainCiv2Window mainCiv2Window;
-
-        public static int offsetX, offsetY, CenterBoxX, CenterBoxY, ClickedBoxX, ClickedBoxY, BoxNoX, BoxNoY;
-        public static bool ViewingPiecesMode;
-        Random randomNo = new Random();
-
-        public bool CreateUnit, GridIsChecked = false, DrawXYnumbers = false;
-
-        //timer
-        Timer t = new Timer();
-        int timerCount = 0;   //records no of timer ticks
-
-        Draw Draw = new Draw();
-
         CreateUnitForm createUnitForm = new CreateUnitForm();
-
         DoubleBufferedPanel MapPanel;
-
+        Random randomNo = new Random();
+        Timer t = new Timer();
+        Draw Draw = new Draw();
         Pen pulsatingRectPen = new Pen(Color.White, 1);
+
+        public static int OffsetX { get; set; }
+        public static int OffsetY { get; set; }
+        public static int CenterBoxX { get; set; }
+        public static int CenterBoxY { get; set; }
+        public static int ClickedBoxX { get; set; }
+        public static int ClickedBoxY { get; set; }
+        public static int BoxNoX { get; set; }
+        public static int BoxNoY { get; set; }
+        public static bool ViewingPiecesMode { get; set; }
+        public int TimerCount { get; set; }
+        public bool CreateUnit { get; set; }
+        public bool GridIsChecked { get; set; }
+        public bool DrawXYnumbers { get; set; }
 
         public MapForm(MainCiv2Window _mainCiv2Window)
         {
@@ -53,26 +55,27 @@ namespace PoskusCiv2.Forms
             MapPanel.Paint += new PaintEventHandler(MapPanel_Paint);
             MapPanel.MouseClick += new MouseEventHandler(MapPanel_MouseClick);
 
-            ViewingPiecesMode = false; //initialize
-        }
-
-        private void MapForm_Load(object sender, EventArgs e)
-        {
-            //timer for animating units
-            t.Interval = 200; // specify interval time as you want (ms)
-            t.Tick += new EventHandler(Timer_Tick);
-            t.Start();
-
-            CreateUnit = false; //for start
-
+            //Initialize variables
+            GridIsChecked = false;
+            DrawXYnumbers = false;
+            ViewingPiecesMode = false;
+            CreateUnit = false;
+            TimerCount = 0;   //records no of timer ticks
             //for calculation of moving with mouse in MapForm   
             BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);   //No of squares in X and Y direction
             BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2); //Determine the square in the center of figure
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
-            offsetX = 0; //starting offset from (0,0)
-            offsetY = 0;
+            OffsetX = 0; //starting offset from (0,0)
+            OffsetY = 0;    
+
+            //timer for animating units
+            t.Interval = 200; // specify interval time as you want (ms)
+            t.Tick += new EventHandler(Timer_Tick);
+            t.Start();
         }
+
+        private void MapForm_Load(object sender, EventArgs e) { }
 
         private void MapForm_Paint(object sender, PaintEventArgs e)
         {
@@ -101,7 +104,7 @@ namespace PoskusCiv2.Forms
                 Game.Map,
                 0,
                 0,
-                new Rectangle(offsetX * 32, offsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
+                new Rectangle(OffsetX * 32, OffsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
                 GraphicsUnit.Pixel);
 
             //Draw all units
@@ -111,19 +114,14 @@ namespace PoskusCiv2.Forms
                 {
                     //Determine if unit inside city
                     bool unitOnTopOfCity = false;
-                    foreach (City city in Game.Cities) { if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; } }
+                    foreach (City city in Game.Cities) if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; }
 
                     if (!unitOnTopOfCity && (unit.X != Game.Instance.ActiveUnit.X || unit.Y != Game.Instance.ActiveUnit.Y))   //Draw only if unit NOT inside city AND if active unit is not on same square
                     {
                         List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
-                        if (unitsInXY.Count > 1)    //if units are stacked, draw only the last unit in the list
-                        {
-                            e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true, 1), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
-                        }
-                        else    //if units aren't stacked, draw normally
-                        {
-                            e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 32 * (unit.X2 - offsetX), 16 * (unit.Y2 - offsetY) - 16);
-                        }
+                        //if units are stacked, draw only the last unit in the list. Otherwise draw normally.
+                        if (unitsInXY.Count > 1) e.Graphics.DrawImage(Draw.DrawUnit(unitsInXY.Last(), true, 1), 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
+                        else e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
                     }
                 }
             }
@@ -131,27 +129,27 @@ namespace PoskusCiv2.Forms
             //Draw cities
             foreach (City city in Game.Cities)
             {
-                e.Graphics.DrawImage(Draw.DrawCity(city, true), 32 * (city.X2 - offsetX), 16 * (city.Y2 - offsetY) - 16);
+                e.Graphics.DrawImage(Draw.DrawCity(city, true), 32 * (city.X2 - OffsetX), 16 * (city.Y2 - OffsetY) - 16);
 
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
                 //Draw city name
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - offsetX) + 32 + 2, 16 * (city.Y2 - offsetY) + 32, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - offsetX) + 32, 16 * (city.Y2 - offsetY) + 32 + 2, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (city.X2 - offsetX) + 32, 16 * (city.Y2 - offsetY) + 32, sf);
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - OffsetX) + 32 + 2, 16 * (city.Y2 - OffsetY) + 32, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(Color.Black), 32 * (city.X2 - OffsetX) + 32, 16 * (city.Y2 - OffsetY) + 32 + 2, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 15.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (city.X2 - OffsetX) + 32, 16 * (city.Y2 - OffsetY) + 32, sf);
                 sf.Dispose();
             }
 
             //Draw active unit
-            if (timerCount % 2 == 1 || ViewingPiecesMode)
+            if (TimerCount % 2 == 1 || ViewingPiecesMode)
             {
                 //Determine if active unit is stacked
                 bool stacked = false;
                 List<IUnit> unitsInXY = ListOfUnitsIn(Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y);
                 if (unitsInXY.Count > 1) stacked = true;
 
-                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked, 1), 32 * (Game.Instance.ActiveUnit.X2 - offsetX), 16 * (Game.Instance.ActiveUnit.Y2 - offsetY) - 16);
+                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, stacked, 1), 32 * (Game.Instance.ActiveUnit.X2 - OffsetX), 16 * (Game.Instance.ActiveUnit.Y2 - OffsetY) - 16);
             }
 
             //Draw gridlines
@@ -176,16 +174,16 @@ namespace PoskusCiv2.Forms
                     {
                         x = i * 64 + 12;
                         y = j * 32 + 8;
-                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + offsetX, 2 * j + offsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x, y, new StringFormat()); //for first horizontal line
-                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + 1 + offsetX, 2 * j + 1 + offsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x + 32, y + 16, new StringFormat()); //for second horizontal line
+                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + OffsetX, 2 * j + OffsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x, y, new StringFormat()); //for first horizontal line
+                        e.Graphics.DrawString(String.Format("({0},{1})", 2 * i + 1 + OffsetX, 2 * j + 1 + OffsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x + 32, y + 16, new StringFormat()); //for second horizontal line
                     }
                 }
             }
 
             //Draw viewing pieces
-            if (ViewingPiecesMode && timerCount % 2 == 1)
+            if (ViewingPiecesMode && TimerCount % 2 == 1)
             {
-                e.Graphics.DrawImage(Images.ViewingPieces, 32 * (ClickedBoxX - offsetX), 16 * (ClickedBoxY - offsetY), 64, 32);
+                e.Graphics.DrawImage(Images.ViewingPieces, 32 * (ClickedBoxX - OffsetX), 16 * (ClickedBoxY - OffsetY), 64, 32);
             }
 
         }
@@ -202,24 +200,24 @@ namespace PoskusCiv2.Forms
             double ny = -(-e.Location.Y - 0.5 * e.Location.X);   //crossing at y-axis
             int nX = Convert.ToInt32(Math.Floor((nx + 32) / 64));   //converting crossing to int
             int nY = Convert.ToInt32(Math.Floor((ny - 16) / 32));   //converting crossing to int
-            ClickedBoxX = nX + nY + offsetX;
-            ClickedBoxY = nY - nX + offsetY;
-            offsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
-            offsetY = ClickedBoxY - 2 * CenterBoxY + 2;
+            ClickedBoxX = nX + nY + OffsetX;
+            ClickedBoxY = nY - nX + OffsetY;
+            OffsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
+            OffsetY = ClickedBoxY - 2 * CenterBoxY + 2;
 
             //Do not allow to move out of map bounds by limiting offset
-            if (offsetX < 0) offsetX = 0;
-            if (offsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) offsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX;
-            if (offsetY < 0) offsetY = 0;
-            if (offsetY >= Game.Data.MapYdim - 2 * BoxNoY) offsetY = Game.Data.MapYdim - 2 * BoxNoY;
+            if (OffsetX < 0) OffsetX = 0;
+            if (OffsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) OffsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX;
+            if (OffsetY < 0) OffsetY = 0;
+            if (OffsetY >= Game.Data.MapYdim - 2 * BoxNoY) OffsetY = Game.Data.MapYdim - 2 * BoxNoY;
 
             //After limiting offset, do not allow some combinations, e.g. (2,1)
-            if (Math.Abs((offsetX - offsetY) % 2) == 1)
+            if (Math.Abs((OffsetX - OffsetY) % 2) == 1)
             {
-                if (offsetX + 1 < Game.Data.MapXdim) offsetX += 1;
-                else if (offsetY + 1 < Game.Data.MapYdim) offsetY += 1;
-                else if (offsetX - 1 > 0) offsetX -= 1;
-                else offsetY -= 1;
+                if (OffsetX + 1 < Game.Data.MapXdim) OffsetX += 1;
+                else if (OffsetY + 1 < Game.Data.MapYdim) OffsetY += 1;
+                else if (OffsetX - 1 > 0) OffsetX -= 1;
+                else OffsetY -= 1;
             }
             MapPanel.Invalidate();
 
@@ -242,14 +240,15 @@ namespace PoskusCiv2.Forms
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            timerCount += 1;
+            TimerCount += 1;
             //update viewing pieces
             //MapPanel.Invalidate(new Rectangle(64 * (CenterBoxX - 1), 32 * (CenterBoxY - 1), 64, 32));
-            RefreshMapForm();
+            MapPanel.Refresh();
         }
 
         public void RefreshMapForm()
         {
+            TimerCount = 1; //set this so that when this method is called everything in form is refreshed immediately
             MapPanel.Refresh();
         }
 
@@ -257,13 +256,9 @@ namespace PoskusCiv2.Forms
         private List<IUnit> ListOfUnitsIn(int x, int y)
         {
             List<IUnit> unitsInXY = new List<IUnit>();
-            foreach (IUnit unit in Game.Units)
-            {
-                if (unit.X == x && unit.Y == y) unitsInXY.Add(unit);
-            }
+            foreach (IUnit unit in Game.Units) if (unit.X == x && unit.Y == y) unitsInXY.Add(unit);
             return unitsInXY;
         }
-
     }
 
 }

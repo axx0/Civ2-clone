@@ -241,7 +241,7 @@ namespace PoskusCiv2.Forms
         private void ForeignButton_Click(object sender, EventArgs e)
         {
             Close();
-            ForeignCreateUnitForm ForeignCreateUnitForm = new ForeignCreateUnitForm();
+            ForeignCreateUnitForm ForeignCreateUnitForm = new ForeignCreateUnitForm(ChosenUnit, IsVeteran);
             ForeignCreateUnitForm.Load += new EventHandler(ForeignCreateUnitForm_Load);   //so you set the correct size of form
             ForeignCreateUnitForm.ShowDialog();
         }
@@ -266,7 +266,8 @@ namespace PoskusCiv2.Forms
         private void OKButton_Click(object sender, EventArgs e)
         {
             Game.CreateUnit((UnitType)ChosenUnit, 5, 5, false, true, false, IsVeteran, 1, 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
-            Application.OpenForms.OfType<StatusForm>().First().Update();
+            Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
+            Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             Close();
         }
 

@@ -130,7 +130,7 @@ namespace PoskusCiv2.Forms
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            if (CompleteitButton.Checked == true) DialogResult = DialogResult.OK;
+            if (CompleteitButton.Checked) DialogResult = DialogResult.OK;
             else DialogResult = DialogResult.No;
             Close();
         }

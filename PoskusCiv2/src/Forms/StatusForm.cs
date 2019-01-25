@@ -17,13 +17,10 @@ namespace PoskusCiv2.Forms
     public partial class StatusForm : Civ2form
     {
         public MainCiv2Window mainCiv2Window;
-
         DoubleBufferedPanel UnitPanel, StatsPanel;
-        
-         Draw Draw = new Draw();
-
-        //timer
+        Draw Draw = new Draw();
         Timer timer = new Timer();
+
         int TimerCounter { get; set; }   //records no of timer ticks
         bool EndOfTurnMessage { get; set; }   //records no of timer ticks
 
@@ -34,6 +31,11 @@ namespace PoskusCiv2.Forms
 
             Size = new Size((int)(_mainCiv2Window.ClientSize.Width * 0.1375), (int)((_mainCiv2Window.ClientSize.Height - 30) * 0.85));
             Paint += new PaintEventHandler(StatusForm_Paint);
+
+            EndOfTurnMessage = false;
+            //Timer properties
+            timer.Interval = 500;   //500 ms
+            timer.Tick += new EventHandler(TimerTick);
 
             //Stats panel
             StatsPanel = new DoubleBufferedPanel
@@ -53,13 +55,8 @@ namespace PoskusCiv2.Forms
                 BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(UnitPanel);
-            UnitPanel.Paint += UnitPanel_Paint;
-
-            //Timer properties
-            timer.Interval = 500;   //500 ms
-            timer.Tick += new EventHandler(TimerTick);
-
-            EndOfTurnMessage = false;
+            UnitPanel.Paint += new PaintEventHandler(UnitPanel_Paint);
+            UnitPanel.Click += new EventHandler(UnitPanel_Click);  
         }
 
         private void StatusForm_Load(object sender, EventArgs e) { }
@@ -191,6 +188,11 @@ namespace PoskusCiv2.Forms
                 }
             }
             sf.Dispose();
+        }
+
+        private void UnitPanel_Click(object sender, EventArgs e)
+        {
+            MapForm.ViewingPiecesMode = !MapForm.ViewingPiecesMode;
         }
 
         //Receive and display X-Y coordinates on right-click on Map

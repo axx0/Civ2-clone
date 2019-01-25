@@ -8,16 +8,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoskusCiv2.Imagery;
+using PoskusCiv2.Enums;
 
 namespace PoskusCiv2.Forms
 {
     public partial class ForeignCreateUnitForm : Civ2form
     {
         DoubleBufferedPanel MainPanel;
+        RadioButton[] RadioButton = new RadioButton[Game.Data.CivsInPlay.Sum()];
+        int ChosenUnit { get; }
+        bool IsVeteran { get; }
+        int[] ActiveCivId = new int[Game.Data.CivsInPlay.Sum()];
 
-        public ForeignCreateUnitForm()
+        public ForeignCreateUnitForm(int chosenUnit, bool isVeteran)
         {
             InitializeComponent();
+            ChosenUnit = chosenUnit;
+            IsVeteran = IsVeteran;
 
             //Main panel
             MainPanel = new DoubleBufferedPanel
@@ -50,6 +57,32 @@ namespace PoskusCiv2.Forms
             };
             Controls.Add(CancelButton);
             CancelButton.Click += new EventHandler(CancelButton_Click);
+
+            //Radio buttons
+            int count = 0;
+            for (int civ = 0; civ < 8; civ++)
+            {
+                if (Game.Data.CivsInPlay[civ] == 1)
+                {
+                    //Make a radio button
+                    RadioButton[count] = new RadioButton
+                    {
+                        Text = Game.Civs[civ].TribeName,
+                        Location = new Point(40, 2 + 32 * count),
+                        BackColor = Color.Transparent,
+                        Font = new Font("Times New Roman", 18.0f),
+                        ForeColor = Color.FromArgb(51, 51, 51),
+                        AutoSize = true
+                    };
+                    MainPanel.Controls.Add(RadioButton[count]);
+
+                    //Also get indexes of active civs
+                    ActiveCivId[count] = civ;
+
+                    count++;
+                }
+            }
+            RadioButton[0].Checked = true;  //set initial value
         }
 
         private void ForeignCreateUnitForm_Load(object sender, EventArgs e) { }
@@ -65,22 +98,22 @@ namespace PoskusCiv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, MainPanel.Height - 3);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MainPanel.Width - 2, 1, MainPanel.Width - 2, MainPanel.Height - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, MainPanel.Height - 2, MainPanel.Width - 2, MainPanel.Height - 2);
-
-            //Civs
-            int count = 0;
-            for (int civ = 0; civ < 8; civ++)
-            {
-                if (Game.Data.CivsInPlay[civ] == 0)
-                {
-                    e.Graphics.DrawString(Game.Civs[civ].TribeName, new Font("Times New Roman", 16), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(40, 2 + count * 32));
-                    count++;
-                }
-            }            
         }
 
         private void OKButton_Click(object sender, EventArgs e)
         {
+            for (int i = 0; i < Game.Data.CivsInPlay.Sum(); i++)
+            {
+                if (RadioButton[i].Checked)
+                {
+                    Game.CreateUnit((UnitType)ChosenUnit, 5, 5, false, true, false, IsVeteran, ActiveCivId[i], 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
+                    Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
+                    Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
+                    Close();
 
+                    break;
+                }
+            }
         }
 
         //if cancel is pressed --> just close the form
