@@ -90,7 +90,7 @@ namespace PoskusCiv2.Forms
             t_VP.Start();
 
             //timer for animating units (don't start it until the unit has to move)
-            t_Unit.Interval = 40;
+            t_Unit.Interval = 30;
             t_Unit.Tick += new EventHandler(TimerUnit_Tick);
         }
 
@@ -180,7 +180,7 @@ namespace PoskusCiv2.Forms
             }
 
             //Draw gridlines
-            if (GridIsChecked)
+            if (Game.Options.Grid)
             {
                 for (int col = 0; col < Game.Data.MapXdim / 2; col++)
                 {
@@ -293,8 +293,8 @@ namespace PoskusCiv2.Forms
         {
             if (Game.Instance.ActiveUnit.X2 <= OffsetX ||
                 Game.Instance.ActiveUnit.Y2 <= OffsetY ||
-                Game.Instance.ActiveUnit.X2 >= OffsetX + 2 * BoxNoX ||
-                Game.Instance.ActiveUnit.Y2 >= OffsetY + 2 * BoxNoY)
+                Game.Instance.ActiveUnit.X2 >= OffsetX + 2 * BoxNoX - 1 ||
+                Game.Instance.ActiveUnit.Y2 >= OffsetY + 2 * BoxNoY - 1)
             {
                 OffsetX = Game.Instance.ActiveUnit.X2 - 2 * (CenterBoxX - 1);
                 OffsetY = Game.Instance.ActiveUnit.Y2 - 2 * (CenterBoxY - 1);
@@ -323,7 +323,7 @@ namespace PoskusCiv2.Forms
 
         public void ToggleMapGrid()
         {
-            GridIsChecked = !GridIsChecked;
+            Game.Options.Grid = !Game.Options.Grid;
             Refresh();
         }
 

@@ -19,22 +19,19 @@ namespace PoskusCiv2
             string bin;
 
             //Read every byte
-            for (int i = 0; i < fs.Length; i++)
-            {
-                dataArray[i] = fs.ReadByte();
-            }
+            for (int i = 0; i < fs.Length; i++) dataArray[i] = fs.ReadByte();
 
             //=========================
             //START OF SAVED GAME FILE
             //=========================
             //Determine version        
             int version;
-            if (dataArray[10] == 39) version = 1;    //Conflicts (27 hex)
-            else if (dataArray[10] == 40) version = 2; //FW (28 hex)
-            else if (dataArray[10] == 44) version = 3;    //MGE (2C hex)
-            else if (dataArray[10] == 49) version = 4;    //ToT1.0 (31 hex)
-            else if (dataArray[10] == 50) version = 5;    //ToT1.1 (32 hex)
-            else version = 1;   //lower than Conflicts
+            if (dataArray[10] == 39)        version = 1;    //Conflicts (27 hex)
+            else if (dataArray[10] == 40)   version = 2; //FW (28 hex)
+            else if (dataArray[10] == 44)   version = 3;    //MGE (2C hex)
+            else if (dataArray[10] == 49)   version = 4;    //ToT1.0 (31 hex)
+            else if (dataArray[10] == 50)   version = 5;    //ToT1.1 (32 hex)
+            else                            version = 1;   //lower than Conflicts
                         
             //Bloodlust on/off
             bool bloodlust = false;
