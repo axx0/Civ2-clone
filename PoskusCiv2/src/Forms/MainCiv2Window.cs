@@ -21,7 +21,7 @@ namespace PoskusCiv2.Forms
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
-        Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem;
+        Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
 
         public MainCiv2Window()
         {
@@ -90,7 +90,34 @@ namespace PoskusCiv2.Forms
 
             //View menu
             ToolStripMenuItem ViewMenu = new ToolStripMenuItem("View");
+            MovePiecesItem = new Civ2ToolStripMenuItem("Move Pieces", MovePieces_Click, "v");
+            ViewPiecesItem = new Civ2ToolStripMenuItem("View Pieces", ViewPieces_Click, "v");
+            ZoomInItem = new Civ2ToolStripMenuItem("Zoom In", ZoomIn_Click, "z");
+            ZoomOutItem = new Civ2ToolStripMenuItem("Zoom Out", ZoomOut_Click, "x");
+            ToolStripMenuItem MaxZoomInItem = new ToolStripMenuItem("Max Zoom In", null, MaxZoomIn_Click, (Keys)Shortcut.CtrlZ);
+            StandardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", StandardZoom_Click, "Shift+Z");
+            MediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", MediumZoomOut_Click, "Shift+X");
+            ToolStripMenuItem MaxZoomOutItem = new ToolStripMenuItem("Max Zoom Out", null, MaxZoomOut_Click, (Keys)Shortcut.CtrlX);
+            ToolStripMenuItem ShowMapGridItem = new ToolStripMenuItem("Show Map Grid", null, ShowMapGrid_Click, (Keys)Shortcut.CtrlG);
+            ArrangeWindowsItem = new Civ2ToolStripMenuItem("Arrange Windows", ArrangeWindows_Click, "");
+            ShowHiddenTerrainItem = new Civ2ToolStripMenuItem("Show Hidden Terrain", ShowHiddenTerrain_Click, "t");
+            CenterViewItem = new Civ2ToolStripMenuItem("Center View", CenterView_Click, "c");
             MainMenuStrip.Items.Add(ViewMenu);
+            ViewMenu.DropDownItems.Add(MovePiecesItem);
+            ViewMenu.DropDownItems.Add(ViewPiecesItem);
+            ViewMenu.DropDownItems.Add(new ToolStripSeparator());
+            ViewMenu.DropDownItems.Add(ZoomInItem);
+            ViewMenu.DropDownItems.Add(ZoomOutItem);
+            ViewMenu.DropDownItems.Add(new ToolStripSeparator());
+            ViewMenu.DropDownItems.Add(MaxZoomInItem);
+            ViewMenu.DropDownItems.Add(StandardZoomItem);
+            ViewMenu.DropDownItems.Add(MediumZoomOutItem);
+            ViewMenu.DropDownItems.Add(MaxZoomOutItem);
+            ViewMenu.DropDownItems.Add(new ToolStripSeparator());
+            ViewMenu.DropDownItems.Add(ShowMapGridItem);
+            ViewMenu.DropDownItems.Add(ArrangeWindowsItem);
+            ViewMenu.DropDownItems.Add(ShowHiddenTerrainItem);
+            ViewMenu.DropDownItems.Add(CenterViewItem);
 
             //Orders
             OrdersMenu = new ToolStripMenuItem("Orders");
@@ -312,6 +339,20 @@ namespace PoskusCiv2.Forms
         private void ChangeTimer_Click(object sender, EventArgs e) { }
         private void Retire_Click(object sender, EventArgs e) { }
         private void Quit_Click(object sender, EventArgs e) { Close(); }
+
+        // VIEW MENU
+        private void MovePieces_Click(object sender, EventArgs e) { }
+        private void ViewPieces_Click(object sender, EventArgs e) { }
+        private void ZoomIn_Click(object sender, EventArgs e) { }
+        private void ZoomOut_Click(object sender, EventArgs e) { }
+        private void MaxZoomIn_Click(object sender, EventArgs e) { }
+        private void StandardZoom_Click(object sender, EventArgs e) { }
+        private void MediumZoomOut_Click(object sender, EventArgs e) { }
+        private void MaxZoomOut_Click(object sender, EventArgs e) { }
+        private void ShowMapGrid_Click(object sender, EventArgs e) { mapForm.ToggleMapGrid(); }
+        private void ArrangeWindows_Click(object sender, EventArgs e) { }
+        private void ShowHiddenTerrain_Click(object sender, EventArgs e) { }
+        private void CenterView_Click(object sender, EventArgs e) { }
 
         // KINGDOM MENU
         private void TaxRate_Click(object sender, EventArgs e) { }

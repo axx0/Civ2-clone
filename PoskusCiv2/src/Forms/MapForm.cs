@@ -321,6 +321,12 @@ namespace PoskusCiv2.Forms
             }
         }
 
+        public void ToggleMapGrid()
+        {
+            GridIsChecked = !GridIsChecked;
+            Refresh();
+        }
+
         //Return list of units on a X-Y square
         private List<IUnit> ListOfUnitsIn(int x, int y)
         {
