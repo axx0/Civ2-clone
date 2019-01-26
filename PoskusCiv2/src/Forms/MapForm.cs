@@ -298,6 +298,7 @@ namespace PoskusCiv2.Forms
 
         public void AnimateUnit(IUnit movingUnit, int startX, int startY)
         {
+            UnitIsMoving = true;
             MovingUnit = movingUnit;
             AnimationStartX = startX;
             AnimationStartY = startY;
