@@ -35,7 +35,7 @@ namespace PoskusCiv2.Forms
         public static int ActiveBoxX { get; set; }  //Currently active box (active unit or viewing piece)
         public static int ActiveBoxY { get; set; }
         public static bool ViewingPiecesMode { get; set; }
-        public static bool UnitIsMoving { get; set; }
+        public bool UnitIsMoving { get; set; }
         public int TimerVPCount { get; set; }
         public int TimerUnitCount { get; set; }
         public int AnimationStartX { get; set; }
@@ -217,11 +217,6 @@ namespace PoskusCiv2.Forms
 
         private void MapPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            BoxNoX = (int)Math.Floor((double)MapPanel.Width / 64);//Calculate No of squares in the form in X and Y
-            BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
-            CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2);//Determine the square in the center of figure
-            CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
-
             //Calculate (X,Y) coordinates of clicked square
             double nx = e.Location.X - 2 * e.Location.Y;  //crossing at x-axis
             double ny = -(-e.Location.Y - 0.5 * e.Location.X);   //crossing at y-axis
@@ -231,21 +226,8 @@ namespace PoskusCiv2.Forms
             ClickedBoxY = nY - nX + OffsetY;
             OffsetX = ClickedBoxX - 2 * CenterBoxX + 2; //calculate offset of shown map from (0,0)
             OffsetY = ClickedBoxY - 2 * CenterBoxY + 2;
+            CheckOffset();
 
-            //Do not allow to move out of map bounds by limiting offset
-            if (OffsetX < 0) OffsetX = 0;
-            if (OffsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) OffsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX;
-            if (OffsetY < 0) OffsetY = 0;
-            if (OffsetY >= Game.Data.MapYdim - 2 * BoxNoY) OffsetY = Game.Data.MapYdim - 2 * BoxNoY;
-
-            //After limiting offset, do not allow some combinations, e.g. (2,1)
-            if (Math.Abs((OffsetX - OffsetY) % 2) == 1)
-            {
-                if (OffsetX + 1 < Game.Data.MapXdim) OffsetX += 1;
-                else if (OffsetY + 1 < Game.Data.MapYdim) OffsetY += 1;
-                else if (OffsetX - 1 > 0) OffsetX -= 1;
-                else OffsetY -= 1;
-            }
             MapPanel.Refresh();
 
             if (e.Button == MouseButtons.Right)
@@ -304,6 +286,39 @@ namespace PoskusCiv2.Forms
             AnimationStartY = startY;
             t_Unit.Start();
             MapPanel.Refresh();
+        }
+
+        //Center view on new unit only if it is on the edge of current view or further away
+        public void MoveMapViewIfNecessary()
+        {
+            if (Game.Instance.ActiveUnit.X2 <= OffsetX ||
+                Game.Instance.ActiveUnit.Y2 <= OffsetY ||
+                Game.Instance.ActiveUnit.X2 >= OffsetX + 2 * BoxNoX ||
+                Game.Instance.ActiveUnit.Y2 >= OffsetY + 2 * BoxNoY)
+            {
+                OffsetX = Game.Instance.ActiveUnit.X2 - 2 * (CenterBoxX - 1);
+                OffsetY = Game.Instance.ActiveUnit.Y2 - 2 * (CenterBoxY - 1);
+                CheckOffset();
+            }
+        }
+
+        //Call this to make sure offset is correct after movement with mouse or when new unit is chosen
+        public void CheckOffset()
+        {
+            //Do not allow to move out of map bounds by limiting offset
+            if (OffsetX < 0) OffsetX = 0;
+            if (OffsetX >= 2 * Game.Data.MapXdim - 2 * BoxNoX) OffsetX = 2 * Game.Data.MapXdim - 2 * BoxNoX;
+            if (OffsetY < 0) OffsetY = 0;
+            if (OffsetY >= Game.Data.MapYdim - 2 * BoxNoY) OffsetY = Game.Data.MapYdim - 2 * BoxNoY;
+
+            //After limiting offset, do not allow some combinations, e.g. (2,1)
+            if (Math.Abs((OffsetX - OffsetY) % 2) == 1)
+            {
+                if (OffsetX + 1 < Game.Data.MapXdim) OffsetX += 1;
+                else if (OffsetY + 1 < Game.Data.MapYdim) OffsetY += 1;
+                else if (OffsetX - 1 > 0) OffsetX -= 1;
+                else OffsetY -= 1;
+            }
         }
 
         //Return list of units on a X-Y square

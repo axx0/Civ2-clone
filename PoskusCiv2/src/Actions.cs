@@ -83,24 +83,8 @@ namespace PoskusCiv2
 
                     allUnitsEndedTurn = false;
 
-                    //Center view on new unit in MapForm
-                    MapForm.OffsetX = Game.Instance.ActiveUnit.X2 - 2 * (MapForm.CenterBoxX - 1);  //for centering view on new unit
-                    MapForm.OffsetY = Game.Instance.ActiveUnit.Y2 - 2 * (MapForm.CenterBoxY - 1);
-
-                    //Do not allow to move out of map bounds by limiting offset
-                    if (MapForm.OffsetX < 0) MapForm.OffsetX = 0;
-                    if (MapForm.OffsetX >= 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX) MapForm.OffsetX = 2 * Game.Data.MapXdim - 2 * MapForm.BoxNoX;
-                    if (MapForm.OffsetY < 0) MapForm.OffsetY = 0;
-                    if (MapForm.OffsetY >= Game.Data.MapYdim - 2 * MapForm.BoxNoY) MapForm.OffsetY = Game.Data.MapYdim - 2 * MapForm.BoxNoY;
-
-                    //After limiting offset, do not allow some combinations, e.g. (2,1)
-                    if (Math.Abs((MapForm.OffsetX - MapForm.OffsetY) % 2) == 1)
-                    {
-                        if (MapForm.OffsetX + 1 < Game.Data.MapXdim) MapForm.OffsetX += 1;
-                        else if (MapForm.OffsetY + 1 < Game.Data.MapYdim) MapForm.OffsetY += 1;
-                        else if (MapForm.OffsetX - 1 > 0) MapForm.OffsetX -= 1;
-                        else MapForm.OffsetY -= 1;
-                    }
+                    //If necessary, center view on new unit in MapForm
+                    Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
 
                     //Set active box coords to next unit
                     MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;

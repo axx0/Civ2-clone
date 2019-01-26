@@ -99,7 +99,7 @@ namespace PoskusCiv2.Units
                 Y = Yto;
 
                 //for animation of movement
-                if (!Game.Options.FastPieceSlide) Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X2 - moveX, Y2 - moveY);//send coords of unit starting loc
+                if (!Game.Options.FastPieceSlide) Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X2 - moveX, Y2 - moveY);    //send coords of unit starting loc
     
                 Sound.MoveSound.Play();
             }
