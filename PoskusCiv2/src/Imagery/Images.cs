@@ -295,13 +295,13 @@ namespace PoskusCiv2.Imagery
                     //determine where the city size window is located (x-y)
                     for (int ix = 0; ix < 64; ix++) //in x-direction
                     {
-                        if (cities.GetPixel(65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { cityFlagLoc[row, col, 0] = ix; }  //if pixel on border is blue
-                        if (cities.GetPixel(333 + 65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) { cityWallFlagLoc[row, col, 0] = ix; }  //for cities with wall
+                        if (cities.GetPixel(65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 0] = ix;  //if pixel on border is blue
+                        if (cities.GetPixel(333 + 65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 0] = ix;  //for cities with wall
                     }
                     for (int iy = 0; iy < 48; iy++) //in y-direction
                     {
-                        if (cities.GetPixel(65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { cityFlagLoc[row, col, 1] = iy; }
-                        if (cities.GetPixel(333 + 65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) { cityWallFlagLoc[row, col, 1] = iy; }
+                        if (cities.GetPixel(65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 1] = iy;
+                        if (cities.GetPixel(333 + 65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 1] = iy;
                     }
                 }
             }
@@ -453,11 +453,11 @@ namespace PoskusCiv2.Imagery
                     //determine where the unit shield is located (x-y)
                     for (int ix = 0; ix < 64; ix++) //in x-direction
                     {
-                        if (units.GetPixel(65 * col + ix, 49 * row) == Color.FromArgb(0, 0, 255)) { unitShieldLocation[stej, 0] = ix; }  //if pixel on border is blue
+                        if (units.GetPixel(65 * col + ix, 49 * row) == Color.FromArgb(0, 0, 255)) unitShieldLocation[stej, 0] = ix;  //if pixel on border is blue
                     }
                     for (int iy = 0; iy < 48; iy++) //in y-direction
                     {
-                        if (units.GetPixel(65 * col, 49 * row + iy) == Color.FromArgb(0, 0, 255)) { unitShieldLocation[stej, 1] = iy; }
+                        if (units.GetPixel(65 * col, 49 * row + iy) == Color.FromArgb(0, 0, 255)) unitShieldLocation[stej, 1] = iy;
                     }
 
                     stej += 1;
@@ -548,14 +548,8 @@ namespace PoskusCiv2.Imagery
                     {
                         for (int y = 0; y < 30; y++)
                         {
-                            if (PeopleL[col, row].GetPixel(x, y) != transparentPink)
-                            {
-                                PeopleLshadow[col, row].SetPixel(x, y, Color.Black);
-                            }
-                            else
-                            {
-                                PeopleLshadow[col, row].SetPixel(x, y, Color.Transparent);
-                            }
+                            if (PeopleL[col, row].GetPixel(x, y) != transparentPink) PeopleLshadow[col, row].SetPixel(x, y, Color.Black);
+                            else PeopleLshadow[col, row].SetPixel(x, y, Color.Transparent);
                         }
                     }
                     PeopleL[col, row].MakeTransparent(transparentPink);
@@ -588,7 +582,7 @@ namespace PoskusCiv2.Imagery
                     ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
 
                     count++;
-                    if (count == 39) { break; }
+                    if (count == 39) break;
                 }
             }
             //WondersIcons

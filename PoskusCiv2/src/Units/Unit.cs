@@ -193,22 +193,22 @@ namespace PoskusCiv2.Units
         //When making a new unit
         public Unit(UnitType type)
         {
-            Name = ReadFiles.UnitName[(int)(type)];
+            Name = ReadFiles.UnitName[(int)type];
             //UntilTech = TO-DO
-            if (ReadFiles.UnitDomain[(int)(type)] == 0) { GAS = UnitGAS.Ground; }
-            else if (ReadFiles.UnitDomain[(int)(type)] == 1) { GAS = UnitGAS.Air; }
-            else { GAS = UnitGAS.Sea; }
-            MoveRate = ReadFiles.UnitMove[(int)(type)];
-            Range = ReadFiles.UnitRange[(int)(type)];
-            Attack = ReadFiles.UnitAttack[(int)(type)];
-            Defense = ReadFiles.UnitDefense[(int)(type)];
-            HitPoints = ReadFiles.UnitHitp[(int)(type)];
-            Firepower = ReadFiles.UnitFirepwr[(int)(type)];
-            Cost = ReadFiles.UnitCost[(int)(type)];
-            ShipHold = ReadFiles.UnitHold[(int)(type)];
-            AIrole = ReadFiles.UnitAIrole[(int)(type)];
+            if (ReadFiles.UnitDomain[(int)type] == 0) GAS = UnitGAS.Ground;
+            else if (ReadFiles.UnitDomain[(int)type] == 1) GAS = UnitGAS.Air;
+            else GAS = UnitGAS.Sea;
+            MoveRate = ReadFiles.UnitMove[(int)type];
+            Range = ReadFiles.UnitRange[(int)type];
+            Attack = ReadFiles.UnitAttack[(int)type];
+            Defense = ReadFiles.UnitDefense[(int)type];
+            HitPoints = 10 * ReadFiles.UnitHitp[(int)type];
+            Firepower = ReadFiles.UnitFirepwr[(int)type];
+            Cost = ReadFiles.UnitCost[(int)type];
+            ShipHold = ReadFiles.UnitHold[(int)type];
+            AIrole = ReadFiles.UnitAIrole[(int)type];
             //PrereqTech = TO-DO
-            Flags = ReadFiles.UnitFlags[(int)(type)];
+            Flags = ReadFiles.UnitFlags[(int)type];
         }
 
     }

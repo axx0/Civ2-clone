@@ -27,11 +27,11 @@ namespace PoskusCiv2
             //Determine version        
             int version;
             if (dataArray[10] == 39)        version = 1;    //Conflicts (27 hex)
-            else if (dataArray[10] == 40)   version = 2; //FW (28 hex)
+            else if (dataArray[10] == 40)   version = 2;    //FW (28 hex)
             else if (dataArray[10] == 44)   version = 3;    //MGE (2C hex)
             else if (dataArray[10] == 49)   version = 4;    //ToT1.0 (31 hex)
             else if (dataArray[10] == 50)   version = 5;    //ToT1.1 (32 hex)
-            else                            version = 1;   //lower than Conflicts
+            else                            version = 1;    //lower than Conflicts
                         
             //Bloodlust on/off
             bool bloodlust = false;
@@ -277,31 +277,19 @@ namespace PoskusCiv2
                 civCityStyle[i + 1] = dataArray[584 + 242 * i];
 
                 //Leader names (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++)
-                {
-                    asciich[j] = Convert.ToChar(dataArray[584 + 2 + 242 * i + j]);
-                }
+                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(dataArray[584 + 2 + 242 * i + j]);
                 civLeaderName[i + 1] = new string(asciich);
                 civLeaderName[i + 1] = civLeaderName[i + 1].Replace("\0", string.Empty);  //remove null characters
-                //Console.WriteLine(civLeaderName);
 
                 //Tribe name (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++)
-                {
-                    asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 242 * i + j]);
-                }
+                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 242 * i + j]);
                 civTribeName[i + 1] = new string(asciich);
                 civTribeName[i + 1] = civTribeName[i + 1].Replace("\0", string.Empty);
-                //Console.WriteLine(civTribeName[i + 1]);
 
                 //Adjective (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++)
-                {
-                    asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 23 + 242 * i + j]);
-                }
+                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 23 + 242 * i + j]);
                 civAdjective[i + 1] = new string(asciich);
                 civAdjective[i + 1] = civAdjective[i + 1].Replace("\0", string.Empty);
-                //Console.WriteLine(civAdjective[i + 1]);
 
                 //Leader titles (Anarchy, Despotism, ...)
                 // .... TO-DO ....
@@ -540,13 +528,12 @@ namespace PoskusCiv2
             //UNIT INFO
             //=========================
             int ofsetU = ofsetB3 + 2 * locatorMapXDimension * locatorMapYDimension + 1024;
-            //Console.WriteLine("offset Unit=" + ofsetU.ToString());
-
+            
             //determine byte length of units
             int multipl;
-            if (version <= 2) multipl = 26; //FW or CiC
-            else if (version == 3) multipl = 32;    //MGE
-            else multipl = 40;  //ToT
+            if (version <= 2)       multipl = 26;   //FW or CiC
+            else if (version == 3)  multipl = 32;   //MGE
+            else                    multipl = 40;   //ToT
 
             for (int i = 0; i < numberOfUnits; i++)
             {
@@ -637,11 +624,10 @@ namespace PoskusCiv2
             //CITIES
             //=========================
             int ofsetC = ofsetU + multipl * numberOfUnits;
-            //Console.WriteLine("offset Cities=" + ofsetC.ToString());
-
-            if (version <= 2) multipl = 84; //FW or CiC
-            else if (version == 3) multipl = 88;    //MGE
-            else multipl = 92;  //ToT
+            
+            if (version <= 2)       multipl = 84;   //FW or CiC
+            else if (version == 3)  multipl = 88;   //MGE
+            else                    multipl = 92;   //ToT
                         
             char[] asciichar = new char[15];            
             for (int i = 0; i < numberOfCities; i++)
@@ -730,10 +716,7 @@ namespace PoskusCiv2
                 int cityNetTrade = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Name        
-                for (int j = 0; j < 15; j++)
-                {
-                    asciichar[j] = Convert.ToChar(dataArray[ofsetC + multipl * i + j + 32]);
-                }
+                for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(dataArray[ofsetC + multipl * i + j + 32]);
                 string cityName = new string(asciichar);
                 cityName = cityName.Replace("\0", string.Empty);
 
@@ -891,9 +874,9 @@ namespace PoskusCiv2
                     int novi_i = 0; //zacetna tocka pri j=1 (0,1)
                     while (novi_i < mapXdim)  //keep jumping in x-direction till map end
                     {
-                        if (novi_i < mapXdim && col == novi_i) special = 2; break;   //tocke (3,1), (11,1), (19,1), ...
+                        if (novi_i < mapXdim && col == novi_i) { special = 2; break; }   //tocke (3,1), (11,1), (19,1), ...
                         novi_i += 3;
-                        if (novi_i < mapXdim && col == novi_i) special = 1; break;   //tocke (8,1), (16,1), (24,1), ...
+                        if (novi_i < mapXdim && col == novi_i) { special = 1; break; }   //tocke (8,1), (16,1), (24,1), ...
                         novi_i += 5;
                     }
 
