@@ -16,6 +16,7 @@ namespace PoskusCiv2.Units
         int Range { get; set; }
         int Attack { get; set; }
         int Defense { get; set; }
+        int MaxHitPoints { get; set; }
         int HitPoints { get; set; }
         int Firepower { get; set; }
         int Cost { get; set; }

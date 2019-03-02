@@ -19,6 +19,7 @@ namespace PoskusCiv2.Units
         public int Range { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
+        public int MaxHitPoints { get; set; }
         public int HitPoints { get; set; }
         public int Firepower { get; set; }
         public int Cost { get; set; }
@@ -190,7 +191,7 @@ namespace PoskusCiv2.Units
             }
         }
 
-        //When making a new unit
+        //When making a new unit, read stats from RULES.TXT
         public Unit(UnitType type)
         {
             Name = ReadFiles.UnitName[(int)type];
@@ -202,7 +203,8 @@ namespace PoskusCiv2.Units
             Range = ReadFiles.UnitRange[(int)type];
             Attack = ReadFiles.UnitAttack[(int)type];
             Defense = ReadFiles.UnitDefense[(int)type];
-            HitPoints = 10 * ReadFiles.UnitHitp[(int)type];
+            MaxHitPoints = 10 * ReadFiles.UnitHitp[(int)type];
+            HitPoints = MaxHitPoints;
             Firepower = ReadFiles.UnitFirepwr[(int)type];
             Cost = ReadFiles.UnitCost[(int)type];
             ShipHold = ReadFiles.UnitHold[(int)type];
