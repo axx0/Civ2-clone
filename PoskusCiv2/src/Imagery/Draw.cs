@@ -120,33 +120,11 @@ namespace PoskusCiv2.Imagery
                 }
 
                 //Determine hitpoints bar size
-                int hitpointsBarX;
+                int hitpointsBarX = (int)Math.Floor((float)unit.HitPoints * 12 / (float)unit.MaxHitPoints);
                 Color hitpointsColor;
-                switch (unit.HitPoints)
-                {
-                    case 0:
-                    case 1: hitpointsBarX = 0; hitpointsColor = Color.FromArgb(243, 0, 0); break;
-                    case 2:
-                    case 3: hitpointsBarX = 1; hitpointsColor = Color.FromArgb(243, 0, 0); break;
-                    case 4: hitpointsBarX = 2; hitpointsColor = Color.FromArgb(243, 0, 0); break;
-                    case 5:
-                    case 6:
-                    case 7: hitpointsBarX = 3; hitpointsColor = Color.FromArgb(243, 0, 0); break;
-                    case 8: hitpointsBarX = 4; hitpointsColor = Color.FromArgb(255, 223, 79); break;
-                    case 9: hitpointsBarX = 5; hitpointsColor = Color.FromArgb(255, 223, 79); break;
-                    case 10:
-                    case 11: hitpointsBarX = 6; hitpointsColor = Color.FromArgb(255, 223, 79); break;
-                    case 12:
-                    case 13: hitpointsBarX = 7; hitpointsColor = Color.FromArgb(255, 223, 79); break;
-                    case 14: hitpointsBarX = 8; hitpointsColor = Color.FromArgb(255, 223, 79); break;
-                    case 15:
-                    case 16: hitpointsBarX = 9; hitpointsColor = Color.FromArgb(87, 171, 39); break;
-                    case 17:
-                    case 18: hitpointsBarX = 10; hitpointsColor = Color.FromArgb(87, 171, 39); break;
-                    case 19: hitpointsBarX = 11; hitpointsColor = Color.FromArgb(87, 171, 39); break;
-                    case 20: hitpointsBarX = 12; hitpointsColor = Color.FromArgb(87, 171, 39); break;
-                    default: hitpointsBarX = 12; hitpointsColor = Color.FromArgb(87, 171, 39); break;
-                }
+                if (hitpointsBarX <= 3) hitpointsColor = Color.FromArgb(243, 0, 0);
+                else if (hitpointsBarX >= 4 && hitpointsBarX <= 8) hitpointsColor = Color.FromArgb(255, 223, 79);
+                else hitpointsColor = Color.FromArgb(87, 171, 39);
 
                 if (stacked)    //draw dark shield if unit is stacked on top of others
                 {

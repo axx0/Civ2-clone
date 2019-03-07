@@ -36,7 +36,6 @@ namespace PoskusCiv2.Units
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
         public int Civ { get; set; }
-        public int HitpointsLost { get; set; }
         public int LastMove { get; set; }
         public int CaravanCommodity { get; set; }
         public int Orders { get; set; }

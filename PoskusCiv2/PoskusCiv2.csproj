@@ -321,12 +321,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\civ2.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\ICONS.GIF" />
-  </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="Resources\UNITS.GIF" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

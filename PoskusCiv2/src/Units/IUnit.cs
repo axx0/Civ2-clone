@@ -37,7 +37,6 @@ namespace PoskusCiv2.Units
         bool Veteran { get; set; }
         int Civ { get; set; }
         int MovePointsLost { get; set; }
-        int HitpointsLost { get; set; }
         int LastMove { get; set; }
         int CaravanCommodity { get; set; }
         int Orders { get; set; }
