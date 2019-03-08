@@ -12,7 +12,8 @@ namespace PoskusCiv2.Units
         //From RULES.TXT
         string Name { get; set; }
         TechType UntilTech { get; set; }
-        int MoveRate { get; set; }
+        int MaxMovePoints { get; set; }
+        int MovePoints { get; set; }
         int Range { get; set; }
         int Attack { get; set; }
         int Defense { get; set; }
@@ -36,7 +37,6 @@ namespace PoskusCiv2.Units
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
         int Civ { get; set; }
-        int MovePointsLost { get; set; }
         int LastMove { get; set; }
         int CaravanCommodity { get; set; }
         int Orders { get; set; }

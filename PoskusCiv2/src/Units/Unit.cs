@@ -15,7 +15,8 @@ namespace PoskusCiv2.Units
         //From RULES.TXT
         public string Name { get; set; }
         public TechType UntilTech { get; set; }
-        public int MoveRate { get; set; }
+        public int MaxMovePoints { get; set; }
+        public int MovePoints { get; set; }
         public int Range { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
@@ -69,12 +70,12 @@ namespace PoskusCiv2.Units
             get { return GoToY; }
         }
 
-        private int _movePointsLost;
-        public int MovePointsLost
-        {
-            get { return _movePointsLost; }
-            set { _movePointsLost = value; }
-        }
+        //private int _movePointsLost;
+        //public int MovePointsLost
+        //{
+        //    get { return _movePointsLost; }
+        //    set { _movePointsLost = value; }
+        //}
 
         public void Move(int moveX, int moveY)
         {
@@ -89,11 +90,11 @@ namespace PoskusCiv2.Units
                     (Game.Terrain[X, Y].River && Game.Terrain[Xto, Yto].River && moveX < 2 && moveY < 2)    //For rivers only for diagonal movement
                     )
                 {
-                    MovePointsLost += 1;
+                    MovePoints -= 1;
                 }
                 else
                 {
-                    MovePointsLost += 3;
+                    MovePoints -= 3;
                 }
                 X = Xto;
                 Y = Yto;
@@ -104,10 +105,9 @@ namespace PoskusCiv2.Units
                 Sound.MoveSound.Play();
             }
 
-            if (MovePointsLost >= 3 * MoveRate)
+            if (MovePoints <= 0)
             {
                 TurnEnded = true;
-                MovePointsLost = 3 * MoveRate;
             }            
         }
 
@@ -116,9 +116,8 @@ namespace PoskusCiv2.Units
         {
             get
             {
-                if (MovePointsLost >= 3 * MoveRate)
+                if (MovePoints <= 0)
                 {
-                    MovePointsLost = 3 * MoveRate;
                     _turnEnded = true;
                 }
                 if (Action == OrderType.Fortified || Action == OrderType.Sleep || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) _turnEnded = true;
@@ -198,7 +197,8 @@ namespace PoskusCiv2.Units
             if (ReadFiles.UnitDomain[(int)type] == 0) GAS = UnitGAS.Ground;
             else if (ReadFiles.UnitDomain[(int)type] == 1) GAS = UnitGAS.Air;
             else GAS = UnitGAS.Sea;
-            MoveRate = ReadFiles.UnitMove[(int)type];
+            MaxMovePoints = 3 * ReadFiles.UnitMove[(int)type];
+            MovePoints = MaxMovePoints;
             Range = ReadFiles.UnitRange[(int)type];
             Attack = ReadFiles.UnitAttack[(int)type];
             Defense = ReadFiles.UnitDefense[(int)type];

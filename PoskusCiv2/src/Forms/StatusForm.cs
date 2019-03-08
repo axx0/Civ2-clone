@@ -124,7 +124,7 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
                 e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
 
-                int _movePointsLeft = 3 * Game.Instance.ActiveUnit.MoveRate - Game.Instance.ActiveUnit.MovePointsLost;
+                int _movePointsLeft = Game.Instance.ActiveUnit.MovePoints;
                 string movesLeft;
                 if (_movePointsLeft % 3 == 0)
                 {

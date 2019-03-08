@@ -132,7 +132,7 @@ namespace PoskusCiv2
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
             {
                 unit.TurnEnded = false;
-                unit.MovePointsLost = 0;
+                unit.MovePoints = unit.MaxMovePoints;
 
                 //Increase counters
                 if ((unit.Action == OrderType.BuildIrrigation) || (unit.Action == OrderType.BuildRoad) || (unit.Action == OrderType.BuildMine)) unit.Counter += 1;
