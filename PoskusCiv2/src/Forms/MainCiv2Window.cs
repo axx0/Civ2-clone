@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PoskusCiv2.Enums;
+using PoskusCiv2.Imagery;
 
 namespace PoskusCiv2.Forms
 {
@@ -29,9 +30,27 @@ namespace PoskusCiv2.Forms
             IsMdiContainer = true;
             WindowState = FormWindowState.Maximized;
 
+            //Setting background color in MdiParent control
+            foreach (Control c in this.Controls)
+            {
+                if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);
+            }
+
             //Load the icon
             Icon ico = Properties.Resources.civ2;
             this.Icon = ico;
+
+            //Symbol image in the center of screen
+            //Bitmap backimage = Images.MainScreenSymbol;
+            Bitmap backimage = Images.MainScreenSinai;
+            PictureBox mainIcon = new PictureBox
+            {
+                Image = backimage,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                Anchor = AnchorStyles.None,
+                Location = new Point((this.Width / 2) - (backimage.Width / 2), (this.Height / 2) - (backimage.Height / 2))
+            };
+            Controls.Add(mainIcon);
 
             //Menustrip
             MainMenuStrip = new MenuStrip
@@ -266,19 +285,19 @@ namespace PoskusCiv2.Forms
             mapForm = new MapForm(this);
             mapForm.MdiParent = this;
             mapForm.Location = new Point(0, 0);
-            mapForm.Show();
+            //mapForm.Show();
 
             worldMapForm = new WorldMapForm(this);
             worldMapForm.MdiParent = this;
             worldMapForm.StartPosition = FormStartPosition.Manual;
             worldMapForm.Location = new Point((int)(ClientSize.Width * 0.8625) - 6 + 1, 0);
-            worldMapForm.Show();
+            //worldMapForm.Show();
 
             statusForm = new StatusForm(this);
             statusForm.MdiParent = this;
             statusForm.StartPosition = FormStartPosition.Manual;
             statusForm.Location = new Point((int)(ClientSize.Width * 0.8625) - 6 + 1, worldMapForm.Height + 1);
-            statusForm.Show();
+            //statusForm.Show();
 
             cityForm = new CityForm(this);
         }

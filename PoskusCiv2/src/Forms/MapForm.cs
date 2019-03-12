@@ -79,8 +79,9 @@ namespace PoskusCiv2.Forms
             BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2); //Determine the square in the center of figure
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
-            OffsetX = 0; //starting offset from (0,0)
-            OffsetY = 0;
+            OffsetX = Game.Instance.ActiveUnit.X2 - 2 * (CenterBoxX - 1);   //at game start center view on active unit
+            OffsetY = Game.Instance.ActiveUnit.Y2 - 2 * (CenterBoxY - 1);
+            CheckOffset();
             ActiveBoxX = Game.Instance.ActiveUnit.X2;   //set active box coords to active unit coords
             ActiveBoxY = Game.Instance.ActiveUnit.Y2;
 
