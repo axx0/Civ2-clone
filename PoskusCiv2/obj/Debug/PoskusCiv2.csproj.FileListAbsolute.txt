@@ -60,3 +60,6 @@ C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.ForeignCreateUnitForm.r
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.ForeignCreateUnitForm.resources
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\bin\Debug\CommandLine.dll
 C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\bin\Debug\CommandLine.xml
+C:\Users\PC\myciv2\PoskusCiv2\bin\Debug\CommandLine.dll
+C:\Users\PC\myciv2\PoskusCiv2\bin\Debug\CommandLine.xml
+C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.csproj.CopyComplete

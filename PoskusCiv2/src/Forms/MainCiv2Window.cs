@@ -15,6 +15,7 @@ namespace PoskusCiv2.Forms
     public partial class MainCiv2Window : Form
     {
         MenuStrip MainMenuStrip;
+        PictureBox sinaiIcon;
         public MapForm mapForm;
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
@@ -29,28 +30,19 @@ namespace PoskusCiv2.Forms
             InitializeComponent();
             IsMdiContainer = true;
             WindowState = FormWindowState.Maximized;
-
+            
             //Setting background color in MdiParent control
             foreach (Control c in this.Controls)
             {
-                if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);
+                if (c is MdiClient)
+                {
+                    c.BackColor = Color.FromArgb(143, 123, 99);
+                }
             }
 
             //Load the icon
             Icon ico = Properties.Resources.civ2;
             this.Icon = ico;
-
-            //Symbol image in the center of screen
-            //Bitmap backimage = Images.MainScreenSymbol;
-            Bitmap backimage = Images.MainScreenSinai;
-            PictureBox mainIcon = new PictureBox
-            {
-                Image = backimage,
-                SizeMode = PictureBoxSizeMode.AutoSize,
-                Anchor = AnchorStyles.None,
-                Location = new Point((this.Width / 2) - (backimage.Width / 2), (this.Height / 2) - (backimage.Height / 2))
-            };
-            Controls.Add(mainIcon);
 
             //Menustrip
             MainMenuStrip = new MenuStrip
@@ -281,6 +273,32 @@ namespace PoskusCiv2.Forms
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
         {
+            Console.WriteLine("size={0}", this.Size);
+            Console.WriteLine("size2={0}", ClientSize);
+
+            //Symbol image in the center of screen
+            Bitmap backimage = Images.MainScreenSymbol;
+            PictureBox mainIcon = new PictureBox
+            {
+                Image = backimage,
+                SizeMode = PictureBoxSizeMode.AutoSize,
+                Anchor = AnchorStyles.None,
+                Location = new Point((ClientSize.Width / 2) - (backimage.Width / 2), (ClientSize.Height / 2) - (backimage.Height / 2))
+            };
+            Controls.Add(mainIcon);
+
+            //Sinai image in the intro screen
+            Bitmap sinaiimage = Images.MainScreenSinai;
+            sinaiIcon = new PictureBox
+            {
+                Image = sinaiimage,
+                Size = sinaiimage.Size,
+                Anchor = AnchorStyles.None,
+                Location = new Point((int)(ClientSize.Width * 0.08333), (int)(ClientSize.Height * 0.0933))
+            };
+            Controls.Add(sinaiIcon);
+            sinaiIcon.Paint += new PaintEventHandler(SinaiBorder_Paint);
+
             //Forms
             mapForm = new MapForm(this);
             mapForm.MdiParent = this;
@@ -642,6 +660,31 @@ namespace PoskusCiv2.Forms
                 case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void SinaiBorder_Paint(object sender, PaintEventArgs e)
+        {
+            //Draw border around form
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, sinaiIcon.Width - 2, 0);   //1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, sinaiIcon.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), sinaiIcon.Width - 1, 0, sinaiIcon.Width - 1, sinaiIcon.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), 0, sinaiIcon.Height - 1, sinaiIcon.Width - 1, sinaiIcon.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 255, 255)), 1, 1, sinaiIcon.Width - 3, 1);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 255, 255)), 1, 1, 1, sinaiIcon.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(160, 160, 160)), sinaiIcon.Width - 2, 1, sinaiIcon.Width - 2, sinaiIcon.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(160, 160, 160)), 1, sinaiIcon.Height - 2, sinaiIcon.Width - 2, sinaiIcon.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, 2, sinaiIcon.Width - 4, 2);   //3rd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, 2, 2, sinaiIcon.Height - 4);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), sinaiIcon.Width - 3, 2, sinaiIcon.Width - 3, sinaiIcon.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, sinaiIcon.Height - 3, sinaiIcon.Width - 3, sinaiIcon.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 3, 3, sinaiIcon.Width - 5, 3);   //4th layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 3, 3, 3, sinaiIcon.Height - 5);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), sinaiIcon.Width - 4, 3, sinaiIcon.Width - 4, sinaiIcon.Height - 4);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 3, sinaiIcon.Height - 4, sinaiIcon.Width - 4, sinaiIcon.Height - 4);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, sinaiIcon.Width - 6, 4);   //5th layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, 4, sinaiIcon.Height - 6);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), sinaiIcon.Width - 5, 4, sinaiIcon.Width - 5, sinaiIcon.Height - 5);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 4, sinaiIcon.Height - 5, sinaiIcon.Width - 5, sinaiIcon.Height - 5);
         }
     }
 }
