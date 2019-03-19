@@ -63,3 +63,4 @@ C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\bin\Debug\CommandLine.xml
 C:\Users\PC\myciv2\PoskusCiv2\bin\Debug\CommandLine.dll
 C:\Users\PC\myciv2\PoskusCiv2\bin\Debug\CommandLine.xml
 C:\Users\PC\myciv2\PoskusCiv2\obj\Debug\PoskusCiv2.csproj.CopyComplete
+C:\Users\MM\source\repos\PoskusCiv2\PoskusCiv2\obj\Debug\PoskusCiv2.Forms.MainCiv2WindowChoiceMenu.resources
