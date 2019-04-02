@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 using PoskusCiv2.Enums;
 using PoskusCiv2.Units;
 using PoskusCiv2.Terrains;
 using PoskusCiv2.Improvements;
 using PoskusCiv2.Forms;
 using PoskusCiv2.Imagery;
+using PoskusCiv2.Sounds;
 using ExtensionMethods;
-using System.Drawing;
 
 namespace PoskusCiv2
 {
@@ -30,26 +31,34 @@ namespace PoskusCiv2
         //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
         //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
 
-        public static void StartGame()
+        public static void StartNewGame()
         {
-            //Console.WriteLine("Active units:");
-            //foreach (IUnit unit in Game.Units)  //List active units
-            //{
-            //    Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
-            //}
-            //Console.WriteLine("Dead units:");
-            //foreach (IUnit unit in Game.DeadUnits)  //List dead units
-            //{
-            //    Console.WriteLine("{0} real=({1},{2}), civ2=({3},{4})", unit.Name, unit.X, unit.Y, unit.X2, unit.Y2);
-            //}
-
-            //Draw game map
-            //Draw Draw = new Draw();
+            //Prepare game map
             Map = Draw.DrawMap(); //prepare whole game map
 
             //Set active unit at game start
             Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];
         }
+
+        public static void LoadGame(string SAVpath)
+        {
+            //Read files
+            ReadFiles.ReadRULES(String.Concat(Program.Path, "RULES.TXT"));
+            ImportSAV(SAVpath);
+            Images.LoadTerrain(String.Concat(Program.Path, "TERRAIN1.GIF"), String.Concat(Program.Path, "TERRAIN2.GIF"));
+            Images.LoadCities(String.Concat(Program.Path, "CITIES.GIF"));
+            Images.LoadUnits(String.Concat(Program.Path, "UNITS.GIF"));
+            Images.LoadPeople(String.Concat(Program.Path, "PEOPLE.GIF"));
+            Images.LoadIcons(String.Concat(Program.Path, "ICONS.GIF"));
+            Images.LoadCityWallpaper(String.Concat(Program.Path, "CITY.GIF"));
+            Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
+
+            Map = Draw.DrawMap(); //prepare whole game map
+
+            //Set active unit at game start
+            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];
+        }
+
 
         private int _activeUnit;
         public IUnit ActiveUnit
@@ -262,7 +271,7 @@ namespace PoskusCiv2
             return unit;
         }
         
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, string improvements, int itemInProduction, int activeTradeRoutes, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, int happyCitizens, int unhappyCitizens, int[] wonders)
+        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, int happyCitizens, int unhappyCitizens, bool[] wonders)
         {
             City city = new City
             {
@@ -299,69 +308,69 @@ namespace PoskusCiv2
                 UnhappyCitizens = unhappyCitizens
             };
 
-            if (improvements[0] == '1') city.AddImprovement(new Improvement(ImprovementType.Palace));
-            if (improvements[1] == '1') city.AddImprovement(new Improvement(ImprovementType.Barracks));
-            if (improvements[2] == '1') city.AddImprovement(new Improvement(ImprovementType.Granary));
-            if (improvements[3] == '1') city.AddImprovement(new Improvement(ImprovementType.Temple));
-            if (improvements[4] == '1') city.AddImprovement(new Improvement(ImprovementType.Marketplace));
-            if (improvements[5] == '1') city.AddImprovement(new Improvement(ImprovementType.Library));
-            if (improvements[6] == '1') city.AddImprovement(new Improvement(ImprovementType.Courthouse));
-            if (improvements[7] == '1') city.AddImprovement(new Improvement(ImprovementType.CityWalls));
-            if (improvements[8] == '1') city.AddImprovement(new Improvement(ImprovementType.Aqueduct));
-            if (improvements[9] == '1') city.AddImprovement(new Improvement(ImprovementType.Bank));
-            if (improvements[10] == '1') city.AddImprovement(new Improvement(ImprovementType.Cathedral));
-            if (improvements[11] == '1') city.AddImprovement(new Improvement(ImprovementType.University));
-            if (improvements[12] == '1') city.AddImprovement(new Improvement(ImprovementType.MassTransit));
-            if (improvements[13] == '1') city.AddImprovement(new Improvement(ImprovementType.Colosseum));
-            if (improvements[14] == '1') city.AddImprovement(new Improvement(ImprovementType.Factory));
-            if (improvements[15] == '1') city.AddImprovement(new Improvement(ImprovementType.MfgPlant));
-            if (improvements[16] == '1') city.AddImprovement(new Improvement(ImprovementType.SDIdefense));
-            if (improvements[17] == '1') city.AddImprovement(new Improvement(ImprovementType.RecyclCentre));
-            if (improvements[18] == '1') city.AddImprovement(new Improvement(ImprovementType.PowerPlant));
-            if (improvements[19] == '1') city.AddImprovement(new Improvement(ImprovementType.HydroPlant));
-            if (improvements[20] == '1') city.AddImprovement(new Improvement(ImprovementType.NuclearPlant));
-            if (improvements[21] == '1') city.AddImprovement(new Improvement(ImprovementType.StockExch));
-            if (improvements[22] == '1') city.AddImprovement(new Improvement(ImprovementType.SewerSystem));
-            if (improvements[23] == '1') city.AddImprovement(new Improvement(ImprovementType.Supermarket));
-            if (improvements[24] == '1') city.AddImprovement(new Improvement(ImprovementType.Superhighways));
-            if (improvements[25] == '1') city.AddImprovement(new Improvement(ImprovementType.ResearchLab));
-            if (improvements[26] == '1') city.AddImprovement(new Improvement(ImprovementType.SAMbattery));
-            if (improvements[27] == '1') city.AddImprovement(new Improvement(ImprovementType.CoastalFort));
-            if (improvements[28] == '1') city.AddImprovement(new Improvement(ImprovementType.SolarPlant));
-            if (improvements[29] == '1') city.AddImprovement(new Improvement(ImprovementType.Harbour));
-            if (improvements[30] == '1') city.AddImprovement(new Improvement(ImprovementType.OffshorePlat));
-            if (improvements[31] == '1') city.AddImprovement(new Improvement(ImprovementType.Airport));
-            if (improvements[32] == '1') city.AddImprovement(new Improvement(ImprovementType.PoliceStat));
-            if (improvements[33] == '1') city.AddImprovement(new Improvement(ImprovementType.PortFacil));
+            if (improvements[0]) city.AddImprovement(new Improvement(ImprovementType.Palace));
+            if (improvements[1]) city.AddImprovement(new Improvement(ImprovementType.Barracks));
+            if (improvements[2]) city.AddImprovement(new Improvement(ImprovementType.Granary));
+            if (improvements[3]) city.AddImprovement(new Improvement(ImprovementType.Temple));
+            if (improvements[4]) city.AddImprovement(new Improvement(ImprovementType.Marketplace));
+            if (improvements[5]) city.AddImprovement(new Improvement(ImprovementType.Library));
+            if (improvements[6]) city.AddImprovement(new Improvement(ImprovementType.Courthouse));
+            if (improvements[7]) city.AddImprovement(new Improvement(ImprovementType.CityWalls));
+            if (improvements[8]) city.AddImprovement(new Improvement(ImprovementType.Aqueduct));
+            if (improvements[9]) city.AddImprovement(new Improvement(ImprovementType.Bank));
+            if (improvements[10]) city.AddImprovement(new Improvement(ImprovementType.Cathedral));
+            if (improvements[11]) city.AddImprovement(new Improvement(ImprovementType.University));
+            if (improvements[12]) city.AddImprovement(new Improvement(ImprovementType.MassTransit));
+            if (improvements[13]) city.AddImprovement(new Improvement(ImprovementType.Colosseum));
+            if (improvements[14]) city.AddImprovement(new Improvement(ImprovementType.Factory));
+            if (improvements[15]) city.AddImprovement(new Improvement(ImprovementType.MfgPlant));
+            if (improvements[16]) city.AddImprovement(new Improvement(ImprovementType.SDIdefense));
+            if (improvements[17]) city.AddImprovement(new Improvement(ImprovementType.RecyclCentre));
+            if (improvements[18]) city.AddImprovement(new Improvement(ImprovementType.PowerPlant));
+            if (improvements[19]) city.AddImprovement(new Improvement(ImprovementType.HydroPlant));
+            if (improvements[20]) city.AddImprovement(new Improvement(ImprovementType.NuclearPlant));
+            if (improvements[21]) city.AddImprovement(new Improvement(ImprovementType.StockExch));
+            if (improvements[22]) city.AddImprovement(new Improvement(ImprovementType.SewerSystem));
+            if (improvements[23]) city.AddImprovement(new Improvement(ImprovementType.Supermarket));
+            if (improvements[24]) city.AddImprovement(new Improvement(ImprovementType.Superhighways));
+            if (improvements[25]) city.AddImprovement(new Improvement(ImprovementType.ResearchLab));
+            if (improvements[26]) city.AddImprovement(new Improvement(ImprovementType.SAMbattery));
+            if (improvements[27]) city.AddImprovement(new Improvement(ImprovementType.CoastalFort));
+            if (improvements[28]) city.AddImprovement(new Improvement(ImprovementType.SolarPlant));
+            if (improvements[29]) city.AddImprovement(new Improvement(ImprovementType.Harbour));
+            if (improvements[30]) city.AddImprovement(new Improvement(ImprovementType.OffshorePlat));
+            if (improvements[31]) city.AddImprovement(new Improvement(ImprovementType.Airport));
+            if (improvements[32]) city.AddImprovement(new Improvement(ImprovementType.PoliceStat));
+            if (improvements[33]) city.AddImprovement(new Improvement(ImprovementType.PortFacil));
 
-            if (wonders[0] == 1) city.AddImprovement(new Improvement(ImprovementType.Pyramids));
-            if (wonders[1] == 1) city.AddImprovement(new Improvement(ImprovementType.HangingGardens));
-            if (wonders[2] == 1) city.AddImprovement(new Improvement(ImprovementType.Colossus));
-            if (wonders[3] == 1) city.AddImprovement(new Improvement(ImprovementType.Lighthouse));
-            if (wonders[4] == 1) city.AddImprovement(new Improvement(ImprovementType.GreatLibrary));
-            if (wonders[5] == 1) city.AddImprovement(new Improvement(ImprovementType.Oracle));
-            if (wonders[6] == 1) city.AddImprovement(new Improvement(ImprovementType.GreatWall));
-            if (wonders[7] == 1) city.AddImprovement(new Improvement(ImprovementType.WarAcademy));
-            if (wonders[8] == 1) city.AddImprovement(new Improvement(ImprovementType.KR_Crusade));
-            if (wonders[9] == 1) city.AddImprovement(new Improvement(ImprovementType.MP_Embassy));
-            if (wonders[10] == 1) city.AddImprovement(new Improvement(ImprovementType.MichChapel));
-            if (wonders[11] == 1) city.AddImprovement(new Improvement(ImprovementType.CoperObserv));
-            if (wonders[12] == 1) city.AddImprovement(new Improvement(ImprovementType.MagellExped));
-            if (wonders[13] == 1) city.AddImprovement(new Improvement(ImprovementType.ShakespTheat));
-            if (wonders[14] == 1) city.AddImprovement(new Improvement(ImprovementType.DV_Workshop));
-            if (wonders[15] == 1) city.AddImprovement(new Improvement(ImprovementType.JSB_Cathedral));
-            if (wonders[16] == 1) city.AddImprovement(new Improvement(ImprovementType.IN_College));
-            if (wonders[17] == 1) city.AddImprovement(new Improvement(ImprovementType.TradingCompany));
-            if (wonders[18] == 1) city.AddImprovement(new Improvement(ImprovementType.DarwinVoyage));
-            if (wonders[19] == 1) city.AddImprovement(new Improvement(ImprovementType.StatueLiberty));
-            if (wonders[20] == 1) city.AddImprovement(new Improvement(ImprovementType.EiffelTower));
-            if (wonders[21] == 1) city.AddImprovement(new Improvement(ImprovementType.HooverDam));
-            if (wonders[22] == 1) city.AddImprovement(new Improvement(ImprovementType.WomenSuffrage));
-            if (wonders[23] == 1) city.AddImprovement(new Improvement(ImprovementType.ManhattanProj));
-            if (wonders[24] == 1) city.AddImprovement(new Improvement(ImprovementType.UnitedNations));
-            if (wonders[25] == 1) city.AddImprovement(new Improvement(ImprovementType.ApolloProgr));
-            if (wonders[26] == 1) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
-            if (wonders[27] == 1) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
+            if (wonders[0]) city.AddImprovement(new Improvement(ImprovementType.Pyramids));
+            if (wonders[1]) city.AddImprovement(new Improvement(ImprovementType.HangingGardens));
+            if (wonders[2]) city.AddImprovement(new Improvement(ImprovementType.Colossus));
+            if (wonders[3]) city.AddImprovement(new Improvement(ImprovementType.Lighthouse));
+            if (wonders[4]) city.AddImprovement(new Improvement(ImprovementType.GreatLibrary));
+            if (wonders[5]) city.AddImprovement(new Improvement(ImprovementType.Oracle));
+            if (wonders[6]) city.AddImprovement(new Improvement(ImprovementType.GreatWall));
+            if (wonders[7]) city.AddImprovement(new Improvement(ImprovementType.WarAcademy));
+            if (wonders[8]) city.AddImprovement(new Improvement(ImprovementType.KR_Crusade));
+            if (wonders[9]) city.AddImprovement(new Improvement(ImprovementType.MP_Embassy));
+            if (wonders[10]) city.AddImprovement(new Improvement(ImprovementType.MichChapel));
+            if (wonders[11]) city.AddImprovement(new Improvement(ImprovementType.CoperObserv));
+            if (wonders[12]) city.AddImprovement(new Improvement(ImprovementType.MagellExped));
+            if (wonders[13]) city.AddImprovement(new Improvement(ImprovementType.ShakespTheat));
+            if (wonders[14]) city.AddImprovement(new Improvement(ImprovementType.DV_Workshop));
+            if (wonders[15]) city.AddImprovement(new Improvement(ImprovementType.JSB_Cathedral));
+            if (wonders[16]) city.AddImprovement(new Improvement(ImprovementType.IN_College));
+            if (wonders[17]) city.AddImprovement(new Improvement(ImprovementType.TradingCompany));
+            if (wonders[18]) city.AddImprovement(new Improvement(ImprovementType.DarwinVoyage));
+            if (wonders[19]) city.AddImprovement(new Improvement(ImprovementType.StatueLiberty));
+            if (wonders[20]) city.AddImprovement(new Improvement(ImprovementType.EiffelTower));
+            if (wonders[21]) city.AddImprovement(new Improvement(ImprovementType.HooverDam));
+            if (wonders[22]) city.AddImprovement(new Improvement(ImprovementType.WomenSuffrage));
+            if (wonders[23]) city.AddImprovement(new Improvement(ImprovementType.ManhattanProj));
+            if (wonders[24]) city.AddImprovement(new Improvement(ImprovementType.UnitedNations));
+            if (wonders[25]) city.AddImprovement(new Improvement(ImprovementType.ApolloProgr));
+            if (wonders[26]) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
+            if (wonders[27]) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
 
             Cities.Add(city);
             return city;

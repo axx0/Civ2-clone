@@ -66,17 +66,17 @@
     <Compile Include="src\Enums\OrderType.cs" />
     <Compile Include="src\Enums\UnitGAS.cs" />
     <Compile Include="src\Enums\TechType.cs" />
+    <Compile Include="src\Forms\ChoiceMenuPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
+      <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\MainCiv2Window.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\MainCiv2WindowChoiceMenu.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MainCiv2WindowChoiceMenu.Designer.cs">
-      <DependentUpon>MainCiv2WindowChoiceMenu.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\MapForm.cs">
       <SubType>Form</SubType>
@@ -168,6 +168,12 @@
     <Compile Include="src\Forms\Menu World\WondersOfWorldForm.Designer.cs">
       <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\NameCityPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\NameCityPanel.Designer.cs">
+      <DependentUpon>NameCityPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="src\Forms\StatusForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,7 +227,7 @@
     <Compile Include="src\Imagery\ModifyImage.cs" />
     <Compile Include="src\Imagery\Squares.cs" />
     <Compile Include="src\Imagery\Images.cs" />
-    <Compile Include="src\Game.LoadGame.cs" />
+    <Compile Include="src\Game.ImportSAV.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />
     <Compile Include="src\Improvements\IImprovement.cs" />
@@ -239,9 +245,6 @@
     <Compile Include="src\Units\IUnit.cs" />
     <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\MainCiv2WindowChoiceMenu.resx">
-      <DependentUpon>MainCiv2WindowChoiceMenu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\MapForm.resx">
       <DependentUpon>MapForm.cs</DependentUpon>
@@ -333,6 +336,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\civ2.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\civ2alt.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

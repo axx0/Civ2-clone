@@ -49,6 +49,7 @@ namespace PoskusCiv2.Units
         int LinkOtherUnitsUnder { get; set; }
         int Counter { get; set; }
 
+        void BuildCity();
         void BuildRoad();
         void BuildMines();
         void BuildIrrigation();

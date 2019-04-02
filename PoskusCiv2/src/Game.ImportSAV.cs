@@ -12,9 +12,9 @@ namespace PoskusCiv2
 {
     public partial class Game
     {        
-        public static void LoadGame(string filePath)
+        public static void ImportSAV(string SAVpath)
         {
-            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);        //Enter filename
+            FileStream fs = new FileStream(SAVpath, FileMode.Open, FileAccess.Read);        //Enter filename
             int[] dataArray = new int[fs.Length];
             string bin;
 
@@ -748,7 +748,14 @@ namespace PoskusCiv2
                 cityImprovements5 = Reverse(cityImprovements5);
                 cityImprovements5 = cityImprovements5.Remove(cityImprovements5.Length - 5); //remove last 5 bits, they are not important
                 //Merge all strings into a large string
-                string cityImprovements = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
+                string cityImprovements_ = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
+                //convert string array to bool array
+                bool[] cityImprovements = new bool[34];
+                for (int impNo = 0; impNo < 34; impNo++)
+                {
+                    if (cityImprovements_[impNo] == '1') cityImprovements[impNo] = true;
+                    else cityImprovements[impNo] = false;
+                }
 
                 //Item in production
                 //0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
@@ -805,11 +812,11 @@ namespace PoskusCiv2
                 //...
 
                 //Check if wonder is in city (28 possible wonders)
-                int[] cityWonders = new int[28];
+                bool[] cityWonders = new bool[28];
                 for (int wndr = 0; wndr < 28; wndr++)
                 {
-                    if (wonderCity[wndr] == i) cityWonders[wndr] = 1;
-                    else cityWonders[wndr] = 0;
+                    if (wonderCity[wndr] == i) cityWonders[wndr] = true;
+                    else cityWonders[wndr] = false;
                 }
 
                 City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);

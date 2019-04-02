@@ -84,7 +84,10 @@ namespace PoskusCiv2.Units
             int Xto = (xTo - yTo % 2) / 2;  //from civ2-style to real coords
             int Yto = yTo;
 
-            if (Game.Terrain[Xto, Yto].Type != TerrainType.Ocean)
+            bool unitMoved = false;
+
+            //LAND units
+            if (GAS == UnitGAS.Ground && Game.Terrain[Xto, Yto].Type != TerrainType.Ocean)
             {
                 if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent) ||   //From & To must be cities, road
                     (Game.Terrain[X, Y].River && Game.Terrain[Xto, Yto].River && moveX < 2 && moveY < 2)    //For rivers only for diagonal movement
@@ -96,6 +99,26 @@ namespace PoskusCiv2.Units
                 {
                     MovePoints -= 3;
                 }
+                unitMoved = true;
+            }
+
+            //SEA units
+            if (GAS == UnitGAS.Sea && Game.Terrain[Xto, Yto].Type == TerrainType.Ocean)
+            {
+                MovePoints -= 3;
+                unitMoved = true;
+            }
+
+            //AIR units
+            if (GAS == UnitGAS.Air)
+            {
+                MovePoints -= 3;
+                unitMoved = true;
+            }
+
+            //If unit moved, update its X-Y coords, map & play sound
+            if (unitMoved)
+            {
                 X = Xto;
                 Y = Yto;
 
@@ -105,10 +128,7 @@ namespace PoskusCiv2.Units
                 Sound.MoveSound.Play();
             }
 
-            if (MovePoints <= 0)
-            {
-                TurnEnded = true;
-            }            
+            if (MovePoints <= 0) TurnEnded = true;        
         }
 
         private bool _turnEnded;
@@ -182,6 +202,19 @@ namespace PoskusCiv2.Units
             {
                 Action = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
+            }
+            else
+            {
+                //Warning!
+            }
+        }
+
+        public void BuildCity()
+        {
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.Terrain[X, Y].Type != TerrainType.Ocean))
+            {
+                //First invoke city name panel. If cancel is pressed, do nothing.
+                Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
             }
             else
             {

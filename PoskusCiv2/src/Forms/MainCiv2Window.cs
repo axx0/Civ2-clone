@@ -16,6 +16,7 @@ namespace PoskusCiv2.Forms
     {
         MenuStrip MainMenuStrip;
         PictureBox MainIcon, SinaiIcon;
+        ChoiceMenuPanel ChoiceMenu;
         public MapForm mapForm;
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
@@ -24,12 +25,14 @@ namespace PoskusCiv2.Forms
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
+        public bool AreWeInIntroScreen, LoadGameCalled;
 
         public MainCiv2Window()
         {
             InitializeComponent();
             IsMdiContainer = true;
             WindowState = FormWindowState.Maximized;
+            Text = "Civilization II Multiplayer Gold (OpenCIV2)";
             
             //Setting background color in MdiParent control
             foreach (Control c in this.Controls)
@@ -41,7 +44,7 @@ namespace PoskusCiv2.Forms
             }
 
             //Load the icon
-            Icon ico = Properties.Resources.civ2;
+            Icon ico = Properties.Resources.civ2alt;
             this.Icon = ico;
 
             //Menustrip
@@ -269,6 +272,10 @@ namespace PoskusCiv2.Forms
             GameProfileItem.Enabled = false;
             JoinGameItem.Enabled = false;
             ChangeTimerItem.Enabled = false;
+
+            //Set some variables
+            AreWeInIntroScreen = true;
+            LoadGameCalled = false;
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -297,42 +304,45 @@ namespace PoskusCiv2.Forms
             };
             Controls.Add(SinaiIcon);
             SinaiIcon.Paint += new PaintEventHandler(SinaiBorder_Paint);
+            SinaiIcon.Show();
+            SinaiIcon.BringToFront();
+            
+            //Choice menu panel
+            ChoiceMenu = new ChoiceMenuPanel(this);
+            ChoiceMenu.Location = new Point((int)(ClientSize.Width * 0.745), (int)(ClientSize.Height * 0.570));
+            Controls.Add(ChoiceMenu);
 
-            //Game menu form
-            MainCiv2WindowChoiceMenu mainCiv2WindowChoiceMenu = new MainCiv2WindowChoiceMenu(this);
-            mainCiv2WindowChoiceMenu.MdiParent = this;
-            mainCiv2WindowChoiceMenu.StartPosition = FormStartPosition.Manual;
-            mainCiv2WindowChoiceMenu.Location = new Point((int)(ClientSize.Width * 0.745), (int)(ClientSize.Height * 0.570));
-            mainCiv2WindowChoiceMenu.Show();
+            //cityForm = new CityForm(this);
 
-            //mapForm = new MapForm(this);
-            //mapForm.MdiParent = this;
-            //mapForm.Location = new Point(0, 0);
-            //mapForm.Show();
+            //If quickload is enabled skip intro screen & load game immediately
+            if (Program.QuickLoad) ChoiceMenuResult(2, String.Concat(String.Concat(Program.Path, Program.SAVName), ".SAV"));
+            else ShowIntroScreen();
+        }
 
-            worldMapForm = new WorldMapForm(this);
-            worldMapForm.MdiParent = this;
-            worldMapForm.StartPosition = FormStartPosition.Manual;
-            worldMapForm.Location = new Point((int)(ClientSize.Width * 0.8625) - 6 + 1, 0);
-            //worldMapForm.Show();
+        //What to show on intro screen
+        public void ShowIntroScreen()
+        {
+            AreWeInIntroScreen = true;
 
-            statusForm = new StatusForm(this);
-            statusForm.MdiParent = this;
-            statusForm.StartPosition = FormStartPosition.Manual;
-            statusForm.Location = new Point((int)(ClientSize.Width * 0.8625) - 6 + 1, worldMapForm.Height + 1);
-            //statusForm.Show();
+            SinaiIcon.Show();
+            ChoiceMenu.Visible = true;
 
-            cityForm = new CityForm(this);
+            if (mapForm != null) mapForm.Close();
+            if (statusForm != null) statusForm.Close();
+            if (worldMapForm != null) worldMapForm.Close();
+            MainMenuStrip.Enabled = false;
         }
 
         //Make actions based on choice menu result
-        public void ChoiceMenuResult(int choiceNo, string chosenFile)
+        public void ChoiceMenuResult(int choiceNo, string SAVpath)
         {
             //Load game
             if (choiceNo == 2)
             {
-                LoadGame(chosenFile);
+                LoadGame(SAVpath);
             }
+            ChoiceMenu.Visible = false;
+            MainMenuStrip.Enabled = true;
         }
 
         // GAME MENU
@@ -385,12 +395,18 @@ namespace PoskusCiv2.Forms
         private void GameProfile_Click(object sender, EventArgs e) { }
         private void PickMusic_Click(object sender, EventArgs e) { }
         private void SaveGame_Click(object sender, EventArgs e) { }
-        private void LoadGame_Click(object sender, EventArgs e) { }
+
+        private void LoadGame_Click(object sender, EventArgs e)
+        {
+            LoadGameCalled = true;
+            ChoiceMenu.ChoseResult();
+        }
+
         private void JoinGame_Click(object sender, EventArgs e) { }
         private void SetPassword_Click(object sender, EventArgs e) { }
         private void ChangeTimer_Click(object sender, EventArgs e) { }
         private void Retire_Click(object sender, EventArgs e) { }
-        private void Quit_Click(object sender, EventArgs e) { Close(); }
+        private void Quit_Click(object sender, EventArgs e) { ShowIntroScreen(); }
 
         // VIEW MENU
         private void MovePieces_Click(object sender, EventArgs e) { }
@@ -636,43 +652,46 @@ namespace PoskusCiv2.Forms
         //Shome shortcuts keys are not supported. Grab them with this method.
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            switch (keyData)
+            if (!AreWeInIntroScreen)
             {
-                case Keys.NumPad1: Actions.GiveCommand("Move SW"); break;
-                case Keys.NumPad2: Actions.GiveCommand("Move S"); break;
-                case Keys.NumPad3: Actions.GiveCommand("Move SE"); break;
-                case Keys.NumPad4: Actions.GiveCommand("Move W"); break;
-                case Keys.NumPad6: Actions.GiveCommand("Move E"); break;
-                case Keys.NumPad7: Actions.GiveCommand("Move NW"); break;
-                case Keys.NumPad8: Actions.GiveCommand("Move N"); break;
-                case Keys.NumPad9: Actions.GiveCommand("Move NE"); break;
-                case Keys.Down: Actions.GiveCommand("Move S"); break;
-                case Keys.Left: Actions.GiveCommand("Move W"); break;
-                case Keys.Right: Actions.GiveCommand("Move E"); break;
-                case Keys.Up: Actions.GiveCommand("Move N"); break;
-                case Keys.A: ActivateUnit_Click(null, null); break;
-                case Keys.B: BuildNewCity_Click(null, null); break;
-                case Keys.F: Fortify_Click(null, null); break;
-                case Keys.G: GoTo_Click(null, null); break;
-                case Keys.H: GoHomeToNearestCity_Click(null, null); break;
-                case Keys.I: BuildIrrigation_Click(null, null); break;
-                case Keys.K: AutomateSettler_Click(null, null); break;
-                case Keys.M: BuildMinesChangeForest_Click(null, null); break;
-                case Keys.O: Actions.GiveCommand("Terraform"); break;
-                case Keys.P: CleanUpPollution_Click(null, null); break; //paradrop!!!
-                case Keys.R: BuildRoad_Click(null, null); break;
-                case Keys.S: Sleep_Click(null, null); break;
-                case Keys.U: Unload_Click(null, null); break;
-                case Keys.W: Wait_Click(null, null); break;
-                case Keys.Space: SkipTurn_Click(null, null); break;
-                case Keys.Enter: Actions.GiveCommand("ENTER"); break;
-                case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
-                case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
-                case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
-                case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
-                case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
-                case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
-                case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
+                switch (keyData)
+                {
+                    case Keys.NumPad1: Actions.GiveCommand("Move SW"); break;
+                    case Keys.NumPad2: Actions.GiveCommand("Move S"); break;
+                    case Keys.NumPad3: Actions.GiveCommand("Move SE"); break;
+                    case Keys.NumPad4: Actions.GiveCommand("Move W"); break;
+                    case Keys.NumPad6: Actions.GiveCommand("Move E"); break;
+                    case Keys.NumPad7: Actions.GiveCommand("Move NW"); break;
+                    case Keys.NumPad8: Actions.GiveCommand("Move N"); break;
+                    case Keys.NumPad9: Actions.GiveCommand("Move NE"); break;
+                    case Keys.Down: Actions.GiveCommand("Move S"); break;
+                    case Keys.Left: Actions.GiveCommand("Move W"); break;
+                    case Keys.Right: Actions.GiveCommand("Move E"); break;
+                    case Keys.Up: Actions.GiveCommand("Move N"); break;
+                    case Keys.A: ActivateUnit_Click(null, null); break;
+                    case Keys.B: BuildNewCity_Click(null, null); break;
+                    case Keys.F: Fortify_Click(null, null); break;
+                    case Keys.G: GoTo_Click(null, null); break;
+                    case Keys.H: GoHomeToNearestCity_Click(null, null); break;
+                    case Keys.I: BuildIrrigation_Click(null, null); break;
+                    case Keys.K: AutomateSettler_Click(null, null); break;
+                    case Keys.M: BuildMinesChangeForest_Click(null, null); break;
+                    case Keys.O: Actions.GiveCommand("Terraform"); break;
+                    case Keys.P: CleanUpPollution_Click(null, null); break; //paradrop!!!
+                    case Keys.R: BuildRoad_Click(null, null); break;
+                    case Keys.S: Sleep_Click(null, null); break;
+                    case Keys.U: Unload_Click(null, null); break;
+                    case Keys.W: Wait_Click(null, null); break;
+                    case Keys.Space: SkipTurn_Click(null, null); break;
+                    case Keys.Enter: Actions.GiveCommand("ENTER"); break;
+                    case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
+                    case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
+                    case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
+                    case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
+                    case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
+                    case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
+                    case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
+                }
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }

@@ -18,6 +18,7 @@ namespace PoskusCiv2.Forms
         public MainCiv2Window mainCiv2Window;
         CreateUnitForm createUnitForm = new CreateUnitForm();
         DoubleBufferedPanel MapPanel;
+        NameCityPanel NameCityPanel;
         Random randomNo = new Random();
         Timer t_VP = new Timer();   //viewing pieces timer
         Timer t_Unit = new Timer(); //unit animation timer
@@ -214,6 +215,21 @@ namespace PoskusCiv2.Forms
                 e.Graphics.DrawImage(Images.ViewingPieces, 32 * (ClickedBoxX - OffsetX), 16 * (ClickedBoxY - OffsetY), 64, 32);
             }
 
+        }
+
+        public void ShowCityNamePanel()
+        {
+            NameCityPanel = new NameCityPanel(this);
+            Controls.Add(NameCityPanel);
+            NameCityPanel.Show();
+            NameCityPanel.BringToFront();
+        }
+
+        public void CityNamePanelResult(bool result, string cityName)
+        {
+            if (result) Actions.BuildCity(cityName);
+
+            Controls.Remove(NameCityPanel);
         }
 
         private void MapPanel_MouseClick(object sender, MouseEventArgs e)

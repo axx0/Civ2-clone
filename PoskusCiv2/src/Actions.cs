@@ -72,6 +72,14 @@ namespace PoskusCiv2
         //Chose next unit for orders. If all units ended turn, update cities.
         public static void ChooseNextUnit()
         {
+            //Set next active unit by increasing unit index.
+            //First get index of current unit in list
+            int index = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit);
+            for (int i = index; i < Game.Units.Count; i++)
+            {
+
+            }
+
             //Move on to next unit
             allUnitsEndedTurn = true;
             foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
@@ -145,6 +153,33 @@ namespace PoskusCiv2
             ChooseNextUnit();
         }
 
+        public static void BuildCity(string cityName)
+        {
+            int x = Game.Instance.ActiveUnit.X;
+            int y = Game.Instance.ActiveUnit.Y;
+            bool[] improvements = new bool[34];
+            bool[] wonders = new bool[28];
+            for (int i = 0; i < 34; i++) improvements[i] = false;
+            for (int i = 0; i < 28; i++) wonders[i] = false;
+            Game.CreateCity(x, y, false, false, false, false, false, false, false, false, false, Game.Instance.ActiveUnit.Civ, 1, Game.Instance.ActiveUnit.Civ, 0, 0, 0, cityName, 0, 0, 0, 0, improvements, 0, 0, 0, 0, 0, 0, 0, 0, 0, wonders);
+
+            DeleteUnit(Game.Instance.ActiveUnit);
+        }
+
+        public static void DeleteUnit(IUnit unit)
+        {
+            if (Game.Instance.ActiveUnit == unit)
+            {
+                Game.Units.Remove(unit);
+                ChooseNextUnit();
+            }
+            else
+            {
+                Game.Units.Remove(unit);
+            }
+
+        }
+
         public static void GiveCommand(string action)
         {
             //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
@@ -164,7 +199,7 @@ namespace PoskusCiv2
                 {
                     case "Activate unit": break;
                     case "Automate": break;
-                    case "Build city": break;
+                    case "Build city": Game.Instance.ActiveUnit.BuildCity(); break;
                     case "Build road": Game.Instance.ActiveUnit.BuildRoad(); break;
                     case "Build irrigation": Game.Instance.ActiveUnit.BuildIrrigation(); break;
                     case "Build mines/Change forest": Game.Instance.ActiveUnit.BuildMines(); break;
