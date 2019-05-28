@@ -22,6 +22,7 @@ namespace PoskusCiv2
         [STAThread]
         static void Main(string[] args)
         {
+
             //Get input arguments
             ProgramArguments arguments = new ProgramArguments();
             if (Parser.Default.ParseArguments(args, arguments))
@@ -59,6 +60,7 @@ namespace PoskusCiv2
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            HelpConsole.CreateConsole();
             Application.Run(new Forms.MainCiv2Window());
         }
     }

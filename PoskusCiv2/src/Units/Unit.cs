@@ -140,7 +140,7 @@ namespace PoskusCiv2.Units
                 {
                     _turnEnded = true;
                 }
-                if (Action == OrderType.Fortified || Action == OrderType.Sleep || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) _turnEnded = true;
+                if (Action == OrderType.Fortified || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) _turnEnded = true;
                 
                 return _turnEnded;
             }

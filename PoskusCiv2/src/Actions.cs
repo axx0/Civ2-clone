@@ -72,35 +72,65 @@ namespace PoskusCiv2
         //Chose next unit for orders. If all units ended turn, update cities.
         public static void ChooseNextUnit()
         {
-            //Set next active unit by increasing unit index.
-            //First get index of current unit in list
-            int index = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit);
-            for (int i = index; i < Game.Units.Count; i++)
-            {
+            ////Set next active unit by increasing unit index.            
+            //int indexU = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit); //First get index of current unit in list
+            ////Make an array of indexes of current civ units starting with index of currently active unit
+            //List<int> indexL = new List<int>();
+            //List<int> indexR = new List<int>();
+            //for (int i = 0; i < Game.Units.Count; i++)
+            //{
+            //    if (Game.Units[i].Civ == Game.Data.HumanPlayerUsed)
+            //    {
+            //        if (i < indexU) indexL.Add(i);
+            //        else indexR.Add(i);
+            //    }
+            //}
+            //IEnumerable<int> indexALL = indexR.Union(indexL);
 
+            //bool newUnitChosen = false;
+
+            //Create an array of indexes of units awaiting orders
+            List<int> indexNO = new List<int>();
+            int indexAU = 0;    //index of currently active unit
+            for (int i = 0; i < Game.Units.Count; i++)
+            {
+                if ((Game.Units[i].Civ == Game.Data.HumanPlayerUsed) && !Game.Units[i].TurnEnded && (Game.Units[i].Action == OrderType.Sleep)) indexNO.Add(i);
+
+                if (Game.Units[i] == Game.Instance.ActiveUnit) indexAU = i;
             }
 
-            //Move on to next unit
-            allUnitsEndedTurn = true;
-            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
+            //Move on to the next unit
+            bool startNewTurn = true;
+            if (indexNO.Any()) //there are still units awaiting orders
             {
-                if (!unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
+                if (indexNO.Count == 1) { } //if only 1 active unit (currently active unit), then start new turn (do nothing here)
+                else if (indexAU == indexNO[indexNO.Count - 1])  //currently active unit is also the final unit in the array of no order units
                 {
-                    Game.Instance.ActiveUnit = unit;
-                    //Game.Instance.ActiveUnit.FirstMove = true;
-
-                    allUnitsEndedTurn = false;
-
-                    //If necessary, center view on new unit in MapForm
-                    Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
-
-                    //Set active box coords to next unit
-                    MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
-                    MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
-
-                    break;
+                    Game.Instance.ActiveUnit = Game.Units[0];
                 }
             }
+
+            ////Move on to next unit
+            //allUnitsEndedTurn = true;
+            //foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
+            //{
+            //    if (!unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
+            //    {
+            //        Game.Instance.ActiveUnit = unit;
+            //        //Game.Instance.ActiveUnit.FirstMove = true;
+
+            //        allUnitsEndedTurn = false;
+
+            //        //If necessary, center view on new unit in MapForm
+            //        Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
+
+            //        //Set active box coords to next unit
+            //        MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
+            //        MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
+
+            //        break;
+            //    }
+            //}
 
             //If all units ended turn ==> start new turn. If not, update unit stats.
             if (allUnitsEndedTurn)

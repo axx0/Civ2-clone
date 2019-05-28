@@ -317,6 +317,7 @@ namespace PoskusCiv2.Forms
             //If quickload is enabled skip intro screen & load game immediately
             if (Program.QuickLoad) ChoiceMenuResult(2, String.Concat(String.Concat(Program.Path, Program.SAVName), ".SAV"));
             else ShowIntroScreen();
+
         }
 
         //What to show on intro screen
