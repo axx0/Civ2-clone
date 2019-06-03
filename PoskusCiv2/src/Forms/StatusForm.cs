@@ -176,7 +176,7 @@ namespace PoskusCiv2.Forms
                     //Game.Cities[unit.HomeCity].Name
                     //Game.Cities[0].Name
                     e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18));
-                    e.Graphics.DrawString(unit.Action.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 18));
+                    e.Graphics.DrawString(unit.Order.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 18));
                     e.Graphics.DrawString(unit.Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 2 * 18));
                     count++;
                     if (count > 6)

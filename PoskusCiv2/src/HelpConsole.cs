@@ -85,17 +85,17 @@ namespace PoskusCiv2
                                 if (unit.TurnEnded) active = "(turn ended)";
                                 else active = "(active)";
                                 string order;
-                                if (unit.Action == OrderType.Fortify) order = "fortifying";
-                                else if (unit.Action == OrderType.Fortified) order = "fortified";
-                                else if (unit.Action == OrderType.Sleep) order = "sleep";
-                                else if (unit.Action == OrderType.BuildFortress) order = "building fortress";
-                                else if (unit.Action == OrderType.BuildRoad) order = "building road";
-                                else if (unit.Action == OrderType.BuildIrrigation) order = "building irrigation";
-                                else if (unit.Action == OrderType.BuildMine) order = "building mine";
-                                else if (unit.Action == OrderType.Transform) order = "transforming";
-                                else if (unit.Action == OrderType.CleanPollution) order = "cleaning pollution";
-                                else if (unit.Action == OrderType.BuildAirbase) order = "building airbase";
-                                else if (unit.Action == OrderType.GoTo) order = "Go-To";
+                                if (unit.Order == OrderType.Fortify) order = "fortifying";
+                                else if (unit.Order == OrderType.Fortified) order = "fortified";
+                                else if (unit.Order == OrderType.Sleep) order = "sleep";
+                                else if (unit.Order == OrderType.BuildFortress) order = "building fortress";
+                                else if (unit.Order == OrderType.BuildRoad) order = "building road";
+                                else if (unit.Order == OrderType.BuildIrrigation) order = "building irrigation";
+                                else if (unit.Order == OrderType.BuildMine) order = "building mine";
+                                else if (unit.Order == OrderType.Transform) order = "transforming";
+                                else if (unit.Order == OrderType.CleanPollution) order = "cleaning pollution";
+                                else if (unit.Order == OrderType.BuildAirbase) order = "building airbase";
+                                else if (unit.Order == OrderType.GoTo) order = "Go-To";
                                 else order = "no orders";
                                 Console.WriteLine("#{0} {1}, XY=({2},{3}), civ2XY=({4},{5}), {6}, {7}", id, unit.Type, unit.X, unit.Y, unit.X2, unit.Y2, active, order);
                             }

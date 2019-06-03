@@ -19,6 +19,6 @@ namespace PoskusCiv2.Enums
         CleanPollution = 8,
         BuildAirbase = 9,
         GoTo = 10,
-        NoOrders = 11
+        NoOrders = 255
     }
 }

@@ -31,12 +31,10 @@ namespace PoskusCiv2
         public int MaxParadropRange = ReadFiles.CosmicRules[19];
         public int MassThrustParadigm = ReadFiles.CosmicRules[20];
         public int MaxEffectiveScienceRate = ReadFiles.CosmicRules[21];
-
-
-
+        
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
-        public int UnitSelectedAtGameStart { get; set; }
+        public int UnitSelectedIndex { get; set; }
         public int HumanPlayerUsed { get; set; }
         public int[] CivsInPlay { get; set; }
         public int PlayersMapUsed { get; set; }
@@ -55,6 +53,8 @@ namespace PoskusCiv2
         public int MapSeed { get; set; }
         public int MapLocatorXdim { get; set; }
         public int MapLocatorYdim { get; set; }
+
+        public int IndexOfLastActiveUnit { get; set; }
 
         private int _gameYear;
         public int GameYear

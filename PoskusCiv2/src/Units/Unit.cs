@@ -31,7 +31,7 @@ namespace PoskusCiv2.Units
 
         public UnitType Type { get; set; }
         public UnitGAS GAS { get; set; }
-        public OrderType Action { get; set; }
+        public OrderType Order { get; set; }
 
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
@@ -39,7 +39,6 @@ namespace PoskusCiv2.Units
         public int Civ { get; set; }
         public int LastMove { get; set; }
         public int CaravanCommodity { get; set; }
-        public int Orders { get; set; }
         public int HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
@@ -124,7 +123,7 @@ namespace PoskusCiv2.Units
 
                 //for animation of movement
                 if (!Game.Options.FastPieceSlide) Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X2 - moveX, Y2 - moveY);    //send coords of unit starting loc
-    
+
                 Sound.MoveSound.Play();
             }
 
@@ -140,11 +139,24 @@ namespace PoskusCiv2.Units
                 {
                     _turnEnded = true;
                 }
-                if (Action == OrderType.Fortified || Action == OrderType.Transform || Action == OrderType.Fortify || Action == OrderType.BuildIrrigation || Action == OrderType.BuildRoad || Action == OrderType.BuildAirbase || Action == OrderType.BuildFortress || Action == OrderType.BuildMine) _turnEnded = true;
+                if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation || Order == OrderType.BuildRoad || Order == OrderType.BuildAirbase || Order == OrderType.BuildFortress || Order == OrderType.BuildMine) _turnEnded = true;
                 
                 return _turnEnded;
             }
             set { _turnEnded = value; }
+        }
+
+        private bool _awaitingOrders;
+        public bool AwaitingOrders
+        {
+            get
+            {
+                if (TurnEnded || (Order != OrderType.NoOrders)) _awaitingOrders = false;
+                else _awaitingOrders = true;
+
+                return _awaitingOrders;
+            }
+            set { _awaitingOrders = value; }
         }
 
         public void SkipTurn()
@@ -154,14 +166,14 @@ namespace PoskusCiv2.Units
 
         public void Fortify()
         {
-            Action = OrderType.Fortify;
+            Order = OrderType.Fortify;
         }
 
         public void BuildIrrigation()
         {
             if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Irrigation == false) || (Game.Terrain[X, Y].Farmland == false)))
             {
-                Action = OrderType.BuildIrrigation;
+                Order = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
             }
             else
@@ -174,7 +186,7 @@ namespace PoskusCiv2.Units
         {
             if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.Terrain[X, Y].Mining == false && (Game.Terrain[X, Y].Type == TerrainType.Mountains || Game.Terrain[X, Y].Type == TerrainType.Hills))
             {
-                Action = OrderType.BuildMine;
+                Order = OrderType.BuildMine;
                 Counter = 0;    //reset counter
             }
             else
@@ -187,20 +199,20 @@ namespace PoskusCiv2.Units
         {
             if (Type == UnitType.Engineers)
             {
-                Action = OrderType.Transform;
+                Order = OrderType.Transform;
             }
         }
 
         public void Sleep()
         {
-            Action = OrderType.Sleep;
+            Order = OrderType.Sleep;
         }
 
         public void BuildRoad()
         {
             if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Road == false) || (Game.Terrain[X, Y].Railroad == false)))
             {
-                Action = OrderType.BuildRoad;
+                Order = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
             }
             else
@@ -243,6 +255,7 @@ namespace PoskusCiv2.Units
             AIrole = ReadFiles.UnitAIrole[(int)type];
             //PrereqTech = TO-DO
             Flags = ReadFiles.UnitFlags[(int)type];
+            Order = OrderType.NoOrders;
         }
 
     }

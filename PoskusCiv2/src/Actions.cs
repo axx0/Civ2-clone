@@ -21,10 +21,10 @@ namespace PoskusCiv2
         public static void UpdateUnit(IUnit unit)
         {
             //If unit has ended turn
-            if (unit.TurnEnded) ChooseNextUnit();
+            if (!unit.AwaitingOrders) ChooseNextUnit();
 
             //Check if unit has done irrigating
-            if (unit.Action == OrderType.BuildIrrigation)
+            if (unit.Order == OrderType.BuildIrrigation)
             {
                 if (unit.Counter == 2)
                 {
@@ -40,7 +40,7 @@ namespace PoskusCiv2
                     //unit.Action = OrderType.NoOrders;
                 }
             }
-            else if (unit.Action == OrderType.BuildRoad)
+            else if (unit.Order == OrderType.BuildRoad)
             {
                 if (unit.Counter == 2)
                 {
@@ -56,7 +56,7 @@ namespace PoskusCiv2
                     //unit.Action = OrderType.NoOrders;
                 }
             }
-            else if (unit.Action == OrderType.BuildMine)
+            else if (unit.Order == OrderType.BuildMine)
             {
                 if (unit.Counter == 2)
                 {
@@ -72,42 +72,34 @@ namespace PoskusCiv2
         //Chose next unit for orders. If all units ended turn, update cities.
         public static void ChooseNextUnit()
         {
-            ////Set next active unit by increasing unit index.            
-            //int indexU = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit); //First get index of current unit in list
-            ////Make an array of indexes of current civ units starting with index of currently active unit
-            //List<int> indexL = new List<int>();
-            //List<int> indexR = new List<int>();
-            //for (int i = 0; i < Game.Units.Count; i++)
-            //{
-            //    if (Game.Units[i].Civ == Game.Data.HumanPlayerUsed)
-            //    {
-            //        if (i < indexU) indexL.Add(i);
-            //        else indexR.Add(i);
-            //    }
-            //}
-            //IEnumerable<int> indexALL = indexR.Union(indexL);
-
-            //bool newUnitChosen = false;
-
             //Create an array of indexes of units awaiting orders
-            List<int> indexNO = new List<int>();
-            int indexAU = 0;    //index of currently active unit
-            for (int i = 0; i < Game.Units.Count; i++)
-            {
-                if ((Game.Units[i].Civ == Game.Data.HumanPlayerUsed) && !Game.Units[i].TurnEnded && (Game.Units[i].Action == OrderType.Sleep)) indexNO.Add(i);
-
-                if (Game.Units[i] == Game.Instance.ActiveUnit) indexAU = i;
-            }
+            List<int> indexUAO = new List<int>();
+            for (int i = 0; i < Game.Units.Count; i++) if ((Game.Units[i].Civ == Game.Data.HumanPlayerUsed) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
 
             //Move on to the next unit
-            bool startNewTurn = true;
-            if (indexNO.Any()) //there are still units awaiting orders
+            bool noUnitsAwaitingOrders = true;
+            if (indexUAO.Any()) //there are still units awaiting orders
             {
-                if (indexNO.Count == 1) { } //if only 1 active unit (currently active unit), then start new turn (do nothing here)
-                else if (indexAU == indexNO[indexNO.Count - 1])  //currently active unit is also the final unit in the array of no order units
+                if (Game.Data.UnitSelectedIndex < indexUAO[indexUAO.Count - 1]) //indexes of the next units in line are > index of unit that just moved
                 {
-                    Game.Instance.ActiveUnit = Game.Units[0];
+                    for (int i = 0; i < indexUAO.Count; i++) if (indexUAO[i] > Game.Data.UnitSelectedIndex) { Game.Data.UnitSelectedIndex = indexUAO[i]; break; }   //chose next index
                 }
+                else    //else chose the 1st index in list (go to beginning of list)
+                {
+                    Game.Data.UnitSelectedIndex = indexUAO[0];
+                }
+
+                Game.Instance.ActiveUnit = Game.Units[Game.Data.UnitSelectedIndex];
+                noUnitsAwaitingOrders = false;
+
+                //If necessary, center view on new unit in MapForm
+                Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
+
+                //Set active box coords to next unit
+                MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
+                MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
+
+                Console.WriteLine("Chosen unit index={0}", Game.Data.UnitSelectedIndex);
             }
 
             ////Move on to next unit
@@ -133,7 +125,7 @@ namespace PoskusCiv2
             //}
 
             //If all units ended turn ==> start new turn. If not, update unit stats.
-            if (allUnitsEndedTurn)
+            if (noUnitsAwaitingOrders)
             {
                 //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
                 if (Game.Options.AlwaysWaitAtEndOfTurn)
@@ -173,7 +165,7 @@ namespace PoskusCiv2
                 unit.MovePoints = unit.MaxMovePoints;
 
                 //Increase counters
-                if ((unit.Action == OrderType.BuildIrrigation) || (unit.Action == OrderType.BuildRoad) || (unit.Action == OrderType.BuildMine)) unit.Counter += 1;
+                if ((unit.Order == OrderType.BuildIrrigation) || (unit.Order == OrderType.BuildRoad) || (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
             }
 
             //Update all cities

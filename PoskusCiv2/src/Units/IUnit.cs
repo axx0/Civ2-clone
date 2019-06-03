@@ -28,7 +28,7 @@ namespace PoskusCiv2.Units
 
         UnitType Type { get; }
         UnitGAS GAS { get; }
-        OrderType Action { get; set; }
+        OrderType Order { get; set; }
         int X { get; set; }
         int Y { get; set; }
         int X2 { get; }
@@ -39,7 +39,6 @@ namespace PoskusCiv2.Units
         int Civ { get; set; }
         int LastMove { get; set; }
         int CaravanCommodity { get; set; }
-        int Orders { get; set; }
         int HomeCity { get; set; }
         int GoToX { get; set; }
         int GoToY { get; set; }
@@ -59,5 +58,6 @@ namespace PoskusCiv2.Units
         void Transform();
         void Sleep();
         bool TurnEnded { get; set; }
+        bool AwaitingOrders { get; set; }
     }
 }

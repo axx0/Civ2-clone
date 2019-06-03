@@ -37,7 +37,7 @@ namespace PoskusCiv2
             Map = Draw.DrawMap(); //prepare whole game map
 
             //Set active unit at game start
-            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];
+            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
         }
 
         public static void LoadGame(string SAVpath)
@@ -56,7 +56,7 @@ namespace PoskusCiv2
             Map = Draw.DrawMap(); //prepare whole game map
 
             //Set active unit at game start
-            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedAtGameStart];
+            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
         }
 
 
@@ -119,7 +119,7 @@ namespace PoskusCiv2
             {
                 TurnNumber = turnNumber,
                 TurnNumberForGameYear = turnNumberForGameYear,
-                UnitSelectedAtGameStart = unitSelectedAtGameStart,
+                UnitSelectedIndex = unitSelectedAtGameStart,
                 HumanPlayerUsed = whichHumanPlayerIsUsed,
                 CivsInPlay = civsInPlay,
                 PlayersMapUsed = playersMapUsed,
@@ -257,7 +257,7 @@ namespace PoskusCiv2
                 HitPoints = 10 * ReadFiles.UnitHitp[(int)type] - hitpointsLost,
                 LastMove = lastMove,
                 CaravanCommodity = caravanCommodity,
-                Action = orders,
+                Order = orders,
                 HomeCity = homeCity,
                 GoToX = goToX,
                 GoToY = goToY,

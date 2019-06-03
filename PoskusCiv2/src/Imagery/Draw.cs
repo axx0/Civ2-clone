@@ -84,7 +84,7 @@ namespace PoskusCiv2.Imagery
                 sf.Alignment = StringAlignment.Center;
 
                 string shieldText;
-                switch (unit.Action)
+                switch (unit.Order)
                 {
                     case OrderType.Fortify: shieldText = "f"; break;
                     case OrderType.Fortified: shieldText = "F"; break;
@@ -147,7 +147,7 @@ namespace PoskusCiv2.Imagery
                 //Action on shield
                 graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    
 
-                if (unit.Action != OrderType.Sleep)
+                if (unit.Order != OrderType.Sleep)
                 {
                     graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
                 }
@@ -157,7 +157,7 @@ namespace PoskusCiv2.Imagery
                 }
 
                 //draw fortification
-                if (unit.Action == OrderType.Fortified) graphics.DrawImage(Images.Fortified, 0, 0);
+                if (unit.Order == OrderType.Fortified) graphics.DrawImage(Images.Fortified, 0, 0);
 
                 sf.Dispose();
             }
