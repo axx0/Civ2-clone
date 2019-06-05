@@ -16,7 +16,7 @@ namespace PoskusCiv2
 {
     static class Actions
     {
-        static bool allUnitsEndedTurn;
+        static bool noUnitsAwaitingOrders;
 
         public static void UpdateUnit(IUnit unit)
         {
@@ -98,8 +98,6 @@ namespace PoskusCiv2
                 //Set active box coords to next unit
                 MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
                 MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
-
-                Console.WriteLine("Chosen unit index={0}", Game.Data.UnitSelectedIndex);
             }
 
             ////Move on to next unit
@@ -205,7 +203,7 @@ namespace PoskusCiv2
         public static void GiveCommand(string action)
         {
             //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
-            if (Game.Options.AlwaysWaitAtEndOfTurn && allUnitsEndedTurn)
+            if (Game.Options.AlwaysWaitAtEndOfTurn && !AnyUnitsAwaitingOrders(Game.Data.HumanPlayerUsed))
             {
                 if (action == "ENTER")
                 {
@@ -243,6 +241,16 @@ namespace PoskusCiv2
                 }
                 UpdateUnit(Game.Instance.ActiveUnit);
             }
+        }
+
+        //find out if certain civ has any units awaiting orders
+        static bool AnyUnitsAwaitingOrders(int civId)
+        {
+            List<int> indexUAO = new List<int>();            //Create an array of indexes of units awaiting orders
+            for (int i = 0; i < Game.Units.Count; i++) if ((Game.Units[i].Civ == civId) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
+
+            if (indexUAO.Any()) return true;
+            else return false;
         }
     }
 }
