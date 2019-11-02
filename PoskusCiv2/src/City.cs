@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PoskusCiv2.Enums;
-using PoskusCiv2.Improvements;
+using RTciv2.Enums;
+using RTciv2.Improvements;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     public class City
     {

@@ -7,9 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PoskusCiv2.Imagery;
+using RTciv2.Imagery;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class NameCityPanel : DoubleBufferedPanel
     {

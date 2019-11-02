@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace PoskusCiv2.Imagery
+namespace RTciv2.Imagery
 {
     public static class CivColors
     {

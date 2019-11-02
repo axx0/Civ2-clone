@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PoskusCiv2.Enums;
-using PoskusCiv2.Sounds;
-using PoskusCiv2.Forms;
+using RTciv2.Enums;
+using RTciv2.Sounds;
+using RTciv2.Forms;
 
-namespace PoskusCiv2.Units
+namespace RTciv2.Units
 {
     internal class Unit : IUnit
     {

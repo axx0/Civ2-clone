@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PoskusCiv2.Enums;
-using PoskusCiv2.Units;
-using PoskusCiv2.Terrains;
+using RTciv2.Enums;
+using RTciv2.Units;
+using RTciv2.Terrains;
 using System.IO;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     public partial class Game
     {        

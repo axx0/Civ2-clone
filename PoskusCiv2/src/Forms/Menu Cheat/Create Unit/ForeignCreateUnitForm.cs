@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PoskusCiv2.Imagery;
-using PoskusCiv2.Enums;
+using RTciv2.Imagery;
+using RTciv2.Enums;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class ForeignCreateUnitForm : Civ2form
     {

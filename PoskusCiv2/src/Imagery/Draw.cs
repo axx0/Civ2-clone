@@ -5,10 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
-using PoskusCiv2.Units;
-using PoskusCiv2.Enums;
+using RTciv2.Units;
+using RTciv2.Enums;
 
-namespace PoskusCiv2.Imagery
+namespace RTciv2.Imagery
 {
     class Draw
     {

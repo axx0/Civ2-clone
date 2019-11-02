@@ -1,4 +1,4 @@
-﻿namespace PoskusCiv2.Forms
+﻿namespace RTciv2.Forms
 {
     partial class CityChangeForm
     {

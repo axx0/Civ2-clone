@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     public class Options
     {

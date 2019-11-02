@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     public class DoubleBufferedPanel : Panel
     {

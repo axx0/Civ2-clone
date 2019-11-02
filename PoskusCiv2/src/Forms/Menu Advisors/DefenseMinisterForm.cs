@@ -7,10 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PoskusCiv2.Imagery;
-using PoskusCiv2.Units;
+using RTciv2.Imagery;
+using RTciv2.Units;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class DefenseMinisterForm : Civ2form
     {

@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PoskusCiv2.Imagery;
-using PoskusCiv2.Units;
-using PoskusCiv2.Improvements;
+using RTciv2.Imagery;
+using RTciv2.Units;
+using RTciv2.Improvements;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     //public partial class CityForm : Form
     public partial class CityForm : Civ2form

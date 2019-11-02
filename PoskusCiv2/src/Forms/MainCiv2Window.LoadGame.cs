@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class MainCiv2Window
     {

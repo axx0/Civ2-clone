@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class Civ2ToolStripMenuItem : ToolStripMenuItem
     {

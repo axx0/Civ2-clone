@@ -5,16 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-using PoskusCiv2.Enums;
-using PoskusCiv2.Units;
-using PoskusCiv2.Terrains;
-using PoskusCiv2.Improvements;
-using PoskusCiv2.Forms;
-using PoskusCiv2.Imagery;
-using PoskusCiv2.Sounds;
+using RTciv2.Enums;
+using RTciv2.Units;
+using RTciv2.Terrains;
+using RTciv2.Improvements;
+using RTciv2.Forms;
+using RTciv2.Imagery;
+using RTciv2.Sounds;
 using ExtensionMethods;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     public partial class Game
     {

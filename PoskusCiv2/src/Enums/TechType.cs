@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PoskusCiv2.Enums
+namespace RTciv2.Enums
 {
     public enum TechType
     {

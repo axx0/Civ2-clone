@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PoskusCiv2.Enums;
+using RTciv2.Enums;
 
-namespace PoskusCiv2.Techs
+namespace RTciv2.Techs
 {
     public interface ITech
     {

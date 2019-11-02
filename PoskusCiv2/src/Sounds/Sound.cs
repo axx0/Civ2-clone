@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Media;
 
-namespace PoskusCiv2.Sounds
+namespace RTciv2.Sounds
 {
     public static class Sound
     {

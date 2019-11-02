@@ -7,7 +7,7 @@ using System.Drawing;
 using System.Reflection;
 using System.IO;
 
-namespace PoskusCiv2.Imagery
+namespace RTciv2.Imagery
 {
     public static class Images
     {

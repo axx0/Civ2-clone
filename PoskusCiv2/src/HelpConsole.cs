@@ -6,10 +6,10 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
-using PoskusCiv2.Units;
-using PoskusCiv2.Enums;
+using RTciv2.Units;
+using RTciv2.Enums;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     public class HelpConsole
     {

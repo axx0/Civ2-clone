@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
-using PoskusCiv2.Imagery;
-using PoskusCiv2.Sounds;
+using RTciv2.Imagery;
+using RTciv2.Sounds;
 using CommandLine;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     static class Program
     {

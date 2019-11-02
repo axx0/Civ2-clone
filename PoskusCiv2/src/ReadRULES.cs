@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace PoskusCiv2
+namespace RTciv2
 {
     class ReadFiles
     {

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PoskusCiv2.Imagery;
+using RTciv2.Imagery;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class AttitudeAdvisorForm : Civ2form
     {

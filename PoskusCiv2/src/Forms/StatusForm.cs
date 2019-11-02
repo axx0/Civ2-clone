@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExtensionMethods;
-using PoskusCiv2.Imagery;
-using PoskusCiv2.Enums;
-using PoskusCiv2.Units;
+using RTciv2.Imagery;
+using RTciv2.Enums;
+using RTciv2.Units;
 
-namespace PoskusCiv2.Forms
+namespace RTciv2.Forms
 {
     public partial class StatusForm : Civ2form
     {
