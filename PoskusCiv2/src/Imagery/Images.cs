@@ -19,47 +19,47 @@ namespace RTciv2.Imagery
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
         public static Bitmap CityWallpaper, CityStatusWallpaper, DefenseMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper, ScienceAdvWallpaper, WondersOfWorldWallpaper, DemographicsWallpaper, MainScreenSymbol, MainScreenSinai;
 
-        public static void LoadDLLimages(string loc)
+        public static void LoadDLLimages()
         {
-            Bitmap cityStatusWallpaper = new Bitmap(String.Concat(loc, "Image #1.GIF"));
+            Bitmap cityStatusWallpaper = new Bitmap(Properties.Resources.DLL01);
             CityStatusWallpaper = (Bitmap)cityStatusWallpaper;
             CityStatusWallpaper = ModifyImage.CropImage(CityStatusWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap defenseMinWallpaper = new Bitmap(String.Concat(loc, "Image #2.GIF"));
+            Bitmap defenseMinWallpaper = new Bitmap(Properties.Resources.DLL02);
             DefenseMinWallpaper = (Bitmap)defenseMinWallpaper;
             DefenseMinWallpaper = ModifyImage.CropImage(DefenseMinWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap attitudeAdvWallpaper = new Bitmap(String.Concat(loc, "Image #4.GIF"));
+            Bitmap attitudeAdvWallpaper = new Bitmap(Properties.Resources.DLL04);
             AttitudeAdvWallpaper = (Bitmap)attitudeAdvWallpaper;
             AttitudeAdvWallpaper = ModifyImage.CropImage(AttitudeAdvWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap tradeAdvWallpaper = new Bitmap(String.Concat(loc, "Image #5.GIF"));
+            Bitmap tradeAdvWallpaper = new Bitmap(Properties.Resources.DLL05);
             TradeAdvWallpaper = (Bitmap)tradeAdvWallpaper;
             TradeAdvWallpaper = ModifyImage.CropImage(TradeAdvWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap scienceAdvWallpaper = new Bitmap(String.Concat(loc, "Image #6.GIF"));
+            Bitmap scienceAdvWallpaper = new Bitmap(Properties.Resources.DLL06);
             ScienceAdvWallpaper = (Bitmap)scienceAdvWallpaper;
             ScienceAdvWallpaper = ModifyImage.CropImage(ScienceAdvWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap wowWallpaper = new Bitmap(String.Concat(loc, "Image #7.GIF"));
+            Bitmap wowWallpaper = new Bitmap(Properties.Resources.DLL07);
             WondersOfWorldWallpaper = (Bitmap)wowWallpaper;
             WondersOfWorldWallpaper = ModifyImage.CropImage(WondersOfWorldWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap demographicsWallpaper = new Bitmap(String.Concat(loc, "Image #9.GIF"));
+            Bitmap demographicsWallpaper = new Bitmap(Properties.Resources.DLL09);
             DemographicsWallpaper = (Bitmap)demographicsWallpaper;
             DemographicsWallpaper = ModifyImage.CropImage(DemographicsWallpaper, new Rectangle(0, 0, 600, 400));
 
-            Bitmap mainScreenSymbol = new Bitmap(String.Concat(loc, "Image #23.GIF"));
+            Bitmap mainScreenSymbol = new Bitmap(Properties.Resources.DLL23);
             MainScreenSymbol = (Bitmap)mainScreenSymbol;
 
-            Bitmap mainScreenSinai = new Bitmap(String.Concat(loc, "\\2\\Image #1.GIF"));
+            Bitmap mainScreenSinai = new Bitmap(Properties.Resources.DLL_2_01);
             MainScreenSinai = (Bitmap)mainScreenSinai;
         }
 
-        public static void LoadTerrain(string terrainLoc1, string terrainLoc2)
+        public static void LoadTerrain()
         {
-            Bitmap terrain1 = new Bitmap(terrainLoc1);
-            Bitmap terrain2 = new Bitmap(terrainLoc2);
+            Bitmap terrain1 = new Bitmap(Properties.Resources.TERRAIN1);
+            Bitmap terrain2 = new Bitmap(Properties.Resources.TERRAIN2);
             Desert = new Bitmap[4];
             Plains = new Bitmap[4];
             Grassland = new Bitmap[4];
@@ -269,9 +269,9 @@ namespace RTciv2.Imagery
 
         }
 
-        public static void LoadCities(string cityLoc)
+        public static void LoadCities()
         {
-            Bitmap cities = new Bitmap(cityLoc);
+            Bitmap cities = new Bitmap(Properties.Resources.CITIES);
             City = new Bitmap[6, 4];
             CityFlag = new Bitmap[9];
             CityWall = new Bitmap[6, 4];
@@ -435,9 +435,9 @@ namespace RTciv2.Imagery
 
         }
 
-        public static void LoadUnits(string unitLoc)
+        public static void LoadUnits()
         {
-            Bitmap units = new Bitmap(unitLoc);
+            Bitmap units = new Bitmap(Properties.Resources.UNITS);
 
             Units = new Bitmap[63];
             UnitShield = new Bitmap[8];
@@ -530,9 +530,9 @@ namespace RTciv2.Imagery
 
         }
 
-        public static void LoadPeople(string peopleLoc)
+        public static void LoadPeople()
         {
-            Bitmap icons = new Bitmap(peopleLoc);
+            Bitmap icons = new Bitmap(Properties.Resources.PEOPLE);
 
             PeopleL = new Bitmap[11, 4];
             PeopleLshadow = new Bitmap[11, 4];
@@ -563,9 +563,9 @@ namespace RTciv2.Imagery
             }
         }
 
-        public static void LoadIcons(string iconLoc)
+        public static void LoadIcons()
         {
-            Bitmap icons = new Bitmap(iconLoc);
+            Bitmap icons = new Bitmap(Properties.Resources.ICONS);
 
             Improvements = new Bitmap[67];
             ImprovementsLarge = new Bitmap[67];
@@ -691,12 +691,11 @@ namespace RTciv2.Imagery
             PrevCityLarge = ModifyImage.ResizeImage(PrevCity, 27, 36);    //50% larger
         }
 
-        public static void LoadCityWallpaper(string cityWallpaperLoc)
+        public static void LoadCityWallpaper()
         {
-            Bitmap cityWallpaper = new Bitmap(cityWallpaperLoc);
-            
-            CityWallpaper = (Bitmap)cityWallpaper;
-            CityWallpaper = ModifyImage.CropImage(CityWallpaper, new Rectangle(0, 0, 640, 420));
+            Bitmap cityWallpaper = new Bitmap(Properties.Resources.CITY);            
+            //CityWallpaper = (Bitmap)cityWallpaper;
+            CityWallpaper = ModifyImage.CropImage(cityWallpaper, new Rectangle(0, 0, 640, 420));
         }
 
         //Converting GIFs to non-indexed images (required for SetPixel method)

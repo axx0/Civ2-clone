@@ -45,12 +45,12 @@ namespace RTciv2
             //Read files
             ReadFiles.ReadRULES(String.Concat(Program.Path, "RULES.TXT"));
             ImportSAV(SAVpath);
-            Images.LoadTerrain(String.Concat(Program.Path, "TERRAIN1.GIF"), String.Concat(Program.Path, "TERRAIN2.GIF"));
-            Images.LoadCities(String.Concat(Program.Path, "CITIES.GIF"));
-            Images.LoadUnits(String.Concat(Program.Path, "UNITS.GIF"));
-            Images.LoadPeople(String.Concat(Program.Path, "PEOPLE.GIF"));
-            Images.LoadIcons(String.Concat(Program.Path, "ICONS.GIF"));
-            Images.LoadCityWallpaper(String.Concat(Program.Path, "CITY.GIF"));
+            Images.LoadTerrain();
+            Images.LoadCities();
+            Images.LoadUnits();
+            Images.LoadPeople();
+            Images.LoadIcons();
+            Images.LoadCityWallpaper();
             Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
 
             Map = Draw.DrawMap(); //prepare whole game map

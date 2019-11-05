@@ -46,6 +46,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
@@ -86,6 +89,12 @@
     </Compile>
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\IntroForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="src\Forms\IntroForm.Designer.cs">
+      <DependentUpon>IntroForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\MainCiv2Window.cs">
       <SubType>Form</SubType>
@@ -259,6 +268,9 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
+    <EmbeddedResource Include="src\Forms\IntroForm.resx">
+      <DependentUpon>IntroForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
     </EmbeddedResource>
@@ -332,6 +344,7 @@
     <EmbeddedResource Include="src\Forms\WorldMapForm.resx">
       <DependentUpon>WorldMapForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -366,6 +379,57 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\CITIES.GIF" />
+    <Content Include="Resources\CITY.GIF" />
+    <Content Include="Resources\DLL01.gif" />
+    <Content Include="Resources\DLL10.gif" />
+    <Content Include="Resources\DLL11.gif" />
+    <Content Include="Resources\DLL12.gif" />
+    <Content Include="Resources\DLL13.gif" />
+    <Content Include="Resources\DLL14.gif" />
+    <Content Include="Resources\DLL15.gif" />
+    <Content Include="Resources\DLL16.gif" />
+    <Content Include="Resources\DLL17.gif" />
+    <Content Include="Resources\DLL18.gif" />
+    <Content Include="Resources\DLL19.gif" />
+    <Content Include="Resources\DLL02.gif" />
+    <Content Include="Resources\DLL20.gif" />
+    <Content Include="Resources\DLL21.gif" />
+    <Content Include="Resources\DLL22.gif" />
+    <Content Include="Resources\DLL23.gif" />
+    <Content Include="Resources\DLL24.gif" />
+    <Content Include="Resources\DLL03.gif" />
+    <Content Include="Resources\DLL04.gif" />
+    <Content Include="Resources\DLL05.gif" />
+    <Content Include="Resources\DLL06.gif" />
+    <Content Include="Resources\DLL07.gif" />
+    <Content Include="Resources\DLL08.gif" />
+    <Content Include="Resources\DLL09.gif" />
+    <Content Include="Resources\DLL_2_01.gif" />
+    <Content Include="Resources\DLL_2_10.gif" />
+    <Content Include="Resources\DLL_2_11.gif" />
+    <Content Include="Resources\DLL_2_12.gif" />
+    <Content Include="Resources\DLL_2_13.gif" />
+    <Content Include="Resources\DLL_2_02.gif" />
+    <Content Include="Resources\DLL_2_03.gif" />
+    <Content Include="Resources\DLL_2_04.gif" />
+    <Content Include="Resources\DLL_2_05.gif" />
+    <Content Include="Resources\DLL_2_06.gif" />
+    <Content Include="Resources\DLL_2_07.gif" />
+    <Content Include="Resources\DLL_2_08.gif" />
+    <Content Include="Resources\DLL_2_09.gif" />
+    <Content Include="Resources\EDITORAS.GIF" />
+    <Content Include="Resources\EDITORPT.GIF" />
+    <Content Include="Resources\EDITORSA.GIF" />
+    <Content Include="Resources\EDITORSQ.GIF" />
+    <Content Include="Resources\ICONS.GIF" />
+    <Content Include="Resources\PEOPLE.GIF" />
+    <Content Include="Resources\SCREDITS.GIF" />
+    <Content Include="Resources\TERRAIN1.GIF" />
+    <Content Include="Resources\TERRAIN2.GIF" />
+    <Content Include="Resources\UNITS.GIF" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

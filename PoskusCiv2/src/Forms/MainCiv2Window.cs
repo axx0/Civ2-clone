@@ -27,7 +27,7 @@ namespace RTciv2.Forms
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
 
-        public MainCiv2Window()
+        public MainCiv2Window(string resolution, string civ2Path, string SAVfile)
         {
             InitializeComponent();
             IsMdiContainer = true;
@@ -36,22 +36,16 @@ namespace RTciv2.Forms
             
             //Setting background color in MdiParent control
             foreach (Control c in this.Controls)
-            {
-                if (c is MdiClient)
-                {
-                    c.BackColor = Color.FromArgb(143, 123, 99);
-                }
-            }
+                if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);
 
             //Load the icon
             Icon ico = Properties.Resources.civ2alt;
             this.Icon = ico;
 
+            #region MENUS
             //Menustrip
-            MainMenuStrip = new MenuStrip
-            {
-                BackColor = Color.White
-            };
+            MainMenuStrip = new MenuStrip            {
+                BackColor = Color.White };
             Controls.Add(MainMenuStrip);
 
             //Game menu
@@ -154,8 +148,7 @@ namespace RTciv2.Forms
             AutomateSettlerItem = new ToolStripMenuItem("Automate Settler", null, AutomateSettler_Click);
             ParadropItem = new ToolStripMenuItem("Paradrop", null, Paradrop_Click);   //Paratroopers only item
             MainMenuStrip.Items.Add(OrdersMenu);
-
-            
+                        
             SettlerItems = new List<ToolStripItem> { BuildNewCityItem, BuildRoadItem, BuildIrrigationItem, BuildMinesChangeForestItem, new ToolStripSeparator(), AutomateSettlerItem, CleanUpPollutionItem, new ToolStripSeparator(), GoToItem, GoHomeToNearestCityItem, new ToolStripSeparator(), SleepItem, new ToolStripSeparator(), DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, new ToolStripSeparator(), EndPlayerTurnItem };
 
             NoSettlerItems = new List<ToolStripItem> { BuildRoadItem, BuildIrrigationItem, BuildMinesChangeForestItem, new ToolStripSeparator(), CleanUpPollutionItem, PillageItem, new ToolStripSeparator(), UnloadItem, GoToItem, ParadropItem, GoHomeToNearestCityItem, new ToolStripSeparator(), FortifyItem, SleepItem, new ToolStripSeparator(), DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, new ToolStripSeparator(), EndPlayerTurnItem };
@@ -272,10 +265,11 @@ namespace RTciv2.Forms
             GameProfileItem.Enabled = false;
             JoinGameItem.Enabled = false;
             ChangeTimerItem.Enabled = false;
+            #endregion
 
             //Set some variables
             AreWeInIntroScreen = true;
-            LoadGameCalled = false;
+            LoadGameCalled = false;            
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -317,7 +311,8 @@ namespace RTciv2.Forms
             //If quickload is enabled skip intro screen & load game immediately
             if (Program.QuickLoad) ChoiceMenuResult(2, String.Concat(String.Concat(Program.Path, Program.SAVName), ".SAV"));
             else ShowIntroScreen();
-
+            Console.WriteLine("SIZE:{0},{1}", Size.Width, Size.Height);
+            Console.WriteLine("SIZE2:{0}", Screen.GetWorkingArea(this));
         }
 
         //What to show on intro screen

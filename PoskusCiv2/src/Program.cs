@@ -35,7 +35,7 @@ namespace RTciv2
                 else SAVName = "";
 
                 if (arguments.Path != null) Path = arguments.Path;
-                else Path = @"C:\DOS\CIV 2\Civ2\";
+                else Path = @"F:\DOS\CIV 2\Civ2\";
 
                 if (arguments.Verbose)
                 {
@@ -45,23 +45,18 @@ namespace RTciv2
             }
 
             //Read original Civ2 files
-            //ReadFiles.ReadRULES(String.Concat(Path, "RULES.TXT"));
-            //Game.LoadGame(String.Concat(String.Concat(Path, SAVName), ".SAV"));
-            //Images.LoadTerrain(String.Concat(Path, "TERRAIN1.GIF"), String.Concat(Path, "TERRAIN2.GIF"));
-            //Images.LoadCities(String.Concat(Path, "CITIES.GIF"));
-            //Images.LoadUnits(String.Concat(Path, "UNITS.GIF"));
-            //Images.LoadPeople(String.Concat(Path, "PEOPLE.GIF"));
-            Images.LoadIcons(String.Concat(Path, "ICONS.GIF"));
-            //Images.LoadCityWallpaper(String.Concat(Path, "CITY.GIF"));
+            Images.LoadIcons();
             //Sound.LoadSounds(String.Concat(Path, @"\SOUND\"));
-            Images.LoadDLLimages(@"C:\DOS\CIV 2\DLLs\");
+            Images.LoadDLLimages();
 
             //Game.StartGame();
 
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            HelpConsole.CreateConsole();
-            Application.Run(new Forms.MainCiv2Window());
+            //HelpConsole.CreateConsole();
+            Application.Run(new Forms.IntroForm());
+            //Application.Run(new Forms.MainCiv2Window());
         }
     }
 }
