@@ -92,7 +92,11 @@ namespace RTciv2.Forms
             Controls.Add(ResultBox);
         }
 
-        private void IntroForm_Load(object sender, EventArgs e) { }
+        private void IntroForm_Load(object sender, EventArgs e) 
+        { 
+            //Check if config file exists
+            if (File.Exists())
+        }
 
         private void IntroForm_Paint(object sender, PaintEventArgs e) {
             e.Graphics.DrawString("RTciv2", new Font("Times New Roman", 25), new SolidBrush(Color.Black), new Point(10, 10));

@@ -30,21 +30,19 @@ namespace RTciv2.Forms
         public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
             InitializeComponent();
+
+            #region INITIAL SETTINGS
             IsMdiContainer = true;            
             Text = "Civilization II Multiplayer Gold (OpenCIV2)";
+            this.Icon = Properties.Resources.civ2alt;   //Load the icon
+            foreach (Control c in this.Controls)    //Setting background color in MdiParent control
+                if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);
+            #endregion
 
             #region RESOLUTION
             if (resol.Name == "Fullscreen") WindowState = FormWindowState.Maximized;
             else this.Size = new Size(resol.Width, resol.Height);
             #endregion
-
-            //Setting background color in MdiParent control
-            foreach (Control c in this.Controls)
-                if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);
-
-            //Load the icon
-            Icon ico = Properties.Resources.civ2alt;
-            this.Icon = ico;
 
             #region MENUS
             //Menustrip
@@ -280,133 +278,107 @@ namespace RTciv2.Forms
         {
             //Symbol image in the center of screen
             Bitmap backimage = Images.MainScreenSymbol;
-            MainIcon = new PictureBox
-            {
+            MainIcon = new PictureBox {
                 Image = backimage,
                 SizeMode = PictureBoxSizeMode.AutoSize,
                 Anchor = AnchorStyles.None,
-                Location = new Point((ClientSize.Width / 2) - (backimage.Width / 2), (ClientSize.Height / 2) - (backimage.Height / 2))
-            };
+                Location = new Point((ClientSize.Width / 2) - (backimage.Width / 2), (ClientSize.Height / 2) - (backimage.Height / 2)) };
             Controls.Add(MainIcon);
 
-            //Sinai image in the intro screen
-            Bitmap sinaiimage = Images.MainScreenSinai;
-            SinaiIcon = new PictureBox
-            {
-                Image = sinaiimage,
-                BackgroundImage = Images.WallpaperMapForm,
-                Width = sinaiimage.Width + 2 * 11,
-                Height = sinaiimage.Height + 2 * 11,
-                Location = new Point((int)(ClientSize.Width * 0.08333), (int)(ClientSize.Height * 0.0933)),
-                SizeMode = PictureBoxSizeMode.CenterImage
-            };
-            Controls.Add(SinaiIcon);
-            SinaiIcon.Paint += new PaintEventHandler(SinaiBorder_Paint);
-            SinaiIcon.Show();
-            SinaiIcon.BringToFront();
-            
-            //Choice menu panel
-            ChoiceMenu = new ChoiceMenuPanel(this);
-            ChoiceMenu.Location = new Point((int)(ClientSize.Width * 0.745), (int)(ClientSize.Height * 0.570));
-            Controls.Add(ChoiceMenu);
+            #region If starting game through intro screen
+            ////Sinai image in the intro screen
+            //Bitmap sinaiimage = Images.MainScreenSinai;
+            //SinaiIcon = new PictureBox {
+            //    Image = sinaiimage,
+            //    BackgroundImage = Images.WallpaperMapForm,
+            //    Width = sinaiimage.Width + 2 * 11,
+            //    Height = sinaiimage.Height + 2 * 11,
+            //    Location = new Point((int)(ClientSize.Width * 0.08333), (int)(ClientSize.Height * 0.0933)),
+            //    SizeMode = PictureBoxSizeMode.CenterImage };
+            //Controls.Add(SinaiIcon);
+            //SinaiIcon.Paint += new PaintEventHandler(SinaiBorder_Paint);
+            //SinaiIcon.Show();
+            //SinaiIcon.BringToFront();
 
-            //cityForm = new CityForm(this);
+            ////Choice menu panel
+            //ChoiceMenu = new ChoiceMenuPanel(this);
+            //ChoiceMenu.Location = new Point((int)(ClientSize.Width * 0.745), (int)(ClientSize.Height * 0.570));
+            //Controls.Add(ChoiceMenu);
 
-            //If quickload is enabled skip intro screen & load game immediately
-            if (Program.QuickLoad) ChoiceMenuResult(2, String.Concat(String.Concat(Program.Path, Program.SAVName), ".SAV"));
-            else ShowIntroScreen();
-            Console.WriteLine("SIZE:{0},{1}", Size.Width, Size.Height);
-            Console.WriteLine("SIZE2:{0}", Screen.GetWorkingArea(this));
+            ////cityForm = new CityForm(this);
+
+            ////If quickload is enabled skip intro screen & load game immediately
+            //if (Program.QuickLoad) ChoiceMenuResult(2, String.Concat(String.Concat(Program.Path, Program.SAVName), ".SAV"));
+            //else ShowIntroScreen();
+            #endregion
         }
 
         //What to show on intro screen
-        public void ShowIntroScreen()
-        {
+        public void ShowIntroScreen() {
             AreWeInIntroScreen = true;
-
             SinaiIcon.Show();
             ChoiceMenu.Visible = true;
-
             if (mapForm != null) mapForm.Close();
             if (statusForm != null) statusForm.Close();
             if (worldMapForm != null) worldMapForm.Close();
-            MainMenuStrip.Enabled = false;
-        }
+            MainMenuStrip.Enabled = false; }
 
         //Make actions based on choice menu result
-        public void ChoiceMenuResult(int choiceNo, string SAVpath)
-        {
-            //Load game
-            if (choiceNo == 2)
-            {
-                LoadGame(SAVpath);
-            }
+        public void ChoiceMenuResult(int choiceNo, string SAVpath) {
+            if (choiceNo == 2) LoadGame(SAVpath);
             ChoiceMenu.Visible = false;
-            MainMenuStrip.Enabled = true;
-        }
+            MainMenuStrip.Enabled = true; }
 
         // GAME MENU
-        private void GameOptions_Click(object sender, EventArgs e)
-        {
+        private void GameOptions_Click(object sender, EventArgs e) {
             GameOptionsForm GameOptionsForm = new GameOptionsForm();
             GameOptionsForm.Load += new EventHandler(GameOptionsForm_Load);   //so you set the correct size of form
-            GameOptionsForm.ShowDialog();
-        }
+            GameOptionsForm.ShowDialog(); }
 
-        private void GameOptionsForm_Load(object sender, EventArgs e)
-        {
+        private void GameOptionsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Width = 746;
             frm.Height = 440;
-            frm.Location = new Point(330, 250);
-        }
+            frm.Location = new Point(330, 250); }
 
-        private void GraphicOptions_Click(object sender, EventArgs e)
-        {
+        private void GraphicOptions_Click(object sender, EventArgs e) {
             GraphicOptionsForm GraphicOptionsForm = new GraphicOptionsForm();
             GraphicOptionsForm.Load += new EventHandler(GraphicOptionsForm_Load);   //so you set the correct size of form
-            GraphicOptionsForm.ShowDialog();
-        }
+            GraphicOptionsForm.ShowDialog(); }
 
-        private void GraphicOptionsForm_Load(object sender, EventArgs e)
-        {
+        private void GraphicOptionsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Width = 746;
             frm.Height = 280;
-            frm.Location = new Point(330, 250);
-        }
+            frm.Location = new Point(330, 250); }
 
-        private void CityReportOptions_Click(object sender, EventArgs e)
-        {
+        private void CityReportOptions_Click(object sender, EventArgs e) {
             CityReportOptionsForm CityReportOptionsForm = new CityReportOptionsForm();
             CityReportOptionsForm.Load += new EventHandler(CityReportOptionsForm_Load);   //so you set the correct size of form
-            CityReportOptionsForm.ShowDialog();
-        }
+            CityReportOptionsForm.ShowDialog(); }
 
-        private void CityReportOptionsForm_Load(object sender, EventArgs e)
-        {
+        private void CityReportOptionsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Width = 746;
             frm.Height = 440;
-            frm.Location = new Point(330, 250);
-        }
+            frm.Location = new Point(330, 250); }
 
         private void MultiplayerOptions_Click(object sender, EventArgs e) { }
         private void GameProfile_Click(object sender, EventArgs e) { }
         private void PickMusic_Click(object sender, EventArgs e) { }
         private void SaveGame_Click(object sender, EventArgs e) { }
 
-        private void LoadGame_Click(object sender, EventArgs e)
-        {
+        private void LoadGame_Click(object sender, EventArgs e) {
             LoadGameCalled = true;
-            ChoiceMenu.ChoseResult();
-        }
+            ChoiceMenu.ChoseResult(); }
 
         private void JoinGame_Click(object sender, EventArgs e) { }
         private void SetPassword_Click(object sender, EventArgs e) { }
         private void ChangeTimer_Click(object sender, EventArgs e) { }
         private void Retire_Click(object sender, EventArgs e) { }
-        private void Quit_Click(object sender, EventArgs e) { ShowIntroScreen(); }
+        private void Quit_Click(object sender, EventArgs e) {
+            //ShowIntroScreen(); 
+            Close(); }
 
         // VIEW MENU
         private void MovePieces_Click(object sender, EventArgs e) { }
@@ -431,65 +403,45 @@ namespace RTciv2.Forms
         // ORDERS MENU
         private void BuildRoad_Click(object sender, EventArgs e) { }
 
-        private void BuildIrrigation_Click(object sender, EventArgs e)
-        {
-            if (BuildIrrigationItem.Enabled) Actions.GiveCommand("Build irrigation");
-        }
+        private void BuildIrrigation_Click(object sender, EventArgs e) {
+            if (BuildIrrigationItem.Enabled) Actions.GiveCommand("Build irrigation"); }
 
-        private void BuildMinesChangeForest_Click(object sender, EventArgs e)
-        {
-            if (BuildMinesChangeForestItem.Enabled) Actions.GiveCommand("Build mines/Change forest");
-        }
+        private void BuildMinesChangeForest_Click(object sender, EventArgs e) {
+            if (BuildMinesChangeForestItem.Enabled) Actions.GiveCommand("Build mines/Change forest"); }
 
         private void CleanUpPollution_Click(object sender, EventArgs e) { }
         private void Pillage_Click(object sender, EventArgs e) { }
         private void Unload_Click(object sender, EventArgs e) { }
 
-        private void GoTo_Click(object sender, EventArgs e)
-        {
-            if (GoToItem.Enabled) Actions.GiveCommand("Go To");
-        }
+        private void GoTo_Click(object sender, EventArgs e) {
+            if (GoToItem.Enabled) Actions.GiveCommand("Go To"); }
 
-        private void GoHomeToNearestCity_Click(object sender, EventArgs e)
-        {
-            if (GoHomeToNearestCityItem.Enabled) Actions.GiveCommand("Go Home");
-        }
+        private void GoHomeToNearestCity_Click(object sender, EventArgs e) {
+            if (GoHomeToNearestCityItem.Enabled) Actions.GiveCommand("Go Home"); }
 
-        private void Fortify_Click(object sender, EventArgs e)
-        {
-            if (FortifyItem.Enabled) Actions.GiveCommand("Fortify");
-        }
+        private void Fortify_Click(object sender, EventArgs e) {
+            if (FortifyItem.Enabled) Actions.GiveCommand("Fortify"); }
 
-        private void Sleep_Click(object sender, EventArgs e)
-        {
-            if (SleepItem.Enabled) Actions.GiveCommand("Sleep");
-        }
+        private void Sleep_Click(object sender, EventArgs e) {
+            if (SleepItem.Enabled) Actions.GiveCommand("Sleep"); }
 
         private void Disband_Click(object sender, EventArgs e) { }
 
-        private void ActivateUnit_Click(object sender, EventArgs e)
-        {
-            if (ActivateUnitItem.Enabled) Actions.GiveCommand("Activate unit");
-        }
+        private void ActivateUnit_Click(object sender, EventArgs e) {
+            if (ActivateUnitItem.Enabled) Actions.GiveCommand("Activate unit"); }
 
         private void Wait_Click(object sender, EventArgs e) { }
 
-        private void SkipTurn_Click(object sender, EventArgs e)
-        {
-            Actions.GiveCommand("Skip turn");
-        }
+        private void SkipTurn_Click(object sender, EventArgs e) {
+            Actions.GiveCommand("Skip turn"); }
 
         private void EndPlayerTurn_Click(object sender, EventArgs e) { }
 
-        private void BuildNewCity_Click(object sender, EventArgs e)
-        {
-            if(BuildNewCityItem.Enabled) Actions.GiveCommand("Build city");
-        }
+        private void BuildNewCity_Click(object sender, EventArgs e) {
+            if(BuildNewCityItem.Enabled) Actions.GiveCommand("Build city"); }
 
-        private void AutomateSettler_Click(object sender, EventArgs e)
-        {
-            if (AutomateSettlerItem.Enabled) Actions.GiveCommand("Automate");
-        }
+        private void AutomateSettler_Click(object sender, EventArgs e) {
+            if (AutomateSettlerItem.Enabled) Actions.GiveCommand("Automate"); }
 
         private void Paradrop_Click(object sender, EventArgs e) { }
 
@@ -497,100 +449,78 @@ namespace RTciv2.Forms
         private void ChatWithKings_Click(object sender, EventArgs e) { }
         private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
 
-        private void CityStatus_Click(object sender, EventArgs e)
-        {
+        private void CityStatus_Click(object sender, EventArgs e) {
             CityStatusForm CityStatusForm = new CityStatusForm();
             CityStatusForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            CityStatusForm.ShowDialog();
-        }
+            CityStatusForm.ShowDialog(); }
 
-        private void DefenseMinister_Click(object sender, EventArgs e)
-        {
+        private void DefenseMinister_Click(object sender, EventArgs e) {
             DefenseMinisterForm DefenseMinisterForm = new DefenseMinisterForm();
             DefenseMinisterForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            DefenseMinisterForm.ShowDialog();
-        }
+            DefenseMinisterForm.ShowDialog(); }
 
         private void ForeignMinister_Click(object sender, EventArgs e) { }
 
-        private void AttitudeAdvisor_Click(object sender, EventArgs e)
-        {
+        private void AttitudeAdvisor_Click(object sender, EventArgs e) {
             AttitudeAdvisorForm AttitudeAdvisorForm = new AttitudeAdvisorForm();
             AttitudeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            AttitudeAdvisorForm.ShowDialog();
-        }
+            AttitudeAdvisorForm.ShowDialog(); }
 
-        private void TradeAdvisor_Click(object sender, EventArgs e)
-        {
+        private void TradeAdvisor_Click(object sender, EventArgs e) {
             TradeAdvisorForm TradeAdvisorForm = new TradeAdvisorForm();
             TradeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            TradeAdvisorForm.ShowDialog();
-        }
+            TradeAdvisorForm.ShowDialog(); }
 
-        private void ScienceAdvisor_Click(object sender, EventArgs e)
-        {
+        private void ScienceAdvisor_Click(object sender, EventArgs e) {
             ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
             ScienceAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            ScienceAdvisorForm.ShowDialog();
-        }
+            ScienceAdvisorForm.ShowDialog(); }
 
         private void CasualtyTimeline_Click(object sender, EventArgs e) { }
 
         // WORLD MENU
-        private void WondersOfWorld_Click(object sender, EventArgs e)
-        {
+        private void WondersOfWorld_Click(object sender, EventArgs e) {
             WondersOfWorldForm WondersOfWorldForm = new WondersOfWorldForm();
             WondersOfWorldForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            WondersOfWorldForm.ShowDialog();
-        }
+            WondersOfWorldForm.ShowDialog(); }
 
         private void Top5Cities_Click(object sender, EventArgs e) { }
         private void CivScore_Click(object sender, EventArgs e) { }
 
-        private void Demographics_Click(object sender, EventArgs e)
-        {
+        private void Demographics_Click(object sender, EventArgs e) {
             DemographicsForm DemographicsForm = new DemographicsForm();
             DemographicsForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            DemographicsForm.ShowDialog();
-        }
+            DemographicsForm.ShowDialog(); }
 
         private void Spaceships_Click(object sender, EventArgs e) { }
 
         // CHEAT MENU
         private void ToggleCheatMode_Click(object sender, EventArgs e) { }
 
-        private void CreateUnit_Click(object sender, EventArgs e)
-        {
+        private void CreateUnit_Click(object sender, EventArgs e) {
             CreateUnitForm CreateUnitForm = new CreateUnitForm();
             CreateUnitForm.Load += new EventHandler(CreateUnitForm_Load);   //so you set the correct size of form
-            CreateUnitForm.ShowDialog();
-        }
+            CreateUnitForm.ShowDialog(); }
 
-        private void CreateUnitForm_Load(object sender, EventArgs e)
-        {
+        private void CreateUnitForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Location = new Point(300, 200);
             frm.Width = 746;
-            frm.Height = 459;
-        }
+            frm.Height = 459; }
 
         private void RevealMap_Click(object sender, EventArgs e) { }
         private void SetHumanPlayer_Click(object sender, EventArgs e) { }
 
-        private void SetGameYear_Click(object sender, EventArgs e)
-        {
+        private void SetGameYear_Click(object sender, EventArgs e) {
             SetGameYearForm SetGameYearForm = new SetGameYearForm();
             SetGameYearForm.Load += new EventHandler(SetGameYearForm_Load);   //so you set the correct size of form
-            SetGameYearForm.ShowDialog();
-        }
+            SetGameYearForm.ShowDialog(); }
 
-        private void SetGameYearForm_Load(object sender, EventArgs e)
-        {
+        private void SetGameYearForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Location = new Point(400, 350);
             frm.Width = 476;
-            frm.Height = 158;
-        }
+            frm.Height = 158; }
 
         private void KillCivilization_Click(object sender, EventArgs e) { }
         private void TechnologyAdvance_Click(object sender, EventArgs e) { }
@@ -605,13 +535,11 @@ namespace RTciv2.Forms
         private void ScenarioParameters_Click(object sender, EventArgs e) { }
         private void SaveAsScenario_Click(object sender, EventArgs e) { }
 
-        private void AdvisorsForm_Load(object sender, EventArgs e)
-        {
+        private void AdvisorsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Location = new Point(330, 250);
             frm.Width = 622;
-            frm.Height = 421;
-        }
+            frm.Height = 421; }
 
         //If a new unit or no unit is active, update orders menu accordingly
         public void UpdateOrdersMenu()
@@ -696,8 +624,7 @@ namespace RTciv2.Forms
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void SinaiBorder_Paint(object sender, PaintEventArgs e)
-        {
+        private void SinaiBorder_Paint(object sender, PaintEventArgs e) {
             //Draw border around form
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, SinaiIcon.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, SinaiIcon.Height - 2);
@@ -726,7 +653,6 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10, SinaiIcon.Width - 12, 10);   //2nd layer border of sinai image
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10, 10, SinaiIcon.Height - 12);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), SinaiIcon.Width - 11, 10, SinaiIcon.Width - 11, SinaiIcon.Height - 11);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, SinaiIcon.Height - 11, SinaiIcon.Width - 11, SinaiIcon.Height - 11);
-        }
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, SinaiIcon.Height - 11, SinaiIcon.Width - 11, SinaiIcon.Height - 11); }
     }
 }

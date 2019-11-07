@@ -90,6 +90,7 @@
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Config\ConfigFile.cs" />
     <Compile Include="src\Forms\IntroForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -431,6 +432,8 @@
     <Content Include="Resources\TERRAIN1.GIF" />
     <Content Include="Resources\TERRAIN2.GIF" />
     <Content Include="Resources\UNITS.GIF" />
+    <Content Include="src\Config\Config.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
