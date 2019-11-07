@@ -57,7 +57,7 @@ namespace RTciv2.Forms
             CancelButton.Click += new EventHandler(CancelButton_Click);
 
             //Make an options array
-            choiceOptions = new bool[11] { Game.Options.WarnWhenCityGrowthHalted, Game.Options.ShowCityImprovementsBuilt, Game.Options.ShowNonCombatUnitsBuilt, Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored, Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs, Game.Options.WarnWhenChangingProductionWillCostShields, Game.Options.ZoomToCityNotDefaultAction};
+            choiceOptions = new bool[11] { Options.WarnWhenCityGrowthHalted, Options.ShowCityImprovementsBuilt, Options.ShowNonCombatUnitsBuilt, Options.ShowInvalidBuildInstructions, Options.AnnounceCitiesInDisorder, Options.AnnounceOrderRestored, Options.AnnounceWeLoveKingDay, Options.WarnWhenFoodDangerouslyLow, Options.WarnWhenPollutionOccurs, Options.WarnWhenChangingProductionWillCostShields, Options.ZoomToCityNotDefaultAction};
             //Write here individual options
             textOptions = new string[11] { "Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.", "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".", "Warn when food dangerously low.", "Warn when new pollution occurs.", "Warn when changing production will cost shields.", "\"Zoom-to-City\" NOT default action." };
             //Make click panels for each options
@@ -133,17 +133,17 @@ namespace RTciv2.Forms
         //if OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Game.Options.WarnWhenCityGrowthHalted = choiceOptions[0];
-            Game.Options.ShowCityImprovementsBuilt = choiceOptions[1];
-            Game.Options.ShowNonCombatUnitsBuilt = choiceOptions[2];
-            Game.Options.ShowInvalidBuildInstructions = choiceOptions[3];
-            Game.Options.AnnounceCitiesInDisorder = choiceOptions[4];
-            Game.Options.AnnounceOrderRestored = choiceOptions[5];
-            Game.Options.AnnounceWeLoveKingDay = choiceOptions[6];
-            Game.Options.WarnWhenFoodDangerouslyLow = choiceOptions[7];
-            Game.Options.WarnWhenPollutionOccurs = choiceOptions[8];
-            Game.Options.WarnWhenChangingProductionWillCostShields = choiceOptions[9];
-            Game.Options.ZoomToCityNotDefaultAction = choiceOptions[10];
+            Options.WarnWhenCityGrowthHalted = choiceOptions[0];
+            Options.ShowCityImprovementsBuilt = choiceOptions[1];
+            Options.ShowNonCombatUnitsBuilt = choiceOptions[2];
+            Options.ShowInvalidBuildInstructions = choiceOptions[3];
+            Options.AnnounceCitiesInDisorder = choiceOptions[4];
+            Options.AnnounceOrderRestored = choiceOptions[5];
+            Options.AnnounceWeLoveKingDay = choiceOptions[6];
+            Options.WarnWhenFoodDangerouslyLow = choiceOptions[7];
+            Options.WarnWhenPollutionOccurs = choiceOptions[8];
+            Options.WarnWhenChangingProductionWillCostShields = choiceOptions[9];
+            Options.ZoomToCityNotDefaultAction = choiceOptions[10];
             Close();
         }
 

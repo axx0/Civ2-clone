@@ -23,7 +23,6 @@ namespace RTciv2
         public static List<City> Cities = new List<City>();
         public static List<Civilization> Civs = new List<Civilization>();        
         public static ITerrain[,] Terrain;
-        public static Options Options;
         public static Data Data;
         public static Bitmap Map;
 
@@ -67,50 +66,50 @@ namespace RTciv2
             set { _activeUnit = Units.IndexOf(value); }
         }
 
-        public static void SetOptions(int version, bool bloodlust, bool simplifiedCombat, bool flatEarth, bool dontRestartIfEliminated, bool moveUnitsWithoutMouse, bool enterClosestCityScreen, bool grid, bool soundEffects, bool music, bool cheatMenu, bool alwaysWaitAtEndOfTurn, bool autosaveEachTurn, bool showEnemyMoves, bool noPauseAfterEnemyMoves, bool fastPieceSlide, bool instantAdvice, bool tutorialHelp, bool animatedHeralds, bool highCouncil, bool civilopediaForAdvances, bool throneRoomGraphics, bool diplomacyScreenGraphics, bool wonderMovies, bool cheatPenaltyWarning, bool announceWeLoveKingDay, bool warnWhenFoodDangerouslyLow, bool announceCitiesInDisorder, bool announceOrderRestored, bool showNonCombatUnitsBuilt, bool showInvalidBuildInstructions, bool warnWhenCityGrowthHalted, bool showCityImprovementsBuilt, bool zoomToCityNotDefaultAction, bool warnWhenPollutionOccurs, bool warnWhenChangingProductionWillCostShields)
-        {
-            Options opt = new Options
-            {
-                Version = version,
-                Bloodlust = bloodlust,
-                SimplifiedCombat = simplifiedCombat,
-                FlatEarth = flatEarth,
-                DontRestartIfEliminated = dontRestartIfEliminated,
-                MoveUnitsWithoutMouse = moveUnitsWithoutMouse,
-                EnterClosestCityScreen = enterClosestCityScreen,
-                Grid = grid,
-                SoundEffects = soundEffects,
-                Music = music,
-                CheatMenu = cheatMenu,
-                AlwaysWaitAtEndOfTurn = alwaysWaitAtEndOfTurn,
-                AutosaveEachTurn = autosaveEachTurn,
-                ShowEnemyMoves = showEnemyMoves,
-                NoPauseAfterEnemyMoves = noPauseAfterEnemyMoves,
-                FastPieceSlide = fastPieceSlide,
-                InstantAdvice = instantAdvice,
-                TutorialHelp = tutorialHelp,
-                AnimatedHeralds = animatedHeralds,
-                HighCouncil = highCouncil,
-                CivilopediaForAdvances = civilopediaForAdvances,
-                ThroneRoomGraphics = throneRoomGraphics,
-                DiplomacyScreenGraphics = diplomacyScreenGraphics,
-                WonderMovies = wonderMovies,
-                CheatPenaltyWarning = cheatPenaltyWarning,
-                AnnounceWeLoveKingDay = announceWeLoveKingDay,
-                WarnWhenFoodDangerouslyLow = warnWhenFoodDangerouslyLow,
-                AnnounceCitiesInDisorder = announceCitiesInDisorder,
-                AnnounceOrderRestored = announceOrderRestored,
-                ShowNonCombatUnitsBuilt = showNonCombatUnitsBuilt,
-                ShowInvalidBuildInstructions = showInvalidBuildInstructions,
-                WarnWhenCityGrowthHalted = warnWhenCityGrowthHalted,
-                ShowCityImprovementsBuilt = showCityImprovementsBuilt,
-                ZoomToCityNotDefaultAction = zoomToCityNotDefaultAction,
-                WarnWhenPollutionOccurs = warnWhenPollutionOccurs,
-                WarnWhenChangingProductionWillCostShields = warnWhenChangingProductionWillCostShields
-            };
+        //public static void SetOptions(int version, bool bloodlust, bool simplifiedCombat, bool flatEarth, bool dontRestartIfEliminated, bool moveUnitsWithoutMouse, bool enterClosestCityScreen, bool grid, bool soundEffects, bool music, bool cheatMenu, bool alwaysWaitAtEndOfTurn, bool autosaveEachTurn, bool showEnemyMoves, bool noPauseAfterEnemyMoves, bool fastPieceSlide, bool instantAdvice, bool tutorialHelp, bool animatedHeralds, bool highCouncil, bool civilopediaForAdvances, bool throneRoomGraphics, bool diplomacyScreenGraphics, bool wonderMovies, bool cheatPenaltyWarning, bool announceWeLoveKingDay, bool warnWhenFoodDangerouslyLow, bool announceCitiesInDisorder, bool announceOrderRestored, bool showNonCombatUnitsBuilt, bool showInvalidBuildInstructions, bool warnWhenCityGrowthHalted, bool showCityImprovementsBuilt, bool zoomToCityNotDefaultAction, bool warnWhenPollutionOccurs, bool warnWhenChangingProductionWillCostShields)
+        //{
+        //    Options opt = new Options
+        //    {
+        //        Version = version,
+        //        Bloodlust = bloodlust,
+        //        SimplifiedCombat = simplifiedCombat,
+        //        FlatEarth = flatEarth,
+        //        DontRestartIfEliminated = dontRestartIfEliminated,
+        //        MoveUnitsWithoutMouse = moveUnitsWithoutMouse,
+        //        EnterClosestCityScreen = enterClosestCityScreen,
+        //        Grid = grid,
+        //        SoundEffects = soundEffects,
+        //        Music = music,
+        //        CheatMenu = cheatMenu,
+        //        AlwaysWaitAtEndOfTurn = alwaysWaitAtEndOfTurn,
+        //        AutosaveEachTurn = autosaveEachTurn,
+        //        ShowEnemyMoves = showEnemyMoves,
+        //        NoPauseAfterEnemyMoves = noPauseAfterEnemyMoves,
+        //        FastPieceSlide = fastPieceSlide,
+        //        InstantAdvice = instantAdvice,
+        //        TutorialHelp = tutorialHelp,
+        //        AnimatedHeralds = animatedHeralds,
+        //        HighCouncil = highCouncil,
+        //        CivilopediaForAdvances = civilopediaForAdvances,
+        //        ThroneRoomGraphics = throneRoomGraphics,
+        //        DiplomacyScreenGraphics = diplomacyScreenGraphics,
+        //        WonderMovies = wonderMovies,
+        //        CheatPenaltyWarning = cheatPenaltyWarning,
+        //        AnnounceWeLoveKingDay = announceWeLoveKingDay,
+        //        WarnWhenFoodDangerouslyLow = warnWhenFoodDangerouslyLow,
+        //        AnnounceCitiesInDisorder = announceCitiesInDisorder,
+        //        AnnounceOrderRestored = announceOrderRestored,
+        //        ShowNonCombatUnitsBuilt = showNonCombatUnitsBuilt,
+        //        ShowInvalidBuildInstructions = showInvalidBuildInstructions,
+        //        WarnWhenCityGrowthHalted = warnWhenCityGrowthHalted,
+        //        ShowCityImprovementsBuilt = showCityImprovementsBuilt,
+        //        ZoomToCityNotDefaultAction = zoomToCityNotDefaultAction,
+        //        WarnWhenPollutionOccurs = warnWhenPollutionOccurs,
+        //        WarnWhenChangingProductionWillCostShields = warnWhenChangingProductionWillCostShields
+        //    };
 
-            Options = opt;
-        }
+        //    Options = opt;
+        //}
 
 
         public static void SetGameData(int turnNumber, int turnNumberForGameYear, int unitSelectedAtGameStart, int whichHumanPlayerIsUsed, int[] civsInPlay, int playersMapUsed, int playersCivilizationNumberUsed, bool mapRevealed, int difficultyLevel, int barbarianActivity, int pollutionAmount, int globalTempRiseOccured, int noOfTurnsOfPeace, int numberOfUnits, int numberOfCities, int mapxdim, int mapydim, int mapArea, int mapSeed, int locatorX, int locatorY)

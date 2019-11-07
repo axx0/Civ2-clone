@@ -57,7 +57,7 @@ namespace RTciv2.Forms
             CancelButton.Click += new EventHandler(CancelButton_Click);
 
             //Make an options array
-            choiceOptions = new bool[11] { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn, Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp, Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
+            choiceOptions = new bool[11] { Options.SoundEffects, Options.Music, Options.AlwaysWaitAtEndOfTurn, Options.AutosaveEachTurn, Options.ShowEnemyMoves, Options.NoPauseAfterEnemyMoves, Options.FastPieceSlide, Options.InstantAdvice, Options.TutorialHelp, Options.MoveUnitsWithoutMouse, Options.EnterClosestCityScreen };
             //Write here individual options
             textOptions = new string[11] { "Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.", "Fast piece slide.", "Instant advice.", "Tutorial help.", "Move units w/ mouse (cursor arrows).", "ENTER key closes City Screen." };
             //Make click panels for each options
@@ -133,17 +133,17 @@ namespace RTciv2.Forms
         //if OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Game.Options.SoundEffects = choiceOptions[0];
-            Game.Options.Music = choiceOptions[1];
-            Game.Options.AlwaysWaitAtEndOfTurn = choiceOptions[2];
-            Game.Options.AutosaveEachTurn = choiceOptions[3];
-            Game.Options.ShowEnemyMoves = choiceOptions[4];
-            Game.Options.NoPauseAfterEnemyMoves = choiceOptions[5];
-            Game.Options.FastPieceSlide = choiceOptions[6];
-            Game.Options.InstantAdvice = choiceOptions[7];
-            Game.Options.TutorialHelp = choiceOptions[8];
-            Game.Options.MoveUnitsWithoutMouse = choiceOptions[9];
-            Game.Options.EnterClosestCityScreen = choiceOptions[10];
+            Options.SoundEffects = choiceOptions[0];
+            Options.Music = choiceOptions[1];
+            Options.AlwaysWaitAtEndOfTurn = choiceOptions[2];
+            Options.AutosaveEachTurn = choiceOptions[3];
+            Options.ShowEnemyMoves = choiceOptions[4];
+            Options.NoPauseAfterEnemyMoves = choiceOptions[5];
+            Options.FastPieceSlide = choiceOptions[6];
+            Options.InstantAdvice = choiceOptions[7];
+            Options.TutorialHelp = choiceOptions[8];
+            Options.MoveUnitsWithoutMouse = choiceOptions[9];
+            Options.EnterClosestCityScreen = choiceOptions[10];
             Close();
         }
 

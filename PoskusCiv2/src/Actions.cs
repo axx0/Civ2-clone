@@ -126,7 +126,7 @@ namespace RTciv2
             if (noUnitsAwaitingOrders)
             {
                 //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
-                if (Game.Options.AlwaysWaitAtEndOfTurn)
+                if (Options.AlwaysWaitAtEndOfTurn)
                 {
                     MapForm.ViewingPiecesMode = true;
                     Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage();
@@ -203,7 +203,7 @@ namespace RTciv2
         public static void GiveCommand(string action)
         {
             //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
-            if (Game.Options.AlwaysWaitAtEndOfTurn && !AnyUnitsAwaitingOrders(Game.Data.HumanPlayerUsed))
+            if (Options.AlwaysWaitAtEndOfTurn && !AnyUnitsAwaitingOrders(Game.Data.HumanPlayerUsed))
             {
                 if (action == "ENTER")
                 {

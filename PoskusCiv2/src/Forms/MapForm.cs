@@ -182,7 +182,7 @@ namespace RTciv2.Forms
             }
 
             //Draw gridlines
-            if (Game.Options.Grid)
+            if (Options.Grid)
             {
                 for (int col = 0; col < Game.Data.MapXdim / 2; col++)
                 {
@@ -340,7 +340,7 @@ namespace RTciv2.Forms
 
         public void ToggleMapGrid()
         {
-            Game.Options.Grid = !Game.Options.Grid;
+            Options.Grid = !Options.Grid;
             Refresh();
         }
 

@@ -242,7 +242,7 @@ namespace RTciv2
             intVal2 = dataArray[61];
             int numberOfCities = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            SetOptions(version, bloodlust, simplifiedCombat, flatEarth, dontRestartIfEliminated, moveUnitsWithoutMouse, enterClosestCityScreen, grid, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, autosaveEachTurn, showEnemyMoves, noPauseAfterEnemyMoves, fastPieceSlide, instantAdvice, tutorialHelp, animatedHeralds, highCouncil, civilopediaForAdvances, throneRoomGraphics, diplomacyScreenGraphics, wonderMovies, cheatPenaltyWarning, announceWeLoveKingDay, warnWhenFoodDangerouslyLow, announceCitiesInDisorder, announceOrderRestored, showNonCombatUnitsBuilt, showInvalidBuildInstructions, warnWhenCityGrowthHalted, showCityImprovementsBuilt, zoomToCityNotDefaultAction, warnWhenPollutionOccurs, warnWhenChangingProductionWillCostShields);
+            //SetOptions(version, bloodlust, simplifiedCombat, flatEarth, dontRestartIfEliminated, moveUnitsWithoutMouse, enterClosestCityScreen, grid, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, autosaveEachTurn, showEnemyMoves, noPauseAfterEnemyMoves, fastPieceSlide, instantAdvice, tutorialHelp, animatedHeralds, highCouncil, civilopediaForAdvances, throneRoomGraphics, diplomacyScreenGraphics, wonderMovies, cheatPenaltyWarning, announceWeLoveKingDay, warnWhenFoodDangerouslyLow, announceCitiesInDisorder, announceOrderRestored, showNonCombatUnitsBuilt, showInvalidBuildInstructions, warnWhenCityGrowthHalted, showCityImprovementsBuilt, zoomToCityNotDefaultAction, warnWhenPollutionOccurs, warnWhenChangingProductionWillCostShields);
 
             //=========================
             //WONDERS

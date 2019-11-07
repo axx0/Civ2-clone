@@ -16,6 +16,7 @@ namespace RTciv2.Forms
         private CheckBox FullscrBox;
         private ComboBox ResolBox;
         private TextBox PathBox, SAVbox, ResultBox;
+        public List<Resolution> Resolutions = new List<Resolution>();
 
         public IntroForm()
         {
@@ -23,6 +24,10 @@ namespace RTciv2.Forms
             Size = new Size(230, 440);
             CenterToScreen();
             Paint += new PaintEventHandler(IntroForm_Paint);
+
+            Resolutions.Add(new Resolution(-1, -1, "Fullscreen"));
+            Resolutions.Add(new Resolution(1280, 720, "1280x720"));
+            Resolutions.Add(new Resolution(1920, 1080, "1920x1080"));
 
             //Full screen checkbox
             FullscrBox = new CheckBox {
@@ -37,11 +42,10 @@ namespace RTciv2.Forms
                 BackColor = Color.LightGray,
                 Font = new Font("Times New Roman", 11),
                 DropDownStyle = ComboBoxStyle.DropDownList };
-            ResolBox.Items.Add("1920x1080");
-            ResolBox.Items.Add("1280x720");
+            foreach (Resolution resol in Resolutions.Skip(1))
+                ResolBox.Items.Add(resol.Name);
             ResolBox.SelectedIndex = 0;
             Controls.Add(ResolBox);
-            ResolBox.SelectedIndexChanged += new EventHandler(ResolBox_SelectedIndexChanged);
 
             //Start button
             Civ2button StartButton = new Civ2button {
@@ -105,12 +109,6 @@ namespace RTciv2.Forms
             if (FullscrBox.Checked) ResolBox.Enabled = false;
             else ResolBox.Enabled = true; }
 
-        //Resolution changed
-        private void ResolBox_SelectedIndexChanged(Object sender, EventArgs e)
-        {
-
-        }
-
         //Start button clicked
         private void StartButton_Clicked(Object sender, EventArgs e)
         {
@@ -123,15 +121,11 @@ namespace RTciv2.Forms
                 if (!File.Exists(String.Join("", name))) ResultBox.AppendText("SAV file doesn't exist.");
                 else //run the game!
                 {
-                    string resolution;
-                    switch (ResolBox.SelectedIndex)
-                    {
-                        case 0: resolution = "1920x1080"; break;
-                        default: break;
-                    }
-                    if (FullscrBox.Checked) resolution = "";
                     this.Hide();
-                    var form2 = new MainCiv2Window(resolution, PathBox.Text, SAVbox.Text);
+                    int resolChoice;
+                    if (FullscrBox.Checked) resolChoice = 0;
+                    else resolChoice = ResolBox.SelectedIndex + 1;
+                    var form2 = new MainCiv2Window(Resolutions[resolChoice], PathBox.Text, SAVbox.Text);
                     form2.Closed += (s, args) => this.Close();
                     form2.Show();
                 }

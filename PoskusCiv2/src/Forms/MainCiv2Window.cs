@@ -27,13 +27,17 @@ namespace RTciv2.Forms
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
 
-        public MainCiv2Window(string resolution, string civ2Path, string SAVfile)
+        public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
             InitializeComponent();
-            IsMdiContainer = true;
-            WindowState = FormWindowState.Maximized;
+            IsMdiContainer = true;            
             Text = "Civilization II Multiplayer Gold (OpenCIV2)";
-            
+
+            #region RESOLUTION
+            if (resol.Name == "Fullscreen") WindowState = FormWindowState.Maximized;
+            else this.Size = new Size(resol.Width, resol.Height);
+            #endregion
+
             //Setting background color in MdiParent control
             foreach (Control c in this.Controls)
                 if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);

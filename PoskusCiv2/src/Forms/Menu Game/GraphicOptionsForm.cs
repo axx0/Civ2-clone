@@ -57,7 +57,7 @@ namespace RTciv2.Forms
             CancelButton.Click += new EventHandler(CancelButton_Click);
 
             //Make an options array
-            choiceOptions = new bool[6] { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds, Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
+            choiceOptions = new bool[6] { Options.ThroneRoomGraphics, Options.DiplomacyScreenGraphics, Options.AnimatedHeralds, Options.CivilopediaForAdvances, Options.HighCouncil, Options.WonderMovies };
             //Write here individual options
             textOptions = new string[6] { "Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)", "Civilopedia for Advances", "High Council", "Wonder Movies" };
             //Make click panels for each options
@@ -133,12 +133,12 @@ namespace RTciv2.Forms
         //if OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Game.Options.ThroneRoomGraphics = choiceOptions[0];
-            Game.Options.DiplomacyScreenGraphics = choiceOptions[1];
-            Game.Options.AnimatedHeralds = choiceOptions[2];
-            Game.Options.CivilopediaForAdvances = choiceOptions[3];
-            Game.Options.HighCouncil = choiceOptions[4];
-            Game.Options.WonderMovies = choiceOptions[5];
+            Options.ThroneRoomGraphics = choiceOptions[0];
+            Options.DiplomacyScreenGraphics = choiceOptions[1];
+            Options.AnimatedHeralds = choiceOptions[2];
+            Options.CivilopediaForAdvances = choiceOptions[3];
+            Options.HighCouncil = choiceOptions[4];
+            Options.WonderMovies = choiceOptions[5];
             Close();
         }
 
