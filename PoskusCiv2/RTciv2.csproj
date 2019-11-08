@@ -432,7 +432,9 @@
     <Content Include="Resources\TERRAIN1.GIF" />
     <Content Include="Resources\TERRAIN2.GIF" />
     <Content Include="Resources\UNITS.GIF" />
-    <Content Include="src\Config\Config.txt" />
+    <Content Include="src\Config\Config.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

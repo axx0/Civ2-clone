@@ -93,9 +93,17 @@ namespace RTciv2.Forms
         }
 
         private void IntroForm_Load(object sender, EventArgs e) 
-        { 
-            //Check if config file exists
-            if (File.Exists())
+        {
+            //Load settings from config file
+            string line;
+            int count = 0;
+            StreamReader file = new StreamReader(Environment.CurrentDirectory + @"\src\Config\" + @"Config.txt");
+            while ((line = file.ReadLine()) != "#END")
+            {
+                char first = line[0];
+                if (first
+                
+            }
         }
 
         private void IntroForm_Paint(object sender, PaintEventArgs e) {
