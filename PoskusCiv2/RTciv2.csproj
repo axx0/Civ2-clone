@@ -90,7 +90,6 @@
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Config\ConfigFile.cs" />
     <Compile Include="src\Forms\IntroForm.cs">
       <SubType>Form</SubType>
     </Compile>

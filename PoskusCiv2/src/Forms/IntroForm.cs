@@ -17,6 +17,7 @@ namespace RTciv2.Forms
         private ComboBox ResolBox;
         private TextBox PathBox, SAVbox, ResultBox;
         public List<Resolution> Resolutions = new List<Resolution>();
+        private string Civ2Path, SAVpath;
 
         public IntroForm()
         {
@@ -68,15 +69,13 @@ namespace RTciv2.Forms
                 Location = new Point(30, 220),
                 BackColor = Color.LightGray,
                 Font = new Font("Times New Roman", 11),
-                Size = new Size(160, 30),
-                Text = @"F:\DOS\CIV 2\Civ2\" };
+                Size = new Size(160, 30) };
             Controls.Add(PathBox);
 
             //SAV name textbox
             SAVbox = new TextBox {
                 Location = new Point(30, 280),
                 Size = new Size(160, 30),
-                Text = "Persia01",
                 BackColor = Color.LightGray,
                 Font = new Font("Times New Roman", 11) };
             Controls.Add(SAVbox);
@@ -100,9 +99,23 @@ namespace RTciv2.Forms
             StreamReader file = new StreamReader(Environment.CurrentDirectory + @"\src\Config\" + @"Config.txt");
             while ((line = file.ReadLine()) != "#END")
             {
-                char first = line[0];
-                if (first
-                
+                if (line != "" && line[0].Equals('#'))
+                {
+                    switch (count)
+                    {
+                        case 0: Civ2Path = file.ReadLine(); break;  //1st # is civ2 path
+                        case 1: SAVpath = file.ReadLine(); break;   //2nd # is SAV name
+                        case 2: //3rd # is resolution
+                            {
+                                line = file.ReadLine();
+                                if (line == "-1") FullscrBox.Checked = true;
+                                else ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == line) - 1;
+                                break;
+                            }
+                        default: break;
+                    }
+                    count++;
+                }
             }
         }
 
