@@ -17,7 +17,7 @@ namespace RTciv2.Forms
         private ComboBox ResolBox;
         private TextBox PathBox, SAVbox, ResultBox;
         public List<Resolution> Resolutions = new List<Resolution>();
-        private string Civ2Path, SAVpath;
+        private string Civ2Path, SAVname;
         private Civ2button StartButton;
 
         public IntroForm()
@@ -26,10 +26,10 @@ namespace RTciv2.Forms
             Size = new Size(230, 440);
             CenterToScreen();
             Paint += new PaintEventHandler(IntroForm_Paint);
-
-            Resolutions.Add(new Resolution(-1, -1, "Fullscreen"));
+            
             Resolutions.Add(new Resolution(1280, 720, "1280x720"));
             Resolutions.Add(new Resolution(1920, 1080, "1920x1080"));
+            Resolutions.Add(new Resolution(-1, -1, "Fullscreen"));
 
             //Full screen checkbox
             FullscrBox = new CheckBox {
@@ -44,8 +44,8 @@ namespace RTciv2.Forms
                 BackColor = Color.LightGray,
                 Font = new Font("Times New Roman", 11),
                 DropDownStyle = ComboBoxStyle.DropDownList };
-            foreach (Resolution resol in Resolutions.Skip(1))
-                ResolBox.Items.Add(resol.Name);
+            foreach (Resolution resol in Resolutions)
+                if (resol.Name != "Fullscreen") ResolBox.Items.Add(resol.Name);
             ResolBox.SelectedIndex = 0;
             Controls.Add(ResolBox);
 
@@ -97,7 +97,7 @@ namespace RTciv2.Forms
             //Load settings from config file
             string line;
             int count = 0;
-            StreamReader file = new StreamReader(Environment.CurrentDirectory + @"\src\Config\" + @"Config.txt");
+            StreamReader file = new StreamReader(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Config.txt");
             while ((line = file.ReadLine()) != "#END")
             {
                 if (line != "" && line[0].Equals('#'))
@@ -112,8 +112,7 @@ namespace RTciv2.Forms
                             }
                         case 1:     //2nd # is SAV name
                             {
-                                string SAVname = file.ReadLine();
-                                SAVpath = Civ2Path + SAVname + ".SAV";
+                                SAVname = file.ReadLine();
                                 SAVbox.Text = SAVname;
                                 break;
                             }
@@ -121,14 +120,15 @@ namespace RTciv2.Forms
                             {
                                 line = file.ReadLine();
                                 if (line == "-1") { FullscrBox.Checked = true; ResolBox.Enabled = false; }
-                                else { ResolBox.Enabled = true;  ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == line) - 1; FullscrBox.Checked = false; }
+                                else { ResolBox.Enabled = true;  ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == line); FullscrBox.Checked = false; }
                                 break;
                             }
                         default: break;
                     }
                     count++;
                 }
-            }                        
+            }
+            file.Close();
             CheckPaths();   //Check if there are any problems with input from config file
 
             PathBox.TextChanged += new EventHandler(PathBox_TextChanged);   //Subscribe to text change events after config file was read, so that it doesn't interfere
@@ -151,31 +151,21 @@ namespace RTciv2.Forms
             else ResolBox.Enabled = true; }
 
         //Path textbox text changed
-        private void PathBox_TextChanged(Object sender, EventArgs e) {
-            Civ2Path = PathBox.Text;
-            CheckPaths(); }
+        private void PathBox_TextChanged(Object sender, EventArgs e) { CheckPaths(); }
 
         //SAV textbox text changed
-        private void SAVbox_TextChanged(Object sender, EventArgs e) {
-            SAVpath = Civ2Path + SAVbox.Text + ".SAV";
-            CheckPaths(); }
+        private void SAVbox_TextChanged(Object sender, EventArgs e) { CheckPaths(); }
 
         //Start button clicked
-        private void StartButton_Clicked(Object sender, EventArgs e)
-        {
-            //Check if directory & files exist
-            ResultBox.Text = "";
-            if (CheckPaths())
-            {
-                this.Hide();
-                int resolChoice;
-                if (FullscrBox.Checked) resolChoice = 0;
-                else resolChoice = ResolBox.SelectedIndex + 1;
-                var form2 = new MainCiv2Window(Resolutions[resolChoice], PathBox.Text, SAVbox.Text);
-                form2.Closed += (s, args) => this.Close();
-                form2.Show();
-            }
-        }
+        private void StartButton_Clicked(Object sender, EventArgs e) {
+            this.Hide();
+            int resolChoice;
+            if (FullscrBox.Checked) resolChoice = Resolutions.FindIndex(a => a.Name == "Fullscreen");
+            else resolChoice = ResolBox.SelectedIndex;
+            WriteConfig();   //write a config file with current settings before closing form
+            var form2 = new MainCiv2Window(Resolutions[resolChoice], Civ2Path, SAVname);
+            form2.Closed += (s, args) => this.Close();
+            form2.Show(); }
 
         //Quit button clicked
         private void QuitButton_Clicked(Object sender, EventArgs e) { Close(); }
@@ -183,8 +173,11 @@ namespace RTciv2.Forms
         //Check if directory and SAV file exist
         private bool CheckPaths()
         {
+            Civ2Path = PathBox.Text;
+            SAVname = SAVbox.Text;
+
             bool resultDir = Directory.Exists(Civ2Path);
-            bool resultSav = File.Exists(SAVpath);
+            bool resultSav = File.Exists(Civ2Path + SAVname + ".SAV");
             ResultBox.Text = "";
             if (!resultDir) 
             {
@@ -213,5 +206,25 @@ namespace RTciv2.Forms
             return resultDir && resultSav;
         }
 
+        //Write a config file with current settings
+        private void WriteConfig()
+        {
+            string resol;
+            if (FullscrBox.Checked) resol = "-1";
+            else resol = Resolutions[ResolBox.SelectedIndex].Name;
+
+            StreamWriter file = new StreamWriter(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Config.txt");
+            file.WriteLine("#Civ2 PATH");
+            file.WriteLine(Civ2Path);
+            file.WriteLine("");
+            file.WriteLine("#SAV file");
+            file.WriteLine(SAVname);
+            file.WriteLine("");
+            file.WriteLine("#Resolution (-1 = fullscreen)");
+            file.WriteLine(resol);
+            file.WriteLine("");
+            file.WriteLine("#END");
+            file.Close();
+        }
     }
 }
