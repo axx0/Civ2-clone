@@ -49,7 +49,7 @@ namespace RTciv2
             //Sound.LoadSounds(String.Concat(Path, @"\SOUND\"));
             Images.LoadDLLimages();
 
-            //Game.StartGame();
+            //Game.StartNewGame();
 
 
             Application.EnableVisualStyles();

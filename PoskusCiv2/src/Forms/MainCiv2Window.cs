@@ -17,7 +17,7 @@ namespace RTciv2.Forms
         MenuStrip MainMenuStrip;
         PictureBox MainIcon, SinaiIcon;
         ChoiceMenuPanel ChoiceMenu;
-        public MapForm mapForm;
+        public MapForm MapForm;
         public StatusForm statusForm;
         public WorldMapForm worldMapForm;
         public CityForm cityForm;
@@ -41,7 +41,7 @@ namespace RTciv2.Forms
 
             #region RESOLUTION
             if (resol.Name == "Fullscreen") WindowState = FormWindowState.Maximized;
-            else this.Size = new Size(resol.Width, resol.Height);
+            else { this.Size = new Size(resol.Width, resol.Height); CenterToScreen(); }
             #endregion
 
             #region MENUS
@@ -271,7 +271,10 @@ namespace RTciv2.Forms
 
             //Set some variables
             AreWeInIntroScreen = true;
-            LoadGameCalled = false;            
+            LoadGameCalled = false;
+
+            Console.WriteLine("FORM SIZE ={0}", this.Size);
+            Console.WriteLine("CLIENT SIZE ={0}", this.ClientSize);
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -311,25 +314,35 @@ namespace RTciv2.Forms
             //if (Program.QuickLoad) ChoiceMenuResult(2, String.Concat(String.Concat(Program.Path, Program.SAVName), ".SAV"));
             //else ShowIntroScreen();
             #endregion
+
+            //MapForm = new MapForm(this);
+            Form thisForm = new Form();
+            thisForm.Location = new Point(5, 5);
+            thisForm.Size = new Size(50, 50);
+            thisForm.BackColor = Color.Yellow;
+            thisForm.FormBorderStyle = FormBorderStyle.None;
+            thisForm.Show();
         }
 
-        //What to show on intro screen
+        #region What to show on itro screen
         public void ShowIntroScreen() {
             AreWeInIntroScreen = true;
             SinaiIcon.Show();
             ChoiceMenu.Visible = true;
-            if (mapForm != null) mapForm.Close();
+            if (MapForm != null) MapForm.Close();
             if (statusForm != null) statusForm.Close();
             if (worldMapForm != null) worldMapForm.Close();
             MainMenuStrip.Enabled = false; }
+        #endregion
 
-        //Make actions based on choice menu result
+        #region Make actions based on choice menu result
         public void ChoiceMenuResult(int choiceNo, string SAVpath) {
             if (choiceNo == 2) LoadGame(SAVpath);
             ChoiceMenu.Visible = false;
             MainMenuStrip.Enabled = true; }
+        #endregion
 
-        // GAME MENU
+        #region GAME MENU EVENTS
         private void GameOptions_Click(object sender, EventArgs e) {
             GameOptionsForm GameOptionsForm = new GameOptionsForm();
             GameOptionsForm.Load += new EventHandler(GameOptionsForm_Load);   //so you set the correct size of form
@@ -379,8 +392,8 @@ namespace RTciv2.Forms
         private void Quit_Click(object sender, EventArgs e) {
             //ShowIntroScreen(); 
             Close(); }
-
-        // VIEW MENU
+        #endregion
+        #region VIEW MENU EVENTS
         private void MovePieces_Click(object sender, EventArgs e) { }
         private void ViewPieces_Click(object sender, EventArgs e) { }
         private void ZoomIn_Click(object sender, EventArgs e) { }
@@ -389,18 +402,18 @@ namespace RTciv2.Forms
         private void StandardZoom_Click(object sender, EventArgs e) { }
         private void MediumZoomOut_Click(object sender, EventArgs e) { }
         private void MaxZoomOut_Click(object sender, EventArgs e) { }
-        private void ShowMapGrid_Click(object sender, EventArgs e) { mapForm.ToggleMapGrid(); }
+        private void ShowMapGrid_Click(object sender, EventArgs e) { MapForm.ToggleMapGrid(); }
         private void ArrangeWindows_Click(object sender, EventArgs e) { }
         private void ShowHiddenTerrain_Click(object sender, EventArgs e) { }
         private void CenterView_Click(object sender, EventArgs e) { }
-
-        // KINGDOM MENU
+        #endregion
+        #region KINGDOM MENU EVENTS
         private void TaxRate_Click(object sender, EventArgs e) { }
         private void ViewThroneRoom_Click(object sender, EventArgs e) { }
         private void FindCity_Click(object sender, EventArgs e) { }
         private void Revolution_Click(object sender, EventArgs e) { }
-
-        // ORDERS MENU
+        #endregion
+        #region ORDERS MENU EVENTS
         private void BuildRoad_Click(object sender, EventArgs e) { }
 
         private void BuildIrrigation_Click(object sender, EventArgs e) {
@@ -444,8 +457,8 @@ namespace RTciv2.Forms
             if (AutomateSettlerItem.Enabled) Actions.GiveCommand("Automate"); }
 
         private void Paradrop_Click(object sender, EventArgs e) { }
-
-        // ADVISORS MENU
+        #endregion
+        #region ADVISORS MENU EVENTS
         private void ChatWithKings_Click(object sender, EventArgs e) { }
         private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
 
@@ -477,8 +490,8 @@ namespace RTciv2.Forms
             ScienceAdvisorForm.ShowDialog(); }
 
         private void CasualtyTimeline_Click(object sender, EventArgs e) { }
-
-        // WORLD MENU
+        #endregion
+        #region WORLD MENU EVENTS
         private void WondersOfWorld_Click(object sender, EventArgs e) {
             WondersOfWorldForm WondersOfWorldForm = new WondersOfWorldForm();
             WondersOfWorldForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
@@ -493,8 +506,8 @@ namespace RTciv2.Forms
             DemographicsForm.ShowDialog(); }
 
         private void Spaceships_Click(object sender, EventArgs e) { }
-
-        // CHEAT MENU
+        #endregion
+        #region CHEAT MENU EVENTS
         private void ToggleCheatMode_Click(object sender, EventArgs e) { }
 
         private void CreateUnit_Click(object sender, EventArgs e) {
@@ -534,14 +547,14 @@ namespace RTciv2.Forms
         private void EditKing_Click(object sender, EventArgs e) { }
         private void ScenarioParameters_Click(object sender, EventArgs e) { }
         private void SaveAsScenario_Click(object sender, EventArgs e) { }
-
+        #endregion
         private void AdvisorsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
             frm.Location = new Point(330, 250);
             frm.Width = 622;
             frm.Height = 421; }
 
-        //If a new unit or no unit is active, update orders menu accordingly
+        #region If a new unit or no unit is active, update orders menu accordingly
         public void UpdateOrdersMenu()
         {
             if (MapForm.ViewingPiecesMode)  //disable all menus except disband & activate unit
@@ -576,8 +589,9 @@ namespace RTciv2.Forms
                 UnloadItem.Enabled = false;
             }
         }
+        #endregion
 
-        //Shome shortcuts keys are not supported. Grab them with this method.
+        #region Some shortcuts keys are not supported. Grab them with this method.
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (!AreWeInIntroScreen)
@@ -623,9 +637,10 @@ namespace RTciv2.Forms
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
+        #endregion
 
-        private void SinaiBorder_Paint(object sender, PaintEventArgs e) {
-            //Draw border around form
+        #region Draw border around Sinai image
+        private void SinaiBorder_Paint(object sender, PaintEventArgs e) {            
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, SinaiIcon.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, SinaiIcon.Height - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), SinaiIcon.Width - 1, 0, SinaiIcon.Width - 1, SinaiIcon.Height - 1);
@@ -654,5 +669,6 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10, 10, SinaiIcon.Height - 12);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), SinaiIcon.Width - 11, 10, SinaiIcon.Width - 11, SinaiIcon.Height - 11);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, SinaiIcon.Height - 11, SinaiIcon.Width - 11, SinaiIcon.Height - 11); }
+        #endregion
     }
 }

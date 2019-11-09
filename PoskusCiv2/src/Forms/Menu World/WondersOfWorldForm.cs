@@ -111,8 +111,7 @@ namespace RTciv2.Forms
 
                     //measure string size so you can position the image of wonder
                     SizeF stringSize = e.Graphics.MeasureString(wonderText, new Font("Times New Roman", 13));
-                    Console.WriteLine("Size={0},{1}", stringSize.Width, stringSize.Height);
-
+                    
                     e.Graphics.DrawImage(Images.Improvements[i + 39], new Point(235 - (int)(stringSize.Width / 2), 55 + 40 * count));
 
                     count++;

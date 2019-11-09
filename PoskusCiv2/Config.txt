@@ -5,6 +5,6 @@ F:\DOS\CIV 2\Civ2\
 Persia01
 
 #Resolution (-1 = fullscreen)
-1280x720
+-1
 
 #END

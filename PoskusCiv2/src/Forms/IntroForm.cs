@@ -26,8 +26,12 @@ namespace RTciv2.Forms
             Size = new Size(230, 440);
             CenterToScreen();
             Paint += new PaintEventHandler(IntroForm_Paint);
-            
+
+            //Define resolutions
+            Resolutions.Add(new Resolution(640, 480, "640x480"));
+            Resolutions.Add(new Resolution(800, 600, "800x600"));
             Resolutions.Add(new Resolution(1280, 720, "1280x720"));
+            Resolutions.Add(new Resolution(1280, 720, "1280x960"));
             Resolutions.Add(new Resolution(1920, 1080, "1920x1080"));
             Resolutions.Add(new Resolution(-1, -1, "Fullscreen"));
 
