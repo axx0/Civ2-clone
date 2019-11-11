@@ -167,6 +167,7 @@ namespace RTciv2.Forms
             if (FullscrBox.Checked) resolChoice = Resolutions.FindIndex(a => a.Name == "Fullscreen");
             else resolChoice = ResolBox.SelectedIndex;
             WriteConfig();   //write a config file with current settings before closing form
+            Game.LoadGame(Civ2Path + SAVname + ".SAV");
             var form2 = new MainCiv2Window(Resolutions[resolChoice], Civ2Path, SAVname);
             form2.Closed += (s, args) => this.Close();
             form2.Show(); }

@@ -19,7 +19,7 @@ namespace RTciv2.Forms
         ChoiceMenuPanel ChoiceMenu;
         public MapForm MapForm;
         public StatusForm statusForm;
-        public WorldMapForm worldMapForm;
+        public WorldMapForm WorldMapForm;
         public CityForm cityForm;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
@@ -29,10 +29,10 @@ namespace RTciv2.Forms
 
         public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
-            InitializeComponent();
-
             #region INITIAL SETTINGS
-            IsMdiContainer = true;            
+            InitializeComponent();
+            IsMdiContainer = true;
+            this.FormBorderStyle = FormBorderStyle.None;
             Text = "Civilization II Multiplayer Gold (OpenCIV2)";
             this.Icon = Properties.Resources.civ2alt;   //Load the icon
             foreach (Control c in this.Controls)    //Setting background color in MdiParent control
@@ -275,18 +275,20 @@ namespace RTciv2.Forms
 
             Console.WriteLine("FORM SIZE ={0}", this.Size);
             Console.WriteLine("CLIENT SIZE ={0}", this.ClientSize);
+            Console.WriteLine("BORDER SIZE ={0}", SystemInformation.BorderSize);
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
         {
             //Symbol image in the center of screen
-            Bitmap backimage = Images.MainScreenSymbol;
-            MainIcon = new PictureBox {
-                Image = backimage,
-                SizeMode = PictureBoxSizeMode.AutoSize,
-                Anchor = AnchorStyles.None,
-                Location = new Point((ClientSize.Width / 2) - (backimage.Width / 2), (ClientSize.Height / 2) - (backimage.Height / 2)) };
-            Controls.Add(MainIcon);
+            //Bitmap backimage = Images.MainScreenSymbol;
+            //MainIcon = new PictureBox {
+            //    Image = backimage,
+            //    SizeMode = PictureBoxSizeMode.AutoSize,
+            //    Anchor = AnchorStyles.None,
+            //    Location = new Point((ClientSize.Width / 2) - (backimage.Width / 2), (ClientSize.Height / 2) - (backimage.Height / 2)) };
+            //Controls.Add(MainIcon);
+            //MainIcon.SendToBack();
 
             #region If starting game through intro screen
             ////Sinai image in the intro screen
@@ -315,13 +317,26 @@ namespace RTciv2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            //MapForm = new MapForm(this);
+            //MapForm = new MapForm(this) {
+            //    MdiParent = this,
+            //    StartPosition = FormStartPosition.Manual,
+            //    Location = new Point(1, 1) };
+            //MapForm.Show();
+
+            //WorldMapForm = new WorldMapForm(this) {
+            //    MdiParent = this,
+            //    StartPosition = FormStartPosition.Manual,
+            //    Location = new Point(this.ClientSize.Width - 262 - 10, 1) };
+            //WorldMapForm.Show();
+
             Form thisForm = new Form();
-            thisForm.Location = new Point(5, 5);
-            thisForm.Size = new Size(50, 50);
+            thisForm.MdiParent = this;
+            thisForm.Size = new Size(200, 200);
             thisForm.BackColor = Color.Yellow;
+            thisForm.Padding = Padding.Empty;
             thisForm.FormBorderStyle = FormBorderStyle.None;
             thisForm.Show();
+            Console.WriteLine(thisForm.Size);
         }
 
         #region What to show on itro screen
@@ -331,7 +346,7 @@ namespace RTciv2.Forms
             ChoiceMenu.Visible = true;
             if (MapForm != null) MapForm.Close();
             if (statusForm != null) statusForm.Close();
-            if (worldMapForm != null) worldMapForm.Close();
+            if (WorldMapForm != null) WorldMapForm.Close();
             MainMenuStrip.Enabled = false; }
         #endregion
 

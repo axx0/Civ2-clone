@@ -22,7 +22,7 @@ namespace RTciv2.Forms
             mainCiv2Window = _mainCiv2Window;
 
             Paint += new PaintEventHandler(WorldMapForm_Paint);
-            Size = new Size((int)((_mainCiv2Window.ClientSize.Width) * 0.1375), (int)((_mainCiv2Window.ClientSize.Height - 30) * 0.15));
+            Size = new Size(262, 148);  //no matter the resolution
 
             //Minimap panel
             MinimapPanel = new DoubleBufferedPanel
