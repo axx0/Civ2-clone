@@ -24,32 +24,33 @@ namespace RTciv2
         {
 
             //Get input arguments
-            ProgramArguments arguments = new ProgramArguments();
-            if (Parser.Default.ParseArguments(args, arguments))
-            {
-                if (arguments.SAVName != null)
-                {
-                    QuickLoad = true;
-                    SAVName = arguments.SAVName;
-                }
-                else SAVName = "";
+            //ProgramArguments arguments = new ProgramArguments();
+            //if (Parser.Default.ParseArguments(args, arguments))
+            //{
+            //    if (arguments.SAVName != null)
+            //    {
+            //        QuickLoad = true;
+            //        SAVName = arguments.SAVName;
+            //    }
+            //    else SAVName = "";
 
-                if (arguments.Path != null) Path = arguments.Path;
-                else Path = @"F:\DOS\CIV 2\Civ2\";
+            //    if (arguments.Path != null) Path = arguments.Path;
+            //    else Path = @"C:\DOS\CIV 2\Civ2\";
 
-                if (arguments.Verbose)
-                {
-                    Console.WriteLine("Path = {0}", Path);
-                    Console.WriteLine("SAV File = {0}.SAV", SAVName);
-                }
-            }
+            //    if (arguments.Verbose)
+            //    {
+            //        Console.WriteLine("Path = {0}", Path);
+            //        Console.WriteLine("SAV File = {0}.SAV", SAVName);
+            //    }
+            //}
 
             //Read original Civ2 files
-            Images.LoadIcons();
+            //Images.LoadIcons();
             //Sound.LoadSounds(String.Concat(Path, @"\SOUND\"));
-            Images.LoadDLLimages();
+            //Images.LoadDLLimages();
 
             //Game.StartNewGame();
+            //Game.LoadGame();
 
 
             Application.EnableVisualStyles();

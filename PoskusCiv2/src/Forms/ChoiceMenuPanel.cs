@@ -82,26 +82,29 @@ namespace RTciv2.Forms
             InitializeComponent();
         }
 
-        private void OKButton_Click(object sender, EventArgs e) { ChoseResult(); }
-
-        public void ChoseResult()
-        {
-            //Load game
-            if (RadioBtn[4].Checked || mainForm.LoadGameCalled)
-            {
-                OpenFileDialog ofd = new OpenFileDialog
-                {
-                    InitialDirectory = Program.Path,
-                    Title = "Select Game To Load",
-                    Filter = "Save Files (*.sav)|*.SAV"
-                };
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    mainForm.ChoiceMenuResult(2, ofd.FileName);
-                }
-            }
+        private void OKButton_Click(object sender, EventArgs e) 
+        { 
+            //ChoseResult(); 
         }
+
+        //public void ChoseResult()
+        //{
+        //    //Load game
+        //    if (RadioBtn[4].Checked || mainForm.LoadGameCalled)
+        //    {
+        //        OpenFileDialog ofd = new OpenFileDialog
+        //        {
+        //            InitialDirectory = Program.Path,
+        //            Title = "Select Game To Load",
+        //            Filter = "Save Files (*.sav)|*.SAV"
+        //        };
+
+        //        if (ofd.ShowDialog() == DialogResult.OK)
+        //        {
+        //            mainForm.ChoiceMenuResult(2, ofd.FileName);
+        //        }
+        //    }
+        //}
 
         private void CancelButton_Click(object sender, EventArgs e) { Application.Exit(); }
 
@@ -110,7 +113,7 @@ namespace RTciv2.Forms
             switch (keyData)
             {
                 case Keys.Enter:
-                    ChoseResult();
+                    //ChoseResult();
                     break;
             }
 

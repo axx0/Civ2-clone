@@ -39,23 +39,24 @@ namespace RTciv2
             Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
         }
 
-        public static void LoadGame(string SAVpath)
+        #region Loads stuff when civ2 starts
+        public static void Preloading()
         {
-            //Read files
-            ReadFiles.ReadRULES(String.Concat(Program.Path, "RULES.TXT"));
-            ImportSAV(SAVpath);
-            Images.LoadTerrain();
-            Images.LoadCities();
-            Images.LoadUnits();
-            Images.LoadPeople();
-            Images.LoadIcons();
-            Images.LoadCityWallpaper();
-            Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
+            Images.LoadDLLimages();
+        }
+        #endregion
 
-            Map = Draw.DrawMap(); //prepare whole game map
+        public static void LoadGame(string civ2path, string SAVname)
+        {
+            Images.CreateBitmapsFromFiles();    //Creates bitmaps from current folder (CURRENTLY FROM RESOURCES)
+            ReadFiles.ReadRULES(civ2path + "RULES.TXT");
+            ImportSAV(civ2path + SAVname + ".SAV");
+            //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
+
+            //Map = Draw.DrawMap(); //prepare whole game map
 
             //Set active unit at game start
-            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
+            //Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
         }
 
 

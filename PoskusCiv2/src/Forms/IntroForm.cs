@@ -27,14 +27,15 @@ namespace RTciv2.Forms
             CenterToScreen();
             Paint += new PaintEventHandler(IntroForm_Paint);
 
-            //Define resolutions
+            #region Define possible game resolutions
             Resolutions.Add(new Resolution(640, 480, "640x480"));
             Resolutions.Add(new Resolution(800, 600, "800x600"));
             Resolutions.Add(new Resolution(1280, 720, "1280x720"));
             Resolutions.Add(new Resolution(1280, 720, "1280x960"));
             Resolutions.Add(new Resolution(1920, 1080, "1920x1080"));
             Resolutions.Add(new Resolution(-1, -1, "Fullscreen"));
-
+            #endregion
+            #region Define controls
             //Full screen checkbox
             FullscrBox = new CheckBox {
                 Location = new Point(12, 100),
@@ -94,6 +95,7 @@ namespace RTciv2.Forms
                 Font = new Font("Times New Roman", 11),
                 ForeColor = Color.Red };
             Controls.Add(ResultBox);
+            #endregion
         }
 
         private void IntroForm_Load(object sender, EventArgs e) 
@@ -167,7 +169,7 @@ namespace RTciv2.Forms
             if (FullscrBox.Checked) resolChoice = Resolutions.FindIndex(a => a.Name == "Fullscreen");
             else resolChoice = ResolBox.SelectedIndex;
             WriteConfig();   //write a config file with current settings before closing form
-            Game.LoadGame(Civ2Path + SAVname + ".SAV");
+            Game.LoadGame(Civ2Path, SAVname);
             var form2 = new MainCiv2Window(Resolutions[resolChoice], Civ2Path, SAVname);
             form2.Closed += (s, args) => this.Close();
             form2.Show(); }

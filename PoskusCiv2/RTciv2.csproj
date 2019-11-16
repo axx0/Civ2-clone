@@ -108,6 +108,15 @@
     <Compile Include="src\Forms\MapForm.Designer.cs">
       <DependentUpon>MapForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\StatusPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\WorldmapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\MapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -233,6 +242,9 @@
     <Compile Include="src\Forms\Menu Advisors\TradeAdvisorForm.Designer.cs">
       <DependentUpon>TradeAdvisorForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="src\Forms\Templates\Civ2panel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Forms\Templates\Civ2ToolStripMenuItem.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -356,9 +368,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="src\Forms\MainCiv2Window.LoadGame.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="src\Forms\MainCiv2Window.LoadGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

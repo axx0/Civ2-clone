@@ -31,12 +31,9 @@ namespace RTciv2.Forms
         {
             #region INITIAL SETTINGS
             InitializeComponent();
-            IsMdiContainer = true;
-            this.FormBorderStyle = FormBorderStyle.None;
             Text = "Civilization II Multiplayer Gold (OpenCIV2)";
+            BackColor = Color.FromArgb(143, 123, 99);
             this.Icon = Properties.Resources.civ2alt;   //Load the icon
-            foreach (Control c in this.Controls)    //Setting background color in MdiParent control
-                if (c is MdiClient) c.BackColor = Color.FromArgb(143, 123, 99);
             #endregion
 
             #region RESOLUTION
@@ -270,12 +267,8 @@ namespace RTciv2.Forms
             #endregion
 
             //Set some variables
-            AreWeInIntroScreen = true;
-            LoadGameCalled = false;
-
-            Console.WriteLine("FORM SIZE ={0}", this.Size);
-            Console.WriteLine("CLIENT SIZE ={0}", this.ClientSize);
-            Console.WriteLine("BORDER SIZE ={0}", SystemInformation.BorderSize);
+            //AreWeInIntroScreen = true;
+            //LoadGameCalled = false;
         }
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
@@ -329,32 +322,35 @@ namespace RTciv2.Forms
             //    Location = new Point(this.ClientSize.Width - 262 - 10, 1) };
             //WorldMapForm.Show();
 
-            Form thisForm = new Form();
-            thisForm.MdiParent = this;
-            thisForm.Size = new Size(200, 200);
-            thisForm.BackColor = Color.Yellow;
-            thisForm.Padding = Padding.Empty;
-            thisForm.FormBorderStyle = FormBorderStyle.None;
-            thisForm.Show();
-            Console.WriteLine(thisForm.Size);
+            MapPanel MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            MapPanel.Location = new Point(0, MainMenuStrip.Height);
+            Controls.Add(MapPanel);
+
+            WorldmapPanel WorldmapPanel = new WorldmapPanel(262, 148);
+            WorldmapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
+            Controls.Add(WorldmapPanel);
+
+            StatusPanel StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
+            StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148  );
+            Controls.Add(StatusPanel);
         }
 
         #region What to show on itro screen
-        public void ShowIntroScreen() {
-            AreWeInIntroScreen = true;
-            SinaiIcon.Show();
-            ChoiceMenu.Visible = true;
-            if (MapForm != null) MapForm.Close();
-            if (statusForm != null) statusForm.Close();
-            if (WorldMapForm != null) WorldMapForm.Close();
-            MainMenuStrip.Enabled = false; }
+        //public void ShowIntroScreen() {
+        //    AreWeInIntroScreen = true;
+        //    SinaiIcon.Show();
+        //    ChoiceMenu.Visible = true;
+        //    if (MapForm != null) MapForm.Close();
+        //    if (statusForm != null) statusForm.Close();
+        //    if (WorldMapForm != null) WorldMapForm.Close();
+        //    MainMenuStrip.Enabled = false; }
         #endregion
 
         #region Make actions based on choice menu result
-        public void ChoiceMenuResult(int choiceNo, string SAVpath) {
-            if (choiceNo == 2) LoadGame(SAVpath);
-            ChoiceMenu.Visible = false;
-            MainMenuStrip.Enabled = true; }
+        //public void ChoiceMenuResult(int choiceNo, string SAVpath) {
+        //    if (choiceNo == 2) LoadGame(SAVpath);
+        //    ChoiceMenu.Visible = false;
+        //    MainMenuStrip.Enabled = true; }
         #endregion
 
         #region GAME MENU EVENTS
@@ -397,8 +393,9 @@ namespace RTciv2.Forms
         private void SaveGame_Click(object sender, EventArgs e) { }
 
         private void LoadGame_Click(object sender, EventArgs e) {
-            LoadGameCalled = true;
-            ChoiceMenu.ChoseResult(); }
+            //LoadGameCalled = true;
+            //ChoiceMenu.ChoseResult(); 
+        }
 
         private void JoinGame_Click(object sender, EventArgs e) { }
         private void SetPassword_Click(object sender, EventArgs e) { }

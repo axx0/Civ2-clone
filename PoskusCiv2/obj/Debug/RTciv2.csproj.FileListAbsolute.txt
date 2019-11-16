@@ -64,5 +64,5 @@ C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.csproj.GenerateResou
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.csproj.CopyComplete
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.exe
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.pdb
-C:\Users\PC\source\repos\rtciv2\PoskusCiv2\bin\Debug\src\Config\Config.txt
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\bin\Debug\Config.txt
+C:\Users\PC\source\repos\rtciv2\PoskusCiv2\bin\Debug\Config.txt
