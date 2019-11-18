@@ -18,7 +18,7 @@ namespace RTciv2.Forms
         VScrollBar VerticalBar;
         public int BarValue { get; set; }       //starting value of view of horizontal bar
         Civ2button CasualtiesButton;
-        Draw Draw = new Draw();
+        //Draw Draw = new Draw();
         int[] ActiveUnitCount = new int[62];
         int[] UnitInProductionCount = new int[62];
         bool StatisticsActive;  //true=statistics are shown, false=casualties are shown
@@ -126,7 +126,7 @@ namespace RTciv2.Forms
                     {
                         int civId = 1;  //your civ only
                                         //Image of unit
-                        e.Graphics.DrawImage(Draw.DrawUnitType(i, civId), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
+                        //e.Graphics.DrawImage(Draw.DrawUnitType(i, civId), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
                         //Unit name
                         e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
                         e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));

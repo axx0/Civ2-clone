@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using RTciv2.Enums;
 using RTciv2.Improvements;
+using RTciv2.Imagery;
 
 namespace RTciv2
 {
@@ -87,7 +89,7 @@ namespace RTciv2
                     y2 = Y2 + offsets[square, 1];
                     x = (x2 - (y2 % 2)) / 2;    //Real format
                     y = y2;
-                    countFST[square] = Game.Terrain[x, y].Food + Game.Terrain[x, y].Shields + Game.Terrain[x, y].Trade;
+                    countFST[square] = Game.Map[x, y].Food + Game.Map[x, y].Shields + Game.Map[x, y].Trade;
                 }
                 Array.Sort(countFST, prioritySquareIndexes);  //this sorts countFST and indexes shows the correct index order
                 Array.Reverse(prioritySquareIndexes);   //because it's sorted in wrong order
@@ -120,7 +122,7 @@ namespace RTciv2
                     int y2 = Y2 + PriorityOffsets[i, 1];
                     int x = (x2 - (y2 % 2)) / 2;    //Real format
                     int y = y2;
-                    _foodtotal += Game.Terrain[x, y].Food;
+                    _foodtotal += Game.Map[x, y].Food;
                 }
                 return _foodtotal;
             }
@@ -219,6 +221,20 @@ namespace RTciv2
             {
                 _production = 3;
                 return _production;
+            }
+        }
+
+        private Bitmap _graphic;
+        public Bitmap Graphic
+        {
+            get
+            {
+                _graphic = Images.CreateCityBitmap(this, true);
+                return _graphic;
+            }
+            set
+            {
+                _graphic = value;
             }
         }
     }

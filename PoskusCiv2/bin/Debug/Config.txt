@@ -1,10 +1,10 @@
 #Civ2 PATH
-C:\DOS\CIV 2\Civ2\
+F:\DOS\CIV 2\Civ2\
 
 #SAV file
 Persia01
 
 #Resolution (-1 = fullscreen)
-1280x960
+-1
 
 #END

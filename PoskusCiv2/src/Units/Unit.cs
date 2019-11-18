@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Drawing;
 using RTciv2.Enums;
 using RTciv2.Sounds;
 using RTciv2.Forms;
+using RTciv2.Imagery;
 
 namespace RTciv2.Units
 {
@@ -86,10 +88,10 @@ namespace RTciv2.Units
             bool unitMoved = false;
 
             //LAND units
-            if (GAS == UnitGAS.Ground && Game.Terrain[Xto, Yto].Type != TerrainType.Ocean)
+            if (GAS == UnitGAS.Ground && Game.Map[Xto, Yto].Type != TerrainType.Ocean)
             {
-                if ((Game.Terrain[X, Y].Road || Game.Terrain[X, Y].CityPresent) && (Game.Terrain[Xto, Yto].Road || Game.Terrain[Xto, Yto].CityPresent) ||   //From & To must be cities, road
-                    (Game.Terrain[X, Y].River && Game.Terrain[Xto, Yto].River && moveX < 2 && moveY < 2)    //For rivers only for diagonal movement
+                if ((Game.Map[X, Y].Road || Game.Map[X, Y].CityPresent) && (Game.Map[Xto, Yto].Road || Game.Map[Xto, Yto].CityPresent) ||   //From & To must be cities, road
+                    (Game.Map[X, Y].River && Game.Map[Xto, Yto].River && moveX < 2 && moveY < 2)    //For rivers only for diagonal movement
                     )
                 {
                     MovePoints -= 1;
@@ -102,7 +104,7 @@ namespace RTciv2.Units
             }
 
             //SEA units
-            if (GAS == UnitGAS.Sea && Game.Terrain[Xto, Yto].Type == TerrainType.Ocean)
+            if (GAS == UnitGAS.Sea && Game.Map[Xto, Yto].Type == TerrainType.Ocean)
             {
                 MovePoints -= 3;
                 unitMoved = true;
@@ -171,7 +173,7 @@ namespace RTciv2.Units
 
         public void BuildIrrigation()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Irrigation == false) || (Game.Terrain[X, Y].Farmland == false)))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Map[X, Y].Irrigation == false) || (Game.Map[X, Y].Farmland == false)))
             {
                 Order = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
@@ -184,7 +186,7 @@ namespace RTciv2.Units
 
         public void BuildMines()
         {
-            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.Terrain[X, Y].Mining == false && (Game.Terrain[X, Y].Type == TerrainType.Mountains || Game.Terrain[X, Y].Type == TerrainType.Hills))
+            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.Map[X, Y].Mining == false && (Game.Map[X, Y].Type == TerrainType.Mountains || Game.Map[X, Y].Type == TerrainType.Hills))
             {
                 Order = OrderType.BuildMine;
                 Counter = 0;    //reset counter
@@ -210,7 +212,7 @@ namespace RTciv2.Units
 
         public void BuildRoad()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Terrain[X, Y].Road == false) || (Game.Terrain[X, Y].Railroad == false)))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Map[X, Y].Road == false) || (Game.Map[X, Y].Railroad == false)))
             {
                 Order = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
@@ -223,7 +225,7 @@ namespace RTciv2.Units
 
         public void BuildCity()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.Terrain[X, Y].Type != TerrainType.Ocean))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.Map[X, Y].Type != TerrainType.Ocean))
             {
                 //First invoke city name panel. If cancel is pressed, do nothing.
                 Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
@@ -258,5 +260,49 @@ namespace RTciv2.Units
             Order = OrderType.NoOrders;
         }
 
+        private bool _isInCity;
+        public bool IsInCity
+        {
+            get
+            {
+                _isInCity = false;
+                foreach (City city in Game.Cities) if (city.X == X && city.Y == Y) _isInCity = true;
+                return _isInCity;
+            }
+        }
+
+        private bool _isInStack;
+        public (bool, bool) IsInStack
+        {
+            get 
+            {
+                List<IUnit> unitsInXY = new List<IUnit>();
+                foreach (IUnit unit in Game.Units) if (unit.X == X && unit.Y == Y) unitsInXY.Add(unit);
+                if (unitsInXY.Count > 1) _isInStack = true;
+                else _isInStack = false;
+                return _isInStack;
+            }
+        }
+
+        private bool _isLastInStackList;
+        public bool IsLastInStackList   //determine if unit is last in stack list (or if it is not in stack, it is the only one)
+        {
+            get
+            {
+
+
+                return _isLastInStackList;
+            }
+        }
+
+        private Bitmap _graphicMapPanel;
+        public Bitmap GraphicMapPanel
+        {
+            get
+            {
+                _graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, 1);
+                return _graphicMapPanel;
+            }
+        }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using RTciv2.Enums;
+using RTciv2.Imagery;
 
 namespace RTciv2.Terrains
 {
@@ -118,7 +120,19 @@ namespace RTciv2.Terrains
                 Shields = ReadFiles.TerrainSpecShields[(int)(stype)];
                 Trade = ReadFiles.TerrainSpecTrade[(int)(stype)];
             }
+        }
 
+        private Bitmap _graphic;
+        public Bitmap Graphic
+        {
+            get
+            {
+                return _graphic;
+            }
+            set 
+            { 
+                _graphic = value; 
+            }
         }
     }
 }

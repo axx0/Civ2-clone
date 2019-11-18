@@ -21,6 +21,7 @@ namespace RTciv2
             //Read every byte
             for (int i = 0; i < fs.Length; i++) dataArray[i] = fs.ReadByte();
 
+            #region Start of saved game file
             //=========================
             //START OF SAVED GAME FILE
             //=========================
@@ -243,7 +244,8 @@ namespace RTciv2
             int numberOfCities = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //SetOptions(version, bloodlust, simplifiedCombat, flatEarth, dontRestartIfEliminated, moveUnitsWithoutMouse, enterClosestCityScreen, grid, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, autosaveEachTurn, showEnemyMoves, noPauseAfterEnemyMoves, fastPieceSlide, instantAdvice, tutorialHelp, animatedHeralds, highCouncil, civilopediaForAdvances, throneRoomGraphics, diplomacyScreenGraphics, wonderMovies, cheatPenaltyWarning, announceWeLoveKingDay, warnWhenFoodDangerouslyLow, announceCitiesInDisorder, announceOrderRestored, showNonCombatUnitsBuilt, showInvalidBuildInstructions, warnWhenCityGrowthHalted, showCityImprovementsBuilt, zoomToCityNotDefaultAction, warnWhenPollutionOccurs, warnWhenChangingProductionWillCostShields);
-
+            #endregion
+            #region Wonders
             //=========================
             //WONDERS
             //=========================
@@ -262,7 +264,8 @@ namespace RTciv2
                 else if (wonderCity[i] == 65279) wonderDestroyed[i] = true; //FEFF(hex)
                 else { wonderBuilt[i] = true; wonderDestroyed[i] = false; }
             }
-
+            #endregion
+            #region Civs
             //=========================
             //CIVS
             //=========================
@@ -301,7 +304,8 @@ namespace RTciv2
             civLeaderName[0] = "NULL";
             civTribeName[0] = "Barbarians";
             civAdjective[0] = "Barbarian";
-
+            #endregion
+            #region Tech & money
             //=========================
             //TECH & MONEY
             //=========================
@@ -392,11 +396,10 @@ namespace RTciv2
 
                 Civilization civ = CreateCiv(i, whichHumanPlayerIsUsed, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
             }
-
-
-
+            #endregion
+            #region Map
             //=========================
-            //MAPS
+            //MAP
             //=========================
             //Map header ofset
             int ofset;
@@ -407,7 +410,7 @@ namespace RTciv2
             intVal1 = dataArray[ofset + 0];
             intVal2 = dataArray[ofset + 1];
             int mapXdimension = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-            mapXdimension = mapXdimension / 2; //map 150x120 is really 75x120
+            mapXdimension /= 2; //map 150x120 is really 75x120
 
             //Map Y dimension
             intVal1 = dataArray[ofset + 2];
@@ -442,7 +445,7 @@ namespace RTciv2
             SetGameData(turnNumber, turnNumberForGameYear, unitSelectedAtGameStart, whichHumanPlayerIsUsed, civsInPlay, playersMapUsed, playersCivilizationNumberUsed, mapRevealed, difficultyLevel, barbarianActivity, pollutionAmount, globalTempRiseOccured, noOfTurnsOfPeace, numberOfUnits, numberOfCities, mapXdimension, mapYdimension, mapArea, mapSeed, locatorMapXDimension, locatorMapYDimension);
             
             //Initialize Terrain array now that you know its size
-            Terrain = new ITerrain[mapXdimension, mapYdimension];
+            Map = new ITerrain[mapXdimension, mapYdimension];
 
             //block 1 - terrain improvements (for indivudual civs)
             int ofsetB1 = ofset + 14; //offset for block 2 values
@@ -522,8 +525,9 @@ namespace RTciv2
             }
             //block 3 - locator map
             int ofsetB3 = ofsetB2 + 6 * mapArea; //offset for block 2 values
-            //...............
-
+                                                 //...............
+            #endregion
+            #region Units
             //=========================
             //UNIT INFO
             //=========================
@@ -618,8 +622,8 @@ namespace RTciv2
                 
                 IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovePointsLost, unitHitpointsLost, unitLastMove, unitCaravanCommodity, (OrderType)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
-
-
+            #endregion
+            #region Cities
             //=========================
             //CITIES
             //=========================
@@ -821,18 +825,17 @@ namespace RTciv2
 
                 City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);
             }
-
-
+            #endregion
+            #region Other
             //=========================
             //OTHER
             //=========================
+            #endregion
 
-
-
+            fs.Dispose();
         }
-        
-        //Reverse a string
-        public static string Reverse(string s)
+                
+        public static string Reverse(string s)   //Reverse a string
         {
             char[] charArray = s.ToCharArray();
             Array.Reverse(charArray);
@@ -860,7 +863,7 @@ namespace RTciv2
                     else special = 0;
                 }
 
-                //if (Game.Terrain[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
+                //if (Game.Map[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
             }
 
             //Special Resources (not grassland)

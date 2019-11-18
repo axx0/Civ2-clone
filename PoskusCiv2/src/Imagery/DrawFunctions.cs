@@ -10,28 +10,28 @@ using RTciv2.Enums;
 
 namespace RTciv2.Imagery
 {
-    class Draw
+    public class DrawFunctions
     {
         //Draw entire game map
-        public static Bitmap DrawMap()
-        {
-            Bitmap map = new Bitmap(Game.Data.MapXdim * 64 + 32, Game.Data.MapYdim * 32 + 16);    //define a bitmap for drawing map
+        //public static Bitmap DrawMap()
+        //{
+        //    Bitmap map = new Bitmap(Game.Data.MapXdim * 64 + 32, Game.Data.MapYdim * 32 + 16);    //define a bitmap for drawing map
             
-            Squares square = new Squares();
+        //    Squares square = new Squares();
                        
-            using (Graphics graphics = Graphics.FromImage(map))
-            {
-                for (int col = 0; col < Game.Data.MapXdim; col++)
-                {
-                    for (int row = 0; row < Game.Data.MapYdim; row++)
-                    {
-                        graphics.DrawImage(square.Terrain(col, row), 64 * col + 32 * (row % 2) + 1, 16 * row + 1);
-                    }
-                }
-            }
+        //    using (Graphics graphics = Graphics.FromImage(map))
+        //    {
+        //        for (int col = 0; col < Game.Data.MapXdim; col++)
+        //        {
+        //            for (int row = 0; row < Game.Data.MapYdim; row++)
+        //            {
+        //                graphics.DrawImage(square.Terrain(col, row), 64 * col + 32 * (row % 2) + 1, 16 * row + 1);
+        //            }
+        //        }
+        //    }
             
-            return map;
-        }
+        //    return map;
+        //}
 
         //Draw unit type (not in game units and their stats, just unit types for e.g. defense minister statistics)
         public Bitmap DrawUnitType(int Id, int civId)  //Id = order from RULES.TXT, civId = id of civ (0=barbarian)
@@ -167,8 +167,7 @@ namespace RTciv2.Imagery
 
             return square;
         }
-
-        //Draw city
+                
         public Bitmap DrawCity(City city, bool citySizeWindow)
         {
             Bitmap map = new Bitmap(64, 48);    //define a bitmap for drawing map
@@ -277,36 +276,35 @@ namespace RTciv2.Imagery
 
             return map;
         }
+        
+        //public Bitmap DrawCityFormMap(City city)    //Draw terrain in city form
+        //{
+        //    Bitmap map = new Bitmap(4 * 64, 4 * 32);    //define a bitmap for drawing map
 
-        //Draw terrain in city form
-        public Bitmap DrawCityFormMap(City city)
-        {
-            Bitmap map = new Bitmap(4 * 64, 4 * 32);    //define a bitmap for drawing map
+        //    Squares square = new Squares();
 
-            Squares square = new Squares();
+        //    Bitmap image;
+        //    using (Graphics graphics = Graphics.FromImage(map))
+        //    {
+        //        for (int x_ = -3; x_ <= 3; x_++)
+        //        {
+        //            for (int y_ = -3; y_ <= 3; y_++)
+        //            {
+        //                if ((x_ == -1 & y_ == -3) || (x_ == 1 & y_ == -3) || (x_ == -2 & y_ == -2) || (x_ == 0 & y_ == -2) || (x_ == 2 & y_ == -2) || (x_ == -3 & y_ == -1) || (x_ == -1 & y_ == -1) || (x_ == 1 & y_ == -1) || (x_ == 3 & y_ == -1) || (x_ == -2 & y_ == 0) || (x_ == 0 & y_ == 0) || (x_ == 2 & y_ == 0) || (x_ == -3 & y_ == 1) || (x_ == -1 & y_ == 1) || (x_ == 1 & y_ == 1) || (x_ == 3 & y_ == 1) || (x_ == -2 & y_ == 2) || (x_ == 0 & y_ == 2) || (x_ == 2 & y_ == 2) || (x_ == -1 & y_ == 3) || (x_ == 1 & y_ == 3))
+        //                {
+        //                    int newX = city.X2 + x_;
+        //                    int newY = city.Y2 + y_;
+        //                    if (newX >= 0 && newX < 2 * Game.Data.MapXdim && newY >= 0 && newY < Game.Data.MapYdim) image = square.Terrain((newX - (newY % 2)) / 2, newY);
+        //                    else image = Images.Blank;
+        //                    graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
+        //                }
+        //            }
+        //        }
+        //        graphics.DrawImage(DrawCity(city, false), 64 * 1 + 32 * (3 % 2) + 1, 16 * 2 + 1);
+        //    }
 
-            Bitmap image;
-            using (Graphics graphics = Graphics.FromImage(map))
-            {
-                for (int x_ = -3; x_ <= 3; x_++)
-                {
-                    for (int y_ = -3; y_ <= 3; y_++)
-                    {
-                        if ((x_ == -1 & y_ == -3) || (x_ == 1 & y_ == -3) || (x_ == -2 & y_ == -2) || (x_ == 0 & y_ == -2) || (x_ == 2 & y_ == -2) || (x_ == -3 & y_ == -1) || (x_ == -1 & y_ == -1) || (x_ == 1 & y_ == -1) || (x_ == 3 & y_ == -1) || (x_ == -2 & y_ == 0) || (x_ == 0 & y_ == 0) || (x_ == 2 & y_ == 0) || (x_ == -3 & y_ == 1) || (x_ == -1 & y_ == 1) || (x_ == 1 & y_ == 1) || (x_ == 3 & y_ == 1) || (x_ == -2 & y_ == 2) || (x_ == 0 & y_ == 2) || (x_ == 2 & y_ == 2) || (x_ == -1 & y_ == 3) || (x_ == 1 & y_ == 3))
-                        {
-                            int newX = city.X2 + x_;
-                            int newY = city.Y2 + y_;
-                            if (newX >= 0 && newX < 2 * Game.Data.MapXdim && newY >= 0 && newY < Game.Data.MapYdim) image = square.Terrain((newX - (newY % 2)) / 2, newY);
-                            else image = Images.Blank;
-                            graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
-                        }
-                    }
-                }
-                graphics.DrawImage(DrawCity(city, false), 64 * 1 + 32 * (3 % 2) + 1, 16 * 2 + 1);
-            }
-
-            return map;
-        }
+        //    return map;
+        //}
 
         //Draw food/shields/trade icons in city form sqare which is offset (offsetX, offsetY) from the square with the city
         public Bitmap DrawCityFormMapIcons(City city, int offsetX, int offsetY)
@@ -318,9 +316,9 @@ namespace RTciv2.Imagery
             {
                 //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
                 int spacing;
-                int countF = Game.Terrain[city.X + offsetX, city.Y + offsetY].Food;
-                int countS = Game.Terrain[city.X + offsetX, city.Y + offsetY].Shields;
-                int countT = Game.Terrain[city.X + offsetX, city.Y + offsetY].Trade;
+                int countF = Game.Map[city.X + offsetX, city.Y + offsetY].Food;
+                int countS = Game.Map[city.X + offsetX, city.Y + offsetY].Shields;
+                int countT = Game.Map[city.X + offsetX, city.Y + offsetY].Trade;
                 switch (countF + countS + countT)
                 {
                     case 1:
@@ -343,8 +341,7 @@ namespace RTciv2.Imagery
             return icons;
         }
 
-        //Draw faces in cityform
-        public Bitmap DrawFaces(City city, double scale_factor)
+        public Bitmap DrawFaces(City city, double scale_factor) //Draw faces in cityform
         {
             Bitmap faces = new Bitmap(630, 50);
             using (Graphics graphics = Graphics.FromImage(faces))
@@ -509,7 +506,6 @@ namespace RTciv2.Imagery
             return icons;
         }
 
-        //Draw food in storage
         public Bitmap DrawFoodStorage(City city)
         {
             Bitmap icons = new Bitmap(291, 244);    //define a bitmap for drawing icons
@@ -590,7 +586,6 @@ namespace RTciv2.Imagery
             return icons;
         }
 
-        //Draw food in storage
         public Bitmap DrawCityProduction(City city)
         {
             Bitmap icons = new Bitmap(293, 287);    //same size as production panel in city form

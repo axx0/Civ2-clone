@@ -28,15 +28,15 @@ namespace RTciv2
             {
                 if (unit.Counter == 2)
                 {
-                    if (Game.Terrain[unit.X, unit.Y].Irrigation == false) //Build irrigation
+                    if (Game.Map[unit.X, unit.Y].Irrigation == false) //Build irrigation
                     {
-                        Game.Terrain[unit.X, unit.Y].Irrigation = true;
+                        Game.Map[unit.X, unit.Y].Irrigation = true;
                     }
-                    else if ((Game.Terrain[unit.X, unit.Y].Irrigation == true) && (Game.Terrain[unit.X, unit.Y].Farmland == false)) //Build farms
+                    else if ((Game.Map[unit.X, unit.Y].Irrigation == true) && (Game.Map[unit.X, unit.Y].Farmland == false)) //Build farms
                     {
-                        Game.Terrain[unit.X, unit.Y].Farmland = true;
+                        Game.Map[unit.X, unit.Y].Farmland = true;
                     }
-                    Game.Map = Draw.DrawMap();  //Update game map
+                    //Game.Map = Draw.DrawMap();  //Update game map
                     //unit.Action = OrderType.NoOrders;
                 }
             }
@@ -44,15 +44,15 @@ namespace RTciv2
             {
                 if (unit.Counter == 2)
                 {
-                    if (Game.Terrain[unit.X, unit.Y].Road == false) //Build road
+                    if (Game.Map[unit.X, unit.Y].Road == false) //Build road
                     {
-                        Game.Terrain[unit.X, unit.Y].Road = true;
+                        Game.Map[unit.X, unit.Y].Road = true;
                     }
-                    else if ((Game.Terrain[unit.X, unit.Y].Road == true) && (Game.Terrain[unit.X, unit.Y].Railroad == false)) //Build railroad
+                    else if ((Game.Map[unit.X, unit.Y].Road == true) && (Game.Map[unit.X, unit.Y].Railroad == false)) //Build railroad
                     {
-                        Game.Terrain[unit.X, unit.Y].Railroad = true;
+                        Game.Map[unit.X, unit.Y].Railroad = true;
                     }
-                    Game.Map = Draw.DrawMap();  //Update game map
+                    //Game.Map = Draw.DrawMap();  //Update game map
                     //unit.Action = OrderType.NoOrders;
                 }
             }
@@ -60,8 +60,8 @@ namespace RTciv2
             {
                 if (unit.Counter == 2)
                 {
-                    Game.Terrain[unit.X, unit.Y].Mining = true;
-                    Game.Map = Draw.DrawMap();  //Update game map
+                    Game.Map[unit.X, unit.Y].Mining = true;
+                    //Game.Map = Draw.DrawMap();  //Update game map
                     //unit.Action = OrderType.NoOrders;
                 }
             }

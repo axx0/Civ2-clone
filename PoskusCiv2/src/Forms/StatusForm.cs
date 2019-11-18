@@ -18,7 +18,7 @@ namespace RTciv2.Forms
     {
         public MainCiv2Window mainCiv2Window;
         DoubleBufferedPanel UnitPanel, StatsPanel;
-        Draw Draw = new Draw();
+        //Draw Draw = new Draw();
         Timer timer = new Timer();
 
         int TimerCounter { get; set; }   //records no of timer ticks
@@ -149,10 +149,10 @@ namespace RTciv2.Forms
                 else { unitName = Game.Instance.ActiveUnit.Name; };
                 e.Graphics.DrawString(unitName, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 85));
 
-                string unitTerrain = "(" + Game.Terrain[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
+                string unitTerrain = "(" + Game.Map[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
                 e.Graphics.DrawString(unitTerrain, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 103));
 
-                e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false, 1), 10, 30);
+                //e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false, 1), 10, 30);
             }
             else
             {
@@ -162,17 +162,17 @@ namespace RTciv2.Forms
                 int clickedX = (MapForm.ClickedBoxX - MapForm.ClickedBoxY % 2) / 2;    //convert from real to civ-2 style coordinates
                 int clickedY = MapForm.ClickedBoxY;
                 string sec_line = null;
-                if (Game.Terrain[clickedX, clickedY].River) { sec_line = ", River"; }
+                if (Game.Map[clickedX, clickedY].River) { sec_line = ", River"; }
                 string third_line = null;
-                if (Game.Terrain[clickedX, clickedY].SpecType != null && Game.Terrain[clickedX, clickedY].SpecType != SpecialType.GrasslandShield) { third_line = "(" + Game.Terrain[clickedX, clickedY].SpecName + ")"; }
-                e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Terrain[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Terrain[clickedX, clickedY].Type + sec_line + ")" + "\n" + third_line, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
+                if (Game.Map[clickedX, clickedY].SpecType != null && Game.Map[clickedX, clickedY].SpecType != SpecialType.GrasslandShield) { third_line = "(" + Game.Map[clickedX, clickedY].SpecName + ")"; }
+                e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Map[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Map[clickedX, clickedY].Type + sec_line + ")" + "\n" + third_line, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
 
                 //Draw all units on the clicked square
                 int count = 0;
                 List<IUnit> unitMatches = Game.Units.FindAll(unit => unit.X == clickedX && unit.Y == clickedY);
                 foreach (IUnit unit in unitMatches)
                 {
-                    e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 10, 90 + count * 3 * 18);
+                    //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 10, 90 + count * 3 * 18);
                     //Game.Cities[unit.HomeCity].Name
                     //Game.Cities[0].Name
                     e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18));

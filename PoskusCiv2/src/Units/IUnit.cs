@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using RTciv2.Enums;
 
 namespace RTciv2.Units
@@ -59,5 +60,8 @@ namespace RTciv2.Units
         void Sleep();
         bool TurnEnded { get; set; }
         bool AwaitingOrders { get; set; }
+        bool IsInCity { get; }
+        bool IsInStack { get; }
+        Bitmap GraphicMapPanel { get; }
     }
 }

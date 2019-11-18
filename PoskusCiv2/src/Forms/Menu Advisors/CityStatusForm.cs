@@ -16,7 +16,7 @@ namespace RTciv2.Forms
         DoubleBufferedPanel MainPanel;
         VScrollBar VerticalBar;
         public int BarValue { get; set; }       //starting value of view of horizontal bar
-        Draw Draw = new Draw();
+        //Draw Draw = new Draw();
 
         public CityStatusForm()
         {
@@ -86,7 +86,7 @@ namespace RTciv2.Forms
             foreach (City city in Game.Cities.Where(n => n.Owner == 1))
             {
                 //City image
-                e.Graphics.DrawImage(Draw.DrawCity(city, true), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
+                //e.Graphics.DrawImage(Draw.DrawCity(city, true), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
                 //City name
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 82 + 24 * count + 1));
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 82 + 24 * count));

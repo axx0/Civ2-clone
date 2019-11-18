@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 using RTciv2.Enums;
 
 namespace RTciv2.Terrains
@@ -45,7 +46,7 @@ namespace RTciv2.Terrains
         bool Farmland { get; set; }
         bool Airbase { get; set; }
         int Island { get; set; }
-
         string Hexvalue { get; set; }
+        Bitmap Graphic { get; set; }
     }
 }

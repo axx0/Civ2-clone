@@ -22,9 +22,8 @@ namespace RTciv2
         public static List<IUnit> DeadUnits = new List<IUnit>();
         public static List<City> Cities = new List<City>();
         public static List<Civilization> Civs = new List<Civilization>();        
-        public static ITerrain[,] Terrain;
+        public static ITerrain[,] Map;
         public static Data Data;
-        public static Bitmap Map;
 
         //load sound for moving piece
         //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
@@ -32,9 +31,6 @@ namespace RTciv2
 
         public static void StartNewGame()
         {
-            //Prepare game map
-            Map = Draw.DrawMap(); //prepare whole game map
-
             //Set active unit at game start
             Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
         }
@@ -48,15 +44,13 @@ namespace RTciv2
 
         public static void LoadGame(string civ2path, string SAVname)
         {
-            Images.CreateBitmapsFromFiles();    //Creates bitmaps from current folder (CURRENTLY FROM RESOURCES)
+            Images.LoadBitmapsFromFiles();    //Creates bitmaps from current folder (CURRENTLY FROM RESOURCES)
             ReadFiles.ReadRULES(civ2path + "RULES.TXT");
             ImportSAV(civ2path + SAVname + ".SAV");
+            Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
             //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
-
-            //Map = Draw.DrawMap(); //prepare whole game map
-
-            //Set active unit at game start
-            //Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
+                        
+            Instance.ActiveUnit = Units[Data.UnitSelectedIndex];  //Set active unit at game start
         }
 
 
@@ -99,7 +93,7 @@ namespace RTciv2
 
         public static void CreateTerrain(int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, string hexvalue)
         {
-            ITerrain terrain;
+            ITerrain map;
             SpecialType? stype = null;
             switch (type)
             {
@@ -171,7 +165,7 @@ namespace RTciv2
                     }
                 default: return ;
             }
-            terrain = new Terrain(type, stype)
+            map = new Terrain(type, stype)
             {
                 Type = type,
                 SpecType = stype,
@@ -190,7 +184,7 @@ namespace RTciv2
                 Airbase = airbase,
                 Hexvalue = hexvalue
             };
-            Terrain[x, y] = terrain;
+            Map[x, y] = map;
         }
 
         public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)

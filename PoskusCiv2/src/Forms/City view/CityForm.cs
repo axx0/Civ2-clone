@@ -17,7 +17,7 @@ namespace RTciv2.Forms
     public partial class CityForm : Civ2form
     {
         public MainCiv2Window mainCiv2Window;
-        Draw Draw = new Draw();
+        //Draw Draw = new Draw();
         City ThisCity;
         Bitmap CityDrawing;
         DoubleBufferedPanel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
@@ -251,7 +251,7 @@ namespace RTciv2.Forms
             ImprovementsBar.ValueChanged += new EventHandler(ImprovementsBarValueChanged);
 
             //Initialize city drawing
-            CityDrawing = Draw.DrawCityFormMap(ThisCity);
+            //CityDrawing = Draw.DrawCityFormMap(ThisCity);
 
             //Define offset map array
             offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
@@ -306,7 +306,7 @@ namespace RTciv2.Forms
         //Draw faces
         private void Faces_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(Draw.DrawFaces(ThisCity, 1.5), 0, 0);
+           //e.Graphics.DrawImage(Draw.DrawFaces(ThisCity, 1.5), 0, 0);
         }
 
         //Draw city map
@@ -317,7 +317,7 @@ namespace RTciv2.Forms
             //Food/shield/trade icons around the city (21 of them altogether)
             for (int i = 0; i <= ThisCity.Size; i++)
             {
-                e.Graphics.DrawImage(Draw.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+                //e.Graphics.DrawImage(Draw.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
             }
         }
 
@@ -356,7 +356,7 @@ namespace RTciv2.Forms
             e.Graphics.DrawString("Production: " + ThisCity.Production.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(7, 11, 103)), new Point(345, 223), sf1);
 
             //Draw icons
-            e.Graphics.DrawImage(Draw.DrawCityIcons(ThisCity, 5, -2, 5, 3, 7, 2, 6, 5, 3), new Point(7, 42));
+            //e.Graphics.DrawImage(Draw.DrawCityIcons(ThisCity, 5, -2, 5, 3, 7, 2, 6, 5, 3), new Point(7, 42));
 
             sf1.Dispose();
             sf2.Dispose();
@@ -372,7 +372,7 @@ namespace RTciv2.Forms
             {
                 col = count % 5;
                 row = count / 5;
-                e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row)));
+                //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row)));
                 count++;
 
                 if (count >= 10) { break; }
@@ -392,7 +392,7 @@ namespace RTciv2.Forms
             {
                 col = count % 5;
                 row = count / 5;
-                e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row) + 5 * row));
+                //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row) + 5 * row));
                 e.Graphics.DrawString(ThisCity.Name.Substring(0, 3), new Font("Arial", 12), new SolidBrush(Color.Black), new Point((int)(64 * resize_factor * col) + (int)(64 * resize_factor / 2), (int)(48 * resize_factor * row) + 5 * row + (int)(48 * resize_factor)), sf);
                 count++;
             }
@@ -422,7 +422,7 @@ namespace RTciv2.Forms
 
         private void FoodStorage_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(Draw.DrawFoodStorage(ThisCity), new Point(0, 0));
+            //e.Graphics.DrawImage(Draw.DrawFoodStorage(ThisCity), new Point(0, 0));
         }
 
         private void ProductionPanel_Paint(object sender, PaintEventArgs e)
@@ -443,7 +443,7 @@ namespace RTciv2.Forms
                 sf.Dispose();
             }
 
-            e.Graphics.DrawImage(Draw.DrawCityProduction(ThisCity), new Point(0, 0));  //draw production shields and sqare around them
+            //e.Graphics.DrawImage(Draw.DrawCityProduction(ThisCity), new Point(0, 0));  //draw production shields and sqare around them
         }
 
         private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)

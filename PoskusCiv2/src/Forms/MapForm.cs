@@ -22,7 +22,7 @@ namespace RTciv2.Forms
         Random randomNo = new Random();
         Timer t_VP = new Timer();   //viewing pieces timer
         Timer t_Unit = new Timer(); //unit animation timer
-        Draw Draw = new Draw();
+        DrawFunctions Draw = new DrawFunctions();
         Pen pulsatingRectPen = new Pen(Color.White, 1);
 
         public static int BoxNoX { get; set; }      //No of visible squares on map
@@ -122,12 +122,12 @@ namespace RTciv2.Forms
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
             //Draw map
-            e.Graphics.DrawImage(
-                Game.Map,
-                0,
-                0,
-                new Rectangle(OffsetX * 32, OffsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
-                GraphicsUnit.Pixel);
+            //e.Graphics.DrawImage(
+                //Game.Map,
+                //0,
+                //0,
+                //new Rectangle(OffsetX * 32, OffsetY * 16, (BoxNoX + 1) * 64, (BoxNoY + 1) * 32),
+                //GraphicsUnit.Pixel);
 
             //Draw all units
             foreach (IUnit unit in Game.Units)
