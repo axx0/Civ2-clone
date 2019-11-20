@@ -251,12 +251,12 @@ namespace RTciv2.Forms
             if (e.Button == MouseButtons.Right)
             {
                 ViewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form
-                Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();  //update orders menu in main screen
-                mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();  //send mouse click location to status form
+                //Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();  //update orders menu in main screen
+                //mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();  //send mouse click location to status form
             }
             else
             {
-                mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();   //send mouse click location to status form
+                //mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();   //send mouse click location to status form
                 if (Game.Cities.Any(city => city.X2 == ClickedBoxX && city.Y2 == ClickedBoxY))    //if city is clicked => open form
                 {
                     CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X2 == ClickedBoxX && city.Y2 == ClickedBoxY));

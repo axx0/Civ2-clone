@@ -62,6 +62,8 @@ namespace RTciv2.Units
         bool AwaitingOrders { get; set; }
         bool IsInCity { get; }
         bool IsInStack { get; }
+        bool IsLastInStack { get; }
+        bool IsInView { get; }
         Bitmap GraphicMapPanel { get; }
     }
 }

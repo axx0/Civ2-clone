@@ -272,26 +272,37 @@ namespace RTciv2.Units
         }
 
         private bool _isInStack;
-        public (bool, bool) IsInStack
+        public bool IsInStack
         {
             get 
             {
-                List<IUnit> unitsInXY = new List<IUnit>();
-                foreach (IUnit unit in Game.Units) if (unit.X == X && unit.Y == Y) unitsInXY.Add(unit);
-                if (unitsInXY.Count > 1) _isInStack = true;
+                List<IUnit> unitsInStack = new List<IUnit>();
+                foreach (IUnit unit in Game.Units) if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
+                if (unitsInStack.Count > 1) _isInStack = true;
                 else _isInStack = false;
                 return _isInStack;
             }
         }
 
-        private bool _isLastInStackList;
-        public bool IsLastInStackList   //determine if unit is last in stack list (or if it is not in stack, it is the only one)
+        private bool _isLastInStack;
+        public bool IsLastInStack   //determine if unit is last in stack list (or if it is not in stack, it is the only one)
         {
             get
             {
+                List<IUnit> unitsInStack = new List<IUnit>();
+                foreach (IUnit unit in Game.Units) if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
+                if (unitsInStack.Last() == this) _isLastInStack = true;
+                else _isLastInStack = false;
+                return _isLastInStack;
+            }
+        }
 
-
-                return _isLastInStackList;
+        private bool _isInView;
+        public bool IsInView    //determine if unit is visible in current map panel view
+        {
+            get
+            {
+                return _isInView;
             }
         }
 

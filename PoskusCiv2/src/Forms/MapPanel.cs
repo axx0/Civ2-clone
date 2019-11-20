@@ -17,6 +17,7 @@ namespace RTciv2.Forms
         public static int BoxNoY { get; set; }
         public static int OffsetX { get; set; }     //Offset squares from (0,0) for showing map
         public static int OffsetY { get; set; }
+        private int MapGridVar { get; set; }
 
         public MapPanel(int width, int height)
         {
@@ -33,9 +34,10 @@ namespace RTciv2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             BoxNoX = (int)Math.Floor((double)DrawPanel.Width / 64);
-            BoxNoY = (int)Math.Floor((double)DrawPanel.Height / 32);
+            BoxNoY = (int)Math.Floor((double)DrawPanel.Height / 16);
             OffsetX = 0;
             OffsetY = 0;
+            MapGridVar = 0;
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -62,10 +64,12 @@ namespace RTciv2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             //Draw map
+            Console.WriteLine("PanelSize={0},{1}", DrawPanel.Width, DrawPanel.Height);
+            Console.WriteLine("BOX={0},{1}", BoxNoX, BoxNoY);
             for (int col = 0; col < BoxNoX; col++)
-                for (int row = 0; row < 2 * BoxNoY; row++)
+                for (int row = 0; row < BoxNoY; row++)
                     e.Graphics.DrawImage(Game.Map[col, row].Graphic, 64 * col + 32 * (row % 2) + 1, 16 * row + 1);
-                        
+
             //Draw cities
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
@@ -79,34 +83,43 @@ namespace RTciv2.Forms
 
             //Draw units
             foreach (IUnit unit in Game.Units)
-                if (unit == Game.Instance.ActiveUnit)
-                    e.Graphics.DrawImage(unit.GraphicMapPanel, 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
-                else if (unit.IsInCity || (unit.IsInStack && unit.IsLastInStackList))
+                if (unit == Game.Instance.ActiveUnit) e.Graphics.DrawImage(unit.GraphicMapPanel, 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
+                else if (!(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack))) e.Graphics.DrawImage(unit.GraphicMapPanel, 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
 
-
-                //if (unit != Game.Instance.ActiveUnit) // && unit != MovingUnit)
-                //{
-                //    //Determine if unit inside city
-                //    bool unitOnTopOfCity = false;
-                //    foreach (City city in Game.Cities) if (unit.X == city.X && unit.Y == city.Y) { unitOnTopOfCity = true; break; }
-
-                //    if (!unitOnTopOfCity && (unit.X != Game.Instance.ActiveUnit.X || unit.Y != Game.Instance.ActiveUnit.Y))   //Draw only if unit NOT inside city AND if active unit is not on same square
-                //    {
-                //        List<IUnit> unitsInXY = ListOfUnitsIn(unit.X, unit.Y);    //make a list of units on this X-Y square
-                //                                                                  //if units are stacked, draw only the last unit in the list. Otherwise draw normally.
-                //        if (unitsInXY.Count > 1) e.Graphics.DrawImage(unit.Grap(unitsInXY.Last(), true, 1), 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
-                //        //if (unitsInXY.Count > 1) e.Graphics.DrawImage(unit.Grap(unitsInXY.Last(), true, 1), 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
-                //        else e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 32 * (unit.X2 - OffsetX), 16 * (unit.Y2 - OffsetY) - 16);
-                //    }
-                //}
+            //Draw gridlines
+            if (Options.Grid)
+            {
+                for (int col = 0; col < BoxNoX; col++)
+                    for (int row = 0; row < 2 * BoxNoY; row++)
+                    {
+                        if (MapGridVar > 0) e.Graphics.DrawImage(Images.GridLines, 64 * col + 32 * (row % 2), 16 * row);
+                        if (MapGridVar == 2)    //XY coords
+                        {
+                            int x = col * 64 + 12;
+                            int y = row * 32 + 8;
+                            e.Graphics.DrawString(String.Format("({0},{1})", col + OffsetX, row + OffsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x, y, new StringFormat()); //for first horizontal line
+                            //e.Graphics.DrawString(String.Format("({0},{1})", col + OffsetX + 1, row + OffsetY + 1), new Font("Arial", 8), new SolidBrush(Color.Yellow), x + 32, y + 16, new StringFormat()); //for second horizontal line
+                        }
+                        if (MapGridVar == 3)    //civXY coords
+                        {
+                            int x = col * 64 + 12;
+                            int y = row * 32 + 8;
+                            e.Graphics.DrawString(String.Format("({0},{1})", 2 * col + OffsetX, 2 * row + OffsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x, y, new StringFormat()); //for first horizontal line
+                            e.Graphics.DrawString(String.Format("({0},{1})", 2 * col + 1 + OffsetX, 2 * row + 1 + OffsetY), new Font("Arial", 8), new SolidBrush(Color.Yellow), x + 32, y + 16, new StringFormat()); //for second horizontal line
+                        }
+                    }
+            }
 
         }
 
-        private List<IUnit> ListOfUnitsIn(int x, int y) //Return list of units on a X-Y square
+        public int ToggleMapGrid()
         {
-            List<IUnit> unitsInXY = new List<IUnit>();
-            foreach (IUnit unit in Game.Units) if (unit.X == x && unit.Y == y) unitsInXY.Add(unit);
-            return unitsInXY;
+            MapGridVar++;
+            if (MapGridVar > 3) MapGridVar = 0;
+            if (MapGridVar != 0) Options.Grid = true;
+            else Options.Grid = false;
+            Refresh();
+            return MapGridVar;
         }
     }
 }

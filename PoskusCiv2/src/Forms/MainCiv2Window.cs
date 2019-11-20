@@ -17,15 +17,17 @@ namespace RTciv2.Forms
         MenuStrip MainMenuStrip;
         PictureBox MainIcon, SinaiIcon;
         ChoiceMenuPanel ChoiceMenu;
-        public MapForm MapForm;
-        public StatusForm statusForm;
-        public WorldMapForm WorldMapForm;
+        //public MapForm MapForm;
+        //public StatusForm statusForm;
+        //public WorldMapForm WorldMapForm;
+        public MapPanel MapPanel;
         public CityForm cityForm;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
+        ToolStripMenuItem ShowMapGridItem;
 
         public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
@@ -105,7 +107,7 @@ namespace RTciv2.Forms
             StandardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", StandardZoom_Click, "Shift+Z");
             MediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", MediumZoomOut_Click, "Shift+X");
             ToolStripMenuItem MaxZoomOutItem = new ToolStripMenuItem("Max Zoom Out", null, MaxZoomOut_Click, (Keys)Shortcut.CtrlX);
-            ToolStripMenuItem ShowMapGridItem = new ToolStripMenuItem("Show Map Grid", null, ShowMapGrid_Click, (Keys)Shortcut.CtrlG);
+            ShowMapGridItem = new ToolStripMenuItem("Show Map Grid", null, ShowMapGrid_Click, (Keys)Shortcut.CtrlG);
             ArrangeWindowsItem = new Civ2ToolStripMenuItem("Arrange Windows", ArrangeWindows_Click, "");
             ShowHiddenTerrainItem = new Civ2ToolStripMenuItem("Show Hidden Terrain", ShowHiddenTerrain_Click, "t");
             CenterViewItem = new Civ2ToolStripMenuItem("Center View", CenterView_Click, "c");
@@ -322,7 +324,7 @@ namespace RTciv2.Forms
             //    Location = new Point(this.ClientSize.Width - 262 - 10, 1) };
             //WorldMapForm.Show();
 
-            MapPanel MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
 
@@ -414,7 +416,12 @@ namespace RTciv2.Forms
         private void StandardZoom_Click(object sender, EventArgs e) { }
         private void MediumZoomOut_Click(object sender, EventArgs e) { }
         private void MaxZoomOut_Click(object sender, EventArgs e) { }
-        private void ShowMapGrid_Click(object sender, EventArgs e) { MapForm.ToggleMapGrid(); }
+        private void ShowMapGrid_Click(object sender, EventArgs e) 
+        { 
+            int var = MapPanel.ToggleMapGrid();
+            if (var != 0) ShowMapGridItem.Checked = true;
+            else ShowMapGridItem.Checked = false;
+        }
         private void ArrangeWindows_Click(object sender, EventArgs e) { }
         private void ShowHiddenTerrain_Click(object sender, EventArgs e) { }
         private void CenterView_Click(object sender, EventArgs e) { }
