@@ -61,26 +61,11 @@ namespace RTciv2
         {
             get
             {
-                if (TurnNumber < 250)
-                {
-                    _gameYear = -4000 + TurnNumber * 20;
-                }
-                else if (TurnNumber >= 250 && TurnNumber < 300)
-                {
-                    _gameYear = 1000 + (TurnNumber - 250) * 10;
-                }
-                else if (TurnNumber >= 300 && TurnNumber < 350)
-                {
-                    _gameYear = 1500 + (TurnNumber - 300) * 5;
-                }
-                else if (TurnNumber >= 350 && TurnNumber < 400)
-                {
-                    _gameYear = 1750 + (TurnNumber - 350) * 2;
-                }
-                else
-                {
-                    _gameYear = 1850 + (TurnNumber - 400);
-                }
+                if (TurnNumber < 250) _gameYear = -4000 + TurnNumber * 20;
+                else if (TurnNumber >= 250 && TurnNumber < 300) _gameYear = 1000 + (TurnNumber - 250) * 10;
+                else if (TurnNumber >= 300 && TurnNumber < 350) _gameYear = 1500 + (TurnNumber - 300) * 5;
+                else if (TurnNumber >= 350 && TurnNumber < 400) _gameYear = 1750 + (TurnNumber - 350) * 2;
+                else _gameYear = 1850 + (TurnNumber - 400);
                 return _gameYear;
             }
         }

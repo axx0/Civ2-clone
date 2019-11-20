@@ -178,7 +178,7 @@ namespace RTciv2.Forms
         private void QuitButton_Clicked(Object sender, EventArgs e) { Close(); }
 
         //Check if directory and SAV file exist
-        private bool CheckPaths()
+        private void CheckPaths()
         {
             Civ2Path = PathBox.Text;
             SAVname = SAVbox.Text;
@@ -210,7 +210,9 @@ namespace RTciv2.Forms
                     StartButton.Enabled = false; 
                 } 
             }
-            return resultDir && resultSav;
+            if (StartButton.Enabled) {
+                StartButton.Focus();
+                StartButton.Select(); }
         }
 
         //Write a config file with current settings
