@@ -7,6 +7,7 @@ using System.Drawing;
 using RTciv2.Enums;
 using RTciv2.Improvements;
 using RTciv2.Imagery;
+using RTciv2.Forms;
 
 namespace RTciv2
 {
@@ -221,6 +222,17 @@ namespace RTciv2
             {
                 _production = 3;
                 return _production;
+            }
+        }
+
+        private bool _isInView;
+        public bool IsInView    //determine if city is visible in current map panel view
+        {
+            get
+            {
+                if ((X > MapPanel.MapOffsetXY[0]) && (X < MapPanel.MapOffsetXY[0] + MapPanel.MapVisSqXY[0]) && (Y > MapPanel.MapOffsetXY[1]) && (Y < MapPanel.MapOffsetXY[1] + MapPanel.MapVisSqXY[1])) _isInView = true;
+                else _isInView = false;
+                return _isInView;
             }
         }
 
