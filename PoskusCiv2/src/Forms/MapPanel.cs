@@ -16,6 +16,7 @@ namespace RTciv2.Forms
         public static int[] MapVisSqXY { get; set; }      //Visible map squares shown on the panel
         public static int[] MapOffsetXY { get; set; }     //Starting map coordinates
         private int MapGridVar { get; set; }
+        private int ZoomLevel { get; set; } //Needs to be read from SAV !!!
 
         public MapPanel(int width, int height)
         {
@@ -31,8 +32,7 @@ namespace RTciv2.Forms
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
 
-            Button 
-                OUTButton = new Button
+            Button ZoomOUTButton = new Button
             {
                 Location = new Point(11, 9),
                 Size = new Size(23, 23),
@@ -57,6 +57,8 @@ namespace RTciv2.Forms
             MapVisSqXY = new int[] { (int)Math.Ceiling((double)DrawPanel.Width / 64), (int)Math.Ceiling((double)DrawPanel.Height / 16) };
             MapOffsetXY = new int[] { 0, 0 };
             MapGridVar = 0;
+
+            ZoomLevel = 8;  //normal zoom (needs to be read from SAV !!!)
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -85,7 +87,7 @@ namespace RTciv2.Forms
             //Draw map
             for (int col = MapOffsetXY[0]; col < MapVisSqXY[0]; col++)
                 for (int row = MapOffsetXY[1]; row < MapVisSqXY[1]; row++)
-                    e.Graphics.DrawImage(Game.Map[col, row].Graphic, 64 * col + 32 * (row % 2), 16 * row);
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[col, row].Graphic, ZoomLevel * 8, ZoomLevel * 4), ZoomLevel * 8 * col + ZoomLevel * 4 * (row % 2), ZoomLevel * 2 * row);
 
             //Draw cities
             StringFormat sf = new StringFormat();
@@ -141,12 +143,14 @@ namespace RTciv2.Forms
 
         private void ZoomOUTclicked(Object sender, EventArgs e)
         {
-
+            ZoomLevel = Math.Max(ZoomLevel - 1, 4);
+            Refresh();
         }
 
         private void ZoomINclicked(Object sender, EventArgs e)
         {
-
+            ZoomLevel = Math.Min(ZoomLevel + 1, 16);
+            Refresh();
         }
     }
 }
