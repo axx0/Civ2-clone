@@ -58,7 +58,7 @@ namespace RTciv2.Forms
             MapOffsetXY = new int[] { 0, 0 };
             MapGridVar = 0;
 
-            ZoomLvl = 8;  //normal zoom (needs to be read from SAV !!!)
+            ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -86,20 +86,23 @@ namespace RTciv2.Forms
         {
             Console.WriteLine("MapVisSqXY={0},{1}", MapVisSqXY[0], MapVisSqXY[1]);
             Console.WriteLine("Panel={0}", DrawPanel.Size);
+            Console.WriteLine("ZoomLvl={0}", ZoomLvl);
             //Draw map
-            for (int col = MapOffsetXY[0]; col < MapVisSqXY[0]; col++)
-                for (int row = MapOffsetXY[1]; row < MapVisSqXY[1]; row++)
+            for (int col = MapOffsetXY[0]; col < Math.Min(MapVisSqXY[0], Game.Map.GetLength(0)); col++)
+                for (int row = MapOffsetXY[1]; row < Math.Min(MapVisSqXY[1], Game.Map.GetLength(1)); row++)
                     e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[col, row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
 
             //Draw cities
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            foreach (City city in Game.Cities.Where(n => n.IsInView)) { 
+            foreach (City city in Game.Cities.Where(n => n.IsInView))
+            { // TODO: move this to Cities
                 e.Graphics.DrawImage(city.Graphic, 32 * (city.X2 - MapOffsetXY[0]), 16 * (city.Y2 - MapOffsetXY[1]) - 16);
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32 + 2, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32 + 2, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(CivColors.Light[city.Owner]), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf); }
+                //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32 + 2, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);    //Draw shadow around font
+                //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32 + 2, sf);    //Draw shadow around font
+                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 12), new SolidBrush(Color.Yellow), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);
+            }
             sf.Dispose();
 
             //Draw units

@@ -391,6 +391,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="notes.txt" />
     <Content Include="Resources\CITIES.GIF" />
     <Content Include="Resources\CITY.GIF" />
     <Content Include="Resources\DLL01.gif" />
