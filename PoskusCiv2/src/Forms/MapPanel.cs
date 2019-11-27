@@ -16,7 +16,7 @@ namespace RTciv2.Forms
         public static int[] MapVisSqXY { get; set; }      //Visible map squares shown on the panel
         public static int[] MapOffsetXY { get; set; }     //Starting map coordinates
         private int MapGridVar { get; set; }
-        private int ZoomLvl { get; set; } //Needs to be read from SAV !!!
+        public static int ZoomLvl { get; set; } //Needs to be read from SAV !!!
 
         public MapPanel(int width, int height)
         {
@@ -99,11 +99,11 @@ namespace RTciv2.Forms
             sf.Alignment = StringAlignment.Center;
             foreach (City city in Game.Cities.Where(n => n.IsInView))
             { // TODO: move this to Cities
-                //e.Graphics.DrawImage(ModifyImage.ResizeImage(city.Graphic, ZoomLvl * 8, ZoomLvl * 4), 32 * (city.X2 - MapOffsetXY[0]), 16 * (city.Y2 - MapOffsetXY[1]) - 16);
-                e.Graphics.DrawImage(city.Graphic, 32 * (city.X2 - MapOffsetXY[0]), 16 * (city.Y2 - MapOffsetXY[1]) - 16);
+                //e.Graphics.DrawImage(ModifyImage.ResizeImage(city.Graphic, ZoomLvl * 8, ZoomLvl * 6), 32 * (city.X2 - MapOffsetXY[0]), 16 * (city.Y2 - MapOffsetXY[1]) - 16);
+                e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl));
                 //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32 + 2, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);    //Draw shadow around font
                 //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32 + 2, sf);    //Draw shadow around font
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 1), new SolidBrush(Color.Cyan), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);
+                //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 12), new SolidBrush(Color.Cyan), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);
             }
             sf.Dispose();
 

@@ -1303,7 +1303,7 @@ namespace RTciv2.Imagery
             return square;
         }
 
-        public static Bitmap CreateCityBitmap(City city, bool citySizeWindow)
+        public static Bitmap CreateCityBitmap(City city, bool citySizeWindow, bool withText, int zoom)
         {
             Bitmap graphic = new Bitmap(64, 48);    //define a bitmap for drawing map
 
@@ -1383,6 +1383,8 @@ namespace RTciv2.Imagery
 
                 sf.Dispose();
             }
+
+            graphic = ModifyImage.ResizeImage(graphic, 8 * zoom, 6 * zoom);
 
             return graphic;
         }

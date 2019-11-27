@@ -241,7 +241,7 @@ namespace RTciv2
         {
             get
             {
-                _graphic = Images.CreateCityBitmap(this, true);
+                _graphic = Images.CreateCityBitmap(this, true, true, MapPanel.ZoomLvl);
                 return _graphic;
             }
             set
