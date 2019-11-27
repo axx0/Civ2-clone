@@ -1303,7 +1303,7 @@ namespace RTciv2.Imagery
             return square;
         }
 
-        public static Bitmap CreateCityBitmap(City city, bool citySizeWindow, bool withText, int zoom)
+        public static Bitmap CreateCityBitmap(City city, bool citySizeWindow, int zoom)
         {
             Bitmap graphic = new Bitmap(64, 48);    //define a bitmap for drawing map
 
@@ -1380,7 +1380,6 @@ namespace RTciv2.Imagery
                     }
                     if (flagPresent) graphics.DrawImage(CityFlag[city.Owner], cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);    //Draw city flag                    
                 }
-
                 sf.Dispose();
             }
 

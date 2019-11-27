@@ -98,9 +98,9 @@ namespace RTciv2.Forms
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             foreach (City city in Game.Cities.Where(n => n.IsInView))
-            { // TODO: move this to Cities
-                //e.Graphics.DrawImage(ModifyImage.ResizeImage(city.Graphic, ZoomLvl * 8, ZoomLvl * 6), 32 * (city.X2 - MapOffsetXY[0]), 16 * (city.Y2 - MapOffsetXY[1]) - 16);
+            {
                 e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl));
+                e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl));
                 //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32 + 2, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);    //Draw shadow around font
                 //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32 + 2, sf);    //Draw shadow around font
                 //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 12), new SolidBrush(Color.Cyan), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);
@@ -160,6 +160,11 @@ namespace RTciv2.Forms
             ZoomLvl = Math.Min(ZoomLvl + 1, 16);
             MapVisSqXY = new int[] { (int)Math.Ceiling((double)DrawPanel.Width / (ZoomLvl * 8)), (int)Math.Ceiling((double)DrawPanel.Height / (ZoomLvl * 2)) };
             Refresh();
+        }
+
+        private void DrawCityText(PaintEventArgs e)
+        {
+
         }
     }
 }

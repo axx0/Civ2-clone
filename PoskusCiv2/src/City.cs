@@ -241,12 +241,27 @@ namespace RTciv2
         {
             get
             {
-                _graphic = Images.CreateCityBitmap(this, true, true, MapPanel.ZoomLvl);
+                _graphic = Images.CreateCityBitmap(this, true, MapPanel.ZoomLvl);
                 return _graphic;
             }
-            set
+        }
+
+        private Bitmap _textGraphic;
+        public Bitmap TextGraphic
+        {
+            get
             {
-                _graphic = value;
+                Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
+                SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", 14));
+                int stringWidth = (int)stringSize.Width;
+                int stringHeight = (int)stringSize.Height;
+                Bitmap _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
+                Graphics g = Graphics.FromImage(_textGraphic);
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                g.DrawString(Name, new Font("Times New Roman", 14), Brushes.Black, new PointF(2, 0));
+                g.DrawString(Name, new Font("Times New Roman", 14), Brushes.Black, new PointF(0, 2));
+                g.DrawString(Name, new Font("Times New Roman", 14), Brushes.Cyan, new PointF(0, 0));
+                return _textGraphic;
             }
         }
     }
