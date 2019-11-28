@@ -313,7 +313,7 @@ namespace RTciv2.Units
         {
             get
             {
-                _graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, 1);
+                _graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, MapPanel.ZoomLvl);
                 return _graphicMapPanel;
             }
         }

@@ -1218,7 +1218,7 @@ namespace RTciv2.Imagery
         }
         #endregion
 
-        public static Bitmap CreateUnitBitmap(IUnit unit, bool drawInStack, double scale_factor)
+        public static Bitmap CreateUnitBitmap(IUnit unit, bool drawInStack, int zoom)
         {
             Bitmap square = new Bitmap(64, 48);     //define a bitmap for drawing       
 

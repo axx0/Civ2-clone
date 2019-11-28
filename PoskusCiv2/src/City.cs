@@ -273,13 +273,15 @@ namespace RTciv2
                     case 16: shadowOffset = 2; fontSize = 28; break;
                     default: shadowOffset = 2; fontSize = 14; break;
                 }
+                //Draw
                 Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
                 SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", fontSize));
                 int stringWidth = (int)stringSize.Width;
                 int stringHeight = (int)stringSize.Height;
-                Bitmap _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
+                _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
                 Graphics g = Graphics.FromImage(_textGraphic);
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                Console.WriteLine("NAME={0},OWNER={1}", Name, Owner);
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));
                 g.DrawString(Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[Owner]), new PointF(0, 0));

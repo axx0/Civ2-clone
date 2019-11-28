@@ -39,7 +39,7 @@ namespace RTciv2.Imagery
             Color.FromArgb(255, 255, 255),  //WHITE
             Color.FromArgb(111, 219, 51),     //GREEN
             Color.FromArgb(0, 115, 255),     //BLUE
-            Color.FromArgb(255, 255, 255),    //YELLOW
+            Color.FromArgb(255, 255, 0),    //YELLOW
             Color.FromArgb(63, 187, 199),   //CYAN
             Color.FromArgb(243, 183, 7),    //ORANGE
             Color.FromArgb(183, 147, 255)    //PURPLE

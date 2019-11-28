@@ -93,19 +93,11 @@ namespace RTciv2.Forms
                     e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[col, row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
 
             //Draw cities
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;  //make text not blurry
-            StringFormat sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
             foreach (City city in Game.Cities.Where(n => n.IsInView))
             {
                 e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl));
-                e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl));
-                //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32 + 2, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);    //Draw shadow around font
-                //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 14.0f), new SolidBrush(Color.Black), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32 + 2, sf);    //Draw shadow around font
-                //e.Graphics.DrawString(city.Name, new Font("Times New Roman", 12), new SolidBrush(Color.Cyan), 32 * (city.X2 - MapOffsetXY[0]) + 32, 16 * (city.Y2 - MapOffsetXY[1]) + 32, sf);
+                e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl) + ZoomLvl * 5);
             }
-            sf.Dispose();
 
             //Draw units
             foreach (IUnit unit in Game.Units.Where(n => n.IsInView))
