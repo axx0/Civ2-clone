@@ -251,16 +251,38 @@ namespace RTciv2
         {
             get
             {
+                //Define text characteristics for zoom levels
+                int shadowOffset, fontSize;
+                switch (MapPanel.ZoomLvl)
+                {
+                    case 1: shadowOffset = 0; fontSize = 1; break;
+                    case 2: shadowOffset = 0; fontSize = 3; break;
+                    case 3: shadowOffset = 0; fontSize = 5; break;
+                    case 4: shadowOffset = 1; fontSize = 7; break;
+                    case 5: shadowOffset = 1; fontSize = 10; break;
+                    case 6: shadowOffset = 1; fontSize = 11; break;
+                    case 7: shadowOffset = 1; fontSize = 13; break;
+                    case 8: shadowOffset = 2; fontSize = 14; break;
+                    case 9: shadowOffset = 2; fontSize = 16; break;
+                    case 10: shadowOffset = 2; fontSize = 17; break;
+                    case 11: shadowOffset = 2; fontSize = 19; break;
+                    case 12: shadowOffset = 2; fontSize = 21; break;
+                    case 13: shadowOffset = 2; fontSize = 24; break;
+                    case 14: shadowOffset = 2; fontSize = 25; break;
+                    case 15: shadowOffset = 2; fontSize = 26; break;
+                    case 16: shadowOffset = 2; fontSize = 28; break;
+                    default: shadowOffset = 2; fontSize = 14; break;
+                }
                 Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
-                SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", 14));
+                SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", fontSize));
                 int stringWidth = (int)stringSize.Width;
                 int stringHeight = (int)stringSize.Height;
                 Bitmap _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
                 Graphics g = Graphics.FromImage(_textGraphic);
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-                g.DrawString(Name, new Font("Times New Roman", 14), Brushes.Black, new PointF(2, 0));
-                g.DrawString(Name, new Font("Times New Roman", 14), Brushes.Black, new PointF(0, 2));
-                g.DrawString(Name, new Font("Times New Roman", 14), Brushes.Cyan, new PointF(0, 0));
+                g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
+                g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));
+                g.DrawString(Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[Owner]), new PointF(0, 0));
                 return _textGraphic;
             }
         }

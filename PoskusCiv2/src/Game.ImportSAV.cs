@@ -823,7 +823,7 @@ namespace RTciv2
                     else cityWonders[wndr] = false;
                 }
 
-                City city = CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);
+                CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);
             }
             #endregion
             #region Other
