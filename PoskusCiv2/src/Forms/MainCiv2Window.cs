@@ -101,7 +101,7 @@ namespace RTciv2.Forms
             ToolStripMenuItem ViewMenu = new ToolStripMenuItem("View");
             MovePiecesItem = new Civ2ToolStripMenuItem("Move Pieces", MovePieces_Click, "v");
             ViewPiecesItem = new Civ2ToolStripMenuItem("View Pieces", ViewPieces_Click, "v");
-            ZoomInItem = new Civ2ToolStripMenuItem("Zoom In", ZoomIn_Click, "z");
+            ZoomInItem = new Civ2ToolStripMenuItem("Zoom In", ZoomIn_Click, "z");   // TODO: subscribe to zoom event in Mappanel
             ZoomOutItem = new Civ2ToolStripMenuItem("Zoom Out", ZoomOut_Click, "x");
             ToolStripMenuItem MaxZoomInItem = new ToolStripMenuItem("Max Zoom In", null, MaxZoomIn_Click, (Keys)Shortcut.CtrlZ);
             StandardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", StandardZoom_Click, "Shift+Z");

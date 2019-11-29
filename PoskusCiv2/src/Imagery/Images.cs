@@ -410,7 +410,7 @@ namespace RTciv2.Imagery
 
             //Extract unit shield
             Bitmap _unitShield = units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
-            _unitShield.MakeTransparent(transparentGray);  //gray
+            _unitShield.MakeTransparent(transparentGray);
 
             //Make shields of different colors for 8 different civs
             UnitShield[0] = CreateNonIndexedImage(_unitShield); //convert GIF to non-indexed picture
@@ -435,7 +435,8 @@ namespace RTciv2.Imagery
             {
                 for (int y = 0; y < 20; y++)
                 {
-                    if (_unitShield.GetPixel(x, y) == transparentPink)  //if color is pink, replace it
+                    if (_unitShield.GetPixel(x, y) == transparentPink)   //if color is pink, replace it
+                    {
                         UnitShield[0].SetPixel(x, y, CivColors.Light[0]);  //red
                         UnitShield[1].SetPixel(x, y, CivColors.Light[1]);  //white
                         UnitShield[2].SetPixel(x, y, CivColors.Light[2]);  //green
@@ -444,8 +445,10 @@ namespace RTciv2.Imagery
                         UnitShield[5].SetPixel(x, y, CivColors.Light[5]);  //cyan
                         UnitShield[6].SetPixel(x, y, CivColors.Light[6]);  //orange
                         UnitShield[7].SetPixel(x, y, CivColors.Light[7]);  //purple
+                    }
             
                     if (_backUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    //if color is red, replace it
+                    {
                         NoBorderUnitShield[0].SetPixel(x, y, CivColors.Dark[0]);  //red
                         NoBorderUnitShield[1].SetPixel(x, y, CivColors.Dark[1]);  //white
                         NoBorderUnitShield[2].SetPixel(x, y, CivColors.Dark[2]);  //green
@@ -455,6 +458,7 @@ namespace RTciv2.Imagery
                         NoBorderUnitShield[6].SetPixel(x, y, CivColors.Dark[6]);  //orange
                         NoBorderUnitShield[7].SetPixel(x, y, CivColors.Dark[7]);  //purple
                         UnitShieldShadow.SetPixel(x, y, Color.FromArgb(51, 51, 51));    //color of the shield shadow
+                    }
                 }
             }   
 
@@ -622,8 +626,8 @@ namespace RTciv2.Imagery
             PrevCityLarge = ModifyImage.ResizeImage(PrevCity, 27, 36);    //50% larger
 
             //Zoom icons
-            ZoomOUT = icons.Clone(new Rectangle(18, 389, 16, 16), icons.PixelFormat);
-            ZoomIN = icons.Clone(new Rectangle(35, 389, 16, 16), icons.PixelFormat);
+            ZoomIN = icons.Clone(new Rectangle(18, 389, 16, 16), icons.PixelFormat);
+            ZoomOUT = icons.Clone(new Rectangle(35, 389, 16, 16), icons.PixelFormat);
 
             icons.Dispose();
         }
@@ -1278,16 +1282,16 @@ namespace RTciv2.Imagery
                 graphics.DrawImage(UnitShieldShadow, unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, unitShieldLocation[(int)unit.Type, 1]);
 
                 //main shield
-                //graphics.DrawImage(UnitShield[unit.Civ], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
+                graphics.DrawImage(UnitShield[unit.Civ], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
 
                 //Draw black background for hitpoints bar
-                //graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
+                graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
 
                 //Draw hitpoints bar
-                //graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
+                graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
 
                 //Action on shield
-                //graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), unitShieldLocation[(int)unit.Type, 0] + 6, unitShieldLocation[(int)unit.Type, 1] + 12, sf);
+                graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), unitShieldLocation[(int)unit.Type, 0] + 6, unitShieldLocation[(int)unit.Type, 1] + 12, sf);
 
                 if (unit.Order != OrderType.Sleep) graphics.DrawImage(Units[(int)unit.Type], 0, 0);    //draw unit
                 else graphics.DrawImage(Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit
