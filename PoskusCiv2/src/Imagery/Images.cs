@@ -429,7 +429,7 @@ namespace RTciv2.Imagery
             NoBorderUnitShield[5] = CreateNonIndexedImage(_backUnitShield);
             NoBorderUnitShield[6] = CreateNonIndexedImage(_backUnitShield);
             NoBorderUnitShield[7] = CreateNonIndexedImage(_backUnitShield);
-            UnitShieldShadow = CreateNonIndexedImage(_backUnitShield); //convert GIF to non-indexed picture
+            UnitShieldShadow = CreateNonIndexedImage(_backUnitShield);
             //Replace colors for unit shield and dark unit shield
             for (int x = 0; x < 12; x++)
             {
@@ -1227,6 +1227,7 @@ namespace RTciv2.Imagery
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
+                graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 
                 string shieldText;
                 switch (unit.Order)
@@ -1277,16 +1278,16 @@ namespace RTciv2.Imagery
                 graphics.DrawImage(UnitShieldShadow, unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, unitShieldLocation[(int)unit.Type, 1]);
 
                 //main shield
-                graphics.DrawImage(UnitShield[unit.Civ], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
+                //graphics.DrawImage(UnitShield[unit.Civ], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
 
                 //Draw black background for hitpoints bar
-                graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
+                //graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
 
                 //Draw hitpoints bar
-                graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
+                //graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
 
                 //Action on shield
-                graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), unitShieldLocation[(int)unit.Type, 0] + 6, unitShieldLocation[(int)unit.Type, 1] + 12, sf);
+                //graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), unitShieldLocation[(int)unit.Type, 0] + 6, unitShieldLocation[(int)unit.Type, 1] + 12, sf);
 
                 if (unit.Order != OrderType.Sleep) graphics.DrawImage(Units[(int)unit.Type], 0, 0);    //draw unit
                 else graphics.DrawImage(Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit
@@ -1298,7 +1299,7 @@ namespace RTciv2.Imagery
             }
 
             //Resize image if required
-            square = ModifyImage.ResizeImage(square, (int)(64 * scale_factor), (int)(48 * scale_factor));
+            square = ModifyImage.ResizeImage(square, 8 * zoom, 6 * zoom);
 
             return square;
         }
@@ -1356,6 +1357,7 @@ namespace RTciv2.Imagery
                 StringFormat sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
+                graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 
                 if (!Array.Exists(city.Improvements, element => element.Type == ImprovementType.CityWalls))  //no city walls
                 {

@@ -93,16 +93,14 @@ namespace RTciv2.Forms
                     e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[col, row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
 
             //Draw cities
-            foreach (City city in Game.Cities.Where(n => n.IsInView))
-            {
-                e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl));
-                e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - (2 * ZoomLvl) + ZoomLvl * 5);
-            }
+            foreach (City city in Game.Cities.Where(n => n.IsInView)) {
+                e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
+                e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5); }
 
             //Draw units
             foreach (IUnit unit in Game.Units.Where(n => n.IsInView))
-                if (unit == Game.Instance.ActiveUnit) e.Graphics.DrawImage(unit.GraphicMapPanel, 32 * (unit.X2 - MapOffsetXY[0]), 16 * (unit.Y2 - MapOffsetXY[1]) - 16);
-                else if (!(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack))) e.Graphics.DrawImage(unit.GraphicMapPanel, 32 * (unit.X2 - MapOffsetXY[0]), 16 * (unit.Y2 - MapOffsetXY[1]) - 16);
+                if (unit == Game.Instance.ActiveUnit) e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (unit.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
+                else if (!(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack))) e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (unit.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
 
             //Draw gridlines
             if (Options.Grid)
