@@ -23,7 +23,7 @@ namespace RTciv2.Forms
         public MapPanel MapPanel;
         public CityForm cityForm;
         ToolStripMenuItem OrdersMenu;
-        ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
+        ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, MaxZoomInItem, MaxZoomOutItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
@@ -44,11 +44,11 @@ namespace RTciv2.Forms
             #endregion
 
             #region MENUS
-            //Menustrip
-            MainMenuStrip = new MenuStrip            {
-                BackColor = Color.White };
+            MainMenuStrip = new MenuStrip
+            {
+                BackColor = Color.White
+            };
             Controls.Add(MainMenuStrip);
-
             //Game menu
             ToolStripMenuItem GameMenu = new ToolStripMenuItem("Game");
             ToolStripMenuItem GameOptionsItem = new ToolStripMenuItem("Game Options", null, GameOptions_Click, (Keys)Shortcut.CtrlO);
@@ -83,30 +83,18 @@ namespace RTciv2.Forms
             GameMenu.DropDownItems.Add(RetireItem);
             GameMenu.DropDownItems.Add(QuitItem);
 
-            //Kingdom menu
-            ToolStripMenuItem KingdomMenu = new ToolStripMenuItem("Kingdom");
-            TaxRateItem = new Civ2ToolStripMenuItem("Tax Rate", TaxRate_Click, "Shift+T");
-            ViewThroneRoomItem = new Civ2ToolStripMenuItem("View Throne Room", ViewThroneRoom_Click, "Shift+H");
-            FindCityItem = new Civ2ToolStripMenuItem("Find City", FindCity_Click, "Shift+C");
-            RevolutionItem = new Civ2ToolStripMenuItem("REVOLUTION", Revolution_Click, "Shift+R");
-            MainMenuStrip.Items.Add(KingdomMenu);
-            KingdomMenu.DropDownItems.Add(TaxRateItem);
-            KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
-            KingdomMenu.DropDownItems.Add(ViewThroneRoomItem);
-            KingdomMenu.DropDownItems.Add(FindCityItem);
-            KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
-            KingdomMenu.DropDownItems.Add(RevolutionItem);
-
             //View menu
             ToolStripMenuItem ViewMenu = new ToolStripMenuItem("View");
             MovePiecesItem = new Civ2ToolStripMenuItem("Move Pieces", MovePieces_Click, "v");
             ViewPiecesItem = new Civ2ToolStripMenuItem("View Pieces", ViewPieces_Click, "v");
-            ZoomInItem = new Civ2ToolStripMenuItem("Zoom In", ZoomIn_Click, "z");   // TODO: subscribe to zoom event in Mappanel
-            ZoomOutItem = new Civ2ToolStripMenuItem("Zoom Out", ZoomOut_Click, "x");
-            ToolStripMenuItem MaxZoomInItem = new ToolStripMenuItem("Max Zoom In", null, MaxZoomIn_Click, (Keys)Shortcut.CtrlZ);
-            StandardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", StandardZoom_Click, "Shift+Z");
-            MediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", MediumZoomOut_Click, "Shift+X");
-            ToolStripMenuItem MaxZoomOutItem = new ToolStripMenuItem("Max Zoom Out", null, MaxZoomOut_Click, (Keys)Shortcut.CtrlX);
+            ZoomInItem = new Civ2ToolStripMenuItem("Zoom In", null, "z");
+            ZoomOutItem = new Civ2ToolStripMenuItem("Zoom Out", null, "x");
+            MaxZoomInItem = new ToolStripMenuItem("Max Zoom In", null, null, (Keys)Shortcut.CtrlZ);
+            StandardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", null, "Shift+Z");
+            MediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", null, "Shift+X");
+            StandardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", null, "Shift+Z");
+            MediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", null, "Shift+X");
+            MaxZoomOutItem = new ToolStripMenuItem("Max Zoom Out", null, null, (Keys)Shortcut.CtrlX);
             ShowMapGridItem = new ToolStripMenuItem("Show Map Grid", null, ShowMapGrid_Click, (Keys)Shortcut.CtrlG);
             ArrangeWindowsItem = new Civ2ToolStripMenuItem("Arrange Windows", ArrangeWindows_Click, "");
             ShowHiddenTerrainItem = new Civ2ToolStripMenuItem("Show Hidden Terrain", ShowHiddenTerrain_Click, "t");
@@ -128,6 +116,20 @@ namespace RTciv2.Forms
             ViewMenu.DropDownItems.Add(ShowHiddenTerrainItem);
             ViewMenu.DropDownItems.Add(CenterViewItem);
 
+            //Kingdom menu
+            ToolStripMenuItem KingdomMenu = new ToolStripMenuItem("Kingdom");
+            TaxRateItem = new Civ2ToolStripMenuItem("Tax Rate", TaxRate_Click, "Shift+T");
+            ViewThroneRoomItem = new Civ2ToolStripMenuItem("View Throne Room", ViewThroneRoom_Click, "Shift+H");
+            FindCityItem = new Civ2ToolStripMenuItem("Find City", FindCity_Click, "Shift+C");
+            RevolutionItem = new Civ2ToolStripMenuItem("REVOLUTION", Revolution_Click, "Shift+R");
+            MainMenuStrip.Items.Add(KingdomMenu);
+            KingdomMenu.DropDownItems.Add(TaxRateItem);
+            KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
+            KingdomMenu.DropDownItems.Add(ViewThroneRoomItem);
+            KingdomMenu.DropDownItems.Add(FindCityItem);
+            KingdomMenu.DropDownItems.Add(new ToolStripSeparator());
+            KingdomMenu.DropDownItems.Add(RevolutionItem);
+                        
             //Orders
             OrdersMenu = new ToolStripMenuItem("Orders");
             BuildRoadItem = new Civ2ToolStripMenuItem("Build Road", BuildRoad_Click, "r");
@@ -312,28 +314,22 @@ namespace RTciv2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            //MapForm = new MapForm(this) {
-            //    MdiParent = this,
-            //    StartPosition = FormStartPosition.Manual,
-            //    Location = new Point(1, 1) };
-            //MapForm.Show();
-
-            //WorldMapForm = new WorldMapForm(this) {
-            //    MdiParent = this,
-            //    StartPosition = FormStartPosition.Manual,
-            //    Location = new Point(this.ClientSize.Width - 262 - 10, 1) };
-            //WorldMapForm.Show();
-
             MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
+            ZoomInItem.Click += MapPanel.ZoomINclicked;
+            ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
+            MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
+            MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
+            StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
+            MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
 
             WorldmapPanel WorldmapPanel = new WorldmapPanel(262, 148);
             WorldmapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
             Controls.Add(WorldmapPanel);
 
             StatusPanel StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
-            StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148  );
+            StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
             Controls.Add(StatusPanel);
         }
 
@@ -410,12 +406,6 @@ namespace RTciv2.Forms
         #region VIEW MENU EVENTS
         private void MovePieces_Click(object sender, EventArgs e) { }
         private void ViewPieces_Click(object sender, EventArgs e) { }
-        private void ZoomIn_Click(object sender, EventArgs e) { }
-        private void ZoomOut_Click(object sender, EventArgs e) { }
-        private void MaxZoomIn_Click(object sender, EventArgs e) { }
-        private void StandardZoom_Click(object sender, EventArgs e) { }
-        private void MediumZoomOut_Click(object sender, EventArgs e) { }
-        private void MaxZoomOut_Click(object sender, EventArgs e) { }
         private void ShowMapGrid_Click(object sender, EventArgs e) 
         { 
             int var = MapPanel.ToggleMapGrid();
@@ -643,6 +633,8 @@ namespace RTciv2.Forms
                     case Keys.S: Sleep_Click(null, null); break;
                     case Keys.U: Unload_Click(null, null); break;
                     case Keys.W: Wait_Click(null, null); break;
+                    case Keys.X: MapPanel.ZoomLvl--; break;
+                    case Keys.Z: MapPanel.ZoomLvl++; break;
                     case Keys.Space: SkipTurn_Click(null, null); break;
                     case Keys.Enter: Actions.GiveCommand("ENTER"); break;
                     case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;

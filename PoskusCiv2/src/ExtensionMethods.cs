@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExtensionMethods
 {
-    public static class MyExtensions
+    public static class Ext
     {
         public static T[] RemoveAt<T>(this T[] source, int index)
         {
@@ -24,6 +24,13 @@ namespace ExtensionMethods
         public static int[] Civ2xy(this int[] coordXY)
         {
             int[] newcoordXY = { (coordXY[0] - coordXY[1] % 2) / 2, coordXY[1] };
+            return newcoordXY;
+        }
+
+        //Convert real XY coordinates to civ2 XY coordinates
+        public static int[] XYciv2(int[] coordXY)
+        {
+            int[] newcoordXY = { 2 * coordXY[0] + (coordXY[1] % 2), coordXY[1] };
             return newcoordXY;
         }
     }
