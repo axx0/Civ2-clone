@@ -84,12 +84,13 @@ namespace RTciv2.Forms
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
-            Console.WriteLine("center offset={0},{1}", CenterOffsetXY[0], CenterOffsetXY[1]);
-            Console.WriteLine("vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
+            Console.WriteLine("Drawing: offset map={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
+            Console.WriteLine("Drawing: vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
             //Draw map
-            for (int col = MapOffsetXY[0]; col < MapOffsetXY[0] + DrawingSqXY[0] / 2; col++)
-                for (int row = MapOffsetXY[1]; row < MapOffsetXY[1] + DrawingSqXY[1]; row++)
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[col, row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
+            int[] coords = Ext.Civ2xy(MapOffsetXY);  //convert civ2 to real coords
+            for (int col = 0; col < DrawingSqXY[0] / 2; col++)
+                for (int row = 0; row < DrawingSqXY[1]; row++)
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0] + col, coords[1] + row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
 
             //Draw units
             foreach (IUnit unit in Game.Units.Where(n => n.IsInView))
@@ -117,7 +118,7 @@ namespace RTciv2.Forms
                             e.Graphics.DrawString(String.Format("({0},{1})", col + MapOffsetXY[0], row + MapOffsetXY[1]), new Font("Arial", ZoomLvl), new SolidBrush(Color.Yellow), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2) + 4 * ZoomLvl, 2 * ZoomLvl * row + 2 * ZoomLvl, sf);
                         if (MapGridVar == 3)    //civXY coords
                         {
-                            int[] coords = Ext.XYciv2(new int[] { col + MapOffsetXY[0], row + MapOffsetXY[1] });
+                            coords = Ext.XYciv2(new int[] { col + MapOffsetXY[0], row + MapOffsetXY[1] });
                             e.Graphics.DrawString(String.Format("({0},{1})", coords[0], coords[1]), new Font("Arial", ZoomLvl), new SolidBrush(Color.Yellow), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2) + 4 * ZoomLvl, 2 * ZoomLvl * row + 2 * ZoomLvl, sf);
                         }
                     }
@@ -193,19 +194,36 @@ namespace RTciv2.Forms
                 Console.WriteLine("SET OFFSET BEF ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
                 _mapOffsetXY = value;
                 Console.WriteLine("SET OFFSET AFT ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
-                if (value[0] < 0) Console.WriteLine("LIMIT#1"); _mapOffsetXY[0] = 0;
-                if (value[0] >= 2 * Game.Data.MapXdim - DrawingSqXY[0]) Console.WriteLine("LIMIT#2"); _mapOffsetXY[0] = 2 * Game.Data.MapXdim - DrawingSqXY[0];
-                if (value[1] < 0) Console.WriteLine("LIMIT#3"); _mapOffsetXY[1] = 0;
-                if (value[1] >= Game.Data.MapYdim - DrawingSqXY[1]) Console.WriteLine("LIMIT#4"); _mapOffsetXY[1] = Game.Data.MapYdim - DrawingSqXY[1];
+                if (value[0] < 0)
+                {
+                    Console.WriteLine("LIMIT#1"); 
+                    _mapOffsetXY[0] = 0;
+                }
+                if (value[0] >= 2 * Game.Data.MapXdim - DrawingSqXY[0]) 
+                {
+                    Console.WriteLine("LIMIT#2"); 
+                    _mapOffsetXY[0] = 2 * Game.Data.MapXdim - DrawingSqXY[0];
+                }
+                if (value[1] < 0) 
+                {
+                    Console.WriteLine("LIMIT#3"); 
+                    _mapOffsetXY[1] = 0;
+                }
+                if (value[1] >= Game.Data.MapYdim - DrawingSqXY[1]) 
+                {
+                    Console.WriteLine("LIMIT#4"); 
+                    _mapOffsetXY[1] = Game.Data.MapYdim - DrawingSqXY[1];
+                }
                 Console.WriteLine("SET OFFSET AFT LIM ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
-                //After limiting offset, do not allow some combinations, e.g. (2, 1)
-                //if (Math.Abs((_mapOffsetXY[0] - _mapOffsetXY[1]) % 2) == 1)
-                //{
-                //    if (_mapOffsetXY[0] + 1 < Game.Data.MapXdim) _mapOffsetXY[0]++;
-                //    else if (_mapOffsetXY[1] + 1 < Game.Data.MapYdim) _mapOffsetXY[1]++;
-                //    else if (_mapOffsetXY[0] - 1 > 0) _mapOffsetXY[0]--;
-                //    else _mapOffsetXY[1]--;
-                //}
+                //After limiting offset, do not allow XY combinations not in civ2 style (e.g. (2, 1))
+                if (Math.Abs((_mapOffsetXY[0] - _mapOffsetXY[1]) % 2) == 1)
+                {
+                    if (_mapOffsetXY[0] + 1 < 2 * Game.Data.MapXdim) _mapOffsetXY[0]++;
+                    else if (_mapOffsetXY[1] + 1 < Game.Data.MapYdim) _mapOffsetXY[1]++;
+                    else if (_mapOffsetXY[0] - 1 > 0) _mapOffsetXY[0]--;
+                    else _mapOffsetXY[1]--;
+                }
+                Console.WriteLine("SET OFFSET AFT LIMv2 ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
             }
         }
         public int[] ClickedXY     //Civ2 coords of clicked tile

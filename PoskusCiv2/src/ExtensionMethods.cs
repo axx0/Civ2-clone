@@ -21,7 +21,7 @@ namespace ExtensionMethods
         }
 
         //Convert civ2-style XY coordinates to real XY coordinates
-        public static int[] Civ2xy(this int[] coordXY)
+        public static int[] Civ2xy(int[] coordXY)
         {
             int[] newcoordXY = { (coordXY[0] - coordXY[1] % 2) / 2, coordXY[1] };
             return newcoordXY;
