@@ -16,6 +16,7 @@ namespace RTciv2.Forms
         private static DoubleBufferedPanel DrawPanel;
         private int MapGridVar { get; set; }    //style of map grid presentation        
         private bool ViewingPiecesMode { get; set; }
+        Label HelpLabel;
 
         public MapPanel(int width, int height)
         {
@@ -26,7 +27,7 @@ namespace RTciv2.Forms
             {
                 Location = new Point(11, 38),
                 Size = new Size(Width - 22, Height - 49),
-                BackColor = Color.Black 
+                BackColor = Color.Green 
             };
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
@@ -59,6 +60,16 @@ namespace RTciv2.Forms
             ClickedXY = new int[] { 0, 0 };
             MapGridVar = 0;
             ViewingPiecesMode = false;
+
+            //!!! HELP !!!
+            HelpLabel = new Label
+            {
+                Location = new Point(1000, 50),
+                AutoSize = true,
+                BackColor = Color.White,
+                Text = "OK"
+            };
+            DrawPanel.Controls.Add(HelpLabel);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -87,44 +98,59 @@ namespace RTciv2.Forms
             Console.WriteLine("Drawing: offset map={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
             Console.WriteLine("Drawing: vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
             //Draw map
-            int[] coords = Ext.Civ2xy(MapOffsetXY);  //convert civ2 to real coords
-            for (int col = 0; col < DrawingSqXY[0] / 2; col++)
-                for (int row = 0; row < DrawingSqXY[1]; row++)
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0] + col, coords[1] + row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
+            //int[] coords = Ext.Civ2xy(MapOffsetXY);  //convert civ2 to real coords
+            //for (int col = 0; col < DrawingSqXY[0] / 2; col++)
+            //    for (int row = 0; row < DrawingSqXY[1]; row++)
+            //        e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0] + col, coords[1] + row].Graphic, ZoomLvl * 8, ZoomLvl * 4), ZoomLvl * 8 * col + ZoomLvl * 4 * (row % 2), ZoomLvl * 2 * row);
 
             //Draw units
-            foreach (IUnit unit in Game.Units.Where(n => n.IsInView))
-                if (unit == Game.Instance.ActiveUnit) e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (unit.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
-                else if (!(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack))) e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (unit.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
+            //foreach (IUnit unit in Game.Units.Where(n => n.IsInView))
+            //    if (unit == Game.Instance.ActiveUnit) e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (unit.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
+            //    else if (!(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack))) e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (unit.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
 
             //Draw cities
-            foreach (City city in Game.Cities.Where(n => n.IsInView))
-            {
-                e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
-                e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
-            }
+            //foreach (City city in Game.Cities.Where(n => n.IsInView))
+            //{
+            //    e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
+            //    e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
+            //}
 
             //Draw gridlines
-            if (Options.Grid)
-            {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-                for (int col = MapOffsetXY[0]; col < MapOffsetXY[0] + DrawingSqXY[0] / 2; col++)
-                    for (int row = MapOffsetXY[1]; row < MapOffsetXY[1] + DrawingSqXY[1]; row++)
-                    {
-                        if (MapGridVar > 0) e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.GridLines, 8 * ZoomLvl, 4 * ZoomLvl), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2), 2 * ZoomLvl * row);
-                        if (MapGridVar == 2)     //XY coords
-                            e.Graphics.DrawString(String.Format("({0},{1})", col + MapOffsetXY[0], row + MapOffsetXY[1]), new Font("Arial", ZoomLvl), new SolidBrush(Color.Yellow), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2) + 4 * ZoomLvl, 2 * ZoomLvl * row + 2 * ZoomLvl, sf);
-                        if (MapGridVar == 3)    //civXY coords
-                        {
-                            coords = Ext.XYciv2(new int[] { col + MapOffsetXY[0], row + MapOffsetXY[1] });
-                            e.Graphics.DrawString(String.Format("({0},{1})", coords[0], coords[1]), new Font("Arial", ZoomLvl), new SolidBrush(Color.Yellow), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2) + 4 * ZoomLvl, 2 * ZoomLvl * row + 2 * ZoomLvl, sf);
-                        }
-                    }
-                sf.Dispose();
-            }
+            //if (Options.Grid)
+            //{
+            //    StringFormat sf = new StringFormat();
+            //    sf.LineAlignment = StringAlignment.Center;
+            //    sf.Alignment = StringAlignment.Center;
+            //    for (int col = MapOffsetXY[0]; col < MapOffsetXY[0] + DrawingSqXY[0] / 2; col++)
+            //        for (int row = MapOffsetXY[1]; row < MapOffsetXY[1] + DrawingSqXY[1]; row++)
+            //        {
+            //            if (MapGridVar > 0) e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.GridLines, 8 * ZoomLvl, 4 * ZoomLvl), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2), 2 * ZoomLvl * row);
+            //            if (MapGridVar == 2)     //XY coords
+            //                e.Graphics.DrawString(String.Format("({0},{1})", col + MapOffsetXY[0], row + MapOffsetXY[1]), new Font("Arial", ZoomLvl), new SolidBrush(Color.Yellow), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2) + 4 * ZoomLvl, 2 * ZoomLvl * row + 2 * ZoomLvl, sf);
+            //            if (MapGridVar == 3)    //civXY coords
+            //            {
+            //                coords = Ext.XYciv2(new int[] { col + MapOffsetXY[0], row + MapOffsetXY[1] });
+            //                e.Graphics.DrawString(String.Format("({0},{1})", coords[0], coords[1]), new Font("Arial", ZoomLvl), new SolidBrush(Color.Yellow), 8 * ZoomLvl * col + 4 * ZoomLvl * (row % 2) + 4 * ZoomLvl, 2 * ZoomLvl * row + 2 * ZoomLvl, sf);
+            //            }
+            //        }
+            //    sf.Dispose();
+            //}
 
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            for (int col = StartingSqXY[0]; col < StartingSqXY[0] + DrawingSqXY[0]; col++)
+                for (int row = StartingSqXY[1]; row < StartingSqXY[1] + DrawingSqXY[1]; row++)
+                {
+                    e.Graphics.DrawImage(Images.GridLines, StartingOffsetXY[0] + 64 * col + 32 * (row % 2), StartingOffsetXY[1] + 16 * row);
+                    e.Graphics.DrawString(String.Format("({0},{1})", col, row), new Font("Arial", 8), new SolidBrush(Color.Yellow), StartingOffsetXY[0] + 64 * col + 32 * (row % 2) + 32, StartingOffsetXY[1] + 16 * row + 16, sf);
+                }
+
+            HelpLabel.Text = "Panel size = (" + DrawPanel.Width.ToString() + "," + DrawPanel.Height.ToString() + ")\n" +
+                "CenterOffsetXY = (" + CenterOffsetXY[0].ToString() + "," + CenterOffsetXY[1].ToString() + ")\n" +
+                "DrawingSqXY = (" + DrawingSqXY[0].ToString() + "," + DrawingSqXY[1].ToString() + ")\n" +
+                "StartingOffsetXY = (" + StartingOffsetXY[0].ToString() + "," + StartingOffsetXY[1].ToString() + ") px\n" +
+                "StartingSqXY = (" + StartingSqXY[0].ToString() + "," + StartingSqXY[1].ToString() + ")\n";
         }
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
@@ -170,9 +196,19 @@ namespace RTciv2.Forms
             //}
         }
 
+        private int[] StartingSqXY
+        {
+            get { return new int[] { 0, 0 }; }
+        }
+        private int[] StartingOffsetXY
+        {
+            get { return new int[] { 0, 0 }; }
+        }
+
         public static int[] DrawingSqXY  //Squares to be drawn on the panel (must be multiple of 2)
         {
-            get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
+            //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
+            get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / 64), 2 * (int)Math.Ceiling((double)DrawPanel.Height / 32) }; }
         }
 
         private int[] CenterOffsetXY  //offset of central tile from panel NW corner (civ2 coords)
