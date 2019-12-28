@@ -95,8 +95,8 @@ namespace RTciv2.Forms
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
-            Console.WriteLine("Drawing: offset map={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
-            Console.WriteLine("Drawing: vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
+            //Console.WriteLine("Drawing: offset map={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
+            //Console.WriteLine("Drawing: vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
             //Draw map
             //int[] coords = Ext.Civ2xy(MapOffsetXY);  //convert civ2 to real coords
             //for (int col = 0; col < DrawingSqXY[0] / 2; col++)
@@ -139,32 +139,45 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            for (int col = StartingSqXY[0]; col < StartingSqXY[0] + DrawingSqXY[0]; col++)
-                for (int row = StartingSqXY[1]; row < StartingSqXY[1] + DrawingSqXY[1]; row++)
+            for (int row = 0; row < DrawingSqXY[1]; row++)  //this time in civ2 coords
+                for (int col = row % 2; col < DrawingSqXY[0]; col += 2)
                 {
-                    e.Graphics.DrawImage(Images.GridLines, StartingOffsetXY[0] + 64 * col + 32 * (row % 2), StartingOffsetXY[1] + 16 * row);
-                    e.Graphics.DrawString(String.Format("({0},{1})", col, row), new Font("Arial", 8), new SolidBrush(Color.Yellow), StartingOffsetXY[0] + 64 * col + 32 * (row % 2) + 32, StartingOffsetXY[1] + 16 * row + 16, sf);
+                    //Console.WriteLine("(col,row)=({0},{1})", col, row);
+                    e.Graphics.DrawImage(Images.GridLines, DrawingOffsetXY[0] + 32 * col, DrawingOffsetXY[1] + 16 * row);
+                    Color brushColor = Color.Yellow;
+                    if ((col + StartingSqXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] == CenterSqXY[1])) brushColor = Color.Red;
+                    e.Graphics.DrawString(String.Format("({0},{1})", col + StartingSqXY[0], row + StartingSqXY[1]), new Font("Arial", 8), new SolidBrush(brushColor), DrawingOffsetXY[0] + 32 * col + 32, DrawingOffsetXY[1] + 16 * row + 16, sf);
                 }
+            sf.Dispose();
 
             HelpLabel.Text = "Panel size = (" + DrawPanel.Width.ToString() + "," + DrawPanel.Height.ToString() + ")\n" +
-                "CenterOffsetXY = (" + CenterOffsetXY[0].ToString() + "," + CenterOffsetXY[1].ToString() + ")\n" +
+                "CenterDistanceXY = (" + CenterDistanceXY[0].ToString() + "," + CenterDistanceXY[1].ToString() + ")\n" +                
                 "DrawingSqXY = (" + DrawingSqXY[0].ToString() + "," + DrawingSqXY[1].ToString() + ")\n" +
-                "StartingOffsetXY = (" + StartingOffsetXY[0].ToString() + "," + StartingOffsetXY[1].ToString() + ") px\n" +
-                "StartingSqXY = (" + StartingSqXY[0].ToString() + "," + StartingSqXY[1].ToString() + ")\n";
+                "DrawingOffsetXY = (" + DrawingOffsetXY[0].ToString() + "," + DrawingOffsetXY[1].ToString() + ") px\n" +
+                "StartingSqXY = (" + StartingSqXY[0].ToString() + "," + StartingSqXY[1].ToString() + ")\n" +
+                "CenterSqXY = (" + CenterSqXY[0].ToString() + "," + CenterSqXY[1].ToString() + ")";
+
+            e.Dispose();
         }
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            Console.WriteLine("before offset={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
-            Console.WriteLine("center={0},{1}", CenterOffsetXY[0], CenterOffsetXY[1]);
+            //Console.WriteLine("before offset={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
+            //Console.WriteLine("center={0},{1}", CenterDistanceXY[0], CenterDistanceXY[1]);
 
             ClickedXY = PxToCoords(e.Location.X, e.Location.Y); // (X,Y) coordinates of clicked square
-            Console.WriteLine("Offset if not limited={0},{1}", MapOffsetXY[0] + ClickedXY[0] - CenterOffsetXY[0], MapOffsetXY[1] + ClickedXY[1] - CenterOffsetXY[1]);
-            MapOffsetXY = new int[] { MapOffsetXY[0] + ClickedXY[0] - CenterOffsetXY[0], MapOffsetXY[1] + ClickedXY[1] - CenterOffsetXY[1] }; // offset of shown map from (0,0)
+            //Console.WriteLine("Offset if not limited={0},{1}", MapOffsetXY[0] + ClickedXY[0] - CenterDistanceXY[0], MapOffsetXY[1] + ClickedXY[1] - CenterDistanceXY[1]);
+            //MapOffsetXY = new int[] { MapOffsetXY[0] + ClickedXY[0] - CenterDistanceXY[0], MapOffsetXY[1] + ClickedXY[1] - CenterDistanceXY[1] }; // offset of shown map from (0,0)
 
             Console.WriteLine("Clicked={0},{1}", ClickedXY[0], ClickedXY[1]);
-            Console.WriteLine("Offset after limit={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
-            Console.WriteLine("Vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
+            Console.WriteLine("Center distance={0},{1}", CenterDistanceXY[0], CenterDistanceXY[1]);
+            //Console.WriteLine("Offset after limit={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
+            //Console.WriteLine("Vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
+
+            // !!! HELP !!!
+            StartingSqXY = new int[] { StartingSqXY[0] + ClickedXY[0] - CenterDistanceXY[0], StartingSqXY[1] + ClickedXY[1] - CenterDistanceXY[1] };
+
+
             DrawPanel.Refresh();
 
             if (e.Button == MouseButtons.Right)
@@ -196,24 +209,57 @@ namespace RTciv2.Forms
             //}
         }
 
+        private int[] _startingSqXY;
         private int[] StartingSqXY
         {
-            get { return new int[] { 0, 0 }; }
+            get 
+            { 
+                if (_startingSqXY == null) _startingSqXY = new int[] { 0, 0 };
+                return _startingSqXY;
+            }
+            set 
+            {
+                if (value[0] < 0)   //do not allow the map to move left of col=0
+                {
+                    value[0] = 0;
+                    DrawingOffsetXY[0] = 0;
+                }
+                if (value[1] < 0)
+                {
+                    value[1] = 0;
+                    DrawingOffsetXY[1] = 0;
+                }
+                if (value[0] + DrawingSqXY[0] >= 100)
+                {
+                    value[0] = 100 - DrawingSqXY[0];
+                }
+
+                _startingSqXY = value;
+            }
         }
-        private int[] StartingOffsetXY
+        private int[] DrawingOffsetXY   //in px
         {
             get { return new int[] { 0, 0 }; }
         }
 
+        private static int[] _drawingSqXY;
         public static int[] DrawingSqXY  //Squares to be drawn on the panel (must be multiple of 2)
         {
             //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
-            get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / 64), 2 * (int)Math.Ceiling((double)DrawPanel.Height / 32) }; }
+            get 
+            {
+                _drawingSqXY = new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / 64), 2 * (int)Math.Ceiling((double)DrawPanel.Height / 32) };
+                return _drawingSqXY;
+            }
         }
 
-        private int[] CenterOffsetXY  //offset of central tile from panel NW corner (civ2 coords)
+        private int[] CenterSqXY
         {
-            get { return PxToCoords(DrawPanel.Width /2, DrawPanel.Height / 2); }
+            get { return new int[] { CenterDistanceXY[0] + StartingSqXY[0], CenterDistanceXY[1] + StartingSqXY[1] }; }
+        }
+        private int[] CenterDistanceXY  //offset of central tile from panel NW corner (civ2 coords)
+        {
+            get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
         }
 
         private static int[] _mapOffsetXY;
