@@ -229,17 +229,24 @@ namespace RTciv2.Forms
                     value[1] = 0;
                     DrawingOffsetXY[1] = 0;
                 }
-                if (value[0] + DrawingSqXY[0] >= 100)
+                if (value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim)
                 {
-                    value[0] = 100 - DrawingSqXY[0];
+                    value[0] = 2 * Game.Data.MapXdim - DrawingSqXY[0];
                 }
 
                 _startingSqXY = value;
             }
         }
+
+        private int[] _drawingOffsetXY;
         private int[] DrawingOffsetXY   //in px
         {
-            get { return new int[] { 0, 0 }; }
+            get 
+            {
+                _drawingOffsetXY = new int[] { 0, 0 };
+                if (StartingSqXY[0] > 2 * Game.Data.MapXdim - DrawingSqXY[0]) _drawingOffsetXY[0] = 32 * DrawingSqXY[0] - DrawPanel.Width;    //we're on right edge
+                return _drawingOffsetXY; 
+            }
         }
 
         private static int[] _drawingSqXY;
@@ -257,6 +264,7 @@ namespace RTciv2.Forms
         {
             get { return new int[] { CenterDistanceXY[0] + StartingSqXY[0], CenterDistanceXY[1] + StartingSqXY[1] }; }
         }
+
         private int[] CenterDistanceXY  //offset of central tile from panel NW corner (civ2 coords)
         {
             get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
