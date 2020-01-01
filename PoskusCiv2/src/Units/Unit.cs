@@ -302,8 +302,8 @@ namespace RTciv2.Units
         {
             get
             {
-                if ((X > MapPanel.MapOffsetXY[0]) && (X < MapPanel.MapOffsetXY[0] + MapPanel.DrawingSqXY[0] / 2) && (Y > MapPanel.MapOffsetXY[1]) && (Y < MapPanel.MapOffsetXY[1] + MapPanel.DrawingSqXY[1])) _isInView = true;
-                else _isInView = false;
+                //if ((X > MapPanel.MapOffsetXY[0]) && (X < MapPanel.MapOffsetXY[0] + MapPanel.DrawingSqXY[0] / 2) && (Y > MapPanel.MapOffsetXY[1]) && (Y < MapPanel.MapOffsetXY[1] + MapPanel.DrawingSqXY[1])) _isInView = true;
+                //else _isInView = false;
                 return _isInView;
             }
         }

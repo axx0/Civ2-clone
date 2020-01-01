@@ -27,7 +27,7 @@ namespace RTciv2.Forms
             {
                 Location = new Point(11, 38),
                 Size = new Size(Width - 22, Height - 49),
-                BackColor = Color.Green 
+                BackColor = Color.Black 
             };
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
@@ -110,7 +110,7 @@ namespace RTciv2.Forms
 
             //Draw cities
             //foreach (City city in Game.Cities.Where(n => n.IsInView))
-            //{
+            //{ 
             //    e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]), 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl);
             //    e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X2 - MapOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y2 - MapOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
             //}
@@ -143,18 +143,20 @@ namespace RTciv2.Forms
                 for (int col = row % 2; col < DrawingSqXY[0]; col += 2)
                 {
                     //Console.WriteLine("(col,row)=({0},{1})", col, row);
-                    e.Graphics.DrawImage(Images.GridLines, DrawingOffsetXY[0] + 32 * col, DrawingOffsetXY[1] + 16 * row);
+                    e.Graphics.DrawImage(Images.Grassland[0], DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+                    e.Graphics.DrawImage(Images.GridLines, DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
                     Color brushColor = Color.Yellow;
-                    if ((col + StartingSqXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] == CenterSqXY[1])) brushColor = Color.Red;
-                    e.Graphics.DrawString(String.Format("({0},{1})", col + StartingSqXY[0], row + StartingSqXY[1]), new Font("Arial", 8), new SolidBrush(brushColor), DrawingOffsetXY[0] + 32 * col + 32, DrawingOffsetXY[1] + 16 * row + 16, sf);
+                    if ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) brushColor = Color.Red;
+                    e.Graphics.DrawString(String.Format("({0},{1})", col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1]), new Font("Arial", 8), new SolidBrush(brushColor), DrawingPxOffsetXY[0] + 32 * col + 32, DrawingPxOffsetXY[1] + 16 * row + 16, sf);
                 }
             sf.Dispose();
 
             HelpLabel.Text = "Panel size = (" + DrawPanel.Width.ToString() + "," + DrawPanel.Height.ToString() + ")\n" +
                 "CenterDistanceXY = (" + CenterDistanceXY[0].ToString() + "," + CenterDistanceXY[1].ToString() + ")\n" +                
                 "DrawingSqXY = (" + DrawingSqXY[0].ToString() + "," + DrawingSqXY[1].ToString() + ")\n" +
-                "DrawingOffsetXY = (" + DrawingOffsetXY[0].ToString() + "," + DrawingOffsetXY[1].ToString() + ") px\n" +
+                "DrawingPxOffsetXY = (" + DrawingPxOffsetXY[0].ToString() + "," + DrawingPxOffsetXY[1].ToString() + ") px\n" +
                 "StartingSqXY = (" + StartingSqXY[0].ToString() + "," + StartingSqXY[1].ToString() + ")\n" +
+                "EdgeDrawOffsetXY = (" + EdgeDrawOffsetXY[0].ToString() + "," + EdgeDrawOffsetXY[1].ToString() + ")\n" +
                 "CenterSqXY = (" + CenterSqXY[0].ToString() + "," + CenterSqXY[1].ToString() + ")";
 
             e.Dispose();
@@ -219,43 +221,43 @@ namespace RTciv2.Forms
             }
             set 
             {
-                if (value[0] < 0)   //do not allow the map to move left of col=0
-                {
-                    value[0] = 0;
-                    DrawingOffsetXY[0] = 0;
-                }
-                if (value[1] < 0)
-                {
-                    value[1] = 0;
-                    DrawingOffsetXY[1] = 0;
-                }
-                if (value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim)
-                {
-                    value[0] = 2 * Game.Data.MapXdim - DrawingSqXY[0];
-                }
-
                 _startingSqXY = value;
             }
         }
 
-        private int[] _drawingOffsetXY;
-        private int[] DrawingOffsetXY   //in px
+        private int[] _edgeDrawOffsetXY;
+        private int[] EdgeDrawOffsetXY  //determines offset to StartingSqXY for drawing of squares on panel edge
         {
-            get 
+            get
             {
-                _drawingOffsetXY = new int[] { 0, 0 };
-                if (StartingSqXY[0] > 2 * Game.Data.MapXdim - DrawingSqXY[0]) _drawingOffsetXY[0] = 32 * DrawingSqXY[0] - DrawPanel.Width;    //we're on right edge
-                return _drawingOffsetXY; 
+                if (StartingSqXY[0] == 0 && StartingSqXY[1] == 0) _edgeDrawOffsetXY = new int[] { 0, 0 };
+                else if (StartingSqXY[0] == 0 && StartingSqXY[1] >= 2) _edgeDrawOffsetXY = new int[] { 0, -2 };
+                else if (StartingSqXY[0] >= 2 && StartingSqXY[1] == 0) _edgeDrawOffsetXY = new int[] { -2, 0 };
+                else _edgeDrawOffsetXY = new int[] { -1, -1 };
+                return _edgeDrawOffsetXY; 
             }
         }
 
-        private static int[] _drawingSqXY;
-        public static int[] DrawingSqXY  //Squares to be drawn on the panel (must be multiple of 2)
+        private int[] _drawingPxOffsetXY;
+        private int[] DrawingPxOffsetXY   //in px
+        {
+            get 
+            {
+                _drawingPxOffsetXY = new int[] { 32 * EdgeDrawOffsetXY[0], 16 * EdgeDrawOffsetXY[1] };
+                //if (StartingSqXY[0] > 2 * Game.Data.MapXdim - DrawingSqXY[0]) _drawingOffsetXY[0] = 32 * DrawingSqXY[0] - DrawPanel.Width;    //we're on right edge
+                return _drawingPxOffsetXY; 
+            }
+        }
+
+        private int[] _drawingSqXY;
+        public int[] DrawingSqXY  //Squares to be drawn on the panel (must be multiple of 2)
         {
             //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
             get 
             {
                 _drawingSqXY = new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / 64), 2 * (int)Math.Ceiling((double)DrawPanel.Height / 32) };
+                if (EdgeDrawOffsetXY[0] == -2) _drawingSqXY[0] += 2;
+                if (EdgeDrawOffsetXY[1] == -2) _drawingSqXY[1] += 2;
                 return _drawingSqXY;
             }
         }
@@ -270,8 +272,8 @@ namespace RTciv2.Forms
             get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
         }
 
-        private static int[] _mapOffsetXY;
-        public static int[] MapOffsetXY //Starting map coordinates (civ2 coords)
+        private int[] _mapOffsetXY;
+        public int[] MapOffsetXY //Starting map coordinates (civ2 coords)
         {
             get 
             {
