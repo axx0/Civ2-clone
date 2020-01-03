@@ -102,12 +102,6 @@
     <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\MapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MapForm.Designer.cs">
-      <DependentUpon>MapForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Forms\StatusPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -285,9 +279,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\MapForm.resx">
-      <DependentUpon>MapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.resx">
       <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>

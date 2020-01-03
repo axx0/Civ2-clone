@@ -47,29 +47,8 @@ namespace RTciv2.Units
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
-
         public int X { get; set; }
         public int Y { get; set; }
-
-        public int X2   //Civ2 style
-        {
-            get { return 2 * X + (Y % 2); }
-        }
-
-        public int Y2   //Civ2 style
-        {
-            get { return Y; }
-        }
-
-        public int GoToX2   //Civ2 style
-        {
-            get { return 2 * GoToX + (GoToY % 2); }
-        }
-
-        public int GoToY2   //Civ2 style
-        {
-            get { return GoToY; }
-        }
 
         //private int _movePointsLost;
         //public int MovePointsLost
@@ -80,8 +59,8 @@ namespace RTciv2.Units
 
         public void Move(int moveX, int moveY)
         {
-            int xTo = X2 + moveX;    //Civ2-style
-            int yTo = Y2 + moveY;
+            int xTo = X + moveX;    //Civ2-style
+            int yTo = Y + moveY;
             int Xto = (xTo - yTo % 2) / 2;  //from civ2-style to real coords
             int Yto = yTo;
 
@@ -124,7 +103,7 @@ namespace RTciv2.Units
                 Y = Yto;
 
                 //for animation of movement
-                if (!Options.FastPieceSlide) Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X2 - moveX, Y2 - moveY);    //send coords of unit starting loc
+                //if (!Options.FastPieceSlide) Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X - moveX, Y - moveY);    //send coords of unit starting loc
 
                 Sound.MoveSound.Play();
             }
@@ -228,7 +207,7 @@ namespace RTciv2.Units
             if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.Map[X, Y].Type != TerrainType.Ocean))
             {
                 //First invoke city name panel. If cancel is pressed, do nothing.
-                Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
+                //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
             }
             else
             {
@@ -294,17 +273,6 @@ namespace RTciv2.Units
                 if (unitsInStack.Last() == this) _isLastInStack = true;
                 else _isLastInStack = false;
                 return _isLastInStack;
-            }
-        }
-
-        private bool _isInView;
-        public bool IsInView    //determine if unit is visible in current map panel view
-        {
-            get
-            {
-                //if ((X > MapPanel.MapOffsetXY[0]) && (X < MapPanel.MapOffsetXY[0] + MapPanel.DrawingSqXY[0] / 2) && (Y > MapPanel.MapOffsetXY[1]) && (Y < MapPanel.MapOffsetXY[1] + MapPanel.DrawingSqXY[1])) _isInView = true;
-                //else _isInView = false;
-                return _isInView;
             }
         }
 

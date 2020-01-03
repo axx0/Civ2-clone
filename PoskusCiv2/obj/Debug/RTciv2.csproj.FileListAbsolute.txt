@@ -5,7 +5,6 @@ C:\Users\milos\source\repos\RTciv2\PoskusCiv2\bin\Debug\CommandLine.dll
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\bin\Debug\CommandLine.xml
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\obj\Debug\RTciv2.csprojAssemblyReference.cache
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.MainCiv2Window.resources
-C:\Users\milos\source\repos\RTciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.MapForm.resources
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.AttitudeAdvisorForm.resources
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.CityBuyForm.resources
 C:\Users\milos\source\repos\RTciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.CityChangeForm.resources

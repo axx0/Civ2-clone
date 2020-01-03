@@ -566,9 +566,10 @@ namespace RTciv2.Forms
         #region If a new unit or no unit is active, update orders menu accordingly
         public void UpdateOrdersMenu()
         {
-            if (MapForm.ViewingPiecesMode)  //disable all menus except disband & activate unit
-            {
-                foreach (ToolStripItem item in OrdersMenu.DropDownItems) item.Enabled = false;
+            //if (MapForm.ViewingPiecesMode)  //disable all menus except disband & activate unit
+                if (1 == 1) //disable all menus except disband & activate unit
+                {
+                    foreach (ToolStripItem item in OrdersMenu.DropDownItems) item.Enabled = false;
                 DisbandItem.Enabled = true;
                 ActivateUnitItem.Enabled = true;
             }

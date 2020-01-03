@@ -119,80 +119,80 @@ namespace RTciv2.Forms
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
 
-            if (!MapForm.ViewingPiecesMode)
-            {
-                e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
-                e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
+            //if (!MapForm.ViewingPiecesMode)
+            //    {
+            //        e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
+            //    e.Graphics.DrawString("Moving Units", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
 
-                int _movePointsLeft = Game.Instance.ActiveUnit.MovePoints;
-                string movesLeft;
-                if (_movePointsLeft % 3 == 0)
-                {
-                    movesLeft = "Moves: " + (_movePointsLeft / 3).ToString();
-                }
-                else
-                {
-                    movesLeft = "Moves: " + Convert.ToInt32(Math.Floor((double)_movePointsLeft / 3)).ToString() + " " + (_movePointsLeft % 3).ToString() + "/3";
-                }
-                e.Graphics.DrawString(movesLeft, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 30));
+            //    int _movePointsLeft = Game.Instance.ActiveUnit.MovePoints;
+            //    string movesLeft;
+            //    if (_movePointsLeft % 3 == 0)
+            //    {
+            //        movesLeft = "Moves: " + (_movePointsLeft / 3).ToString();
+            //    }
+            //    else
+            //    {
+            //        movesLeft = "Moves: " + Convert.ToInt32(Math.Floor((double)_movePointsLeft / 3)).ToString() + " " + (_movePointsLeft % 3).ToString() + "/3";
+            //    }
+            //    e.Graphics.DrawString(movesLeft, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 30));
 
-                string homeCity;
-                if (Game.Instance.ActiveUnit.HomeCity == 255) { homeCity = "NONE"; }  //FF in hex
-                else { homeCity = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
-                e.Graphics.DrawString(homeCity, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 48));
+            //    string homeCity;
+            //    if (Game.Instance.ActiveUnit.HomeCity == 255) { homeCity = "NONE"; }  //FF in hex
+            //    else { homeCity = Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name; }
+            //    e.Graphics.DrawString(homeCity, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 48));
 
-                string adjective = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
-                e.Graphics.DrawString(adjective, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 66));
+            //    string adjective = Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective;
+            //    e.Graphics.DrawString(adjective, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(70, 66));
 
-                string unitName;
-                if (Game.Instance.ActiveUnit.Veteran) { unitName = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
-                else { unitName = Game.Instance.ActiveUnit.Name; };
-                e.Graphics.DrawString(unitName, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 85));
+            //    string unitName;
+            //    if (Game.Instance.ActiveUnit.Veteran) { unitName = Game.Instance.ActiveUnit.Name + " (Veteran)"; }
+            //    else { unitName = Game.Instance.ActiveUnit.Name; };
+            //    e.Graphics.DrawString(unitName, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 85));
 
-                string unitTerrain = "(" + Game.Map[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
-                e.Graphics.DrawString(unitTerrain, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 103));
+            //    string unitTerrain = "(" + Game.Map[Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y].Name + ")";
+            //    e.Graphics.DrawString(unitTerrain, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 103));
 
-                //e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false, 1), 10, 30);
-            }
-            else
-            {
-                e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
-                e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
+            //    //e.Graphics.DrawImage(Draw.DrawUnit(Game.Instance.ActiveUnit, false, 1), 10, 30);
+            //}
+            //else
+            //{
+            //    //e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.Black), new Point(UnitPanel.Width / 2, 13), sf);
+            //    //e.Graphics.DrawString("Viewing Pieces", new Font("Times New Roman", 12), new SolidBrush(Color.White), new Point(UnitPanel.Width / 2, 12), sf);
 
-                int clickedX = (MapForm.ClickedBoxX - MapForm.ClickedBoxY % 2) / 2;    //convert from real to civ-2 style coordinates
-                int clickedY = MapForm.ClickedBoxY;
-                string sec_line = null;
-                if (Game.Map[clickedX, clickedY].River) { sec_line = ", River"; }
-                string third_line = null;
-                if (Game.Map[clickedX, clickedY].SpecType != null && Game.Map[clickedX, clickedY].SpecType != SpecialType.GrasslandShield) { third_line = "(" + Game.Map[clickedX, clickedY].SpecName + ")"; }
-                e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Map[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Map[clickedX, clickedY].Type + sec_line + ")" + "\n" + third_line, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
+            //    //int clickedX = (MapForm.ClickedBoxX - MapForm.ClickedBoxY % 2) / 2;    //convert from real to civ-2 style coordinates
+            //    //int clickedY = MapForm.ClickedBoxY;
+            //    //string sec_line = null;
+            //    //if (Game.Map[clickedX, clickedY].River) { sec_line = ", River"; }
+            //    //string third_line = null;
+            //    //if (Game.Map[clickedX, clickedY].SpecType != null && Game.Map[clickedX, clickedY].SpecType != SpecialType.GrasslandShield) { third_line = "(" + Game.Map[clickedX, clickedY].SpecName + ")"; }
+            //    //e.Graphics.DrawString("Loc: (" + MapForm.ClickedBoxX.ToString() + ", " + MapForm.ClickedBoxY.ToString() + ") " + Game.Map[clickedX, clickedY].Island.ToString() + "\n" + "(" + Game.Map[clickedX, clickedY].Type + sec_line + ")" + "\n" + third_line, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 40));
 
-                //Draw all units on the clicked square
-                int count = 0;
-                List<IUnit> unitMatches = Game.Units.FindAll(unit => unit.X == clickedX && unit.Y == clickedY);
-                foreach (IUnit unit in unitMatches)
-                {
-                    //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 10, 90 + count * 3 * 18);
-                    //Game.Cities[unit.HomeCity].Name
-                    //Game.Cities[0].Name
-                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18));
-                    e.Graphics.DrawString(unit.Order.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 18));
-                    e.Graphics.DrawString(unit.Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 2 * 18));
-                    count++;
-                    if (count > 6)
-                    {
-                        int c = unitMatches.Count - 7;
-                        e.Graphics.DrawString("(" + c.ToString() + " More Units)", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 90 + count * 3 * 18));
-                        break;
-                    }
-                }
-            }
-            sf.Dispose();
+            //    ////Draw all units on the clicked square
+            //    //int count = 0;
+            //    //List<IUnit> unitMatches = Game.Units.FindAll(unit => unit.X == clickedX && unit.Y == clickedY);
+            //    //foreach (IUnit unit in unitMatches)
+            //    //{
+            //    //    //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, 1), 10, 90 + count * 3 * 18);
+            //    //    //Game.Cities[unit.HomeCity].Name
+            //    //    //Game.Cities[0].Name
+            //    //    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18));
+            //    //    e.Graphics.DrawString(unit.Order.ToString(), new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 18));
+            //    //    e.Graphics.DrawString(unit.Name, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(80, 90 + count * 3 * 18 + 2 * 18));
+            //    //    count++;
+            //    //    if (count > 6)
+            //    //    {
+            //    //        int c = unitMatches.Count - 7;
+            //    //        e.Graphics.DrawString("(" + c.ToString() + " More Units)", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(10, 90 + count * 3 * 18));
+            //    //        break;
+            //    //    }
+            //    //}
+            //}
+            //sf.Dispose();
         }
 
         private void UnitPanel_Click(object sender, EventArgs e)
         {
-            MapForm.ViewingPiecesMode = !MapForm.ViewingPiecesMode;
+            //MapForm.ViewingPiecesMode = !MapForm.ViewingPiecesMode;
         }
 
         //Receive and display X-Y coordinates on right-click on Map

@@ -266,11 +266,11 @@ namespace RTciv2.Forms
         private void OKButton_Click(object sender, EventArgs e)
         {
             //unit should be placed on activebox coords (convert it from civ2-style)
-            int x = (MapForm.ActiveBoxX - MapForm.ActiveBoxY % 2) / 2;
-            int y = MapForm.ActiveBoxY;
+            //int x = (MapForm.ActiveBoxX - MapForm.ActiveBoxY % 2) / 2;
+            //int y = MapForm.ActiveBoxY;
 
-            Game.CreateUnit((UnitType)ChosenUnit, x, y, false, true, false, IsVeteran, Game.Civs[Game.Data.HumanPlayerUsed].Id, 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
-            Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
+            //Game.CreateUnit((UnitType)ChosenUnit, x, y, false, true, false, IsVeteran, Game.Civs[Game.Data.HumanPlayerUsed].Id, 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
+            //Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
             Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             Close();
         }

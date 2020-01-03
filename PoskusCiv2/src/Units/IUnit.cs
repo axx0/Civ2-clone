@@ -32,8 +32,6 @@ namespace RTciv2.Units
         OrderType Order { get; set; }
         int X { get; set; }
         int Y { get; set; }
-        int X2 { get; }
-        int Y2 { get; }
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
@@ -43,8 +41,6 @@ namespace RTciv2.Units
         int HomeCity { get; set; }
         int GoToX { get; set; }
         int GoToY { get; set; }
-        int GoToX2 { get; }
-        int GoToY2 { get; }
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
         int Counter { get; set; }
@@ -63,7 +59,6 @@ namespace RTciv2.Units
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }
-        bool IsInView { get; }
         Bitmap GraphicMapPanel { get; }
     }
 }

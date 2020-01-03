@@ -81,11 +81,11 @@ namespace RTciv2.Forms
             BoxNoY = (int)Math.Floor((double)MapPanel.Height / 32);
             CenterBoxX = (int)Math.Ceiling((double)BoxNoX / 2); //Determine the square in the center of figure
             CenterBoxY = (int)Math.Ceiling((double)BoxNoY / 2);
-            OffsetX = Game.Instance.ActiveUnit.X2 - 2 * (CenterBoxX - 1);   //at game start center view on active unit
-            OffsetY = Game.Instance.ActiveUnit.Y2 - 2 * (CenterBoxY - 1);
+            OffsetX = Game.Instance.ActiveUnit.X - 2 * (CenterBoxX - 1);   //at game start center view on active unit
+            OffsetY = Game.Instance.ActiveUnit.Y - 2 * (CenterBoxY - 1);
             CheckOffset();
-            ActiveBoxX = Game.Instance.ActiveUnit.X2;   //set active box coords to active unit coords
-            ActiveBoxY = Game.Instance.ActiveUnit.Y2;
+            ActiveBoxX = Game.Instance.ActiveUnit.X;   //set active box coords to active unit coords
+            ActiveBoxY = Game.Instance.ActiveUnit.Y;
 
             //timer for viewing pieces
             t_VP.Interval = 200; // specify interval time as you want (ms)

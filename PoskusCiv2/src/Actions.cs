@@ -66,7 +66,7 @@ namespace RTciv2
                 }
             }
             Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
-            Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
+            //Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
         }
 
         //Chose next unit for orders. If all units ended turn, update cities.
@@ -93,11 +93,11 @@ namespace RTciv2
                 noUnitsAwaitingOrders = false;
 
                 //If necessary, center view on new unit in MapForm
-                Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
+                //Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
 
                 //Set active box coords to next unit
-                MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
-                MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
+                //MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X;
+                //MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y;
             }
 
             ////Move on to next unit
@@ -128,7 +128,7 @@ namespace RTciv2
                 //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
                 if (Options.AlwaysWaitAtEndOfTurn)
                 {
-                    MapForm.ViewingPiecesMode = true;
+                    //MapForm.ViewingPiecesMode = true;
                     Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage();
                     Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();
                 }
@@ -137,7 +137,7 @@ namespace RTciv2
             else
             {
                 //Unit is active. Make sure the menus are enabled.
-                MapForm.ViewingPiecesMode = false;
+                //MapForm.ViewingPiecesMode = false;
                 UpdateUnit(Game.Instance.ActiveUnit);
                 Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();
             }
@@ -208,7 +208,7 @@ namespace RTciv2
                 if (action == "ENTER")
                 {
                     Application.OpenForms.OfType<StatusForm>().First().HideEndOfTurnMessage();
-                    MapForm.ViewingPiecesMode = false; //reset it
+                    //MapForm.ViewingPiecesMode = false; //reset it
                     NewTurn();
                 }
 

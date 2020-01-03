@@ -15,17 +15,6 @@ namespace RTciv2
     {
         public int X { get; set; }
         public int Y { get; set; }
-
-        public int X2   //Civ2 style
-        {
-            get { return 2 * X + (Y % 2); }
-        }
-
-        public int Y2   //Civ2 style
-        {
-            get { return Y; }
-        }
-
         public bool CanBuildCoastal { get; set; }
         public bool AutobuildMilitaryRule { get; set; }
         public bool StolenTech { get; set; }
@@ -86,8 +75,8 @@ namespace RTciv2
                 int x, y, x2, y2;
                 for (int square = 0; square < 20; square++)
                 {
-                    x2 = X2 + offsets[square, 0];   //Civ2 format
-                    y2 = Y2 + offsets[square, 1];
+                    x2 = X + offsets[square, 0];   //Civ2 format
+                    y2 = Y + offsets[square, 1];
                     x = (x2 - (y2 % 2)) / 2;    //Real format
                     y = y2;
                     countFST[square] = Game.Map[x, y].Food + Game.Map[x, y].Shields + Game.Map[x, y].Trade;
@@ -119,8 +108,8 @@ namespace RTciv2
                 _foodtotal = 0;
                 for (int i = 0; i <= Size; i++)
                 {
-                    int x2 = X2 + PriorityOffsets[i, 0];   //Civ2 format
-                    int y2 = Y2 + PriorityOffsets[i, 1];
+                    int x2 = X + PriorityOffsets[i, 0];   //Civ2 format
+                    int y2 = Y + PriorityOffsets[i, 1];
                     int x = (x2 - (y2 % 2)) / 2;    //Real format
                     int y = y2;
                     _foodtotal += Game.Map[x, y].Food;
@@ -222,17 +211,6 @@ namespace RTciv2
             {
                 _production = 3;
                 return _production;
-            }
-        }
-
-        private bool _isInView;
-        public bool IsInView    //determine if city is visible in current map panel view
-        {
-            get
-            {
-                //if ((X > MapPanel.MapOffsetXY[0]) && (X < MapPanel.MapOffsetXY[0] + MapPanel.DrawingSqXY[0] / 2) && (Y > MapPanel.MapOffsetXY[1]) && (Y < MapPanel.MapOffsetXY[1] + MapPanel.DrawingSqXY[1])) _isInView = true;
-                //else _isInView = false;
-                return _isInView;
             }
         }
 

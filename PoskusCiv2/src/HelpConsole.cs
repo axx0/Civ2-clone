@@ -70,14 +70,12 @@ namespace RTciv2
                         //List for all civs
                         int count = 0;
                         foreach(IUnit unit in Game.Units)
-                        {
-                            Console.WriteLine("#{0} {1}, XY=({2},{3}), civ2XY=({4},{5}), {6}", count++, unit.Type, unit.X, unit.Y, unit.X2, unit.Y2, Game.Civs[unit.Civ].TribeName);
-                        }
+                            Console.WriteLine($"#{count++} {unit.Type}, XY=({unit.X},{unit.Y}), {Game.Civs[unit.Civ].TribeName}");
                         Console.WriteLine();
                         //List for specific civs
                         foreach(Civilization civ in Game.Civs)
                         {
-                            Console.WriteLine("{0}", civ.TribeName);
+                            Console.WriteLine($"{civ.TribeName}");
                             foreach (IUnit unit in Game.Units.Where(n => Game.Civs[n.Civ].TribeName == civ.TribeName))
                             {
                                 int id = Game.Units.FindIndex(n => n == unit);
@@ -97,7 +95,7 @@ namespace RTciv2
                                 else if (unit.Order == OrderType.BuildAirbase) order = "building airbase";
                                 else if (unit.Order == OrderType.GoTo) order = "Go-To";
                                 else order = "no orders";
-                                Console.WriteLine("#{0} {1}, XY=({2},{3}), civ2XY=({4},{5}), {6}, {7}", id, unit.Type, unit.X, unit.Y, unit.X2, unit.Y2, active, order);
+                                Console.WriteLine($"#{id} {unit.Type}, XY=({unit.X},{unit.Y}), {active}, {order}");
                             }
                             Console.WriteLine();
                         }

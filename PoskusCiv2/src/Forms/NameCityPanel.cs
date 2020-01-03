@@ -13,10 +13,11 @@ namespace RTciv2.Forms
 {
     public partial class NameCityPanel : DoubleBufferedPanel
     {
-        MapForm mapForm;
+        MapPanel mapForm;
         Panel MainPanel;
 
-        public NameCityPanel(MapForm _mapForm)
+        //public NameCityPanel(MapForm _mapForm)
+        public NameCityPanel(MapPanel _mapForm)
         {
             InitializeComponent();
             mapForm = _mapForm;
@@ -66,12 +67,12 @@ namespace RTciv2.Forms
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            mapForm.CityNamePanelResult(true, "Hello");
+            //mapForm.CityNamePanelResult(true, "Hello");
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
-            mapForm.CityNamePanelResult(false, "");
+            //mapForm.CityNamePanelResult(false, "");
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)

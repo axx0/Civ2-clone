@@ -360,7 +360,6 @@ namespace RTciv2
 
         
         private static Game instance;  //Singleton
-
         public static Game Instance //Singleton
         {
             get
