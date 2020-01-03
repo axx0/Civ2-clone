@@ -95,9 +95,43 @@ namespace RTciv2.Forms
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
-            //Console.WriteLine("Drawing: offset map={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
-            //Console.WriteLine("Drawing: vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
-            //Draw map
+
+        //Console.WriteLine($"Panel size = ({DrawPanel.Width},{DrawPanel.Height})\n" +
+        //    $"CenterDistanceXY = ({CenterDistanceXY[0]},{CenterDistanceXY[1]})\n" +
+        //    $"DrawingSqXY = ({DrawingSqXY[0]},{DrawingSqXY[1]}))\n" +
+        //    $"DrawingPxOffsetXY = ({DrawingPxOffsetXY[0]},{DrawingPxOffsetXY[1]}) px\n" +
+        //    $"StartingSqXY = ({StartingSqXY[0]},{StartingSqXY[1]})\n" +
+        //    $"EdgeDrawOffsetXY = ({EdgeDrawOffsetXY[0]},{EdgeDrawOffsetXY[1]},{EdgeDrawOffsetXY[2]},{EdgeDrawOffsetXY[3]})\n" +
+        //    $"CenterSqXY = ({CenterSqXY[0]},{CenterSqXY[1]})");
+
+        //Draw map
+        StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            for (int row = 0; row < DrawingSqXY[1] - EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3]; row++)
+                for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++)
+                    if (Math.Abs(row - col) % 2 == 0)   //only isometric squares
+                    {
+                        int[] coords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4), DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+
+
+                        //e.Graphics.DrawImage(Images.Grassland[0], DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+                        //e.Graphics.DrawImage(Images.GridLines, DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+                        //Color brushColor = Color.Yellow;
+                        //if ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) brushColor = Color.Red;
+                        //e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"), new Font("Arial", 8), new SolidBrush(brushColor), DrawingPxOffsetXY[0] + 32 * col + 32, DrawingPxOffsetXY[1] + 16 * row + 16, sf);
+                    }
+            sf.Dispose();
+
+            //for (int row = 0; row < DrawingSqXY[1] + ExtraDrawingSqXY[1]; row++)
+            //    for (int col = 0; col < DrawingSqXY[0] + ExtraDrawingSqXY[0]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //only isometric squares
+            //        {
+            //            int[] coords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
+            //            e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4), DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+            //        }
+
             //int[] coords = Ext.Civ2xy(MapOffsetXY);  //convert civ2 to real coords
             //for (int col = 0; col < DrawingSqXY[0] / 2; col++)
             //    for (int row = 0; row < DrawingSqXY[1]; row++)
@@ -136,49 +170,37 @@ namespace RTciv2.Forms
             //    sf.Dispose();
             //}
 
-            StringFormat sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-            for (int row = 0; row < DrawingSqXY[1]; row++)  //this time in civ2 coords
-                for (int col = row % 2; col < DrawingSqXY[0]; col += 2)
-                {
-                    //Console.WriteLine("(col,row)=({0},{1})", col, row);
-                    e.Graphics.DrawImage(Images.Grassland[0], DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
-                    e.Graphics.DrawImage(Images.GridLines, DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
-                    Color brushColor = Color.Yellow;
-                    if ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) brushColor = Color.Red;
-                    e.Graphics.DrawString(String.Format("({0},{1})", col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1]), new Font("Arial", 8), new SolidBrush(brushColor), DrawingPxOffsetXY[0] + 32 * col + 32, DrawingPxOffsetXY[1] + 16 * row + 16, sf);
-                }
-            sf.Dispose();
+            //StringFormat sf = new StringFormat();
+            //sf.LineAlignment = StringAlignment.Center;
+            //sf.Alignment = StringAlignment.Center;
+            //for (int row = 0; row < DrawingSqXY[1] + ExtraDrawingSqXY[1]; row++)
+            //    for (int col = 0; col < DrawingSqXY[0] + ExtraDrawingSqXY[0]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //only isometric squares
+            //        {
+            //            e.Graphics.DrawImage(Images.Grassland[0], DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+            //            e.Graphics.DrawImage(Images.GridLines, DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+            //            Color brushColor = Color.Yellow;
+            //            if ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) brushColor = Color.Red;
+            //            e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"), new Font("Arial", 8), new SolidBrush(brushColor), DrawingPxOffsetXY[0] + 32 * col + 32, DrawingPxOffsetXY[1] + 16 * row + 16, sf);
+            //        }
+            //sf.Dispose();
 
-            HelpLabel.Text = "Panel size = (" + DrawPanel.Width.ToString() + "," + DrawPanel.Height.ToString() + ")\n" +
-                "CenterDistanceXY = (" + CenterDistanceXY[0].ToString() + "," + CenterDistanceXY[1].ToString() + ")\n" +                
-                "DrawingSqXY = (" + DrawingSqXY[0].ToString() + "," + DrawingSqXY[1].ToString() + ")\n" +
-                "DrawingPxOffsetXY = (" + DrawingPxOffsetXY[0].ToString() + "," + DrawingPxOffsetXY[1].ToString() + ") px\n" +
-                "StartingSqXY = (" + StartingSqXY[0].ToString() + "," + StartingSqXY[1].ToString() + ")\n" +
-                "EdgeDrawOffsetXY = (" + EdgeDrawOffsetXY[0].ToString() + "," + EdgeDrawOffsetXY[1].ToString() + ")\n" +
-                "CenterSqXY = (" + CenterSqXY[0].ToString() + "," + CenterSqXY[1].ToString() + ")";
+            HelpLabel.Text = $"Panel size = ({DrawPanel.Width},{DrawPanel.Height})\n" +
+                $"CenterDistanceXY = ({CenterDistanceXY[0]},{CenterDistanceXY[1]})\n" +
+                $"DrawingSqXY = ({DrawingSqXY[0]},{DrawingSqXY[1]})\n" +
+                $"DrawingPxOffsetXY = ({DrawingPxOffsetXY[0]},{DrawingPxOffsetXY[1]}) px\n" +
+                $"StartingSqXY = ({StartingSqXY[0]},{StartingSqXY[1]})\n" +
+                $"EdgeDrawOffsetXY = ({EdgeDrawOffsetXY[0]},{EdgeDrawOffsetXY[1]},{EdgeDrawOffsetXY[2]},{EdgeDrawOffsetXY[3]})\n" +
+                $"CenterSqXY = ({CenterSqXY[0]},{CenterSqXY[1]})";
+
 
             e.Dispose();
         }
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            //Console.WriteLine("before offset={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
-            //Console.WriteLine("center={0},{1}", CenterDistanceXY[0], CenterDistanceXY[1]);
-
             ClickedXY = PxToCoords(e.Location.X, e.Location.Y); // (X,Y) coordinates of clicked square
-            //Console.WriteLine("Offset if not limited={0},{1}", MapOffsetXY[0] + ClickedXY[0] - CenterDistanceXY[0], MapOffsetXY[1] + ClickedXY[1] - CenterDistanceXY[1]);
-            //MapOffsetXY = new int[] { MapOffsetXY[0] + ClickedXY[0] - CenterDistanceXY[0], MapOffsetXY[1] + ClickedXY[1] - CenterDistanceXY[1] }; // offset of shown map from (0,0)
-
-            Console.WriteLine("Clicked={0},{1}", ClickedXY[0], ClickedXY[1]);
-            Console.WriteLine("Center distance={0},{1}", CenterDistanceXY[0], CenterDistanceXY[1]);
-            //Console.WriteLine("Offset after limit={0},{1}", MapOffsetXY[0], MapOffsetXY[1]);
-            //Console.WriteLine("Vis sq={0},{1}", DrawingSqXY[0], DrawingSqXY[1]);
-
-            // !!! HELP !!!
             StartingSqXY = new int[] { StartingSqXY[0] + ClickedXY[0] - CenterDistanceXY[0], StartingSqXY[1] + ClickedXY[1] - CenterDistanceXY[1] };
-
 
             DrawPanel.Refresh();
 
@@ -221,19 +243,63 @@ namespace RTciv2.Forms
             }
             set 
             {
-                _startingSqXY = value;
+                //limit movement so that map limits are not exceeded
+                if (value[0] < 0 && value[1] < 0)    //movement beyond upper & left edge
+                    _startingSqXY = new int[] { 0, 0 };
+                else if ((value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim) && value[1] < 0)    //movement beyond upper & right edge
+                    _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0], 0 };
+                else if (value[0] < 0 && (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim))    //movement beyond lower & left edge
+                    _startingSqXY = new int[] { 0, Game.Data.MapYdim - DrawingSqXY[1] };
+                else if ((value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim) && (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim))    //movement beyond lower & right edge
+                    _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0], Game.Data.MapYdim - DrawingSqXY[1] };
+                else if (value[0] < 0)     //movement beyond left edge
+                    _startingSqXY = new int[] { value[1] % 2, value[1] };
+                else if (value[1] < 0)     //movement beyond upper edge
+                    _startingSqXY = new int[] { value[0], value[0] % 2 };
+                else if (value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim)     //movement beyond right edge
+                    _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0] - value[1] % 2, value[1] };
+                else if (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim)     //movement beyond bottom edge
+                    _startingSqXY = new int[] { value[0], Game.Data.MapYdim - DrawingSqXY[1] - value[0] % 2 };
+                else _startingSqXY = value;
             }
         }
 
         private int[] _edgeDrawOffsetXY;
-        private int[] EdgeDrawOffsetXY  //determines offset to StartingSqXY for drawing of squares on panel edge
+        private int[] EdgeDrawOffsetXY  //determines offset to StartingSqXY for drawing of squares on panel edge { left, up, right, down }
         {
             get
             {
-                if (StartingSqXY[0] == 0 && StartingSqXY[1] == 0) _edgeDrawOffsetXY = new int[] { 0, 0 };
-                else if (StartingSqXY[0] == 0 && StartingSqXY[1] >= 2) _edgeDrawOffsetXY = new int[] { 0, -2 };
-                else if (StartingSqXY[0] >= 2 && StartingSqXY[1] == 0) _edgeDrawOffsetXY = new int[] { -2, 0 };
-                else _edgeDrawOffsetXY = new int[] { -1, -1 };
+                _edgeDrawOffsetXY = new int[] { -2, -2, 2, 2 }; //by default draw 2 squares more in each direction
+                if (StartingSqXY[0] == 0 || StartingSqXY[1] == 0)   //starting on edge
+                {
+                    _edgeDrawOffsetXY[0] = -Math.Max(Math.Min(StartingSqXY[0], 2), 0);
+                    _edgeDrawOffsetXY[1] = -Math.Max(Math.Min(StartingSqXY[1], 2), 0);
+                }
+                if (StartingSqXY[0] == 1 || StartingSqXY[1] == 1)  //starting in 1st row/column
+                {
+                    _edgeDrawOffsetXY[0] = -1;
+                    _edgeDrawOffsetXY[1] = -1;
+                }
+                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Game.Data.MapXdim)  //on right edge
+                {
+                    _edgeDrawOffsetXY[2] = 0;
+                    _edgeDrawOffsetXY[3] = Math.Min(Game.Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
+                }
+                if (StartingSqXY[1] + DrawingSqXY[1] == Game.Data.MapYdim)  //on bottom edge
+                {
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Game.Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
+                    _edgeDrawOffsetXY[3] = 0;
+                }
+                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Game.Data.MapXdim - 1)  //1 column left of right edge
+                {
+                    _edgeDrawOffsetXY[2] = 1;
+                    _edgeDrawOffsetXY[3] = Math.Min(Game.Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
+                }
+                if (StartingSqXY[1] + DrawingSqXY[1] == Game.Data.MapYdim - 1)  //1 column up of bottom edge
+                {
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Game.Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
+                    _edgeDrawOffsetXY[3] = 1;
+                }
                 return _edgeDrawOffsetXY; 
             }
         }
@@ -244,20 +310,19 @@ namespace RTciv2.Forms
             get 
             {
                 _drawingPxOffsetXY = new int[] { 32 * EdgeDrawOffsetXY[0], 16 * EdgeDrawOffsetXY[1] };
-                //if (StartingSqXY[0] > 2 * Game.Data.MapXdim - DrawingSqXY[0]) _drawingOffsetXY[0] = 32 * DrawingSqXY[0] - DrawPanel.Width;    //we're on right edge
+                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Game.Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * DrawingSqXY[0] - 32 * EdgeDrawOffsetXY[0]);
+                if (StartingSqXY[1] + DrawingSqXY[1] == Game.Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * DrawingSqXY[1] - 16 * EdgeDrawOffsetXY[1]);
                 return _drawingPxOffsetXY; 
             }
         }
 
         private int[] _drawingSqXY;
-        public int[] DrawingSqXY  //Squares to be drawn on the panel (must be multiple of 2)
+        private int[] DrawingSqXY  //Squares to be drawn on the panel
         {
             //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
             get 
             {
-                _drawingSqXY = new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / 64), 2 * (int)Math.Ceiling((double)DrawPanel.Height / 32) };
-                if (EdgeDrawOffsetXY[0] == -2) _drawingSqXY[0] += 2;
-                if (EdgeDrawOffsetXY[1] == -2) _drawingSqXY[1] += 2;
+                _drawingSqXY = new int[] { (int)Math.Floor(((double)DrawPanel.Width - 32) / 32), (int)Math.Floor(((double)DrawPanel.Height - 16) / 16) };
                 return _drawingSqXY;
             }
         }
@@ -270,53 +335,6 @@ namespace RTciv2.Forms
         private int[] CenterDistanceXY  //offset of central tile from panel NW corner (civ2 coords)
         {
             get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
-        }
-
-        private int[] _mapOffsetXY;
-        public int[] MapOffsetXY //Starting map coordinates (civ2 coords)
-        {
-            get 
-            {
-                if (_mapOffsetXY == null) _mapOffsetXY = new int[] { 0, 0 };
-                return _mapOffsetXY; 
-            }
-            set
-            {
-                //Do not allow to move out of map bounds by limiting offset
-                Console.WriteLine("SET OFFSET BEF ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
-                _mapOffsetXY = value;
-                Console.WriteLine("SET OFFSET AFT ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
-                if (value[0] < 0)
-                {
-                    Console.WriteLine("LIMIT#1"); 
-                    _mapOffsetXY[0] = 0;
-                }
-                if (value[0] >= 2 * Game.Data.MapXdim - DrawingSqXY[0]) 
-                {
-                    Console.WriteLine("LIMIT#2"); 
-                    _mapOffsetXY[0] = 2 * Game.Data.MapXdim - DrawingSqXY[0];
-                }
-                if (value[1] < 0) 
-                {
-                    Console.WriteLine("LIMIT#3"); 
-                    _mapOffsetXY[1] = 0;
-                }
-                if (value[1] >= Game.Data.MapYdim - DrawingSqXY[1]) 
-                {
-                    Console.WriteLine("LIMIT#4"); 
-                    _mapOffsetXY[1] = Game.Data.MapYdim - DrawingSqXY[1];
-                }
-                Console.WriteLine("SET OFFSET AFT LIM ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
-                //After limiting offset, do not allow XY combinations not in civ2 style (e.g. (2, 1))
-                if (Math.Abs((_mapOffsetXY[0] - _mapOffsetXY[1]) % 2) == 1)
-                {
-                    if (_mapOffsetXY[0] + 1 < 2 * Game.Data.MapXdim) _mapOffsetXY[0]++;
-                    else if (_mapOffsetXY[1] + 1 < Game.Data.MapYdim) _mapOffsetXY[1]++;
-                    else if (_mapOffsetXY[0] - 1 > 0) _mapOffsetXY[0]--;
-                    else _mapOffsetXY[1]--;
-                }
-                Console.WriteLine("SET OFFSET AFT LIMv2 ={0},{1}", _mapOffsetXY[0], _mapOffsetXY[1]);
-            }
         }
         public int[] ClickedXY     //Civ2 coords of clicked tile
         { 
