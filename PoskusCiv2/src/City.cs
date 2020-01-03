@@ -49,7 +49,8 @@ namespace RTciv2
             get
             {
                  _population = 0;
-                for (int i = 1; i <= Size; i++) { _population += i * 10000; }
+                for (int i = 1; i <= Size; i++) 
+                    _population += i * 10000;
                 return _population;
             }
         }

@@ -35,152 +35,117 @@ namespace RTciv2
             else                            version = 1;    //lower than Conflicts
                         
             //Bloodlust on/off
-            bool bloodlust = false;
             bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');    //you have to pad zeros to the left because ToString doesn't write first zeros
-            if (bin[0] == '1') bloodlust = true;
+            bool bloodlust = (bin[0] == '1') ? true : false;
                         
             //Simplified combat on/off
-            bool simplifiedCombat = false;
-            if (bin[3] == '1') simplifiedCombat = true;
+            bool simplifiedCombat = (bin[3] == '1') ? true : false;
                         
             //Flat/round earth
-            bool flatEarth = false;
             bin = Convert.ToString(dataArray[13], 2).PadLeft(8, '0');
-            if (bin[0] == '1') flatEarth = true;
+            bool flatEarth = (bin[0] == '1') ? true : false;
 
             //Don't restart if eliminated
-            bool dontRestartIfEliminated = false;
-            if (bin[7] == '1') dontRestartIfEliminated = true;
+            bool dontRestartIfEliminated = (bin[7] == '1') ? true : false;
 
             //Move units without mouse
-            bool moveUnitsWithoutMouse = false;
             bin = Convert.ToString(dataArray[14], 2).PadLeft(8, '0');
-            if (bin[0] == '1') moveUnitsWithoutMouse = true;
+            bool moveUnitsWithoutMouse = (bin[0] == '1') ? true : false;
 
             //Enter closes city screen
-            bool enterClosestCityScreen = false;
-            if (bin[1] == '1') enterClosestCityScreen = true;
+            bool enterClosestCityScreen = (bin[1] == '1') ? true : false;
                         
             //Grid on/off
-            bool grid = false;
-            if (bin[2] == '1') grid = true;
+            bool grid = (bin[2] == '1') ? true : false;
 
             //Sound effects on/off
-            bool soundEffects = false;
-            if (bin[3] == '1') soundEffects = true;
+            bool soundEffects = (bin[3] == '1') ? true : false;
 
             //Music on/off
-            bool music = false;
-            if (bin[4] == '1') music = true;
+            bool music = (bin[4] == '1') ? true : false;
 
             //Cheat menu on/off
-            bool cheatMenu = false;
             bin = Convert.ToString(dataArray[15], 2).PadLeft(8, '0');
-            if (bin[0] == '1') cheatMenu = true;
+            bool cheatMenu = (bin[0] == '1') ? true : false;
 
             //Always wait at end of turn on/off
-            bool alwaysWaitAtEndOfTurn = false;
-            if (bin[1] == '1') alwaysWaitAtEndOfTurn = true;
+            bool alwaysWaitAtEndOfTurn = (bin[1] == '1') ? true : false;
 
             //Autosave each turn on/off
-            bool autosaveEachTurn = false;
-            if (bin[2] == '1') autosaveEachTurn = true;
+            bool autosaveEachTurn = (bin[2] == '1') ? true : false;
 
             //Show enemy moves on/off
-            bool showEnemyMoves = false;
-            if (bin[3] == '1') showEnemyMoves = true;
+            bool showEnemyMoves = (bin[3] == '1') ? true : false;
 
             //No pause after enemy moves on/off
-            bool noPauseAfterEnemyMoves = false;
-            if (bin[4] == '1') noPauseAfterEnemyMoves = true;
+            bool noPauseAfterEnemyMoves = (bin[4] == '1') ? true : false;
 
             //Fast piece slide on/off
-            bool fastPieceSlide = false;
-            if (bin[5] == '1') fastPieceSlide = true;
+            bool fastPieceSlide = (bin[5] == '1') ? true : false;
 
             //Instant advice on/off
-            bool instantAdvice = false;
-            if (bin[6] == '1') instantAdvice = true;
+            bool instantAdvice = (bin[6] == '1') ? true : false;
 
             //Tutorial help on/off
-            bool tutorialHelp = false;
-            if (bin[7] == '1') tutorialHelp = true;
+            bool tutorialHelp = (bin[7] == '1') ? true : false;
 
             //Animated heralds on/off
-            bool animatedHeralds = false;
             bin = Convert.ToString(dataArray[16], 2).PadLeft(8, '0');
-            if (bin[2] == '1') animatedHeralds = true;
+            bool animatedHeralds = (bin[2] == '1') ? true : false;
 
             //High council on/off
-            bool highCouncil = false;
-            if (bin[3] == '1') highCouncil = true;
+            bool highCouncil = (bin[3] == '1') ? true : false;
 
             //Civilopedia for advances on/off
-            bool civilopediaForAdvances = false;
-            if (bin[4] == '1') civilopediaForAdvances = true;
+            bool civilopediaForAdvances = (bin[4] == '1') ? true : false;
 
             //Throne room graphics on/off
-            bool throneRoomGraphics = false;
-            if (bin[5] == '1') throneRoomGraphics = true;
+            bool throneRoomGraphics = (bin[5] == '1') ? true : false;
             
             //Diplomacy screen graphics on/off
-            bool diplomacyScreenGraphics = false;
-            if (bin[6] == '1') diplomacyScreenGraphics = true;
+            bool diplomacyScreenGraphics = (bin[6] == '1') ? true : false;
 
             //Wonder movies on/off
-            bool wonderMovies = false;
-            if (bin[7] == '1') wonderMovies = true;
+            bool wonderMovies = (bin[7] == '1') ? true : false;
 
             //Cheat penalty/warning on/off
-            bool cheatPenaltyWarning = false;
             bin = Convert.ToString(dataArray[20], 2).PadLeft(8, '0');
-            if (bin[3] == '1') cheatPenaltyWarning = true;
+            bool cheatPenaltyWarning = (bin[3] == '1') ? true : false;
 
             //Announce we love king day on/off
-            bool announceWeLoveKingDay = false;
             bin = Convert.ToString(dataArray[22], 2).PadLeft(8, '0');
-            if (bin[0] == '1') announceWeLoveKingDay = true;
+            bool announceWeLoveKingDay = (bin[0] == '1') ? true : false;
 
             //Warn when food dangerously low on/off
-            bool warnWhenFoodDangerouslyLow = false;
-            if (bin[1] == '1') warnWhenFoodDangerouslyLow = true;
+            bool warnWhenFoodDangerouslyLow = (bin[1] == '1') ? true : false;
 
             //Announce cities in disorder on/off
-            bool announceCitiesInDisorder = false;
-            if (bin[2] == '1') announceCitiesInDisorder = true;
+            bool announceCitiesInDisorder = (bin[2] == '1') ? true : false;
 
             //Announce order restored in cities on/off
-            bool announceOrderRestored = false;
-            if (bin[3] == '1') announceOrderRestored = true;
+            bool announceOrderRestored = (bin[3] == '1') ? true : false;
 
             //Show non combat units build on/off
-            bool showNonCombatUnitsBuilt = false;
-            if (bin[4] == '1') showNonCombatUnitsBuilt = true;
+            bool showNonCombatUnitsBuilt = (bin[4] == '1') ? true : false;
 
             //Show invalid build instructions on/off
-            bool showInvalidBuildInstructions = false;
-            if (bin[5] == '1') showInvalidBuildInstructions = true;
+            bool showInvalidBuildInstructions = (bin[5] == '1') ? true : false;
 
             //Warn when city growth halted on/off
-            bool warnWhenCityGrowthHalted = false;
-            if (bin[6] == '1') warnWhenCityGrowthHalted = true;
+            bool warnWhenCityGrowthHalted = (bin[6] == '1') ? true : false;
 
             //Show city improvements built on/off
-            bool showCityImprovementsBuilt = false;
-            if (bin[7] == '1') showCityImprovementsBuilt = true;
+            bool showCityImprovementsBuilt = (bin[7] == '1') ? true : false;
 
             //Zoom to city not default action on/off
-            bool zoomToCityNotDefaultAction = false;
             bin = Convert.ToString(dataArray[23], 2).PadLeft(8, '0');
-            if (bin[5] == '1') zoomToCityNotDefaultAction = true;
+            bool zoomToCityNotDefaultAction = (bin[5] == '1') ? true : false;
 
             //Warn when pollution occurs on/off
-            bool warnWhenPollutionOccurs = false;
-            if (bin[6] == '1') warnWhenPollutionOccurs = true;
+            bool warnWhenPollutionOccurs = (bin[6] == '1') ? true : false;
 
             //Warn when changing production will cost shileds on/off
-            bool warnWhenChangingProductionWillCostShields = false;
-            if (bin[7] == '1') warnWhenChangingProductionWillCostShields = true;
+            bool warnWhenChangingProductionWillCostShields = (bin[7] == '1') ? true : false;
 
             //Number of turns passed
             int intVal1 = dataArray[28];
@@ -207,8 +172,7 @@ namespace RTciv2
             int playersCivilizationNumberUsed = dataArray[41];
 
             //Map revealed
-            bool mapRevealed = false;
-            if (dataArray[43] == 1) mapRevealed = true;
+            bool mapRevealed = (dataArray[43] == 1) ? true : false;
 
             //Difficulty level
             int difficultyLevel = dataArray[44];
@@ -642,43 +606,34 @@ namespace RTciv2
 
                 //Can build coastal improvements
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 4], 2).PadLeft(8, '0');
-                bool cityCanBuildCoastal = false;
-                if (bin[0] == '1') cityCanBuildCoastal = true;
+                bool cityCanBuildCoastal = (bin[0] == '1') ? true : false;
 
                 //Auto build under military rule
-                bool cityAutobuildMilitaryRule = false;
-                if (bin[3] == '1') cityAutobuildMilitaryRule = true;
+                bool cityAutobuildMilitaryRule = (bin[3] == '1') ? true : false;
 
                 //Stolen tech
-                bool cityStolenTech = false;
-                if (bin[4] == '1') cityStolenTech = true;
+                bool cityStolenTech = (bin[4] == '1') ? true : false;
 
                 //Improvement sold
-                bool cityImprovementSold = false;
-                if (bin[5] == '1') cityImprovementSold = true;
+                bool cityImprovementSold = (bin[5] == '1') ? true : false;
 
                 //We love king day
-                bool cityWeLoveKingDay = false;
-                if (bin[6] == '1') cityWeLoveKingDay = true;
+                bool cityWeLoveKingDay = (bin[6] == '1') ? true : false;
 
                 //Civil disorder
-                bool cityCivilDisorder = false;
-                if (bin[7] == '1') cityCivilDisorder = true;
+                bool cityCivilDisorder = (bin[7] == '1') ? true : false;
 
                 //Can build ships
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 6], 2).PadLeft(8, '0');
-                bool cityCanBuildShips = false;
-                if (bin[2] == '1') cityCanBuildShips = true;
+                bool cityCanBuildShips = (bin[2] == '1') ? true : false;
 
                 //Objective x3
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex3 = false;
-                if (bin[3] == '1') cityObjectivex3 = true;
+                bool cityObjectivex3 = (bin[3] == '1') ? true : false;
 
                 //Objective x1
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex1 = false;
-                if (bin[5] == '1') cityObjectivex1 = true;
+                bool cityObjectivex1 = (bin[5] == '1') ? true : false;
 
                 //Owner
                 int cityOwner = dataArray[ofsetC + multipl * i + 8];
@@ -747,19 +702,14 @@ namespace RTciv2
                 //convert string array to bool array
                 bool[] cityImprovements = new bool[34];
                 for (int impNo = 0; impNo < 34; impNo++)
-                {
-                    if (cityImprovements_[impNo] == '1') cityImprovements[impNo] = true;
-                    else cityImprovements[impNo] = false;
-                }
+                    cityImprovements[impNo] = (cityImprovements_[impNo] == '1') ? true : false;
 
                 //Item in production
                 //0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
                 //convert this notation of improvements, so that 62(dec) is 1st improvement, 63(dec) is 2nd, ...
                 int cityItemInProduction = dataArray[ofsetC + multipl * i + 57];
                 if (cityItemInProduction > 70)  //if it is improvement
-                {
                     cityItemInProduction = 255 - cityItemInProduction + 62; //62 because 0...61 are units
-                }
 
                 //No of active trade routes
                 int cityActiveTradeRoutes = dataArray[ofsetC + multipl * i + 58];
@@ -809,10 +759,7 @@ namespace RTciv2
                 //Check if wonder is in city (28 possible wonders)
                 bool[] cityWonders = new bool[28];
                 for (int wndr = 0; wndr < 28; wndr++)
-                {
-                    if (wonderCity[wndr] == i) cityWonders[wndr] = true;
-                    else cityWonders[wndr] = false;
-                }
+                    cityWonders[wndr] = (wonderCity[wndr] == i) ? true : false;
 
                 CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);
             }

@@ -135,8 +135,7 @@ namespace RTciv2.Forms
                     for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++)
                         if (Math.Abs(row - col) % 2 == 0)   //choose which squares
                         {
-                            if ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) brushColor = Color.Red;   //red color for central tile
-                            else brushColor = Color.Yellow;
+                            brushColor = ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red
                             if (MapGridVar > 0)
                                 e.Graphics.DrawImage(Images.GridLines, DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
                             if (MapGridVar == 2)     //Map coords from SAVfile logic
@@ -225,7 +224,8 @@ namespace RTciv2.Forms
                     _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0] - value[1] % 2, value[1] };
                 else if (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim)     //movement beyond bottom edge
                     _startingSqXY = new int[] { value[0], Game.Data.MapYdim - DrawingSqXY[1] - value[0] % 2 };
-                else _startingSqXY = value;
+                else 
+                    _startingSqXY = value;
             }
         }
 
@@ -316,8 +316,7 @@ namespace RTciv2.Forms
         {
             MapGridVar++;
             if (MapGridVar > 3) MapGridVar = 0;
-            if (MapGridVar != 0) Options.Grid = true;
-            else Options.Grid = false;
+            Options.Grid = (MapGridVar != 0) ? true : false;
             Refresh();
             return MapGridVar;
         }

@@ -324,7 +324,7 @@ namespace RTciv2.Forms
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
 
-            WorldmapPanel WorldmapPanel = new WorldmapPanel(262, 148);
+            WorldmapPanel WorldmapPanel = new WorldmapPanel(262, 149);
             WorldmapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
             Controls.Add(WorldmapPanel);
 

@@ -116,12 +116,8 @@ namespace RTciv2.Units
         {
             get
             {
-                if (MovePoints <= 0)
-                {
-                    _turnEnded = true;
-                }
+                if (MovePoints <= 0) _turnEnded = true;
                 if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation || Order == OrderType.BuildRoad || Order == OrderType.BuildAirbase || Order == OrderType.BuildFortress || Order == OrderType.BuildMine) _turnEnded = true;
-                
                 return _turnEnded;
             }
             set { _turnEnded = value; }
@@ -132,9 +128,7 @@ namespace RTciv2.Units
         {
             get
             {
-                if (TurnEnded || (Order != OrderType.NoOrders)) _awaitingOrders = false;
-                else _awaitingOrders = true;
-
+                _awaitingOrders = (TurnEnded || (Order != OrderType.NoOrders)) ? false : true;
                 return _awaitingOrders;
             }
             set { _awaitingOrders = value; }
@@ -220,9 +214,12 @@ namespace RTciv2.Units
         {
             Name = ReadFiles.UnitName[(int)type];
             //UntilTech = TO-DO
-            if (ReadFiles.UnitDomain[(int)type] == 0) GAS = UnitGAS.Ground;
-            else if (ReadFiles.UnitDomain[(int)type] == 1) GAS = UnitGAS.Air;
-            else GAS = UnitGAS.Sea;
+            if (ReadFiles.UnitDomain[(int)type] == 0) 
+                GAS = UnitGAS.Ground;
+            else if (ReadFiles.UnitDomain[(int)type] == 1) 
+                GAS = UnitGAS.Air;
+            else 
+                GAS = UnitGAS.Sea;
             MaxMovePoints = 3 * ReadFiles.UnitMove[(int)type];
             MovePoints = MaxMovePoints;
             Range = ReadFiles.UnitRange[(int)type];
@@ -244,8 +241,8 @@ namespace RTciv2.Units
         {
             get
             {
-                _isInCity = false;
-                foreach (City city in Game.Cities) if (city.X == X && city.Y == Y) _isInCity = true;
+                foreach (City city in Game.Cities)
+                    _isInCity = (city.X == X && city.Y == Y) ? true : false;
                 return _isInCity;
             }
         }
@@ -256,9 +253,9 @@ namespace RTciv2.Units
             get 
             {
                 List<IUnit> unitsInStack = new List<IUnit>();
-                foreach (IUnit unit in Game.Units) if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
-                if (unitsInStack.Count > 1) _isInStack = true;
-                else _isInStack = false;
+                foreach (IUnit unit in Game.Units) 
+                    if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
+                _isInStack = (unitsInStack.Count > 1) ? true : false;
                 return _isInStack;
             }
         }
@@ -269,9 +266,9 @@ namespace RTciv2.Units
             get
             {
                 List<IUnit> unitsInStack = new List<IUnit>();
-                foreach (IUnit unit in Game.Units) if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
-                if (unitsInStack.Last() == this) _isLastInStack = true;
-                else _isLastInStack = false;
+                foreach (IUnit unit in Game.Units) 
+                    if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
+                _isLastInStack = (unitsInStack.Last() == this) ? true : false;
                 return _isLastInStack;
             }
         }
