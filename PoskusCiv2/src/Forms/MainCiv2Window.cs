@@ -28,6 +28,7 @@ namespace RTciv2.Forms
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
         ToolStripMenuItem ShowMapGridItem;
+        MinimapPanel MinimapPanel;
 
         public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
@@ -314,9 +315,12 @@ namespace RTciv2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            // MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            MapPanel = new MapPanel();
+            MapPanel.CreateMapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
+            MapPanel.SendCoordsEvent += MapPanel_SendCoordsEvent;
             ZoomInItem.Click += MapPanel.ZoomINclicked;
             ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
             MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
@@ -324,9 +328,10 @@ namespace RTciv2.Forms
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
 
-            WorldmapPanel WorldmapPanel = new WorldmapPanel(262, 149);
-            WorldmapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
-            Controls.Add(WorldmapPanel);
+
+            MinimapPanel = new MinimapPanel(262, 149);
+            MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
+            Controls.Add(MinimapPanel);
 
             StatusPanel StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
             StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
@@ -682,5 +687,10 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), SinaiIcon.Width - 11, 10, SinaiIcon.Width - 11, SinaiIcon.Height - 11);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, SinaiIcon.Height - 11, SinaiIcon.Width - 11, SinaiIcon.Height - 11); }
         #endregion
+
+        private void MapPanel_SendCoordsEvent(int[] rectCoords, int[] rectSize)
+        {
+            MinimapPanel.UpdateMinimap(rectCoords, rectSize);
+        }
     }
 }

@@ -18,7 +18,10 @@ namespace RTciv2.Forms
         private bool ViewingPiecesMode { get; set; }
         Label HelpLabel;
 
-        public MapPanel(int width, int height)
+        public delegate void SendCoords(int[] rectStartCoords, int[] rectSize);
+        public event SendCoords SendCoordsEvent;
+
+        public void CreateMapPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
@@ -195,6 +198,8 @@ namespace RTciv2.Forms
             //    ActiveXY[0] = Game.Instance.ActiveUnit.X2;
             //    ActiveXY[1] = Game.Instance.ActiveUnit.Y2;
             //}
+            if (SendCoordsEvent != null) 
+                SendCoordsEvent.Invoke(StartingSqXY, DrawingSqXY);  //send dimensions of current view
         }
 
         private int[] _startingSqXY;
