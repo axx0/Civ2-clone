@@ -20,16 +20,17 @@ namespace RTciv2.Forms
         //public MapForm MapForm;
         //public StatusForm statusForm;
         //public WorldMapForm WorldMapForm;
-        public MapPanel MapPanel;
-        public CityForm cityForm;
+        MapPanel MapPanel;
+        CityForm cityForm;
+        MinimapPanel MinimapPanel;
+        StatusPanel StatusPanel;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, MaxZoomInItem, MaxZoomOutItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
         ToolStripMenuItem ShowMapGridItem;
-        MinimapPanel MinimapPanel;
-
+        
         public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
             #region INITIAL SETTINGS
@@ -327,13 +328,12 @@ namespace RTciv2.Forms
             MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-
-
+            
             MinimapPanel = new MinimapPanel(262, 149);
             MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
             Controls.Add(MinimapPanel);
 
-            StatusPanel StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
+            StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
             StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
             Controls.Add(StatusPanel);
         }
