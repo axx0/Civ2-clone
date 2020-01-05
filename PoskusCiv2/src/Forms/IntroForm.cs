@@ -152,9 +152,10 @@ namespace RTciv2.Forms
             e.Graphics.DrawString(".SAV name:", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(28, 260)); }
 
         //Checkbox fullscreen state changed
-        private void FullscrBox_CheckedChanged(Object sender, EventArgs e) { 
-            if (FullscrBox.Checked) ResolBox.Enabled = false;
-            else ResolBox.Enabled = true; }
+        private void FullscrBox_CheckedChanged(Object sender, EventArgs e) 
+        {
+            ResolBox.Enabled = (FullscrBox.Checked) ? false : true;
+        }
 
         //Path textbox text changed
         private void PathBox_TextChanged(Object sender, EventArgs e) { CheckPaths(); }
@@ -166,8 +167,7 @@ namespace RTciv2.Forms
         private void StartButton_Clicked(Object sender, EventArgs e) {
             this.Hide();
             int resolChoice;
-            if (FullscrBox.Checked) resolChoice = Resolutions.FindIndex(a => a.Name == "Fullscreen");
-            else resolChoice = ResolBox.SelectedIndex;
+            resolChoice = (FullscrBox.Checked) ? Resolutions.FindIndex(a => a.Name == "Fullscreen") : ResolBox.SelectedIndex;
             WriteConfig();   //write a config file with current settings before closing form
             Game.LoadGame(Civ2Path, SAVname);
             var form2 = new MainCiv2Window(Resolutions[resolChoice], Civ2Path, SAVname);
@@ -218,9 +218,7 @@ namespace RTciv2.Forms
         //Write a config file with current settings
         private void WriteConfig()
         {
-            string resol;
-            if (FullscrBox.Checked) resol = "-1";
-            else resol = Resolutions[ResolBox.SelectedIndex].Name;
+            string resol = (FullscrBox.Checked) ? "-1" : Resolutions[ResolBox.SelectedIndex].Name;
 
             StreamWriter file = new StreamWriter(Directory.GetParent(Environment.CurrentDirectory).Parent.FullName + @"\Config.txt");
             file.WriteLine("#Civ2 PATH");

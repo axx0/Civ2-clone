@@ -36,178 +36,180 @@ namespace RTciv2
                         
             //Bloodlust on/off
             bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');    //you have to pad zeros to the left because ToString doesn't write first zeros
-            bool bloodlust = (bin[0] == '1') ? true : false;
-                        
+            Options.Bloodlust = (bin[0] == '1') ? true : false;
+
             //Simplified combat on/off
-            bool simplifiedCombat = (bin[3] == '1') ? true : false;
+            Options.SimplifiedCombat = (bin[3] == '1') ? true : false;
                         
             //Flat/round earth
             bin = Convert.ToString(dataArray[13], 2).PadLeft(8, '0');
-            bool flatEarth = (bin[0] == '1') ? true : false;
+            Options.FlatEarth = (bin[0] == '1') ? true : false;
 
             //Don't restart if eliminated
-            bool dontRestartIfEliminated = (bin[7] == '1') ? true : false;
+            Options.DontRestartIfEliminated = (bin[7] == '1') ? true : false;
 
             //Move units without mouse
             bin = Convert.ToString(dataArray[14], 2).PadLeft(8, '0');
-            bool moveUnitsWithoutMouse = (bin[0] == '1') ? true : false;
+            Options.MoveUnitsWithoutMouse = (bin[0] == '1') ? true : false;
 
             //Enter closes city screen
-            bool enterClosestCityScreen = (bin[1] == '1') ? true : false;
+            Options.EnterClosestCityScreen = (bin[1] == '1') ? true : false;
                         
             //Grid on/off
-            bool grid = (bin[2] == '1') ? true : false;
+            Options.Grid = (bin[2] == '1') ? true : false;
 
             //Sound effects on/off
-            bool soundEffects = (bin[3] == '1') ? true : false;
+            Options.SoundEffects = (bin[3] == '1') ? true : false;
 
             //Music on/off
-            bool music = (bin[4] == '1') ? true : false;
+            Options.Music = (bin[4] == '1') ? true : false;
 
             //Cheat menu on/off
             bin = Convert.ToString(dataArray[15], 2).PadLeft(8, '0');
-            bool cheatMenu = (bin[0] == '1') ? true : false;
+            Options.CheatMenu = (bin[0] == '1') ? true : false;
 
             //Always wait at end of turn on/off
-            bool alwaysWaitAtEndOfTurn = (bin[1] == '1') ? true : false;
+            Options.AlwaysWaitAtEndOfTurn = (bin[1] == '1') ? true : false;
 
             //Autosave each turn on/off
-            bool autosaveEachTurn = (bin[2] == '1') ? true : false;
+            Options.AutosaveEachTurn = (bin[2] == '1') ? true : false;
 
             //Show enemy moves on/off
-            bool showEnemyMoves = (bin[3] == '1') ? true : false;
+            Options.ShowEnemyMoves = (bin[3] == '1') ? true : false;
 
             //No pause after enemy moves on/off
-            bool noPauseAfterEnemyMoves = (bin[4] == '1') ? true : false;
+            Options.NoPauseAfterEnemyMoves = (bin[4] == '1') ? true : false;
 
             //Fast piece slide on/off
-            bool fastPieceSlide = (bin[5] == '1') ? true : false;
+            Options.FastPieceSlide = (bin[5] == '1') ? true : false;
 
             //Instant advice on/off
-            bool instantAdvice = (bin[6] == '1') ? true : false;
+            Options.InstantAdvice = (bin[6] == '1') ? true : false;
 
             //Tutorial help on/off
-            bool tutorialHelp = (bin[7] == '1') ? true : false;
+            Options.TutorialHelp = (bin[7] == '1') ? true : false;
 
             //Animated heralds on/off
             bin = Convert.ToString(dataArray[16], 2).PadLeft(8, '0');
-            bool animatedHeralds = (bin[2] == '1') ? true : false;
+            Options.AnimatedHeralds = (bin[2] == '1') ? true : false;
 
             //High council on/off
-            bool highCouncil = (bin[3] == '1') ? true : false;
+            Options.HighCouncil = (bin[3] == '1') ? true : false;
 
             //Civilopedia for advances on/off
-            bool civilopediaForAdvances = (bin[4] == '1') ? true : false;
+            Options.CivilopediaForAdvances = (bin[4] == '1') ? true : false;
 
             //Throne room graphics on/off
-            bool throneRoomGraphics = (bin[5] == '1') ? true : false;
+            Options.ThroneRoomGraphics = (bin[5] == '1') ? true : false;
             
             //Diplomacy screen graphics on/off
-            bool diplomacyScreenGraphics = (bin[6] == '1') ? true : false;
+            Options.DiplomacyScreenGraphics = (bin[6] == '1') ? true : false;
 
             //Wonder movies on/off
-            bool wonderMovies = (bin[7] == '1') ? true : false;
+            Options.WonderMovies = (bin[7] == '1') ? true : false;
 
             //Cheat penalty/warning on/off
             bin = Convert.ToString(dataArray[20], 2).PadLeft(8, '0');
-            bool cheatPenaltyWarning = (bin[3] == '1') ? true : false;
+            Options.CheatPenaltyWarning = (bin[3] == '1') ? true : false;
 
             //Announce we love king day on/off
             bin = Convert.ToString(dataArray[22], 2).PadLeft(8, '0');
-            bool announceWeLoveKingDay = (bin[0] == '1') ? true : false;
+            Options.AnnounceWeLoveKingDay = (bin[0] == '1') ? true : false;
 
             //Warn when food dangerously low on/off
-            bool warnWhenFoodDangerouslyLow = (bin[1] == '1') ? true : false;
+            Options.WarnWhenFoodDangerouslyLow = (bin[1] == '1') ? true : false;
 
             //Announce cities in disorder on/off
-            bool announceCitiesInDisorder = (bin[2] == '1') ? true : false;
+            Options.AnnounceCitiesInDisorder = (bin[2] == '1') ? true : false;
 
             //Announce order restored in cities on/off
-            bool announceOrderRestored = (bin[3] == '1') ? true : false;
+            Options.AnnounceOrderRestored = (bin[3] == '1') ? true : false;
 
             //Show non combat units build on/off
-            bool showNonCombatUnitsBuilt = (bin[4] == '1') ? true : false;
+            Options.ShowNonCombatUnitsBuilt = (bin[4] == '1') ? true : false;
 
             //Show invalid build instructions on/off
-            bool showInvalidBuildInstructions = (bin[5] == '1') ? true : false;
+            Options.ShowInvalidBuildInstructions = (bin[5] == '1') ? true : false;
 
             //Warn when city growth halted on/off
-            bool warnWhenCityGrowthHalted = (bin[6] == '1') ? true : false;
+            Options.WarnWhenCityGrowthHalted = (bin[6] == '1') ? true : false;
 
             //Show city improvements built on/off
-            bool showCityImprovementsBuilt = (bin[7] == '1') ? true : false;
+            Options.ShowCityImprovementsBuilt = (bin[7] == '1') ? true : false;
 
             //Zoom to city not default action on/off
             bin = Convert.ToString(dataArray[23], 2).PadLeft(8, '0');
-            bool zoomToCityNotDefaultAction = (bin[5] == '1') ? true : false;
+            Options.ZoomToCityNotDefaultAction = (bin[5] == '1') ? true : false;
 
             //Warn when pollution occurs on/off
-            bool warnWhenPollutionOccurs = (bin[6] == '1') ? true : false;
+            Options.WarnWhenPollutionOccurs = (bin[6] == '1') ? true : false;
 
             //Warn when changing production will cost shileds on/off
-            bool warnWhenChangingProductionWillCostShields = (bin[7] == '1') ? true : false;
+            Options.WarnWhenChangingProductionWillCostShields = (bin[7] == '1') ? true : false;
 
             //Number of turns passed
             int intVal1 = dataArray[28];
             int intVal2 = dataArray[29];
-            int turnNumber = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
+            Data.TurnNumber = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
 
             //Number of turns passed for game year calculation
             intVal1 = dataArray[30];
             intVal2 = dataArray[31];
-            int turnNumberForGameYear = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.TurnNumberForGameYear = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Which unit is selected at start of game
+            //Which unit is selected at start of game (return -1 if no unit is selected (FFFFhex=65535dec))
             intVal1 = dataArray[34];
             intVal2 = dataArray[35];
-            int unitSelectedAtGameStart = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            int _selectedIndex = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.SelectedUnitIndex = (_selectedIndex == 65535) ? -1 : _selectedIndex;
 
             //Which human player is used
-            int whichHumanPlayerIsUsed = dataArray[39];
+            Data.HumanPlayer = dataArray[39];
 
             //Players map which is used
-            int playersMapUsed = dataArray[40];
+            Data.PlayersMapUsed = dataArray[40];
 
             //Players map which is used
-            int playersCivilizationNumberUsed = dataArray[41];
+            Data.PlayersCivilizationNumberUsed = dataArray[41];
 
             //Map revealed
-            bool mapRevealed = (dataArray[43] == 1) ? true : false;
+            Data.MapRevealed = (dataArray[43] == 1) ? true : false;
 
             //Difficulty level
-            int difficultyLevel = dataArray[44];
+            Data.DifficultyLevel = dataArray[44];
 
             //Barbarian activity
-            int barbarianActivity = dataArray[45];
+            Data.BarbarianActivity = dataArray[45];
 
             //Civs in play
-            int[] civsInPlay = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
+            Data.CivsInPlay = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
             string conv = Convert.ToString(dataArray[46], 2).PadLeft(8, '0');
-            for (int i = 0; i < 8; i++) if (conv[i] == '1') civsInPlay[i] = 1;
+            for (int i = 0; i < 8; i++) 
+                if (conv[i] == '1') 
+                    Data.CivsInPlay[i] = 1;
 
             //Civs with human player playing (multiplayer)
             string humanPlayerPlayed = Convert.ToString(dataArray[47], 2).PadLeft(8, '0');
 
             //Amount of pollution
-            int pollutionAmount = dataArray[50];
+            Data.PollutionAmount = dataArray[50];
 
             //Global temp rising times occured
-            int globalTempRiseOccured = dataArray[51];
+            Data.GlobalTempRiseOccured = dataArray[51];
 
             //Number of turns of peace
-            int noOfTurnsOfPeace = dataArray[56];
-
+            Data.NoOfTurnsOfPeace = dataArray[56];
+            
             //Number of units
             intVal1 = dataArray[58];
             intVal2 = dataArray[59];
-            int numberOfUnits = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.NumberOfUnits = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //Number of cities
             intVal1 = dataArray[60];
             intVal2 = dataArray[61];
-            int numberOfCities = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.NumberOfCities = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //SetOptions(version, bloodlust, simplifiedCombat, flatEarth, dontRestartIfEliminated, moveUnitsWithoutMouse, enterClosestCityScreen, grid, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, autosaveEachTurn, showEnemyMoves, noPauseAfterEnemyMoves, fastPieceSlide, instantAdvice, tutorialHelp, animatedHeralds, highCouncil, civilopediaForAdvances, throneRoomGraphics, diplomacyScreenGraphics, wonderMovies, cheatPenaltyWarning, announceWeLoveKingDay, warnWhenFoodDangerouslyLow, announceCitiesInDisorder, announceOrderRestored, showNonCombatUnitsBuilt, showInvalidBuildInstructions, warnWhenCityGrowthHalted, showCityImprovementsBuilt, zoomToCityNotDefaultAction, warnWhenPollutionOccurs, warnWhenChangingProductionWillCostShields);
             #endregion
             #region Wonders
             //=========================
@@ -262,7 +264,6 @@ namespace RTciv2
                 // .... TO-DO ....
 
             }
-
             //Manually add data for barbarians
             civCityStyle[0] = 0;
             civLeaderName[0] = "NULL";
@@ -353,12 +354,9 @@ namespace RTciv2
                 string civTechs_ = String.Concat(civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
                 //True = tech researched, false = not researched
                 for (int no = 0; no < 89; no++)
-                {
-                    if (civTechs_[no] == '1') civTechs[no] = 1;
-                    else civTechs[no] = 0;
-                }
+                    civTechs[no] = (civTechs_[no] == '1') ? 1 : 0;
 
-                Civilization civ = CreateCiv(i, whichHumanPlayerIsUsed, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
+                Civilization civ = CreateCiv(i, Data.HumanPlayer, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
             }
             #endregion
             #region Map
@@ -373,18 +371,17 @@ namespace RTciv2
             //Map X dimension
             intVal1 = dataArray[ofset + 0];
             intVal2 = dataArray[ofset + 1];
-            int mapXdimension = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-            mapXdimension /= 2; //map 150x120 is really 75x120
+            Data.MapXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
 
             //Map Y dimension
             intVal1 = dataArray[ofset + 2];
             intVal2 = dataArray[ofset + 3];
-            int mapYdimension = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.MapYdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //Map area:
             intVal1 = dataArray[ofset + 4];
             intVal2 = dataArray[ofset + 5];
-            int mapArea = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.MapArea = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             ////Flat Earth flag (info already given before!!)
             //intVal1 = dataArray[ofset + 6];
@@ -394,32 +391,30 @@ namespace RTciv2
             //Map seed
             intVal1 = dataArray[ofset + 8];
             intVal2 = dataArray[ofset + 9];
-            int mapSeed = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.MapSeed = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //Locator map X dimension
             intVal1 = dataArray[ofset + 10];
             intVal2 = dataArray[ofset + 11];
-            int locatorMapXDimension = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.MapLocatorXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
 
             //Locator map Y dimension
             int intValue11 = dataArray[ofset + 12];
             int intValue12 = dataArray[ofset + 13];
-            int locatorMapYDimension = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            Data.MapLocatorYdim = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            SetGameData(turnNumber, turnNumberForGameYear, unitSelectedAtGameStart, whichHumanPlayerIsUsed, civsInPlay, playersMapUsed, playersCivilizationNumberUsed, mapRevealed, difficultyLevel, barbarianActivity, pollutionAmount, globalTempRiseOccured, noOfTurnsOfPeace, numberOfUnits, numberOfCities, mapXdimension, mapYdimension, mapArea, mapSeed, locatorMapXDimension, locatorMapYDimension);
-            
             //Initialize Terrain array now that you know its size
-            Map = new ITerrain[mapXdimension, mapYdimension];
+            Map = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
 
             //block 1 - terrain improvements (for indivudual civs)
             int ofsetB1 = ofset + 14; //offset for block 2 values
             //...........
             //block 2 - terrain type
-            int ofsetB2 = ofsetB1 + 7 * mapArea; //offset for block 2 values
-            for (int i = 0; i < mapArea; i++)
+            int ofsetB2 = ofsetB1 + 7 * Data.MapArea; //offset for block 2 values
+            for (int i = 0; i < Data.MapArea; i++)
             {
-                int x = i % mapXdimension;
-                int y = i / mapXdimension;
+                int x = i % Data.MapXdim;
+                int y = i / Data.MapXdim;
 
                 // Terrain type
                 TerrainType type = TerrainType.Desert;  //only initial
@@ -482,20 +477,20 @@ namespace RTciv2
                 //string hexValue = intValueB26.ToString("X");
 
                 //SAV file doesn't tell where special resources are, so you have to determine this yourself
-                int specialtype = ReturnSpecial(x, y, type, mapXdimension, mapYdimension);
+                int specialtype = ReturnSpecial(x, y, type, Data.MapXdim, Data.MapYdim);
 
                 CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, bin);
                 
             }
             //block 3 - locator map
-            int ofsetB3 = ofsetB2 + 6 * mapArea; //offset for block 2 values
+            int ofsetB3 = ofsetB2 + 6 * Data.MapArea; //offset for block 2 values
                                                  //...............
             #endregion
             #region Units
             //=========================
             //UNIT INFO
             //=========================
-            int ofsetU = ofsetB3 + 2 * locatorMapXDimension * locatorMapYDimension + 1024;
+            int ofsetU = ofsetB3 + 2 * Data.MapLocatorXdim * Data.MapLocatorYdim + 1024;
             
             //determine byte length of units
             int multipl;
@@ -503,7 +498,7 @@ namespace RTciv2
             else if (version == 3)  multipl = 32;   //MGE
             else                    multipl = 40;   //ToT
 
-            for (int i = 0; i < numberOfUnits; i++)
+            for (int i = 0; i < Data.NumberOfUnits; i++)
             {
                 //Unit X location
                 intVal1 = dataArray[ofsetU + multipl * i + 0];
@@ -511,9 +506,8 @@ namespace RTciv2
                 int unitXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
-                bool unit_dead = false;
                 bin = Convert.ToString(intVal2, 2).PadLeft(8, '0');
-                if (bin[0] == '1') unit_dead = true;
+                bool unit_dead = (bin[0] == '1') ? true : false;
 
                 //Unit Y location
                 intVal1 = dataArray[ofsetU + multipl * i + 2];
@@ -522,17 +516,14 @@ namespace RTciv2
 
                 //If this is the unit's first move
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 4], 2).PadLeft(8, '0');
-                bool unitFirstMove = false;
-                if (bin[1] == '1') unitFirstMove = true;
+                bool unitFirstMove = (bin[1] == '1') ? true : false;
 
                 //Grey star to the shield
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 5], 2).PadLeft(8, '0');
-                bool unitGreyStarShield = false;
-                if (bin[0] == '1') unitGreyStarShield = true;
+                bool unitGreyStarShield = (bin[0] == '1') ? true : false;
 
                 //Veteran status
-                bool unitVeteranStatus = false;
-                if (bin[2] == '1') unitVeteranStatus = true;
+                bool unitVeteranStatus = (bin[2] == '1') ? true : false;
 
                 //Unit type
                 int unitType = dataArray[ofsetU + multipl * i + 6];
@@ -585,14 +576,14 @@ namespace RTciv2
             //=========================
             //CITIES
             //=========================
-            int ofsetC = ofsetU + multipl * numberOfUnits;
+            int ofsetC = ofsetU + multipl * Data.NumberOfUnits;
             
             if (version <= 2)       multipl = 84;   //FW or CiC
             else if (version == 3)  multipl = 88;   //MGE
             else                    multipl = 92;   //ToT
                         
             char[] asciichar = new char[15];            
-            for (int i = 0; i < numberOfCities; i++)
+            for (int i = 0; i < Data.NumberOfCities; i++)
             {
                 //City X location
                 intVal1 = dataArray[ofsetC + multipl * i + 0];
@@ -791,15 +782,9 @@ namespace RTciv2
             if (type == TerrainType.Grassland)
             {
                 if (row % 2 == 0) //odd lines
-                {
-                    if ((col + 4 - (row % 8) / 2) % 4 == 0 || (col + 4 - (row % 8) / 2) % 4 == 1) special = 1;
-                    else special = 0;
-                }
+                    special = ((col + 4 - (row % 8) / 2) % 4 == 0 || (col + 4 - (row % 8) / 2) % 4 == 1) ? 1 : 0;
                 else    //even lines
-                {
-                    if ((col + 4 - (row % 8) / 2) % 4 == 2 || (col + 4 - (row % 8) / 2) % 4 == 3) special = 1;
-                    else special = 0;
-                }
+                    special = ((col + 4 - (row % 8) / 2) % 4 == 2 || (col + 4 - (row % 8) / 2) % 4 == 3) ? 1 : 0;
 
                 //if (Game.Map[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
             }

@@ -82,9 +82,9 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            //Civilization humanPlayer = Game.Civs.Find(civ => civ.Id == Game.Data.HumanPlayerUsed);
-            e.Graphics.DrawString("Roman Map", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString("Roman Map", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
             //Draw line borders of panel
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border
@@ -95,6 +95,7 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 10, Height - 9 - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 37, Width - 9 - 2, Height - 9 - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - 9 - 2, Width - 9 - 2, Height - 9 - 2);
+            e.Dispose();
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
@@ -114,13 +115,8 @@ namespace RTciv2.Forms
 
             //UNITS
             foreach (IUnit unit in Game.Units)
-                if (UnitIsInView(unit))
-                {
-                    if (unit == Game.Instance.ActiveUnit)
-                        e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-                    else if (!(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack)))
-                        e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-                }
+                if (UnitIsInView(unit) && unit != Game.Instance.ActiveUnit && !(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack)))
+                    e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
 
             //CITIES
             foreach (City city in Game.Cities)
@@ -129,6 +125,10 @@ namespace RTciv2.Forms
                     e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
                     e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
                 }
+
+            //ACTIVE UNIT
+            if ((Game.Instance.ActiveUnit != null) & UnitIsInView(Game.Instance.ActiveUnit))
+                e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel, 4 * ZoomLvl * (Game.Instance.ActiveUnit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (Game.Instance.ActiveUnit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
 
             //GRIDLINES
             if (Options.Grid)
@@ -215,20 +215,20 @@ namespace RTciv2.Forms
                 //limit movement so that map limits are not exceeded
                 if (value[0] < 0 && value[1] < 0)    //movement beyond upper & left edge
                     _startingSqXY = new int[] { 0, 0 };
-                else if ((value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim) && value[1] < 0)    //movement beyond upper & right edge
-                    _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0], 0 };
-                else if (value[0] < 0 && (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim))    //movement beyond lower & left edge
-                    _startingSqXY = new int[] { 0, Game.Data.MapYdim - DrawingSqXY[1] };
-                else if ((value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim) && (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim))    //movement beyond lower & right edge
-                    _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0], Game.Data.MapYdim - DrawingSqXY[1] };
+                else if ((value[0] + DrawingSqXY[0] >= 2 * Data.MapXdim) && value[1] < 0)    //movement beyond upper & right edge
+                    _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0], 0 };
+                else if (value[0] < 0 && (value[1] + DrawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & left edge
+                    _startingSqXY = new int[] { 0, Data.MapYdim - DrawingSqXY[1] };
+                else if ((value[0] + DrawingSqXY[0] >= 2 * Data.MapXdim) && (value[1] + DrawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & right edge
+                    _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0], Data.MapYdim - DrawingSqXY[1] };
                 else if (value[0] < 0)     //movement beyond left edge
                     _startingSqXY = new int[] { value[1] % 2, value[1] };
                 else if (value[1] < 0)     //movement beyond upper edge
                     _startingSqXY = new int[] { value[0], value[0] % 2 };
-                else if (value[0] + DrawingSqXY[0] >= 2 * Game.Data.MapXdim)     //movement beyond right edge
-                    _startingSqXY = new int[] { 2 * Game.Data.MapXdim - DrawingSqXY[0] - value[1] % 2, value[1] };
-                else if (value[1] + DrawingSqXY[1] >= Game.Data.MapYdim)     //movement beyond bottom edge
-                    _startingSqXY = new int[] { value[0], Game.Data.MapYdim - DrawingSqXY[1] - value[0] % 2 };
+                else if (value[0] + DrawingSqXY[0] >= 2 * Data.MapXdim)     //movement beyond right edge
+                    _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0] - value[1] % 2, value[1] };
+                else if (value[1] + DrawingSqXY[1] >= Data.MapYdim)     //movement beyond bottom edge
+                    _startingSqXY = new int[] { value[0], Data.MapYdim - DrawingSqXY[1] - value[0] % 2 };
                 else 
                     _startingSqXY = value;
             }
@@ -250,24 +250,24 @@ namespace RTciv2.Forms
                     _edgeDrawOffsetXY[0] = -1;
                     _edgeDrawOffsetXY[1] = -1;
                 }
-                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Game.Data.MapXdim)  //on right edge
+                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim)  //on right edge
                 {
                     _edgeDrawOffsetXY[2] = 0;
-                    _edgeDrawOffsetXY[3] = Math.Min(Game.Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
+                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
                 }
-                if (StartingSqXY[1] + DrawingSqXY[1] == Game.Data.MapYdim)  //on bottom edge
+                if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim)  //on bottom edge
                 {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Game.Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 0;
                 }
-                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Game.Data.MapXdim - 1)  //1 column left of right edge
+                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim - 1)  //1 column left of right edge
                 {
                     _edgeDrawOffsetXY[2] = 1;
-                    _edgeDrawOffsetXY[3] = Math.Min(Game.Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
+                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
                 }
-                if (StartingSqXY[1] + DrawingSqXY[1] == Game.Data.MapYdim - 1)  //1 column up of bottom edge
+                if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim - 1)  //1 column up of bottom edge
                 {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Game.Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 1;
                 }
                 return _edgeDrawOffsetXY; 
@@ -280,8 +280,8 @@ namespace RTciv2.Forms
             get 
             {
                 _drawingPxOffsetXY = new int[] { 32 * EdgeDrawOffsetXY[0], 16 * EdgeDrawOffsetXY[1] };
-                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Game.Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * DrawingSqXY[0] - 32 * EdgeDrawOffsetXY[0]);
-                if (StartingSqXY[1] + DrawingSqXY[1] == Game.Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * DrawingSqXY[1] - 16 * EdgeDrawOffsetXY[1]);
+                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * DrawingSqXY[0] - 32 * EdgeDrawOffsetXY[0]);
+                if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * DrawingSqXY[1] - 16 * EdgeDrawOffsetXY[1]);
                 return _drawingPxOffsetXY; 
             }
         }

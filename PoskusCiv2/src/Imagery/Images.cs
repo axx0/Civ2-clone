@@ -693,8 +693,8 @@ namespace RTciv2.Imagery
 
         public static void CreateTerrainBitmaps()   //creates bitmaps for whole map (used before game starts)
         {
-            for (int col = 0; col < Game.Data.MapXdim; col++)
-                for (int row = 0; row < Game.Data.MapYdim; row++)
+            for (int col = 0; col < Data.MapXdim; col++)
+                for (int row = 0; row < Data.MapYdim; row++)
                     Game.Map[col, row].Graphic = TerrainBitmap(col, row);
 
         }
@@ -729,9 +729,9 @@ namespace RTciv2.Imagery
                 //First check if you are on map edge. If not, look at type of terrain in all 4 directions.
                 TerrainType[,] tiletype = new TerrainType[2, 2];
                 if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Game.Map[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 2 * Game.Data.MapXdim - 1) && (row != 0)) tiletype[1, 0] = Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 0) && (row != Game.Data.MapYdim - 1)) tiletype[0, 1] = Game.Map[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
-                if ((col_ != 2 * Game.Data.MapXdim - 1) && (row != Game.Data.MapYdim - 1)) tiletype[1, 1] = Game.Map[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
+                if ((col_ != 2 * Data.MapXdim - 1) && (row != 0)) tiletype[1, 0] = Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
+                if ((col_ != 0) && (row != Data.MapYdim - 1)) tiletype[0, 1] = Game.Map[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
+                if ((col_ != 2 * Data.MapXdim - 1) && (row != Data.MapYdim - 1)) tiletype[1, 1] = Game.Map[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
                 //implement dither on 4 locations in square
                 for (int tileX = 0; tileX < 2; tileX++)    //for 4 directions
                     for (int tileY = 0; tileY < 2; tileY++)
@@ -798,8 +798,8 @@ namespace RTciv2.Imagery
                     //River mouth
                     //if next to ocean is river, draw river mouth on this tile                            
                     col_ = 2 * col + row % 2; //rewrite indexes in Civ2-style
-                    int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-                    int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+                    int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+                    int Ydim = Data.MapYdim;   //no need for such correction for Y
                     if (col_ + 1 < Xdim && row - 1 >= 0)    //NE there is no edge of map
                     {
                         if (land[1] == 1 && Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(Images.RiverMouth[0], 0, 0);
@@ -1009,8 +1009,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if land is present next to ocean
             //N:
@@ -1047,8 +1047,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if forest is present
             //NE:
@@ -1073,8 +1073,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if mountain is present
             //NE:
@@ -1099,8 +1099,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if hill is present
             //NE:
@@ -1125,8 +1125,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if river is present
             //NE:
@@ -1151,8 +1151,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if road or city is present next to tile
             //N:
@@ -1189,8 +1189,8 @@ namespace RTciv2.Imagery
 
             //rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Game.Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Game.Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
+            int Ydim = Data.MapYdim;   //no need for such correction for Y
 
             //observe in all directions if road or city is present next to tile
             //N:

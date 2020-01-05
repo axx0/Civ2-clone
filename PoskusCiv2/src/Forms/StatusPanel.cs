@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Globalization;
 using RTciv2.Imagery;
 
 namespace RTciv2.Forms
@@ -13,7 +14,7 @@ namespace RTciv2.Forms
     {
         DoubleBufferedPanel StatsPanel, UnitPanel;
 
-        public StatusPanel(int width, int height)
+        public void CreateStatusPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(StatusPanel_Paint);
@@ -25,6 +26,7 @@ namespace RTciv2.Forms
                 BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(StatsPanel);
+            StatsPanel.Paint += StatsPanel_Paint;
 
             UnitPanel = new DoubleBufferedPanel()
             {
@@ -41,8 +43,9 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 14, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 14, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
             //Draw line borders of stats panel
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 252, 36);   //1st layer of border
@@ -62,6 +65,20 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 104, 10, 105 + UnitPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, 106 + UnitPanel.Height, 252, 106 + UnitPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 251, 105, 251, 105 + UnitPanel.Height);
+            e.Dispose();
+        }
+
+        private void StatsPanel_Paint(object sender, PaintEventArgs e)
+        {
+            string showYear = (Data.GameYear < 0) ? $"{Math.Abs(Data.GameYear)} B.C." : $"A.D. {Math.Abs(Data.GameYear)}";
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            e.Graphics.DrawString(Game.Civs[Data.HumanPlayer].Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 2 + 1));
+            e.Graphics.DrawString(Game.Civs[Data.HumanPlayer].Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 2));
+            e.Graphics.DrawString(showYear, new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 20 + 1));
+            e.Graphics.DrawString(showYear, new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 20));
+            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Money} Gold 5.0.5", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
+            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Money} Gold 5.0.5", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 38));
+            e.Dispose();
         }
 
     }

@@ -66,22 +66,23 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 19), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 16), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 16), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
         }
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
             string showYear;
-            if (Game.Data.GameYear < 0) showYear = Math.Abs(Game.Data.GameYear).ToString() + " B.C. (Turn " + Game.Data.TurnNumber + ")";
-            else showYear = "A.D. " + Math.Abs(Game.Data.GameYear).ToString() + " (Turn " + Game.Data.TurnNumber + ")";
+            if (Data.GameYear < 0) showYear = Math.Abs(Data.GameYear).ToString() + " B.C. (Turn " + Data.TurnNumber + ")";
+            else showYear = "A.D. " + Math.Abs(Data.GameYear).ToString() + " (Turn " + Data.TurnNumber + ")";
             e.Graphics.DrawString(Game.Civs[1].Population + " People", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 2 + 1));
             e.Graphics.DrawString(Game.Civs[1].Population + " People", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 2));
             e.Graphics.DrawString(showYear, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 20 + 1));
             e.Graphics.DrawString(showYear, new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 20));
-            e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
-            e.Graphics.DrawString(Game.Civs[Game.Data.HumanPlayerUsed].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
+            e.Graphics.DrawString(Game.Civs[Data.HumanPlayer].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
+            e.Graphics.DrawString(Game.Civs[Data.HumanPlayer].Money.ToString() + " Gold 5.0.5", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(30, 30, 30)), new Point(5, 38));
             //Draw line borders
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, StatsPanel.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, StatsPanel.Height - 2);

@@ -23,16 +23,16 @@ namespace RTciv2
         public static List<City> Cities = new List<City>();
         public static List<Civilization> Civs = new List<Civilization>();        
         public static ITerrain[,] Map;
-        public static Data Data;
 
         //load sound for moving piece
         //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
         //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
 
+        
+
         public static void StartNewGame()
         {
-            //Set active unit at game start
-            Game.Instance.ActiveUnit = Game.Units[Data.UnitSelectedIndex];
+
         }
 
         #region Loads stuff when civ2 starts
@@ -50,45 +50,19 @@ namespace RTciv2
             Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
             //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
                         
-            Instance.ActiveUnit = Units[Data.UnitSelectedIndex];  //Set active unit at game start
+            //Instance.ActiveUnit = Units[Data.SelectedUnitIndex];  //Set active unit at game start
         }
 
 
-        private int _activeUnit;
+        private IUnit _activeUnit;
         public IUnit ActiveUnit
         {
-            get { return Units[_activeUnit]; }
-            set { _activeUnit = Units.IndexOf(value); }
-        }
-
-        public static void SetGameData(int turnNumber, int turnNumberForGameYear, int unitSelectedAtGameStart, int whichHumanPlayerIsUsed, int[] civsInPlay, int playersMapUsed, int playersCivilizationNumberUsed, bool mapRevealed, int difficultyLevel, int barbarianActivity, int pollutionAmount, int globalTempRiseOccured, int noOfTurnsOfPeace, int numberOfUnits, int numberOfCities, int mapxdim, int mapydim, int mapArea, int mapSeed, int locatorX, int locatorY)
-        {
-            Data data = new Data
+            get 
             {
-                TurnNumber = turnNumber,
-                TurnNumberForGameYear = turnNumberForGameYear,
-                UnitSelectedIndex = unitSelectedAtGameStart,
-                HumanPlayerUsed = whichHumanPlayerIsUsed,
-                CivsInPlay = civsInPlay,
-                PlayersMapUsed = playersMapUsed,
-                PlayersCivilizationNumberUsed = playersCivilizationNumberUsed,
-                MapRevealed = mapRevealed,
-                DifficultyLevel = difficultyLevel,
-                BarbarianActivity = barbarianActivity,
-                PollutionAmount = pollutionAmount,
-                GlobalTempRiseOccured = globalTempRiseOccured,
-                NoOfTurnsOfPeace = noOfTurnsOfPeace,
-                NumberOfUnits = numberOfUnits,
-                NumberOfCities = numberOfCities,
-                MapXdim = mapxdim,
-                MapYdim = mapydim,
-                MapArea = mapArea,
-                MapSeed = mapSeed,
-                MapLocatorXdim = locatorX,
-                MapLocatorYdim = locatorY
-            };
-
-            Data = data;
+                _activeUnit = (Data.SelectedUnitIndex == -1) ? null : Units[Data.SelectedUnitIndex];    //-1 means no unit is selected
+                return _activeUnit; 
+            }
+            set { _activeUnit = value; }
         }
 
         public static void CreateTerrain(int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, string hexvalue)
@@ -328,19 +302,19 @@ namespace RTciv2
         {
             //if leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
             if (id != 0 && leaderName == "")
-            {
-                if (gender == 0) leaderName = ReadFiles.LeaderNameHIS[tribeNumber];
-                else leaderName = ReadFiles.LeaderNameHER[tribeNumber];
-            }
+                leaderName = (gender == 0) ? ReadFiles.LeaderNameHIS[tribeNumber] : ReadFiles.LeaderNameHER[tribeNumber];
 
             //if tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && tribeName == "") tribeName = ReadFiles.LeaderPlural[tribeNumber];
+            if (id != 0 && tribeName == "") 
+                tribeName = ReadFiles.LeaderPlural[tribeNumber];
 
             //if adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
-            if (id != 0 && adjective == "") adjective = ReadFiles.LeaderAdjective[tribeNumber];
+            if (id != 0 && adjective == "") 
+                adjective = ReadFiles.LeaderAdjective[tribeNumber];
 
             //Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
-            if (id != 0 && id != whichHumanPlayerIsUsed) style = ReadFiles.LeaderCityStyle[tribeNumber];
+            if (id != 0 && id != whichHumanPlayerIsUsed) 
+                style = ReadFiles.LeaderCityStyle[tribeNumber];
 
             Civilization civ = new Civilization
             {

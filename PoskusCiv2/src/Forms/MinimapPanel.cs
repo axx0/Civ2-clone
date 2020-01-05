@@ -25,7 +25,7 @@ namespace RTciv2.Forms
             set { _rectangleDimensions = value; }
         }
 
-        public MinimapPanel(int width, int height)
+        public void CreateMinimapPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MinimapPanel_Paint);
@@ -46,8 +46,9 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("World", new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString("World", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            e.Graphics.DrawString("World", new Font("Times New Roman", 14, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString("World", new Font("Times New Roman", 14, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
             //Draw line borders of panel
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border
@@ -58,17 +59,18 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 10, Height - 9 - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 37, Width - 9 - 2, Height - 9 - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - 9 - 2, Width - 9 - 2, Height - 9 - 2);
+            e.Dispose();
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             //determine the offset of minimap from panel edges
-            int[] offset = new int[] { (DrawPanel.Width - 2 * Game.Data.MapXdim) / 2, (DrawPanel.Height - Game.Data.MapYdim) / 2 };
+            int[] offset = new int[] { (DrawPanel.Width - 2 * Data.MapXdim) / 2, (DrawPanel.Height - Data.MapYdim) / 2 };
 
             //draw map
             Color drawColor;
-            for (int row = 0; row < Game.Data.MapYdim; row++)
-                for (int col = 0; col < Game.Data.MapXdim; col++)
+            for (int row = 0; row < Data.MapYdim; row++)
+                for (int col = 0; col < Data.MapXdim; col++)
                 {
                     drawColor = (Game.Map[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                     e.Graphics.FillRectangle(new SolidBrush(drawColor), offset[0] + 2 * col + (row % 2), offset[1] + row, 2, 1);
@@ -80,6 +82,7 @@ namespace RTciv2.Forms
 
             //draw current view rectangle
             e.Graphics.DrawRectangle(new Pen(Color.White), offset[0] + RectangleDimensions[0], offset[1] + RectangleDimensions[1], RectangleDimensions[2], RectangleDimensions[3]);
+            e.Dispose();
         }
 
         public void UpdateMinimap(int[] rectStartCoords, int[] rectSize)

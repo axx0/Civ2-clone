@@ -250,7 +250,7 @@ namespace RTciv2.Forms
         {
             Form frm = sender as Form;
             frm.Width = 686;
-            frm.Height = Game.Data.CivsInPlay.Sum() * 32 + 84;   //dependent on the number of civs in play * 32 + the height of frames
+            frm.Height = Data.CivsInPlay.Sum() * 32 + 84;   //dependent on the number of civs in play * 32 + the height of frames
             frm.Location = new Point(330, 250);
         }
 

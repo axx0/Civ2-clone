@@ -359,6 +359,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="src\Forms\MainCiv2Window.LoadGame.cs" />
+    <None Include="SAVfile.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

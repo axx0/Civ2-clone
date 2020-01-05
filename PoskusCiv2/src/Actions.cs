@@ -74,22 +74,24 @@ namespace RTciv2
         {
             //Create an array of indexes of units awaiting orders
             List<int> indexUAO = new List<int>();
-            for (int i = 0; i < Game.Units.Count; i++) if ((Game.Units[i].Civ == Game.Data.HumanPlayerUsed) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
+            for (int i = 0; i < Game.Units.Count; i++) 
+                if ((Game.Units[i].Civ == Data.HumanPlayer) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
 
             //Move on to the next unit
             bool noUnitsAwaitingOrders = true;
             if (indexUAO.Any()) //there are still units awaiting orders
             {
-                if (Game.Data.UnitSelectedIndex < indexUAO[indexUAO.Count - 1]) //indexes of the next units in line are > index of unit that just moved
+                if (Data.SelectedUnitIndex < indexUAO[indexUAO.Count - 1]) //indexes of the next units in line are > index of unit that just moved
                 {
-                    for (int i = 0; i < indexUAO.Count; i++) if (indexUAO[i] > Game.Data.UnitSelectedIndex) { Game.Data.UnitSelectedIndex = indexUAO[i]; break; }   //chose next index
+                    for (int i = 0; i < indexUAO.Count; i++) 
+                        if (indexUAO[i] > Data.SelectedUnitIndex) { Data.SelectedUnitIndex = indexUAO[i]; break; }   //chose next index
                 }
                 else    //else chose the 1st index in list (go to beginning of list)
                 {
-                    Game.Data.UnitSelectedIndex = indexUAO[0];
+                    Data.SelectedUnitIndex = indexUAO[0];
                 }
 
-                Game.Instance.ActiveUnit = Game.Units[Game.Data.UnitSelectedIndex];
+                Game.Instance.ActiveUnit = Game.Units[Data.SelectedUnitIndex];
                 noUnitsAwaitingOrders = false;
 
                 //If necessary, center view on new unit in MapForm
@@ -146,7 +148,7 @@ namespace RTciv2
         //Update stats of all cities
         public static void CitiesTurn()
         {
-            foreach (City city in Game.Cities.Where(a => a.Owner == Game.Data.HumanPlayerUsed))
+            foreach (City city in Game.Cities.Where(a => a.Owner == Data.HumanPlayer))
             {
                 //city.NewTurn();
             }
@@ -154,10 +156,10 @@ namespace RTciv2
 
         public static void NewTurn()
         {
-            Game.Data.TurnNumber += 1;
+            Data.TurnNumber++;
 
             //Set all units to active
-            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
+            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Data.HumanPlayer))
             {
                 unit.TurnEnded = false;
                 unit.MovePoints = unit.MaxMovePoints;
@@ -203,7 +205,7 @@ namespace RTciv2
         public static void GiveCommand(string action)
         {
             //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
-            if (Options.AlwaysWaitAtEndOfTurn && !AnyUnitsAwaitingOrders(Game.Data.HumanPlayerUsed))
+            if (Options.AlwaysWaitAtEndOfTurn && !AnyUnitsAwaitingOrders(Data.HumanPlayer))
             {
                 if (action == "ENTER")
                 {

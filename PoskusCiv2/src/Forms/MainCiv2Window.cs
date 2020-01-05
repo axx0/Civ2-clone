@@ -316,7 +316,6 @@ namespace RTciv2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            // MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel = new MapPanel();
             MapPanel.CreateMapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
@@ -329,11 +328,13 @@ namespace RTciv2.Forms
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
             
-            MinimapPanel = new MinimapPanel(262, 149);
+            MinimapPanel = new MinimapPanel();
+            MinimapPanel.CreateMinimapPanel(262, 149);
             MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
             Controls.Add(MinimapPanel);
 
-            StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
+            StatusPanel = new StatusPanel();
+            StatusPanel.CreateStatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
             StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
             Controls.Add(StatusPanel);
         }

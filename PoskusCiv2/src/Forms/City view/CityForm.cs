@@ -275,10 +275,8 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            string bcad;
-            if (Game.Data.GameYear < 0) { bcad = "B.C."; }
-            else { bcad = "A.D."; }
-            string text = String.Format("City of {0}, {1} {2}, Population {3:n0} (Treasury: {4} Gold)", ThisCity.Name, Math.Abs(Game.Data.GameYear), bcad, ThisCity.Population, Game.Civs[ThisCity.Owner].Money);
+            string bcad = (Data.GameYear < 0) ? "B.C.": "A.D.";
+            string text = String.Format("City of {0}, {1} {2}, Population {3:n0} (Treasury: {4} Gold)", ThisCity.Name, Math.Abs(Data.GameYear), bcad, ThisCity.Population, Game.Civs[ThisCity.Owner].Money);
 
             e.Graphics.DrawString(text, new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
             e.Graphics.DrawString(text, new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);

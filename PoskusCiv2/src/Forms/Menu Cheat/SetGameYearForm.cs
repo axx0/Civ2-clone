@@ -58,7 +58,7 @@ namespace RTciv2.Forms
             {
                 Location = new Point(134, 36),
                 Size = new Size(95, 30),
-                Text = Game.Data.TurnNumber.ToString(),
+                Text = Data.TurnNumber.ToString(),
                 Font = new Font("Times New Roman", 14)
             };
             MainPanel.Controls.Add(ChangeTextBox);
@@ -91,8 +91,8 @@ namespace RTciv2.Forms
             //Text
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
-            e.Graphics.DrawString("# Turns Elapsed: " + Game.Data.TurnNumber + ".", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(3 + 1, 17 + 1), sf);
-            e.Graphics.DrawString("# Turns Elapsed: " + Game.Data.TurnNumber + ".", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(3, 17), sf);
+            e.Graphics.DrawString("# Turns Elapsed: " + Data.TurnNumber + ".", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(3 + 1, 17 + 1), sf);
+            e.Graphics.DrawString("# Turns Elapsed: " + Data.TurnNumber + ".", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(3, 17), sf);
             e.Graphics.DrawString("New # Turns:", new Font("Times New Roman", 12), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(3, 50), sf);
             sf.Dispose();
         }
@@ -109,7 +109,7 @@ namespace RTciv2.Forms
                 newGameYear = 0;
             }
             
-            Game.Data.TurnNumber = newGameYear;
+            Data.TurnNumber = newGameYear;
             Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             Close();
         }

@@ -15,10 +15,10 @@ namespace RTciv2.Forms
     public partial class ForeignCreateUnitForm : Civ2form
     {
         DoubleBufferedPanel MainPanel;
-        RadioButton[] RadioButton = new RadioButton[Game.Data.CivsInPlay.Sum()];
+        RadioButton[] RadioButton = new RadioButton[Data.CivsInPlay.Sum()];
         int ChosenUnit { get; }
         bool IsVeteran { get; }
-        int[] ActiveCivId = new int[Game.Data.CivsInPlay.Sum()];
+        int[] ActiveCivId = new int[Data.CivsInPlay.Sum()];
 
         public ForeignCreateUnitForm(int chosenUnit, bool isVeteran)
         {
@@ -30,7 +30,7 @@ namespace RTciv2.Forms
             MainPanel = new DoubleBufferedPanel
             {
                 Location = new Point(9, 36),
-                Size = new Size(668, Game.Data.CivsInPlay.Sum() * 32 + 4),
+                Size = new Size(668, Data.CivsInPlay.Sum() * 32 + 4),
                 BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(MainPanel);
@@ -39,7 +39,7 @@ namespace RTciv2.Forms
             //OK button
             Civ2button OKButton = new Civ2button
             {
-                Location = new Point(9, Game.Data.CivsInPlay.Sum() * 32 + 42),
+                Location = new Point(9, Data.CivsInPlay.Sum() * 32 + 42),
                 Size = new Size(333, 36),
                 Font = new Font("Times New Roman", 11),
                 Text = "OK"
@@ -50,7 +50,7 @@ namespace RTciv2.Forms
             //Cancel button
             Civ2button CancelButton = new Civ2button
             {
-                Location = new Point(344, Game.Data.CivsInPlay.Sum() * 32 + 42),
+                Location = new Point(344, Data.CivsInPlay.Sum() * 32 + 42),
                 Size = new Size(333, 36),
                 Font = new Font("Times New Roman", 11),
                 Text = "Cancel"
@@ -62,7 +62,7 @@ namespace RTciv2.Forms
             int count = 0;
             for (int civ = 0; civ < 8; civ++)
             {
-                if (Game.Data.CivsInPlay[civ] == 1)
+                if (Data.CivsInPlay[civ] == 1)
                 {
                     //Make a radio button
                     RadioButton[count] = new RadioButton
@@ -102,7 +102,7 @@ namespace RTciv2.Forms
 
         private void OKButton_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i < Game.Data.CivsInPlay.Sum(); i++)
+            for (int i = 0; i < Data.CivsInPlay.Sum(); i++)
             {
                 if (RadioButton[i].Checked)
                 {
