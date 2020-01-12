@@ -320,7 +320,6 @@ namespace RTciv2.Forms
             MapPanel.CreateMapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
-            MapPanel.SendCoordsEvent += MapPanel_SendCoordsEvent;
             ZoomInItem.Click += MapPanel.ZoomINclicked;
             ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
             MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
@@ -688,10 +687,5 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), SinaiIcon.Width - 11, 10, SinaiIcon.Width - 11, SinaiIcon.Height - 11);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, SinaiIcon.Height - 11, SinaiIcon.Width - 11, SinaiIcon.Height - 11); }
         #endregion
-
-        private void MapPanel_SendCoordsEvent(int[] rectCoords, int[] rectSize)
-        {
-            MinimapPanel.UpdateMinimap(rectCoords, rectSize);
-        }
     }
 }

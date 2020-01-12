@@ -29,6 +29,7 @@ namespace RTciv2.Forms
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MinimapPanel_Paint);
+            MapPanel.MapViewChangedEvent += ViewChangedInMapPanel;
 
             DrawPanel = new DoubleBufferedPanel()
             {
@@ -84,12 +85,12 @@ namespace RTciv2.Forms
             e.Graphics.DrawRectangle(new Pen(Color.White), offset[0] + RectangleDimensions[0], offset[1] + RectangleDimensions[1], RectangleDimensions[2], RectangleDimensions[3]);
             e.Dispose();
         }
+        //TODO: Make sure minimap rectangle is correct immediately after game loading
 
-        public void UpdateMinimap(int[] rectStartCoords, int[] rectSize)
+        private void ViewChangedInMapPanel(bool viewingPiecesMode, int[] rectStartCoords, int[] rectSize, int[] actingSqCoords)
         {
             RectangleDimensions = new int[] { rectStartCoords[0], rectStartCoords[1], rectSize[0], rectSize[1] };
             DrawPanel.Refresh();
         }
-        //TODO: Make sure minimap rectangle is correct immediately after game loading
     }
 }

@@ -14,12 +14,13 @@ namespace RTciv2.Forms
     public partial class MapPanel : Civ2panel
     {
         private static DoubleBufferedPanel DrawPanel;
-        private int MapGridVar { get; set; }    //style of map grid presentation        
-        private bool ViewingPiecesMode { get; set; }
+        private int MapGridVar { get; set; }    //style of map grid presentation
+        private Timer t_Blinking = new Timer();    //timer for blinking (unit or viewing piece)
+        int BlinkingCounter;
         Label HelpLabel;
 
-        public delegate void SendCoords(int[] rectStartCoords, int[] rectSize);
-        public event SendCoords SendCoordsEvent;
+        public delegate void MapViewChanged(bool ViewingPiecesMode, int[] rectStartCoords, int[] rectSize, int[] actingSqCoords);
+        public static event MapViewChanged MapViewChangedEvent;
 
         public void CreateMapPanel(int width, int height)
         {
@@ -60,9 +61,8 @@ namespace RTciv2.Forms
 
             //Initialize variables
             ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
-            ClickedXY = new int[] { 0, 0 };
             MapGridVar = 0;
-            ViewingPiecesMode = false;
+            ViewingPiecesMode = false;  //TODO: find out how viewing pieces mode is loaded from sav
             //TODO: Implement zoom
 
             //Uncomment this for help in drawing-logic
@@ -74,6 +74,12 @@ namespace RTciv2.Forms
             //    Text = "OK"
             //};
             //DrawPanel.Controls.Add(HelpLabel);
+
+            //Timer for blinking of unit/viewing piece
+            t_Blinking.Interval = 200;
+            t_Blinking.Tick += new EventHandler(Blinking_Tick);
+            t_Blinking.Start();
+            BlinkingCounter = 0;
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -98,37 +104,48 @@ namespace RTciv2.Forms
             e.Dispose();
         }
 
-        private void DrawPanel_Paint(object sender, PaintEventArgs e)
+        private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
-        //Draw map
-        StringFormat sf = new StringFormat();
-        sf.LineAlignment = StringAlignment.Center;
-        sf.Alignment = StringAlignment.Center;
-        for (int row = 0; row < DrawingSqXY[1] - EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3]; row++)
-            for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++)
-                if (Math.Abs(row - col) % 2 == 0)   //choose which squares
-                {
-                    //TILES
-                    int[] coords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4), DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
-                }
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+
+            //TILES
+            for (int row = 0; row < DrawingSqXY[1] - EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3]; row++)
+                for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++)
+                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+                    {
+                        int[] coords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4), 
+                                             DrawingPxOffsetXY[0] + 32 * col, 
+                                             DrawingPxOffsetXY[1] + 16 * row);
+                    }
 
             //UNITS
             foreach (IUnit unit in Game.Units)
-                if (UnitIsInView(unit) && unit != Game.Instance.ActiveUnit && !(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack)))
-                    e.Graphics.DrawImage(unit.GraphicMapPanel, 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+                if (UnitIsInView(unit) && !(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack)) &&
+                    ((unit != Game.Instance.ActiveUnit) || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)))
+                    e.Graphics.DrawImage(unit.GraphicMapPanel,
+                                         DrawingPxOffsetXY[0] + 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
+                                         DrawingPxOffsetXY[1] + 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
 
             //CITIES
             foreach (City city in Game.Cities)
                 if (CityIsInView(city))
                 {
-                    e.Graphics.DrawImage(city.Graphic, 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-                    e.Graphics.DrawImage(city.TextGraphic, 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
+                    e.Graphics.DrawImage(city.Graphic, 
+                                         DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 
+                                         DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+                    e.Graphics.DrawImage(city.TextGraphic, 
+                                         DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 
+                                         DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
                 }
 
             //ACTIVE UNIT
-            if ((Game.Instance.ActiveUnit != null) & UnitIsInView(Game.Instance.ActiveUnit))
-                e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel, 4 * ZoomLvl * (Game.Instance.ActiveUnit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 2 * ZoomLvl * (Game.Instance.ActiveUnit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+            if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit) && (BlinkingCounter % 2 == 0))
+                e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+                                     DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
+                                     DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
 
             //GRIDLINES
             if (Options.Grid)
@@ -140,16 +157,31 @@ namespace RTciv2.Forms
                         {
                             brushColor = ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red
                             if (MapGridVar > 0)
-                                e.Graphics.DrawImage(Images.GridLines, DrawingPxOffsetXY[0] + 32 * col, DrawingPxOffsetXY[1] + 16 * row);
+                                e.Graphics.DrawImage(Images.GridLines, 
+                                                     DrawingPxOffsetXY[0] + 32 * col, 
+                                                     DrawingPxOffsetXY[1] + 16 * row);
                             if (MapGridVar == 2)     //Map coords from SAVfile logic
                             {
                                 int[] realCoords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
-                                e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"), new Font("Arial", 8), new SolidBrush(brushColor), DrawingPxOffsetXY[0] + 32 * col + 32, DrawingPxOffsetXY[1] + 16 * row + 16, sf);
+                                e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"), 
+                                                      new Font("Arial", 8), 
+                                                      new SolidBrush(brushColor), 
+                                                      DrawingPxOffsetXY[0] + 32 * col + 32, 
+                                                      DrawingPxOffsetXY[1] + 16 * row + 16, sf);
                             }
                             if (MapGridVar == 3)    //Civ2-coords
-                                e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"), new Font("Arial", 8), new SolidBrush(brushColor), DrawingPxOffsetXY[0] + 32 * col + 32, DrawingPxOffsetXY[1] + 16 * row + 16, sf);
+                                e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"), 
+                                                      new Font("Arial", 8), new SolidBrush(brushColor), 
+                                                      DrawingPxOffsetXY[0] + 32 * col + 32, 
+                                                      DrawingPxOffsetXY[1] + 16 * row + 16, sf);
                         }
             }
+
+            //VIEWING PIECE
+            if (ViewingPiecesMode && (BlinkingCounter % 2 == 0))
+                e.Graphics.DrawImage(Images.ViewingPieces,
+                                     DrawingPxOffsetXY[0] + 4 * ZoomLvl * (ActiveXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
+                                     DrawingPxOffsetXY[1] + 2 * ZoomLvl * (ActiveXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]));
 
             //Uncomment this for help in drawing-logic
             //HelpLabel.Text = $"Panel size = ({DrawPanel.Width},{DrawPanel.Height})\n" +
@@ -166,40 +198,55 @@ namespace RTciv2.Forms
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            ClickedXY = PxToCoords(e.Location.X, e.Location.Y); // (X,Y) coordinates of clicked square
-            StartingSqXY = new int[] { StartingSqXY[0] + ClickedXY[0] - CenterDistanceXY[0], StartingSqXY[1] + ClickedXY[1] - CenterDistanceXY[1] };
+            int[] coords = PxToCoords(e.Location.X, e.Location.Y);
+            ClickedXY = new int[] { StartingSqXY[0] + coords[0], StartingSqXY[1] + coords[1] };  // coordinates of clicked square
+            int[] newStartingSqViewCoords = { ClickedXY[0] - CenterDistanceXY[0], ClickedXY[1] - CenterDistanceXY[1] };
 
-            DrawPanel.Refresh();
-
-            if (e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Left)
             {
-                ViewingPiecesMode = true;   //with right-click you activate viewing pieces mode in status form
-                //Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();  //update orders menu in main screen
-                //mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();  //send mouse click location to status form
-            }
-            else
-            {
-                //mainCiv2Window.statusForm.ReceiveMousePositionFromMapForm();   //send mouse click location to status form
-                if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //if city is clicked => open form
+                if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
                 {
-                    //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X2 == ClickedXY[0] && city.Y2 == ClickedXY[1]));
-                    //cityForm.Show();
+                    if (ViewingPiecesMode) ActiveXY = ClickedXY;
+                    //TODO: open city panel
+                }
+                else if (Game.Units.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
+                {                    
+                    MapViewChange(newStartingSqViewCoords);
+                    int clickedUnitIndex = Game.Units.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
+                    if (!Game.Units[clickedUnitIndex].TurnEnded)
+                    {
+                        Game.Instance.ActiveUnit = Game.Units[clickedUnitIndex];
+                        ViewingPiecesMode = false;                        
+                    }
+                    else
+                    {
+                        //TODO: determine what happens if unit has ended turn...
+                    }
+                }
+                else    //something else clicked
+                {
+                    if (ViewingPiecesMode) ActiveXY = ClickedXY;
+                    MapViewChange(newStartingSqViewCoords);
                 }
             }
+            else    //right click
+            {
+                Game.Instance.ActiveUnit = null;
+                ViewingPiecesMode = true;
+                ActiveXY = ClickedXY;
+                MapViewChange(newStartingSqViewCoords);
+            }
 
-            //Update active box coordinates. If viewing pieces mode is off, the active unit determines coords.
-            //if (ViewingPiecesMode)
-            //{
-            //    ActiveXY[0] = ClickedXY[0];
-            //    ActiveXY[1] = ClickedXY[1];
-            //}
-            //else
-            //{
-            //    ActiveXY[0] = Game.Instance.ActiveUnit.X2;
-            //    ActiveXY[1] = Game.Instance.ActiveUnit.Y2;
-            //}
-            if (SendCoordsEvent != null) 
-                SendCoordsEvent.Invoke(StartingSqXY, DrawingSqXY);  //send dimensions of current view
+        }
+
+        private void MapViewChange(int[] newStartingSqViewCoords)
+        {
+            StartingSqXY = newStartingSqViewCoords;
+
+            if (MapViewChangedEvent != null)
+                MapViewChangedEvent.Invoke(ViewingPiecesMode, StartingSqXY, DrawingSqXY, ActiveXY);  //send dimensions of current view
+
+            DrawPanel.Refresh();
         }
 
         private int[] _startingSqXY;
@@ -306,15 +353,23 @@ namespace RTciv2.Forms
         {
             get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
         }
-        public int[] ClickedXY     //Civ2 coords of clicked tile
-        { 
-            get; 
-            set; 
-        }
 
+        private int[] _activeXY;
         private int[] ActiveXY  //Currently active box (active unit or viewing piece), civ2 coords
         {
-            get { return new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y }; }
+            get
+            {
+                if (!ViewingPiecesMode && Game.Instance.ActiveUnit != null)
+                    _activeXY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y };
+                return _activeXY;
+            }
+            set { _activeXY = value; }
+        }
+
+        private int[] ClickedXY //tile currently clicked
+        {
+            get;
+            set;
         }
         
         public int ToggleMapGrid()
@@ -343,6 +398,22 @@ namespace RTciv2.Forms
         public void MaxZoomOUTclicked(Object sender, EventArgs e) { ZoomLvl = 1; }
         public void StandardZOOMclicked(Object sender, EventArgs e) { ZoomLvl = 8; }
         public void MediumZoomOUTclicked(Object sender, EventArgs e) { ZoomLvl = 5; }
+
+        private bool _viewingPiecesMode;
+        private bool ViewingPiecesMode
+        {
+            get { return _viewingPiecesMode; }
+            set 
+            {
+                _viewingPiecesMode = value;
+            }
+        }
+
+        private void Blinking_Tick(object sender, EventArgs e)
+        {
+            BlinkingCounter++;
+            DrawPanel.Refresh();
+        }
 
         private int[] PxToCoords(int x, int y)  //determine XY civ2 coords from x-y pixel location on panel
         {

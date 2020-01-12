@@ -236,14 +236,11 @@ namespace RTciv2.Units
             Order = OrderType.NoOrders;
         }
 
-        private bool _isInCity;
         public bool IsInCity
         {
             get
             {
-                foreach (City city in Game.Cities)
-                    _isInCity = (city.X == X && city.Y == Y) ? true : false;
-                return _isInCity;
+                return Game.Cities.Any(city => city.X == X && city.Y == Y); ;
             }
         }
 

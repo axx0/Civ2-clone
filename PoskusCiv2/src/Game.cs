@@ -48,20 +48,26 @@ namespace RTciv2
             ReadFiles.ReadRULES(civ2path + "RULES.TXT");
             ImportSAV(civ2path + SAVname + ".SAV");
             Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
-            //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
-                        
-            //Instance.ActiveUnit = Units[Data.SelectedUnitIndex];  //Set active unit at game start
+                                            //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
+            Game.Instance.ActiveUnit = Game.Units[Data.SelectedUnitIndex];
+
+            int count = 0;
+            foreach (IUnit unit in Game.Units)
+            { 
+                if (unit.Civ == 5)
+                {
+                    Console.WriteLine($"Unit, Id={count}, {unit.Type}, ({unit.X},{unit.Y}), TurnEnded={unit.TurnEnded}");
+                }
+                count++; 
+            }
+
         }
 
 
         private IUnit _activeUnit;
         public IUnit ActiveUnit
         {
-            get 
-            {
-                _activeUnit = (Data.SelectedUnitIndex == -1) ? null : Units[Data.SelectedUnitIndex];    //-1 means no unit is selected
-                return _activeUnit; 
-            }
+            get { return _activeUnit; }
             set { _activeUnit = value; }
         }
 

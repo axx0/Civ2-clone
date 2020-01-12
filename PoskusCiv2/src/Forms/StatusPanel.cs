@@ -7,17 +7,21 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.Globalization;
 using RTciv2.Imagery;
+using RTciv2.Units;
 
 namespace RTciv2.Forms
 {
     public partial class StatusPanel : Civ2panel
     {
         DoubleBufferedPanel StatsPanel, UnitPanel;
+        bool ViewingPiecesMode = false;
+        int[] ActiveXY = new int[] { 0, 0 };
 
         public void CreateStatusPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(StatusPanel_Paint);
+            MapPanel.MapViewChangedEvent += ViewChangedInMapPanel;
 
             StatsPanel = new DoubleBufferedPanel()
             {
@@ -35,6 +39,7 @@ namespace RTciv2.Forms
                 BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(UnitPanel);
+            UnitPanel.Paint += UnitPanel_Paint;
         }
 
         private void StatusPanel_Paint(object sender, PaintEventArgs e)
@@ -81,5 +86,59 @@ namespace RTciv2.Forms
             e.Dispose();
         }
 
+        private void UnitPanel_Paint(object sender, PaintEventArgs e)
+        {
+            StringFormat sf = new StringFormat();
+            //sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            Font font = new Font("Times new roman", 10, FontStyle.Bold);
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+
+            if (ViewingPiecesMode)
+            {
+                e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
+                e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
+                e.Graphics.DrawString($"Loc: ({ActiveXY[0]}, {ActiveXY[1]})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
+                e.Graphics.DrawString($"Loc: ({ActiveXY[0]}, {ActiveXY[1]})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
+                e.Graphics.DrawString($"({Game.Map[(ActiveXY[0] - ActiveXY[1] % 2) / 2, ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
+                e.Graphics.DrawString($"({Game.Map[(ActiveXY[0] - ActiveXY[1] % 2) / 2, ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
+
+                int count = 0;
+                foreach (IUnit unit in Game.Units.Where(a => (a.X == ActiveXY[0]) && (a.Y == ActiveXY[1]))) //draw units on this tile
+                {
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(unit, false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
+                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
+                    e.Graphics.DrawString(unit.Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
+                    e.Graphics.DrawString(unit.Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
+                    e.Graphics.DrawString(ReadFiles.UnitName[(int)unit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                    e.Graphics.DrawString(ReadFiles.UnitName[(int)unit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
+                    count++;
+                }
+                    
+            }
+            else
+            {
+                e.Graphics.DrawString("Moving Units", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
+                e.Graphics.DrawString("Moving Units", font, new SolidBrush(Color.White), new Point(120, 0), sf);
+
+
+
+                //e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(, IsInStack, MapPanel.ZoomLvl), (int)Math.Round(8 * 8 * 1.15), (int)Math.Round(8 * 6 * 1.15)), 20, 40);
+                //e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[3], (int)Math.Round(8 * 8 * 1.15), (int)Math.Round(8 * 6 * 1.15)), 20, 40+56);
+                //e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[3], (int)Math.Round(8 * 8 * 1.15), (int)Math.Round(8 * 6 * 1.15)), 20, 40+56*2);
+            }
+
+            sf.Dispose();
+            e.Dispose();
+            font.Dispose();
+        }
+
+        private void ViewChangedInMapPanel(bool viewingPiecesMode, int[] rectStartCoords, int[] rectSize, int[] activeSqCoords)
+        {
+            ViewingPiecesMode = viewingPiecesMode;
+            ActiveXY = activeSqCoords;
+            UnitPanel.Refresh();
+        }
     }
 }
