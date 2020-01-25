@@ -67,7 +67,7 @@ namespace RTciv2.Forms
             ViewingPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
             ClickedXY = Data.ClickedXY;
             ActiveXY = Data.ActiveXY;
-            StartingSqXY = new int[] { ClickedXY[0] - CenterDistanceXY[0], ClickedXY[1] - CenterDistanceXY[1] };    //update map view at game start
+            CenterSqXY = ClickedXY;
             UnitMoved = false;
             //TODO: Implement zoom
 
@@ -206,7 +206,6 @@ namespace RTciv2.Forms
         {
             int[] coords = PxToCoords(e.Location.X, e.Location.Y);
             ClickedXY = new int[] { StartingSqXY[0] + coords[0], StartingSqXY[1] + coords[1] };  // coordinates of clicked square
-            int[] newStartingSqViewCoords = { ClickedXY[0] - CenterDistanceXY[0], ClickedXY[1] - CenterDistanceXY[1] };
 
             if (e.Button == MouseButtons.Left)
             {
@@ -227,26 +226,26 @@ namespace RTciv2.Forms
                     {
                         //TODO: determine what happens if unit has ended turn...
                     }
-                    MapViewChange(newStartingSqViewCoords);
+                    MapViewChange(ClickedXY);
                 }
                 else    //something else clicked
                 {
                     if (ViewingPiecesMode) ActiveXY = ClickedXY;
-                    MapViewChange(newStartingSqViewCoords);
+                    MapViewChange(ClickedXY);
                 }
             }
             else    //right click
             {
                 ViewingPiecesMode = true;
                 ActiveXY = ClickedXY;
-                MapViewChange(newStartingSqViewCoords);
+                MapViewChange(ClickedXY);
             }
 
         }
 
-        private void MapViewChange(int[] newStartingSqViewCoords)
+        private void MapViewChange(int[] newCenterCoords)
         {
-            StartingSqXY = newStartingSqViewCoords;
+            CenterSqXY = newCenterCoords;
 
             if (MapViewChangedEvent != null)
                 MapViewChangedEvent.Invoke();  //send dimensions of current view
@@ -257,12 +256,12 @@ namespace RTciv2.Forms
         private static int[] _startingSqXY;
         public static int[] StartingSqXY
         {
-            get 
-            { 
+            get
+            {
                 if (_startingSqXY == null) _startingSqXY = new int[] { 0, 0 };
                 return _startingSqXY;
             }
-            set 
+            set
             {
                 //limit movement so that map limits are not exceeded
                 if (value[0] < 0 && value[1] < 0)    //movement beyond upper & left edge
@@ -281,7 +280,7 @@ namespace RTciv2.Forms
                     _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0] - value[1] % 2, value[1] };
                 else if (value[1] + DrawingSqXY[1] >= Data.MapYdim)     //movement beyond bottom edge
                     _startingSqXY = new int[] { value[0], Data.MapYdim - DrawingSqXY[1] - value[0] % 2 };
-                else 
+                else
                     _startingSqXY = value;
             }
         }
@@ -322,19 +321,19 @@ namespace RTciv2.Forms
                     _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 1;
                 }
-                return _edgeDrawOffsetXY; 
+                return _edgeDrawOffsetXY;
             }
         }
 
         private int[] _drawingPxOffsetXY;
         private int[] DrawingPxOffsetXY   //in px
         {
-            get 
+            get
             {
                 _drawingPxOffsetXY = new int[] { 32 * EdgeDrawOffsetXY[0], 16 * EdgeDrawOffsetXY[1] };
                 if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * DrawingSqXY[0] - 32 * EdgeDrawOffsetXY[0]);
                 if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * DrawingSqXY[1] - 16 * EdgeDrawOffsetXY[1]);
-                return _drawingPxOffsetXY; 
+                return _drawingPxOffsetXY;
             }
         }
 
@@ -342,21 +341,23 @@ namespace RTciv2.Forms
         public static int[] DrawingSqXY  //Squares to be drawn on the panel
         {
             //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
-            get 
+            get
             {
                 _drawingSqXY = new int[] { (int)Math.Floor(((double)DrawPanel.Width - 32) / 32), (int)Math.Floor(((double)DrawPanel.Height - 16) / 16) };
                 return _drawingSqXY;
             }
         }
 
+        private int[] _centerSqXY;
         private int[] CenterSqXY
         {
-            get { return new int[] { CenterDistanceXY[0] + StartingSqXY[0], CenterDistanceXY[1] + StartingSqXY[1] }; }
-        }
-
-        private int[] CenterDistanceXY  //offset of central tile from panel NW corner (civ2 coords)
-        {
-            get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
+            get { return _centerSqXY; }
+            set
+            {
+                int[] centerDistanceXY = PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); //offset of central tile from panel NW corner
+                StartingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
+                _centerSqXY = new int[] { centerDistanceXY[0] + StartingSqXY[0], centerDistanceXY[1] + StartingSqXY[1] };
+            }
         }
 
         private static int[] _activeXY;
