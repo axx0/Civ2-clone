@@ -14,10 +14,9 @@ namespace RTciv2.Forms
     public partial class StatusPanel : Civ2panel
     {
         DoubleBufferedPanel StatsPanel, UnitPanel;
-        bool ViewingPiecesMode = false;
-        int[] ActiveXY = new int[] { 0, 0 };
 
-        public void CreateStatusPanel(int width, int height)
+        //public void CreateStatusPanel(int width, int height)
+        public StatusPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(StatusPanel_Paint);
@@ -31,6 +30,7 @@ namespace RTciv2.Forms
             };
             Controls.Add(StatsPanel);
             StatsPanel.Paint += StatsPanel_Paint;
+            StatsPanel.MouseClick += UnitPanel_Click;
 
             UnitPanel = new DoubleBufferedPanel()
             {
@@ -40,6 +40,7 @@ namespace RTciv2.Forms
             };
             Controls.Add(UnitPanel);
             UnitPanel.Paint += UnitPanel_Paint;
+            UnitPanel.MouseClick += UnitPanel_Click;
         }
 
         private void StatusPanel_Paint(object sender, PaintEventArgs e)
@@ -93,40 +94,73 @@ namespace RTciv2.Forms
             sf.Alignment = StringAlignment.Center;
             Font font = new Font("Times new roman", 10, FontStyle.Bold);
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            //List all units on active tile
+            List<IUnit> UnitsOnThisTile = new List<IUnit>();
+            foreach (IUnit unit in Game.Units.Where(a => (a.X == MapPanel.ActiveXY[0]) && (a.Y == MapPanel.ActiveXY[1])))
+                UnitsOnThisTile.Add(unit);
+            int maxUnitsToDraw = (int)Math.Floor((double)((UnitPanel.Height - 66) / 56));
 
-            if (ViewingPiecesMode)
+            if (MapPanel.ViewingPiecesMode)
             {
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
-                e.Graphics.DrawString($"Loc: ({ActiveXY[0]}, {ActiveXY[1]})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
-                e.Graphics.DrawString($"Loc: ({ActiveXY[0]}, {ActiveXY[1]})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
-                e.Graphics.DrawString($"({Game.Map[(ActiveXY[0] - ActiveXY[1] % 2) / 2, ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
-                e.Graphics.DrawString($"({Game.Map[(ActiveXY[0] - ActiveXY[1] % 2) / 2, ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
+                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
+                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
+                e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
+                e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
 
-                int count = 0;
-                foreach (IUnit unit in Game.Units.Where(a => (a.X == ActiveXY[0]) && (a.Y == ActiveXY[1]))) //draw units on this tile
+                int count;
+                for (count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
                 {
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(unit, false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
-                    e.Graphics.DrawString(Game.Cities[unit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
-                    e.Graphics.DrawString(unit.Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
-                    e.Graphics.DrawString(unit.Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
-                    e.Graphics.DrawString(ReadFiles.UnitName[(int)unit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
-                    e.Graphics.DrawString(ReadFiles.UnitName[(int)unit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
-                    count++;
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                    e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
+                    e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
+                    e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
+                    e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
+                    e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                    e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
                 }
-                    
+                if (count < UnitsOnThisTile.Count())
+                {
+                    string moreUnits = (UnitsOnThisTile.Count() - count == 1) ? "More Unit" : "More Units";
+                    e.Graphics.DrawString($"({UnitsOnThisTile.Count() - count} {moreUnits})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, UnitPanel.Height - 26); ;
+                    e.Graphics.DrawString($"({UnitsOnThisTile.Count() - count} {moreUnits})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, UnitPanel.Height - 27); ;
+                }
             }
-            else
+            else    //moving units mode
             {
                 e.Graphics.DrawString("Moving Units", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Moving Units", font, new SolidBrush(Color.White), new Point(120, 0), sf);
 
+                int count;
+                for(count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
+                {
+                    if (Game.Instance.ActiveUnit == UnitsOnThisTile[count])
+                    {
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(Game.Instance.ActiveUnit, false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 27);
+                        e.Graphics.DrawString($"Moves: {Game.Instance.ActiveUnit.MovePoints}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
+                        e.Graphics.DrawString($"Moves: {Game.Instance.ActiveUnit.MovePoints}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
+                        e.Graphics.DrawString(Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 44);
+                        e.Graphics.DrawString(Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
+                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
+                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
+                        e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
+                        e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
+                        e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
+                        e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
 
-
-                //e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(, IsInStack, MapPanel.ZoomLvl), (int)Math.Round(8 * 8 * 1.15), (int)Math.Round(8 * 6 * 1.15)), 20, 40);
-                //e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[3], (int)Math.Round(8 * 8 * 1.15), (int)Math.Round(8 * 6 * 1.15)), 20, 40+56);
-                //e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[3], (int)Math.Round(8 * 8 * 1.15), (int)Math.Round(8 * 6 * 1.15)), 20, 40+56*2);
+                    }
+                    else
+                    {
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                        e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
+                        e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
+                        e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
+                        e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
+                        e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                        e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
+                    }
+                }
             }
 
             sf.Dispose();
@@ -134,10 +168,14 @@ namespace RTciv2.Forms
             font.Dispose();
         }
 
-        private void ViewChangedInMapPanel(bool viewingPiecesMode, int[] rectStartCoords, int[] rectSize, int[] activeSqCoords)
+        private void ViewChangedInMapPanel()
         {
-            ViewingPiecesMode = viewingPiecesMode;
-            ActiveXY = activeSqCoords;
+            UnitPanel.Refresh();
+        }
+
+        private void UnitPanel_Click(object sender, MouseEventArgs e)
+        {
+            MapPanel.ViewingPiecesMode = !MapPanel.ViewingPiecesMode;
             UnitPanel.Refresh();
         }
     }

@@ -166,8 +166,7 @@ namespace RTciv2.Forms
         //Start button clicked
         private void StartButton_Clicked(Object sender, EventArgs e) {
             this.Hide();
-            int resolChoice;
-            resolChoice = (FullscrBox.Checked) ? Resolutions.FindIndex(a => a.Name == "Fullscreen") : ResolBox.SelectedIndex;
+            int resolChoice = (FullscrBox.Checked) ? Resolutions.FindIndex(a => a.Name == "Fullscreen") : ResolBox.SelectedIndex;
             WriteConfig();   //write a config file with current settings before closing form
             Game.LoadGame(Civ2Path, SAVname);
             var form2 = new MainCiv2Window(Resolutions[resolChoice], Civ2Path, SAVname);

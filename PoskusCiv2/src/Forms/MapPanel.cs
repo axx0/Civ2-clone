@@ -15,14 +15,16 @@ namespace RTciv2.Forms
     {
         private static DoubleBufferedPanel DrawPanel;
         private int MapGridVar { get; set; }    //style of map grid presentation
+        public static bool UnitMoved { get; set; }
         private Timer t_Blinking = new Timer();    //timer for blinking (unit or viewing piece)
         int BlinkingCounter;
         Label HelpLabel;
 
-        public delegate void MapViewChanged(bool ViewingPiecesMode, int[] rectStartCoords, int[] rectSize, int[] actingSqCoords);
+        public delegate void MapViewChanged();
         public static event MapViewChanged MapViewChangedEvent;
 
-        public void CreateMapPanel(int width, int height)
+        //public void CreateMapPanel(int width, int height)
+        public MapPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
@@ -62,7 +64,11 @@ namespace RTciv2.Forms
             //Initialize variables
             ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
             MapGridVar = 0;
-            ViewingPiecesMode = false;  //TODO: find out how viewing pieces mode is loaded from sav
+            ViewingPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
+            ClickedXY = Data.ClickedXY;
+            ActiveXY = Data.ActiveXY;
+            StartingSqXY = new int[] { ClickedXY[0] - CenterDistanceXY[0], ClickedXY[1] - CenterDistanceXY[1] };    //update map view at game start
+            UnitMoved = false;
             //TODO: Implement zoom
 
             //Uncomment this for help in drawing-logic
@@ -123,8 +129,8 @@ namespace RTciv2.Forms
 
             //UNITS
             foreach (IUnit unit in Game.Units)
-                if (UnitIsInView(unit) && !(unit.IsInCity || (unit.IsInStack && unit.IsLastInStack)) &&
-                    ((unit != Game.Instance.ActiveUnit) || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)))
+                if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
+                    UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
                     e.Graphics.DrawImage(unit.GraphicMapPanel,
                                          DrawingPxOffsetXY[0] + 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
                                          DrawingPxOffsetXY[1] + 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
@@ -211,7 +217,6 @@ namespace RTciv2.Forms
                 }
                 else if (Game.Units.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
                 {                    
-                    MapViewChange(newStartingSqViewCoords);
                     int clickedUnitIndex = Game.Units.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
                     if (!Game.Units[clickedUnitIndex].TurnEnded)
                     {
@@ -222,6 +227,7 @@ namespace RTciv2.Forms
                     {
                         //TODO: determine what happens if unit has ended turn...
                     }
+                    MapViewChange(newStartingSqViewCoords);
                 }
                 else    //something else clicked
                 {
@@ -231,7 +237,6 @@ namespace RTciv2.Forms
             }
             else    //right click
             {
-                Game.Instance.ActiveUnit = null;
                 ViewingPiecesMode = true;
                 ActiveXY = ClickedXY;
                 MapViewChange(newStartingSqViewCoords);
@@ -244,13 +249,13 @@ namespace RTciv2.Forms
             StartingSqXY = newStartingSqViewCoords;
 
             if (MapViewChangedEvent != null)
-                MapViewChangedEvent.Invoke(ViewingPiecesMode, StartingSqXY, DrawingSqXY, ActiveXY);  //send dimensions of current view
+                MapViewChangedEvent.Invoke();  //send dimensions of current view
 
             DrawPanel.Refresh();
         }
 
-        private int[] _startingSqXY;
-        private int[] StartingSqXY
+        private static int[] _startingSqXY;
+        public static int[] StartingSqXY
         {
             get 
             { 
@@ -333,8 +338,8 @@ namespace RTciv2.Forms
             }
         }
 
-        private int[] _drawingSqXY;
-        private int[] DrawingSqXY  //Squares to be drawn on the panel
+        private static int[] _drawingSqXY;
+        public static int[] DrawingSqXY  //Squares to be drawn on the panel
         {
             //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
             get 
@@ -354,8 +359,8 @@ namespace RTciv2.Forms
             get { return PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); }            
         }
 
-        private int[] _activeXY;
-        private int[] ActiveXY  //Currently active box (active unit or viewing piece), civ2 coords
+        private static int[] _activeXY;
+        public static int[] ActiveXY  //Currently active box (active unit or viewing piece), civ2 coords
         {
             get
             {
@@ -399,14 +404,10 @@ namespace RTciv2.Forms
         public void StandardZOOMclicked(Object sender, EventArgs e) { ZoomLvl = 8; }
         public void MediumZoomOUTclicked(Object sender, EventArgs e) { ZoomLvl = 5; }
 
-        private bool _viewingPiecesMode;
-        private bool ViewingPiecesMode
+        public static bool ViewingPiecesMode
         {
-            get { return _viewingPiecesMode; }
-            set 
-            {
-                _viewingPiecesMode = value;
-            }
+            get;
+            set;
         }
 
         private void Blinking_Tick(object sender, EventArgs e)

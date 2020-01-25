@@ -316,8 +316,9 @@ namespace RTciv2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            MapPanel = new MapPanel();
-            MapPanel.CreateMapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            //MapPanel = new MapPanel();
+            //MapPanel.CreateMapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
             ZoomInItem.Click += MapPanel.ZoomINclicked;
@@ -326,14 +327,16 @@ namespace RTciv2.Forms
             MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            
-            MinimapPanel = new MinimapPanel();
-            MinimapPanel.CreateMinimapPanel(262, 149);
+
+            //MinimapPanel = new MinimapPanel();
+            //MinimapPanel.CreateMinimapPanel(262, 149);
+            MinimapPanel = new MinimapPanel(262, 149);
             MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
             Controls.Add(MinimapPanel);
 
-            StatusPanel = new StatusPanel();
-            StatusPanel.CreateStatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
+            //StatusPanel = new StatusPanel();
+            //StatusPanel.CreateStatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
+            StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
             StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
             Controls.Add(StatusPanel);
         }
@@ -606,55 +609,6 @@ namespace RTciv2.Forms
         }
         #endregion
 
-        #region Some shortcuts keys are not supported. Grab them with this method.
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (!AreWeInIntroScreen)
-            {
-                switch (keyData)
-                {
-                    case Keys.NumPad1: Actions.GiveCommand("Move SW"); break;
-                    case Keys.NumPad2: Actions.GiveCommand("Move S"); break;
-                    case Keys.NumPad3: Actions.GiveCommand("Move SE"); break;
-                    case Keys.NumPad4: Actions.GiveCommand("Move W"); break;
-                    case Keys.NumPad6: Actions.GiveCommand("Move E"); break;
-                    case Keys.NumPad7: Actions.GiveCommand("Move NW"); break;
-                    case Keys.NumPad8: Actions.GiveCommand("Move N"); break;
-                    case Keys.NumPad9: Actions.GiveCommand("Move NE"); break;
-                    case Keys.Down: Actions.GiveCommand("Move S"); break;
-                    case Keys.Left: Actions.GiveCommand("Move W"); break;
-                    case Keys.Right: Actions.GiveCommand("Move E"); break;
-                    case Keys.Up: Actions.GiveCommand("Move N"); break;
-                    case Keys.A: ActivateUnit_Click(null, null); break;
-                    case Keys.B: BuildNewCity_Click(null, null); break;
-                    case Keys.F: Fortify_Click(null, null); break;
-                    case Keys.G: GoTo_Click(null, null); break;
-                    case Keys.H: GoHomeToNearestCity_Click(null, null); break;
-                    case Keys.I: BuildIrrigation_Click(null, null); break;
-                    case Keys.K: AutomateSettler_Click(null, null); break;
-                    case Keys.M: BuildMinesChangeForest_Click(null, null); break;
-                    case Keys.O: Actions.GiveCommand("Terraform"); break;
-                    case Keys.P: CleanUpPollution_Click(null, null); break; //paradrop!!!
-                    case Keys.R: BuildRoad_Click(null, null); break;
-                    case Keys.S: Sleep_Click(null, null); break;
-                    case Keys.U: Unload_Click(null, null); break;
-                    case Keys.W: Wait_Click(null, null); break;
-                    case Keys.X: MapPanel.ZoomLvl--; break;
-                    case Keys.Z: MapPanel.ZoomLvl++; break;
-                    case Keys.Space: SkipTurn_Click(null, null); break;
-                    case Keys.Enter: Actions.GiveCommand("ENTER"); break;
-                    case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
-                    case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
-                    case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
-                    case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
-                    case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
-                    case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
-                    case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
-                }
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
-        #endregion
 
         #region Draw border around Sinai image
         private void SinaiBorder_Paint(object sender, PaintEventArgs e) {            

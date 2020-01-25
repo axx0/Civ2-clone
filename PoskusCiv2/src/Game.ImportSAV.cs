@@ -11,12 +11,13 @@ using System.IO;
 namespace RTciv2
 {
     public partial class Game
-    {        
+    {
         public static void ImportSAV(string SAVpath)
         {
             FileStream fs = new FileStream(SAVpath, FileMode.Open, FileAccess.Read);        //Enter filename
             int[] dataArray = new int[fs.Length];
             string bin;
+            int intVal1, intVal2, intVal3, intVal4;
 
             //Read every byte
             for (int i = 0; i < fs.Length; i++) dataArray[i] = fs.ReadByte();
@@ -33,123 +34,61 @@ namespace RTciv2
             else if (dataArray[10] == 49)   version = 4;    //ToT1.0 (31 hex)
             else if (dataArray[10] == 50)   version = 5;    //ToT1.1 (32 hex)
             else                            version = 1;    //lower than Conflicts
-                        
-            //Bloodlust on/off
-            bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');    //you have to pad zeros to the left because ToString doesn't write first zeros
-            Options.Bloodlust = (bin[0] == '1') ? true : false;
 
-            //Simplified combat on/off
-            Options.SimplifiedCombat = (bin[3] == '1') ? true : false;
+            bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');   //you have to pad zeros to the left because ToString doesn't write first zeros
+            Options.Bloodlust = (bin[0] == '1') ? true : false;         //Bloodlust on/off            
+            Options.SimplifiedCombat = (bin[3] == '1') ? true : false;  //Simplified combat on/off
                         
-            //Flat/round earth
             bin = Convert.ToString(dataArray[13], 2).PadLeft(8, '0');
-            Options.FlatEarth = (bin[0] == '1') ? true : false;
-
-            //Don't restart if eliminated
-            Options.DontRestartIfEliminated = (bin[7] == '1') ? true : false;
-
-            //Move units without mouse
-            bin = Convert.ToString(dataArray[14], 2).PadLeft(8, '0');
-            Options.MoveUnitsWithoutMouse = (bin[0] == '1') ? true : false;
-
-            //Enter closes city screen
-            Options.EnterClosestCityScreen = (bin[1] == '1') ? true : false;
+            Options.FlatEarth = (bin[0] == '1') ? true : false;                 //Flat/round earth            
+            Options.DontRestartIfEliminated = (bin[7] == '1') ? true : false;   //Don't restart if eliminated
                         
-            //Grid on/off
-            Options.Grid = (bin[2] == '1') ? true : false;
-
-            //Sound effects on/off
-            Options.SoundEffects = (bin[3] == '1') ? true : false;
-
-            //Music on/off
-            Options.Music = (bin[4] == '1') ? true : false;
-
-            //Cheat menu on/off
-            bin = Convert.ToString(dataArray[15], 2).PadLeft(8, '0');
-            Options.CheatMenu = (bin[0] == '1') ? true : false;
-
-            //Always wait at end of turn on/off
-            Options.AlwaysWaitAtEndOfTurn = (bin[1] == '1') ? true : false;
-
-            //Autosave each turn on/off
-            Options.AutosaveEachTurn = (bin[2] == '1') ? true : false;
-
-            //Show enemy moves on/off
-            Options.ShowEnemyMoves = (bin[3] == '1') ? true : false;
-
-            //No pause after enemy moves on/off
-            Options.NoPauseAfterEnemyMoves = (bin[4] == '1') ? true : false;
-
-            //Fast piece slide on/off
-            Options.FastPieceSlide = (bin[5] == '1') ? true : false;
-
-            //Instant advice on/off
-            Options.InstantAdvice = (bin[6] == '1') ? true : false;
-
-            //Tutorial help on/off
-            Options.TutorialHelp = (bin[7] == '1') ? true : false;
-
-            //Animated heralds on/off
-            bin = Convert.ToString(dataArray[16], 2).PadLeft(8, '0');
-            Options.AnimatedHeralds = (bin[2] == '1') ? true : false;
-
-            //High council on/off
-            Options.HighCouncil = (bin[3] == '1') ? true : false;
-
-            //Civilopedia for advances on/off
-            Options.CivilopediaForAdvances = (bin[4] == '1') ? true : false;
-
-            //Throne room graphics on/off
-            Options.ThroneRoomGraphics = (bin[5] == '1') ? true : false;
+            bin = Convert.ToString(dataArray[14], 2).PadLeft(8, '0');
+            Options.MoveUnitsWithoutMouse = (bin[0] == '1') ? true : false;     //Move units without mouse            
+            Options.EnterClosestCityScreen = (bin[1] == '1') ? true : false;    //Enter closes city screen            
+            Options.Grid = (bin[2] == '1') ? true : false;                      //Grid on/off            
+            Options.SoundEffects = (bin[3] == '1') ? true : false;              //Sound effects on/off            
+            Options.Music = (bin[4] == '1') ? true : false;                     //Music on/off
             
-            //Diplomacy screen graphics on/off
-            Options.DiplomacyScreenGraphics = (bin[6] == '1') ? true : false;
-
-            //Wonder movies on/off
-            Options.WonderMovies = (bin[7] == '1') ? true : false;
-
-            //Cheat penalty/warning on/off
+            bin = Convert.ToString(dataArray[15], 2).PadLeft(8, '0');
+            Options.CheatMenu = (bin[0] == '1') ? true : false;             //Cheat menu on/off            
+            Options.AlwaysWaitAtEndOfTurn = (bin[1] == '1') ? true : false; //Always wait at end of turn on/off           
+            Options.AutosaveEachTurn = (bin[2] == '1') ? true : false;      //Autosave each turn on/off            
+            Options.ShowEnemyMoves = (bin[3] == '1') ? true : false;        //Show enemy moves on/off            
+            Options.NoPauseAfterEnemyMoves = (bin[4] == '1') ? true : false;//No pause after enemy moves on/off            
+            Options.FastPieceSlide = (bin[5] == '1') ? true : false;        //Fast piece slide on/off            
+            Options.InstantAdvice = (bin[6] == '1') ? true : false;         //Instant advice on/off            
+            Options.TutorialHelp = (bin[7] == '1') ? true : false;          //Tutorial help on/off
+            
+            bin = Convert.ToString(dataArray[16], 2).PadLeft(8, '0');
+            Options.AnimatedHeralds = (bin[2] == '1') ? true : false;           //Animated heralds on/off            
+            Options.HighCouncil = (bin[3] == '1') ? true : false;               //High council on/off            
+            Options.CivilopediaForAdvances = (bin[4] == '1') ? true : false;    //Civilopedia for advances on/off            
+            Options.ThroneRoomGraphics = (bin[5] == '1') ? true : false;        //Throne room graphics on/off            
+            Options.DiplomacyScreenGraphics = (bin[6] == '1') ? true : false;   //Diplomacy screen graphics on/off            
+            Options.WonderMovies = (bin[7] == '1') ? true : false;              //Wonder movies on/off
+            
             bin = Convert.ToString(dataArray[20], 2).PadLeft(8, '0');
-            Options.CheatPenaltyWarning = (bin[3] == '1') ? true : false;
-
-            //Announce we love king day on/off
+            Options.CheatPenaltyWarning = (bin[3] == '1') ? true : false;   //Cheat penalty/warning on/off
+                        
             bin = Convert.ToString(dataArray[22], 2).PadLeft(8, '0');
-            Options.AnnounceWeLoveKingDay = (bin[0] == '1') ? true : false;
-
-            //Warn when food dangerously low on/off
-            Options.WarnWhenFoodDangerouslyLow = (bin[1] == '1') ? true : false;
-
-            //Announce cities in disorder on/off
-            Options.AnnounceCitiesInDisorder = (bin[2] == '1') ? true : false;
-
-            //Announce order restored in cities on/off
-            Options.AnnounceOrderRestored = (bin[3] == '1') ? true : false;
-
-            //Show non combat units build on/off
-            Options.ShowNonCombatUnitsBuilt = (bin[4] == '1') ? true : false;
-
-            //Show invalid build instructions on/off
-            Options.ShowInvalidBuildInstructions = (bin[5] == '1') ? true : false;
-
-            //Warn when city growth halted on/off
-            Options.WarnWhenCityGrowthHalted = (bin[6] == '1') ? true : false;
-
-            //Show city improvements built on/off
-            Options.ShowCityImprovementsBuilt = (bin[7] == '1') ? true : false;
-
-            //Zoom to city not default action on/off
+            Options.AnnounceWeLoveKingDay = (bin[0] == '1') ? true : false;         //Announce we love king day on/off            
+            Options.WarnWhenFoodDangerouslyLow = (bin[1] == '1') ? true : false;    //Warn when food dangerously low on/off            
+            Options.AnnounceCitiesInDisorder = (bin[2] == '1') ? true : false;      //Announce cities in disorder on/off            
+            Options.AnnounceOrderRestored = (bin[3] == '1') ? true : false;         //Announce order restored in cities on/off            
+            Options.ShowNonCombatUnitsBuilt = (bin[4] == '1') ? true : false;       //Show non combat units build on/off           
+            Options.ShowInvalidBuildInstructions = (bin[5] == '1') ? true : false;  //Show invalid build instructions on/off            
+            Options.WarnWhenCityGrowthHalted = (bin[6] == '1') ? true : false;      //Warn when city growth halted on/off            
+            Options.ShowCityImprovementsBuilt = (bin[7] == '1') ? true : false;     //Show city improvements built on/off
+            
             bin = Convert.ToString(dataArray[23], 2).PadLeft(8, '0');
-            Options.ZoomToCityNotDefaultAction = (bin[5] == '1') ? true : false;
-
-            //Warn when pollution occurs on/off
-            Options.WarnWhenPollutionOccurs = (bin[6] == '1') ? true : false;
-
-            //Warn when changing production will cost shileds on/off
-            Options.WarnWhenChangingProductionWillCostShields = (bin[7] == '1') ? true : false;
+            Options.ZoomToCityNotDefaultAction = (bin[5] == '1') ? true : false;                //Zoom to city not default action on/off            
+            Options.WarnWhenPollutionOccurs = (bin[6] == '1') ? true : false;                   //Warn when pollution occurs on/off           
+            Options.WarnWhenChangingProductionWillCostShields = (bin[7] == '1') ? true : false; //Warn when changing production will cost shileds on/off
 
             //Number of turns passed
-            int intVal1 = dataArray[28];
-            int intVal2 = dataArray[29];
+            intVal1 = dataArray[28];
+            intVal2 = dataArray[29];
             Data.TurnNumber = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
 
             //Number of turns passed for game year calculation
@@ -162,44 +101,34 @@ namespace RTciv2
             intVal2 = dataArray[35];
             int _selectedIndex = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
             Data.SelectedUnitIndex = (_selectedIndex == 65535) ? -1 : _selectedIndex;
-
-            //Which human player is used
-            Data.HumanPlayer = dataArray[39];
-
-            //Players map which is used
-            Data.PlayersMapUsed = dataArray[40];
-
-            //Players map which is used
-            Data.PlayersCivilizationNumberUsed = dataArray[41];
-
-            //Map revealed
-            Data.MapRevealed = (dataArray[43] == 1) ? true : false;
-
-            //Difficulty level
-            Data.DifficultyLevel = dataArray[44];
-
-            //Barbarian activity
-            Data.BarbarianActivity = dataArray[45];
+                        
+            Data.HumanPlayer = dataArray[39];//Which human player is used
+            
+            Data.PlayersMapUsed = dataArray[40];//Players map which is used
+            
+            Data.PlayersCivilizationNumberUsed = dataArray[41];//Players civ number used
+            
+            Data.MapRevealed = (dataArray[43] == 1) ? true : false;//Map revealed
+            
+            Data.DifficultyLevel = dataArray[44];//Difficulty level
+            
+            Data.BarbarianActivity = dataArray[45];//Barbarian activity
 
             //Civs in play
             Data.CivsInPlay = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
             string conv = Convert.ToString(dataArray[46], 2).PadLeft(8, '0');
-            for (int i = 0; i < 8; i++) 
-                if (conv[i] == '1') 
+            for (int i = 0; i < 8; i++)
+                if (conv[i] == '1')
                     Data.CivsInPlay[i] = 1;
-
-            //Civs with human player playing (multiplayer)
-            string humanPlayerPlayed = Convert.ToString(dataArray[47], 2).PadLeft(8, '0');
-
-            //Amount of pollution
-            Data.PollutionAmount = dataArray[50];
-
-            //Global temp rising times occured
-            Data.GlobalTempRiseOccured = dataArray[51];
-
-            //Number of turns of peace
-            Data.NoOfTurnsOfPeace = dataArray[56];
             
+            string humanPlayerPlayed = Convert.ToString(dataArray[47], 2).PadLeft(8, '0');//Civs with human player playing (multiplayer)
+                        
+            Data.PollutionAmount = dataArray[50];//Amount of pollution
+                        
+            Data.GlobalTempRiseOccured = dataArray[51];//Global temp rising times occured
+                       
+            Data.NoOfTurnsOfPeace = dataArray[56]; //Number of turns of peace
+
             //Number of units
             intVal1 = dataArray[58];
             intVal2 = dataArray[59];
@@ -406,7 +335,7 @@ namespace RTciv2
             //Initialize Terrain array now that you know its size
             Map = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
 
-            //block 1 - terrain improvements (for indivudual civs)
+            //block 1 - terrain improvements (for individual civs)
             int ofsetB1 = ofset + 14; //offset for block 2 values
             //...........
             //block 2 - terrain type
@@ -420,28 +349,28 @@ namespace RTciv2
                 TerrainType type = TerrainType.Desert;  //only initial
                 bool river = false;
                 int terrain_type = dataArray[ofsetB2 + i * 6 + 0];
-                if (terrain_type == 0)   { type = TerrainType.Desert; river = false; }   //0dec=0hex
+                if (terrain_type == 0) { type = TerrainType.Desert; river = false; }   //0dec=0hex
                 if (terrain_type == 128) { type = TerrainType.Desert; river = true; }   //128dec=80hex
-                if (terrain_type == 1)   { type = TerrainType.Plains; river = false; }   //1dec=1hex
+                if (terrain_type == 1) { type = TerrainType.Plains; river = false; }   //1dec=1hex
                 if (terrain_type == 129) { type = TerrainType.Plains; river = true; }   //129dec=81hex
-                if (terrain_type == 2)   { type = TerrainType.Grassland; river = false; }   //2dec=2hex
+                if (terrain_type == 2) { type = TerrainType.Grassland; river = false; }   //2dec=2hex
                 if (terrain_type == 130) { type = TerrainType.Grassland; river = true; }   //130dec=82hex
-                if (terrain_type == 3)   { type = TerrainType.Forest; river = false; }   //3dec=3hex
+                if (terrain_type == 3) { type = TerrainType.Forest; river = false; }   //3dec=3hex
                 if (terrain_type == 131) { type = TerrainType.Forest; river = true; }   //131dec=83hex
-                if (terrain_type == 4)   { type = TerrainType.Hills; river = false; }   //4dec=4hex
+                if (terrain_type == 4) { type = TerrainType.Hills; river = false; }   //4dec=4hex
                 if (terrain_type == 132) { type = TerrainType.Hills; river = true; }   //132dec=84hex
-                if (terrain_type == 5)   { type = TerrainType.Mountains; river = false; }   //5dec=5hex
+                if (terrain_type == 5) { type = TerrainType.Mountains; river = false; }   //5dec=5hex
                 if (terrain_type == 133) { type = TerrainType.Mountains; river = true; }   //133dec=85hex
-                if (terrain_type == 6)   { type = TerrainType.Tundra; river = false; }   //6dec=6hex
+                if (terrain_type == 6) { type = TerrainType.Tundra; river = false; }   //6dec=6hex
                 if (terrain_type == 134) { type = TerrainType.Tundra; river = true; }   //134dec=86hex
-                if (terrain_type == 7)   { type = TerrainType.Glacier; river = false; }   //7dec=7hex
+                if (terrain_type == 7) { type = TerrainType.Glacier; river = false; }   //7dec=7hex
                 if (terrain_type == 135) { type = TerrainType.Glacier; river = true; }   //135dec=87hex
-                if (terrain_type == 8)   { type = TerrainType.Swamp; river = false; }   //8dec=8hex
+                if (terrain_type == 8) { type = TerrainType.Swamp; river = false; }   //8dec=8hex
                 if (terrain_type == 136) { type = TerrainType.Swamp; river = true; }   //136dec=88hex
-                if (terrain_type == 9)   { type = TerrainType.Jungle; river = false; }   //9dec=9hex
+                if (terrain_type == 9) { type = TerrainType.Jungle; river = false; }   //9dec=9hex
                 if (terrain_type == 137) { type = TerrainType.Jungle; river = true; }   //137dec=89hex
-                if (terrain_type == 10)  { type = TerrainType.Ocean; river = false; }   //10dec=Ahex
-                if (terrain_type == 74)  { type = TerrainType.Ocean; river = false; }   //74dec=4Ahex
+                if (terrain_type == 10) { type = TerrainType.Ocean; river = false; }   //10dec=Ahex
+                if (terrain_type == 74) { type = TerrainType.Ocean; river = false; }   //74dec=4Ahex
                 //determine if resources are present
                 bool resource = false;
                 //!!! NOT WORKING PROPERLY !!!
@@ -452,27 +381,24 @@ namespace RTciv2
                 int tile_improv = dataArray[ofsetB2 + i * 6 + 1];
                 bool unit_present = false, city_present = false, irrigation = false, mining = false, road = false, railroad = false, fortress = false, pollution = false, farmland = false, airbase = false;
                 bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
-                if (bin[7] == '1') unit_present = true;
-                if (bin[6] == '1') city_present = true;
-                if (bin[5] == '1') irrigation = true;
-                if (bin[4] == '1') mining = true;
-                if (bin[3] == '1') road = true;
+                if (bin[7] == '1')                  unit_present = true;
+                if (bin[6] == '1')                  city_present = true;
+                if (bin[5] == '1')                  irrigation = true;
+                if (bin[4] == '1')                  mining = true;
+                if (bin[3] == '1')                  road = true;
                 if (bin[2] == '1' && bin[3] == '1') railroad = true;
-                if (bin[1] == '1') fortress = true;
-                if (bin[0] == '1') pollution = true;
+                if (bin[1] == '1')                  fortress = true;
+                if (bin[0] == '1')                  pollution = true;
                 if (bin[4] == '1' && bin[5] == '1') farmland = true;
                 if (bin[1] == '1' && bin[6] == '1') airbase = true;
-
-                //City radius (TO-DO)
-                int intValueB23 = dataArray[ofsetB2 + i * 6 + 2];
                 
-                //Island counter
-                int terrain_island = dataArray[ofsetB2 + i * 6 + 3];
+                int intValueB23 = dataArray[ofsetB2 + i * 6 + 2];       //City radius (TO-DO)
+                
+                int terrain_island = dataArray[ofsetB2 + i * 6 + 3];    //Island counter
+                
+                int intValueB25 = dataArray[ofsetB2 + i * 6 + 4];       //Visibility (TO-DO)
 
-                //Visibility (TO-DO)
-                int intValueB25 = dataArray[ofsetB2 + i * 6 + 4];
-
-                int intValueB26 = dataArray[ofsetB2 + i * 6 + 5];   //?
+                int intValueB26 = dataArray[ofsetB2 + i * 6 + 5];       //?
 
                 //string hexValue = intValueB26.ToString("X");
 
@@ -480,18 +406,18 @@ namespace RTciv2
                 int specialtype = ReturnSpecial(x, y, type, Data.MapXdim, Data.MapYdim);
 
                 CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, bin);
-                
+
             }
             //block 3 - locator map
             int ofsetB3 = ofsetB2 + 6 * Data.MapArea; //offset for block 2 values
-                                                 //...............
+                                                      //...............
             #endregion
             #region Units
             //=========================
             //UNIT INFO
             //=========================
             int ofsetU = ofsetB3 + 2 * Data.MapLocatorXdim * Data.MapLocatorYdim + 1024;
-            
+
             //determine byte length of units
             int multipl;
             if (version <= 2)       multipl = 26;   //FW or CiC
@@ -513,41 +439,21 @@ namespace RTciv2
                 intVal1 = dataArray[ofsetU + multipl * i + 2];
                 intVal2 = dataArray[ofsetU + multipl * i + 3];
                 int unitYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-
-                //If this is the unit's first move
+                                
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 4], 2).PadLeft(8, '0');
-                bool unitFirstMove = (bin[1] == '1') ? true : false;
-
-                //Grey star to the shield
+                bool unitFirstMove = (bin[1] == '1') ? true : false;            //If this is the unit's first move
+                                
                 bin = Convert.ToString(dataArray[ofsetU + multipl * i + 5], 2).PadLeft(8, '0');
-                bool unitGreyStarShield = (bin[0] == '1') ? true : false;
-
-                //Veteran status
-                bool unitVeteranStatus = (bin[2] == '1') ? true : false;
-
-                //Unit type
-                int unitType = dataArray[ofsetU + multipl * i + 6];
-
-                //Unit civ
-                int unitCiv = dataArray[ofsetU + multipl * i + 7];  //00 = barbarians
-               
-                //Unit move points expended
-                int unitMovePointsLost = dataArray[ofsetU + multipl * i + 8];
-
-                //Unit hitpoints lost
-                int unitHitpointsLost = dataArray[ofsetU + multipl * i + 10];
-
-                //Unit previous move
-                int unitLastMove = dataArray[ofsetU + multipl * i + 11];    //06=right, 02=down, ...
-
-                //Unit caravan commodity
-                int unitCaravanCommodity = dataArray[ofsetU + multipl * i + 13];
-
-                //Unit orders
-                int unitOrders = dataArray[ofsetU + multipl * i + 15];
-
-                //Unit home city
-                int unitHomeCity = dataArray[ofsetU + multipl * i + 16];
+                bool unitGreyStarShield = (bin[0] == '1') ? true : false;       //Grey star to the shield                
+                bool unitVeteranStatus = (bin[2] == '1') ? true : false;        //Veteran status                
+                int unitType = dataArray[ofsetU + multipl * i + 6];             //Unit type
+                int unitCiv = dataArray[ofsetU + multipl * i + 7];              //Unit civ, 00 = barbarians                
+                int unitMovePointsLost = dataArray[ofsetU + multipl * i + 8];   //Unit move points expended                
+                int unitHitpointsLost = dataArray[ofsetU + multipl * i + 10];   //Unit hitpoints lost
+                int unitLastMove = dataArray[ofsetU + multipl * i + 11];        //Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)                
+                int unitCaravanCommodity = dataArray[ofsetU + multipl * i + 13];//Unit caravan commodity                
+                int unitOrders = dataArray[ofsetU + multipl * i + 15];          //Unit orders                
+                int unitHomeCity = dataArray[ofsetU + multipl * i + 16];        //Unit home city
 
                 //Unit go-to X
                 intVal1 = dataArray[ofsetU + multipl * i + 18];
@@ -568,7 +474,7 @@ namespace RTciv2
                 intVal1 = dataArray[ofsetU + multipl * i + 24];
                 intVal2 = dataArray[ofsetU + multipl * i + 25];
                 int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-                
+
                 IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovePointsLost, unitHitpointsLost, unitLastMove, unitCaravanCommodity, (OrderType)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
             #endregion
@@ -577,12 +483,12 @@ namespace RTciv2
             //CITIES
             //=========================
             int ofsetC = ofsetU + multipl * Data.NumberOfUnits;
-            
+
             if (version <= 2)       multipl = 84;   //FW or CiC
             else if (version == 3)  multipl = 88;   //MGE
             else                    multipl = 92;   //ToT
-                        
-            char[] asciichar = new char[15];            
+
+            char[] asciichar = new char[15];
             for (int i = 0; i < Data.NumberOfCities; i++)
             {
                 //City X location
@@ -595,45 +501,28 @@ namespace RTciv2
                 intVal2 = dataArray[ofsetC + multipl * i + 3];
                 int cityYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Can build coastal improvements
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 4], 2).PadLeft(8, '0');
-                bool cityCanBuildCoastal = (bin[0] == '1') ? true : false;
+                bool cityCanBuildCoastal = (bin[0] == '1') ? true : false;          //Can build coastal improvements
+                bool cityAutobuildMilitaryRule = (bin[3] == '1') ? true : false;    //Auto build under military rule
+                bool cityStolenTech = (bin[4] == '1') ? true : false;               //Stolen tech
+                bool cityImprovementSold = (bin[5] == '1') ? true : false;          //Improvement sold
+                bool cityWeLoveKingDay = (bin[6] == '1') ? true : false;            //We love king day
+                bool cityCivilDisorder = (bin[7] == '1') ? true : false;            //Civil disorder
 
-                //Auto build under military rule
-                bool cityAutobuildMilitaryRule = (bin[3] == '1') ? true : false;
-
-                //Stolen tech
-                bool cityStolenTech = (bin[4] == '1') ? true : false;
-
-                //Improvement sold
-                bool cityImprovementSold = (bin[5] == '1') ? true : false;
-
-                //We love king day
-                bool cityWeLoveKingDay = (bin[6] == '1') ? true : false;
-
-                //Civil disorder
-                bool cityCivilDisorder = (bin[7] == '1') ? true : false;
-
-                //Can build ships
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 6], 2).PadLeft(8, '0');
-                bool cityCanBuildShips = (bin[2] == '1') ? true : false;
+                bool cityCanBuildShips = (bin[2] == '1') ? true : false;    //Can build ships
 
-                //Objective x3
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex3 = (bin[3] == '1') ? true : false;
+                bool cityObjectivex3 = (bin[3] == '1') ? true : false;  //Objective x3
 
-                //Objective x1
                 bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex1 = (bin[5] == '1') ? true : false;
-
-                //Owner
-                int cityOwner = dataArray[ofsetC + multipl * i + 8];
-
-                //Size
-                int citySize = dataArray[ofsetC + multipl * i + 9];
-
-                //Who built it
-                int cityWhoBuiltIt = dataArray[ofsetC + multipl * i + 10];
+                bool cityObjectivex1 = (bin[5] == '1') ? true : false;  //Objective x1
+                                
+                int cityOwner = dataArray[ofsetC + multipl * i + 8];    //Owner
+                
+                int citySize = dataArray[ofsetC + multipl * i + 9];     //Size
+                                
+                int cityWhoBuiltIt = dataArray[ofsetC + multipl * i + 10];  //Who built it
 
                 //Production squares
                 //???????????????????
@@ -660,18 +549,14 @@ namespace RTciv2
                 for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(dataArray[ofsetC + multipl * i + j + 32]);
                 string cityName = new string(asciichar);
                 cityName = cityName.Replace("\0", string.Empty);
-
-                //Workers in inner circle
-                int cityWorkersInnerCircle = dataArray[ofsetC + multipl * i + 48];
-
-                //Workers on 8 of the outer circle
-                int cityWorkersOn8 = dataArray[ofsetC + multipl * i + 49];
                 
-                //Workers on 4 of the outer circle
-                int cityWorkersOn4 = dataArray[ofsetC + multipl * i + 50];
-
-                //Number of specialists x4
-                int cityNoOfSpecialistsx4 = dataArray[ofsetC + multipl * i + 51];
+                int cityWorkersInnerCircle = dataArray[ofsetC + multipl * i + 48];  //Workers in inner circle
+                
+                int cityWorkersOn8 = dataArray[ofsetC + multipl * i + 49];  //Workers on 8 of the outer circle
+                                
+                int cityWorkersOn4 = dataArray[ofsetC + multipl * i + 50];  //Workers on 4 of the outer circle
+                                
+                int cityNoOfSpecialistsx4 = dataArray[ofsetC + multipl * i + 51];   //Number of specialists x4
 
                 //Improvements
                 string cityImprovements1 = Convert.ToString(dataArray[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');   //bit6=palace (1st improvement), bit7=not important
@@ -701,9 +586,8 @@ namespace RTciv2
                 int cityItemInProduction = dataArray[ofsetC + multipl * i + 57];
                 if (cityItemInProduction > 70)  //if it is improvement
                     cityItemInProduction = 255 - cityItemInProduction + 62; //62 because 0...61 are units
-
-                //No of active trade routes
-                int cityActiveTradeRoutes = dataArray[ofsetC + multipl * i + 58];
+                                
+                int cityActiveTradeRoutes = dataArray[ofsetC + multipl * i + 58];   //No of active trade routes
 
                 //1st, 2nd, 3rd trade commodities available
                 //...
@@ -731,18 +615,14 @@ namespace RTciv2
                 intVal1 = dataArray[ofsetC + multipl * i + 78];
                 intVal2 = dataArray[ofsetC + multipl * i + 79];
                 int cityNoOfTradeIcons = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-
-                //Total food production
-                int cityFoodProduction = dataArray[ofsetC + multipl * i + 80];
-
-                //Total shield production
-                int cityShieldProduction = dataArray[ofsetC + multipl * i + 81];
-
-                //No of happy citizens
-                int cityHappyCitizens = dataArray[ofsetC + multipl * i + 82];
-
-                //No of unhappy citizens
-                int cityUnhappyCitizens = dataArray[ofsetC + multipl * i + 83];
+                                
+                int cityFoodProduction = dataArray[ofsetC + multipl * i + 80];  //Total food production
+                                
+                int cityShieldProduction = dataArray[ofsetC + multipl * i + 81];    //Total shield production
+                                
+                int cityHappyCitizens = dataArray[ofsetC + multipl * i + 82];   //No of happy citizens
+                                
+                int cityUnhappyCitizens = dataArray[ofsetC + multipl * i + 83]; //No of unhappy citizens
 
                 //Sequence number of the city
                 //...
@@ -759,6 +639,23 @@ namespace RTciv2
             //=========================
             //OTHER
             //=========================
+            int ofsetO = ofsetC + multipl * Data.NumberOfCities;
+
+            //active cursor XY position
+            intVal1 = dataArray[ofsetO + 63];
+            intVal2 = dataArray[ofsetO + 64];
+            intVal3 = dataArray[ofsetO + 65];
+            intVal4 = dataArray[ofsetO + 66];
+            Data.ActiveXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+
+            //clicked tile X position
+            intVal1 = dataArray[ofsetO + 1425];
+            intVal2 = dataArray[ofsetO + 1426];
+            intVal3 = dataArray[ofsetO + 1427];
+            intVal4 = dataArray[ofsetO + 1428];
+            Data.ClickedXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+
+            Console.WriteLine($"Pos: cursor=({Data.ActiveXY[0]},{Data.ActiveXY[1]}), view=({Data.ClickedXY[0]},{Data.ClickedXY[1]})");
             #endregion
 
             fs.Dispose();

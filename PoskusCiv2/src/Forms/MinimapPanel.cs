@@ -14,18 +14,8 @@ namespace RTciv2.Forms
     {
         DoubleBufferedPanel DrawPanel;
 
-        private int[] _rectangleDimensions;
-        private int[] RectangleDimensions   // X, Y, WIDTH, HEIGHT
-        {
-            get 
-            {
-                if (_rectangleDimensions == null) _rectangleDimensions = new int[] { 0, 0, 10, 10 };
-                return _rectangleDimensions; 
-            }
-            set { _rectangleDimensions = value; }
-        }
-
-        public void CreateMinimapPanel(int width, int height)
+        //public void CreateMinimapPanel(int width, int height)
+        public MinimapPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MinimapPanel_Paint);
@@ -82,14 +72,13 @@ namespace RTciv2.Forms
                 e.Graphics.FillRectangle(new SolidBrush(CivColors.CityTextColor[city.Owner]), offset[0] + city.X, offset[1] + city.Y, 2, 1);
 
             //draw current view rectangle
-            e.Graphics.DrawRectangle(new Pen(Color.White), offset[0] + RectangleDimensions[0], offset[1] + RectangleDimensions[1], RectangleDimensions[2], RectangleDimensions[3]);
+            e.Graphics.DrawRectangle(new Pen(Color.White), offset[0] + MapPanel.StartingSqXY[0], offset[1] + MapPanel.StartingSqXY[1], MapPanel.DrawingSqXY[0], MapPanel.DrawingSqXY[1]);
             e.Dispose();
         }
         //TODO: Make sure minimap rectangle is correct immediately after game loading
 
-        private void ViewChangedInMapPanel(bool viewingPiecesMode, int[] rectStartCoords, int[] rectSize, int[] actingSqCoords)
+        private void ViewChangedInMapPanel()
         {
-            RectangleDimensions = new int[] { rectStartCoords[0], rectStartCoords[1], rectSize[0], rectSize[1] };
             DrawPanel.Refresh();
         }
     }

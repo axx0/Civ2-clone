@@ -246,13 +246,14 @@ namespace RTciv2
         }
 
         //find out if certain civ has any units awaiting orders
-        static bool AnyUnitsAwaitingOrders(int civId)
+        public static bool AnyUnitsAwaitingOrders(int civId)
         {
-            List<int> indexUAO = new List<int>();            //Create an array of indexes of units awaiting orders
-            for (int i = 0; i < Game.Units.Count; i++) if ((Game.Units[i].Civ == civId) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
+            //List<int> indexUAO = new List<int>();            //Create an array of indexes of units awaiting orders
+            //for (int i = 0; i < Game.Units.Count; i++) if ((Game.Units[i].Civ == civId) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
 
-            if (indexUAO.Any()) return true;
-            else return false;
+            //if (indexUAO.Any()) return true;
+            //else return false;
+            return Game.Units.Any(unit => unit.Civ == civId && unit.AwaitingOrders);
         }
     }
 }

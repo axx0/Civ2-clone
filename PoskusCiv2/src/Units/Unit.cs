@@ -39,6 +39,7 @@ namespace RTciv2.Units
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
         public int Civ { get; set; }
+
         public int LastMove { get; set; }
         public int CaravanCommodity { get; set; }
         public int HomeCity { get; set; }
@@ -59,56 +60,67 @@ namespace RTciv2.Units
 
         public void Move(int moveX, int moveY)
         {
-            int xTo = X + moveX;    //Civ2-style
-            int yTo = Y + moveY;
-            int Xto = (xTo - yTo % 2) / 2;  //from civ2-style to real coords
-            int Yto = yTo;
+            int Xto = X + moveX;    //Civ2-style
+            int Yto = Y + moveY;
+            int X_ = (X - Y % 2) / 2;  //real coords
+            int Xto_ = (Xto - Yto % 2) / 2;
 
             bool unitMoved = false;
 
-            //LAND units
-            if (GAS == UnitGAS.Ground && Game.Map[Xto, Yto].Type != TerrainType.Ocean)
+            switch (GAS)
             {
-                if ((Game.Map[X, Y].Road || Game.Map[X, Y].CityPresent) && (Game.Map[Xto, Yto].Road || Game.Map[Xto, Yto].CityPresent) ||   //From & To must be cities, road
-                    (Game.Map[X, Y].River && Game.Map[Xto, Yto].River && moveX < 2 && moveY < 2)    //For rivers only for diagonal movement
-                    )
-                {
-                    MovePoints -= 1;
-                }
-                else
-                {
-                    MovePoints -= 3;
-                }
-                unitMoved = true;
-            }
+                case UnitGAS.Ground:
+                    {
+                        if (Game.Map[Xto_, Yto].Type == TerrainType.Ocean) break;
 
-            //SEA units
-            if (GAS == UnitGAS.Sea && Game.Map[Xto, Yto].Type == TerrainType.Ocean)
-            {
-                MovePoints -= 3;
-                unitMoved = true;
-            }
+                        if ((Game.Map[X_, Y].Road || Game.Map[X_, Y].CityPresent) && (Game.Map[Xto_, Yto].Road || Game.Map[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
+                            (Game.Map[X_, Y].River && Game.Map[Xto_, Yto].River && moveX < 2 && moveY < 2))    //For rivers only for diagonal movement
+                            MovePoints -= 1;
+                        else
+                            MovePoints -= 3;
 
-            //AIR units
-            if (GAS == UnitGAS.Air)
-            {
-                MovePoints -= 3;
-                unitMoved = true;
+                        unitMoved = true;
+                        break;
+                    }
+                case UnitGAS.Sea:
+                    {
+                        if (Game.Map[Xto_, Yto].Type != TerrainType.Ocean) break;
+
+                        MovePoints -= 3;
+
+                        unitMoved = true;
+                        break;
+                    }
+                case UnitGAS.Air:
+                    {
+                        MovePoints -= 3;
+
+                        unitMoved = true;
+                        break;
+                    }
             }
 
             //If unit moved, update its X-Y coords, map & play sound
             if (unitMoved)
             {
+                //set last move for unit
+                if (moveX == 1 && moveY == -1)          LastMove = 0;
+                else if (moveX == 2 && moveY == 0)      LastMove = 1;
+                else if (moveX == 1 && moveY == 1)      LastMove = 2;
+                else if (moveX == 0 && moveY == 2)      LastMove = 3;
+                else if (moveX == -1 && moveY == 1)     LastMove = 4;
+                else if (moveX == -2 && moveY == 0)     LastMove = 5;
+                else if (moveX == -1 && moveY == -1)    LastMove = 6;
+                else if (moveX == 0 && moveY == -2)     LastMove = 7;
+
+                //set new coords
                 X = Xto;
                 Y = Yto;
 
-                //for animation of movement
-                //if (!Options.FastPieceSlide) Application.OpenForms.OfType<MapForm>().First().AnimateUnit(this, X - moveX, Y - moveY);    //send coords of unit starting loc
+                MapPanel.UnitMoved = true;    //trigger animation of movement in map panel
 
-                Sound.MoveSound.Play();
+                //Sound.MoveSound.Play();
             }
-
-            if (MovePoints <= 0) TurnEnded = true;        
         }
 
         private bool _turnEnded;
@@ -117,7 +129,8 @@ namespace RTciv2.Units
             get
             {
                 if (MovePoints <= 0) _turnEnded = true;
-                if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation || Order == OrderType.BuildRoad || Order == OrderType.BuildAirbase || Order == OrderType.BuildFortress || Order == OrderType.BuildMine) _turnEnded = true;
+                if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation || 
+                    Order == OrderType.BuildRoad || Order == OrderType.BuildAirbase || Order == OrderType.BuildFortress || Order == OrderType.BuildMine) _turnEnded = true;
                 return _turnEnded;
             }
             set { _turnEnded = value; }
@@ -128,7 +141,7 @@ namespace RTciv2.Units
         {
             get
             {
-                _awaitingOrders = (TurnEnded || (Order != OrderType.NoOrders)) ? false : true;
+                _awaitingOrders = (Order == OrderType.NoOrders || Order == OrderType.GoTo) ? true : false;
                 return _awaitingOrders;
             }
             set { _awaitingOrders = value; }
@@ -137,6 +150,7 @@ namespace RTciv2.Units
         public void SkipTurn()
         {
             TurnEnded = true;
+            LastMove = 255; //FF hex
         }
 
         public void Fortify()
@@ -258,7 +272,7 @@ namespace RTciv2.Units
         }
 
         private bool _isLastInStack;
-        public bool IsLastInStack   //determine if unit is last in stack list (or if it is not in stack, it is the only one)
+        public bool IsLastInStack   //determine if unit is last in stack list (return TRUE if it is not in stack)
         {
             get
             {

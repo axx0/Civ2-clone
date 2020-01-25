@@ -1236,18 +1236,19 @@ namespace RTciv2.Imagery
                 string shieldText;
                 switch (unit.Order)
                 {
-                    case OrderType.Fortify: shieldText = "f"; break;
-                    case OrderType.Fortified: shieldText = "F"; break;
-                    case OrderType.Sleep: shieldText = "S"; break;
-                    case OrderType.BuildFortress: shieldText = "bf"; break;
-                    case OrderType.BuildRoad: shieldText = "R"; break;
+                    case OrderType.Fortify:         shieldText = "F"; break;
+                    case OrderType.Fortified:       shieldText = "F"; break;
+                    case OrderType.Sleep:           shieldText = "S"; break;
+                    case OrderType.BuildFortress:   shieldText = "F"; break;
+                    case OrderType.BuildRoad:       shieldText = "R"; break;
                     case OrderType.BuildIrrigation: shieldText = "I"; break;
-                    case OrderType.BuildMine: shieldText = "M"; break;
-                    case OrderType.Transform: shieldText = "O"; break;
-                    case OrderType.CleanPollution: shieldText = "P"; break;
-                    case OrderType.BuildAirbase: shieldText = "A"; break;
-                    case OrderType.GoTo: shieldText = "G"; break;
-                    default: shieldText = "/"; break;
+                    case OrderType.BuildMine:       shieldText = "m"; break;
+                    case OrderType.Transform:       shieldText = "O"; break;
+                    case OrderType.CleanPollution:  shieldText = "p"; break;
+                    case OrderType.BuildAirbase:    shieldText = "E"; break;
+                    case OrderType.GoTo:            shieldText = "G"; break;
+                    case OrderType.NoOrders:        shieldText = "-"; break;
+                    default:                        shieldText = "-"; break;
                 }
 
                 //Draw unit shields. First determine if the shield is on the left or right side
@@ -1255,21 +1256,28 @@ namespace RTciv2.Imagery
                 int secondShieldXLoc = firstShieldXLoc;
                 int secondShieldBorderXLoc;
                 int borderShieldOffset;
-                if (firstShieldXLoc < 32) {
+                if (firstShieldXLoc < 32) 
+                {
                     borderShieldOffset = -1;
                     secondShieldXLoc -= 4;
-                    secondShieldBorderXLoc = secondShieldXLoc - 1; }
-                else {
+                    secondShieldBorderXLoc = secondShieldXLoc - 1; 
+                }
+                else 
+                {
                     borderShieldOffset = 1;
                     secondShieldXLoc += 4;
-                    secondShieldBorderXLoc = secondShieldXLoc + 1; }
+                    secondShieldBorderXLoc = secondShieldXLoc + 1; 
+                }
 
                 //Determine hitpoints bar size
                 int hitpointsBarX = (int)Math.Floor((float)unit.HitPoints * 12 / unit.MaxHitPoints);
                 Color hitpointsColor;
-                if (hitpointsBarX <= 3) hitpointsColor = Color.FromArgb(243, 0, 0);
-                else if (hitpointsBarX >= 4 && hitpointsBarX <= 8) hitpointsColor = Color.FromArgb(255, 223, 79);
-                else hitpointsColor = Color.FromArgb(87, 171, 39);
+                if (hitpointsBarX <= 3) 
+                    hitpointsColor = Color.FromArgb(243, 0, 0);
+                else if (hitpointsBarX >= 4 && hitpointsBarX <= 8) 
+                    hitpointsColor = Color.FromArgb(255, 223, 79);
+                else 
+                    hitpointsColor = Color.FromArgb(87, 171, 39);
 
                 //Draw shadow for unit in stack
                 if (drawInStack)    //draw dark shield if unit is stacked on top of others
@@ -1279,7 +1287,7 @@ namespace RTciv2.Imagery
                 }
 
                 //shield shadow
-                graphics.DrawImage(UnitShieldShadow, unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, unitShieldLocation[(int)unit.Type, 1]);
+                graphics.DrawImage(UnitShieldShadow, unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, unitShieldLocation[(int)unit.Type, 1] - borderShieldOffset);
 
                 //main shield
                 graphics.DrawImage(UnitShield[unit.Civ], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
@@ -1291,7 +1299,7 @@ namespace RTciv2.Imagery
                 graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
 
                 //Action on shield
-                graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), unitShieldLocation[(int)unit.Type, 0] + 6, unitShieldLocation[(int)unit.Type, 1] + 12, sf);
+                graphics.DrawString(shieldText, new Font("Arial", 6.5f), new SolidBrush(Color.Black), unitShieldLocation[(int)unit.Type, 0] + 7, unitShieldLocation[(int)unit.Type, 1] + 12, sf);
 
                 if (unit.Order != OrderType.Sleep) graphics.DrawImage(Units[(int)unit.Type], 0, 0);    //draw unit
                 else graphics.DrawImage(Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit

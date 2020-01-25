@@ -49,17 +49,20 @@ namespace RTciv2
             ImportSAV(civ2path + SAVname + ".SAV");
             Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
                                             //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
-            Game.Instance.ActiveUnit = Game.Units[Data.SelectedUnitIndex];
+            Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units[Data.SelectedUnitIndex];    //null means all units have ended turn
 
             int count = 0;
             foreach (IUnit unit in Game.Units)
-            { 
+            {
                 if (unit.Civ == 5)
-                {
-                    Console.WriteLine($"Unit, Id={count}, {unit.Type}, ({unit.X},{unit.Y}), TurnEnded={unit.TurnEnded}");
-                }
-                count++; 
+                    Console.WriteLine($"Unit, Id={count}, owner={unit.Civ}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
+                        $"order={unit.Order}");
+                count++;
             }
+            //for (int i = 0; i < 8; i++)
+            //{
+            //    Console.WriteLine("Civ{0}, AnyUnitsAwaitingOrders={1}", i, Actions.AnyUnitsAwaitingOrders(i));
+            //}
 
         }
 

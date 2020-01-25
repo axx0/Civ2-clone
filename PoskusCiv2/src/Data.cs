@@ -68,5 +68,8 @@ namespace RTciv2
                 return _gameYear;
             }
         }
+
+        public static int[] ActiveXY { get; set; }
+        public static int[] ClickedXY { get; set; }
     }
 }

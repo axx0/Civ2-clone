@@ -358,8 +358,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="src\Forms\MainCiv2Window.LoadGame.cs" />
     <None Include="SAVfile.xlsx" />
+    <Compile Include="src\Forms\MainCiv2Window.KeyPressActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

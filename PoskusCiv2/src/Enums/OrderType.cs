@@ -8,17 +8,17 @@ namespace RTciv2.Enums
 {
     public enum OrderType
     {
-        Fortify = 0,
-        Fortified = 1,
-        Sleep = 2,
-        BuildFortress = 3,
-        BuildRoad = 4,
-        BuildIrrigation = 5,
-        BuildMine = 6,
-        Transform = 7,
-        CleanPollution = 8,
-        BuildAirbase = 9,
-        GoTo = 10,
+        Fortify = 1,
+        Fortified = 2,
+        Sleep = 3,
+        BuildFortress = 4,
+        BuildRoad = 5,
+        BuildIrrigation = 6,
+        BuildMine = 7,
+        Transform = 8,
+        CleanPollution = 9,
+        BuildAirbase = 10,
+        GoTo = 11,
         NoOrders = 255
     }
 }

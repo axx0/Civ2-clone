@@ -1,5 +1,5 @@
 #Civ2 PATH
-F:\DOS\CIV 2\Civ2\
+F:\DOS\C2\
 
 #SAV file
 Persia02
