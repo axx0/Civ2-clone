@@ -15,60 +15,85 @@ namespace RTciv2.Forms
         {
             switch (keyData)
             {
-                case Keys.NumPad1:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(-1, 1);
+                case Keys.NumPad1:  
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveSW); 
                     break;
+                case Keys.Down:
                 case Keys.NumPad2:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(0, 2);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveS); 
                     break;
                 case Keys.NumPad3:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(1, 1);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveSE); 
                     break;
+                case Keys.Left:
                 case Keys.NumPad4:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(-2, 0);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveW); 
                     break;
+                case Keys.Right:
                 case Keys.NumPad6:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(2, 0);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveE); 
                     break;
                 case Keys.NumPad7:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(-1, -1);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveNW); 
                     break;
+                case Keys.Up:
                 case Keys.NumPad8:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(0, -2);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveN); 
                     break;
                 case Keys.NumPad9:
-                    if (Game.Instance.ActiveUnit != null) Game.Instance.ActiveUnit.Move(1, -1);
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveNE); 
                     break;
-
-                    //case Keys.Down: Actions.GiveCommand("Move S"); break;
-                    //case Keys.Left: Actions.GiveCommand("Move W"); break;
-                    //case Keys.Right: Actions.GiveCommand("Move E"); break;
-                    //case Keys.Up: Actions.GiveCommand("Move N"); break;
-                    //case Keys.A: ActivateUnit_Click(null, null); break;
-                    //case Keys.B: BuildNewCity_Click(null, null); break;
-                    //case Keys.F: Fortify_Click(null, null); break;
-                    //case Keys.G: GoTo_Click(null, null); break;
-                    //case Keys.H: GoHomeToNearestCity_Click(null, null); break;
-                    //case Keys.I: BuildIrrigation_Click(null, null); break;
-                    //case Keys.K: AutomateSettler_Click(null, null); break;
-                    //case Keys.M: BuildMinesChangeForest_Click(null, null); break;
-                    //case Keys.O: Actions.GiveCommand("Terraform"); break;
-                    //case Keys.P: CleanUpPollution_Click(null, null); break; //paradrop!!!
-                    //case Keys.R: BuildRoad_Click(null, null); break;
-                    //case Keys.S: Sleep_Click(null, null); break;
-                    //case Keys.U: Unload_Click(null, null); break;
-                    //case Keys.W: Wait_Click(null, null); break;
-                    //case Keys.X: MapPanel.ZoomLvl--; break;
-                    //case Keys.Z: MapPanel.ZoomLvl++; break;
-                    //case Keys.Space: SkipTurn_Click(null, null); break;
-                    //case Keys.Enter: Actions.GiveCommand("ENTER"); break;
-                    //case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
-                    //case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
-                    //case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
-                    //case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
-                    //case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
-                    //case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
-                    //case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
+                case Keys.B:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildCity); 
+                    break;
+                case Keys.F:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Fortify); 
+                    break;
+                case Keys.G:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.GoTo); 
+                    break;
+                case Keys.H:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.GoHome); 
+                    break;
+                case Keys.I:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildIrrigation); 
+                    break;
+                case Keys.K:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Automate); 
+                    break;
+                case Keys.M:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildMine); 
+                    break;
+                case Keys.O:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Transform); 
+                    break;
+                case Keys.P:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.CleanPollution); 
+                    break;
+                case Keys.R:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildRoad); 
+                    break;
+                case Keys.S:
+                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Sleep); 
+                    break;
+                case Keys.Enter:
+                    if (Options.AlwaysWaitAtEndOfTurn && !Actions.AnyUnitsAwaitingOrders(Data.HumanPlayer)) Actions.GiveOrder(OrderType.EndTurn);
+                    //TODO: if enter pressed when view piece above city --> enter city view
+                    break;
+                //TODO: case Keys.W: wait
+                //TODO: case Keys.U: unload
+                //TODO: case Keys.A: activate unit
+                //TODO: case Keys.X: zoom out
+                //TODO: case Keys.Z: zoom in
+                //TODO: case Keys.Space: skip turn
+                //TODO: case Keys.Enter: ??
+                //TODO: case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
+                //TODO: case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
+                //TODO: case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
+                //TODO: case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
+                //TODO: case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
+                //TODO: case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
+                //TODO: case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }

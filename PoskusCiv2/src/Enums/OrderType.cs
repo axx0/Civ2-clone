@@ -19,6 +19,21 @@ namespace RTciv2.Enums
         CleanPollution = 9,
         BuildAirbase = 10,
         GoTo = 11,
+        MoveSW = 12,
+        MoveS = 13,
+        MoveSE = 14,
+        MoveW = 15,
+        MoveE = 16,
+        MoveNW = 17,
+        MoveN = 18,
+        MoveNE = 19,
+        GoHome = 20,
+        SkipTurn = 21,
+        BuildCity = 22,
+        Automate = 23,
+        EndTurn = 24,
+        ViewCity = 25,
+        ActivateUnit = 26,
         NoOrders = 255
     }
 }

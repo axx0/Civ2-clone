@@ -49,7 +49,7 @@ namespace RTciv2.Units
         void BuildRoad();
         void BuildMines();
         void BuildIrrigation();
-        void Move(int moveX, int moveY);
+        bool Move(int moveX, int moveY);
         void SkipTurn();
         void Fortify();
         void Transform();

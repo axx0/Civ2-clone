@@ -16,9 +16,9 @@ namespace RTciv2.Forms
         private static DoubleBufferedPanel DrawPanel;
         private int MapGridVar { get; set; }    //style of map grid presentation
         public static bool UnitMoved { get; set; }
-        private Timer t_Blinking = new Timer();    //timer for blinking (unit or viewing piece)
-        int BlinkingCounter;
-        Label HelpLabel;
+        private Timer Timer = new Timer();    //timer for blinking (unit or viewing piece), moving unit, etc.
+        int TimerCounter;
+        Label HelpLabel;        
 
         public delegate void MapViewChanged();
         public static event MapViewChanged MapViewChangedEvent;
@@ -28,6 +28,8 @@ namespace RTciv2.Forms
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
+
+            Actions.UnitMovedEvent += UnitHasMoved; //subscribe to event when unit moves
 
             DrawPanel = new DoubleBufferedPanel() 
             {
@@ -82,10 +84,11 @@ namespace RTciv2.Forms
             //DrawPanel.Controls.Add(HelpLabel);
 
             //Timer for blinking of unit/viewing piece
-            t_Blinking.Interval = 200;
-            t_Blinking.Tick += new EventHandler(Blinking_Tick);
-            t_Blinking.Start();
-            BlinkingCounter = 0;
+            Timer.Interval = 200;
+            Timer.Tick += new EventHandler(Timer_Tick);
+            Timer.Start();
+            TimerCounter = 0;
+            AnimType = AnimationType.ViewingPieces;
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -184,7 +187,7 @@ namespace RTciv2.Forms
             }
 
             //VIEWING PIECE
-            if (ViewingPiecesMode && (BlinkingCounter % 2 == 0))
+            if (ViewingPiecesMode && (TimerCounter % 2 == 0))
                 e.Graphics.DrawImage(Images.ViewingPieces,
                                      DrawingPxOffsetXY[0] + 4 * ZoomLvl * (ActiveXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
                                      DrawingPxOffsetXY[1] + 2 * ZoomLvl * (ActiveXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]));
@@ -212,7 +215,8 @@ namespace RTciv2.Forms
                 if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
                 {
                     if (ViewingPiecesMode) ActiveXY = ClickedXY;
-                    //TODO: open city panel
+                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
+                    cityForm.Show();
                 }
                 else if (Game.Units.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
                 {                    
@@ -411,10 +415,19 @@ namespace RTciv2.Forms
             set;
         }
 
-        private void Blinking_Tick(object sender, EventArgs e)
+        private void Timer_Tick(object sender, EventArgs e)
         {
-            BlinkingCounter++;
+            TimerCounter++;
             DrawPanel.Refresh();
+        }
+
+        private void UnitHasMoved() //fired by event
+        {
+            AnimType = AnimationType.UnitMoving;
+            Timer.Stop();
+            TimerCounter = 0;
+            Timer.Interval = 30;    //ms
+            Timer.Start();
         }
 
         private int[] PxToCoords(int x, int y)  //determine XY civ2 coords from x-y pixel location on panel
@@ -444,6 +457,26 @@ namespace RTciv2.Forms
                 (city.Y <= StartingSqXY[1] + DrawingSqXY[1] + EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3])) isInView = true;
             else isInView = false;
             return isInView;
+        }
+
+        private enum AnimationType
+        {
+            ViewingPieces = 0,
+            UnitMoving = 1
+        }
+
+        private AnimationType _animType;
+        private AnimationType AnimType
+        {
+            get
+            {
+                if (_animType == AnimationType.UnitMoving && TimerCounter == 4) _animType = AnimationType.ViewingPieces;
+                return _animType;
+            }
+            set
+            {
+                _animType = value;
+            }
         }
     }
 }

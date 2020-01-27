@@ -506,85 +506,85 @@ namespace RTciv2.Imagery
             return icons;
         }
 
-        public Bitmap DrawFoodStorage(City city)
-        {
-            Bitmap icons = new Bitmap(291, 244);    //define a bitmap for drawing icons
-            using (Graphics graphics = Graphics.FromImage(icons))
-            {
-                int wheatW = 21;   //width. Original=14 (50% scaling).
-                int wheatH = 21;   //height. Original=14 (50% scaling).
+        //public Bitmap DrawFoodStorage(City city)
+        //{
+        //    Bitmap icons = new Bitmap(291, 244);    //define a bitmap for drawing icons
+        //    using (Graphics graphics = Graphics.FromImage(icons))
+        //    {
+        //        int wheatW = 21;   //width. Original=14 (50% scaling).
+        //        int wheatH = 21;   //height. Original=14 (50% scaling).
 
-                //First determine spacing between wheat icons
-                //NOTE (not 100% accurate, spacing also tends to switch between two numbers)
-                int wheat_spacing;
-                switch (city.Size)
-                {
-                    case int n when (n <= 9): wheat_spacing = 26; break;  //original=17 (50% scaled)
-                    case int n when (n == 10): wheat_spacing = 24; break;  //original=16 (50% scaled)
-                    case int n when (n == 11): wheat_spacing = 20; break;  //original=13 (50% scaled)
-                    case int n when (n == 12): wheat_spacing = 18; break;  //original=12 (50% scaled)
-                    case int n when (n == 13): wheat_spacing = 17; break;  //original=11 (50% scaled)
-                    case int n when (n == 14): wheat_spacing = 15; break;  //original=10 (50% scaled)
-                    case int n when (n == 15 || n == 16): wheat_spacing = 14; break;  //original=9 (50% scaled)
-                    case int n when (n == 17): wheat_spacing = 12; break;  //original=8 (50% scaled)
-                    case int n when (n >= 18 && n <= 20): wheat_spacing = 11; break;  //original=7 (50% scaled)
-                    case int n when (n == 21 || n == 22): wheat_spacing = 9; break;  //original=6 (50% scaled)
-                    case int n when (n >= 23 && n <= 26): wheat_spacing = 8; break;  //original=5 (50% scaled)
-                    case int n when (n >= 27 && n <= 33): wheat_spacing = 6; break;  //original=4 (50% scaled)
-                    case int n when (n >= 34 && n <= 40): wheat_spacing = 5; break;  //original=3 (50% scaled)
-                    case int n when (n >= 41 && n <= 80): wheat_spacing = 3; break;  //original=2 (50% scaled)
-                    case int n when (n >= 81): wheat_spacing = 2; break;  //original=1 (50% scaled)
-                    default: wheat_spacing = 26; break;
-                }
+        //        //First determine spacing between wheat icons
+        //        //NOTE (not 100% accurate, spacing also tends to switch between two numbers)
+        //        int wheat_spacing;
+        //        switch (city.Size)
+        //        {
+        //            case int n when (n <= 9): wheat_spacing = 26; break;  //original=17 (50% scaled)
+        //            case int n when (n == 10): wheat_spacing = 24; break;  //original=16 (50% scaled)
+        //            case int n when (n == 11): wheat_spacing = 20; break;  //original=13 (50% scaled)
+        //            case int n when (n == 12): wheat_spacing = 18; break;  //original=12 (50% scaled)
+        //            case int n when (n == 13): wheat_spacing = 17; break;  //original=11 (50% scaled)
+        //            case int n when (n == 14): wheat_spacing = 15; break;  //original=10 (50% scaled)
+        //            case int n when (n == 15 || n == 16): wheat_spacing = 14; break;  //original=9 (50% scaled)
+        //            case int n when (n == 17): wheat_spacing = 12; break;  //original=8 (50% scaled)
+        //            case int n when (n >= 18 && n <= 20): wheat_spacing = 11; break;  //original=7 (50% scaled)
+        //            case int n when (n == 21 || n == 22): wheat_spacing = 9; break;  //original=6 (50% scaled)
+        //            case int n when (n >= 23 && n <= 26): wheat_spacing = 8; break;  //original=5 (50% scaled)
+        //            case int n when (n >= 27 && n <= 33): wheat_spacing = 6; break;  //original=4 (50% scaled)
+        //            case int n when (n >= 34 && n <= 40): wheat_spacing = 5; break;  //original=3 (50% scaled)
+        //            case int n when (n >= 41 && n <= 80): wheat_spacing = 3; break;  //original=2 (50% scaled)
+        //            case int n when (n >= 81): wheat_spacing = 2; break;  //original=1 (50% scaled)
+        //            default: wheat_spacing = 26; break;
+        //        }
 
-                //Draw rectangle around wheat icons     
-                //1st horizontal line
-                int line_width = (city.Size + 1) * wheat_spacing + wheatW - wheat_spacing + 2 + 5;
-                int starting_x = (int)((291 - line_width) / 2);   //291 = width of drawing panel
-                int starting_y = 23;    //original=15, this is 50 % scaled
-                graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
-                //3rd horizontal line
-                starting_y = 240;    //original=160, this is 50 % scaled
-                graphics.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x, starting_y, starting_x + line_width, starting_y);
-                //1st vertical line
-                starting_y = 23;
-                int line_height = 216;  //original=144 (50% scaled)
-                graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x, starting_y + line_height);
-                //2nd vertical line
-                graphics.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x + line_width, starting_y, starting_x + line_width, starting_y + line_height);
+        //        //Draw rectangle around wheat icons     
+        //        //1st horizontal line
+        //        int line_width = (city.Size + 1) * wheat_spacing + wheatW - wheat_spacing + 2 + 5;
+        //        int starting_x = (int)((291 - line_width) / 2);   //291 = width of drawing panel
+        //        int starting_y = 23;    //original=15, this is 50 % scaled
+        //        graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
+        //        //3rd horizontal line
+        //        starting_y = 240;    //original=160, this is 50 % scaled
+        //        graphics.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x, starting_y, starting_x + line_width, starting_y);
+        //        //1st vertical line
+        //        starting_y = 23;
+        //        int line_height = 216;  //original=144 (50% scaled)
+        //        graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x, starting_y + line_height);
+        //        //2nd vertical line
+        //        graphics.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x + line_width, starting_y, starting_x + line_width, starting_y + line_height);
 
-                //Draw wheat icons
-                int count = 0;
-                starting_x += 3;    //wheat icons 2px to the right in original (50% scaled)
-                for (int row = 0; row < 10; row++)
-                {
-                    for (int col = 0; col <= city.Size; col++)
-                    {
-                        graphics.DrawImage(Images.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
-                        count++;
+        //        //Draw wheat icons
+        //        int count = 0;
+        //        starting_x += 3;    //wheat icons 2px to the right in original (50% scaled)
+        //        for (int row = 0; row < 10; row++)
+        //        {
+        //            for (int col = 0; col <= city.Size; col++)
+        //            {
+        //                graphics.DrawImage(Images.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
+        //                count++;
 
-                        if (count >= city.FoodInStorage) break;
-                    }
-                    if (count >= city.FoodInStorage) break;
-                }
+        //                if (count >= city.FoodInStorage) break;
+        //            }
+        //            if (count >= city.FoodInStorage) break;
+        //        }
 
-                //3rd horizontal line (shorter)
-                line_width -= 12;   //orignal=8 px shorter (50% scaled)
-                starting_x -= 3;    //correct from above
-                starting_x += 6;
-                starting_y = 131;   //orignal=87 (50% scaled)
-                graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
+        //        //3rd horizontal line (shorter)
+        //        line_width -= 12;   //orignal=8 px shorter (50% scaled)
+        //        starting_x -= 3;    //correct from above
+        //        starting_x += 6;
+        //        starting_y = 131;   //orignal=87 (50% scaled)
+        //        graphics.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
 
-                //Draw string
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.Black), new Point(147, 5), sf);
-                graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(146, 4), sf);
-                sf.Dispose();
-            }
+        //        //Draw string
+        //        StringFormat sf = new StringFormat();
+        //        sf.Alignment = StringAlignment.Center;
+        //        graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.Black), new Point(147, 5), sf);
+        //        graphics.DrawString("Food Storage", new Font("Arial", 12), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(146, 4), sf);
+        //        sf.Dispose();
+        //    }
 
-            return icons;
-        }
+        //    return icons;
+        //}
 
         public Bitmap DrawCityProduction(City city)
         {

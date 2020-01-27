@@ -58,7 +58,7 @@ namespace RTciv2.Units
         //    set { _movePointsLost = value; }
         //}
 
-        public void Move(int moveX, int moveY)
+        public bool Move(int moveX, int moveY)
         {
             int Xto = X + moveX;    //Civ2-style
             int Yto = Y + moveY;
@@ -117,10 +117,12 @@ namespace RTciv2.Units
                 X = Xto;
                 Y = Yto;
 
-                MapPanel.UnitMoved = true;    //trigger animation of movement in map panel
+                //MapPanel.UnitMoved = true;    //trigger animation of movement in map panel
 
                 //Sound.MoveSound.Play();
             }
+
+            return unitMoved;
         }
 
         private bool _turnEnded;

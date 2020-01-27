@@ -16,7 +16,8 @@ namespace RTciv2
 {
     static class Actions
     {
-        static bool noUnitsAwaitingOrders;
+        public delegate void UnitMoved();
+        public static event UnitMoved UnitMovedEvent;
 
         public static void UpdateUnit(IUnit unit)
         {
@@ -65,7 +66,7 @@ namespace RTciv2
                     //unit.Action = OrderType.NoOrders;
                 }
             }
-            Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
+            //Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             //Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
         }
 
@@ -202,47 +203,77 @@ namespace RTciv2
 
         }
 
-        public static void GiveCommand(string action)
+        public static void GiveOrder(OrderType order)
         {
-            //If "wait for end of turn" is enabled & all units have ended turn --> wait for ENTER and then make next game turn
-            if (Options.AlwaysWaitAtEndOfTurn && !AnyUnitsAwaitingOrders(Data.HumanPlayer))
+            switch (order)
             {
-                if (action == "ENTER")
-                {
-                    Application.OpenForms.OfType<StatusForm>().First().HideEndOfTurnMessage();
-                    //MapForm.ViewingPiecesMode = false; //reset it
-                    NewTurn();
-                }
-
+                case OrderType.MoveSW:
+                    if (Game.Instance.ActiveUnit.Move(-1, 1))
+                        if (UnitMovedEvent != null) UnitMovedEvent.Invoke();
+                    break;
+                case OrderType.MoveS:   
+                    Game.Instance.ActiveUnit.Move(0, 2); 
+                    break;
+                case OrderType.MoveSE:  
+                    Game.Instance.ActiveUnit.Move(1, 1); 
+                    break;
+                case OrderType.MoveW:   
+                    Game.Instance.ActiveUnit.Move(-2, 0); 
+                    break;
+                case OrderType.MoveE:   
+                    Game.Instance.ActiveUnit.Move(2, 0); 
+                    break;
+                case OrderType.MoveNW:  
+                    Game.Instance.ActiveUnit.Move(-1, -1); 
+                    break;
+                case OrderType.MoveN:   
+                    Game.Instance.ActiveUnit.Move(0, -2); 
+                    break;
+                case OrderType.MoveNE:  
+                    Game.Instance.ActiveUnit.Move(1, -1); 
+                    break;
+                case OrderType.BuildIrrigation: 
+                    Game.Instance.ActiveUnit.BuildIrrigation(); 
+                    break;
+                case OrderType.BuildMine: 
+                    Game.Instance.ActiveUnit.BuildMines(); 
+                    break;
+                case OrderType.GoTo:
+                    //TODO: goto key pressed event
+                    break;
+                case OrderType.Fortify: 
+                    Game.Instance.ActiveUnit.Fortify(); 
+                    break;
+                case OrderType.Sleep: 
+                    Game.Instance.ActiveUnit.Sleep(); 
+                    break;
+                case OrderType.GoHome:
+                    //TODO: gohome key pressed event
+                    break;
+                case OrderType.SkipTurn: 
+                    Game.Instance.ActiveUnit.SkipTurn(); 
+                    break;
+                case OrderType.BuildCity: 
+                    Game.Instance.ActiveUnit.BuildCity(); 
+                    break;
+                case OrderType.BuildRoad: 
+                    Game.Instance.ActiveUnit.BuildRoad(); 
+                    break;
+                case OrderType.Transform: 
+                    Game.Instance.ActiveUnit.Transform(); 
+                    break;
+                case OrderType.Automate:
+                    //TODO: automate key pressed event
+                    break;
+                case OrderType.ActivateUnit:
+                    //TODO: activate unit key pressed event
+                    break;
+                case OrderType.EndTurn:
+                    //TODO: end turn key pressed event
+                    break;
+                default: break;
             }
-            else
-            {
-                switch (action)
-                {
-                    case "Activate unit": break;
-                    case "Automate": break;
-                    case "Build city": Game.Instance.ActiveUnit.BuildCity(); break;
-                    case "Build road": Game.Instance.ActiveUnit.BuildRoad(); break;
-                    case "Build irrigation": Game.Instance.ActiveUnit.BuildIrrigation(); break;
-                    case "Build mines/Change forest": Game.Instance.ActiveUnit.BuildMines(); break;
-                    case "Fortify": Game.Instance.ActiveUnit.Fortify(); break;
-                    case "Go Home": break;
-                    case "Go To": Game.Instance.ActiveUnit.GoToX = 5; break;    //TO-DO
-                    case "Move SW": Game.Instance.ActiveUnit.Move(-1, 1); break;
-                    case "Move S": Game.Instance.ActiveUnit.Move(0, 2); break;
-                    case "Move SE": Game.Instance.ActiveUnit.Move(1, 1); break;
-                    case "Move E": Game.Instance.ActiveUnit.Move(2, 0); break;
-                    case "Move W": Game.Instance.ActiveUnit.Move(-2, 0); break;
-                    case "Move NW": Game.Instance.ActiveUnit.Move(-1, -1); break;
-                    case "Move N": Game.Instance.ActiveUnit.Move(0, -2); break;
-                    case "Move NE": Game.Instance.ActiveUnit.Move(1, -1); break;
-                    case "Sleep": Game.Instance.ActiveUnit.Sleep(); break;
-                    case "Skip turn": Game.Instance.ActiveUnit.SkipTurn(); break;
-                    case "Terraform": Game.Instance.ActiveUnit.Transform(); break;
-                    default: break;
-                }
-                UpdateUnit(Game.Instance.ActiveUnit);
-            }
+            UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         //find out if certain civ has any units awaiting orders

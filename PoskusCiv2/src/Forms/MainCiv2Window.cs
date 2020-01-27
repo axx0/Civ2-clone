@@ -316,8 +316,6 @@ namespace RTciv2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            //MapPanel = new MapPanel();
-            //MapPanel.CreateMapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
@@ -328,14 +326,10 @@ namespace RTciv2.Forms
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
 
-            //MinimapPanel = new MinimapPanel();
-            //MinimapPanel.CreateMinimapPanel(262, 149);
             MinimapPanel = new MinimapPanel(262, 149);
             MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
             Controls.Add(MinimapPanel);
 
-            //StatusPanel = new StatusPanel();
-            //StatusPanel.CreateStatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
             StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
             StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
             Controls.Add(StatusPanel);
@@ -434,44 +428,60 @@ namespace RTciv2.Forms
         private void BuildRoad_Click(object sender, EventArgs e) { }
 
         private void BuildIrrigation_Click(object sender, EventArgs e) {
-            if (BuildIrrigationItem.Enabled) Actions.GiveCommand("Build irrigation"); }
+            if (BuildIrrigationItem.Enabled) Actions.GiveOrder(OrderType.BuildIrrigation); }
 
         private void BuildMinesChangeForest_Click(object sender, EventArgs e) {
-            if (BuildMinesChangeForestItem.Enabled) Actions.GiveCommand("Build mines/Change forest"); }
+            if (BuildMinesChangeForestItem.Enabled) Actions.GiveOrder(OrderType.BuildMine); }
 
         private void CleanUpPollution_Click(object sender, EventArgs e) { }
         private void Pillage_Click(object sender, EventArgs e) { }
         private void Unload_Click(object sender, EventArgs e) { }
 
-        private void GoTo_Click(object sender, EventArgs e) {
-            if (GoToItem.Enabled) Actions.GiveCommand("Go To"); }
+        private void GoTo_Click(object sender, EventArgs e) 
+        {
+            if (GoToItem.Enabled) Actions.GiveOrder(OrderType.GoTo);   //TODO: implement goto
+        }
 
-        private void GoHomeToNearestCity_Click(object sender, EventArgs e) {
-            if (GoHomeToNearestCityItem.Enabled) Actions.GiveCommand("Go Home"); }
+        private void GoHomeToNearestCity_Click(object sender, EventArgs e) 
+        {
+            if (GoHomeToNearestCityItem.Enabled) Actions.GiveOrder(OrderType.GoHome); 
+        }
 
-        private void Fortify_Click(object sender, EventArgs e) {
-            if (FortifyItem.Enabled) Actions.GiveCommand("Fortify"); }
+        private void Fortify_Click(object sender, EventArgs e) 
+        {
+            if (FortifyItem.Enabled) Actions.GiveOrder(OrderType.Fortify); 
+        }
 
-        private void Sleep_Click(object sender, EventArgs e) {
-            if (SleepItem.Enabled) Actions.GiveCommand("Sleep"); }
+        private void Sleep_Click(object sender, EventArgs e) 
+        {
+            if (SleepItem.Enabled) Actions.GiveOrder(OrderType.Sleep); 
+        }
 
         private void Disband_Click(object sender, EventArgs e) { }
 
-        private void ActivateUnit_Click(object sender, EventArgs e) {
-            if (ActivateUnitItem.Enabled) Actions.GiveCommand("Activate unit"); }
+        private void ActivateUnit_Click(object sender, EventArgs e) 
+        {
+            //if (ActivateUnitItem.Enabled) Actions.GiveCommand("Activate unit"); 
+        }
 
         private void Wait_Click(object sender, EventArgs e) { }
 
-        private void SkipTurn_Click(object sender, EventArgs e) {
-            Actions.GiveCommand("Skip turn"); }
+        private void SkipTurn_Click(object sender, EventArgs e) 
+        {
+            Actions.GiveOrder(OrderType.SkipTurn); 
+        }
 
         private void EndPlayerTurn_Click(object sender, EventArgs e) { }
 
-        private void BuildNewCity_Click(object sender, EventArgs e) {
-            if(BuildNewCityItem.Enabled) Actions.GiveCommand("Build city"); }
+        private void BuildNewCity_Click(object sender, EventArgs e) 
+        {
+            if(BuildNewCityItem.Enabled) Actions.GiveOrder(OrderType.BuildCity); 
+        }
 
-        private void AutomateSettler_Click(object sender, EventArgs e) {
-            if (AutomateSettlerItem.Enabled) Actions.GiveCommand("Automate"); }
+        private void AutomateSettler_Click(object sender, EventArgs e) 
+        {
+            if (AutomateSettlerItem.Enabled) Actions.GiveOrder(OrderType.Automate); 
+        }
 
         private void Paradrop_Click(object sender, EventArgs e) { }
         #endregion

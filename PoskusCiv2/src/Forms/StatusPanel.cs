@@ -15,7 +15,6 @@ namespace RTciv2.Forms
     {
         DoubleBufferedPanel StatsPanel, UnitPanel;
 
-        //public void CreateStatusPanel(int width, int height)
         public StatusPanel(int width, int height)
         {
             Size = new Size(width, height);
