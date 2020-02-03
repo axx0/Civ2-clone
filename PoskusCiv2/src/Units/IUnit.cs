@@ -27,7 +27,8 @@ namespace RTciv2.Units
         TechType PrereqTech { get; set; }
         string Flags { get; set; }
 
-        UnitType Type { get; }
+        int Id { get; set; }
+        UnitType Type { get; set; }
         UnitGAS GAS { get; }
         OrderType Order { get; set; }
         int X { get; set; }
@@ -44,7 +45,7 @@ namespace RTciv2.Units
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
         int Counter { get; set; }
-
+        int[] LastXY { get; set; }
         void BuildCity();
         void BuildRoad();
         void BuildMines();

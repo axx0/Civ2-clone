@@ -8,18 +8,26 @@ using System.Drawing;
 using System.Globalization;
 using RTciv2.Imagery;
 using RTciv2.Units;
+using RTciv2.Events;
 
 namespace RTciv2.Forms
 {
     public partial class StatusPanel : Civ2panel
     {
         DoubleBufferedPanel StatsPanel, UnitPanel;
+        private Timer Timer = new Timer();
+
+        private bool WaitingAtEndOfTurn { get; set; }
 
         public StatusPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(StatusPanel_Paint);
             MapPanel.MapViewChangedEvent += ViewChangedInMapPanel;
+            Actions.OnMoveUnitCommand += UnitMoveCommand;
+            Actions.OnNewPlayerTurn += NewPlayerTurn;
+            Actions.OnNewUnitChosen += NewUnitChosen;
+            Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
 
             StatsPanel = new DoubleBufferedPanel()
             {
@@ -29,7 +37,7 @@ namespace RTciv2.Forms
             };
             Controls.Add(StatsPanel);
             StatsPanel.Paint += StatsPanel_Paint;
-            StatsPanel.MouseClick += UnitPanel_Click;
+            StatsPanel.MouseClick += Panel_Click;
 
             UnitPanel = new DoubleBufferedPanel()
             {
@@ -39,7 +47,11 @@ namespace RTciv2.Forms
             };
             Controls.Add(UnitPanel);
             UnitPanel.Paint += UnitPanel_Paint;
-            UnitPanel.MouseClick += UnitPanel_Click;
+            UnitPanel.MouseClick += Panel_Click;
+
+            //Timer for "end of turn" message
+            Timer.Tick += Timer_Tick;
+            Timer.Interval = 500;   //ms
         }
 
         private void StatusPanel_Paint(object sender, PaintEventArgs e)
@@ -137,8 +149,19 @@ namespace RTciv2.Forms
                     if (Game.Instance.ActiveUnit == UnitsOnThisTile[count])
                     {
                         e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(Game.Instance.ActiveUnit, false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 27);
-                        e.Graphics.DrawString($"Moves: {Game.Instance.ActiveUnit.MovePoints}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
-                        e.Graphics.DrawString($"Moves: {Game.Instance.ActiveUnit.MovePoints}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
+                        //Show move points correctly
+                        int fullMovPts = Game.Instance.ActiveUnit.MovePoints / 3;
+                        int remMovPts = Game.Instance.ActiveUnit.MovePoints % 3;
+                        if (remMovPts == 0) //only show full move pts
+                        {
+                            e.Graphics.DrawString($"Moves: {fullMovPts}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
+                            e.Graphics.DrawString($"Moves: {fullMovPts}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
+                        }
+                        else    //also show remainer of move points
+                        {
+                            e.Graphics.DrawString($"Moves: {fullMovPts} {remMovPts}/3", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
+                            e.Graphics.DrawString($"Moves: {fullMovPts} {remMovPts}/3", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
+                        }
                         e.Graphics.DrawString(Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 44);
                         e.Graphics.DrawString(Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
                         e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
@@ -147,7 +170,6 @@ namespace RTciv2.Forms
                         e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
                         e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
                         e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
-
                     }
                     else
                     {
@@ -162,6 +184,18 @@ namespace RTciv2.Forms
                 }
             }
 
+            //Blinking "end of turn" message
+            if (WaitingAtEndOfTurn)
+            {
+                Color EoTcolor;
+                if (BoolSwitcher) EoTcolor = Color.White;
+                else EoTcolor = Color.FromArgb(135, 135, 135);
+                e.Graphics.DrawString("End of Turn", new Font("Times new roman", 12, FontStyle.Bold), new SolidBrush(Color.Black), 6, UnitPanel.Height - 51);
+                e.Graphics.DrawString("End of Turn", new Font("Times new roman", 12, FontStyle.Bold), new SolidBrush(EoTcolor), 5, UnitPanel.Height - 51);
+                e.Graphics.DrawString("(Press ENTER)", new Font("Times new roman", 12, FontStyle.Bold), new SolidBrush(Color.Black), 11, UnitPanel.Height - 33);
+                e.Graphics.DrawString("(Press ENTER)", new Font("Times new roman", 12, FontStyle.Bold), new SolidBrush(EoTcolor), 10, UnitPanel.Height - 33);
+            }
+
             sf.Dispose();
             e.Dispose();
             font.Dispose();
@@ -172,10 +206,58 @@ namespace RTciv2.Forms
             UnitPanel.Refresh();
         }
 
-        private void UnitPanel_Click(object sender, MouseEventArgs e)
+        private void Panel_Click(object sender, MouseEventArgs e)
         {
-            MapPanel.ViewingPiecesMode = !MapPanel.ViewingPiecesMode;
+            if (WaitingAtEndOfTurn)
+            {
+                WaitingAtEndOfTurn = false;
+                Actions.NewPlayerTurn();
+            }
+            else
+            {
+                MapPanel.ViewingPiecesMode = !MapPanel.ViewingPiecesMode;
+                UnitPanel.Refresh();
+            }
+        }
+
+        private void UnitMoveCommand(object sender, MoveUnitCommandEventArgs e)
+        {
+            if (e.MoveUnit) UnitPanel.Refresh();
+        }
+
+        private void NewPlayerTurn(object sender, NewPlayerTurnEventArgs e)
+        {
+            WaitingAtEndOfTurn = false;
+            StatsPanel.Refresh();
             UnitPanel.Refresh();
+        }
+
+        private void NewUnitChosen(object sender, NewUnitChosenEventArgs e)
+        {
+            UnitPanel.Refresh();
+        }
+
+        private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
+        {
+            WaitingAtEndOfTurn = true;
+            Timer.Start();
+            UnitPanel.Refresh();
+        }
+
+        private void Timer_Tick (object sender, EventArgs e)
+        {
+            UnitPanel.Refresh();
+        }
+
+        bool _boolSwitcher;
+        private bool BoolSwitcher
+        {
+            get
+            {
+                if (this == null) _boolSwitcher = true;
+                _boolSwitcher = !_boolSwitcher;   //change state when this is called
+                return _boolSwitcher;
+            }
         }
     }
 }

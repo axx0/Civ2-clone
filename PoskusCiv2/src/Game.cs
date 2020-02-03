@@ -10,8 +10,8 @@ using RTciv2.Units;
 using RTciv2.Terrains;
 using RTciv2.Improvements;
 using RTciv2.Forms;
-using RTciv2.Imagery;
 using RTciv2.Sounds;
+using RTciv2.Imagery;
 using ExtensionMethods;
 
 namespace RTciv2
@@ -24,23 +24,17 @@ namespace RTciv2
         public static List<Civilization> Civs = new List<Civilization>();        
         public static ITerrain[,] Map;
 
-        //load sound for moving piece
-        //System.Media.SoundPlayer moveSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\MOVPIECE.WAV");
-        //System.Media.SoundPlayer fightSound = new System.Media.SoundPlayer(@"C:\DOS\CIV 2\Civ2\Sound\SWORDFGT.WAV");
-
-        
+        #region Loads stuff when civ2 starts
+        public static void Preloading(string civ2path)
+        {
+            //Images.LoadDLLimages();
+            Sound.LoadSounds(civ2path);
+        }
+        #endregion  
 
         public static void StartNewGame()
         {
-
         }
-
-        #region Loads stuff when civ2 starts
-        public static void Preloading()
-        {
-            Images.LoadDLLimages();
-        }
-        #endregion
 
         public static void LoadGame(string civ2path, string SAVname)
         {
@@ -48,16 +42,14 @@ namespace RTciv2
             ReadFiles.ReadRULES(civ2path + "RULES.TXT");
             ImportSAV(civ2path + SAVname + ".SAV");
             Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
-                                            //Sound.LoadSounds(String.Concat(Program.Path, @"\SOUND\"));
-            Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units[Data.SelectedUnitIndex];    //null means all units have ended turn
+            //Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units[Data.SelectedUnitIndex];    //null means all units have ended turn
+            Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
 
-            int count = 0;
             foreach (IUnit unit in Game.Units)
             {
                 if (unit.Civ == 5)
-                    Console.WriteLine($"Unit, Id={count}, owner={unit.Civ}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
+                    Console.WriteLine($"Unit, Id={unit.Id}, owner={unit.Civ}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
                         $"order={unit.Order}");
-                count++;
             }
             //for (int i = 0; i < 8; i++)
             //{
@@ -65,7 +57,6 @@ namespace RTciv2
             //}
 
         }
-
 
         private IUnit _activeUnit;
         public IUnit ActiveUnit
@@ -175,6 +166,7 @@ namespace RTciv2
             IUnit unit;
             unit = new Unit(type)
             {
+                Id = Game.Units.Count + Game.DeadUnits.Count,
                 Type = type,
                 X = x,
                 Y = y,

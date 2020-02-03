@@ -111,24 +111,18 @@ namespace RTciv2.Forms
                     switch (count)
                     {
                         case 0:     //1st # is civ2 path
-                            {
-                                Civ2Path = file.ReadLine();
-                                PathBox.Text = Civ2Path;
-                                break;                            
-                            }
+                            Civ2Path = file.ReadLine();
+                            PathBox.Text = Civ2Path;
+                            break;                            
                         case 1:     //2nd # is SAV name
-                            {
-                                SAVname = file.ReadLine();
-                                SAVbox.Text = SAVname;
-                                break;
-                            }
+                            SAVname = file.ReadLine();
+                            SAVbox.Text = SAVname;
+                            break;
                         case 2:     //3rd # is resolution
-                            {
-                                line = file.ReadLine();
-                                if (line == "-1") { FullscrBox.Checked = true; ResolBox.Enabled = false; }
-                                else { ResolBox.Enabled = true;  ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == line); FullscrBox.Checked = false; }
-                                break;
-                            }
+                            line = file.ReadLine();
+                            if (line == "-1") { FullscrBox.Checked = true; ResolBox.Enabled = false; }
+                            else { ResolBox.Enabled = true;  ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == line); FullscrBox.Checked = false; }
+                            break;
                         default: break;
                     }
                     count++;
@@ -168,6 +162,7 @@ namespace RTciv2.Forms
             this.Hide();
             int resolChoice = (FullscrBox.Checked) ? Resolutions.FindIndex(a => a.Name == "Fullscreen") : ResolBox.SelectedIndex;
             WriteConfig();   //write a config file with current settings before closing form
+            Game.Preloading(Civ2Path);
             Game.LoadGame(Civ2Path, SAVname);
             var form2 = new MainCiv2Window(Resolutions[resolChoice], Civ2Path, SAVname);
             form2.Closed += (s, args) => this.Close();
@@ -195,10 +190,10 @@ namespace RTciv2.Forms
             }
             else 
             {
+                SAVbox.Enabled = true;
                 if (resultSav) 
                 {
                     StartButton.Enabled = true;
-                    SAVbox.Enabled = true;
                     PathBox.BackColor = Color.LightGray;
                     SAVbox.BackColor = Color.LightGray;
                 }

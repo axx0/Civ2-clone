@@ -84,6 +84,11 @@
     <Compile Include="src\Enums\OrderType.cs" />
     <Compile Include="src\Enums\UnitGAS.cs" />
     <Compile Include="src\Enums\TechType.cs" />
+    <Compile Include="src\Events\CheckIfCityCanBeViewedEventArgs.cs" />
+    <Compile Include="src\Events\WaitAtTurnEndEventArgs.cs" />
+    <Compile Include="src\Events\NewPlayerTurnEventArgs.cs" />
+    <Compile Include="src\Events\NewUnitChosenEventArgs.cs" />
+    <Compile Include="src\Events\MoveUnitCommandEventArgs.cs" />
     <Compile Include="src\Forms\ChoiceMenuPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -107,6 +112,9 @@
     </Compile>
     <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
+    </Compile>
+    <Compile Include="src\Forms\NoSelectButton.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Forms\StatusPanel.cs">
       <SubType>Component</SubType>
@@ -291,9 +299,11 @@
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\City view\CityBuyForm.resx">
       <DependentUpon>CityBuyForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\City view\CityChangeForm.resx">
       <DependentUpon>CityChangeForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\City view\CityRenameForm.resx">
       <DependentUpon>CityRenameForm.cs</DependentUpon>
@@ -445,8 +455,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\Events\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

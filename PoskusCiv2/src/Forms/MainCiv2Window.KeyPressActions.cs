@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RTciv2.Enums;
+using RTciv2.Events;
 
 namespace RTciv2.Forms
 {
     public partial class MainCiv2Window : Form
     {
-        
+        public static event EventHandler<CheckIfCityCanBeViewedEventArgs> OnCheckIfCityCanBeViewed;
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             switch (keyData)
@@ -77,16 +79,21 @@ namespace RTciv2.Forms
                     if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Sleep); 
                     break;
                 case Keys.Enter:
-                    if (Options.AlwaysWaitAtEndOfTurn && !Actions.AnyUnitsAwaitingOrders(Data.HumanPlayer)) Actions.GiveOrder(OrderType.EndTurn);
-                    //TODO: if enter pressed when view piece above city --> enter city view
+                    if (Options.AlwaysWaitAtEndOfTurn && !Actions.AnyUnitsAwaitingOrders(Data.HumanPlayer))
+                        Actions.NewPlayerTurn();
+                    else 
+                        OnCheckIfCityCanBeViewed?.Invoke(null, new CheckIfCityCanBeViewedEventArgs());  //if enter pressed when view piece above city --> enter city view
                     break;
-                //TODO: case Keys.W: wait
+                case Keys.Space:
+                    if (Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.SkipTurn);
+                    break;
+                case Keys.W:
+                    if (Game.Instance.ActiveUnit != null) Actions.ChooseNextUnit();
+                    break;
                 //TODO: case Keys.U: unload
                 //TODO: case Keys.A: activate unit
                 //TODO: case Keys.X: zoom out
                 //TODO: case Keys.Z: zoom in
-                //TODO: case Keys.Space: skip turn
-                //TODO: case Keys.Enter: ??
                 //TODO: case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
                 //TODO: case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
                 //TODO: case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
@@ -97,7 +104,5 @@ namespace RTciv2.Forms
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
-
     }
 }

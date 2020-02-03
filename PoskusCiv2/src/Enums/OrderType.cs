@@ -31,9 +31,7 @@ namespace RTciv2.Enums
         SkipTurn = 21,
         BuildCity = 22,
         Automate = 23,
-        EndTurn = 24,
-        ViewCity = 25,
-        ActivateUnit = 26,
+        ActivateUnit = 24,
         NoOrders = 255
     }
 }

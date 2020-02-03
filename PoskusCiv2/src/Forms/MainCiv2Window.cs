@@ -146,8 +146,8 @@ namespace RTciv2.Forms
             SleepItem = new ToolStripMenuItem("Sleep", null, Sleep_Click);
             DisbandItem = new ToolStripMenuItem("Disband", null, Disband_Click);
             ActivateUnitItem = new ToolStripMenuItem("Activate Unit", null, ActivateUnit_Click);
-            WaitItem = new ToolStripMenuItem("Wait", null, Wait_Click);
-            SkipTurnItem = new ToolStripMenuItem("Skip Turn", null, SkipTurn_Click);
+            WaitItem = new Civ2ToolStripMenuItem("Wait", Wait_Click, "w");
+            SkipTurnItem = new Civ2ToolStripMenuItem("Skip Turn", SkipTurn_Click, "SPACE");
             EndPlayerTurnItem = new ToolStripMenuItem("End Player Turn", null, EndPlayerTurn_Click, (Keys)Shortcut.CtrlN);
             BuildNewCityItem = new ToolStripMenuItem("Build New City", null, BuildNewCity_Click);   //Settlers only items
             AutomateSettlerItem = new ToolStripMenuItem("Automate Settler", null, AutomateSettler_Click);
@@ -464,7 +464,10 @@ namespace RTciv2.Forms
             //if (ActivateUnitItem.Enabled) Actions.GiveCommand("Activate unit"); 
         }
 
-        private void Wait_Click(object sender, EventArgs e) { }
+        private void Wait_Click(object sender, EventArgs e) 
+        { 
+            if (Game.Instance.ActiveUnit != null) Actions.ChooseNextUnit(); 
+        }
 
         private void SkipTurn_Click(object sender, EventArgs e) 
         {

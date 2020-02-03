@@ -10,62 +10,67 @@ using RTciv2.Imagery;
 using RTciv2.Terrains;
 using RTciv2.Improvements;
 using RTciv2.Forms;
-
+using RTciv2.Events;
 
 namespace RTciv2
 {
     static class Actions
     {
-        public delegate void UnitMoved();
-        public static event UnitMoved UnitMovedEvent;
+        public static event EventHandler<MoveUnitCommandEventArgs> OnMoveUnitCommand;
+        public static event EventHandler<NewUnitChosenEventArgs> OnNewUnitChosen;
+        public static event EventHandler<NewPlayerTurnEventArgs> OnNewPlayerTurn;
+        public static event EventHandler<WaitAtTurnEndEventArgs> OnWaitAtTurnEnd;
 
         public static void UpdateUnit(IUnit unit)
         {
-            //If unit has ended turn
-            if (!unit.AwaitingOrders) ChooseNextUnit();
+            //If unit is not waiting order, chose next unit in line, otherwise update its orders
+            if (!unit.AwaitingOrders)
+                ChooseNextUnit(); 
+            else
+                switch (unit.Order)
+                {
+                    case OrderType.BuildIrrigation:
+                        if (unit.Counter == 2)
+                        {
+                            if (Game.Map[unit.X, unit.Y].Irrigation == false) //Build irrigation
+                            {
+                                Game.Map[unit.X, unit.Y].Irrigation = true;
+                            }
+                            else if ((Game.Map[unit.X, unit.Y].Irrigation == true) && (Game.Map[unit.X, unit.Y].Farmland == false)) //Build farms
+                            {
+                                Game.Map[unit.X, unit.Y].Farmland = true;
+                            }
+                            //Game.Map = Draw.DrawMap();  //Update game map
+                            //unit.Action = OrderType.NoOrders;
+                        }
+                        break;
+                    case OrderType.BuildRoad:
+                        if (unit.Counter == 2)
+                        {
+                            if (Game.Map[unit.X, unit.Y].Road == false) //Build road
+                            {
+                                Game.Map[unit.X, unit.Y].Road = true;
+                            }
+                            else if ((Game.Map[unit.X, unit.Y].Road == true) && (Game.Map[unit.X, unit.Y].Railroad == false)) //Build railroad
+                            {
+                                Game.Map[unit.X, unit.Y].Railroad = true;
+                            }
+                            //Game.Map = Draw.DrawMap();  //Update game map
+                            //unit.Action = OrderType.NoOrders;
+                        }
+                        break;
+                    case OrderType.BuildMine:
+                        if (unit.Counter == 2)
+                        {
+                            Game.Map[unit.X, unit.Y].Mining = true;
+                            //Game.Map = Draw.DrawMap();  //Update game map
+                            //unit.Action = OrderType.NoOrders;
+                        }
+                        break;
+                    default:
+                        break;
+                }
 
-            //Check if unit has done irrigating
-            if (unit.Order == OrderType.BuildIrrigation)
-            {
-                if (unit.Counter == 2)
-                {
-                    if (Game.Map[unit.X, unit.Y].Irrigation == false) //Build irrigation
-                    {
-                        Game.Map[unit.X, unit.Y].Irrigation = true;
-                    }
-                    else if ((Game.Map[unit.X, unit.Y].Irrigation == true) && (Game.Map[unit.X, unit.Y].Farmland == false)) //Build farms
-                    {
-                        Game.Map[unit.X, unit.Y].Farmland = true;
-                    }
-                    //Game.Map = Draw.DrawMap();  //Update game map
-                    //unit.Action = OrderType.NoOrders;
-                }
-            }
-            else if (unit.Order == OrderType.BuildRoad)
-            {
-                if (unit.Counter == 2)
-                {
-                    if (Game.Map[unit.X, unit.Y].Road == false) //Build road
-                    {
-                        Game.Map[unit.X, unit.Y].Road = true;
-                    }
-                    else if ((Game.Map[unit.X, unit.Y].Road == true) && (Game.Map[unit.X, unit.Y].Railroad == false)) //Build railroad
-                    {
-                        Game.Map[unit.X, unit.Y].Railroad = true;
-                    }
-                    //Game.Map = Draw.DrawMap();  //Update game map
-                    //unit.Action = OrderType.NoOrders;
-                }
-            }
-            else if (unit.Order == OrderType.BuildMine)
-            {
-                if (unit.Counter == 2)
-                {
-                    Game.Map[unit.X, unit.Y].Mining = true;
-                    //Game.Map = Draw.DrawMap();  //Update game map
-                    //unit.Action = OrderType.NoOrders;
-                }
-            }
             //Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             //Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
         }
@@ -73,76 +78,29 @@ namespace RTciv2
         //Chose next unit for orders. If all units ended turn, update cities.
         public static void ChooseNextUnit()
         {
-            //Create an array of indexes of units awaiting orders
-            List<int> indexUAO = new List<int>();
-            for (int i = 0; i < Game.Units.Count; i++) 
-                if ((Game.Units[i].Civ == Data.HumanPlayer) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
-
-            //Move on to the next unit
-            bool noUnitsAwaitingOrders = true;
-            if (indexUAO.Any()) //there are still units awaiting orders
+            if (!AnyUnitsAwaitingOrders(Data.HumanPlayer))  //end turn if no units awaiting orders
             {
-                if (Data.SelectedUnitIndex < indexUAO[indexUAO.Count - 1]) //indexes of the next units in line are > index of unit that just moved
-                {
-                    for (int i = 0; i < indexUAO.Count; i++) 
-                        if (indexUAO[i] > Data.SelectedUnitIndex) { Data.SelectedUnitIndex = indexUAO[i]; break; }   //chose next index
-                }
-                else    //else chose the 1st index in list (go to beginning of list)
-                {
-                    Data.SelectedUnitIndex = indexUAO[0];
-                }
-
-                Game.Instance.ActiveUnit = Game.Units[Data.SelectedUnitIndex];
-                noUnitsAwaitingOrders = false;
-
-                //If necessary, center view on new unit in MapForm
-                //Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
-
-                //Set active box coords to next unit
-                //MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X;
-                //MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y;
-            }
-
-            ////Move on to next unit
-            //allUnitsEndedTurn = true;
-            //foreach (IUnit unit in Game.Units.Where(n => n.Civ == Game.Data.HumanPlayerUsed))
-            //{
-            //    if (!unit.TurnEnded)   //First unit on list which hasn't ended turns is activated
-            //    {
-            //        Game.Instance.ActiveUnit = unit;
-            //        //Game.Instance.ActiveUnit.FirstMove = true;
-
-            //        allUnitsEndedTurn = false;
-
-            //        //If necessary, center view on new unit in MapForm
-            //        Application.OpenForms.OfType<MapForm>().First().MoveMapViewIfNecessary();
-
-            //        //Set active box coords to next unit
-            //        MapForm.ActiveBoxX = Game.Instance.ActiveUnit.X2;
-            //        MapForm.ActiveBoxY = Game.Instance.ActiveUnit.Y2;
-
-            //        break;
-            //    }
-            //}
-
-            //If all units ended turn ==> start new turn. If not, update unit stats.
-            if (noUnitsAwaitingOrders)
-            {
-                //If "wait at end of turn is enabled" show the message in status form & wait for ENTER pressed
                 if (Options.AlwaysWaitAtEndOfTurn)
-                {
-                    //MapForm.ViewingPiecesMode = true;
-                    Application.OpenForms.OfType<StatusForm>().First().ShowEndOfTurnMessage();
-                    Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();
-                }
-                else NewTurn();
+                    OnWaitAtTurnEnd?.Invoke(null, new WaitAtTurnEndEventArgs());
+                else
+                    NewPlayerTurn();
             }
-            else
+            else    //chose next unit
             {
-                //Unit is active. Make sure the menus are enabled.
-                //MapForm.ViewingPiecesMode = false;
-                UpdateUnit(Game.Instance.ActiveUnit);
-                Application.OpenForms.OfType<MainCiv2Window>().First().UpdateOrdersMenu();
+                //Create an array of indexes of units awaiting orders
+                List<int> indexUAO = new List<int>();
+                for (int i = 0; i < Game.Units.Count; i++)
+                    if ((Game.Units[i].Civ == Data.HumanPlayer) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
+
+                int indexActUnit = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit);  //Determine index of unit that is currently still active but just ended turn
+
+                if ((indexUAO[0] > indexActUnit) || (indexUAO[indexUAO.Count - 1] <= indexActUnit))  //currently active unit is at beginning/end of list ==> chose next unit from beginning of list
+                    Game.Instance.ActiveUnit = Game.Units[indexUAO[0]];
+                else    //otherwise chose next unit from currently active unit in the list
+                    for (int i = 0; i < indexUAO.Count - 1; i++)
+                        if ((indexActUnit >= indexUAO[i]) && (indexActUnit < indexUAO[i + 1])) Game.Instance.ActiveUnit = Game.Units[indexUAO[i + 1]];
+
+                OnNewUnitChosen?.Invoke(null, new NewUnitChosenEventArgs());    //run event that new unit was chosen
             }
         }
 
@@ -155,7 +113,7 @@ namespace RTciv2
             }
         }
 
-        public static void NewTurn()
+        public static void NewPlayerTurn()
         {
             Data.TurnNumber++;
 
@@ -174,6 +132,8 @@ namespace RTciv2
 
             //Choose next unit
             ChooseNextUnit();
+
+            OnNewPlayerTurn?.Invoke(null, new NewPlayerTurnEventArgs());
         }
 
         public static void BuildCity(string cityName)
@@ -208,83 +168,87 @@ namespace RTciv2
             switch (order)
             {
                 case OrderType.MoveSW:
-                    if (Game.Instance.ActiveUnit.Move(-1, 1))
-                        if (UnitMovedEvent != null) UnitMovedEvent.Invoke();
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(-1, 1)));
                     break;
-                case OrderType.MoveS:   
-                    Game.Instance.ActiveUnit.Move(0, 2); 
+                case OrderType.MoveS:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(0, 2)));
                     break;
-                case OrderType.MoveSE:  
-                    Game.Instance.ActiveUnit.Move(1, 1); 
+                case OrderType.MoveSE:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(1, 1)));
                     break;
-                case OrderType.MoveW:   
-                    Game.Instance.ActiveUnit.Move(-2, 0); 
+                case OrderType.MoveW:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(-2, 0)));
                     break;
-                case OrderType.MoveE:   
-                    Game.Instance.ActiveUnit.Move(2, 0); 
+                case OrderType.MoveE:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(2, 0)));
                     break;
-                case OrderType.MoveNW:  
-                    Game.Instance.ActiveUnit.Move(-1, -1); 
+                case OrderType.MoveNW:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(-1, -1)));
                     break;
-                case OrderType.MoveN:   
-                    Game.Instance.ActiveUnit.Move(0, -2); 
+                case OrderType.MoveN:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(0, -2)));
                     break;
-                case OrderType.MoveNE:  
-                    Game.Instance.ActiveUnit.Move(1, -1); 
+                case OrderType.MoveNE:
+                    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(1, -1)));
                     break;
                 case OrderType.BuildIrrigation: 
-                    Game.Instance.ActiveUnit.BuildIrrigation(); 
+                    Game.Instance.ActiveUnit.BuildIrrigation();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.BuildMine: 
-                    Game.Instance.ActiveUnit.BuildMines(); 
+                    Game.Instance.ActiveUnit.BuildMines();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.GoTo:
                     //TODO: goto key pressed event
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.Fortify: 
-                    Game.Instance.ActiveUnit.Fortify(); 
+                    Game.Instance.ActiveUnit.Fortify();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.Sleep: 
-                    Game.Instance.ActiveUnit.Sleep(); 
+                    Game.Instance.ActiveUnit.Sleep();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.GoHome:
                     //TODO: gohome key pressed event
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.SkipTurn: 
-                    Game.Instance.ActiveUnit.SkipTurn(); 
+                    Game.Instance.ActiveUnit.SkipTurn();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.BuildCity: 
-                    Game.Instance.ActiveUnit.BuildCity(); 
+                    Game.Instance.ActiveUnit.BuildCity();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.BuildRoad: 
-                    Game.Instance.ActiveUnit.BuildRoad(); 
+                    Game.Instance.ActiveUnit.BuildRoad();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.Transform: 
-                    Game.Instance.ActiveUnit.Transform(); 
+                    Game.Instance.ActiveUnit.Transform();
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.Automate:
                     //TODO: automate key pressed event
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 case OrderType.ActivateUnit:
                     //TODO: activate unit key pressed event
-                    break;
-                case OrderType.EndTurn:
-                    //TODO: end turn key pressed event
+                    UpdateUnit(Game.Instance.ActiveUnit);
                     break;
                 default: break;
             }
-            UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         //find out if certain civ has any units awaiting orders
         public static bool AnyUnitsAwaitingOrders(int civId)
         {
-            //List<int> indexUAO = new List<int>();            //Create an array of indexes of units awaiting orders
-            //for (int i = 0; i < Game.Units.Count; i++) if ((Game.Units[i].Civ == civId) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
-
-            //if (indexUAO.Any()) return true;
-            //else return false;
             return Game.Units.Any(unit => unit.Civ == civId && unit.AwaitingOrders);
         }
+
+
     }
 }

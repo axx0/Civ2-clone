@@ -31,6 +31,7 @@ namespace RTciv2.Units
         public TechType PrereqTech { get; set; }
         public string Flags { get; set; }
 
+        public int Id { get; set; }
         public UnitType Type { get; set; }
         public UnitGAS GAS { get; set; }
         public OrderType Order { get; set; }
@@ -103,6 +104,9 @@ namespace RTciv2.Units
             //If unit moved, update its X-Y coords, map & play sound
             if (unitMoved)
             {
+                //set previous coords
+                LastXY = new int[] { X, Y };
+
                 //set last move for unit
                 if (moveX == 1 && moveY == -1)          LastMove = 0;
                 else if (moveX == 2 && moveY == 0)      LastMove = 1;
@@ -116,14 +120,12 @@ namespace RTciv2.Units
                 //set new coords
                 X = Xto;
                 Y = Yto;
-
-                //MapPanel.UnitMoved = true;    //trigger animation of movement in map panel
-
-                //Sound.MoveSound.Play();
             }
 
             return unitMoved;
         }
+
+        public int[] LastXY { get; set; }   //XY position of unit before it moved
 
         private bool _turnEnded;
         public bool TurnEnded
@@ -144,6 +146,7 @@ namespace RTciv2.Units
             get
             {
                 _awaitingOrders = (Order == OrderType.NoOrders || Order == OrderType.GoTo) ? true : false;
+                if (TurnEnded) _awaitingOrders = false;
                 return _awaitingOrders;
             }
             set { _awaitingOrders = value; }
