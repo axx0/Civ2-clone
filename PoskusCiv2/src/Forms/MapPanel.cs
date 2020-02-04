@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -122,108 +123,99 @@ namespace RTciv2.Forms
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
 
-            //TILES
+            //Draw for each visible square
             for (int row = 0; row < DrawingSqXY[1] - EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3]; row++)
-                for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++)
+                for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++) 
                     if (Math.Abs(row - col) % 2 == 0)   //choose which squares
                     {
+                        //TILES
                         int[] coords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
-                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4), 
-                                             DrawingPxOffsetXY[0] + 32 * col, 
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4),
+                                             DrawingPxOffsetXY[0] + 32 * col,
                                              DrawingPxOffsetXY[1] + 16 * row);
-                    }
 
-            //UNITS
-            foreach (IUnit unit in Game.Units)
-                if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
-                    UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
-                    e.Graphics.DrawImage(unit.GraphicMapPanel,
-                                         DrawingPxOffsetXY[0] + 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
-                                         DrawingPxOffsetXY[1] + 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-
-            //CITIES
-            foreach (City city in Game.Cities)
-                if (CityIsInView(city))
-                {
-                    e.Graphics.DrawImage(city.Graphic, 
-                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]), 
-                                         DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-                    e.Graphics.DrawImage(city.TextGraphic, 
-                                         DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2, 
-                                         DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
-                }
-
-            //ACTIVE UNIT
-            if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit))
-                if (AnimType == AnimationType.None && (TimerCounter % 2 == 0))
-                {
-                    e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
-                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
-                                        DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-                }
-                else if (AnimType == AnimationType.UnitMoving)
-                {
-                    //Console.WriteLine($"Current xy={Game.Instance.ActiveUnit.X},{Game.Instance.ActiveUnit.Y}, Lastxy={Game.Instance.ActiveUnit.LastXY[0]},{Game.Instance.ActiveUnit.LastXY[1]}");
-                    //Console.WriteLine($"Timer={TimerCounter}");
-                    //Console.WriteLine($"Move={8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter},{4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter}");
-                    //Console.WriteLine($"Static={4 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0])},{2 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1])}");
-                    int moveToX = 8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter;
-                    int moveToY = 4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter;
-                    e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
-                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + moveToX,
-                                        DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + moveToY);
-
-                    if (TimerCounter == 4)  //unit finished movement
-                    {
-                        ChangeAnimation(AnimationType.None); //reset after unit has moved
-                        Actions.UpdateUnit(Game.Instance.ActiveUnit);
-                    }                        
-                }
-
-            //GRIDLINES
-            if (Options.Grid)
-            {
-                Color brushColor;
-                for (int row = 0; row < DrawingSqXY[1] - EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3]; row++)
-                    for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++)
-                        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+                        //UNITS
+                        List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
+                        foreach (IUnit unit in Game.Units.Where(u => u.X == col + StartingSqXY[0] + EdgeDrawOffsetXY[0] && u.Y == row + StartingSqXY[1] + EdgeDrawOffsetXY[1])) unitsHere.Add(unit);
+                        if (unitsHere.Any())
                         {
-                            brushColor = ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red
+                            IUnit unit = unitsHere.Last();
+                            if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
+                                UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
+                                e.Graphics.DrawImage(unit.GraphicMapPanel,
+                                                     DrawingPxOffsetXY[0] + 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
+                                                     DrawingPxOffsetXY[1] + 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+
+                        }
+
+                        //CITIES
+                        City city = Game.Cities.Find(c => c.X == col + StartingSqXY[0] + EdgeDrawOffsetXY[0] && c.Y == row + StartingSqXY[1] + EdgeDrawOffsetXY[1]);    //find if city is here
+                        if (city != null && CityIsInView(city))
+                        {
+                            e.Graphics.DrawImage(city.Graphic,
+                                                 DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
+                                                 DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+                            e.Graphics.DrawImage(city.TextGraphic,
+                                                 DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2,
+                                                 DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
+                        }
+
+                        //ACTIVE UNIT
+                        if (unitsHere.Contains(Game.Instance.ActiveUnit))
+                            if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit))
+                            {
+                                if (AnimType == AnimationType.None && (TimerCounter % 2 == 0))
+                                {
+                                    e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+                                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
+                                                        DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+                                }
+                                else if (AnimType == AnimationType.UnitMoving)
+                                {
+                                    int moveToX = 8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter;
+                                    int moveToY = 4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter;
+                                    e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+                                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + moveToX,
+                                                        DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + moveToY);
+
+                                    if (TimerCounter == 4)  //unit finished movement
+                                    {
+                                        ChangeAnimation(AnimationType.None); //reset after unit has moved
+                                        Actions.UpdateUnit(Game.Instance.ActiveUnit);
+                                    }
+                                }
+                            }
+
+                        //GRID
+                        if (Options.Grid)
+                        {
+                            Color brushColor = ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red;
                             if (MapGridVar > 0)
-                                e.Graphics.DrawImage(Images.GridLines, 
-                                                     DrawingPxOffsetXY[0] + 32 * col, 
+                                e.Graphics.DrawImage(Images.GridLines,
+                                                     DrawingPxOffsetXY[0] + 32 * col,
                                                      DrawingPxOffsetXY[1] + 16 * row);
                             if (MapGridVar == 2)     //Map coords from SAVfile logic
                             {
                                 int[] realCoords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
-                                e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"), 
-                                                      new Font("Arial", 8), 
-                                                      new SolidBrush(brushColor), 
-                                                      DrawingPxOffsetXY[0] + 32 * col + 32, 
+                                e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"),
+                                                      new Font("Arial", 8),
+                                                      new SolidBrush(brushColor),
+                                                      DrawingPxOffsetXY[0] + 32 * col + 32,
                                                       DrawingPxOffsetXY[1] + 16 * row + 16, sf);
                             }
                             if (MapGridVar == 3)    //Civ2-coords
-                                e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"), 
-                                                      new Font("Arial", 8), new SolidBrush(brushColor), 
-                                                      DrawingPxOffsetXY[0] + 32 * col + 32, 
+                                e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"),
+                                                      new Font("Arial", 8), new SolidBrush(brushColor),
+                                                      DrawingPxOffsetXY[0] + 32 * col + 32,
                                                       DrawingPxOffsetXY[1] + 16 * row + 16, sf);
                         }
-            }
+                    }
 
             //VIEWING PIECE
             if (ViewingPiecesMode && (TimerCounter % 2 == 0))
                 e.Graphics.DrawImage(Images.ViewingPieces,
                                      DrawingPxOffsetXY[0] + 4 * ZoomLvl * (ActiveXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
                                      DrawingPxOffsetXY[1] + 2 * ZoomLvl * (ActiveXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]));
-
-            //Uncomment this for help in drawing-logic
-            //HelpLabel.Text = $"Panel size = ({DrawPanel.Width},{DrawPanel.Height})\n" +
-            //    $"CenterDistanceXY = ({CenterDistanceXY[0]},{CenterDistanceXY[1]})\n" +
-            //    $"DrawingSqXY = ({DrawingSqXY[0]},{DrawingSqXY[1]})\n" +
-            //    $"DrawingPxOffsetXY = ({DrawingPxOffsetXY[0]},{DrawingPxOffsetXY[1]}) px\n" +
-            //    $"StartingSqXY = ({StartingSqXY[0]},{StartingSqXY[1]})\n" +
-            //    $"EdgeDrawOffsetXY = ({EdgeDrawOffsetXY[0]},{EdgeDrawOffsetXY[1]},{EdgeDrawOffsetXY[2]},{EdgeDrawOffsetXY[3]})\n" +
-            //    $"CenterSqXY = ({CenterSqXY[0]},{CenterSqXY[1]})";
 
             e.Dispose();
             sf.Dispose();
