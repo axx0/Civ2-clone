@@ -11,7 +11,7 @@ namespace RTciv2.Forms
     {
         public NoSelectButton()
         {
-            SetStyle(ControlStyles.Selectable, false);  //Lose focus from button
+            SetStyle(ControlStyles.Selectable, false);  //Lose focus from button (cannot be selected by tab)
         }
     }
 }

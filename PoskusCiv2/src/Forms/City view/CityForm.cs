@@ -20,7 +20,7 @@ namespace RTciv2.Forms
         public MainCiv2Window mainCiv2Window;
         //Draw Draw = new Draw();
         City ThisCity;
-        Bitmap CityDrawing;
+        //Bitmap CityDrawing;
         DoubleBufferedPanel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
         DoubleBufferedPanel CallingForm;
         VScrollBar ImprovementsBar;
@@ -54,21 +54,11 @@ namespace RTciv2.Forms
             {
                 Location = new Point(11, 39),    //normal zoom = (8,25)
                 Size = new Size(954, 631),      //normal zoom = (640,420)
-                BackgroundImage = ModifyImage.ResizeImage(Images.CityWallpaper, 954, 631),
+                BackgroundImage = ModifyImage.ResizeImage(Images.CityWallpaper, 954, 631)
             };
             Controls.Add(WallpaperPanel);
             WallpaperPanel.Paint += new PaintEventHandler(WallpaperPanel_Paint);
             WallpaperPanel.Paint += new PaintEventHandler(ImprovementsList_Paint);
-
-            //Faces panel
-            Faces = new DoubleBufferedPanel
-            {
-                Location = new Point(10, 10),
-                Size = new Size(630, 50),    //stretched by 12.5 %
-                BackColor = Color.Transparent
-            };
-            WallpaperPanel.Controls.Add(Faces);
-            Faces.Paint += new PaintEventHandler(Faces_Paint);
 
             //Resource map panel
             ResourceMap = new DoubleBufferedPanel
@@ -77,8 +67,8 @@ namespace RTciv2.Forms
                 Size = new Size(4 * 72, 4 * 36),    //stretched by 12.5 %
                 BackColor = Color.Transparent
             };
-            WallpaperPanel.Controls.Add(ResourceMap);
-            ResourceMap.Paint += new PaintEventHandler(ResourceMap_Paint);
+            //WallpaperPanel.Controls.Add(ResourceMap);
+            //ResourceMap.Paint += new PaintEventHandler(ResourceMap_Paint);
 
             //City resources panel
             CityResources = new DoubleBufferedPanel
@@ -87,8 +77,8 @@ namespace RTciv2.Forms
                 Size = new Size(350, 245),    //stretched by 12.5 %
                 BackColor = Color.Transparent
             };
-            WallpaperPanel.Controls.Add(CityResources);
-            CityResources.Paint += new PaintEventHandler(CityResources_Paint);
+            //WallpaperPanel.Controls.Add(CityResources);
+            //CityResources.Paint += new PaintEventHandler(CityResources_Paint);
 
             //Units from city panel
             UnitsFromCity = new DoubleBufferedPanel
@@ -97,8 +87,8 @@ namespace RTciv2.Forms
                 Size = new Size(270, 104),
                 BackColor = Color.Transparent
             };
-            WallpaperPanel.Controls.Add(UnitsFromCity);
-            UnitsFromCity.Paint += new PaintEventHandler(UnitsFromCity_Paint);
+            //WallpaperPanel.Controls.Add(UnitsFromCity);
+            //UnitsFromCity.Paint += new PaintEventHandler(UnitsFromCity_Paint);
 
             //Units in city panel
             UnitsInCity = new DoubleBufferedPanel
@@ -107,51 +97,31 @@ namespace RTciv2.Forms
                 Size = new Size(360, 245),
                 BackColor = Color.Transparent
             };
-            WallpaperPanel.Controls.Add(UnitsInCity);
-            UnitsInCity.Paint += new PaintEventHandler(UnitsInCity_Paint);
-
-            //Food storage panel
-            FoodStorage = new DoubleBufferedPanel
-            {
-                Location = new Point(651, 0),
-                Size = new Size(291, 245),
-                BackColor = Color.Transparent
-            };
-            WallpaperPanel.Controls.Add(FoodStorage);
-            FoodStorage.Paint += new PaintEventHandler(FoodStorage_Paint);
-
-            //Production panel
-            ProductionPanel = new DoubleBufferedPanel
-            {
-                Location = new Point(651, 248),
-                Size = new Size(291, 287),
-                BackColor = Color.Transparent
-            };
-            WallpaperPanel.Controls.Add(ProductionPanel);
-            ProductionPanel.Paint += new PaintEventHandler(ProductionPanel_Paint);
+            //WallpaperPanel.Controls.Add(UnitsInCity);
+            //UnitsInCity.Paint += new PaintEventHandler(UnitsInCity_Paint);
             #endregion
 
             #region Buttons
             //Buy button
             Civ2button BuyButton = new Civ2button
             {
-                Location = new Point(8, 24),
+                Location = new Point(651 + 8, 248 + 24),
                 Size = new Size(102, 36),
                 Font = new Font("Arial", 10.5F),
                 Text = "Buy"
             };
-            ProductionPanel.Controls.Add(BuyButton);
+            WallpaperPanel.Controls.Add(BuyButton);
             BuyButton.Click += new EventHandler(BuyButton_Click);
 
             //Change button
             Civ2button ChangeButton = new Civ2button
             {
-                Location = new Point(180, 24),
+                Location = new Point(651 + 180, 248 + 24),
                 Size = new Size(102, 36),
                 Font = new Font("Arial", 10.5F),
                 Text = "Change"
             };
-            ProductionPanel.Controls.Add(ChangeButton);
+            WallpaperPanel.Controls.Add(ChangeButton);
             ChangeButton.Click += new EventHandler(ChangeButton_Click);
 
             //Info button
@@ -221,7 +191,7 @@ namespace RTciv2.Forms
             ExitButton.Click += new EventHandler(ExitButton_Click);
 
             //Next city (UP) button
-            Button NextCityButton = new Button
+            NoSelectButton NextCityButton = new NoSelectButton
             {
                 Location = new Point(652, 548), //original (440, 367)
                 Size = new Size(32, 36),  //original (21, 24)
@@ -233,7 +203,7 @@ namespace RTciv2.Forms
             NextCityButton.Paint += new PaintEventHandler(NextCityButton_Paint);
 
             //Previous city (DOWN) button
-            Button PrevCityButton = new Button
+            NoSelectButton PrevCityButton = new NoSelectButton
             {
                 Location = new Point(652, 585), //original (440, 392)
                 Size = new Size(32, 36),  //original (21, 24)
@@ -301,6 +271,9 @@ namespace RTciv2.Forms
 
         private void WallpaperPanel_Paint(object sender, PaintEventArgs e)
         {
+            StringFormat sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+
             //Texts
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
             e.Graphics.DrawString("Citizens", new Font("Arial", 11), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(117, 71));
@@ -317,25 +290,57 @@ namespace RTciv2.Forms
             e.Graphics.DrawString("Units Present", new Font("Arial", 11), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(413, 326));
             e.Graphics.DrawString("Food Storage", new Font("Arial", 11), new SolidBrush(Color.FromArgb(0, 0, 0)), new Point(743, 1));
             e.Graphics.DrawString("Food Storage", new Font("Arial", 11), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(742, 0));
-            e.Dispose();
-        }
 
-        //Draw faces
-        private void Faces_Paint(object sender, PaintEventArgs e)
-        {
-           //e.Graphics.DrawImage(Draw.DrawFaces(ThisCity, 1.5), 0, 0);
+            //Faces
+            e.Graphics.DrawImage(Images.DrawFaces(ThisCity, 1.5), 0, 0);
+
+            //Food storage
+            e.Graphics.DrawImage(Images.DrawFoodStorage(ThisCity), new Point(651, 0));
+
+            #region Production panel
+            //Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
+            //Units are scaled by 1.15 compared to original, improvements are size 54x30
+            if (ThisCity.ItemInProduction < 62)    //units
+            {
+                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[ThisCity.ItemInProduction], 74, 55), new Point(651 + 106, 248 + 7));
+            }
+            else    //improvements
+            {
+                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 651 + 146 + 1, 248 + 3 + 1, sf);
+                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 651 + 146, 248 + 3, sf);
+                e.Graphics.DrawImage(Images.ImprovementsLarge[ThisCity.ItemInProduction - 62 + 1], new Point(651 + 119, 248 + 28));
+            }
+            e.Graphics.DrawImage(Images.DrawCityProduction(ThisCity), new Point(651, 248));  //draw production shields and sqare around them
+            #endregion
+
+            //Map around city
+            Bitmap CityDrawing = Images.DrawCityFormMap(ThisCity);
+            e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), 7, 125);
+            //Food/shield/trade icons around the city (21 of them altogether)
+            //for (int i = 0; i <= ThisCity.Size; i++)
+            //for (int i = 0; i <= 0; i++)
+            //{
+            //e.Graphics.DrawImage(Images.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 7 + 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 125 + 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+            int i = 0;
+            e.Graphics.DrawImage(Images.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 7 + 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 125 + 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+            //e.Graphics.DrawImage(Images.Desert[0], 7 + 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 125 + 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+            //}
+
+            sf.Dispose();
+            e.Dispose();
         }
 
         //Draw city map
         private void ResourceMap_Paint(object sender, PaintEventArgs e)
         {
-            //map around city
+            //Map around city
             //e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), 0, 0);
             //Food/shield/trade icons around the city (21 of them altogether)
             for (int i = 0; i <= ThisCity.Size; i++)
             {
-                //e.Graphics.DrawImage(Draw.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+                //e.Graphics.DrawImage(Images.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 7 + 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 125 + 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
             }
+            e.Dispose();
         }
 
         //Draw city resources
@@ -442,37 +447,6 @@ namespace RTciv2.Forms
                 e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
             }
             e.Dispose();
-        }
-
-        private void FoodStorage_Paint(object sender, PaintEventArgs e)
-        {
-            e.Graphics.DrawImage(Images.DrawFoodStorage(ThisCity), new Point(0, 0));
-        }
-
-        private void ProductionPanel_Paint(object sender, PaintEventArgs e)
-        {
-            //Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
-            //Units are scaled by 1.15 compared to original, improvements are size 54x30
-            if (ThisCity.ItemInProduction < 62)    //units
-            {
-                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[ThisCity.ItemInProduction], 74, 55), new Point(106, 7));
-            }
-            else    //improvements
-            {
-                StringFormat sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 146 + 1, 3 + 1, sf);
-                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 146, 3, sf);
-                e.Graphics.DrawImage(Images.ImprovementsLarge[ThisCity.ItemInProduction - 62 + 1], new Point(119, 28));
-                sf.Dispose();
-            }
-
-            //e.Graphics.DrawImage(Draw.DrawCityProduction(ThisCity), new Point(0, 0));  //draw production shields and sqare around them
-            e.Dispose();
-        }
-
-        private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
-        {          
         }
 
         private void BuyButton_Click(object sender, EventArgs e)

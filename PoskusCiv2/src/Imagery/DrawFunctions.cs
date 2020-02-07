@@ -307,39 +307,39 @@ namespace RTciv2.Imagery
         //}
 
         //Draw food/shields/trade icons in city form sqare which is offset (offsetX, offsetY) from the square with the city
-        public Bitmap DrawCityFormMapIcons(City city, int offsetX, int offsetY)
-        {            
-            offsetX = (offsetX - (offsetY % 2)) / 2;    //First turn offsetX/Y from Civ2 to real coordinates
+        //public Bitmap DrawCityFormMapIcons(City city, int offsetX, int offsetY)
+        //{            
+        //    offsetX = (offsetX - (offsetY % 2)) / 2;    //First turn offsetX/Y from Civ2 to real coordinates
 
-            Bitmap icons = new Bitmap(64, 32);    //define a bitmap for drawing icons
-            using (Graphics graphics = Graphics.FromImage(icons))
-            {
-                //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
-                int spacing;
-                int countF = Game.Map[city.X + offsetX, city.Y + offsetY].Food;
-                int countS = Game.Map[city.X + offsetX, city.Y + offsetY].Shields;
-                int countT = Game.Map[city.X + offsetX, city.Y + offsetY].Trade;
-                switch (countF + countS + countT)
-                {
-                    case 1:
-                    case 2: spacing = 17; break;    //50 % larger (orignal = 11, 1 pixel gap)
-                    case 3: spacing = 15; break;    //50 % larger (orignal = 10, no gap)
-                    case 4: spacing = 11; break;    //50 % larger (orignal = 7)
-                    case 5: spacing = 8; break;    //50 % larger (orignal = 5)
-                    case 6: spacing = 6; break;    //50 % larger (orignal = 4)
-                    case 7:
-                    case 8: spacing = 5; break;    //50 % larger (orignal = 3)
-                    case 9: spacing = 3; break;    //50 % larger (orignal = 2)
-                    case 10: spacing = 2; break;    //50 % larger (orignal = 1)
-                    default: spacing = 2; break;    //50 % larger (orignal = 1)
-                }
-                //First draw food, then shields, then trade icons
-                for (int i = 0; i < countF; i++) graphics.DrawImage(Images.CitymapFoodSmallBigger, i * spacing, 0);
-                for (int i = 0; i < countS; i++) graphics.DrawImage(Images.CitymapShieldSmallBigger, (countF + i) * spacing, 0);
-                for (int i = 0; i < countT; i++) graphics.DrawImage(Images.CitymapTradeSmallBigger, (countF + countS + i) * spacing, 0);
-            }
-            return icons;
-        }
+        //    Bitmap icons = new Bitmap(64, 32);    //define a bitmap for drawing icons
+        //    using (Graphics graphics = Graphics.FromImage(icons))
+        //    {
+        //        //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
+        //        int spacing;
+        //        int countF = Game.Map[city.X + offsetX, city.Y + offsetY].Food;
+        //        int countS = Game.Map[city.X + offsetX, city.Y + offsetY].Shields;
+        //        int countT = Game.Map[city.X + offsetX, city.Y + offsetY].Trade;
+        //        switch (countF + countS + countT)
+        //        {
+        //            case 1:
+        //            case 2: spacing = 17; break;    //50 % larger (orignal = 11, 1 pixel gap)
+        //            case 3: spacing = 15; break;    //50 % larger (orignal = 10, no gap)
+        //            case 4: spacing = 11; break;    //50 % larger (orignal = 7)
+        //            case 5: spacing = 8; break;    //50 % larger (orignal = 5)
+        //            case 6: spacing = 6; break;    //50 % larger (orignal = 4)
+        //            case 7:
+        //            case 8: spacing = 5; break;    //50 % larger (orignal = 3)
+        //            case 9: spacing = 3; break;    //50 % larger (orignal = 2)
+        //            case 10: spacing = 2; break;    //50 % larger (orignal = 1)
+        //            default: spacing = 2; break;    //50 % larger (orignal = 1)
+        //        }
+        //        //First draw food, then shields, then trade icons
+        //        for (int i = 0; i < countF; i++) graphics.DrawImage(Images.CitymapFoodSmallBigger, i * spacing, 0);
+        //        for (int i = 0; i < countS; i++) graphics.DrawImage(Images.CitymapShieldSmallBigger, (countF + i) * spacing, 0);
+        //        for (int i = 0; i < countT; i++) graphics.DrawImage(Images.CitymapTradeSmallBigger, (countF + countS + i) * spacing, 0);
+        //    }
+        //    return icons;
+        //}
 
         public Bitmap DrawFaces(City city, double scale_factor) //Draw faces in cityform
         {
@@ -385,126 +385,126 @@ namespace RTciv2.Imagery
             return faces;
         }
 
-        //Draw icons in city resources (surplus < 0 is hunger)
-        public Bitmap DrawCityIcons(City city, int foodIcons, int surplusIcons, int tradeIcons, int corruptionIcons, int taxIcons, int luxIcons, int sciIcons, int supportIcons, int productionIcons)
-        {
-            int x_size = 330;
-            int y_size = 200;
-            Bitmap icons = new Bitmap(x_size, y_size);    //define a bitmap for drawing icons
-            using (Graphics graphics = Graphics.FromImage(icons))
-            {
-                //Number of food+surplus/hunger icons determines spacing between icons
-                int spacing;
-                switch (foodIcons + Math.Abs(surplusIcons))
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw food & surplus icons
-                for (int i = 0; i < foodIcons; i++) graphics.DrawImage(Images.CitymapFoodLargeBigger, i * spacing + 3, 1);
-                for (int i = 0; i < Math.Abs(surplusIcons); i++)
-                {
-                    if (surplusIcons < 0) graphics.DrawImage(Images.CitymapHungerLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
-                    else graphics.DrawImage(Images.CitymapFoodLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
-                }
+        ////Draw icons in city resources (surplus < 0 is hunger)
+        //public Bitmap DrawCityIcons(City city, int foodIcons, int surplusIcons, int tradeIcons, int corruptionIcons, int taxIcons, int luxIcons, int sciIcons, int supportIcons, int productionIcons)
+        //{
+        //    int x_size = 330;
+        //    int y_size = 200;
+        //    Bitmap icons = new Bitmap(x_size, y_size);    //define a bitmap for drawing icons
+        //    using (Graphics graphics = Graphics.FromImage(icons))
+        //    {
+        //        //Number of food+surplus/hunger icons determines spacing between icons
+        //        int spacing;
+        //        switch (foodIcons + Math.Abs(surplusIcons))
+        //        {
+        //            case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
+        //            case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
+        //            case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
+        //            case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
+        //            case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
+        //            case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
+        //            case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
+        //            case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
+        //            case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
+        //            case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
+        //            case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
+        //            case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
+        //            default: spacing = 2; break;
+        //        }
+        //        //First draw background rectangle
+        //        graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
+        //        graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
+        //        //Draw food & surplus icons
+        //        for (int i = 0; i < foodIcons; i++) graphics.DrawImage(Images.CitymapFoodLargeBigger, i * spacing + 3, 1);
+        //        for (int i = 0; i < Math.Abs(surplusIcons); i++)
+        //        {
+        //            if (surplusIcons < 0) graphics.DrawImage(Images.CitymapHungerLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
+        //            else graphics.DrawImage(Images.CitymapFoodLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
+        //        }
 
-                //Next draw trade + corruption icons
-                switch (tradeIcons + Math.Abs(corruptionIcons))
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw trade & corruption icons
-                for (int i = 0; i < tradeIcons; i++) graphics.DrawImage(Images.CitymapTradeLargeBigger, i * spacing + 3, 63);
+        //        //Next draw trade + corruption icons
+        //        switch (tradeIcons + Math.Abs(corruptionIcons))
+        //        {
+        //            case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
+        //            case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
+        //            case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
+        //            case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
+        //            case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
+        //            case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
+        //            case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
+        //            case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
+        //            case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
+        //            case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
+        //            case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
+        //            case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
+        //            default: spacing = 2; break;
+        //        }
+        //        //First draw background rectangle
+        //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
+        //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
+        //        //Draw trade & corruption icons
+        //        for (int i = 0; i < tradeIcons; i++) graphics.DrawImage(Images.CitymapTradeLargeBigger, i * spacing + 3, 63);
 
-                for (int i = 0; i < Math.Abs(corruptionIcons); i++) graphics.DrawImage(Images.CitymapCorruptionLargeBigger, x_size - (spacing * Math.Abs(corruptionIcons) + 21 - spacing) + i * spacing, 63); //hunger
+        //        for (int i = 0; i < Math.Abs(corruptionIcons); i++) graphics.DrawImage(Images.CitymapCorruptionLargeBigger, x_size - (spacing * Math.Abs(corruptionIcons) + 21 - spacing) + i * spacing, 63); //hunger
 
-                //Next draw tax+lux+sci icons
-                switch (taxIcons + luxIcons + sciIcons)
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw trade & corruption icons
-                for (int i = 0; i < taxIcons; i++) graphics.DrawImage(Images.CitymapTaxLargeBigger, i * spacing + 3, 99);  //tax
+        //        //Next draw tax+lux+sci icons
+        //        switch (taxIcons + luxIcons + sciIcons)
+        //        {
+        //            case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
+        //            case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
+        //            case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
+        //            case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
+        //            case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
+        //            case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
+        //            case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
+        //            case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
+        //            case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
+        //            case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
+        //            case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
+        //            case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
+        //            default: spacing = 2; break;
+        //        }
+        //        //First draw background rectangle
+        //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
+        //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
+        //        //Draw trade & corruption icons
+        //        for (int i = 0; i < taxIcons; i++) graphics.DrawImage(Images.CitymapTaxLargeBigger, i * spacing + 3, 99);  //tax
 
-                for (int i = 0; i < luxIcons; i++)
-                {
-                    //TO-DO !!!
-                    //graphics.DrawImage(Images.CitymapLuxLargeBigger, i * spacing + 3, 99);  //lux
-                }
-                for (int i = 0; i < sciIcons; i++) graphics.DrawImage(Images.CitymapSciLargeBigger, x_size - (spacing * sciIcons + 21 - spacing) + i * spacing, 99); //sci
+        //        for (int i = 0; i < luxIcons; i++)
+        //        {
+        //            //TO-DO !!!
+        //            //graphics.DrawImage(Images.CitymapLuxLargeBigger, i * spacing + 3, 99);  //lux
+        //        }
+        //        for (int i = 0; i < sciIcons; i++) graphics.DrawImage(Images.CitymapSciLargeBigger, x_size - (spacing * sciIcons + 21 - spacing) + i * spacing, 99); //sci
 
-                //Next draw support+production icons
-                switch (supportIcons + productionIcons)
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw trade & corruption icons
-                for (int i = 0; i < supportIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, i * spacing + 3, 161);  //support
+        //        //Next draw support+production icons
+        //        switch (supportIcons + productionIcons)
+        //        {
+        //            case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
+        //            case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
+        //            case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
+        //            case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
+        //            case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
+        //            case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
+        //            case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
+        //            case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
+        //            case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
+        //            case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
+        //            case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
+        //            case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
+        //            default: spacing = 2; break;
+        //        }
+        //        //First draw background rectangle
+        //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
+        //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
+        //        //Draw trade & corruption icons
+        //        for (int i = 0; i < supportIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, i * spacing + 3, 161);  //support
 
-                for (int i = 0; i < productionIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, x_size - (spacing * productionIcons + 21 - spacing) + i * spacing, 161); //production
+        //        for (int i = 0; i < productionIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, x_size - (spacing * productionIcons + 21 - spacing) + i * spacing, 161); //production
 
-            }
-            return icons;
-        }
+        //    }
+        //    return icons;
+        //}
 
         //public Bitmap DrawFoodStorage(City city)
         //{
@@ -586,40 +586,40 @@ namespace RTciv2.Imagery
         //    return icons;
         //}
 
-        public Bitmap DrawCityProduction(City city)
-        {
-            Bitmap icons = new Bitmap(293, 287);    //same size as production panel in city form
-            using (Graphics graphics = Graphics.FromImage(icons))
-            {
-                //Draw rectangle around icons
-                int IIP = city.ItemInProduction;
-                int cost;
-                if (IIP < 62) cost = ReadFiles.UnitCost[IIP];   //Item is unit
-                else cost = ReadFiles.ImprovementCost[IIP - 62 + 1];    //Item is improvement (first 62 are units, +1 because first improfement is "Nothing")
-                int vertSpacing = Math.Min(10, cost);    //max 10 lines
-                graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9 + 271, 65);   //1st horizontal
-                graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9, 65 + 27 + (vertSpacing - 1) * 21);   //1st vertical
-                graphics.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 9, 65 + 27 + (vertSpacing - 1) * 21, 9 + 271, 65 + 27 + (vertSpacing - 1) * 21);   //2nd horizontal
-                graphics.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 9 + 271, 65, 9 + 271, 65 + 27 + (vertSpacing - 1) * 21);   //2nd vertical
+        //public Bitmap DrawCityProduction(City city)
+        //{
+        //    Bitmap icons = new Bitmap(293, 287);    //same size as production panel in city form
+        //    using (Graphics graphics = Graphics.FromImage(icons))
+        //    {
+        //        //Draw rectangle around icons
+        //        int IIP = city.ItemInProduction;
+        //        int cost;
+        //        if (IIP < 62) cost = ReadFiles.UnitCost[IIP];   //Item is unit
+        //        else cost = ReadFiles.ImprovementCost[IIP - 62 + 1];    //Item is improvement (first 62 are units, +1 because first improfement is "Nothing")
+        //        int vertSpacing = Math.Min(10, cost);    //max 10 lines
+        //        graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9 + 271, 65);   //1st horizontal
+        //        graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9, 65 + 27 + (vertSpacing - 1) * 21);   //1st vertical
+        //        graphics.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 9, 65 + 27 + (vertSpacing - 1) * 21, 9 + 271, 65 + 27 + (vertSpacing - 1) * 21);   //2nd horizontal
+        //        graphics.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 9 + 271, 65, 9 + 271, 65 + 27 + (vertSpacing - 1) * 21);   //2nd vertical
 
-                //Draw icons
-                int count = 0;
-                for (int row = 0; row < Math.Min(cost, 10); row++)   //there are never more than 10 rows
-                {
-                    for (int col = 0; col < Math.Max(cost, 10); col++)  //there are never less than 10 columns
-                    {
-                        int dx = Convert.ToInt32(2 + col * (272 - 21 - 4) / ((float)Math.Max(cost, 10) - 1)); //horizontal separation between icons
-                        int dy = 21;    //vertical separation of icons (space between icons in y-directions is always 0)
-                        graphics.DrawImage(Images.CitymapSupportLargeBigger, 10 + dx, 65 + 3 + dy * row);
+        //        //Draw icons
+        //        int count = 0;
+        //        for (int row = 0; row < Math.Min(cost, 10); row++)   //there are never more than 10 rows
+        //        {
+        //            for (int col = 0; col < Math.Max(cost, 10); col++)  //there are never less than 10 columns
+        //            {
+        //                int dx = Convert.ToInt32(2 + col * (272 - 21 - 4) / ((float)Math.Max(cost, 10) - 1)); //horizontal separation between icons
+        //                int dy = 21;    //vertical separation of icons (space between icons in y-directions is always 0)
+        //                graphics.DrawImage(Images.CitymapSupportLargeBigger, 10 + dx, 65 + 3 + dy * row);
 
-                        count++;
-                        if (count >= city.ShieldsProgress) break;
-                    }
-                    if (count >= city.ShieldsProgress) break;
-                }
-            }
+        //                count++;
+        //                if (count >= city.ShieldsProgress) break;
+        //            }
+        //            if (count >= city.ShieldsProgress) break;
+        //        }
+        //    }
 
-            return icons;
-        }
+        //    return icons;
+        //}
     }
 }

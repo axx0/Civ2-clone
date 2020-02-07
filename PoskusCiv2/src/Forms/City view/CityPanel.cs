@@ -213,7 +213,7 @@ namespace RTciv2.Forms
             ExitButton.Click += new EventHandler(ExitButton_Click);
 
             //Next city (UP) button
-            Button NextCityButton = new Button
+            NoSelectButton NextCityButton = new NoSelectButton
             {
                 Location = new Point(660, 550), //original (440, 367)
                 Size = new Size(32, 36),  //original (21, 24)
@@ -225,7 +225,7 @@ namespace RTciv2.Forms
             NextCityButton.Paint += new PaintEventHandler(NextCityButton_Paint);
 
             //Previous city (DOWN) button
-            Button PrevCityButton = new Button
+            NoSelectButton PrevCityButton = new NoSelectButton
             {
                 Location = new Point(660, 588), //original (440, 392)
                 Size = new Size(32, 36),  //original (21, 24)

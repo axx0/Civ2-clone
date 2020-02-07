@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace RTciv2
+namespace RTciv2.Forms
 {
     public class DoubleBufferedPanel : Panel
     {

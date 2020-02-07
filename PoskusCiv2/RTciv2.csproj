@@ -66,7 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DoubleBufferedPanel.cs">
+    <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Actions.cs" />
@@ -113,7 +113,7 @@
     <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\NoSelectButton.cs">
+    <Compile Include="src\Forms\Templates\NoSelectButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Forms\StatusPanel.cs">
