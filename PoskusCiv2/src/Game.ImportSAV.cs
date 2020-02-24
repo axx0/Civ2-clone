@@ -208,6 +208,7 @@ namespace RTciv2
             int[] tribeNumber = new int[8];
             int[] civResearchProgress = new int[8];
             int[] civResearchingTech = new int[8];
+            int[] civSciRate = new int[8];
             int[] civTaxRate = new int[8];
             int[] civGovernment = new int[8];
             int[] civReputation = new int[8];
@@ -234,7 +235,10 @@ namespace RTciv2
                 //Tech currently being researched
                 civResearchingTech[i] = dataArray[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
 
-                //Tax/science percentages
+                //Science rate (%/10)
+                civSciRate[i] = dataArray[2278 + 1428 * i + 19]; //20th byte in tribe block
+
+                //Tax rate (%/10)
                 civTaxRate[i] = dataArray[2278 + 1428 * i + 20]; //21st byte in tribe block
 
                 //Government
@@ -285,7 +289,8 @@ namespace RTciv2
                 for (int no = 0; no < 89; no++)
                     civTechs[no] = (civTechs_[no] == '1') ? 1 : 0;
 
-                Civilization civ = CreateCiv(i, Data.HumanPlayer, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
+                Civilization civ = CreateCiv(i, Data.HumanPlayer, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], 
+                    civResearchProgress[i], civResearchingTech[i], civSciRate[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
             }
             #endregion
             #region Map
@@ -549,13 +554,16 @@ namespace RTciv2
                 for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(dataArray[ofsetC + multipl * i + j + 32]);
                 string cityName = new string(asciichar);
                 cityName = cityName.Replace("\0", string.Empty);
-                
-                int cityWorkersInnerCircle = dataArray[ofsetC + multipl * i + 48];  //Workers in inner circle
-                
-                int cityWorkersOn8 = dataArray[ofsetC + multipl * i + 49];  //Workers on 8 of the outer circle
-                                
-                int cityWorkersOn4 = dataArray[ofsetC + multipl * i + 50];  //Workers on 4 of the outer circle
-                                
+
+                //Distribution of workers on map in city view
+                string cityWorkDistr1 = Convert.ToString(dataArray[ofsetC + multipl * i + 48], 2).PadLeft(8, '0');  //inner circle (starting from N, going in counter-clokwise direction)                
+                string cityWorkDistr2 = Convert.ToString(dataArray[ofsetC + multipl * i + 49], 2).PadLeft(8, '0');  //on 8 of the outer circle    
+                string cityWorkDistr3 = Convert.ToString(dataArray[ofsetC + multipl * i + 50], 2).PadLeft(5, '0');  //on 4 of the outer circle
+                string _cityDistributionWorkers = string.Format("{0}{1}{2}", cityWorkDistr3, cityWorkDistr2, cityWorkDistr1);
+                int[] cityDistributionWorkers = new int[21];
+                for (int distNo = 0; distNo < 21; distNo++)
+                    cityDistributionWorkers[distNo] = (_cityDistributionWorkers[distNo] == '1') ? 1 : 0;
+
                 int cityNoOfSpecialistsx4 = dataArray[ofsetC + multipl * i + 51];   //Number of specialists x4
 
                 //Improvements
@@ -589,17 +597,17 @@ namespace RTciv2
                                 
                 int cityActiveTradeRoutes = dataArray[ofsetC + multipl * i + 58];   //No of active trade routes
 
-                //1st, 2nd, 3rd trade commodities available
-                //...
+                //1st, 2nd, 3rd trade commodities supplied
+                int[] cityCommoditySupplied = new int[] { dataArray[ofsetC + multipl * i + 59], dataArray[ofsetC + multipl * i + 60], dataArray[ofsetC + multipl * i + 61] };
 
                 //1st, 2nd, 3rd trade commodities demanded
-                //...
+                int[] cityCommodityDemanded = new int[] { dataArray[ofsetC + multipl * i + 62], dataArray[ofsetC + multipl * i + 63], dataArray[ofsetC + multipl * i + 64] };
 
                 //1st, 2nd, 3rd trade commodities in route
-                //...
+                int[] cityCommodityInRoute = new int[] { dataArray[ofsetC + multipl * i + 65], dataArray[ofsetC + multipl * i + 66], dataArray[ofsetC + multipl * i + 67] };
 
                 //1st, 2nd, 3rd trade route partner city number
-                //...
+                int[] cityTradeRoutePartnerCity = new int[] { dataArray[ofsetC + multipl * i + 68], dataArray[ofsetC + multipl * i + 69], dataArray[ofsetC + multipl * i + 70] };
 
                 //Science
                 intVal1 = dataArray[ofsetC + multipl * i + 74];
@@ -632,7 +640,11 @@ namespace RTciv2
                 for (int wndr = 0; wndr < 28; wndr++)
                     cityWonders[wndr] = (wonderCity[wndr] == i) ? true : false;
 
-                CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName, cityWorkersInnerCircle, cityWorkersOn8, cityWorkersOn4, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, cityUnhappyCitizens, cityWonders);
+                CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, 
+                           cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName,
+                           cityDistributionWorkers, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityCommoditySupplied, cityCommodityDemanded,
+                           cityCommodityInRoute, cityTradeRoutePartnerCity, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, 
+                           cityUnhappyCitizens, cityWonders);
             }
             #endregion
             #region Other

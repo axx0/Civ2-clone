@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RTciv2.Enums;
 
 namespace RTciv2
 {
@@ -16,6 +17,23 @@ namespace RTciv2
         public int Money { get; set; }
         public int ReseachingTech { get; set; }
         public int[] Techs { get; set; }
+        public int ScienceRate { get; set; }
+        public int TaxRate { get; set; }
+        public GovernmentType Government { get; set; }
+
+        private int _luxRate;
+        public int LuxRate 
+        {
+            get
+            {
+                _luxRate = 100 - TaxRate - ScienceRate;
+                return _luxRate;
+            }
+            set
+            {
+                _luxRate = value;
+            }
+        }
 
         private int _population;
         public int Population

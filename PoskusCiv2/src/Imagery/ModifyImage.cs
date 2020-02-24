@@ -28,11 +28,15 @@ namespace RTciv2.Imagery
             using (var graphics = Graphics.FromImage(destImage))
             {
                 graphics.CompositingMode = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                //graphics.CompositingQuality = CompositingQuality.HighQuality;
+                //graphics.CompositingQuality = CompositingQuality.AssumeLinear;
+                graphics.CompositingQuality = CompositingQuality.HighSpeed;
                 //graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                //graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.SmoothingMode = SmoothingMode.HighSpeed;
+                //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.None;
 
                 using (var wrapMode = new ImageAttributes())
                 {

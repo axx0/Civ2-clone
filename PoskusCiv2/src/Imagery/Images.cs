@@ -487,7 +487,6 @@ namespace RTciv2.Imagery
 
             //Make shadows of faces
             for (int row = 0; row < 4; row++)
-            {
                 for (int col = 0; col < 11; col++)
                 {
                     PeopleL[col, row] = icons.Clone(new Rectangle(27 * col + 2 + col, 30 * row + 6 + row, 27, 30), icons.PixelFormat);
@@ -501,7 +500,6 @@ namespace RTciv2.Imagery
                             else PeopleLshadow[col, row].SetPixel(x, y, Color.Transparent);
                     PeopleL[col, row].MakeTransparent(transparentPink);
                 }
-            }
 
             icons.Dispose();
         }
@@ -692,35 +690,34 @@ namespace RTciv2.Imagery
             return newBmp;
         }
 
-        public static void CreateTerrainBitmaps()   //creates bitmaps for whole map (used before game starts)
+        public static void CreateTerrainBitmaps()   //creates bitmaps for whole map (used before game starts), for each zoom level
         {
             for (int col = 0; col < Data.MapXdim; col++)
                 for (int row = 0; row < Data.MapYdim; row++)
                     Game.Map[col, row].Graphic = TerrainBitmap(col, row);
-
         }
 
-        #region Create bitmaps of tiles
-        public static Bitmap TerrainBitmap(int col, int row)
+        #region Create bitmaps of tiles for each zoom level
+        public static Bitmap[] TerrainBitmap(int col, int row)
         {
-            Bitmap square = new Bitmap(64, 32); //define a bitmap for drawing in MapForm
+            Bitmap tile = new Bitmap(64, 32); //define a bitmap for drawing in MapForm
 
-            using (Graphics graphics = Graphics.FromImage(square))  //Draw tiles
+            using (Graphics graphics = Graphics.FromImage(tile))  //Draw tiles
             {
                 Bitmap maptype;
                 switch (Game.Map[col, row].Type)
                 {
-                    case TerrainType.Desert: maptype = Images.Desert[0]; break;
-                    case TerrainType.Forest: maptype = Images.ForestBase[0]; break;
-                    case TerrainType.Glacier: maptype = Images.Glacier[0]; break;
-                    case TerrainType.Grassland: maptype = Images.Grassland[0]; break;
-                    case TerrainType.Hills: maptype = Images.HillsBase[0]; break;
-                    case TerrainType.Jungle: maptype = Images.Jungle[0]; break;
-                    case TerrainType.Mountains: maptype = Images.MtnsBase[0]; break;
-                    case TerrainType.Ocean: maptype = Images.Ocean[0]; break;
-                    case TerrainType.Plains: maptype = Images.Plains[0]; break;
-                    case TerrainType.Swamp: maptype = Images.Swamp[0]; break;
-                    case TerrainType.Tundra: maptype = Images.Tundra[0]; break;
+                    case TerrainType.Desert: maptype = Desert[0]; break;
+                    case TerrainType.Forest: maptype = ForestBase[0]; break;
+                    case TerrainType.Glacier: maptype = Glacier[0]; break;
+                    case TerrainType.Grassland: maptype = Grassland[0]; break;
+                    case TerrainType.Hills: maptype = HillsBase[0]; break;
+                    case TerrainType.Jungle: maptype = Jungle[0]; break;
+                    case TerrainType.Mountains: maptype = MtnsBase[0]; break;
+                    case TerrainType.Ocean: maptype = Ocean[0]; break;
+                    case TerrainType.Plains: maptype = Plains[0]; break;
+                    case TerrainType.Swamp: maptype = Swamp[0]; break;
+                    case TerrainType.Tundra: maptype = Tundra[0]; break;
                     default: throw new ArgumentOutOfRangeException();
                 }
                 graphics.DrawImage(maptype, 0, 0);
@@ -738,20 +735,19 @@ namespace RTciv2.Imagery
                     for (int tileY = 0; tileY < 2; tileY++)
                         switch (tiletype[tileX, tileY])
                         {
-                            case TerrainType.Desert: graphics.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Plains: graphics.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Grassland: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Forest: graphics.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Hills: graphics.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Mountains: graphics.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Tundra: graphics.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Glacier: graphics.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Swamp: graphics.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Jungle: graphics.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Ocean: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Desert: graphics.DrawImage(DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Plains: graphics.DrawImage(DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Grassland: graphics.DrawImage(DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Forest: graphics.DrawImage(DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Hills: graphics.DrawImage(DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Mountains: graphics.DrawImage(DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Tundra: graphics.DrawImage(DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Glacier: graphics.DrawImage(DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Swamp: graphics.DrawImage(DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Jungle: graphics.DrawImage(DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Ocean: graphics.DrawImage(DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
                             default: break;
                         }
-
 
                 //Draw coast & river mouth
                 if (Game.Map[col, row].Type == TerrainType.Ocean)
@@ -760,41 +756,41 @@ namespace RTciv2.Imagery
 
                     //draw coast & river mouth tiles
                     //NW+N+NE tiles
-                    if (land[7] == 0 && land[0] == 0 && land[1] == 0) graphics.DrawImage(Images.Coast[0, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 0 && land[1] == 0) graphics.DrawImage(Images.Coast[1, 0], 16, 0);
-                    if (land[7] == 0 && land[0] == 1 && land[1] == 0) graphics.DrawImage(Images.Coast[2, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 1 && land[1] == 0) graphics.DrawImage(Images.Coast[3, 0], 16, 0);
-                    if (land[7] == 0 && land[0] == 0 && land[1] == 1) graphics.DrawImage(Images.Coast[4, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 0 && land[1] == 1) graphics.DrawImage(Images.Coast[5, 0], 16, 0);
-                    if (land[7] == 0 && land[0] == 1 && land[1] == 1) graphics.DrawImage(Images.Coast[6, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 1 && land[1] == 1) graphics.DrawImage(Images.Coast[7, 0], 16, 0);
+                    if (land[7] == 0 && land[0] == 0 && land[1] == 0) graphics.DrawImage(Coast[0, 0], 16, 0);
+                    if (land[7] == 1 && land[0] == 0 && land[1] == 0) graphics.DrawImage(Coast[1, 0], 16, 0);
+                    if (land[7] == 0 && land[0] == 1 && land[1] == 0) graphics.DrawImage(Coast[2, 0], 16, 0);
+                    if (land[7] == 1 && land[0] == 1 && land[1] == 0) graphics.DrawImage(Coast[3, 0], 16, 0);
+                    if (land[7] == 0 && land[0] == 0 && land[1] == 1) graphics.DrawImage(Coast[4, 0], 16, 0);
+                    if (land[7] == 1 && land[0] == 0 && land[1] == 1) graphics.DrawImage(Coast[5, 0], 16, 0);
+                    if (land[7] == 0 && land[0] == 1 && land[1] == 1) graphics.DrawImage(Coast[6, 0], 16, 0);
+                    if (land[7] == 1 && land[0] == 1 && land[1] == 1) graphics.DrawImage(Coast[7, 0], 16, 0);
                     //SW+S+SE tiles
-                    if (land[3] == 0 && land[4] == 0 && land[5] == 0) graphics.DrawImage(Images.Coast[0, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 0 && land[5] == 0) graphics.DrawImage(Images.Coast[1, 1], 16, 16);
-                    if (land[3] == 0 && land[4] == 1 && land[5] == 0) graphics.DrawImage(Images.Coast[2, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 1 && land[5] == 0) graphics.DrawImage(Images.Coast[3, 1], 16, 16);
-                    if (land[3] == 0 && land[4] == 0 && land[5] == 1) graphics.DrawImage(Images.Coast[4, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 0 && land[5] == 1) graphics.DrawImage(Images.Coast[5, 1], 16, 16);
-                    if (land[3] == 0 && land[4] == 1 && land[5] == 1) graphics.DrawImage(Images.Coast[6, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 1 && land[5] == 1) graphics.DrawImage(Images.Coast[7, 1], 16, 16);
+                    if (land[3] == 0 && land[4] == 0 && land[5] == 0) graphics.DrawImage(Coast[0, 1], 16, 16);
+                    if (land[3] == 1 && land[4] == 0 && land[5] == 0) graphics.DrawImage(Coast[1, 1], 16, 16);
+                    if (land[3] == 0 && land[4] == 1 && land[5] == 0) graphics.DrawImage(Coast[2, 1], 16, 16);
+                    if (land[3] == 1 && land[4] == 1 && land[5] == 0) graphics.DrawImage(Coast[3, 1], 16, 16);
+                    if (land[3] == 0 && land[4] == 0 && land[5] == 1) graphics.DrawImage(Coast[4, 1], 16, 16);
+                    if (land[3] == 1 && land[4] == 0 && land[5] == 1) graphics.DrawImage(Coast[5, 1], 16, 16);
+                    if (land[3] == 0 && land[4] == 1 && land[5] == 1) graphics.DrawImage(Coast[6, 1], 16, 16);
+                    if (land[3] == 1 && land[4] == 1 && land[5] == 1) graphics.DrawImage(Coast[7, 1], 16, 16);
                     //SW+W+NW tiles
-                    if (land[5] == 0 && land[6] == 0 && land[7] == 0) graphics.DrawImage(Images.Coast[0, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 0 && land[7] == 0) graphics.DrawImage(Images.Coast[1, 2], 0, 8);
-                    if (land[5] == 0 && land[6] == 1 && land[7] == 0) graphics.DrawImage(Images.Coast[2, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 1 && land[7] == 0) graphics.DrawImage(Images.Coast[3, 2], 0, 8);
-                    if (land[5] == 0 && land[6] == 0 && land[7] == 1) graphics.DrawImage(Images.Coast[4, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 0 && land[7] == 1) graphics.DrawImage(Images.Coast[5, 2], 0, 8);
-                    if (land[5] == 0 && land[6] == 1 && land[7] == 1) graphics.DrawImage(Images.Coast[6, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 1 && land[7] == 1) graphics.DrawImage(Images.Coast[7, 2], 0, 8);
+                    if (land[5] == 0 && land[6] == 0 && land[7] == 0) graphics.DrawImage(Coast[0, 2], 0, 8);
+                    if (land[5] == 1 && land[6] == 0 && land[7] == 0) graphics.DrawImage(Coast[1, 2], 0, 8);
+                    if (land[5] == 0 && land[6] == 1 && land[7] == 0) graphics.DrawImage(Coast[2, 2], 0, 8);
+                    if (land[5] == 1 && land[6] == 1 && land[7] == 0) graphics.DrawImage(Coast[3, 2], 0, 8);
+                    if (land[5] == 0 && land[6] == 0 && land[7] == 1) graphics.DrawImage(Coast[4, 2], 0, 8);
+                    if (land[5] == 1 && land[6] == 0 && land[7] == 1) graphics.DrawImage(Coast[5, 2], 0, 8);
+                    if (land[5] == 0 && land[6] == 1 && land[7] == 1) graphics.DrawImage(Coast[6, 2], 0, 8);
+                    if (land[5] == 1 && land[6] == 1 && land[7] == 1) graphics.DrawImage(Coast[7, 2], 0, 8);
                     //NE+E+SE tiles
-                    if (land[1] == 0 && land[2] == 0 && land[3] == 0) graphics.DrawImage(Images.Coast[0, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 0 && land[3] == 0) graphics.DrawImage(Images.Coast[1, 3], 32, 8);
-                    if (land[1] == 0 && land[2] == 1 && land[3] == 0) graphics.DrawImage(Images.Coast[2, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 1 && land[3] == 0) graphics.DrawImage(Images.Coast[3, 3], 32, 8);
-                    if (land[1] == 0 && land[2] == 0 && land[3] == 1) graphics.DrawImage(Images.Coast[4, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 0 && land[3] == 1) graphics.DrawImage(Images.Coast[5, 3], 32, 8);
-                    if (land[1] == 0 && land[2] == 1 && land[3] == 1) graphics.DrawImage(Images.Coast[6, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 1 && land[3] == 1) graphics.DrawImage(Images.Coast[7, 3], 32, 8);
+                    if (land[1] == 0 && land[2] == 0 && land[3] == 0) graphics.DrawImage(Coast[0, 3], 32, 8);
+                    if (land[1] == 1 && land[2] == 0 && land[3] == 0) graphics.DrawImage(Coast[1, 3], 32, 8);
+                    if (land[1] == 0 && land[2] == 1 && land[3] == 0) graphics.DrawImage(Coast[2, 3], 32, 8);
+                    if (land[1] == 1 && land[2] == 1 && land[3] == 0) graphics.DrawImage(Coast[3, 3], 32, 8);
+                    if (land[1] == 0 && land[2] == 0 && land[3] == 1) graphics.DrawImage(Coast[4, 3], 32, 8);
+                    if (land[1] == 1 && land[2] == 0 && land[3] == 1) graphics.DrawImage(Coast[5, 3], 32, 8);
+                    if (land[1] == 0 && land[2] == 1 && land[3] == 1) graphics.DrawImage(Coast[6, 3], 32, 8);
+                    if (land[1] == 1 && land[2] == 1 && land[3] == 1) graphics.DrawImage(Coast[7, 3], 32, 8);
 
                     //River mouth
                     //if next to ocean is river, draw river mouth on this tile                            
@@ -803,19 +799,19 @@ namespace RTciv2.Imagery
                     int Ydim = Data.MapYdim;   //no need for such correction for Y
                     if (col_ + 1 < Xdim && row - 1 >= 0)    //NE there is no edge of map
                     {
-                        if (land[1] == 1 && Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(Images.RiverMouth[0], 0, 0);
+                        if (land[1] == 1 && Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[0], 0, 0);
                     }
                     if (col_ + 1 < Xdim && row + 1 < Ydim)    //SE there is no edge of map
                     {
-                        if (land[3] == 1 && Game.Map[((col_ + 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(Images.RiverMouth[1], 0, 0);
+                        if (land[3] == 1 && Game.Map[((col_ + 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[1], 0, 0);
                     }
                     if (col_ - 1 >= 0 && row + 1 < Ydim)    //SW there is no edge of map
                     {
-                        if (land[5] == 1 && Game.Map[((col_ - 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(Images.RiverMouth[2], 0, 0);
+                        if (land[5] == 1 && Game.Map[((col_ - 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[2], 0, 0);
                     }
                     if (col_ - 1 >= 0 && row - 1 >= 0)    //NW there is no edge of map
                     {
-                        if (land[7] == 1 && Game.Map[((col_ - 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(Images.RiverMouth[3], 0, 0);
+                        if (land[7] == 1 && Game.Map[((col_ - 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[3], 0, 0);
                     }
                 }
 
@@ -825,22 +821,22 @@ namespace RTciv2.Imagery
                     int[] forestAround = IsForestAround(col, row);
 
                     //draw forest tiles
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Images.Forest[0], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Images.Forest[1], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Images.Forest[2], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Images.Forest[3], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Images.Forest[4], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Images.Forest[5], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Images.Forest[6], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Images.Forest[7], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Images.Forest[8], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Images.Forest[9], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Images.Forest[10], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Images.Forest[11], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Images.Forest[12], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Images.Forest[13], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Images.Forest[14], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Images.Forest[15], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Forest[0], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Forest[1], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Forest[2], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Forest[3], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Forest[4], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Forest[5], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Forest[6], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Forest[7], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Forest[8], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Forest[9], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Forest[10], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Forest[11], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Forest[12], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Forest[13], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Forest[14], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Forest[15], 0, 0);
                 }
 
                 //Draw mountains
@@ -850,22 +846,22 @@ namespace RTciv2.Imagery
                     int[] mountAround = IsMountAround(col, row);
 
                     //draw forest tiles
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Images.Mountains[0], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Images.Mountains[1], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Images.Mountains[2], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Images.Mountains[3], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Images.Mountains[4], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Images.Mountains[5], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Images.Mountains[6], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Images.Mountains[7], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Images.Mountains[8], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Images.Mountains[9], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Images.Mountains[10], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Images.Mountains[11], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Images.Mountains[12], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Images.Mountains[13], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Images.Mountains[14], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Images.Mountains[15], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Mountains[0], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Mountains[1], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Mountains[2], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Mountains[3], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Mountains[4], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Mountains[5], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Mountains[6], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Mountains[7], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Mountains[8], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Mountains[9], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Mountains[10], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Mountains[11], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Mountains[12], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Mountains[13], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Mountains[14], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Mountains[15], 0, 0);
                 }
 
                 //Draw hills
@@ -874,22 +870,22 @@ namespace RTciv2.Imagery
                     int[] hillAround = IsHillAround(col, row);
 
                     //draw forest tiles
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Images.Hills[0], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Images.Hills[1], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Images.Hills[2], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Images.Hills[3], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Images.Hills[4], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Images.Hills[5], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Images.Hills[6], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Images.Hills[7], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Images.Hills[8], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Images.Hills[9], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Images.Hills[10], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Images.Hills[11], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Images.Hills[12], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Images.Hills[13], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Images.Hills[14], 0, 0);
-                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Images.Hills[15], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Hills[0], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Hills[1], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Hills[2], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Hills[3], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Hills[4], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Hills[5], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Hills[6], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Hills[7], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Hills[8], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Hills[9], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Hills[10], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Hills[11], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Hills[12], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Hills[13], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Hills[14], 0, 0);
+                    if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Hills[15], 0, 0);
                 }
 
                 //Draw rivers
@@ -898,22 +894,22 @@ namespace RTciv2.Imagery
                     int[] riverAround = IsRiverAround(col, row);
 
                     //draw river tiles
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Images.River[0], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Images.River[1], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Images.River[2], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Images.River[3], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Images.River[4], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Images.River[5], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Images.River[6], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Images.River[7], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Images.River[8], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Images.River[9], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Images.River[10], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Images.River[11], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Images.River[12], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Images.River[13], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Images.River[14], 0, 0);
-                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Images.River[15], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(River[0], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(River[1], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(River[2], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(River[3], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(River[4], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(River[5], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(River[6], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(River[7], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(River[8], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(River[9], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(River[10], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(River[11], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(River[12], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(River[13], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(River[14], 0, 0);
+                    if (Enumerable.SequenceEqual(riverAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(River[15], 0, 0);
                 }
 
                 //Draw special resources if they exist
@@ -921,27 +917,27 @@ namespace RTciv2.Imagery
                 {
                     switch (Game.Map[col, row].SpecType)
                     {
-                        case SpecialType.Oasis: maptype = Images.Desert[2]; break;
-                        case SpecialType.DesertOil: maptype = Images.Desert[3]; break;
-                        case SpecialType.Buffalo: maptype = Images.Plains[2]; break;
-                        case SpecialType.Wheat: maptype = Images.Plains[3]; break;
-                        case SpecialType.GrasslandShield: maptype = Images.Shield; break;
-                        case SpecialType.Pheasant: maptype = Images.ForestBase[2]; break;
-                        case SpecialType.Silk: maptype = Images.ForestBase[3]; break;
-                        case SpecialType.Coal: maptype = Images.HillsBase[2]; break;
-                        case SpecialType.Wine: maptype = Images.HillsBase[3]; break;
-                        case SpecialType.Gold: maptype = Images.MtnsBase[2]; break;
-                        case SpecialType.Iron: maptype = Images.MtnsBase[3]; break;
-                        case SpecialType.Game: maptype = Images.Tundra[2]; break;
-                        case SpecialType.Furs: maptype = Images.Tundra[3]; break;
-                        case SpecialType.Ivory: maptype = Images.Glacier[2]; break;
-                        case SpecialType.GlacierOil: maptype = Images.Glacier[3]; break;
-                        case SpecialType.Peat: maptype = Images.Swamp[2]; break;
-                        case SpecialType.Spice: maptype = Images.Swamp[3]; break;
-                        case SpecialType.Gems: maptype = Images.Jungle[2]; break;
-                        case SpecialType.Fruit: maptype = Images.Jungle[3]; break;
-                        case SpecialType.Fish: maptype = Images.Ocean[2]; break;
-                        case SpecialType.Whales: maptype = Images.Ocean[3]; break;
+                        case SpecialType.Oasis: maptype = Desert[2]; break;
+                        case SpecialType.DesertOil: maptype = Desert[3]; break;
+                        case SpecialType.Buffalo: maptype = Plains[2]; break;
+                        case SpecialType.Wheat: maptype = Plains[3]; break;
+                        case SpecialType.GrasslandShield: maptype = Shield; break;
+                        case SpecialType.Pheasant: maptype = ForestBase[2]; break;
+                        case SpecialType.Silk: maptype = ForestBase[3]; break;
+                        case SpecialType.Coal: maptype = HillsBase[2]; break;
+                        case SpecialType.Wine: maptype = HillsBase[3]; break;
+                        case SpecialType.Gold: maptype = MtnsBase[2]; break;
+                        case SpecialType.Iron: maptype = MtnsBase[3]; break;
+                        case SpecialType.Game: maptype = Tundra[2]; break;
+                        case SpecialType.Furs: maptype = Tundra[3]; break;
+                        case SpecialType.Ivory: maptype = Glacier[2]; break;
+                        case SpecialType.GlacierOil: maptype = Glacier[3]; break;
+                        case SpecialType.Peat: maptype = Swamp[2]; break;
+                        case SpecialType.Spice: maptype = Swamp[3]; break;
+                        case SpecialType.Gems: maptype = Jungle[2]; break;
+                        case SpecialType.Fruit: maptype = Jungle[3]; break;
+                        case SpecialType.Fish: maptype = Ocean[2]; break;
+                        case SpecialType.Whales: maptype = Ocean[3]; break;
                         default: throw new ArgumentOutOfRangeException();
                     }
                     graphics.DrawImage(maptype, 0, 0);
@@ -953,15 +949,15 @@ namespace RTciv2.Imagery
                     int[] roadAround = IsRoadAround(col, row);
 
                     //draw roads
-                    if (roadAround[0] == 1) graphics.DrawImage(Images.Road[8], 0, 0);  //to N
-                    if (roadAround[1] == 1) graphics.DrawImage(Images.Road[1], 0, 0);  //to NE
-                    if (roadAround[2] == 1) graphics.DrawImage(Images.Road[2], 0, 0);  //to E
-                    if (roadAround[3] == 1) graphics.DrawImage(Images.Road[3], 0, 0);  //to SE
-                    if (roadAround[4] == 1) graphics.DrawImage(Images.Road[4], 0, 0);  //to S
-                    if (roadAround[5] == 1) graphics.DrawImage(Images.Road[5], 0, 0);  //to SW
-                    if (roadAround[6] == 1) graphics.DrawImage(Images.Road[6], 0, 0);  //to W
-                    if (roadAround[7] == 1) graphics.DrawImage(Images.Road[7], 0, 0);  //to NW
-                    if (Enumerable.SequenceEqual(roadAround, new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 })) graphics.DrawImage(Images.Road[0], 0, 0);    //no road around
+                    if (roadAround[0] == 1) graphics.DrawImage(Road[8], 0, 0);  //to N
+                    if (roadAround[1] == 1) graphics.DrawImage(Road[1], 0, 0);  //to NE
+                    if (roadAround[2] == 1) graphics.DrawImage(Road[2], 0, 0);  //to E
+                    if (roadAround[3] == 1) graphics.DrawImage(Road[3], 0, 0);  //to SE
+                    if (roadAround[4] == 1) graphics.DrawImage(Road[4], 0, 0);  //to S
+                    if (roadAround[5] == 1) graphics.DrawImage(Road[5], 0, 0);  //to SW
+                    if (roadAround[6] == 1) graphics.DrawImage(Road[6], 0, 0);  //to W
+                    if (roadAround[7] == 1) graphics.DrawImage(Road[7], 0, 0);  //to NW
+                    if (Enumerable.SequenceEqual(roadAround, new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 })) graphics.DrawImage(Road[0], 0, 0);    //no road around
                 }
 
                 // !!!! NOT AS SIMPLE AS THIS. CORRECT THIS !!!!!
@@ -983,25 +979,35 @@ namespace RTciv2.Imagery
                 //}
 
                 //Irrigation
-                if (Game.Map[col, row].Irrigation) graphics.DrawImage(Images.Irrigation, 0, 0);
+                if (Game.Map[col, row].Irrigation) graphics.DrawImage(Irrigation, 0, 0);
 
                 //Farmland
-                if (Game.Map[col, row].Farmland) graphics.DrawImage(Images.Farmland, 0, 0);
+                if (Game.Map[col, row].Farmland) graphics.DrawImage(Farmland, 0, 0);
 
                 //Mining
-                if (Game.Map[col, row].Mining) graphics.DrawImage(Images.Mining, 0, 0);
+                if (Game.Map[col, row].Mining) graphics.DrawImage(Mining, 0, 0);
 
                 //Pollution
-                if (Game.Map[col, row].Pollution) graphics.DrawImage(Images.Pollution, 0, 0);
+                if (Game.Map[col, row].Pollution) graphics.DrawImage(Pollution, 0, 0);
 
                 //Fortress
-                if (Game.Map[col, row].Fortress) graphics.DrawImage(Images.Fortress, 0, 0);
+                if (Game.Map[col, row].Fortress) graphics.DrawImage(Fortress, 0, 0);
 
                 //Airbase
-                if (Game.Map[col, row].Airbase) graphics.DrawImage(Images.Airbase, 0, 0);
+                if (Game.Map[col, row].Airbase) graphics.DrawImage(Airbase, 0, 0);
 
             }
-            return square;
+
+            //Modify tile size according to zoom level. Zoom level=8 by default.
+            Bitmap[] tiles = new Bitmap[16];
+            for (int zoom = 1; zoom <= 16; zoom++)
+            {
+                if (zoom == 8) tiles[zoom - 1] = tile;  //for zoom=8 no resize is necessary
+                else tiles[zoom - 1] = ModifyImage.ResizeImage(tile, zoom * 8, zoom * 4);
+            }
+
+            tile.Dispose();
+            return tiles;
         }
 
         private static int[] IsLandPresent(int i, int j)
@@ -1476,7 +1482,7 @@ namespace RTciv2.Imagery
             return icons;
         }
 
-        public static Bitmap DrawFaces(City city, double scale_factor) //Draw faces in cityform
+        public static Bitmap DrawCitizens(City city, double scale_factor) //Draw faces in cityform
         {
             Bitmap faces = new Bitmap(630, 50);
             using (Graphics graphics = Graphics.FromImage(faces))
@@ -1510,10 +1516,14 @@ namespace RTciv2.Imagery
                     default: spacing = 30; break;
                 }
                 //Draw icons
+                PeopleType[] peoples = city.People;
+                int drawIndex = 0;
                 for (int i = 0; i < city.Size; i++)
                 {
-                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleLshadow[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing + 1, 1);  //shadow
-                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleL[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing, 0);  //man-woman exchange turns
+                    drawIndex = (int)peoples[i];
+                    if (i % 2 == 1 && (drawIndex == 0 || drawIndex == 2 || drawIndex == 4 || drawIndex == 6)) drawIndex++;  //to change men/woman appearance
+                    graphics.DrawImage(ModifyImage.ResizeImage(PeopleLshadow[drawIndex, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing + 1, 1);   //shadow
+                    graphics.DrawImage(ModifyImage.ResizeImage(PeopleL[drawIndex, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing, 0);
                 }
             }
 
@@ -1556,7 +1566,7 @@ namespace RTciv2.Imagery
             return icons;
         }
 
-        public static Bitmap DrawCityFormMap(City city)    //Draw terrain in city form
+        public static Bitmap DrawCityResourcesMap(City city)    //Draw terrain in city form
         {
             Bitmap map = new Bitmap(4 * 64, 4 * 32);
 
@@ -1570,171 +1580,53 @@ namespace RTciv2.Imagery
                         {
                             int newX = city.X + x_;
                             int newY = city.Y + y_;
-                            if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
-                            else image = Images.Blank;
+                            //TODO: correct this
+                            //if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
+                            //else image = Blank;
+                            image = Blank;
                             graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
                         }
 
                 //Then draw city
                 graphics.DrawImage(CreateCityBitmap(city, false, 8), 64 * 1 + 32 * (3 % 2) + 1, 16 * 2 + 1);
-            }
 
+                //Then draw food/shield/trade icons around the city (21 squares around city)
+                int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 },
+                                                  { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
+                int[] cityFood = city.FoodDistribution;
+                int[] cityShld = city.ShieldDistribution;
+                int[] cityTrad = city.TradeDistribution;
+                for (int i = 0; i < 21; i++)
+                    if (city.DistributionWorkers[i] == 1)
+                    {
+                        //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
+                        int spacing;
+                        switch (cityFood[i] + cityShld[i] + cityTrad[i])
+                        {
+                            case 1:
+                            case 2: spacing = 17; break;    //50 % larger (orignal = 11, 1 pixel gap)
+                            case 3: spacing = 15; break;    //50 % larger (orignal = 10, no gap)
+                            case 4: spacing = 11; break;    //50 % larger (orignal = 7)
+                            case 5: spacing = 8; break;    //50 % larger (orignal = 5)
+                            case 6: spacing = 6; break;    //50 % larger (orignal = 4)
+                            case 7:
+                            case 8: spacing = 5; break;    //50 % larger (orignal = 3)
+                            case 9: spacing = 3; break;    //50 % larger (orignal = 2)
+                            case 10: spacing = 2; break;    //50 % larger (orignal = 1)
+                            default: spacing = 2; break;    //50 % larger (orignal = 1)
+                        }
+
+                        //First draw food, then shields, then trade icons
+                        int x_offset = 32 - ((cityFood[i] + cityShld[i] + cityTrad[i] - 1) * spacing + 15) / 2;
+                        int y_offset = 9;
+                        for (int j = 0; j < cityFood[i]; j++) graphics.DrawImage(CitymapFoodSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + j * spacing, y_offset + (3 + offsets[i, 1]) * 16);
+                        for (int j = 0; j < cityShld[i]; j++) graphics.DrawImage(CitymapShieldSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
+                        for (int j = 0; j < cityTrad[i]; j++) graphics.DrawImage(CitymapTradeSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + cityShld[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
+                    }
+            }
             return map;
         }
 
-        public static Bitmap DrawCityFormMapIcons(City city, int offsetX, int offsetY)
-        {
-            offsetX = (offsetX - (offsetY % 2)) / 2;    //First turn offsetX/Y from Civ2 to real coordinates
-
-            Bitmap icons = new Bitmap(64, 32);    //define a bitmap for drawing icons
-            using (Graphics graphics = Graphics.FromImage(icons))
-            {
-                //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
-                int spacing;
-                int countF = Game.Map[city.X + offsetX, city.Y + offsetY].Food;
-                int countS = Game.Map[city.X + offsetX, city.Y + offsetY].Shields;
-                int countT = Game.Map[city.X + offsetX, city.Y + offsetY].Trade;
-                switch (countF + countS + countT)
-                {
-                    case 1:
-                    case 2: spacing = 17; break;    //50 % larger (orignal = 11, 1 pixel gap)
-                    case 3: spacing = 15; break;    //50 % larger (orignal = 10, no gap)
-                    case 4: spacing = 11; break;    //50 % larger (orignal = 7)
-                    case 5: spacing = 8; break;    //50 % larger (orignal = 5)
-                    case 6: spacing = 6; break;    //50 % larger (orignal = 4)
-                    case 7:
-                    case 8: spacing = 5; break;    //50 % larger (orignal = 3)
-                    case 9: spacing = 3; break;    //50 % larger (orignal = 2)
-                    case 10: spacing = 2; break;    //50 % larger (orignal = 1)
-                    default: spacing = 2; break;    //50 % larger (orignal = 1)
-                }
-                //First draw food, then shields, then trade icons
-                for (int i = 0; i < countF; i++) graphics.DrawImage(CitymapFoodSmallBigger, i * spacing, 0);
-                for (int i = 0; i < countS; i++) graphics.DrawImage(CitymapShieldSmallBigger, (countF + i) * spacing, 0);
-                for (int i = 0; i < countT; i++) graphics.DrawImage(CitymapTradeSmallBigger, (countF + countS + i) * spacing, 0);
-            }
-            return icons;
-        }
-                
-        public static Bitmap DrawCityIcons(City city, int foodIcons, int surplusIcons, int tradeIcons, int corruptionIcons, int taxIcons, int luxIcons, int sciIcons, 
-            int supportIcons, int productionIcons)  //Draw icons in city resources (surplus < 0 is hunger)
-        {
-            int x_size = 330;
-            int y_size = 200;
-            Bitmap icons = new Bitmap(x_size, y_size);    //define a bitmap for drawing icons
-            using (Graphics graphics = Graphics.FromImage(icons))
-            {
-                //Number of food+surplus/hunger icons determines spacing between icons
-                int spacing;
-                switch (foodIcons + Math.Abs(surplusIcons))
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw food & surplus icons
-                for (int i = 0; i < foodIcons; i++) graphics.DrawImage(Images.CitymapFoodLargeBigger, i * spacing + 3, 1);
-                for (int i = 0; i < Math.Abs(surplusIcons); i++)
-                {
-                    if (surplusIcons < 0) graphics.DrawImage(Images.CitymapHungerLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
-                    else graphics.DrawImage(Images.CitymapFoodLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
-                }
-
-                //Next draw trade + corruption icons
-                switch (tradeIcons + Math.Abs(corruptionIcons))
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw trade & corruption icons
-                for (int i = 0; i < tradeIcons; i++) graphics.DrawImage(Images.CitymapTradeLargeBigger, i * spacing + 3, 63);
-
-                for (int i = 0; i < Math.Abs(corruptionIcons); i++) graphics.DrawImage(Images.CitymapCorruptionLargeBigger, x_size - (spacing * Math.Abs(corruptionIcons) + 21 - spacing) + i * spacing, 63); //hunger
-
-                //Next draw tax+lux+sci icons
-                switch (taxIcons + luxIcons + sciIcons)
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw trade & corruption icons
-                for (int i = 0; i < taxIcons; i++) graphics.DrawImage(Images.CitymapTaxLargeBigger, i * spacing + 3, 99);  //tax
-
-                for (int i = 0; i < luxIcons; i++)
-                {
-                    //TO-DO !!!
-                    //graphics.DrawImage(Images.CitymapLuxLargeBigger, i * spacing + 3, 99);  //lux
-                }
-                for (int i = 0; i < sciIcons; i++) graphics.DrawImage(Images.CitymapSciLargeBigger, x_size - (spacing * sciIcons + 21 - spacing) + i * spacing, 99); //sci
-
-                //Next draw support+production icons
-                switch (supportIcons + productionIcons)
-                {
-                    case int n when (n >= 1 && n <= 15): spacing = 23; break;    //50 % larger (orignal = 15, 1 pixel gap)
-                    case int n when (n == 16 || n == 17): spacing = 20; break;   //50 % larger (orignal = 13, 1 pixel overlap)
-                    case int n when (n == 18 || n == 19): spacing = 17; break;   //50 % larger (orignal = 11, 3 pixel overlap)
-                    case int n when (n == 20 || n == 21): spacing = 15; break;   //50 % larger (orignal = 10, 4 pixel overlap)
-                    case int n when (n == 22 || n == 23): spacing = 14; break;   //50 % larger (orignal = 9, 5 pixel overlap)
-                    case int n when (n == 24 || n == 25): spacing = 12; break;   //50 % larger (orignal = 8, 6 pixel overlap)
-                    case int n when (n >= 26 && n <= 29): spacing = 11; break;   //50 % larger (orignal = 7, 7 pixel overlap)
-                    case int n when (n >= 30 && n <= 33): spacing = 9; break;    //50 % larger (orignal = 6, 8 pixel overlap)
-                    case int n when (n >= 34 && n <= 37): spacing = 8; break;    //50 % larger (orignal = 5, 9 pixel overlap)
-                    case int n when (n >= 38 && n <= 49): spacing = 6; break;    //50 % larger (orignal = 4, 10 pixel overlap)
-                    case int n when (n >= 50 && n <= 65): spacing = 5; break;    //50 % larger (orignal = 3, 11 pixel overlap)
-                    case int n when (n >= 66): spacing = 3; break;               //50 % larger (orignal = 2, 12 pixel overlap)
-                    default: spacing = 2; break;
-                }
-                //First draw background rectangle
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
-                //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
-                //Draw trade & corruption icons
-                for (int i = 0; i < supportIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, i * spacing + 3, 161);  //support
-
-                for (int i = 0; i < productionIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, x_size - (spacing * productionIcons + 21 - spacing) + i * spacing, 161); //production
-
-            }
-            return icons;
-        }
     }
 }
+ 

@@ -144,7 +144,7 @@ namespace RTciv2
             bool[] wonders = new bool[28];
             for (int i = 0; i < 34; i++) improvements[i] = false;
             for (int i = 0; i < 28; i++) wonders[i] = false;
-            Game.CreateCity(x, y, false, false, false, false, false, false, false, false, false, Game.Instance.ActiveUnit.Civ, 1, Game.Instance.ActiveUnit.Civ, 0, 0, 0, cityName, 0, 0, 0, 0, improvements, 0, 0, 0, 0, 0, 0, 0, 0, 0, wonders);
+            //Game.CreateCity(x, y, false, false, false, false, false, false, false, false, false, Game.Instance.ActiveUnit.Civ, 1, Game.Instance.ActiveUnit.Civ, 0, 0, 0, cityName, 0, 0, 0, 0, improvements, 0, 0, 0, 0, 0, 0, 0, 0, 0, wonders);
 
             DeleteUnit(Game.Instance.ActiveUnit);
         }

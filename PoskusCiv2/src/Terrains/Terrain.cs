@@ -122,17 +122,6 @@ namespace RTciv2.Terrains
             }
         }
 
-        private Bitmap _graphic;
-        public Bitmap Graphic
-        {
-            get
-            {
-                return _graphic;
-            }
-            set 
-            { 
-                _graphic = value; 
-            }
-        }
+        public Bitmap[] Graphic { get; set; }
     }
 }

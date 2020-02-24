@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Enums\PeopleType.cs" />
     <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -94,12 +95,6 @@
     </Compile>
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityPanel.Designer.cs">
-      <DependentUpon>CityPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\IntroForm.cs">
       <SubType>Form</SubType>

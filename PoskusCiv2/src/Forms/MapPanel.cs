@@ -8,19 +8,28 @@ using RTciv2.Events;
 using ExtensionMethods;
 using RTciv2.Imagery;
 using RTciv2.Units;
+using System.Timers;
 
 namespace RTciv2.Forms
 {
     public partial class MapPanel : Civ2panel
     {
         private static DoubleBufferedPanel DrawPanel;
+        StringFormat sf = new StringFormat();
+        
         private int MapGridVar { get; set; }    //style of map grid presentation
         public static bool UnitMoved { get; set; }
-        private Timer Timer = new Timer();    //timer for blinking (unit or viewing piece), moving unit, etc.
+        private System.Windows.Forms.Timer Timer;    //timer for blinking (unit or viewing piece), moving unit, etc.
+        //private System.Threading.Timer Timer2;
+        //private System.Timers.Timer Timer3;
         private AnimationType AnimType;
         int TimerCounter;
         Label HelpLabel;
-        Stopwatch sw = new Stopwatch();
+
+        Stopwatch sw1 = new Stopwatch();
+        Stopwatch sw2 = new Stopwatch();
+        Stopwatch sw3 = new Stopwatch();
+        long cas;
 
         public delegate void MapViewChanged();
         public static event MapViewChanged MapViewChangedEvent;
@@ -88,11 +97,21 @@ namespace RTciv2.Forms
             //};
             //DrawPanel.Controls.Add(HelpLabel);
 
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+
             //Timer for blinking of unit/viewing piece
+            Timer = new System.Windows.Forms.Timer();
             Timer.Tick += new EventHandler(Timer_Tick);
             ChangeAnimation(AnimationType.None);
 
-            sw.Start();
+            //Timer3 = new System.Timers.Timer(200);
+            //Timer3.Elapsed += OnTimedEvent;
+            //Timer3.Enabled = true;
+
+            sw2.Start();
+            sw3.Start();
+            cas = 0;
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -119,64 +138,204 @@ namespace RTciv2.Forms
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
-            StringFormat sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
+            sw1 = Stopwatch.StartNew();
 
-            //Draw for each visible square
-            for (int row = 0; row < DrawingSqXY[1] - EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3]; row++)
-                for (int col = 0; col < DrawingSqXY[0] - EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]; col++) 
+            int[] drawingSqXY = DrawingSqXY;
+            int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
+            int[] startingSqXY = StartingSqXY;
+            int[] drawingPxOffsetXY = DrawingPxOffsetXY;
+            int[] activeXY = ActiveXY;
+            int[] centerSqXY = CenterSqXY;
+            int zoomLvl = ZoomLvl;
+
+            #region working
+            ////Draw for each visible square
+            //for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            //    for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+            //        {
+            //            //TILES
+            //            int[] coords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
+            //            e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, zoomLvl * 8, zoomLvl * 4),
+            //                                 drawingPxOffsetXY[0] + 32 * col,
+            //                                 drawingPxOffsetXY[1] + 16 * row);
+
+            //            //UNITS
+            //            List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
+            //            foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
+            //            if (unitsHere.Any())
+            //            {
+            //                IUnit unit = unitsHere.Last();
+            //                if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
+            //                    UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
+            //                    e.Graphics.DrawImage(unit.GraphicMapPanel,
+            //                                         drawingPxOffsetXY[0] + 4 * zoomLvl * (unit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                                         drawingPxOffsetXY[1] + 2 * zoomLvl * (unit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
+
+            //            }
+
+            //            //CITIES
+            //            City city = Game.Cities.Find(c => c.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && c.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1]);    //find if city is here
+            //            if (city != null && CityIsInView(city))
+            //            {
+            //                e.Graphics.DrawImage(city.Graphic,
+            //                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
+            //                e.Graphics.DrawImage(city.TextGraphic,
+            //                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]) + 4 * zoomLvl - city.TextGraphic.Width / 2,
+            //                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + zoomLvl * 5);
+            //            }
+
+            //            //ACTIVE UNIT
+            //            if (unitsHere.Contains(Game.Instance.ActiveUnit))
+            //                if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit))
+            //                {
+            //                    if (AnimType == AnimationType.None && (TimerCounter % 2 == 0))
+            //                    {
+            //                        e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+            //                                            drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                                            drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
+            //                    }
+            //                    else if (AnimType == AnimationType.UnitMoving)
+            //                    {
+            //                        int moveToX = 8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter;
+            //                        int moveToY = 4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter;
+            //                        e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+            //                                            drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]) + moveToX,
+            //                                            drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + moveToY);
+
+            //                        if (TimerCounter == 4)  //unit finished movement
+            //                        {
+            //                            ChangeAnimation(AnimationType.None); //reset after unit has moved
+            //                            Actions.UpdateUnit(Game.Instance.ActiveUnit);
+            //                        }
+            //                    }
+            //                }
+
+            //            //GRID
+            //            if (Options.Grid)
+            //            {
+            //                Color brushColor = ((col + startingSqXY[0] + edgeDrawOffsetXY[0] == centerSqXY[0]) && (row + startingSqXY[1] + edgeDrawOffsetXY[1] == centerSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red;
+            //                if (MapGridVar > 0)
+            //                    e.Graphics.DrawImage(Images.GridLines,
+            //                                         drawingPxOffsetXY[0] + 32 * col,
+            //                                         drawingPxOffsetXY[1] + 16 * row);
+            //                if (MapGridVar == 2)     //Map coords from SAVfile logic
+            //                {
+            //                    int[] realCoords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
+            //                    e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"),
+            //                                          new Font("Arial", 8),
+            //                                          new SolidBrush(brushColor),
+            //                                          drawingPxOffsetXY[0] + 32 * col + 32,
+            //                                          drawingPxOffsetXY[1] + 16 * row + 16, sf);
+            //                }
+            //                if (MapGridVar == 3)    //Civ2-coords
+            //                    e.Graphics.DrawString(String.Format($"({col + startingSqXY[0] + edgeDrawOffsetXY[0]},{row + startingSqXY[1] + edgeDrawOffsetXY[1]})"),
+            //                                          new Font("Arial", 8), new SolidBrush(brushColor),
+            //                                          drawingPxOffsetXY[0] + 32 * col + 32,
+            //                                          drawingPxOffsetXY[1] + 16 * row + 16, sf);
+            //            }
+            //        }
+
+            ////VIEWING PIECE
+            //if (ViewingPiecesMode && (TimerCounter % 2 == 0))
+            //    e.Graphics.DrawImage(Images.ViewingPieces,
+            //                         drawingPxOffsetXY[0] + 4 * zoomLvl * (activeXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                         drawingPxOffsetXY[1] + 2 * zoomLvl * (activeXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]));
+            #endregion
+
+            long t1 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"precal elapsed={t1}");
+
+            //TILES
+            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            {
+                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
                     if (Math.Abs(row - col) % 2 == 0)   //choose which squares
                     {
-                        //TILES
-                        int[] coords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
-                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, ZoomLvl * 8, ZoomLvl * 4),
-                                             DrawingPxOffsetXY[0] + 32 * col,
-                                             DrawingPxOffsetXY[1] + 16 * row);
+                        int[] coords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
+                        //Console.Write($"({coords[0]},{coords[1]}) "); //check which tiles are drawn
+                        //e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, zoomLvl * 8, zoomLvl * 4),
+                        //                     drawingPxOffsetXY[0] + 32 * col,
+                        //                     drawingPxOffsetXY[1] + 16 * row);
+                        e.Graphics.DrawImage(Game.Map[coords[0], coords[1]].Graphic[zoomLvl],
+                                             drawingPxOffsetXY[0] + 32 * col,
+                                             drawingPxOffsetXY[1] + 16 * row);
+                        //e.Graphics.DrawImage(Images.Desert[0],
+                        //                     drawingPxOffsetXY[0] + 32 * col,
+                        //                     drawingPxOffsetXY[1] + 16 * row);
+                    }
+                //Console.Write("\n");
+            }
 
-                        //UNITS
+            long t2 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"tiles elapsed={t2 - t1}");
+                       
+            //UNITS
+            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+                    {
                         List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
-                        foreach (IUnit unit in Game.Units.Where(u => u.X == col + StartingSqXY[0] + EdgeDrawOffsetXY[0] && u.Y == row + StartingSqXY[1] + EdgeDrawOffsetXY[1])) unitsHere.Add(unit);
+                        foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
                         if (unitsHere.Any())
                         {
                             IUnit unit = unitsHere.Last();
                             if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
                                 UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
                                 e.Graphics.DrawImage(unit.GraphicMapPanel,
-                                                     DrawingPxOffsetXY[0] + 4 * ZoomLvl * (unit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
-                                                     DrawingPxOffsetXY[1] + 2 * ZoomLvl * (unit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
-
+                                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (unit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+                                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (unit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
                         }
+                    }
 
-                        //CITIES
-                        City city = Game.Cities.Find(c => c.X == col + StartingSqXY[0] + EdgeDrawOffsetXY[0] && c.Y == row + StartingSqXY[1] + EdgeDrawOffsetXY[1]);    //find if city is here
+            long t3 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"units elapsed={t3 - t2}");
+
+            //CITIES
+            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+                    {
+                        City city = Game.Cities.Find(c => c.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && c.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1]);    //find if city is here
                         if (city != null && CityIsInView(city))
                         {
                             e.Graphics.DrawImage(city.Graphic,
-                                                 DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
-                                                 DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+                                                 drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+                                                 drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
                             e.Graphics.DrawImage(city.TextGraphic,
-                                                 DrawingPxOffsetXY[0] + 4 * ZoomLvl * (city.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + 4 * ZoomLvl - city.TextGraphic.Width / 2,
-                                                 DrawingPxOffsetXY[1] + 2 * ZoomLvl * (city.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + ZoomLvl * 5);
+                                                 drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]) + 4 * zoomLvl - city.TextGraphic.Width / 2,
+                                                 drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + zoomLvl * 5);
                         }
+                    }
 
-                        //ACTIVE UNIT
+            long t4 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"cities elapsed={t4 - t3}");
+
+            //ACTIVE UNIT
+            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+                    {
+                        List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
+                        foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
                         if (unitsHere.Contains(Game.Instance.ActiveUnit))
+                        {
                             if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit))
                             {
                                 if (AnimType == AnimationType.None && (TimerCounter % 2 == 0))
                                 {
                                     e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
-                                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.X - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
-                                                        DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.Y - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl);
+                                                        drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+                                                        drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
                                 }
                                 else if (AnimType == AnimationType.UnitMoving)
                                 {
                                     int moveToX = 8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter;
                                     int moveToY = 4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter;
                                     e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
-                                                        DrawingPxOffsetXY[0] + 4 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]) + moveToX,
-                                                        DrawingPxOffsetXY[1] + 2 * ZoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]) - 2 * ZoomLvl + moveToY);
+                                                        drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]) + moveToX,
+                                                        drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + moveToY);
 
                                     if (TimerCounter == 4)  //unit finished movement
                                     {
@@ -185,45 +344,59 @@ namespace RTciv2.Forms
                                     }
                                 }
                             }
+                        }
+                    }
 
-                        //GRID
+            long t5 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"active unit elapsed={t5 - t4}");
+
+            //GRID
+            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+                    {
                         if (Options.Grid)
                         {
-                            Color brushColor = ((col + StartingSqXY[0] + EdgeDrawOffsetXY[0] == CenterSqXY[0]) && (row + StartingSqXY[1] + EdgeDrawOffsetXY[1] == CenterSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red;
+                            Color brushColor = ((col + startingSqXY[0] + edgeDrawOffsetXY[0] == centerSqXY[0]) && (row + startingSqXY[1] + edgeDrawOffsetXY[1] == centerSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red;
                             if (MapGridVar > 0)
                                 e.Graphics.DrawImage(Images.GridLines,
-                                                     DrawingPxOffsetXY[0] + 32 * col,
-                                                     DrawingPxOffsetXY[1] + 16 * row);
+                                                     drawingPxOffsetXY[0] + 32 * col,
+                                                     drawingPxOffsetXY[1] + 16 * row);
                             if (MapGridVar == 2)     //Map coords from SAVfile logic
                             {
-                                int[] realCoords = Ext.Civ2xy(new int[] { col + StartingSqXY[0] + EdgeDrawOffsetXY[0], row + StartingSqXY[1] + EdgeDrawOffsetXY[1] });
+                                int[] realCoords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
                                 e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"),
                                                       new Font("Arial", 8),
                                                       new SolidBrush(brushColor),
-                                                      DrawingPxOffsetXY[0] + 32 * col + 32,
-                                                      DrawingPxOffsetXY[1] + 16 * row + 16, sf);
+                                                      drawingPxOffsetXY[0] + 32 * col + 32,
+                                                      drawingPxOffsetXY[1] + 16 * row + 16, sf);
                             }
                             if (MapGridVar == 3)    //Civ2-coords
-                                e.Graphics.DrawString(String.Format($"({col + StartingSqXY[0] + EdgeDrawOffsetXY[0]},{row + StartingSqXY[1] + EdgeDrawOffsetXY[1]})"),
+                                e.Graphics.DrawString(String.Format($"({col + startingSqXY[0] + edgeDrawOffsetXY[0]},{row + startingSqXY[1] + edgeDrawOffsetXY[1]})"),
                                                       new Font("Arial", 8), new SolidBrush(brushColor),
-                                                      DrawingPxOffsetXY[0] + 32 * col + 32,
-                                                      DrawingPxOffsetXY[1] + 16 * row + 16, sf);
+                                                      drawingPxOffsetXY[0] + 32 * col + 32,
+                                                      drawingPxOffsetXY[1] + 16 * row + 16, sf);
                         }
                     }
+
+            long t6 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"grid elapsed={t6 - t5}");
 
             //VIEWING PIECE
             if (ViewingPiecesMode && (TimerCounter % 2 == 0))
                 e.Graphics.DrawImage(Images.ViewingPieces,
-                                     DrawingPxOffsetXY[0] + 4 * ZoomLvl * (ActiveXY[0] - StartingSqXY[0] - EdgeDrawOffsetXY[0]),
-                                     DrawingPxOffsetXY[1] + 2 * ZoomLvl * (ActiveXY[1] - StartingSqXY[1] - EdgeDrawOffsetXY[1]));
+                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (activeXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]),
+                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (activeXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]));
+
+            long t7 = sw1.ElapsedMilliseconds;
+            Console.WriteLine($"viewing pieces elapsed={t7 - t6}");
 
             e.Dispose();
-            sf.Dispose();
         }
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            int[] coords = PxToCoords(e.Location.X, e.Location.Y);
+            int[] coords = Ext.PxToCoords(e.Location.X, e.Location.Y, ZoomLvl);
             ClickedXY = new int[] { StartingSqXY[0] + coords[0], StartingSqXY[1] + coords[1] };  // coordinates of clicked square
 
             if (e.Button == MouseButtons.Left)
@@ -282,23 +455,24 @@ namespace RTciv2.Forms
             }
             set
             {
+                int[] drawingSqXY = DrawingSqXY;
                 //limit movement so that map limits are not exceeded
                 if (value[0] < 0 && value[1] < 0)    //movement beyond upper & left edge
                     _startingSqXY = new int[] { 0, 0 };
-                else if ((value[0] + DrawingSqXY[0] >= 2 * Data.MapXdim) && value[1] < 0)    //movement beyond upper & right edge
-                    _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0], 0 };
-                else if (value[0] < 0 && (value[1] + DrawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & left edge
-                    _startingSqXY = new int[] { 0, Data.MapYdim - DrawingSqXY[1] };
-                else if ((value[0] + DrawingSqXY[0] >= 2 * Data.MapXdim) && (value[1] + DrawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & right edge
-                    _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0], Data.MapYdim - DrawingSqXY[1] };
+                else if ((value[0] + drawingSqXY[0] >= 2 * Data.MapXdim) && value[1] < 0)    //movement beyond upper & right edge
+                    _startingSqXY = new int[] { 2 * Data.MapXdim - drawingSqXY[0], 0 };
+                else if (value[0] < 0 && (value[1] + drawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & left edge
+                    _startingSqXY = new int[] { 0, Data.MapYdim - drawingSqXY[1] };
+                else if ((value[0] + drawingSqXY[0] >= 2 * Data.MapXdim) && (value[1] + drawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & right edge
+                    _startingSqXY = new int[] { 2 * Data.MapXdim - drawingSqXY[0], Data.MapYdim - drawingSqXY[1] };
                 else if (value[0] < 0)     //movement beyond left edge
                     _startingSqXY = new int[] { value[1] % 2, value[1] };
                 else if (value[1] < 0)     //movement beyond upper edge
                     _startingSqXY = new int[] { value[0], value[0] % 2 };
-                else if (value[0] + DrawingSqXY[0] >= 2 * Data.MapXdim)     //movement beyond right edge
-                    _startingSqXY = new int[] { 2 * Data.MapXdim - DrawingSqXY[0] - value[1] % 2, value[1] };
-                else if (value[1] + DrawingSqXY[1] >= Data.MapYdim)     //movement beyond bottom edge
-                    _startingSqXY = new int[] { value[0], Data.MapYdim - DrawingSqXY[1] - value[0] % 2 };
+                else if (value[0] + drawingSqXY[0] >= 2 * Data.MapXdim)     //movement beyond right edge
+                    _startingSqXY = new int[] { 2 * Data.MapXdim - drawingSqXY[0] - value[1] % 2, value[1] };
+                else if (value[1] + drawingSqXY[1] >= Data.MapYdim)     //movement beyond bottom edge
+                    _startingSqXY = new int[] { value[0], Data.MapYdim - drawingSqXY[1] - value[0] % 2 };
                 else
                     _startingSqXY = value;
             }
@@ -309,35 +483,37 @@ namespace RTciv2.Forms
         {
             get
             {
+                int[] startingSqXY = StartingSqXY;
+                int[] drawingSqXY = DrawingSqXY;
                 _edgeDrawOffsetXY = new int[] { -2, -2, 2, 2 }; //by default draw 2 squares more in each direction
-                if (StartingSqXY[0] == 0 || StartingSqXY[1] == 0)   //starting on edge
+                if (startingSqXY[0] == 0 || startingSqXY[1] == 0)   //starting on edge
                 {
-                    _edgeDrawOffsetXY[0] = -Math.Max(Math.Min(StartingSqXY[0], 2), 0);
-                    _edgeDrawOffsetXY[1] = -Math.Max(Math.Min(StartingSqXY[1], 2), 0);
+                    _edgeDrawOffsetXY[0] = -Math.Max(Math.Min(startingSqXY[0], 2), 0);
+                    _edgeDrawOffsetXY[1] = -Math.Max(Math.Min(startingSqXY[1], 2), 0);
                 }
-                if (StartingSqXY[0] == 1 || StartingSqXY[1] == 1)  //starting in 1st row/column
+                if (startingSqXY[0] == 1 || startingSqXY[1] == 1)  //starting in 1st row/column
                 {
                     _edgeDrawOffsetXY[0] = -1;
                     _edgeDrawOffsetXY[1] = -1;
                 }
-                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim)  //on right edge
+                if (startingSqXY[0] + drawingSqXY[0] == 2 * Data.MapXdim)  //on right edge
                 {
                     _edgeDrawOffsetXY[2] = 0;
-                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
+                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - drawingSqXY[1] - startingSqXY[1], 2);
                 }
-                if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim)  //on bottom edge
+                if (startingSqXY[1] + drawingSqXY[1] == Data.MapYdim)  //on bottom edge
                 {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - drawingSqXY[0] - startingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 0;
                 }
-                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim - 1)  //1 column left of right edge
+                if (startingSqXY[0] + drawingSqXY[0] == 2 * Data.MapXdim - 1)  //1 column left of right edge
                 {
                     _edgeDrawOffsetXY[2] = 1;
-                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - DrawingSqXY[1] - StartingSqXY[1], 2);
+                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - drawingSqXY[1] - startingSqXY[1], 2);
                 }
-                if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim - 1)  //1 column up of bottom edge
+                if (startingSqXY[1] + drawingSqXY[1] == Data.MapYdim - 1)  //1 column up of bottom edge
                 {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - DrawingSqXY[0] - StartingSqXY[0], 2);
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - drawingSqXY[0] - startingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 1;
                 }
                 return _edgeDrawOffsetXY;
@@ -349,9 +525,12 @@ namespace RTciv2.Forms
         {
             get
             {
-                _drawingPxOffsetXY = new int[] { 32 * EdgeDrawOffsetXY[0], 16 * EdgeDrawOffsetXY[1] };
-                if (StartingSqXY[0] + DrawingSqXY[0] == 2 * Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * DrawingSqXY[0] - 32 * EdgeDrawOffsetXY[0]);
-                if (StartingSqXY[1] + DrawingSqXY[1] == Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * DrawingSqXY[1] - 16 * EdgeDrawOffsetXY[1]);
+                int[] startingSqXY = StartingSqXY;
+                int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
+                int[] drawingSqXY = DrawingSqXY;
+                _drawingPxOffsetXY = new int[] { 32 * edgeDrawOffsetXY[0], 16 * edgeDrawOffsetXY[1] };
+                if (startingSqXY[0] + drawingSqXY[0] == 2 * Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * drawingSqXY[0] - 32 * edgeDrawOffsetXY[0]);
+                if (startingSqXY[1] + drawingSqXY[1] == Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * drawingSqXY[1] - 16 * edgeDrawOffsetXY[1]);
                 return _drawingPxOffsetXY;
             }
         }
@@ -373,9 +552,10 @@ namespace RTciv2.Forms
             get { return _centerSqXY; }
             set
             {
-                int[] centerDistanceXY = PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2); //offset of central tile from panel NW corner
+                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, ZoomLvl); //offset of central tile from panel NW corner
                 StartingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
-                _centerSqXY = new int[] { centerDistanceXY[0] + StartingSqXY[0], centerDistanceXY[1] + StartingSqXY[1] };
+                int[] startingSqXY = StartingSqXY;
+                _centerSqXY = new int[] { centerDistanceXY[0] + startingSqXY[0], centerDistanceXY[1] + startingSqXY[1] };
             }
         }
 
@@ -424,9 +604,21 @@ namespace RTciv2.Forms
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine($"elapsed={sw.Elapsed}");
-
+            long cas2 = sw3.ElapsedMilliseconds;
+            long Dcas = cas2 - cas;
+            cas = cas2;
+            Console.WriteLine($"elapsed between ticks={Dcas}");
             TimerCounter++;
+            sw2 = Stopwatch.StartNew();
+            Console.WriteLine("======");
+            DrawPanel.Refresh();
+            //DrawPanel.Invalidate();
+            Console.WriteLine($"elapsed cumul={sw2.ElapsedMilliseconds}");
+        }
+
+        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
             DrawPanel.Refresh();
         }
 
@@ -470,31 +662,30 @@ namespace RTciv2.Forms
             }
         }
 
-        private int[] PxToCoords(int x, int y)  //determine XY civ2 coords from x-y pixel location on panel
-        {
-            double[] nxy = new double[] { x - 2 * y, -(-y - 0.5 * x) };  //crossing at x,y-axis
-            int[] nXY = new int[] { Convert.ToInt32(Math.Floor((nxy[0] + 4 * ZoomLvl) / (8 * ZoomLvl))), Convert.ToInt32(Math.Floor((nxy[1] - 2 * ZoomLvl) / (4 * ZoomLvl))) };   //converting crossing to int
-            return new int[] { nXY[0] + nXY[1], nXY[1] - nXY[0] };
-        }
-
         private bool UnitIsInView(IUnit unit)   //Determine if unit can be seen in current map view
         {
+            int[] startingSqXY = StartingSqXY;
+            int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
+            int[] drawingSqXY = DrawingSqXY;
             bool isInView;
-            if ((unit.X >= StartingSqXY[0] + EdgeDrawOffsetXY[0]) && 
-                (unit.X <= StartingSqXY[0] + DrawingSqXY[0] + EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]) &&
-                (unit.Y >= StartingSqXY[1] + EdgeDrawOffsetXY[1]) &&
-                (unit.Y <= StartingSqXY[1] + DrawingSqXY[1] + EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3])) isInView = true;
+            if ((unit.X >= startingSqXY[0] + edgeDrawOffsetXY[0]) && 
+                (unit.X <= startingSqXY[0] + drawingSqXY[0] + edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]) &&
+                (unit.Y >= startingSqXY[1] + edgeDrawOffsetXY[1]) &&
+                (unit.Y <= startingSqXY[1] + drawingSqXY[1] + edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3])) isInView = true;
             else isInView = false;
             return isInView;
         }
 
         private bool CityIsInView(City city)   //Determine if city can be seen in current map view
         {
+            int[] startingSqXY = StartingSqXY;
+            int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
+            int[] drawingSqXY = DrawingSqXY;
             bool isInView;
-            if ((city.X >= StartingSqXY[0] + EdgeDrawOffsetXY[0]) &&
-                (city.X <= StartingSqXY[0] + DrawingSqXY[0] + EdgeDrawOffsetXY[0] + EdgeDrawOffsetXY[2]) &&
-                (city.Y >= StartingSqXY[1] + EdgeDrawOffsetXY[1]) &&
-                (city.Y <= StartingSqXY[1] + DrawingSqXY[1] + EdgeDrawOffsetXY[1] + EdgeDrawOffsetXY[3])) isInView = true;
+            if ((city.X >= startingSqXY[0] + edgeDrawOffsetXY[0]) &&
+                (city.X <= startingSqXY[0] + drawingSqXY[0] + edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]) &&
+                (city.Y >= startingSqXY[1] + edgeDrawOffsetXY[1]) &&
+                (city.Y <= startingSqXY[1] + drawingSqXY[1] + edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3])) isInView = true;
             else isInView = false;
             return isInView;
         }

@@ -326,8 +326,8 @@ namespace RTciv2.Forms
             //Draw food+surplus/hunger strings
             e.Graphics.DrawString("Food: " + ThisCity.Food.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 21));
             e.Graphics.DrawString("Food: " + ThisCity.Food.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(87, 171, 39)), new Point(5, 20));
-            e.Graphics.DrawString("Surplus: " + ThisCity.Surplus.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 21), sf1);
-            e.Graphics.DrawString("Surplus: " + ThisCity.Surplus.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 139, 31)), new Point(345, 20), sf1);
+            e.Graphics.DrawString("Surplus: " + ThisCity.SurplusHunger.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 21), sf1);
+            e.Graphics.DrawString("Surplus: " + ThisCity.SurplusHunger.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 139, 31)), new Point(345, 20), sf1);
 
             //Draw trade+corruption strings
             e.Graphics.DrawString("Trade: " + ThisCity.Trade.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 83));

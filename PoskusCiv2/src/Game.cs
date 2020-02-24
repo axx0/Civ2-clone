@@ -42,14 +42,13 @@ namespace RTciv2
             ReadFiles.ReadRULES(civ2path + "RULES.TXT");
             ImportSAV(civ2path + SAVname + ".SAV");
             Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
-            //Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units[Data.SelectedUnitIndex];    //null means all units have ended turn
             Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
 
             foreach (IUnit unit in Game.Units)
             {
-                if (unit.Civ == 5)
-                    Console.WriteLine($"Unit, Id={unit.Id}, owner={unit.Civ}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
-                        $"order={unit.Order}");
+                if (unit.Civ == 5 && unit.HomeCity != 255)
+                    Console.WriteLine($"Unit, Id={unit.Id}, {Civs[unit.Civ].TribeName}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
+                        $"order={unit.Order}, {Cities[unit.HomeCity].Name}");
             }
             //for (int i = 0; i < 8; i++)
             //{
@@ -194,7 +193,11 @@ namespace RTciv2
             return unit;
         }
         
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, int workersInnerCircle, int workersOn8, int workersOn4, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, int happyCitizens, int unhappyCitizens, bool[] wonders)
+        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, 
+                                      bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, 
+                                      string name, int[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, int[] commoditySupplied,
+                                      int[] commodityDemanded, int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, 
+                                      int shieldProduction, int happyCitizens, int unhappyCitizens, bool[] wonders)
         {
             City city = new City
             {
@@ -216,15 +219,17 @@ namespace RTciv2
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,
                 Name = name,
-                WorkersInnerCircle = workersInnerCircle,
-                WorkersOn8 = workersOn8,
-                WorkersOn4 = workersOn4,
+                DistributionWorkers = distributionWorkers,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction,
                 ActiveTradeRoutes = activeTradeRoutes,
-                Science = science,
-                Tax = tax,
-                NoOfTradeIcons = noOfTradeIcons,
+                CommoditySupplied = new CommodityType[] { (CommodityType)commoditySupplied[0], (CommodityType)commoditySupplied[1], (CommodityType)commoditySupplied[2] },
+                CommodityDemanded = new CommodityType[] { (CommodityType)commodityDemanded[0], (CommodityType)commodityDemanded[1], (CommodityType)commodityDemanded[2] },
+                CommodityInRoute = new CommodityType[] { (CommodityType)commodityInRoute[0], (CommodityType)commodityInRoute[1], (CommodityType)commodityInRoute[2] },
+                TradeRoutePartnerCity = new int[] { tradeRoutePartnerCity[0], tradeRoutePartnerCity[1], tradeRoutePartnerCity[2] },
+                //Science = science,    //what does this mean???
+                //Tax = tax,
+                //NoOfTradeIcons = noOfTradeIcons,
                 FoodProduction = foodProduction,
                 ShieldProduction = shieldProduction,
                 HappyCitizens = happyCitizens,
@@ -299,23 +304,20 @@ namespace RTciv2
             return city;
         }
 
-        public static Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int taxRate, int government, int reputation, int[] techs)
+        public static Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, int gender, int money, int tribeNumber, 
+                                             int researchProgress, int researchingTech, int sciRate, int taxRate, int government, int reputation, int[] techs)
         {
             //if leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && leaderName == "")
-                leaderName = (gender == 0) ? ReadFiles.LeaderNameHIS[tribeNumber] : ReadFiles.LeaderNameHER[tribeNumber];
+            if (id != 0 && leaderName == "") leaderName = (gender == 0) ? ReadFiles.LeaderNameHIS[tribeNumber] : ReadFiles.LeaderNameHER[tribeNumber];
 
             //if tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && tribeName == "") 
-                tribeName = ReadFiles.LeaderPlural[tribeNumber];
+            if (id != 0 && tribeName == "") tribeName = ReadFiles.LeaderPlural[tribeNumber];
 
             //if adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
-            if (id != 0 && adjective == "") 
-                adjective = ReadFiles.LeaderAdjective[tribeNumber];
+            if (id != 0 && adjective == "") adjective = ReadFiles.LeaderAdjective[tribeNumber];
 
             //Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
-            if (id != 0 && id != whichHumanPlayerIsUsed) 
-                style = ReadFiles.LeaderCityStyle[tribeNumber];
+            if (id != 0 && id != whichHumanPlayerIsUsed) style = ReadFiles.LeaderCityStyle[tribeNumber];
 
             Civilization civ = new Civilization
             {
@@ -326,7 +328,10 @@ namespace RTciv2
                 Adjective = adjective,
                 Money = money,
                 ReseachingTech = researchingTech,
-                Techs = techs
+                Techs = techs,
+                ScienceRate = sciRate * 10,
+                TaxRate = taxRate * 10,
+                Government = (GovernmentType)government
             };
 
             Civs.Add(civ);

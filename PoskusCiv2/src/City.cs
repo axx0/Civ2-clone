@@ -8,6 +8,8 @@ using RTciv2.Enums;
 using RTciv2.Improvements;
 using RTciv2.Imagery;
 using RTciv2.Forms;
+using RTciv2.Units;
+using RTciv2.Terrains;
 
 namespace RTciv2
 {
@@ -31,12 +33,14 @@ namespace RTciv2
         public int ShieldsProgress { get; set; }
         public int NetTrade { get; set; }
         public string Name { get; set; }
-        public int WorkersInnerCircle { get; set; }
-        public int WorkersOn8 { get; set; }
-        public int WorkersOn4 { get; set; }
+        public int[] DistributionWorkers { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
         public int ItemInProduction { get; set; }
         public int ActiveTradeRoutes { get; set; }
+        public CommodityType[] CommoditySupplied { get; set; }
+        public CommodityType[] CommodityDemanded { get; set; }
+        public CommodityType[] CommodityInRoute { get; set; }
+        public int[] TradeRoutePartnerCity { get; set; }
         public int NoOfTradeIcons { get; set; }
         public int FoodProduction { get; set; }
         public int ShieldProduction { get; set; }
@@ -55,67 +59,130 @@ namespace RTciv2
             }
         }
 
-        public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
-
         private List<IImprovement> _improvements = new List<IImprovement>();
-
+        public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
+
+        public List<IUnit> UnitsInCity => Game.Units.Where(unit => unit.X == X && unit.Y == Y).ToList();
+        public List<IUnit> SupportedUnits => Game.Units.Where(unit => unit.HomeCity == Game.Cities.IndexOf(this)).ToList();
         
-        
-        //offsets of squares around the city (0,0) in civ2-format
-        private int[,] offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
-        //Returns coordinates (offsets) of city-surrounding squares according to most FST they have
-        private int[,] _priorityOffsets = new int[21, 2];
-        public int[,] PriorityOffsets
+        //Determine which units, supported by this city, cost shields
+        public bool[] SupportedUnitsWhichCostShields()
+        {
+            List<IUnit> supportedUnits = SupportedUnits;
+            bool[] costShields = new bool[SupportedUnits.Count()];
+            //First determine how many units have 0 costs due to different goverernment types
+            int noCost = 0;
+            switch (Game.Civs[Owner].Government)
+            {
+                case GovernmentType.Anarchy:
+                case GovernmentType.Despotism:
+                    noCost = Math.Min(supportedUnits.Count(), Size); //only units above city size cost 1 shield
+                    break;
+                case GovernmentType.Communism:
+                case GovernmentType.Monarchy:
+                    noCost = Math.Min(supportedUnits.Count(), 3);    //first 3 units have no shield cost
+                    break;
+                case GovernmentType.Fundamentalism:
+                    noCost = Math.Min(supportedUnits.Count(), 10);   //first 10 units have no shield cost
+                    break;
+                case GovernmentType.Republic:
+                case GovernmentType.Democracy:
+                    noCost = 0;    //each unit costs 1 shield per turn
+                    break;
+            }
+            //Now determine bools of units that require upkeep
+            for (int i = 0; i < supportedUnits.Count(); i++)
+            {
+                if (supportedUnits[i].Type == UnitType.Diplomat || supportedUnits[i].Type == UnitType.Caravan || supportedUnits[i].Type == UnitType.Fanatics ||
+                    supportedUnits[i].Type == UnitType.Spy || supportedUnits[i].Type == UnitType.Freight)   //some units never require upkeep
+                {
+                    costShields[i] = false;
+                }
+                else if (noCost != 0)
+                {
+                    costShields[i] = false;
+                    noCost--;   //reduce counter
+                }
+                else
+                {
+                    costShields[i] = true;
+                }                    
+            }
+
+            return costShields;
+        }
+
+        private int[] _foodDistribution;
+        public int[] FoodDistribution
         {
             get
             {
-                //Distribute on those squares that have max(FST)
-                int[] countFST = new int[20];
-                int[] prioritySquareIndexes = new int[20] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 };
-                int x, y, x2, y2;
-                for (int square = 0; square < 20; square++)
+                _foodDistribution = new int[21];    //21 squares around city
+                int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 },
+                                                  { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
+                for (int i = 0; i < 21; i++)
                 {
-                    x2 = X + offsets[square, 0];   //Civ2 format
-                    y2 = Y + offsets[square, 1];
-                    x = (x2 - (y2 % 2)) / 2;    //Real format
-                    y = y2;
-                    countFST[square] = Game.Map[x, y].Food + Game.Map[x, y].Shields + Game.Map[x, y].Trade;
+                    if (DistributionWorkers[i] == 1)
+                    {
+                        int x = X + offsets[i, 0];
+                        int y = Y + offsets[i, 1];
+                        x = (x - (y % 2)) / 2;    //map format
+                        _foodDistribution[i] = Game.Map[x, y].Food;
+                        if (Game.Map[x, y].Irrigation) _foodDistribution[i] += Game.Map[x, y].IrrigationBonus;
+                    }
+                    else _foodDistribution[i] = 0;
                 }
-                Array.Sort(countFST, prioritySquareIndexes);  //this sorts countFST and indexes shows the correct index order
-                Array.Reverse(prioritySquareIndexes);   //because it's sorted in wrong order
-                //Now with sorted offset indexes make _priorityOffsets (element 0 is always city square itself with index (0,0))
-                _priorityOffsets[0, 0] = 0;
-                _priorityOffsets[0, 1] = 0;
-                for (int i = 0; i < 20; i++)
-                {
-                    _priorityOffsets[i + 1, 0] = offsets[prioritySquareIndexes[i], 0];
-                    _priorityOffsets[i + 1, 1] = offsets[prioritySquareIndexes[i], 1];
-                }
-
-                return _priorityOffsets;
-            }
-            set
-            {
-                _priorityOffsets = value;
+                return _foodDistribution;
             }
         }
 
-        private int _foodtotal;
-        public int FoodTotal
+        private int[] _shieldDistribution;
+        public int[] ShieldDistribution
         {
             get
             {
-                _foodtotal = 0;
-                for (int i = 0; i <= Size; i++)
+                _shieldDistribution = new int[21];    //21 squares around city
+                int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 },
+                                                  { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
+                for (int i = 0; i < 21; i++)
                 {
-                    int x2 = X + PriorityOffsets[i, 0];   //Civ2 format
-                    int y2 = Y + PriorityOffsets[i, 1];
-                    int x = (x2 - (y2 % 2)) / 2;    //Real format
-                    int y = y2;
-                    _foodtotal += Game.Map[x, y].Food;
+                    if (DistributionWorkers[i] == 1)
+                    {
+                        int x = X + offsets[i, 0];
+                        int y = Y + offsets[i, 1];
+                        x = (x - (y % 2)) / 2;    //map format
+                        _shieldDistribution[i] = Game.Map[x, y].Shields;
+                        if (Game.Map[x, y].Mining) _shieldDistribution[i] += Game.Map[x, y].MiningBonus;
+                    }
+                    else _shieldDistribution[i] = 0;
                 }
-                return _foodtotal;
+                return _shieldDistribution;
+            }
+        }
+
+        private int[] _tradeDistribution;
+        public int[] TradeDistribution
+        {
+            get
+            {
+                _tradeDistribution = new int[21];    //21 squares around city
+                int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 },
+                                                  { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
+                for (int i = 0; i < 21; i++)
+                {
+                    if (DistributionWorkers[i] == 1)
+                    {
+                        int x = X + offsets[i, 0];
+                        int y = Y + offsets[i, 1];
+                        x = (x - (y % 2)) / 2;    //map format
+                        ITerrain map = Game.Map[x, y];
+                        _tradeDistribution[i] = map.Trade;
+                        if (map.Road && (map.Type == TerrainType.Desert || map.Type == TerrainType.Grassland || map.Type == TerrainType.Plains)) _tradeDistribution[i]++;
+                    }
+                    else _tradeDistribution[i] = 0;
+                }
+                return _tradeDistribution;
             }
         }
 
@@ -124,18 +191,22 @@ namespace RTciv2
         {
             get
             {
-                _food = Size * 2;
+                int maxFood = 2 * Size;
+                foreach (IUnit unit in Game.Units.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.Cities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
+                _food = Math.Min(FoodDistribution.Sum(), maxFood);
                 return _food;
             }
         }
 
-        private int _surplus;
-        public int Surplus
+        private int _surplusHunger;
+        public int SurplusHunger
         {
             get
             {
-                _surplus = FoodTotal - Food;
-                return _surplus;
+                int maxFood = 2 * Size;
+                foreach (IUnit unit in Game.Units.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.Cities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
+                _surplusHunger = FoodDistribution.Sum() - maxFood;
+                return _surplusHunger;
             }
         }
 
@@ -144,7 +215,7 @@ namespace RTciv2
         {
             get
             {
-                _trade = 5;
+                _trade = TradeDistribution.Sum();
                 return _trade;
             }
         }
@@ -154,7 +225,8 @@ namespace RTciv2
         {
             get
             {
-                _corruption = 3;
+                _corruption = 0;
+                if (!Improvements.Any(impr => impr.Type == ImprovementType.Palace)) _corruption++;  //if not capital
                 return _corruption;
             }
         }
@@ -164,11 +236,8 @@ namespace RTciv2
         {
             get
             {
+                _tax = Trade * Game.Civs[Owner].TaxRate / 100;
                 return _tax;
-            }
-            set
-            {
-                _tax = value;
             }
         }
 
@@ -177,7 +246,7 @@ namespace RTciv2
         {
             get
             {
-                _lux = 3;
+                _lux = Trade - Science - Tax;
                 return _lux;
             }
         }
@@ -187,11 +256,8 @@ namespace RTciv2
         {
             get
             {
+                _science = Trade * Game.Civs[Owner].ScienceRate / 100;
                 return _science;
-            }
-            set
-            {
-                _science = value;
             }
         }
 
@@ -200,7 +266,8 @@ namespace RTciv2
         {
             get
             {
-                _support = 5;
+                bool[] costShields = SupportedUnitsWhichCostShields();
+                _support = costShields.Count(c => c);   //count true occurrences
                 return _support;
             }
         }
@@ -210,8 +277,18 @@ namespace RTciv2
         {
             get
             {
-                _production = 3;
+                _production = ShieldDistribution.Sum() - Support;
                 return _production;
+            }
+        }
+
+        private int _waste;
+        public int Waste
+        {
+            get
+            {
+                _waste = 1;
+                return _waste;
             }
         }
 
@@ -222,6 +299,50 @@ namespace RTciv2
             {
                 _graphic = Images.CreateCityBitmap(this, true, MapPanel.ZoomLvl);
                 return _graphic;
+            }
+        }
+
+        private PeopleType[] _people;
+        public PeopleType[] People
+        {
+            get
+            {
+                _people = new PeopleType[Size];
+                //Unhappy
+                int additUnhappy = Size - 6;    //without units & improvements present, 6 people are content
+                additUnhappy -= Math.Min(Game.Units.Where(unit => unit.X == X && unit.Y == Y).Count(), 3);  //each new unit in city -> 1 less unhappy (up to 3 max)
+                if (Improvements.Any(impr => impr.Type == ImprovementType.Temple)) additUnhappy -= 2;
+                if (Improvements.Any(impr => impr.Type == ImprovementType.Colosseum)) additUnhappy -= 3;
+                if (Improvements.Any(impr => impr.Type == ImprovementType.Cathedral)) additUnhappy -= 3;
+                //Aristocrats
+                int additArist = 0;
+                switch (Size + 1 - DistributionWorkers.Sum())   //populating aristocrats based on workers removed
+                {
+                    case 1: additArist += 1; break;
+                    case 2:
+                    case 3: additArist += 3; break;
+                    case 4:
+                    case 5:
+                    case 6: additArist += 4; break;
+                    case 7: additArist += 5; break;
+                    case 8:
+                    case 9: additArist += 6; break;
+                    case 10: additArist += 7; break;
+                    case 11: additArist += 8; break;
+                    default: break;
+                }
+                //Elvis
+                int additElvis = Size + 1 - DistributionWorkers.Sum();  //no of elvis = no of workers removed
+                //Populate
+                for (int i = 0; i < Size; i++) _people[i] = PeopleType.Worker;
+                for (int i = 0; i < additUnhappy; i++) _people[Size - 1 - i] = PeopleType.Unhappy;
+                for (int i = 0; i < additArist; i++) _people[i] = PeopleType.Aristocrat;
+                for (int i = 0; i < additElvis; i++) _people[Size - 1 - i] = PeopleType.Elvis;
+                return _people;
+            }
+            set
+            {
+                _people = value;
             }
         }
 
