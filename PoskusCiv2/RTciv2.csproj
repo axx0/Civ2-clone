@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Enums\AnimationType.cs" />
     <Compile Include="src\Enums\PeopleType.cs" />
     <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>

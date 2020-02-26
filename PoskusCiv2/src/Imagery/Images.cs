@@ -9,6 +9,7 @@ using System.IO;
 using RTciv2.Enums;
 using RTciv2.Units;
 using ExtensionMethods;
+using RTciv2.Forms;
 
 namespace RTciv2.Imagery
 {
@@ -701,10 +702,6 @@ namespace RTciv2.Imagery
             Game.WholeMap = new Bitmap(64 * Data.MapXdim + 32, 32 * Data.MapYdim + 16);
             using (Graphics g = Graphics.FromImage(Game.WholeMap))
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                //sf.Alignment = StringAlignment.Center;
-
                 for (int row = 0; row < Data.MapYdim; row++) 
                     for (int col = 0; col < Data.MapXdim; col++)
                     {
@@ -728,10 +725,16 @@ namespace RTciv2.Imagery
                         if (city != null)
                         {
                             g.DrawImage(CreateCityBitmap(city, true, 8), 32 * col2, 16 * row2 - 16);
-                            g.DrawImage(CreateCityNameBitmap(city, 8), 32 * col2, 16 * row2 + 16);
+                            
                         }
                     }
 
+                //City name text is drawn last
+                foreach (City city in Game.Cities)
+                {
+                    Bitmap cityNameBitmap = CreateCityNameBitmap(city, 8);
+                    g.DrawImage(cityNameBitmap, 32 * city.X + 32 - cityNameBitmap.Width / 2, 16 * city.Y + 3 * 8);
+                }
             }
         }
 
@@ -1476,6 +1479,45 @@ namespace RTciv2.Imagery
             g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.Owner]), new PointF(0, 0));
 
             return _textGraphic;
+        }
+
+        public static Bitmap[] CreateMapAnimation(AnimationType animation)
+        {
+            Bitmap[] _bitmap = new Bitmap[2];
+            _bitmap[0] = new Bitmap(64, 32);
+            _bitmap[1] = new Bitmap(64, 32);
+
+            for (int i = 0; i < 2; i++)
+            {
+                using (Graphics g = Graphics.FromImage(_bitmap[0]))
+                {
+                    switch (animation)
+                    {
+                        case AnimationType.None:
+                            {
+                                if (MapPanel.ViewingPiecesMode)
+                                {
+
+                                }
+                                else    //unit is active
+                                {
+                                    int x = Game.Instance.ActiveUnit.X;
+                                    int y = Game.Instance.ActiveUnit.Y;
+                                    g.DrawImage(Game.WholeMap, new Rectangle(32 * x, 16 * y, 64, 48));
+                                    if (i == 1) g.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel, 0, 16);
+                                }
+                                break;
+                            }
+                        case AnimationType.UnitMoving:
+                            {
+                                break;
+                            }
+                        default: break;
+                    }
+                }
+            }
+
+            return _bitmap;
         }
 
         public static Bitmap DrawFoodStorage(City city)
