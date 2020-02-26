@@ -81,9 +81,9 @@ namespace RTciv2.Forms
             ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
             MapGridVar = 0;
             ViewingPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
-            ClickedXY = Data.ClickedXY;
-            ActiveXY = Data.ActiveXY;
-            CenterSqXY = ActiveXY;
+            //ClickedXY = Data.ClickedXY;
+            //ActiveXY = Data.ActiveXY;
+            //CenterSqXY = ActiveXY;
             UnitMoved = false;
             //TODO: Implement zoom
 
@@ -138,6 +138,7 @@ namespace RTciv2.Forms
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
+            Console.WriteLine("MAPDRAW!!!");
             sw1 = Stopwatch.StartNew();
 
             int[] drawingSqXY = DrawingSqXY;
@@ -147,6 +148,9 @@ namespace RTciv2.Forms
             int[] activeXY = ActiveXY;
             int[] centerSqXY = CenterSqXY;
             int zoomLvl = ZoomLvl;
+
+            Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
+            e.Graphics.DrawImage(Game.WholeMap, 0, 0, rect, GraphicsUnit.Pixel);
 
             #region working
             ////Draw for each visible square
@@ -244,152 +248,154 @@ namespace RTciv2.Forms
             //                         drawingPxOffsetXY[1] + 2 * zoomLvl * (activeXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]));
             #endregion
 
-            long t1 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"precal elapsed={t1}");
+            #region Calculate time between drawings
+            //long t1 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"precal elapsed={t1}");
 
-            //TILES
-            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
-            {
-                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
-                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
-                    {
-                        int[] coords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
-                        //Console.Write($"({coords[0]},{coords[1]}) "); //check which tiles are drawn
-                        //e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, zoomLvl * 8, zoomLvl * 4),
-                        //                     drawingPxOffsetXY[0] + 32 * col,
-                        //                     drawingPxOffsetXY[1] + 16 * row);
-                        e.Graphics.DrawImage(Game.Map[coords[0], coords[1]].Graphic[zoomLvl],
-                                             drawingPxOffsetXY[0] + 32 * col,
-                                             drawingPxOffsetXY[1] + 16 * row);
-                        //e.Graphics.DrawImage(Images.Desert[0],
-                        //                     drawingPxOffsetXY[0] + 32 * col,
-                        //                     drawingPxOffsetXY[1] + 16 * row);
-                    }
-                //Console.Write("\n");
-            }
+            ////TILES
+            //for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            //{
+            //    for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+            //        {
+            //            int[] coords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
+            //            //Console.Write($"({coords[0]},{coords[1]}) "); //check which tiles are drawn
+            //            //e.Graphics.DrawImage(ModifyImage.ResizeImage(Game.Map[coords[0], coords[1]].Graphic, zoomLvl * 8, zoomLvl * 4),
+            //            //                     drawingPxOffsetXY[0] + 32 * col,
+            //            //                     drawingPxOffsetXY[1] + 16 * row);
+            //            e.Graphics.DrawImage(Game.Map[coords[0], coords[1]].Graphic[zoomLvl],
+            //                                 drawingPxOffsetXY[0] + 32 * col,
+            //                                 drawingPxOffsetXY[1] + 16 * row);
+            //            //e.Graphics.DrawImage(Images.Desert[0],
+            //            //                     drawingPxOffsetXY[0] + 32 * col,
+            //            //                     drawingPxOffsetXY[1] + 16 * row);
+            //        }
+            //    //Console.Write("\n");
+            //}
 
-            long t2 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"tiles elapsed={t2 - t1}");
-                       
-            //UNITS
-            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
-                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
-                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
-                    {
-                        List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
-                        foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
-                        if (unitsHere.Any())
-                        {
-                            IUnit unit = unitsHere.Last();
-                            if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
-                                UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
-                                e.Graphics.DrawImage(unit.GraphicMapPanel,
-                                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (unit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
-                                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (unit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
-                        }
-                    }
+            //long t2 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"tiles elapsed={t2 - t1}");
 
-            long t3 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"units elapsed={t3 - t2}");
+            ////UNITS
+            //for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            //    for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+            //        {
+            //            List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
+            //            foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
+            //            if (unitsHere.Any())
+            //            {
+            //                IUnit unit = unitsHere.Last();
+            //                if ((unit != Game.Instance.ActiveUnit || (unit == Game.Instance.ActiveUnit && ViewingPiecesMode)) &&
+            //                    UnitIsInView(unit) && !unit.IsInCity && unit.IsLastInStack)
+            //                    e.Graphics.DrawImage(unit.GraphicMapPanel,
+            //                                         drawingPxOffsetXY[0] + 4 * zoomLvl * (unit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                                         drawingPxOffsetXY[1] + 2 * zoomLvl * (unit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
+            //            }
+            //        }
 
-            //CITIES
-            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
-                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
-                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
-                    {
-                        City city = Game.Cities.Find(c => c.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && c.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1]);    //find if city is here
-                        if (city != null && CityIsInView(city))
-                        {
-                            e.Graphics.DrawImage(city.Graphic,
-                                                 drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
-                                                 drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
-                            e.Graphics.DrawImage(city.TextGraphic,
-                                                 drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]) + 4 * zoomLvl - city.TextGraphic.Width / 2,
-                                                 drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + zoomLvl * 5);
-                        }
-                    }
+            //long t3 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"units elapsed={t3 - t2}");
 
-            long t4 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"cities elapsed={t4 - t3}");
+            ////CITIES
+            //for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            //    for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+            //        {
+            //            City city = Game.Cities.Find(c => c.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && c.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1]);    //find if city is here
+            //            if (city != null && CityIsInView(city))
+            //            {
+            //                e.Graphics.DrawImage(city.Graphic,
+            //                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
+            //                e.Graphics.DrawImage(city.TextGraphic,
+            //                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (city.X - startingSqXY[0] - edgeDrawOffsetXY[0]) + 4 * zoomLvl - city.TextGraphic.Width / 2,
+            //                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (city.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + zoomLvl * 5);
+            //            }
+            //        }
 
-            //ACTIVE UNIT
-            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
-                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
-                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
-                    {
-                        List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
-                        foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
-                        if (unitsHere.Contains(Game.Instance.ActiveUnit))
-                        {
-                            if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit))
-                            {
-                                if (AnimType == AnimationType.None && (TimerCounter % 2 == 0))
-                                {
-                                    e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
-                                                        drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
-                                                        drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
-                                }
-                                else if (AnimType == AnimationType.UnitMoving)
-                                {
-                                    int moveToX = 8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter;
-                                    int moveToY = 4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter;
-                                    e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
-                                                        drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]) + moveToX,
-                                                        drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + moveToY);
+            //long t4 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"cities elapsed={t4 - t3}");
 
-                                    if (TimerCounter == 4)  //unit finished movement
-                                    {
-                                        ChangeAnimation(AnimationType.None); //reset after unit has moved
-                                        Actions.UpdateUnit(Game.Instance.ActiveUnit);
-                                    }
-                                }
-                            }
-                        }
-                    }
+            ////ACTIVE UNIT
+            //for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            //    for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+            //        {
+            //            List<IUnit> unitsHere = new List<IUnit>();    //list of all units on this tile
+            //            foreach (IUnit unit in Game.Units.Where(u => u.X == col + startingSqXY[0] + edgeDrawOffsetXY[0] && u.Y == row + startingSqXY[1] + edgeDrawOffsetXY[1])) unitsHere.Add(unit);
+            //            if (unitsHere.Contains(Game.Instance.ActiveUnit))
+            //            {
+            //                if (!ViewingPiecesMode && (Game.Instance.ActiveUnit != null) && UnitIsInView(Game.Instance.ActiveUnit))
+            //                {
+            //                    if (AnimType == AnimationType.None && (TimerCounter % 2 == 0))
+            //                    {
+            //                        e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+            //                                            drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.X - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                                            drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.Y - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl);
+            //                    }
+            //                    else if (AnimType == AnimationType.UnitMoving)
+            //                    {
+            //                        int moveToX = 8 * (Game.Instance.ActiveUnit.X - Game.Instance.ActiveUnit.LastXY[0]) * TimerCounter;
+            //                        int moveToY = 4 * (Game.Instance.ActiveUnit.Y - Game.Instance.ActiveUnit.LastXY[1]) * TimerCounter;
+            //                        e.Graphics.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel,
+            //                                            drawingPxOffsetXY[0] + 4 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]) + moveToX,
+            //                                            drawingPxOffsetXY[1] + 2 * zoomLvl * (Game.Instance.ActiveUnit.LastXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]) - 2 * zoomLvl + moveToY);
 
-            long t5 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"active unit elapsed={t5 - t4}");
+            //                        if (TimerCounter == 4)  //unit finished movement
+            //                        {
+            //                            ChangeAnimation(AnimationType.None); //reset after unit has moved
+            //                            Actions.UpdateUnit(Game.Instance.ActiveUnit);
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
 
-            //GRID
-            for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
-                for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
-                    if (Math.Abs(row - col) % 2 == 0)   //choose which squares
-                    {
-                        if (Options.Grid)
-                        {
-                            Color brushColor = ((col + startingSqXY[0] + edgeDrawOffsetXY[0] == centerSqXY[0]) && (row + startingSqXY[1] + edgeDrawOffsetXY[1] == centerSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red;
-                            if (MapGridVar > 0)
-                                e.Graphics.DrawImage(Images.GridLines,
-                                                     drawingPxOffsetXY[0] + 32 * col,
-                                                     drawingPxOffsetXY[1] + 16 * row);
-                            if (MapGridVar == 2)     //Map coords from SAVfile logic
-                            {
-                                int[] realCoords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
-                                e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"),
-                                                      new Font("Arial", 8),
-                                                      new SolidBrush(brushColor),
-                                                      drawingPxOffsetXY[0] + 32 * col + 32,
-                                                      drawingPxOffsetXY[1] + 16 * row + 16, sf);
-                            }
-                            if (MapGridVar == 3)    //Civ2-coords
-                                e.Graphics.DrawString(String.Format($"({col + startingSqXY[0] + edgeDrawOffsetXY[0]},{row + startingSqXY[1] + edgeDrawOffsetXY[1]})"),
-                                                      new Font("Arial", 8), new SolidBrush(brushColor),
-                                                      drawingPxOffsetXY[0] + 32 * col + 32,
-                                                      drawingPxOffsetXY[1] + 16 * row + 16, sf);
-                        }
-                    }
+            //long t5 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"active unit elapsed={t5 - t4}");
 
-            long t6 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"grid elapsed={t6 - t5}");
+            ////GRID
+            //for (int row = 0; row < drawingSqXY[1] - edgeDrawOffsetXY[1] + edgeDrawOffsetXY[3]; row++)
+            //    for (int col = 0; col < drawingSqXY[0] - edgeDrawOffsetXY[0] + edgeDrawOffsetXY[2]; col++)
+            //        if (Math.Abs(row - col) % 2 == 0)   //choose which squares
+            //        {
+            //            if (Options.Grid)
+            //            {
+            //                Color brushColor = ((col + startingSqXY[0] + edgeDrawOffsetXY[0] == centerSqXY[0]) && (row + startingSqXY[1] + edgeDrawOffsetXY[1] == centerSqXY[1])) ? Color.Red : Color.Yellow; //color central tile red;
+            //                if (MapGridVar > 0)
+            //                    e.Graphics.DrawImage(Images.GridLines,
+            //                                         drawingPxOffsetXY[0] + 32 * col,
+            //                                         drawingPxOffsetXY[1] + 16 * row);
+            //                if (MapGridVar == 2)     //Map coords from SAVfile logic
+            //                {
+            //                    int[] realCoords = Ext.Civ2xy(new int[] { col + startingSqXY[0] + edgeDrawOffsetXY[0], row + startingSqXY[1] + edgeDrawOffsetXY[1] });
+            //                    e.Graphics.DrawString(String.Format($"({realCoords[0]},{realCoords[1]})"),
+            //                                          new Font("Arial", 8),
+            //                                          new SolidBrush(brushColor),
+            //                                          drawingPxOffsetXY[0] + 32 * col + 32,
+            //                                          drawingPxOffsetXY[1] + 16 * row + 16, sf);
+            //                }
+            //                if (MapGridVar == 3)    //Civ2-coords
+            //                    e.Graphics.DrawString(String.Format($"({col + startingSqXY[0] + edgeDrawOffsetXY[0]},{row + startingSqXY[1] + edgeDrawOffsetXY[1]})"),
+            //                                          new Font("Arial", 8), new SolidBrush(brushColor),
+            //                                          drawingPxOffsetXY[0] + 32 * col + 32,
+            //                                          drawingPxOffsetXY[1] + 16 * row + 16, sf);
+            //            }
+            //        }
 
-            //VIEWING PIECE
-            if (ViewingPiecesMode && (TimerCounter % 2 == 0))
-                e.Graphics.DrawImage(Images.ViewingPieces,
-                                     drawingPxOffsetXY[0] + 4 * zoomLvl * (activeXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]),
-                                     drawingPxOffsetXY[1] + 2 * zoomLvl * (activeXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]));
+            //long t6 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"grid elapsed={t6 - t5}");
 
-            long t7 = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"viewing pieces elapsed={t7 - t6}");
+            ////VIEWING PIECE
+            //if (ViewingPiecesMode && (TimerCounter % 2 == 0))
+            //    e.Graphics.DrawImage(Images.ViewingPieces,
+            //                         drawingPxOffsetXY[0] + 4 * zoomLvl * (activeXY[0] - startingSqXY[0] - edgeDrawOffsetXY[0]),
+            //                         drawingPxOffsetXY[1] + 2 * zoomLvl * (activeXY[1] - startingSqXY[1] - edgeDrawOffsetXY[1]));
+
+            //long t7 = sw1.ElapsedMilliseconds;
+            //Console.WriteLine($"viewing pieces elapsed={t7 - t6}");
+            #endregion
 
             e.Dispose();
         }
@@ -401,31 +407,31 @@ namespace RTciv2.Forms
 
             if (e.Button == MouseButtons.Left)
             {
-                if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
-                {
+                //if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
+                //{
+                //    if (ViewingPiecesMode) ActiveXY = ClickedXY;
+                //    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
+                //    cityForm.Show();
+                //}
+                //else if (Game.Units.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
+                //{
+                //    int clickedUnitIndex = Game.Units.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
+                //    if (!Game.Units[clickedUnitIndex].TurnEnded)
+                //    {
+                //        Game.Instance.ActiveUnit = Game.Units[clickedUnitIndex];
+                //        ViewingPiecesMode = false;
+                //    }
+                //    else
+                //    {
+                //        //TODO: determine what happens if unit has ended turn...
+                //    }
+                //    MapViewChange(ClickedXY);
+                //}
+                //else    //something else clicked
+                //{
                     if (ViewingPiecesMode) ActiveXY = ClickedXY;
-                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
-                    cityForm.Show();
-                }
-                else if (Game.Units.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
-                {                    
-                    int clickedUnitIndex = Game.Units.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
-                    if (!Game.Units[clickedUnitIndex].TurnEnded)
-                    {
-                        Game.Instance.ActiveUnit = Game.Units[clickedUnitIndex];
-                        ViewingPiecesMode = false;                        
-                    }
-                    else
-                    {
-                        //TODO: determine what happens if unit has ended turn...
-                    }
                     MapViewChange(ClickedXY);
-                }
-                else    //something else clicked
-                {
-                    if (ViewingPiecesMode) ActiveXY = ClickedXY;
-                    MapViewChange(ClickedXY);
-                }
+                //}
             }
             else    //right click
             {
@@ -607,13 +613,12 @@ namespace RTciv2.Forms
             long cas2 = sw3.ElapsedMilliseconds;
             long Dcas = cas2 - cas;
             cas = cas2;
-            Console.WriteLine($"elapsed between ticks={Dcas}");
+            //Console.WriteLine($"elapsed between ticks={Dcas}");
             TimerCounter++;
             sw2 = Stopwatch.StartNew();
-            Console.WriteLine("======");
-            DrawPanel.Refresh();
+            //Console.WriteLine("======");
             //DrawPanel.Invalidate();
-            Console.WriteLine($"elapsed cumul={sw2.ElapsedMilliseconds}");
+            //Console.WriteLine($"elapsed cumul={sw2.ElapsedMilliseconds}");
         }
 
         private void OnTimedEvent(object sender, ElapsedEventArgs e)

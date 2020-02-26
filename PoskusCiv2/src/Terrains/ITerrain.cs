@@ -47,6 +47,6 @@ namespace RTciv2.Terrains
         bool Airbase { get; set; }
         int Island { get; set; }
         string Hexvalue { get; set; }
-        Bitmap[] Graphic { get; set; }
+        Bitmap Graphic { get; set; }
     }
 }

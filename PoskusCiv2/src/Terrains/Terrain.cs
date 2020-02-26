@@ -122,6 +122,6 @@ namespace RTciv2.Terrains
             }
         }
 
-        public Bitmap[] Graphic { get; set; }
+        public Bitmap Graphic { get; set; }
     }
 }

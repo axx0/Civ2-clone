@@ -8,6 +8,7 @@ using System.Reflection;
 using System.IO;
 using RTciv2.Enums;
 using RTciv2.Units;
+using ExtensionMethods;
 
 namespace RTciv2.Imagery
 {
@@ -695,10 +696,47 @@ namespace RTciv2.Imagery
             for (int col = 0; col < Data.MapXdim; col++)
                 for (int row = 0; row < Data.MapYdim; row++)
                     Game.Map[col, row].Graphic = TerrainBitmap(col, row);
+
+            //Create an image of whole map
+            Game.WholeMap = new Bitmap(64 * Data.MapXdim + 32, 32 * Data.MapYdim + 16);
+            using (Graphics g = Graphics.FromImage(Game.WholeMap))
+            {
+                StringFormat sf = new StringFormat();
+                sf.LineAlignment = StringAlignment.Center;
+                //sf.Alignment = StringAlignment.Center;
+
+                for (int row = 0; row < Data.MapYdim; row++) 
+                    for (int col = 0; col < Data.MapXdim; col++)
+                    {
+                        //Tiles
+                        g.DrawImage(Game.Map[col, row].Graphic, 64 * col + 32 * (row % 2), 16 * row);
+
+                        //Units
+                        int[] coords = Ext.XYciv2(new int[] { col, row });  //civ2 coords from real coords
+                        int col2 = coords[0];
+                        int row2 = coords[1];
+                        List<IUnit> unitsHere = Game.Units.Where(u => u.X == col2 && u.Y == row2).ToList();
+                        if (unitsHere.Any())
+                        {
+                            IUnit unit = unitsHere.Last();
+                            int zoom = 8;
+                            if (!unit.IsInCity) g.DrawImage(CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom), 32 * col2, 16 * row2 - 16);
+                        }
+
+                        //Cities
+                        City city = Game.Cities.Find(c => c.X == col2 && c.Y == row2);
+                        if (city != null)
+                        {
+                            g.DrawImage(CreateCityBitmap(city, true, 8), 32 * col2, 16 * row2 - 16);
+                            g.DrawImage(CreateCityNameBitmap(city, 8), 32 * col2, 16 * row2 + 16);
+                        }
+                    }
+
+            }
         }
 
         #region Create bitmaps of tiles for each zoom level
-        public static Bitmap[] TerrainBitmap(int col, int row)
+        public static Bitmap TerrainBitmap(int col, int row)
         {
             Bitmap tile = new Bitmap(64, 32); //define a bitmap for drawing in MapForm
 
@@ -998,16 +1036,7 @@ namespace RTciv2.Imagery
 
             }
 
-            //Modify tile size according to zoom level. Zoom level=8 by default.
-            Bitmap[] tiles = new Bitmap[16];
-            for (int zoom = 1; zoom <= 16; zoom++)
-            {
-                if (zoom == 8) tiles[zoom - 1] = tile;  //for zoom=8 no resize is necessary
-                else tiles[zoom - 1] = ModifyImage.ResizeImage(tile, zoom * 8, zoom * 4);
-            }
-
-            tile.Dispose();
-            return tiles;
+            return tile;
         }
 
         private static int[] IsLandPresent(int i, int j)
@@ -1407,6 +1436,46 @@ namespace RTciv2.Imagery
             graphic = ModifyImage.ResizeImage(graphic, 8 * zoom, 6 * zoom);
 
             return graphic;
+        }
+
+        public static Bitmap CreateCityNameBitmap(City city, int zoom)
+        {
+            //Define text characteristics for zoom levels
+            int shadowOffset, fontSize;
+            switch (zoom)
+            {
+                case 1: shadowOffset = 0; fontSize = 1; break;
+                case 2: shadowOffset = 0; fontSize = 3; break;
+                case 3: shadowOffset = 0; fontSize = 5; break;
+                case 4: shadowOffset = 1; fontSize = 7; break;
+                case 5: shadowOffset = 1; fontSize = 10; break;
+                case 6: shadowOffset = 1; fontSize = 11; break;
+                case 7: shadowOffset = 1; fontSize = 13; break;
+                case 8: shadowOffset = 2; fontSize = 14; break;
+                case 9: shadowOffset = 2; fontSize = 16; break;
+                case 10: shadowOffset = 2; fontSize = 17; break;
+                case 11: shadowOffset = 2; fontSize = 19; break;
+                case 12: shadowOffset = 2; fontSize = 21; break;
+                case 13: shadowOffset = 2; fontSize = 24; break;
+                case 14: shadowOffset = 2; fontSize = 25; break;
+                case 15: shadowOffset = 2; fontSize = 26; break;
+                case 16: shadowOffset = 2; fontSize = 28; break;
+                default: shadowOffset = 2; fontSize = 14; break;
+            }
+
+            //Draw
+            Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
+            SizeF stringSize = gr.MeasureString(city.Name, new Font("Times New Roman", fontSize));
+            int stringWidth = (int)stringSize.Width;
+            int stringHeight = (int)stringSize.Height;
+            Bitmap _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
+            Graphics g = Graphics.FromImage(_textGraphic);
+            g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.Owner]), new PointF(0, 0));
+
+            return _textGraphic;
         }
 
         public static Bitmap DrawFoodStorage(City city)

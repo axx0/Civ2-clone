@@ -23,6 +23,7 @@ namespace RTciv2
         public static List<City> Cities = new List<City>();
         public static List<Civilization> Civs = new List<Civilization>();        
         public static ITerrain[,] Map;
+        public static Bitmap WholeMap;
 
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)
