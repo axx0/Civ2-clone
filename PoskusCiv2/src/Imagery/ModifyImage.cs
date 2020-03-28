@@ -55,6 +55,20 @@ namespace RTciv2.Imagery
             return bmpImage.Clone(cropArea, bmpImage.PixelFormat);
         }
 
+        //Merge 2 images
+        public static Bitmap MergedBitmaps(Bitmap original, Bitmap layer, int x, int y)
+        {
+            //Bitmap result = new Bitmap(original.Width, original.Height);
+            Bitmap result = original;
+
+            using (Graphics g = Graphics.FromImage(result))
+            {
+                //g.DrawImage(bmp2, Point.Empty);
+                g.DrawImage(layer, x, y);
+            }
+            return result;
+        }
+
         //Grey out an image
         public static ImageAttributes ConvertToGray()
         {

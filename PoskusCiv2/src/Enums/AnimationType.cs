@@ -8,7 +8,7 @@ namespace RTciv2.Enums
 {
     public enum AnimationType
     {
-        None = 0,
+        UnitWaiting = 0,
         UnitMoving = 1
     }
 }
