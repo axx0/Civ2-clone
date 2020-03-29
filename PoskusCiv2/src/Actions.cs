@@ -21,12 +21,20 @@ namespace RTciv2
         public static event EventHandler<NewPlayerTurnEventArgs> OnNewPlayerTurn;
         public static event EventHandler<WaitAtTurnEndEventArgs> OnWaitAtTurnEnd;
 
+        static Actions()
+        {
+            MapPanel.OnUnitCompletedMovement += UnitCompletedMovement;
+        }
+        
         public static void UpdateUnit(IUnit unit)
         {
             //If unit is not waiting order, chose next unit in line, otherwise update its orders
             if (!unit.AwaitingOrders)
-                ChooseNextUnit(); 
+            {
+                ChooseNextUnit();
+            }
             else
+            {
                 switch (unit.Order)
                 {
                     case OrderType.BuildIrrigation:
@@ -70,22 +78,26 @@ namespace RTciv2
                     default:
                         break;
                 }
-
-            //Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
-            //Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
+            }
         }
 
         //Chose next unit for orders. If all units ended turn, update cities.
         public static void ChooseNextUnit()
         {
-            if (!AnyUnitsAwaitingOrders(Data.HumanPlayer))  //end turn if no units awaiting orders
+            //End turn if no units awaiting orders
+            if (!AnyUnitsAwaitingOrders(Data.HumanPlayer))  
             {
                 if (Options.AlwaysWaitAtEndOfTurn)
+                {
                     OnWaitAtTurnEnd?.Invoke(null, new WaitAtTurnEndEventArgs());
+                }
                 else
+                {
                     NewPlayerTurn();
+                }
             }
-            else    //chose next unit
+            //Choose next unit
+            else    
             {
                 //Create an array of indexes of units awaiting orders
                 List<int> indexUAO = new List<int>();
@@ -94,11 +106,17 @@ namespace RTciv2
 
                 int indexActUnit = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit);  //Determine index of unit that is currently still active but just ended turn
 
-                if ((indexUAO[0] > indexActUnit) || (indexUAO[indexUAO.Count - 1] <= indexActUnit))  //currently active unit is at beginning/end of list ==> chose next unit from beginning of list
+                //currently active unit is at beginning/end of list ==> choose next unit from beginning of list
+                if ((indexUAO[0] > indexActUnit) || (indexUAO[indexUAO.Count - 1] <= indexActUnit))  
+                {
                     Game.Instance.ActiveUnit = Game.Units[indexUAO[0]];
-                else    //otherwise chose next unit from currently active unit in the list
+                }
+                //otherwise choose next unit from currently active unit in the list
+                else
+                {
                     for (int i = 0; i < indexUAO.Count - 1; i++)
                         if ((indexActUnit >= indexUAO[i]) && (indexActUnit < indexUAO[i + 1])) Game.Instance.ActiveUnit = Game.Units[indexUAO[i + 1]];
+                }
 
                 OnNewUnitChosen?.Invoke(null, new NewUnitChosenEventArgs());    //run event that new unit was chosen
             }
@@ -160,7 +178,6 @@ namespace RTciv2
             {
                 Game.Units.Remove(unit);
             }
-
         }
 
         public static void GiveOrder(OrderType order)
@@ -241,6 +258,11 @@ namespace RTciv2
                     break;
                 default: break;
             }
+        }
+
+        private static void UnitCompletedMovement(object sender, UnitCompletedMovementEventArgs e)
+        {
+            UpdateUnit(Game.Instance.ActiveUnit);
         }
 
         //find out if certain civ has any units awaiting orders

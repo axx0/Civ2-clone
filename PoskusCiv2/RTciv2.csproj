@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="src\Enums\AnimationType.cs" />
     <Compile Include="src\Enums\PeopleType.cs" />
+    <Compile Include="src\Events\UnitCompletedMovementEventArgs.cs" />
     <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -262,6 +263,7 @@
       <DependentUpon>WorldMapForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Game.cs" />
+    <Compile Include="src\Imagery\AnimationFrames.cs" />
     <Compile Include="src\HelpConsole.cs" />
     <Compile Include="src\Imagery\CivColors.cs" />
     <Compile Include="src\Imagery\DrawFunctions.cs" />

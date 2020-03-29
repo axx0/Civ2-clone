@@ -52,13 +52,6 @@ namespace RTciv2.Units
         public int X { get; set; }
         public int Y { get; set; }
 
-        //private int _movePointsLost;
-        //public int MovePointsLost
-        //{
-        //    get { return _movePointsLost; }
-        //    set { _movePointsLost = value; }
-        //}
-
         public bool Move(int moveX, int moveY)
         {
             int Xto = X + moveX;    //Civ2-style
@@ -74,6 +67,13 @@ namespace RTciv2.Units
                     {
                         if (Game.Map[Xto_, Yto].Type == TerrainType.Ocean) break;
 
+                        //Cannot move beyond map edge
+                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) 
+                        { 
+                            //TODO: display a message that a unit cannot move beyond map edges
+                            break; 
+                        }
+
                         if ((Game.Map[X_, Y].Road || Game.Map[X_, Y].CityPresent) && (Game.Map[Xto_, Yto].Road || Game.Map[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
                             (Game.Map[X_, Y].River && Game.Map[Xto_, Yto].River && moveX < 2 && moveY < 2))    //For rivers only for diagonal movement
                             MovePoints -= 1;
@@ -87,6 +87,9 @@ namespace RTciv2.Units
                     {
                         if (Game.Map[Xto_, Yto].Type != TerrainType.Ocean) break;
 
+                        //Cannot move beyond map edge
+                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) break;
+
                         MovePoints -= 3;
 
                         unitMoved = true;
@@ -94,6 +97,9 @@ namespace RTciv2.Units
                     }
                 case UnitGAS.Air:
                     {
+                        //Cannot move beyond map edge
+                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) break;
+
                         MovePoints -= 3;
 
                         unitMoved = true;
