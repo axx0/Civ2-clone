@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Media;
 using RTciv2.Events;
+using RTciv2.GameActions;
+using RTciv2.Enums;
 
 namespace RTciv2.Sounds
 {
@@ -16,16 +18,12 @@ namespace RTciv2.Sounds
         {
             MOVPIECE = new SoundPlayer(directoryPath + "Sound\\MOVPIECE.WAV");
 
-            Actions.OnMoveUnitCommand += UnitHasMoved;
+            Actions.OnUnitEvent += UnitEventHappened;
         }
 
-        private static void UnitHasMoved(object sender, MoveUnitCommandEventArgs e)
+        private static void UnitEventHappened(object sender, UnitEventArgs e)
         {
-            if (e.MoveUnit)
-            {
-                MOVPIECE.Play();
-            }
-                
+            if (e.EventType == UnitEventType.MoveCommand && e.Counter == 0) MOVPIECE.Play();
         }
     }
 }

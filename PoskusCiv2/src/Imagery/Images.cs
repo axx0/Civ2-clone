@@ -17,7 +17,7 @@ namespace RTciv2.Imagery
     {
         public static Bitmap CityWallpaper, CityStatusWallpaper, DefenseMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper, ScienceAdvWallpaper, WondersOfWorldWallpaper, 
                              DemographicsWallpaper, MainScreenSymbol, MainScreenSinai, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, 
-                             Shield, ViewingPieces, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, 
+                             Shield, ViewPiece, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, 
                              SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, 
                              CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, 
                              CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, 
@@ -553,9 +553,9 @@ namespace RTciv2.Imagery
 
             SellIconLarge = ModifyImage.ResizeImage(SellIcon, 16, 16);
 
-            ViewingPieces = icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
-            ViewingPieces.MakeTransparent(transparentLightPink);
-            ViewingPieces.MakeTransparent(transparentPink);
+            ViewPiece = icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
+            ViewPiece.MakeTransparent(transparentLightPink);
+            ViewPiece.MakeTransparent(transparentPink);
 
             GridLines = icons.Clone(new Rectangle(183, 430, 64, 32), icons.PixelFormat);
             GridLines.MakeTransparent(transparentLightPink);
@@ -1514,7 +1514,7 @@ namespace RTciv2.Imagery
                             Bitmap _bitmap = new Bitmap(64, 32);
                             using (Graphics g = Graphics.FromImage(_bitmap))
                             {
-                                if (MapPanel.ViewingPiecesMode)
+                                if (MapPanel.ViewPiecesMode)
                                 {
 
                                 }

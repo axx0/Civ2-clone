@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RTciv2.Enums;
 using RTciv2.Imagery;
+using RTciv2.GameActions;
+using RTciv2.Events;
 
 namespace RTciv2.Forms
 {
@@ -17,9 +19,6 @@ namespace RTciv2.Forms
         MenuStrip MainMenuStrip;
         PictureBox MainIcon, SinaiIcon;
         ChoiceMenuPanel ChoiceMenu;
-        //public MapForm MapForm;
-        //public StatusForm statusForm;
-        //public WorldMapForm WorldMapForm;
         MapPanel MapPanel;
         CityForm cityForm;
         MinimapPanel MinimapPanel;
@@ -30,7 +29,9 @@ namespace RTciv2.Forms
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
         ToolStripMenuItem ShowMapGridItem;
-        
+
+        public static event EventHandler<MapEventArgs> OnMapEvent;
+
         public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
         {
             #region INITIAL SETTINGS
@@ -325,6 +326,8 @@ namespace RTciv2.Forms
             MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
             StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
+            StatusPanel.OnMapEvent += MapEventHappened;
+            MapPanel.OnMapEvent += MapEventHappened;
 
             MinimapPanel = new MinimapPanel(262, 149);
             MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
@@ -406,8 +409,22 @@ namespace RTciv2.Forms
             Close(); }
         #endregion
         #region VIEW MENU EVENTS
-        private void MovePieces_Click(object sender, EventArgs e) { }
-        private void ViewPieces_Click(object sender, EventArgs e) { }
+        private void MovePieces_Click(object sender, EventArgs e) 
+        {
+            MapPanel.ViewPiecesMode = false;
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
+            ViewPiecesItem.Enabled = true;
+            MovePiecesItem.Enabled = false;
+        }
+
+        private void ViewPieces_Click(object sender, EventArgs e) 
+        {
+            MapPanel.ViewPiecesMode = true;
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
+            MovePiecesItem.Enabled = true;
+            ViewPiecesItem.Enabled = false;
+        }
+
         private void ShowMapGrid_Click(object sender, EventArgs e) 
         { 
             int var = MapPanel.ToggleMapGrid();
@@ -427,11 +444,15 @@ namespace RTciv2.Forms
         #region ORDERS MENU EVENTS
         private void BuildRoad_Click(object sender, EventArgs e) { }
 
-        private void BuildIrrigation_Click(object sender, EventArgs e) {
-            if (BuildIrrigationItem.Enabled) Actions.GiveOrder(OrderType.BuildIrrigation); }
+        private void BuildIrrigation_Click(object sender, EventArgs e) 
+        {
+            if (BuildIrrigationItem.Enabled) Actions.IssueUnitOrder(OrderType.BuildIrrigation); 
+        }
 
-        private void BuildMinesChangeForest_Click(object sender, EventArgs e) {
-            if (BuildMinesChangeForestItem.Enabled) Actions.GiveOrder(OrderType.BuildMine); }
+        private void BuildMinesChangeForest_Click(object sender, EventArgs e) 
+        {
+            if (BuildMinesChangeForestItem.Enabled) Actions.IssueUnitOrder(OrderType.BuildMine); 
+        }
 
         private void CleanUpPollution_Click(object sender, EventArgs e) { }
         private void Pillage_Click(object sender, EventArgs e) { }
@@ -439,22 +460,22 @@ namespace RTciv2.Forms
 
         private void GoTo_Click(object sender, EventArgs e) 
         {
-            if (GoToItem.Enabled) Actions.GiveOrder(OrderType.GoTo);   //TODO: implement goto
+            if (GoToItem.Enabled) Actions.IssueUnitOrder(OrderType.GoTo);   //TODO: implement goto
         }
 
         private void GoHomeToNearestCity_Click(object sender, EventArgs e) 
         {
-            if (GoHomeToNearestCityItem.Enabled) Actions.GiveOrder(OrderType.GoHome); 
+            if (GoHomeToNearestCityItem.Enabled) Actions.IssueUnitOrder(OrderType.GoHome); 
         }
 
         private void Fortify_Click(object sender, EventArgs e) 
         {
-            if (FortifyItem.Enabled) Actions.GiveOrder(OrderType.Fortify); 
+            if (FortifyItem.Enabled) Actions.IssueUnitOrder(OrderType.Fortify); 
         }
 
         private void Sleep_Click(object sender, EventArgs e) 
         {
-            if (SleepItem.Enabled) Actions.GiveOrder(OrderType.Sleep); 
+            if (SleepItem.Enabled) Actions.IssueUnitOrder(OrderType.Sleep); 
         }
 
         private void Disband_Click(object sender, EventArgs e) { }
@@ -471,19 +492,19 @@ namespace RTciv2.Forms
 
         private void SkipTurn_Click(object sender, EventArgs e) 
         {
-            Actions.GiveOrder(OrderType.SkipTurn); 
+            Actions.IssueUnitOrder(OrderType.SkipTurn); 
         }
 
         private void EndPlayerTurn_Click(object sender, EventArgs e) { }
 
         private void BuildNewCity_Click(object sender, EventArgs e) 
         {
-            if(BuildNewCityItem.Enabled) Actions.GiveOrder(OrderType.BuildCity); 
+            if(BuildNewCityItem.Enabled) Actions.IssueUnitOrder(OrderType.BuildCity); 
         }
 
         private void AutomateSettler_Click(object sender, EventArgs e) 
         {
-            if (AutomateSettlerItem.Enabled) Actions.GiveOrder(OrderType.Automate); 
+            if (AutomateSettlerItem.Enabled) Actions.IssueUnitOrder(OrderType.Automate); 
         }
 
         private void Paradrop_Click(object sender, EventArgs e) { }
@@ -654,5 +675,28 @@ namespace RTciv2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), SinaiIcon.Width - 11, 10, SinaiIcon.Width - 11, SinaiIcon.Height - 11);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, SinaiIcon.Height - 11, SinaiIcon.Width - 11, SinaiIcon.Height - 11); }
         #endregion
+
+        //If view pieces mode is toggled on/off
+        private void MapEventHappened(object sender, MapEventArgs e)
+        {
+            switch (e.EventType)
+            {
+                case MapEventType.SwitchViewMovePieces:
+                    {
+                        if (MapPanel.ViewPiecesMode) 
+                        {
+                            MovePiecesItem.Enabled = true;
+                            ViewPiecesItem.Enabled = false;
+                        }
+                        else
+                        {
+                            MovePiecesItem.Enabled = false;
+                            ViewPiecesItem.Enabled = true;
+                        }
+                        break;
+                    }
+                default: break;
+            }
+        }
     }
 }

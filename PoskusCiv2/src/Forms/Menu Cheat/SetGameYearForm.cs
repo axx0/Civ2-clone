@@ -110,7 +110,7 @@ namespace RTciv2.Forms
             }
             
             Data.TurnNumber = newGameYear;
-            Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
+            //Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             Close();
         }
 

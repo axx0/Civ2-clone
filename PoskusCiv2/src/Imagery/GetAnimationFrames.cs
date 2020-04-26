@@ -10,7 +10,7 @@ using ExtensionMethods;
 
 namespace RTciv2.Imagery
 {
-    public class AnimationFrames
+    public class GetAnimationFrames
     {
 
         //Get animation frames for waiting unit
@@ -80,7 +80,7 @@ namespace RTciv2.Imagery
                                 else
                                 {
                                     //Viewing pieces mode is enabled, so draw last unit on stack
-                                    if (MapPanel.ViewingPiecesMode)
+                                    if (MapPanel.ViewPiecesMode)
                                     {
                                         unit = unitsHere.Last();
                                         if (!unit.IsInCity)
@@ -110,7 +110,7 @@ namespace RTciv2.Imagery
                                 //This tile has active unit/viewing piece
                                 if (x == MapPanel.ActiveXY[0] && y == MapPanel.ActiveXY[1])
                                 {
-                                    if (!MapPanel.ViewingPiecesMode)
+                                    if (!MapPanel.ViewPiecesMode)
                                     {
                                         if (frame == 0) //for first frame draw unit, for second not
                                         {
@@ -147,14 +147,14 @@ namespace RTciv2.Imagery
                         }
                     }
 
-                    //Viewing piece (is drawn on top of everything)
-                    if (MapPanel.ViewingPiecesMode)
-                    {
-                        if (frame == 0)
-                        {
-                            g.DrawImage(Images.ViewingPieces, 0, 16);
-                        }
-                    }
+                    ////Viewing piece (is drawn on top of everything)
+                    //if (MapPanel.ViewingPiecesMode)
+                    //{
+                    //    if (frame == 0)
+                    //    {
+                    //        g.DrawImage(Images.ViewPiece, 0, 16);
+                    //    }
+                    //}
                 }
                 animationFrames.Add(_bitmap);
             }
@@ -254,7 +254,7 @@ namespace RTciv2.Imagery
                             else
                             {
                                 //Viewing pieces mode is enabled, so draw last unit on stack
-                                if (MapPanel.ViewingPiecesMode)
+                                if (MapPanel.ViewPiecesMode)
                                 {
                                     unit = unitsHere.Last();
                                     if (!unit.IsInCity)
@@ -321,40 +321,59 @@ namespace RTciv2.Imagery
                 Bitmap _bitmapWithMovingUnit = new Bitmap(_mainBitmap);
                 using (Graphics g = Graphics.FromImage(_bitmapWithMovingUnit))
                 {
-                    //Viewing piece (is drawn on top of everything)
-                    if (MapPanel.ViewingPiecesMode)
+                    ////Viewing piece (is drawn on top of everything)
+                    //if (MapPanel.ViewingPiecesMode)
+                    //{
+                    //    g.DrawImage(Images.ViewPiece, 64, 48);
+                    //}
+                    ////Draw active unit on top of everything
+                    //else
+                    //{
+                    int[] activeUnitDrawOffset = new int[] { 0, 0 };
+                    switch (Game.Instance.ActiveUnit.LastMove)
                     {
-                        g.DrawImage(Images.ViewingPieces, 64, 48);
+                        case 0: activeUnitDrawOffset = new int[] { 1, -1 }; break;
+                        case 1: activeUnitDrawOffset = new int[] { 2, 0 }; break;
+                        case 2: activeUnitDrawOffset = new int[] { 1, 1 }; break;
+                        case 3: activeUnitDrawOffset = new int[] { 0, 2 }; break;
+                        case 4: activeUnitDrawOffset = new int[] { -1, 1 }; break;
+                        case 5: activeUnitDrawOffset = new int[] { -2, 0 }; break;
+                        case 6: activeUnitDrawOffset = new int[] { -1, -1 }; break;
+                        case 7: activeUnitDrawOffset = new int[] { 0, -2 }; break;
                     }
-                    //Draw active unit on top of everything
-                    else
-                    {
-                        int[] activeUnitDrawOffset = new int[] { 0, 0 };
-                        switch (Game.Instance.ActiveUnit.LastMove)
-                        {
-                            case 0: activeUnitDrawOffset = new int[] { 1, -1 }; break;
-                            case 1: activeUnitDrawOffset = new int[] { 2, 0 }; break;
-                            case 2: activeUnitDrawOffset = new int[] { 1, 1 }; break;
-                            case 3: activeUnitDrawOffset = new int[] { 0, 2 }; break;
-                            case 4: activeUnitDrawOffset = new int[] { -1, 1 }; break;
-                            case 5: activeUnitDrawOffset = new int[] { -2, 0 }; break;
-                            case 6: activeUnitDrawOffset = new int[] { -1, -1 }; break;
-                            case 7: activeUnitDrawOffset = new int[] { 0, -2 }; break;
-                        }
-                        activeUnitDrawOffset[0] *= 32 / noFramesForOneMove * (frame + 1);
-                        activeUnitDrawOffset[1] *= 16 / noFramesForOneMove * (frame + 1);
+                    activeUnitDrawOffset[0] *= 32 / noFramesForOneMove * (frame + 1);
+                    activeUnitDrawOffset[1] *= 16 / noFramesForOneMove * (frame + 1);
 
-                        IUnit unit = Game.Instance.ActiveUnit;
-                        g.DrawImage(
-                            Images.CreateUnitBitmap(unit, false, zoom),
-                            64 + activeUnitDrawOffset[0],
-                            32 + activeUnitDrawOffset[1]);
-                    }
+                    IUnit unit = Game.Instance.ActiveUnit;
+                    g.DrawImage(
+                        Images.CreateUnitBitmap(unit, false, zoom),
+                        64 + activeUnitDrawOffset[0],
+                        32 + activeUnitDrawOffset[1]);
+                    //}
                 }
                 animationFrames.Add(_bitmapWithMovingUnit);
             }
 
             return animationFrames;
         }
+
+        //Get animation frames for view piece
+        //public static List<Bitmap> ViewPiece()
+        //{
+        //    List<Bitmap> animationFrames = new List<Bitmap>();
+        //    for (int frame = 0; frame < 2; frame++)
+        //    {
+        //        Bitmap _mainBitmap = new Bitmap(64, 32);
+        //        using (Graphics g = Graphics.FromImage(_mainBitmap))
+        //        {
+        //            g.DrawImage(Game.WholeMap, 0, 0, 32 * MapPanel.ActiveXY[0], 16 * MapPanel.ActiveXY[0]);
+        //            if (frame == 0)
+        //                g.DrawImage(Images.ViewPiece, 0, 0, 32 * MapPanel.ActiveXY[0], 16 * MapPanel.ActiveXY[0]);
+        //        }
+        //        animationFrames.Add(_mainBitmap);
+        //    }
+        //    return animationFrames;
+        //}
+
     }
 }

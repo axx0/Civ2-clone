@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace RTciv2.Enums
 {
-    public enum AnimationType
+    public enum MapEventType
     {
-        None = 0,
-        UnitWaiting = 1,
-        UnitMoving = 2,
-        ViewPieces = 3
+        SwitchViewMovePieces = 0,
+        MapViewChanged = 1,
+        ViewPieceMoved = 2
     }
 }

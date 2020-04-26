@@ -50,13 +50,11 @@ C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.GameOptionsFor
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.GraphicOptionsForm.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.DemographicsForm.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.WondersOfWorldForm.resources
-C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.StatusForm.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.Civ2form.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.DefenseMinisterForm.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Properties.Resources.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.ScienceAdvisorForm.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.TradeAdvisorForm.resources
-C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.Forms.WorldMapForm.resources
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.csproj.GenerateResource.cache
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.csproj.CopyComplete
 C:\Users\PC\source\repos\rtciv2\PoskusCiv2\obj\Debug\RTciv2.exe

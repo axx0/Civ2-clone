@@ -9,6 +9,7 @@ using RTciv2.Enums;
 using RTciv2.Sounds;
 using RTciv2.Forms;
 using RTciv2.Imagery;
+using RTciv2.Events;
 
 namespace RTciv2.Units
 {
@@ -51,12 +52,51 @@ namespace RTciv2.Units
         public int Counter { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int MovementCounter { get; set; }
 
-        public bool Move(int moveX, int moveY)
+        public bool Move(OrderType movementDirection)
         {
-            int Xto = X + moveX;    //Civ2-style
-            int Yto = Y + moveY;
-            int X_ = (X - Y % 2) / 2;  //real coords
+            //Determine coordinates of movement
+            int Xto = 0;
+            int Yto = 0;
+            switch (movementDirection)
+            {
+                case OrderType.MoveSW:
+                    Xto = X - 1;
+                    Yto = Y + 1;
+                    break;
+                case OrderType.MoveS:
+                    Xto = X + 0;
+                    Yto = Y + 2;
+                    break;
+                case OrderType.MoveSE:
+                    Xto = X + 1;
+                    Yto = Y + 1;
+                    break;
+                case OrderType.MoveE:
+                    Xto = X + 2;
+                    Yto = Y + 0;
+                    break;
+                case OrderType.MoveNE:
+                    Xto = X + 1;
+                    Yto = Y - 1;
+                    break;
+                case OrderType.MoveN:
+                    Xto = X + 0;
+                    Yto = Y - 2;
+                    break;
+                case OrderType.MoveNW:
+                    Xto = X - 1;
+                    Yto = Y - 1;
+                    break;
+                case OrderType.MoveW:
+                    Xto = X - 2;
+                    Yto = Y + 0;
+                    break;
+            }
+
+            //Convert civ2 coords to real coords (for existing & destination square)
+            int X_ = (X - Y % 2) / 2;
             int Xto_ = (Xto - Yto % 2) / 2;
 
             bool unitMoved = false;
@@ -65,8 +105,12 @@ namespace RTciv2.Units
             {
                 case UnitGAS.Ground:
                     {
-                        if (Game.Map[Xto_, Yto].Type == TerrainType.Ocean) break;
-
+                        //Cannot move to ocean tile
+                        if (Game.Map[Xto_, Yto].Type == TerrainType.Ocean)
+                        { 
+                            break; 
+                        }
+                        
                         //Cannot move beyond map edge
                         if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) 
                         { 
@@ -74,21 +118,33 @@ namespace RTciv2.Units
                             break; 
                         }
 
+                        //Movement possible, reduce movement points
                         if ((Game.Map[X_, Y].Road || Game.Map[X_, Y].CityPresent) && (Game.Map[Xto_, Yto].Road || Game.Map[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
-                            (Game.Map[X_, Y].River && Game.Map[Xto_, Yto].River && moveX < 2 && moveY < 2))    //For rivers only for diagonal movement
+                            (Game.Map[X_, Y].River && Game.Map[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        {
                             MovePoints -= 1;
+                        }
                         else
+                        {
                             MovePoints -= 3;
+                        }
 
                         unitMoved = true;
                         break;
                     }
                 case UnitGAS.Sea:
                     {
-                        if (Game.Map[Xto_, Yto].Type != TerrainType.Ocean) break;
+                        if (Game.Map[Xto_, Yto].Type != TerrainType.Ocean)
+                        { 
+                            break; 
+                        }
 
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) break;
+                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) 
+                        {
+                            //TODO: display a message that a unit cannot move beyond map edges
+                            break;
+                        }
 
                         MovePoints -= 3;
 
@@ -98,7 +154,10 @@ namespace RTciv2.Units
                 case UnitGAS.Air:
                     {
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) break;
+                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim)
+                        {
+                            break;
+                        }
 
                         MovePoints -= 3;
 
@@ -107,21 +166,21 @@ namespace RTciv2.Units
                     }
             }
 
-            //If unit moved, update its X-Y coords, map & play sound
+            //If unit moved, update its X-Y coords
             if (unitMoved)
             {
                 //set previous coords
                 LastXY = new int[] { X, Y };
 
                 //set last move for unit
-                if (moveX == 1 && moveY == -1)          LastMove = 0;
-                else if (moveX == 2 && moveY == 0)      LastMove = 1;
-                else if (moveX == 1 && moveY == 1)      LastMove = 2;
-                else if (moveX == 0 && moveY == 2)      LastMove = 3;
-                else if (moveX == -1 && moveY == 1)     LastMove = 4;
-                else if (moveX == -2 && moveY == 0)     LastMove = 5;
-                else if (moveX == -1 && moveY == -1)    LastMove = 6;
-                else if (moveX == 0 && moveY == -2)     LastMove = 7;
+                if (movementDirection == OrderType.MoveNE) LastMove = 0;
+                else if (movementDirection == OrderType.MoveE) LastMove = 1;
+                else if (movementDirection == OrderType.MoveSE) LastMove = 2;
+                else if (movementDirection == OrderType.MoveS) LastMove = 3;
+                else if (movementDirection == OrderType.MoveSW) LastMove = 4;
+                else if (movementDirection == OrderType.MoveW) LastMove = 5;
+                else if (movementDirection == OrderType.MoveNW) LastMove = 6;
+                else if (movementDirection == OrderType.MoveN) LastMove = 7;
 
                 //set new coords
                 X = Xto;

@@ -271,7 +271,7 @@ namespace RTciv2.Forms
 
             //Game.CreateUnit((UnitType)ChosenUnit, x, y, false, true, false, IsVeteran, Game.Civs[Game.Data.HumanPlayerUsed].Id, 0, 0, 0, 0, OrderType.NoOrders, 0, 0, 0, 0, 0);
             //Application.OpenForms.OfType<MapForm>().First().RefreshMapForm();
-            Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
+            //Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             Close();
         }
 

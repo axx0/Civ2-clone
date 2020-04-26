@@ -195,6 +195,7 @@ namespace RTciv2.Forms
         private void ImprovementsBarValueChanged(object sender, EventArgs e)
         {
             WallpaperPanel.Invalidate();
+            Update();
         }
 
         private void CityForm_Load(object sender, EventArgs e)

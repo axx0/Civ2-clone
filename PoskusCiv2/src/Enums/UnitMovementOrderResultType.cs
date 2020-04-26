@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RTciv2.Events
+namespace RTciv2.Enums
 {
-    public class NewUnitChosenEventArgs : EventArgs
+    public enum UnitMovementOrderResultType
     {
-        public NewUnitChosenEventArgs()
-        {
-        }
+        Movement = 0,
+        AttackUnit = 1,
+        AttackCity = 2
     }
 }

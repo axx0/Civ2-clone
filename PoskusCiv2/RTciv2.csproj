@@ -67,12 +67,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\Enums\AnimationType.cs" />
+    <Compile Include="src\Enums\PlayerEventType.cs" />
+    <Compile Include="src\Enums\MapEventType.cs" />
+    <Compile Include="src\Enums\UnitMovementOrderResultType.cs" />
     <Compile Include="src\Enums\PeopleType.cs" />
-    <Compile Include="src\Events\UnitCompletedMovementEventArgs.cs" />
+    <Compile Include="src\Enums\UnitEventType.cs" />
+    <Compile Include="src\Events\MapEventArgs.cs" />
+    <Compile Include="src\Events\PlayerEventArgs.cs" />
+    <Compile Include="src\Events\UnitEventArgs.cs" />
     <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Actions.cs" />
+    <Compile Include="src\GameActions\Actions.cs" />
     <Compile Include="src\City.cs" />
     <Compile Include="src\Civilization.cs" />
     <Compile Include="src\BaseInstance.cs" />
@@ -90,8 +96,6 @@
     <Compile Include="src\Events\CheckIfCityCanBeViewedEventArgs.cs" />
     <Compile Include="src\Events\WaitAtTurnEndEventArgs.cs" />
     <Compile Include="src\Events\NewPlayerTurnEventArgs.cs" />
-    <Compile Include="src\Events\NewUnitChosenEventArgs.cs" />
-    <Compile Include="src\Events\MoveUnitCommandEventArgs.cs" />
     <Compile Include="src\Forms\ChoiceMenuPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -212,12 +216,6 @@
     <Compile Include="src\Forms\NameCityPanel.Designer.cs">
       <DependentUpon>NameCityPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\StatusForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\StatusForm.Designer.cs">
-      <DependentUpon>StatusForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Forms\Templates\Civ2button.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -256,14 +254,8 @@
     <Compile Include="src\Forms\Templates\TransparentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Forms\WorldMapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\WorldMapForm.Designer.cs">
-      <DependentUpon>WorldMapForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Game.cs" />
-    <Compile Include="src\Imagery\AnimationFrames.cs" />
+    <Compile Include="src\Imagery\GetAnimationFrames.cs" />
     <Compile Include="src\HelpConsole.cs" />
     <Compile Include="src\Imagery\CivColors.cs" />
     <Compile Include="src\Imagery\DrawFunctions.cs" />
@@ -333,9 +325,6 @@
     <EmbeddedResource Include="src\Forms\Menu World\WondersOfWorldForm.resx">
       <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\StatusForm.resx">
-      <DependentUpon>StatusForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Templates\Civ2form.resx">
       <DependentUpon>Civ2form.cs</DependentUpon>
     </EmbeddedResource>
@@ -358,9 +347,6 @@
     <EmbeddedResource Include="src\Forms\Menu Advisors\TradeAdvisorForm.resx">
       <DependentUpon>TradeAdvisorForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\WorldMapForm.resx">
-      <DependentUpon>WorldMapForm.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -376,6 +362,7 @@
     <Compile Include="src\Forms\MainCiv2Window.KeyPressActions.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="src\GameActions\Actions.Units.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -399,6 +386,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MinimapCursor.cur" />
     <Content Include="notes.txt" />
     <Content Include="Resources\CITIES.GIF" />
     <Content Include="Resources\CITY.GIF" />

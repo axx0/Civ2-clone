@@ -10,6 +10,7 @@ using RTciv2.Events;
 using RTciv2.Imagery;
 using RTciv2.Units;
 using RTciv2.Enums;
+using RTciv2.GameActions;
 
 namespace RTciv2.Forms
 {
@@ -18,33 +19,32 @@ namespace RTciv2.Forms
         private static DoubleBufferedPanel DrawPanel;
         StringFormat sf = new StringFormat();
 
-        private List<Bitmap> AnimationBitmap;        
+        private static List<Bitmap> AnimationBitmap;        
         private int MapGridVar { get; set; }    //style of map grid presentation
-        public static bool UnitMoved { get; set; }
         private System.Windows.Forms.Timer Timer;    //timer for blinking (unit or viewing piece), moving unit, etc.
-        private AnimationType AnimType;
-        int TimerCounter;
+        private static AnimationType AnimType;
+        int TimerCounter 
+        { 
+            get; 
+            set; 
+        }
         Label HelpLabel;
 
-        Stopwatch sw1 = new Stopwatch();
-        //Stopwatch sw3 = new Stopwatch();
-        long t_prev, t_now;
-
-        public delegate void MapViewChanged();
-        public static event MapViewChanged MapViewChangedEvent;
-        public static event EventHandler<UnitCompletedMovementEventArgs> OnUnitCompletedMovement;
+        public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public MapPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
 
-            Actions.OnMoveUnitCommand += MoveUnitCommand;
-            Actions.OnNewPlayerTurn += NewPlayerTurn;
-            Actions.OnNewUnitChosen += NewUnitWasChosen;
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
+            Actions.OnUnitEvent += UnitEventHappened;
+            Actions.OnPlayerEvent += PlayerEventHappened;
+            MinimapPanel.OnMapEvent += MapEventHappened;
+            StatusPanel.OnMapEvent += MapEventHappened;
+            MainCiv2Window.OnMapEvent += MapEventHappened;
             MainCiv2Window.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
-
+            
             DrawPanel = new DoubleBufferedPanel() 
             {
                 Location = new Point(11, 38),
@@ -80,11 +80,10 @@ namespace RTciv2.Forms
             //Initialize variables
             ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
             MapGridVar = 0;
-            ViewingPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
+            ViewPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
             ClickedXY = Data.ClickedXY;
             ActiveXY = Data.ActiveXY;
             CenterSqXY = ActiveXY;
-            UnitMoved = false;
             //TODO: Implement zoom
 
             //Uncomment this for help in drawing-logic
@@ -104,16 +103,6 @@ namespace RTciv2.Forms
             Timer = new System.Windows.Forms.Timer();
             Timer.Tick += new EventHandler(Timer_Tick);
             StartAnimation(AnimationType.UnitWaiting);
-            t_prev = 0;
-            t_now = 0;
-
-            //Timer3 = new System.Timers.Timer(200);
-            //Timer3.Elapsed += OnTimedEvent;
-            //Timer3.Enabled = true;
-
-            //sw2.Start();
-            //sw3.Start();
-            //cas = 0;
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -154,6 +143,8 @@ namespace RTciv2.Forms
             //Unit/viewing piece static
             switch (AnimType)
             {
+                case AnimationType.None:
+                    break;
                 case AnimationType.UnitWaiting:
                     {
                         IUnit unit = Game.Instance.ActiveUnit;
@@ -163,7 +154,12 @@ namespace RTciv2.Forms
                 case AnimationType.UnitMoving:
                     {
                         IUnit unit = Game.Instance.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter], (unit.LastXY[0] - startingSqXY[0]) * 32 - 64, (unit.LastXY[1] - startingSqXY[1]) * 16 - 48);
+                        e.Graphics.DrawImage(AnimationBitmap[Game.Instance.ActiveUnit.MovementCounter], (unit.LastXY[0] - startingSqXY[0]) * 32 - 64, (unit.LastXY[1] - startingSqXY[1]) * 16 - 48);
+                        break;
+                    }
+                case AnimationType.ViewPieces:
+                    {
+                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
                         break;
                     }
             }
@@ -180,7 +176,7 @@ namespace RTciv2.Forms
             {
                 if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
                 {
-                    if (ViewingPiecesMode) ActiveXY = ClickedXY;
+                    if (ViewPiecesMode) ActiveXY = ClickedXY;
                     CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
                     cityForm.Show();
                 }
@@ -190,7 +186,9 @@ namespace RTciv2.Forms
                     if (!Game.Units[clickedUnitIndex].TurnEnded)
                     {
                         Game.Instance.ActiveUnit = Game.Units[clickedUnitIndex];
-                        ViewingPiecesMode = false;
+                        ViewPiecesMode = false;
+                        OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
+                        StartAnimation(AnimationType.UnitWaiting);
                     }
                     else
                     {
@@ -200,15 +198,17 @@ namespace RTciv2.Forms
                 }
                 else    //something else clicked
                 {
-                    if (ViewingPiecesMode) ActiveXY = ClickedXY;
+                    if (ViewPiecesMode) ActiveXY = ClickedXY;
                     MapViewChange(ClickedXY);
                 }
             }
             else    //right click
             {
-                ViewingPiecesMode = true;
+                ViewPiecesMode = true;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
                 ActiveXY = ClickedXY;
                 MapViewChange(ClickedXY);
+                StartAnimation(AnimationType.ViewPieces);                
             }
         }
 
@@ -216,7 +216,7 @@ namespace RTciv2.Forms
         {
             CenterSqXY = newCenterCoords;
 
-            MapViewChangedEvent?.Invoke();  //send dimensions of current view
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));    
 
             DrawPanel.Refresh();
         }
@@ -340,7 +340,7 @@ namespace RTciv2.Forms
         {
             get
             {
-                if (!ViewingPiecesMode && Game.Instance.ActiveUnit != null)
+                if (!ViewPiecesMode && Game.Instance.ActiveUnit != null)
                     _activeXY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y };
                 return _activeXY;
             }
@@ -349,7 +349,7 @@ namespace RTciv2.Forms
 
         private int[] ClickedXY { get; set; } //tile currently clicked
 
-        public static bool ViewingPiecesMode { get; set; }
+        public static bool ViewPiecesMode { get; set; }
 
         public int ToggleMapGrid()
         {
@@ -380,82 +380,79 @@ namespace RTciv2.Forms
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            //Measure elapsed time between ticks
-            t_now = sw1.ElapsedMilliseconds;
-            Console.WriteLine($"elapsed between ticks={t_now - t_prev} ms, count={TimerCounter}");
-            t_prev = t_now;
-
-            int[] startingSqXY = StartingSqXY;
-            int[] activeXY = ActiveXY;
-            
-            switch (AnimType)
-            {
-                case AnimationType.UnitWaiting:
-                    {
-                        //At new unit turn initially re-draw the whole map
-                        if (TimerCounter == 0)
-                        {
-                            DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
-                        }
-                        DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32, (activeXY[1] - startingSqXY[1]) * 16 - 16, 64, 48));
-                        break;
-                    }
-                case AnimationType.UnitMoving:
-                    {
-                        DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32 - 64, (activeXY[1] - startingSqXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
-                        if (TimerCounter == 7)  //Unit has completed movement
-                        {
-                            //Update the original world map image with image of new location of unit
-                            IUnit unit = Game.Instance.ActiveUnit;
-                            Game.WholeMap = ModifyImage.MergedBitmaps(Game.WholeMap, AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
-                            StartAnimation(AnimationType.UnitWaiting);
-
-                            //Check if unit moved outside map view -> map view needs to be updated
-                            CheckIfUnitMovedOutsideMapView();
-
-                            //Trigger an event that unit completed movement
-                            OnUnitCompletedMovement?.Invoke(null, new UnitCompletedMovementEventArgs());
-                        }
-                        break;
-                    }
-            }
-            
+            DrawAnimation();
             TimerCounter++;
         }
 
-        private void OnTimedEvent(object sender, ElapsedEventArgs e)
+        private void MapEventHappened(object sender, MapEventArgs e)
         {
-            Console.WriteLine("The Elapsed event was raised at {0:HH:mm:ss.fff}", e.SignalTime);
-            DrawPanel.Refresh();
-        }
-
-        private void MoveUnitCommand(object sender, MoveUnitCommandEventArgs e)
-        {
-            if (e.MoveUnit) 
-            { 
-                StartAnimation(AnimationType.UnitMoving); 
+            switch (e.EventType)
+            {
+                case MapEventType.MapViewChanged:
+                    {
+                        MapViewChange(e.CenterSqXY);
+                        break;
+                    }
+                case MapEventType.SwitchViewMovePieces:
+                    {
+                        if (ViewPiecesMode) StartAnimation(AnimationType.ViewPieces);
+                        else StartAnimation(AnimationType.UnitWaiting);
+                        break;
+                    }
+                case MapEventType.ViewPieceMoved:
+                    {
+                        StartAnimation(AnimationType.ViewPieces);
+                        break;
+                    }
+                default: break;
             }
-            
         }
 
-        private void NewPlayerTurn(object sender, NewPlayerTurnEventArgs e)
+        private void PlayerEventHappened(object sender, PlayerEventArgs e)
         {
-            if (Game.Instance.ActiveUnit != null) ViewingPiecesMode = false;
-            Timer.Stop();
-            TimerCounter = 0;
-            Timer.Start();
+            switch (e.EventType)
+            {
+                case PlayerEventType.NewTurn:
+                    {
+                        if (Game.Instance.ActiveUnit != null) ViewPiecesMode = false;
+                        Timer.Stop();
+                        TimerCounter = 0;
+                        Timer.Start();
+                        break;
+                    }
+            }
         }
 
-        private void NewUnitWasChosen(object sender, NewUnitChosenEventArgs e)
+        private void UnitEventHappened(object sender, UnitEventArgs e)
         {
-            ActiveXY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y };
-            CenterSqXY = ActiveXY;
-            StartAnimation(AnimationType.UnitWaiting);
+            switch (e.EventType)
+            {
+                //Unit movement animation event was raised
+                case UnitEventType.MoveCommand:
+                    {
+                        TimerCounter = Game.Instance.ActiveUnit.MovementCounter;
+                        if (TimerCounter == 0) StartAnimation(AnimationType.UnitMoving);
+                        DrawAnimation();
+                        break;
+                    }
+                case UnitEventType.StatusUpdate:
+                    {
+                        StartAnimation(AnimationType.UnitWaiting);
+                        break;
+                    }
+                case UnitEventType.NewUnitActivated:
+                    {
+                        ActiveXY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y };
+                        CenterSqXY = ActiveXY;
+                        StartAnimation(AnimationType.UnitWaiting);
+                        break;
+                    }
+            }
         }
 
         private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
         {
-            ViewingPiecesMode = true;
+            ViewPiecesMode = true;
             Timer.Stop();
             TimerCounter = 0;
             Timer.Start();
@@ -470,13 +467,14 @@ namespace RTciv2.Forms
             {
                 CenterSqXY = ActiveXY;
                 DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
+                Update();
             }
         }
 
         //If ENTER pressed when view piece above city --> enter city view
         private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
         {
-            if (ViewingPiecesMode && Game.Cities.Any(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]))
+            if (ViewPiecesMode && Game.Cities.Any(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]))
             {
                 CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
                 cityForm.Show();
@@ -487,23 +485,81 @@ namespace RTciv2.Forms
         {
             switch (anim)
             {
+                case AnimationType.None:
+                    Timer.Stop();
+                    TimerCounter = 0;
+                    break; 
                 case AnimationType.UnitWaiting:
                     AnimType = AnimationType.UnitWaiting;
                     Timer.Stop();
-                    AnimationBitmap = AnimationFrames.UnitWaiting();
+                    AnimationBitmap = GetAnimationFrames.UnitWaiting();
                     TimerCounter = 0;
                     Timer.Interval = 200;    //ms                    
                     Timer.Start();
                     break;
                 case AnimationType.UnitMoving:
                     AnimType = AnimationType.UnitMoving;
+                    AnimationBitmap = GetAnimationFrames.UnitMoving();
+                    break;
+                case AnimationType.ViewPieces:
+                    AnimType = AnimationType.ViewPieces;
                     Timer.Stop();
-                    AnimationBitmap = AnimationFrames.UnitMoving();
                     TimerCounter = 0;
-                    Timer.Interval = 25;    //ms
+                    Timer.Interval = 200;    //ms                    
                     Timer.Start();
                     break;
             }            
+        }
+
+        private void DrawAnimation()
+        {
+            int[] startingSqXY = StartingSqXY;
+            int[] activeXY = ActiveXY;
+
+            switch (AnimType)
+            {
+                case AnimationType.UnitWaiting:
+                    {
+                        //At new unit turn initially re-draw the whole map
+                        if (TimerCounter == 0)
+                            DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
+                        else
+                            DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32, (activeXY[1] - startingSqXY[1]) * 16 - 16, 64, 48));
+                        Update();
+                        break;
+                    }
+                case AnimationType.UnitMoving:
+                    {
+                        DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32 - 64, (activeXY[1] - startingSqXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
+                        Update();
+                        if (TimerCounter == 7)  //Unit has completed movement
+                        {
+                            //Update the original world map image with image of new location of unit & redraw whole map
+                            IUnit unit = Game.Instance.ActiveUnit;
+                            Game.WholeMap = ModifyImage.MergedBitmaps(Game.WholeMap, AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
+                            DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
+                            Update();
+
+                            //Then stop animation
+                            StartAnimation(AnimationType.None);
+
+                            //Check if unit moved outside map view -> map view needs to be updated
+                            CheckIfUnitMovedOutsideMapView();
+                        }
+                        break;
+                    }
+                case AnimationType.ViewPieces:
+                    {
+                        //At new unit turn initially re-draw the whole map
+                        if (TimerCounter == 0)
+                            DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
+                        else
+                            DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32, (activeXY[1] - startingSqXY[1]) * 16, 64, 32));
+                        Update();
+                        break;
+                    }
+
+            }
         }
     }
 }

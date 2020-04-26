@@ -33,6 +33,7 @@ namespace RTciv2.Units
         OrderType Order { get; set; }
         int X { get; set; }
         int Y { get; set; }
+        int MovementCounter { get; set; }
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
@@ -50,7 +51,7 @@ namespace RTciv2.Units
         void BuildRoad();
         void BuildMines();
         void BuildIrrigation();
-        bool Move(int moveX, int moveY);
+        bool Move(OrderType movementDirection);
         void SkipTurn();
         void Fortify();
         void Transform();

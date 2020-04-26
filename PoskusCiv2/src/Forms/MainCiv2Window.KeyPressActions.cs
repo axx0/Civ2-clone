@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RTciv2.Enums;
 using RTciv2.Events;
+using RTciv2.GameActions;
 
 namespace RTciv2.Forms
 {
@@ -17,66 +18,161 @@ namespace RTciv2.Forms
         {
             switch (keyData)
             {
-                case Keys.NumPad1:  
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveSW); 
-                    break;
+                case Keys.NumPad1:
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveSW);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[0] -= 1;
+                            MapPanel.ActiveXY[1] += 1;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.Down:
                 case Keys.NumPad2:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveS); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveS);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[1] += 2;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.NumPad3:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveSE); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveSE);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[0] += 1;
+                            MapPanel.ActiveXY[1] += 1;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.Left:
                 case Keys.NumPad4:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveW); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveW);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[0] -= 2;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.Right:
                 case Keys.NumPad6:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveE); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveE);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[0] += 2;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.NumPad7:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveNW); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveNW);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[0] -= 1;
+                            MapPanel.ActiveXY[1] -= 1;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.Up:
                 case Keys.NumPad8:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveN); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveN);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[1] -= 2;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.NumPad9:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.MoveNE); 
-                    break;
+                    {
+                        if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0)
+                        {
+                            Actions.IssueUnitOrder(OrderType.MoveNE);
+                        }
+                        else if (MapPanel.ViewPiecesMode)
+                        {
+                            MapPanel.ActiveXY[0] += 1;
+                            MapPanel.ActiveXY[1] -= 1;
+                            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
+                        }
+                        break;
+                    }
                 case Keys.B:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildCity); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.BuildCity); 
                     break;
                 case Keys.F:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Fortify); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.Fortify); 
                     break;
                 case Keys.G:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.GoTo); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.GoTo); 
                     break;
                 case Keys.H:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.GoHome); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.GoHome); 
                     break;
                 case Keys.I:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildIrrigation); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.BuildIrrigation); 
                     break;
                 case Keys.K:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Automate); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.Automate); 
                     break;
                 case Keys.M:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildMine); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.BuildMine); 
                     break;
                 case Keys.O:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Transform); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.Transform); 
                     break;
                 case Keys.P:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.CleanPollution); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.CleanPollution); 
                     break;
                 case Keys.R:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.BuildRoad); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.BuildRoad); 
                     break;
                 case Keys.S:
-                    if (!MapPanel.ViewingPiecesMode && Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.Sleep); 
+                    if (!MapPanel.ViewPiecesMode && Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.Sleep); 
                     break;
                 case Keys.Enter:
                     if (Options.AlwaysWaitAtEndOfTurn && !Actions.AnyUnitsAwaitingOrders(Data.HumanPlayer))
@@ -85,7 +181,8 @@ namespace RTciv2.Forms
                         OnCheckIfCityCanBeViewed?.Invoke(null, new CheckIfCityCanBeViewedEventArgs());  //if enter pressed when view piece above city --> enter city view
                     break;
                 case Keys.Space:
-                    if (Game.Instance.ActiveUnit != null) Actions.GiveOrder(OrderType.SkipTurn);
+                    if (Game.Instance.ActiveUnit != null && Game.Instance.ActiveUnit.MovementCounter == 0) 
+                        Actions.IssueUnitOrder(OrderType.SkipTurn);
                     break;
                 case Keys.W:
                     if (Game.Instance.ActiveUnit != null) Actions.ChooseNextUnit();

@@ -9,6 +9,8 @@ using System.Globalization;
 using RTciv2.Imagery;
 using RTciv2.Units;
 using RTciv2.Events;
+using RTciv2.GameActions;
+using RTciv2.Enums;
 
 namespace RTciv2.Forms
 {
@@ -16,18 +18,19 @@ namespace RTciv2.Forms
     {
         DoubleBufferedPanel StatsPanel, UnitPanel;
         private Timer Timer = new Timer();
-
         private bool WaitingAtEndOfTurn { get; set; }
+
+        public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public StatusPanel(int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(StatusPanel_Paint);
-            MapPanel.MapViewChangedEvent += ViewChangedInMapPanel;
-            Actions.OnMoveUnitCommand += UnitMoveCommand;
-            Actions.OnNewPlayerTurn += NewPlayerTurn;
-            Actions.OnNewUnitChosen += NewUnitChosen;
+            MapPanel.OnMapEvent += MapEventHappened;
+            MainCiv2Window.OnMapEvent += MapEventHappened;
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
+            Actions.OnPlayerEvent += PlayerEventHappened;
+            Actions.OnUnitEvent += UnitEventHappened;
 
             StatsPanel = new DoubleBufferedPanel()
             {
@@ -99,7 +102,7 @@ namespace RTciv2.Forms
         }
 
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
-        {
+            {
             StringFormat sf = new StringFormat();
             //sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
@@ -111,7 +114,7 @@ namespace RTciv2.Forms
                 UnitsOnThisTile.Add(unit);
             int maxUnitsToDraw = (int)Math.Floor((double)((UnitPanel.Height - 66) / 56));
 
-            if (MapPanel.ViewingPiecesMode)
+            if (MapPanel.ViewPiecesMode)
             {
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
@@ -162,8 +165,9 @@ namespace RTciv2.Forms
                             e.Graphics.DrawString($"Moves: {fullMovPts} {remMovPts}/3", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
                             e.Graphics.DrawString($"Moves: {fullMovPts} {remMovPts}/3", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
                         }
-                        e.Graphics.DrawString(Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 44);
-                        e.Graphics.DrawString(Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
+                        string cityName = (Game.Instance.ActiveUnit.HomeCity == 255) ? "NONE" : Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name;
+                        e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 44);
+                        e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
                         e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
                         e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
                         e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
@@ -201,11 +205,6 @@ namespace RTciv2.Forms
             font.Dispose();
         }
 
-        private void ViewChangedInMapPanel()
-        {
-            UnitPanel.Refresh();
-        }
-
         private void Panel_Click(object sender, MouseEventArgs e)
         {
             if (WaitingAtEndOfTurn)
@@ -215,26 +214,62 @@ namespace RTciv2.Forms
             }
             else
             {
-                MapPanel.ViewingPiecesMode = !MapPanel.ViewingPiecesMode;
+                MapPanel.ViewPiecesMode = !MapPanel.ViewPiecesMode;
                 UnitPanel.Refresh();
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
             }
         }
 
-        private void UnitMoveCommand(object sender, MoveUnitCommandEventArgs e)
+        private void MapEventHappened(object sender, MapEventArgs e)
         {
-            if (e.MoveUnit) UnitPanel.Refresh();
+            switch (e.EventType)
+            {
+                case MapEventType.MapViewChanged:
+                    {
+                        UnitPanel.Refresh();
+                        break;
+                    }
+                default: break;
+            }
         }
 
-        private void NewPlayerTurn(object sender, NewPlayerTurnEventArgs e)
+        private void PlayerEventHappened(object sender, PlayerEventArgs e)
         {
-            WaitingAtEndOfTurn = false;
-            StatsPanel.Refresh();
-            UnitPanel.Refresh();
+            switch (e.EventType)
+            {
+                case PlayerEventType.NewTurn:
+                    {
+                        WaitingAtEndOfTurn = false;
+                        StatsPanel.Refresh();
+                        UnitPanel.Refresh();
+                        break;
+                    }
+                default: break;
+            }
         }
 
-        private void NewUnitChosen(object sender, NewUnitChosenEventArgs e)
+        private void UnitEventHappened(object sender, UnitEventArgs e)
         {
-            UnitPanel.Refresh();
+            switch (e.EventType)
+            {
+                //Unit movement animation event was raised
+                case UnitEventType.MoveCommand:
+                    {
+                        break;
+                    }
+                case UnitEventType.StatusUpdate:
+                    {
+                        UnitPanel.Refresh();
+                        break;
+                    }
+                case UnitEventType.NewUnitActivated:
+                    {
+                        UnitPanel.Refresh();
+                        break;
+                    }
+                default:
+                    break;
+            }
         }
 
         private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
