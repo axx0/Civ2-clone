@@ -338,7 +338,7 @@ namespace RTciv2
             Data.MapLocatorYdim = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //Initialize Terrain array now that you know its size
-            Map = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
+            TerrainTile = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
 
             //block 1 - terrain improvements (for individual civs)
             int ofsetB1 = ofset + 14; //offset for block 2 values
@@ -384,24 +384,27 @@ namespace RTciv2
 
                 // Tile improvements (for all civs! In block 1 it's for indivudual civs)
                 int tile_improv = dataArray[ofsetB2 + i * 6 + 1];
-                bool unit_present = false, city_present = false, irrigation = false, mining = false, road = false, railroad = false, fortress = false, pollution = false, farmland = false, airbase = false;
                 bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
-                if (bin[7] == '1')                  unit_present = true;
-                if (bin[6] == '1')                  city_present = true;
-                if (bin[5] == '1')                  irrigation = true;
-                if (bin[4] == '1')                  mining = true;
-                if (bin[3] == '1')                  road = true;
-                if (bin[2] == '1' && bin[3] == '1') railroad = true;
-                if (bin[1] == '1')                  fortress = true;
-                if (bin[0] == '1')                  pollution = true;
-                if (bin[4] == '1' && bin[5] == '1') farmland = true;
-                if (bin[1] == '1' && bin[6] == '1') airbase = true;
+                bool unit_present = (bin[7] == '1') ? true : false;
+                bool city_present = (bin[6] == '1') ? true : false;
+                bool irrigation = (bin[5] == '1') ? true : false;
+                bool mining = (bin[4] == '1') ? true : false;
+                bool road = (bin[3] == '1') ? true : false;
+                bool railroad = (bin[2] == '1' && bin[3] == '1') ? true : false;
+                bool fortress = (bin[1] == '1') ? true : false;
+                bool pollution = (bin[0] == '1') ? true : false;
+                bool farmland = (bin[4] == '1' && bin[5] == '1') ? true : false;
+                bool airbase = (bin[1] == '1' && bin[6] == '1') ? true : false;
                 
                 int intValueB23 = dataArray[ofsetB2 + i * 6 + 2];       //City radius (TO-DO)
                 
                 int terrain_island = dataArray[ofsetB2 + i * 6 + 3];    //Island counter
                 
-                int intValueB25 = dataArray[ofsetB2 + i * 6 + 4];       //Visibility (TO-DO)
+                //Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
+                int intValueB25 = dataArray[ofsetB2 + i * 6 + 4];
+                bool[] visibility = new bool[8];
+                bin = Convert.ToString(intValueB25, 2).PadLeft(8, '0');
+                for (int civ = 0; civ < 8; civ++) visibility[civ] = (bin[7 - civ] == '1') ? true : false;
 
                 int intValueB26 = dataArray[ofsetB2 + i * 6 + 5];       //?
 
@@ -410,7 +413,7 @@ namespace RTciv2
                 //SAV file doesn't tell where special resources are, so you have to determine this yourself
                 int specialtype = ReturnSpecial(x, y, type, Data.MapXdim, Data.MapYdim);
 
-                CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, bin);
+                CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, visibility, bin);
 
             }
             //block 3 - locator map
@@ -695,7 +698,7 @@ namespace RTciv2
                 else    //even lines
                     special = ((col + 4 - (row % 8) / 2) % 4 == 2 || (col + 4 - (row % 8) / 2) % 4 == 3) ? 1 : 0;
 
-                //if (Game.Map[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
+                //if (Game.TerrainTile[col, row].Special == 1) { graphics.DrawImage(Images.Shield, 0, 0); }
             }
 
             //Special Resources (not grassland)

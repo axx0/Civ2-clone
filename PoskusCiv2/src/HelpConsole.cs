@@ -70,13 +70,13 @@ namespace RTciv2
                         //List for all civs
                         int count = 0;
                         foreach(IUnit unit in Game.Units)
-                            Console.WriteLine($"#{count++} {unit.Type}, XY=({unit.X},{unit.Y}), {Game.Civs[unit.Civ].TribeName}");
+                            Console.WriteLine($"#{count++} {unit.Type}, XY=({unit.X},{unit.Y}), {Game.Civs[unit.CivId].TribeName}");
                         Console.WriteLine();
                         //List for specific civs
                         foreach(Civilization civ in Game.Civs)
                         {
                             Console.WriteLine($"{civ.TribeName}");
-                            foreach (IUnit unit in Game.Units.Where(n => Game.Civs[n.Civ].TribeName == civ.TribeName))
+                            foreach (IUnit unit in Game.Units.Where(n => Game.Civs[n.CivId].TribeName == civ.TribeName))
                             {
                                 int id = Game.Units.FindIndex(n => n == unit);
                                 string active;

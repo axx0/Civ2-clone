@@ -37,7 +37,7 @@ namespace RTciv2.Units
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
-        int Civ { get; set; }
+        int CivId { get; set; }
         int LastMove { get; set; }
         int CaravanCommodity { get; set; }
         int HomeCity { get; set; }

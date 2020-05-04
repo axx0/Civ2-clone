@@ -138,7 +138,7 @@ namespace RTciv2.Forms
             int zoomLvl = ZoomLvl;
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
-            e.Graphics.DrawImage(Game.WholeMap, 0, 0, rect, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(Game.CivsMap[Game.Instance.ActiveCiv.Id], 0, 0, rect, GraphicsUnit.Pixel);
 
             //Unit/viewing piece static
             switch (AnimType)
@@ -536,7 +536,7 @@ namespace RTciv2.Forms
                         {
                             //Update the original world map image with image of new location of unit & redraw whole map
                             IUnit unit = Game.Instance.ActiveUnit;
-                            Game.WholeMap = ModifyImage.MergedBitmaps(Game.WholeMap, AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
+                            Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                             Update();
 

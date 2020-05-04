@@ -40,7 +40,7 @@ namespace RTciv2.Units
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
-        public int Civ { get; set; }
+        public int CivId { get; set; }
 
         public int LastMove { get; set; }
         public int CaravanCommodity { get; set; }
@@ -106,7 +106,7 @@ namespace RTciv2.Units
                 case UnitGAS.Ground:
                     {
                         //Cannot move to ocean tile
-                        if (Game.Map[Xto_, Yto].Type == TerrainType.Ocean)
+                        if (Game.TerrainTile[Xto_, Yto].Type == TerrainType.Ocean)
                         { 
                             break; 
                         }
@@ -119,8 +119,8 @@ namespace RTciv2.Units
                         }
 
                         //Movement possible, reduce movement points
-                        if ((Game.Map[X_, Y].Road || Game.Map[X_, Y].CityPresent) && (Game.Map[Xto_, Yto].Road || Game.Map[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
-                            (Game.Map[X_, Y].River && Game.Map[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        if ((Game.TerrainTile[X_, Y].Road || Game.TerrainTile[X_, Y].CityPresent) && (Game.TerrainTile[Xto_, Yto].Road || Game.TerrainTile[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
+                            (Game.TerrainTile[X_, Y].River && Game.TerrainTile[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
                         {
                             MovePoints -= 1;
                         }
@@ -134,7 +134,7 @@ namespace RTciv2.Units
                     }
                 case UnitGAS.Sea:
                     {
-                        if (Game.Map[Xto_, Yto].Type != TerrainType.Ocean)
+                        if (Game.TerrainTile[Xto_, Yto].Type != TerrainType.Ocean)
                         { 
                             break; 
                         }
@@ -230,7 +230,7 @@ namespace RTciv2.Units
 
         public void BuildIrrigation()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Map[X, Y].Irrigation == false) || (Game.Map[X, Y].Farmland == false)))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.TerrainTile[X, Y].Irrigation == false) || (Game.TerrainTile[X, Y].Farmland == false)))
             {
                 Order = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
@@ -243,7 +243,7 @@ namespace RTciv2.Units
 
         public void BuildMines()
         {
-            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.Map[X, Y].Mining == false && (Game.Map[X, Y].Type == TerrainType.Mountains || Game.Map[X, Y].Type == TerrainType.Hills))
+            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.TerrainTile[X, Y].Mining == false && (Game.TerrainTile[X, Y].Type == TerrainType.Mountains || Game.TerrainTile[X, Y].Type == TerrainType.Hills))
             {
                 Order = OrderType.BuildMine;
                 Counter = 0;    //reset counter
@@ -269,7 +269,7 @@ namespace RTciv2.Units
 
         public void BuildRoad()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.Map[X, Y].Road == false) || (Game.Map[X, Y].Railroad == false)))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.TerrainTile[X, Y].Road == false) || (Game.TerrainTile[X, Y].Railroad == false)))
             {
                 Order = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
@@ -282,7 +282,7 @@ namespace RTciv2.Units
 
         public void BuildCity()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.Map[X, Y].Type != TerrainType.Ocean))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.TerrainTile[X, Y].Type != TerrainType.Ocean))
             {
                 //First invoke city name panel. If cancel is pressed, do nothing.
                 //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();

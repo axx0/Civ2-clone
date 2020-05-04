@@ -116,12 +116,12 @@ namespace RTciv2.GameActions
 
             //Determine what happens after command
             //Enemy city is present
-            if (Game.Cities.Any(city => city.X == newXY[0] && city.Y == newXY[1] && city.Owner != Game.Instance.ActiveUnit.Civ))
+            if (Game.Cities.Any(city => city.X == newXY[0] && city.Y == newXY[1] && city.Owner != Game.Instance.ActiveUnit.CivId))
             {
                 return UnitMovementOrderResultType.AttackCity;
             }
             //Enemy unit is present
-            else if (Game.Units.Any(unit => unit.X == newXY[0] && unit.Y == newXY[1] && unit.Civ != Game.Instance.ActiveUnit.Civ))
+            else if (Game.Units.Any(unit => unit.X == newXY[0] && unit.Y == newXY[1] && unit.CivId != Game.Instance.ActiveUnit.CivId))
             {
                 return UnitMovementOrderResultType.AttackUnit;
             }
@@ -146,38 +146,38 @@ namespace RTciv2.GameActions
                     case OrderType.BuildIrrigation:
                         if (unit.Counter == 2)
                         {
-                            if (Game.Map[unit.X, unit.Y].Irrigation == false) //Build irrigation
+                            if (Game.TerrainTile[unit.X, unit.Y].Irrigation == false) //Build irrigation
                             {
-                                Game.Map[unit.X, unit.Y].Irrigation = true;
+                                Game.TerrainTile[unit.X, unit.Y].Irrigation = true;
                             }
-                            else if ((Game.Map[unit.X, unit.Y].Irrigation == true) && (Game.Map[unit.X, unit.Y].Farmland == false)) //Build farms
+                            else if ((Game.TerrainTile[unit.X, unit.Y].Irrigation == true) && (Game.TerrainTile[unit.X, unit.Y].Farmland == false)) //Build farms
                             {
-                                Game.Map[unit.X, unit.Y].Farmland = true;
+                                Game.TerrainTile[unit.X, unit.Y].Farmland = true;
                             }
-                            //Game.Map = Draw.DrawMap();  //Update game map
+                            //Game.TerrainTile = Draw.DrawMap();  //Update game map
                             //unit.Action = OrderType.NoOrders;
                         }
                         break;
                     case OrderType.BuildRoad:
                         if (unit.Counter == 2)
                         {
-                            if (Game.Map[unit.X, unit.Y].Road == false) //Build road
+                            if (Game.TerrainTile[unit.X, unit.Y].Road == false) //Build road
                             {
-                                Game.Map[unit.X, unit.Y].Road = true;
+                                Game.TerrainTile[unit.X, unit.Y].Road = true;
                             }
-                            else if ((Game.Map[unit.X, unit.Y].Road == true) && (Game.Map[unit.X, unit.Y].Railroad == false)) //Build railroad
+                            else if ((Game.TerrainTile[unit.X, unit.Y].Road == true) && (Game.TerrainTile[unit.X, unit.Y].Railroad == false)) //Build railroad
                             {
-                                Game.Map[unit.X, unit.Y].Railroad = true;
+                                Game.TerrainTile[unit.X, unit.Y].Railroad = true;
                             }
-                            //Game.Map = Draw.DrawMap();  //Update game map
+                            //Game.TerrainTile = Draw.DrawMap();  //Update game map
                             //unit.Action = OrderType.NoOrders;
                         }
                         break;
                     case OrderType.BuildMine:
                         if (unit.Counter == 2)
                         {
-                            Game.Map[unit.X, unit.Y].Mining = true;
-                            //Game.Map = Draw.DrawMap();  //Update game map
+                            Game.TerrainTile[unit.X, unit.Y].Mining = true;
+                            //Game.TerrainTile = Draw.DrawMap();  //Update game map
                             //unit.Action = OrderType.NoOrders;
                         }
                         break;
@@ -209,7 +209,7 @@ namespace RTciv2.GameActions
                 //Create an array of indexes of units awaiting orders
                 List<int> indexUAO = new List<int>();
                 for (int i = 0; i < Game.Units.Count; i++)
-                    if ((Game.Units[i].Civ == Data.HumanPlayer) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
+                    if ((Game.Units[i].CivId == Game.Instance.ActiveCiv.Id) && Game.Units[i].AwaitingOrders) indexUAO.Add(i);
 
                 int indexActUnit = Game.Units.FindIndex(unit => unit == Game.Instance.ActiveUnit);  //Determine index of unit that is currently still active but just ended turn
 

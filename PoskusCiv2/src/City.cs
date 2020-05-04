@@ -132,8 +132,8 @@ namespace RTciv2
                         int x = X + offsets[i, 0];
                         int y = Y + offsets[i, 1];
                         x = (x - (y % 2)) / 2;    //map format
-                        _foodDistribution[i] = Game.Map[x, y].Food;
-                        if (Game.Map[x, y].Irrigation) _foodDistribution[i] += Game.Map[x, y].IrrigationBonus;
+                        _foodDistribution[i] = Game.TerrainTile[x, y].Food;
+                        if (Game.TerrainTile[x, y].Irrigation) _foodDistribution[i] += Game.TerrainTile[x, y].IrrigationBonus;
                     }
                     else _foodDistribution[i] = 0;
                 }
@@ -156,8 +156,8 @@ namespace RTciv2
                         int x = X + offsets[i, 0];
                         int y = Y + offsets[i, 1];
                         x = (x - (y % 2)) / 2;    //map format
-                        _shieldDistribution[i] = Game.Map[x, y].Shields;
-                        if (Game.Map[x, y].Mining) _shieldDistribution[i] += Game.Map[x, y].MiningBonus;
+                        _shieldDistribution[i] = Game.TerrainTile[x, y].Shields;
+                        if (Game.TerrainTile[x, y].Mining) _shieldDistribution[i] += Game.TerrainTile[x, y].MiningBonus;
                     }
                     else _shieldDistribution[i] = 0;
                 }
@@ -180,7 +180,7 @@ namespace RTciv2
                         int x = X + offsets[i, 0];
                         int y = Y + offsets[i, 1];
                         x = (x - (y % 2)) / 2;    //map format
-                        ITerrain map = Game.Map[x, y];
+                        ITerrain map = Game.TerrainTile[x, y];
                         _tradeDistribution[i] = map.Trade;
                         if (map.Road && (map.Type == TerrainType.Desert || map.Type == TerrainType.Grassland || map.Type == TerrainType.Plains)) _tradeDistribution[i]++;
                     }

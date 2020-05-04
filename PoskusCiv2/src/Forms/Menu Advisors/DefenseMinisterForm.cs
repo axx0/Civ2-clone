@@ -74,12 +74,12 @@ namespace RTciv2.Forms
             for (int i = 0; i < 62; i++)
             {
                 //Count active units
-                foreach (IUnit unit in Game.Units.Where(n => n.Civ == 1))   //search just for your civ
+                foreach (IUnit unit in Game.Units.Where(n => n.CivId == Game.Instance.ActiveCiv.Id))   //search just for your civ
                 {
                     if (unit.Name == ReadFiles.UnitName[i]) ActiveUnitCount[i]++;
                 }
                 //Count units in production
-                foreach (City city in Game.Cities.Where(n => n.Owner == 1)) //only search in cities for your civ
+                foreach (City city in Game.Cities.Where(n => n.Owner == Game.Instance.ActiveCiv.Id)) //only search in cities for your civ
                 {
                     if (city.ItemInProduction == i) UnitInProductionCount[i]++;
                 }

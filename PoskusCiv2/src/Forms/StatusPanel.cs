@@ -118,10 +118,10 @@ namespace RTciv2.Forms
             {
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
-                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
-                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
-                e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
-                e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
+                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
+                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
+                e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
+                e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
 
                 int count;
                 for (count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
@@ -168,12 +168,12 @@ namespace RTciv2.Forms
                         string cityName = (Game.Instance.ActiveUnit.HomeCity == 255) ? "NONE" : Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name;
                         e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 44);
                         e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
-                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
-                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveUnit.Civ].Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
+                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveCiv.Id].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
+                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveCiv.Id].Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
                         e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
                         e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
-                        e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
-                        e.Graphics.DrawString($"({Game.Map[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
+                        e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
+                        e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
                     }
                     else
                     {

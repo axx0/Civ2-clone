@@ -129,14 +129,14 @@ namespace RTciv2.Imagery
                 if (stacked)    //draw dark shield if unit is stacked on top of others
                 {
                     graphics.DrawImage(Images.UnitShieldShadow, secondShieldBorderXLoc, Images.unitShieldLocation[(int)unit.Type, 1]); //shield shadow
-                    graphics.DrawImage(Images.NoBorderUnitShield[(int)unit.Civ], secondShieldXLoc, Images.unitShieldLocation[(int)unit.Type, 1]);   //dark shield
+                    graphics.DrawImage(Images.NoBorderUnitShield[(int)unit.CivId], secondShieldXLoc, Images.unitShieldLocation[(int)unit.Type, 1]);   //dark shield
                 }
 
                 //shield shadow
                 graphics.DrawImage(Images.UnitShieldShadow, Images.unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, Images.unitShieldLocation[(int)unit.Type, 1]);
 
                 //main shield
-                graphics.DrawImage(Images.UnitShield[(int)unit.Civ], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]);
+                graphics.DrawImage(Images.UnitShield[(int)unit.CivId], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]);
 
                 //Draw black background for hitpoints bar
                 graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
@@ -316,9 +316,9 @@ namespace RTciv2.Imagery
         //    {
         //        //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
         //        int spacing;
-        //        int countF = Game.Map[city.X + offsetX, city.Y + offsetY].Food;
-        //        int countS = Game.Map[city.X + offsetX, city.Y + offsetY].Shields;
-        //        int countT = Game.Map[city.X + offsetX, city.Y + offsetY].Trade;
+        //        int countF = Game.TerrainTile[city.X + offsetX, city.Y + offsetY].Food;
+        //        int countS = Game.TerrainTile[city.X + offsetX, city.Y + offsetY].Shields;
+        //        int countT = Game.TerrainTile[city.X + offsetX, city.Y + offsetY].Trade;
         //        switch (countF + countS + countT)
         //        {
         //            case 1:

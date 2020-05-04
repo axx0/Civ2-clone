@@ -32,7 +32,7 @@ namespace RTciv2.GameActions
             Data.TurnNumber++;
 
             //Set all units to active
-            foreach (IUnit unit in Game.Units.Where(n => n.Civ == Data.HumanPlayer))
+            foreach (IUnit unit in Game.Units.Where(n => n.CivId == Game.Instance.ActiveCiv.Id))
             {
                 unit.TurnEnded = false;
                 unit.MovePoints = unit.MaxMovePoints;
@@ -160,7 +160,7 @@ namespace RTciv2.GameActions
         //find out if certain civ has any units awaiting orders
         public static bool AnyUnitsAwaitingOrders(int civId)
         {
-            return Game.Units.Any(unit => unit.Civ == civId && unit.AwaitingOrders);
+            return Game.Units.Any(unit => unit.CivId == civId && unit.AwaitingOrders);
         }
 
 

@@ -73,7 +73,7 @@ namespace RTciv2.Forms
             for (int row = 0; row < Data.MapYdim; row++)
                 for (int col = 0; col < Data.MapXdim; col++)
                 {
-                    drawColor = (Game.Map[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
+                    drawColor = (Game.TerrainTile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                     e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
                 }
 

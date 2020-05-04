@@ -21,9 +21,9 @@ namespace RTciv2
         public static List<IUnit> Units = new List<IUnit>();
         public static List<IUnit> DeadUnits = new List<IUnit>();
         public static List<City> Cities = new List<City>();
-        public static List<Civilization> Civs = new List<Civilization>();        
-        public static ITerrain[,] Map;
-        public static Bitmap WholeMap;
+        public static List<Civilization> Civs = new List<Civilization>();
+        public static ITerrain[,] TerrainTile;
+        public static Bitmap[] CivsMap;
 
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)
@@ -39,18 +39,19 @@ namespace RTciv2
 
         public static void LoadGame(string civ2path, string SAVname)
         {
-            Images.LoadBitmapsFromFiles();    //Creates bitmaps from current folder (CURRENTLY FROM RESOURCES)
             ReadFiles.ReadRULES(civ2path + "RULES.TXT");
             ImportSAV(civ2path + SAVname + ".SAV");
-            Images.CreateTerrainBitmaps();  //creates bitmaps of all map tiles
+            Images.CreateLoadGameGraphics();
             Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
+            Game.Instance.ActiveCiv = Civs[Data.HumanPlayer];
 
-            foreach (IUnit unit in Game.Units)
-            {
-                if (unit.Civ == 5 && unit.HomeCity != 255)
-                    Console.WriteLine($"Unit, Id={unit.Id}, {Civs[unit.Civ].TribeName}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
-                        $"order={unit.Order}, {Cities[unit.HomeCity].Name}");
-            }
+            //FOR HELP!!!
+            //foreach (IUnit unit in Game.Units)
+            //{
+            //    if (unit.Civ == 5 && unit.HomeCity != 255)
+            //        Console.WriteLine($"Unit, Id={unit.Id}, {Civs[unit.Civ].TribeName}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
+            //            $"order={unit.Order}, {Cities[unit.HomeCity].Name}");
+            //}
             //for (int i = 0; i < 8; i++)
             //{
             //    Console.WriteLine("Civ{0}, AnyUnitsAwaitingOrders={1}", i, Actions.AnyUnitsAwaitingOrders(i));
@@ -65,9 +66,16 @@ namespace RTciv2
             set { _activeUnit = value; }
         }
 
-        public static void CreateTerrain(int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, string hexvalue)
+        private Civilization _activeCiv;
+        public Civilization ActiveCiv
         {
-            ITerrain map;
+            get { return _activeCiv; }
+            set { _activeCiv = value; }
+        }
+
+        public static void CreateTerrain(int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
+        {
+            ITerrain tile;
             SpecialType? stype = null;
             switch (type)
             {
@@ -139,7 +147,7 @@ namespace RTciv2
                     }
                 default: return ;
             }
-            map = new Terrain(type, stype)
+            tile = new Terrain(type, stype)
             {
                 Type = type,
                 SpecType = stype,
@@ -156,12 +164,13 @@ namespace RTciv2
                 Pollution = pollution,
                 Farmland = farmland,
                 Airbase = airbase,
+                Visibility = visibility,
                 Hexvalue = hexvalue
             };
-            Map[x, y] = map;
+            TerrainTile[x, y] = tile;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civ, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit;
             unit = new Unit(type)
@@ -173,7 +182,7 @@ namespace RTciv2
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
-                Civ = civ,
+                CivId = civId,
                 MaxMovePoints = 3 * ReadFiles.UnitMove[(int)type],
                 MovePoints = 3 * ReadFiles.UnitMove[(int)type] - movePointsLost,
                 MaxHitPoints = 10 * ReadFiles.UnitHitp[(int)type],

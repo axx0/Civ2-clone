@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using System.Reflection;
-using System.IO;
+﻿using ExtensionMethods;
 using RTciv2.Enums;
-using RTciv2.Units;
-using ExtensionMethods;
 using RTciv2.Forms;
+using RTciv2.Units;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
 
 namespace RTciv2.Imagery
 {
@@ -17,7 +13,7 @@ namespace RTciv2.Imagery
     {
         public static Bitmap CityWallpaper, CityStatusWallpaper, DefenseMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper, ScienceAdvWallpaper, WondersOfWorldWallpaper, 
                              DemographicsWallpaper, MainScreenSymbol, MainScreenSinai, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, 
-                             Shield, ViewPiece, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, DitherBlank, Blank, DitherBase, 
+                             Shield, ViewPiece, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase, 
                              SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, 
                              CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, 
                              CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, 
@@ -25,14 +21,14 @@ namespace RTciv2.Imagery
                              NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills,  RiverMouth, Road, 
                                Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall;
-        public static Bitmap[,] Coast, City, CityWall, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, 
-                                DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
+        public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, 
+                                DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
 
         #region Load bitmaps from files
-        public static void LoadBitmapsFromFiles()
+        private static void LoadGraphicsAssetsFromFiles()
         {
             LoadTerrain();
             LoadCities();
@@ -108,8 +104,17 @@ namespace RTciv2.Imagery
                 Ocean[i].MakeTransparent(transparentGray);
                 Ocean[i].MakeTransparent(transparentPink); }
 
-            //Dither
-            DitherBlank = terrain1.Clone(new Rectangle(1, 447, 64, 32), terrain1.PixelFormat);
+            //4 small dither tiles
+            DitherBlank = new Bitmap[2, 2];
+            DitherDots = new Bitmap[2, 2];
+            for (int tileX = 0; tileX < 2; tileX++)
+                for (int tileY = 0; tileY < 2; tileY++)
+                {
+                    DitherBlank[tileX, tileY] = terrain1.Clone(new Rectangle(tileX * 32 + 1, tileY * 16 + 447, 32, 16), terrain1.PixelFormat);
+                    DitherDots[tileX, tileY] = DitherBlank[tileX, tileY];
+                    DitherDots[tileX, tileY].MakeTransparent(transparentGray);
+                    DitherDots[tileX, tileY].MakeTransparent(transparentPink);
+                }
 
             //Blank tile
             Blank = terrain1.Clone(new Rectangle(131, 447, 64, 32), terrain1.PixelFormat);
@@ -144,7 +149,8 @@ namespace RTciv2.Imagery
                     DitherJungle[tileX, tileY] = new Bitmap(32, 16);
                     for (int col = 0; col < 32; col++) {
                         for (int row = 0; row < 16; row++) {
-                            replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
+                            //replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
+                            replacementColor = DitherBlank[tileX, tileY].GetPixel(col, row);
                             if (replacementColor == Color.FromArgb(0, 0, 0)) {
                                 DitherDesert[tileX, tileY].SetPixel(col, row, Desert[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
                                 DitherPlains[tileX, tileY].SetPixel(col, row, Plains[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
@@ -680,6 +686,7 @@ namespace RTciv2.Imagery
         }
         #endregion
         #endregion    
+
         private static Bitmap CreateNonIndexedImage(Image src)  //Converting GIFs to non-indexed images (required for SetPixel method)
         {
             Bitmap newBmp = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
@@ -692,68 +699,107 @@ namespace RTciv2.Imagery
             return newBmp;
         }
 
-        public static void CreateTerrainBitmaps()   //creates bitmaps for whole map (used before game starts), for each zoom level
+        public static void CreateLoadGameGraphics()
         {
+            //Creates bitmaps from current folder (CURRENTLY FROM RESOURCES, TODO: load files from disk)
+            LoadGraphicsAssetsFromFiles();
+
+            //Create graphic of each map tile
             for (int col = 0; col < Data.MapXdim; col++)
-            {
                 for (int row = 0; row < Data.MapYdim; row++)
-                {
-                    Game.Map[col, row].Graphic = TerrainBitmap(col, row);
-                }
-            }
+                    Game.TerrainTile[col, row].Graphic = TerrainBitmap(col, row);
 
-            //Create an image of whole map
-            Game.WholeMap = new Bitmap(64 * Data.MapXdim + 32, 32 * Data.MapYdim + 16);
-            using (Graphics g = Graphics.FromImage(Game.WholeMap))
+            //Add cities+units graphics to each tile & create image of maps (what each civ sees + one entire visible)
+            CreateWholeMapGraphics();
+        }
+
+        //Create images of world maps for each civ + entire map
+        public static void CreateWholeMapGraphics() 
+        {
+            Game.CivsMap = new Bitmap[9];
+
+            //What each civ (index=0...7) sees, additionally (index=8) for entire revealed map
+            for (int civ = 0; civ < 9; civ++)
             {
-                for (int row = 0; row < Data.MapYdim; row++)
+                Game.CivsMap[civ] = new Bitmap(64 * Data.MapXdim + 32, 32 * Data.MapYdim + 16);
+
+                using (Graphics g = Graphics.FromImage(Game.CivsMap[civ]))
                 {
-                    for (int col = 0; col < Data.MapXdim; col++)
+                    for (int row = 0; row < Data.MapYdim; row++)
                     {
-                        //Tiles
-                        g.DrawImage(
-                            Game.Map[col, row].Graphic, 
-                            64 * col + 32 * (row % 2), 
-                            16 * row);
-
-                        //Units
-                        int[] coords = Ext.XYciv2(new int[] { col, row });  //civ2 coords from real coords
-                        int col2 = coords[0];
-                        int row2 = coords[1];
-                        List<IUnit> unitsHere = Game.Units.Where(u => u.X == col2 && u.Y == row2).ToList();
-                        if (unitsHere.Any())
+                        for (int col = 0; col < Data.MapXdim; col++)
                         {
-                            IUnit unit = unitsHere.Last();
-                            int zoom = 8;
-                            if (!unit.IsInCity) 
-                            { 
+                            //Draw only if the tile is visible for each civ (index=8...whole map visible)
+                            if ((civ < 8 && Game.TerrainTile[col, row].Visibility[civ]) || civ == 8)
+                            {
+                                //Tiles
                                 g.DrawImage(
-                                    CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom), 
-                                    32 * col2, 
-                                    16 * row2 - 16); 
-                            }
-                        }
+                                    Game.TerrainTile[col, row].Graphic,
+                                    64 * col + 32 * (row % 2),
+                                    16 * row);
 
-                        //Cities
-                        City city = Game.Cities.Find(c => c.X == col2 && c.Y == row2);
-                        if (city != null)
-                        {
-                            g.DrawImage(
-                                CreateCityBitmap(city, true, 8),
-                                32 * col2, 
-                                16 * row2 - 16);
+                                //Implement dithering in all 4 directions if necessary
+                                if (civ != 8)
+                                    for (int tileX = 0; tileX < 2; tileX++)
+                                        for (int tileY = 0; tileY < 2; tileY++)
+                                        {
+                                            int[] offset = new int[] { -1, 1};
+                                            int col_ = 2 * col + (row % 2); //real->civ2 coords
+                                            int colNew_ = col_ + offset[tileX];
+                                            int rowNew = row + offset[tileY];
+                                            int colNew = (colNew_ - rowNew % 2) / 2; //back to real coords
+                                            if (colNew >= 0 && colNew < Data.MapXdim && rowNew >= 0 && rowNew < Data.MapYdim)   //don't observe outside map limits
+                                                if (!Game.TerrainTile[colNew, rowNew].Visibility[civ])   //surrounding tile is not visible -> dither
+                                                    g.DrawImage(DitherDots[tileX, tileY],
+                                                                64 * col + 32 * (row % 2) + 32 * tileX,
+                                                                16 * row + 16 * tileY);
+                                        }
+
+
+                                //Units
+                                int[] coords = Ext.XYciv2(new int[] { col, row });  //civ2 coords from real coords
+                                int col2 = coords[0];
+                                int row2 = coords[1];
+                                List<IUnit> unitsHere = Game.Units.Where(u => u.X == col2 && u.Y == row2).ToList();
+                                if (unitsHere.Any())
+                                {
+                                    IUnit unit = unitsHere.Last();
+                                    int zoom = 8;
+                                    if (!unit.IsInCity)
+                                    {
+                                        g.DrawImage(
+                                            CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom),
+                                            32 * col2,
+                                            16 * row2 - 16);
+                                    }
+                                }
+
+                                //Cities
+                                City city = Game.Cities.Find(c => c.X == col2 && c.Y == row2);
+                                if (city != null)
+                                {
+                                    g.DrawImage(
+                                        CreateCityBitmap(city, true, 8),
+                                        32 * col2,
+                                        16 * row2 - 16);
+                                }
+                            }                            
                         }
                     }
-                }
 
-                //City name text is drawn last
-                foreach (City city in Game.Cities)
-                {
-                    Bitmap cityNameBitmap = CreateCityNameBitmap(city, 8);
-                    g.DrawImage(
-                        cityNameBitmap, 
-                        32 * city.X + 32 - cityNameBitmap.Width / 2, 
-                        16 * city.Y + 3 * 8);
+                    //City name text is drawn last
+                    foreach (City city in Game.Cities)
+                    {
+                        int[] ColRow = Ext.Civ2xy(new int[] { city.X, city.Y });  //real coords from civ2 coords
+                        if ((civ < 8 && Game.TerrainTile[ColRow[0], ColRow[1]].Visibility[civ]) || civ == 8)
+                        {
+                            Bitmap cityNameBitmap = CreateCityNameBitmap(city, 8);
+                            g.DrawImage(
+                                cityNameBitmap,
+                                32 * city.X + 32 - cityNameBitmap.Width / 2,
+                                16 * city.Y + 3 * 8);
+                        }
+                    }
                 }
             }
         }
@@ -766,7 +812,7 @@ namespace RTciv2.Imagery
             using (Graphics graphics = Graphics.FromImage(tile))  //Draw tiles
             {
                 Bitmap maptype;
-                switch (Game.Map[col, row].Type)
+                switch (Game.TerrainTile[col, row].Type)
                 {
                     case TerrainType.Desert: maptype = Desert[0]; break;
                     case TerrainType.Forest: maptype = ForestBase[0]; break;
@@ -787,10 +833,10 @@ namespace RTciv2.Imagery
                 int col_ = 2 * col + row % 2;   //to civ2-style
                 //First check if you are on map edge. If not, look at type of terrain in all 4 directions.
                 TerrainType[,] tiletype = new TerrainType[2, 2];
-                if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Game.Map[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 2 * Data.MapXdim - 1) && (row != 0)) tiletype[1, 0] = Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 0) && (row != Data.MapYdim - 1)) tiletype[0, 1] = Game.Map[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
-                if ((col_ != 2 * Data.MapXdim - 1) && (row != Data.MapYdim - 1)) tiletype[1, 1] = Game.Map[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
+                if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Game.TerrainTile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
+                if ((col_ != 2 * Data.MapXdim - 1) && (row != 0)) tiletype[1, 0] = Game.TerrainTile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
+                if ((col_ != 0) && (row != Data.MapYdim - 1)) tiletype[0, 1] = Game.TerrainTile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
+                if ((col_ != 2 * Data.MapXdim - 1) && (row != Data.MapYdim - 1)) tiletype[1, 1] = Game.TerrainTile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
                 //implement dither on 4 locations in square
                 for (int tileX = 0; tileX < 2; tileX++)    //for 4 directions
                     for (int tileY = 0; tileY < 2; tileY++)
@@ -811,7 +857,7 @@ namespace RTciv2.Imagery
                         }
 
                 //Draw coast & river mouth
-                if (Game.Map[col, row].Type == TerrainType.Ocean)
+                if (Game.TerrainTile[col, row].Type == TerrainType.Ocean)
                 {
                     int[] land = IsLandPresent(col, row);   //Determine if land is present in 8 directions
 
@@ -860,24 +906,24 @@ namespace RTciv2.Imagery
                     int Ydim = Data.MapYdim;   //no need for such correction for Y
                     if (col_ + 1 < Xdim && row - 1 >= 0)    //NE there is no edge of map
                     {
-                        if (land[1] == 1 && Game.Map[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[0], 0, 0);
+                        if (land[1] == 1 && Game.TerrainTile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[0], 0, 0);
                     }
                     if (col_ + 1 < Xdim && row + 1 < Ydim)    //SE there is no edge of map
                     {
-                        if (land[3] == 1 && Game.Map[((col_ + 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[1], 0, 0);
+                        if (land[3] == 1 && Game.TerrainTile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[1], 0, 0);
                     }
                     if (col_ - 1 >= 0 && row + 1 < Ydim)    //SW there is no edge of map
                     {
-                        if (land[5] == 1 && Game.Map[((col_ - 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[2], 0, 0);
+                        if (land[5] == 1 && Game.TerrainTile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[2], 0, 0);
                     }
                     if (col_ - 1 >= 0 && row - 1 >= 0)    //NW there is no edge of map
                     {
-                        if (land[7] == 1 && Game.Map[((col_ - 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[3], 0, 0);
+                        if (land[7] == 1 && Game.TerrainTile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[3], 0, 0);
                     }
                 }
 
                 //Draw forests
-                if (Game.Map[col, row].Type == TerrainType.Forest)
+                if (Game.TerrainTile[col, row].Type == TerrainType.Forest)
                 {
                     int[] forestAround = IsForestAround(col, row);
 
@@ -902,7 +948,7 @@ namespace RTciv2.Imagery
 
                 //Draw mountains
                 //CORRECT THIS: IF SHIELD IS AT MOUNTAIN IT SHOULD BE Mountains[2] and Mountains[3] !!!
-                if (Game.Map[col, row].Type == TerrainType.Mountains)
+                if (Game.TerrainTile[col, row].Type == TerrainType.Mountains)
                 {
                     int[] mountAround = IsMountAround(col, row);
 
@@ -926,7 +972,7 @@ namespace RTciv2.Imagery
                 }
 
                 //Draw hills
-                if (Game.Map[col, row].Type == TerrainType.Hills)
+                if (Game.TerrainTile[col, row].Type == TerrainType.Hills)
                 {
                     int[] hillAround = IsHillAround(col, row);
 
@@ -950,7 +996,7 @@ namespace RTciv2.Imagery
                 }
 
                 //Draw rivers
-                if (Game.Map[col, row].River)
+                if (Game.TerrainTile[col, row].River)
                 {
                     int[] riverAround = IsRiverAround(col, row);
 
@@ -974,9 +1020,9 @@ namespace RTciv2.Imagery
                 }
 
                 //Draw special resources if they exist
-                if (Game.Map[col, row].SpecType != null)
+                if (Game.TerrainTile[col, row].SpecType != null)
                 {
-                    switch (Game.Map[col, row].SpecType)
+                    switch (Game.TerrainTile[col, row].SpecType)
                     {
                         case SpecialType.Oasis: maptype = Desert[2]; break;
                         case SpecialType.DesertOil: maptype = Desert[3]; break;
@@ -1005,7 +1051,7 @@ namespace RTciv2.Imagery
                 }
 
                 //Roads (cites also act as road tiles)
-                if (Game.Map[col, row].Road || Game.Map[col, row].CityPresent)
+                if (Game.TerrainTile[col, row].Road || Game.TerrainTile[col, row].CityPresent)
                 {
                     int[] roadAround = IsRoadAround(col, row);
 
@@ -1023,7 +1069,7 @@ namespace RTciv2.Imagery
 
                 // !!!! NOT AS SIMPLE AS THIS. CORRECT THIS !!!!!
                 //Railroads (cites also act as railroad tiles)
-                //if (Game.Map[i, j].Railroad || Game.Map[i, j].CityPresent)
+                //if (Game.TerrainTile[i, j].Railroad || Game.TerrainTile[i, j].CityPresent)
                 //{
                 //    int[] railroadAround = IsRailroadAround(i, j);
 
@@ -1040,22 +1086,22 @@ namespace RTciv2.Imagery
                 //}
 
                 //Irrigation
-                if (Game.Map[col, row].Irrigation) graphics.DrawImage(Irrigation, 0, 0);
+                if (Game.TerrainTile[col, row].Irrigation) graphics.DrawImage(Irrigation, 0, 0);
 
                 //Farmland
-                if (Game.Map[col, row].Farmland) graphics.DrawImage(Farmland, 0, 0);
+                if (Game.TerrainTile[col, row].Farmland) graphics.DrawImage(Farmland, 0, 0);
 
                 //Mining
-                if (Game.Map[col, row].Mining) graphics.DrawImage(Mining, 0, 0);
+                if (Game.TerrainTile[col, row].Mining) graphics.DrawImage(Mining, 0, 0);
 
                 //Pollution
-                if (Game.Map[col, row].Pollution) graphics.DrawImage(Pollution, 0, 0);
+                if (Game.TerrainTile[col, row].Pollution) graphics.DrawImage(Pollution, 0, 0);
 
                 //Fortress
-                if (Game.Map[col, row].Fortress) graphics.DrawImage(Fortress, 0, 0);
+                if (Game.TerrainTile[col, row].Fortress) graphics.DrawImage(Fortress, 0, 0);
 
                 //Airbase
-                if (Game.Map[col, row].Airbase) graphics.DrawImage(Airbase, 0, 0);
+                if (Game.TerrainTile[col, row].Airbase) graphics.DrawImage(Airbase, 0, 0);
 
             }
 
@@ -1074,28 +1120,28 @@ namespace RTciv2.Imagery
             //observe in all directions if land is present next to ocean
             //N:
             if (j - 2 < 0) land[0] = 1;   //if N tile is out of map (black tile), we presume it is land
-            else if (Game.Map[(i_ - (j - 2) % 2) / 2, j - 2].Type != TerrainType.Ocean) land[0] = 1;
+            else if (Game.TerrainTile[(i_ - (j - 2) % 2) / 2, j - 2].Type != TerrainType.Ocean) land[0] = 1;
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) land[1] = 1;  //NE is black tile
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[1] = 1;    //if it is not ocean, it is land
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[1] = 1;    //if it is not ocean, it is land
             //E:
             if (i_ + 2 >= Xdim) land[2] = 1;  //E is black tile
-            else if (Game.Map[((i_ + 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[2] = 1;
+            else if (Game.TerrainTile[((i_ + 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[2] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) land[3] = 1;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[3] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[3] = 1;
             //S:
             if (j + 2 >= Ydim) land[4] = 1;   //S is black tile
-            else if (Game.Map[(i_ - (j + 2) % 2) / 2, j + 2].Type != TerrainType.Ocean) land[4] = 1;
+            else if (Game.TerrainTile[(i_ - (j + 2) % 2) / 2, j + 2].Type != TerrainType.Ocean) land[4] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) land[5] = 1;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[5] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[5] = 1;
             //W:
             if (i_ - 2 < 0) land[6] = 1;  //W is black tile
-            else if (Game.Map[((i_ - 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[6] = 1;
+            else if (Game.TerrainTile[((i_ - 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[6] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) land[7] = 1;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[7] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[7] = 1;
 
             return land;
         }
@@ -1112,16 +1158,16 @@ namespace RTciv2.Imagery
             //observe in all directions if forest is present
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) forestAround[0] = 0;  //NE is black tile (we presume no forest is there)
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[0] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[0] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) forestAround[1] = 0;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[1] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[1] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) forestAround[2] = 0;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[2] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[2] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) forestAround[3] = 0;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[3] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[3] = 1;
 
             return forestAround;
         }
@@ -1138,16 +1184,16 @@ namespace RTciv2.Imagery
             //observe in all directions if mountain is present
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) mountAround[0] = 0;  //NE is black tile (we presume no mountain is there)
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[0] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[0] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) mountAround[1] = 0;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[1] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[1] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) mountAround[2] = 0;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[2] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[2] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) mountAround[3] = 0;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[3] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[3] = 1;
 
             return mountAround;
         }
@@ -1164,16 +1210,16 @@ namespace RTciv2.Imagery
             //observe in all directions if hill is present
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) hillAround[0] = 0;  //NE is black tile (we presume no hill is there)
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Hills) hillAround[0] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Hills) hillAround[0] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) hillAround[1] = 0;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Hills) hillAround[1] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Hills) hillAround[1] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) hillAround[2] = 0;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Hills) hillAround[2] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Hills) hillAround[2] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) hillAround[3] = 0;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Hills) hillAround[3] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Hills) hillAround[3] = 1;
 
             return hillAround;
         }
@@ -1190,16 +1236,16 @@ namespace RTciv2.Imagery
             //observe in all directions if river is present
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) riverAround[0] = 0;  //NE is black tile (we presume no river is there)
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].River || Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Ocean) riverAround[0] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].River || Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Ocean) riverAround[0] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) riverAround[1] = 0;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].River || Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Ocean) riverAround[1] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].River || Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Ocean) riverAround[1] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) riverAround[2] = 0;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].River || Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Ocean) riverAround[2] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].River || Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Ocean) riverAround[2] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) riverAround[3] = 0;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].River || Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Ocean) riverAround[3] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].River || Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Ocean) riverAround[3] = 1;
 
             return riverAround;
         }
@@ -1216,28 +1262,28 @@ namespace RTciv2.Imagery
             //observe in all directions if road or city is present next to tile
             //N:
             if (j - 2 < 0) roadAround[0] = 0;   //if N tile is out of map (black tile), we presume there is no road
-            else if (Game.Map[(i_ - (j - 2) % 2) / 2, j - 2].Road || Game.Map[(i_ - (j - 2) % 2) / 2, j - 2].CityPresent) roadAround[0] = 1;
+            else if (Game.TerrainTile[(i_ - (j - 2) % 2) / 2, j - 2].Road || Game.TerrainTile[(i_ - (j - 2) % 2) / 2, j - 2].CityPresent) roadAround[0] = 1;
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) roadAround[1] = 0;  //NE is black tile
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Road || Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].CityPresent) roadAround[1] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Road || Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].CityPresent) roadAround[1] = 1;
             //E:
             if (i_ + 2 >= Xdim) roadAround[2] = 0;  //E is black tile
-            else if (Game.Map[((i_ + 2) - j % 2) / 2, j].Road || Game.Map[((i_ + 2) - j % 2) / 2, j].CityPresent) roadAround[2] = 1;
+            else if (Game.TerrainTile[((i_ + 2) - j % 2) / 2, j].Road || Game.TerrainTile[((i_ + 2) - j % 2) / 2, j].CityPresent) roadAround[2] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) roadAround[3] = 0;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Road || Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].CityPresent) roadAround[3] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Road || Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].CityPresent) roadAround[3] = 1;
             //S:
             if (j + 2 >= Ydim) roadAround[4] = 0;   //S is black tile
-            else if (Game.Map[(i_ - (j + 2) % 2) / 2, j + 2].Road || Game.Map[(i_ - (j + 2) % 2) / 2, j + 2].CityPresent) roadAround[4] = 1;
+            else if (Game.TerrainTile[(i_ - (j + 2) % 2) / 2, j + 2].Road || Game.TerrainTile[(i_ - (j + 2) % 2) / 2, j + 2].CityPresent) roadAround[4] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) roadAround[5] = 0;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Road || Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].CityPresent) roadAround[5] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Road || Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].CityPresent) roadAround[5] = 1;
             //W:
             if (i_ - 2 < 0) roadAround[6] = 0;  //W is black tile
-            else if (Game.Map[((i_ - 2) - j % 2) / 2, j].Road || Game.Map[((i_ - 2) - j % 2) / 2, j].CityPresent) roadAround[6] = 1;
+            else if (Game.TerrainTile[((i_ - 2) - j % 2) / 2, j].Road || Game.TerrainTile[((i_ - 2) - j % 2) / 2, j].CityPresent) roadAround[6] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) roadAround[7] = 0;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Road || Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].CityPresent) roadAround[7] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Road || Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].CityPresent) roadAround[7] = 1;
 
             return roadAround;
         }
@@ -1254,28 +1300,28 @@ namespace RTciv2.Imagery
             //observe in all directions if road or city is present next to tile
             //N:
             if (j - 2 < 0) railroadAround[0] = 0;   //if N tile is out of map (black tile), we presume there is no road
-            else if (Game.Map[(i_ - (j - 2) % 2) / 2, j - 2].Railroad || Game.Map[(i_ - (j - 2) % 2) / 2, j - 2].CityPresent) railroadAround[0] = 1;
+            else if (Game.TerrainTile[(i_ - (j - 2) % 2) / 2, j - 2].Railroad || Game.TerrainTile[(i_ - (j - 2) % 2) / 2, j - 2].CityPresent) railroadAround[0] = 1;
             //NE:
             if (i_ + 1 >= Xdim || j - 1 < 0) railroadAround[1] = 0;  //NE is black tile
-            else if (Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Railroad || Game.Map[((i_ + 1) - (j - 1) % 2) / 2, j - 1].CityPresent) railroadAround[1] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Railroad || Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].CityPresent) railroadAround[1] = 1;
             //E:
             if (i_ + 2 >= Xdim) railroadAround[2] = 0;  //E is black tile
-            else if (Game.Map[((i_ + 2) - j % 2) / 2, j].Railroad || Game.Map[((i_ + 2) - j % 2) / 2, j].CityPresent) railroadAround[2] = 1;
+            else if (Game.TerrainTile[((i_ + 2) - j % 2) / 2, j].Railroad || Game.TerrainTile[((i_ + 2) - j % 2) / 2, j].CityPresent) railroadAround[2] = 1;
             //SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) railroadAround[3] = 0;  //SE is black tile
-            else if (Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Railroad || Game.Map[((i_ + 1) - (j + 1) % 2) / 2, j + 1].CityPresent) railroadAround[3] = 1;
+            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Railroad || Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].CityPresent) railroadAround[3] = 1;
             //S:
             if (j + 2 >= Ydim) railroadAround[4] = 0;   //S is black tile
-            else if (Game.Map[(i_ - (j + 2) % 2) / 2, j + 2].Railroad || Game.Map[(i_ - (j + 2) % 2) / 2, j + 2].CityPresent) railroadAround[4] = 1;
+            else if (Game.TerrainTile[(i_ - (j + 2) % 2) / 2, j + 2].Railroad || Game.TerrainTile[(i_ - (j + 2) % 2) / 2, j + 2].CityPresent) railroadAround[4] = 1;
             //SW:
             if (i_ - 1 < 0 || j + 1 >= Ydim) railroadAround[5] = 0;  //SW is black tile
-            else if (Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Railroad || Game.Map[((i_ - 1) - (j + 1) % 2) / 2, j + 1].CityPresent) railroadAround[5] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Railroad || Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].CityPresent) railroadAround[5] = 1;
             //W:
             if (i_ - 2 < 0) railroadAround[6] = 0;  //W is black tile
-            else if (Game.Map[((i_ - 2) - j % 2) / 2, j].Railroad || Game.Map[((i_ - 2) - j % 2) / 2, j].CityPresent) railroadAround[6] = 1;
+            else if (Game.TerrainTile[((i_ - 2) - j % 2) / 2, j].Railroad || Game.TerrainTile[((i_ - 2) - j % 2) / 2, j].CityPresent) railroadAround[6] = 1;
             //NW:
             if (i_ - 1 < 0 || j - 1 < 0) railroadAround[7] = 0;  //NW is black tile
-            else if (Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Railroad || Game.Map[((i_ - 1) - (j - 1) % 2) / 2, j - 1].CityPresent) railroadAround[7] = 1;
+            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Railroad || Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].CityPresent) railroadAround[7] = 1;
 
             return railroadAround;
         }
@@ -1342,14 +1388,14 @@ namespace RTciv2.Imagery
                 if (drawInStack)    //draw dark shield if unit is stacked on top of others
                 {
                     graphics.DrawImage(UnitShieldShadow, secondShieldBorderXLoc, unitShieldLocation[(int)unit.Type, 1]); //shield shadow
-                    graphics.DrawImage(NoBorderUnitShield[unit.Civ], secondShieldXLoc, unitShieldLocation[(int)unit.Type, 1]);   //dark shield
+                    graphics.DrawImage(NoBorderUnitShield[unit.CivId], secondShieldXLoc, unitShieldLocation[(int)unit.Type, 1]);   //dark shield
                 }
 
                 //shield shadow
                 graphics.DrawImage(UnitShieldShadow, unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, unitShieldLocation[(int)unit.Type, 1] - borderShieldOffset);
 
                 //main shield
-                graphics.DrawImage(UnitShield[unit.Civ], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
+                graphics.DrawImage(UnitShield[unit.CivId], unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1]);
 
                 //Draw black background for hitpoints bar
                 graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(unitShieldLocation[(int)unit.Type, 0], unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
@@ -1384,40 +1430,58 @@ namespace RTciv2.Imagery
             //If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
             int cityStyle = Game.Civs[city.Owner].CityStyle;
             int sizeStyle = 0;
-            if (cityStyle < 4) {
-                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) { //palace exists
+            if (cityStyle < 4) 
+            {
+                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace))     //palace exists
+                { 
                     if (city.Size <= 3) sizeStyle = 1;
                     else if (city.Size > 3 && city.Size <= 5) sizeStyle = 2;
-                    else sizeStyle = 3; }
-                else {
+                    else sizeStyle = 3; 
+                }
+                else 
+                {
                     if (city.Size <= 3) sizeStyle = 0;
                     else if (city.Size > 3 && city.Size <= 5) sizeStyle = 1;
                     else if (city.Size > 5 && city.Size <= 7) sizeStyle = 2;
-                    else sizeStyle = 3; } }
+                    else sizeStyle = 3; 
+                } 
+            }
             //If city is industrial => 4 city size styles (0=sizes 1...4, 1=sizes 5...7, 2=sizes 8...10, 3=sizes >= 11)
             //If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...7, 3=sizes >= 8)
-            else if (cityStyle == 4) {
-                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) { //palace exists
+            else if (cityStyle == 4) 
+            {
+                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
+                {
                     if (city.Size <= 4) sizeStyle = 1;
                     else if (city.Size > 4 && city.Size <= 7) sizeStyle = 2;
-                    else sizeStyle = 3; }
-                else {
+                    else sizeStyle = 3; 
+                }
+                else 
+                {
                     if (city.Size <= 4) sizeStyle = 0;
                     else if (city.Size > 4 && city.Size <= 7) sizeStyle = 1;
                     else if (city.Size > 7 && city.Size <= 10) sizeStyle = 2;
-                    else sizeStyle = 3; } }
+                    else sizeStyle = 3; 
+                } 
+            }
             //If city is modern => 4 city size styles (0=sizes 1...4, 1=sizes 5...10, 2=sizes 11...18, 3=sizes >= 19)
             //If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...10, 3=sizes >= 11)
-            else {
-                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) { //palace exists
+            else 
+            {
+                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
+                { 
                     if (city.Size <= 4) sizeStyle = 1;
                     else if (city.Size > 4 && city.Size <= 10) sizeStyle = 2;
-                    else sizeStyle = 3; }
-                else {
+                    else sizeStyle = 3; 
+                }
+                else 
+                {
                     if (city.Size <= 4) sizeStyle = 0;
                     else if (city.Size > 4 && city.Size <= 10) sizeStyle = 1;
                     else if (city.Size > 10 && city.Size <= 18) sizeStyle = 2;
-                    else sizeStyle = 3; } }
+                    else sizeStyle = 3; 
+                } 
+            }
 
             //If no units are in the city, draw no flag
             bool flagPresent = false;
@@ -1522,7 +1586,7 @@ namespace RTciv2.Imagery
                                 {
                                     int x = Game.Instance.ActiveUnit.X;
                                     int y = Game.Instance.ActiveUnit.Y;
-                                    g.DrawImage(Game.WholeMap, new Rectangle(32 * x, 16 * y, 64, 48));
+                                    g.DrawImage(Game.CivsMap[Game.Instance.ActiveCiv.Id], new Rectangle(32 * x, 16 * y, 64, 48));
                                     if (i == 1) g.DrawImage(Game.Instance.ActiveUnit.GraphicMapPanel, 0, 16);
                                 }
                             }
