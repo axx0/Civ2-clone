@@ -187,17 +187,21 @@ namespace RTciv2.Forms
                 case Keys.W:
                     if (Game.Instance.ActiveUnit != null) Actions.ChooseNextUnit();
                     break;
-                //TODO: case Keys.U: unload
-                //TODO: case Keys.A: activate unit
-                //TODO: case Keys.X: zoom out
-                //TODO: case Keys.Z: zoom in
-                //TODO: case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
-                //TODO: case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
-                //TODO: case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
-                //TODO: case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
-                //TODO: case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
-                //TODO: case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
-                //TODO: case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
+                case Keys.Y:
+                    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ToggleBetweenCurrentEntireMapView));
+                    break;
+
+                    //TODO: case Keys.U: unload
+                    //TODO: case Keys.A: activate unit
+                    //TODO: case Keys.X: zoom out
+                    //TODO: case Keys.Z: zoom in
+                    //TODO: case (Keys.Control | Keys.N): EndPlayerTurn_Click(null, null); break;
+                    //TODO: case (Keys.Shift | Keys.C): FindCity_Click(null, null); break;
+                    //TODO: case (Keys.Shift | Keys.D): Disband_Click(null, null); break;
+                    //TODO: case (Keys.Shift | Keys.H): ViewThroneRoom_Click(null, null); break;
+                    //TODO: case (Keys.Shift | Keys.P): Pillage_Click(null, null); break;
+                    //TODO: case (Keys.Shift | Keys.R): Revolution_Click(null, null); break;
+                    //TODO: case (Keys.Shift | Keys.T): TaxRate_Click(null, null); break;
             }
             return base.ProcessCmdKey(ref msg, keyData);
         }

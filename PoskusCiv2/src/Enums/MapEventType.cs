@@ -10,6 +10,7 @@ namespace RTciv2.Enums
     {
         SwitchViewMovePieces = 0,
         MapViewChanged = 1,
-        ViewPieceMoved = 2
+        ViewPieceMoved = 2,
+        ToggleBetweenCurrentEntireMapView = 3
     }
 }

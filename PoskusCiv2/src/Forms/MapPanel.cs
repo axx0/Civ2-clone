@@ -23,11 +23,8 @@ namespace RTciv2.Forms
         private int MapGridVar { get; set; }    //style of map grid presentation
         private System.Windows.Forms.Timer Timer;    //timer for blinking (unit or viewing piece), moving unit, etc.
         private static AnimationType AnimType;
-        int TimerCounter 
-        { 
-            get; 
-            set; 
-        }
+        private int CivIdWhoseMapIsDisplayed { get; set; }
+        int TimerCounter { get; set; }
         Label HelpLabel;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
@@ -84,6 +81,8 @@ namespace RTciv2.Forms
             ClickedXY = Data.ClickedXY;
             ActiveXY = Data.ActiveXY;
             CenterSqXY = ActiveXY;
+            CivIdWhoseMapIsDisplayed = Game.Instance.ActiveCiv.Id;  //when game starts reveal map for current player's civ view
+            //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
             //TODO: Implement zoom
 
             //Uncomment this for help in drawing-logic
@@ -138,13 +137,11 @@ namespace RTciv2.Forms
             int zoomLvl = ZoomLvl;
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
-            e.Graphics.DrawImage(Game.CivsMap[Game.Instance.ActiveCiv.Id], 0, 0, rect, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(Game.CivsMap[CivIdWhoseMapIsDisplayed], 0, 0, rect, GraphicsUnit.Pixel);
 
             //Unit/viewing piece static
             switch (AnimType)
             {
-                case AnimationType.None:
-                    break;
                 case AnimationType.UnitWaiting:
                     {
                         IUnit unit = Game.Instance.ActiveUnit;
@@ -404,6 +401,14 @@ namespace RTciv2.Forms
                         StartAnimation(AnimationType.ViewPieces);
                         break;
                     }
+                case MapEventType.ToggleBetweenCurrentEntireMapView:
+                    {
+                        if (CivIdWhoseMapIsDisplayed == Game.Instance.ActiveCiv.Id) CivIdWhoseMapIsDisplayed = 8;   //show entire map
+                        else if (CivIdWhoseMapIsDisplayed == 8) CivIdWhoseMapIsDisplayed = Game.Instance.ActiveCiv.Id;   //show current civ's map view
+                        DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
+                        Update();
+                        break;
+                    }
                 default: break;
             }
         }
@@ -558,7 +563,6 @@ namespace RTciv2.Forms
                         Update();
                         break;
                     }
-
             }
         }
     }
