@@ -23,7 +23,7 @@ namespace RTciv2.Forms
         private int MapGridVar { get; set; }    //style of map grid presentation
         private System.Windows.Forms.Timer Timer;    //timer for blinking (unit or viewing piece), moving unit, etc.
         private static AnimationType AnimType;
-        private int CivIdWhoseMapIsDisplayed { get; set; }
+        public static int CivIdWhoseMapIsDisplayed { get; set; }
         int TimerCounter { get; set; }
         Label HelpLabel;
 
@@ -403,8 +403,6 @@ namespace RTciv2.Forms
                     }
                 case MapEventType.ToggleBetweenCurrentEntireMapView:
                     {
-                        if (CivIdWhoseMapIsDisplayed == Game.Instance.ActiveCiv.Id) CivIdWhoseMapIsDisplayed = 8;   //show entire map
-                        else if (CivIdWhoseMapIsDisplayed == 8) CivIdWhoseMapIsDisplayed = Game.Instance.ActiveCiv.Id;   //show current civ's map view
                         DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         Update();
                         break;

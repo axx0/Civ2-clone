@@ -26,6 +26,7 @@ namespace RTciv2.Forms
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MinimapPanel_Paint);
             MapPanel.OnMapEvent += MapEventHappened;
+            MainCiv2Window.OnMapEvent += MapEventHappened;
 
             DrawPanel = new DoubleBufferedPanel()
             {
@@ -73,13 +74,21 @@ namespace RTciv2.Forms
             for (int row = 0; row < Data.MapYdim; row++)
                 for (int col = 0; col < Data.MapXdim; col++)
                 {
-                    drawColor = (Game.TerrainTile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
-                    e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
+                    if (MapPanel.CivIdWhoseMapIsDisplayed == 8 || Game.TerrainTile[col, row].Visibility[MapPanel.CivIdWhoseMapIsDisplayed])
+                    {
+                        drawColor = (Game.TerrainTile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
+                        e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
+                    }
                 }
 
             //draw cities
             foreach (City city in Game.Cities)
-                e.Graphics.FillRectangle(new SolidBrush(CivColors.CityTextColor[city.Owner]), Offset[0] + city.X, Offset[1] + city.Y, 2, 1);
+            {
+                if (MapPanel.CivIdWhoseMapIsDisplayed == 8 || Game.TerrainTile[(city.X - city.Y % 2) / 2, city.Y].Visibility[MapPanel.CivIdWhoseMapIsDisplayed])
+                {
+                    e.Graphics.FillRectangle(new SolidBrush(CivColors.CityTextColor[city.Owner]), Offset[0] + city.X, Offset[1] + city.Y, 2, 1);
+                }
+            }
 
             //draw current view rectangle
             e.Graphics.DrawRectangle(new Pen(Color.White), Offset[0] + MapPanel.StartingSqXY[0], Offset[1] + MapPanel.StartingSqXY[1], MapPanel.DrawingSqXY[0], MapPanel.DrawingSqXY[1]);
@@ -115,6 +124,11 @@ namespace RTciv2.Forms
             switch (e.EventType)
             {
                 case MapEventType.MapViewChanged:
+                    {
+                        DrawPanel.Refresh();
+                        break;
+                    }
+                case MapEventType.ToggleBetweenCurrentEntireMapView:
                     {
                         DrawPanel.Refresh();
                         break;

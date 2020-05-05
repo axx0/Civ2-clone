@@ -188,8 +188,12 @@ namespace RTciv2.Forms
                     if (Game.Instance.ActiveUnit != null) Actions.ChooseNextUnit();
                     break;
                 case Keys.Y:
-                    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ToggleBetweenCurrentEntireMapView));
-                    break;
+                    {
+                        if (MapPanel.CivIdWhoseMapIsDisplayed == Game.Instance.ActiveCiv.Id) MapPanel.CivIdWhoseMapIsDisplayed = 8;   //show entire map
+                        else if (MapPanel.CivIdWhoseMapIsDisplayed == 8) MapPanel.CivIdWhoseMapIsDisplayed = Game.Instance.ActiveCiv.Id;   //show current civ's map view
+                        OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ToggleBetweenCurrentEntireMapView));
+                        break;
+                    }
 
                     //TODO: case Keys.U: unload
                     //TODO: case Keys.A: activate unit
