@@ -8,7 +8,7 @@ using System.Drawing;
 using RTciv2.Enums;
 using RTciv2.Sounds;
 using RTciv2.Forms;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Events;
 
 namespace RTciv2.Units

@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Bitmaps\Images.ImportBitmaps.cs" />
     <Compile Include="src\Enums\AnimationType.cs" />
     <Compile Include="src\Enums\PlayerEventType.cs" />
     <Compile Include="src\Enums\MapEventType.cs" />
@@ -255,12 +256,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Game.cs" />
-    <Compile Include="src\Imagery\GetAnimationFrames.cs" />
+    <Compile Include="src\Bitmaps\GetAnimationFrames.cs" />
     <Compile Include="src\HelpConsole.cs" />
-    <Compile Include="src\Imagery\CivColors.cs" />
-    <Compile Include="src\Imagery\DrawFunctions.cs" />
-    <Compile Include="src\Imagery\ModifyImage.cs" />
-    <Compile Include="src\Imagery\Images.cs" />
+    <Compile Include="src\Bitmaps\CivColors.cs" />
+    <Compile Include="src\Bitmaps\DrawFunctions.cs" />
+    <Compile Include="src\Bitmaps\ModifyImage.cs" />
+    <Compile Include="src\Bitmaps\Images.cs" />
     <Compile Include="src\Game.ImportSAV.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />

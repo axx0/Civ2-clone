@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RTciv2.Enums;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.GameActions;
 using RTciv2.Events;
 

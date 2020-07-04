@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RTciv2.Enums;
 using RTciv2.Units;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Terrains;
 using RTciv2.Improvements;
 using RTciv2.Forms;
 using RTciv2.Events;
+using ExtensionMethods;
 
 namespace RTciv2.GameActions
 {
@@ -74,6 +75,35 @@ namespace RTciv2.GameActions
             {
                 Game.Units.Remove(unit);
             }
+        }
+
+        //Make visible (potential) hidden tiles when active unit has completed movement
+        public static void UpdateWorldMapAfterUnitHasMoved()
+        {
+            //Offsets of tiles around active unit
+            List<int[]> offsets = new List<int[]>
+            {
+                new int[] {0, -2},
+                new int[] {1, -1},
+                new int[] {2, 0},
+                new int[] {1, 1},
+                new int[] {0, 2},
+                new int[] {-1, 1},
+                new int[] {-2, 0},
+                new int[] {-1, -1}
+            };
+
+            //For each offset make the tile visible if it isn't yet
+            foreach (int[] offset in offsets)
+            {
+                int[] coords = Ext.Civ2xy(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
+                coords[0] += offset[0];
+                coords[1] += offset[1];
+                Game.TerrainTile[coords[0], coords[1]].Visibility[Game.Instance.ActiveCiv.Id] = true;
+            }
+
+            //Update the map image
+            Images.RedrawMap(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
         }
 
         //public static void GiveOrder(OrderType order)

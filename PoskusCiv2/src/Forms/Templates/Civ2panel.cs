@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 
 namespace RTciv2.Forms
 {

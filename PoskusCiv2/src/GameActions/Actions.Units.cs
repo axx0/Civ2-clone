@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RTciv2.Units;
 using RTciv2.Enums;
 using RTciv2.Events;
+using RTciv2.Bitmaps;
 using System.Windows.Forms;
 
 namespace RTciv2.GameActions
@@ -34,11 +35,11 @@ namespace RTciv2.GameActions
                         {
                             case UnitMovementOrderResultType.Movement:
                                 {
-                                    //Movement successful
-                                    Game.Instance.ActiveUnit.Move(order);
-
-                                    //Initiate unit movement timer
-                                    StartUnitMovementTimer();
+                                    //Start movement timer only if move was successful (eg didn't hit obstacle)
+                                    if (Game.Instance.ActiveUnit.Move(order))
+                                    {
+                                        StartUnitMovementTimer();   //Initiate unit movement timer
+                                    }
 
                                     break;
                                 }

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
 using RTciv2.Enums;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Events;
 
 namespace RTciv2.Forms

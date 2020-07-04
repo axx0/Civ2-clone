@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 
-namespace RTciv2.Imagery
+namespace RTciv2.Bitmaps
 {
     public static class CivColors
     {

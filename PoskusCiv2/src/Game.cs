@@ -11,7 +11,7 @@ using RTciv2.Terrains;
 using RTciv2.Improvements;
 using RTciv2.Forms;
 using RTciv2.Sounds;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using ExtensionMethods;
 
 namespace RTciv2

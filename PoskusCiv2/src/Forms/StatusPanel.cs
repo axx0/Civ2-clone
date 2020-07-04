@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 using System.Globalization;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Units;
 using RTciv2.Events;
 using RTciv2.GameActions;

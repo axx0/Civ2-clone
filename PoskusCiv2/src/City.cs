@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using RTciv2.Enums;
 using RTciv2.Improvements;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Forms;
 using RTciv2.Units;
 using RTciv2.Terrains;
@@ -378,12 +378,12 @@ namespace RTciv2
                     default: shadowOffset = 2; fontSize = 14; break;
                 }
                 //Draw
-                Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
+                System.Drawing.Graphics gr = System.Drawing.Graphics.FromImage(new Bitmap(1, 1));
                 SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", fontSize));
                 int stringWidth = (int)stringSize.Width;
                 int stringHeight = (int)stringSize.Height;
                 _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
-                Graphics g = Graphics.FromImage(_textGraphic);
+                System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(_textGraphic);
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));

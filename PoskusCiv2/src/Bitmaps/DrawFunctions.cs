@@ -8,7 +8,7 @@ using System.Drawing.Imaging;
 using RTciv2.Units;
 using RTciv2.Enums;
 
-namespace RTciv2.Imagery
+namespace RTciv2.Bitmaps
 {
     public class DrawFunctions
     {

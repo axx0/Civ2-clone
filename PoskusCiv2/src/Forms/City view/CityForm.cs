@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExtensionMethods;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Units;
 using RTciv2.Enums;
 using RTciv2.Improvements;

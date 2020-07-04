@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Timers;
 using ExtensionMethods;
 using RTciv2.Events;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Units;
 using RTciv2.Enums;
 using RTciv2.GameActions;
@@ -537,6 +537,9 @@ namespace RTciv2.Forms
                         Update();
                         if (TimerCounter == 7)  //Unit has completed movement
                         {
+                            //First update world map with new visible tiles
+                            Actions.UpdateWorldMapAfterUnitHasMoved();
+
                             //Update the original world map image with image of new location of unit & redraw whole map
                             IUnit unit = Game.Instance.ActiveUnit;
                             Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);

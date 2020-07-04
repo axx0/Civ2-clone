@@ -8,7 +8,7 @@ using RTciv2.Forms;
 using RTciv2.Units;
 using ExtensionMethods;
 
-namespace RTciv2.Imagery
+namespace RTciv2.Bitmaps
 {
     public class GetAnimationFrames
     {
@@ -114,9 +114,8 @@ namespace RTciv2.Imagery
                                     {
                                         if (frame == 0) //for first frame draw unit, for second not
                                         {
-                                            IUnit unit = Game.Instance.ActiveUnit;
                                             g.DrawImage(
-                                                Images.CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom),
+                                                Images.CreateUnitBitmap(Game.Instance.ActiveUnit, unitsHere.Count() > 1, zoom),
                                                 32 * coordsOffsets[0],
                                                 16 * coordsOffsets[1]);
                                         }
@@ -215,20 +214,42 @@ namespace RTciv2.Imagery
                 foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                 {
                     //change coords of central offset
-                    int x = centralCoords[0] + coordsOffsets[0];
-                    int y = centralCoords[1] + coordsOffsets[1];
+                    int xCiv2 = centralCoords[0] + coordsOffsets[0];
+                    int yCiv2 = centralCoords[1] + coordsOffsets[1];
+                    int xReal = (xCiv2 - yCiv2 % 2) / 2;
+                    int yReal = yCiv2;
 
-                    if (x >= 0 && y >= 0 && x < 2 * Data.MapXdim && y < Data.MapYdim)    //make sure you're not drawing tiles outside map bounds
+                    if (xCiv2 >= 0 && yCiv2 >= 0 && xCiv2 < 2 * Data.MapXdim && yCiv2 < Data.MapYdim)    //make sure you're not drawing tiles outside map bounds
                     {
                         //Tiles
-                        int[] realCoords = Ext.Civ2xy(new int[] { x, y });  //real coords from civ2 coords
-                        g.DrawImage(
-                            Images.TerrainBitmap(realCoords[0], realCoords[1]),
-                            32 * coordsOffsets[0] + 64,
-                            16 * coordsOffsets[1] + 48);
+                        int civId = MapPanel.CivIdWhoseMapIsDisplayed;
+                        if ((civId < 8 && Game.TerrainTile[xReal, yReal].Visibility[civId]) || civId == 8)
+                        {
+                            g.DrawImage(
+                                Images.TerrainBitmap(xReal, yReal),
+                                32 * coordsOffsets[0] + 64,
+                                16 * coordsOffsets[1] + 48);
+
+                            //Implement dithering in all 4 directions if necessary
+                            if (civId != 8)
+                                for (int tileX = 0; tileX < 2; tileX++)
+                                    for (int tileY = 0; tileY < 2; tileY++)
+                                    {
+                                        int[] offset = new int[] { -1, 1 };
+                                        int xCiv2New = xCiv2 + offset[tileX];
+                                        int yCiv2New = yCiv2 + offset[tileY];
+                                        int xRealNew = (xCiv2New - yCiv2New % 2) / 2; //back to real coords
+                                        int yRealNew = yCiv2New;
+                                        if (xRealNew >= 0 && xRealNew < Data.MapXdim && yRealNew >= 0 && yRealNew < Data.MapYdim)   //don't observe outside map limits
+                                            if (!Game.TerrainTile[xRealNew, yRealNew].Visibility[civId])   //surrounding tile is not visible -> dither
+                                                g.DrawImage(Images.DitherDots[tileX, tileY],
+                                                            32 * coordsOffsets[0] + 64 + 32 * tileX,
+                                                            16 * coordsOffsets[1] + 48 + 16 * tileY);
+                                    }
+                        }
 
                         //Units
-                        List<IUnit> unitsHere = Game.Units.Where(u => u.X == x && u.Y == y).ToList();
+                        List<IUnit> unitsHere = Game.Units.Where(u => u.X == xCiv2 && u.Y == yCiv2).ToList();
                         //If active unit is in this list-- > remove it
                         if (unitsHere.Contains(Game.Instance.ActiveUnit))
                         {
@@ -269,7 +290,7 @@ namespace RTciv2.Imagery
                         }
 
                         //Cities
-                        City city = Game.Cities.Find(c => c.X == x && c.Y == y);
+                        City city = Game.Cities.Find(c => c.X == xCiv2 && c.Y == yCiv2);
                         if (city != null)
                         {
                             g.DrawImage(

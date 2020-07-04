@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
-using RTciv2.Imagery;
+using RTciv2.Bitmaps;
 using RTciv2.Sounds;
 using CommandLine;
 
