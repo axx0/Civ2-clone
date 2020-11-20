@@ -23,21 +23,29 @@ namespace civ2.Forms
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
         ToolStripMenuItem ShowMapGridItem;
+        
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MainCiv2Window(Resolution resol, string civ2Path, string SAVfile)
+        public MainCiv2Window(Resolution resol)
         {
             #region INITIAL SETTINGS
             InitializeComponent();
-            Text = "Civilization II Multiplayer Gold (OpenCIV2)";
+            Text = "Civilization II Multiplayer Gold";
             BackColor = Color.FromArgb(143, 123, 99);
             this.Icon = Properties.Resources.civ2alt;   //Load the icon
             #endregion
 
-            #region RESOLUTION
-            if (resol.Name == "Whole screen") WindowState = FormWindowState.Maximized;
-            else { this.Size = new Size(resol.Width, resol.Height); CenterToScreen(); }
+            #region SCREEN SIZE
+            if (resol.Name == "Maximized")
+            {
+                WindowState = FormWindowState.Maximized;
+            }                
+            else 
+            {
+                this.Size = new Size(resol.Width, resol.Height); 
+                CenterToScreen();
+            }
             #endregion
 
             #region MENUS
