@@ -270,6 +270,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\ReadRULES.cs" />
     <Compile Include="src\Resolution.cs" />
+    <Compile Include="src\Settings.cs" />
     <Compile Include="src\Sounds\Sound.cs" />
     <Compile Include="src\Techs\Tech.cs" />
     <Compile Include="src\Techs\ITech.cs" />
@@ -384,7 +385,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MinimapCursor.cur" />
     <Content Include="notes.txt" />
     <Content Include="Resources\CITIES.GIF" />
     <Content Include="Resources\CITY.GIF" />
