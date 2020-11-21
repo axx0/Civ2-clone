@@ -26,8 +26,9 @@ namespace civ2.Bitmaps
         public static int[,] unitShieldLocation = new int[63, 2];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
+        public static Icon Civ2Icon;         
 
-        private static void LoadGraphicsAssetsFromFiles()
+        public static void LoadGraphicsAssetsFromFiles()
         {
             TerrainBitmapsImportFromFile();
             CitiesBitmapsImportFromFile();
@@ -35,12 +36,12 @@ namespace civ2.Bitmaps
             PeopleIconsBitmapsImportFromFile();
             IconsBitmapsImportFromFile();
             CityWallpaperBitmapImportFromFile();
-            ImportDLLimages();
+            //ImportDLLimages();
         }
 
         public static void CreateLoadGameGraphics()
         {
-            //Creates bitmaps from current folder (CURRENTLY FROM RESOURCES, TODO: load files from disk)
+            //Creates bitmaps from current folder
             LoadGraphicsAssetsFromFiles();
 
             //Create graphic of each map tile

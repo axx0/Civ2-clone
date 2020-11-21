@@ -6,6 +6,20 @@ namespace civ2.Bitmaps
 {
     public partial class Images
     {
+        // Extract icon from civ2.exe file
+        public static void ImportCiv2Icon()
+        {
+            try
+            {
+                Civ2Icon = Icon.ExtractAssociatedIcon(Settings.Civ2Path + "civ2.exe");
+            }
+            catch
+            {
+                Console.WriteLine("Civ2.exe not found!");
+            }
+            
+        }
+
         public static void TerrainBitmapsImportFromFile()
         {
             Bitmap terrain1 = new Bitmap(640, 480);

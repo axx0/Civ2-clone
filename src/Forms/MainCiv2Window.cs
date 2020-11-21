@@ -5,6 +5,8 @@ using System.Windows.Forms;
 using civ2.Enums;
 using civ2.GameActions;
 using civ2.Events;
+using civ2.Bitmaps;
+using civ2.Sounds;
 
 namespace civ2.Forms
 {
@@ -29,11 +31,14 @@ namespace civ2.Forms
 
         public MainCiv2Window(Resolution resol)
         {
+            LoadInitialAssets();
+
             #region INITIAL SETTINGS
             InitializeComponent();
             Text = "Civilization II Multiplayer Gold";
             BackColor = Color.FromArgb(143, 123, 99);
-            this.Icon = Properties.Resources.civ2alt;   //Load the icon
+            this.Icon = Images.Civ2Icon;
+            //this.Icon = Properties.Resources.civ2alt;   //Load the icon
             #endregion
 
             #region SCREEN SIZE
@@ -282,6 +287,8 @@ namespace civ2.Forms
 
         private void MainCiv2Window_Load(object sender, EventArgs e)
         {
+            LoadInitialAssets();
+
             //Symbol image in the center of screen
             //Bitmap backimage = Images.MainScreenSymbol;
             //MainIcon = new PictureBox {
@@ -319,25 +326,35 @@ namespace civ2.Forms
             //else ShowIntroScreen();
             #endregion
 
-            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
-            MapPanel.Location = new Point(0, MainMenuStrip.Height);
-            Controls.Add(MapPanel);
-            ZoomInItem.Click += MapPanel.ZoomINclicked;
-            ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
-            MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
-            MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
-            StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
-            MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            StatusPanel.OnMapEvent += MapEventHappened;
-            MapPanel.OnMapEvent += MapEventHappened;
+            //MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            //MapPanel.Location = new Point(0, MainMenuStrip.Height);
+            //Controls.Add(MapPanel);
+            //ZoomInItem.Click += MapPanel.ZoomINclicked;
+            //ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
+            //MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
+            //MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
+            //StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
+            //MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
+            //StatusPanel.OnMapEvent += MapEventHappened;
+            //MapPanel.OnMapEvent += MapEventHappened;
 
-            MinimapPanel = new MinimapPanel(262, 149);
-            MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
-            Controls.Add(MinimapPanel);
+            //MinimapPanel = new MinimapPanel(262, 149);
+            //MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
+            //Controls.Add(MinimapPanel);
 
-            StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
-            StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
-            Controls.Add(StatusPanel);
+            //StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
+            //StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
+            //Controls.Add(StatusPanel);
+        }
+
+        // Load assets at start of Civ2 program
+        private void LoadInitialAssets()
+        {
+            // Load DLLs
+            Images.ImportDLLimages();
+
+            // Load civ2 icon
+            Images.ImportCiv2Icon();
         }
 
         #region What to show on itro screen

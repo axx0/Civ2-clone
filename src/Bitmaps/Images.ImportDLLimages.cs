@@ -13,7 +13,7 @@ namespace civ2.Bitmaps
                              CityBuiltAncientWallpaper, CityBuiltModernWallpaper, MainScreenSymbol;
 
         // Import gifs from various DLL files
-        private static void ImportDLLimages()
+        public static void ImportDLLimages()
         {
             // Manually read GIFs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)
             //string DLLname = "Civ2Art.dll";
