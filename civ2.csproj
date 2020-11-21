@@ -362,6 +362,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\GameActions\Actions.Units.cs" />
+    <Compile Include="src\Bitmaps\Images.ImportDLLimages.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -388,30 +389,6 @@
     <Content Include="notes.txt" />
     <Content Include="Resources\CITIES.GIF" />
     <Content Include="Resources\CITY.GIF" />
-    <Content Include="Resources\DLL01.gif" />
-    <Content Include="Resources\DLL10.gif" />
-    <Content Include="Resources\DLL11.gif" />
-    <Content Include="Resources\DLL12.gif" />
-    <Content Include="Resources\DLL13.gif" />
-    <Content Include="Resources\DLL14.gif" />
-    <Content Include="Resources\DLL15.gif" />
-    <Content Include="Resources\DLL16.gif" />
-    <Content Include="Resources\DLL17.gif" />
-    <Content Include="Resources\DLL18.gif" />
-    <Content Include="Resources\DLL19.gif" />
-    <Content Include="Resources\DLL02.gif" />
-    <Content Include="Resources\DLL20.gif" />
-    <Content Include="Resources\DLL21.gif" />
-    <Content Include="Resources\DLL22.gif" />
-    <Content Include="Resources\DLL23.gif" />
-    <Content Include="Resources\DLL24.gif" />
-    <Content Include="Resources\DLL03.gif" />
-    <Content Include="Resources\DLL04.gif" />
-    <Content Include="Resources\DLL05.gif" />
-    <Content Include="Resources\DLL06.gif" />
-    <Content Include="Resources\DLL07.gif" />
-    <Content Include="Resources\DLL08.gif" />
-    <Content Include="Resources\DLL09.gif" />
     <Content Include="Resources\DLL_2_01.gif" />
     <Content Include="Resources\DLL_2_10.gif" />
     <Content Include="Resources\DLL_2_11.gif" />

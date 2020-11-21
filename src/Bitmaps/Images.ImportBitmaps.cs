@@ -643,43 +643,6 @@ namespace civ2.Bitmaps
             CityWallpaper = ModifyImage.CropImage(cityWallpaper, new Rectangle(0, 0, 640, 420));
         }
 
-        public static void LoadDLLimagesImportFromFile()
-        {
-            Bitmap cityStatusWallpaper = new Bitmap(Properties.Resources.DLL01);
-            CityStatusWallpaper = cityStatusWallpaper;
-            CityStatusWallpaper = ModifyImage.CropImage(CityStatusWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap defenseMinWallpaper = new Bitmap(Properties.Resources.DLL02);
-            DefenseMinWallpaper = defenseMinWallpaper;
-            DefenseMinWallpaper = ModifyImage.CropImage(DefenseMinWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap attitudeAdvWallpaper = new Bitmap(Properties.Resources.DLL04);
-            AttitudeAdvWallpaper = attitudeAdvWallpaper;
-            AttitudeAdvWallpaper = ModifyImage.CropImage(AttitudeAdvWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap tradeAdvWallpaper = new Bitmap(Properties.Resources.DLL05);
-            TradeAdvWallpaper = tradeAdvWallpaper;
-            TradeAdvWallpaper = ModifyImage.CropImage(TradeAdvWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap scienceAdvWallpaper = new Bitmap(Properties.Resources.DLL06);
-            ScienceAdvWallpaper = scienceAdvWallpaper;
-            ScienceAdvWallpaper = ModifyImage.CropImage(ScienceAdvWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap wowWallpaper = new Bitmap(Properties.Resources.DLL07);
-            WondersOfWorldWallpaper = wowWallpaper;
-            WondersOfWorldWallpaper = ModifyImage.CropImage(WondersOfWorldWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap demographicsWallpaper = new Bitmap(Properties.Resources.DLL09);
-            DemographicsWallpaper = demographicsWallpaper;
-            DemographicsWallpaper = ModifyImage.CropImage(DemographicsWallpaper, new Rectangle(0, 0, 600, 400));
-
-            Bitmap mainScreenSymbol = new Bitmap(Properties.Resources.DLL23);
-            MainScreenSymbol = mainScreenSymbol;
-
-            Bitmap mainScreenSinai = new Bitmap(Properties.Resources.DLL_2_01);
-            MainScreenSinai = mainScreenSinai;
-        }
-
         private static Bitmap CreateNonIndexedImage(Image src)  //Converting GIFs to non-indexed images (required for SetPixel method)
         {
             Bitmap newBmp = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
