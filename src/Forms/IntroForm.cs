@@ -150,7 +150,7 @@ namespace civ2.Forms
             e.Graphics.DrawString("civ2", new Font("Times New Roman", 25), new SolidBrush(Color.Black), new Point(10, 10));
             e.Graphics.DrawString("civ2", new Font("Times New Roman", 25), new SolidBrush(Color.DarkRed), new Point(9, 9));
             e.Graphics.DrawString("launcher", new Font("Times New Roman", 15, FontStyle.Italic), new SolidBrush(Color.DarkBlue), new Point(12, 50));
-            e.Graphics.DrawIcon(Properties.Resources.civ2, new Rectangle(160, 25, 32, 32));
+            //e.Graphics.DrawIcon(Properties.Resources.civ2, new Rectangle(160, 25, 32, 32));
             e.Graphics.DrawString("Maximized", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(26, 103));
             e.Graphics.DrawString("Chose screen size:", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(28, 130));
             e.Graphics.DrawString("Civ2 path:", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(28, 200));

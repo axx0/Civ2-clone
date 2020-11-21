@@ -65,6 +65,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="src\Bitmaps\Images.ImportBitmaps.cs" />
     <Compile Include="src\Enums\AnimationType.cs" />
     <Compile Include="src\Enums\PlayerEventType.cs" />
@@ -333,14 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="src\Forms\Menu Advisors\ScienceAdvisorForm.resx">
       <DependentUpon>ScienceAdvisorForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -381,9 +381,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="notes.txt" />
+    <None Include="Resources\MinimapCursor.cur" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
