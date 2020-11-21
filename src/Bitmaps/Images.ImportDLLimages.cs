@@ -6,11 +6,15 @@ namespace civ2.Bitmaps
 {
     public partial class Images
     {
+        // From Tiles.dll
         public static Bitmap CityStatusWallpaper, DefenseMinWallpaper, ForeignMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper,
                              ScienceAdvWallpaper, WondersOfWorldWallpaper, Top5citiesWallpaper, DemographicsWallpaper, CivScoreWallpaper,
                              TaxRateSmallWallpaper, TaxRateWallpaper, CityConqueredAncientWallpaper, CityConqueredModernWallpaper,
                              CivilDisorderAncientWallpaper, CivilDisorderModernWallpaper, WeLoveKingAncientWallpaper, WeLoveKingModernWallpaper,
                              CityBuiltAncientWallpaper, CityBuiltModernWallpaper, MainScreenSymbol;
+
+        // From Intro.dll
+        public static Bitmap SinaiPic;
 
         // Import gifs from various DLL files
         public static void ImportDLLimages()
@@ -30,7 +34,7 @@ namespace civ2.Bitmaps
 
             // Extract GIF from bytes using known offsets and lengths of GIFS from DLL
             Bitmap extractedGIF;
-            // 50) City status wallpaper
+            // (50) City status wallpaper
             extractedGIF = ExtractBitmapFromDLL(bytes, "1E8B0", "13A3F");
             CityStatusWallpaper = ModifyImage.CropImage(extractedGIF, new Rectangle(0, 0, 600, 400));
             // (51) Defense minister wallpaper
@@ -84,8 +88,16 @@ namespace civ2.Bitmaps
             CityBuiltModernWallpaper = ExtractBitmapFromDLL(bytes, "E34A4", "4A42");
             // (90) Main screen
             MainScreenSymbol = ExtractBitmapFromDLL(bytes, "F7454", "1389D");
-            // TODO: Import DLLs (85), (86), (95)
+            // TODO: Import DLLs (85), (86), (95) from tiles.dll
 
+            // ========================================================================================
+            // INTRO.DLL
+            DLLname = "Intro.dll";
+            DLLpath = Settings.Civ2Path + DLLname;
+            bytes = File.ReadAllBytes(DLLpath);
+
+            // (901) City status wallpaper
+            SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
         }
 
         // Extract GIF image from DLL bytes

@@ -48,8 +48,9 @@ namespace civ2
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             //HelpConsole.CreateConsole();
-            Application.Run(new Forms.IntroForm());
-            //Application.Run(new Forms.MainCiv2Window());
+            //Application.Run(new Forms.IntroForm());
+            Settings.LoadConfigSettings();
+            Application.Run(new Forms.MainCiv2Window());
         }
     }
 }

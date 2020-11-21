@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace civ2
 {
@@ -6,23 +7,32 @@ namespace civ2
     {
         //Game settings from App.config
         public static string Civ2Path { get; private set; }
-        public static string SAVname { get; private set; }
-        public static string WindowSize { get; private set; }
 
-        public static void UpdateConfigSettings(string civ2Path, string savName, string windowSize)
+        public static void LoadConfigSettings()
+        {
+            //Load settings from App.config
+            try
+            {
+                //Read from config file
+                Civ2Path = ConfigurationManager.AppSettings.Get("path");
+            }
+            catch (ConfigurationErrorsException)
+            {
+                Console.WriteLine("Error reading app settings");
+            }
+        }
+
+        public static void UpdateConfigSettings(string civ2Path)
         {
             //First update the App.config file
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             config.AppSettings.Settings["path"].Value = civ2Path;
-            config.AppSettings.Settings["SAV file"].Value = savName;
-            config.AppSettings.Settings["window size"].Value = windowSize;
+
             config.AppSettings.SectionInformation.ForceSave = true;
             config.Save(ConfigurationSaveMode.Modified);
 
             //Then update settings variables for the game
             Civ2Path = civ2Path;
-            SAVname = savName;
-            WindowSize = windowSize;
         }
     }
 }

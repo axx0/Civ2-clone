@@ -80,6 +80,9 @@
     <Compile Include="src\Events\MapEventArgs.cs" />
     <Compile Include="src\Events\PlayerEventArgs.cs" />
     <Compile Include="src\Events\UnitEventArgs.cs" />
+    <Compile Include="src\Forms\MainCiv2Window.ShowIntroScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -106,12 +109,6 @@
     </Compile>
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\IntroForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\IntroForm.Designer.cs">
-      <DependentUpon>IntroForm.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\MainCiv2Window.cs">
       <SubType>Form</SubType>
@@ -283,9 +280,6 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
-    <EmbeddedResource Include="src\Forms\IntroForm.resx">
-      <DependentUpon>IntroForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
       <DependentUpon>MainCiv2Window.cs</DependentUpon>
     </EmbeddedResource>
