@@ -14,7 +14,11 @@ namespace civ2.Forms
         private TextBox PathBox, SAVbox, ResultBox;
         private Civ2button StartButton;
         public List<Resolution> Resolutions = new List<Resolution>();
-        
+        private string Civ2Path { get; set; }
+        private string SAVname { get; set; }
+        private string WindowSize { get; set; }
+
+
         public IntroForm()
         {
             InitializeComponent();            
@@ -111,14 +115,14 @@ namespace civ2.Forms
             try
             {
                 //Read from config file
-                Settings.Civ2Path = ConfigurationManager.AppSettings.Get("path");
-                Settings.SAVname = ConfigurationManager.AppSettings.Get("SAV file");
-                Settings.WindowSize = ConfigurationManager.AppSettings.Get("window size");
+                Civ2Path = ConfigurationManager.AppSettings.Get("path");
+                SAVname = ConfigurationManager.AppSettings.Get("SAV file");
+                WindowSize = ConfigurationManager.AppSettings.Get("window size");
 
                 //Update controls in form
-                PathBox.Text = Settings.Civ2Path;
-                SAVbox.Text = Settings.SAVname;
-                if (Settings.WindowSize == "Maximized") 
+                PathBox.Text = Civ2Path;
+                SAVbox.Text = SAVname;
+                if (WindowSize == "Maximized") 
                 {
                     MaxScrBox.Checked = true; 
                     ResolBox.Enabled = false; 
@@ -126,7 +130,7 @@ namespace civ2.Forms
                 else 
                 { 
                     ResolBox.Enabled = true; 
-                    ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == Settings.WindowSize);
+                    ResolBox.SelectedIndex = Resolutions.FindIndex(a => a.Name == WindowSize);
                     MaxScrBox.Checked = false; 
                 }
             }
@@ -176,8 +180,7 @@ namespace civ2.Forms
         {
             this.Hide();
             int resolChoice = MaxScrBox.Checked ? Resolutions.FindIndex(a => a.Name == "Maximized") : ResolBox.SelectedIndex;
-            Settings.WindowSize = Resolutions[resolChoice].Name;
-            UpdateConfig();   //update config file with current settings before closing form
+            Settings.UpdateConfigSettings(Civ2Path, SAVname, Resolutions[resolChoice].Name);    //update config file with current settings before closing form
             Game.Preloading(Settings.Civ2Path);
             Game.LoadGame(Settings.Civ2Path, Settings.SAVname);
             var form2 = new MainCiv2Window(Resolutions[resolChoice]);
@@ -210,14 +213,14 @@ namespace civ2.Forms
             }
             else 
             {
-                Settings.Civ2Path = _Civ2Path;
+                Civ2Path = _Civ2Path;
                 SAVbox.Enabled = true;
                 if (savExists) 
                 {
                     StartButton.Enabled = true;
                     PathBox.BackColor = Color.LightGray;
                     SAVbox.BackColor = Color.LightGray;
-                    Settings.SAVname = _SAVname;
+                    SAVname = _SAVname;
                 }
                 else 
                 {
@@ -231,17 +234,6 @@ namespace civ2.Forms
                 StartButton.Focus();
                 StartButton.Select(); 
             }
-        }
-
-        //Update config file with current settings
-        private void UpdateConfig()
-        {
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings["path"].Value = Settings.Civ2Path;
-            config.AppSettings.Settings["SAV file"].Value = Settings.SAVname;
-            config.AppSettings.Settings["window size"].Value = Settings.WindowSize;
-            config.AppSettings.SectionInformation.ForceSave = true;
-            config.Save(ConfigurationSaveMode.Modified);
         }
     }
 }
