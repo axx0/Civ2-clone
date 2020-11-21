@@ -86,7 +86,6 @@ namespace civ2.Bitmaps
             MainScreenSymbol = ExtractBitmapFromDLL(bytes, "F7454", "1389D");
             // TODO: Import DLLs (85), (86), (95)
 
-            extractedGIF.Dispose();
         }
 
         // Extract GIF image from DLL bytes

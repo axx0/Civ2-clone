@@ -387,31 +387,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="notes.txt" />
-    <Content Include="Resources\CITIES.GIF" />
-    <Content Include="Resources\CITY.GIF" />
-    <Content Include="Resources\DLL_2_01.gif" />
-    <Content Include="Resources\DLL_2_10.gif" />
-    <Content Include="Resources\DLL_2_11.gif" />
-    <Content Include="Resources\DLL_2_12.gif" />
-    <Content Include="Resources\DLL_2_13.gif" />
-    <Content Include="Resources\DLL_2_02.gif" />
-    <Content Include="Resources\DLL_2_03.gif" />
-    <Content Include="Resources\DLL_2_04.gif" />
-    <Content Include="Resources\DLL_2_05.gif" />
-    <Content Include="Resources\DLL_2_06.gif" />
-    <Content Include="Resources\DLL_2_07.gif" />
-    <Content Include="Resources\DLL_2_08.gif" />
-    <Content Include="Resources\DLL_2_09.gif" />
-    <Content Include="Resources\EDITORAS.GIF" />
-    <Content Include="Resources\EDITORPT.GIF" />
-    <Content Include="Resources\EDITORSA.GIF" />
-    <Content Include="Resources\EDITORSQ.GIF" />
-    <Content Include="Resources\ICONS.GIF" />
-    <Content Include="Resources\PEOPLE.GIF" />
-    <Content Include="Resources\SCREDITS.GIF" />
-    <Content Include="Resources\TERRAIN1.GIF" />
-    <Content Include="Resources\TERRAIN2.GIF" />
-    <Content Include="Resources\UNITS.GIF" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

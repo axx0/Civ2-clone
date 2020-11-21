@@ -1,4 +1,6 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
+using System.IO;
 
 namespace civ2.Bitmaps
 {
@@ -6,8 +8,26 @@ namespace civ2.Bitmaps
     {
         public static void TerrainBitmapsImportFromFile()
         {
-            Bitmap terrain1 = new Bitmap(Properties.Resources.TERRAIN1);
-            Bitmap terrain2 = new Bitmap(Properties.Resources.TERRAIN2);
+            Bitmap terrain1 = new Bitmap(640, 480);
+            try
+            {
+                terrain1 = new Bitmap(Settings.Civ2Path + "TERRAIN1.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("TERRAIN1.GIF not found!");
+            }
+            
+            Bitmap terrain2 = new Bitmap(640, 480);
+            try
+            {
+                terrain2 = new Bitmap(Settings.Civ2Path + "TERRAIN2.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("TERRAIN2.GIF not found!");
+            }
+
             Desert = new Bitmap[4];
             Plains = new Bitmap[4];
             Grassland = new Bitmap[4];
@@ -230,7 +250,16 @@ namespace civ2.Bitmaps
 
         public static void CitiesBitmapsImportFromFile()
         {
-            Bitmap cities = new Bitmap(Properties.Resources.CITIES);
+            Bitmap cities = new Bitmap(640, 480);
+            try
+            {
+                cities = new Bitmap(Settings.Civ2Path + "CITIES.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("CITIES.GIF not found!");
+            }
+
             City = new Bitmap[6, 4];
             CityFlag = new Bitmap[9];
             CityWall = new Bitmap[6, 4];
@@ -395,7 +424,15 @@ namespace civ2.Bitmaps
 
         public static void UnitsBitmapsImportFromFile()
         {
-            Bitmap units = new Bitmap(Properties.Resources.UNITS);
+            Bitmap units = new Bitmap(640, 480);
+            try
+            {
+                units = new Bitmap(Settings.Civ2Path + "UNITS.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("UNITS.GIF not found!");
+            }
 
             Units = new Bitmap[63];
             UnitShield = new Bitmap[8];
@@ -483,7 +520,15 @@ namespace civ2.Bitmaps
 
         public static void PeopleIconsBitmapsImportFromFile()
         {
-            Bitmap icons = new Bitmap(Properties.Resources.PEOPLE);
+            Bitmap icons = new Bitmap(640, 480);
+            try
+            {
+                icons = new Bitmap(Settings.Civ2Path + "PEOPLE.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("PEOPLE.GIF not found!");
+            }
 
             PeopleL = new Bitmap[11, 4];
             PeopleLshadow = new Bitmap[11, 4];
@@ -512,7 +557,15 @@ namespace civ2.Bitmaps
 
         public static void IconsBitmapsImportFromFile()
         {
-            Bitmap icons = new Bitmap(Properties.Resources.ICONS);
+            Bitmap icons = new Bitmap(640, 480);
+            try
+            {
+                icons = new Bitmap(Settings.Civ2Path + "ICONS.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("ICONS.GIF not found!");
+            }
 
             Improvements = new Bitmap[67];
             ImprovementsLarge = new Bitmap[67];
@@ -638,8 +691,16 @@ namespace civ2.Bitmaps
 
         public static void CityWallpaperBitmapImportFromFile()
         {
-            Bitmap cityWallpaper = new Bitmap(Properties.Resources.CITY);
-            //CityWallpaper = (Bitmap)cityWallpaper;
+            Bitmap cityWallpaper = new Bitmap(640, 480);
+            try
+            {
+                cityWallpaper = new Bitmap(Settings.Civ2Path + "CITY.GIF");
+            }
+            catch
+            {
+                Console.WriteLine("CITY.GIF not found!");
+            }
+
             CityWallpaper = ModifyImage.CropImage(cityWallpaper, new Rectangle(0, 0, 640, 420));
         }
 
