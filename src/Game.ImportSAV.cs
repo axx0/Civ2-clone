@@ -10,15 +10,10 @@ namespace civ2
     {
         public static void ImportSAV(string SAVpath)
         {
-            // Enter filename
-            FileStream fs = new FileStream(SAVpath, FileMode.Open, FileAccess.Read);
-            int[] dataArray = new int[fs.Length];
             string bin;
             int intVal1, intVal2, intVal3, intVal4;
 
             //Read every byte
-            for (int i = 0; i < fs.Length; i++) dataArray[i] = fs.ReadByte();
-
             byte[] bytes = File.ReadAllBytes(SAVpath);
 
             #region Start of saved game file
@@ -166,20 +161,20 @@ namespace civ2
             for (int i = 0; i < 7; i++) //for 7 civs, but NOT for barbarians (barbarians have i=0, so begin count at 1)
             {
                 //City style
-                civCityStyle[i + 1] = dataArray[584 + 242 * i];
+                civCityStyle[i + 1] = bytes[584 + 242 * i];
 
                 //Leader names (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(dataArray[584 + 2 + 242 * i + j]);
+                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 242 * i + j]);
                 civLeaderName[i + 1] = new string(asciich);
                 civLeaderName[i + 1] = civLeaderName[i + 1].Replace("\0", string.Empty);  //remove null characters
 
                 //Tribe name (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 242 * i + j]);
+                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 23 + 242 * i + j]);
                 civTribeName[i + 1] = new string(asciich);
                 civTribeName[i + 1] = civTribeName[i + 1].Replace("\0", string.Empty);
 
                 //Adjective (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(dataArray[584 + 2 + 23 + 23 + 242 * i + j]);
+                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 23 + 23 + 242 * i + j]);
                 civAdjective[i + 1] = new string(asciich);
                 civAdjective[i + 1] = civAdjective[i + 1].Replace("\0", string.Empty);
 
@@ -211,35 +206,35 @@ namespace civ2
             for (int i = 0; i < 8; i++) //for each civ
             {
                 //Gender (0=male, 2=female)
-                rulerGender[i] = dataArray[2278 + 1428 * i + 1]; //2nd byte in tribe block
+                rulerGender[i] = bytes[2278 + 1428 * i + 1]; //2nd byte in tribe block
 
                 //Money
-                intVal1 = dataArray[2278 + 1428 * i + 2];    //3rd byte in tribe block
-                intVal2 = dataArray[2278 + 1428 * i + 3];    //4th byte in tribe block
+                intVal1 = bytes[2278 + 1428 * i + 2];    //3rd byte in tribe block
+                intVal2 = bytes[2278 + 1428 * i + 3];    //4th byte in tribe block
                 civMoney[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Tribe number as per @Leaders table in RULES.TXT
-                tribeNumber[i] = dataArray[2278 + 1428 * i + 6];    //7th byte in tribe block
+                tribeNumber[i] = bytes[2278 + 1428 * i + 6];    //7th byte in tribe block
 
                 //Research progress
-                intVal1 = dataArray[2278 + 1428 * i + 8];    //9th byte in tribe block
-                intVal2 = dataArray[2278 + 1428 * i + 9];    //10th byte in tribe block
+                intVal1 = bytes[2278 + 1428 * i + 8];    //9th byte in tribe block
+                intVal2 = bytes[2278 + 1428 * i + 9];    //10th byte in tribe block
                 civResearchProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 //Tech currently being researched
-                civResearchingTech[i] = dataArray[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
+                civResearchingTech[i] = bytes[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
 
                 //Science rate (%/10)
-                civSciRate[i] = dataArray[2278 + 1428 * i + 19]; //20th byte in tribe block
+                civSciRate[i] = bytes[2278 + 1428 * i + 19]; //20th byte in tribe block
 
                 //Tax rate (%/10)
-                civTaxRate[i] = dataArray[2278 + 1428 * i + 20]; //21st byte in tribe block
+                civTaxRate[i] = bytes[2278 + 1428 * i + 20]; //21st byte in tribe block
 
                 //Government
-                civGovernment[i] = dataArray[2278 + 1428 * i + 21]; //22nd byte in tribe block (0=anarchy, ...)
+                civGovernment[i] = bytes[2278 + 1428 * i + 21]; //22nd byte in tribe block (0=anarchy, ...)
 
                 //Reputation
-                civReputation[i] = dataArray[2278 + 1428 * i + 30]; //31st byte in tribe block
+                civReputation[i] = bytes[2278 + 1428 * i + 30]; //31st byte in tribe block
 
                 //Treaties
                 // ..... TO-DO .....
@@ -248,19 +243,19 @@ namespace civ2
                 // ..... TO-DO .....
 
                 //Technologies
-                string civTechs1 = Convert.ToString(dataArray[2278 + 1428 * i + 88], 2).PadLeft(8, '0');    //89th byte
-                string civTechs2 = Convert.ToString(dataArray[2278 + 1428 * i + 89], 2).PadLeft(8, '0');
-                string civTechs3 = Convert.ToString(dataArray[2278 + 1428 * i + 90], 2).PadLeft(8, '0');
-                string civTechs4 = Convert.ToString(dataArray[2278 + 1428 * i + 91], 2).PadLeft(8, '0');
-                string civTechs5 = Convert.ToString(dataArray[2278 + 1428 * i + 92], 2).PadLeft(8, '0');
-                string civTechs6 = Convert.ToString(dataArray[2278 + 1428 * i + 93], 2).PadLeft(8, '0');
-                string civTechs7 = Convert.ToString(dataArray[2278 + 1428 * i + 94], 2).PadLeft(8, '0');
-                string civTechs8 = Convert.ToString(dataArray[2278 + 1428 * i + 95], 2).PadLeft(8, '0');
-                string civTechs9 = Convert.ToString(dataArray[2278 + 1428 * i + 96], 2).PadLeft(8, '0');
-                string civTechs10 = Convert.ToString(dataArray[2278 + 1428 * i + 97], 2).PadLeft(8, '0');
-                string civTechs11 = Convert.ToString(dataArray[2278 + 1428 * i + 98], 2).PadLeft(8, '0');
-                string civTechs12 = Convert.ToString(dataArray[2278 + 1428 * i + 99], 2).PadLeft(8, '0');
-                string civTechs13 = Convert.ToString(dataArray[2278 + 1428 * i + 100], 2).PadLeft(8, '0');   //101st byte
+                string civTechs1 = Convert.ToString(bytes[2278 + 1428 * i + 88], 2).PadLeft(8, '0');    //89th byte
+                string civTechs2 = Convert.ToString(bytes[2278 + 1428 * i + 89], 2).PadLeft(8, '0');
+                string civTechs3 = Convert.ToString(bytes[2278 + 1428 * i + 90], 2).PadLeft(8, '0');
+                string civTechs4 = Convert.ToString(bytes[2278 + 1428 * i + 91], 2).PadLeft(8, '0');
+                string civTechs5 = Convert.ToString(bytes[2278 + 1428 * i + 92], 2).PadLeft(8, '0');
+                string civTechs6 = Convert.ToString(bytes[2278 + 1428 * i + 93], 2).PadLeft(8, '0');
+                string civTechs7 = Convert.ToString(bytes[2278 + 1428 * i + 94], 2).PadLeft(8, '0');
+                string civTechs8 = Convert.ToString(bytes[2278 + 1428 * i + 95], 2).PadLeft(8, '0');
+                string civTechs9 = Convert.ToString(bytes[2278 + 1428 * i + 96], 2).PadLeft(8, '0');
+                string civTechs10 = Convert.ToString(bytes[2278 + 1428 * i + 97], 2).PadLeft(8, '0');
+                string civTechs11 = Convert.ToString(bytes[2278 + 1428 * i + 98], 2).PadLeft(8, '0');
+                string civTechs12 = Convert.ToString(bytes[2278 + 1428 * i + 99], 2).PadLeft(8, '0');
+                string civTechs13 = Convert.ToString(bytes[2278 + 1428 * i + 100], 2).PadLeft(8, '0');   //101st byte
                 civTechs13 = civTechs13.Remove(civTechs13.Length - 4); //remove last 4 bits, they are not important
                 //Put all techs into one large string, where bit0=1st tech, bit1=2nd tech, ..., bit99=100th tech
                 //First reverse bit order in all strings
@@ -291,53 +286,53 @@ namespace civ2
             //=========================
             //MAP
             //=========================
-            //Map header ofset
+            // Map header ofset
             int ofset;
-            if (version > 1) ofset = 13702;  //FW and later (offset=3586hex)
-            else ofset = 13432; //Conflicts (offset=3478hex)
+            if (version > 1) ofset = 13702; // FW and later (offset=3586hex)
+            else ofset = 13432;             // Conflicts (offset=3478hex)
 
-            //Map X dimension
-            intVal1 = dataArray[ofset + 0];
-            intVal2 = dataArray[ofset + 1];
+            // Map X dimension
+            intVal1 = bytes[ofset + 0];
+            intVal2 = bytes[ofset + 1];
             Data.MapXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
 
-            //Map Y dimension
-            intVal1 = dataArray[ofset + 2];
-            intVal2 = dataArray[ofset + 3];
+            // Map Y dimension
+            intVal1 = bytes[ofset + 2];
+            intVal2 = bytes[ofset + 3];
             Data.MapYdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Map area:
-            intVal1 = dataArray[ofset + 4];
-            intVal2 = dataArray[ofset + 5];
+            // Map area:
+            intVal1 = bytes[ofset + 4];
+            intVal2 = bytes[ofset + 5];
             Data.MapArea = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            ////Flat Earth flag (info already given before!!)
-            //intVal1 = dataArray[ofset + 6];
-            //intVal2 = dataArray[ofset + 7];
+            //// Flat Earth flag (info already given before!!)
+            //intVal1 = bytes[ofset + 6];
+            //intVal2 = bytes[ofset + 7];
             //flatEarth = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Map seed
-            intVal1 = dataArray[ofset + 8];
-            intVal2 = dataArray[ofset + 9];
+            // Map seed
+            intVal1 = bytes[ofset + 8];
+            intVal2 = bytes[ofset + 9];
             Data.MapSeed = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Locator map X dimension
-            intVal1 = dataArray[ofset + 10];
-            intVal2 = dataArray[ofset + 11];
+            // Locator map X dimension
+            intVal1 = bytes[ofset + 10];
+            intVal2 = bytes[ofset + 11];
             Data.MapLocatorXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
 
-            //Locator map Y dimension
-            int intValue11 = dataArray[ofset + 12];
-            int intValue12 = dataArray[ofset + 13];
+            // Locator map Y dimension
+            int intValue11 = bytes[ofset + 12];
+            int intValue12 = bytes[ofset + 13];
             Data.MapLocatorYdim = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Initialize Terrain array now that you know its size
+            // Initialize Terrain array now that you know its size
             TerrainTile = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
 
-            //block 1 - terrain improvements (for individual civs)
+            // block 1 - terrain improvements (for individual civs)
             int ofsetB1 = ofset + 14; //offset for block 2 values
             //...........
-            //block 2 - terrain type
+            // block 2 - terrain type
             int ofsetB2 = ofsetB1 + 7 * Data.MapArea; //offset for block 2 values
             for (int i = 0; i < Data.MapArea; i++)
             {
@@ -347,7 +342,7 @@ namespace civ2
                 // Terrain type
                 TerrainType type = TerrainType.Desert;  //only initial
                 bool river = false;
-                int terrain_type = dataArray[ofsetB2 + i * 6 + 0];
+                int terrain_type = bytes[ofsetB2 + i * 6 + 0];
                 if (terrain_type == 0) { type = TerrainType.Desert; river = false; }   //0dec=0hex
                 if (terrain_type == 128) { type = TerrainType.Desert; river = true; }   //128dec=80hex
                 if (terrain_type == 1) { type = TerrainType.Plains; river = false; }   //1dec=1hex
@@ -377,34 +372,36 @@ namespace civ2
                 //if (bin[1] == '1') { resource = true; }
 
                 // Tile improvements (for all civs! In block 1 it's for indivudual civs)
-                int tile_improv = dataArray[ofsetB2 + i * 6 + 1];
-                bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
-                bool unit_present = (bin[7] == '1') ? true : false;
-                bool city_present = (bin[6] == '1') ? true : false;
-                bool irrigation = (bin[5] == '1') ? true : false;
-                bool mining = (bin[4] == '1') ? true : false;
-                bool road = (bin[3] == '1') ? true : false;
-                bool railroad = (bin[2] == '1' && bin[3] == '1') ? true : false;
-                bool fortress = (bin[1] == '1') ? true : false;
-                bool pollution = (bin[0] == '1') ? true : false;
-                bool farmland = (bin[4] == '1' && bin[5] == '1') ? true : false;
-                bool airbase = (bin[1] == '1' && bin[6] == '1') ? true : false;
+                //int tile_improv = bytes[ofsetB2 + i * 6 + 1];
+                //bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
+
+                bool unit_present   = GetBit(bytes[ofsetB2 + i * 6 + 1], 7);
+                bool city_present   = GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
+                bool irrigation     = GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
+                bool mining         = GetBit(bytes[ofsetB2 + i * 6 + 1], 4);
+                bool road           = GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
+                bool railroad       = GetBit(bytes[ofsetB2 + i * 6 + 1], 2) && GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
+                bool fortress       = GetBit(bytes[ofsetB2 + i * 6 + 1], 1);
+                bool pollution      = GetBit(bytes[ofsetB2 + i * 6 + 1], 0);
+                bool farmland       = GetBit(bytes[ofsetB2 + i * 6 + 1], 4) && GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
+                bool airbase        = GetBit(bytes[ofsetB2 + i * 6 + 1], 1) && GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
+
+                int intValueB23 = bytes[ofsetB2 + i * 6 + 2];       //City radius (TO-DO)
                 
-                int intValueB23 = dataArray[ofsetB2 + i * 6 + 2];       //City radius (TO-DO)
+                int terrain_island = bytes[ofsetB2 + i * 6 + 3];    //Island counter
                 
-                int terrain_island = dataArray[ofsetB2 + i * 6 + 3];    //Island counter
-                
-                //Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
-                int intValueB25 = dataArray[ofsetB2 + i * 6 + 4];
+                // Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
+                int intValueB25 = bytes[ofsetB2 + i * 6 + 4];
                 bool[] visibility = new bool[8];
                 bin = Convert.ToString(intValueB25, 2).PadLeft(8, '0');
-                for (int civ = 0; civ < 8; civ++) visibility[civ] = (bin[7 - civ] == '1') ? true : false;
+                for (int civ = 0; civ < 8; civ++) 
+                    visibility[civ] = (bin[7 - civ] == '1') ? true : false;
 
-                int intValueB26 = dataArray[ofsetB2 + i * 6 + 5];       //?
+                int intValueB26 = bytes[ofsetB2 + i * 6 + 5];       //?
 
                 //string hexValue = intValueB26.ToString("X");
 
-                //SAV file doesn't tell where special resources are, so you have to determine this yourself
+                // SAV file doesn't tell where special resources are, so you have to set this yourself
                 int specialtype = ReturnSpecial(x, y, type, Data.MapXdim, Data.MapYdim);
 
                 CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, visibility, bin);
@@ -420,61 +417,57 @@ namespace civ2
             //=========================
             int ofsetU = ofsetB3 + 2 * Data.MapLocatorXdim * Data.MapLocatorYdim + 1024;
 
-            //determine byte length of units
+            // Determine byte length of units
             int multipl;
-            if (version <= 2)       multipl = 26;   //FW or CiC
-            else if (version == 3)  multipl = 32;   //MGE
-            else                    multipl = 40;   //ToT
+            if (version <= 2)       multipl = 26;   // FW or CiC
+            else if (version == 3)  multipl = 32;   // MGE
+            else                    multipl = 40;   // ToT
 
             for (int i = 0; i < Data.NumberOfUnits; i++)
             {
-                //Unit X location
-                intVal1 = dataArray[ofsetU + multipl * i + 0];
-                intVal2 = dataArray[ofsetU + multipl * i + 1];
+                // Unit X location
+                intVal1 = bytes[ofsetU + multipl * i + 0];
+                intVal2 = bytes[ofsetU + multipl * i + 1];
                 int unitXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
-                bin = Convert.ToString(intVal2, 2).PadLeft(8, '0');
-                bool unit_dead = (bin[0] == '1') ? true : false;
+                bool unit_dead = GetBit(bytes[ofsetU + multipl * i + 1], 0);    // Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
 
-                //Unit Y location
-                intVal1 = dataArray[ofsetU + multipl * i + 2];
-                intVal2 = dataArray[ofsetU + multipl * i + 3];
+                // Unit Y location
+                intVal1 = bytes[ofsetU + multipl * i + 2];
+                intVal2 = bytes[ofsetU + multipl * i + 3];
                 int unitYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
                                 
-                bin = Convert.ToString(dataArray[ofsetU + multipl * i + 4], 2).PadLeft(8, '0');
-                bool unitFirstMove = (bin[1] == '1') ? true : false;            //If this is the unit's first move
-                                
-                bin = Convert.ToString(dataArray[ofsetU + multipl * i + 5], 2).PadLeft(8, '0');
-                bool unitGreyStarShield = (bin[0] == '1') ? true : false;       //Grey star to the shield                
-                bool unitVeteranStatus = (bin[2] == '1') ? true : false;        //Veteran status                
-                int unitType = dataArray[ofsetU + multipl * i + 6];             //Unit type
-                int unitCiv = dataArray[ofsetU + multipl * i + 7];              //Unit civ, 00 = barbarians                
-                int unitMovePointsLost = dataArray[ofsetU + multipl * i + 8];   //Unit move points expended                
-                int unitHitpointsLost = dataArray[ofsetU + multipl * i + 10];   //Unit hitpoints lost
-                int unitLastMove = dataArray[ofsetU + multipl * i + 11];        //Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)                
-                int unitCaravanCommodity = dataArray[ofsetU + multipl * i + 13];//Unit caravan commodity                
-                int unitOrders = dataArray[ofsetU + multipl * i + 15];          //Unit orders                
-                int unitHomeCity = dataArray[ofsetU + multipl * i + 16];        //Unit home city
+                bool unitFirstMove = GetBit(bytes[ofsetU + multipl * i + 4], 1);    // If this is the unit's first move
 
-                //Unit go-to X
-                intVal1 = dataArray[ofsetU + multipl * i + 18];
-                intVal2 = dataArray[ofsetU + multipl * i + 19];
+                bool unitGreyStarShield = GetBit(bytes[ofsetU + multipl * i + 5], 0);   // Grey star to the shield
+                bool unitVeteranStatus = GetBit(bytes[ofsetU + multipl * i + 5], 2);    // Veteran status
+                int unitType = bytes[ofsetU + multipl * i + 6];                         // Unit type
+                int unitCiv = bytes[ofsetU + multipl * i + 7];                          // Unit civ, 00 = barbarians                
+                int unitMovePointsLost = bytes[ofsetU + multipl * i + 8];               // Unit move points expended                
+                int unitHitpointsLost = bytes[ofsetU + multipl * i + 10];               // Unit hitpoints lost
+                int unitLastMove = bytes[ofsetU + multipl * i + 11];                    // Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)                
+                int unitCaravanCommodity = bytes[ofsetU + multipl * i + 13];            // Unit caravan commodity                
+                int unitOrders = bytes[ofsetU + multipl * i + 15];                      // Unit orders                
+                int unitHomeCity = bytes[ofsetU + multipl * i + 16];                    // Unit home city
+
+                // Unit go-to X
+                intVal1 = bytes[ofsetU + multipl * i + 18];
+                intVal2 = bytes[ofsetU + multipl * i + 19];
                 int unitGoToX = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Unit go-to Y
-                intVal1 = dataArray[ofsetU + multipl * i + 20];
-                intVal2 = dataArray[ofsetU + multipl * i + 21];
+                // Unit go-to Y
+                intVal1 = bytes[ofsetU + multipl * i + 20];
+                intVal2 = bytes[ofsetU + multipl * i + 21];
                 int unitGoToY = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Unit link to other units on top of it
-                intVal1 = dataArray[ofsetU + multipl * i + 22];
-                intVal2 = dataArray[ofsetU + multipl * i + 23];
+                // Unit link to other units on top of it
+                intVal1 = bytes[ofsetU + multipl * i + 22];
+                intVal2 = bytes[ofsetU + multipl * i + 23];
                 int unitLinkOtherUnitsOnTop = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Unit link to other units under it
-                intVal1 = dataArray[ofsetU + multipl * i + 24];
-                intVal2 = dataArray[ofsetU + multipl * i + 25];
+                // Unit link to other units under it
+                intVal1 = bytes[ofsetU + multipl * i + 24];
+                intVal2 = bytes[ofsetU + multipl * i + 25];
                 int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 IUnit unit = CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovePointsLost, unitHitpointsLost, unitLastMove, unitCaravanCommodity, (OrderType)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
@@ -486,153 +479,145 @@ namespace civ2
             //=========================
             int ofsetC = ofsetU + multipl * Data.NumberOfUnits;
 
-            if (version <= 2)       multipl = 84;   //FW or CiC
-            else if (version == 3)  multipl = 88;   //MGE
-            else                    multipl = 92;   //ToT
+            if (version <= 2)       multipl = 84;   // FW or CiC
+            else if (version == 3)  multipl = 88;   // MGE
+            else                    multipl = 92;   // ToT
 
             char[] asciichar = new char[15];
             for (int i = 0; i < Data.NumberOfCities; i++)
             {
-                //City X location
-                intVal1 = dataArray[ofsetC + multipl * i + 0];
-                intVal2 = dataArray[ofsetC + multipl * i + 1];
+                // City X location
+                intVal1 = bytes[ofsetC + multipl * i + 0];
+                intVal2 = bytes[ofsetC + multipl * i + 1];
                 int cityXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //City Y location
-                intVal1 = dataArray[ofsetC + multipl * i + 2];
-                intVal2 = dataArray[ofsetC + multipl * i + 3];
+                // City Y location
+                intVal1 = bytes[ofsetC + multipl * i + 2];
+                intVal2 = bytes[ofsetC + multipl * i + 3];
                 int cityYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                bin = Convert.ToString(dataArray[ofsetC + multipl * i + 4], 2).PadLeft(8, '0');
-                bool cityCanBuildCoastal = (bin[0] == '1') ? true : false;          //Can build coastal improvements
-                bool cityAutobuildMilitaryRule = (bin[3] == '1') ? true : false;    //Auto build under military rule
-                bool cityStolenTech = (bin[4] == '1') ? true : false;               //Stolen tech
-                bool cityImprovementSold = (bin[5] == '1') ? true : false;          //Improvement sold
-                bool cityWeLoveKingDay = (bin[6] == '1') ? true : false;            //We love king day
-                bool cityCivilDisorder = (bin[7] == '1') ? true : false;            //Civil disorder
+                bool cityCanBuildCoastal        = GetBit(bytes[ofsetC + multipl * i + 4], 0);    // Can build coastal improvements
+                bool cityAutobuildMilitaryRule  = GetBit(bytes[ofsetC + multipl * i + 4], 3);    // Auto build under military rule
+                bool cityStolenTech             = GetBit(bytes[ofsetC + multipl * i + 4], 4);    // Stolen tech
+                bool cityImprovementSold        = GetBit(bytes[ofsetC + multipl * i + 4], 5);    // Improvement sold
+                bool cityWeLoveKingDay          = GetBit(bytes[ofsetC + multipl * i + 4], 6);    // We love king day
+                bool cityCivilDisorder          = GetBit(bytes[ofsetC + multipl * i + 4], 7);    // Civil disorder
+                bool cityCanBuildShips          = GetBit(bytes[ofsetC + multipl * i + 6], 2);    // Can build ships
+                bool cityObjectivex3            = GetBit(bytes[ofsetC + multipl * i + 7], 3);    // Objective x3
+                bool cityObjectivex1            = GetBit(bytes[ofsetC + multipl * i + 7], 5);    // Objective x1
 
-                bin = Convert.ToString(dataArray[ofsetC + multipl * i + 6], 2).PadLeft(8, '0');
-                bool cityCanBuildShips = (bin[2] == '1') ? true : false;    //Can build ships
+                int cityOwner = bytes[ofsetC + multipl * i + 8];        // Owner
+                int citySize = bytes[ofsetC + multipl * i + 9];         // Size
+                int cityWhoBuiltIt = bytes[ofsetC + multipl * i + 10];  // Who built it
 
-                bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex3 = (bin[3] == '1') ? true : false;  //Objective x3
-
-                bin = Convert.ToString(dataArray[ofsetC + multipl * i + 7], 2).PadLeft(8, '0');
-                bool cityObjectivex1 = (bin[5] == '1') ? true : false;  //Objective x1
-                                
-                int cityOwner = dataArray[ofsetC + multipl * i + 8];    //Owner
-                
-                int citySize = dataArray[ofsetC + multipl * i + 9];     //Size
-                                
-                int cityWhoBuiltIt = dataArray[ofsetC + multipl * i + 10];  //Who built it
-
-                //Production squares
+                // Production squares
                 //???????????????????
 
-                //Specialists
+                // Specialists
                 //??????????????????
 
-                //Food in storage
-                intVal1 = dataArray[ofsetC + multipl * i + 26];
-                intVal2 = dataArray[ofsetC + multipl * i + 27];
+                // Food in storage
+                intVal1 = bytes[ofsetC + multipl * i + 26];
+                intVal2 = bytes[ofsetC + multipl * i + 27];
                 int cityFoodInStorage = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Shield progress
-                intVal1 = dataArray[ofsetC + multipl * i + 28];
-                intVal2 = dataArray[ofsetC + multipl * i + 29];
+                // Shield progress
+                intVal1 = bytes[ofsetC + multipl * i + 28];
+                intVal2 = bytes[ofsetC + multipl * i + 29];
                 int cityShieldsProgress = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Net trade
-                intVal1 = dataArray[ofsetC + multipl * i + 30];
-                intVal2 = dataArray[ofsetC + multipl * i + 31];
+                // Net trade
+                intVal1 = bytes[ofsetC + multipl * i + 30];
+                intVal2 = bytes[ofsetC + multipl * i + 31];
                 int cityNetTrade = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Name        
-                for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(dataArray[ofsetC + multipl * i + j + 32]);
+                // Name        
+                for (int j = 0; j < 15; j++) 
+                    asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
                 string cityName = new string(asciichar);
                 cityName = cityName.Replace("\0", string.Empty);
 
-                //Distribution of workers on map in city view
-                string cityWorkDistr1 = Convert.ToString(dataArray[ofsetC + multipl * i + 48], 2).PadLeft(8, '0');  //inner circle (starting from N, going in counter-clokwise direction)                
-                string cityWorkDistr2 = Convert.ToString(dataArray[ofsetC + multipl * i + 49], 2).PadLeft(8, '0');  //on 8 of the outer circle    
-                string cityWorkDistr3 = Convert.ToString(dataArray[ofsetC + multipl * i + 50], 2).PadLeft(5, '0');  //on 4 of the outer circle
+                // Distribution of workers on map in city view
+                string cityWorkDistr1 = Convert.ToString(bytes[ofsetC + multipl * i + 48], 2).PadLeft(8, '0');  // inner circle (starting from N, going in counter-clokwise direction)                
+                string cityWorkDistr2 = Convert.ToString(bytes[ofsetC + multipl * i + 49], 2).PadLeft(8, '0');  // on 8 of the outer circle    
+                string cityWorkDistr3 = Convert.ToString(bytes[ofsetC + multipl * i + 50], 2).PadLeft(5, '0');  // on 4 of the outer circle
                 string _cityDistributionWorkers = string.Format("{0}{1}{2}", cityWorkDistr3, cityWorkDistr2, cityWorkDistr1);
                 int[] cityDistributionWorkers = new int[21];
                 for (int distNo = 0; distNo < 21; distNo++)
                     cityDistributionWorkers[distNo] = (_cityDistributionWorkers[distNo] == '1') ? 1 : 0;
 
-                int cityNoOfSpecialistsx4 = dataArray[ofsetC + multipl * i + 51];   //Number of specialists x4
+                int cityNoOfSpecialistsx4 = bytes[ofsetC + multipl * i + 51];   // Number of specialists x4
 
-                //Improvements
-                string cityImprovements1 = Convert.ToString(dataArray[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');   //bit6=palace (1st improvement), bit7=not important
-                cityImprovements1 = cityImprovements1.Remove(cityImprovements1.Length - 1); //remove last bit, it is not important
-                string cityImprovements2 = Convert.ToString(dataArray[ofsetC + multipl * i + 53], 2).PadLeft(8, '0');
-                string cityImprovements3 = Convert.ToString(dataArray[ofsetC + multipl * i + 54], 2).PadLeft(8, '0');
-                string cityImprovements4 = Convert.ToString(dataArray[ofsetC + multipl * i + 55], 2).PadLeft(8, '0');
-                string cityImprovements5 = Convert.ToString(dataArray[ofsetC + multipl * i + 56], 2).PadLeft(8, '0');   //bit0-bit4=not important, bit5=port facility (last improvement)
-                //Put all improvements into one large string, where bit0=palace, bit1=barracks, ..., bit33=port facility
-                //First reverse bit order in all strings
+                // Improvements
+                string cityImprovements1 = Convert.ToString(bytes[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');   // bit6=palace (1st improvement), bit7=not important
+                cityImprovements1 = cityImprovements1.Remove(cityImprovements1.Length - 1);                         // remove last bit, it is not important
+                string cityImprovements2 = Convert.ToString(bytes[ofsetC + multipl * i + 53], 2).PadLeft(8, '0');
+                string cityImprovements3 = Convert.ToString(bytes[ofsetC + multipl * i + 54], 2).PadLeft(8, '0');
+                string cityImprovements4 = Convert.ToString(bytes[ofsetC + multipl * i + 55], 2).PadLeft(8, '0');
+                string cityImprovements5 = Convert.ToString(bytes[ofsetC + multipl * i + 56], 2).PadLeft(8, '0');   // bit0-bit4=not important, bit5=port facility (last improvement)
+                // Put all improvements into one large string, where bit0=palace, bit1=barracks, ..., bit33=port facility
+                // First reverse bit order in all strings
                 cityImprovements1 = Reverse(cityImprovements1);
                 cityImprovements2 = Reverse(cityImprovements2);
                 cityImprovements3 = Reverse(cityImprovements3);
                 cityImprovements4 = Reverse(cityImprovements4);
                 cityImprovements5 = Reverse(cityImprovements5);
-                cityImprovements5 = cityImprovements5.Remove(cityImprovements5.Length - 5); //remove last 5 bits, they are not important
-                //Merge all strings into a large string
+                cityImprovements5 = cityImprovements5.Remove(cityImprovements5.Length - 5); // remove last 5 bits, they are not important
+                // Merge all strings into a large string
                 string cityImprovements_ = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
-                //convert string array to bool array
+                // Convert string array to bool array
                 bool[] cityImprovements = new bool[34];
                 for (int impNo = 0; impNo < 34; impNo++)
                     cityImprovements[impNo] = (cityImprovements_[impNo] == '1') ? true : false;
 
-                //Item in production
-                //0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
-                //convert this notation of improvements, so that 62(dec) is 1st improvement, 63(dec) is 2nd, ...
-                int cityItemInProduction = dataArray[ofsetC + multipl * i + 57];
+                // Item in production
+                // 0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
+                // convert this notation of improvements, so that 62(dec) is 1st improvement, 63(dec) is 2nd, ...
+                int cityItemInProduction = bytes[ofsetC + multipl * i + 57];
                 if (cityItemInProduction > 70)  //if it is improvement
-                    cityItemInProduction = 255 - cityItemInProduction + 62; //62 because 0...61 are units
+                    cityItemInProduction = 255 - cityItemInProduction + 62; // 62 because 0...61 are units
                                 
-                int cityActiveTradeRoutes = dataArray[ofsetC + multipl * i + 58];   //No of active trade routes
+                int cityActiveTradeRoutes = bytes[ofsetC + multipl * i + 58];   // No of active trade routes
 
-                //1st, 2nd, 3rd trade commodities supplied
-                int[] cityCommoditySupplied = new int[] { dataArray[ofsetC + multipl * i + 59], dataArray[ofsetC + multipl * i + 60], dataArray[ofsetC + multipl * i + 61] };
+                // 1st, 2nd, 3rd trade commodities supplied
+                int[] cityCommoditySupplied = new int[] { bytes[ofsetC + multipl * i + 59], bytes[ofsetC + multipl * i + 60], bytes[ofsetC + multipl * i + 61] };
 
-                //1st, 2nd, 3rd trade commodities demanded
-                int[] cityCommodityDemanded = new int[] { dataArray[ofsetC + multipl * i + 62], dataArray[ofsetC + multipl * i + 63], dataArray[ofsetC + multipl * i + 64] };
+                // 1st, 2nd, 3rd trade commodities demanded
+                int[] cityCommodityDemanded = new int[] { bytes[ofsetC + multipl * i + 62], bytes[ofsetC + multipl * i + 63], bytes[ofsetC + multipl * i + 64] };
 
-                //1st, 2nd, 3rd trade commodities in route
-                int[] cityCommodityInRoute = new int[] { dataArray[ofsetC + multipl * i + 65], dataArray[ofsetC + multipl * i + 66], dataArray[ofsetC + multipl * i + 67] };
+                // 1st, 2nd, 3rd trade commodities in route
+                int[] cityCommodityInRoute = new int[] { bytes[ofsetC + multipl * i + 65], bytes[ofsetC + multipl * i + 66], bytes[ofsetC + multipl * i + 67] };
 
-                //1st, 2nd, 3rd trade route partner city number
-                int[] cityTradeRoutePartnerCity = new int[] { dataArray[ofsetC + multipl * i + 68], dataArray[ofsetC + multipl * i + 69], dataArray[ofsetC + multipl * i + 70] };
+                // 1st, 2nd, 3rd trade route partner city number
+                int[] cityTradeRoutePartnerCity = new int[] { bytes[ofsetC + multipl * i + 68], bytes[ofsetC + multipl * i + 69], bytes[ofsetC + multipl * i + 70] };
 
-                //Science
-                intVal1 = dataArray[ofsetC + multipl * i + 74];
-                intVal2 = dataArray[ofsetC + multipl * i + 75];
+                // Science
+                intVal1 = bytes[ofsetC + multipl * i + 74];
+                intVal2 = bytes[ofsetC + multipl * i + 75];
                 int cityScience = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //Tax
-                intVal1 = dataArray[ofsetC + multipl * i + 76];
-                intVal2 = dataArray[ofsetC + multipl * i + 77];
+                // Tax
+                intVal1 = bytes[ofsetC + multipl * i + 76];
+                intVal2 = bytes[ofsetC + multipl * i + 77];
                 int cityTax = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //No of trade icons
-                intVal1 = dataArray[ofsetC + multipl * i + 78];
-                intVal2 = dataArray[ofsetC + multipl * i + 79];
+                // No of trade icons
+                intVal1 = bytes[ofsetC + multipl * i + 78];
+                intVal2 = bytes[ofsetC + multipl * i + 79];
                 int cityNoOfTradeIcons = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
                                 
-                int cityFoodProduction = dataArray[ofsetC + multipl * i + 80];  //Total food production
+                int cityFoodProduction = bytes[ofsetC + multipl * i + 80];  // Total food production
                                 
-                int cityShieldProduction = dataArray[ofsetC + multipl * i + 81];    //Total shield production
+                int cityShieldProduction = bytes[ofsetC + multipl * i + 81];    // Total shield production
                                 
-                int cityHappyCitizens = dataArray[ofsetC + multipl * i + 82];   //No of happy citizens
+                int cityHappyCitizens = bytes[ofsetC + multipl * i + 82];   // No of happy citizens
                                 
-                int cityUnhappyCitizens = dataArray[ofsetC + multipl * i + 83]; //No of unhappy citizens
+                int cityUnhappyCitizens = bytes[ofsetC + multipl * i + 83]; // No of unhappy citizens
 
-                //Sequence number of the city
+                // Sequence number of the city
                 //...
 
-                //Check if wonder is in city (28 possible wonders)
+                // Check if wonder is in city (28 possible wonders)
                 bool[] cityWonders = new bool[28];
                 for (int wndr = 0; wndr < 28; wndr++)
                     cityWonders[wndr] = (wonderCity[wndr] == i) ? true : false;
@@ -650,24 +635,22 @@ namespace civ2
             //=========================
             int ofsetO = ofsetC + multipl * Data.NumberOfCities;
 
-            //active cursor XY position
-            intVal1 = dataArray[ofsetO + 63];
-            intVal2 = dataArray[ofsetO + 64];
-            intVal3 = dataArray[ofsetO + 65];
-            intVal4 = dataArray[ofsetO + 66];
+            // Active cursor XY position
+            intVal1 = bytes[ofsetO + 63];
+            intVal2 = bytes[ofsetO + 64];
+            intVal3 = bytes[ofsetO + 65];
+            intVal4 = bytes[ofsetO + 66];
             Data.ActiveXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
-            //clicked tile X position
-            intVal1 = dataArray[ofsetO + 1425];
-            intVal2 = dataArray[ofsetO + 1426];
-            intVal3 = dataArray[ofsetO + 1427];
-            intVal4 = dataArray[ofsetO + 1428];
+            // Clicked tile X position
+            intVal1 = bytes[ofsetO + 1425];
+            intVal2 = bytes[ofsetO + 1426];
+            intVal3 = bytes[ofsetO + 1427];
+            intVal4 = bytes[ofsetO + 1428];
             Data.ClickedXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
-            Console.WriteLine($"Pos: cursor=({Data.ActiveXY[0]},{Data.ActiveXY[1]}), view=({Data.ClickedXY[0]},{Data.ClickedXY[1]})");
             #endregion
 
-            fs.Dispose();
         }
 
         private static bool GetBit(byte b, int bitNumber)
