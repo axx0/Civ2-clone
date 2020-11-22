@@ -20,10 +20,7 @@ namespace civ2.Bitmaps
         public static void ImportDLLimages()
         {
             // Manually read GIFs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)
-            //string DLLname = "Civ2Art.dll";
-            //string[] GIFoffsets = { "1E460", "1EAA8", "2144C", "23544", "222A0" };
-            //string[] GIFlenghts = { "647", "29A2", "E51", "14832", "12A2" };     
-
+            
             // ========================================================================================
             // TILES.DLL
             string DLLname = "Tiles.dll";
@@ -88,7 +85,6 @@ namespace civ2.Bitmaps
             CityBuiltModernWallpaper = ExtractBitmapFromDLL(bytes, "E34A4", "4A42");
             // (90) Main screen
             MainScreenSymbol = ExtractBitmapFromDLL(bytes, "F7454", "1389D");
-            // TODO: Import DLLs (85), (86), (95) from tiles.dll
 
             // ========================================================================================
             // INTRO.DLL
@@ -98,6 +94,7 @@ namespace civ2.Bitmaps
 
             // (901) City status wallpaper
             SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
+
         }
 
         // Extract GIF image from DLL bytes

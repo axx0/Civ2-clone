@@ -22,7 +22,7 @@ namespace civ2.Forms
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MinimapPanel_Paint);
             MapPanel.OnMapEvent += MapEventHappened;
-            MainCiv2Window.OnMapEvent += MapEventHappened;
+            MainWindow.OnMapEvent += MapEventHappened;
 
             DrawPanel = new DoubleBufferedPanel()
             {

@@ -80,7 +80,7 @@
     <Compile Include="src\Events\MapEventArgs.cs" />
     <Compile Include="src\Events\PlayerEventArgs.cs" />
     <Compile Include="src\Events\UnitEventArgs.cs" />
-    <Compile Include="src\Forms\MainCiv2Window.ShowIntroScreen.cs">
+    <Compile Include="src\Forms\MainWindow.ShowIntroScreen.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
@@ -110,11 +110,11 @@
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\MainCiv2Window.cs">
+    <Compile Include="src\Forms\MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Forms\MainCiv2Window.Designer.cs">
-      <DependentUpon>MainCiv2Window.cs</DependentUpon>
+    <Compile Include="src\Forms\MainWindow.Designer.cs">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\Templates\NoSelectButton.cs">
       <SubType>Component</SubType>
@@ -280,8 +280,8 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
-    <EmbeddedResource Include="src\Forms\MainCiv2Window.resx">
-      <DependentUpon>MainCiv2Window.cs</DependentUpon>
+    <EmbeddedResource Include="src\Forms\MainWindow.resx">
+      <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.resx">
       <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>
@@ -352,7 +352,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="SAVfile.xlsx" />
-    <Compile Include="src\Forms\MainCiv2Window.KeyPressActions.cs">
+    <Compile Include="src\Forms\MainWindow.KeyPressActions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\GameActions\Actions.Units.cs" />

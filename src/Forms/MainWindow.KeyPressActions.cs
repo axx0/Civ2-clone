@@ -6,7 +6,7 @@ using civ2.GameActions;
 
 namespace civ2.Forms
 {
-    public partial class MainCiv2Window : Form
+    public partial class MainWindow : Form
     {
         public static event EventHandler<CheckIfCityCanBeViewedEventArgs> OnCheckIfCityCanBeViewed;
 

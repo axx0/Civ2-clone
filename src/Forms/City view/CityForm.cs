@@ -14,17 +14,17 @@ namespace civ2.Forms
     //public partial class CityForm : Form
     public partial class CityForm : Civ2form
     {
-        public MainCiv2Window mainCiv2Window;
+        public MainWindow MainWindow;
         City ThisCity;
         DoubleBufferedPanel CallingForm, WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
         VScrollBar ImprovementsBar;
         int[,] offsets;
         int ProductionItem;
 
-        public CityForm(MainCiv2Window _mainCiv2Window)
+        public CityForm(MainWindow _MainWindow)
         {
             InitializeComponent();
-            mainCiv2Window = _mainCiv2Window;
+            MainWindow = _MainWindow;
         }
 
         public CityForm(DoubleBufferedPanel _callingForm, City city)
@@ -37,7 +37,7 @@ namespace civ2.Forms
 
             Size = new Size(976, 681);  //normalen zoom = (657,459)
             FormBorderStyle = FormBorderStyle.None;
-            BackgroundImage = Images.WallpaperMapForm;
+            BackgroundImage = Images.PanelOuterWallpaper;
             
             this.Load += CityForm_Load;
             this.Paint += CityForm_Paint;

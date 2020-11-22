@@ -38,8 +38,8 @@ namespace civ2.Forms
             Actions.OnPlayerEvent += PlayerEventHappened;
             MinimapPanel.OnMapEvent += MapEventHappened;
             StatusPanel.OnMapEvent += MapEventHappened;
-            MainCiv2Window.OnMapEvent += MapEventHappened;
-            MainCiv2Window.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
+            MainWindow.OnMapEvent += MapEventHappened;
+            MainWindow.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
             
             DrawPanel = new DoubleBufferedPanel() 
             {

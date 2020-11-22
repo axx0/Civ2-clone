@@ -25,7 +25,7 @@ namespace civ2.Forms
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(StatusPanel_Paint);
             MapPanel.OnMapEvent += MapEventHappened;
-            MainCiv2Window.OnMapEvent += MapEventHappened;
+            MainWindow.OnMapEvent += MapEventHappened;
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Actions.OnPlayerEvent += PlayerEventHappened;
             Actions.OnUnitEvent += UnitEventHappened;

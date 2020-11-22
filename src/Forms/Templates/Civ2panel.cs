@@ -8,7 +8,7 @@ namespace civ2.Forms
     {
         public Civ2panel()
         {
-            BackgroundImage = Images.WallpaperMapForm;
+            BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 

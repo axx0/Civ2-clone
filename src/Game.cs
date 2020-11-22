@@ -30,10 +30,10 @@ namespace civ2
         {
         }
 
-        public static void LoadGame(string civ2path, string SAVname)
+        public static void LoadGame(string SAVpath)
         {
-            ReadFiles.ReadRULES(civ2path + "RULES.TXT");
-            ImportSAV(civ2path + SAVname + ".SAV");
+            ReadFiles.ReadRULES(Settings.Civ2Path + "RULES.TXT");
+            ImportSAV(SAVpath);
             Images.CreateLoadGameGraphics();
             Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
             Game.Instance.ActiveCiv = Civs[Data.HumanPlayer];

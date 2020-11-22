@@ -1,6 +1,6 @@
 ﻿namespace civ2.Forms
 {
-    partial class MainCiv2Window
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -30,14 +30,14 @@
         {
             this.SuspendLayout();
             // 
-            // MainCiv2Window
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(282, 253);
-            this.Name = "MainCiv2Window";
-            this.Text = "MainCiv2Window";
-            this.Load += new System.EventHandler(this.MainCiv2Window_Load);
+            this.Name = "MainWindow";
+            this.Text = "MainWindow";
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.ResumeLayout(false);
 
         }

@@ -16,7 +16,7 @@ namespace civ2.Forms
 
             //Size = new Size(480, 120);
             FormBorderStyle = FormBorderStyle.None;
-            BackgroundImage = Images.WallpaperMapForm;
+            BackgroundImage = Images.PanelOuterWallpaper;
             CenterToParent();
             Paint += CityRenameForm_Paint;
 

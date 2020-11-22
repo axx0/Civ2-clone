@@ -11,9 +11,9 @@ namespace civ2.Bitmaps
 {
     public partial class Images
     {
-        public static Bitmap CityWallpaper, 
+        public static Bitmap CityWallpaper, PanelOuterWallpaper,
                              Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, 
-                             Shield, ViewPiece, WallpaperMapForm, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase, 
+                             Shield, ViewPiece, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase, 
                              SellIcon, SellIconLarge, CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall, CitymapFoodSmallBigger, 
                              CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall, 
                              CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge, 
@@ -33,10 +33,14 @@ namespace civ2.Bitmaps
             TerrainBitmapsImportFromFile();
             CitiesBitmapsImportFromFile();
             UnitsBitmapsImportFromFile();
-            PeopleIconsBitmapsImportFromFile();
-            IconsBitmapsImportFromFile();
-            CityWallpaperBitmapImportFromFile();
-            //ImportDLLimages();
+            PeopleIconsBitmapsImportFromFile();            
+            CityWallpaperBitmapImportFromFile();            
+        }
+
+        public static void LoadGraphicsAssetsAtIntroScreen()
+        {
+            ImportDLLimages();
+            IconsBitmapsImportFromFile();   // needed because of background tiles
         }
 
         public static void CreateLoadGameGraphics()

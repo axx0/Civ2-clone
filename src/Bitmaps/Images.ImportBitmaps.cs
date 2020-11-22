@@ -635,7 +635,7 @@ namespace civ2.Bitmaps
             GridLinesVisible.MakeTransparent(transparentLightPink);
             GridLinesVisible.MakeTransparent(transparentPink);
 
-            WallpaperMapForm = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
+            PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             WallpaperStatusForm = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
 
             //Big icons in city resources

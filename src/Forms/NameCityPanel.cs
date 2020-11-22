@@ -18,7 +18,7 @@ namespace civ2.Forms
             mapForm = _mapForm;
             Size = new Size(686, 126);
             Location = new Point(mapForm.Width / 2 - this.Width / 2, mapForm.Height / 2 - this.Height / 2);
-            BackgroundImage = Images.WallpaperMapForm;
+            BackgroundImage = Images.PanelOuterWallpaper;
             Paint += new PaintEventHandler(NameCityPanel_Paint);
 
             MainPanel = new Panel

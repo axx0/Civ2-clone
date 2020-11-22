@@ -15,6 +15,7 @@ namespace civ2
             {
                 //Read from config file
                 Civ2Path = ConfigurationManager.AppSettings.Get("path");
+                // TODO: check if path exists
             }
             catch (ConfigurationErrorsException)
             {
