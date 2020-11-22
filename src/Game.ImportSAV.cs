@@ -19,142 +19,139 @@ namespace civ2
             //Read every byte
             for (int i = 0; i < fs.Length; i++) dataArray[i] = fs.ReadByte();
 
+            byte[] bytes = File.ReadAllBytes(SAVpath);
+
             #region Start of saved game file
             //=========================
             //START OF SAVED GAME FILE
             //=========================
-            //Determine version        
+            // Determine game version        
             int version;
-            if (dataArray[10] == 39)        version = 1;    //Conflicts (27 hex)
-            else if (dataArray[10] == 40)   version = 2;    //FW (28 hex)
-            else if (dataArray[10] == 44)   version = 3;    //MGE (2C hex)
-            else if (dataArray[10] == 49)   version = 4;    //ToT1.0 (31 hex)
-            else if (dataArray[10] == 50)   version = 5;    //ToT1.1 (32 hex)
-            else                            version = 1;    //lower than Conflicts
+            if (bytes[10] == 39)        version = 1;    // Conflicts (27 hex)
+            else if (bytes[10] == 40)   version = 2;    // FW (28 hex)
+            else if (bytes[10] == 44)   version = 3;    // MGE (2C hex)
+            else if (bytes[10] == 49)   version = 4;    // ToT1.0 (31 hex)
+            else if (bytes[10] == 50)   version = 5;    // ToT1.1 (32 hex)
+            else                        version = 1;    // lower than Conflicts
 
-            bin = Convert.ToString(dataArray[12], 2).PadLeft(8, '0');   //you have to pad zeros to the left because ToString doesn't write first zeros
-            Options.Bloodlust = (bin[0] == '1') ? true : false;         //Bloodlust on/off            
-            Options.SimplifiedCombat = (bin[3] == '1') ? true : false;  //Simplified combat on/off
-                        
-            bin = Convert.ToString(dataArray[13], 2).PadLeft(8, '0');
-            Options.FlatEarth = (bin[0] == '1') ? true : false;                 //Flat/round earth            
-            Options.DontRestartIfEliminated = (bin[7] == '1') ? true : false;   //Don't restart if eliminated
-                        
-            bin = Convert.ToString(dataArray[14], 2).PadLeft(8, '0');
-            Options.MoveUnitsWithoutMouse = (bin[0] == '1') ? true : false;     //Move units without mouse            
-            Options.EnterClosestCityScreen = (bin[1] == '1') ? true : false;    //Enter closes city screen            
-            Options.Grid = (bin[2] == '1') ? true : false;                      //Grid on/off            
-            Options.SoundEffects = (bin[3] == '1') ? true : false;              //Sound effects on/off            
-            Options.Music = (bin[4] == '1') ? true : false;                     //Music on/off
-            
-            bin = Convert.ToString(dataArray[15], 2).PadLeft(8, '0');
-            Options.CheatMenu = (bin[0] == '1') ? true : false;             //Cheat menu on/off            
-            Options.AlwaysWaitAtEndOfTurn = (bin[1] == '1') ? true : false; //Always wait at end of turn on/off           
-            Options.AutosaveEachTurn = (bin[2] == '1') ? true : false;      //Autosave each turn on/off            
-            Options.ShowEnemyMoves = (bin[3] == '1') ? true : false;        //Show enemy moves on/off            
-            Options.NoPauseAfterEnemyMoves = (bin[4] == '1') ? true : false;//No pause after enemy moves on/off            
-            Options.FastPieceSlide = (bin[5] == '1') ? true : false;        //Fast piece slide on/off            
-            Options.InstantAdvice = (bin[6] == '1') ? true : false;         //Instant advice on/off            
-            Options.TutorialHelp = (bin[7] == '1') ? true : false;          //Tutorial help on/off
-            
-            bin = Convert.ToString(dataArray[16], 2).PadLeft(8, '0');
-            Options.AnimatedHeralds = (bin[2] == '1') ? true : false;           //Animated heralds on/off            
-            Options.HighCouncil = (bin[3] == '1') ? true : false;               //High council on/off            
-            Options.CivilopediaForAdvances = (bin[4] == '1') ? true : false;    //Civilopedia for advances on/off            
-            Options.ThroneRoomGraphics = (bin[5] == '1') ? true : false;        //Throne room graphics on/off            
-            Options.DiplomacyScreenGraphics = (bin[6] == '1') ? true : false;   //Diplomacy screen graphics on/off            
-            Options.WonderMovies = (bin[7] == '1') ? true : false;              //Wonder movies on/off
-            
-            bin = Convert.ToString(dataArray[20], 2).PadLeft(8, '0');
-            Options.CheatPenaltyWarning = (bin[3] == '1') ? true : false;   //Cheat penalty/warning on/off
-                        
-            bin = Convert.ToString(dataArray[22], 2).PadLeft(8, '0');
-            Options.AnnounceWeLoveKingDay = (bin[0] == '1') ? true : false;         //Announce we love king day on/off            
-            Options.WarnWhenFoodDangerouslyLow = (bin[1] == '1') ? true : false;    //Warn when food dangerously low on/off            
-            Options.AnnounceCitiesInDisorder = (bin[2] == '1') ? true : false;      //Announce cities in disorder on/off            
-            Options.AnnounceOrderRestored = (bin[3] == '1') ? true : false;         //Announce order restored in cities on/off            
-            Options.ShowNonCombatUnitsBuilt = (bin[4] == '1') ? true : false;       //Show non combat units build on/off           
-            Options.ShowInvalidBuildInstructions = (bin[5] == '1') ? true : false;  //Show invalid build instructions on/off            
-            Options.WarnWhenCityGrowthHalted = (bin[6] == '1') ? true : false;      //Warn when city growth halted on/off            
-            Options.ShowCityImprovementsBuilt = (bin[7] == '1') ? true : false;     //Show city improvements built on/off
-            
-            bin = Convert.ToString(dataArray[23], 2).PadLeft(8, '0');
-            Options.ZoomToCityNotDefaultAction = (bin[5] == '1') ? true : false;                //Zoom to city not default action on/off            
-            Options.WarnWhenPollutionOccurs = (bin[6] == '1') ? true : false;                   //Warn when pollution occurs on/off           
-            Options.WarnWhenChangingProductionWillCostShields = (bin[7] == '1') ? true : false; //Warn when changing production will cost shileds on/off
+            Options.Bloodlust                       = GetBit(bytes[12], 0);     // Bloodlust on/off            
+            Options.SimplifiedCombat                = GetBit(bytes[12], 3);     // Simplified combat on/off
+            Options.FlatEarth                       = GetBit(bytes[13], 0);     // Flat/round earth
+            Options.DontRestartIfEliminated         = GetBit(bytes[13], 7);     // Don't restart if eliminated
+            Options.MoveUnitsWithoutMouse           = GetBit(bytes[14], 0);     // Move units without mouse
+            Options.EnterClosestCityScreen          = GetBit(bytes[14], 1);     // Enter closes city screen     
+            Options.Grid                            = GetBit(bytes[14], 2);     // Grid on/off
+            Options.SoundEffects                    = GetBit(bytes[14], 3);     // Sound effects on/off
+            Options.Music                           = GetBit(bytes[14], 4);     // Music on/off
+            Options.CheatMenu                       = GetBit(bytes[15], 0);     // Cheat menu on/off
+            Options.AlwaysWaitAtEndOfTurn           = GetBit(bytes[15], 1);     // Always wait at end of turn on/off
+            Options.AutosaveEachTurn                = GetBit(bytes[15], 2);     // Autosave each turn on/off
+            Options.ShowEnemyMoves                  = GetBit(bytes[15], 3);     // Show enemy moves on/off
+            Options.NoPauseAfterEnemyMoves          = GetBit(bytes[15], 4);     // No pause after enemy moves on/off
+            Options.FastPieceSlide                  = GetBit(bytes[15], 5);     // Fast piece slide on/off
+            Options.InstantAdvice                   = GetBit(bytes[15], 6);     // Instant advice on/off
+            Options.TutorialHelp                    = GetBit(bytes[15], 7);     // Tutorial help on/off
+            Options.AnimatedHeralds                 = GetBit(bytes[16], 2);     // Animated heralds on/off
+            Options.HighCouncil                     = GetBit(bytes[16], 3);     // High council on/off
+            Options.CivilopediaForAdvances          = GetBit(bytes[16], 4);     // Civilopedia for advances on/off
+            Options.ThroneRoomGraphics              = GetBit(bytes[16], 5);     // Throne room graphics on/off
+            Options.DiplomacyScreenGraphics         = GetBit(bytes[16], 6);     // Diplomacy screen graphics on/off
+            Options.WonderMovies                    = GetBit(bytes[16], 7);     // Wonder movies on/off
+            Options.CheatPenaltyWarning             = GetBit(bytes[20], 3);     // Cheat penalty/warning on/off
+            Options.AnnounceWeLoveKingDay           = GetBit(bytes[22], 0);     // Announce we love king day on/off
+            Options.WarnWhenFoodDangerouslyLow      = GetBit(bytes[22], 1);     // Warn when food dangerously low on/off
+            Options.AnnounceCitiesInDisorder        = GetBit(bytes[22], 2);     // Announce cities in disorder on/off
+            Options.AnnounceOrderRestored           = GetBit(bytes[22], 3);     // Announce order restored in cities on/off
+            Options.ShowNonCombatUnitsBuilt         = GetBit(bytes[22], 4);     // Show non combat units build on/off
+            Options.ShowInvalidBuildInstructions    = GetBit(bytes[22], 5);     // Show invalid build instructions on/off
+            Options.WarnWhenCityGrowthHalted        = GetBit(bytes[22], 6);     // Warn when city growth halted on/off
+            Options.ShowCityImprovementsBuilt       = GetBit(bytes[22], 7);     // Show city improvements built on/off
+            Options.ZoomToCityNotDefaultAction      = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
+            Options.WarnWhenPollutionOccurs         = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
+            Options.WarnChangProductWillCostShields = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
 
-            //Number of turns passed
-            intVal1 = dataArray[28];
-            intVal2 = dataArray[29];
-            Data.TurnNumber = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
+            // Number of turns passed
+            Data.TurnNumber = int.Parse(string.Concat(bytes[29].ToString("X"), bytes[28].ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
 
-            //Number of turns passed for game year calculation
-            intVal1 = dataArray[30];
-            intVal2 = dataArray[31];
-            Data.TurnNumberForGameYear = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Number of turns passed for game year calculation
+            Data.TurnNumberForGameYear = int.Parse(string.Concat(bytes[31].ToString("X"), bytes[30].ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Which unit is selected at start of game (return -1 if no unit is selected (FFFFhex=65535dec))
-            intVal1 = dataArray[34];
-            intVal2 = dataArray[35];
-            int _selectedIndex = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Which unit is selected at start of game (return -1 if no unit is selected (FFFFhex=65535dec))
+            int _selectedIndex = int.Parse(string.Concat(bytes[35].ToString("X"), bytes[34].ToString("X")), System.Globalization.NumberStyles.HexNumber);
             Data.SelectedUnitIndex = (_selectedIndex == 65535) ? -1 : _selectedIndex;
-                        
-            Data.HumanPlayer = dataArray[39];//Which human player is used
             
-            Data.PlayersMapUsed = dataArray[40];//Players map which is used
-            
-            Data.PlayersCivilizationNumberUsed = dataArray[41];//Players civ number used
-            
-            Data.MapRevealed = (dataArray[43] == 1) ? true : false;//Map revealed
-            
-            Data.DifficultyLevel = dataArray[44];//Difficulty level
-            
-            Data.BarbarianActivity = dataArray[45];//Barbarian activity
+            // Which human player is used
+            Data.HumanPlayer = bytes[39];
 
-            //Civs in play
+            // Players map which is used
+            Data.PlayersMapUsed = bytes[40];
+
+            // Players civ number used
+            Data.PlayersCivilizationNumberUsed = bytes[41];
+
+            // Map revealed
+            Data.MapRevealed = (bytes[43] == 1) ? true : false;
+
+            // Difficulty level
+            Data.DifficultyLevel = bytes[44];
+
+            // Barbarian activity
+            Data.BarbarianActivity = bytes[45];
+
+            // Civs in play
             Data.CivsInPlay = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 };
-            string conv = Convert.ToString(dataArray[46], 2).PadLeft(8, '0');
+            string conv = Convert.ToString(bytes[46], 2).PadLeft(8, '0');
             for (int i = 0; i < 8; i++)
                 if (conv[i] == '1')
                     Data.CivsInPlay[i] = 1;
+
+            // Civs with human player playing (multiplayer)
+            string humanPlayerPlayed = Convert.ToString(bytes[47], 2).PadLeft(8, '0');
+
+            // Amount of pollution
+            Data.PollutionAmount = bytes[50];
+
+            // Global temp rising times occured
+            Data.GlobalTempRiseOccured = bytes[51];
             
-            string humanPlayerPlayed = Convert.ToString(dataArray[47], 2).PadLeft(8, '0');//Civs with human player playing (multiplayer)
-                        
-            Data.PollutionAmount = dataArray[50];//Amount of pollution
-                        
-            Data.GlobalTempRiseOccured = dataArray[51];//Global temp rising times occured
-                       
-            Data.NoOfTurnsOfPeace = dataArray[56]; //Number of turns of peace
+            //Number of turns of peace
+            Data.NoOfTurnsOfPeace = bytes[56]; 
 
-            //Number of units
-            intVal1 = dataArray[58];
-            intVal2 = dataArray[59];
-            Data.NumberOfUnits = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Number of units
+            Data.NumberOfUnits = int.Parse(string.Concat(bytes[59].ToString("X"), bytes[58].ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //Number of cities
-            intVal1 = dataArray[60];
-            intVal2 = dataArray[61];
-            Data.NumberOfCities = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Number of cities
+            Data.NumberOfCities = int.Parse(string.Concat(bytes[61].ToString("X"), bytes[60].ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             #endregion
             #region Wonders
             //=========================
             //WONDERS
             //=========================
-            int[] wonderCity = new int[28]; //city which has wonder
-            bool[] wonderBuilt = new bool[28];  //has the wonder been built
-            bool[] wonderDestroyed = new bool[28];  //has the wonder been destroyed
+            int[] wonderCity = new int[28];         // city which has wonder
+            bool[] wonderBuilt = new bool[28];      // has the wonder been built
+            bool[] wonderDestroyed = new bool[28];  // has the wonder been destroyed
             for (int i = 0; i < 28; i++)
             {
-                //City number with the wonder
-                intVal1 = dataArray[266 + 2 * i];
-                intVal2 = dataArray[266 + 2 * i + 1];
+                // City number with the wonder
+                intVal1 = bytes[266 + 2 * i];
+                intVal2 = bytes[266 + 2 * i + 1];
                 wonderCity[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                //determine if wonder is built/destroyed
-                if (wonderCity[i] == 65535) wonderBuilt[i] = false; //FFFF(hex)
-                else if (wonderCity[i] == 65279) wonderDestroyed[i] = true; //FEFF(hex)
-                else { wonderBuilt[i] = true; wonderDestroyed[i] = false; }
+                // Determine if wonder is built/destroyed
+                if (wonderCity[i] == 65535) //FFFF(hex)
+                {
+                    wonderBuilt[i] = false;
+                }
+                else if (wonderCity[i] == 65279)    //FEFF(hex)
+                {
+                    wonderDestroyed[i] = true;
+                }
+                else
+                {
+                    wonderBuilt[i] = true;
+                    wonderDestroyed[i] = false;
+                }
             }
             #endregion
             #region Civs
@@ -672,15 +669,20 @@ namespace civ2
 
             fs.Dispose();
         }
-                
-        public static string Reverse(string s)   //Reverse a string
+
+        private static bool GetBit(byte b, int bitNumber)
+        {
+            return (b & (1 << bitNumber)) != 0;
+        }
+
+        private static string Reverse(string s)   //Reverse a string
         {
             char[] charArray = s.ToCharArray();
             Array.Reverse(charArray);
             return new string(charArray);
         }
 
-        static int ReturnSpecial(int col, int row, TerrainType type, int mapXdim, int mapYdim)
+        private static int ReturnSpecial(int col, int row, TerrainType type, int mapXdim, int mapYdim)
         {
             int special = 0;
 

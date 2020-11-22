@@ -52,7 +52,7 @@ namespace civ2.Forms
             CancelButton.Click += new EventHandler(CancelButton_Click);
 
             //Make an options array
-            choiceOptions = new bool[11] { Options.WarnWhenCityGrowthHalted, Options.ShowCityImprovementsBuilt, Options.ShowNonCombatUnitsBuilt, Options.ShowInvalidBuildInstructions, Options.AnnounceCitiesInDisorder, Options.AnnounceOrderRestored, Options.AnnounceWeLoveKingDay, Options.WarnWhenFoodDangerouslyLow, Options.WarnWhenPollutionOccurs, Options.WarnWhenChangingProductionWillCostShields, Options.ZoomToCityNotDefaultAction};
+            choiceOptions = new bool[11] { Options.WarnWhenCityGrowthHalted, Options.ShowCityImprovementsBuilt, Options.ShowNonCombatUnitsBuilt, Options.ShowInvalidBuildInstructions, Options.AnnounceCitiesInDisorder, Options.AnnounceOrderRestored, Options.AnnounceWeLoveKingDay, Options.WarnWhenFoodDangerouslyLow, Options.WarnWhenPollutionOccurs, Options.WarnChangProductWillCostShields, Options.ZoomToCityNotDefaultAction};
             //Write here individual options
             textOptions = new string[11] { "Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.", "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".", "Warn when food dangerously low.", "Warn when new pollution occurs.", "Warn when changing production will cost shields.", "\"Zoom-to-City\" NOT default action." };
             //Make click panels for each options
@@ -137,7 +137,7 @@ namespace civ2.Forms
             Options.AnnounceWeLoveKingDay = choiceOptions[6];
             Options.WarnWhenFoodDangerouslyLow = choiceOptions[7];
             Options.WarnWhenPollutionOccurs = choiceOptions[8];
-            Options.WarnWhenChangingProductionWillCostShields = choiceOptions[9];
+            Options.WarnChangProductWillCostShields = choiceOptions[9];
             Options.ZoomToCityNotDefaultAction = choiceOptions[10];
             Close();
         }

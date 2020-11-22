@@ -37,7 +37,7 @@
         public static bool ShowCityImprovementsBuilt { get; set; }
         public static bool ZoomToCityNotDefaultAction { get; set; }
         public static bool WarnWhenPollutionOccurs { get; set; }
-        public static bool WarnWhenChangingProductionWillCostShields { get; set; }
+        public static bool WarnChangProductWillCostShields { get; set; }
     }
 }
 
