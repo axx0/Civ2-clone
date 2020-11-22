@@ -3,28 +3,28 @@
     public static class Data
     {
         //Cosmic rules from RULES.TXT
-        public static int RoadMultiplier { get { return ReadFiles.CosmicRules[0]; } }
-        public static int ChanceTriremeLost { get { return ReadFiles.CosmicRules[1]; } }
-        public static int FoodEatenPerTurn { get { return ReadFiles.CosmicRules[2]; } }
-        public static int RowsFoodBox { get { return ReadFiles.CosmicRules[3]; } }
-        public static int RowsShieldBox { get { return ReadFiles.CosmicRules[4]; } }
-        public static int SettlersEatTillMonarchy { get { return ReadFiles.CosmicRules[5]; } }
-        public static int SettlersEatFromCommunism { get { return ReadFiles.CosmicRules[6]; } }
-        public static int CitySizeUnhappyChieftain { get { return ReadFiles.CosmicRules[7]; } }
-        public static int RiotFactor { get { return ReadFiles.CosmicRules[8]; } }
-        public static int AqueductNeeded { get { return ReadFiles.CosmicRules[9]; } }
-        public static int SewerNeeded { get { return ReadFiles.CosmicRules[10]; } }
-        public static int TechParadigm { get { return ReadFiles.CosmicRules[11]; } }
-        public static int BaseTimeEngineersTransform { get { return ReadFiles.CosmicRules[12]; } }
-        public static int MonarchyPaysSupport { get { return ReadFiles.CosmicRules[13]; } }
-        public static int CommunismPaysSupport { get { return ReadFiles.CosmicRules[14]; } }
-        public static int FundamentalismPaysSupport { get { return ReadFiles.CosmicRules[15]; } }
-        public static int CommunismEquivalentPalaceDistance { get { return ReadFiles.CosmicRules[16]; } }
-        public static int FundamentalismScienceLost { get { return ReadFiles.CosmicRules[17]; } }
-        public static int ShieldPenaltyTypeChange { get { return ReadFiles.CosmicRules[18]; } }
-        public static int MaxParadropRange { get { return ReadFiles.CosmicRules[19]; } }
-        public static int MassThrustParadigm { get { return ReadFiles.CosmicRules[20]; } }
-        public static int MaxEffectiveScienceRate { get { return ReadFiles.CosmicRules[21]; } }
+        public static int RoadMultiplier { get { return Rules.CosmicRules[0]; } }
+        public static int ChanceTriremeLost { get { return Rules.CosmicRules[1]; } }
+        public static int FoodEatenPerTurn { get { return Rules.CosmicRules[2]; } }
+        public static int RowsFoodBox { get { return Rules.CosmicRules[3]; } }
+        public static int RowsShieldBox { get { return Rules.CosmicRules[4]; } }
+        public static int SettlersEatTillMonarchy { get { return Rules.CosmicRules[5]; } }
+        public static int SettlersEatFromCommunism { get { return Rules.CosmicRules[6]; } }
+        public static int CitySizeUnhappyChieftain { get { return Rules.CosmicRules[7]; } }
+        public static int RiotFactor { get { return Rules.CosmicRules[8]; } }
+        public static int AqueductNeeded { get { return Rules.CosmicRules[9]; } }
+        public static int SewerNeeded { get { return Rules.CosmicRules[10]; } }
+        public static int TechParadigm { get { return Rules.CosmicRules[11]; } }
+        public static int BaseTimeEngineersTransform { get { return Rules.CosmicRules[12]; } }
+        public static int MonarchyPaysSupport { get { return Rules.CosmicRules[13]; } }
+        public static int CommunismPaysSupport { get { return Rules.CosmicRules[14]; } }
+        public static int FundamentalismPaysSupport { get { return Rules.CosmicRules[15]; } }
+        public static int CommunismEquivalentPalaceDistance { get { return Rules.CosmicRules[16]; } }
+        public static int FundamentalismScienceLost { get { return Rules.CosmicRules[17]; } }
+        public static int ShieldPenaltyTypeChange { get { return Rules.CosmicRules[18]; } }
+        public static int MaxParadropRange { get { return Rules.CosmicRules[19]; } }
+        public static int MassThrustParadigm { get { return Rules.CosmicRules[20]; } }
+        public static int MaxEffectiveScienceRate { get { return Rules.CosmicRules[21]; } }
 
         public static int TurnNumber { get; set; }
         public static int TurnNumberForGameYear { get; set; }

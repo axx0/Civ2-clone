@@ -590,8 +590,8 @@ namespace civ2.Bitmaps
         //        //Draw rectangle around icons
         //        int IIP = city.ItemInProduction;
         //        int cost;
-        //        if (IIP < 62) cost = ReadFiles.UnitCost[IIP];   //Item is unit
-        //        else cost = ReadFiles.ImprovementCost[IIP - 62 + 1];    //Item is improvement (first 62 are units, +1 because first improfement is "Nothing")
+        //        if (IIP < 62) cost = Rules.UnitCost[IIP];   //Item is unit
+        //        else cost = Rules.ImprovementCost[IIP - 62 + 1];    //Item is improvement (first 62 are units, +1 because first improfement is "Nothing")
         //        int vertSpacing = Math.Min(10, cost);    //max 10 lines
         //        graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9 + 271, 65);   //1st horizontal
         //        graphics.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 9, 65, 9, 65 + 27 + (vertSpacing - 1) * 21);   //1st vertical

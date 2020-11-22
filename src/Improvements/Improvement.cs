@@ -18,9 +18,9 @@ namespace civ2.Improvements
         public Improvement(ImprovementType type)
         {
             Type = type;
-            Name = ReadFiles.ImprovementName[(int)(type)];
-            Cost = ReadFiles.ImprovementCost[(int)(type)];
-            Upkeep = ReadFiles.ImprovementUpkeep[(int)(type)];
+            Name = Rules.ImprovementName[(int)(type)];
+            Cost = Rules.ImprovementCost[(int)(type)];
+            Upkeep = Rules.ImprovementUpkeep[(int)(type)];
             //find correct Prereq TO-DO
             //find correct advance expiration TO-DO
         }

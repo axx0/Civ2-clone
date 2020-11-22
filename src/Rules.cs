@@ -5,92 +5,164 @@ using System.IO;
 
 namespace civ2
 {
-    class ReadFiles
+    public class Rules
     {
+        // Game rules from RULES.txt
+
         //Cosmic rules
-        public static int[] CosmicRules = new int[22];
+        public static int[] CosmicRules { get; private set; }
         //Units
-        public static string[] UnitName = new string[62];
-        public static string[] UnitUntil = new string[62];
-        public static int[] UnitDomain = new int[62];
-        public static int[] UnitMove = new int[62];
-        public static int[] UnitRange = new int[62];
-        public static int[] UnitAttack = new int[62];
-        public static int[] UnitDefense = new int[62];
-        public static int[] UnitHitp = new int[62];
-        public static int[] UnitFirepwr = new int[62];
-        public static int[] UnitCost = new int[62];
-        public static int[] UnitHold = new int[62];
-        public static int[] UnitAIrole = new int[62];
-        public static string[] UnitPrereq = new string[62];
-        public static string[] UnitFlags = new string[62];
+        public static string[] UnitName { get; private set; }
+        public static string[] UnitUntil { get; private set; }
+        public static int[] UnitDomain { get; private set; }
+        public static int[] UnitMove { get; private set; }
+        public static int[] UnitRange { get; private set; }
+        public static int[] UnitAttack { get; private set; }
+        public static int[] UnitDefense { get; private set; }
+        public static int[] UnitHitp { get; private set; }
+        public static int[] UnitFirepwr { get; private set; }
+        public static int[] UnitCost { get; private set; }
+        public static int[] UnitHold { get; private set; }
+        public static int[] UnitAIrole { get; private set; }
+        public static string[] UnitPrereq { get; private set; }
+        public static string[] UnitFlags { get; private set; }
         //Tech/advances
-        public static string[] TechName = new string[100];
-        public static int[] TechAIvalue = new int[100];
-        public static int[] TechModifier = new int[100];
-        public static string[] TechPrereq1 = new string[100];
-        public static string[] TechPrereq2 = new string[100];
-        public static int[] TechEpoch = new int[100];
-        public static int[] TechCategory = new int[100];
-        public static string[] TechShortName = new string[100];
+        public static string[] TechName { get; private set; }
+        public static int[] TechAIvalue { get; private set; }
+        public static int[] TechModifier { get; private set; }
+        public static string[] TechPrereq1 { get; private set; }
+        public static string[] TechPrereq2 { get; private set; }
+        public static int[] TechEpoch { get; private set; }
+        public static int[] TechCategory { get; private set; }
+        public static string[] TechShortName { get; private set; }
         //City improvements
-        public static string[] ImprovementName = new string[67];
-        public static int[] ImprovementCost = new int[67];
-        public static int[] ImprovementUpkeep = new int[67];
-        public static string[] ImprovementPrereq = new string[67];
+        public static string[] ImprovementName { get; private set; }
+        public static int[] ImprovementCost { get; private set; }
+        public static int[] ImprovementUpkeep { get; private set; }
+        public static string[] ImprovementPrereq { get; private set; }
         //Expiration of advances
-        public static string[] ImprovementAdvanceExpiration = new string[67];
+        public static string[] ImprovementAdvanceExpiration { get; private set; }
         //Terrain
-        public static string[] TerrainName = new string[11];
-        public static int[] TerrainMovecost = new int[11];
-        public static int[] TerrainDefense = new int[11];
-        public static int[] TerrainFood = new int[11];
-        public static int[] TerrainShields = new int[11];
-        public static int[] TerrainTrade = new int[11];
-        public static string[] TerrainIrrigate = new string[11];
-        public static int[] TerrainIrrigateBonus = new int[11];
-        public static int[] TerrainIrrigateTurns = new int[11];
-        public static int[] TerrainIrrigateAI = new int[11];
-        public static string[] TerrainMine = new string[11];
-        public static int[] TerrainMineBonus = new int[11];
-        public static int[] TerrainMineTurns = new int[11];
-        public static int[] TerrainMineAI = new int[11];
-        public static string[] TerrainTransform = new string[11];
-        public static string[] TerrainShortName = new string[11];
+        public static string[] TerrainName { get; private set; }
+        public static int[] TerrainMovecost { get; private set; }
+        public static int[] TerrainDefense { get; private set; }
+        public static int[] TerrainFood { get; private set; }
+        public static int[] TerrainShields { get; private set; }
+        public static int[] TerrainTrade { get; private set; }
+        public static string[] TerrainIrrigate { get; private set; }
+        public static int[] TerrainIrrigateBonus { get; private set; }
+        public static int[] TerrainIrrigateTurns { get; private set; }
+        public static int[] TerrainIrrigateAI { get; private set; }
+        public static string[] TerrainMine { get; private set; }
+        public static int[] TerrainMineBonus { get; private set; }
+        public static int[] TerrainMineTurns { get; private set; }
+        public static int[] TerrainMineAI { get; private set; }
+        public static string[] TerrainTransform { get; private set; }
+        public static string[] TerrainShortName { get; private set; }
         //Special terrain
-        public static string[] TerrainSpecName = new string[22];
-        public static int[] TerrainSpecMovecost = new int[22];
-        public static int[] TerrainSpecDefense = new int[22];
-        public static int[] TerrainSpecFood = new int[22];
-        public static int[] TerrainSpecShields = new int[22];
-        public static int[] TerrainSpecTrade = new int[22];
+        public static string[] TerrainSpecName { get; private set; }
+        public static int[] TerrainSpecMovecost { get; private set; }
+        public static int[] TerrainSpecDefense { get; private set; }
+        public static int[] TerrainSpecFood { get; private set; }
+        public static int[] TerrainSpecShields { get; private set; }
+        public static int[] TerrainSpecTrade { get; private set; }
         //Governments
-        public static string[] GovernmentName = new string[7];
-        public static string[] GovernmentTitleHIS = new string[7];
-        public static string[] GovernmentTitleHER = new string[7];
+        public static string[] GovernmentName { get; private set; }
+        public static string[] GovernmentTitleHIS { get; private set; }
+        public static string[] GovernmentTitleHER { get; private set; }
         //Leaders
-        public static string[] LeaderNameHIS = new string[21];
-        public static string[] LeaderNameHER = new string[21];
-        public static int[] LeaderFemale = new int[21];
-        public static int[] LeaderColor = new int[21];
-        public static int[] LeaderCityStyle = new int[21];
-        public static string[] LeaderPlural = new string[21];
-        public static string[] LeaderAdjective = new string[21];
-        public static int[] LeaderAttack = new int[21];
-        public static int[] LeaderExpand = new int[21];
-        public static int[] LeaderCivilize = new int[21];
+        public static string[] LeaderNameHIS { get; private set; }
+        public static string[] LeaderNameHER { get; private set; }
+        public static int[] LeaderFemale { get; private set; }
+        public static int[] LeaderColor { get; private set; }
+        public static int[] LeaderCityStyle { get; private set; }
+        public static string[] LeaderPlural { get; private set; }
+        public static string[] LeaderAdjective { get; private set; }
+        public static int[] LeaderAttack { get; private set; }
+        public static int[] LeaderExpand { get; private set; }
+        public static int[] LeaderCivilize { get; private set; }
         //Trading commodities
-        public static string[] CaravanCommoditie = new string[16];
+        public static string[] CaravanCommoditie { get; private set; }
         //Orders
-        public static string[] OrderName = new string[11];
-        public static string[] OrderShortcut = new string[11];
+        public static string[] OrderName { get; private set; }
+        public static string[] OrderShortcut { get; private set; }
         //Difficulty
-        public static string[] Difficulty = new string[6];
+        public static string[] Difficulty { get; private set; }
         //Attitudes
-        public static string[] Attitude = new string[9];
+        public static string[] Attitude { get; private set; }
 
         public static void ReadRULES(string filePath)
         {
+            // Initialize
+            CosmicRules = new int[22];
+            UnitName = new string[62];
+            UnitUntil = new string[62];
+            UnitDomain = new int[62];
+            UnitMove = new int[62];
+            UnitRange = new int[62];
+            UnitAttack = new int[62];
+            UnitDefense = new int[62];
+            UnitHitp = new int[62];
+            UnitFirepwr = new int[62];
+            UnitCost = new int[62];
+            UnitHold = new int[62];
+            UnitAIrole = new int[62];
+            UnitPrereq = new string[62];
+            UnitFlags = new string[62];
+            TechName = new string[100];
+            TechAIvalue = new int[100];
+            TechModifier = new int[100];
+            TechPrereq1 = new string[100];
+            TechPrereq2 = new string[100];
+            TechEpoch = new int[100];
+            TechCategory = new int[100];
+            TechShortName = new string[100];
+            ImprovementName = new string[67];
+            ImprovementCost = new int[67];
+            ImprovementUpkeep = new int[67];
+            ImprovementPrereq = new string[67];
+            ImprovementAdvanceExpiration = new string[67];
+            TerrainName = new string[11];
+            TerrainMovecost = new int[11];
+            TerrainDefense = new int[11];
+            TerrainFood = new int[11];
+            TerrainShields = new int[11];
+            TerrainTrade = new int[11];
+            TerrainIrrigate = new string[11];
+            TerrainIrrigateBonus = new int[11];
+            TerrainIrrigateTurns = new int[11];
+            TerrainIrrigateAI = new int[11];
+            TerrainMine = new string[11];
+            TerrainMineBonus = new int[11];
+            TerrainMineTurns = new int[11];
+            TerrainMineAI = new int[11];
+            TerrainTransform = new string[11];
+            TerrainShortName = new string[11];
+            TerrainSpecName = new string[22];
+            TerrainSpecMovecost = new int[22];
+            TerrainSpecDefense = new int[22];
+            TerrainSpecFood = new int[22];
+            TerrainSpecShields = new int[22];
+            TerrainSpecTrade = new int[22];
+            GovernmentName = new string[7];
+            GovernmentTitleHIS = new string[7];
+            GovernmentTitleHER = new string[7];
+            LeaderNameHIS = new string[21];
+            LeaderNameHER = new string[21];
+            LeaderFemale = new int[21];
+            LeaderColor = new int[21];
+            LeaderCityStyle = new int[21];
+            LeaderPlural = new string[21];
+            LeaderAdjective = new string[21];
+            LeaderAttack = new int[21];
+            LeaderExpand = new int[21];
+            LeaderCivilize = new int[21];
+            CaravanCommoditie = new string[16];
+            OrderName = new string[11];
+            OrderShortcut = new string[11];
+            Difficulty = new string[6];
+            Attitude = new string[9];
+
             string line;
             
             // Read the file and display it line by line.  

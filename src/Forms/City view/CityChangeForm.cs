@@ -209,23 +209,23 @@ namespace civ2.Forms
                 {
                     if (BarValue + row == ThisCity.ItemInProduction)   //draw shadow of text for chosen line
                     {
-                        e.Graphics.DrawString(ReadFiles.UnitName[BarValue + row], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(85 + 1, row * 23 + 1));
-                        e.Graphics.DrawString("(20 Turns, ADM: " + ReadFiles.UnitAttack[BarValue + row] + "/" + ReadFiles.UnitDefense[BarValue + row] + "/" + ReadFiles.UnitMove[BarValue + row] + " HP: " + ReadFiles.UnitHitp[BarValue + row] + "/" + ReadFiles.UnitFirepwr[BarValue + row] + ")", new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(ChoicePanel.Width - VerticalBar.Width, row * 23 + 1), sf);
+                        e.Graphics.DrawString(Rules.UnitName[BarValue + row], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(85 + 1, row * 23 + 1));
+                        e.Graphics.DrawString("(20 Turns, ADM: " + Rules.UnitAttack[BarValue + row] + "/" + Rules.UnitDefense[BarValue + row] + "/" + Rules.UnitMove[BarValue + row] + " HP: " + Rules.UnitHitp[BarValue + row] + "/" + Rules.UnitFirepwr[BarValue + row] + ")", new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(ChoicePanel.Width - VerticalBar.Width, row * 23 + 1), sf);
                     }
                     e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[BarValue + row], 48, 36), new Point(1 + ((BarValue + row) % 2) * 38, 3 + row * 23 - 8));  //0.75-times the normal size of units
-                    e.Graphics.DrawString(ReadFiles.UnitName[BarValue + row], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
-                    e.Graphics.DrawString("(20 Turns, ADM: " + ReadFiles.UnitAttack[BarValue + row] + "/" + ReadFiles.UnitDefense[BarValue + row] + "/" + ReadFiles.UnitMove[BarValue + row] + " HP: " + ReadFiles.UnitHitp[BarValue + row] + "/" + ReadFiles.UnitFirepwr[BarValue + row] + ")", new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(ChoicePanel.Width - VerticalBar.Width - 1, row * 23), sf);
+                    e.Graphics.DrawString(Rules.UnitName[BarValue + row], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
+                    e.Graphics.DrawString("(20 Turns, ADM: " + Rules.UnitAttack[BarValue + row] + "/" + Rules.UnitDefense[BarValue + row] + "/" + Rules.UnitMove[BarValue + row] + " HP: " + Rules.UnitHitp[BarValue + row] + "/" + Rules.UnitFirepwr[BarValue + row] + ")", new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(ChoicePanel.Width - VerticalBar.Width - 1, row * 23), sf);
                 }
                 else    //draw improvements
                 {
                     int improvNo = BarValue + row - totalNoUnits + 1;
                     if (BarValue + row == ThisCity.ItemInProduction)   //draw shadow of text for chosen line
                     {
-                        e.Graphics.DrawString(ReadFiles.ImprovementName[improvNo], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(85 + 1, row * 23 + 1));
+                        e.Graphics.DrawString(Rules.ImprovementName[improvNo], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(85 + 1, row * 23 + 1));
                         e.Graphics.DrawString("(20 Turns)", new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(ChoicePanel.Width - VerticalBar.Width, row * 23 + 1), sf);
                     }
                     e.Graphics.DrawImage(Images.Improvements[improvNo], new Point(1 + ((BarValue + row) % 2) * 38, 3 + row * 23));
-                    e.Graphics.DrawString(ReadFiles.ImprovementName[improvNo], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
+                    e.Graphics.DrawString(Rules.ImprovementName[improvNo], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
                     e.Graphics.DrawString("(20 Turns)", new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(ChoicePanel.Width - VerticalBar.Width - 1, row * 23), sf);
                 }
             }

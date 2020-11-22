@@ -1,6 +1,7 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
 using civ2.Bitmaps;
+using civ2.Enums;
 
 namespace civ2.Forms
 {
@@ -41,14 +42,45 @@ namespace civ2.Forms
         }
 
         // Make actions based on choice menu results
-        public void ChoiceMenuResult(int choiceNo, string SAVpath)
+        public void ChoiceMenuResult(IntroScreenChoiceType choice, string directoryPath, string SAVname)
         {
-            if (choiceNo == 2) 
+            switch (choice)
             {
-                Game.LoadGame(SAVpath);
+                case IntroScreenChoiceType.StartNewGame:
+                    {
+                        break;
+                    }
+                case IntroScreenChoiceType.StartOnPremadeWorld:
+                    {
+                        break;
+                    }
+                case IntroScreenChoiceType.CustomizeWorld:
+                    {
+                        break;
+                    }
+                case IntroScreenChoiceType.BeginScenario:
+                    {
+                        break;
+                    }
+                case IntroScreenChoiceType.LoadGame:
+                    {
+                        Game.LoadGame(directoryPath, SAVname);
+                        //ArrangeWindowControlsAfterGameStart();
+                        break;
+                    }
+                case IntroScreenChoiceType.MultiplayerGame:
+                    {
+                        break;
+                    }
+                case IntroScreenChoiceType.ViewHallOfFame:
+                    {
+                        break;
+                    }
+                case IntroScreenChoiceType.ViewCredits:
+                    {
+                        break;
+                    }
             }
-            ChoiceMenu.Visible = false;
-            MainMenuStrip.Enabled = true;
         }
 
         // Draw border around Sinai image

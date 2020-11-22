@@ -290,27 +290,27 @@ namespace civ2.Units
         //When making a new unit, read stats from RULES.TXT
         public Unit(UnitType type)
         {
-            Name = ReadFiles.UnitName[(int)type];
+            Name = Rules.UnitName[(int)type];
             //UntilTech = TO-DO
-            if (ReadFiles.UnitDomain[(int)type] == 0) 
+            if (Rules.UnitDomain[(int)type] == 0) 
                 GAS = UnitGAS.Ground;
-            else if (ReadFiles.UnitDomain[(int)type] == 1) 
+            else if (Rules.UnitDomain[(int)type] == 1) 
                 GAS = UnitGAS.Air;
             else 
                 GAS = UnitGAS.Sea;
-            MaxMovePoints = 3 * ReadFiles.UnitMove[(int)type];
+            MaxMovePoints = 3 * Rules.UnitMove[(int)type];
             MovePoints = MaxMovePoints;
-            Range = ReadFiles.UnitRange[(int)type];
-            Attack = ReadFiles.UnitAttack[(int)type];
-            Defense = ReadFiles.UnitDefense[(int)type];
-            MaxHitPoints = 10 * ReadFiles.UnitHitp[(int)type];
+            Range = Rules.UnitRange[(int)type];
+            Attack = Rules.UnitAttack[(int)type];
+            Defense = Rules.UnitDefense[(int)type];
+            MaxHitPoints = 10 * Rules.UnitHitp[(int)type];
             HitPoints = MaxHitPoints;
-            Firepower = ReadFiles.UnitFirepwr[(int)type];
-            Cost = ReadFiles.UnitCost[(int)type];
-            ShipHold = ReadFiles.UnitHold[(int)type];
-            AIrole = ReadFiles.UnitAIrole[(int)type];
+            Firepower = Rules.UnitFirepwr[(int)type];
+            Cost = Rules.UnitCost[(int)type];
+            ShipHold = Rules.UnitHold[(int)type];
+            AIrole = Rules.UnitAIrole[(int)type];
             //PrereqTech = TO-DO
-            Flags = ReadFiles.UnitFlags[(int)type];
+            Flags = Rules.UnitFlags[(int)type];
             Order = OrderType.NoOrders;
         }
 

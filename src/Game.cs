@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using civ2.Enums;
 using civ2.Units;
@@ -9,7 +10,7 @@ using civ2.Bitmaps;
 
 namespace civ2
 {
-    public partial class Game
+    public partial class Game : BaseInstance
     {
         public static List<IUnit> Units = new List<IUnit>();
         public static List<IUnit> DeadUnits = new List<IUnit>();
@@ -32,7 +33,7 @@ namespace civ2
 
         public static void LoadGame(string SAVpath)
         {
-            ReadFiles.ReadRULES(Settings.Civ2Path + "RULES.TXT");
+            //Rules.ReadRULES(Settings.Civ2Path + "RULES.TXT");
             ImportSAV(SAVpath);
             Images.CreateLoadGameGraphics();
             Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
@@ -176,10 +177,10 @@ namespace civ2
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
                 CivId = civId,
-                MaxMovePoints = 3 * ReadFiles.UnitMove[(int)type],
-                MovePoints = 3 * ReadFiles.UnitMove[(int)type] - movePointsLost,
-                MaxHitPoints = 10 * ReadFiles.UnitHitp[(int)type],
-                HitPoints = 10 * ReadFiles.UnitHitp[(int)type] - hitpointsLost,
+                MaxMovePoints = 3 * Rules.UnitMove[(int)type],
+                MovePoints = 3 * Rules.UnitMove[(int)type] - movePointsLost,
+                MaxHitPoints = 10 * Rules.UnitHitp[(int)type],
+                HitPoints = 10 * Rules.UnitHitp[(int)type] - hitpointsLost,
                 LastMove = lastMove,
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
@@ -311,16 +312,16 @@ namespace civ2
                                              int researchProgress, int researchingTech, int sciRate, int taxRate, int government, int reputation, int[] techs)
         {
             //if leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && leaderName == "") leaderName = (gender == 0) ? ReadFiles.LeaderNameHIS[tribeNumber] : ReadFiles.LeaderNameHER[tribeNumber];
+            if (id != 0 && leaderName == "") leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];
 
             //if tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && tribeName == "") tribeName = ReadFiles.LeaderPlural[tribeNumber];
+            if (id != 0 && tribeName == "") tribeName = Rules.LeaderPlural[tribeNumber];
 
             //if adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
-            if (id != 0 && adjective == "") adjective = ReadFiles.LeaderAdjective[tribeNumber];
+            if (id != 0 && adjective == "") adjective = Rules.LeaderAdjective[tribeNumber];
 
             //Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
-            if (id != 0 && id != whichHumanPlayerIsUsed) style = ReadFiles.LeaderCityStyle[tribeNumber];
+            if (id != 0 && id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
 
             Civilization civ = new Civilization
             {
@@ -342,13 +343,16 @@ namespace civ2
         }
 
         
-        private static Game instance;  //Singleton
-        public static Game Instance //Singleton
+        private static Game _instance;
+        public static Game Instance
         {
             get
             {
-                if (instance == null) instance = new Game();
-                return instance;
+                if (_instance == null)
+                {
+                    Console.WriteLine("Game instance does not exist!");
+                }                        
+                return _instance;
             }
         }
 

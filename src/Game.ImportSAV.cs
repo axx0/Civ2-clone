@@ -10,7 +10,8 @@ namespace civ2
     {
         public static void ImportSAV(string SAVpath)
         {
-            FileStream fs = new FileStream(SAVpath, FileMode.Open, FileAccess.Read);        //Enter filename
+            // Enter filename
+            FileStream fs = new FileStream(SAVpath, FileMode.Open, FileAccess.Read);
             int[] dataArray = new int[fs.Length];
             string bin;
             int intVal1, intVal2, intVal3, intVal4;

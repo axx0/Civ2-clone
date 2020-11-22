@@ -100,13 +100,13 @@ namespace civ2.Forms
                 int item = city.ItemInProduction;
                 if (city.ItemInProduction < 62) //Unit is in production
                 {
-                    e.Graphics.DrawString(ReadFiles.UnitName[item] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * ReadFiles.UnitCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString(ReadFiles.UnitName[item] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * ReadFiles.UnitCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
+                    e.Graphics.DrawString(Rules.UnitName[item] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Rules.UnitCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
+                    e.Graphics.DrawString(Rules.UnitName[item] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Rules.UnitCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
                 }
                 else    //improvement
                 {
-                    e.Graphics.DrawString(ReadFiles.ImprovementName[item - 62 + 1] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * ReadFiles.ImprovementCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString(ReadFiles.ImprovementName[item - 62 + 1] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * ReadFiles.ImprovementCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
+                    e.Graphics.DrawString(Rules.ImprovementName[item - 62 + 1] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Rules.ImprovementCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
+                    e.Graphics.DrawString(Rules.ImprovementName[item - 62 + 1] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Rules.ImprovementCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
                 }               
                 count++;
             }

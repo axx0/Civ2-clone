@@ -220,8 +220,8 @@ namespace civ2.Forms
                 }
 
                 string unitText;
-                if (IsVeteran) unitText = "Veteran " + ReadFiles.UnitName[BarValue + row];
-                else unitText = ReadFiles.UnitName[BarValue + row];
+                if (IsVeteran) unitText = "Veteran " + Rules.UnitName[BarValue + row];
+                else unitText = Rules.UnitName[BarValue + row];
                 if (BarValue + row == ChosenUnit)   //draw shadow of text for chosen line
                 {                    
                     e.Graphics.DrawString(unitText, new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(1, row * 23 + 1));

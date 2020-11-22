@@ -139,10 +139,10 @@ namespace civ2.Forms
                 int count2 = 0;
                 for (int i = 0; i < 67; i++)
                 {
-                    if ((NoOfImprovements[i] > 0) && (ReadFiles.ImprovementUpkeep[i] > 0))  //only show improvements with upkeep > 0
+                    if ((NoOfImprovements[i] > 0) && (Rules.ImprovementUpkeep[i] > 0))  //only show improvements with upkeep > 0
                     {
-                        e.Graphics.DrawString(NoOfImprovements[i].ToString() + " " + ReadFiles.ImprovementName[i] + " (Cost: " + UpkeepOfImprovements[i] + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(335 + 1, 105 + 24 * count2 + 1));
-                        e.Graphics.DrawString(NoOfImprovements[i].ToString() + " " + ReadFiles.ImprovementName[i] + " (Cost: " + UpkeepOfImprovements[i] + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(335, 105 + 24 * count2));
+                        e.Graphics.DrawString(NoOfImprovements[i].ToString() + " " + Rules.ImprovementName[i] + " (Cost: " + UpkeepOfImprovements[i] + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(335 + 1, 105 + 24 * count2 + 1));
+                        e.Graphics.DrawString(NoOfImprovements[i].ToString() + " " + Rules.ImprovementName[i] + " (Cost: " + UpkeepOfImprovements[i] + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(335, 105 + 24 * count2));
                         count2++;
                     }
                 }

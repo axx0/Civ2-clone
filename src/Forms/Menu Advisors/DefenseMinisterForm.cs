@@ -72,7 +72,7 @@ namespace civ2.Forms
                 //Count active units
                 foreach (IUnit unit in Game.Units.Where(n => n.CivId == Game.Instance.ActiveCiv.Id))   //search just for your civ
                 {
-                    if (unit.Name == ReadFiles.UnitName[i]) ActiveUnitCount[i]++;
+                    if (unit.Name == Rules.UnitName[i]) ActiveUnitCount[i]++;
                 }
                 //Count units in production
                 foreach (City city in Game.Cities.Where(n => n.Owner == Game.Instance.ActiveCiv.Id)) //only search in cities for your civ
@@ -120,14 +120,14 @@ namespace civ2.Forms
                                         //Image of unit
                         //e.Graphics.DrawImage(Draw.DrawUnitType(i, civId), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
                         //Unit name
-                        e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
-                        e.Graphics.DrawString(ReadFiles.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
+                        e.Graphics.DrawString(Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
+                        e.Graphics.DrawString(Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
                         //Unit attack/defense/movement
-                        e.Graphics.DrawString(ReadFiles.UnitAttack[i] + "/" + ReadFiles.UnitDefense[i] + "/" + ReadFiles.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
-                        e.Graphics.DrawString(ReadFiles.UnitAttack[i] + "/" + ReadFiles.UnitDefense[i] + "/" + ReadFiles.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
+                        e.Graphics.DrawString(Rules.UnitAttack[i] + "/" + Rules.UnitDefense[i] + "/" + Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString(Rules.UnitAttack[i] + "/" + Rules.UnitDefense[i] + "/" + Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
                         //Hitpoints/firepower
-                        e.Graphics.DrawString(ReadFiles.UnitHitp[i] + "/" + ReadFiles.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);
-                        e.Graphics.DrawString(ReadFiles.UnitHitp[i] + "/" + ReadFiles.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(300, 85 + 24 * count), sf);
+                        e.Graphics.DrawString(Rules.UnitHitp[i] + "/" + Rules.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString(Rules.UnitHitp[i] + "/" + Rules.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(300, 85 + 24 * count), sf);
                         //No of active units
                         e.Graphics.DrawString(ActiveUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(325 + 1, 85 + 24 * count + 1));
                         e.Graphics.DrawString(ActiveUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(325, 85 + 24 * count));

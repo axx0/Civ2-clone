@@ -78,8 +78,8 @@ namespace civ2.Forms
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             string itemName;
-            if (itemNo < 62) itemName = ReadFiles.UnitName[itemNo];
-            else itemName = ReadFiles.ImprovementName[itemNo - 62 + 1];
+            if (itemNo < 62) itemName = Rules.UnitName[itemNo];
+            else itemName = Rules.ImprovementName[itemNo - 62 + 1];
             e.Graphics.DrawString("Buy " + itemName, new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(379 + 1, 7 + 1), sf);
             e.Graphics.DrawString("Buy " + itemName, new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(379, 7), sf);
             sf.Dispose();
@@ -103,9 +103,9 @@ namespace civ2.Forms
                 CompleteitButton.Location = new Point(125, 67);
                 NevermindButton.Location = new Point(125, 97);
 
-                string itemName = ReadFiles.UnitName[itemNo];
+                string itemName = Rules.UnitName[itemNo];
                 e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[itemNo], 128, 96), 4, 4); //2-times larger
-                int costToComplete = 10 * ReadFiles.UnitCost[itemNo] - ThisCity.ShieldsProgress;
+                int costToComplete = 10 * Rules.UnitCost[itemNo] - ThisCity.ShieldsProgress;
                 e.Graphics.DrawString("Cost to complete " + itemName + ": " + costToComplete.ToString() + " gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(120, 8));
                 e.Graphics.DrawString("Treasury: " + Game.Civs[1].Money.ToString() + " gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(120, 35));
             }
@@ -114,9 +114,9 @@ namespace civ2.Forms
                 CompleteitButton.Location = new Point(85, 67);
                 NevermindButton.Location = new Point(85, 97);
 
-                string itemName = ReadFiles.ImprovementName[itemNo - 62 + 1];
+                string itemName = Rules.ImprovementName[itemNo - 62 + 1];
                 e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Improvements[itemNo - 62 + 1], 72, 40), 4, 4);
-                int costToComplete = 10 * ReadFiles.ImprovementCost[itemNo - 62 + 1] - ThisCity.ShieldsProgress;
+                int costToComplete = 10 * Rules.ImprovementCost[itemNo - 62 + 1] - ThisCity.ShieldsProgress;
                 e.Graphics.DrawString("Cost to complete " + itemName + ": " + costToComplete.ToString() + " gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(80, 8));
                 e.Graphics.DrawString("Treasury: " + Game.Civs[1].Money.ToString() + " gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(80, 35));
             }

@@ -49,18 +49,18 @@ namespace civ2.Terrains
         public Terrain(TerrainType type, SpecialType? stype)
         {
             //Regular terrain
-            Name = ReadFiles.TechName[(int)(type)];
-            MoveCost = ReadFiles.TerrainMovecost[(int)(type)];
-            Defense = ReadFiles.TerrainDefense[(int)(type)];
-            Food = ReadFiles.TerrainFood[(int)(type)];
-            Shields = ReadFiles.TerrainShields[(int)(type)];
-            Trade = ReadFiles.TerrainTrade[(int)(type)];
-            if (ReadFiles.TerrainIrrigate[(int)(type)] == "yes")
+            Name = Rules.TechName[(int)(type)];
+            MoveCost = Rules.TerrainMovecost[(int)(type)];
+            Defense = Rules.TerrainDefense[(int)(type)];
+            Food = Rules.TerrainFood[(int)(type)];
+            Shields = Rules.TerrainShields[(int)(type)];
+            Trade = Rules.TerrainTrade[(int)(type)];
+            if (Rules.TerrainIrrigate[(int)(type)] == "yes")
             {
                 CanIrrigate = true;
                 IrrigationResult = null;
             }
-            else if (ReadFiles.TerrainIrrigate[(int)(type)] == "no")
+            else if (Rules.TerrainIrrigate[(int)(type)] == "no")
             {
                 CanIrrigate = false;
                 IrrigationResult = null;
@@ -68,17 +68,17 @@ namespace civ2.Terrains
             else
             {
                 CanIrrigate = true;
-                //IrrigationResult = ReadFiles.TerrainIrrigate[(int)(type)]; TO-DO
+                //IrrigationResult = Rules.TerrainIrrigate[(int)(type)]; TO-DO
             }
-            IrrigationBonus = ReadFiles.TerrainIrrigateBonus[(int)(type)];
-            TurnsToIrrigate = ReadFiles.TerrainIrrigateTurns[(int)(type)];
-            AIirrigation = ReadFiles.TerrainIrrigateAI[(int)(type)];
-            if (ReadFiles.TerrainMine[(int)(type)] == "yes")
+            IrrigationBonus = Rules.TerrainIrrigateBonus[(int)(type)];
+            TurnsToIrrigate = Rules.TerrainIrrigateTurns[(int)(type)];
+            AIirrigation = Rules.TerrainIrrigateAI[(int)(type)];
+            if (Rules.TerrainMine[(int)(type)] == "yes")
             {
                 CanMine = true;
                 MiningResult = null;
             }
-            else if (ReadFiles.TerrainMine[(int)(type)] == "no")
+            else if (Rules.TerrainMine[(int)(type)] == "no")
             {
                 CanMine = false;
                 MiningResult = null;
@@ -86,18 +86,18 @@ namespace civ2.Terrains
             else
             {
                 CanMine = true;
-                //MiningResult = ReadFiles.TerrainMine[(int)(type)]; TO-DO
+                //MiningResult = Rules.TerrainMine[(int)(type)]; TO-DO
             }
-            MiningBonus = ReadFiles.TerrainMineBonus[(int)(type)];
-            TurnsToMine = ReadFiles.TerrainMineTurns[(int)(type)];
-            AImining = ReadFiles.TerrainMineAI[(int)(type)];
-            if (ReadFiles.TerrainTransform[(int)(type)] == "no")
+            MiningBonus = Rules.TerrainMineBonus[(int)(type)];
+            TurnsToMine = Rules.TerrainMineTurns[(int)(type)];
+            AImining = Rules.TerrainMineAI[(int)(type)];
+            if (Rules.TerrainTransform[(int)(type)] == "no")
             {
                 TransformResult = null;
             }
             else
             {
-                //TransformResult = ReadFiles.TerrainTransform[(int)(type)]; TO-DO
+                //TransformResult = Rules.TerrainTransform[(int)(type)]; TO-DO
             }
 
             //Special terrain
@@ -107,13 +107,13 @@ namespace civ2.Terrains
             }
             else
             {
-                SpecName = ReadFiles.TerrainSpecName[(int)(stype)];
+                SpecName = Rules.TerrainSpecName[(int)(stype)];
                 //Overwrite
-                MoveCost = ReadFiles.TerrainSpecMovecost[(int)(stype)];
-                Defense = ReadFiles.TerrainSpecDefense[(int)(stype)];
-                Food = ReadFiles.TerrainSpecFood[(int)(stype)];
-                Shields = ReadFiles.TerrainSpecShields[(int)(stype)];
-                Trade = ReadFiles.TerrainSpecTrade[(int)(stype)];
+                MoveCost = Rules.TerrainSpecMovecost[(int)(stype)];
+                Defense = Rules.TerrainSpecDefense[(int)(stype)];
+                Food = Rules.TerrainSpecFood[(int)(stype)];
+                Shields = Rules.TerrainSpecShields[(int)(stype)];
+                Trade = Rules.TerrainSpecTrade[(int)(stype)];
             }
         }
 

@@ -19,13 +19,13 @@ namespace civ2.Techs
         //When making a new tech
         public Tech(TechType type)
         {
-            Name = ReadFiles.TechName[(int)(type)];
-            AIvalue = ReadFiles.TechAIvalue[(int)(type)];
-            Modifier = ReadFiles.TechModifier[(int)(type)];
+            Name = Rules.TechName[(int)(type)];
+            AIvalue = Rules.TechAIvalue[(int)(type)];
+            Modifier = Rules.TechModifier[(int)(type)];
             //find correct Prereq1 TO-DO
             //find correct Prereq2 TO-DO
-            Epoch = ReadFiles.TechEpoch[(int)(type)];
-            Category = ReadFiles.TechCategory[(int)(type)];
+            Epoch = Rules.TechEpoch[(int)(type)];
+            Category = Rules.TechCategory[(int)(type)];
         }
     }
 }

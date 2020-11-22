@@ -67,7 +67,7 @@ namespace civ2.Forms
 
             //for (int i = 0; i < 28; i++)
             //{
-            //    if (WonderBuilt[i]) Console.Write("\n Wonder {0}, {1}, owner {2}", ReadFiles.ImprovementName[i + 39], CityWonder[i], Game.Civs[WhoOwnsWonder[i]].TribeName);
+            //    if (WonderBuilt[i]) Console.Write("\n Wonder {0}, {1}, owner {2}", Rules.ImprovementName[i + 39], CityWonder[i], Game.Civs[WhoOwnsWonder[i]].TribeName);
             //}
         }
 
@@ -98,7 +98,7 @@ namespace civ2.Forms
             {
                 if (WonderBuilt[i])
                 {
-                    string wonderText = ReadFiles.ImprovementName[i + 39] + " of " + CityWonder[i] + " (" + Game.Civs[WhoOwnsWonder[i]].TribeName + ")";
+                    string wonderText = Rules.ImprovementName[i + 39] + " of " + CityWonder[i] + " (" + Game.Civs[WhoOwnsWonder[i]].TribeName + ")";
 
                     e.Graphics.DrawString(wonderText, new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(292 + 1, 65 + 40 * count + 1), sf);
                     e.Graphics.DrawString(wonderText, new Font("Times New Roman", 13), new SolidBrush(CivColors.Light[WhoOwnsWonder[i]]), new Point(292, 65 + 40 * count), sf);

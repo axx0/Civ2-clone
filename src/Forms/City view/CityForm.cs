@@ -263,8 +263,8 @@ namespace civ2.Forms
             }
             else    //improvements
             {
-                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 651 + 146 + 1, 248 + 3 + 1, sf2);
-                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 651 + 146, 248 + 3, sf2);
+                e.Graphics.DrawString(Rules.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 651 + 146 + 1, 248 + 3 + 1, sf2);
+                e.Graphics.DrawString(Rules.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 651 + 146, 248 + 3, sf2);
                 e.Graphics.DrawImage(Images.ImprovementsLarge[ThisCity.ItemInProduction - 62 + 1], new Point(651 + 119, 248 + 28));
             }
             e.Graphics.DrawImage(Images.DrawCityProduction(ThisCity), new Point(651, 248));  //draw production shields and sqare around them
@@ -557,9 +557,9 @@ namespace civ2.Forms
                 {
                     int cost = 0;
                     if (ThisCity.ItemInProduction < 62) 
-                        cost = ReadFiles.UnitCost[ThisCity.ItemInProduction];
+                        cost = Rules.UnitCost[ThisCity.ItemInProduction];
                     else 
-                        cost = ReadFiles.ImprovementCost[ThisCity.ItemInProduction - 62 + 1];
+                        cost = Rules.ImprovementCost[ThisCity.ItemInProduction - 62 + 1];
                     Game.Civs[1].Money -= 10 * cost - ThisCity.ShieldsProgress;
                     ThisCity.ShieldsProgress = 10 * cost;
                     ProductionPanel.Refresh();

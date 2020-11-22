@@ -283,14 +283,7 @@ namespace civ2.Forms
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            LoadInitialAssets();
-
             ShowIntroScreen();
-
-            #region If starting game through intro screen
-
-
-            #endregion
 
             //MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             //MapPanel.Location = new Point(0, MainMenuStrip.Height);

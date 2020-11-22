@@ -1,8 +1,9 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 using civ2.Bitmaps;
+using civ2.Enums;
 
 namespace civ2.Forms
 {
@@ -96,7 +97,10 @@ namespace civ2.Forms
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    mainForm.ChoiceMenuResult(2, ofd.FileName);
+                    // Get SAV name & directory name from result
+                    string directoryPath = Path.GetDirectoryName(ofd.FileName);
+                    string SAVname = Path.GetFileName(ofd.FileName);
+                    mainForm.ChoiceMenuResult(IntroScreenChoiceType.LoadGame, directoryPath, SAVname);
                 }
             }
         }

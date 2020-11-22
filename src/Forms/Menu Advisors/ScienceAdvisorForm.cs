@@ -97,8 +97,8 @@ namespace civ2.Forms
             e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
             e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
             e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
-            e.Graphics.DrawString("Researching: " + ReadFiles.TechName[Game.Civs[1].ReseachingTech], new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 74 + 1), sf);
-            e.Graphics.DrawString("Researching: " + ReadFiles.TechName[Game.Civs[1].ReseachingTech], new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 74), sf);
+            e.Graphics.DrawString("Researching: " + Rules.TechName[Game.Civs[1].ReseachingTech], new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 74 + 1), sf);
+            e.Graphics.DrawString("Researching: " + Rules.TechName[Game.Civs[1].ReseachingTech], new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 74), sf);
             e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 130 + 1), sf);
             e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 130), sf);
             sf.Dispose();
@@ -108,9 +108,9 @@ namespace civ2.Forms
             {
                 int x = 198 * (count / 8);
                 int y = 22 * (count % 8);
-                e.Graphics.DrawImage(Images.ResearchIcons[ReadFiles.TechCategory[DiscoveredTechs[i]], ReadFiles.TechEpoch[DiscoveredTechs[i]]], new Point(4 + x, 159 + y));
-                e.Graphics.DrawString(ReadFiles.TechName[DiscoveredTechs[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(x + 42 + 2, y + 160 + 1));
-                e.Graphics.DrawString(ReadFiles.TechName[DiscoveredTechs[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(x + 42, y + 160));
+                e.Graphics.DrawImage(Images.ResearchIcons[Rules.TechCategory[DiscoveredTechs[i]], Rules.TechEpoch[DiscoveredTechs[i]]], new Point(4 + x, 159 + y));
+                e.Graphics.DrawString(Rules.TechName[DiscoveredTechs[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(x + 42 + 2, y + 160 + 1));
+                e.Graphics.DrawString(Rules.TechName[DiscoveredTechs[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(x + 42, y + 160));
                 count++;
                 if (count == 24) break; //only 24 can be shown at a time (3 columns)
             }

@@ -2,6 +2,6 @@
 {
     public abstract class BaseInstance
     {
-        //protected static Game Game => Game.Instance;
+        protected static Game Game => Game.Instance;
     }
 }

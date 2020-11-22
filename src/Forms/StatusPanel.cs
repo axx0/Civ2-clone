@@ -129,8 +129,8 @@ namespace civ2.Forms
                     e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
                     e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
                     e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
-                    e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
-                    e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
+                    e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                    e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
                 }
                 if (count < UnitsOnThisTile.Count())
                 {
@@ -168,8 +168,8 @@ namespace civ2.Forms
                         e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
                         e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveCiv.Id].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
                         e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveCiv.Id].Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
-                        e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
-                        e.Graphics.DrawString(ReadFiles.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
+                        e.Graphics.DrawString(Rules.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
+                        e.Graphics.DrawString(Rules.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
                         e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
                         e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
                     }
@@ -180,8 +180,8 @@ namespace civ2.Forms
                         e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
                         e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
                         e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
-                        e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
-                        e.Graphics.DrawString(ReadFiles.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
+                        e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                        e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
                     }
                 }
             }
