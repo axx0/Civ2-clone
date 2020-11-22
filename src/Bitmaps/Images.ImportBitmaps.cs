@@ -20,28 +20,42 @@ namespace civ2.Bitmaps
             
         }
 
-        public static void TerrainBitmapsImportFromFile()
+        public static void TerrainBitmapsImportFromFile(string path)
         {
+            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             Bitmap terrain1 = new Bitmap(640, 480);
-            try
+            string FilePath_local = path + "\\TERRAIN1.GIF";
+            string FilePath_root = Settings.Civ2Path + "TERRAIN1.GIF";
+            if (File.Exists(FilePath_local))
             {
-                terrain1 = new Bitmap(Settings.Civ2Path + "TERRAIN1.GIF");
+                terrain1 = new Bitmap(FilePath_local);
             }
-            catch
+            else if (File.Exists(FilePath_root))
+            {
+                terrain1 = new Bitmap(FilePath_root);
+            }
+            else
             {
                 Console.WriteLine("TERRAIN1.GIF not found!");
             }
             
             Bitmap terrain2 = new Bitmap(640, 480);
-            try
+            FilePath_local = path + "\\TERRAIN2.GIF";
+            FilePath_root = Settings.Civ2Path + "TERRAIN2.GIF";
+            if (File.Exists(FilePath_local))
             {
-                terrain2 = new Bitmap(Settings.Civ2Path + "TERRAIN2.GIF");
+                terrain1 = new Bitmap(FilePath_local);
             }
-            catch
+            else if (File.Exists(FilePath_root))
+            {
+                terrain1 = new Bitmap(FilePath_root);
+            }
+            else
             {
                 Console.WriteLine("TERRAIN2.GIF not found!");
             }
 
+            // Initialize objects
             Desert = new Bitmap[4];
             Plains = new Bitmap[4];
             Grassland = new Bitmap[4];
@@ -62,12 +76,12 @@ namespace civ2.Bitmaps
             Road = new Bitmap[9];
             Railroad = new Bitmap[9];
 
-            //define transparent colors
+            // Define transparent colors
             Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
             Color transparentCyan = Color.FromArgb(0, 255, 255);    //define transparent back color (cyan)
 
-            //Tiles
+            // Tiles
             for (int i = 0; i < 4; i++)
             {
                 Desert[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 1, 64, 32), terrain1.PixelFormat);
@@ -105,7 +119,7 @@ namespace civ2.Bitmaps
                 Ocean[i].MakeTransparent(transparentPink);
             }
 
-            //4 small dither tiles
+            // 4 small dither tiles
             DitherBlank = new Bitmap[2, 2];
             DitherDots = new Bitmap[2, 2];
             for (int tileX = 0; tileX < 2; tileX++)
@@ -117,14 +131,14 @@ namespace civ2.Bitmaps
                     DitherDots[tileX, tileY].MakeTransparent(transparentPink);
                 }
 
-            //Blank tile
+            // Blank tile
             Blank = terrain1.Clone(new Rectangle(131, 447, 64, 32), terrain1.PixelFormat);
             Blank.MakeTransparent(transparentGray);
 
-            //Dither base (only useful for grasland?)
+            // Dither base (only useful for grasland?)
             DitherBase = terrain1.Clone(new Rectangle(196, 447, 64, 32), terrain1.PixelFormat);
 
-            //Replace black dither pixels with base pixels
+            // Replace black dither pixels with base pixels
             DitherDesert = new Bitmap[2, 2];   //4 dither tiles for one 64x32 map tile
             DitherPlains = new Bitmap[2, 2];
             DitherGrassland = new Bitmap[2, 2];
@@ -137,7 +151,7 @@ namespace civ2.Bitmaps
             DitherJungle = new Bitmap[2, 2];
             Color replacementColor;
             for (int tileX = 0; tileX < 2; tileX++)
-            {    //for 4 directions (NE, SE, SW, NW)
+            {    // for 4 directions (NE, SE, SW, NW)
                 for (int tileY = 0; tileY < 2; tileY++)
                 {
                     DitherDesert[tileX, tileY] = new Bitmap(32, 16);
@@ -154,7 +168,7 @@ namespace civ2.Bitmaps
                     {
                         for (int row = 0; row < 16; row++)
                         {
-                            //replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
+                            // replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
                             replacementColor = DitherBlank[tileX, tileY].GetPixel(col, row);
                             if (replacementColor == Color.FromArgb(0, 0, 0))
                             {
@@ -188,7 +202,7 @@ namespace civ2.Bitmaps
             }
 
 
-            //Rivers, Forest, Mountains, Hills
+            // Rivers, Forest, Mountains, Hills
             for (int i = 0; i < 16; i++)
             {
                 River[i] = terrain2.Clone(new Rectangle(i % 8 + 1 + (i % 8) * 64, 3 + i / 8 + (2 + i / 8) * 32, 64, 32), terrain2.PixelFormat);
@@ -205,7 +219,7 @@ namespace civ2.Bitmaps
                 Hills[i].MakeTransparent(transparentPink);
             }
 
-            //River mouths
+            // River mouths
             for (int i = 0; i < 4; i++)
             {
                 RiverMouth[i] = terrain2.Clone(new Rectangle(i + 1 + i * 64, 11 * 1 + 10 * 32, 64, 32), terrain2.PixelFormat);
@@ -214,7 +228,7 @@ namespace civ2.Bitmaps
                 RiverMouth[i].MakeTransparent(transparentCyan);
             }
 
-            //Coast
+            // Coast
             for (int i = 0; i < 8; i++)
             {
                 Coast[i, 0] = terrain2.Clone(new Rectangle(2 * i + 1 + 2 * i * 32, 429, 32, 16), terrain2.PixelFormat);  // N
@@ -227,7 +241,7 @@ namespace civ2.Bitmaps
                 Coast[i, 3].MakeTransparent(transparentGray);
             }
 
-            //Road & railorad
+            // Road & railorad
             for (int i = 0; i < 9; i++)
             {
                 Road[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 364, 64, 32), terrain1.PixelFormat);
@@ -262,18 +276,26 @@ namespace civ2.Bitmaps
             terrain2.Dispose();
         }
 
-        public static void CitiesBitmapsImportFromFile()
+        public static void CitiesBitmapsImportFromFile(string path)
         {
+            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             Bitmap cities = new Bitmap(640, 480);
-            try
+            string FilePath_local = path + "\\CITIES.GIF";
+            string FilePath_root = Settings.Civ2Path + "CITIES.GIF";
+            if (File.Exists(FilePath_local))
             {
-                cities = new Bitmap(Settings.Civ2Path + "CITIES.GIF");
+                cities = new Bitmap(FilePath_local);
             }
-            catch
+            else if (File.Exists(FilePath_root))
+            {
+                cities = new Bitmap(FilePath_root);
+            }
+            else
             {
                 Console.WriteLine("CITIES.GIF not found!");
             }
 
+            // Initialize objects
             City = new Bitmap[6, 4];
             CityFlag = new Bitmap[9];
             CityWall = new Bitmap[6, 4];
@@ -282,12 +304,12 @@ namespace civ2.Bitmaps
             citySizeWindowLoc = new int[6, 4, 2];
             cityWallSizeWindowLoc = new int[6, 4, 2];
 
-            //define transparent colors
+            // Define transparent colors
             Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
             //Color transparentCyan = Color.FromArgb(0, 255, 255);    //define transparent back color (cyan)
 
-            //Get city bitmaps
+            // Get city bitmaps
             for (int row = 0; row < 6; row++)
             {
                 for (int col = 0; col < 4; col++)
@@ -312,14 +334,14 @@ namespace civ2.Bitmaps
                 }
             }
 
-            //Get flag bitmaps
+            // Get flag bitmaps
             for (int col = 0; col < 9; col++)
             {
                 CityFlag[col] = cities.Clone(new Rectangle(1 + 15 * col, 425, 14, 22), cities.PixelFormat);
                 CityFlag[col].MakeTransparent(transparentGray);
             }
 
-            //Locations of city size windows
+            // Locations of city size windows
             citySizeWindowLoc[0, 0, 0] = 13;    //stone age
             citySizeWindowLoc[0, 0, 1] = 23;
             citySizeWindowLoc[0, 1, 0] = 52;
@@ -436,23 +458,31 @@ namespace civ2.Bitmaps
             cities.Dispose();
         }
 
-        public static void UnitsBitmapsImportFromFile()
+        public static void UnitsBitmapsImportFromFile(string path)
         {
+            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             Bitmap units = new Bitmap(640, 480);
-            try
+            string FilePath_local = path + "\\UNITS.GIF";
+            string FilePath_root = Settings.Civ2Path + "UNITS.GIF";
+            if (File.Exists(FilePath_local))
             {
-                units = new Bitmap(Settings.Civ2Path + "UNITS.GIF");
+                units = new Bitmap(FilePath_local);
             }
-            catch
+            else if (File.Exists(FilePath_root))
+            {
+                units = new Bitmap(FilePath_root);
+            }
+            else
             {
                 Console.WriteLine("UNITS.GIF not found!");
             }
 
+            // Initialize objects
             Units = new Bitmap[63];
             UnitShield = new Bitmap[8];
             NoBorderUnitShield = new Bitmap[8];
 
-            //define transparent colors
+            // Define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
 
@@ -464,22 +494,22 @@ namespace civ2.Bitmaps
                     Units[count] = units.Clone(new Rectangle(64 * col + 1 + col, 48 * row + 1 + row, 64, 48), units.PixelFormat);
                     Units[count].MakeTransparent(transparentGray);
                     Units[count].MakeTransparent(transparentPink);
-                    //determine where the unit shield is located (x-y)
+                    // Determine where the unit shield is located (x-y)
                     for (int ix = 0; ix < 64; ix++) if (units.GetPixel(65 * col + ix, 49 * row) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 0] = ix;  //if pixel on border is blue, in x-direction
                     for (int iy = 0; iy < 48; iy++) if (units.GetPixel(65 * col, 49 * row + iy) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 1] = iy;  //in y-direction
                     count++;
                 }
             }
 
-            //Extract shield without black border (used for stacked units)
+            // Extract shield without black border (used for stacked units)
             Bitmap _backUnitShield = units.Clone(new Rectangle(586, 1, 12, 20), units.PixelFormat);
             _backUnitShield.MakeTransparent(transparentGray);
 
-            //Extract unit shield
+            // Extract unit shield
             Bitmap _unitShield = units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
             _unitShield.MakeTransparent(transparentGray);
 
-            //Make shields of different colors for 8 different civs
+            // Make shields of different colors for 8 different civs
             UnitShield[0] = CreateNonIndexedImage(_unitShield); //convert GIF to non-indexed picture
             UnitShield[1] = CreateNonIndexedImage(_unitShield);
             UnitShield[2] = CreateNonIndexedImage(_unitShield);
@@ -497,7 +527,7 @@ namespace civ2.Bitmaps
             NoBorderUnitShield[6] = CreateNonIndexedImage(_backUnitShield);
             NoBorderUnitShield[7] = CreateNonIndexedImage(_backUnitShield);
             UnitShieldShadow = CreateNonIndexedImage(_backUnitShield);
-            //Replace colors for unit shield and dark unit shield
+            // Replace colors for unit shield and dark unit shield
             for (int x = 0; x < 12; x++)
             {
                 for (int y = 0; y < 20; y++)
@@ -532,33 +562,41 @@ namespace civ2.Bitmaps
             units.Dispose();
         }
 
-        public static void PeopleIconsBitmapsImportFromFile()
+        public static void PeopleIconsBitmapsImportFromFile(string path)
         {
-            Bitmap icons = new Bitmap(640, 480);
-            try
+            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
+            Bitmap pplIcons = new Bitmap(640, 480);
+            string FilePath_local = path + "\\PEOPLE.GIF";
+            string FilePath_root = Settings.Civ2Path + "PEOPLE.GIF";
+            if (File.Exists(FilePath_local))
             {
-                icons = new Bitmap(Settings.Civ2Path + "PEOPLE.GIF");
+                pplIcons = new Bitmap(FilePath_local);
             }
-            catch
+            else if (File.Exists(FilePath_root))
+            {
+                pplIcons = new Bitmap(FilePath_root);
+            }
+            else
             {
                 Console.WriteLine("PEOPLE.GIF not found!");
             }
 
+            // Initialize objects
             PeopleL = new Bitmap[11, 4];
             PeopleLshadow = new Bitmap[11, 4];
 
-            //define transparent colors
+            // Define transparent colors
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
 
-            //Make shadows of faces
+            // Make shadows of faces
             for (int row = 0; row < 4; row++)
                 for (int col = 0; col < 11; col++)
                 {
-                    PeopleL[col, row] = icons.Clone(new Rectangle(27 * col + 2 + col, 30 * row + 6 + row, 27, 30), icons.PixelFormat);
+                    PeopleL[col, row] = pplIcons.Clone(new Rectangle(27 * col + 2 + col, 30 * row + 6 + row, 27, 30), pplIcons.PixelFormat);
 
                     PeopleLshadow[col, row] = CreateNonIndexedImage(PeopleL[col, row]); //convert GIF to non-indexed picture
 
-                    //If color is non-pink, replace it with black to get shadow (otherwise make transparent)
+                    // If color is non-pink, replace it with black to get shadow (otherwise make transparent)
                     for (int x = 0; x < 27; x++)
                         for (int y = 0; y < 30; y++)
                             if (PeopleL[col, row].GetPixel(x, y) != transparentPink) PeopleLshadow[col, row].SetPixel(x, y, Color.Black);
@@ -566,10 +604,11 @@ namespace civ2.Bitmaps
                     PeopleL[col, row].MakeTransparent(transparentPink);
                 }
 
-            icons.Dispose();
+            pplIcons.Dispose();
         }
 
-        public static void IconsBitmapsImportFromFile()
+        // Import wallpapers for intro screen
+        public static void ImportWallpapersFromIconsFile()
         {
             Bitmap icons = new Bitmap(640, 480);
             try
@@ -581,17 +620,41 @@ namespace civ2.Bitmaps
                 Console.WriteLine("ICONS.GIF not found!");
             }
 
+            PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
+            WallpaperStatusForm = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+        }
+
+        public static void IconsBitmapsImportFromFile(string path)
+        {
+            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
+            Bitmap icons = new Bitmap(640, 480);
+            string FilePath_local = path + "\\ICONS.GIF";
+            string FilePath_root = Settings.Civ2Path + "ICONS.GIF";
+            if (File.Exists(FilePath_local))
+            {
+                icons = new Bitmap(FilePath_local);
+            }
+            else if (File.Exists(FilePath_root))
+            {
+                icons = new Bitmap(FilePath_root);
+            }
+            else
+            {
+                Console.WriteLine("ICONS.GIF not found!");
+            }
+
+            // Initialize objects
             Improvements = new Bitmap[67];
             ImprovementsLarge = new Bitmap[67];
             ImprovementsSmall = new Bitmap[67];
             ResearchIcons = new Bitmap[5, 4];
 
-            //define transparent colors
+            // Define transparent colors
             Color transparentLightPink = Color.FromArgb(255, 159, 163);//define transparent back color (light pink)
             Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
             //Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
 
-            //Improvement icons
+            // Improvement icons
             int count = 1;  //start at 1. 0 is for no improvement.
             for (int row = 0; row < 5; row++)
                 for (int col = 0; col < 8; col++)
@@ -603,7 +666,7 @@ namespace civ2.Bitmaps
                     if (count == 39) break;
                 }
 
-            //WondersIcons
+            // WondersIcons
             for (int row = 0; row < 4; row++)
                 for (int col = 0; col < 7; col++)
                 {
@@ -613,7 +676,7 @@ namespace civ2.Bitmaps
                     count++;
                 }
 
-            //Research icons
+            // Research icons
             for (int row = 0; row < 4; row++)
                 for (int col = 0; col < 5; col++)
                     ResearchIcons[col, row] = icons.Clone(new Rectangle(343 + 36 * col + col, 211 + 20 * row + row, 36, 20), icons.PixelFormat);
@@ -635,10 +698,7 @@ namespace civ2.Bitmaps
             GridLinesVisible.MakeTransparent(transparentLightPink);
             GridLinesVisible.MakeTransparent(transparentPink);
 
-            PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
-            WallpaperStatusForm = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
-
-            //Big icons in city resources
+            // Big icons in city resources
             CitymapHungerLarge = icons.Clone(new Rectangle(1, 290, 14, 14), icons.PixelFormat);
             CitymapHungerLarge.MakeTransparent(transparentLightPink);
             CitymapHungerLargeBigger = ModifyImage.ResizeImage(CitymapHungerLarge, 21, 21);    //50% larger
@@ -675,7 +735,7 @@ namespace civ2.Bitmaps
             CitymapSciLarge.MakeTransparent(transparentLightPink);
             CitymapSciLargeBigger = ModifyImage.ResizeImage(CitymapSciLarge, 21, 21);    //50% larger
 
-            //Small icons in city resources
+            // Small icons in city resources
             CitymapFoodSmall = icons.Clone(new Rectangle(49, 334, 10, 10), icons.PixelFormat);
             CitymapFoodSmall.MakeTransparent(transparentLightPink);
             CitymapFoodSmallBigger = ModifyImage.ResizeImage(CitymapFoodSmall, 15, 15);    //50% larger
@@ -688,7 +748,11 @@ namespace civ2.Bitmaps
             CitymapTradeSmall.MakeTransparent(transparentLightPink);
             CitymapTradeSmallBigger = ModifyImage.ResizeImage(CitymapTradeSmall, 15, 15);    //50% larger
 
-            //Icon for next/previous city (black arrow)
+            // Wallpaper icons
+            PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
+            WallpaperStatusForm = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+
+            // Icon for next/previous city (black arrow)
             NextCity = icons.Clone(new Rectangle(227, 389, 18, 24), icons.PixelFormat);
             PrevCity = icons.Clone(new Rectangle(246, 389, 18, 24), icons.PixelFormat);
             NextCity.MakeTransparent(transparentLightPink);
@@ -696,7 +760,7 @@ namespace civ2.Bitmaps
             NextCityLarge = ModifyImage.ResizeImage(NextCity, 27, 36);    //50% larger
             PrevCityLarge = ModifyImage.ResizeImage(PrevCity, 27, 36);    //50% larger
 
-            //Zoom icons
+            // Zoom icons
             ZoomIN = icons.Clone(new Rectangle(18, 389, 16, 16), icons.PixelFormat);
             ZoomOUT = icons.Clone(new Rectangle(35, 389, 16, 16), icons.PixelFormat);
 

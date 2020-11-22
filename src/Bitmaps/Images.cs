@@ -28,25 +28,25 @@ namespace civ2.Bitmaps
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
         public static Icon Civ2Icon;         
 
-        public static void LoadGraphicsAssetsFromFiles()
+        public static void LoadGraphicsAssetsFromFiles(string path)
         {
-            TerrainBitmapsImportFromFile();
-            CitiesBitmapsImportFromFile();
-            UnitsBitmapsImportFromFile();
-            PeopleIconsBitmapsImportFromFile();            
-            CityWallpaperBitmapImportFromFile();            
+            TerrainBitmapsImportFromFile(path);
+            CitiesBitmapsImportFromFile(path);
+            UnitsBitmapsImportFromFile(path);
+            PeopleIconsBitmapsImportFromFile(path);            
+            IconsBitmapsImportFromFile(path);
         }
 
         public static void LoadGraphicsAssetsAtIntroScreen()
         {
             ImportDLLimages();
-            IconsBitmapsImportFromFile();   // needed because of background tiles
+            ImportWallpapersFromIconsFile();
         }
 
         public static void CreateLoadGameGraphics()
         {
             //Creates bitmaps from current folder
-            LoadGraphicsAssetsFromFiles();
+            //LoadGraphicsAssetsFromFiles();
 
             //Create graphic of each map tile
             for (int col = 0; col < Data.MapXdim; col++)

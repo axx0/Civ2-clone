@@ -312,8 +312,8 @@ namespace civ2.Forms
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
 
-            // Load civ2 icon
-            Images.ImportCiv2Icon();
+            // Load wallpapers
+            //Images.ImportWallpapersFromIconsFile();
 
             // Load sounds
             // ...

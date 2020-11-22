@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using civ2.Bitmaps;
 
 namespace civ2
 {
@@ -23,6 +24,8 @@ namespace civ2
             // Import SAV
             ImportSAV(savDirectoryPath + "\\" + SAVname);
 
+            // Import graphical assets from SAV directory. If they don't exist import from root civ2 directory.
+            Images.LoadGraphicsAssetsFromFiles(savDirectoryPath);
         }
     }
 }
