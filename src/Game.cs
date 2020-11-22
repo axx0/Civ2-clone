@@ -12,6 +12,10 @@ namespace civ2
 {
     public partial class Game : BaseInstance
     {
+        private readonly List<IUnit> _units;
+        private readonly List<IUnit> _casualties;
+        private readonly List<City> _cities;
+
         public static List<IUnit> Units = new List<IUnit>();
         public static List<IUnit> DeadUnits = new List<IUnit>();
         public static List<City> Cities = new List<City>();
@@ -33,11 +37,11 @@ namespace civ2
 
         public static void LoadGame(string SAVpath)
         {
-            //Rules.ReadRULES(Settings.Civ2Path + "RULES.TXT");
-            ImportSAV(SAVpath);
-            Images.CreateLoadGameGraphics();
-            Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
-            Game.Instance.ActiveCiv = Civs[Data.HumanPlayer];
+            ////Rules.ReadRULES(Settings.Civ2Path + "RULES.TXT");
+            //ImportSAV(SAVpath);
+            //Images.CreateLoadGameGraphics();
+            //Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
+            //Game.Instance.ActiveCiv = Civs[Data.HumanPlayer];
 
             //FOR HELP!!!
             //foreach (IUnit unit in Game.Units)
@@ -67,7 +71,8 @@ namespace civ2
             set { _activeCiv = value; }
         }
 
-        public static void CreateTerrain(int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
+        public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
+                                          bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
         {
             ITerrain tile;
             SpecialType? stype = null;
@@ -164,12 +169,12 @@ namespace civ2
             TerrainTile[x, y] = tile;
         }
 
-        public static IUnit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, int movePointsLost, int hitpointsLost, int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public static void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, int movePointsLost, int hitpointsLost, 
+                                       int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
-            IUnit unit;
-            unit = new Unit(type)
+            IUnit unit = new Unit
             {
-                Id = Game.Units.Count + Game.DeadUnits.Count,
+                Id = _instance._casualties.Count + _instance._units.Count,
                 Type = type,
                 X = x,
                 Y = y,
@@ -177,8 +182,7 @@ namespace civ2
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
                 CivId = civId,
-                MaxMovePoints = 3 * Rules.UnitMove[(int)type],
-                MovePoints = 3 * Rules.UnitMove[(int)type] - movePointsLost,
+                MovePoints = -movePointsLost,
                 MaxHitPoints = 10 * Rules.UnitHitp[(int)type],
                 HitPoints = 10 * Rules.UnitHitp[(int)type] - hitpointsLost,
                 LastMove = lastMove,
@@ -191,17 +195,15 @@ namespace civ2
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            if (dead) DeadUnits.Add(unit);
-            else Units.Add(unit);
-
-            return unit;
+            if (dead)   _instance._casualties.Add(unit);
+            else        _instance._units.Add(unit);
         }
         
-        public static City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, 
-                                      bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, 
-                                      string name, int[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, int[] commoditySupplied,
-                                      int[] commodityDemanded, int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, 
-                                      int shieldProduction, int happyCitizens, int unhappyCitizens, bool[] wonders)
+        public static void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, 
+                                       bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, 
+                                       string name, int[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, int[] commoditySupplied,
+                                       int[] commodityDemanded, int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, 
+                                       int shieldProduction, int happyCitizens, int unhappyCitizens, bool[] wonders)
         {
             City city = new City
             {
@@ -304,8 +306,7 @@ namespace civ2
             if (wonders[26]) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
             if (wonders[27]) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
 
-            Cities.Add(city);
-            return city;
+            _instance._cities.Add(city);
         }
 
         public static Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, int gender, int money, int tribeNumber, 

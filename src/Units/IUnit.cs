@@ -6,23 +6,23 @@ namespace civ2.Units
     public interface IUnit
     {
         //From RULES.TXT
-        string Name { get; set; }
-        TechType UntilTech { get; set; }
-        int MaxMovePoints { get; set; }
-        int MovePoints { get; set; }
-        int Range { get; set; }
-        int Attack { get; set; }
-        int Defense { get; set; }
-        int MaxHitPoints { get; set; }
-        int HitPoints { get; set; }
-        int Firepower { get; set; }
-        int Cost { get; set; }
-        int ShipHold { get; set; }
-        int AIrole { get; set; }
-        TechType PrereqTech { get; set; }
-        string Flags { get; set; }
+        string Name { get; }
+        TechType UntilTech { get; }
+        int MaxMovePoints { get; }
+        int Range { get; }
+        int Attack { get; }
+        int Defense { get; }
+        int MaxHitPoints { get; }
+        int Firepower { get; }
+        int Cost { get; }
+        int ShipHold { get; }
+        int AIrole { get; }
+        TechType PrereqTech { get; }
+        string Flags { get; }
 
         int Id { get; set; }
+        int MovePoints { get; set; }
+        int HitPoints { get; set; }
         UnitType Type { get; set; }
         UnitGAS GAS { get; }
         OrderType Order { get; set; }

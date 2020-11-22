@@ -91,8 +91,25 @@ namespace civ2
         //Attitudes
         public static string[] Attitude { get; private set; }
 
-        public static void ReadRULES(string filePath)
+        public static void ReadRULES(string path)
         {
+            // Read in SAV directory path. If it doesn't exist there, read from root civ2 directory.
+            string rulesPath1 = path + "\\RULES.TXT";
+            string rulesPath2 = Settings.Civ2Path + "RULES.TXT";
+            string filePath = null;
+            if (File.Exists(rulesPath1))
+            {
+                filePath = rulesPath1;
+            }
+            else if (File.Exists(rulesPath2))
+            {
+                filePath = rulesPath2;
+            }
+            else
+            {
+                Console.WriteLine("RULES.TXT not found!");
+            }
+
             // Initialize
             CosmicRules = new int[22];
             UnitName = new string[62];

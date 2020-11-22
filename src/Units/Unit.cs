@@ -10,32 +10,74 @@ namespace civ2.Units
     internal class Unit : IUnit
     {
         //From RULES.TXT
-        public string Name { get; set; }
-        public TechType UntilTech { get; set; }
-        public int MaxMovePoints { get; set; }
-        public int MovePoints { get; set; }
-        public int Range { get; set; }
-        public int Attack { get; set; }
-        public int Defense { get; set; }
-        public int MaxHitPoints { get; set; }
-        public int HitPoints { get; set; }
-        public int Firepower { get; set; }
-        public int Cost { get; set; }
-        public int ShipHold { get; set; }
-        public int AIrole { get; set; }
-        public TechType PrereqTech { get; set; }
-        public string Flags { get; set; }
+        public string Name 
+        { 
+            get { return Rules.UnitName[(int)Type]; } 
+        }
+        public TechType UntilTech { get; }         // TODO: implement unit UntilTech logic
+        public int MaxMovePoints 
+        {
+            get { return 3 * Rules.UnitMove[(int)Type]; }
+        }
+        public int Range 
+        {
+            get { return Rules.UnitRange[(int)Type]; }
+        }
+        public int Attack 
+        { 
+            get { return Rules.UnitAttack[(int)Type]; }
+        }
+        public int Defense 
+        {
+            get { return Rules.UnitDefense[(int)Type]; }
+        }
+        public int MaxHitPoints 
+        {
+            get { return 10 * Rules.UnitHitp[(int)Type]; }
+        }
+        public int Firepower 
+        {
+            get { return Rules.UnitFirepwr[(int)Type]; }
+        }
+        public int Cost 
+        {
+            get { return Rules.UnitCost[(int)Type]; }
+        }
+        public int ShipHold
+        {
+            get { return Rules.UnitHold[(int)Type]; }
+        }
+        public int AIrole 
+        {
+            get { return Rules.UnitAIrole[(int)Type]; }
+        }
+        public TechType PrereqTech { get; }        // TODO: implement unit PrereqTech logic
+        public string Flags 
+        { 
+            get { return Rules.UnitFlags[(int)Type]; }
+        }
 
         public int Id { get; set; }
+        public int MovePoints { get; set; }
+        public int HitPoints { get; set; }
         public UnitType Type { get; set; }
-        public UnitGAS GAS { get; set; }
+        public UnitGAS GAS 
+        {
+            get
+            {
+                if (Rules.UnitDomain[(int)Type] == 0)
+                    return UnitGAS.Ground;
+                else if (Rules.UnitDomain[(int)Type] == 1)
+                    return UnitGAS.Air;
+                else
+                    return UnitGAS.Sea;
+            }
+        }
         public OrderType Order { get; set; }
-
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
         public int CivId { get; set; }
-
         public int LastMove { get; set; }
         public int CaravanCommodity { get; set; }
         public int HomeCity { get; set; }
@@ -285,33 +327,6 @@ namespace civ2.Units
             {
                 //Warning!
             }
-        }
-
-        //When making a new unit, read stats from RULES.TXT
-        public Unit(UnitType type)
-        {
-            Name = Rules.UnitName[(int)type];
-            //UntilTech = TO-DO
-            if (Rules.UnitDomain[(int)type] == 0) 
-                GAS = UnitGAS.Ground;
-            else if (Rules.UnitDomain[(int)type] == 1) 
-                GAS = UnitGAS.Air;
-            else 
-                GAS = UnitGAS.Sea;
-            MaxMovePoints = 3 * Rules.UnitMove[(int)type];
-            MovePoints = MaxMovePoints;
-            Range = Rules.UnitRange[(int)type];
-            Attack = Rules.UnitAttack[(int)type];
-            Defense = Rules.UnitDefense[(int)type];
-            MaxHitPoints = 10 * Rules.UnitHitp[(int)type];
-            HitPoints = MaxHitPoints;
-            Firepower = Rules.UnitFirepwr[(int)type];
-            Cost = Rules.UnitCost[(int)type];
-            ShipHold = Rules.UnitHold[(int)type];
-            AIrole = Rules.UnitAIrole[(int)type];
-            //PrereqTech = TO-DO
-            Flags = Rules.UnitFlags[(int)type];
-            Order = OrderType.NoOrders;
         }
 
         public bool IsInCity
