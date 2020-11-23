@@ -15,6 +15,11 @@ namespace civ2
         private readonly List<IUnit> _units;
         private readonly List<IUnit> _casualties;
         private readonly List<City> _cities;
+        private readonly List<Civilization> _civs;
+        private readonly Options _options;
+
+        public GameVersionType Version { get; set; }
+        //public Options Options => _options;
 
         public static List<IUnit> Units = new List<IUnit>();
         public static List<IUnit> DeadUnits = new List<IUnit>();
@@ -308,19 +313,20 @@ namespace civ2
             _instance._cities.Add(city);
         }
 
-        public static Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, int gender, int money, int tribeNumber, 
-                                             int researchProgress, int researchingTech, int sciRate, int taxRate, int government, int reputation, int[] techs)
+        public static void CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, 
+                                     int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate, 
+                                     int government, int reputation, int[] techs)
         {
-            //if leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
+            // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
             if (id != 0 && leaderName == "") leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];
 
-            //if tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
+            // If tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
             if (id != 0 && tribeName == "") tribeName = Rules.LeaderPlural[tribeNumber];
 
-            //if adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
+            // If adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
             if (id != 0 && adjective == "") adjective = Rules.LeaderAdjective[tribeNumber];
 
-            //Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
+            // Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
             if (id != 0 && id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
 
             Civilization civ = new Civilization
@@ -338,8 +344,7 @@ namespace civ2
                 Government = (GovernmentType)government
             };
 
-            Civs.Add(civ);
-            return civ;
+            _instance._civs.Add(civ);
         }
 
         

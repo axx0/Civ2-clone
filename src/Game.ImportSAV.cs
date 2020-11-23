@@ -8,7 +8,7 @@ namespace civ2
 {
     public partial class Game
     {
-        public static void ImportSAV(string SAVpath)
+        private void ImportSAV(string SAVpath)
         {
             string bin;
             int intVal1, intVal2, intVal3, intVal4;
@@ -21,49 +21,55 @@ namespace civ2
             //START OF SAVED GAME FILE
             //=========================
             // Determine game version        
-            int version;
-            if (bytes[10] == 39)        version = 1;    // Conflicts (27 hex)
-            else if (bytes[10] == 40)   version = 2;    // FW (28 hex)
-            else if (bytes[10] == 44)   version = 3;    // MGE (2C hex)
-            else if (bytes[10] == 49)   version = 4;    // ToT1.0 (31 hex)
-            else if (bytes[10] == 50)   version = 5;    // ToT1.1 (32 hex)
-            else                        version = 1;    // lower than Conflicts
+            //int version;
+            //if (bytes[10] == 39)        version = 1;    // Conflicts (27 hex)
+            //else if (bytes[10] == 40)   version = 2;    // FW (28 hex)
+            //else if (bytes[10] == 44)   version = 3;    // MGE (2C hex)
+            //else if (bytes[10] == 49)   version = 4;    // ToT1.0 (31 hex)
+            //else if (bytes[10] == 50)   version = 5;    // ToT1.1 (32 hex)
+            //else                        version = 1;    // lower than Conflicts
+            if (bytes[10] == 39)        Version = GameVersionType.Conflicts;    // Conflicts (27 hex)
+            else if (bytes[10] == 40)   Version = GameVersionType.FW;           // FW (28 hex)
+            else if (bytes[10] == 44)   Version = GameVersionType.MGE;          // MGE (2C hex)
+            else if (bytes[10] == 49)   Version = GameVersionType.ToT10;        // ToT1.0 (31 hex)
+            else if (bytes[10] == 50)   Version = GameVersionType.ToT11;        // ToT1.1 (32 hex)
+            else                        Version = GameVersionType.Conflicts;    // lower than Conflicts
 
-            Options.Bloodlust                       = GetBit(bytes[12], 0);     // Bloodlust on/off            
-            Options.SimplifiedCombat                = GetBit(bytes[12], 3);     // Simplified combat on/off
-            Options.FlatEarth                       = GetBit(bytes[13], 0);     // Flat/round earth
-            Options.DontRestartIfEliminated         = GetBit(bytes[13], 7);     // Don't restart if eliminated
-            Options.MoveUnitsWithoutMouse           = GetBit(bytes[14], 0);     // Move units without mouse
-            Options.EnterClosestCityScreen          = GetBit(bytes[14], 1);     // Enter closes city screen     
-            Options.Grid                            = GetBit(bytes[14], 2);     // Grid on/off
-            Options.SoundEffects                    = GetBit(bytes[14], 3);     // Sound effects on/off
-            Options.Music                           = GetBit(bytes[14], 4);     // Music on/off
-            Options.CheatMenu                       = GetBit(bytes[15], 0);     // Cheat menu on/off
-            Options.AlwaysWaitAtEndOfTurn           = GetBit(bytes[15], 1);     // Always wait at end of turn on/off
-            Options.AutosaveEachTurn                = GetBit(bytes[15], 2);     // Autosave each turn on/off
-            Options.ShowEnemyMoves                  = GetBit(bytes[15], 3);     // Show enemy moves on/off
-            Options.NoPauseAfterEnemyMoves          = GetBit(bytes[15], 4);     // No pause after enemy moves on/off
-            Options.FastPieceSlide                  = GetBit(bytes[15], 5);     // Fast piece slide on/off
-            Options.InstantAdvice                   = GetBit(bytes[15], 6);     // Instant advice on/off
-            Options.TutorialHelp                    = GetBit(bytes[15], 7);     // Tutorial help on/off
-            Options.AnimatedHeralds                 = GetBit(bytes[16], 2);     // Animated heralds on/off
-            Options.HighCouncil                     = GetBit(bytes[16], 3);     // High council on/off
-            Options.CivilopediaForAdvances          = GetBit(bytes[16], 4);     // Civilopedia for advances on/off
-            Options.ThroneRoomGraphics              = GetBit(bytes[16], 5);     // Throne room graphics on/off
-            Options.DiplomacyScreenGraphics         = GetBit(bytes[16], 6);     // Diplomacy screen graphics on/off
-            Options.WonderMovies                    = GetBit(bytes[16], 7);     // Wonder movies on/off
-            Options.CheatPenaltyWarning             = GetBit(bytes[20], 3);     // Cheat penalty/warning on/off
-            Options.AnnounceWeLoveKingDay           = GetBit(bytes[22], 0);     // Announce we love king day on/off
-            Options.WarnWhenFoodDangerouslyLow      = GetBit(bytes[22], 1);     // Warn when food dangerously low on/off
-            Options.AnnounceCitiesInDisorder        = GetBit(bytes[22], 2);     // Announce cities in disorder on/off
-            Options.AnnounceOrderRestored           = GetBit(bytes[22], 3);     // Announce order restored in cities on/off
-            Options.ShowNonCombatUnitsBuilt         = GetBit(bytes[22], 4);     // Show non combat units build on/off
-            Options.ShowInvalidBuildInstructions    = GetBit(bytes[22], 5);     // Show invalid build instructions on/off
-            Options.WarnWhenCityGrowthHalted        = GetBit(bytes[22], 6);     // Warn when city growth halted on/off
-            Options.ShowCityImprovementsBuilt       = GetBit(bytes[22], 7);     // Show city improvements built on/off
-            Options.ZoomToCityNotDefaultAction      = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
-            Options.WarnWhenPollutionOccurs         = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
-            Options.WarnChangProductWillCostShields = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
+            _options.Bloodlust                       = GetBit(bytes[12], 0);     // Bloodlust on/off            
+            _options.SimplifiedCombat                = GetBit(bytes[12], 3);     // Simplified combat on/off
+            _options.FlatEarth                       = GetBit(bytes[13], 0);     // Flat/round earth
+            _options.DontRestartIfEliminated         = GetBit(bytes[13], 7);     // Don't restart if eliminated
+            _options.MoveUnitsWithoutMouse           = GetBit(bytes[14], 0);     // Move units without mouse
+            _options.EnterClosestCityScreen          = GetBit(bytes[14], 1);     // Enter closes city screen     
+            _options.Grid                            = GetBit(bytes[14], 2);     // Grid on/off
+            _options.SoundEffects                    = GetBit(bytes[14], 3);     // Sound effects on/off
+            _options.Music                           = GetBit(bytes[14], 4);     // Music on/off
+            _options.CheatMenu                       = GetBit(bytes[15], 0);     // Cheat menu on/off
+            _options.AlwaysWaitAtEndOfTurn           = GetBit(bytes[15], 1);     // Always wait at end of turn on/off
+            _options.AutosaveEachTurn                = GetBit(bytes[15], 2);     // Autosave each turn on/off
+            _options.ShowEnemyMoves                  = GetBit(bytes[15], 3);     // Show enemy moves on/off
+            _options.NoPauseAfterEnemyMoves          = GetBit(bytes[15], 4);     // No pause after enemy moves on/off
+            _options.FastPieceSlide                  = GetBit(bytes[15], 5);     // Fast piece slide on/off
+            _options.InstantAdvice                   = GetBit(bytes[15], 6);     // Instant advice on/off
+            _options.TutorialHelp                    = GetBit(bytes[15], 7);     // Tutorial help on/off
+            _options.AnimatedHeralds                 = GetBit(bytes[16], 2);     // Animated heralds on/off
+            _options.HighCouncil                     = GetBit(bytes[16], 3);     // High council on/off
+            _options.CivilopediaForAdvances          = GetBit(bytes[16], 4);     // Civilopedia for advances on/off
+            _options.ThroneRoomGraphics              = GetBit(bytes[16], 5);     // Throne room graphics on/off
+            _options.DiplomacyScreenGraphics         = GetBit(bytes[16], 6);     // Diplomacy screen graphics on/off
+            _options.WonderMovies                    = GetBit(bytes[16], 7);     // Wonder movies on/off
+            _options.CheatPenaltyWarning             = GetBit(bytes[20], 3);     // Cheat penalty/warning on/off
+            _options.AnnounceWeLoveKingDay           = GetBit(bytes[22], 0);     // Announce we love king day on/off
+            _options.WarnWhenFoodDangerouslyLow      = GetBit(bytes[22], 1);     // Warn when food dangerously low on/off
+            _options.AnnounceCitiesInDisorder        = GetBit(bytes[22], 2);     // Announce cities in disorder on/off
+            _options.AnnounceOrderRestored           = GetBit(bytes[22], 3);     // Announce order restored in cities on/off
+            _options.ShowNonCombatUnitsBuilt         = GetBit(bytes[22], 4);     // Show non combat units build on/off
+            _options.ShowInvalidBuildInstructions    = GetBit(bytes[22], 5);     // Show invalid build instructions on/off
+            _options.WarnWhenCityGrowthHalted        = GetBit(bytes[22], 6);     // Warn when city growth halted on/off
+            _options.ShowCityImprovementsBuilt       = GetBit(bytes[22], 7);     // Show city improvements built on/off
+            _options.ZoomToCityNotDefaultAction      = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
+            _options.WarnWhenPollutionOccurs         = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
+            _options.WarnChangProductWillCostShields = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
 
             // Number of turns passed
             Data.TurnNumber = int.Parse(string.Concat(bytes[29].ToString("X"), bytes[28].ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
@@ -278,8 +284,9 @@ namespace civ2
                 for (int no = 0; no < 89; no++)
                     civTechs[no] = (civTechs_[no] == '1') ? 1 : 0;
 
-                Civilization civ = CreateCiv(i, Data.HumanPlayer, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], tribeNumber[i], 
-                    civResearchProgress[i], civResearchingTech[i], civSciRate[i], civTaxRate[i], civGovernment[i], civReputation[i], civTechs);
+                CreateCiv(i, Data.HumanPlayer, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i], 
+                          tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civSciRate[i], civTaxRate[i], civGovernment[i], 
+                          civReputation[i], civTechs);
             }
             #endregion
             #region Map
