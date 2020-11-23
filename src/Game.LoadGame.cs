@@ -26,7 +26,7 @@ namespace civ2
             //_instance.ActiveCiv = Civs[Data.HumanPlayer];
             //_instance.ActiveUnit = Game.Units[0];   //temp!!!
             //_instance.ActiveCiv = Game.Civs[0];   //temp!!!
-            
+
         }
 
         private Game()

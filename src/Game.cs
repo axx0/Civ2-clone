@@ -21,6 +21,8 @@ namespace civ2
         public GameVersionType Version { get; set; }
         //public Options Options => _options;
 
+        public List<IUnit> GetUnits => _units;
+
         public static List<IUnit> Units = new List<IUnit>();
         public static List<IUnit> DeadUnits = new List<IUnit>();
         public static List<City> Cities = new List<City>();

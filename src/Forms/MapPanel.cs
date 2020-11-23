@@ -13,7 +13,7 @@ using civ2.GameActions;
 
 namespace civ2.Forms
 {
-    public partial class MapPanel : Civ2panel
+    public partial class MapPanel : Civ2panel, BaseInstance
     {
         private static DoubleBufferedPanel DrawPanel;
         StringFormat sf = new StringFormat();
@@ -351,7 +351,7 @@ namespace civ2.Forms
         {
             MapGridVar++;
             if (MapGridVar > 3) MapGridVar = 0;
-            Options.Grid = (MapGridVar != 0) ? true : false;
+            //Options.Grid = (MapGridVar != 0) ? true : false;
             Refresh();
             return MapGridVar;
         }

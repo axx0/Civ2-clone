@@ -20,21 +20,15 @@ namespace civ2
             //=========================
             //START OF SAVED GAME FILE
             //=========================
-            // Determine game version        
-            //int version;
-            //if (bytes[10] == 39)        version = 1;    // Conflicts (27 hex)
-            //else if (bytes[10] == 40)   version = 2;    // FW (28 hex)
-            //else if (bytes[10] == 44)   version = 3;    // MGE (2C hex)
-            //else if (bytes[10] == 49)   version = 4;    // ToT1.0 (31 hex)
-            //else if (bytes[10] == 50)   version = 5;    // ToT1.1 (32 hex)
-            //else                        version = 1;    // lower than Conflicts
-            if (bytes[10] == 39)        Version = GameVersionType.Conflicts;    // Conflicts (27 hex)
-            else if (bytes[10] == 40)   Version = GameVersionType.FW;           // FW (28 hex)
-            else if (bytes[10] == 44)   Version = GameVersionType.MGE;          // MGE (2C hex)
-            else if (bytes[10] == 49)   Version = GameVersionType.ToT10;        // ToT1.0 (31 hex)
-            else if (bytes[10] == 50)   Version = GameVersionType.ToT11;        // ToT1.1 (32 hex)
-            else                        Version = GameVersionType.Conflicts;    // lower than Conflicts
+            // Determine game version
+            if (bytes[10] == 39)        Version = GameVersionType.CiC;      // Conflicts (27 hex)
+            else if (bytes[10] == 40)   Version = GameVersionType.FW;       // FW (28 hex)
+            else if (bytes[10] == 44)   Version = GameVersionType.MGE;      // MGE (2C hex)
+            else if (bytes[10] == 49)   Version = GameVersionType.ToT10;    // ToT1.0 (31 hex)
+            else if (bytes[10] == 50)   Version = GameVersionType.ToT11;    // ToT1.1 (32 hex)
+            else                        Version = GameVersionType.CiC;      // lower than Conflicts
 
+            // Options
             _options.Bloodlust                       = GetBit(bytes[12], 0);     // Bloodlust on/off            
             _options.SimplifiedCombat                = GetBit(bytes[12], 3);     // Simplified combat on/off
             _options.FlatEarth                       = GetBit(bytes[13], 0);     // Flat/round earth
@@ -295,7 +289,7 @@ namespace civ2
             //=========================
             // Map header ofset
             int ofset;
-            if (version > 1) ofset = 13702; // FW and later (offset=3586hex)
+            if (bytes[10] > 39) ofset = 13702; // FW and later (offset=3586hex)
             else ofset = 13432;             // Conflicts (offset=3478hex)
 
             // Map X dimension
@@ -426,9 +420,9 @@ namespace civ2
 
             // Determine byte length of units
             int multipl;
-            if (version <= 2)       multipl = 26;   // FW or CiC
-            else if (version == 3)  multipl = 32;   // MGE
-            else                    multipl = 40;   // ToT
+            if (bytes[10] <= 40)        multipl = 26;   // FW or CiC
+            else if (bytes[10] == 44)   multipl = 32;   // MGE
+            else                        multipl = 40;   // ToT
 
             for (int i = 0; i < Data.NumberOfUnits; i++)
             {
@@ -486,9 +480,9 @@ namespace civ2
             //=========================
             int ofsetC = ofsetU + multipl * Data.NumberOfUnits;
 
-            if (version <= 2)       multipl = 84;   // FW or CiC
-            else if (version == 3)  multipl = 88;   // MGE
-            else                    multipl = 92;   // ToT
+            if (bytes[10] <= 40)        multipl = 84;   // FW or CiC
+            else if (bytes[10] == 44)   multipl = 88;   // MGE
+            else                        multipl = 92;   // ToT
 
             char[] asciichar = new char[15];
             for (int i = 0; i < Data.NumberOfCities; i++)
