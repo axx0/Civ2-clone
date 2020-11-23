@@ -1,5 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using civ2.Bitmaps;
+using civ2.Units;
 
 namespace civ2
 {
@@ -7,7 +9,7 @@ namespace civ2
     {
         public static void LoadGame(string savDirectoryPath, string SAVname)
         {
-            // Read files. If they don't exist in SAV directory path, read them from base directory in settings
+            _instance = new Game();
 
             // Read RULES.txt
             Rules.ReadRULES(savDirectoryPath);
@@ -20,8 +22,18 @@ namespace civ2
 
             //_instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
             //_instance.ActiveCiv = Civs[Data.HumanPlayer];
-            _instance.ActiveUnit = Game.Units[0];   //temp!!!
-            _instance.ActiveCiv = Game.Civs[0];   //temp!!!
+            //_instance.ActiveUnit = Game.Units[0];   //temp!!!
+            //_instance.ActiveCiv = Game.Civs[0];   //temp!!!
+            
         }
+
+        private Game()
+        {
+            _units = new List<IUnit>();
+            _casualties = new List<IUnit>();
+            _cities = new List<City>();
+        }
+
+    
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 
 namespace civ2
 {
@@ -10,12 +11,18 @@ namespace civ2
 
         public static void LoadConfigSettings()
         {
+            const int ERROR_INVALID_NAME = 123;
+
             //Load settings from App.config
             try
             {
                 //Read from config file
                 Civ2Path = ConfigurationManager.AppSettings.Get("path");
-                // TODO: check if path exists
+                if (!Directory.Exists(Civ2Path))
+                {
+                    Console.WriteLine("Civ2 directory doesn't exist!");
+                    Environment.Exit(ERROR_INVALID_NAME);
+                }
             }
             catch (ConfigurationErrorsException)
             {
