@@ -21,8 +21,10 @@ namespace civ2.Units
         string Flags { get; }
 
         int Id { get; set; }
-        int MovePoints { get; set; }
-        int HitPoints { get; set; }
+        int MovePoints { get; }
+        int MovePointsLost { get; set; }
+        int HitPoints { get; }
+        int HitPointsLost { get; set; }
         UnitType Type { get; set; }
         UnitGAS GAS { get; }
         OrderType Order { get; set; }

@@ -30,7 +30,7 @@ namespace civ2.GameActions
             foreach (IUnit unit in Game.Units.Where(n => n.CivId == Game.Instance.ActiveCiv.Id))
             {
                 unit.TurnEnded = false;
-                unit.MovePoints = unit.MaxMovePoints;
+                unit.MovePointsLost = 0;
 
                 //Increase counters
                 if ((unit.Order == OrderType.BuildIrrigation) || (unit.Order == OrderType.BuildRoad) || (unit.Order == OrderType.BuildMine)) unit.Counter += 1;

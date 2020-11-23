@@ -15,7 +15,7 @@ namespace civ2.Units
             get { return Rules.UnitName[(int)Type]; } 
         }
         public TechType UntilTech { get; }         // TODO: implement unit UntilTech logic
-        public int MaxMovePoints 
+        public int MaxMovePoints
         {
             get { return 3 * Rules.UnitMove[(int)Type]; }
         }
@@ -58,8 +58,16 @@ namespace civ2.Units
         }
 
         public int Id { get; set; }
-        public int MovePoints { get; set; }
-        public int HitPoints { get; set; }
+        public int MovePoints
+        {
+            get { return MaxMovePoints - MovePointsLost; }
+        }
+        public int MovePointsLost { get; set; }
+        public int HitPoints 
+        { 
+            get { return MaxHitPoints - HitPointsLost; } 
+        }
+        public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
         public UnitGAS GAS 
         {
@@ -158,11 +166,11 @@ namespace civ2.Units
                         if ((Game.TerrainTile[X_, Y].Road || Game.TerrainTile[X_, Y].CityPresent) && (Game.TerrainTile[Xto_, Yto].Road || Game.TerrainTile[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
                             (Game.TerrainTile[X_, Y].River && Game.TerrainTile[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
                         {
-                            MovePoints -= 1;
+                            MovePointsLost += 1;
                         }
                         else
                         {
-                            MovePoints -= 3;
+                            MovePointsLost += 3;
                         }
 
                         unitMoved = true;
@@ -182,7 +190,7 @@ namespace civ2.Units
                             break;
                         }
 
-                        MovePoints -= 3;
+                        MovePointsLost += 3;
 
                         unitMoved = true;
                         break;
@@ -195,7 +203,7 @@ namespace civ2.Units
                             break;
                         }
 
-                        MovePoints -= 3;
+                        MovePointsLost += 3;
 
                         unitMoved = true;
                         break;

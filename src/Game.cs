@@ -169,22 +169,21 @@ namespace civ2
             TerrainTile[x, y] = tile;
         }
 
-        public static void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, int movePointsLost, int hitpointsLost, 
+        public static void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, int movePointsLost, int hitPointsLost, 
                                        int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit = new Unit
             {
-                Id = _instance._casualties.Count + _instance._units.Count,
+                //Id = _instance._casualties.Count + _instance._units.Count,
                 Type = type,
                 X = x,
                 Y = y,
+                MovePointsLost = movePointsLost,
+                HitPointsLost = hitPointsLost,
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
                 CivId = civId,
-                MovePoints = -movePointsLost,
-                MaxHitPoints = 10 * Rules.UnitHitp[(int)type],
-                HitPoints = 10 * Rules.UnitHitp[(int)type] - hitpointsLost,
                 LastMove = lastMove,
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
