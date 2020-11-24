@@ -30,42 +30,47 @@ namespace civ2
 
             // Options
             // TODO: determine if randomizing villages/resources, randomizing player starting locations, select comp. opponents, accelerated sturtup options are selected from SAV file
-            bool bloodlust                           = GetBit(bytes[12], 0);     // Bloodlust on/off            
-            bool simplifiedCombat                    = GetBit(bytes[12], 3);     // Simplified combat on/off
-            bool flatEarth                           = GetBit(bytes[13], 0);     // Flat/round earth
-            bool dontRestartIfEliminated             = GetBit(bytes[13], 7);     // Don't restart if eliminated
-            _options.MoveUnitsWithoutMouse           = GetBit(bytes[14], 0);     // Move units without mouse
-            _options.EnterClosestCityScreen          = GetBit(bytes[14], 1);     // Enter closes city screen     
-            _options.Grid                            = GetBit(bytes[14], 2);     // Grid on/off
-            _options.SoundEffects                    = GetBit(bytes[14], 3);     // Sound effects on/off
-            _options.Music                           = GetBit(bytes[14], 4);     // Music on/off
-            _options.CheatMenu                       = GetBit(bytes[15], 0);     // Cheat menu on/off
-            _options.AlwaysWaitAtEndOfTurn           = GetBit(bytes[15], 1);     // Always wait at end of turn on/off
-            _options.AutosaveEachTurn                = GetBit(bytes[15], 2);     // Autosave each turn on/off
-            _options.ShowEnemyMoves                  = GetBit(bytes[15], 3);     // Show enemy moves on/off
-            _options.NoPauseAfterEnemyMoves          = GetBit(bytes[15], 4);     // No pause after enemy moves on/off
-            _options.FastPieceSlide                  = GetBit(bytes[15], 5);     // Fast piece slide on/off
-            _options.InstantAdvice                   = GetBit(bytes[15], 6);     // Instant advice on/off
-            _options.TutorialHelp                    = GetBit(bytes[15], 7);     // Tutorial help on/off
-            _options.AnimatedHeralds                 = GetBit(bytes[16], 2);     // Animated heralds on/off
-            _options.HighCouncil                     = GetBit(bytes[16], 3);     // High council on/off
-            _options.CivilopediaForAdvances          = GetBit(bytes[16], 4);     // Civilopedia for advances on/off
-            _options.ThroneRoomGraphics              = GetBit(bytes[16], 5);     // Throne room graphics on/off
-            _options.DiplomacyScreenGraphics         = GetBit(bytes[16], 6);     // Diplomacy screen graphics on/off
-            _options.WonderMovies                    = GetBit(bytes[16], 7);     // Wonder movies on/off
-            _options.CheatPenaltyWarning             = GetBit(bytes[20], 3);     // Cheat penalty/warning on/off
-            _options.AnnounceWeLoveKingDay           = GetBit(bytes[22], 0);     // Announce we love king day on/off
-            _options.WarnWhenFoodDangerouslyLow      = GetBit(bytes[22], 1);     // Warn when food dangerously low on/off
-            _options.AnnounceCitiesInDisorder        = GetBit(bytes[22], 2);     // Announce cities in disorder on/off
-            _options.AnnounceOrderRestored           = GetBit(bytes[22], 3);     // Announce order restored in cities on/off
-            _options.ShowNonCombatUnitsBuilt         = GetBit(bytes[22], 4);     // Show non combat units build on/off
-            _options.ShowInvalidBuildInstructions    = GetBit(bytes[22], 5);     // Show invalid build instructions on/off
-            _options.WarnWhenCityGrowthHalted        = GetBit(bytes[22], 6);     // Warn when city growth halted on/off
-            _options.ShowCityImprovementsBuilt       = GetBit(bytes[22], 7);     // Show city improvements built on/off
-            _options.ZoomToCityNotDefaultAction      = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
-            _options.WarnWhenPollutionOccurs         = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
-            _options.WarnChangProductWillCostShields = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
-            _options.SetReadonlyOptions(simplifiedCombat, flatEarth, bloodlust, dontRestartIfEliminated);
+            bool bloodlust                          = GetBit(bytes[12], 0);     // Bloodlust on/off            
+            bool simplifiedCombat                   = GetBit(bytes[12], 3);     // Simplified combat on/off
+            bool flatEarth                          = GetBit(bytes[13], 0);     // Flat/round earth
+            bool dontRestartIfEliminated            = GetBit(bytes[13], 7);     // Don't restart if eliminated
+            bool moveUnitsWithoutMouse              = GetBit(bytes[14], 0);     // Move units without mouse
+            bool enterClosestCityScreen             = GetBit(bytes[14], 1);     // Enter closes city screen     
+            bool grid                               = GetBit(bytes[14], 2);     // Grid on/off
+            bool soundEffects                       = GetBit(bytes[14], 3);     // Sound effects on/off
+            bool music                              = GetBit(bytes[14], 4);     // Music on/off
+            bool cheatMenu                          = GetBit(bytes[15], 0);     // Cheat menu on/off
+            bool alwaysWaitAtEndOfTurn              = GetBit(bytes[15], 1);     // Always wait at end of turn on/off
+            bool autosaveEachTurn                   = GetBit(bytes[15], 2);     // Autosave each turn on/off
+            bool showEnemyMoves                     = GetBit(bytes[15], 3);     // Show enemy moves on/off
+            bool noPauseAfterEnemyMoves             = GetBit(bytes[15], 4);     // No pause after enemy moves on/off
+            bool fastPieceSlide                     = GetBit(bytes[15], 5);     // Fast piece slide on/off
+            bool instantAdvice                      = GetBit(bytes[15], 6);     // Instant advice on/off
+            bool tutorialHelp                       = GetBit(bytes[15], 7);     // Tutorial help on/off
+            bool animatedHeralds                    = GetBit(bytes[16], 2);     // Animated heralds on/off
+            bool highCouncil                        = GetBit(bytes[16], 3);     // High council on/off
+            bool civilopediaForAdvances             = GetBit(bytes[16], 4);     // Civilopedia for advances on/off
+            bool throneRoomGraphics                 = GetBit(bytes[16], 5);     // Throne room graphics on/off
+            bool diplomacyScreenGraphics            = GetBit(bytes[16], 6);     // Diplomacy screen graphics on/off
+            bool wonderMovies                       = GetBit(bytes[16], 7);     // Wonder movies on/off
+            bool cheatPenaltyWarning                = GetBit(bytes[20], 3);     // Cheat penalty/warning on/off
+            bool announceWeLoveKingDay              = GetBit(bytes[22], 0);     // Announce we love king day on/off
+            bool warnWhenFoodDangerouslyLow         = GetBit(bytes[22], 1);     // Warn when food dangerously low on/off
+            bool announceCitiesInDisorder           = GetBit(bytes[22], 2);     // Announce cities in disorder on/off
+            bool announceOrderRestored              = GetBit(bytes[22], 3);     // Announce order restored in cities on/off
+            bool showNonCombatUnitsBuilt            = GetBit(bytes[22], 4);     // Show non combat units build on/off
+            bool showInvalidBuildInstructions       = GetBit(bytes[22], 5);     // Show invalid build instructions on/off
+            bool warnWhenCityGrowthHalted           = GetBit(bytes[22], 6);     // Warn when city growth halted on/off
+            bool showCityImprovementsBuilt          = GetBit(bytes[22], 7);     // Show city improvements built on/off
+            bool zoomToCityNotDefaultAction         = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
+            bool warnWhenPollutionOccurs            = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
+            bool warnChangProductWillCostShields    = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
+            _options.SetReadonlyOptions(simplifiedCombat, flatEarth, bloodlust, dontRestartIfEliminated, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, 
+                                        autosaveEachTurn, showEnemyMoves, noPauseAfterEnemyMoves, fastPieceSlide, instantAdvice, tutorialHelp, enterClosestCityScreen, 
+                                        moveUnitsWithoutMouse, throneRoomGraphics, diplomacyScreenGraphics, animatedHeralds, civilopediaForAdvances, highCouncil, 
+                                        wonderMovies, warnWhenCityGrowthHalted, showCityImprovementsBuilt, showNonCombatUnitsBuilt, showInvalidBuildInstructions, 
+                                        announceCitiesInDisorder, announceOrderRestored, announceWeLoveKingDay, warnWhenFoodDangerouslyLow, warnWhenPollutionOccurs,
+                                        warnChangProductWillCostShields, zoomToCityNotDefaultAction, cheatPenaltyWarning, grid);
 
             // Number of turns passed
             Data.TurnNumber = int.Parse(string.Concat(bytes[29].ToString("X"), bytes[28].ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int

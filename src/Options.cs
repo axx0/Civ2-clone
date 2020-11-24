@@ -46,12 +46,49 @@
         public bool CheatPenaltyWarning { get; set; }
         public bool Grid { get; set; }
 
-        public void SetReadonlyOptions(bool simplifiedCombat, bool flatEarth, bool bloodlust, bool dontRestartIfEliminated)
+        public void SetReadonlyOptions(bool simplifiedCombat, bool flatEarth, bool bloodlust, bool dontRestartIfEliminated, bool soundEffects, bool music, bool cheatMenu,
+                                        bool alwaysWaitAtEndOfTurn, bool autosaveEachTurn, bool showEnemyMoves, bool noPauseAfterEnemyMoves, bool fastPieceSlide, bool instantAdvice,
+                                        bool tutorialHelp, bool enterClosestCityScreen, bool moveUnitsWithoutMouse, bool throneRoomGraphics, bool diplomacyScreenGraphics,
+                                        bool animatedHeralds, bool civilopediaForAdvances, bool highCouncil, bool wonderMovies, bool warnWhenCityGrowthHalted,
+                                        bool showCityImprovementsBuilt, bool showNonCombatUnitsBuilt, bool showInvalidBuildInstructions, bool announceCitiesInDisorder,
+                                        bool announceOrderRestored, bool announceWeLoveKingDay, bool warnWhenFoodDangerouslyLow, bool warnWhenPollutionOccurs,
+                                        bool warnChangProductWillCostShields, bool zoomToCityNotDefaultAction, bool cheatPenaltyWarning, bool grid)
         {
             SimplifiedCombat = simplifiedCombat;
             FlatEarth = flatEarth;
             Bloodlust = bloodlust;
             DontRestartIfEliminated = dontRestartIfEliminated;
+            SoundEffects = soundEffects;
+            Music = music;
+            CheatMenu = cheatMenu;
+            AlwaysWaitAtEndOfTurn = alwaysWaitAtEndOfTurn;
+            AutosaveEachTurn = autosaveEachTurn;
+            ShowEnemyMoves = showEnemyMoves;
+            NoPauseAfterEnemyMoves = noPauseAfterEnemyMoves;
+            FastPieceSlide = fastPieceSlide;
+            InstantAdvice = instantAdvice;
+            TutorialHelp = tutorialHelp;
+            EnterClosestCityScreen = enterClosestCityScreen;
+            MoveUnitsWithoutMouse = moveUnitsWithoutMouse;
+            ThroneRoomGraphics = throneRoomGraphics;
+            DiplomacyScreenGraphics = diplomacyScreenGraphics;
+            AnimatedHeralds = animatedHeralds;
+            CivilopediaForAdvances = civilopediaForAdvances;
+            HighCouncil = highCouncil;
+            WonderMovies = wonderMovies;
+            WarnWhenCityGrowthHalted = warnWhenCityGrowthHalted;
+            ShowCityImprovementsBuilt = showCityImprovementsBuilt;
+            ShowNonCombatUnitsBuilt = showNonCombatUnitsBuilt;
+            ShowInvalidBuildInstructions = showInvalidBuildInstructions;
+            AnnounceCitiesInDisorder = announceCitiesInDisorder;
+            AnnounceOrderRestored = announceOrderRestored;
+            AnnounceWeLoveKingDay = announceWeLoveKingDay;
+            WarnWhenFoodDangerouslyLow = warnWhenFoodDangerouslyLow;
+            WarnWhenPollutionOccurs = warnWhenPollutionOccurs;
+            WarnChangProductWillCostShields = warnChangProductWillCostShields;
+            ZoomToCityNotDefaultAction = zoomToCityNotDefaultAction;
+            CheatPenaltyWarning = cheatPenaltyWarning;
+            Grid = grid;
         }
     }
 }
