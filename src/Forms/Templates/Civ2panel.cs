@@ -14,7 +14,7 @@ namespace civ2.Forms
 
         //Draw border around form
         private void Civ2panel_Paint(object sender, PaintEventArgs e)
-        {            
+        {
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, this.Height - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), this.Width - 1, 0, this.Width - 1, this.Height - 1);

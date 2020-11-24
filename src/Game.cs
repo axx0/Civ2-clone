@@ -16,19 +16,19 @@ namespace civ2
         private readonly List<IUnit> _casualties;
         private readonly List<City> _cities;
         private readonly List<Civilization> _civs;
-        private readonly Options _options;
+        public readonly Options _options;
 
         public GameVersionType Version { get; set; }
         //public Options Options => _options;
 
         public List<IUnit> GetUnits => _units;
 
-        public static List<IUnit> Units = new List<IUnit>();
-        public static List<IUnit> DeadUnits = new List<IUnit>();
-        public static List<City> Cities = new List<City>();
-        public static List<Civilization> Civs = new List<Civilization>();
-        public static ITerrain[,] TerrainTile;
-        public static Bitmap[] CivsMap;
+        //public static List<IUnit> Units = new List<IUnit>();
+        //public static List<IUnit> DeadUnits = new List<IUnit>();
+        //public static List<City> Cities = new List<City>();
+        //public static List<Civilization> Civs = new List<Civilization>();
+        //public static ITerrain[,] TerrainTile;
+        //public static Bitmap[] CivsMap;
 
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)

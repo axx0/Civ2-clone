@@ -13,7 +13,7 @@ using civ2.GameActions;
 
 namespace civ2.Forms
 {
-    public partial class MapPanel : Civ2panel, BaseInstance
+    public partial class MapPanel : Civ2panel
     {
         private static DoubleBufferedPanel DrawPanel;
         StringFormat sf = new StringFormat();
@@ -50,7 +50,7 @@ namespace civ2.Forms
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
             DrawPanel.MouseClick += DrawPanel_MouseClick;
-
+            
             NoSelectButton ZoomINButton = new NoSelectButton
             {
                 Location = new Point(11, 9),

@@ -29,10 +29,11 @@ namespace civ2
             else                        Version = GameVersionType.CiC;      // lower than Conflicts
 
             // Options
-            _options.Bloodlust                       = GetBit(bytes[12], 0);     // Bloodlust on/off            
-            _options.SimplifiedCombat                = GetBit(bytes[12], 3);     // Simplified combat on/off
-            _options.FlatEarth                       = GetBit(bytes[13], 0);     // Flat/round earth
-            _options.DontRestartIfEliminated         = GetBit(bytes[13], 7);     // Don't restart if eliminated
+            // TODO: determine if randomizing villages/resources, randomizing player starting locations, select comp. opponents, accelerated sturtup options are selected from SAV file
+            bool bloodlust                           = GetBit(bytes[12], 0);     // Bloodlust on/off            
+            bool simplifiedCombat                    = GetBit(bytes[12], 3);     // Simplified combat on/off
+            bool flatEarth                           = GetBit(bytes[13], 0);     // Flat/round earth
+            bool dontRestartIfEliminated             = GetBit(bytes[13], 7);     // Don't restart if eliminated
             _options.MoveUnitsWithoutMouse           = GetBit(bytes[14], 0);     // Move units without mouse
             _options.EnterClosestCityScreen          = GetBit(bytes[14], 1);     // Enter closes city screen     
             _options.Grid                            = GetBit(bytes[14], 2);     // Grid on/off
@@ -64,6 +65,7 @@ namespace civ2
             _options.ZoomToCityNotDefaultAction      = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
             _options.WarnWhenPollutionOccurs         = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
             _options.WarnChangProductWillCostShields = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
+            _options.SetReadonlyOptions(simplifiedCombat, flatEarth, bloodlust, dontRestartIfEliminated);
 
             // Number of turns passed
             Data.TurnNumber = int.Parse(string.Concat(bytes[29].ToString("X"), bytes[28].ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
