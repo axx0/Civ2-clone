@@ -31,7 +31,7 @@ namespace civ2.Forms
         public MainWindow()
         {
             LoadInitialAssets();
-
+            
             #region INITIAL SETTINGS
             InitializeComponent();
             Text = "Civilization II Multiplayer Gold";
@@ -284,7 +284,7 @@ namespace civ2.Forms
         private void MainWindow_Load(object sender, EventArgs e)
         {
             ShowIntroScreen();
-
+            
             //MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             //MapPanel.Location = new Point(0, MainMenuStrip.Height);
             //Controls.Add(MapPanel);
@@ -613,6 +613,7 @@ namespace civ2.Forms
         //If view pieces mode is toggled on/off
         private void MapEventHappened(object sender, MapEventArgs e)
         {
+            
             switch (e.EventType)
             {
                 case MapEventType.SwitchViewMovePieces:

@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\ITest.cs" />
     <Compile Include="src\Enums\GameVersionType.cs" />
     <Compile Include="src\Enums\IntroScreenChoiceType.cs" />
     <Compile Include="src\Game.LoadGame.cs" />
@@ -272,6 +273,7 @@
     <Compile Include="src\Bitmaps\Images.cs" />
     <Compile Include="src\Game.ImportSAV.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
+    <Compile Include="src\IBaseInstance.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />
     <Compile Include="src\Improvements\IImprovement.cs" />
     <Compile Include="src\Options.cs" />
@@ -287,6 +289,7 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
+    <Compile Include="src\Test.cs" />
     <EmbeddedResource Include="src\Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

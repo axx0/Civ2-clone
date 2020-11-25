@@ -65,7 +65,7 @@ namespace civ2
             bool zoomToCityNotDefaultAction         = GetBit(bytes[23], 5);     // Zoom to city not default action on/off
             bool warnWhenPollutionOccurs            = GetBit(bytes[23], 6);     // Warn when pollution occurs on/off
             bool warnChangProductWillCostShields    = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
-            _options.SetReadonlyOptions(simplifiedCombat, flatEarth, bloodlust, dontRestartIfEliminated, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, 
+            _options.SetOptions(simplifiedCombat, flatEarth, bloodlust, dontRestartIfEliminated, soundEffects, music, cheatMenu, alwaysWaitAtEndOfTurn, 
                                         autosaveEachTurn, showEnemyMoves, noPauseAfterEnemyMoves, fastPieceSlide, instantAdvice, tutorialHelp, enterClosestCityScreen, 
                                         moveUnitsWithoutMouse, throneRoomGraphics, diplomacyScreenGraphics, animatedHeralds, civilopediaForAdvances, highCouncil, 
                                         wonderMovies, warnWhenCityGrowthHalted, showCityImprovementsBuilt, showNonCombatUnitsBuilt, showInvalidBuildInstructions, 

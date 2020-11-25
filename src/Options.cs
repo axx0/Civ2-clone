@@ -46,13 +46,13 @@
         public bool CheatPenaltyWarning { get; set; }
         public bool Grid { get; set; }
 
-        public void SetReadonlyOptions(bool simplifiedCombat, bool flatEarth, bool bloodlust, bool dontRestartIfEliminated, bool soundEffects, bool music, bool cheatMenu,
-                                        bool alwaysWaitAtEndOfTurn, bool autosaveEachTurn, bool showEnemyMoves, bool noPauseAfterEnemyMoves, bool fastPieceSlide, bool instantAdvice,
-                                        bool tutorialHelp, bool enterClosestCityScreen, bool moveUnitsWithoutMouse, bool throneRoomGraphics, bool diplomacyScreenGraphics,
-                                        bool animatedHeralds, bool civilopediaForAdvances, bool highCouncil, bool wonderMovies, bool warnWhenCityGrowthHalted,
-                                        bool showCityImprovementsBuilt, bool showNonCombatUnitsBuilt, bool showInvalidBuildInstructions, bool announceCitiesInDisorder,
-                                        bool announceOrderRestored, bool announceWeLoveKingDay, bool warnWhenFoodDangerouslyLow, bool warnWhenPollutionOccurs,
-                                        bool warnChangProductWillCostShields, bool zoomToCityNotDefaultAction, bool cheatPenaltyWarning, bool grid)
+        public void SetOptions(bool simplifiedCombat, bool flatEarth, bool bloodlust, bool dontRestartIfEliminated, bool soundEffects, bool music, bool cheatMenu,
+                            bool alwaysWaitAtEndOfTurn, bool autosaveEachTurn, bool showEnemyMoves, bool noPauseAfterEnemyMoves, bool fastPieceSlide, bool instantAdvice,
+                            bool tutorialHelp, bool enterClosestCityScreen, bool moveUnitsWithoutMouse, bool throneRoomGraphics, bool diplomacyScreenGraphics,
+                            bool animatedHeralds, bool civilopediaForAdvances, bool highCouncil, bool wonderMovies, bool warnWhenCityGrowthHalted,
+                            bool showCityImprovementsBuilt, bool showNonCombatUnitsBuilt, bool showInvalidBuildInstructions, bool announceCitiesInDisorder,
+                            bool announceOrderRestored, bool announceWeLoveKingDay, bool warnWhenFoodDangerouslyLow, bool warnWhenPollutionOccurs,
+                            bool warnChangProductWillCostShields, bool zoomToCityNotDefaultAction, bool cheatPenaltyWarning, bool grid)
         {
             SimplifiedCombat = simplifiedCombat;
             FlatEarth = flatEarth;
