@@ -8,7 +8,8 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>civ2</RootNamespace>
     <AssemblyName>civ2</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <LangVersion>8.0</LangVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -26,6 +27,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -65,7 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\ITest.cs" />
+    <Compile Include="src\Enums\BarbarianActivityType.cs" />
     <Compile Include="src\Enums\GameVersionType.cs" />
     <Compile Include="src\Enums\IntroScreenChoiceType.cs" />
     <Compile Include="src\Game.LoadGame.cs" />
@@ -97,7 +99,7 @@
     <Compile Include="src\City.cs" />
     <Compile Include="src\Civilization.cs" />
     <Compile Include="src\BaseInstance.cs" />
-    <Compile Include="src\Data.cs" />
+    <Compile Include="src\IO\GameData.cs" />
     <Compile Include="src\Enums\AttitudeType.cs" />
     <Compile Include="src\Enums\DifficultyType.cs" />
     <Compile Include="src\Enums\CommodityType.cs" />
@@ -271,16 +273,14 @@
     <Compile Include="src\Bitmaps\DrawFunctions.cs" />
     <Compile Include="src\Bitmaps\ModifyImage.cs" />
     <Compile Include="src\Bitmaps\Images.cs" />
-    <Compile Include="src\Game.ImportSAV.cs" />
+    <Compile Include="src\IO\ReadFiles.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
-    <Compile Include="src\IBaseInstance.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />
     <Compile Include="src\Improvements\IImprovement.cs" />
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\Rules.cs" />
-    <Compile Include="src\Resolution.cs" />
     <Compile Include="src\Settings.cs" />
     <Compile Include="src\Sounds\Sound.cs" />
     <Compile Include="src\Techs\Tech.cs" />
@@ -289,7 +289,6 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
-    <Compile Include="src\Test.cs" />
     <EmbeddedResource Include="src\Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

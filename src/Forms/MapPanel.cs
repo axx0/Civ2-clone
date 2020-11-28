@@ -28,11 +28,11 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MapPanel(int width, int height)
+        public MapPanel(Game Game, int width, int height)
         {
             Size = new Size(width, height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
-
+            
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Actions.OnUnitEvent += UnitEventHappened;
             Actions.OnPlayerEvent += PlayerEventHappened;
@@ -105,7 +105,7 @@ namespace civ2.Forms
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
-            //Title
+            // Title
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
@@ -113,7 +113,7 @@ namespace civ2.Forms
             e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
             e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
-            //Draw line borders of panel
+            // Draw panel borders
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9, Height - 9 - 1);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 1, 36, Width - 9 - 1, Height - 9 - 1);

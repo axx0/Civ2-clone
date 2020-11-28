@@ -16,12 +16,34 @@ namespace civ2
         private readonly List<IUnit> _casualties;
         private readonly List<City> _cities;
         private readonly List<Civilization> _civs;
-        public readonly Options _options;
-
-        public GameVersionType Version { get; set; }
-        //public Options Options => _options;
+        private readonly Options _options;
+        private readonly Rules _rules;
+        //private readonly Data _data;
+        private readonly GameVersionType _gameVersion;
+        private readonly DifficultyType _difficultyLevel;
+        private readonly BarbarianActivityType _barbarianActivity;
 
         public List<IUnit> GetUnits => _units;
+        public Options Options => _options;
+        public Rules Rules => _rules;
+        public GameVersionType GameVersion => _gameVersion;
+
+        public int TurnNumber { get; set; }
+        public int TurnNumberForGameYear { get; set; }
+        public int SelectedUnitIndex { get; set; }
+        public int HumanPlayer { get; set; }
+        public int PlayersMapUsed { get; set; }
+        public int PlayersCivilizationNumberUsed { get; set; }
+        public bool MapRevealed { get; set; }
+        public DifficultyType DifficultyLevel => _difficultyLevel;
+        public BarbarianActivityType BarbarianActivity => _barbarianActivity;
+        public bool[] CivsInPlay { get; set; }
+        public int PollutionAmount { get; set; }
+        public int GlobalTempRiseOccured { get; set; }
+        public int NoOfTurnsOfPeace { get; set; }
+        public int NumberOfUnits { get; set; }
+        public int NumberOfCities { get; set; }
+
 
         //public static List<IUnit> Units = new List<IUnit>();
         //public static List<IUnit> DeadUnits = new List<IUnit>();
@@ -38,31 +60,7 @@ namespace civ2
         }
         #endregion  
 
-        public static void StartNewGame()
-        {
-        }
 
-        public static void LoadGame(string SAVpath)
-        {
-            ////Rules.ReadRULES(Settings.Civ2Path + "RULES.TXT");
-            //ImportSAV(SAVpath);
-            //Images.CreateLoadGameGraphics();
-            //Game.Instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Game.Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
-            //Game.Instance.ActiveCiv = Civs[Data.HumanPlayer];
-
-            //FOR HELP!!!
-            //foreach (IUnit unit in Game.Units)
-            //{
-            //    if (unit.Civ == 5 && unit.HomeCity != 255)
-            //        Console.WriteLine($"Unit, Id={unit.Id}, {Civs[unit.Civ].TribeName}, {unit.Type}, ({unit.X},{unit.Y}), Lastmove={unit.LastMove}, Firstmove={unit.FirstMove}," +
-            //            $"order={unit.Order}, {Cities[unit.HomeCity].Name}");
-            //}
-            //for (int i = 0; i < 8; i++)
-            //{
-            //    Console.WriteLine("Civ{0}, AnyUnitsAwaitingOrders={1}", i, Actions.AnyUnitsAwaitingOrders(i));
-            //}
-
-        }
 
         private IUnit _activeUnit;
         public IUnit ActiveUnit
@@ -317,7 +315,7 @@ namespace civ2
 
         public static void CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, 
                                      int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate, 
-                                     int government, int reputation, int[] techs)
+                                     int government, int reputation, bool[] techs)
         {
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
             if (id != 0 && leaderName == "") leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];
@@ -348,8 +346,8 @@ namespace civ2
 
             _instance._civs.Add(civ);
         }
-
         
+        // Singleton instance of a game
         private static Game _instance;
         public static Game Instance
         {

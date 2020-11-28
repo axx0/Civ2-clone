@@ -9,89 +9,122 @@ namespace civ2
     {
         // Game rules from RULES.txt
 
-        //Cosmic rules
-        public static int[] CosmicRules { get; private set; }
-        //Units
-        public static string[] UnitName { get; private set; }
-        public static string[] UnitUntil { get; private set; }
-        public static int[] UnitDomain { get; private set; }
-        public static int[] UnitMove { get; private set; }
-        public static int[] UnitRange { get; private set; }
-        public static int[] UnitAttack { get; private set; }
-        public static int[] UnitDefense { get; private set; }
-        public static int[] UnitHitp { get; private set; }
-        public static int[] UnitFirepwr { get; private set; }
-        public static int[] UnitCost { get; private set; }
-        public static int[] UnitHold { get; private set; }
-        public static int[] UnitAIrole { get; private set; }
-        public static string[] UnitPrereq { get; private set; }
-        public static string[] UnitFlags { get; private set; }
-        //Tech/advances
-        public static string[] TechName { get; private set; }
-        public static int[] TechAIvalue { get; private set; }
-        public static int[] TechModifier { get; private set; }
-        public static string[] TechPrereq1 { get; private set; }
-        public static string[] TechPrereq2 { get; private set; }
-        public static int[] TechEpoch { get; private set; }
-        public static int[] TechCategory { get; private set; }
-        public static string[] TechShortName { get; private set; }
-        //City improvements
-        public static string[] ImprovementName { get; private set; }
-        public static int[] ImprovementCost { get; private set; }
-        public static int[] ImprovementUpkeep { get; private set; }
-        public static string[] ImprovementPrereq { get; private set; }
-        //Expiration of advances
-        public static string[] ImprovementAdvanceExpiration { get; private set; }
-        //Terrain
-        public static string[] TerrainName { get; private set; }
-        public static int[] TerrainMovecost { get; private set; }
-        public static int[] TerrainDefense { get; private set; }
-        public static int[] TerrainFood { get; private set; }
-        public static int[] TerrainShields { get; private set; }
-        public static int[] TerrainTrade { get; private set; }
-        public static string[] TerrainIrrigate { get; private set; }
-        public static int[] TerrainIrrigateBonus { get; private set; }
-        public static int[] TerrainIrrigateTurns { get; private set; }
-        public static int[] TerrainIrrigateAI { get; private set; }
-        public static string[] TerrainMine { get; private set; }
-        public static int[] TerrainMineBonus { get; private set; }
-        public static int[] TerrainMineTurns { get; private set; }
-        public static int[] TerrainMineAI { get; private set; }
-        public static string[] TerrainTransform { get; private set; }
-        public static string[] TerrainShortName { get; private set; }
-        //Special terrain
-        public static string[] TerrainSpecName { get; private set; }
-        public static int[] TerrainSpecMovecost { get; private set; }
-        public static int[] TerrainSpecDefense { get; private set; }
-        public static int[] TerrainSpecFood { get; private set; }
-        public static int[] TerrainSpecShields { get; private set; }
-        public static int[] TerrainSpecTrade { get; private set; }
-        //Governments
-        public static string[] GovernmentName { get; private set; }
-        public static string[] GovernmentTitleHIS { get; private set; }
-        public static string[] GovernmentTitleHER { get; private set; }
-        //Leaders
-        public static string[] LeaderNameHIS { get; private set; }
-        public static string[] LeaderNameHER { get; private set; }
-        public static int[] LeaderFemale { get; private set; }
-        public static int[] LeaderColor { get; private set; }
-        public static int[] LeaderCityStyle { get; private set; }
-        public static string[] LeaderPlural { get; private set; }
-        public static string[] LeaderAdjective { get; private set; }
-        public static int[] LeaderAttack { get; private set; }
-        public static int[] LeaderExpand { get; private set; }
-        public static int[] LeaderCivilize { get; private set; }
-        //Trading commodities
-        public static string[] CaravanCommoditie { get; private set; }
-        //Orders
-        public static string[] OrderName { get; private set; }
-        public static string[] OrderShortcut { get; private set; }
-        //Difficulty
-        public static string[] Difficulty { get; private set; }
-        //Attitudes
-        public static string[] Attitude { get; private set; }
+        // Cosmic rules
+        public int RoadMultiplier { get; private set; }
+        public int ChanceTriremeLost { get; private set; }
+        public int FoodEatenPerTurn { get; private set; }
+        public int RowsFoodBox { get; private set; }
+        public int RowsShieldBox { get; private set; }
+        public int SettlersEatTillMonarchy { get; private set; }
+        public int SettlersEatFromCommunism { get; private set; }
+        public int CitySizeUnhappyChieftain { get; private set; }
+        public int RiotFactor { get; private set; }
+        public int ToExceedCitySizeAqueductNeeded { get; private set; }
+        public int SewerNeeded { get; private set; }
+        public int TechParadigm { get; private set; }
+        public int BaseTimeEngineersTransform { get; private set; }
+        public int MonarchyPaysSupport { get; private set; }
+        public int CommunismPaysSupport { get; private set; }
+        public int FundamentalismPaysSupport { get; private set; }
+        public int CommunismEquivalentPalaceDistance { get; private set; }
+        public int FundamentalismScienceLost { get; private set; }
+        public int ShieldPenaltyTypeChange { get; private set; }
+        public int MaxParadropRange { get; private set; }
+        public int MassThrustParadigm { get; private set; }
+        public int MaxEffectiveScienceRate { get; private set; }
 
-        public static void ReadRULES(string path)
+        // Units
+        public string[] UnitName { get; set; }
+        public string[] UnitUntil { get; private set; }
+        public int[] UnitDomain { get; private set; }
+        public int[] UnitMove { get; private set; }
+        public int[] UnitRange { get; private set; }
+        public int[] UnitAttack { get; private set; }
+        public int[] UnitDefense { get; private set; }
+        public int[] UnitHitp { get; private set; }
+        public int[] UnitFirepwr { get; private set; }
+        public int[] UnitCost { get; private set; }
+        public int[] UnitHold { get; private set; }
+        public int[] UnitAIrole { get; private set; }
+        public string[] UnitPrereq { get; private set; }
+        public string[] UnitFlags { get; private set; }
+
+        // Tech/advances
+        public string[] TechName { get; private set; }
+        public int[] TechAIvalue { get; private set; }
+        public int[] TechModifier { get; private set; }
+        public string[] TechPrereq1 { get; private set; }
+        public string[] TechPrereq2 { get; private set; }
+        public int[] TechEpoch { get; private set; }
+        public int[] TechCategory { get; private set; }
+        public string[] TechShortName { get; private set; }
+
+        // City improvements
+        public string[] ImprovementName { get; private set; }
+        public int[] ImprovementCost { get; private set; }
+        public int[] ImprovementUpkeep { get; private set; }
+        public string[] ImprovementPrereq { get; private set; }
+
+        // Expiration of advances
+        public string[] ImprovementAdvanceExpiration { get; private set; }
+        
+        // Terrain
+        public string[] TerrainName { get; private set; }
+        public int[] TerrainMovecost { get; private set; }
+        public int[] TerrainDefense { get; private set; }
+        public int[] TerrainFood { get; private set; }
+        public int[] TerrainShields { get; private set; }
+        public int[] TerrainTrade { get; private set; }
+        public string[] TerrainIrrigate { get; private set; }
+        public int[] TerrainIrrigateBonus { get; private set; }
+        public int[] TerrainIrrigateTurns { get; private set; }
+        public int[] TerrainIrrigateAI { get; private set; }
+        public string[] TerrainMine { get; private set; }
+        public int[] TerrainMineBonus { get; private set; }
+        public int[] TerrainMineTurns { get; private set; }
+        public int[] TerrainMineAI { get; private set; }
+        public string[] TerrainTransform { get; private set; }
+        public string[] TerrainShortName { get; private set; }
+
+        // Special terrain
+        public string[] TerrainSpecName { get; private set; }
+        public int[] TerrainSpecMovecost { get; private set; }
+        public int[] TerrainSpecDefense { get; private set; }
+        public int[] TerrainSpecFood { get; private set; }
+        public int[] TerrainSpecShields { get; private set; }
+        public int[] TerrainSpecTrade { get; private set; }
+
+        // Governments
+        public string[] GovernmentName { get; private set; }
+        public string[] GovernmentTitleHIS { get; private set; }
+        public string[] GovernmentTitleHER { get; private set; }
+
+        // Leaders
+        public string[] LeaderNameHIS { get; private set; }
+        public string[] LeaderNameHER { get; private set; }
+        public int[] LeaderFemale { get; private set; }
+        public int[] LeaderColor { get; private set; }
+        public int[] LeaderCityStyle { get; private set; }
+        public string[] LeaderPlural { get; private set; }
+        public string[] LeaderAdjective { get; private set; }
+        public int[] LeaderAttack { get; private set; }
+        public int[] LeaderExpand { get; private set; }
+        public int[] LeaderCivilize { get; private set; }
+
+        // Trading commodities
+        public string[] CaravanCommoditie { get; private set; }
+
+        // Orders
+        public string[] OrderName { get; private set; }
+        public string[] OrderShortcut { get; private set; }
+
+        // Difficulty
+        public string[] Difficulty { get; private set; }
+
+        // Attitudes
+        public string[] Attitude { get; private set; }
+
+        public void ReadRULES(string path)
         {
             // Read in SAV directory path. If it doesn't exist there, read from root civ2 directory.
             string rulesPath1 = path + "\\RULES.TXT";
@@ -111,7 +144,6 @@ namespace civ2
             }
 
             // Initialize
-            CosmicRules = new int[22];
             UnitName = new string[62];
             UnitUntil = new string[62];
             UnitDomain = new int[62];
@@ -186,18 +218,57 @@ namespace civ2
             StreamReader file = new StreamReader(filePath);
             while ((line = file.ReadLine()) != null)
             {
-                //Read COSMIC PRINCIPLES
+                // Read COSMIC PRINCIPLES
                 if (line == "@COSMIC")
                 {
-                    for (int row = 0; row < 22; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(';').ToList();
-                        CosmicRules[row] = Int32.Parse(text[0].Trim());
-                    }
+                    List<string> text;                    
+                    text = file.ReadLine().Split(';').ToList();
+                    RoadMultiplier = Int32.Parse(text[0].Trim());       // Cosmic rule #1
+                    text = file.ReadLine().Split(';').ToList();
+                    ChanceTriremeLost = Int32.Parse(text[0].Trim());    // Cosmic rule #2
+                    text = file.ReadLine().Split(';').ToList();
+                    FoodEatenPerTurn = Int32.Parse(text[0].Trim());    // Cosmic rule #3
+                    text = file.ReadLine().Split(';').ToList();
+                    RowsFoodBox = Int32.Parse(text[0].Trim());    // Cosmic rule #4
+                    text = file.ReadLine().Split(';').ToList();
+                    RowsShieldBox = Int32.Parse(text[0].Trim());    // Cosmic rule #5
+                    text = file.ReadLine().Split(';').ToList();
+                    SettlersEatTillMonarchy = Int32.Parse(text[0].Trim());    // Cosmic rule #6
+                    text = file.ReadLine().Split(';').ToList();
+                    SettlersEatFromCommunism = Int32.Parse(text[0].Trim());    // Cosmic rule #7
+                    text = file.ReadLine().Split(';').ToList();
+                    CitySizeUnhappyChieftain = Int32.Parse(text[0].Trim());    // Cosmic rule #8
+                    text = file.ReadLine().Split(';').ToList();
+                    RiotFactor = Int32.Parse(text[0].Trim());    // Cosmic rule #9
+                    text = file.ReadLine().Split(';').ToList();
+                    ToExceedCitySizeAqueductNeeded = Int32.Parse(text[0].Trim());    // Cosmic rule #10
+                    text = file.ReadLine().Split(';').ToList();
+                    SewerNeeded = Int32.Parse(text[0].Trim());    // Cosmic rule #11
+                    text = file.ReadLine().Split(';').ToList();
+                    TechParadigm = Int32.Parse(text[0].Trim());    // Cosmic rule #12
+                    text = file.ReadLine().Split(';').ToList();
+                    BaseTimeEngineersTransform = Int32.Parse(text[0].Trim());    // Cosmic rule #13
+                    text = file.ReadLine().Split(';').ToList();
+                    MonarchyPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #14
+                    text = file.ReadLine().Split(';').ToList();
+                    CommunismPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #15
+                    text = file.ReadLine().Split(';').ToList();
+                    FundamentalismPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #16
+                    text = file.ReadLine().Split(';').ToList();
+                    CommunismEquivalentPalaceDistance = Int32.Parse(text[0].Trim());    // Cosmic rule #17
+                    text = file.ReadLine().Split(';').ToList();
+                    FundamentalismScienceLost = Int32.Parse(text[0].Trim());    // Cosmic rule #18
+                    text = file.ReadLine().Split(';').ToList();
+                    ShieldPenaltyTypeChange = Int32.Parse(text[0].Trim());    // Cosmic rule #19
+                    text = file.ReadLine().Split(';').ToList();
+                    MaxParadropRange = Int32.Parse(text[0].Trim());    // Cosmic rule #20
+                    text = file.ReadLine().Split(';').ToList();
+                    MassThrustParadigm = Int32.Parse(text[0].Trim());    // Cosmic rule #21
+                    text = file.ReadLine().Split(';').ToList();
+                    MaxEffectiveScienceRate = Int32.Parse(text[0].Trim());    // Cosmic rule #22
                 }
 
-                //Read TECH RULES
+                // Read TECH RULES
                 if (line == "@CIVILIZE")
                 {
                     for (int row = 0; row < 100; row++)
@@ -215,7 +286,7 @@ namespace civ2
                     }
                 }
 
-                //Read IMPROVEMENTS
+                // Read IMPROVEMENTS
                 if (line == "@IMPROVE")
                 {
                     for (int row = 0; row < 67; row++)
@@ -229,13 +300,14 @@ namespace civ2
                     }
                 }
 
-                //Read EXPIRATION OF ADVANCES
+                // Read EXPIRATION OF ADVANCES
                 if (line == "@ENDWONDER")
                 {
-                    //First 39 are city improvements, they have no expiration
-                    for (int row = 0; row < 39; row++) { ImprovementAdvanceExpiration[row] = ""; }
+                    // First 39 are city improvements, they have no expiration
+                    for (int row = 0; row < 39; row++) 
+                        ImprovementAdvanceExpiration[row] = "";
 
-                    //Next 28 are advances
+                    // Next 28 are advances
                     for (int row = 0; row < 28; row++)  //for advances
                     {
                         line = file.ReadLine();
@@ -244,7 +316,7 @@ namespace civ2
                     }
                 }
 
-                //Read UNIT RULES
+                // Read UNIT RULES
                 if (line == "@UNITS")
                 {
                     for (int row = 0; row < 62; row++)
@@ -268,10 +340,10 @@ namespace civ2
                     }
                 }
 
-                //Read TERRAIN RULES
+                // Read TERRAIN RULES
                 if (line == "@TERRAIN")
                 {
-                    //First read normal terrain
+                    // First read normal terrain
                     for (int row = 0; row < 11; row++)
                     {
                         line = file.ReadLine();
@@ -294,7 +366,7 @@ namespace civ2
                         TerrainShortName[row] = text[16].Trim();
                     }
 
-                    //Next read special terrain
+                    // Next read special terrain
                     for (int row = 0; row < 22; row++)
                     {
                         line = file.ReadLine();
@@ -308,7 +380,7 @@ namespace civ2
                     }
                 }
 
-                //Read GOVERNMENTS
+                // Read GOVERNMENTS
                 if (line == "@GOVERNMENTS")
                 {
                     for (int row = 0; row < 7; row++)
@@ -321,7 +393,7 @@ namespace civ2
                     }
                 }
 
-                //Read LEADERS
+                // Read LEADERS
                 if (line == "@LEADERS")
                 {
                     for (int row = 0; row < 21; row++)
@@ -341,7 +413,7 @@ namespace civ2
                     }
                 }
 
-                //Read CARAVAN TRADING COMMODITIES
+                // Read CARAVAN TRADING COMMODITIES
                 if (line == "@CARAVAN")
                 {
                     for (int row = 0; row < 16; row++)
@@ -352,7 +424,7 @@ namespace civ2
                     }
                 }
 
-                //Read ORDERS
+                // Read ORDERS
                 if (line == "@ORDERS")
                 {
                     for (int row = 0; row < 11; row++)
@@ -364,7 +436,7 @@ namespace civ2
                     }
                 }
 
-                //Read DIFFICULTY
+                // Read DIFFICULTY
                 if (line == "@DIFFICULTY")
                 {
                     for (int row = 0; row < 6; row++)
@@ -374,7 +446,7 @@ namespace civ2
                     }
                 }
 
-                //Read ATTITUDES
+                // Read ATTITUDES
                 if (line == "@ATTITUDES")
                 {
                     for (int row = 0; row < 9; row++)

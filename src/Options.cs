@@ -6,7 +6,7 @@
         public bool SimplifiedCombat { get; private set; }
         public bool FlatEarth { get; private set; }
         public bool Bloodlust { get; private set; }
-        public bool DontRestartIfEliminated { get; private set; }        
+        public bool DontRestartIfEliminated { get; private set; }
 
         // GAME OPTIONS
         public bool SoundEffects { get; set; }
@@ -46,49 +46,43 @@
         public bool CheatPenaltyWarning { get; set; }
         public bool Grid { get; set; }
 
-        public void SetOptions(bool simplifiedCombat, bool flatEarth, bool bloodlust, bool dontRestartIfEliminated, bool soundEffects, bool music, bool cheatMenu,
-                            bool alwaysWaitAtEndOfTurn, bool autosaveEachTurn, bool showEnemyMoves, bool noPauseAfterEnemyMoves, bool fastPieceSlide, bool instantAdvice,
-                            bool tutorialHelp, bool enterClosestCityScreen, bool moveUnitsWithoutMouse, bool throneRoomGraphics, bool diplomacyScreenGraphics,
-                            bool animatedHeralds, bool civilopediaForAdvances, bool highCouncil, bool wonderMovies, bool warnWhenCityGrowthHalted,
-                            bool showCityImprovementsBuilt, bool showNonCombatUnitsBuilt, bool showInvalidBuildInstructions, bool announceCitiesInDisorder,
-                            bool announceOrderRestored, bool announceWeLoveKingDay, bool warnWhenFoodDangerouslyLow, bool warnWhenPollutionOccurs,
-                            bool warnChangProductWillCostShields, bool zoomToCityNotDefaultAction, bool cheatPenaltyWarning, bool grid)
+        public void Set(bool[] optionsArray)
         {
-            SimplifiedCombat = simplifiedCombat;
-            FlatEarth = flatEarth;
-            Bloodlust = bloodlust;
-            DontRestartIfEliminated = dontRestartIfEliminated;
-            SoundEffects = soundEffects;
-            Music = music;
-            CheatMenu = cheatMenu;
-            AlwaysWaitAtEndOfTurn = alwaysWaitAtEndOfTurn;
-            AutosaveEachTurn = autosaveEachTurn;
-            ShowEnemyMoves = showEnemyMoves;
-            NoPauseAfterEnemyMoves = noPauseAfterEnemyMoves;
-            FastPieceSlide = fastPieceSlide;
-            InstantAdvice = instantAdvice;
-            TutorialHelp = tutorialHelp;
-            EnterClosestCityScreen = enterClosestCityScreen;
-            MoveUnitsWithoutMouse = moveUnitsWithoutMouse;
-            ThroneRoomGraphics = throneRoomGraphics;
-            DiplomacyScreenGraphics = diplomacyScreenGraphics;
-            AnimatedHeralds = animatedHeralds;
-            CivilopediaForAdvances = civilopediaForAdvances;
-            HighCouncil = highCouncil;
-            WonderMovies = wonderMovies;
-            WarnWhenCityGrowthHalted = warnWhenCityGrowthHalted;
-            ShowCityImprovementsBuilt = showCityImprovementsBuilt;
-            ShowNonCombatUnitsBuilt = showNonCombatUnitsBuilt;
-            ShowInvalidBuildInstructions = showInvalidBuildInstructions;
-            AnnounceCitiesInDisorder = announceCitiesInDisorder;
-            AnnounceOrderRestored = announceOrderRestored;
-            AnnounceWeLoveKingDay = announceWeLoveKingDay;
-            WarnWhenFoodDangerouslyLow = warnWhenFoodDangerouslyLow;
-            WarnWhenPollutionOccurs = warnWhenPollutionOccurs;
-            WarnChangProductWillCostShields = warnChangProductWillCostShields;
-            ZoomToCityNotDefaultAction = zoomToCityNotDefaultAction;
-            CheatPenaltyWarning = cheatPenaltyWarning;
-            Grid = grid;
+            SimplifiedCombat = optionsArray[0];
+            FlatEarth = optionsArray[1];
+            Bloodlust = optionsArray[2];
+            DontRestartIfEliminated = optionsArray[3];
+            SoundEffects = optionsArray[4];
+            Music = optionsArray[5];
+            CheatMenu = optionsArray[6];
+            AlwaysWaitAtEndOfTurn = optionsArray[7];
+            AutosaveEachTurn = optionsArray[8];
+            ShowEnemyMoves = optionsArray[9];
+            NoPauseAfterEnemyMoves = optionsArray[10];
+            FastPieceSlide = optionsArray[11];
+            InstantAdvice = optionsArray[12];
+            TutorialHelp = optionsArray[13];
+            EnterClosestCityScreen = optionsArray[14];
+            MoveUnitsWithoutMouse = optionsArray[15];
+            ThroneRoomGraphics = optionsArray[16];
+            DiplomacyScreenGraphics = optionsArray[17];
+            AnimatedHeralds = optionsArray[18];
+            CivilopediaForAdvances = optionsArray[19];
+            HighCouncil = optionsArray[20];
+            WonderMovies = optionsArray[21];
+            WarnWhenCityGrowthHalted = optionsArray[22];
+            ShowCityImprovementsBuilt = optionsArray[23];
+            ShowNonCombatUnitsBuilt = optionsArray[24];
+            ShowInvalidBuildInstructions = optionsArray[25];
+            AnnounceCitiesInDisorder = optionsArray[26];
+            AnnounceOrderRestored = optionsArray[27];
+            AnnounceWeLoveKingDay = optionsArray[28];
+            WarnWhenFoodDangerouslyLow = optionsArray[29];
+            WarnWhenPollutionOccurs = optionsArray[30];
+            WarnChangProductWillCostShields = optionsArray[31];
+            ZoomToCityNotDefaultAction = optionsArray[32];
+            CheatPenaltyWarning = optionsArray[33];
+            Grid = optionsArray[34];
         }
     }
 }

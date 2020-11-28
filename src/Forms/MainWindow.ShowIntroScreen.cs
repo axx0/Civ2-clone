@@ -64,8 +64,8 @@ namespace civ2.Forms
                     }
                 case IntroScreenChoiceType.LoadGame:
                     {
-                        Game.LoadGame(directoryPath, SAVname);
-                        //ArrangeWindowControlsAfterGameStart();
+                        Game gameInstance = Game.LoadGame(directoryPath, SAVname);
+                        ArrangeWindowControlsAfterGameStart(gameInstance);
                         break;
                     }
                 case IntroScreenChoiceType.MultiplayerGame:

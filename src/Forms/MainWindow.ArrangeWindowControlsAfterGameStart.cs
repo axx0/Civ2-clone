@@ -5,14 +5,14 @@ namespace civ2.Forms
 {
     public partial class MainWindow : Form
     {
-        public void ArrangeWindowControlsAfterGameStart()
+        public void ArrangeWindowControlsAfterGameStart(Game instance)
         {
             ChoiceMenu.Visible = false;
             ChoiceMenu.Dispose();
             ChoiceMenu = null;
             MainMenuStrip.Enabled = true;
 
-            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            MapPanel = new MapPanel(instance, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             MapPanel.Location = new Point(0, MainMenuStrip.Height);
             Controls.Add(MapPanel);
             ZoomInItem.Click += MapPanel.ZoomINclicked;
