@@ -27,9 +27,27 @@ namespace civ2
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
 
+        private int _gameYear;
+        public int GameYear
+        { 
+            get
+            {
+                //if (TurnNumber< 250) _gameYear = -4000 + (TurnNumber - 1) * 20;
+                //else if (TurnNumber >= 250 && TurnNumber< 300) _gameYear = 1000 + (TurnNumber - 1 - 250) * 10;
+                //else if (TurnNumber >= 300 && TurnNumber< 350) _gameYear = 1500 + (TurnNumber - 1 - 300) * 5;
+                //else if (TurnNumber >= 350 && TurnNumber< 400) _gameYear = 1750 + (TurnNumber - 1 - 350) * 2;
+                //else _gameYear = 1850 + (TurnNumber - 1 - 400);
+                //return _gameYear;
+                if (TurnNumber < 250) return -4000 + (TurnNumber - 1) * 20;
+                else if (TurnNumber >= 250 && TurnNumber < 300) return 1000 + (TurnNumber - 1 - 250) * 10;
+                else if (TurnNumber >= 300 && TurnNumber < 350) return 1500 + (TurnNumber - 1 - 300) * 5;
+                else if (TurnNumber >= 350 && TurnNumber < 400) return 1750 + (TurnNumber - 1 - 350) * 2;
+                else return 1850 + (TurnNumber - 1 - 400);
+            }
+        }
+
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
-        public int SelectedUnitIndex { get; set; }
         public int HumanPlayer { get; set; }
         public int PlayersMapUsed { get; set; }
         public int PlayersCivilizationNumberUsed { get; set; }

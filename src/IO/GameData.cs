@@ -136,7 +136,8 @@ namespace civ2
         // Other data        
         public int[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
-        public int IndexOfLastActiveUnit { get; set; }
+
+        //public int IndexOfLastActiveUnit { get; set; }
 
         //public int GameYear { get; set; }
         //{

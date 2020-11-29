@@ -44,7 +44,6 @@ namespace civ2
 
             TurnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
-            SelectedUnitIndex = SAVgameData.SelectedUnitIndex;
             HumanPlayer = SAVgameData.HumanPlayer;
             PlayersMapUsed = SAVgameData.PlayersMapUsed;
             PlayersCivilizationNumberUsed = SAVgameData.PlayersCivilizationNumberUsed;
@@ -92,6 +91,8 @@ namespace civ2
 
             ActiveCursorXY = SAVgameData.ActiveCursorXY;
             ClickedXY = SAVgameData.ClickedXY;
+
+            _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    //null means all units have ended turn
         }
 
 
