@@ -87,7 +87,7 @@ namespace civ2.Units
         public bool Veteran { get; set; }
         public int CivId { get; set; }
         public int LastMove { get; set; }
-        public int CaravanCommodity { get; set; }
+        public CommodityType CaravanCommodity { get; set; }
         public int HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }

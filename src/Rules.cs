@@ -67,7 +67,7 @@ namespace civ2
 
         // Expiration of advances
         public string[] ImprovementAdvanceExpiration { get; private set; }
-        
+
         // Terrain
         public string[] TerrainName { get; private set; }
         public int[] TerrainMovecost { get; private set; }
@@ -124,340 +124,143 @@ namespace civ2
         // Attitudes
         public string[] Attitude { get; private set; }
 
-        public void ReadRULES(string path)
+        public void Set(List<string[]> rulesList)
         {
-            // Read in SAV directory path. If it doesn't exist there, read from root civ2 directory.
-            string rulesPath1 = path + "\\RULES.TXT";
-            string rulesPath2 = Settings.Civ2Path + "RULES.TXT";
-            string filePath = null;
-            if (File.Exists(rulesPath1))
+            // Set cosmic principles
+            RoadMultiplier = Int32.Parse(rulesList[0][0]);
+            ChanceTriremeLost = Int32.Parse(rulesList[0][1]);
+            FoodEatenPerTurn = Int32.Parse(rulesList[0][2]);
+            RowsFoodBox = Int32.Parse(rulesList[0][3]);
+            RowsShieldBox = Int32.Parse(rulesList[0][4]);
+            SettlersEatTillMonarchy = Int32.Parse(rulesList[0][5]);
+            SettlersEatFromCommunism = Int32.Parse(rulesList[0][6]);
+            CitySizeUnhappyChieftain = Int32.Parse(rulesList[0][7]);
+            RiotFactor = Int32.Parse(rulesList[0][8]);
+            ToExceedCitySizeAqueductNeeded = Int32.Parse(rulesList[0][9]);
+            SewerNeeded = Int32.Parse(rulesList[0][10]);
+            TechParadigm = Int32.Parse(rulesList[0][11]);
+            BaseTimeEngineersTransform = Int32.Parse(rulesList[0][12]);
+            MonarchyPaysSupport = Int32.Parse(rulesList[0][13]);
+            CommunismPaysSupport = Int32.Parse(rulesList[0][14]);
+            FundamentalismPaysSupport = Int32.Parse(rulesList[0][15]);
+            CommunismEquivalentPalaceDistance = Int32.Parse(rulesList[0][16]);
+            FundamentalismScienceLost = Int32.Parse(rulesList[0][17]);
+            ShieldPenaltyTypeChange = Int32.Parse(rulesList[0][18]);
+            MaxParadropRange = Int32.Parse(rulesList[0][19]);
+            MassThrustParadigm = Int32.Parse(rulesList[0][20]);
+            MaxEffectiveScienceRate = Int32.Parse(rulesList[0][21]);
+
+            for (int row = 0; row < 100; row++)
             {
-                filePath = rulesPath1;
-            }
-            else if (File.Exists(rulesPath2))
-            {
-                filePath = rulesPath2;
-            }
-            else
-            {
-                Console.WriteLine("RULES.TXT not found!");
-            }
-
-            // Initialize
-            UnitName = new string[62];
-            UnitUntil = new string[62];
-            UnitDomain = new int[62];
-            UnitMove = new int[62];
-            UnitRange = new int[62];
-            UnitAttack = new int[62];
-            UnitDefense = new int[62];
-            UnitHitp = new int[62];
-            UnitFirepwr = new int[62];
-            UnitCost = new int[62];
-            UnitHold = new int[62];
-            UnitAIrole = new int[62];
-            UnitPrereq = new string[62];
-            UnitFlags = new string[62];
-            TechName = new string[100];
-            TechAIvalue = new int[100];
-            TechModifier = new int[100];
-            TechPrereq1 = new string[100];
-            TechPrereq2 = new string[100];
-            TechEpoch = new int[100];
-            TechCategory = new int[100];
-            TechShortName = new string[100];
-            ImprovementName = new string[67];
-            ImprovementCost = new int[67];
-            ImprovementUpkeep = new int[67];
-            ImprovementPrereq = new string[67];
-            ImprovementAdvanceExpiration = new string[67];
-            TerrainName = new string[11];
-            TerrainMovecost = new int[11];
-            TerrainDefense = new int[11];
-            TerrainFood = new int[11];
-            TerrainShields = new int[11];
-            TerrainTrade = new int[11];
-            TerrainIrrigate = new string[11];
-            TerrainIrrigateBonus = new int[11];
-            TerrainIrrigateTurns = new int[11];
-            TerrainIrrigateAI = new int[11];
-            TerrainMine = new string[11];
-            TerrainMineBonus = new int[11];
-            TerrainMineTurns = new int[11];
-            TerrainMineAI = new int[11];
-            TerrainTransform = new string[11];
-            TerrainShortName = new string[11];
-            TerrainSpecName = new string[22];
-            TerrainSpecMovecost = new int[22];
-            TerrainSpecDefense = new int[22];
-            TerrainSpecFood = new int[22];
-            TerrainSpecShields = new int[22];
-            TerrainSpecTrade = new int[22];
-            GovernmentName = new string[7];
-            GovernmentTitleHIS = new string[7];
-            GovernmentTitleHER = new string[7];
-            LeaderNameHIS = new string[21];
-            LeaderNameHER = new string[21];
-            LeaderFemale = new int[21];
-            LeaderColor = new int[21];
-            LeaderCityStyle = new int[21];
-            LeaderPlural = new string[21];
-            LeaderAdjective = new string[21];
-            LeaderAttack = new int[21];
-            LeaderExpand = new int[21];
-            LeaderCivilize = new int[21];
-            CaravanCommoditie = new string[16];
-            OrderName = new string[11];
-            OrderShortcut = new string[11];
-            Difficulty = new string[6];
-            Attitude = new string[9];
-
-            string line;
-            
-            // Read the file and display it line by line.  
-            StreamReader file = new StreamReader(filePath);
-            while ((line = file.ReadLine()) != null)
-            {
-                // Read COSMIC PRINCIPLES
-                if (line == "@COSMIC")
-                {
-                    List<string> text;                    
-                    text = file.ReadLine().Split(';').ToList();
-                    RoadMultiplier = Int32.Parse(text[0].Trim());       // Cosmic rule #1
-                    text = file.ReadLine().Split(';').ToList();
-                    ChanceTriremeLost = Int32.Parse(text[0].Trim());    // Cosmic rule #2
-                    text = file.ReadLine().Split(';').ToList();
-                    FoodEatenPerTurn = Int32.Parse(text[0].Trim());    // Cosmic rule #3
-                    text = file.ReadLine().Split(';').ToList();
-                    RowsFoodBox = Int32.Parse(text[0].Trim());    // Cosmic rule #4
-                    text = file.ReadLine().Split(';').ToList();
-                    RowsShieldBox = Int32.Parse(text[0].Trim());    // Cosmic rule #5
-                    text = file.ReadLine().Split(';').ToList();
-                    SettlersEatTillMonarchy = Int32.Parse(text[0].Trim());    // Cosmic rule #6
-                    text = file.ReadLine().Split(';').ToList();
-                    SettlersEatFromCommunism = Int32.Parse(text[0].Trim());    // Cosmic rule #7
-                    text = file.ReadLine().Split(';').ToList();
-                    CitySizeUnhappyChieftain = Int32.Parse(text[0].Trim());    // Cosmic rule #8
-                    text = file.ReadLine().Split(';').ToList();
-                    RiotFactor = Int32.Parse(text[0].Trim());    // Cosmic rule #9
-                    text = file.ReadLine().Split(';').ToList();
-                    ToExceedCitySizeAqueductNeeded = Int32.Parse(text[0].Trim());    // Cosmic rule #10
-                    text = file.ReadLine().Split(';').ToList();
-                    SewerNeeded = Int32.Parse(text[0].Trim());    // Cosmic rule #11
-                    text = file.ReadLine().Split(';').ToList();
-                    TechParadigm = Int32.Parse(text[0].Trim());    // Cosmic rule #12
-                    text = file.ReadLine().Split(';').ToList();
-                    BaseTimeEngineersTransform = Int32.Parse(text[0].Trim());    // Cosmic rule #13
-                    text = file.ReadLine().Split(';').ToList();
-                    MonarchyPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #14
-                    text = file.ReadLine().Split(';').ToList();
-                    CommunismPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #15
-                    text = file.ReadLine().Split(';').ToList();
-                    FundamentalismPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #16
-                    text = file.ReadLine().Split(';').ToList();
-                    CommunismEquivalentPalaceDistance = Int32.Parse(text[0].Trim());    // Cosmic rule #17
-                    text = file.ReadLine().Split(';').ToList();
-                    FundamentalismScienceLost = Int32.Parse(text[0].Trim());    // Cosmic rule #18
-                    text = file.ReadLine().Split(';').ToList();
-                    ShieldPenaltyTypeChange = Int32.Parse(text[0].Trim());    // Cosmic rule #19
-                    text = file.ReadLine().Split(';').ToList();
-                    MaxParadropRange = Int32.Parse(text[0].Trim());    // Cosmic rule #20
-                    text = file.ReadLine().Split(';').ToList();
-                    MassThrustParadigm = Int32.Parse(text[0].Trim());    // Cosmic rule #21
-                    text = file.ReadLine().Split(';').ToList();
-                    MaxEffectiveScienceRate = Int32.Parse(text[0].Trim());    // Cosmic rule #22
-                }
-
-                // Read TECH RULES
-                if (line == "@CIVILIZE")
-                {
-                    for (int row = 0; row < 100; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TechName[row] = text[0];
-                        TechAIvalue[row] = Int32.Parse(text[1].Trim());
-                        TechModifier[row] = Int32.Parse(text[2].Trim());
-                        TechPrereq1[row] = text[3].Trim();
-                        TechPrereq2[row] = text[4].Trim();
-                        TechEpoch[row] = Int32.Parse(text[5].Trim());
-                        TechCategory[row] = Int32.Parse(text[6].Trim());
-                        TechShortName[row] = text[7].Trim();
-                    }
-                }
-
-                // Read IMPROVEMENTS
-                if (line == "@IMPROVE")
-                {
-                    for (int row = 0; row < 67; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        ImprovementName[row] = text[0];
-                        ImprovementCost[row] = Int32.Parse(text[1].Trim());
-                        ImprovementUpkeep[row] = Int32.Parse(text[2].Trim());
-                        ImprovementPrereq[row] = text[3].Trim();
-                    }
-                }
-
-                // Read EXPIRATION OF ADVANCES
-                if (line == "@ENDWONDER")
-                {
-                    // First 39 are city improvements, they have no expiration
-                    for (int row = 0; row < 39; row++) 
-                        ImprovementAdvanceExpiration[row] = "";
-
-                    // Next 28 are advances
-                    for (int row = 0; row < 28; row++)  //for advances
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        ImprovementAdvanceExpiration[row + 39] = text[0];
-                    }
-                }
-
-                // Read UNIT RULES
-                if (line == "@UNITS")
-                {
-                    for (int row = 0; row < 62; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        UnitName[row] = text[0];
-                        UnitUntil[row] = text[1];
-                        UnitDomain[row] = Int32.Parse(text[2].Trim());
-                        UnitMove[row] = Int32.Parse(text[3].Trim().Replace(".", string.Empty));
-                        UnitRange[row] = Int32.Parse(text[4].Trim());
-                        UnitAttack[row] = Int32.Parse(text[5].Trim().Replace("a", string.Empty));
-                        UnitDefense[row] = Int32.Parse(text[6].Trim().Replace("d", string.Empty));
-                        UnitHitp[row] = Int32.Parse(text[7].Trim().Replace("h", string.Empty));
-                        UnitFirepwr[row] = Int32.Parse(text[8].Trim().Replace("f", string.Empty));
-                        UnitCost[row] = Int32.Parse(text[9].Trim());
-                        UnitHold[row] = Int32.Parse(text[10].Trim());
-                        UnitAIrole[row] = Int32.Parse(text[11].Trim());
-                        UnitPrereq[row] = text[12];
-                        UnitFlags[row] = text[13];
-                    }
-                }
-
-                // Read TERRAIN RULES
-                if (line == "@TERRAIN")
-                {
-                    // First read normal terrain
-                    for (int row = 0; row < 11; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TerrainName[row] = text[0].Trim();
-                        TerrainMovecost[row] = Int32.Parse(text[1].Trim());
-                        TerrainDefense[row] = Int32.Parse(text[2].Trim());
-                        TerrainFood[row] = Int32.Parse(text[3].Trim());
-                        TerrainShields[row] = Int32.Parse(text[4].Trim());
-                        TerrainTrade[row] = Int32.Parse(text[5].Trim());
-                        TerrainIrrigate[row] = text[6].Trim();
-                        TerrainIrrigateBonus[row] = Int32.Parse(text[7].Trim());
-                        TerrainIrrigateTurns[row] = Int32.Parse(text[8].Trim());
-                        TerrainIrrigateAI[row] = Int32.Parse(text[9].Trim());
-                        TerrainMine[row] = text[10].Trim();
-                        TerrainMineBonus[row] = Int32.Parse(text[11].Trim());
-                        TerrainMineTurns[row] = Int32.Parse(text[12].Trim());
-                        TerrainMineAI[row] = Int32.Parse(text[13].Trim());
-                        TerrainTransform[row] = text[14].Trim();
-                        TerrainShortName[row] = text[16].Trim();
-                    }
-
-                    // Next read special terrain
-                    for (int row = 0; row < 22; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TerrainSpecName[row] = text[0];
-                        TerrainSpecMovecost[row] = Int32.Parse(text[1].Trim());
-                        TerrainSpecDefense[row] = Int32.Parse(text[2].Trim());
-                        TerrainSpecFood[row] = Int32.Parse(text[3].Trim());
-                        TerrainSpecShields[row] = Int32.Parse(text[4].Trim());
-                        TerrainSpecTrade[row] = Int32.Parse(text[5].Trim());
-                    }
-                }
-
-                // Read GOVERNMENTS
-                if (line == "@GOVERNMENTS")
-                {
-                    for (int row = 0; row < 7; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        GovernmentName[row] = text[0].Trim();
-                        GovernmentTitleHIS[row] = text[1].Trim();
-                        GovernmentTitleHER[row] = text[2].Trim();
-                    }
-                }
-
-                // Read LEADERS
-                if (line == "@LEADERS")
-                {
-                    for (int row = 0; row < 21; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        LeaderNameHIS[row] = text[0].Trim();
-                        LeaderNameHER[row] = text[1].Trim();
-                        LeaderFemale[row] = Int32.Parse(text[2].Trim());
-                        LeaderColor[row] = Int32.Parse(text[3].Trim());
-                        LeaderCityStyle[row] = Int32.Parse(text[4].Trim());
-                        LeaderPlural[row] = text[5].Trim();
-                        LeaderAdjective[row] = text[6].Trim();
-                        LeaderAttack[row] = Int32.Parse(text[7].Trim());
-                        LeaderExpand[row] = Int32.Parse(text[8].Trim());
-                        LeaderCivilize[row] = Int32.Parse(text[9].Trim());
-                    }
-                }
-
-                // Read CARAVAN TRADING COMMODITIES
-                if (line == "@CARAVAN")
-                {
-                    for (int row = 0; row < 16; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        CaravanCommoditie[row] = text[0].Trim();
-                    }
-                }
-
-                // Read ORDERS
-                if (line == "@ORDERS")
-                {
-                    for (int row = 0; row < 11; row++)
-                    {
-                        line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        OrderName[row] = text[0];
-                        OrderShortcut[row] = text[1].Trim();
-                    }
-                }
-
-                // Read DIFFICULTY
-                if (line == "@DIFFICULTY")
-                {
-                    for (int row = 0; row < 6; row++)
-                    {
-                        line = file.ReadLine();
-                        Difficulty[row] = line;
-                    }
-                }
-
-                // Read ATTITUDES
-                if (line == "@ATTITUDES")
-                {
-                    for (int row = 0; row < 9; row++)
-                    {
-                        line = file.ReadLine();
-                        Attitude[row] = line;
-                    }
-                }
+                TechName[row] = rulesList[1][row];
+                TechAIvalue[row] = Int32.Parse(rulesList[2][row]);
+                TechModifier[row] = Int32.Parse(rulesList[3][row]);
+                TechPrereq1[row] = rulesList[4][row];
+                TechPrereq2[row] = rulesList[5][row];
+                TechEpoch[row] = Int32.Parse(rulesList[6][row]);
+                TechCategory[row] = Int32.Parse(rulesList[7][row]);
+                TechShortName[row] = rulesList[8][row];
             }
 
-            file.Close();
+            for (int row = 0; row < 67; row++)
+            {
+                ImprovementName[row] = rulesList[9][row];
+                ImprovementCost[row] = Int32.Parse(rulesList[10][row]);
+                ImprovementUpkeep[row] = Int32.Parse(rulesList[11][row]);
+                ImprovementPrereq[row] = rulesList[12][row];
+                ImprovementAdvanceExpiration[row] = rulesList[13][row];
+            }
+
+            for (int row = 0; row < 62; row++)
+            {
+                UnitName[row] = rulesList[14][row];
+                UnitUntil[row] = rulesList[15][row];
+                UnitDomain[row] = Int32.Parse(rulesList[16][row]);
+                UnitMove[row] = Int32.Parse(rulesList[17][row]);
+                UnitRange[row] = Int32.Parse(rulesList[18][row]);
+                UnitAttack[row] = Int32.Parse(rulesList[19][row]);
+                UnitDefense[row] = Int32.Parse(rulesList[20][row]);
+                UnitHitp[row] = Int32.Parse(rulesList[21][row]);
+                UnitFirepwr[row] = Int32.Parse(rulesList[22][row]);
+                UnitCost[row] = Int32.Parse(rulesList[23][row]);
+                UnitHold[row] = Int32.Parse(rulesList[24][row]);
+                UnitAIrole[row] = Int32.Parse(rulesList[25][row]);
+                UnitPrereq[row] = rulesList[26][row];
+                UnitFlags[row] = rulesList[27][row];
+            }
+
+            for (int row = 0; row < 11; row++)
+            {
+                TerrainName[row] = rulesList[28][row];
+                TerrainMovecost[row] = Int32.Parse(rulesList[29][row]);
+                TerrainDefense[row] = Int32.Parse(rulesList[30][row]);
+                TerrainFood[row] = Int32.Parse(rulesList[31][row]);
+                TerrainShields[row] = Int32.Parse(rulesList[32][row]);
+                TerrainTrade[row] = Int32.Parse(rulesList[33][row]);
+                TerrainIrrigate[row] = rulesList[34][row];
+                TerrainIrrigateBonus[row] = Int32.Parse(rulesList[35][row]);
+                TerrainIrrigateTurns[row] = Int32.Parse(rulesList[36][row]);
+                TerrainIrrigateAI[row] = Int32.Parse(rulesList[37][row]);
+                TerrainMine[row] = rulesList[38][row];
+                TerrainMineBonus[row] = Int32.Parse(rulesList[39][row]);
+                TerrainMineTurns[row] = Int32.Parse(rulesList[40][row]);
+                TerrainMineAI[row] = Int32.Parse(rulesList[41][row]);
+                TerrainTransform[row] = rulesList[42][row];
+                TerrainShortName[row] = rulesList[43][row];
+            }
+
+            for (int row = 0; row < 22; row++)
+            {
+                TerrainSpecName[row] = rulesList[44][row];
+                TerrainSpecMovecost[row] = Int32.Parse(rulesList[45][row]);
+                TerrainSpecDefense[row] = Int32.Parse(rulesList[46][row]);
+                TerrainSpecFood[row] = Int32.Parse(rulesList[47][row]);
+                TerrainSpecShields[row] = Int32.Parse(rulesList[48][row]);
+                TerrainSpecTrade[row] = Int32.Parse(rulesList[49][row]);
+            }
+
+            for (int row = 0; row < 7; row++)
+            {
+                GovernmentName[row] = rulesList[50][row];
+                GovernmentTitleHIS[row] = rulesList[51][row];
+                GovernmentTitleHER[row] = rulesList[52][row];
+            }
+
+            for (int row = 0; row < 21; row++)
+            {
+                LeaderNameHIS[row] = rulesList[53][row];
+                LeaderNameHER[row] = rulesList[54][row];
+                LeaderFemale[row] = Int32.Parse(rulesList[55][row]);
+                LeaderColor[row] = Int32.Parse(rulesList[56][row]);
+                LeaderCityStyle[row] = Int32.Parse(rulesList[57][row]);
+                LeaderPlural[row] = rulesList[58][row];
+                LeaderAdjective[row] = rulesList[59][row];
+                LeaderAttack[row] = Int32.Parse(rulesList[60][row]);
+                LeaderExpand[row] = Int32.Parse(rulesList[61][row]);
+                LeaderCivilize[row] = Int32.Parse(rulesList[62][row]);
+            }
+
+            for (int row = 0; row < 16; row++)
+            {
+                CaravanCommoditie[row] = rulesList[63][row];
+            }
+
+            for (int row = 0; row < 11; row++)
+            {
+                OrderName[row] = rulesList[64][row];
+                OrderShortcut[row] = rulesList[65][row];
+            }
+
+            for (int row = 0; row < 6; row++)
+            {
+                Difficulty[row] = rulesList[66][row];
+            }
+
+            for (int row = 0; row < 9; row++)
+            {
+                Attitude[row] = rulesList[67][row];
+            }
         }
+
     }
 }

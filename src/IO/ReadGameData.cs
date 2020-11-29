@@ -3,6 +3,8 @@ using civ2.Enums;
 using civ2.Units;
 using civ2.Terrains;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace civ2
 {
@@ -39,319 +41,348 @@ namespace civ2
                 Console.WriteLine("RULES.TXT not found!");
             }
 
-            Rules data = new Rules();
-
-            // Initialize
-            data.UnitName = new string[62];
-            data.UnitUntil = new string[62];
-            data.UnitDomain = new int[62];
-            data.UnitMove = new int[62];
-            data.UnitRange = new int[62];
-            data.UnitAttack = new int[62];
-            data.UnitDefense = new int[62];
-            data.UnitHitp = new int[62];
-            data.UnitFirepwr = new int[62];
-            data.UnitCost = new int[62];
-            data.UnitHold = new int[62];
-            data.UnitAIrole = new int[62];
-            data.UnitPrereq = new string[62];
-            data.UnitFlags = new string[62];
-            data.TechName = new string[100];
-            data.TechAIvalue = new int[100];
-            data.TechModifier = new int[100];
-            data.TechPrereq1 = new string[100];
-            data.TechPrereq2 = new string[100];
-            data.TechEpoch = new int[100];
-            data.TechCategory = new int[100];
-            data.TechShortName = new string[100];
-            data.ImprovementName = new string[67];
-            data.ImprovementCost = new int[67];
-            data.ImprovementUpkeep = new int[67];
-            data.ImprovementPrereq = new string[67];
-            data.ImprovementAdvanceExpiration = new string[67];
-            data.TerrainName = new string[11];
-            data.TerrainMovecost = new int[11];
-            data.TerrainDefense = new int[11];
-            data.TerrainFood = new int[11];
-            data.TerrainShields = new int[11];
-            data.TerrainTrade = new int[11];
-            data.TerrainIrrigate = new string[11];
-            data.TerrainIrrigateBonus = new int[11];
-            data.TerrainIrrigateTurns = new int[11];
-            data.TerrainIrrigateAI = new int[11];
-            data.TerrainMine = new string[11];
-            data.TerrainMineBonus = new int[11];
-            data.TerrainMineTurns = new int[11];
-            data.TerrainMineAI = new int[11];
-            data.TerrainTransform = new string[11];
-            data.TerrainShortName = new string[11];
-            data.TerrainSpecName = new string[22];
-            data.TerrainSpecMovecost = new int[22];
-            data.TerrainSpecDefense = new int[22];
-            data.TerrainSpecFood = new int[22];
-            data.TerrainSpecShields = new int[22];
-            data.TerrainSpecTrade = new int[22];
-            data.GovernmentName = new string[7];
-            data.GovernmentTitleHIS = new string[7];
-            data.GovernmentTitleHER = new string[7];
-            data.LeaderNameHIS = new string[21];
-            data.LeaderNameHER = new string[21];
-            data.LeaderFemale = new int[21];
-            data.LeaderColor = new int[21];
-            data.LeaderCityStyle = new int[21];
-            data.LeaderPlural = new string[21];
-            data.LeaderAdjective = new string[21];
-            data.LeaderAttack = new int[21];
-            data.LeaderExpand = new int[21];
-            data.LeaderCivilize = new int[21];
-            data.CaravanCommoditie = new string[16];
-            data.OrderName = new string[11];
-            data.OrderShortcut = new string[11];
-            data.Difficulty = new string[6];
-            data.Attitude = new string[9];
-
-            string line;
+            data.Rules = new List<string[]>();
 
             // Read the file and display it line by line.  
             StreamReader file = new StreamReader(filePath);
+            string line;
             while ((line = file.ReadLine()) != null)
             {
+                List<string> text;
+
                 // Read COSMIC PRINCIPLES
                 if (line == "@COSMIC")
                 {
-                    List<string> text;
-                    text = file.ReadLine().Split(';').ToList();
-                    RoadMultiplier = Int32.Parse(text[0].Trim());       // Cosmic rule #1
-                    text = file.ReadLine().Split(';').ToList();
-                    ChanceTriremeLost = Int32.Parse(text[0].Trim());    // Cosmic rule #2
-                    text = file.ReadLine().Split(';').ToList();
-                    FoodEatenPerTurn = Int32.Parse(text[0].Trim());    // Cosmic rule #3
-                    text = file.ReadLine().Split(';').ToList();
-                    RowsFoodBox = Int32.Parse(text[0].Trim());    // Cosmic rule #4
-                    text = file.ReadLine().Split(';').ToList();
-                    RowsShieldBox = Int32.Parse(text[0].Trim());    // Cosmic rule #5
-                    text = file.ReadLine().Split(';').ToList();
-                    SettlersEatTillMonarchy = Int32.Parse(text[0].Trim());    // Cosmic rule #6
-                    text = file.ReadLine().Split(';').ToList();
-                    SettlersEatFromCommunism = Int32.Parse(text[0].Trim());    // Cosmic rule #7
-                    text = file.ReadLine().Split(';').ToList();
-                    CitySizeUnhappyChieftain = Int32.Parse(text[0].Trim());    // Cosmic rule #8
-                    text = file.ReadLine().Split(';').ToList();
-                    RiotFactor = Int32.Parse(text[0].Trim());    // Cosmic rule #9
-                    text = file.ReadLine().Split(';').ToList();
-                    ToExceedCitySizeAqueductNeeded = Int32.Parse(text[0].Trim());    // Cosmic rule #10
-                    text = file.ReadLine().Split(';').ToList();
-                    SewerNeeded = Int32.Parse(text[0].Trim());    // Cosmic rule #11
-                    text = file.ReadLine().Split(';').ToList();
-                    TechParadigm = Int32.Parse(text[0].Trim());    // Cosmic rule #12
-                    text = file.ReadLine().Split(';').ToList();
-                    BaseTimeEngineersTransform = Int32.Parse(text[0].Trim());    // Cosmic rule #13
-                    text = file.ReadLine().Split(';').ToList();
-                    MonarchyPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #14
-                    text = file.ReadLine().Split(';').ToList();
-                    CommunismPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #15
-                    text = file.ReadLine().Split(';').ToList();
-                    FundamentalismPaysSupport = Int32.Parse(text[0].Trim());    // Cosmic rule #16
-                    text = file.ReadLine().Split(';').ToList();
-                    CommunismEquivalentPalaceDistance = Int32.Parse(text[0].Trim());    // Cosmic rule #17
-                    text = file.ReadLine().Split(';').ToList();
-                    FundamentalismScienceLost = Int32.Parse(text[0].Trim());    // Cosmic rule #18
-                    text = file.ReadLine().Split(';').ToList();
-                    ShieldPenaltyTypeChange = Int32.Parse(text[0].Trim());    // Cosmic rule #19
-                    text = file.ReadLine().Split(';').ToList();
-                    MaxParadropRange = Int32.Parse(text[0].Trim());    // Cosmic rule #20
-                    text = file.ReadLine().Split(';').ToList();
-                    MassThrustParadigm = Int32.Parse(text[0].Trim());    // Cosmic rule #21
-                    text = file.ReadLine().Split(';').ToList();
-                    MaxEffectiveScienceRate = Int32.Parse(text[0].Trim());    // Cosmic rule #22
+                    string[] cosmicRules = new string[22];
+                    for (int i = 0; i < 22; i++)
+                    {
+                        cosmicRules[i] = file.ReadLine().Split(';').ToList()[0].Trim();
+                    }
+                    data.Rules.Add(cosmicRules);
                 }
 
                 // Read TECH RULES
                 if (line == "@CIVILIZE")
                 {
+                    string[] techName = new string[100];
+                    string[] techAIvalue = new string[100];
+                    string[] techModifier = new string[100];
+                    string[] techPrereq1 = new string[100];
+                    string[] techPrereq2 = new string[100];
+                    string[] techEpoch = new string[100];
+                    string[] techCategory = new string[100];
+                    string[] techShortName = new string[100];
                     for (int row = 0; row < 100; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TechName[row] = text[0];
-                        TechAIvalue[row] = Int32.Parse(text[1].Trim());
-                        TechModifier[row] = Int32.Parse(text[2].Trim());
-                        TechPrereq1[row] = text[3].Trim();
-                        TechPrereq2[row] = text[4].Trim();
-                        TechEpoch[row] = Int32.Parse(text[5].Trim());
-                        TechCategory[row] = Int32.Parse(text[6].Trim());
-                        TechShortName[row] = text[7].Trim();
+                        text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        techName[row] = text[0];
+                        techAIvalue[row] = text[1].Trim();
+                        techModifier[row] = text[2].Trim();
+                        techPrereq1[row] = text[3].Trim();
+                        techPrereq2[row] = text[4].Trim();
+                        techEpoch[row] = text[5].Trim();
+                        techCategory[row] = text[6].Trim();
+                        techShortName[row] = text[7].Trim();
                     }
+                    data.Rules.Add(techName);
+                    data.Rules.Add(techAIvalue);
+                    data.Rules.Add(techModifier);
+                    data.Rules.Add(techPrereq1);
+                    data.Rules.Add(techPrereq2);
+                    data.Rules.Add(techEpoch);
+                    data.Rules.Add(techCategory);
+                    data.Rules.Add(techShortName);
                 }
 
                 // Read IMPROVEMENTS
                 if (line == "@IMPROVE")
                 {
+                    string[] improvementName = new string[67];
+                    string[] improvementCost = new string[67];
+                    string[] improvementUpkeep = new string[67];
+                    string[] improvementPrereq = new string[67];
                     for (int row = 0; row < 67; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        ImprovementName[row] = text[0];
-                        ImprovementCost[row] = Int32.Parse(text[1].Trim());
-                        ImprovementUpkeep[row] = Int32.Parse(text[2].Trim());
-                        ImprovementPrereq[row] = text[3].Trim();
+                        text = line.Split(',').ToList();
+                        improvementName[row] = text[0];
+                        improvementCost[row] = text[1].Trim();
+                        improvementUpkeep[row] = text[2].Trim();
+                        improvementPrereq[row] = text[3].Trim();
                     }
+                    data.Rules.Add(improvementName);
+                    data.Rules.Add(improvementCost);
+                    data.Rules.Add(improvementUpkeep);
+                    data.Rules.Add(improvementPrereq);
                 }
 
                 // Read EXPIRATION OF ADVANCES
                 if (line == "@ENDWONDER")
                 {
                     // First 39 are city improvements, they have no expiration
+                    string[] improvementAdvanceExpiration = new string[67];
                     for (int row = 0; row < 39; row++)
-                        ImprovementAdvanceExpiration[row] = "";
+                    {
+                        improvementAdvanceExpiration[row] = "";
+                    }
 
                     // Next 28 are advances
-                    for (int row = 0; row < 28; row++)  //for advances
+                    for (int row = 0; row < 28; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        ImprovementAdvanceExpiration[row + 39] = text[0];
+                        improvementAdvanceExpiration[row + 39] = line.Split(',').ToList()[0];
                     }
+                    data.Rules.Add(improvementAdvanceExpiration);
                 }
 
                 // Read UNIT RULES
                 if (line == "@UNITS")
                 {
+                    string[] unitName = new string[62];
+                    string[] unitUntil = new string[62];
+                    string[] unitDomain = new string[62];
+                    string[] unitMove = new string[62];
+                    string[] unitRange = new string[62];
+                    string[] unitAttack = new string[62];
+                    string[] unitDefense = new string[62];
+                    string[] unitHitp = new string[62];
+                    string[] unitFirepwr = new string[62];
+                    string[] unitCost = new string[62];
+                    string[] unitHold = new string[62];
+                    string[] unitAIrole = new string[62];
+                    string[] unitPrereq = new string[62];
+                    string[] unitFlags = new string[62];
                     for (int row = 0; row < 62; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        UnitName[row] = text[0];
-                        UnitUntil[row] = text[1];
-                        UnitDomain[row] = Int32.Parse(text[2].Trim());
-                        UnitMove[row] = Int32.Parse(text[3].Trim().Replace(".", string.Empty));
-                        UnitRange[row] = Int32.Parse(text[4].Trim());
-                        UnitAttack[row] = Int32.Parse(text[5].Trim().Replace("a", string.Empty));
-                        UnitDefense[row] = Int32.Parse(text[6].Trim().Replace("d", string.Empty));
-                        UnitHitp[row] = Int32.Parse(text[7].Trim().Replace("h", string.Empty));
-                        UnitFirepwr[row] = Int32.Parse(text[8].Trim().Replace("f", string.Empty));
-                        UnitCost[row] = Int32.Parse(text[9].Trim());
-                        UnitHold[row] = Int32.Parse(text[10].Trim());
-                        UnitAIrole[row] = Int32.Parse(text[11].Trim());
-                        UnitPrereq[row] = text[12];
-                        UnitFlags[row] = text[13];
+                        text = line.Split(',').ToList();
+                        unitName[row] = text[0];
+                        unitUntil[row] = text[1];
+                        unitDomain[row] = text[2].Trim();
+                        unitMove[row] = text[3].Trim().Replace(".", string.Empty);
+                        unitRange[row] = text[4].Trim();
+                        unitAttack[row] = text[5].Trim().Replace("a", string.Empty);
+                        unitDefense[row] = text[6].Trim().Replace("d", string.Empty);
+                        unitHitp[row] = text[7].Trim().Replace("h", string.Empty);
+                        unitFirepwr[row] = text[8].Trim().Replace("f", string.Empty);
+                        unitCost[row] = text[9].Trim();
+                        unitHold[row] = text[10].Trim();
+                        unitAIrole[row] = text[11].Trim();
+                        unitPrereq[row] = text[12];
+                        unitFlags[row] = text[13];
                     }
+                    data.Rules.Add(unitName);
+                    data.Rules.Add(unitUntil);
+                    data.Rules.Add(unitDomain);
+                    data.Rules.Add(unitMove);
+                    data.Rules.Add(unitRange);
+                    data.Rules.Add(unitAttack);
+                    data.Rules.Add(unitDefense);
+                    data.Rules.Add(unitHitp);
+                    data.Rules.Add(unitFirepwr);
+                    data.Rules.Add(unitCost);
+                    data.Rules.Add(unitHold);
+                    data.Rules.Add(unitAIrole);
+                    data.Rules.Add(unitPrereq);
+                    data.Rules.Add(unitFlags);
                 }
 
                 // Read TERRAIN RULES
                 if (line == "@TERRAIN")
                 {
                     // First read normal terrain
+                    string[] terrainName = new string[11];
+                    string[] terrainMovecost = new string[11];
+                    string[] terrainDefense = new string[11];
+                    string[] terrainFood = new string[11];
+                    string[] terrainShields = new string[11];
+                    string[] terrainTrade = new string[11];
+                    string[] terrainIrrigate = new string[11];
+                    string[] terrainIrrigateBonus = new string[11];
+                    string[] terrainIrrigateTurns = new string[11];
+                    string[] terrainIrrigateAI = new string[11];
+                    string[] terrainMine = new string[11];
+                    string[] terrainMineBonus = new string[11];
+                    string[] terrainMineTurns = new string[11];
+                    string[] terrainMineAI = new string[11];
+                    string[] terrainTransform = new string[11];
+                    string[] terrainShortName = new string[11];
+                    
                     for (int row = 0; row < 11; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TerrainName[row] = text[0].Trim();
-                        TerrainMovecost[row] = Int32.Parse(text[1].Trim());
-                        TerrainDefense[row] = Int32.Parse(text[2].Trim());
-                        TerrainFood[row] = Int32.Parse(text[3].Trim());
-                        TerrainShields[row] = Int32.Parse(text[4].Trim());
-                        TerrainTrade[row] = Int32.Parse(text[5].Trim());
-                        TerrainIrrigate[row] = text[6].Trim();
-                        TerrainIrrigateBonus[row] = Int32.Parse(text[7].Trim());
-                        TerrainIrrigateTurns[row] = Int32.Parse(text[8].Trim());
-                        TerrainIrrigateAI[row] = Int32.Parse(text[9].Trim());
-                        TerrainMine[row] = text[10].Trim();
-                        TerrainMineBonus[row] = Int32.Parse(text[11].Trim());
-                        TerrainMineTurns[row] = Int32.Parse(text[12].Trim());
-                        TerrainMineAI[row] = Int32.Parse(text[13].Trim());
-                        TerrainTransform[row] = text[14].Trim();
-                        TerrainShortName[row] = text[16].Trim();
+                        text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        terrainName[row] = text[0].Trim();
+                        terrainMovecost[row] = text[1].Trim();
+                        terrainDefense[row] = text[2].Trim();
+                        terrainFood[row] = text[3].Trim();
+                        terrainShields[row] = text[4].Trim();
+                        terrainTrade[row] = text[5].Trim();
+                        terrainIrrigate[row] = text[6].Trim();
+                        terrainIrrigateBonus[row] = text[7].Trim();
+                        terrainIrrigateTurns[row] = text[8].Trim();
+                        terrainIrrigateAI[row] = text[9].Trim();
+                        terrainMine[row] = text[10].Trim();
+                        terrainMineBonus[row] = text[11].Trim();
+                        terrainMineTurns[row] = text[12].Trim();
+                        terrainMineAI[row] = text[13].Trim();
+                        terrainTransform[row] = text[14].Trim();
+                        terrainShortName[row] = text[16].Trim();
                     }
+                    data.Rules.Add(terrainName);
+                    data.Rules.Add(terrainMovecost);
+                    data.Rules.Add(terrainDefense);
+                    data.Rules.Add(terrainFood);
+                    data.Rules.Add(terrainShields);
+                    data.Rules.Add(terrainTrade);
+                    data.Rules.Add(terrainIrrigate);
+                    data.Rules.Add(terrainIrrigateBonus);
+                    data.Rules.Add(terrainIrrigateTurns);
+                    data.Rules.Add(terrainIrrigateAI);
+                    data.Rules.Add(terrainMine);
+                    data.Rules.Add(terrainMineBonus);
+                    data.Rules.Add(terrainMineTurns);
+                    data.Rules.Add(terrainMineAI);
+                    data.Rules.Add(terrainTransform);
+                    data.Rules.Add(terrainShortName);
 
                     // Next read special terrain
+                    string[] terrainSpecName = new string[22];
+                    string[] terrainSpecMovecost = new string[22];
+                    string[] terrainSpecDefense = new string[22];
+                    string[] terrainSpecFood = new string[22];
+                    string[] terrainSpecShields = new string[22];
+                    string[] terrainSpecTrade = new string[22];
                     for (int row = 0; row < 22; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        TerrainSpecName[row] = text[0];
-                        TerrainSpecMovecost[row] = Int32.Parse(text[1].Trim());
-                        TerrainSpecDefense[row] = Int32.Parse(text[2].Trim());
-                        TerrainSpecFood[row] = Int32.Parse(text[3].Trim());
-                        TerrainSpecShields[row] = Int32.Parse(text[4].Trim());
-                        TerrainSpecTrade[row] = Int32.Parse(text[5].Trim());
+                        text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        terrainSpecName[row] = text[0];
+                        terrainSpecMovecost[row] = text[1].Trim();
+                        terrainSpecDefense[row] = text[2].Trim();
+                        terrainSpecFood[row] = text[3].Trim();
+                        terrainSpecShields[row] = text[4].Trim();
+                        terrainSpecTrade[row] = text[5].Trim();
                     }
+                    data.Rules.Add(terrainSpecName);
+                    data.Rules.Add(terrainSpecMovecost);
+                    data.Rules.Add(terrainSpecDefense);
+                    data.Rules.Add(terrainSpecFood);
+                    data.Rules.Add(terrainSpecShields);
+                    data.Rules.Add(terrainSpecTrade);
                 }
 
                 // Read GOVERNMENTS
                 if (line == "@GOVERNMENTS")
                 {
+                    string[] governmentName = new string[7];
+                    string[] governmentTitleHIS = new string[7];
+                    string[] governmentTitleHER = new string[7];
                     for (int row = 0; row < 7; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        GovernmentName[row] = text[0].Trim();
-                        GovernmentTitleHIS[row] = text[1].Trim();
-                        GovernmentTitleHER[row] = text[2].Trim();
+                        text = line.Split(',').ToList();
+                        governmentName[row] = text[0].Trim();
+                        governmentTitleHIS[row] = text[1].Trim();
+                        governmentTitleHER[row] = text[2].Trim();
                     }
+                    data.Rules.Add(governmentName);
+                    data.Rules.Add(governmentTitleHIS);
+                    data.Rules.Add(governmentTitleHER);
                 }
 
                 // Read LEADERS
                 if (line == "@LEADERS")
                 {
+                    string[] leaderNameHIS = new string[21];
+                    string[] leaderNameHER = new string[21];
+                    string[] leaderFemale = new string[21];
+                    string[] leaderColor = new string[21];
+                    string[] leaderCityStyle = new string[21];
+                    string[] leaderPlural = new string[21];
+                    string[] leaderAdjective = new string[21];
+                    string[] leaderAttack = new string[21];
+                    string[] leaderExpand = new string[21];
+                    string[] leaderCivilize = new string[21];
                     for (int row = 0; row < 21; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        LeaderNameHIS[row] = text[0].Trim();
-                        LeaderNameHER[row] = text[1].Trim();
-                        LeaderFemale[row] = Int32.Parse(text[2].Trim());
-                        LeaderColor[row] = Int32.Parse(text[3].Trim());
-                        LeaderCityStyle[row] = Int32.Parse(text[4].Trim());
-                        LeaderPlural[row] = text[5].Trim();
-                        LeaderAdjective[row] = text[6].Trim();
-                        LeaderAttack[row] = Int32.Parse(text[7].Trim());
-                        LeaderExpand[row] = Int32.Parse(text[8].Trim());
-                        LeaderCivilize[row] = Int32.Parse(text[9].Trim());
+                        text = line.Split(',').ToList();
+                        leaderNameHIS[row] = text[0].Trim();
+                        leaderNameHER[row] = text[1].Trim();
+                        leaderFemale[row] = text[2].Trim();
+                        leaderColor[row] = text[3].Trim();
+                        leaderCityStyle[row] = text[4].Trim();
+                        leaderPlural[row] = text[5].Trim();
+                        leaderAdjective[row] = text[6].Trim();
+                        leaderAttack[row] = text[7].Trim();
+                        leaderExpand[row] = text[8].Trim();
+                        leaderCivilize[row] = text[9].Trim();
                     }
+                    data.Rules.Add(leaderNameHIS);
+                    data.Rules.Add(leaderNameHER);
+                    data.Rules.Add(leaderFemale);
+                    data.Rules.Add(leaderColor);
+                    data.Rules.Add(leaderCityStyle);
+                    data.Rules.Add(leaderPlural);
+                    data.Rules.Add(leaderAdjective);
+                    data.Rules.Add(leaderAttack);
+                    data.Rules.Add(leaderExpand);
+                    data.Rules.Add(leaderCivilize);
                 }
 
                 // Read CARAVAN TRADING COMMODITIES
                 if (line == "@CARAVAN")
                 {
+                    string[] caravanCommoditie = new string[16];
                     for (int row = 0; row < 16; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        CaravanCommoditie[row] = text[0].Trim();
+                        text = line.Split(',').ToList();
+                        caravanCommoditie[row] = text[0].Trim();
                     }
+                    data.Rules.Add(caravanCommoditie);
                 }
 
                 // Read ORDERS
                 if (line == "@ORDERS")
                 {
+                    string[] orderName = new string[11];
+                    string[] orderShortcut = new string[11];
                     for (int row = 0; row < 11; row++)
                     {
                         line = file.ReadLine();
-                        List<string> text = line.Split(',').ToList();
-                        OrderName[row] = text[0];
-                        OrderShortcut[row] = text[1].Trim();
+                        text = line.Split(',').ToList();
+                        orderName[row] = text[0];
+                        orderShortcut[row] = text[1].Trim();
                     }
+                    data.Rules.Add(orderName);
+                    data.Rules.Add(orderShortcut);
                 }
 
                 // Read DIFFICULTY
                 if (line == "@DIFFICULTY")
                 {
+                    string[] difficulty = new string[6];
                     for (int row = 0; row < 6; row++)
                     {
                         line = file.ReadLine();
-                        Difficulty[row] = line;
+                        difficulty[row] = line;
                     }
+                    data.Rules.Add(difficulty);
                 }
 
                 // Read ATTITUDES
                 if (line == "@ATTITUDES")
                 {
+                    string[] attitude = new string[9];
                     for (int row = 0; row < 9; row++)
                     {
                         line = file.ReadLine();
-                        Attitude[row] = line;
+                        attitude[row] = line;
                     }
+                    data.Rules.Add(attitude);
                 }
             }
 
@@ -359,7 +390,7 @@ namespace civ2
         }
 
         // READ SAV GAME
-        public void ReadSAV(string SAVpath)
+        public void ReadSAV(string savPath, string savName)
         {
             GameData data = new GameData();
 
@@ -367,7 +398,7 @@ namespace civ2
             int intVal1, intVal2, intVal3, intVal4;
 
             //Read every byte
-            byte[] bytes = File.ReadAllBytes(SAVpath);
+            byte[] bytes = File.ReadAllBytes(savPath + "\\" + savName);
 
             #region Start of saved game file
             //=========================
@@ -635,197 +666,196 @@ namespace civ2
                 //          civReputation[i], civTechs);
             }
             #endregion
-            //#region Map
-            ////=========================
-            ////MAP
-            ////=========================
-            //// Map header ofset
-            //int ofset;
-            //if (bytes[10] > 39) ofset = 13702; // FW and later (offset=3586hex)
-            //else ofset = 13432;             // Conflicts (offset=3478hex)
+            #region Map
+            //=========================
+            //MAP
+            //=========================
+            // Map header ofset
+            int ofset;
+            if (bytes[10] > 39) ofset = 13702;  // FW and later (offset=3586hex)
+            else ofset = 13432;                 // Conflicts (offset=3478hex)
 
-            //// Map X dimension
-            //intVal1 = bytes[ofset + 0];
-            //intVal2 = bytes[ofset + 1];
-            //Data.MapXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
+            // Map X dimension
+            intVal1 = bytes[ofset + 0];
+            intVal2 = bytes[ofset + 1];
+            data.MapXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
 
-            //// Map Y dimension
-            //intVal1 = bytes[ofset + 2];
-            //intVal2 = bytes[ofset + 3];
-            //Data.MapYdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Map Y dimension
+            intVal1 = bytes[ofset + 2];
+            intVal2 = bytes[ofset + 3];
+            data.MapYdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //// Map area:
-            //intVal1 = bytes[ofset + 4];
-            //intVal2 = bytes[ofset + 5];
-            //Data.MapArea = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Map area:
+            intVal1 = bytes[ofset + 4];
+            intVal2 = bytes[ofset + 5];
+            data.MapArea = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            ////// Flat Earth flag (info already given before!!)
-            ////intVal1 = bytes[ofset + 6];
-            ////intVal2 = bytes[ofset + 7];
-            ////flatEarth = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            //// Flat Earth flag (info already given before!!)
+            //intVal1 = bytes[ofset + 6];
+            //intVal2 = bytes[ofset + 7];
+            //flatEarth = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //// Map seed
-            //intVal1 = bytes[ofset + 8];
-            //intVal2 = bytes[ofset + 9];
-            //Data.MapSeed = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Map seed
+            intVal1 = bytes[ofset + 8];
+            intVal2 = bytes[ofset + 9];
+            data.MapSeed = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //// Locator map X dimension
-            //intVal1 = bytes[ofset + 10];
-            //intVal2 = bytes[ofset + 11];
-            //Data.MapLocatorXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
+            // Locator map X dimension
+            intVal1 = bytes[ofset + 10];
+            intVal2 = bytes[ofset + 11];
+            data.MapLocatorXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
 
-            //// Locator map Y dimension
-            //int intValue11 = bytes[ofset + 12];
-            //int intValue12 = bytes[ofset + 13];
-            //Data.MapLocatorYdim = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            // Locator map Y dimension
+            int intValue11 = bytes[ofset + 12];
+            int intValue12 = bytes[ofset + 13];
+            data.MapLocatorYdim = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //// Initialize Terrain array now that you know its size
+            // Initialize Terrain array now that you know its size
             //TerrainTile = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
 
-            //// block 1 - terrain improvements (for individual civs)
-            //int ofsetB1 = ofset + 14; //offset for block 2 values
-            ////...........
-            //// block 2 - terrain type
-            //int ofsetB2 = ofsetB1 + 7 * Data.MapArea; //offset for block 2 values
-            //for (int i = 0; i < Data.MapArea; i++)
-            //{
-            //    int x = i % Data.MapXdim;
-            //    int y = i / Data.MapXdim;
+            // block 1 - terrain improvements (for individual civs)
+            int ofsetB1 = ofset + 14; //offset for block 2 values
+            //...........
+            // block 2 - terrain type
+            int ofsetB2 = ofsetB1 + 7 * data.MapArea; //offset for block 2 values
+            data.MapVisibilityCivs = new bool[data.MapXdim, data.MapYdim][];
+            for (int i = 0; i < data.MapArea; i++)
+            {
+                int x = i % data.MapXdim;
+                int y = i / data.MapXdim;
 
-            //    // Terrain type
-            //    TerrainType type = TerrainType.Desert;  //only initial
-            //    bool river = false;
-            //    int terrain_type = bytes[ofsetB2 + i * 6 + 0];
-            //    if (terrain_type == 0) { type = TerrainType.Desert; river = false; }   //0dec=0hex
-            //    if (terrain_type == 128) { type = TerrainType.Desert; river = true; }   //128dec=80hex
-            //    if (terrain_type == 1) { type = TerrainType.Plains; river = false; }   //1dec=1hex
-            //    if (terrain_type == 129) { type = TerrainType.Plains; river = true; }   //129dec=81hex
-            //    if (terrain_type == 2) { type = TerrainType.Grassland; river = false; }   //2dec=2hex
-            //    if (terrain_type == 130) { type = TerrainType.Grassland; river = true; }   //130dec=82hex
-            //    if (terrain_type == 3) { type = TerrainType.Forest; river = false; }   //3dec=3hex
-            //    if (terrain_type == 131) { type = TerrainType.Forest; river = true; }   //131dec=83hex
-            //    if (terrain_type == 4) { type = TerrainType.Hills; river = false; }   //4dec=4hex
-            //    if (terrain_type == 132) { type = TerrainType.Hills; river = true; }   //132dec=84hex
-            //    if (terrain_type == 5) { type = TerrainType.Mountains; river = false; }   //5dec=5hex
-            //    if (terrain_type == 133) { type = TerrainType.Mountains; river = true; }   //133dec=85hex
-            //    if (terrain_type == 6) { type = TerrainType.Tundra; river = false; }   //6dec=6hex
-            //    if (terrain_type == 134) { type = TerrainType.Tundra; river = true; }   //134dec=86hex
-            //    if (terrain_type == 7) { type = TerrainType.Glacier; river = false; }   //7dec=7hex
-            //    if (terrain_type == 135) { type = TerrainType.Glacier; river = true; }   //135dec=87hex
-            //    if (terrain_type == 8) { type = TerrainType.Swamp; river = false; }   //8dec=8hex
-            //    if (terrain_type == 136) { type = TerrainType.Swamp; river = true; }   //136dec=88hex
-            //    if (terrain_type == 9) { type = TerrainType.Jungle; river = false; }   //9dec=9hex
-            //    if (terrain_type == 137) { type = TerrainType.Jungle; river = true; }   //137dec=89hex
-            //    if (terrain_type == 10) { type = TerrainType.Ocean; river = false; }   //10dec=Ahex
-            //    if (terrain_type == 74) { type = TerrainType.Ocean; river = false; }   //74dec=4Ahex
-            //    //determine if resources are present
-            //    bool resource = false;
-            //    //!!! NOT WORKING PROPERLY !!!
-            //    //bin = Convert.ToString(dataArray[ofsetB2 + i * 6 + 0], 2).PadLeft(8, '0');
-            //    //if (bin[1] == '1') { resource = true; }
+                // Terrain type
+                data.MapTerrainType[x, y] = TerrainType.Desert; = TerrainType.Desert;  //only initial
+                data.MapRiverPresent[x, y] = false;
+                int terrain_type = bytes[ofsetB2 + i * 6 + 0];
+                if (terrain_type == 0) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = false; }   //0dec=0hex
+                if (terrain_type == 128) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = true; }   //128dec=80hex
+                if (terrain_type == 1) { data.MapTerrainType[x, y] = TerrainType.Plains; data.MapRiverPresent[x, y] = false; }   //1dec=1hex
+                if (terrain_type == 129) { data.MapTerrainType[x, y] = TerrainType.Plains; data.MapRiverPresent[x, y] = true; }   //129dec=81hex
+                if (terrain_type == 2) { data.MapTerrainType[x, y] = TerrainType.Grassland; data.MapRiverPresent[x, y] = false; }   //2dec=2hex
+                if (terrain_type == 130) { data.MapTerrainType[x, y] = TerrainType.Grassland; data.MapRiverPresent[x, y] = true; }   //130dec=82hex
+                if (terrain_type == 3) { data.MapTerrainType[x, y] = TerrainType.Forest; data.MapRiverPresent[x, y] = false; }   //3dec=3hex
+                if (terrain_type == 131) { data.MapTerrainType[x, y] = TerrainType.Forest; data.MapRiverPresent[x, y] = true; }   //131dec=83hex
+                if (terrain_type == 4) { data.MapTerrainType[x, y] = TerrainType.Hills; data.MapRiverPresent[x, y] = false; }   //4dec=4hex
+                if (terrain_type == 132) { data.MapTerrainType[x, y] = TerrainType.Hills; data.MapRiverPresent[x, y] = true; }   //132dec=84hex
+                if (terrain_type == 5) { data.MapTerrainType[x, y] = TerrainType.Mountains; data.MapRiverPresent[x, y] = false; }   //5dec=5hex
+                if (terrain_type == 133) { data.MapTerrainType[x, y] = TerrainType.Mountains; data.MapRiverPresent[x, y] = true; }   //133dec=85hex
+                if (terrain_type == 6) { data.MapTerrainType[x, y] = TerrainType.Tundra; data.MapRiverPresent[x, y] = false; }   //6dec=6hex
+                if (terrain_type == 134) { data.MapTerrainType[x, y] = TerrainType.Tundra; data.MapRiverPresent[x, y] = true; }   //134dec=86hex
+                if (terrain_type == 7) { data.MapTerrainType[x, y] = TerrainType.Glacier; data.MapRiverPresent[x, y] = false; }   //7dec=7hex
+                if (terrain_type == 135) { data.MapTerrainType[x, y] = TerrainType.Glacier; data.MapRiverPresent[x, y] = true; }   //135dec=87hex
+                if (terrain_type == 8) { data.MapTerrainType[x, y] = TerrainType.Swamp; data.MapRiverPresent[x, y] = false; }   //8dec=8hex
+                if (terrain_type == 136) { data.MapTerrainType[x, y] = TerrainType.Swamp; data.MapRiverPresent[x, y] = true; }   //136dec=88hex
+                if (terrain_type == 9) { data.MapTerrainType[x, y] = TerrainType.Jungle; data.MapRiverPresent[x, y] = false; }   //9dec=9hex
+                if (terrain_type == 137) { data.MapTerrainType[x, y] = TerrainType.Jungle; data.MapRiverPresent[x, y] = true; }   //137dec=89hex
+                if (terrain_type == 10) { data.MapTerrainType[x, y] = TerrainType.Ocean; data.MapRiverPresent[x, y] = false; }   //10dec=Ahex
+                if (terrain_type == 74) { data.MapTerrainType[x, y] = TerrainType.Ocean; data.MapRiverPresent[x, y] = false; }   //74dec=4Ahex
+                //determine if resources are present
+                data.MapResourcePresent[x, y] = false;
+                //!!! NOT WORKING PROPERLY !!!
+                //bin = Convert.ToString(dataArray[ofsetB2 + i * 6 + 0], 2).PadLeft(8, '0');
+                //if (bin[1] == '1') { resource = true; }
 
-            //    // Tile improvements (for all civs! In block 1 it's for indivudual civs)
-            //    //int tile_improv = bytes[ofsetB2 + i * 6 + 1];
-            //    //bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
+                // Tile improvements (for all civs! In block 1 it's for indivudual civs)
+                //int tile_improv = bytes[ofsetB2 + i * 6 + 1];
+                //bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
 
-            //    bool unit_present   = GetBit(bytes[ofsetB2 + i * 6 + 1], 7);
-            //    bool city_present   = GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
-            //    bool irrigation     = GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
-            //    bool mining         = GetBit(bytes[ofsetB2 + i * 6 + 1], 4);
-            //    bool road           = GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
-            //    bool railroad       = GetBit(bytes[ofsetB2 + i * 6 + 1], 2) && GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
-            //    bool fortress       = GetBit(bytes[ofsetB2 + i * 6 + 1], 1);
-            //    bool pollution      = GetBit(bytes[ofsetB2 + i * 6 + 1], 0);
-            //    bool farmland       = GetBit(bytes[ofsetB2 + i * 6 + 1], 4) && GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
-            //    bool airbase        = GetBit(bytes[ofsetB2 + i * 6 + 1], 1) && GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
+                data.MapUnitPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 7);
+                data.MapCityPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
+                data.MapIrrigationPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
+                data.MapMiningPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 4);
+                data.MapRoadPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
+                data.MapRailroadPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 2) && GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
+                data.MapFortressPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 1);
+                data.MapPollutionPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 0);
+                data.MapFarmlandPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 4) && GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
+                data.MapAirbasePresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 1) && GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
 
-            //    int intValueB23 = bytes[ofsetB2 + i * 6 + 2];       //City radius (TO-DO)
+                int intValueB23 = bytes[ofsetB2 + i * 6 + 2];       // TODO: city radius
 
-            //    int terrain_island = bytes[ofsetB2 + i * 6 + 3];    //Island counter
+                data.MapIslandNo[x, y] = bytes[ofsetB2 + i * 6 + 3];    // Island counter
 
-            //    // Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
-            //    int intValueB25 = bytes[ofsetB2 + i * 6 + 4];
-            //    bool[] visibility = new bool[8];
-            //    bin = Convert.ToString(intValueB25, 2).PadLeft(8, '0');
-            //    for (int civ = 0; civ < 8; civ++) 
-            //        visibility[civ] = (bin[7 - civ] == '1') ? true : false;
+                // Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
+                data.MapVisibilityCivs[x, y] = new bool[8];
+                for (int civ = 0; civ < 8; civ++)
+                    data.MapVisibilityCivs[x, y][civ] = GetBit(bytes[ofsetB2 + i * 6 + 4], 7 - civ);
 
-            //    int intValueB26 = bytes[ofsetB2 + i * 6 + 5];       //?
+                int intValueB26 = bytes[ofsetB2 + i * 6 + 5];       //?
 
-            //    //string hexValue = intValueB26.ToString("X");
+                //string hexValue = intValueB26.ToString("X");
 
-            //    // SAV file doesn't tell where special resources are, so you have to set this yourself
-            //    int specialtype = ReturnSpecial(x, y, type, Data.MapXdim, Data.MapYdim);
+                // SAV file doesn't tell where special resources are, so you have to set this yourself
+                data.MapSpecialType[x, y] = ReturnSpecial(x, y, data.MapTerrainType[x, y], data.MapXdim, data.MapYdim);
 
-            //    CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, visibility, bin);
+                //CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, visibility, bin);
 
-            //}
-            ////block 3 - locator map
-            //int ofsetB3 = ofsetB2 + 6 * Data.MapArea; //offset for block 2 values
-            //                                          //...............
-            //#endregion
-            //#region Units
-            ////=========================
-            ////UNIT INFO
-            ////=========================
-            //int ofsetU = ofsetB3 + 2 * Data.MapLocatorXdim * Data.MapLocatorYdim + 1024;
+            }
+            // block 3 - locator map
+            int ofsetB3 = ofsetB2 + 6 * data.MapArea; //offset for block 2 values
+                                                      //...............
+            #endregion
+            #region Units
+            //=========================
+            //UNIT INFO
+            //=========================
+            int ofsetU = ofsetB3 + 2 * data.MapLocatorXdim * data.MapLocatorYdim + 1024;
 
-            //// Determine byte length of units
-            //int multipl;
-            //if (bytes[10] <= 40)        multipl = 26;   // FW or CiC
-            //else if (bytes[10] == 44)   multipl = 32;   // MGE
-            //else                        multipl = 40;   // ToT
+            // Determine byte length of units
+            int multipl;
+            if (bytes[10] <= 40) multipl = 26;   // FW or CiC
+            else if (bytes[10] == 44) multipl = 32;   // MGE
+            else multipl = 40;   // ToT
 
-            //for (int i = 0; i < Data.NumberOfUnits; i++)
-            //{
-            //    // Unit X location
-            //    intVal1 = bytes[ofsetU + multipl * i + 0];
-            //    intVal2 = bytes[ofsetU + multipl * i + 1];
-            //    int unitXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            for (int i = 0; i < data.NumberOfUnits; i++)
+            {
+                // Unit X location
+                intVal1 = bytes[ofsetU + multipl * i + 0];
+                intVal2 = bytes[ofsetU + multipl * i + 1];
+                data.UnitXloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    bool unit_dead = GetBit(bytes[ofsetU + multipl * i + 1], 0);    // Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
+                data.UnitDead[i] = GetBit(bytes[ofsetU + multipl * i + 1], 0);    // Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
 
-            //    // Unit Y location
-            //    intVal1 = bytes[ofsetU + multipl * i + 2];
-            //    intVal2 = bytes[ofsetU + multipl * i + 3];
-            //    int unitYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Unit Y location
+                intVal1 = bytes[ofsetU + multipl * i + 2];
+                intVal2 = bytes[ofsetU + multipl * i + 3];
+                data.UnitYloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    bool unitFirstMove = GetBit(bytes[ofsetU + multipl * i + 4], 1);    // If this is the unit's first move
+                data.UnitFirstMove[i] = GetBit(bytes[ofsetU + multipl * i + 4], 1);         // If this is the unit's first move
+                data.UnitGreyStarShield[i] = GetBit(bytes[ofsetU + multipl * i + 5], 0);    // Grey star to the shield
+                data.UnitVeteran[i] = GetBit(bytes[ofsetU + multipl * i + 5], 2);           // Veteran status
+                data.UnitType[i] = (UnitType)bytes[ofsetU + multipl * i + 6];               // Unit type
+                data.UnitCiv[i] = bytes[ofsetU + multipl * i + 7];                          // Unit civ, 00 = barbarians                
+                data.UnitMovePointsLost[i] = bytes[ofsetU + multipl * i + 8];               // Unit move points expended                
+                data.UnitHitPointsLost[i] = bytes[ofsetU + multipl * i + 10];               // Unit hitpoints lost
+                data.UnitLastMove[i] = bytes[ofsetU + multipl * i + 11];                    // Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)                
+                data.UnitCaravanCommodity[i] = (CommodityType)bytes[ofsetU + multipl * i + 13]; // Unit caravan commodity                
+                data.UnitOrders[i] = (OrderType)bytes[ofsetU + multipl * i + 15];           // Unit orders                
+                data.UnitHomeCity[i] = bytes[ofsetU + multipl * i + 16];                    // Unit home city
 
-            //    bool unitGreyStarShield = GetBit(bytes[ofsetU + multipl * i + 5], 0);   // Grey star to the shield
-            //    bool unitVeteranStatus = GetBit(bytes[ofsetU + multipl * i + 5], 2);    // Veteran status
-            //    int unitType = bytes[ofsetU + multipl * i + 6];                         // Unit type
-            //    int unitCiv = bytes[ofsetU + multipl * i + 7];                          // Unit civ, 00 = barbarians                
-            //    int unitMovePointsLost = bytes[ofsetU + multipl * i + 8];               // Unit move points expended                
-            //    int unitHitpointsLost = bytes[ofsetU + multipl * i + 10];               // Unit hitpoints lost
-            //    int unitLastMove = bytes[ofsetU + multipl * i + 11];                    // Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)                
-            //    int unitCaravanCommodity = bytes[ofsetU + multipl * i + 13];            // Unit caravan commodity                
-            //    int unitOrders = bytes[ofsetU + multipl * i + 15];                      // Unit orders                
-            //    int unitHomeCity = bytes[ofsetU + multipl * i + 16];                    // Unit home city
+                // Unit go-to X
+                intVal1 = bytes[ofsetU + multipl * i + 18];
+                intVal2 = bytes[ofsetU + multipl * i + 19];
+                data.UnitGotoX[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Unit go-to X
-            //    intVal1 = bytes[ofsetU + multipl * i + 18];
-            //    intVal2 = bytes[ofsetU + multipl * i + 19];
-            //    int unitGoToX = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Unit go-to Y
+                intVal1 = bytes[ofsetU + multipl * i + 20];
+                intVal2 = bytes[ofsetU + multipl * i + 21];
+                data.UnitGotoY[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Unit go-to Y
-            //    intVal1 = bytes[ofsetU + multipl * i + 20];
-            //    intVal2 = bytes[ofsetU + multipl * i + 21];
-            //    int unitGoToY = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Unit link to other units on top of it
+                intVal1 = bytes[ofsetU + multipl * i + 22];
+                intVal2 = bytes[ofsetU + multipl * i + 23];
+                data.UnitLinkOtherUnitsOnTop[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Unit link to other units on top of it
-            //    intVal1 = bytes[ofsetU + multipl * i + 22];
-            //    intVal2 = bytes[ofsetU + multipl * i + 23];
-            //    int unitLinkOtherUnitsOnTop = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Unit link to other units under it
+                intVal1 = bytes[ofsetU + multipl * i + 24];
+                intVal2 = bytes[ofsetU + multipl * i + 25];
+                data.UnitLinkOtherUnitsUnder[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Unit link to other units under it
-            //    intVal1 = bytes[ofsetU + multipl * i + 24];
-            //    intVal2 = bytes[ofsetU + multipl * i + 25];
-            //    int unitLinkOtherUnitsUnder = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-
-            //    CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovePointsLost, 
-            //               unitHitpointsLost, unitLastMove, unitCaravanCommodity, (OrderType)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);            }
-            //#endregion
+                //CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovePointsLost,
+                //           unitHitpointsLost, unitLastMove, unitCaravanCommodity, (OrderType)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
+            }
+            #endregion
             //#region Cities
             ////=========================
             ////CITIES
@@ -1020,7 +1050,7 @@ namespace civ2
         }
 
         // Helper function
-        private int ReturnSpecial(int col, int row, TerrainType type, int mapXdim, int mapYdim)
+        private SpecialType ReturnSpecial(int col, int row, TerrainType type, int mapXdim, int mapYdim)
         {
             int special = 0;
 
@@ -1298,7 +1328,7 @@ namespace civ2
 
             }
 
-            return special;
+            return (SpecialType)special;
 
         }
 

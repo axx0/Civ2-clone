@@ -3,12 +3,12 @@ using civ2.Enums;
 
 namespace civ2.Terrains
 {
-    internal class Terrain : ITerrain
+    internal class Terrain : BaseInstance, ITerrain
     {
         public TerrainType Type { get; set; }
         public SpecialType? SpecType { get; set; }
 
-        //From RULES.TXT
+        // From RULES.TXT
         public string Name { get; set; }
         public string SpecName { get; set; }
         public int MoveCost { get; set; }

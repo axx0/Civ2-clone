@@ -36,7 +36,7 @@ namespace civ2.Units
         bool Veteran { get; set; }
         int CivId { get; set; }
         int LastMove { get; set; }
-        int CaravanCommodity { get; set; }
+        CommodityType CaravanCommodity { get; set; }
         int HomeCity { get; set; }
         int GoToX { get; set; }
         int GoToY { get; set; }

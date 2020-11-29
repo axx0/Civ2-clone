@@ -18,7 +18,6 @@ namespace civ2
         private readonly List<Civilization> _civs;
         private readonly Options _options;
         private readonly Rules _rules;
-        //private readonly Data _data;
         private readonly GameVersionType _gameVersion;
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
@@ -174,8 +173,9 @@ namespace civ2
             TerrainTile[x, y] = tile;
         }
 
-        public static void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, int movePointsLost, int hitPointsLost, 
-                                       int lastMove, int caravanCommodity, OrderType orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, 
+                                    int movePointsLost, int hitPointsLost, int lastMove, CommodityType caravanCommodity, OrderType orders, 
+                                    int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit = new Unit
             {
@@ -203,11 +203,13 @@ namespace civ2
             else        _instance._units.Add(unit);
         }
         
-        public static void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, 
-                                       bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, 
-                                       string name, int[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, int[] commoditySupplied,
-                                       int[] commodityDemanded, int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, 
-                                       int shieldProduction, int happyCitizens, int unhappyCitizens, bool[] wonders)
+        public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, 
+                                    bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, 
+                                    int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, 
+                                    int[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, 
+                                    int[] commoditySupplied, int[] commodityDemanded, int[] commodityInRoute, int[] tradeRoutePartnerCity, 
+                                    int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, int happyCitizens, 
+                                    int unhappyCitizens, bool[] wonders)
         {
             City city = new City
             {
@@ -313,9 +315,9 @@ namespace civ2
             _instance._cities.Add(city);
         }
 
-        public static void CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, 
-                                     int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate, 
-                                     int government, int reputation, bool[] techs)
+        public void CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, 
+                            int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate, 
+                            int government, int reputation, bool[] techs)
         {
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
             if (id != 0 && leaderName == "") leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];

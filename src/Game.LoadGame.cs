@@ -14,14 +14,12 @@ namespace civ2
             Images.LoadGraphicsAssetsFromFiles(savDirectoryPath);
 
             // Read SAV file & RULES.txt
-            ReadGameData gameData = new ReadGameData(savDirectoryPath, SAVname);
+            ReadGameData rd = new ReadGameData();
+            GameData gameData = rd.Read_SAV_and_RULES(savDirectoryPath, SAVname);
 
-            // Make an instance of a new game
+            // Make an instance of a new game & map
             _instance = new Game(gameData);
-
-            // Import SAV
-            //_instance.ImportSAV(savDirectoryPath + "\\" + SAVname);
-
+            Map.Instance.GenerateMap(gameData);
 
 
             //_instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
@@ -38,11 +36,11 @@ namespace civ2
             _casualties = new List<IUnit>();
             _cities = new List<City>();
             _civs = new List<Civilization>();
-            _rules = new Rules();
 
             _gameVersion = SAVgameData.GameVersion;
 
             _options.Set(SAVgameData.Options);
+            _rules.Set(SAVgameData.Rules);
 
             TurnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
@@ -66,6 +64,16 @@ namespace civ2
                     SAVgameData.CivAdjective[i], SAVgameData.RulerGender[i], SAVgameData.CivMoney[i], SAVgameData.CivNumber[i],
                     SAVgameData.CivResearchProgress[i], SAVgameData.CivResearchingTech[i], SAVgameData.CivSciRate[i], SAVgameData.CivTaxRate[i],
                     SAVgameData.CivGovernment[i], SAVgameData.CivReputation[i], SAVgameData.CivTechs);
+            }
+
+            // Create units
+            for (int i = 0; i < SAVgameData.NumberOfUnits; i++)
+            {
+                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i], SAVgameData.UnitDead[i],
+                    SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i], SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i],
+                    SAVgameData.UnitMovePointsLost[i], SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitLastMove[i], SAVgameData.UnitCaravanCommodity[i],
+                    SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i], SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i],
+                    SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
             }
         }
 

@@ -273,10 +273,11 @@
     <Compile Include="src\Bitmaps\DrawFunctions.cs" />
     <Compile Include="src\Bitmaps\ModifyImage.cs" />
     <Compile Include="src\Bitmaps\Images.cs" />
-    <Compile Include="src\IO\ReadFiles.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />
     <Compile Include="src\Improvements\IImprovement.cs" />
+    <Compile Include="src\IO\ReadGameData.cs" />
+    <Compile Include="src\Map.cs" />
     <Compile Include="src\Options.cs" />
     <Compile Include="src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

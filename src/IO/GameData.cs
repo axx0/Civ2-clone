@@ -1,4 +1,5 @@
 ﻿using civ2.Enums;
+using System.Collections.Generic;
 
 namespace civ2
 {
@@ -6,6 +7,9 @@ namespace civ2
     {
         // Options
         public bool[] Options { get; set; }
+
+        // Rules
+        public List<string[]> Rules { get; set; }
 
         // General game data
         public int TurnNumber { get; set; }
@@ -47,13 +51,50 @@ namespace civ2
         public int[] CivReputation { get; set; }
         public bool[] CivTechs { get; set; }
 
-
+        // Map data
         public int MapXdim { get; set; }
         public int MapYdim { get; set; }
         public int MapArea { get; set; }
         public int MapSeed { get; set; }
         public int MapLocatorXdim { get; set; }
         public int MapLocatorYdim { get; set; }
+        public TerrainType[,] MapTerrainType { get; set; }
+        public bool[,] MapRiverPresent { get; set; }
+        public bool[,] MapResourcePresent { get; set; }
+        public bool[,] MapUnitPresent { get; set; }
+        public bool[,] MapCityPresent { get; set; }
+        public bool[,] MapIrrigationPresent { get; set; }
+        public bool[,] MapMiningPresent { get; set; }
+        public bool[,] MapRoadPresent { get; set; }
+        public bool[,] MapRailroadPresent { get; set; }
+        public bool[,] MapFortressPresent { get; set; }
+        public bool[,] MapPollutionPresent { get; set; }
+        public bool[,] MapFarmlandPresent { get; set; }
+        public bool[,] MapAirbasePresent { get; set; }
+        public int[,] MapIslandNo { get; set; }
+        public SpecialType[,] MapSpecialType { get; set; }
+        public bool[,][] MapVisibilityCivs { get; set; }
+
+        // Units
+        public int[] UnitXloc { get; set; }
+        public int[] UnitYloc { get; set; }
+        public bool[] UnitDead { get; set; }
+        public bool[] UnitFirstMove { get; set; }
+        public bool[] UnitGreyStarShield { get; set; }
+        public bool[] UnitVeteran { get; set; }
+        public UnitType[] UnitType { get; set; }
+        public int[] UnitCiv { get; set; }
+        public int[] UnitMovePointsLost { get; set; }
+        public int[] UnitHitPointsLost { get; set; }
+        public int[] UnitLastMove { get; set; }
+        public CommodityType[] UnitCaravanCommodity { get; set; }
+        public OrderType[] UnitOrders { get; set; }
+        public int[] UnitHomeCity { get; set; }
+        public int[] UnitGotoX { get; set; }
+        public int[] UnitGotoY { get; set; }
+        public int[] UnitLinkOtherUnitsOnTop { get; set; }
+        public int[] UnitLinkOtherUnitsUnder { get; set; }
+
         public int IndexOfLastActiveUnit { get; set; }
 
         public int GameYear { get; set; }
