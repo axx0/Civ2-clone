@@ -11,16 +11,16 @@ namespace civ2
     {
         public GameData data;
         
-        public GameData Read_SAV_and_RULES()    // TODO
+        public GameData Read_SAV_and_RULES(string savPath, string savName)
         {
             data = new GameData();
-            ReadRules();
-            ReadSAV();
+            ReadRules(savPath);
+            ReadSAV(savPath, savName);
             return data;
         }
 
         // Read RULES.TXT
-        public Rules ReadRules(string path)
+        public void ReadRules(string path)
         {
             // Read in SAV directory path. If it doesn't exist there, read from root civ2 directory.
             string rulesPath1 = path + "\\RULES.TXT";
@@ -356,12 +356,10 @@ namespace civ2
             }
 
             file.Close();
-
-            return data;
         }
 
         // READ SAV GAME
-        public GameData ReadSAV(string SAVpath)
+        public void ReadSAV(string SAVpath)
         {
             GameData data = new GameData();
 
@@ -1005,8 +1003,6 @@ namespace civ2
             //Data.ClickedXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
             //#endregion
-
-            return data;
         }
 
         // Helper function
