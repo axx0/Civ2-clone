@@ -5,6 +5,8 @@ namespace civ2
 {
     public class GameData
     {
+        public GameVersionType GameVersion { get; set; }
+
         // Options
         public bool[] Options { get; set; }
 
@@ -95,9 +97,48 @@ namespace civ2
         public int[] UnitLinkOtherUnitsOnTop { get; set; }
         public int[] UnitLinkOtherUnitsUnder { get; set; }
 
+        // Cities
+        public int[] CityXloc { get; set; }
+        public int[] CityYloc { get; set; }
+        public bool[] CityCanBuildCoastal { get; set; }
+        public bool[] CityAutobuildMilitaryRule { get; set; }
+        public bool[] CityStolenTech { get; set; }
+        public bool[] CityImprovementSold { get; set; }
+        public bool[] CityWeLoveKingDay { get; set; }
+        public bool[] CityCivilDisorder { get; set; }
+        public bool[] CityCanBuildShips { get; set; }
+        public bool[] CityObjectivex3 { get; set; }
+        public bool[] CityObjectivex1 { get; set; }
+        public int[] CityOwner { get; set; }
+        public int[] CitySize { get; set; }
+        public int[] CityWhoBuiltIt { get; set; }
+        public int[] CityFoodInStorage { get; set; }
+        public int[] CityShieldsProgress { get; set; }
+        public int[] CityNetTrade { get; set; }
+        public string[] CityName { get; set; }
+        public bool[][] CityDistributionWorkers { get; set; }
+        public int[] CityNoOfSpecialistsx4 { get; set; }
+        public bool[][] CityImprovements { get; set; }
+        public int[] CityItemInProduction { get; set; }
+        public int[] CityActiveTradeRoutes { get; set; }
+        public CommodityType[][] CityCommoditySupplied { get; set; }
+        public CommodityType[][] CityCommodityDemanded { get; set; }
+        public CommodityType[][] CityCommodityInRoute { get; set; }
+        public int[][] CityTradeRoutePartnerCity { get; set; }
+        public int[] CityScience { get; set; }
+        public int[] CityTax { get; set; }
+        public int[] CityNoOfTradeIcons { get; set; }
+        public int[] CityFoodProduction { get; set; }
+        public int[] CityShieldProduction { get; set; }
+        public int[] CityHappyCitizens { get; set; }
+        public int[] CityUnhappyCitizens { get; set; }
+
+        // Other data        
+        public int[] ActiveCursorXY { get; set; }
+        public int[] ClickedXY { get; set; }
         public int IndexOfLastActiveUnit { get; set; }
 
-        public int GameYear { get; set; }
+        //public int GameYear { get; set; }
         //{
         //    get
         //    {
@@ -109,8 +150,6 @@ namespace civ2
         //        return _gameYear;
         //    }
         //}
-
-        public GameVersionType GameVersion { get; set; }
 
     }
 }

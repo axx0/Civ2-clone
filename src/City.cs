@@ -30,12 +30,8 @@ namespace civ2
         public int FoodInStorage { get; set; }
         public int ShieldsProgress { get; set; }
         public int NetTrade { get; set; }
-        public string Name 
-        { 
-            get; 
-            set; 
-        }
-        public int[] DistributionWorkers { get; set; }
+        public string Name { get; set; }
+        public bool[] DistributionWorkers { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
         public int ItemInProduction { get; set; }
         public int ActiveTradeRoutes { get; set; }

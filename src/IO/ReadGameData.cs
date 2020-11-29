@@ -660,10 +660,6 @@ namespace civ2
                 // true = tech researched, false = not researched
                 for (int no = 0; no < 89; no++)
                     data.CivTechs[no] = (civTechs_[no] == '1') ? true : false;
-
-                //CreateCiv(i, Data.HumanPlayer, civCityStyle[i], civLeaderName[i], civTribeName[i], civAdjective[i], rulerGender[i], civMoney[i],
-                //          tribeNumber[i], civResearchProgress[i], civResearchingTech[i], civSciRate[i], civTaxRate[i], civGovernment[i],
-                //          civReputation[i], civTechs);
             }
             #endregion
             #region Map
@@ -851,188 +847,181 @@ namespace civ2
                 intVal1 = bytes[ofsetU + multipl * i + 24];
                 intVal2 = bytes[ofsetU + multipl * i + 25];
                 data.UnitLinkOtherUnitsUnder[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
-
-                //CreateUnit((UnitType)unitType, unitXlocation, unitYlocation, unit_dead, unitFirstMove, unitGreyStarShield, unitVeteranStatus, unitCiv, unitMovePointsLost,
-                //           unitHitpointsLost, unitLastMove, unitCaravanCommodity, (OrderType)unitOrders, unitHomeCity, unitGoToX, unitGoToY, unitLinkOtherUnitsOnTop, unitLinkOtherUnitsUnder);
             }
             #endregion
-            //#region Cities
-            ////=========================
-            ////CITIES
-            ////=========================
-            //int ofsetC = ofsetU + multipl * Data.NumberOfUnits;
+            #region Cities
+            //=========================
+            //CITIES
+            //=========================
+            int ofsetC = ofsetU + multipl * data.NumberOfUnits;
 
-            //if (bytes[10] <= 40)        multipl = 84;   // FW or CiC
-            //else if (bytes[10] == 44)   multipl = 88;   // MGE
-            //else                        multipl = 92;   // ToT
+            if (bytes[10] <= 40) multipl = 84;   // FW or CiC
+            else if (bytes[10] == 44) multipl = 88;   // MGE
+            else multipl = 92;   // ToT
 
-            //char[] asciichar = new char[15];
-            //for (int i = 0; i < Data.NumberOfCities; i++)
-            //{
-            //    // City X location
-            //    intVal1 = bytes[ofsetC + multipl * i + 0];
-            //    intVal2 = bytes[ofsetC + multipl * i + 1];
-            //    int cityXlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            char[] asciichar = new char[15];
+            for (int i = 0; i < data.NumberOfCities; i++)
+            {
+                // City X location
+                intVal1 = bytes[ofsetC + multipl * i + 0];
+                intVal2 = bytes[ofsetC + multipl * i + 1];
+                data.CityXloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // City Y location
-            //    intVal1 = bytes[ofsetC + multipl * i + 2];
-            //    intVal2 = bytes[ofsetC + multipl * i + 3];
-            //    int cityYlocation = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // City Y location
+                intVal1 = bytes[ofsetC + multipl * i + 2];
+                intVal2 = bytes[ofsetC + multipl * i + 3];
+                data.CityYloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    bool cityCanBuildCoastal        = GetBit(bytes[ofsetC + multipl * i + 4], 0);    // Can build coastal improvements
-            //    bool cityAutobuildMilitaryRule  = GetBit(bytes[ofsetC + multipl * i + 4], 3);    // Auto build under military rule
-            //    bool cityStolenTech             = GetBit(bytes[ofsetC + multipl * i + 4], 4);    // Stolen tech
-            //    bool cityImprovementSold        = GetBit(bytes[ofsetC + multipl * i + 4], 5);    // Improvement sold
-            //    bool cityWeLoveKingDay          = GetBit(bytes[ofsetC + multipl * i + 4], 6);    // We love king day
-            //    bool cityCivilDisorder          = GetBit(bytes[ofsetC + multipl * i + 4], 7);    // Civil disorder
-            //    bool cityCanBuildShips          = GetBit(bytes[ofsetC + multipl * i + 6], 2);    // Can build ships
-            //    bool cityObjectivex3            = GetBit(bytes[ofsetC + multipl * i + 7], 3);    // Objective x3
-            //    bool cityObjectivex1            = GetBit(bytes[ofsetC + multipl * i + 7], 5);    // Objective x1
+                data.CityCanBuildCoastal[i] = GetBit(bytes[ofsetC + multipl * i + 4], 0);    // Can build coastal improvements
+                data.CityAutobuildMilitaryRule[i] = GetBit(bytes[ofsetC + multipl * i + 4], 3);    // Auto build under military rule
+                data.CityStolenTech[i] = GetBit(bytes[ofsetC + multipl * i + 4], 4);         // Stolen tech
+                data.CityImprovementSold[i] = GetBit(bytes[ofsetC + multipl * i + 4], 5);    // Improvement sold
+                data.CityWeLoveKingDay[i] = GetBit(bytes[ofsetC + multipl * i + 4], 6);    // We love king day
+                data.CityCivilDisorder[i] = GetBit(bytes[ofsetC + multipl * i + 4], 7);    // Civil disorder
+                data.CityCanBuildShips[i] = GetBit(bytes[ofsetC + multipl * i + 6], 2);    // Can build ships
+                data.CityObjectivex3[i] = GetBit(bytes[ofsetC + multipl * i + 7], 3);    // Objective x3
+                data.CityObjectivex1[i] = GetBit(bytes[ofsetC + multipl * i + 7], 5);    // Objective x1
 
-            //    int cityOwner = bytes[ofsetC + multipl * i + 8];        // Owner
-            //    int citySize = bytes[ofsetC + multipl * i + 9];         // Size
-            //    int cityWhoBuiltIt = bytes[ofsetC + multipl * i + 10];  // Who built it
+                data.CityOwner[i] = bytes[ofsetC + multipl * i + 8];        // Owner
+                data.CitySize[i] = bytes[ofsetC + multipl * i + 9];         // Size
+                data.CityWhoBuiltIt[i] = bytes[ofsetC + multipl * i + 10];  // Who built it
 
-            //    // Production squares
-            //    //???????????????????
+                // Production squares
+                //???????????????????
 
-            //    // Specialists
-            //    //??????????????????
+                // Specialists
+                //??????????????????
 
-            //    // Food in storage
-            //    intVal1 = bytes[ofsetC + multipl * i + 26];
-            //    intVal2 = bytes[ofsetC + multipl * i + 27];
-            //    int cityFoodInStorage = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Food in storage
+                intVal1 = bytes[ofsetC + multipl * i + 26];
+                intVal2 = bytes[ofsetC + multipl * i + 27];
+                data.CityFoodInStorage[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Shield progress
-            //    intVal1 = bytes[ofsetC + multipl * i + 28];
-            //    intVal2 = bytes[ofsetC + multipl * i + 29];
-            //    int cityShieldsProgress = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Shield progress
+                intVal1 = bytes[ofsetC + multipl * i + 28];
+                intVal2 = bytes[ofsetC + multipl * i + 29];
+                data.CityShieldsProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Net trade
-            //    intVal1 = bytes[ofsetC + multipl * i + 30];
-            //    intVal2 = bytes[ofsetC + multipl * i + 31];
-            //    int cityNetTrade = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Net trade
+                intVal1 = bytes[ofsetC + multipl * i + 30];
+                intVal2 = bytes[ofsetC + multipl * i + 31];
+                data.CityNetTrade[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Name        
-            //    for (int j = 0; j < 15; j++) 
-            //        asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
-            //    string cityName = new string(asciichar);
-            //    cityName = cityName.Replace("\0", string.Empty);
+                // Name        
+                for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
+                string cityName = new string(asciichar);
+                data.CityName[i] = cityName.Replace("\0", string.Empty);
 
-            //    // Distribution of workers on map in city view
-            //    string cityWorkDistr1 = Convert.ToString(bytes[ofsetC + multipl * i + 48], 2).PadLeft(8, '0');  // inner circle (starting from N, going in counter-clokwise direction)                
-            //    string cityWorkDistr2 = Convert.ToString(bytes[ofsetC + multipl * i + 49], 2).PadLeft(8, '0');  // on 8 of the outer circle    
-            //    string cityWorkDistr3 = Convert.ToString(bytes[ofsetC + multipl * i + 50], 2).PadLeft(5, '0');  // on 4 of the outer circle
-            //    string _cityDistributionWorkers = string.Format("{0}{1}{2}", cityWorkDistr3, cityWorkDistr2, cityWorkDistr1);
-            //    int[] cityDistributionWorkers = new int[21];
-            //    for (int distNo = 0; distNo < 21; distNo++)
-            //        cityDistributionWorkers[distNo] = (_cityDistributionWorkers[distNo] == '1') ? 1 : 0;
+                // Distribution of workers on map in city view
+                string cityWorkDistr1 = Convert.ToString(bytes[ofsetC + multipl * i + 48], 2).PadLeft(8, '0');  // inner circle (starting from N, going in counter-clokwise direction)                
+                string cityWorkDistr2 = Convert.ToString(bytes[ofsetC + multipl * i + 49], 2).PadLeft(8, '0');  // on 8 of the outer circle    
+                string cityWorkDistr3 = Convert.ToString(bytes[ofsetC + multipl * i + 50], 2).PadLeft(5, '0');  // on 4 of the outer circle
+                string _cityDistributionWorkers = string.Format("{0}{1}{2}", cityWorkDistr3, cityWorkDistr2, cityWorkDistr1);
+                data.CityDistributionWorkers[i] = new bool[21];
+                for (int distNo = 0; distNo < 21; distNo++)
+                    data.CityDistributionWorkers[i][distNo] = _cityDistributionWorkers[distNo] == '1';
 
-            //    int cityNoOfSpecialistsx4 = bytes[ofsetC + multipl * i + 51];   // Number of specialists x4
+                data.CityNoOfSpecialistsx4[i] = bytes[ofsetC + multipl * i + 51];   // Number of specialists x4
 
-            //    // Improvements
-            //    string cityImprovements1 = Convert.ToString(bytes[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');   // bit6=palace (1st improvement), bit7=not important
-            //    cityImprovements1 = cityImprovements1.Remove(cityImprovements1.Length - 1);                         // remove last bit, it is not important
-            //    string cityImprovements2 = Convert.ToString(bytes[ofsetC + multipl * i + 53], 2).PadLeft(8, '0');
-            //    string cityImprovements3 = Convert.ToString(bytes[ofsetC + multipl * i + 54], 2).PadLeft(8, '0');
-            //    string cityImprovements4 = Convert.ToString(bytes[ofsetC + multipl * i + 55], 2).PadLeft(8, '0');
-            //    string cityImprovements5 = Convert.ToString(bytes[ofsetC + multipl * i + 56], 2).PadLeft(8, '0');   // bit0-bit4=not important, bit5=port facility (last improvement)
-            //    // Put all improvements into one large string, where bit0=palace, bit1=barracks, ..., bit33=port facility
-            //    // First reverse bit order in all strings
-            //    cityImprovements1 = Reverse(cityImprovements1);
-            //    cityImprovements2 = Reverse(cityImprovements2);
-            //    cityImprovements3 = Reverse(cityImprovements3);
-            //    cityImprovements4 = Reverse(cityImprovements4);
-            //    cityImprovements5 = Reverse(cityImprovements5);
-            //    cityImprovements5 = cityImprovements5.Remove(cityImprovements5.Length - 5); // remove last 5 bits, they are not important
-            //    // Merge all strings into a large string
-            //    string cityImprovements_ = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
-            //    // Convert string array to bool array
-            //    bool[] cityImprovements = new bool[34];
-            //    for (int impNo = 0; impNo < 34; impNo++)
-            //        cityImprovements[impNo] = (cityImprovements_[impNo] == '1') ? true : false;
+                // Improvements
+                string cityImprovements1 = Convert.ToString(bytes[ofsetC + multipl * i + 52], 2).PadLeft(8, '0');   // bit6=palace (1st improvement), bit7=not important
+                cityImprovements1 = cityImprovements1.Remove(cityImprovements1.Length - 1);                         // remove last bit, it is not important
+                string cityImprovements2 = Convert.ToString(bytes[ofsetC + multipl * i + 53], 2).PadLeft(8, '0');
+                string cityImprovements3 = Convert.ToString(bytes[ofsetC + multipl * i + 54], 2).PadLeft(8, '0');
+                string cityImprovements4 = Convert.ToString(bytes[ofsetC + multipl * i + 55], 2).PadLeft(8, '0');
+                string cityImprovements5 = Convert.ToString(bytes[ofsetC + multipl * i + 56], 2).PadLeft(8, '0');   // bit0-bit4=not important, bit5=port facility (last improvement)
+                // Put all improvements into one large string, where bit0=palace, bit1=barracks, ..., bit33=port facility
+                // First reverse bit order in all strings
+                cityImprovements1 = Reverse(cityImprovements1);
+                cityImprovements2 = Reverse(cityImprovements2);
+                cityImprovements3 = Reverse(cityImprovements3);
+                cityImprovements4 = Reverse(cityImprovements4);
+                cityImprovements5 = Reverse(cityImprovements5);
+                cityImprovements5 = cityImprovements5.Remove(cityImprovements5.Length - 5); // remove last 5 bits, they are not important
+                // Merge all strings into a large string
+                string cityImprovements_ = string.Format("{0}{1}{2}{3}{4}", cityImprovements1, cityImprovements2, cityImprovements3, cityImprovements4, cityImprovements5);
+                // Convert string array to bool array
+                data.CityImprovements[i] = new bool[34];
+                for (int impNo = 0; impNo < 34; impNo++)
+                    data.CityImprovements[i][impNo] = cityImprovements_[impNo] == '1';
 
-            //    // Item in production
-            //    // 0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
-            //    // convert this notation of improvements, so that 62(dec) is 1st improvement, 63(dec) is 2nd, ...
-            //    int cityItemInProduction = bytes[ofsetC + multipl * i + 57];
-            //    if (cityItemInProduction > 70)  //if it is improvement
-            //        cityItemInProduction = 255 - cityItemInProduction + 62; // 62 because 0...61 are units
+                // Item in production
+                // 0(dec)/0(hex) ... 61(dec)/3D(hex) are units, improvements are inversed (FF(hex)=1st, FE(hex)=2nd, ...)
+                // convert this notation of improvements, so that 62(dec) is 1st improvement, 63(dec) is 2nd, ...
+                data.CityItemInProduction[i] = bytes[ofsetC + multipl * i + 57];
+                if (data.CityItemInProduction[i] > 70)  //if it is improvement
+                    data.CityItemInProduction[i] = 255 - data.CityItemInProduction[i] + 62; // 62 because 0...61 are units
 
-            //    int cityActiveTradeRoutes = bytes[ofsetC + multipl * i + 58];   // No of active trade routes
+                data.CityActiveTradeRoutes[i] = bytes[ofsetC + multipl * i + 58];   // No of active trade routes
 
-            //    // 1st, 2nd, 3rd trade commodities supplied
-            //    int[] cityCommoditySupplied = new int[] { bytes[ofsetC + multipl * i + 59], bytes[ofsetC + multipl * i + 60], bytes[ofsetC + multipl * i + 61] };
+                // 1st, 2nd, 3rd trade commodities supplied
+                data.CityCommoditySupplied[i] = new CommodityType[] { (CommodityType)bytes[ofsetC + multipl * i + 59], (CommodityType)bytes[ofsetC + multipl * i + 60], (CommodityType)bytes[ofsetC + multipl * i + 61] };
 
-            //    // 1st, 2nd, 3rd trade commodities demanded
-            //    int[] cityCommodityDemanded = new int[] { bytes[ofsetC + multipl * i + 62], bytes[ofsetC + multipl * i + 63], bytes[ofsetC + multipl * i + 64] };
+                // 1st, 2nd, 3rd trade commodities demanded
+                data.CityCommodityDemanded[i] = new CommodityType[] { (CommodityType)bytes[ofsetC + multipl * i + 62], (CommodityType)bytes[ofsetC + multipl * i + 63], (CommodityType)bytes[ofsetC + multipl * i + 64] };
 
-            //    // 1st, 2nd, 3rd trade commodities in route
-            //    int[] cityCommodityInRoute = new int[] { bytes[ofsetC + multipl * i + 65], bytes[ofsetC + multipl * i + 66], bytes[ofsetC + multipl * i + 67] };
+                // 1st, 2nd, 3rd trade commodities in route
+                data.CityCommodityInRoute[i] = new CommodityType[] { (CommodityType)bytes[ofsetC + multipl * i + 65], (CommodityType)bytes[ofsetC + multipl * i + 66], (CommodityType)bytes[ofsetC + multipl * i + 67] };
 
-            //    // 1st, 2nd, 3rd trade route partner city number
-            //    int[] cityTradeRoutePartnerCity = new int[] { bytes[ofsetC + multipl * i + 68], bytes[ofsetC + multipl * i + 69], bytes[ofsetC + multipl * i + 70] };
+                // 1st, 2nd, 3rd trade route partner city number
+                data.CityTradeRoutePartnerCity[i] = new int[] { bytes[ofsetC + multipl * i + 68], bytes[ofsetC + multipl * i + 69], bytes[ofsetC + multipl * i + 70] };
 
-            //    // Science
-            //    intVal1 = bytes[ofsetC + multipl * i + 74];
-            //    intVal2 = bytes[ofsetC + multipl * i + 75];
-            //    int cityScience = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Science
+                intVal1 = bytes[ofsetC + multipl * i + 74];
+                intVal2 = bytes[ofsetC + multipl * i + 75];
+                data.CityScience[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // Tax
-            //    intVal1 = bytes[ofsetC + multipl * i + 76];
-            //    intVal2 = bytes[ofsetC + multipl * i + 77];
-            //    int cityTax = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // Tax
+                intVal1 = bytes[ofsetC + multipl * i + 76];
+                intVal2 = bytes[ofsetC + multipl * i + 77];
+                data.CityTax[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    // No of trade icons
-            //    intVal1 = bytes[ofsetC + multipl * i + 78];
-            //    intVal2 = bytes[ofsetC + multipl * i + 79];
-            //    int cityNoOfTradeIcons = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                // No of trade icons
+                intVal1 = bytes[ofsetC + multipl * i + 78];
+                intVal2 = bytes[ofsetC + multipl * i + 79];
+                data.CityNoOfTradeIcons[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-            //    int cityFoodProduction = bytes[ofsetC + multipl * i + 80];  // Total food production
+                data.CityFoodProduction[i] = bytes[ofsetC + multipl * i + 80];  // Total food production
 
-            //    int cityShieldProduction = bytes[ofsetC + multipl * i + 81];    // Total shield production
+                data.CityShieldProduction[i] = bytes[ofsetC + multipl * i + 81];    // Total shield production
 
-            //    int cityHappyCitizens = bytes[ofsetC + multipl * i + 82];   // No of happy citizens
+                data.CityHappyCitizens[i] = bytes[ofsetC + multipl * i + 82];   // No of happy citizens
 
-            //    int cityUnhappyCitizens = bytes[ofsetC + multipl * i + 83]; // No of unhappy citizens
+                data.CityUnhappyCitizens[i] = bytes[ofsetC + multipl * i + 83]; // No of unhappy citizens
 
-            //    // Sequence number of the city
-            //    //...
+                // Sequence number of the city
+                //...
 
-            //    // Check if wonder is in city (28 possible wonders)
-            //    bool[] cityWonders = new bool[28];
-            //    for (int wndr = 0; wndr < 28; wndr++)
-            //        cityWonders[wndr] = (wonderCity[wndr] == i) ? true : false;
+                //// Check if wonder is in city (28 possible wonders)
+                //bool[] cityWonders = new bool[28];
+                //for (int wndr = 0; wndr < 28; wndr++)
+                //    cityWonders[wndr] = (wonderCity[wndr] == i) ? true : false;
 
-            //    CreateCity(cityXlocation, cityYlocation, cityCanBuildCoastal, cityAutobuildMilitaryRule, cityStolenTech, cityImprovementSold, cityWeLoveKingDay, cityCivilDisorder, 
-            //               cityCanBuildShips, cityObjectivex3, cityObjectivex1, cityOwner, citySize, cityWhoBuiltIt, cityFoodInStorage, cityShieldsProgress, cityNetTrade, cityName,
-            //               cityDistributionWorkers, cityNoOfSpecialistsx4, cityImprovements, cityItemInProduction, cityActiveTradeRoutes, cityCommoditySupplied, cityCommodityDemanded,
-            //               cityCommodityInRoute, cityTradeRoutePartnerCity, cityScience, cityTax, cityNoOfTradeIcons, cityFoodProduction, cityShieldProduction, cityHappyCitizens, 
-            //               cityUnhappyCitizens, cityWonders);
-            //}
-            //#endregion
-            //#region Other
-            ////=========================
-            ////OTHER
-            ////=========================
-            //int ofsetO = ofsetC + multipl * Data.NumberOfCities;
+            }
+            #endregion
+            #region Other
+            //=========================
+            //OTHER
+            //=========================
+            int ofsetO = ofsetC + multipl * data.NumberOfCities;
 
-            //// Active cursor XY position
-            //intVal1 = bytes[ofsetO + 63];
-            //intVal2 = bytes[ofsetO + 64];
-            //intVal3 = bytes[ofsetO + 65];
-            //intVal4 = bytes[ofsetO + 66];
-            //Data.ActiveXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+            // Active cursor XY position
+            intVal1 = bytes[ofsetO + 63];
+            intVal2 = bytes[ofsetO + 64];
+            intVal3 = bytes[ofsetO + 65];
+            intVal4 = bytes[ofsetO + 66];
+            data.ActiveCursorXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), 
+                                              int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
-            //// Clicked tile X position
-            //intVal1 = bytes[ofsetO + 1425];
-            //intVal2 = bytes[ofsetO + 1426];
-            //intVal3 = bytes[ofsetO + 1427];
-            //intVal4 = bytes[ofsetO + 1428];
-            //Data.ClickedXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+            // Clicked tile X position
+            intVal1 = bytes[ofsetO + 1425];
+            intVal2 = bytes[ofsetO + 1426];
+            intVal3 = bytes[ofsetO + 1427];
+            intVal4 = bytes[ofsetO + 1428];
+            data.ClickedXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), 
+                                         int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
-            //#endregion
+            #endregion
         }
 
         // Helper function

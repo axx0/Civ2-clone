@@ -42,6 +42,8 @@ namespace civ2
         public int NoOfTurnsOfPeace { get; set; }
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
+        public int[] ActiveCursorXY { get; set; }
+        public int[] ClickedXY { get; set; }
 
 
         //public static List<IUnit> Units = new List<IUnit>();
@@ -204,12 +206,12 @@ namespace civ2
         }
         
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, 
-                                    bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, 
-                                    int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, 
-                                    int[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, 
-                                    int[] commoditySupplied, int[] commodityDemanded, int[] commodityInRoute, int[] tradeRoutePartnerCity, 
-                                    int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, int happyCitizens, 
-                                    int unhappyCitizens, bool[] wonders)
+                                bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, 
+                                int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, 
+                                bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, 
+                                CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, 
+                                int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, 
+                                int happyCitizens, int unhappyCitizens)
         {
             City city = new City
             {
@@ -235,10 +237,10 @@ namespace civ2
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction,
                 ActiveTradeRoutes = activeTradeRoutes,
-                CommoditySupplied = new CommodityType[] { (CommodityType)commoditySupplied[0], (CommodityType)commoditySupplied[1], (CommodityType)commoditySupplied[2] },
-                CommodityDemanded = new CommodityType[] { (CommodityType)commodityDemanded[0], (CommodityType)commodityDemanded[1], (CommodityType)commodityDemanded[2] },
-                CommodityInRoute = new CommodityType[] { (CommodityType)commodityInRoute[0], (CommodityType)commodityInRoute[1], (CommodityType)commodityInRoute[2] },
-                TradeRoutePartnerCity = new int[] { tradeRoutePartnerCity[0], tradeRoutePartnerCity[1], tradeRoutePartnerCity[2] },
+                CommoditySupplied = commoditySupplied,
+                CommodityDemanded = commodityDemanded,
+                CommodityInRoute = commodityInRoute,
+                TradeRoutePartnerCity = tradeRoutePartnerCity,
                 //Science = science,    //what does this mean???
                 //Tax = tax,
                 //NoOfTradeIcons = noOfTradeIcons,
@@ -282,35 +284,36 @@ namespace civ2
             if (improvements[31]) city.AddImprovement(new Improvement(ImprovementType.Airport));
             if (improvements[32]) city.AddImprovement(new Improvement(ImprovementType.PoliceStat));
             if (improvements[33]) city.AddImprovement(new Improvement(ImprovementType.PortFacil));
-
-            if (wonders[0]) city.AddImprovement(new Improvement(ImprovementType.Pyramids));
-            if (wonders[1]) city.AddImprovement(new Improvement(ImprovementType.HangingGardens));
-            if (wonders[2]) city.AddImprovement(new Improvement(ImprovementType.Colossus));
-            if (wonders[3]) city.AddImprovement(new Improvement(ImprovementType.Lighthouse));
-            if (wonders[4]) city.AddImprovement(new Improvement(ImprovementType.GreatLibrary));
-            if (wonders[5]) city.AddImprovement(new Improvement(ImprovementType.Oracle));
-            if (wonders[6]) city.AddImprovement(new Improvement(ImprovementType.GreatWall));
-            if (wonders[7]) city.AddImprovement(new Improvement(ImprovementType.WarAcademy));
-            if (wonders[8]) city.AddImprovement(new Improvement(ImprovementType.KR_Crusade));
-            if (wonders[9]) city.AddImprovement(new Improvement(ImprovementType.MP_Embassy));
-            if (wonders[10]) city.AddImprovement(new Improvement(ImprovementType.MichChapel));
-            if (wonders[11]) city.AddImprovement(new Improvement(ImprovementType.CoperObserv));
-            if (wonders[12]) city.AddImprovement(new Improvement(ImprovementType.MagellExped));
-            if (wonders[13]) city.AddImprovement(new Improvement(ImprovementType.ShakespTheat));
-            if (wonders[14]) city.AddImprovement(new Improvement(ImprovementType.DV_Workshop));
-            if (wonders[15]) city.AddImprovement(new Improvement(ImprovementType.JSB_Cathedral));
-            if (wonders[16]) city.AddImprovement(new Improvement(ImprovementType.IN_College));
-            if (wonders[17]) city.AddImprovement(new Improvement(ImprovementType.TradingCompany));
-            if (wonders[18]) city.AddImprovement(new Improvement(ImprovementType.DarwinVoyage));
-            if (wonders[19]) city.AddImprovement(new Improvement(ImprovementType.StatueLiberty));
-            if (wonders[20]) city.AddImprovement(new Improvement(ImprovementType.EiffelTower));
-            if (wonders[21]) city.AddImprovement(new Improvement(ImprovementType.HooverDam));
-            if (wonders[22]) city.AddImprovement(new Improvement(ImprovementType.WomenSuffrage));
-            if (wonders[23]) city.AddImprovement(new Improvement(ImprovementType.ManhattanProj));
-            if (wonders[24]) city.AddImprovement(new Improvement(ImprovementType.UnitedNations));
-            if (wonders[25]) city.AddImprovement(new Improvement(ImprovementType.ApolloProgr));
-            if (wonders[26]) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
-            if (wonders[27]) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
+            
+            // TODO: add wonders to city at city import
+            //if (wonders[0]) city.AddImprovement(new Improvement(ImprovementType.Pyramids));
+            //if (wonders[1]) city.AddImprovement(new Improvement(ImprovementType.HangingGardens));
+            //if (wonders[2]) city.AddImprovement(new Improvement(ImprovementType.Colossus));
+            //if (wonders[3]) city.AddImprovement(new Improvement(ImprovementType.Lighthouse));
+            //if (wonders[4]) city.AddImprovement(new Improvement(ImprovementType.GreatLibrary));
+            //if (wonders[5]) city.AddImprovement(new Improvement(ImprovementType.Oracle));
+            //if (wonders[6]) city.AddImprovement(new Improvement(ImprovementType.GreatWall));
+            //if (wonders[7]) city.AddImprovement(new Improvement(ImprovementType.WarAcademy));
+            //if (wonders[8]) city.AddImprovement(new Improvement(ImprovementType.KR_Crusade));
+            //if (wonders[9]) city.AddImprovement(new Improvement(ImprovementType.MP_Embassy));
+            //if (wonders[10]) city.AddImprovement(new Improvement(ImprovementType.MichChapel));
+            //if (wonders[11]) city.AddImprovement(new Improvement(ImprovementType.CoperObserv));
+            //if (wonders[12]) city.AddImprovement(new Improvement(ImprovementType.MagellExped));
+            //if (wonders[13]) city.AddImprovement(new Improvement(ImprovementType.ShakespTheat));
+            //if (wonders[14]) city.AddImprovement(new Improvement(ImprovementType.DV_Workshop));
+            //if (wonders[15]) city.AddImprovement(new Improvement(ImprovementType.JSB_Cathedral));
+            //if (wonders[16]) city.AddImprovement(new Improvement(ImprovementType.IN_College));
+            //if (wonders[17]) city.AddImprovement(new Improvement(ImprovementType.TradingCompany));
+            //if (wonders[18]) city.AddImprovement(new Improvement(ImprovementType.DarwinVoyage));
+            //if (wonders[19]) city.AddImprovement(new Improvement(ImprovementType.StatueLiberty));
+            //if (wonders[20]) city.AddImprovement(new Improvement(ImprovementType.EiffelTower));
+            //if (wonders[21]) city.AddImprovement(new Improvement(ImprovementType.HooverDam));
+            //if (wonders[22]) city.AddImprovement(new Improvement(ImprovementType.WomenSuffrage));
+            //if (wonders[23]) city.AddImprovement(new Improvement(ImprovementType.ManhattanProj));
+            //if (wonders[24]) city.AddImprovement(new Improvement(ImprovementType.UnitedNations));
+            //if (wonders[25]) city.AddImprovement(new Improvement(ImprovementType.ApolloProgr));
+            //if (wonders[26]) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
+            //if (wonders[27]) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
 
             _instance._cities.Add(city);
         }
