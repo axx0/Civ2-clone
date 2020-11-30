@@ -9,24 +9,31 @@ namespace civ2.Terrains
         public SpecialType? SpecType { get; set; }
 
         // From RULES.TXT
-        public string Name { get; set; }
-        public string SpecName { get; set; }
-        public int MoveCost { get; set; }
-        public int Defense { get; set; }
-        public int Food { get; set; }
-        public int Shields { get; set; }
-        public int Trade { get; set; }
-        public bool CanIrrigate { get; set; }
-        public TerrainType? IrrigationResult { get; set; }
-        public int IrrigationBonus { get; set; }
-        public int TurnsToIrrigate { get; set; }
-        public int AIirrigation { get; set; }
-        public bool CanMine { get; set; }
-        public TerrainType? MiningResult { get; set; }
-        public int MiningBonus { get; set; }
-        public int TurnsToMine { get; set; }
-        public int AImining { get; set; }
+        public string Name { get { return Game.Rules.TerrainName[(int)Type]; } }
+        public int MoveCost { get { return Game.Rules.TerrainMovecost[(int)Type]; } }
+        public int Defense { get { return Game.Rules.TerrainDefense[(int)Type]; } }
+        public int Food { get { return Game.Rules.TerrainFood[(int)Type]; } }
+        public int Shields { get { return Game.Rules.TerrainShields[(int)Type]; } }
+        public int Trade { get { return Game.Rules.TerrainTrade[(int)Type]; } }
+        public bool CanBeIrrigated { get { return Game.Rules.TerrainCanIrrigate[(int)Type]; } }
+        public TerrainType IrrigationResult { get; set; }       // TODO: read irrigation result from short name (relevant if CanBeIrrigated = true)
+        public int IrrigationBonus { get { return Game.Rules.TerrainIrrigateBonus[(int)Type]; } }
+        public int TurnsToIrrigate { get { return Game.Rules.TerrainIrrigateTurns[(int)Type]; } }
+        public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; }     // TODO: be careful, 0=never!
+        public bool CanBeMined { get; set; }    // TODO: canbemined
+        public int MiningBonus { get { return Game.Rules.TerrainMineBonus[(int)Type]; } }
+        public int TurnsToMine { get { return Game.Rules.TerrainMineTurns[(int)Type]; } }
+        public GovernmentType MinGovrnLevelAItoPerformMining { get; set; }      // TODO: be careful, 0=never!
+
+        public TerrainType MiningResult { get; set; }       // TODO: read mining result from short name (relevant if CanBeMined = true)
+
+        public string SpecName { get { return Game.Rules.TerrainSpecName[(int)SpecType]; } }
+        
+        
+ 
         public TerrainType? TransformResult { get; set; }
+
+
 
         public bool Resource { get; set; }
         public bool River { get; set; }

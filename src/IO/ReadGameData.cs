@@ -198,7 +198,7 @@ namespace civ2
                     string[] terrainFood = new string[11];
                     string[] terrainShields = new string[11];
                     string[] terrainTrade = new string[11];
-                    string[] terrainIrrigate = new string[11];
+                    string[] terrainCanIrrigate = new string[11];
                     string[] terrainIrrigateBonus = new string[11];
                     string[] terrainIrrigateTurns = new string[11];
                     string[] terrainIrrigateAI = new string[11];
@@ -219,7 +219,7 @@ namespace civ2
                         terrainFood[row] = text[3].Trim();
                         terrainShields[row] = text[4].Trim();
                         terrainTrade[row] = text[5].Trim();
-                        terrainIrrigate[row] = text[6].Trim();
+                        terrainCanIrrigate[row] = text[6].Trim();
                         terrainIrrigateBonus[row] = text[7].Trim();
                         terrainIrrigateTurns[row] = text[8].Trim();
                         terrainIrrigateAI[row] = text[9].Trim();
@@ -236,7 +236,7 @@ namespace civ2
                     data.Rules.Add(terrainFood);
                     data.Rules.Add(terrainShields);
                     data.Rules.Add(terrainTrade);
-                    data.Rules.Add(terrainIrrigate);
+                    data.Rules.Add(terrainCanIrrigate);
                     data.Rules.Add(terrainIrrigateBonus);
                     data.Rules.Add(terrainIrrigateTurns);
                     data.Rules.Add(terrainIrrigateAI);
@@ -461,7 +461,7 @@ namespace civ2
             data.SelectedUnitIndex = (_selectedIndex == 65535) ? -1 : _selectedIndex;
 
             // Which human player is used
-            data.HumanPlayer = bytes[39];
+            data.PlayerCivIndex = bytes[39];
 
             // Players map which is used
             data.PlayersMapUsed = bytes[40];
@@ -721,7 +721,7 @@ namespace civ2
                 int y = i / data.MapXdim;
 
                 // Terrain type
-                data.MapTerrainType[x, y] = TerrainType.Desert; = TerrainType.Desert;  //only initial
+                data.MapTerrainType[x, y] = TerrainType.Desert; //only initial
                 data.MapRiverPresent[x, y] = false;
                 int terrain_type = bytes[ofsetB2 + i * 6 + 0];
                 if (terrain_type == 0) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = false; }   //0dec=0hex

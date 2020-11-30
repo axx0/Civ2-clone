@@ -20,12 +20,6 @@ namespace civ2
             // Make an instance of a new game & map
             _instance = new Game(gameData);
             Map.Instance.GenerateMap(gameData);
-
-
-            //_instance.ActiveUnit = Data.SelectedUnitIndex == -1 ? null : Units.Find(unit => unit.Id == Data.SelectedUnitIndex);    //null means all units have ended turn
-            //_instance._activeCiv = _instance._civs[Data.HumanPlayer];
-            //_instance.ActiveUnit = Game.Units[0];   //temp!!!
-            //_instance.ActiveCiv = Game.Civs[0];   //temp!!!
             
             return _instance;   // Return instance so it can be read by forms
         }
@@ -44,7 +38,6 @@ namespace civ2
 
             TurnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
-            HumanPlayer = SAVgameData.HumanPlayer;
             PlayersMapUsed = SAVgameData.PlayersMapUsed;
             PlayersCivilizationNumberUsed = SAVgameData.PlayersCivilizationNumberUsed;
             _difficultyLevel = SAVgameData.DifficultyLevel;
@@ -59,7 +52,7 @@ namespace civ2
             // Create all 8 civs (tribes)
             for (int i = 0; i < 8; i++)
             {
-                CreateCiv(i, SAVgameData.HumanPlayer, SAVgameData.CivCityStyle[i], SAVgameData.CivLeaderName[i], SAVgameData.CivTribeName[i],
+                CreateCiv(i, SAVgameData.PlayerCivIndex, SAVgameData.CivCityStyle[i], SAVgameData.CivLeaderName[i], SAVgameData.CivTribeName[i],
                     SAVgameData.CivAdjective[i], SAVgameData.RulerGender[i], SAVgameData.CivMoney[i], SAVgameData.CivNumber[i],
                     SAVgameData.CivResearchProgress[i], SAVgameData.CivResearchingTech[i], SAVgameData.CivSciRate[i], SAVgameData.CivTaxRate[i],
                     SAVgameData.CivGovernment[i], SAVgameData.CivReputation[i], SAVgameData.CivTechs);
@@ -93,6 +86,7 @@ namespace civ2
             ClickedXY = SAVgameData.ClickedXY;
 
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    //null means all units have ended turn
+            _playerCiv = _civs.Find(civ => civ.Id == SAVgameData.PlayerCivIndex);
         }
 
 

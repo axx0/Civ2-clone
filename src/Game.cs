@@ -23,6 +23,9 @@ namespace civ2
         private readonly BarbarianActivityType _barbarianActivity;
 
         public List<IUnit> GetUnits => _units;
+        public List<IUnit> GetCasualties => _casualties;
+        public List<City> GetCities => _cities;
+        public List<Civilization> GetCivs => _civs;
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
@@ -63,14 +66,6 @@ namespace civ2
         public int[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
 
-
-        //public static List<IUnit> Units = new List<IUnit>();
-        //public static List<IUnit> DeadUnits = new List<IUnit>();
-        //public static List<City> Cities = new List<City>();
-        //public static List<Civilization> Civs = new List<Civilization>();
-        //public static ITerrain[,] TerrainTile;
-        //public static Bitmap[] CivsMap;
-
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)
         {
@@ -88,11 +83,11 @@ namespace civ2
             set { _activeUnit = value; }
         }
 
-        private Civilization _activeCiv;
-        public Civilization ActiveCiv
+        private Civilization _playerCiv;
+        public Civilization PlayerCiv
         {
-            get { return _activeCiv; }
-            set { _activeCiv = value; }
+            get { return _playerCiv; }
+            set { _playerCiv = value; }
         }
 
         public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 

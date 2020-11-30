@@ -3,7 +3,7 @@ using civ2.Enums;
 
 namespace civ2
 {
-    public class Civilization
+    public class Civilization : BaseInstance
     {
         public int Id { get; set; }
         public int CityStyle { get; set; }
@@ -37,7 +37,7 @@ namespace civ2
             get
             {
                 _population = 0;
-                foreach (City city in Game.Cities.Where(n => n.Owner == Id))
+                foreach (City city in Game.GetCities.Where(n => n.Owner == Id))
                 {
                     _population += city.Population;
                 }

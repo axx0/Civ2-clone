@@ -75,7 +75,7 @@ namespace civ2
         public int[] TerrainFood { get; private set; }
         public int[] TerrainShields { get; private set; }
         public int[] TerrainTrade { get; private set; }
-        public string[] TerrainIrrigate { get; private set; }
+        public bool[] TerrainCanIrrigate { get; private set; }
         public int[] TerrainIrrigateBonus { get; private set; }
         public int[] TerrainIrrigateTurns { get; private set; }
         public int[] TerrainIrrigateAI { get; private set; }
@@ -197,7 +197,7 @@ namespace civ2
                 TerrainFood[row] = Int32.Parse(rulesList[31][row]);
                 TerrainShields[row] = Int32.Parse(rulesList[32][row]);
                 TerrainTrade[row] = Int32.Parse(rulesList[33][row]);
-                TerrainIrrigate[row] = rulesList[34][row];
+                TerrainCanIrrigate[row] = rulesList[34][row] == "yes";
                 TerrainIrrigateBonus[row] = Int32.Parse(rulesList[35][row]);
                 TerrainIrrigateTurns[row] = Int32.Parse(rulesList[36][row]);
                 TerrainIrrigateAI[row] = Int32.Parse(rulesList[37][row]);

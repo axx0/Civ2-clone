@@ -17,7 +17,7 @@ namespace civ2
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
         public int SelectedUnitIndex { get; set; }
-        public int HumanPlayer { get; set; }
+        public int PlayerCivIndex { get; set; }
         public int PlayersMapUsed { get; set; }
         public int PlayersCivilizationNumberUsed { get; set; }
         public bool MapRevealed { get; set; }
