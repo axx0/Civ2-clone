@@ -9,24 +9,27 @@ namespace civ2.Terrains
         SpecialType? SpecType { get; set; }
 
         //From RULES.TXT
-        string Name { get; set; }
-        string SpecName { get; set; }
-        int MoveCost { get; set; }
-        int Defense { get; set; }
-        int Food { get; set; }
-        int Shields { get; set; }
-        int Trade { get; set; }
-        bool CanIrrigate { get; set; }
-        TerrainType? IrrigationResult { get; set; }
-        int IrrigationBonus { get; set; }
-        int TurnsToIrrigate { get; set; }
-        int AIirrigation { get; set; }
-        bool CanMine { get; set; }
-        TerrainType? MiningResult { get; set; }
-        int MiningBonus { get; set; }
-        int TurnsToMine { get; set; }
-        int AImining { get; set; }
-        TerrainType? TransformResult { get; set; }
+        string Name { get; }
+        int MoveCost { get; }
+        int Defense { get; }
+        int Food { get; }
+        int Shields { get; }
+        int Trade { get; }
+        bool CanBeIrrigated { get; }
+        TerrainType IrrigationResult { get; }
+        int IrrigationBonus { get; }
+        int TurnsToIrrigate { get; }
+        GovernmentType MinGovrnLevelAItoPerformIrrigation { get; }
+        bool CanBeMined { get; }
+        TerrainType MiningResult { get; }
+        int MiningBonus { get; }
+        int TurnsToMine { get; }
+        GovernmentType MinGovrnLevelAItoPerformMining { get; }
+        bool CanBeTransformed { get; }
+        TerrainType TransformResult { get; }
+
+        string SpecName { get; }
+
 
         bool Resource { get; set; }
         bool River { get; set; }

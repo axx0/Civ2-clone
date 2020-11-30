@@ -1,15 +1,16 @@
 ﻿using ExtensionMethods;
-using civ2.Enums;
-using civ2.Forms;
-using civ2.Units;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using civ2.Enums;
+using civ2.Forms;
+using civ2.Units;
+using civ2.Terrains;
 
 namespace civ2.Bitmaps
 {
-    public partial class Images
+    public partial class Images : BaseInstance
     {
         public static Bitmap CityWallpaper, PanelOuterWallpaper,
                              Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, 
@@ -43,20 +44,20 @@ namespace civ2.Bitmaps
             ImportWallpapersFromIconsFile();
         }
 
-        public static void CreateLoadGameGraphics()
-        {
-            //Creates bitmaps from current folder
-            //LoadGraphicsAssetsFromFiles();
+        //public static void CreateLoadGameGraphics()
+        //{
+        //    //Creates bitmaps from current folder
+        //    //LoadGraphicsAssetsFromFiles();
 
-            //Create graphic of each map tile
-            for (int col = 0; col < Data.MapXdim; col++)
-                for (int row = 0; row < Data.MapYdim; row++)
-                    Game.TerrainTile[col, row].Graphic = TerrainBitmap(col, row);
+        //    //Create graphic of each map tile
+        //    for (int col = 0; col < Data.MapXdim; col++)
+        //        for (int row = 0; row < Data.MapYdim; row++)
+        //            Game.TerrainTile[col, row].Graphic = TerrainBitmap(col, row);
 
-            //Add cities+units graphics to each tile & create image of maps (what each civ sees + one entire visible)
-            Game.CivsMap = new Bitmap[9];            
-            for (int civ = 0; civ < 9; civ++) CreateWholeMapImage(civ);  //What each civ (index=0...7) sees, additionally (index=8) for entire revealed map
-        }
+        //    //Add cities+units graphics to each tile & create image of maps (what each civ sees + one entire visible)
+        //    Game.CivsMap = new Bitmap[9];            
+        //    for (int civ = 0; civ < 9; civ++) CreateWholeMapImage(civ);  //What each civ (index=0...7) sees, additionally (index=8) for entire revealed map
+        //}
 
         //Create image of civ's world maps
         public static void CreateWholeMapImage(int civ)
@@ -313,40 +314,40 @@ namespace civ2.Bitmaps
             }
         }
 
-        public static Bitmap TerrainBitmap(int col, int row)
+        public static Bitmap DrawTile(ITerrain tile, int col, int row)
         {
-            Bitmap tile = new Bitmap(64, 32); //define a bitmap for drawing in MapForm
+            // Define a bitmap for drawing
+            Bitmap tilePic = new Bitmap(64, 32);
 
-            using (Graphics graphics = Graphics.FromImage(tile))  //Draw tiles
+            // Draw tile
+            using (Graphics graphics = Graphics.FromImage(tilePic))
             {
-                Bitmap maptype;
-                switch (Game.TerrainTile[col, row].Type)
+                switch (tile.Type)
                 {
-                    case TerrainType.Desert: maptype = Desert[0]; break;
-                    case TerrainType.Forest: maptype = ForestBase[0]; break;
-                    case TerrainType.Glacier: maptype = Glacier[0]; break;
-                    case TerrainType.Grassland: maptype = Grassland[0]; break;
-                    case TerrainType.Hills: maptype = HillsBase[0]; break;
-                    case TerrainType.Jungle: maptype = Jungle[0]; break;
-                    case TerrainType.Mountains: maptype = MtnsBase[0]; break;
-                    case TerrainType.Ocean: maptype = Ocean[0]; break;
-                    case TerrainType.Plains: maptype = Plains[0]; break;
-                    case TerrainType.Swamp: maptype = Swamp[0]; break;
-                    case TerrainType.Tundra: maptype = Tundra[0]; break;
+                    case TerrainType.Desert: graphics.DrawImage(Desert[0], 0, 0); break;
+                    case TerrainType.Forest: graphics.DrawImage(ForestBase[0], 0, 0); break;
+                    case TerrainType.Glacier: graphics.DrawImage(Glacier[0], 0, 0); break;
+                    case TerrainType.Grassland: graphics.DrawImage(Grassland[0], 0, 0); break;
+                    case TerrainType.Hills: graphics.DrawImage(HillsBase[0], 0, 0); break;
+                    case TerrainType.Jungle: graphics.DrawImage(Jungle[0], 0, 0); break;
+                    case TerrainType.Mountains: graphics.DrawImage(MtnsBase[0], 0, 0); break;
+                    case TerrainType.Ocean: graphics.DrawImage(Ocean[0], 0, 0); break;
+                    case TerrainType.Plains: graphics.DrawImage(Plains[0], 0, 0); break;
+                    case TerrainType.Swamp: graphics.DrawImage(Swamp[0], 0, 0); break;
+                    case TerrainType.Tundra: graphics.DrawImage(Tundra[0], 0, 0); break;
                     default: throw new ArgumentOutOfRangeException();
                 }
-                graphics.DrawImage(maptype, 0, 0);
 
-                //Dither
-                int col_ = 2 * col + row % 2;   //to civ2-style
-                //First check if you are on map edge. If not, look at type of terrain in all 4 directions.
+                // Dither
+                int col_ = 2 * col + row % 2;   // to civ2-style
+                // First check if you are on map edge. If not, look at type of terrain in all 4 directions.
                 TerrainType[,] tiletype = new TerrainType[2, 2];
-                if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Game.TerrainTile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 2 * Data.MapXdim - 1) && (row != 0)) tiletype[1, 0] = Game.TerrainTile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 0) && (row != Data.MapYdim - 1)) tiletype[0, 1] = Game.TerrainTile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
-                if ((col_ != 2 * Data.MapXdim - 1) && (row != Data.MapYdim - 1)) tiletype[1, 1] = Game.TerrainTile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
-                //implement dither on 4 locations in square
-                for (int tileX = 0; tileX < 2; tileX++)    //for 4 directions
+                if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Map.Tile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
+                if ((col_ != 2 * Map.Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.Tile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
+                if ((col_ != 0) && (row != Map.Ydim - 1)) tiletype[0, 1] = Map.Tile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
+                if ((col_ != 2 * Map.Xdim - 1) && (row != Map.Ydim - 1)) tiletype[1, 1] = Map.Tile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
+                // Implement dither on 4 locations in square
+                for (int tileX = 0; tileX < 2; tileX++)    // for 4 directions
                     for (int tileY = 0; tileY < 2; tileY++)
                         switch (tiletype[tileX, tileY])
                         {
@@ -364,119 +365,119 @@ namespace civ2.Bitmaps
                             default: break;
                         }
 
-                //Draw coast & river mouth
-                if (Game.TerrainTile[col, row].Type == TerrainType.Ocean)
+                // Draw coast & river mouth
+                if (Map.Tile[col, row].Type == TerrainType.Ocean)
                 {
-                    int[] land = IsLandPresent(col, row);   //Determine if land is present in 8 directions
+                    bool[] land = IsLandPresent(col, row);   // Determine if land is present in 8 directions
 
-                    //draw coast & river mouth tiles
-                    //NW+N+NE tiles
-                    if (land[7] == 0 && land[0] == 0 && land[1] == 0) graphics.DrawImage(Coast[0, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 0 && land[1] == 0) graphics.DrawImage(Coast[1, 0], 16, 0);
-                    if (land[7] == 0 && land[0] == 1 && land[1] == 0) graphics.DrawImage(Coast[2, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 1 && land[1] == 0) graphics.DrawImage(Coast[3, 0], 16, 0);
-                    if (land[7] == 0 && land[0] == 0 && land[1] == 1) graphics.DrawImage(Coast[4, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 0 && land[1] == 1) graphics.DrawImage(Coast[5, 0], 16, 0);
-                    if (land[7] == 0 && land[0] == 1 && land[1] == 1) graphics.DrawImage(Coast[6, 0], 16, 0);
-                    if (land[7] == 1 && land[0] == 1 && land[1] == 1) graphics.DrawImage(Coast[7, 0], 16, 0);
-                    //SW+S+SE tiles
-                    if (land[3] == 0 && land[4] == 0 && land[5] == 0) graphics.DrawImage(Coast[0, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 0 && land[5] == 0) graphics.DrawImage(Coast[1, 1], 16, 16);
-                    if (land[3] == 0 && land[4] == 1 && land[5] == 0) graphics.DrawImage(Coast[2, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 1 && land[5] == 0) graphics.DrawImage(Coast[3, 1], 16, 16);
-                    if (land[3] == 0 && land[4] == 0 && land[5] == 1) graphics.DrawImage(Coast[4, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 0 && land[5] == 1) graphics.DrawImage(Coast[5, 1], 16, 16);
-                    if (land[3] == 0 && land[4] == 1 && land[5] == 1) graphics.DrawImage(Coast[6, 1], 16, 16);
-                    if (land[3] == 1 && land[4] == 1 && land[5] == 1) graphics.DrawImage(Coast[7, 1], 16, 16);
-                    //SW+W+NW tiles
-                    if (land[5] == 0 && land[6] == 0 && land[7] == 0) graphics.DrawImage(Coast[0, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 0 && land[7] == 0) graphics.DrawImage(Coast[1, 2], 0, 8);
-                    if (land[5] == 0 && land[6] == 1 && land[7] == 0) graphics.DrawImage(Coast[2, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 1 && land[7] == 0) graphics.DrawImage(Coast[3, 2], 0, 8);
-                    if (land[5] == 0 && land[6] == 0 && land[7] == 1) graphics.DrawImage(Coast[4, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 0 && land[7] == 1) graphics.DrawImage(Coast[5, 2], 0, 8);
-                    if (land[5] == 0 && land[6] == 1 && land[7] == 1) graphics.DrawImage(Coast[6, 2], 0, 8);
-                    if (land[5] == 1 && land[6] == 1 && land[7] == 1) graphics.DrawImage(Coast[7, 2], 0, 8);
-                    //NE+E+SE tiles
-                    if (land[1] == 0 && land[2] == 0 && land[3] == 0) graphics.DrawImage(Coast[0, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 0 && land[3] == 0) graphics.DrawImage(Coast[1, 3], 32, 8);
-                    if (land[1] == 0 && land[2] == 1 && land[3] == 0) graphics.DrawImage(Coast[2, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 1 && land[3] == 0) graphics.DrawImage(Coast[3, 3], 32, 8);
-                    if (land[1] == 0 && land[2] == 0 && land[3] == 1) graphics.DrawImage(Coast[4, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 0 && land[3] == 1) graphics.DrawImage(Coast[5, 3], 32, 8);
-                    if (land[1] == 0 && land[2] == 1 && land[3] == 1) graphics.DrawImage(Coast[6, 3], 32, 8);
-                    if (land[1] == 1 && land[2] == 1 && land[3] == 1) graphics.DrawImage(Coast[7, 3], 32, 8);
+                    // Draw coast & river mouth tiles
+                    // NW+N+NE tiles
+                    if (!land[7] && !land[0] && !land[1]) graphics.DrawImage(Coast[0, 0], 16, 0);
+                    if (land[7] && !land[0] && !land[1]) graphics.DrawImage(Coast[1, 0], 16, 0);
+                    if (!land[7] && land[0] && !land[1]) graphics.DrawImage(Coast[2, 0], 16, 0);
+                    if (land[7] && land[0] && !land[1]) graphics.DrawImage(Coast[3, 0], 16, 0);
+                    if (!land[7] && !land[0] && land[1]) graphics.DrawImage(Coast[4, 0], 16, 0);
+                    if (land[7] && !land[0] && land[1]) graphics.DrawImage(Coast[5, 0], 16, 0);
+                    if (!land[7] && land[0] && land[1]) graphics.DrawImage(Coast[6, 0], 16, 0);
+                    if (land[7] && land[0] && land[1]) graphics.DrawImage(Coast[7, 0], 16, 0);
+                    // SW+S+SE tiles
+                    if (!land[3] && !land[4] && !land[5]) graphics.DrawImage(Coast[0, 1], 16, 16);
+                    if (land[3] && !land[4] && !land[5]) graphics.DrawImage(Coast[1, 1], 16, 16);
+                    if (!land[3] && land[4] && !land[5]) graphics.DrawImage(Coast[2, 1], 16, 16);
+                    if (land[3] && land[4] && !land[5]) graphics.DrawImage(Coast[3, 1], 16, 16);
+                    if (!land[3] && !land[4] && land[5]) graphics.DrawImage(Coast[4, 1], 16, 16);
+                    if (land[3] && !land[4] && land[5]) graphics.DrawImage(Coast[5, 1], 16, 16);
+                    if (!land[3] && land[4] && land[5]) graphics.DrawImage(Coast[6, 1], 16, 16);
+                    if (land[3] && land[4] && land[5]) graphics.DrawImage(Coast[7, 1], 16, 16);
+                    // SW+W+NW tiles
+                    if (!land[5] && !land[6] && !land[7]) graphics.DrawImage(Coast[0, 2], 0, 8);
+                    if (land[5] && !land[6] && !land[7]) graphics.DrawImage(Coast[1, 2], 0, 8);
+                    if (!land[5] && land[6] && !land[7]) graphics.DrawImage(Coast[2, 2], 0, 8);
+                    if (land[5] && land[6] && !land[7]) graphics.DrawImage(Coast[3, 2], 0, 8);
+                    if (!land[5] && !land[6] && land[7]) graphics.DrawImage(Coast[4, 2], 0, 8);
+                    if (land[5] && !land[6] && land[7]) graphics.DrawImage(Coast[5, 2], 0, 8);
+                    if (!land[5] && land[6] && land[7]) graphics.DrawImage(Coast[6, 2], 0, 8);
+                    if (land[5] && land[6] && land[7]) graphics.DrawImage(Coast[7, 2], 0, 8);
+                    // NE+E+SE tiles
+                    if (!land[1] && !land[2] && !land[3]) graphics.DrawImage(Coast[0, 3], 32, 8);
+                    if (land[1] && !land[2] && !land[3]) graphics.DrawImage(Coast[1, 3], 32, 8);
+                    if (!land[1] && land[2] && !land[3]) graphics.DrawImage(Coast[2, 3], 32, 8);
+                    if (land[1] && land[2] && !land[3]) graphics.DrawImage(Coast[3, 3], 32, 8);
+                    if (!land[1] && !land[2] && land[3]) graphics.DrawImage(Coast[4, 3], 32, 8);
+                    if (land[1] && !land[2] && land[3]) graphics.DrawImage(Coast[5, 3], 32, 8);
+                    if (!land[1] && land[2] && land[3]) graphics.DrawImage(Coast[6, 3], 32, 8);
+                    if (land[1] && land[2] && land[3]) graphics.DrawImage(Coast[7, 3], 32, 8);
 
-                    //River mouth
-                    //if next to ocean is river, draw river mouth on this tile                            
-                    col_ = 2 * col + row % 2; //rewrite indexes in Civ2-style
-                    int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-                    int Ydim = Data.MapYdim;   //no need for such correction for Y
-                    if (col_ + 1 < Xdim && row - 1 >= 0)    //NE there is no edge of map
+                    // River mouth
+                    // If river is next to ocean, draw river mouth on this tile.
+                    col_ = 2 * col + row % 2; // rewrite indexes in Civ2-style
+                    int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
+                    int Ydim = Map.Ydim;        // no need for such correction for Y
+                    if (col_ + 1 < Xdim && row - 1 >= 0)    // NE there is no edge of map
                     {
-                        if (land[1] == 1 && Game.TerrainTile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[0], 0, 0);
+                        if (land[1] && Map.Tile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[0], 0, 0);
                     }
-                    if (col_ + 1 < Xdim && row + 1 < Ydim)    //SE there is no edge of map
+                    if (col_ + 1 < Xdim && row + 1 < Ydim)    // SE there is no edge of map
                     {
-                        if (land[3] == 1 && Game.TerrainTile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[1], 0, 0);
+                        if (land[3] && Map.Tile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[1], 0, 0);
                     }
-                    if (col_ - 1 >= 0 && row + 1 < Ydim)    //SW there is no edge of map
+                    if (col_ - 1 >= 0 && row + 1 < Ydim)    // SW there is no edge of map
                     {
-                        if (land[5] == 1 && Game.TerrainTile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[2], 0, 0);
+                        if (land[5] && Map.Tile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].River) graphics.DrawImage(RiverMouth[2], 0, 0);
                     }
-                    if (col_ - 1 >= 0 && row - 1 >= 0)    //NW there is no edge of map
+                    if (col_ - 1 >= 0 && row - 1 >= 0)    // NW there is no edge of map
                     {
-                        if (land[7] == 1 && Game.TerrainTile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[3], 0, 0);
+                        if (land[7] && Map.Tile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].River) graphics.DrawImage(RiverMouth[3], 0, 0);
                     }
                 }
 
-                //Draw forests
-                if (Game.TerrainTile[col, row].Type == TerrainType.Forest)
+                // Draw forests
+                if (Map.Tile[col, row].Type == TerrainType.Forest)
                 {
-                    int[] forestAround = IsForestAround(col, row);
+                    bool[] forestAround = IsForestAround(col, row);
 
-                    //draw forest tiles
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Forest[0], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Forest[1], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Forest[2], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Forest[3], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Forest[4], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Forest[5], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Forest[6], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Forest[7], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Forest[8], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Forest[9], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Forest[10], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Forest[11], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Forest[12], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Forest[13], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Forest[14], 0, 0);
-                    if (Enumerable.SequenceEqual(forestAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Forest[15], 0, 0);
+                    // Draw forest tiles
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Forest[0], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, false, false, false })) graphics.DrawImage(Forest[1], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, true, false, false })) graphics.DrawImage(Forest[2], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, true, false, false })) graphics.DrawImage(Forest[3], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, false, true, false })) graphics.DrawImage(Forest[4], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, false, true, false })) graphics.DrawImage(Forest[5], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, true, true, false })) graphics.DrawImage(Forest[6], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, true, true, false })) graphics.DrawImage(Forest[7], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, false, false, true })) graphics.DrawImage(Forest[8], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, false, false, true })) graphics.DrawImage(Forest[9], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, true, false, true })) graphics.DrawImage(Forest[10], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, true, false, true })) graphics.DrawImage(Forest[11], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, false, true, true })) graphics.DrawImage(Forest[12], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, false, true, true })) graphics.DrawImage(Forest[13], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { false, true, true, true })) graphics.DrawImage(Forest[14], 0, 0);
+                    if (Enumerable.SequenceEqual(forestAround, new bool[4] { true, true, true, true })) graphics.DrawImage(Forest[15], 0, 0);
                 }
 
-                //Draw mountains
-                //CORRECT THIS: IF SHIELD IS AT MOUNTAIN IT SHOULD BE Mountains[2] and Mountains[3] !!!
-                if (Game.TerrainTile[col, row].Type == TerrainType.Mountains)
+                // Draw mountains
+                // TODO: correct drawing mountains - IF SHIELD IS AT MOUNTAIN IT SHOULD BE Mountains[2] and Mountains[3] !!!
+                if (Map.Tile[col, row].Type == TerrainType.Mountains)
                 {
-                    int[] mountAround = IsMountAround(col, row);
+                    bool[] mountAround = IsMountAround(col, row);
 
-                    //draw forest tiles
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Mountains[0], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Mountains[1], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Mountains[2], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 0, 0 })) graphics.DrawImage(Mountains[3], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 1, 0 })) graphics.DrawImage(Mountains[4], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 1, 0 })) graphics.DrawImage(Mountains[5], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 1, 0 })) graphics.DrawImage(Mountains[6], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 1, 0 })) graphics.DrawImage(Mountains[7], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 0, 1 })) graphics.DrawImage(Mountains[8], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 0, 1 })) graphics.DrawImage(Mountains[9], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 0, 1 })) graphics.DrawImage(Mountains[10], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 0, 1 })) graphics.DrawImage(Mountains[11], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 0, 1, 1 })) graphics.DrawImage(Mountains[12], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 0, 1, 1 })) graphics.DrawImage(Mountains[13], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 0, 1, 1, 1 })) graphics.DrawImage(Mountains[14], 0, 0);
-                    if (Enumerable.SequenceEqual(mountAround, new int[4] { 1, 1, 1, 1 })) graphics.DrawImage(Mountains[15], 0, 0);
+                    // Draw mountain tiles
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Mountains[0], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, false, false, false })) graphics.DrawImage(Mountains[1], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, true, false, false })) graphics.DrawImage(Mountains[2], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, true, false, false })) graphics.DrawImage(Mountains[3], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, false, true, false })) graphics.DrawImage(Mountains[4], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, false, true, false })) graphics.DrawImage(Mountains[5], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, true, true, false })) graphics.DrawImage(Mountains[6], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, true, true, false })) graphics.DrawImage(Mountains[7], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, false, false, true })) graphics.DrawImage(Mountains[8], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, false, false, true })) graphics.DrawImage(Mountains[9], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, true, false, true })) graphics.DrawImage(Mountains[10], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, true, false, true })) graphics.DrawImage(Mountains[11], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, false, true, true })) graphics.DrawImage(Mountains[12], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, false, true, true })) graphics.DrawImage(Mountains[13], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { false, true, true, true })) graphics.DrawImage(Mountains[14], 0, 0);
+                    if (Enumerable.SequenceEqual(mountAround, new bool[4] { true, true, true, true })) graphics.DrawImage(Mountains[15], 0, 0);
                 }
 
                 //Draw hills
@@ -484,7 +485,7 @@ namespace civ2.Bitmaps
                 {
                     int[] hillAround = IsHillAround(col, row);
 
-                    //draw forest tiles
+                    // Draw hill tiles
                     if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 0, 0, 0 })) graphics.DrawImage(Hills[0], 0, 0);
                     if (Enumerable.SequenceEqual(hillAround, new int[4] { 1, 0, 0, 0 })) graphics.DrawImage(Hills[1], 0, 0);
                     if (Enumerable.SequenceEqual(hillAround, new int[4] { 0, 1, 0, 0 })) graphics.DrawImage(Hills[2], 0, 0);
@@ -616,92 +617,95 @@ namespace civ2.Bitmaps
             return tile;
         }
 
-        private static int[] IsLandPresent(int i, int j)
+        private static bool[] IsLandPresent(int i, int j)
         {
-            int[] land = new int[8] { 0, 0, 0, 0, 0, 0, 0, 0 }; //in start we presume all surrounding tiles are water (land=1, water=0). Starting 0 is North, follows in clockwise direction.
+            // In start we presume all surrounding tiles are water (land=true, water=false). Index=0 is North, follows in clockwise direction.
+            bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
 
-            //rewrite indexes in Civ2-style
+            // Rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.Ydim;        // no need for such correction for Y
 
-            //observe in all directions if land is present next to ocean
-            //N:
-            if (j - 2 < 0) land[0] = 1;   //if N tile is out of map (black tile), we presume it is land
-            else if (Game.TerrainTile[(i_ - (j - 2) % 2) / 2, j - 2].Type != TerrainType.Ocean) land[0] = 1;
-            //NE:
-            if (i_ + 1 >= Xdim || j - 1 < 0) land[1] = 1;  //NE is black tile
-            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[1] = 1;    //if it is not ocean, it is land
-            //E:
-            if (i_ + 2 >= Xdim) land[2] = 1;  //E is black tile
-            else if (Game.TerrainTile[((i_ + 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[2] = 1;
-            //SE:
-            if (i_ + 1 >= Xdim || j + 1 >= Ydim) land[3] = 1;  //SE is black tile
-            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[3] = 1;
-            //S:
-            if (j + 2 >= Ydim) land[4] = 1;   //S is black tile
-            else if (Game.TerrainTile[(i_ - (j + 2) % 2) / 2, j + 2].Type != TerrainType.Ocean) land[4] = 1;
-            //SW:
-            if (i_ - 1 < 0 || j + 1 >= Ydim) land[5] = 1;  //SW is black tile
-            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[5] = 1;
-            //W:
-            if (i_ - 2 < 0) land[6] = 1;  //W is black tile
-            else if (Game.TerrainTile[((i_ - 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[6] = 1;
-            //NW:
-            if (i_ - 1 < 0 || j - 1 < 0) land[7] = 1;  //NW is black tile
-            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[7] = 1;
+            // Observe in all directions if land is present next to ocean
+            // N:
+            if (j - 2 < 0) land[0] = true;   // if N tile is out of map (black tile), we presume it is land
+            else if (Map.Tile[(i_ - (j - 2) % 2) / 2, j - 2].Type != TerrainType.Ocean) land[0] = true;
+            // NE:
+            if (i_ + 1 >= Xdim || j - 1 < 0) land[1] = true;  // NE is black tile
+            else if (Map.Tile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[1] = true;    // if it is not ocean, it is land
+            // E:
+            if (i_ + 2 >= Xdim) land[2] = true;  // E is black tile
+            else if (Map.Tile[((i_ + 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[2] = true;
+            // SE:
+            if (i_ + 1 >= Xdim || j + 1 >= Ydim) land[3] = true;  // SE is black tile
+            else if (Map.Tile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[3] = true;
+            // S:
+            if (j + 2 >= Ydim) land[4] = true;   // S is black tile
+            else if (Map.Tile[(i_ - (j + 2) % 2) / 2, j + 2].Type != TerrainType.Ocean) land[4] = true;
+            // SW:
+            if (i_ - 1 < 0 || j + 1 >= Ydim) land[5] = true;  // SW is black tile
+            else if (Map.Tile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type != TerrainType.Ocean) land[5] = true;
+            // W:
+            if (i_ - 2 < 0) land[6] = true;  // W is black tile
+            else if (Map.Tile[((i_ - 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[6] = true;
+            // NW:
+            if (i_ - 1 < 0 || j - 1 < 0) land[7] = true;  // NW is black tile
+            else if (Map.Tile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[7] = true;
 
             return land;
         }
 
-        private static int[] IsForestAround(int i, int j)
+        private static bool[] IsForestAround(int i, int j)
         {
-            int[] forestAround = new int[4] { 0, 0, 0, 0 }; //in start we presume all surrounding tiles are not forest (forest=1, no forest=0). Starting 0 is NE, follows in clockwise direction.
+            // In start we presume all surrounding tiles are not forest (forest=true, no forest=false). Index=0 is NE, follows in clockwise direction.
+            bool[] forestAround = new bool[4] { false, false, false, false };
 
-            //rewrite indexes in Civ2-style
+            // Rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.Ydim;        // no need for such correction for Y
 
-            //observe in all directions if forest is present
-            //NE:
-            if (i_ + 1 >= Xdim || j - 1 < 0) forestAround[0] = 0;  //NE is black tile (we presume no forest is there)
-            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[0] = 1;
-            //SE:
-            if (i_ + 1 >= Xdim || j + 1 >= Ydim) forestAround[1] = 0;  //SE is black tile
-            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[1] = 1;
-            //SW:
-            if (i_ - 1 < 0 || j + 1 >= Ydim) forestAround[2] = 0;  //SW is black tile
-            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[2] = 1;
-            //NW:
-            if (i_ - 1 < 0 || j - 1 < 0) forestAround[3] = 0;  //NW is black tile
-            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[3] = 1;
+            // Observe in all directions if forest is present
+            // NE:
+            if (i_ + 1 >= Xdim || j - 1 < 0) forestAround[0] = false;  // NE is black tile (we presume no forest is there)
+            else if (Map.Tile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[0] = true;
+            // SE:
+            if (i_ + 1 >= Xdim || j + 1 >= Ydim) forestAround[1] = false;  // SE is black tile
+            else if (Map.Tile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[1] = true;
+            // SW:
+            if (i_ - 1 < 0 || j + 1 >= Ydim) forestAround[2] = false;  // SW is black tile
+            else if (Map.Tile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Forest) forestAround[2] = true;
+            // NW:
+            if (i_ - 1 < 0 || j - 1 < 0) forestAround[3] = false;  // NW is black tile
+            else if (Map.Tile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Forest) forestAround[3] = true;
 
             return forestAround;
         }
 
-        private static int[] IsMountAround(int i, int j)
+        private static bool[] IsMountAround(int i, int j)
         {
-            int[] mountAround = new int[4] { 0, 0, 0, 0 }; //in start we presume all surrounding tiles are not mountains (mount=1, no mount=0). Starting 0 is NE, follows in clockwise direction.
+            // In start we presume all surrounding tiles are not mountains (mount=true, no mount=false). Index=0 is NE, follows in clockwise direction.
+            bool[] mountAround = new bool[4] { false, false, false, false };
 
-            //rewrite indexes in Civ2-style
+            // Rewrite indexes in Civ2-style
             int i_ = 2 * i + j % 2;
-            int Xdim = 2 * Data.MapXdim;   //X=50 in markted as X=100 in Civ2
-            int Ydim = Data.MapYdim;   //no need for such correction for Y
+            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.Ydim;        // no need for such correction for Y
 
-            //observe in all directions if mountain is present
-            //NE:
-            if (i_ + 1 >= Xdim || j - 1 < 0) mountAround[0] = 0;  //NE is black tile (we presume no mountain is there)
-            else if (Game.TerrainTile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[0] = 1;
-            //SE:
-            if (i_ + 1 >= Xdim || j + 1 >= Ydim) mountAround[1] = 0;  //SE is black tile
-            else if (Game.TerrainTile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[1] = 1;
-            //SW:
-            if (i_ - 1 < 0 || j + 1 >= Ydim) mountAround[2] = 0;  //SW is black tile
-            else if (Game.TerrainTile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[2] = 1;
-            //NW:
-            if (i_ - 1 < 0 || j - 1 < 0) mountAround[3] = 0;  //NW is black tile
-            else if (Game.TerrainTile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[3] = 1;
+            // Observe in all directions if mountain is present
+            // NE:
+            if (i_ + 1 >= Xdim || j - 1 < 0) mountAround[0] = false;  // NE is black tile (we presume no mountain is there)
+            else if (Map.Tile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[0] = true;
+            // SE:
+            if (i_ + 1 >= Xdim || j + 1 >= Ydim) mountAround[1] = false;  // SE is black tile
+            else if (Map.Tile[((i_ + 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[1] = true;
+            // SW:
+            if (i_ - 1 < 0 || j + 1 >= Ydim) mountAround[2] = false;  // SW is black tile
+            else if (Map.Tile[((i_ - 1) - (j + 1) % 2) / 2, j + 1].Type == TerrainType.Mountains) mountAround[2] = true;
+            // NW:
+            if (i_ - 1 < 0 || j - 1 < 0) mountAround[3] = false;  // NW is black tile
+            else if (Map.Tile[((i_ - 1) - (j - 1) % 2) / 2, j - 1].Type == TerrainType.Mountains) mountAround[3] = true;
 
             return mountAround;
         }

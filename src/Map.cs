@@ -1,4 +1,5 @@
 ﻿using civ2.Terrains;
+using civ2.Bitmaps;
 
 namespace civ2
 {
@@ -42,6 +43,15 @@ namespace civ2
                     Tile[col, row].Island = data.MapIslandNo[col, row];
                     Tile[col, row].SpecType = data.MapSpecialType[col, row];
                     Tile[col, row].Visibility = data.MapVisibilityCivs[col, row];
+                }
+            }
+
+            // Make graphics for all tiles
+            for (int col = 0; col < Xdim; col++)
+            {
+                for (int row = 0; row < Ydim; row++)
+                {
+                    Tile[col, row].Graphic = Images.DrawTile(Tile[col, row], col, row);
                 }
             }
         }

@@ -226,7 +226,7 @@ namespace civ2
 
                 TerrainSpec2Name[row] = rulesList[50][row];
                 TerrainSpec2Movecost[row] = Int32.Parse(rulesList[51][row]);
-                TerrainSpec2Defense[row] = Int32.Parse(rulesList[52[row]);
+                TerrainSpec2Defense[row] = Int32.Parse(rulesList[52][row]);
                 TerrainSpec2Food[row] = Int32.Parse(rulesList[53][row]);
                 TerrainSpec2Shields[row] = Int32.Parse(rulesList[54][row]);
                 TerrainSpec2Trade[row] = Int32.Parse(rulesList[55][row]);

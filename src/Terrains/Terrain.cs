@@ -78,7 +78,7 @@ namespace civ2.Terrains
         }
 
         // TODO: put special resources logic into here
-        public string SpecName => Game.Rules.TerrainSpecName[(int)SpecType];
+        public string SpecName => Game.Rules.TerrainSpec1Name[(int)SpecType];
 
 
 
@@ -102,78 +102,6 @@ namespace civ2.Terrains
         public bool[] Visibility { get; set; }
                         
         public string Hexvalue { get; set; }
-
-        //Making a new terrain according to RULES.TXT
-        public Terrain(TerrainType type, SpecialType? stype)
-        {
-            //Regular terrain
-            Name = Rules.TechName[(int)(type)];
-            MoveCost = Rules.TerrainMovecost[(int)(type)];
-            Defense = Rules.TerrainDefense[(int)(type)];
-            Food = Rules.TerrainFood[(int)(type)];
-            Shields = Rules.TerrainShields[(int)(type)];
-            Trade = Rules.TerrainTrade[(int)(type)];
-            if (Rules.TerrainIrrigate[(int)(type)] == "yes")
-            {
-                CanIrrigate = true;
-                IrrigationResult = null;
-            }
-            else if (Rules.TerrainIrrigate[(int)(type)] == "no")
-            {
-                CanIrrigate = false;
-                IrrigationResult = null;
-            }
-            else
-            {
-                CanIrrigate = true;
-                //IrrigationResult = Rules.TerrainIrrigate[(int)(type)]; TO-DO
-            }
-            IrrigationBonus = Rules.TerrainIrrigateBonus[(int)(type)];
-            TurnsToIrrigate = Rules.TerrainIrrigateTurns[(int)(type)];
-            AIirrigation = Rules.TerrainIrrigateAI[(int)(type)];
-            if (Rules.TerrainMine[(int)(type)] == "yes")
-            {
-                CanMine = true;
-                MiningResult = null;
-            }
-            else if (Rules.TerrainMine[(int)(type)] == "no")
-            {
-                CanMine = false;
-                MiningResult = null;
-            }
-            else
-            {
-                CanMine = true;
-                //MiningResult = Rules.TerrainMine[(int)(type)]; TO-DO
-            }
-            MiningBonus = Rules.TerrainMineBonus[(int)(type)];
-            TurnsToMine = Rules.TerrainMineTurns[(int)(type)];
-            AImining = Rules.TerrainMineAI[(int)(type)];
-            if (Rules.TerrainTransform[(int)(type)] == "no")
-            {
-                TransformResult = null;
-            }
-            else
-            {
-                //TransformResult = Rules.TerrainTransform[(int)(type)]; TO-DO
-            }
-
-            //Special terrain
-            if (stype == null)
-            {
-                SpecName = "";
-            }
-            else
-            {
-                SpecName = Rules.TerrainSpecName[(int)(stype)];
-                //Overwrite
-                MoveCost = Rules.TerrainSpecMovecost[(int)(stype)];
-                Defense = Rules.TerrainSpecDefense[(int)(stype)];
-                Food = Rules.TerrainSpecFood[(int)(stype)];
-                Shields = Rules.TerrainSpecShields[(int)(stype)];
-                Trade = Rules.TerrainSpecTrade[(int)(stype)];
-            }
-        }
 
         public Bitmap Graphic { get; set; }
     }
