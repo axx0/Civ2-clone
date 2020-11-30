@@ -202,7 +202,7 @@ namespace civ2
                     string[] terrainIrrigateBonus = new string[11];
                     string[] terrainIrrigateTurns = new string[11];
                     string[] terrainIrrigateAI = new string[11];
-                    string[] terrainMine = new string[11];
+                    string[] terrainCanMine = new string[11];
                     string[] terrainMineBonus = new string[11];
                     string[] terrainMineTurns = new string[11];
                     string[] terrainMineAI = new string[11];
@@ -223,7 +223,7 @@ namespace civ2
                         terrainIrrigateBonus[row] = text[7].Trim();
                         terrainIrrigateTurns[row] = text[8].Trim();
                         terrainIrrigateAI[row] = text[9].Trim();
-                        terrainMine[row] = text[10].Trim();
+                        terrainCanMine[row] = text[10].Trim();
                         terrainMineBonus[row] = text[11].Trim();
                         terrainMineTurns[row] = text[12].Trim();
                         terrainMineAI[row] = text[13].Trim();
@@ -240,37 +240,62 @@ namespace civ2
                     data.Rules.Add(terrainIrrigateBonus);
                     data.Rules.Add(terrainIrrigateTurns);
                     data.Rules.Add(terrainIrrigateAI);
-                    data.Rules.Add(terrainMine);
+                    data.Rules.Add(terrainCanMine);
                     data.Rules.Add(terrainMineBonus);
                     data.Rules.Add(terrainMineTurns);
                     data.Rules.Add(terrainMineAI);
                     data.Rules.Add(terrainTransform);
                     data.Rules.Add(terrainShortName);
 
-                    // Next read special terrain
-                    string[] terrainSpecName = new string[22];
-                    string[] terrainSpecMovecost = new string[22];
-                    string[] terrainSpecDefense = new string[22];
-                    string[] terrainSpecFood = new string[22];
-                    string[] terrainSpecShields = new string[22];
-                    string[] terrainSpecTrade = new string[22];
-                    for (int row = 0; row < 22; row++)
+                    // Next read special terrain 1
+                    string[] terrainSpec1Name = new string[11];
+                    string[] terrainSpec1Movecost = new string[11];
+                    string[] terrainSpec1Defense = new string[11];
+                    string[] terrainSpec1Food = new string[11];
+                    string[] terrainSpec1Shields = new string[11];
+                    string[] terrainSpec1Trade = new string[11];
+                    for (int row = 0; row < 11; row++)
                     {
                         line = file.ReadLine();
                         text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
-                        terrainSpecName[row] = text[0];
-                        terrainSpecMovecost[row] = text[1].Trim();
-                        terrainSpecDefense[row] = text[2].Trim();
-                        terrainSpecFood[row] = text[3].Trim();
-                        terrainSpecShields[row] = text[4].Trim();
-                        terrainSpecTrade[row] = text[5].Trim();
+                        terrainSpec1Name[row] = text[0];
+                        terrainSpec1Movecost[row] = text[1].Trim();
+                        terrainSpec1Defense[row] = text[2].Trim();
+                        terrainSpec1Food[row] = text[3].Trim();
+                        terrainSpec1Shields[row] = text[4].Trim();
+                        terrainSpec1Trade[row] = text[5].Trim();
                     }
-                    data.Rules.Add(terrainSpecName);
-                    data.Rules.Add(terrainSpecMovecost);
-                    data.Rules.Add(terrainSpecDefense);
-                    data.Rules.Add(terrainSpecFood);
-                    data.Rules.Add(terrainSpecShields);
-                    data.Rules.Add(terrainSpecTrade);
+                    data.Rules.Add(terrainSpec1Name);
+                    data.Rules.Add(terrainSpec1Movecost);
+                    data.Rules.Add(terrainSpec1Defense);
+                    data.Rules.Add(terrainSpec1Food);
+                    data.Rules.Add(terrainSpec1Shields);
+                    data.Rules.Add(terrainSpec1Trade);
+
+                    // Next read special terrain 2
+                    string[] terrainSpec2Name = new string[11];
+                    string[] terrainSpec2Movecost = new string[11];
+                    string[] terrainSpec2Defense = new string[11];
+                    string[] terrainSpec2Food = new string[11];
+                    string[] terrainSpec2Shields = new string[11];
+                    string[] terrainSpec2Trade = new string[11];
+                    for (int row = 0; row < 11; row++)
+                    {
+                        line = file.ReadLine();
+                        text = line.Split(new char[] { ',', ';' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                        terrainSpec2Name[row] = text[0];
+                        terrainSpec2Movecost[row] = text[1].Trim();
+                        terrainSpec2Defense[row] = text[2].Trim();
+                        terrainSpec2Food[row] = text[3].Trim();
+                        terrainSpec2Shields[row] = text[4].Trim();
+                        terrainSpec2Trade[row] = text[5].Trim();
+                    }
+                    data.Rules.Add(terrainSpec2Name);
+                    data.Rules.Add(terrainSpec2Movecost);
+                    data.Rules.Add(terrainSpec2Defense);
+                    data.Rules.Add(terrainSpec2Food);
+                    data.Rules.Add(terrainSpec2Shields);
+                    data.Rules.Add(terrainSpec2Trade);
                 }
 
                 // Read GOVERNMENTS
@@ -782,9 +807,6 @@ namespace civ2
 
                 // SAV file doesn't tell where special resources are, so you have to set this yourself
                 data.MapSpecialType[x, y] = ReturnSpecial(x, y, data.MapTerrainType[x, y], data.MapXdim, data.MapYdim);
-
-                //CreateTerrain(x, y, type, specialtype, resource, river, terrain_island, unit_present, city_present, irrigation, mining, road, railroad, fortress, pollution, farmland, airbase, visibility, bin);
-
             }
             // block 3 - locator map
             int ofsetB3 = ofsetB2 + 6 * data.MapArea; //offset for block 2 values

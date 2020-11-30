@@ -75,11 +75,11 @@ namespace civ2
         public int[] TerrainFood { get; private set; }
         public int[] TerrainShields { get; private set; }
         public int[] TerrainTrade { get; private set; }
-        public bool[] TerrainCanIrrigate { get; private set; }
+        public string[] TerrainCanIrrigate { get; private set; }
         public int[] TerrainIrrigateBonus { get; private set; }
         public int[] TerrainIrrigateTurns { get; private set; }
         public int[] TerrainIrrigateAI { get; private set; }
-        public string[] TerrainMine { get; private set; }
+        public string[] TerrainCanMine { get; private set; }
         public int[] TerrainMineBonus { get; private set; }
         public int[] TerrainMineTurns { get; private set; }
         public int[] TerrainMineAI { get; private set; }
@@ -87,12 +87,18 @@ namespace civ2
         public string[] TerrainShortName { get; private set; }
 
         // Special terrain
-        public string[] TerrainSpecName { get; private set; }
-        public int[] TerrainSpecMovecost { get; private set; }
-        public int[] TerrainSpecDefense { get; private set; }
-        public int[] TerrainSpecFood { get; private set; }
-        public int[] TerrainSpecShields { get; private set; }
-        public int[] TerrainSpecTrade { get; private set; }
+        public string[] TerrainSpec1Name { get; private set; }
+        public string[] TerrainSpec2Name { get; private set; }
+        public int[] TerrainSpec1Movecost { get; private set; }
+        public int[] TerrainSpec2Movecost { get; private set; }
+        public int[] TerrainSpec1Defense { get; private set; }
+        public int[] TerrainSpec2Defense { get; private set; }
+        public int[] TerrainSpec1Food { get; private set; }
+        public int[] TerrainSpec2Food { get; private set; }
+        public int[] TerrainSpec1Shields { get; private set; }
+        public int[] TerrainSpec2Shields { get; private set; }
+        public int[] TerrainSpec1Trade { get; private set; }
+        public int[] TerrainSpec2Trade { get; private set; }
 
         // Governments
         public string[] GovernmentName { get; private set; }
@@ -197,11 +203,11 @@ namespace civ2
                 TerrainFood[row] = Int32.Parse(rulesList[31][row]);
                 TerrainShields[row] = Int32.Parse(rulesList[32][row]);
                 TerrainTrade[row] = Int32.Parse(rulesList[33][row]);
-                TerrainCanIrrigate[row] = rulesList[34][row] == "yes";
+                TerrainCanIrrigate[row] = rulesList[34][row];
                 TerrainIrrigateBonus[row] = Int32.Parse(rulesList[35][row]);
                 TerrainIrrigateTurns[row] = Int32.Parse(rulesList[36][row]);
                 TerrainIrrigateAI[row] = Int32.Parse(rulesList[37][row]);
-                TerrainMine[row] = rulesList[38][row];
+                TerrainCanMine[row] = rulesList[38][row];
                 TerrainMineBonus[row] = Int32.Parse(rulesList[39][row]);
                 TerrainMineTurns[row] = Int32.Parse(rulesList[40][row]);
                 TerrainMineAI[row] = Int32.Parse(rulesList[41][row]);
@@ -209,56 +215,63 @@ namespace civ2
                 TerrainShortName[row] = rulesList[43][row];
             }
 
-            for (int row = 0; row < 22; row++)
+            for (int row = 0; row < 11; row++)
             {
-                TerrainSpecName[row] = rulesList[44][row];
-                TerrainSpecMovecost[row] = Int32.Parse(rulesList[45][row]);
-                TerrainSpecDefense[row] = Int32.Parse(rulesList[46][row]);
-                TerrainSpecFood[row] = Int32.Parse(rulesList[47][row]);
-                TerrainSpecShields[row] = Int32.Parse(rulesList[48][row]);
-                TerrainSpecTrade[row] = Int32.Parse(rulesList[49][row]);
+                TerrainSpec1Name[row] = rulesList[44][row];
+                TerrainSpec1Movecost[row] = Int32.Parse(rulesList[45][row]);
+                TerrainSpec1Defense[row] = Int32.Parse(rulesList[46][row]);
+                TerrainSpec1Food[row] = Int32.Parse(rulesList[47][row]);
+                TerrainSpec1Shields[row] = Int32.Parse(rulesList[48][row]);
+                TerrainSpec1Trade[row] = Int32.Parse(rulesList[49][row]);
+
+                TerrainSpec2Name[row] = rulesList[50][row];
+                TerrainSpec2Movecost[row] = Int32.Parse(rulesList[51][row]);
+                TerrainSpec2Defense[row] = Int32.Parse(rulesList[52[row]);
+                TerrainSpec2Food[row] = Int32.Parse(rulesList[53][row]);
+                TerrainSpec2Shields[row] = Int32.Parse(rulesList[54][row]);
+                TerrainSpec2Trade[row] = Int32.Parse(rulesList[55][row]);
             }
 
             for (int row = 0; row < 7; row++)
             {
-                GovernmentName[row] = rulesList[50][row];
-                GovernmentTitleHIS[row] = rulesList[51][row];
-                GovernmentTitleHER[row] = rulesList[52][row];
+                GovernmentName[row] = rulesList[56][row];
+                GovernmentTitleHIS[row] = rulesList[57][row];
+                GovernmentTitleHER[row] = rulesList[58][row];
             }
 
             for (int row = 0; row < 21; row++)
             {
-                LeaderNameHIS[row] = rulesList[53][row];
-                LeaderNameHER[row] = rulesList[54][row];
-                LeaderFemale[row] = Int32.Parse(rulesList[55][row]);
-                LeaderColor[row] = Int32.Parse(rulesList[56][row]);
-                LeaderCityStyle[row] = Int32.Parse(rulesList[57][row]);
-                LeaderPlural[row] = rulesList[58][row];
-                LeaderAdjective[row] = rulesList[59][row];
-                LeaderAttack[row] = Int32.Parse(rulesList[60][row]);
-                LeaderExpand[row] = Int32.Parse(rulesList[61][row]);
-                LeaderCivilize[row] = Int32.Parse(rulesList[62][row]);
+                LeaderNameHIS[row] = rulesList[59][row];
+                LeaderNameHER[row] = rulesList[60][row];
+                LeaderFemale[row] = Int32.Parse(rulesList[61][row]);
+                LeaderColor[row] = Int32.Parse(rulesList[62][row]);
+                LeaderCityStyle[row] = Int32.Parse(rulesList[63][row]);
+                LeaderPlural[row] = rulesList[64][row];
+                LeaderAdjective[row] = rulesList[65][row];
+                LeaderAttack[row] = Int32.Parse(rulesList[66][row]);
+                LeaderExpand[row] = Int32.Parse(rulesList[67][row]);
+                LeaderCivilize[row] = Int32.Parse(rulesList[68][row]);
             }
 
             for (int row = 0; row < 16; row++)
             {
-                CaravanCommoditie[row] = rulesList[63][row];
+                CaravanCommoditie[row] = rulesList[69][row];
             }
 
             for (int row = 0; row < 11; row++)
             {
-                OrderName[row] = rulesList[64][row];
-                OrderShortcut[row] = rulesList[65][row];
+                OrderName[row] = rulesList[70][row];
+                OrderShortcut[row] = rulesList[71][row];
             }
 
             for (int row = 0; row < 6; row++)
             {
-                Difficulty[row] = rulesList[66][row];
+                Difficulty[row] = rulesList[72][row];
             }
 
             for (int row = 0; row < 9; row++)
             {
-                Attitude[row] = rulesList[67][row];
+                Attitude[row] = rulesList[73][row];
             }
         }
 
