@@ -7,18 +7,33 @@ namespace civ2.Units
     {
         //From RULES.TXT
         string Name { get; }
-        TechType UntilTech { get; }
-        int MaxMovePoints { get; }
-        int Range { get; }
-        int Attack { get; }
-        int Defense { get; }
-        int MaxHitPoints { get; }
+        AdvanceType UntilTech { get; }
+        UnitGAS Domain { get; }
+        int MovementRate { get; }
+        int FuelRange { get; }
+        int AttackFactor { get; }
+        int DefenseFactor { get; }
+        int MaxHitpoints { get; }
         int Firepower { get; }
         int Cost { get; }
         int ShipHold { get; }
-        int AIrole { get; }
-        TechType PrereqTech { get; }
-        string Flags { get; }
+        AIroleType AIrole { get; }
+        AdvanceType PrereqAdvance { get; }
+        bool TwoSpaceVisibility { get; }
+        bool IgnoreZonesOfControl { get; }
+        bool CanMakeAmphibiousAssaults { get; }
+        bool SubmarineAdvantagesDisadvantages { get; }
+        bool CanAttackAirUnits { get; }
+        bool ShipMustStayNearLand { get; }
+        bool NegatesCityWalls { get; }
+        bool CanCarryAirUnits { get; }
+        bool CanMakeParadrops { get; }
+        bool Alpine { get; }
+        bool X2onDefenseVersusHorse { get; }
+        bool FreeSupportForFundamentalism { get; }
+        bool DestroyedAfterAttacking { get; }
+        bool X2onDefenseVersusAir { get; }
+        bool UnitCanSpotSubmarines { get; }
 
         int Id { get; set; }
         int MovePoints { get; }

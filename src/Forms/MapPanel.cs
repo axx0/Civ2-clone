@@ -15,7 +15,7 @@ namespace civ2.Forms
 {
     public partial class MapPanel : Civ2panel
     {
-        private static DoubleBufferedPanel DrawPanel;
+        private static Civ2panel DrawPanel;
         StringFormat sf = new StringFormat();
 
         private static List<Bitmap> AnimationBitmap;        
@@ -25,12 +25,14 @@ namespace civ2.Forms
         public static int CivIdWhoseMapIsDisplayed { get; set; }
         int TimerCounter { get; set; }
         Label HelpLabel;
+        Game Game;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MapPanel(Game Game, int width, int height)
+        public MapPanel(Game _game, int _width, int _height)
         {
-            Size = new Size(width, height);
+            Game = _game;
+            Size = new Size(_width, _height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
             
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
@@ -77,10 +79,8 @@ namespace civ2.Forms
             ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
             MapGridVar = 0;
             ViewPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
-            ClickedXY = Data.ClickedXY;
-            ActiveXY = Data.ActiveXY;
             CenterSqXY = ActiveXY;
-            CivIdWhoseMapIsDisplayed = Game.Instance.ActiveCiv.Id;  //when game starts reveal map for current player's civ view
+            CivIdWhoseMapIsDisplayed = Game.PlayerCiv.Id;  //when game starts reveal map for current player's civ view
             //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
             //TODO: Implement zoom
 
@@ -110,8 +110,8 @@ namespace civ2.Forms
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
             // Draw panel borders
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border

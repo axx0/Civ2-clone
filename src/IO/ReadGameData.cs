@@ -684,7 +684,7 @@ namespace civ2
                 string civTechs_ = String.Concat(civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
                 // true = tech researched, false = not researched
                 for (int no = 0; no < 89; no++)
-                    data.CivTechs[no] = (civTechs_[no] == '1') ? true : false;
+                    data.CivTechs[no] = civTechs_[no] == '1';
             }
             #endregion
             #region Map
@@ -771,7 +771,7 @@ namespace civ2
                 if (terrain_type == 137) { data.MapTerrainType[x, y] = TerrainType.Jungle; data.MapRiverPresent[x, y] = true; }   //137dec=89hex
                 if (terrain_type == 10) { data.MapTerrainType[x, y] = TerrainType.Ocean; data.MapRiverPresent[x, y] = false; }   //10dec=Ahex
                 if (terrain_type == 74) { data.MapTerrainType[x, y] = TerrainType.Ocean; data.MapRiverPresent[x, y] = false; }   //74dec=4Ahex
-                //determine if resources are present
+                // Determine if resources are present
                 data.MapResourcePresent[x, y] = false;
                 //!!! NOT WORKING PROPERLY !!!
                 //bin = Convert.ToString(dataArray[ofsetB2 + i * 6 + 0], 2).PadLeft(8, '0');

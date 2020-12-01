@@ -6,7 +6,7 @@ using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    public partial class NameCityPanel : DoubleBufferedPanel
+    public partial class NameCityPanel : Civ2panel
     {
         MapPanel mapForm;
         Panel MainPanel;

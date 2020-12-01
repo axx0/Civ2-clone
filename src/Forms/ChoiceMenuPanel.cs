@@ -7,7 +7,7 @@ using civ2.Enums;
 
 namespace civ2.Forms
 {
-    public partial class ChoiceMenuPanel : DoubleBufferedPanel
+    public partial class ChoiceMenuPanel : Civ2panel
     {
         Panel MainPanel;
         RadioButton[] RadioBtn = new RadioButton[8];

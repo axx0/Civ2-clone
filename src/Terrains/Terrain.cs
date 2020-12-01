@@ -24,15 +24,10 @@ namespace civ2.Terrains
                 // If result == type of terrain before irrigation, this means that it's regular irrigation.
                 // (If it can actually be irrigated is determined by CanBeIrrigated.)
                 if (Game.Rules.TerrainCanIrrigate[(int)Type] == "yes" || Game.Rules.TerrainCanIrrigate[(int)Type] == "no")
-                {
                     return Type;
-                }
                 // Otherwise the result is the type of terrain which is formed.
                 else
-                {
                     return (TerrainType)Array.IndexOf(Game.Rules.TerrainShortName, Game.Rules.TerrainCanIrrigate[(int)Type]);
-                }
-                    
             }
         }
         public int IrrigationBonus => Game.Rules.TerrainIrrigateBonus[(int)Type];
@@ -46,14 +41,10 @@ namespace civ2.Terrains
                 // If result == type of terrain before mining, this means that it's regular mine.
                 // (If it can actually be mined is determined by CanBeMined.)
                 if (Game.Rules.TerrainCanMine[(int)Type] == "yes" || Game.Rules.TerrainCanMine[(int)Type] == "no")
-                {
                     return Type;
-                }
                 // Otherwise the result is the type of terrain which is formed.
                 else
-                {
                     return (TerrainType)Array.IndexOf(Game.Rules.TerrainShortName, Game.Rules.TerrainCanMine[(int)Type]);
-                }
             }
         }
         public int MiningBonus => Game.Rules.TerrainMineBonus[(int)Type];
@@ -66,14 +57,10 @@ namespace civ2.Terrains
             {
                 // If result == type of terrain before transformation, it means it can't be transformed.
                 if (Game.Rules.TerrainTransform[(int)Type] == "no")
-                {
                     return Type;
-                }
                 // Otherwise the result is the type of terrain which is transformed.
                 else
-                {
                     return (TerrainType)Array.IndexOf(Game.Rules.TerrainShortName, Game.Rules.TerrainTransform[(int)Type]);
-                }
             }
         }
 

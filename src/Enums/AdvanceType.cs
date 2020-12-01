@@ -1,6 +1,6 @@
 ﻿namespace civ2.Enums
 {
-    public enum TechType
+    public enum AdvanceType
     {
         AdvFlight = 0,
         Alphabet = 1,

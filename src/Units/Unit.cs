@@ -1,61 +1,62 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
 using civ2.Enums;
-using civ2.Forms;
 using civ2.Bitmaps;
 
 namespace civ2.Units
 {
-    internal class Unit : IUnit
+    internal class Unit : BaseInstance, IUnit
     {
-        //From RULES.TXT
-        public string Name 
-        { 
-            get { return Rules.UnitName[(int)Type]; } 
-        }
-        public TechType UntilTech { get; }         // TODO: implement unit UntilTech logic
-        public int MaxMovePoints
+        // From RULES.TXT
+        public string Name => Game.Rules.UnitName[(int)Type];
+        public AdvanceType? UntilTech
         {
-            get { return 3 * Rules.UnitMove[(int)Type]; }
+            get
+            {
+                if (Game.Rules.UnitUntil[(int)Type] == "nil")
+                    return null;
+                else
+                    return (AdvanceType)Array.IndexOf(Game.Rules.TechShortName, Game.Rules.UnitUntil[(int)Type]);                  
+            }
         }
-        public int Range 
+        public UnitGAS Domain => (UnitGAS)Game.Rules.UnitDomain[(int)Type];
+        public int MovementRate => Game.Rules.UnitMove[(int)Type];
+        public int FuelRange => Game.Rules.UnitRange[(int)Type];
+        public int AttackFactor => Game.Rules.UnitAttack[(int)Type];
+        public int DefenseFactor => Game.Rules.UnitDefense[(int)Type];
+        public int MaxHitpoints => Game.Rules.UnitHitp[(int)Type];
+        public int Firepower => Game.Rules.UnitFirepwr[(int)Type];
+        public int Cost => Game.Rules.UnitCost[(int)Type];
+        public int ShipHold => Game.Rules.UnitHold[(int)Type];
+        public AIroleType AIrole => (AIroleType)Game.Rules.UnitAIrole[(int)Type];
+        public AdvanceType? PrereqAdvance
         {
-            get { return Rules.UnitRange[(int)Type]; }
+            get
+            {
+                if (Game.Rules.UnitPrereq[(int)Type] == "nil" || Game.Rules.UnitPrereq[(int)Type] == "no")
+                    return null;
+                else
+                    return (AdvanceType)Array.IndexOf(Game.Rules.TechShortName, Game.Rules.UnitPrereq[(int)Type]);
+            }
         }
-        public int Attack 
-        { 
-            get { return Rules.UnitAttack[(int)Type]; }
-        }
-        public int Defense 
-        {
-            get { return Rules.UnitDefense[(int)Type]; }
-        }
-        public int MaxHitPoints 
-        {
-            get { return 10 * Rules.UnitHitp[(int)Type]; }
-        }
-        public int Firepower 
-        {
-            get { return Rules.UnitFirepwr[(int)Type]; }
-        }
-        public int Cost 
-        {
-            get { return Rules.UnitCost[(int)Type]; }
-        }
-        public int ShipHold
-        {
-            get { return Rules.UnitHold[(int)Type]; }
-        }
-        public int AIrole 
-        {
-            get { return Rules.UnitAIrole[(int)Type]; }
-        }
-        public TechType PrereqTech { get; }        // TODO: implement unit PrereqTech logic
-        public string Flags 
-        { 
-            get { return Rules.UnitFlags[(int)Type]; }
-        }
+        public bool TwoSpaceVisibility => Game.Rules.UnitFlags[(int)Type][14] == '1';
+        public bool IgnoreZonesOfControl => Game.Rules.UnitFlags[(int)Type][13] == '1';
+        public bool CanMakeAmphibiousAssaults => Game.Rules.UnitFlags[(int)Type][12] == '1';
+        public bool SubmarineAdvantagesDisadvantages => Game.Rules.UnitFlags[(int)Type][11] == '1';
+        public bool CanAttackAirUnits => Game.Rules.UnitFlags[(int)Type][10] == '1';    // fighter
+        public bool ShipMustStayNearLand => Game.Rules.UnitFlags[(int)Type][9] == '1';  // trireme
+        public bool NegatesCityWalls => Game.Rules.UnitFlags[(int)Type][8] == '1';  // howitzer
+        public bool CanCarryAirUnits => Game.Rules.UnitFlags[(int)Type][7] == '1';  // carrier
+        public bool CanMakeParadrops => Game.Rules.UnitFlags[(int)Type][6] == '1';
+        public bool Alpine => Game.Rules.UnitFlags[(int)Type][5] == '1';    // treats all squares as road
+        public bool X2onDefenseVersusHorse => Game.Rules.UnitFlags[(int)Type][4] == '1';    // pikemen
+        public bool FreeSupportForFundamentalism => Game.Rules.UnitFlags[(int)Type][3] == '1';    // fanatics
+        public bool DestroyedAfterAttacking => Game.Rules.UnitFlags[(int)Type][2] == '1';    // missiles
+        public bool X2onDefenseVersusAir => Game.Rules.UnitFlags[(int)Type][1] == '1';    // AEGIS
+        public bool UnitCanSpotSubmarines => Game.Rules.UnitFlags[(int)Type][0] == '1';
+
 
         public int Id { get; set; }
         public int MovePoints
@@ -69,18 +70,7 @@ namespace civ2.Units
         }
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
-        public UnitGAS GAS 
-        {
-            get
-            {
-                if (Rules.UnitDomain[(int)Type] == 0)
-                    return UnitGAS.Ground;
-                else if (Rules.UnitDomain[(int)Type] == 1)
-                    return UnitGAS.Air;
-                else
-                    return UnitGAS.Sea;
-            }
-        }
+
         public OrderType Order { get; set; }
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }

@@ -12,17 +12,17 @@ namespace civ2.Forms
             ChoiceMenu = null;
             MainMenuStrip.Enabled = true;
 
-            MapPanel = new MapPanel(instance, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
-            MapPanel.Location = new Point(0, MainMenuStrip.Height);
-            Controls.Add(MapPanel);
-            ZoomInItem.Click += MapPanel.ZoomINclicked;
-            ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
-            MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
-            MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
-            StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
-            MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            StatusPanel.OnMapEvent += MapEventHappened;
-            MapPanel.OnMapEvent += MapEventHappened;
+            //MapPanel = new MapPanel(instance, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            //MapPanel.Location = new Point(0, MainMenuStrip.Height);
+            //Controls.Add(MapPanel);
+            //ZoomInItem.Click += MapPanel.ZoomINclicked;
+            //ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
+            //MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
+            //MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
+            //StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
+            //MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
+            //StatusPanel.OnMapEvent += MapEventHappened;
+            //MapPanel.OnMapEvent += MapEventHappened;
 
             //MinimapPanel = new MinimapPanel(262, 149);
             //MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);

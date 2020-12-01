@@ -36,8 +36,10 @@ namespace civ2.Forms
             //if (WorldMapForm != null) WorldMapForm.Close();
 
             // Choice menu panel
-            ChoiceMenu = new ChoiceMenuPanel(this);
-            ChoiceMenu.Location = new Point((int)(ClientSize.Width * 0.745), (int)(ClientSize.Height * 0.570));
+            ChoiceMenu = new ChoiceMenuPanel(this)
+            {
+                Location = new Point((int)(ClientSize.Width * 0.745), (int)(ClientSize.Height * 0.570))
+            };
             Controls.Add(ChoiceMenu);
         }
 

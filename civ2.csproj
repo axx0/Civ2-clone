@@ -67,9 +67,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\Advances\Advance.cs" />
+    <Compile Include="src\Advances\IAdvance.cs" />
+    <Compile Include="src\Enums\AIroleType.cs" />
     <Compile Include="src\Enums\BarbarianActivityType.cs" />
+    <Compile Include="src\Enums\EpochType.cs" />
     <Compile Include="src\Enums\GameVersionType.cs" />
     <Compile Include="src\Enums\IntroScreenChoiceType.cs" />
+    <Compile Include="src\Enums\KnowledgeType.cs" />
     <Compile Include="src\Game.LoadGame.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -92,9 +97,6 @@
     <Compile Include="src\Forms\MainWindow.ShowIntroScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="src\GameActions\Actions.cs" />
     <Compile Include="src\City.cs" />
     <Compile Include="src\Civilization.cs" />
@@ -109,7 +111,7 @@
     <Compile Include="src\Enums\GovernmentType.cs" />
     <Compile Include="src\Enums\OrderType.cs" />
     <Compile Include="src\Enums\UnitGAS.cs" />
-    <Compile Include="src\Enums\TechType.cs" />
+    <Compile Include="src\Enums\AdvanceType.cs" />
     <Compile Include="src\Events\CheckIfCityCanBeViewedEventArgs.cs" />
     <Compile Include="src\Events\WaitAtTurnEndEventArgs.cs" />
     <Compile Include="src\Events\NewPlayerTurnEventArgs.cs" />
@@ -126,15 +128,6 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\Templates\NoSelectButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\StatusPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MinimapPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MapPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.cs">
@@ -221,12 +214,6 @@
     <Compile Include="src\Forms\Menu World\WondersOfWorldForm.Designer.cs">
       <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\NameCityPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\NameCityPanel.Designer.cs">
-      <DependentUpon>NameCityPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Forms\Templates\Civ2button.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -284,8 +271,6 @@
     <Compile Include="src\Rules.cs" />
     <Compile Include="src\Settings.cs" />
     <Compile Include="src\Sounds\Sound.cs" />
-    <Compile Include="src\Techs\Tech.cs" />
-    <Compile Include="src\Techs\ITech.cs" />
     <Compile Include="src\Terrains\ITerrain.cs" />
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />

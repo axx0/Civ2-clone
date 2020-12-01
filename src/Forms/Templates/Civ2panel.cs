@@ -1,20 +1,39 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using System.Collections.Generic;
 using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    public partial class Civ2panel : DoubleBufferedPanel
+    // A panel can have:
+    // - a header (title)
+    // - a footer (usually buttons)
+    // - both
+    // - none of these
+
+    public partial class Civ2panel : Panel
     {
-        public Civ2panel()
+        public Civ2panel()  // empty panel
         {
+            DoubleBuffered = true;
             BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 
-        //Draw border around form
+        public Civ2panel(string title)  // only title
+        {
+            DoubleBuffered = true;
+        }
+
+        public Civ2panel(string title, List<Civ2button> buttons)    // title + buttons
+        {
+            DoubleBuffered = true;
+        }
+
+        // Draw border around panel
         private void Civ2panel_Paint(object sender, PaintEventArgs e)
         {
+            // Border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, this.Height - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), this.Width - 1, 0, this.Width - 1, this.Height - 1);
@@ -35,6 +54,8 @@ namespace civ2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, 4, this.Height - 6);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 5, 4, this.Width - 5, this.Height - 5);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 4, this.Height - 5, this.Width - 5, this.Height - 5);
+            // Panel background (TODO)
+            // ...
         }
     }
 }

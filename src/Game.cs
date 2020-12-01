@@ -35,12 +35,6 @@ namespace civ2
         { 
             get
             {
-                //if (TurnNumber< 250) _gameYear = -4000 + (TurnNumber - 1) * 20;
-                //else if (TurnNumber >= 250 && TurnNumber< 300) _gameYear = 1000 + (TurnNumber - 1 - 250) * 10;
-                //else if (TurnNumber >= 300 && TurnNumber< 350) _gameYear = 1500 + (TurnNumber - 1 - 300) * 5;
-                //else if (TurnNumber >= 350 && TurnNumber< 400) _gameYear = 1750 + (TurnNumber - 1 - 350) * 2;
-                //else _gameYear = 1850 + (TurnNumber - 1 - 400);
-                //return _gameYear;
                 if (TurnNumber < 250) return -4000 + (TurnNumber - 1) * 20;
                 else if (TurnNumber >= 250 && TurnNumber < 300) return 1000 + (TurnNumber - 1 - 250) * 10;
                 else if (TurnNumber >= 300 && TurnNumber < 350) return 1500 + (TurnNumber - 1 - 300) * 5;
@@ -90,103 +84,103 @@ namespace civ2
             set { _playerCiv = value; }
         }
 
-        public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
-                                          bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
-        {
-            ITerrain tile;
-            SpecialType? stype = null;
-            switch (type)
-            {
-                case TerrainType.Desert:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Oasis;
-                        if (specialtype == 2) stype = SpecialType.DesertOil;
-                        break;
-                    }
-                case TerrainType.Plains:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Buffalo;
-                        if (specialtype == 2) stype = SpecialType.Wheat;
-                        break;
-                    }
-                case TerrainType.Grassland:
-                    {
-                        if (specialtype == 1) stype = SpecialType.GrasslandShield;
-                        if (specialtype == 2) stype = SpecialType.Grassland;
-                        break;
-                    }
-                case TerrainType.Forest:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Pheasant;
-                        if (specialtype == 2) stype = SpecialType.Silk;
-                        break;
-                    }
-                case TerrainType.Hills:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Coal;
-                        if (specialtype == 2) stype = SpecialType.Wine;
-                        break;
-                    }
-                case TerrainType.Mountains:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Gold;
-                        if (specialtype == 2) stype = SpecialType.Iron;
-                        break;
-                    }
-                case TerrainType.Tundra:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Game;
-                        if (specialtype == 2) stype = SpecialType.Furs;
-                        break;
-                    }
-                case TerrainType.Glacier:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Ivory;
-                        if (specialtype == 2) stype = SpecialType.GlacierOil;
-                        break;
-                    }
-                case TerrainType.Swamp:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Peat;
-                        if (specialtype == 2) stype = SpecialType.Spice;
-                        break;
-                    }
-                case TerrainType.Jungle:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Gems;
-                        if (specialtype == 2) stype = SpecialType.Fruit;
-                        break;
-                    }
-                case TerrainType.Ocean:
-                    {
-                        if (specialtype == 1) stype = SpecialType.Fish;
-                        if (specialtype == 2) stype = SpecialType.Whales;
-                        break;
-                    }
-                default: return ;
-            }
-            tile = new Terrain(type, stype)
-            {
-                Type = type,
-                SpecType = stype,
-                Resource = resource,
-                River = river,
-                Island = island,
-                UnitPresent = unit_present,
-                CityPresent = city_present,
-                Irrigation = irrigation,
-                Mining = mining,
-                Road = road,
-                Railroad = railroad,
-                Fortress = fortress,
-                Pollution = pollution,
-                Farmland = farmland,
-                Airbase = airbase,
-                Visibility = visibility,
-                Hexvalue = hexvalue
-            };
-            TerrainTile[x, y] = tile;
-        }
+        //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
+        //                                  bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
+        //{
+        //    ITerrain tile;
+        //    SpecialType? stype = null;
+        //    switch (type)
+        //    {
+        //        case TerrainType.Desert:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Oasis;
+        //                if (specialtype == 2) stype = SpecialType.DesertOil;
+        //                break;
+        //            }
+        //        case TerrainType.Plains:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Buffalo;
+        //                if (specialtype == 2) stype = SpecialType.Wheat;
+        //                break;
+        //            }
+        //        case TerrainType.Grassland:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.GrasslandShield;
+        //                if (specialtype == 2) stype = SpecialType.Grassland;
+        //                break;
+        //            }
+        //        case TerrainType.Forest:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Pheasant;
+        //                if (specialtype == 2) stype = SpecialType.Silk;
+        //                break;
+        //            }
+        //        case TerrainType.Hills:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Coal;
+        //                if (specialtype == 2) stype = SpecialType.Wine;
+        //                break;
+        //            }
+        //        case TerrainType.Mountains:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Gold;
+        //                if (specialtype == 2) stype = SpecialType.Iron;
+        //                break;
+        //            }
+        //        case TerrainType.Tundra:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Game;
+        //                if (specialtype == 2) stype = SpecialType.Furs;
+        //                break;
+        //            }
+        //        case TerrainType.Glacier:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Ivory;
+        //                if (specialtype == 2) stype = SpecialType.GlacierOil;
+        //                break;
+        //            }
+        //        case TerrainType.Swamp:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Peat;
+        //                if (specialtype == 2) stype = SpecialType.Spice;
+        //                break;
+        //            }
+        //        case TerrainType.Jungle:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Gems;
+        //                if (specialtype == 2) stype = SpecialType.Fruit;
+        //                break;
+        //            }
+        //        case TerrainType.Ocean:
+        //            {
+        //                if (specialtype == 1) stype = SpecialType.Fish;
+        //                if (specialtype == 2) stype = SpecialType.Whales;
+        //                break;
+        //            }
+        //        default: return ;
+        //    }
+        //    tile = new Terrain(type, stype)
+        //    {
+        //        Type = type,
+        //        SpecType = stype,
+        //        Resource = resource,
+        //        River = river,
+        //        Island = island,
+        //        UnitPresent = unit_present,
+        //        CityPresent = city_present,
+        //        Irrigation = irrigation,
+        //        Mining = mining,
+        //        Road = road,
+        //        Railroad = railroad,
+        //        Fortress = fortress,
+        //        Pollution = pollution,
+        //        Farmland = farmland,
+        //        Airbase = airbase,
+        //        Visibility = visibility,
+        //        Hexvalue = hexvalue
+        //    };
+        //    TerrainTile[x, y] = tile;
+        //}
 
         public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, 
                                     int movePointsLost, int hitPointsLost, int lastMove, CommodityType caravanCommodity, OrderType orders, 
