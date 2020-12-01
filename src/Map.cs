@@ -13,6 +13,7 @@ namespace civ2
         public int LocatorYdim { get; private set; }
         public ITerrain[,] Tile { get; private set; }
         
+        // Generate first instance of terrain tiles by importing game data
         public void GenerateMap(GameData data)
         {
             Xdim = data.MapXdim;
@@ -51,7 +52,7 @@ namespace civ2
             {
                 for (int row = 0; row < Ydim; row++)
                 {
-                    Tile[col, row].Graphic = Images.DrawTile(Tile[col, row], col, row);
+                    Tile[col, row].Graphic = Images.DrawTerrain(Tile[col, row], col, row);
                 }
             }
         }

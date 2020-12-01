@@ -367,6 +367,7 @@
     </Compile>
     <Compile Include="src\GameActions\Actions.Units.cs" />
     <Compile Include="src\Bitmaps\Images.ImportDLLimages.cs" />
+    <Compile Include="src\Bitmaps\Images.CityPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
