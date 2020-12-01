@@ -156,7 +156,6 @@
     </Compile>
     <Compile Include="src\Game.cs" />
     <Compile Include="src\Bitmaps\GetAnimationFrames.cs" />
-    <Compile Include="src\GameActions\ActionTest.cs" />
     <Compile Include="src\HelpConsole.cs" />
     <Compile Include="src\Bitmaps\CivColors.cs" />
     <Compile Include="src\Bitmaps\DrawFunctions.cs" />

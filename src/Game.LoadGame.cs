@@ -57,17 +57,7 @@ namespace civ2
                     SAVgameData.CivResearchProgress[i], SAVgameData.CivResearchingTech[i], SAVgameData.CivSciRate[i], SAVgameData.CivTaxRate[i],
                     SAVgameData.CivGovernment[i], SAVgameData.CivReputation[i], SAVgameData.CivTechs);
             }
-
-            // Create units
-            for (int i = 0; i < SAVgameData.NumberOfUnits; i++)
-            {
-                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i], SAVgameData.UnitDead[i],
-                    SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i], SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i],
-                    SAVgameData.UnitMovePointsLost[i], SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitLastMove[i], SAVgameData.UnitCaravanCommodity[i],
-                    SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i], SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i],
-                    SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
-            }
-
+            
             // Create cities
             for (int i = 0; i < SAVgameData.NumberOfCities; i++)
             {
@@ -82,11 +72,22 @@ namespace civ2
                     SAVgameData.CityHappyCitizens[i], SAVgameData.CityUnhappyCitizens[i]);
             }
 
+            // Create units
+            for (int i = 0; i < SAVgameData.NumberOfUnits; i++)
+            {
+                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i], SAVgameData.UnitDead[i],
+                    SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i], SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i],
+                    SAVgameData.UnitMovePointsLost[i], SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitLastMove[i], SAVgameData.UnitCaravanCommodity[i],
+                    SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i], SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i],
+                    SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
+            }
+
             ActiveCursorXY = SAVgameData.ActiveCursorXY;
             ClickedXY = SAVgameData.ClickedXY;
 
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    //null means all units have ended turn
             _playerCiv = _civs.Find(civ => civ.Id == SAVgameData.PlayerCivIndex);
+            _activeCiv = _playerCiv;
         }
 
 

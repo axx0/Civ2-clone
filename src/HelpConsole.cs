@@ -9,7 +9,7 @@ using civ2.Enums;
 
 namespace civ2
 {
-    public class HelpConsole
+    public class HelpConsole : BaseInstance
     {
         [DllImport("kernel32.dll",
         EntryPoint = "AllocConsole",
@@ -67,16 +67,16 @@ namespace civ2
                     {
                         //List for all civs
                         int count = 0;
-                        foreach(IUnit unit in Game.Units)
-                            Console.WriteLine($"#{count++} {unit.Type}, XY=({unit.X},{unit.Y}), {Game.Civs[unit.CivId].TribeName}");
+                        foreach(IUnit unit in Game.GetUnits)
+                            Console.WriteLine($"#{count++} {unit.Type}, XY=({unit.X},{unit.Y}), {unit.Owner.TribeName}");
                         Console.WriteLine();
                         //List for specific civs
-                        foreach(Civilization civ in Game.Civs)
+                        foreach(Civilization civ in Game.GetCivs)
                         {
                             Console.WriteLine($"{civ.TribeName}");
-                            foreach (IUnit unit in Game.Units.Where(n => Game.Civs[n.CivId].TribeName == civ.TribeName))
+                            foreach (IUnit unit in Game.GetUnits.Where(u => u.Owner.TribeName == civ.TribeName))
                             {
-                                int id = Game.Units.FindIndex(n => n == unit);
+                                int id = Game.GetUnits.FindIndex(n => n == unit);
                                 string active;
                                 if (unit.TurnEnded) active = "(turn ended)";
                                 else active = "(active)";

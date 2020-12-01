@@ -9,6 +9,7 @@ namespace civ2.Forms
     {
         ChoiceMenuPanel ChoiceMenu;
         PictureBox SinaiPanel;
+        Game Game;
 
         // Load intro screen
         public void ShowIntroScreen()
@@ -66,8 +67,8 @@ namespace civ2.Forms
                     }
                 case IntroScreenChoiceType.LoadGame:
                     {
-                        Game gameInstance = Game.LoadGame(directoryPath, SAVname);
-                        ArrangeWindowControlsAfterGameStart(gameInstance);
+                        Game = Game.LoadGame(directoryPath, SAVname);
+                        ArrangeWindowControlsAfterGameStart(Game);
                         break;
                     }
                 case IntroScreenChoiceType.MultiplayerGame:

@@ -45,7 +45,6 @@ namespace civ2
 
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
-        public int HumanPlayer { get; set; }
         public int PlayersMapUsed { get; set; }
         public int PlayersCivilizationNumberUsed { get; set; }
         public bool MapRevealed { get; set; }
@@ -82,6 +81,13 @@ namespace civ2
         {
             get { return _playerCiv; }
             set { _playerCiv = value; }
+        }
+
+        private Civilization _activeCiv;    // ActiveCiv can be AI. PlayerCiv is human. They are equal except during enemy turns.
+        public Civilization ActiveCiv
+        {
+            get { return _activeCiv; }
+            set { _activeCiv = value; }
         }
 
         //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
@@ -188,7 +194,7 @@ namespace civ2
         {
             IUnit unit = new Unit
             {
-                //Id = _instance._casualties.Count + _instance._units.Count,
+                Id = _instance._casualties.Count + _instance._units.Count,
                 Type = type,
                 X = x,
                 Y = y,
@@ -197,11 +203,11 @@ namespace civ2
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
-                CivId = civId,
+                Owner = _civs[civId],
                 LastMove = lastMove,
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
-                HomeCity = homeCity,
+                HomeCity = _cities[homeCity],
                 GoToX = goToX,
                 GoToY = goToY,
                 LinkOtherUnitsOnTop = linkOtherUnitsOnTop,
@@ -233,9 +239,9 @@ namespace civ2
                 CanBuildShips = canBuildShips,
                 Objectivex3 = objectivex3,
                 Objectivex1 = objectivex1,
-                Owner = owner,
+                Owner = _civs[owner],
                 Size = size,
-                WhoBuiltIt = whoBuiltIt,
+                WhoBuiltIt = _civs[whoBuiltIt],
                 FoodInStorage = foodInStorage,
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,

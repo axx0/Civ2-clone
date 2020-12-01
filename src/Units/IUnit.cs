@@ -48,10 +48,10 @@ namespace civ2.Units
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
-        int CivId { get; set; }
+        Civilization Owner { get; set; }
         int LastMove { get; set; }
         CommodityType CaravanCommodity { get; set; }
-        int HomeCity { get; set; }
+        City HomeCity { get; set; }
         int GoToX { get; set; }
         int GoToY { get; set; }
         int LinkOtherUnitsOnTop { get; set; }

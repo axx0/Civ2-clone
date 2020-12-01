@@ -11,7 +11,7 @@ using civ2.Terrains;
 
 namespace civ2
 {
-    public class City
+    public class City : BaseInstance
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -24,9 +24,9 @@ namespace civ2
         public bool CanBuildShips { get; set; }
         public bool Objectivex3 { get; set; }
         public bool Objectivex1 { get; set; }
-        public int Owner { get; set; }
+        public Civilization Owner { get; set; }
         public int Size { get; set; }
-        public int WhoBuiltIt { get; set; }
+        public Civilization WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
         public int ShieldsProgress { get; set; }
         public int NetTrade { get; set; }
@@ -61,17 +61,17 @@ namespace civ2
         public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
 
-        public List<IUnit> UnitsInCity => Game.Units.Where(unit => unit.X == X && unit.Y == Y).ToList();
-        public List<IUnit> SupportedUnits => Game.Units.Where(unit => unit.HomeCity == Game.Cities.IndexOf(this)).ToList();
+        public List<IUnit> UnitsInCity => Game.GetUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
+        public List<IUnit> SupportedUnits => Game.GetUnits.Where(unit => unit.HomeCity == Game.GetCities.IndexOf(this)).ToList();
         
-        //Determine which units, supported by this city, cost shields
+        // Determine which units, supported by this city, cost shields
         public bool[] SupportedUnitsWhichCostShields()
         {
             List<IUnit> supportedUnits = SupportedUnits;
             bool[] costShields = new bool[SupportedUnits.Count()];
             //First determine how many units have 0 costs due to different goverernment types
             int noCost = 0;
-            switch (Game.Civs[Owner].Government)
+            switch (Game.GetCivs[Owner].Government)
             {
                 case GovernmentType.Anarchy:
                 case GovernmentType.Despotism:
@@ -121,13 +121,13 @@ namespace civ2
                                                   { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
                 for (int i = 0; i < 21; i++)
                 {
-                    if (DistributionWorkers[i] == 1)
+                    if (DistributionWorkers[i])
                     {
                         int x = X + offsets[i, 0];
                         int y = Y + offsets[i, 1];
                         x = (x - (y % 2)) / 2;    //map format
-                        _foodDistribution[i] = Game.TerrainTile[x, y].Food;
-                        if (Game.TerrainTile[x, y].Irrigation) _foodDistribution[i] += Game.TerrainTile[x, y].IrrigationBonus;
+                        _foodDistribution[i] = Map.Tile[x, y].Food;
+                        if (Map.Tile[x, y].Irrigation) _foodDistribution[i] += Map.Tile[x, y].IrrigationBonus;
                     }
                     else _foodDistribution[i] = 0;
                 }
@@ -145,13 +145,13 @@ namespace civ2
                                                   { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
                 for (int i = 0; i < 21; i++)
                 {
-                    if (DistributionWorkers[i] == 1)
+                    if (DistributionWorkers[i])
                     {
                         int x = X + offsets[i, 0];
                         int y = Y + offsets[i, 1];
                         x = (x - (y % 2)) / 2;    //map format
-                        _shieldDistribution[i] = Game.TerrainTile[x, y].Shields;
-                        if (Game.TerrainTile[x, y].Mining) _shieldDistribution[i] += Game.TerrainTile[x, y].MiningBonus;
+                        _shieldDistribution[i] = Map.Tile[x, y].Shields;
+                        if (Map.Tile[x, y].Mining) _shieldDistribution[i] += Map.Tile[x, y].MiningBonus;
                     }
                     else _shieldDistribution[i] = 0;
                 }
@@ -169,12 +169,12 @@ namespace civ2
                                                   { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
                 for (int i = 0; i < 21; i++)
                 {
-                    if (DistributionWorkers[i] == 1)
+                    if (DistributionWorkers[i])
                     {
                         int x = X + offsets[i, 0];
                         int y = Y + offsets[i, 1];
                         x = (x - (y % 2)) / 2;    //map format
-                        ITerrain map = Game.TerrainTile[x, y];
+                        ITerrain map = Map.Tile[x, y];
                         _tradeDistribution[i] = map.Trade;
                         if (map.Road && (map.Type == TerrainType.Desert || map.Type == TerrainType.Grassland || map.Type == TerrainType.Plains)) _tradeDistribution[i]++;
                     }
@@ -190,7 +190,7 @@ namespace civ2
             get
             {
                 int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.Units.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.Cities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
+                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.GetCities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
                 _food = Math.Min(FoodDistribution.Sum(), maxFood);
                 return _food;
             }
@@ -202,7 +202,7 @@ namespace civ2
             get
             {
                 int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.Units.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.Cities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
+                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.GetCities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
                 _surplusHunger = FoodDistribution.Sum() - maxFood;
                 return _surplusHunger;
             }
@@ -234,7 +234,7 @@ namespace civ2
         {
             get
             {
-                _tax = Trade * Game.Civs[Owner].TaxRate / 100;
+                _tax = Trade * Game.GetCivs[Owner].TaxRate / 100;
                 return _tax;
             }
         }
@@ -254,7 +254,7 @@ namespace civ2
         {
             get
             {
-                _science = Trade * Game.Civs[Owner].ScienceRate / 100;
+                _science = Trade * Game.GetCivs[Owner].ScienceRate / 100;
                 return _science;
             }
         }
@@ -308,13 +308,13 @@ namespace civ2
                 _people = new PeopleType[Size];
                 //Unhappy
                 int additUnhappy = Size - 6;    //without units & improvements present, 6 people are content
-                additUnhappy -= Math.Min(Game.Units.Where(unit => unit.X == X && unit.Y == Y).Count(), 3);  //each new unit in city -> 1 less unhappy (up to 3 max)
+                additUnhappy -= Math.Min(Game.GetUnits.Where(unit => unit.X == X && unit.Y == Y).Count(), 3);  //each new unit in city -> 1 less unhappy (up to 3 max)
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Temple)) additUnhappy -= 2;
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Colosseum)) additUnhappy -= 3;
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Cathedral)) additUnhappy -= 3;
                 //Aristocrats
                 int additArist = 0;
-                switch (Size + 1 - DistributionWorkers.Sum())   //populating aristocrats based on workers removed
+                switch (Size + 1 - DistributionWorkers.Count(c => c))   //populating aristocrats based on workers removed
                 {
                     case 1: additArist += 1; break;
                     case 2:
@@ -330,7 +330,7 @@ namespace civ2
                     default: break;
                 }
                 //Elvis
-                int additElvis = Size + 1 - DistributionWorkers.Sum();  //no of elvis = no of workers removed
+                int additElvis = Size + 1 - DistributionWorkers.Count(c => c);  //no of elvis = no of workers removed
                 //Populate
                 for (int i = 0; i < Size; i++) _people[i] = PeopleType.Worker;
                 for (int i = 0; i < additUnhappy; i++) _people[Size - 1 - i] = PeopleType.Unhappy;
@@ -372,12 +372,12 @@ namespace civ2
                     default: shadowOffset = 2; fontSize = 14; break;
                 }
                 //Draw
-                System.Drawing.Graphics gr = System.Drawing.Graphics.FromImage(new Bitmap(1, 1));
+                Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
                 SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", fontSize));
                 int stringWidth = (int)stringSize.Width;
                 int stringHeight = (int)stringSize.Height;
                 _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
-                System.Drawing.Graphics g = System.Drawing.Graphics.FromImage(_textGraphic);
+                Graphics g = Graphics.FromImage(_textGraphic);
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));

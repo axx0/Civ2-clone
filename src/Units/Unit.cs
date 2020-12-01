@@ -70,15 +70,14 @@ namespace civ2.Units
         }
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
-
         public OrderType Order { get; set; }
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
-        public int CivId { get; set; }
+        public Civilization Owner { get; set; }
         public int LastMove { get; set; }
         public CommodityType CaravanCommodity { get; set; }
-        public int HomeCity { get; set; }
+        public City HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
         public int LinkOtherUnitsOnTop { get; set; }

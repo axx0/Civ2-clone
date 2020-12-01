@@ -6,7 +6,7 @@ using civ2.Enums;
 
 namespace civ2.Bitmaps
 {
-    public class DrawFunctions
+    public class DrawFunctions : BaseInstance
     {
         //Draw entire game map
         //public static Bitmap DrawMap()
@@ -116,7 +116,7 @@ namespace civ2.Bitmaps
                 }
 
                 //Determine hitpoints bar size
-                int hitpointsBarX = (int)Math.Floor((float)unit.HitPoints * 12 / (float)unit.MaxHitPoints);
+                int hitpointsBarX = (int)Math.Floor((float)unit.HitPoints * 12 / (float)unit.MaxHitpoints);
                 Color hitpointsColor;
                 if (hitpointsBarX <= 3) hitpointsColor = Color.FromArgb(243, 0, 0);
                 else if (hitpointsBarX >= 4 && hitpointsBarX <= 8) hitpointsColor = Color.FromArgb(255, 223, 79);
@@ -171,7 +171,7 @@ namespace civ2.Bitmaps
             //Determine city bitmap
             //For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
             //If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
-            int cityStyle = Game.Civs[city.Owner].CityStyle;
+            int cityStyle = Game.GetCities[city.Owner].CityStyle;
             int sizeStyle = 0;
             if (cityStyle < 4)
             {

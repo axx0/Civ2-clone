@@ -9,14 +9,14 @@ using ExtensionMethods;
 
 namespace civ2.GameActions
 {
-    public static partial class Actions
+    public partial class Actions : BaseInstance
     {
         public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
         //Update stats of all cities
         public static void CitiesTurn()
         {
-            foreach (City city in Game.Cities.Where(a => a.Owner == Data.HumanPlayer))
+            foreach (City city in Game.GetCities.Where(a => a.Owner == Game.PlayerCiv))
             {
                 //city.NewTurn();
             }
@@ -24,10 +24,10 @@ namespace civ2.GameActions
 
         public static void NewPlayerTurn()
         {
-            Data.TurnNumber++;
+            Game.TurnNumber++;
 
             //Set all units to active
-            foreach (IUnit unit in Game.Units.Where(n => n.CivId == Game.Instance.ActiveCiv.Id))
+            foreach (IUnit unit in Game.GetUnits.Where(n => n.Owner == Game.ActiveCiv))
             {
                 unit.TurnEnded = false;
                 unit.MovePointsLost = 0;
@@ -47,27 +47,27 @@ namespace civ2.GameActions
 
         public static void BuildCity(string cityName)
         {
-            int x = Game.Instance.ActiveUnit.X;
-            int y = Game.Instance.ActiveUnit.Y;
+            int x = Game.ActiveUnit.X;
+            int y = Game.ActiveUnit.Y;
             bool[] improvements = new bool[34];
             bool[] wonders = new bool[28];
             for (int i = 0; i < 34; i++) improvements[i] = false;
             for (int i = 0; i < 28; i++) wonders[i] = false;
             //Game.CreateCity(x, y, false, false, false, false, false, false, false, false, false, Game.Instance.ActiveUnit.Civ, 1, Game.Instance.ActiveUnit.Civ, 0, 0, 0, cityName, 0, 0, 0, 0, improvements, 0, 0, 0, 0, 0, 0, 0, 0, 0, wonders);
 
-            DeleteUnit(Game.Instance.ActiveUnit);
+            DeleteUnit(Game.ActiveUnit);
         }
 
         public static void DeleteUnit(IUnit unit)
         {
-            if (Game.Instance.ActiveUnit == unit)
+            if (Game.ActiveUnit == unit)
             {
-                Game.Units.Remove(unit);
+                Game.GetUnits.Remove(unit);
                 ChooseNextUnit();
             }
             else
             {
-                Game.Units.Remove(unit);
+                Game.GetUnits.Remove(unit);
             }
         }
 
@@ -93,7 +93,7 @@ namespace civ2.GameActions
                 int[] coords = Ext.Civ2xy(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
                 coords[0] += offset[0];
                 coords[1] += offset[1];
-                Game.TerrainTile[coords[0], coords[1]].Visibility[Game.Instance.ActiveCiv.Id] = true;
+                Map.Tile[coords[0], coords[1]].Visibility[Game.Instance.ActiveCiv.Id] = true;
             }
 
             //Update the map image
@@ -182,9 +182,9 @@ namespace civ2.GameActions
 
 
         //find out if certain civ has any units awaiting orders
-        public static bool AnyUnitsAwaitingOrders(int civId)
+        public static bool AnyUnitsAwaitingOrders(Civilization civ)
         {
-            return Game.Units.Any(unit => unit.CivId == civId && unit.AwaitingOrders);
+            return Game.GetUnits.Any(unit => unit.Owner == civ && unit.AwaitingOrders);
         }
 
 

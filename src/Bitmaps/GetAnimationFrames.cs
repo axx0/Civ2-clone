@@ -7,7 +7,7 @@ using ExtensionMethods;
 
 namespace civ2.Bitmaps
 {
-    public class GetAnimationFrames
+    public class GetAnimationFrames : BaseInstance
     {
 
         //Get animation frames for waiting unit
@@ -47,7 +47,7 @@ namespace civ2.Bitmaps
                         int x = centralCoords[0] + coordsOffsets[0];
                         int y = centralCoords[1] + coordsOffsets[1];
 
-                        if (x >= 0 && y >= 0 && x < 2 * Data.MapXdim && y < Data.MapYdim)    //make sure you're not drawing tiles outside map bounds
+                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim)    //make sure you're not drawing tiles outside map bounds
                         {
                             //Tiles
                             int[] realCoords = Ext.Civ2xy(new int[] { x, y });  //real coords from civ2 coords
@@ -57,7 +57,7 @@ namespace civ2.Bitmaps
                                 16 * coordsOffsets[1] + 16);
 
                             //Units
-                            List<IUnit> unitsHere = Game.Units.Where(u => u.X == x && u.Y == y).ToList();
+                            List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
                             if (unitsHere.Any())
                             {
                                 IUnit unit;
