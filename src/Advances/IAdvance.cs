@@ -10,9 +10,9 @@ namespace civ2.Advances
         string Name { get; }
         int AIvalue { get; }
         int Modifier { get; }
-        AdvanceType Prereq1 { get; }
-        AdvanceType Prereq2 { get; }
-        EpochType TechEpoch { get; }
-        KnowledgeType TechCategory { get; }
+        AdvanceType? Prereq1 { get; }
+        AdvanceType? Prereq2 { get; }
+        EpochType Epoch { get; }
+        KnowledgeType KnowledgeCategory { get; }
     }
 }

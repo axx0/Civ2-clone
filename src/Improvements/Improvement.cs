@@ -1,29 +1,41 @@
-﻿using civ2.Enums;
+﻿using System;
+using civ2.Enums;
 
 namespace civ2.Improvements
 {
-    internal class Improvement : IImprovement
+    internal class Improvement : BaseInstance, IImprovement
     {
-        //From RULES.TXT
-        public string Name { get; set; }
-        public int Cost { get; set; }
-        public int Upkeep { get; set; }
-        public TechType Prerequisite { get; set; }
-        public TechType AdvanceExpiration { get; set; }
-
-        public ImprovementType Type { get; set; }
         public int Id => (int)Type;
+        public ImprovementType Type { get; set; }
 
-        //When making a new improvement
+        //From RULES.TXT
+        public string Name => Game.Rules.ImprovementName[(int)Type];
+        public int Cost => 10 * Game.Rules.ImprovementCost[(int)Type];
+        public int Upkeep => Game.Rules.ImprovementUpkeep[(int)Type];
+        public AdvanceType? Prerequisite
+        {
+            get
+            {
+                if (Game.Rules.ImprovementPrereq[(int)Type] == "nil")
+                    return null;
+                else
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.ImprovementPrereq[(int)Type]);
+            }
+        }
+        public AdvanceType? Expiration
+        {
+            get
+            {
+                if (Game.Rules.ImprovementAdvanceExpiration[(int)Type] == "nil")
+                    return null;
+                else
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.ImprovementAdvanceExpiration[(int)Type]);
+            }
+        }
+
         public Improvement(ImprovementType type)
         {
             Type = type;
-            Name = Rules.ImprovementName[(int)(type)];
-            Cost = Rules.ImprovementCost[(int)(type)];
-            Upkeep = Rules.ImprovementUpkeep[(int)(type)];
-            //find correct Prereq TO-DO
-            //find correct advance expiration TO-DO
         }
-
     }
 }

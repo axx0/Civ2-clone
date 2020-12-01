@@ -12,6 +12,10 @@ namespace civ2.Forms
             ChoiceMenu = null;
             MainMenuStrip.Enabled = true;
 
+            //MapPanel = new Civ2panel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            //MapPanel.Location = new Point(0, MainMenuStrip.Height);
+            //Controls.Add(MapPanel);
+
             //MapPanel = new MapPanel(instance, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             //MapPanel.Location = new Point(0, MainMenuStrip.Height);
             //Controls.Add(MapPanel);

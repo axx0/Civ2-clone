@@ -16,7 +16,7 @@ namespace civ2.Forms
     {
         public MainWindow MainWindow;
         City ThisCity;
-        DoubleBufferedPanel CallingForm, WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
+        Civ2panel CallingForm, WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
         VScrollBar ImprovementsBar;
         int[,] offsets;
         int ProductionItem;
@@ -27,7 +27,7 @@ namespace civ2.Forms
             MainWindow = _MainWindow;
         }
 
-        public CityForm(DoubleBufferedPanel _callingForm, City city)
+        public CityForm(Civ2panel _callingForm, City city)
         {
             InitializeComponent();
 

@@ -7,7 +7,7 @@ namespace civ2.Forms
 {
     public partial class CityBuyForm : Civ2form
     {
-        DoubleBufferedPanel MainPanel;
+        Civ2panel MainPanel;
         RadioButton CompleteitButton, NevermindButton;
         City ThisCity;
         int itemNo;

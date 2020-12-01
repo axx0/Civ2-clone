@@ -49,15 +49,15 @@ namespace civ2
         public string[] UnitPrereq { get; private set; }
         public string[] UnitFlags { get; private set; }
 
-        // Tech/advances
-        public string[] TechName { get; private set; }
-        public int[] TechAIvalue { get; private set; }
-        public int[] TechModifier { get; private set; }
-        public string[] TechPrereq1 { get; private set; }
-        public string[] TechPrereq2 { get; private set; }
-        public int[] TechEpoch { get; private set; }
-        public int[] TechCategory { get; private set; }
-        public string[] TechShortName { get; private set; }
+        // Advances
+        public string[] AdvanceName { get; private set; }
+        public int[] AdvanceAIvalue { get; private set; }
+        public int[] AdvanceModifier { get; private set; }
+        public string[] AdvancePrereq1 { get; private set; }
+        public string[] AdvancePrereq2 { get; private set; }
+        public int[] AdvanceEpoch { get; private set; }
+        public int[] AdvanceCategory { get; private set; }
+        public string[] AdvanceShortName { get; private set; }
 
         // City improvements
         public string[] ImprovementName { get; private set; }
@@ -158,14 +158,14 @@ namespace civ2
 
             for (int row = 0; row < 100; row++)
             {
-                TechName[row] = rulesList[1][row];
-                TechAIvalue[row] = Int32.Parse(rulesList[2][row]);
-                TechModifier[row] = Int32.Parse(rulesList[3][row]);
-                TechPrereq1[row] = rulesList[4][row];
-                TechPrereq2[row] = rulesList[5][row];
-                TechEpoch[row] = Int32.Parse(rulesList[6][row]);
-                TechCategory[row] = Int32.Parse(rulesList[7][row]);
-                TechShortName[row] = rulesList[8][row];
+                AdvanceName[row] = rulesList[1][row];
+                AdvanceAIvalue[row] = Int32.Parse(rulesList[2][row]);
+                AdvanceModifier[row] = Int32.Parse(rulesList[3][row]);
+                AdvancePrereq1[row] = rulesList[4][row];
+                AdvancePrereq2[row] = rulesList[5][row];
+                AdvanceEpoch[row] = Int32.Parse(rulesList[6][row]);
+                AdvanceCategory[row] = Int32.Parse(rulesList[7][row]);
+                AdvanceShortName[row] = rulesList[8][row];
             }
 
             for (int row = 0; row < 67; row++)

@@ -6,7 +6,7 @@ namespace civ2
     public class Civilization : BaseInstance
     {
         public int Id { get; set; }
-        public int CityStyle { get; set; }
+        public CityStyleType CityStyle { get; set; }
         public string LeaderName { get; set; }
         public string TribeName { get; set; }
         public string Adjective { get; set; }

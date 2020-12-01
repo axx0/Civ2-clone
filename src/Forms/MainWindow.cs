@@ -14,10 +14,10 @@ namespace civ2.Forms
     {
         MenuStrip MainMenuStrip;
         PictureBox MainPic;
-        MapPanel MapPanel;
-        CityForm cityForm;
-        MinimapPanel MinimapPanel;
-        StatusPanel StatusPanel;
+        //MapPanel MapPanel;
+        //CityForm cityForm;
+        //MinimapPanel MinimapPanel;
+        //StatusPanel StatusPanel;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, MaxZoomInItem, MaxZoomOutItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
@@ -321,10 +321,12 @@ namespace civ2.Forms
         }
 
         #region GAME MENU EVENTS
-        private void GameOptions_Click(object sender, EventArgs e) {
-            GameOptionsForm GameOptionsForm = new GameOptionsForm();
-            GameOptionsForm.Load += new EventHandler(GameOptionsForm_Load);   //so you set the correct size of form
-            GameOptionsForm.ShowDialog(); }
+        private void GameOptions_Click(object sender, EventArgs e) 
+        {
+            //GameOptionsForm GameOptionsForm = new GameOptionsForm();
+            //GameOptionsForm.Load += new EventHandler(GameOptionsForm_Load);   //so you set the correct size of form
+            //GameOptionsForm.ShowDialog(); 
+        }
 
         private void GameOptionsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
@@ -332,10 +334,12 @@ namespace civ2.Forms
             frm.Height = 440;
             frm.Location = new Point(330, 250); }
 
-        private void GraphicOptions_Click(object sender, EventArgs e) {
-            GraphicOptionsForm GraphicOptionsForm = new GraphicOptionsForm();
-            GraphicOptionsForm.Load += new EventHandler(GraphicOptionsForm_Load);   //so you set the correct size of form
-            GraphicOptionsForm.ShowDialog(); }
+        private void GraphicOptions_Click(object sender, EventArgs e) 
+        {
+            //GraphicOptionsForm GraphicOptionsForm = new GraphicOptionsForm();
+            //GraphicOptionsForm.Load += new EventHandler(GraphicOptionsForm_Load);   //so you set the correct size of form
+            //GraphicOptionsForm.ShowDialog(); 
+        }
 
         private void GraphicOptionsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
@@ -343,10 +347,12 @@ namespace civ2.Forms
             frm.Height = 280;
             frm.Location = new Point(330, 250); }
 
-        private void CityReportOptions_Click(object sender, EventArgs e) {
-            CityReportOptionsForm CityReportOptionsForm = new CityReportOptionsForm();
-            CityReportOptionsForm.Load += new EventHandler(CityReportOptionsForm_Load);   //so you set the correct size of form
-            CityReportOptionsForm.ShowDialog(); }
+        private void CityReportOptions_Click(object sender, EventArgs e) 
+        {
+            //CityReportOptionsForm CityReportOptionsForm = new CityReportOptionsForm();
+            //CityReportOptionsForm.Load += new EventHandler(CityReportOptionsForm_Load);   //so you set the correct size of form
+            //CityReportOptionsForm.ShowDialog(); 
+        }
 
         private void CityReportOptionsForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
@@ -391,9 +397,9 @@ namespace civ2.Forms
 
         private void ShowMapGrid_Click(object sender, EventArgs e) 
         { 
-            int var = MapPanel.ToggleMapGrid();
-            if (var != 0) ShowMapGridItem.Checked = true;
-            else ShowMapGridItem.Checked = false;
+            //int var = MapPanel.ToggleMapGrid();
+            //if (var != 0) ShowMapGridItem.Checked = true;
+            //else ShowMapGridItem.Checked = false;
         }
         private void ArrangeWindows_Click(object sender, EventArgs e) { }
         private void ShowHiddenTerrain_Click(object sender, EventArgs e) { }
@@ -477,58 +483,73 @@ namespace civ2.Forms
         private void ChatWithKings_Click(object sender, EventArgs e) { }
         private void ConsultHighCouncil_Click(object sender, EventArgs e) { }
 
-        private void CityStatus_Click(object sender, EventArgs e) {
-            CityStatusForm CityStatusForm = new CityStatusForm();
-            CityStatusForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            CityStatusForm.ShowDialog(); }
+        private void CityStatus_Click(object sender, EventArgs e) 
+        {
+            //CityStatusForm CityStatusForm = new CityStatusForm();
+            //CityStatusForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //CityStatusForm.ShowDialog(); 
+        }
 
-        private void DefenseMinister_Click(object sender, EventArgs e) {
-            DefenseMinisterForm DefenseMinisterForm = new DefenseMinisterForm();
-            DefenseMinisterForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            DefenseMinisterForm.ShowDialog(); }
+        private void DefenseMinister_Click(object sender, EventArgs e) 
+        {
+            //DefenseMinisterForm DefenseMinisterForm = new DefenseMinisterForm();
+            //DefenseMinisterForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //DefenseMinisterForm.ShowDialog(); 
+        }
 
         private void ForeignMinister_Click(object sender, EventArgs e) { }
 
-        private void AttitudeAdvisor_Click(object sender, EventArgs e) {
-            AttitudeAdvisorForm AttitudeAdvisorForm = new AttitudeAdvisorForm();
-            AttitudeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            AttitudeAdvisorForm.ShowDialog(); }
+        private void AttitudeAdvisor_Click(object sender, EventArgs e) 
+        {
+            //AttitudeAdvisorForm AttitudeAdvisorForm = new AttitudeAdvisorForm();
+            //AttitudeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //AttitudeAdvisorForm.ShowDialog(); 
+        }
 
-        private void TradeAdvisor_Click(object sender, EventArgs e) {
-            TradeAdvisorForm TradeAdvisorForm = new TradeAdvisorForm();
-            TradeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            TradeAdvisorForm.ShowDialog(); }
+        private void TradeAdvisor_Click(object sender, EventArgs e) 
+        {
+            //TradeAdvisorForm TradeAdvisorForm = new TradeAdvisorForm();
+            //TradeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //TradeAdvisorForm.ShowDialog(); 
+        }
 
-        private void ScienceAdvisor_Click(object sender, EventArgs e) {
-            ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
-            ScienceAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            ScienceAdvisorForm.ShowDialog(); }
+        private void ScienceAdvisor_Click(object sender, EventArgs e) 
+        {
+            //ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
+            //ScienceAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //ScienceAdvisorForm.ShowDialog(); 
+        }
 
         private void CasualtyTimeline_Click(object sender, EventArgs e) { }
         #endregion
         #region WORLD MENU EVENTS
-        private void WondersOfWorld_Click(object sender, EventArgs e) {
-            WondersOfWorldForm WondersOfWorldForm = new WondersOfWorldForm();
-            WondersOfWorldForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            WondersOfWorldForm.ShowDialog(); }
+        private void WondersOfWorld_Click(object sender, EventArgs e) 
+        {
+            //WondersOfWorldForm WondersOfWorldForm = new WondersOfWorldForm();
+            //WondersOfWorldForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //WondersOfWorldForm.ShowDialog();
+        }
 
         private void Top5Cities_Click(object sender, EventArgs e) { }
         private void CivScore_Click(object sender, EventArgs e) { }
 
-        private void Demographics_Click(object sender, EventArgs e) {
-            DemographicsForm DemographicsForm = new DemographicsForm();
-            DemographicsForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            DemographicsForm.ShowDialog(); }
-
+        private void Demographics_Click(object sender, EventArgs e)
+        {
+            //DemographicsForm DemographicsForm = new DemographicsForm();
+            //DemographicsForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
+            //DemographicsForm.ShowDialog();
+        }
         private void Spaceships_Click(object sender, EventArgs e) { }
         #endregion
         #region CHEAT MENU EVENTS
         private void ToggleCheatMode_Click(object sender, EventArgs e) { }
 
-        private void CreateUnit_Click(object sender, EventArgs e) {
-            CreateUnitForm CreateUnitForm = new CreateUnitForm();
-            CreateUnitForm.Load += new EventHandler(CreateUnitForm_Load);   //so you set the correct size of form
-            CreateUnitForm.ShowDialog(); }
+        private void CreateUnit_Click(object sender, EventArgs e) 
+        {
+            //CreateUnitForm CreateUnitForm = new CreateUnitForm();
+            //CreateUnitForm.Load += new EventHandler(CreateUnitForm_Load);   //so you set the correct size of form
+            //CreateUnitForm.ShowDialog(); 
+        }
 
         private void CreateUnitForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
@@ -539,10 +560,12 @@ namespace civ2.Forms
         private void RevealMap_Click(object sender, EventArgs e) { }
         private void SetHumanPlayer_Click(object sender, EventArgs e) { }
 
-        private void SetGameYear_Click(object sender, EventArgs e) {
-            SetGameYearForm SetGameYearForm = new SetGameYearForm();
-            SetGameYearForm.Load += new EventHandler(SetGameYearForm_Load);   //so you set the correct size of form
-            SetGameYearForm.ShowDialog(); }
+        private void SetGameYear_Click(object sender, EventArgs e) 
+        {
+            //SetGameYearForm SetGameYearForm = new SetGameYearForm();
+            //SetGameYearForm.Load += new EventHandler(SetGameYearForm_Load);   //so you set the correct size of form
+            //SetGameYearForm.ShowDialog(); 
+        }
 
         private void SetGameYearForm_Load(object sender, EventArgs e) {
             Form frm = sender as Form;
@@ -597,7 +620,7 @@ namespace civ2.Forms
                     item.Enabled = true;
                 }
                 if (Game.Instance.ActiveUnit.Type != UnitType.Paratroopers) OrdersMenu.DropDownItems.Remove(ParadropItem);
-                if (Game.Instance.ActiveUnit.GAS == (UnitGAS.Air | UnitGAS.Sea)) PillageItem.Enabled = false;
+                //if (Game.Instance.ActiveUnit.GAS == (UnitGAS.Air | UnitGAS.Sea)) PillageItem.Enabled = false;
                 BuildRoadItem.Enabled = false;
                 BuildIrrigationItem.Enabled = false;
                 BuildMinesChangeForestItem.Enabled = false;

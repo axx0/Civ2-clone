@@ -8,12 +8,30 @@ namespace civ2.Advances
         public AdvanceType Type { get; set; }
 
         // From RULES.TXT
-        public string Name => Game.Rules.TechName[(int)Type];
-        public int AIvalue => Game.Rules.TechAIvalue[(int)Type];
-        public int Modifier => Game.Rules.TechModifier[(int)Type];
-        public AdvanceType Prereq1 => (AdvanceType)Array.IndexOf(Game.Rules.TechShortName, Game.Rules.TechPrereq1[(int)Type]);
-        public AdvanceType Prereq2 => (AdvanceType)Array.IndexOf(Game.Rules.TechShortName, Game.Rules.TechPrereq2[(int)Type]);
-        public EpochType TechEpoch => (EpochType)Game.Rules.TechEpoch[(int)Type];
-        public KnowledgeType TechCategory => (KnowledgeType)Game.Rules.TechCategory[(int)Type];
+        public string Name => Game.Rules.AdvanceName[(int)Type];
+        public int AIvalue => Game.Rules.AdvanceAIvalue[(int)Type];
+        public int Modifier => Game.Rules.AdvanceModifier[(int)Type];
+        public AdvanceType? Prereq1
+        {
+            get
+            {
+                if (Game.Rules.AdvancePrereq1[(int)Type] == "nil")
+                    return null;
+                else
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.AdvancePrereq1[(int)Type]);
+            }
+        }
+        public AdvanceType? Prereq2
+        {
+            get
+            {
+                if (Game.Rules.AdvancePrereq2[(int)Type] == "nil")
+                    return null;
+                else
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.AdvancePrereq2[(int)Type]);
+            }
+        }
+        public EpochType Epoch => (EpochType)Game.Rules.AdvanceEpoch[(int)Type];
+        public KnowledgeType KnowledgeCategory => (KnowledgeType)Game.Rules.AdvanceCategory[(int)Type];
     }
 }

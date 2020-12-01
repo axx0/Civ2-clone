@@ -7,9 +7,9 @@ namespace civ2.Units
     {
         //From RULES.TXT
         string Name { get; }
-        AdvanceType UntilTech { get; }
+        AdvanceType? UntilTech { get; }
         UnitGAS Domain { get; }
-        int MovementRate { get; }
+        int MaxMovePoints { get; }
         int FuelRange { get; }
         int AttackFactor { get; }
         int DefenseFactor { get; }
@@ -18,7 +18,7 @@ namespace civ2.Units
         int Cost { get; }
         int ShipHold { get; }
         AIroleType AIrole { get; }
-        AdvanceType PrereqAdvance { get; }
+        AdvanceType? PrereqAdvance { get; }
         bool TwoSpaceVisibility { get; }
         bool IgnoreZonesOfControl { get; }
         bool CanMakeAmphibiousAssaults { get; }
@@ -41,7 +41,6 @@ namespace civ2.Units
         int HitPoints { get; }
         int HitPointsLost { get; set; }
         UnitType Type { get; set; }
-        UnitGAS GAS { get; }
         OrderType Order { get; set; }
         int X { get; set; }
         int Y { get; set; }

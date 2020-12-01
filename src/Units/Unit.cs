@@ -18,11 +18,11 @@ namespace civ2.Units
                 if (Game.Rules.UnitUntil[(int)Type] == "nil")
                     return null;
                 else
-                    return (AdvanceType)Array.IndexOf(Game.Rules.TechShortName, Game.Rules.UnitUntil[(int)Type]);                  
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.UnitUntil[(int)Type]);                  
             }
         }
         public UnitGAS Domain => (UnitGAS)Game.Rules.UnitDomain[(int)Type];
-        public int MovementRate => Game.Rules.UnitMove[(int)Type];
+        public int MaxMovePoints => Game.Rules.UnitMove[(int)Type];
         public int FuelRange => Game.Rules.UnitRange[(int)Type];
         public int AttackFactor => Game.Rules.UnitAttack[(int)Type];
         public int DefenseFactor => Game.Rules.UnitDefense[(int)Type];
@@ -38,7 +38,7 @@ namespace civ2.Units
                 if (Game.Rules.UnitPrereq[(int)Type] == "nil" || Game.Rules.UnitPrereq[(int)Type] == "no")
                     return null;
                 else
-                    return (AdvanceType)Array.IndexOf(Game.Rules.TechShortName, Game.Rules.UnitPrereq[(int)Type]);
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.UnitPrereq[(int)Type]);
             }
         }
         public bool TwoSpaceVisibility => Game.Rules.UnitFlags[(int)Type][14] == '1';
@@ -66,7 +66,7 @@ namespace civ2.Units
         public int MovePointsLost { get; set; }
         public int HitPoints 
         { 
-            get { return MaxHitPoints - HitPointsLost; } 
+            get { return MaxHitpoints - HitPointsLost; } 
         }
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
@@ -135,26 +135,26 @@ namespace civ2.Units
 
             bool unitMoved = false;
 
-            switch (GAS)
+            switch (Domain)
             {
                 case UnitGAS.Ground:
                     {
                         //Cannot move to ocean tile
-                        if (Game.TerrainTile[Xto_, Yto].Type == TerrainType.Ocean)
+                        if (Map.Tile[Xto_, Yto].Type == TerrainType.Ocean)
                         { 
                             break; 
                         }
                         
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) 
+                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim) 
                         { 
                             //TODO: display a message that a unit cannot move beyond map edges
                             break; 
                         }
 
                         //Movement possible, reduce movement points
-                        if ((Game.TerrainTile[X_, Y].Road || Game.TerrainTile[X_, Y].CityPresent) && (Game.TerrainTile[Xto_, Yto].Road || Game.TerrainTile[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
-                            (Game.TerrainTile[X_, Y].River && Game.TerrainTile[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        if ((Map.Tile[X_, Y].Road || Map.Tile[X_, Y].CityPresent) && (Map.Tile[Xto_, Yto].Road || Map.Tile[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
+                            (Map.Tile[X_, Y].River && Map.Tile[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
                         {
                             MovePointsLost += 1;
                         }
@@ -168,13 +168,13 @@ namespace civ2.Units
                     }
                 case UnitGAS.Sea:
                     {
-                        if (Game.TerrainTile[Xto_, Yto].Type != TerrainType.Ocean)
+                        if (Map.Tile[Xto_, Yto].Type != TerrainType.Ocean)
                         { 
                             break; 
                         }
 
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim) 
+                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim) 
                         {
                             //TODO: display a message that a unit cannot move beyond map edges
                             break;
@@ -188,7 +188,7 @@ namespace civ2.Units
                 case UnitGAS.Air:
                     {
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Data.MapXdim || Yto < 0 || Yto >= Data.MapYdim)
+                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
                         {
                             break;
                         }
@@ -264,7 +264,7 @@ namespace civ2.Units
 
         public void BuildIrrigation()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.TerrainTile[X, Y].Irrigation == false) || (Game.TerrainTile[X, Y].Farmland == false)))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Map.Tile[X, Y].Irrigation == false) || (Map.Tile[X, Y].Farmland == false)))
             {
                 Order = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
@@ -277,7 +277,7 @@ namespace civ2.Units
 
         public void BuildMines()
         {
-            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Game.TerrainTile[X, Y].Mining == false && (Game.TerrainTile[X, Y].Type == TerrainType.Mountains || Game.TerrainTile[X, Y].Type == TerrainType.Hills))
+            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Map.Tile[X, Y].Mining == false && (Map.Tile[X, Y].Type == TerrainType.Mountains || Map.Tile[X, Y].Type == TerrainType.Hills))
             {
                 Order = OrderType.BuildMine;
                 Counter = 0;    //reset counter
@@ -303,7 +303,7 @@ namespace civ2.Units
 
         public void BuildRoad()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Game.TerrainTile[X, Y].Road == false) || (Game.TerrainTile[X, Y].Railroad == false)))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
             {
                 Order = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
@@ -316,7 +316,7 @@ namespace civ2.Units
 
         public void BuildCity()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Game.TerrainTile[X, Y].Type != TerrainType.Ocean))
+            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Map.Tile[X, Y].Type != TerrainType.Ocean))
             {
                 //First invoke city name panel. If cancel is pressed, do nothing.
                 //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
@@ -331,7 +331,7 @@ namespace civ2.Units
         {
             get
             {
-                return Game.Cities.Any(city => city.X == X && city.Y == Y); ;
+                return Game.GetCities.Any(city => city.X == X && city.Y == Y); ;
             }
         }
 
@@ -341,7 +341,7 @@ namespace civ2.Units
             get 
             {
                 List<IUnit> unitsInStack = new List<IUnit>();
-                foreach (IUnit unit in Game.Units) 
+                foreach (IUnit unit in Game.GetUnits) 
                     if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
                 _isInStack = (unitsInStack.Count > 1) ? true : false;
                 return _isInStack;
@@ -354,7 +354,7 @@ namespace civ2.Units
             get
             {
                 List<IUnit> unitsInStack = new List<IUnit>();
-                foreach (IUnit unit in Game.Units) 
+                foreach (IUnit unit in Game.GetUnits) 
                     if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
                 _isLastInStack = (unitsInStack.Last() == this) ? true : false;
                 return _isLastInStack;
@@ -366,7 +366,7 @@ namespace civ2.Units
         {
             get
             {
-                _graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, MapPanel.ZoomLvl);
+                //_graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, MapPanel.ZoomLvl);
                 return _graphicMapPanel;
             }
         }

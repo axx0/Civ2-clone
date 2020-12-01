@@ -71,10 +71,14 @@
     <Compile Include="src\Advances\IAdvance.cs" />
     <Compile Include="src\Enums\AIroleType.cs" />
     <Compile Include="src\Enums\BarbarianActivityType.cs" />
+    <Compile Include="src\Enums\CityStyleType.cs" />
     <Compile Include="src\Enums\EpochType.cs" />
     <Compile Include="src\Enums\GameVersionType.cs" />
     <Compile Include="src\Enums\IntroScreenChoiceType.cs" />
     <Compile Include="src\Enums\KnowledgeType.cs" />
+    <Compile Include="src\Forms\MapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Game.LoadGame.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -130,90 +134,6 @@
     <Compile Include="src\Forms\Templates\NoSelectButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.Designer.cs">
-      <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityBuyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityBuyForm.Designer.cs">
-      <DependentUpon>CityBuyForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityForm.Designer.cs">
-      <DependentUpon>CityForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityChangeForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityChangeForm.Designer.cs">
-      <DependentUpon>CityChangeForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityRenameForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\City view\CityRenameForm.Designer.cs">
-      <DependentUpon>CityRenameForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\CityStatusForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\CityStatusForm.Designer.cs">
-      <DependentUpon>CityStatusForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.Designer.cs">
-      <DependentUpon>CreateUnitForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.Designer.cs">
-      <DependentUpon>ForeignCreateUnitForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Cheat\SetGameYearForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Cheat\SetGameYearForm.Designer.cs">
-      <DependentUpon>SetGameYearForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Game\CityReportOptionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Game\CityReportOptionsForm.Designer.cs">
-      <DependentUpon>CityReportOptionsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Game\GameOptionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Game\GameOptionsForm.Designer.cs">
-      <DependentUpon>GameOptionsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Game\GraphicOptionsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Game\GraphicOptionsForm.Designer.cs">
-      <DependentUpon>GraphicOptionsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu World\DemographicsForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu World\DemographicsForm.Designer.cs">
-      <DependentUpon>DemographicsForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu World\WondersOfWorldForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu World\WondersOfWorldForm.Designer.cs">
-      <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Forms\Templates\Civ2button.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -225,24 +145,6 @@
     </Compile>
     <Compile Include="src\Enums\TerrainType.cs" />
     <Compile Include="src\Enums\UnitType.cs" />
-    <Compile Include="src\Forms\Menu Advisors\DefenseMinisterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\DefenseMinisterForm.Designer.cs">
-      <DependentUpon>DefenseMinisterForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\ScienceAdvisorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\ScienceAdvisorForm.Designer.cs">
-      <DependentUpon>ScienceAdvisorForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\TradeAdvisorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Menu Advisors\TradeAdvisorForm.Designer.cs">
-      <DependentUpon>TradeAdvisorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="src\Forms\Templates\Civ2panel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -278,63 +180,13 @@
     <EmbeddedResource Include="src\Forms\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Advisors\AttitudeAdvisorForm.resx">
-      <DependentUpon>AttitudeAdvisorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\City view\CityBuyForm.resx">
-      <DependentUpon>CityBuyForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\City view\CityChangeForm.resx">
-      <DependentUpon>CityChangeForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\City view\CityRenameForm.resx">
-      <DependentUpon>CityRenameForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Advisors\CityStatusForm.resx">
-      <DependentUpon>CityStatusForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.resx">
-      <DependentUpon>CreateUnitForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.resx">
-      <DependentUpon>ForeignCreateUnitForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Cheat\SetGameYearForm.resx">
-      <DependentUpon>SetGameYearForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Game\CityReportOptionsForm.resx">
-      <DependentUpon>CityReportOptionsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Game\GameOptionsForm.resx">
-      <DependentUpon>GameOptionsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Game\GraphicOptionsForm.resx">
-      <DependentUpon>GraphicOptionsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu World\DemographicsForm.resx">
-      <DependentUpon>DemographicsForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu World\WondersOfWorldForm.resx">
-      <DependentUpon>WondersOfWorldForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Templates\Civ2form.resx">
       <DependentUpon>Civ2form.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Advisors\DefenseMinisterForm.resx">
-      <DependentUpon>DefenseMinisterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Advisors\ScienceAdvisorForm.resx">
-      <DependentUpon>ScienceAdvisorForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Menu Advisors\TradeAdvisorForm.resx">
-      <DependentUpon>TradeAdvisorForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -373,6 +225,12 @@
     <Content Include="notes.txt" />
     <None Include="Resources\MinimapCursor.cur" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="src\Forms\City view\" />
+    <Folder Include="src\Forms\Menu Advisors\" />
+    <Folder Include="src\Forms\Menu Cheat\Create Unit\" />
+    <Folder Include="src\Forms\Menu Game\" />
+    <Folder Include="src\Forms\Menu World\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

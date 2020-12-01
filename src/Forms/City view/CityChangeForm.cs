@@ -8,7 +8,7 @@ namespace civ2.Forms
     public partial class CityChangeForm : Civ2form
     {
         public event Action RefreshCityForm;
-        DoubleBufferedPanel BackgroundPanel, ChoicePanel;
+        Civ2panel BackgroundPanel, ChoicePanel;
         City ThisCity;
         VScrollBar VerticalBar;
         public int BarValue { get; set; }       //starting value of view of vertical bar

@@ -15,7 +15,7 @@ namespace civ2.Forms
 {
     public partial class MapPanel : Civ2panel
     {
-        private static Civ2panel DrawPanel;
+        private static Panel DrawPanel;
         StringFormat sf = new StringFormat();
 
         private static List<Bitmap> AnimationBitmap;        
@@ -38,12 +38,12 @@ namespace civ2.Forms
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Actions.OnUnitEvent += UnitEventHappened;
             Actions.OnPlayerEvent += PlayerEventHappened;
-            MinimapPanel.OnMapEvent += MapEventHappened;
-            StatusPanel.OnMapEvent += MapEventHappened;
+            //MinimapPanel.OnMapEvent += MapEventHappened;
+            //StatusPanel.OnMapEvent += MapEventHappened;
             MainWindow.OnMapEvent += MapEventHappened;
             MainWindow.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
             
-            DrawPanel = new DoubleBufferedPanel() 
+            DrawPanel = new Panel() 
             {
                 Location = new Point(11, 38),
                 Size = new Size(Width - 22, Height - 49),
@@ -136,7 +136,7 @@ namespace civ2.Forms
             int zoomLvl = ZoomLvl;
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
-            e.Graphics.DrawImage(Game.CivsMap[CivIdWhoseMapIsDisplayed], 0, 0, rect, GraphicsUnit.Pixel);
+            //e.Graphics.DrawImage(Game.CivsMap[CivIdWhoseMapIsDisplayed], 0, 0, rect, GraphicsUnit.Pixel);
 
             //Unit/viewing piece static
             switch (AnimType)
@@ -170,18 +170,18 @@ namespace civ2.Forms
 
             if (e.Button == MouseButtons.Left)
             {
-                if (Game.Cities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
+                if (Game.GetCities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    //city clicked
                 {
                     if (ViewPiecesMode) ActiveXY = ClickedXY;
-                    CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
-                    cityForm.Show();
+                    //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
+                    //cityForm.Show();
                 }
-                else if (Game.Units.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
+                else if (Game.GetUnits.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    //unit clicked
                 {
-                    int clickedUnitIndex = Game.Units.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
-                    if (!Game.Units[clickedUnitIndex].TurnEnded)
+                    int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
+                    if (!Game.GetUnits[clickedUnitIndex].TurnEnded)
                     {
-                        Game.Instance.ActiveUnit = Game.Units[clickedUnitIndex];
+                        Game.Instance.ActiveUnit = Game.GetUnits[clickedUnitIndex];
                         ViewPiecesMode = false;
                         OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
                         StartAnimation(AnimationType.UnitWaiting);
@@ -476,10 +476,10 @@ namespace civ2.Forms
         //If ENTER pressed when view piece above city --> enter city view
         private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
         {
-            if (ViewPiecesMode && Game.Cities.Any(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]))
+            if (ViewPiecesMode && Game.GetCities.Any(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]))
             {
-                CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
-                cityForm.Show();
+                //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
+                //cityForm.Show();
             }
         }
 
@@ -541,7 +541,7 @@ namespace civ2.Forms
 
                             //Update the original world map image with image of new location of unit & redraw whole map
                             IUnit unit = Game.Instance.ActiveUnit;
-                            Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
+                            //Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                             Update();
 

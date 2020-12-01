@@ -13,21 +13,28 @@ namespace civ2.Forms
 
     public partial class Civ2panel : Panel
     {
-        public Civ2panel()  // empty panel
+        public Civ2panel(int width, int height)  // empty panel
         {
+            Size = new Size(width, height);
             DoubleBuffered = true;
             BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 
-        public Civ2panel(string title)  // only title
+        public Civ2panel(int width, int height, string title)  // only title
         {
+            Size = new Size(width, height);
             DoubleBuffered = true;
+            BackgroundImage = Images.PanelOuterWallpaper;
+            this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 
-        public Civ2panel(string title, List<Civ2button> buttons)    // title + buttons
+        public Civ2panel(int width, int height, string title, List<Civ2button> buttons)    // title + buttons
         {
+            Size = new Size(width, height);
             DoubleBuffered = true;
+            BackgroundImage = Images.PanelOuterWallpaper;
+            this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 
         // Draw border around panel

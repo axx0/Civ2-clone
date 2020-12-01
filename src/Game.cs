@@ -344,7 +344,7 @@ namespace civ2
             Civilization civ = new Civilization
             {
                 Id = id,
-                CityStyle = style,
+                CityStyle = (CityStyleType)style,
                 LeaderName = leaderName,
                 TribeName = tribeName,
                 Adjective = adjective,

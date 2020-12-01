@@ -320,6 +320,7 @@ namespace civ2
                 // Read LEADERS
                 if (line == "@LEADERS")
                 {
+                    // TODO: also read govrnment type for name replacement + male & female titles (leaderFemale determines what will the title be)
                     string[] leaderNameHIS = new string[21];
                     string[] leaderNameHER = new string[21];
                     string[] leaderFemale = new string[21];
@@ -419,7 +420,7 @@ namespace civ2
         {
             GameData data = new GameData();
 
-            string bin;
+            //string bin;
             int intVal1, intVal2, intVal3, intVal4;
 
             //Read every byte
@@ -495,7 +496,7 @@ namespace civ2
             data.PlayersCivilizationNumberUsed = bytes[41];
 
             // Map revealed
-            data.MapRevealed = (bytes[43] == 1) ? true : false;
+            data.MapRevealed = bytes[43] == 1;
 
             // Difficulty level
             data.DifficultyLevel = (DifficultyType)bytes[44];
