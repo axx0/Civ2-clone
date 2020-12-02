@@ -4,7 +4,7 @@ using System.IO;
 
 namespace civ2.Bitmaps
 {
-    public partial class Images
+    public partial class Draw
     {
         // Extract icon from civ2.exe file
         public static void ImportCiv2Icon()

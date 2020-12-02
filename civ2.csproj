@@ -85,7 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="src\Bitmaps\Images.ImportBitmaps.cs" />
+    <Compile Include="src\Bitmaps\Draw.ImportBitmaps.cs" />
     <Compile Include="src\Enums\AnimationType.cs" />
     <Compile Include="src\Enums\PlayerEventType.cs" />
     <Compile Include="src\Enums\MapEventType.cs" />
@@ -160,7 +160,7 @@
     <Compile Include="src\Bitmaps\CivColors.cs" />
     <Compile Include="src\Bitmaps\DrawFunctions.cs" />
     <Compile Include="src\Bitmaps\ModifyImage.cs" />
-    <Compile Include="src\Bitmaps\Images.cs" />
+    <Compile Include="src\Bitmaps\Draw.cs" />
     <Compile Include="src\ExtensionMethods.cs" />
     <Compile Include="src\Improvements\Improvement.cs" />
     <Compile Include="src\Improvements\IImprovement.cs" />
@@ -202,8 +202,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\GameActions\Actions.Units.cs" />
-    <Compile Include="src\Bitmaps\Images.ImportDLLimages.cs" />
-    <Compile Include="src\Bitmaps\Images.CityPanel.cs" />
+    <Compile Include="src\Bitmaps\Draw.ImportDLLimages.cs" />
+    <Compile Include="src\Bitmaps\Draw.CityPanel.cs" />
+    <Compile Include="src\Bitmaps\Draw.City.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

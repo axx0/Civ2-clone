@@ -75,6 +75,7 @@ namespace civ2.Units
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
         public Civilization Owner { get; set; }
+        public int OwnerId => Game.GetCivs.IndexOf(Owner);
         public int LastMove { get; set; }
         public CommodityType CaravanCommodity { get; set; }
         public City HomeCity { get; set; }

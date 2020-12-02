@@ -49,6 +49,7 @@ namespace civ2.Units
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
         Civilization Owner { get; set; }
+        int OwnerId { get; }
         int LastMove { get; set; }
         CommodityType CaravanCommodity { get; set; }
         City HomeCity { get; set; }

@@ -42,7 +42,7 @@ namespace civ2.Bitmaps
 
                 //draw unit shields
                 //First determine if the shield is on the left or right side
-                int firstShieldXLoc = Images.unitShieldLocation[Id, 0];
+                int firstShieldXLoc = Draw.unitShieldLocation[Id, 0];
                 int secondShieldXLoc = firstShieldXLoc;
                 int secondShieldBorderXLoc;
                 int borderShieldOffset;
@@ -58,10 +58,10 @@ namespace civ2.Bitmaps
                     secondShieldXLoc += 4;
                     secondShieldBorderXLoc = secondShieldXLoc + 1;
                 }
-                graphics.DrawImage(Images.UnitShieldShadow, Images.unitShieldLocation[Id, 0] + borderShieldOffset, Images.unitShieldLocation[Id, 1]); //shield shadow
-                graphics.DrawImage(Images.UnitShield[civId], Images.unitShieldLocation[Id, 0], Images.unitShieldLocation[Id, 1]); //main shield
-                graphics.DrawString("-", new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[Id, 0] + 6, Images.unitShieldLocation[Id, 1] + 12, sf);    //Action on shield
-                graphics.DrawImage(Images.Units[Id], 0, 0);    //draw unit
+                graphics.DrawImage(Draw.UnitShieldShadow, Draw.unitShieldLocation[Id, 0] + borderShieldOffset, Draw.unitShieldLocation[Id, 1]); //shield shadow
+                graphics.DrawImage(Draw.UnitShield[civId], Draw.unitShieldLocation[Id, 0], Draw.unitShieldLocation[Id, 1]); //main shield
+                graphics.DrawString("-", new Font("Arial", 8.0f), new SolidBrush(Color.Black), Draw.unitShieldLocation[Id, 0] + 6, Draw.unitShieldLocation[Id, 1] + 12, sf);    //Action on shield
+                graphics.DrawImage(Draw.Units[Id], 0, 0);    //draw unit
                 sf.Dispose();
             }
 
@@ -98,7 +98,7 @@ namespace civ2.Bitmaps
 
                 //draw unit shields
                 //First determine if the shield is on the left or right side
-                int firstShieldXLoc = Images.unitShieldLocation[(int)unit.Type, 0];
+                int firstShieldXLoc = Draw.unitShieldLocation[(int)unit.Type, 0];
                 int secondShieldXLoc = firstShieldXLoc;
                 int secondShieldBorderXLoc;
                 int borderShieldOffset;
@@ -124,36 +124,36 @@ namespace civ2.Bitmaps
 
                 if (stacked)    //draw dark shield if unit is stacked on top of others
                 {
-                    graphics.DrawImage(Images.UnitShieldShadow, secondShieldBorderXLoc, Images.unitShieldLocation[(int)unit.Type, 1]); //shield shadow
-                    graphics.DrawImage(Images.NoBorderUnitShield[(int)unit.CivId], secondShieldXLoc, Images.unitShieldLocation[(int)unit.Type, 1]);   //dark shield
+                    graphics.DrawImage(Draw.UnitShieldShadow, secondShieldBorderXLoc, Draw.unitShieldLocation[(int)unit.Type, 1]); //shield shadow
+                    graphics.DrawImage(Draw.NoBorderUnitShield[unit.OwnerId], secondShieldXLoc, Draw.unitShieldLocation[(int)unit.Type, 1]);   //dark shield
                 }
 
                 //shield shadow
-                graphics.DrawImage(Images.UnitShieldShadow, Images.unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, Images.unitShieldLocation[(int)unit.Type, 1]);
+                graphics.DrawImage(Draw.UnitShieldShadow, Draw.unitShieldLocation[(int)unit.Type, 0] + borderShieldOffset, Draw.unitShieldLocation[(int)unit.Type, 1]);
 
                 //main shield
-                graphics.DrawImage(Images.UnitShield[(int)unit.CivId], Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1]);
+                graphics.DrawImage(Draw.UnitShield[unit.OwnerId], Draw.unitShieldLocation[(int)unit.Type, 0], Draw.unitShieldLocation[(int)unit.Type, 1]);
 
                 //Draw black background for hitpoints bar
-                graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
+                graphics.FillRectangle(new SolidBrush(Color.Black), new Rectangle(Draw.unitShieldLocation[(int)unit.Type, 0], Draw.unitShieldLocation[(int)unit.Type, 1] + 2, 12, 3));
 
                 //Draw hitpoints bar
-                graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(Images.unitShieldLocation[(int)unit.Type, 0], Images.unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
+                graphics.FillRectangle(new SolidBrush(hitpointsColor), new Rectangle(Draw.unitShieldLocation[(int)unit.Type, 0], Draw.unitShieldLocation[(int)unit.Type, 1] + 2, hitpointsBarX, 3));
 
                 //Action on shield
-                graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 6, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    
+                graphics.DrawString(shieldText, new Font("Arial", 8.0f), new SolidBrush(Color.Black), Draw.unitShieldLocation[(int)unit.Type, 0] + 6, Draw.unitShieldLocation[(int)unit.Type, 1] + 12, sf);    
 
                 if (unit.Order != OrderType.Sleep)
                 {
-                    graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);    //draw unit
+                    graphics.DrawImage(Draw.Units[(int)unit.Type], 0, 0);    //draw unit
                 }
                 else
                 {
-                    graphics.DrawImage(Images.Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit
+                    graphics.DrawImage(Draw.Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());    //draw sentry unit
                 }
 
                 //draw fortification
-                if (unit.Order == OrderType.Fortified) graphics.DrawImage(Images.Fortified, 0, 0);
+                if (unit.Order == OrderType.Fortified) graphics.DrawImage(Draw.Fortified, 0, 0);
 
                 sf.Dispose();
             }
@@ -164,114 +164,6 @@ namespace civ2.Bitmaps
             return square;
         }
                 
-        public Bitmap DrawCity(City city, bool citySizeWindow)
-        {
-            Bitmap map = new Bitmap(64, 48);    //define a bitmap for drawing map
-
-            //Determine city bitmap
-            //For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
-            //If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
-            int cityStyle = Game.GetCities[city.Owner].CityStyle;
-            int sizeStyle = 0;
-            if (cityStyle < 4)
-            {
-                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
-                {
-                    if (city.Size <= 3) sizeStyle = 1;
-                    else if (city.Size > 3 && city.Size <= 5) sizeStyle = 2;
-                    else sizeStyle = 3;
-
-                }
-                else
-                {
-                    if (city.Size <= 3) sizeStyle = 0;
-                    else if (city.Size > 3 && city.Size <= 5) sizeStyle = 1;
-                    else if (city.Size > 5 && city.Size <= 7) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-            }
-            //If city is industrial => 4 city size styles (0=sizes 1...4, 1=sizes 5...7, 2=sizes 8...10, 3=sizes >= 11)
-            //If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...7, 3=sizes >= 8)
-            else if (cityStyle == 4)
-            {
-                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
-                {
-                    if (city.Size <= 4) sizeStyle = 1;
-                    else if (city.Size > 4 && city.Size <= 7) sizeStyle = 2;
-                    else sizeStyle = 3;
-
-                }
-                else
-                {
-                    if (city.Size <= 4) sizeStyle = 0;
-                    else if (city.Size > 4 && city.Size <= 7) sizeStyle = 1;
-                    else if (city.Size > 7 && city.Size <= 10) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-            }
-            //If city is modern => 4 city size styles (0=sizes 1...4, 1=sizes 5...10, 2=sizes 11...18, 3=sizes >= 19)
-            //If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...10, 3=sizes >= 11)
-            else
-            {
-                if (Array.Exists(city.Improvements, element => element.Type == ImprovementType.Palace)) //palace exists
-                {
-                    if (city.Size <= 4) sizeStyle = 1;
-                    else if (city.Size > 4 && city.Size <= 10) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-                else
-                {
-                    if (city.Size <= 4) sizeStyle = 0;
-                    else if (city.Size > 4 && city.Size <= 10) sizeStyle = 1;
-                    else if (city.Size > 10 && city.Size <= 18) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-            }
-
-            //If no units are in the city, draw no flag
-            bool flagPresent = false;
-            if (Game.Units.Any(unit => unit.X == city.X && unit.Y == city.Y)) flagPresent = true;
-
-            using (Graphics graphics = Graphics.FromImage(map))
-            {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
-
-                if (!Array.Exists(city.Improvements, element => element.Type == ImprovementType.CityWalls))  //no city walls
-                {
-                    graphics.DrawImage(Images.City[cityStyle, sizeStyle], 0, 0);
-                    if (citySizeWindow) //Draw city size window
-                    {
-                        graphics.DrawRectangle(new Pen(Color.Black), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] - 1, Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13);  //rectangle
-                        graphics.FillRectangle(new SolidBrush(CivColors.Light[city.Owner]), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0], Images.citySizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
-                        graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.citySizeWindowLoc[cityStyle, sizeStyle, 0] + 4, Images.citySizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text
-                    }
-                    if (flagPresent)    //Draw city flag
-                    {
-                        graphics.DrawImage(Images.CityFlag[city.Owner], Images.cityFlagLoc[cityStyle, sizeStyle, 0] - 3, Images.cityFlagLoc[cityStyle, sizeStyle, 1] - 17);
-                    }
-                }
-                else
-                {
-                    graphics.DrawImage(Images.CityWall[cityStyle, sizeStyle], 0, 0);
-                    if (citySizeWindow)
-                    {
-                        graphics.DrawRectangle(new Pen(Color.Black), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] - 1, Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] - 1, 9, 13); //Draw city (+Wall) size window
-                        graphics.FillRectangle(new SolidBrush(CivColors.Light[city.Owner]), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0], Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1], 8, 12); //filling of rectangle
-                        graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 0] + 4, Images.cityWallSizeWindowLoc[cityStyle, sizeStyle, 1] + 6, sf);    //Size text    
-                    }
-                    if (flagPresent)    //Draw city flag
-                    {
-                        graphics.DrawImage(Images.CityFlag[city.Owner], Images.cityWallFlagLoc[cityStyle, sizeStyle, 0] - 3, Images.cityWallFlagLoc[cityStyle, sizeStyle, 1] - 17);    //Draw city flag
-                    }
-                }
-
-                sf.Dispose();
-            }
-
-            return map;
-        }
         
         //public Bitmap DrawCityFormMap(City city)    //Draw terrain in city form
         //{
@@ -291,7 +183,7 @@ namespace civ2.Bitmaps
         //                    int newX = city.X2 + x_;
         //                    int newY = city.Y2 + y_;
         //                    if (newX >= 0 && newX < 2 * Game.Data.MapXdim && newY >= 0 && newY < Game.Data.MapYdim) image = square.Terrain((newX - (newY % 2)) / 2, newY);
-        //                    else image = Images.Blank;
+        //                    else image = Draw.Blank;
         //                    graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
         //                }
         //            }
@@ -330,9 +222,9 @@ namespace civ2.Bitmaps
         //            default: spacing = 2; break;    //50 % larger (orignal = 1)
         //        }
         //        //First draw food, then shields, then trade icons
-        //        for (int i = 0; i < countF; i++) graphics.DrawImage(Images.CitymapFoodSmallBigger, i * spacing, 0);
-        //        for (int i = 0; i < countS; i++) graphics.DrawImage(Images.CitymapShieldSmallBigger, (countF + i) * spacing, 0);
-        //        for (int i = 0; i < countT; i++) graphics.DrawImage(Images.CitymapTradeSmallBigger, (countF + countS + i) * spacing, 0);
+        //        for (int i = 0; i < countF; i++) graphics.DrawImage(Draw.CitymapFoodSmallBigger, i * spacing, 0);
+        //        for (int i = 0; i < countS; i++) graphics.DrawImage(Draw.CitymapShieldSmallBigger, (countF + i) * spacing, 0);
+        //        for (int i = 0; i < countT; i++) graphics.DrawImage(Draw.CitymapTradeSmallBigger, (countF + countS + i) * spacing, 0);
         //    }
         //    return icons;
         //}
@@ -373,8 +265,8 @@ namespace civ2.Bitmaps
         //        //Draw icons
         //        for (int i = 0; i < city.Size; i++)
         //        {
-        //            graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleLshadow[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing + 1, 1);  //shadow
-        //            graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleL[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing, 0);  //man-woman exchange turns
+        //            graphics.DrawImage(ModifyImage.ResizeImage(Draw.PeopleLshadow[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing + 1, 1);  //shadow
+        //            graphics.DrawImage(ModifyImage.ResizeImage(Draw.PeopleL[2 + i % 2, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing, 0);  //man-woman exchange turns
         //        }
         //    }            
 
@@ -411,11 +303,11 @@ namespace civ2.Bitmaps
         //        graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
         //        graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
         //        //Draw food & surplus icons
-        //        for (int i = 0; i < foodIcons; i++) graphics.DrawImage(Images.CitymapFoodLargeBigger, i * spacing + 3, 1);
+        //        for (int i = 0; i < foodIcons; i++) graphics.DrawImage(Draw.CitymapFoodLargeBigger, i * spacing + 3, 1);
         //        for (int i = 0; i < Math.Abs(surplusIcons); i++)
         //        {
-        //            if (surplusIcons < 0) graphics.DrawImage(Images.CitymapHungerLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
-        //            else graphics.DrawImage(Images.CitymapFoodLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
+        //            if (surplusIcons < 0) graphics.DrawImage(Draw.CitymapHungerLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
+        //            else graphics.DrawImage(Draw.CitymapFoodLargeBigger, x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing) + i * spacing, 1); //hunger
         //        }
 
         //        //Next draw trade + corruption icons
@@ -439,9 +331,9 @@ namespace civ2.Bitmaps
         //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
         //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
         //        //Draw trade & corruption icons
-        //        for (int i = 0; i < tradeIcons; i++) graphics.DrawImage(Images.CitymapTradeLargeBigger, i * spacing + 3, 63);
+        //        for (int i = 0; i < tradeIcons; i++) graphics.DrawImage(Draw.CitymapTradeLargeBigger, i * spacing + 3, 63);
 
-        //        for (int i = 0; i < Math.Abs(corruptionIcons); i++) graphics.DrawImage(Images.CitymapCorruptionLargeBigger, x_size - (spacing * Math.Abs(corruptionIcons) + 21 - spacing) + i * spacing, 63); //hunger
+        //        for (int i = 0; i < Math.Abs(corruptionIcons); i++) graphics.DrawImage(Draw.CitymapCorruptionLargeBigger, x_size - (spacing * Math.Abs(corruptionIcons) + 21 - spacing) + i * spacing, 63); //hunger
 
         //        //Next draw tax+lux+sci icons
         //        switch (taxIcons + luxIcons + sciIcons)
@@ -464,14 +356,14 @@ namespace civ2.Bitmaps
         //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
         //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
         //        //Draw trade & corruption icons
-        //        for (int i = 0; i < taxIcons; i++) graphics.DrawImage(Images.CitymapTaxLargeBigger, i * spacing + 3, 99);  //tax
+        //        for (int i = 0; i < taxIcons; i++) graphics.DrawImage(Draw.CitymapTaxLargeBigger, i * spacing + 3, 99);  //tax
 
         //        for (int i = 0; i < luxIcons; i++)
         //        {
         //            //TO-DO !!!
-        //            //graphics.DrawImage(Images.CitymapLuxLargeBigger, i * spacing + 3, 99);  //lux
+        //            //graphics.DrawImage(Draw.CitymapLuxLargeBigger, i * spacing + 3, 99);  //lux
         //        }
-        //        for (int i = 0; i < sciIcons; i++) graphics.DrawImage(Images.CitymapSciLargeBigger, x_size - (spacing * sciIcons + 21 - spacing) + i * spacing, 99); //sci
+        //        for (int i = 0; i < sciIcons; i++) graphics.DrawImage(Draw.CitymapSciLargeBigger, x_size - (spacing * sciIcons + 21 - spacing) + i * spacing, 99); //sci
 
         //        //Next draw support+production icons
         //        switch (supportIcons + productionIcons)
@@ -494,9 +386,9 @@ namespace civ2.Bitmaps
         //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
         //        //graphics.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
         //        //Draw trade & corruption icons
-        //        for (int i = 0; i < supportIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, i * spacing + 3, 161);  //support
+        //        for (int i = 0; i < supportIcons; i++) graphics.DrawImage(Draw.CitymapSupportLargeBigger, i * spacing + 3, 161);  //support
 
-        //        for (int i = 0; i < productionIcons; i++) graphics.DrawImage(Images.CitymapSupportLargeBigger, x_size - (spacing * productionIcons + 21 - spacing) + i * spacing, 161); //production
+        //        for (int i = 0; i < productionIcons; i++) graphics.DrawImage(Draw.CitymapSupportLargeBigger, x_size - (spacing * productionIcons + 21 - spacing) + i * spacing, 161); //production
 
         //    }
         //    return icons;
@@ -556,7 +448,7 @@ namespace civ2.Bitmaps
         //        {
         //            for (int col = 0; col <= city.Size; col++)
         //            {
-        //                graphics.DrawImage(Images.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
+        //                graphics.DrawImage(Draw.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
         //                count++;
 
         //                if (count >= city.FoodInStorage) break;
@@ -606,7 +498,7 @@ namespace civ2.Bitmaps
         //            {
         //                int dx = Convert.ToInt32(2 + col * (272 - 21 - 4) / ((float)Math.Max(cost, 10) - 1)); //horizontal separation between icons
         //                int dy = 21;    //vertical separation of icons (space between icons in y-directions is always 0)
-        //                graphics.DrawImage(Images.CitymapSupportLargeBigger, 10 + dx, 65 + 3 + dy * row);
+        //                graphics.DrawImage(Draw.CitymapSupportLargeBigger, 10 + dx, 65 + 3 + dy * row);
 
         //                count++;
         //                if (count >= city.ShieldsProgress) break;

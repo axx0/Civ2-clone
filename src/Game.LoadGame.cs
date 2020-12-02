@@ -11,7 +11,7 @@ namespace civ2
         public static Game LoadGame(string savDirectoryPath, string SAVname)
         {
             // Import graphical assets from SAV directory. If they don't exist import from root civ2 directory.
-            Images.LoadGraphicsAssetsFromFiles(savDirectoryPath);
+            Draw.LoadGraphicsAssetsFromFiles(savDirectoryPath);
 
             // Read SAV file & RULES.txt
             ReadGameData rd = new ReadGameData();
@@ -88,6 +88,8 @@ namespace civ2
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    //null means all units have ended turn
             _playerCiv = _civs.Find(civ => civ.Id == SAVgameData.PlayerCivIndex);
             _activeCiv = _playerCiv;
+
+            ZoomLvl = 8;    // TODO: read this from SAV
         }
 
 

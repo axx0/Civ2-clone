@@ -10,7 +10,7 @@ using civ2.Terrains;
 
 namespace civ2.Bitmaps
 {
-    public partial class Images : BaseInstance
+    public partial class Draw : BaseInstance
     {
         public static Bitmap CityWallpaper, PanelOuterWallpaper,
                              Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, 
@@ -310,7 +310,7 @@ namespace civ2.Bitmaps
             //    }
             //}
         }
-
+        
         public static Bitmap DrawTerrain(ITerrain tile, int col, int row)
         {
             // Define a bitmap for drawing
@@ -1073,7 +1073,7 @@ namespace civ2.Bitmaps
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
             g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
             g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.Owner]), new PointF(0, 0));
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.OwnerId]), new PointF(0, 0));
 
             return _textGraphic;
         }

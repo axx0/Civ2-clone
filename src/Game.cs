@@ -58,6 +58,7 @@ namespace civ2
         public int NumberOfCities { get; set; }
         public int[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
+        public int ZoomLvl { get; set; }
 
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)

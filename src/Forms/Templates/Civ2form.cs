@@ -12,7 +12,7 @@ namespace civ2.Forms
             InitializeComponent();
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
-            BackgroundImage = Images.PanelOuterWallpaper;
+            BackgroundImage = Draw.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2form_Paint);
         }
 

@@ -25,6 +25,7 @@ namespace civ2
         public bool Objectivex3 { get; set; }
         public bool Objectivex1 { get; set; }
         public Civilization Owner { get; set; }
+        public int OwnerId => Game.GetCivs.IndexOf(Owner);
         public int Size { get; set; }
         public Civilization WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
@@ -62,7 +63,7 @@ namespace civ2
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
 
         public List<IUnit> UnitsInCity => Game.GetUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
-        public List<IUnit> SupportedUnits => Game.GetUnits.Where(unit => unit.HomeCity == Game.GetCities.IndexOf(this)).ToList();
+        public List<IUnit> SupportedUnits => Game.GetUnits.Where(unit => unit.HomeCity == this).ToList();
         
         // Determine which units, supported by this city, cost shields
         public bool[] SupportedUnitsWhichCostShields()
@@ -71,7 +72,7 @@ namespace civ2
             bool[] costShields = new bool[SupportedUnits.Count()];
             //First determine how many units have 0 costs due to different goverernment types
             int noCost = 0;
-            switch (Game.GetCivs[Owner].Government)
+            switch (Game.GetCivs[OwnerId].Government)
             {
                 case GovernmentType.Anarchy:
                 case GovernmentType.Despotism:
@@ -190,7 +191,7 @@ namespace civ2
             get
             {
                 int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.GetCities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
+                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  //increase max food for settlers & enineers with this home city
                 _food = Math.Min(FoodDistribution.Sum(), maxFood);
                 return _food;
             }
@@ -202,7 +203,7 @@ namespace civ2
             get
             {
                 int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == Game.GetCities.IndexOf(this))) maxFood++;  //increase max food for settlers & enineers with this home city
+                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  //increase max food for settlers & enineers with this home city
                 _surplusHunger = FoodDistribution.Sum() - maxFood;
                 return _surplusHunger;
             }
@@ -234,7 +235,7 @@ namespace civ2
         {
             get
             {
-                _tax = Trade * Game.GetCivs[Owner].TaxRate / 100;
+                _tax = Trade * Game.GetCivs[OwnerId].TaxRate / 100;
                 return _tax;
             }
         }
@@ -254,7 +255,7 @@ namespace civ2
         {
             get
             {
-                _science = Trade * Game.GetCivs[Owner].ScienceRate / 100;
+                _science = Trade * Game.GetCivs[OwnerId].ScienceRate / 100;
                 return _science;
             }
         }
@@ -295,7 +296,7 @@ namespace civ2
         {
             get
             {
-                _graphic = Images.CreateCityBitmap(this, true, MapPanel.ZoomLvl);
+                _graphic = Draw.CreateCityBitmap(this, true, Game.ZoomLvl);
                 return _graphic;
             }
         }
@@ -351,7 +352,7 @@ namespace civ2
             {
                 //Define text characteristics for zoom levels
                 int shadowOffset, fontSize;
-                switch (MapPanel.ZoomLvl)
+                switch (Game.ZoomLvl)
                 {
                     case 1: shadowOffset = 0; fontSize = 1; break;
                     case 2: shadowOffset = 0; fontSize = 3; break;
@@ -381,7 +382,7 @@ namespace civ2
                 g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
                 g.DrawString(Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));
-                g.DrawString(Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[Owner]), new PointF(0, 0));
+                g.DrawString(Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[OwnerId]), new PointF(0, 0));
                 return _textGraphic;
             }
         }

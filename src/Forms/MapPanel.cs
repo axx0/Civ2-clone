@@ -25,16 +25,15 @@ namespace civ2.Forms
         public static int CivIdWhoseMapIsDisplayed { get; set; }
         int TimerCounter { get; set; }
         Label HelpLabel;
-        Game Game;
+        Game Game => Game.Instance;
+        Map Map => Map.Instance;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MapPanel(Game _game, int _width, int _height)
+        public MapPanel(int _width, int _height) : base(_width, _height)
         {
-            Game = _game;
-            Size = new Size(_width, _height);
+            //Size = new Size(_width, _height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
-            
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Actions.OnUnitEvent += UnitEventHappened;
             Actions.OnPlayerEvent += PlayerEventHappened;
@@ -58,7 +57,7 @@ namespace civ2.Forms
                 Location = new Point(11, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 23, 23)
+                BackgroundImage = ModifyImage.ResizeImage(Draw.ZoomIN, 23, 23)
             };
             ZoomINButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomINButton);
@@ -69,16 +68,15 @@ namespace civ2.Forms
                 Location = new Point(36, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 23, 23)
+                BackgroundImage = ModifyImage.ResizeImage(Draw.ZoomOUT, 23, 23)
             };
             ZoomOUTButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomOUTButton);
             ZoomOUTButton.Click += ZoomOUTclicked;
 
             //Initialize variables
-            ZoomLvl = 8;  // TODO: zoom needs to be read from SAV
             MapGridVar = 0;
-            ViewPiecesMode = (Game.Instance.ActiveUnit == null) ? true : false;  //if no unit is active at start --> all units ended turn
+            ViewPiecesMode = Game.ActiveUnit == null;  //if no unit is active at start --> all units ended turn
             CenterSqXY = ActiveXY;
             CivIdWhoseMapIsDisplayed = Game.PlayerCiv.Id;  //when game starts reveal map for current player's civ view
             //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
@@ -133,7 +131,6 @@ namespace civ2.Forms
             int[] drawingPxOffsetXY = DrawingPxOffsetXY;
             int[] activeXY = ActiveXY;
             int[] centerSqXY = CenterSqXY;
-            int zoomLvl = ZoomLvl;
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
             //e.Graphics.DrawImage(Game.CivsMap[CivIdWhoseMapIsDisplayed], 0, 0, rect, GraphicsUnit.Pixel);
@@ -155,7 +152,7 @@ namespace civ2.Forms
                     }
                 case AnimationType.ViewPieces:
                     {
-                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
+                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Draw.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
                         break;
                     }
             }
@@ -165,7 +162,7 @@ namespace civ2.Forms
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            int[] coords = Ext.PxToCoords(e.Location.X, e.Location.Y, ZoomLvl);
+            int[] coords = Ext.PxToCoords(e.Location.X, e.Location.Y, Game.ZoomLvl);
             ClickedXY = new int[] { StartingSqXY[0] + coords[0], StartingSqXY[1] + coords[1] };  // coordinates of clicked square
 
             if (e.Button == MouseButtons.Left)
@@ -217,8 +214,8 @@ namespace civ2.Forms
             DrawPanel.Refresh();
         }
 
-        private static int[] _startingSqXY;
-        public static int[] StartingSqXY
+        private int[] _startingSqXY;
+        public int[] StartingSqXY
         {
             get
             {
@@ -231,20 +228,20 @@ namespace civ2.Forms
                 //limit movement so that map limits are not exceeded
                 if (value[0] < 0 && value[1] < 0)    //movement beyond upper & left edge
                     _startingSqXY = new int[] { 0, 0 };
-                else if ((value[0] + drawingSqXY[0] >= 2 * Data.MapXdim) && value[1] < 0)    //movement beyond upper & right edge
-                    _startingSqXY = new int[] { 2 * Data.MapXdim - drawingSqXY[0], 0 };
-                else if (value[0] < 0 && (value[1] + drawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & left edge
-                    _startingSqXY = new int[] { 0, Data.MapYdim - drawingSqXY[1] };
-                else if ((value[0] + drawingSqXY[0] >= 2 * Data.MapXdim) && (value[1] + drawingSqXY[1] >= Data.MapYdim))    //movement beyond lower & right edge
-                    _startingSqXY = new int[] { 2 * Data.MapXdim - drawingSqXY[0], Data.MapYdim - drawingSqXY[1] };
+                else if ((value[0] + drawingSqXY[0] >= 2 * Map.Xdim) && value[1] < 0)    //movement beyond upper & right edge
+                    _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], 0 };
+                else if (value[0] < 0 && (value[1] + drawingSqXY[1] >= Map.Ydim))    //movement beyond lower & left edge
+                    _startingSqXY = new int[] { 0, Map.Ydim - drawingSqXY[1] };
+                else if ((value[0] + drawingSqXY[0] >= 2 * Map.Xdim) && (value[1] + drawingSqXY[1] >= Map.Ydim))    //movement beyond lower & right edge
+                    _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], Map.Ydim - drawingSqXY[1] };
                 else if (value[0] < 0)     //movement beyond left edge
                     _startingSqXY = new int[] { value[1] % 2, value[1] };
                 else if (value[1] < 0)     //movement beyond upper edge
                     _startingSqXY = new int[] { value[0], value[0] % 2 };
-                else if (value[0] + drawingSqXY[0] >= 2 * Data.MapXdim)     //movement beyond right edge
-                    _startingSqXY = new int[] { 2 * Data.MapXdim - drawingSqXY[0] - value[1] % 2, value[1] };
-                else if (value[1] + drawingSqXY[1] >= Data.MapYdim)     //movement beyond bottom edge
-                    _startingSqXY = new int[] { value[0], Data.MapYdim - drawingSqXY[1] - value[0] % 2 };
+                else if (value[0] + drawingSqXY[0] >= 2 * Map.Xdim)     //movement beyond right edge
+                    _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0] - value[1] % 2, value[1] };
+                else if (value[1] + drawingSqXY[1] >= Map.Ydim)     //movement beyond bottom edge
+                    _startingSqXY = new int[] { value[0], Map.Ydim - drawingSqXY[1] - value[0] % 2 };
                 else
                     _startingSqXY = value;
             }
@@ -268,24 +265,24 @@ namespace civ2.Forms
                     _edgeDrawOffsetXY[0] = -1;
                     _edgeDrawOffsetXY[1] = -1;
                 }
-                if (startingSqXY[0] + drawingSqXY[0] == 2 * Data.MapXdim)  //on right edge
+                if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)  //on right edge
                 {
                     _edgeDrawOffsetXY[2] = 0;
-                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - drawingSqXY[1] - startingSqXY[1], 2);
+                    _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
                 }
-                if (startingSqXY[1] + drawingSqXY[1] == Data.MapYdim)  //on bottom edge
+                if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)  //on bottom edge
                 {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - drawingSqXY[0] - startingSqXY[0], 2);
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 0;
                 }
-                if (startingSqXY[0] + drawingSqXY[0] == 2 * Data.MapXdim - 1)  //1 column left of right edge
+                if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim - 1)  //1 column left of right edge
                 {
                     _edgeDrawOffsetXY[2] = 1;
-                    _edgeDrawOffsetXY[3] = Math.Min(Data.MapYdim - drawingSqXY[1] - startingSqXY[1], 2);
+                    _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
                 }
-                if (startingSqXY[1] + drawingSqXY[1] == Data.MapYdim - 1)  //1 column up of bottom edge
+                if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim - 1)  //1 column up of bottom edge
                 {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Data.MapXdim - drawingSqXY[0] - startingSqXY[0], 2);
+                    _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
                     _edgeDrawOffsetXY[3] = 1;
                 }
                 return _edgeDrawOffsetXY;
@@ -301,8 +298,8 @@ namespace civ2.Forms
                 int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
                 int[] drawingSqXY = DrawingSqXY;
                 _drawingPxOffsetXY = new int[] { 32 * edgeDrawOffsetXY[0], 16 * edgeDrawOffsetXY[1] };
-                if (startingSqXY[0] + drawingSqXY[0] == 2 * Data.MapXdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * drawingSqXY[0] - 32 * edgeDrawOffsetXY[0]);
-                if (startingSqXY[1] + drawingSqXY[1] == Data.MapYdim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * drawingSqXY[1] - 16 * edgeDrawOffsetXY[1]);
+                if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim) _drawingPxOffsetXY[0] = DrawPanel.Width - (32 + 32 * drawingSqXY[0] - 32 * edgeDrawOffsetXY[0]);
+                if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim) _drawingPxOffsetXY[1] = DrawPanel.Height - (16 + 16 * drawingSqXY[1] - 16 * edgeDrawOffsetXY[1]);
                 return _drawingPxOffsetXY;
             }
         }
@@ -324,20 +321,20 @@ namespace civ2.Forms
             get { return _centerSqXY; }
             set
             {
-                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, ZoomLvl); //offset of central tile from panel NW corner
+                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.ZoomLvl); //offset of central tile from panel NW corner
                 StartingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
                 int[] startingSqXY = StartingSqXY;
                 _centerSqXY = new int[] { centerDistanceXY[0] + startingSqXY[0], centerDistanceXY[1] + startingSqXY[1] };
             }
         }
 
-        private static int[] _activeXY;
-        public static int[] ActiveXY  //Currently active box (active unit or viewing piece), civ2 coords
+        private int[] _activeXY;
+        public int[] ActiveXY  //Currently active box (active unit or viewing piece), civ2 coords
         {
             get
             {
-                if (!ViewPiecesMode && Game.Instance.ActiveUnit != null)
-                    _activeXY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y };
+                if (!ViewPiecesMode && Game.ActiveUnit != null)
+                    _activeXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
                 return _activeXY;
             }
             set { _activeXY = value; }
@@ -356,23 +353,23 @@ namespace civ2.Forms
             return MapGridVar;
         }
 
-        private static int _zoomLvl;
-        public static int ZoomLvl 
-        {
-            get { return _zoomLvl; }
-            set 
-            { 
-                _zoomLvl = Math.Max(Math.Min(value, 16), 1);
-                DrawPanel.Refresh();
-            }
-        }
+        //private int _zoomLvl;
+        //public int ZoomLvl 
+        //{
+        //    get { return _zoomLvl; }
+        //    set 
+        //    { 
+        //        _zoomLvl = Math.Max(Math.Min(value, 16), 1);
+        //        DrawPanel.Refresh();
+        //    }
+        //}
 
-        public void ZoomOUTclicked(Object sender, EventArgs e) { ZoomLvl--; }
-        public void ZoomINclicked(Object sender, EventArgs e) { ZoomLvl++; }
-        public void MaxZoomINclicked(Object sender, EventArgs e) { ZoomLvl = 16; }
-        public void MaxZoomOUTclicked(Object sender, EventArgs e) { ZoomLvl = 1; }
-        public void StandardZOOMclicked(Object sender, EventArgs e) { ZoomLvl = 8; }
-        public void MediumZoomOUTclicked(Object sender, EventArgs e) { ZoomLvl = 5; }
+        public void ZoomOUTclicked(Object sender, EventArgs e) { Game.ZoomLvl--; }
+        public void ZoomINclicked(Object sender, EventArgs e) { Game.ZoomLvl++; }
+        public void MaxZoomINclicked(Object sender, EventArgs e) { Game.ZoomLvl = 16; }
+        public void MaxZoomOUTclicked(Object sender, EventArgs e) { Game.ZoomLvl = 1; }
+        public void StandardZOOMclicked(Object sender, EventArgs e) { Game.ZoomLvl = 8; }
+        public void MediumZoomOUTclicked(Object sender, EventArgs e) { Game.ZoomLvl = 5; }
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -416,7 +413,7 @@ namespace civ2.Forms
             {
                 case PlayerEventType.NewTurn:
                     {
-                        if (Game.Instance.ActiveUnit != null) ViewPiecesMode = false;
+                        if (Game.ActiveUnit != null) ViewPiecesMode = false;
                         Timer.Stop();
                         TimerCounter = 0;
                         Timer.Start();
@@ -432,7 +429,7 @@ namespace civ2.Forms
                 //Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
                     {
-                        TimerCounter = Game.Instance.ActiveUnit.MovementCounter;
+                        TimerCounter = Game.ActiveUnit.MovementCounter;
                         if (TimerCounter == 0) StartAnimation(AnimationType.UnitMoving);
                         DrawAnimation();
                         break;
@@ -444,7 +441,7 @@ namespace civ2.Forms
                     }
                 case UnitEventType.NewUnitActivated:
                     {
-                        ActiveXY = new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y };
+                        ActiveXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
                         CenterSqXY = ActiveXY;
                         StartAnimation(AnimationType.UnitWaiting);
                         break;

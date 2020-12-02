@@ -22,8 +22,8 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[0] -= 1;
-                            MapPanel.ActiveXY[1] += 1;
+                            Game.ActiveCursorXY[0] -= 1;
+                            Game.ActiveCursorXY[1] += 1;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -37,7 +37,7 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[1] += 2;
+                            Game.ActiveCursorXY[1] += 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -50,8 +50,8 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[0] += 1;
-                            MapPanel.ActiveXY[1] += 1;
+                            Game.ActiveCursorXY[0] += 1;
+                            Game.ActiveCursorXY[1] += 1;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -65,7 +65,7 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[0] -= 2;
+                            Game.ActiveCursorXY[0] -= 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -79,7 +79,7 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[0] += 2;
+                            Game.ActiveCursorXY[0] += 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -92,8 +92,8 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[0] -= 1;
-                            MapPanel.ActiveXY[1] -= 1;
+                            Game.ActiveCursorXY[0] -= 1;
+                            Game.ActiveCursorXY[1] -= 1;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -107,7 +107,7 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[1] -= 2;
+                            Game.ActiveCursorXY[1] -= 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -120,8 +120,8 @@ namespace civ2.Forms
                         }
                         else if (MapPanel.ViewPiecesMode)
                         {
-                            MapPanel.ActiveXY[0] += 1;
-                            MapPanel.ActiveXY[1] -= 1;
+                            Game.ActiveCursorXY[0] += 1;
+                            Game.ActiveCursorXY[1] -= 1;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;

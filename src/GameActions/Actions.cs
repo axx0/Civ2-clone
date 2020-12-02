@@ -97,7 +97,7 @@ namespace civ2.GameActions
             }
 
             //Update the map image
-            Images.RedrawMap(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
+            Draw.RedrawMap(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
         }
 
         //public static void GiveOrder(OrderType order)

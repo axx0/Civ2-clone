@@ -2,7 +2,7 @@
 
 namespace civ2.Bitmaps
 {
-    public partial class Images
+    public partial class Draw
     {
         public static Bitmap CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall,
             CitymapFoodSmallBigger,
