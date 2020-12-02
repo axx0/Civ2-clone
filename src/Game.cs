@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Linq;
 using civ2.Enums;
 using civ2.Units;
-using civ2.Terrains;
 using civ2.Improvements;
 using civ2.Sounds;
 using civ2.Bitmaps;
@@ -189,6 +188,8 @@ namespace civ2
         //    TerrainTile[x, y] = tile;
         //}
 
+        public bool AnyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y);
+
         public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, 
                                     int movePointsLost, int hitPointsLost, int lastMove, CommodityType caravanCommodity, OrderType orders, 
                                     int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
@@ -214,6 +215,8 @@ namespace civ2
                 LinkOtherUnitsOnTop = linkOtherUnitsOnTop,
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
+
+            unit.Graphic = Draw.Unit(unit, unit.IsInStack, ZoomLvl);
 
             if (dead)   _instance._casualties.Add(unit);
             else        _instance._units.Add(unit);

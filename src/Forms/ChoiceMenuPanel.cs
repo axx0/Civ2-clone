@@ -17,7 +17,7 @@ namespace civ2.Forms
         {
             InitializeComponent();
             mainForm = _MainWindow;
-            BackgroundImage = Draw.PanelOuterWallpaper;
+            BackgroundImage = Images.PanelOuterWallpaper;
             //Size = new Size((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34));
             Paint += new PaintEventHandler(ChoiceMenu_Paint);
 
@@ -26,7 +26,7 @@ namespace civ2.Forms
             {
                 Location = new Point((int)(this.Width * 0.02694), (int)(this.Height * 0.10465)),
                 Size = new Size(this.Width - 19, (int)(this.Height * 0.7674)),
-                BackgroundImage = Draw.WallpaperStatusForm
+                BackgroundImage = Images.WallpaperStatusForm
             };
             Controls.Add(MainPanel);
             MainPanel.Paint += MainPanel_Paint;

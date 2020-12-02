@@ -440,6 +440,7 @@ namespace civ2
 
             // Options
             // TODO: determine if randomizing villages/resources, randomizing player starting locations, select comp. opponents, accelerated sturtup options are selected from SAV file
+            data.Options = new bool[35];
             data.Options[0] = GetBit(bytes[12], 0);     // Bloodlust on/off            
             data.Options[1] = GetBit(bytes[12], 3);     // Simplified combat on/off
             data.Options[2] = GetBit(bytes[13], 0);     // Flat/round earth
@@ -741,6 +742,7 @@ namespace civ2
             // block 2 - terrain type
             int ofsetB2 = ofsetB1 + 7 * data.MapArea; //offset for block 2 values
             data.MapVisibilityCivs = new bool[data.MapXdim, data.MapYdim][];
+            data.MapRiverPresent = new bool[data.MapXdim, data.MapYdim];
             for (int i = 0; i < data.MapArea; i++)
             {
                 int x = i % data.MapXdim;

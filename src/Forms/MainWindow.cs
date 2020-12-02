@@ -36,11 +36,11 @@ namespace civ2.Forms
             InitializeComponent();
             Text = "Civilization II Multiplayer Gold";
             BackColor = Color.FromArgb(143, 123, 99);
-            this.Icon = Draw.Civ2Icon;
+            this.Icon = Images.Civ2Icon;
             WindowState = FormWindowState.Maximized;
 
             // Symbol image in the center of screen
-            Bitmap backimage = Draw.MainScreenSymbol;
+            Bitmap backimage = Images.MainScreenSymbol;
             MainPic = new PictureBox
             {
                 Image = backimage,
@@ -309,9 +309,9 @@ namespace civ2.Forms
         // Load assets at start of Civ2 program
         private void LoadInitialAssets()
         {
-            
+
             // Load images
-            Draw.LoadGraphicsAssetsAtIntroScreen();
+            Images.LoadGraphicsAssetsAtIntroScreen();
 
             // Load wallpapers
             //Draw.ImportWallpapersFromIconsFile();

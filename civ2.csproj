@@ -69,6 +69,8 @@
   <ItemGroup>
     <Compile Include="src\Advances\Advance.cs" />
     <Compile Include="src\Advances\IAdvance.cs" />
+    <Compile Include="src\Bitmaps\Draw.Terrain.cs" />
+    <Compile Include="src\Bitmaps\Draw.Unit.cs" />
     <Compile Include="src\Enums\AIroleType.cs" />
     <Compile Include="src\Enums\BarbarianActivityType.cs" />
     <Compile Include="src\Enums\CityStyleType.cs" />
@@ -85,7 +87,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="src\Bitmaps\Draw.ImportBitmaps.cs" />
+    <Compile Include="src\Bitmaps\Images.ImportBitmaps.cs" />
     <Compile Include="src\Enums\AnimationType.cs" />
     <Compile Include="src\Enums\PlayerEventType.cs" />
     <Compile Include="src\Enums\MapEventType.cs" />
@@ -202,7 +204,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\GameActions\Actions.Units.cs" />
-    <Compile Include="src\Bitmaps\Draw.ImportDLLimages.cs" />
+    <Compile Include="src\Bitmaps\Images.ImportDLLgifs.cs" />
     <Compile Include="src\Bitmaps\Draw.CityPanel.cs" />
     <Compile Include="src\Bitmaps\Draw.City.cs" />
   </ItemGroup>

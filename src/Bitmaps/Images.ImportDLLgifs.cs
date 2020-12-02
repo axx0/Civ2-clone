@@ -4,7 +4,7 @@ using System.IO;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw
+    public partial class Images
     {
         // From Tiles.dll
         public static Bitmap CityStatusWallpaper, DefenseMinWallpaper, ForeignMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper,

@@ -19,10 +19,10 @@ namespace civ2.Forms
             // Sinai panel
             SinaiPanel = new PictureBox
             {
-                Image = Draw.SinaiPic,
-                BackgroundImage = Draw.PanelOuterWallpaper,
-                Width = Draw.SinaiPic.Width + 2 * 11,
-                Height = Draw.SinaiPic.Height + 2 * 11,
+                Image = Images.SinaiPic,
+                BackgroundImage = Images.PanelOuterWallpaper,
+                Width = Images.SinaiPic.Width + 2 * 11,
+                Height = Images.SinaiPic.Height + 2 * 11,
                 Location = new Point((int)(ClientSize.Width * 0.08333), (int)(ClientSize.Height * 0.0933)),
                 SizeMode = PictureBoxSizeMode.CenterImage
             };

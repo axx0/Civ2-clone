@@ -68,7 +68,7 @@ namespace civ2.Bitmaps
                                     if (!unit.IsInCity)
                                     {
                                         g.DrawImage(
-                                            Draw.CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom),
+                                            Draw.Unit(unit, unitsHere.Count() > 1, zoom),
                                             32 * coordsOffsets[0],
                                             16 * coordsOffsets[1]);
                                     }
@@ -83,7 +83,7 @@ namespace civ2.Bitmaps
                                         if (!unit.IsInCity)
                                         {
                                             g.DrawImage(
-                                                Draw.CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom),
+                                                Draw.Unit(unit, unitsHere.Count() > 1, zoom),
                                                 32 * coordsOffsets[0],
                                                 16 * coordsOffsets[1]);
                                         }
@@ -96,7 +96,7 @@ namespace civ2.Bitmaps
                             if (city != null)
                             {
                                 g.DrawImage(
-                                    Draw.CreateCityBitmap(city, true, 8),
+                                    Draw.City(city, true, 8),
                                     32 * coordsOffsets[0],
                                     16 * coordsOffsets[1]);
                             }
@@ -112,7 +112,7 @@ namespace civ2.Bitmaps
                                         if (frame == 0) //for first frame draw unit, for second not
                                         {
                                             g.DrawImage(
-                                                Draw.CreateUnitBitmap(Game.Instance.ActiveUnit, unitsHere.Count() > 1, zoom),
+                                                Draw.Unit(Game.Instance.ActiveUnit, unitsHere.Count() > 1, zoom),
                                                 32 * coordsOffsets[0],
                                                 16 * coordsOffsets[1]);
                                         }
@@ -134,7 +134,7 @@ namespace civ2.Bitmaps
                             City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                             if (city != null)
                             {
-                                Bitmap cityNameBitmap = Draw.CreateCityNameBitmap(city, 8);
+                                Bitmap cityNameBitmap = Draw.CityName(city, 8);
                                 g.DrawImage(
                                     cityNameBitmap,
                                     32 * coordsOffsets[0] + 32 - cityNameBitmap.Width / 2,
@@ -239,7 +239,7 @@ namespace civ2.Bitmaps
                                         int yRealNew = yCiv2New;
                                         if (xRealNew >= 0 && xRealNew < Map.Xdim && yRealNew >= 0 && yRealNew < Map.Ydim)   //don't observe outside map limits
                                             if (!Map.Tile[xRealNew, yRealNew].Visibility[civId])   //surrounding tile is not visible -> dither
-                                                g.DrawImage(Draw.DitherDots[tileX, tileY],
+                                                g.DrawImage(Images.DitherDots[tileX, tileY],
                                                             32 * coordsOffsets[0] + 64 + 32 * tileX,
                                                             16 * coordsOffsets[1] + 48 + 16 * tileY);
                                     }
@@ -263,7 +263,7 @@ namespace civ2.Bitmaps
                                 if (!unit.IsInCity)
                                 {
                                     g.DrawImage(
-                                        Draw.CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom),
+                                        Draw.Unit(unit, unitsHere.Count() > 1, zoom),
                                         32 * coordsOffsets[0] + 64,
                                         16 * coordsOffsets[1] + 32);
                                 }
@@ -278,7 +278,7 @@ namespace civ2.Bitmaps
                                     if (!unit.IsInCity)
                                     {
                                         g.DrawImage(
-                                            Draw.CreateUnitBitmap(unit, unitsHere.Count() > 1, zoom),
+                                            Draw.Unit(unit, unitsHere.Count() > 1, zoom),
                                             32 * coordsOffsets[0] + 64,
                                             16 * coordsOffsets[1] + 32);
                                     }
@@ -291,7 +291,7 @@ namespace civ2.Bitmaps
                         if (city != null)
                         {
                             g.DrawImage(
-                                Draw.CreateCityBitmap(city, true, 8),
+                                Draw.City(city, true, 8),
                                 32 * coordsOffsets[0] + 64,
                                 16 * coordsOffsets[1] + 32);
                         }
@@ -321,7 +321,7 @@ namespace civ2.Bitmaps
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                         if (city != null)
                         {
-                            Bitmap cityNameBitmap = Draw.CreateCityNameBitmap(city, 8);
+                            Bitmap cityNameBitmap = Draw.CityName(city, 8);
                             g.DrawImage(
                                 cityNameBitmap,
                                 32 * coordsOffsets[0] + 64 + 32 - cityNameBitmap.Width / 2,
@@ -364,7 +364,7 @@ namespace civ2.Bitmaps
 
                     IUnit unit = Game.Instance.ActiveUnit;
                     g.DrawImage(
-                        Draw.CreateUnitBitmap(unit, false, zoom),
+                        Draw.Unit(unit, false, zoom),
                         64 + activeUnitDrawOffset[0],
                         32 + activeUnitDrawOffset[1]);
                     //}

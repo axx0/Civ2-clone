@@ -5,7 +5,6 @@ using System.Drawing;
 using civ2.Enums;
 using civ2.Improvements;
 using civ2.Bitmaps;
-using civ2.Forms;
 using civ2.Units;
 using civ2.Terrains;
 
@@ -61,10 +60,11 @@ namespace civ2
         private List<IImprovement> _improvements = new List<IImprovement>();
         public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
-
+        public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
         public List<IUnit> UnitsInCity => Game.GetUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
         public List<IUnit> SupportedUnits => Game.GetUnits.Where(unit => unit.HomeCity == this).ToList();
-        
+        public bool AnyUnitsPresent() => Game.GetUnits.Any(unit => unit.X == this.X && unit.Y == this.Y);
+
         // Determine which units, supported by this city, cost shields
         public bool[] SupportedUnitsWhichCostShields()
         {
@@ -296,7 +296,8 @@ namespace civ2
         {
             get
             {
-                _graphic = Draw.CreateCityBitmap(this, true, Game.ZoomLvl);
+                if (_graphic == null)
+                    _graphic = Draw.City(this, true, Game.ZoomLvl);
                 return _graphic;
             }
         }

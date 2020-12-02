@@ -17,7 +17,7 @@ namespace civ2.Forms
         {
             Size = new Size(width, height);
             DoubleBuffered = true;
-            BackgroundImage = Draw.PanelOuterWallpaper;
+            BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 
@@ -25,7 +25,7 @@ namespace civ2.Forms
         {
             Size = new Size(width, height);
             DoubleBuffered = true;
-            BackgroundImage = Draw.PanelOuterWallpaper;
+            BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 
@@ -33,7 +33,7 @@ namespace civ2.Forms
         {
             Size = new Size(width, height);
             DoubleBuffered = true;
-            BackgroundImage = Draw.PanelOuterWallpaper;
+            BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
         }
 

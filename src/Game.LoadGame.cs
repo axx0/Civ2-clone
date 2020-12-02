@@ -11,7 +11,7 @@ namespace civ2
         public static Game LoadGame(string savDirectoryPath, string SAVname)
         {
             // Import graphical assets from SAV directory. If they don't exist import from root civ2 directory.
-            Draw.LoadGraphicsAssetsFromFiles(savDirectoryPath);
+            Images.LoadGraphicsAssetsFromFiles(savDirectoryPath);
 
             // Read SAV file & RULES.txt
             ReadGameData rd = new ReadGameData();

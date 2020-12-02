@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using civ2.Bitmaps;
 using civ2.Enums;
 
 namespace civ2.Terrains
@@ -91,5 +92,6 @@ namespace civ2.Terrains
         public string Hexvalue { get; set; }
 
         public Bitmap Graphic { get; set; }
+
     }
 }

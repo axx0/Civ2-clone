@@ -75,7 +75,6 @@ namespace civ2.Units
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
         public Civilization Owner { get; set; }
-        public int OwnerId => Game.GetCivs.IndexOf(Owner);
         public int LastMove { get; set; }
         public CommodityType CaravanCommodity { get; set; }
         public City HomeCity { get; set; }
@@ -327,13 +326,7 @@ namespace civ2.Units
             }
         }
 
-        public bool IsInCity
-        {
-            get
-            {
-                return Game.GetCities.Any(city => city.X == X && city.Y == Y); ;
-            }
-        }
+        public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
 
         private bool _isInStack;
         public bool IsInStack
@@ -361,14 +354,27 @@ namespace civ2.Units
             }
         }
 
-        private Bitmap _graphicMapPanel;
-        public Bitmap GraphicMapPanel
+        private Bitmap _graphic;
+        public Bitmap Graphic 
         {
             get
             {
-                //_graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, MapPanel.ZoomLvl);
-                return _graphicMapPanel;
+                if (_graphic == null)
+                    return Draw.Unit(this, IsInStack, Game.ZoomLvl);
+                else
+                    return _graphic;
             }
+            set { }
         }
+
+        //private Bitmap _graphicMapPanel;
+        //public Bitmap Graphic
+        //{
+        //    get
+        //    {
+        //        //_graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, MapPanel.ZoomLvl);
+        //        return _graphicMapPanel;
+        //    }
+        //}
     }
 }

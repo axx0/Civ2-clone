@@ -52,7 +52,7 @@ namespace civ2
             {
                 for (int row = 0; row < Ydim; row++)
                 {
-                    Tile[col, row].Graphic = Draw.DrawTerrain(Tile[col, row], col, row);
+                    Tile[col, row].Graphic = Draw.Terrain(Tile[col, row], col, row);
                 }
             }
         }

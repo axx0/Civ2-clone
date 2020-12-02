@@ -57,7 +57,7 @@ namespace civ2.Forms
                 Location = new Point(11, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Draw.ZoomIN, 23, 23)
+                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 23, 23)
             };
             ZoomINButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomINButton);
@@ -68,7 +68,7 @@ namespace civ2.Forms
                 Location = new Point(36, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Draw.ZoomOUT, 23, 23)
+                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 23, 23)
             };
             ZoomOUTButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomOUTButton);
@@ -152,7 +152,7 @@ namespace civ2.Forms
                     }
                 case AnimationType.ViewPieces:
                     {
-                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Draw.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
+                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
                         break;
                     }
             }

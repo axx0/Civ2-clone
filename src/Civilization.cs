@@ -37,7 +37,7 @@ namespace civ2
             get
             {
                 _population = 0;
-                foreach (City city in Game.GetCities.Where(n => n.Owner == Id))
+                foreach (City city in Game.GetCities.Where(n => n.Owner == this))
                 {
                     _population += city.Population;
                 }

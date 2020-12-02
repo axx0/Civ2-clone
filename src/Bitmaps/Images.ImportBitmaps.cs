@@ -4,8 +4,42 @@ using System.IO;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw
+    public partial class Images
     {
+        public static Bitmap CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall,
+                            CitymapFoodSmallBigger,
+                            CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall,
+                            CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge,
+                            CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger, NextCity;
+        public static Bitmap CityWallpaper, PanelOuterWallpaper,
+                     Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane,
+                     Shield, ViewPiece, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase,
+                     SellIcon, SellIconLarge,
+                     NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road,
+                               Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall;
+        public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills,
+                                DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
+        public static int[,] unitShieldLocation = new int[63, 2];
+        public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
+        //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
+        public static Icon Civ2Icon;
+
+        public static void LoadGraphicsAssetsFromFiles(string path)
+        {
+            TerrainBitmapsImportFromFile(path);
+            CitiesBitmapsImportFromFile(path);
+            UnitsBitmapsImportFromFile(path);
+            PeopleIconsBitmapsImportFromFile(path);
+            IconsBitmapsImportFromFile(path);
+        }
+
+        public static void LoadGraphicsAssetsAtIntroScreen()
+        {
+            ImportDLLimages();
+            ImportWallpapersFromIconsFile();
+        }
+
         // Extract icon from civ2.exe file
         public static void ImportCiv2Icon()
         {
@@ -16,8 +50,7 @@ namespace civ2.Bitmaps
             catch
             {
                 Console.WriteLine("Civ2.exe not found!");
-            }
-            
+            }            
         }
 
         public static void TerrainBitmapsImportFromFile(string path)
