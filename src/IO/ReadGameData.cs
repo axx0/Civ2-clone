@@ -418,12 +418,9 @@ namespace civ2
         // READ SAV GAME
         public void ReadSAV(string savPath, string savName)
         {
-            GameData data = new GameData();
-
-            //string bin;
             int intVal1, intVal2, intVal3, intVal4;
 
-            //Read every byte
+            // Read every byte from SAV
             byte[] bytes = File.ReadAllBytes(savPath + "\\" + savName);
 
             #region Start of saved game file
@@ -741,16 +738,30 @@ namespace civ2
             //...........
             // block 2 - terrain type
             int ofsetB2 = ofsetB1 + 7 * data.MapArea; //offset for block 2 values
+            data.MapTerrainType = new TerrainType[data.MapXdim, data.MapYdim];
             data.MapVisibilityCivs = new bool[data.MapXdim, data.MapYdim][];
             data.MapRiverPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapResourcePresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapUnitPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapCityPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapIrrigationPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapMiningPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapRoadPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapRailroadPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapFortressPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapPollutionPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapFarmlandPresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapAirbasePresent = new bool[data.MapXdim, data.MapYdim];
+            data.MapIslandNo = new int[data.MapXdim, data.MapYdim];
+            data.MapSpecialType = new SpecialType[data.MapXdim, data.MapYdim];
             for (int i = 0; i < data.MapArea; i++)
             {
                 int x = i % data.MapXdim;
                 int y = i / data.MapXdim;
 
                 // Terrain type
-                data.MapTerrainType[x, y] = TerrainType.Desert; //only initial
-                data.MapRiverPresent[x, y] = false;
+                //data.MapTerrainType[x, y] = TerrainType.Desert; // only initial
+                //data.MapRiverPresent[x, y] = false;
                 int terrain_type = bytes[ofsetB2 + i * 6 + 0];
                 if (terrain_type == 0) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = false; }   //0dec=0hex
                 if (terrain_type == 128) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = true; }   //128dec=80hex
@@ -827,6 +838,24 @@ namespace civ2
             else if (bytes[10] == 44) multipl = 32;   // MGE
             else multipl = 40;   // ToT
 
+            data.UnitXloc = new int[data.NumberOfUnits];
+            data.UnitYloc = new int[data.NumberOfUnits];
+            data.UnitDead = new bool[data.NumberOfUnits];
+            data.UnitFirstMove = new bool[data.NumberOfUnits];
+            data.UnitGreyStarShield = new bool[data.NumberOfUnits];
+            data.UnitVeteran = new bool[data.NumberOfUnits];
+            data.UnitType = new UnitType[data.NumberOfUnits];
+            data.UnitCiv = new int[data.NumberOfUnits];
+            data.UnitMovePointsLost = new int[data.NumberOfUnits];
+            data.UnitHitPointsLost = new int[data.NumberOfUnits];
+            data.UnitLastMove = new int[data.NumberOfUnits];
+            data.UnitCaravanCommodity = new CommodityType[data.NumberOfUnits];
+            data.UnitOrders = new OrderType[data.NumberOfUnits];
+            data.UnitHomeCity = new int[data.NumberOfUnits];
+            data.UnitGotoX = new int[data.NumberOfUnits];
+            data.UnitGotoY = new int[data.NumberOfUnits];
+            data.UnitLinkOtherUnitsOnTop = new int[data.NumberOfUnits];
+            data.UnitLinkOtherUnitsUnder = new int[data.NumberOfUnits];
             for (int i = 0; i < data.NumberOfUnits; i++)
             {
                 // Unit X location
@@ -885,6 +914,40 @@ namespace civ2
             else multipl = 92;   // ToT
 
             char[] asciichar = new char[15];
+            data.CityXloc = new int[data.NumberOfCities];
+            data.CityYloc = new int[data.NumberOfCities];
+            data.CityCanBuildCoastal = new bool[data.NumberOfCities];
+            data.CityAutobuildMilitaryRule = new bool[data.NumberOfCities];
+            data.CityStolenTech = new bool[data.NumberOfCities];
+            data.CityImprovementSold = new bool[data.NumberOfCities];
+            data.CityWeLoveKingDay = new bool[data.NumberOfCities];
+            data.CityCivilDisorder = new bool[data.NumberOfCities];
+            data.CityCanBuildShips = new bool[data.NumberOfCities];
+            data.CityObjectivex3 = new bool[data.NumberOfCities];
+            data.CityObjectivex1 = new bool[data.NumberOfCities];
+            data.CityOwner = new int[data.NumberOfCities];
+            data.CitySize = new int[data.NumberOfCities];
+            data.CityWhoBuiltIt = new int[data.NumberOfCities];
+            data.CityFoodInStorage = new int[data.NumberOfCities];
+            data.CityShieldsProgress = new int[data.NumberOfCities];
+            data.CityNetTrade = new int[data.NumberOfCities];
+            data.CityName = new string[data.NumberOfCities];
+            data.CityDistributionWorkers = new bool[data.NumberOfCities][];
+            data.CityNoOfSpecialistsx4 = new int[data.NumberOfCities];
+            data.CityImprovements = new bool[data.NumberOfCities][];
+            data.CityItemInProduction = new int[data.NumberOfCities];
+            data.CityActiveTradeRoutes = new int[data.NumberOfCities];
+            data.CityCommoditySupplied = new CommodityType[data.NumberOfCities][];
+            data.CityCommodityDemanded = new CommodityType[data.NumberOfCities][];
+            data.CityCommodityInRoute = new CommodityType[data.NumberOfCities][];
+            data.CityTradeRoutePartnerCity = new int[data.NumberOfCities][];
+            data.CityScience = new int[data.NumberOfCities];
+            data.CityTax = new int[data.NumberOfCities];
+            data.CityNoOfTradeIcons = new int[data.NumberOfCities];
+            data.CityFoodProduction = new int[data.NumberOfCities];
+            data.CityShieldProduction = new int[data.NumberOfCities];
+            data.CityHappyCitizens = new int[data.NumberOfCities];
+            data.CityUnhappyCitizens = new int[data.NumberOfCities];
             for (int i = 0; i < data.NumberOfCities; i++)
             {
                 // City X location

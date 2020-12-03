@@ -196,7 +196,7 @@ namespace civ2
         {
             IUnit unit = new Unit
             {
-                Id = _instance._casualties.Count + _instance._units.Count,
+                Id = _casualties.Count + _units.Count,
                 Type = type,
                 X = x,
                 Y = y,
@@ -209,17 +209,15 @@ namespace civ2
                 LastMove = lastMove,
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
-                HomeCity = _cities[homeCity],
+                HomeCity = homeCity == 255 ? null : _cities[homeCity],
                 GoToX = goToX,
                 GoToY = goToY,
                 LinkOtherUnitsOnTop = linkOtherUnitsOnTop,
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            unit.Graphic = Draw.Unit(unit, unit.IsInStack, ZoomLvl);
-
-            if (dead)   _instance._casualties.Add(unit);
-            else        _instance._units.Add(unit);
+            if (dead)   _casualties.Add(unit);
+            else        _units.Add(unit);
         }
         
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, 
@@ -332,7 +330,7 @@ namespace civ2
             //if (wonders[26]) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
             //if (wonders[27]) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
 
-            _instance._cities.Add(city);
+            _cities.Add(city);
         }
 
         public void CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, 
@@ -366,7 +364,7 @@ namespace civ2
                 Government = (GovernmentType)government
             };
 
-            _instance._civs.Add(civ);
+            _civs.Add(civ);
         }
         
         // Singleton instance of a game

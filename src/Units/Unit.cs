@@ -77,7 +77,7 @@ namespace civ2.Units
         public Civilization Owner { get; set; }
         public int LastMove { get; set; }
         public CommodityType CaravanCommodity { get; set; }
-        public City HomeCity { get; set; }
+        public City? HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
         public int LinkOtherUnitsOnTop { get; set; }
@@ -327,32 +327,8 @@ namespace civ2.Units
         }
 
         public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
-
-        private bool _isInStack;
-        public bool IsInStack
-        {
-            get 
-            {
-                List<IUnit> unitsInStack = new List<IUnit>();
-                foreach (IUnit unit in Game.GetUnits) 
-                    if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
-                _isInStack = (unitsInStack.Count > 1) ? true : false;
-                return _isInStack;
-            }
-        }
-
-        private bool _isLastInStack;
-        public bool IsLastInStack   //determine if unit is last in stack list (return TRUE if it is not in stack)
-        {
-            get
-            {
-                List<IUnit> unitsInStack = new List<IUnit>();
-                foreach (IUnit unit in Game.GetUnits) 
-                    if (unit.X == X && unit.Y == Y) unitsInStack.Add(unit);
-                _isLastInStack = (unitsInStack.Last() == this) ? true : false;
-                return _isLastInStack;
-            }
-        }
+        public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
+        public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
 
         private Bitmap _graphic;
         public Bitmap Graphic 
@@ -364,7 +340,7 @@ namespace civ2.Units
                 else
                     return _graphic;
             }
-            set { }
+            set { _graphic = value; }
         }
 
         //private Bitmap _graphicMapPanel;

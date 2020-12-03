@@ -156,6 +156,14 @@ namespace civ2
             MassThrustParadigm = Int32.Parse(rulesList[0][20]);
             MaxEffectiveScienceRate = Int32.Parse(rulesList[0][21]);
 
+            AdvanceName = new string[100];
+            AdvanceAIvalue = new int[100];
+            AdvanceModifier = new int[100];
+            AdvancePrereq1 = new string[100];
+            AdvancePrereq2 = new string[100];
+            AdvanceEpoch = new int[100];
+            AdvanceCategory = new int[100];
+            AdvanceShortName = new string[100];
             for (int row = 0; row < 100; row++)
             {
                 AdvanceName[row] = rulesList[1][row];
@@ -168,6 +176,11 @@ namespace civ2
                 AdvanceShortName[row] = rulesList[8][row];
             }
 
+            ImprovementName = new string[67];
+            ImprovementCost = new int[67];
+            ImprovementUpkeep = new int[67];
+            ImprovementPrereq = new string[67];
+            ImprovementAdvanceExpiration = new string[67];
             for (int row = 0; row < 67; row++)
             {
                 ImprovementName[row] = rulesList[9][row];
@@ -177,6 +190,20 @@ namespace civ2
                 ImprovementAdvanceExpiration[row] = rulesList[13][row];
             }
 
+            UnitName = new string[62];
+            UnitUntil = new string[62];
+            UnitDomain = new int[62];
+            UnitMove = new int[62];
+            UnitRange = new int[62];
+            UnitAttack = new int[62];
+            UnitDefense = new int[62];
+            UnitHitp = new int[62];
+            UnitFirepwr = new int[62];
+            UnitCost = new int[62];
+            UnitHold = new int[62];
+            UnitAIrole = new int[62];
+            UnitPrereq = new string[62];
+            UnitFlags = new string[62];
             for (int row = 0; row < 62; row++)
             {
                 UnitName[row] = rulesList[14][row];
@@ -195,6 +222,22 @@ namespace civ2
                 UnitFlags[row] = rulesList[27][row];
             }
 
+            TerrainName = new string[11];
+            TerrainMovecost = new int[11];
+            TerrainDefense = new int[11];
+            TerrainFood = new int[11];
+            TerrainShields = new int[11];
+            TerrainTrade = new int[11];
+            TerrainCanIrrigate = new string[11];
+            TerrainIrrigateBonus = new int[11];
+            TerrainIrrigateTurns = new int[11];
+            TerrainIrrigateAI = new int[11];
+            TerrainCanMine = new string[11];
+            TerrainMineBonus = new int[11];
+            TerrainMineTurns = new int[11];
+            TerrainMineAI = new int[11];
+            TerrainTransform = new string[11];
+            TerrainShortName = new string[11];
             for (int row = 0; row < 11; row++)
             {
                 TerrainName[row] = rulesList[28][row];
@@ -215,6 +258,18 @@ namespace civ2
                 TerrainShortName[row] = rulesList[43][row];
             }
 
+            TerrainSpec1Name = new string[11];
+            TerrainSpec1Movecost = new int[11];
+            TerrainSpec1Defense = new int[11];
+            TerrainSpec1Food = new int[11];
+            TerrainSpec1Shields = new int[11];
+            TerrainSpec1Trade = new int[11];
+            TerrainSpec2Name = new string[11];
+            TerrainSpec2Movecost = new int[11];
+            TerrainSpec2Defense = new int[11];
+            TerrainSpec2Food = new int[11];
+            TerrainSpec2Shields = new int[11];
+            TerrainSpec2Trade = new int[11];
             for (int row = 0; row < 11; row++)
             {
                 TerrainSpec1Name[row] = rulesList[44][row];
@@ -232,6 +287,9 @@ namespace civ2
                 TerrainSpec2Trade[row] = Int32.Parse(rulesList[55][row]);
             }
 
+            GovernmentName = new string[7];
+            GovernmentTitleHIS = new string[7];
+            GovernmentTitleHER = new string[7];
             for (int row = 0; row < 7; row++)
             {
                 GovernmentName[row] = rulesList[56][row];
@@ -239,6 +297,16 @@ namespace civ2
                 GovernmentTitleHER[row] = rulesList[58][row];
             }
 
+            LeaderNameHIS = new string[21];
+            LeaderNameHER = new string[21];
+            LeaderFemale = new int[21];
+            LeaderColor = new int[21];
+            LeaderCityStyle = new int[21];
+            LeaderPlural = new string[21];
+            LeaderAdjective = new string[21];
+            LeaderAttack = new int[21];
+            LeaderExpand = new int[21];
+            LeaderCivilize = new int[21];
             for (int row = 0; row < 21; row++)
             {
                 LeaderNameHIS[row] = rulesList[59][row];
@@ -253,22 +321,27 @@ namespace civ2
                 LeaderCivilize[row] = Int32.Parse(rulesList[68][row]);
             }
 
+            CaravanCommoditie = new string[16];
             for (int row = 0; row < 16; row++)
             {
                 CaravanCommoditie[row] = rulesList[69][row];
             }
 
+            OrderName = new string[70];
+            OrderShortcut = new string[70];
             for (int row = 0; row < 11; row++)
             {
                 OrderName[row] = rulesList[70][row];
                 OrderShortcut[row] = rulesList[71][row];
             }
 
+            Difficulty = new string[6];
             for (int row = 0; row < 6; row++)
             {
                 Difficulty[row] = rulesList[72][row];
             }
 
+            Attitude = new string[9];
             for (int row = 0; row < 9; row++)
             {
                 Attitude[row] = rulesList[73][row];

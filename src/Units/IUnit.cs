@@ -51,7 +51,7 @@ namespace civ2.Units
         Civilization Owner { get; set; }
         int LastMove { get; set; }
         CommodityType CaravanCommodity { get; set; }
-        City HomeCity { get; set; }
+        City? HomeCity { get; set; }
         int GoToX { get; set; }
         int GoToY { get; set; }
         int LinkOtherUnitsOnTop { get; set; }

@@ -30,6 +30,8 @@ namespace civ2
             _casualties = new List<IUnit>();
             _cities = new List<City>();
             _civs = new List<Civilization>();
+            _options = new Options();
+            _rules = new Rules();
 
             _gameVersion = SAVgameData.GameVersion;
 

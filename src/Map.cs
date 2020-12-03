@@ -23,7 +23,7 @@ namespace civ2
             LocatorYdim = data.MapLocatorXdim;
             LocatorYdim = data.MapLocatorYdim;
 
-            Tile = new ITerrain[Xdim, Ydim];
+            Tile = new Terrain[Xdim, Ydim];
             for (int col = 0; col < Xdim; col++)
             {
                 for (int row = 0; row < Ydim; row++)
