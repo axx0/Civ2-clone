@@ -28,22 +28,25 @@ namespace civ2
             {
                 for (int row = 0; row < Ydim; row++)
                 {
-                    Tile[col, row].Type = data.MapTerrainType[col, row];
-                    Tile[col, row].River = data.MapRiverPresent[col, row];
-                    Tile[col, row].Resource = data.MapResourcePresent[col, row];
-                    Tile[col, row].UnitPresent = data.MapUnitPresent[col, row];
-                    Tile[col, row].CityPresent = data.MapCityPresent[col, row];
-                    Tile[col, row].Irrigation = data.MapIrrigationPresent[col, row];
-                    Tile[col, row].Mining = data.MapMiningPresent[col, row];
-                    Tile[col, row].Road = data.MapRoadPresent[col, row];
-                    Tile[col, row].Railroad = data.MapRailroadPresent[col, row];
-                    Tile[col, row].Fortress = data.MapFortressPresent[col, row];
-                    Tile[col, row].Pollution = data.MapPollutionPresent[col, row];
-                    Tile[col, row].Farmland = data.MapFarmlandPresent[col, row];
-                    Tile[col, row].Airbase = data.MapAirbasePresent[col, row];
-                    Tile[col, row].Island = data.MapIslandNo[col, row];
-                    Tile[col, row].SpecType = data.MapSpecialType[col, row];
-                    Tile[col, row].Visibility = data.MapVisibilityCivs[col, row];
+                    Tile[col, row] = new Terrain
+                    {
+                        Type = data.MapTerrainType[col, row],
+                        River = data.MapRiverPresent[col, row],
+                        Resource = data.MapResourcePresent[col, row],
+                        UnitPresent = data.MapUnitPresent[col, row],
+                        CityPresent = data.MapCityPresent[col, row],
+                        Irrigation = data.MapIrrigationPresent[col, row],
+                        Mining = data.MapMiningPresent[col, row],
+                        Road = data.MapRoadPresent[col, row],
+                        Railroad = data.MapRailroadPresent[col, row],
+                        Fortress = data.MapFortressPresent[col, row],
+                        Pollution = data.MapPollutionPresent[col, row],
+                        Farmland = data.MapFarmlandPresent[col, row],
+                        Airbase = data.MapAirbasePresent[col, row],
+                        Island = data.MapIslandNo[col, row],
+                        SpecType = data.MapSpecialType[col, row],
+                        Visibility = data.MapVisibilityCivs[col, row]
+                    };
                 }
             }
 

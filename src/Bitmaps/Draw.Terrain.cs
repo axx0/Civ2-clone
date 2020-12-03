@@ -228,25 +228,26 @@ namespace civ2.Bitmaps
                     switch (Map.Tile[col, row].SpecType)
                     {
                         case SpecialType.Oasis: graphics.DrawImage(Images.Desert[2], 0, 0); break;
-                        case SpecialType.DesertOil: graphics.DrawImage(Images.Desert[3], 0, 0); break;
                         case SpecialType.Buffalo: graphics.DrawImage(Images.Plains[2], 0, 0); break;
-                        case SpecialType.Wheat: graphics.DrawImage(Images.Plains[3], 0, 0); break;
-                        case SpecialType.GrasslandShield: graphics.DrawImage(Images.Shield, 0, 0); break;
+                        case SpecialType.Grassland: graphics.DrawImage(Images.Grassland[0], 0, 0); break;   // TODO: what is spectype for grassland?
                         case SpecialType.Pheasant: graphics.DrawImage(Images.ForestBase[2], 0, 0); break;
-                        case SpecialType.Silk: graphics.DrawImage(Images.ForestBase[3], 0, 0); break;
                         case SpecialType.Coal: graphics.DrawImage(Images.HillsBase[2], 0, 0); break;
-                        case SpecialType.Wine: graphics.DrawImage(Images.HillsBase[3], 0, 0); break;
                         case SpecialType.Gold: graphics.DrawImage(Images.MtnsBase[2], 0, 0); break;
-                        case SpecialType.Iron: graphics.DrawImage(Images.MtnsBase[3], 0, 0); break;
                         case SpecialType.Game: graphics.DrawImage(Images.Tundra[2], 0, 0); break;
-                        case SpecialType.Furs: graphics.DrawImage(Images.Tundra[3], 0, 0); break;
                         case SpecialType.Ivory: graphics.DrawImage(Images.Glacier[2], 0, 0); break;
-                        case SpecialType.GlacierOil: graphics.DrawImage(Images.Glacier[3], 0, 0); break;
                         case SpecialType.Peat: graphics.DrawImage(Images.Swamp[2], 0, 0); break;
-                        case SpecialType.Spice: graphics.DrawImage(Images.Swamp[3], 0, 0); break;
                         case SpecialType.Gems: graphics.DrawImage(Images.Jungle[2], 0, 0); break;
-                        case SpecialType.Fruit: graphics.DrawImage(Images.Jungle[3], 0, 0); break;
                         case SpecialType.Fish: graphics.DrawImage(Images.Ocean[2], 0, 0); break;
+                        case SpecialType.DesertOil: graphics.DrawImage(Images.Desert[3], 0, 0); break;
+                        case SpecialType.Wheat: graphics.DrawImage(Images.Plains[3], 0, 0); break;
+                        case SpecialType.GrasslandShield: graphics.DrawImage(Images.Shield, 0, 0); break;   // TODO: what is spectype for grassland?
+                        case SpecialType.Silk: graphics.DrawImage(Images.ForestBase[3], 0, 0); break;
+                        case SpecialType.Wine: graphics.DrawImage(Images.HillsBase[3], 0, 0); break;
+                        case SpecialType.Iron: graphics.DrawImage(Images.MtnsBase[3], 0, 0); break;
+                        case SpecialType.Furs: graphics.DrawImage(Images.Tundra[3], 0, 0); break;
+                        case SpecialType.GlacierOil: graphics.DrawImage(Images.Glacier[3], 0, 0); break;
+                        case SpecialType.Spice: graphics.DrawImage(Images.Swamp[3], 0, 0); break;
+                        case SpecialType.Fruit: graphics.DrawImage(Images.Jungle[3], 0, 0); break;
                         case SpecialType.Whales: graphics.DrawImage(Images.Ocean[3], 0, 0); break;
                         default: throw new ArgumentOutOfRangeException();
                     }

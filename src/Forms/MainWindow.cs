@@ -14,7 +14,7 @@ namespace civ2.Forms
     {
         MenuStrip MainMenuStrip;
         PictureBox MainPic;
-        //MapPanel MapPanel;
+        MapPanel MapPanel;
         //CityForm cityForm;
         //MinimapPanel MinimapPanel;
         //StatusPanel StatusPanel;

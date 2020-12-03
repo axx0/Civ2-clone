@@ -30,9 +30,8 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MapPanel(int _width, int _height) : base(_width, _height)
+        public MapPanel(int _width, int _height) : base(_width, _height, true, false)
         {
-            //Size = new Size(_width, _height);
             this.Paint += new PaintEventHandler(MapPanel_Paint);
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Actions.OnUnitEvent += UnitEventHappened;
@@ -42,15 +41,15 @@ namespace civ2.Forms
             MainWindow.OnMapEvent += MapEventHappened;
             MainWindow.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
             
-            DrawPanel = new Panel() 
-            {
-                Location = new Point(11, 38),
-                Size = new Size(Width - 22, Height - 49),
-                BackColor = Color.Black 
-            };
-            Controls.Add(DrawPanel);
-            DrawPanel.Paint += DrawPanel_Paint;
-            DrawPanel.MouseClick += DrawPanel_MouseClick;
+            //DrawPanel = new Panel() 
+            //{
+            //    Location = new Point(11, 38),
+            //    Size = new Size(Width - 22, Height - 49),
+            //    BackColor = Color.Black 
+            //};
+            //Controls.Add(DrawPanel);
+            //DrawPanel.Paint += DrawPanel_Paint;
+            //DrawPanel.MouseClick += DrawPanel_MouseClick;
             
             NoSelectButton ZoomINButton = new NoSelectButton
             {
@@ -75,10 +74,10 @@ namespace civ2.Forms
             ZoomOUTButton.Click += ZoomOUTclicked;
 
             //Initialize variables
-            MapGridVar = 0;
-            ViewPiecesMode = Game.ActiveUnit == null;  //if no unit is active at start --> all units ended turn
-            CenterSqXY = ActiveXY;
-            CivIdWhoseMapIsDisplayed = Game.PlayerCiv.Id;  //when game starts reveal map for current player's civ view
+            //MapGridVar = 0;
+            //ViewPiecesMode = Game.ActiveUnit == null;  //if no unit is active at start --> all units ended turn
+            //CenterSqXY = ActiveXY;
+            //CivIdWhoseMapIsDisplayed = Game.PlayerCiv.Id;  //when game starts reveal map for current player's civ view
             //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
             //TODO: Implement zoom
 
@@ -96,9 +95,9 @@ namespace civ2.Forms
             sf.Alignment = StringAlignment.Center;
 
             //Timer for waiting unit/viewing piece
-            Timer = new System.Windows.Forms.Timer();
-            Timer.Tick += new EventHandler(Timer_Tick);
-            StartAnimation(AnimationType.UnitWaiting);
+            //Timer = new System.Windows.Forms.Timer();
+            //Timer.Tick += new EventHandler(Timer_Tick);
+            //StartAnimation(AnimationType.UnitWaiting);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -112,52 +111,52 @@ namespace civ2.Forms
             e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
             // Draw panel borders
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9, Height - 9 - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 1, 36, Width - 9 - 1, Height - 9 - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - 9 - 1, Width - 9 - 1, Height - 9 - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 9 + (Width - 18 - 2), 37);   //2nd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 10, Height - 9 - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 37, Width - 9 - 2, Height - 9 - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - 9 - 2, Width - 9 - 2, Height - 9 - 2);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9, Height - 9 - 1);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 1, 36, Width - 9 - 1, Height - 9 - 1);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - 9 - 1, Width - 9 - 1, Height - 9 - 1);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 9 + (Width - 18 - 2), 37);   //2nd layer of border
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 10, Height - 9 - 2);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 37, Width - 9 - 2, Height - 9 - 2);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - 9 - 2, Width - 9 - 2, Height - 9 - 2);
             e.Dispose();
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
-            int[] drawingSqXY = DrawingSqXY;
-            int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
-            int[] startingSqXY = StartingSqXY;
-            int[] drawingPxOffsetXY = DrawingPxOffsetXY;
-            int[] activeXY = ActiveXY;
-            int[] centerSqXY = CenterSqXY;
+            //int[] drawingSqXY = DrawingSqXY;
+            //int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
+            //int[] startingSqXY = StartingSqXY;
+            //int[] drawingPxOffsetXY = DrawingPxOffsetXY;
+            //int[] activeXY = ActiveXY;
+            //int[] centerSqXY = CenterSqXY;
 
-            Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
-            //e.Graphics.DrawImage(Game.CivsMap[CivIdWhoseMapIsDisplayed], 0, 0, rect, GraphicsUnit.Pixel);
+            //Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
+            ////e.Graphics.DrawImage(Game.CivsMap[CivIdWhoseMapIsDisplayed], 0, 0, rect, GraphicsUnit.Pixel);
 
-            //Unit/viewing piece static
-            switch (AnimType)
-            {
-                case AnimationType.UnitWaiting:
-                    {
-                        IUnit unit = Game.Instance.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], (unit.X - startingSqXY[0]) * 32, (unit.Y - startingSqXY[1]) * 16 - 16);
-                        break;
-                    }
-                case AnimationType.UnitMoving:
-                    {
-                        IUnit unit = Game.Instance.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[Game.Instance.ActiveUnit.MovementCounter], (unit.LastXY[0] - startingSqXY[0]) * 32 - 64, (unit.LastXY[1] - startingSqXY[1]) * 16 - 48);
-                        break;
-                    }
-                case AnimationType.ViewPieces:
-                    {
-                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
-                        break;
-                    }
-            }
+            ////Unit/viewing piece static
+            //switch (AnimType)
+            //{
+            //    case AnimationType.UnitWaiting:
+            //        {
+            //            IUnit unit = Game.Instance.ActiveUnit;
+            //            e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], (unit.X - startingSqXY[0]) * 32, (unit.Y - startingSqXY[1]) * 16 - 16);
+            //            break;
+            //        }
+            //    case AnimationType.UnitMoving:
+            //        {
+            //            IUnit unit = Game.Instance.ActiveUnit;
+            //            e.Graphics.DrawImage(AnimationBitmap[Game.Instance.ActiveUnit.MovementCounter], (unit.LastXY[0] - startingSqXY[0]) * 32 - 64, (unit.LastXY[1] - startingSqXY[1]) * 16 - 48);
+            //            break;
+            //        }
+            //    case AnimationType.ViewPieces:
+            //        {
+            //            if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, 32 * (ActiveXY[0] - startingSqXY[0]), 16 * (ActiveXY[1] - startingSqXY[1]), 64, 32);
+            //            break;
+            //        }
+            //}
 
-            e.Dispose();
+            //e.Dispose();
         }
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
@@ -304,16 +303,9 @@ namespace civ2.Forms
             }
         }
 
-        private static int[] _drawingSqXY;
-        public static int[] DrawingSqXY  //Squares to be drawn on the panel
-        {
-            //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
-            get
-            {
-                _drawingSqXY = new int[] { (int)Math.Floor(((double)DrawPanel.Width - 32) / 32), (int)Math.Floor(((double)DrawPanel.Height - 16) / 16) };
-                return _drawingSqXY;
-            }
-        }
+        // Squares to be drawn on the panel
+        public static int[] DrawingSqXY => new int[] { (int)Math.Floor(((double)DrawPanel.Width - 32) / 32), (int)Math.Floor(((double)DrawPanel.Height - 16) / 16) };
+        //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
 
         private int[] _centerSqXY;
         private int[] CenterSqXY

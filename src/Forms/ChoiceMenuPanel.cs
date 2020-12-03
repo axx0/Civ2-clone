@@ -13,46 +13,44 @@ namespace civ2.Forms
         RadioButton[] RadioBtn = new RadioButton[8];
         MainWindow mainForm;
 
-        public ChoiceMenuPanel(MainWindow _MainWindow) : base((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34))
+        public ChoiceMenuPanel(MainWindow _MainWindow) : base((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34), true, true)
         {
             InitializeComponent();
             mainForm = _MainWindow;
-            BackgroundImage = Images.PanelOuterWallpaper;
-            //Size = new Size((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34));
-            Paint += new PaintEventHandler(ChoiceMenu_Paint);
+            //Paint += new PaintEventHandler(ChoiceMenu_Paint);
 
             // Stats panel
-            MainPanel = new Panel
-            {
-                Location = new Point((int)(this.Width * 0.02694), (int)(this.Height * 0.10465)),
-                Size = new Size(this.Width - 19, (int)(this.Height * 0.7674)),
-                BackgroundImage = Images.WallpaperStatusForm
-            };
-            Controls.Add(MainPanel);
-            MainPanel.Paint += MainPanel_Paint;
+            //MainPanel = new Panel
+            //{
+            //    Location = new Point((int)(this.Width * 0.02694), (int)(this.Height * 0.10465)),
+            //    Size = new Size(this.Width - 19, (int)(this.Height * 0.7674)),
+            //    BackgroundImage = Images.WallpaperStatusForm
+            //};
+            //Controls.Add(MainPanel);
+            //MainPanel.Paint += MainPanel_Paint;
 
             // Radio buttons
-            string[] txt = { "Start a New Game", "Start on Premade World", "Customize World", "Begin Scenario", "Load a Game", "Multiplayer Game", "View Hall of Fame", "View Credits" };
-            for (int i = 0; i < 7; i++)
-            {
-                RadioBtn[i] = new RadioButton
-                {
-                    Text = txt[i],
-                    Location = new Point(10, (int)(MainPanel.Height / 7) * i),
-                    BackColor = Color.Transparent,
-                    Font = new Font("Times New Roman", 18),
-                    ForeColor = Color.FromArgb(51, 51, 51),
-                    AutoSize = true
-                };
-                MainPanel.Controls.Add(RadioBtn[i]);
-            }
-            RadioBtn[0].Checked = true;
+            //string[] txt = { "Start a New Game", "Start on Premade World", "Customize World", "Begin Scenario", "Load a Game", "Multiplayer Game", "View Hall of Fame", "View Credits" };
+            //for (int i = 0; i < 7; i++)
+            //{
+            //    RadioBtn[i] = new RadioButton
+            //    {
+            //        Text = txt[i],
+            //        Location = new Point(10, (int)(MainPanel.Height / 7) * i),
+            //        BackColor = Color.Transparent,
+            //        Font = new Font("Times New Roman", 18),
+            //        ForeColor = Color.FromArgb(51, 51, 51),
+            //        AutoSize = true
+            //    };
+            //    MainPanel.Controls.Add(RadioBtn[i]);
+            //}
+            //RadioBtn[0].Checked = true;
 
             // OK button
             Civ2button OKButton = new Civ2button
             {
-                Location = new Point((int)(this.Width * 0.02694), (int)(this.Height * 0.8779)),
-                Size = new Size((int)(this.Width * 0.4671), (int)(this.Width * 0.10465)),
+                Location = new Point(9, Height - 42),
+                Size = new Size(156, 36),
                 Font = new Font("Times New Roman", 11),
                 Text = "OK"
             };
@@ -62,8 +60,8 @@ namespace civ2.Forms
             // Cancel button
             Civ2button CancelButton = new Civ2button
             {
-                Location = new Point((int)(this.Width * 0.50299), (int)(this.Height * 0.8779)),
-                Size = new Size((int)(this.Width * 0.4671), (int)(this.Width * 0.10465)),
+                Location = new Point(168, Height - 42),
+                Size = new Size(157, 36),
                 Font = new Font("Times New Roman", 11),
                 Text = "Cancel"
             };
@@ -125,15 +123,15 @@ namespace civ2.Forms
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             // Draw line borders
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, MainPanel.Width - 2, 0);   //1st layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, MainPanel.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MainPanel.Width - 1, 0, MainPanel.Width - 1, MainPanel.Height - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, MainPanel.Height - 1, MainPanel.Width - 1, MainPanel.Height - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, MainPanel.Width - 3, 1);   //2nd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, MainPanel.Height - 3);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MainPanel.Width - 2, 1, MainPanel.Width - 2, MainPanel.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, MainPanel.Height - 2, MainPanel.Width - 2, MainPanel.Height - 2);
-            e.Dispose();
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, MainPanel.Width - 2, 0);   //1st layer of border
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, MainPanel.Height - 2);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MainPanel.Width - 1, 0, MainPanel.Width - 1, MainPanel.Height - 1);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, MainPanel.Height - 1, MainPanel.Width - 1, MainPanel.Height - 1);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, MainPanel.Width - 3, 1);   //2nd layer of border
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 1, 1, MainPanel.Height - 3);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), MainPanel.Width - 2, 1, MainPanel.Width - 2, MainPanel.Height - 2);
+            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 1, MainPanel.Height - 2, MainPanel.Width - 2, MainPanel.Height - 2);
+            //e.Dispose();
         }
 
         private void ChoiceMenu_Paint(object sender, PaintEventArgs e)

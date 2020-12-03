@@ -8,7 +8,7 @@ namespace civ2
 {
     public partial class Game : BaseInstance
     {
-        public static Game LoadGame(string savDirectoryPath, string SAVname)
+        public static void LoadGame(string savDirectoryPath, string SAVname)
         {
             // Import graphical assets from SAV directory. If they don't exist import from root civ2 directory.
             Images.LoadGraphicsAssetsFromFiles(savDirectoryPath);
@@ -20,8 +20,6 @@ namespace civ2
             // Make an instance of a new game & map
             _instance = new Game(gameData);
             Map.Instance.GenerateMap(gameData);
-            
-            return _instance;   // Return instance so it can be read by forms
         }
 
         private Game(GameData SAVgameData)

@@ -11,9 +11,9 @@ namespace civ2.Bitmaps
                             CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall,
                             CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge,
                             CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger, NextCity;
-        public static Bitmap CityWallpaper, PanelOuterWallpaper,
+        public static Bitmap CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper,
                      Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane,
-                     Shield, ViewPiece, WallpaperStatusForm, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase,
+                     Shield, ViewPiece, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase,
                      SellIcon, SellIconLarge,
                      NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road,
@@ -654,7 +654,7 @@ namespace civ2.Bitmaps
             }
 
             PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
-            WallpaperStatusForm = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+            PanelInnerWallpaper = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
         }
 
         public static void IconsBitmapsImportFromFile(string path)
@@ -783,7 +783,7 @@ namespace civ2.Bitmaps
 
             // Wallpaper icons
             PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
-            WallpaperStatusForm = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+            PanelInnerWallpaper = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
 
             // Icon for next/previous city (black arrow)
             NextCity = icons.Clone(new Rectangle(227, 389, 18, 24), icons.PixelFormat);

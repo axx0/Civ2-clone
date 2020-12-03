@@ -5,42 +5,45 @@ using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    // A panel can have:
+    // A panel in civ2 style can have:
     // - a header (title)
     // - a footer (usually buttons)
+    // - none
     // - both
-    // - none of these
 
     public partial class Civ2panel : Panel
     {
-        public Civ2panel(int width, int height)  // empty panel
+        private Panel DrawPanel;
+        private bool TitleExists { get; set; }
+        private bool ButtonsExist { get; set; }
+        private int XtraSpacingUp => TitleExists ? 27 : 0;
+        private int XtraSpacingDwn => ButtonsExist ? 35 : 0;
+
+        public Civ2panel(int width, int height, bool _titleExists, bool _buttonsExist)
         {
+            TitleExists = _titleExists;
+            ButtonsExist = _buttonsExist;
+
             Size = new Size(width, height);
             DoubleBuffered = true;
             BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
+
+            DrawPanel = new Panel()
+            {
+                Location = new Point(11, XtraSpacingUp + 11),
+                Size = new Size(Width - 22, Height - 22 - XtraSpacingUp - XtraSpacingDwn),
+                BackgroundImage = Images.PanelInnerWallpaper
+            };
+            Controls.Add(DrawPanel);
+            DrawPanel.Paint += DrawPanel_Paint;
         }
 
-        public Civ2panel(int width, int height, string title)  // only title
-        {
-            Size = new Size(width, height);
-            DoubleBuffered = true;
-            BackgroundImage = Images.PanelOuterWallpaper;
-            this.Paint += new PaintEventHandler(Civ2panel_Paint);
-        }
-
-        public Civ2panel(int width, int height, string title, List<Civ2button> buttons)    // title + buttons
-        {
-            Size = new Size(width, height);
-            DoubleBuffered = true;
-            BackgroundImage = Images.PanelOuterWallpaper;
-            this.Paint += new PaintEventHandler(Civ2panel_Paint);
-        }
 
         // Draw border around panel
         private void Civ2panel_Paint(object sender, PaintEventArgs e)
         {
-            // Border
+            // Outer border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, this.Height - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), this.Width - 1, 0, this.Width - 1, this.Height - 1);
@@ -61,8 +64,20 @@ namespace civ2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, 4, this.Height - 6);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 5, 4, this.Width - 5, this.Height - 5);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 4, this.Height - 5, this.Width - 5, this.Height - 5);
-            // Panel background (TODO)
-            // ...
+            // Border for draw panel
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 9 + XtraSpacingUp, 9 + (Width - 18 - 1), 9 + XtraSpacingUp);   //1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 9 + XtraSpacingUp, 9, Height - XtraSpacingDwn - 9 - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 1, 9 + XtraSpacingUp, Width - 9 - 1, Height - XtraSpacingDwn - 9 - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - XtraSpacingDwn - 9 - 1, Width - 9 - 1, Height - XtraSpacingDwn - 9 - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10 + XtraSpacingUp, 9 + (Width - 18 - 2), 10 + XtraSpacingUp);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10 + XtraSpacingUp, 10, Height - XtraSpacingDwn - 9 - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 10 + XtraSpacingUp, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - XtraSpacingDwn - 9 - 2, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
+        }
+
+        private void DrawPanel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

@@ -5,16 +5,20 @@ namespace civ2.Forms
 {
     public partial class MainWindow : Form
     {
-        public void ArrangeWindowControlsAfterGameStart(Game instance)
+        public void ArrangeWindowControlsAfterGameStart()
         {
             ChoiceMenu.Visible = false;
             ChoiceMenu.Dispose();
             ChoiceMenu = null;
             MainMenuStrip.Enabled = true;
 
-            //MapPanel = new Civ2panel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
-            //MapPanel.Location = new Point(0, MainMenuStrip.Height);
-            //Controls.Add(MapPanel);
+            SinaiPanel.Dispose();
+            SinaiPanel = null;
+
+            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
+            MapPanel.Location = new Point(0, MainMenuStrip.Height);
+            Controls.Add(MapPanel);
+            MapPanel.BringToFront();
 
             //MapPanel = new MapPanel(instance, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
             //MapPanel.Location = new Point(0, MainMenuStrip.Height);
