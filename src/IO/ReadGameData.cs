@@ -820,7 +820,7 @@ namespace civ2
                 //string hexValue = intValueB26.ToString("X");
 
                 // SAV file doesn't tell where special resources are, so you have to set this yourself
-                data.MapSpecialType[x, y] = ReturnSpecial(x, y, data.MapTerrainType[x, y], data.MapXdim, data.MapYdim);
+                //data.MapSpecialType[x, y] = ReturnSpecial(x, y, data.MapTerrainType[x, y], data.MapXdim, data.MapYdim);
             }
             // block 3 - locator map
             int ofsetB3 = ofsetB2 + 6 * data.MapArea; //offset for block 2 values

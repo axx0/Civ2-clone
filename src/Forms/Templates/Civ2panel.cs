@@ -13,15 +13,15 @@ namespace civ2.Forms
 
     public partial class Civ2panel : Panel
     {
-        private Panel DrawPanel;
-        private bool TitleExists { get; set; }
+        public Panel DrawPanel;
+        private string? Title { get; set; }
         private bool ButtonsExist { get; set; }
-        private int XtraSpacingUp => TitleExists ? 27 : 0;
+        private int XtraSpacingUp => Title != null ? 27 : 0;
         private int XtraSpacingDwn => ButtonsExist ? 35 : 0;
 
-        public Civ2panel(int width, int height, bool _titleExists, bool _buttonsExist)
+        public Civ2panel(int width, int height, string _title, bool _buttonsExist)
         {
-            TitleExists = _titleExists;
+            Title = _title;
             ButtonsExist = _buttonsExist;
 
             Size = new Size(width, height);
@@ -36,13 +36,23 @@ namespace civ2.Forms
                 BackgroundImage = Images.PanelInnerWallpaper
             };
             Controls.Add(DrawPanel);
-            DrawPanel.Paint += DrawPanel_Paint;
+            //DrawPanel.Paint += new PaintEventHandler(DrawPanel_Paint);
         }
 
-
         // Draw border around panel
-        private void Civ2panel_Paint(object sender, PaintEventArgs e)
+        public virtual void Civ2panel_Paint(object sender, PaintEventArgs e)
         {
+            // Title (if exists)
+            if (Title != null)
+            {
+                StringFormat sf = new StringFormat
+                {
+                    LineAlignment = StringAlignment.Center,
+                    Alignment = StringAlignment.Center
+                };
+                e.Graphics.DrawString(Title, new Font("Times New Roman", 17), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+                e.Graphics.DrawString(Title, new Font("Times New Roman", 17), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            }
             // Outer border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   //1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, this.Height - 2);
@@ -75,9 +85,9 @@ namespace civ2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - XtraSpacingDwn - 9 - 2, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
         }
 
-        private void DrawPanel_Paint(object sender, PaintEventArgs e)
-        {
+        //protected void DrawPanel_Paint(object sender, PaintEventArgs e)
+        //{
 
-        }
+        //}
     }
 }

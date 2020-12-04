@@ -15,9 +15,7 @@ namespace civ2.Forms
 {
     public partial class MapPanel : Civ2panel
     {
-        private static Panel DrawPanel;
         StringFormat sf = new StringFormat();
-
         private static List<Bitmap> AnimationBitmap;        
         private int MapGridVar { get; set; }    //style of map grid presentation
         private System.Windows.Forms.Timer Timer;    //timer for blinking (unit or viewing piece), moving unit, etc.
@@ -30,9 +28,10 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MapPanel(int _width, int _height) : base(_width, _height, true, false)
+        public MapPanel(int _width, int _height) : base(_width, _height, "", false)
         {
             this.Paint += new PaintEventHandler(MapPanel_Paint);
+
             Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Actions.OnUnitEvent += UnitEventHappened;
             Actions.OnPlayerEvent += PlayerEventHappened;
@@ -40,17 +39,7 @@ namespace civ2.Forms
             //StatusPanel.OnMapEvent += MapEventHappened;
             MainWindow.OnMapEvent += MapEventHappened;
             MainWindow.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
-            
-            //DrawPanel = new Panel() 
-            //{
-            //    Location = new Point(11, 38),
-            //    Size = new Size(Width - 22, Height - 49),
-            //    BackColor = Color.Black 
-            //};
-            //Controls.Add(DrawPanel);
-            //DrawPanel.Paint += DrawPanel_Paint;
-            //DrawPanel.MouseClick += DrawPanel_MouseClick;
-            
+
             NoSelectButton ZoomINButton = new NoSelectButton
             {
                 Location = new Point(11, 9),
@@ -98,32 +87,38 @@ namespace civ2.Forms
             //Timer = new System.Windows.Forms.Timer();
             //Timer.Tick += new EventHandler(Timer_Tick);
             //StartAnimation(AnimationType.UnitWaiting);
+
+            Controls.Add(DrawPanel);
+            DrawPanel.BackgroundImage = null;
+            DrawPanel.BackColor = Color.Black;
+            DrawPanel.Paint += new PaintEventHandler(DrawPanel_Paint);
+            DrawPanel.MouseClick += DrawPanel_MouseClick;
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
             // Title
-            StringFormat sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
+            StringFormat sf = new StringFormat
+            {
+                LineAlignment = StringAlignment.Center,
+                Alignment = StringAlignment.Center
+            };
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
             e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
             e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
-            sf.Dispose();
-            // Draw panel borders
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9 + (Width - 18 - 1), 36);   //1st layer of border
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9, Height - 9 - 1);
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 1, 36, Width - 9 - 1, Height - 9 - 1);
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - 9 - 1, Width - 9 - 1, Height - 9 - 1);
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 9 + (Width - 18 - 2), 37);   //2nd layer of border
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 10, Height - 9 - 2);
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 37, Width - 9 - 2, Height - 9 - 2);
-            //e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - 9 - 2, Width - 9 - 2, Height - 9 - 2);
-            e.Dispose();
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
+            for (int col = 0; col < 20; col++)
+            {
+                for (int row = 0; row < 20; row++)
+                {
+                    e.Graphics.DrawImage(Map.Tile[col, row].Graphic, 64 * col + 32 * (row % 2), 16 * row);
+                }
+            }
+
+
             //int[] drawingSqXY = DrawingSqXY;
             //int[] edgeDrawOffsetXY = EdgeDrawOffsetXY;
             //int[] startingSqXY = StartingSqXY;
@@ -304,7 +299,8 @@ namespace civ2.Forms
         }
 
         // Squares to be drawn on the panel
-        public static int[] DrawingSqXY => new int[] { (int)Math.Floor(((double)DrawPanel.Width - 32) / 32), (int)Math.Floor(((double)DrawPanel.Height - 16) / 16) };
+        //public static int[] DrawingSqXY => new int[] { (int)Math.Floor(((double)DrawPanel.Width - 32) / 32), (int)Math.Floor(((double)DrawPanel.Height - 16) / 16) };
+        public static int[] DrawingSqXY => new int[] { (int)Math.Floor((206.0 - 32) / 32), (int)Math.Floor((200.0 - 16) / 16) };
         //get { return new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * ZoomLvl)) }; }
 
         private int[] _centerSqXY;
