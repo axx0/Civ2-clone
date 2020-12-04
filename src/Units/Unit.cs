@@ -330,17 +330,21 @@ namespace civ2.Units
         public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
 
-        private Bitmap _graphic;
+        //private Bitmap _graphic;
         public Bitmap Graphic 
         {
             get
             {
-                if (_graphic == null)
-                    return Draw.Unit(this, IsInStack, Game.ZoomLvl);
-                else
-                    return _graphic;
+                return Draw.Unit(this, IsInStack, Game.ZoomLvl);
             }
-            set { _graphic = value; }
+            //get
+            //{
+            //    if (_graphic == null)
+            //        return Draw.Unit(this, IsInStack, Game.ZoomLvl);
+            //    else
+            //        return _graphic;
+            //}
+            //set { _graphic = value; }
         }
 
         //private Bitmap _graphicMapPanel;

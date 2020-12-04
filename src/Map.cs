@@ -30,11 +30,13 @@ namespace civ2
                 {
                     Tile[col, row] = new Terrain
                     {
+                        X = 2 * col + (row % 2),
+                        Y = row,
                         Type = data.MapTerrainType[col, row],
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
-                        UnitPresent = data.MapUnitPresent[col, row],
-                        CityPresent = data.MapCityPresent[col, row],
+                        //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself
+                        //CityPresent = data.MapCityPresent[col, row],  // you can find this out yourself
                         Irrigation = data.MapIrrigationPresent[col, row],
                         Mining = data.MapMiningPresent[col, row],
                         Road = data.MapRoadPresent[col, row],

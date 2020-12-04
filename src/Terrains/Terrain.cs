@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using civ2.Bitmaps;
 using civ2.Enums;
 
@@ -7,6 +8,8 @@ namespace civ2.Terrains
 {
     internal class Terrain : BaseInstance, ITerrain
     {
+        public int X { get; set; }
+        public int Y { get; set; }
         public TerrainType Type { get; set; }
         public SpecialType? SpecType { get; set; }
 
@@ -76,8 +79,8 @@ namespace civ2.Terrains
 
         public bool Resource { get; set; }
         public bool River { get; set; }
-        public bool UnitPresent { get; set; }
-        public bool CityPresent { get; set; }
+        public bool UnitPresent => Game.GetUnits.Any(u => u.X == X && u.Y == Y);
+        public bool CityPresent => Game.GetCities.Any(c => c.X == X && c.Y == Y);
         public bool Irrigation { get; set; }
         public bool Mining { get; set; }
         public bool Road { get; set; }
@@ -88,7 +91,6 @@ namespace civ2.Terrains
         public bool Airbase { get; set; }
         public int Island { get; set; }
         public bool[] Visibility { get; set; }
-                        
         public string Hexvalue { get; set; }
 
         public Bitmap Graphic { get; set; }

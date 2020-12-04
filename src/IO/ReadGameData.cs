@@ -760,31 +760,20 @@ namespace civ2
                 int y = i / data.MapXdim;
 
                 // Terrain type
-                //data.MapTerrainType[x, y] = TerrainType.Desert; // only initial
-                //data.MapRiverPresent[x, y] = false;
-                int terrain_type = bytes[ofsetB2 + i * 6 + 0];
-                if (terrain_type == 0) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = false; }   //0dec=0hex
-                if (terrain_type == 128) { data.MapTerrainType[x, y] = TerrainType.Desert; data.MapRiverPresent[x, y] = true; }   //128dec=80hex
-                if (terrain_type == 1) { data.MapTerrainType[x, y] = TerrainType.Plains; data.MapRiverPresent[x, y] = false; }   //1dec=1hex
-                if (terrain_type == 129) { data.MapTerrainType[x, y] = TerrainType.Plains; data.MapRiverPresent[x, y] = true; }   //129dec=81hex
-                if (terrain_type == 2) { data.MapTerrainType[x, y] = TerrainType.Grassland; data.MapRiverPresent[x, y] = false; }   //2dec=2hex
-                if (terrain_type == 130) { data.MapTerrainType[x, y] = TerrainType.Grassland; data.MapRiverPresent[x, y] = true; }   //130dec=82hex
-                if (terrain_type == 3) { data.MapTerrainType[x, y] = TerrainType.Forest; data.MapRiverPresent[x, y] = false; }   //3dec=3hex
-                if (terrain_type == 131) { data.MapTerrainType[x, y] = TerrainType.Forest; data.MapRiverPresent[x, y] = true; }   //131dec=83hex
-                if (terrain_type == 4) { data.MapTerrainType[x, y] = TerrainType.Hills; data.MapRiverPresent[x, y] = false; }   //4dec=4hex
-                if (terrain_type == 132) { data.MapTerrainType[x, y] = TerrainType.Hills; data.MapRiverPresent[x, y] = true; }   //132dec=84hex
-                if (terrain_type == 5) { data.MapTerrainType[x, y] = TerrainType.Mountains; data.MapRiverPresent[x, y] = false; }   //5dec=5hex
-                if (terrain_type == 133) { data.MapTerrainType[x, y] = TerrainType.Mountains; data.MapRiverPresent[x, y] = true; }   //133dec=85hex
-                if (terrain_type == 6) { data.MapTerrainType[x, y] = TerrainType.Tundra; data.MapRiverPresent[x, y] = false; }   //6dec=6hex
-                if (terrain_type == 134) { data.MapTerrainType[x, y] = TerrainType.Tundra; data.MapRiverPresent[x, y] = true; }   //134dec=86hex
-                if (terrain_type == 7) { data.MapTerrainType[x, y] = TerrainType.Glacier; data.MapRiverPresent[x, y] = false; }   //7dec=7hex
-                if (terrain_type == 135) { data.MapTerrainType[x, y] = TerrainType.Glacier; data.MapRiverPresent[x, y] = true; }   //135dec=87hex
-                if (terrain_type == 8) { data.MapTerrainType[x, y] = TerrainType.Swamp; data.MapRiverPresent[x, y] = false; }   //8dec=8hex
-                if (terrain_type == 136) { data.MapTerrainType[x, y] = TerrainType.Swamp; data.MapRiverPresent[x, y] = true; }   //136dec=88hex
-                if (terrain_type == 9) { data.MapTerrainType[x, y] = TerrainType.Jungle; data.MapRiverPresent[x, y] = false; }   //9dec=9hex
-                if (terrain_type == 137) { data.MapTerrainType[x, y] = TerrainType.Jungle; data.MapRiverPresent[x, y] = true; }   //137dec=89hex
-                if (terrain_type == 10) { data.MapTerrainType[x, y] = TerrainType.Ocean; data.MapRiverPresent[x, y] = false; }   //10dec=Ahex
-                if (terrain_type == 74) { data.MapTerrainType[x, y] = TerrainType.Ocean; data.MapRiverPresent[x, y] = false; }   //74dec=4Ahex
+                int terrB = ofsetB2 + i * 6 + 0;
+                if (!GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Desert;   // xxxx 0000
+                if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Plains;  // xxxx 0001
+                if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Grassland;  // xxxx 0010
+                if (GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Forest;   // xxxx 0011
+                if (!GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Hills;  // xxxx 0100
+                if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Mountains;  // xxxx 0101
+                if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Tundra;  // xxxx 0110
+                if (GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Glacier;  // xxxx 0111
+                if (!GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Swamp;  // xxxx 1000
+                if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Jungle;  // xxxx 1001
+                if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Ocean;  // xxxx 1010
+                data.MapRiverPresent[x, y] = GetBit(bytes[terrB], 7);  // river (1xxx xxxx)
+                
                 // Determine if resources are present
                 data.MapResourcePresent[x, y] = false;
                 //!!! NOT WORKING PROPERLY !!!
@@ -792,19 +781,17 @@ namespace civ2
                 //if (bin[1] == '1') { resource = true; }
 
                 // Tile improvements (for all civs! In block 1 it's for indivudual civs)
-                //int tile_improv = bytes[ofsetB2 + i * 6 + 1];
-                //bin = Convert.ToString(tile_improv, 2).PadLeft(8, '0');
-
-                data.MapUnitPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 7);
-                data.MapCityPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
-                data.MapIrrigationPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
-                data.MapMiningPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 4);
-                data.MapRoadPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
-                data.MapRailroadPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 2) && GetBit(bytes[ofsetB2 + i * 6 + 1], 3);
-                data.MapFortressPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 1);
-                data.MapPollutionPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 0);
-                data.MapFarmlandPresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 4) && GetBit(bytes[ofsetB2 + i * 6 + 1], 5);
-                data.MapAirbasePresent[x, y] = GetBit(bytes[ofsetB2 + i * 6 + 1], 1) && GetBit(bytes[ofsetB2 + i * 6 + 1], 6);
+                terrB = ofsetB2 + i * 6 + 1;
+                data.MapUnitPresent[x, y] = GetBit(bytes[terrB], 0);
+                data.MapCityPresent[x, y] = GetBit(bytes[terrB], 1);
+                data.MapIrrigationPresent[x, y] = GetBit(bytes[terrB], 2);
+                data.MapMiningPresent[x, y] = GetBit(bytes[terrB], 3);
+                data.MapRoadPresent[x, y] = GetBit(bytes[terrB], 4);
+                data.MapRailroadPresent[x, y] = GetBit(bytes[terrB], 4) && GetBit(bytes[terrB], 5);
+                data.MapFortressPresent[x, y] = GetBit(bytes[terrB], 6);
+                data.MapPollutionPresent[x, y] = GetBit(bytes[terrB], 7);
+                data.MapFarmlandPresent[x, y] = GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 6);
+                data.MapAirbasePresent[x, y] = GetBit(bytes[terrB], 3) && GetBit(bytes[terrB], 4);
 
                 int intValueB23 = bytes[ofsetB2 + i * 6 + 2];       // TODO: city radius
 
@@ -820,6 +807,7 @@ namespace civ2
                 //string hexValue = intValueB26.ToString("X");
 
                 // SAV file doesn't tell where special resources are, so you have to set this yourself
+                
                 //data.MapSpecialType[x, y] = ReturnSpecial(x, y, data.MapTerrainType[x, y], data.MapXdim, data.MapYdim);
             }
             // block 3 - locator map

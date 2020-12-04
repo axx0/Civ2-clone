@@ -36,7 +36,6 @@ namespace civ2.Forms
                 BackgroundImage = Images.PanelInnerWallpaper
             };
             Controls.Add(DrawPanel);
-            //DrawPanel.Paint += new PaintEventHandler(DrawPanel_Paint);
         }
 
         // Draw border around panel

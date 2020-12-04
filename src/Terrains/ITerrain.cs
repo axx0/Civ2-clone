@@ -5,6 +5,8 @@ namespace civ2.Terrains
 {
     public interface ITerrain
     {
+        int X { get; set; }
+        int Y { get; set; }
         TerrainType Type { get; set; }
         SpecialType? SpecType { get; set; }
 
@@ -33,8 +35,8 @@ namespace civ2.Terrains
 
         bool Resource { get; set; }
         bool River { get; set; }
-        bool UnitPresent { get; set; }
-        bool CityPresent { get; set; }
+        bool UnitPresent { get; }
+        bool CityPresent { get; }
         bool Irrigation { get; set; }
         bool Mining { get; set; }
         bool Road { get; set; }

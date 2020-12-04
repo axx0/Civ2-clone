@@ -72,7 +72,7 @@ namespace civ2.Units
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }
-        Bitmap Graphic { get; set; }
+        Bitmap Graphic { get; }
 
         //Bitmap GraphicMapPanel { get; }
     }

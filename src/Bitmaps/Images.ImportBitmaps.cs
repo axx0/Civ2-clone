@@ -77,11 +77,11 @@ namespace civ2.Bitmaps
             FilePath_root = Settings.Civ2Path + "TERRAIN2.GIF";
             if (File.Exists(FilePath_local))
             {
-                terrain1 = new Bitmap(FilePath_local);
+                terrain2 = new Bitmap(FilePath_local);
             }
             else if (File.Exists(FilePath_root))
             {
-                terrain1 = new Bitmap(FilePath_root);
+                terrain2 = new Bitmap(FilePath_root);
             }
             else
             {

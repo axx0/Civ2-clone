@@ -110,11 +110,20 @@ namespace civ2.Forms
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
-            for (int col = 0; col < 20; col++)
+            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
+
+            for (int col = 0; col < 25; col++)
             {
-                for (int row = 0; row < 20; row++)
+                for (int row = 0; row < 60; row++)
                 {
+                    // Terrain
                     e.Graphics.DrawImage(Map.Tile[col, row].Graphic, 64 * col + 32 * (row % 2), 16 * row);
+
+                    // Units
+                    List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == Map.Tile[col, row].X && u.Y == Map.Tile[col, row].Y).ToList();
+                    if (unitsHere.Any() && !Map.Tile[col, row].CityPresent)
+                        //e.Graphics.DrawImage(unitsHere.Last().Graphic, 64 * col, 16 * row - 16);
+                        e.Graphics.DrawImage(unitsHere.Last().Graphic, 32 * unitsHere.Last().X, 16 * unitsHere.Last().Y - 16);
                 }
             }
 
