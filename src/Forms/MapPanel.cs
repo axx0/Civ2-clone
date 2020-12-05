@@ -28,6 +28,8 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
+        private Bitmap bitmap;
+
         public MapPanel(int _width, int _height) : base(_width, _height, "", false)
         {
             this.Paint += new PaintEventHandler(MapPanel_Paint);
@@ -108,10 +110,23 @@ namespace civ2.Forms
             e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
         }
 
+        private void PaintThing()
+        {
+            for (int col = 0; col < 25; col++)
+            {
+                for (int row = 0; row < 60; row++)
+                {
+                    using (Graphics g = Graphics.FromImage())
+                    {
+                        e.Graphics.()
+                    }
+                }
+            }
+
+        }
+
         private void DrawPanel_Paint(object sender, PaintEventArgs e)   //DRAW MAP
         {
-            e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.None;
-
             for (int col = 0; col < 25; col++)
             {
                 for (int row = 0; row < 60; row++)
