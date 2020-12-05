@@ -1,4 +1,5 @@
-﻿using civ2.Terrains;
+﻿using System.Drawing;
+using civ2.Terrains;
 using civ2.Bitmaps;
 
 namespace civ2
@@ -12,6 +13,7 @@ namespace civ2
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
         public ITerrain[,] Tile { get; private set; }
+        public Bitmap[] Graphic { get; set; }
         
         // Generate first instance of terrain tiles by importing game data
         public void GenerateMap(GameData data)
@@ -60,6 +62,11 @@ namespace civ2
                     Tile[col, row].Graphic = Draw.Terrain(Tile[col, row], col, row);
                 }
             }
+
+            // Make graphics of a map for each civ (including barbarians) + revealed map
+            Graphic = new Bitmap[9];
+            for (int civId = 0; civId < 9; civId++)
+                Graphic[civId] = Draw.DrawMap(civId);
         }
 
         private static Map _instance;

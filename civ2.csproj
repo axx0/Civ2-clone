@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="src\Advances\Advance.cs" />
     <Compile Include="src\Advances\IAdvance.cs" />
+    <Compile Include="src\Bitmaps\Draw.Map.cs" />
     <Compile Include="src\Bitmaps\Draw.Terrain.cs" />
     <Compile Include="src\Bitmaps\Draw.Unit.cs" />
     <Compile Include="src\Enums\AIroleType.cs" />

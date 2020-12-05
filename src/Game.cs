@@ -56,8 +56,17 @@ namespace civ2
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
         public int[] ActiveCursorXY { get; set; }
-        public int[] ClickedXY { get; set; }
-        public int ZoomLvl { get; set; }
+        public int[] ClickedXY { get; set; }    // Last tile clicked with your mouse on the map
+
+        private int _zoomLvl;
+        public int ZoomLvl
+        {
+            get { return _zoomLvl; }
+            set
+            {
+                _zoomLvl = Math.Max(Math.Min(value, 16), 1);
+            }
+        }
 
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)
