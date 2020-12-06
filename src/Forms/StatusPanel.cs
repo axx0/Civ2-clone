@@ -7,34 +7,37 @@ using System.Globalization;
 using civ2.Bitmaps;
 using civ2.Units;
 using civ2.Events;
-using civ2.GameActions;
 using civ2.Enums;
 
 namespace civ2.Forms
 {
-    public partial class StatusPanel : Civ2panel
+    public partial class StatusPanel : DoubleBufferedPanel
     {
-        DoubleBufferedPanel StatsPanel, UnitPanel;
-        private Timer Timer = new Timer();
+        Game Game => Game.Instance;
+        Map Map => Map.Instance;
+
+        private readonly DoubleBufferedPanel StatsPanel, UnitPanel;
+        private readonly Timer Timer = new Timer();
         private bool WaitingAtEndOfTurn { get; set; }
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public StatusPanel(int width, int height)
+        public StatusPanel(int _width, int _height)
         {
-            Size = new Size(width, height);
-            this.Paint += new PaintEventHandler(StatusPanel_Paint);
+            BackgroundImage = Images.PanelOuterWallpaper;
+            Size = new Size(_width, _height);
+            this.Paint += StatusPanel_Paint;
             MapPanel.OnMapEvent += MapEventHappened;
             MainWindow.OnMapEvent += MapEventHappened;
-            Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
-            Actions.OnPlayerEvent += PlayerEventHappened;
-            Actions.OnUnitEvent += UnitEventHappened;
+            Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
+            Game.OnPlayerEvent += PlayerEventHappened;
+            Game.OnUnitEvent += UnitEventHappened;
 
             StatsPanel = new DoubleBufferedPanel()
             {
                 Location = new Point(11, 38),
                 Size = new Size(240, 60),
-                BackgroundImage = Images.WallpaperStatusForm
+                BackgroundImage = Images.PanelInnerWallpaper
             };
             Controls.Add(StatsPanel);
             StatsPanel.Paint += StatsPanel_Paint;
@@ -44,42 +47,63 @@ namespace civ2.Forms
             {
                 Location = new Point(11, 106),
                 Size = new Size(240, Height - 117),
-                BackgroundImage = Images.WallpaperStatusForm
+                BackgroundImage = Images.PanelInnerWallpaper
             };
             Controls.Add(UnitPanel);
             UnitPanel.Paint += UnitPanel_Paint;
             UnitPanel.MouseClick += Panel_Click;
 
-            //Timer for "end of turn" message
+            // Timer for "end of turn" message
             Timer.Tick += Timer_Tick;
-            Timer.Interval = 500;   //ms
+            Timer.Interval = 500;   // ms
         }
 
         private void StatusPanel_Paint(object sender, PaintEventArgs e)
         {
-            //Title
+            // Title
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 14, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString("Status", new Font("Times New Roman", 14, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString("Status", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             sf.Dispose();
-            //Draw line borders of stats panel
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 252, 36);   //1st layer of border
+            // Outer border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   // 1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, this.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), this.Width - 1, 0, this.Width - 1, this.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), 0, this.Height - 1, this.Width - 1, this.Height - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 255, 255)), 1, 1, this.Width - 3, 1);   // 2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 255, 255)), 1, 1, 1, this.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(160, 160, 160)), this.Width - 2, 1, this.Width - 2, this.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(160, 160, 160)), 1, this.Height - 2, this.Width - 2, this.Height - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, 2, this.Width - 4, 2);   // 3rd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, 2, 2, this.Height - 4);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), this.Width - 3, 2, this.Width - 3, this.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, this.Height - 3, this.Width - 3, this.Height - 3);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 3, 3, this.Width - 5, 3);   // 4th layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 3, 3, 3, this.Height - 5);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 4, 3, this.Width - 4, this.Height - 4);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 3, this.Height - 4, this.Width - 4, this.Height - 4);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, this.Width - 6, 4);   // 5th layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, 4, this.Height - 6);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 5, 4, this.Width - 5, this.Height - 5);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 4, this.Height - 5, this.Width - 5, this.Height - 5);
+            // Draw line borders of stats panel
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 252, 36);   // 1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 36, 9, 98);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, 99, 252, 99);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 252, 36, 252, 99);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 250, 37);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 37, 250, 37);   // 2nd layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 38, 10, 97);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, 98, 251, 98);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 251, 37, 251, 98);
-            //Draw line borders of unit panel
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 104, 252, 104);   //1st layer of border
+            // Draw line borders of unit panel
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 104, 252, 104);   // 1st layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 104, 9, 106 + UnitPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, 107 + UnitPanel.Height, 252, 107 + UnitPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 252, 104, 252, 105 + UnitPanel.Height);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 105, 250, 105);   //2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 105, 250, 105);   // 2nd layer of border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 104, 10, 105 + UnitPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, 106 + UnitPanel.Height, 252, 106 + UnitPanel.Height);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 251, 105, 251, 105 + UnitPanel.Height);
@@ -88,49 +112,49 @@ namespace civ2.Forms
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
-            string showYear = (Data.GameYear < 0) ? $"{Math.Abs(Data.GameYear)} B.C." : $"A.D. {Math.Abs(Data.GameYear)}";
+            string showYear = (Game.GameYear < 0) ? $"{Math.Abs(Game.GameYear)} B.C." : $"A.D. {Math.Abs(Game.GameYear)}";
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString(Game.Civs[Data.HumanPlayer].Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 2 + 1));
-            e.Graphics.DrawString(Game.Civs[Data.HumanPlayer].Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 2));
+            e.Graphics.DrawString(Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 2 + 1));
+            e.Graphics.DrawString(Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 2));
             e.Graphics.DrawString(showYear, new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 20 + 1));
             e.Graphics.DrawString(showYear, new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 20));
-            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Money} Gold 5.0.5", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
-            e.Graphics.DrawString($"{Game.Civs[Data.HumanPlayer].Money} Gold 5.0.5", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 38));
-            e.Dispose();
+            e.Graphics.DrawString($"{Game.PlayerCiv.Money} Gold 5.0.5", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(191, 191, 191)), new Point(5 + 1, 38 + 1));
+            e.Graphics.DrawString($"{Game.PlayerCiv.Money} Gold 5.0.5", new Font("Times New Roman", 10, FontStyle.Bold), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(5, 38));
         }
 
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
-            {
+        {
             StringFormat sf = new StringFormat();
             //sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             Font font = new Font("Times new roman", 10, FontStyle.Bold);
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            //List all units on active tile
-            List<IUnit> UnitsOnThisTile = new List<IUnit>();
-            foreach (IUnit unit in Game.Units.Where(a => (a.X == MapPanel.ActiveXY[0]) && (a.Y == MapPanel.ActiveXY[1])))
-                UnitsOnThisTile.Add(unit);
+            // List all units on active tile
+            //List<IUnit> UnitsOnThisTile = new List<IUnit>();
+            //foreach (IUnit unit in Game.GetUnits.Where(a => (a.X == Game.ActiveCursorXY[0]) && (a.Y == Game.ActiveCursorXY[1])))
+            //    UnitsOnThisTile.Add(unit);
+            List<IUnit> UnitsOnThisTile = Game.GetUnits.Where(u => u.X == Game.ActiveCursorXY[0] && u.Y == Game.ActiveCursorXY[1]).ToList();
             int maxUnitsToDraw = (int)Math.Floor((double)((UnitPanel.Height - 66) / 56));
 
             if (MapPanel.ViewPiecesMode)
             {
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
-                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
-                e.Graphics.DrawString($"Loc: ({MapPanel.ActiveXY[0]}, {MapPanel.ActiveXY[1]}) {Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
-                e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
-                e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
+                e.Graphics.DrawString($"Loc: ({Game.ActiveCursorXY[0]}, {Game.ActiveCursorXY[1]}) {Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
+                e.Graphics.DrawString($"Loc: ({Game.ActiveCursorXY[0]}, {Game.ActiveCursorXY[1]}) {Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
+                e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
+                e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
 
                 int count;
                 for (count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
                 {
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-                    e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
-                    e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
-                    e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                    e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
+                    e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
+                    e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); // TODO: give proper conversion of orders to string
                     e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
-                    e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
-                    e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
+                    e.Graphics.DrawString(UnitsOnThisTile[count].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                    e.Graphics.DrawString(UnitsOnThisTile[count].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
                 }
                 if (count < UnitsOnThisTile.Count())
                 {
@@ -139,7 +163,7 @@ namespace civ2.Forms
                     e.Graphics.DrawString($"({UnitsOnThisTile.Count() - count} {moreUnits})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, UnitPanel.Height - 27); ;
                 }
             }
-            else    //moving units mode
+            else    // Moving units mode
             {
                 e.Graphics.DrawString("Moving Units", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Moving Units", font, new SolidBrush(Color.White), new Point(120, 0), sf);
@@ -149,44 +173,44 @@ namespace civ2.Forms
                 {
                     if (Game.Instance.ActiveUnit == UnitsOnThisTile[count])
                     {
-                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(Game.Instance.ActiveUnit, false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 27);
-                        //Show move points correctly
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(Game.Instance.ActiveUnit, false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 27);
+                        // Show move points correctly
                         int fullMovPts = Game.Instance.ActiveUnit.MovePoints / 3;
                         int remMovPts = Game.Instance.ActiveUnit.MovePoints % 3;
-                        if (remMovPts == 0) //only show full move pts
+                        if (remMovPts == 0) // Only show full move pts
                         {
                             e.Graphics.DrawString($"Moves: {fullMovPts}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
                             e.Graphics.DrawString($"Moves: {fullMovPts}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
                         }
-                        else    //also show remainer of move points
+                        else    // Also show remainer of move points
                         {
                             e.Graphics.DrawString($"Moves: {fullMovPts} {remMovPts}/3", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);
                             e.Graphics.DrawString($"Moves: {fullMovPts} {remMovPts}/3", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 25);
                         }
-                        string cityName = (Game.Instance.ActiveUnit.HomeCity == 255) ? "NONE" : Game.Cities[Game.Instance.ActiveUnit.HomeCity].Name;
+                        string cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
                         e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 44);
                         e.Graphics.DrawString(cityName, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 43);
-                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveCiv.Id].Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
-                        e.Graphics.DrawString(Game.Civs[Game.Instance.ActiveCiv.Id].Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
-                        e.Graphics.DrawString(Rules.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
-                        e.Graphics.DrawString(Rules.UnitName[(int)Game.Instance.ActiveUnit.Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
-                        e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
-                        e.Graphics.DrawString($"({Game.TerrainTile[(MapPanel.ActiveXY[0] - MapPanel.ActiveXY[1] % 2) / 2, MapPanel.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
+                        e.Graphics.DrawString(Game.ActiveCiv.Adjective, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 62);
+                        e.Graphics.DrawString(Game.ActiveCiv.Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
+                        e.Graphics.DrawString(Game.ActiveUnit.Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
+                        e.Graphics.DrawString(Game.ActiveUnit.Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
+                        e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
+                        e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
                     }
                     else
                     {
-                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.CreateUnitBitmap(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-                        e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
-                        e.Graphics.DrawString(Game.Cities[UnitsOnThisTile[count].HomeCity].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
-                        e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); //TODO: give proper conversion of orders to string
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                        e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
+                        e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
+                        e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); // TODO: give proper conversion of orders to string
                         e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 88 + count * 56);
-                        e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
-                        e.Graphics.DrawString(Rules.UnitName[(int)UnitsOnThisTile[count].Type], font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
+                        e.Graphics.DrawString(UnitsOnThisTile[count].Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 107 + count * 56);
+                        e.Graphics.DrawString(UnitsOnThisTile[count].Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 106 + count * 56);
                     }
                 }
             }
 
-            //Blinking "end of turn" message
+            // Blinking "end of turn" message
             if (WaitingAtEndOfTurn)
             {
                 Color EoTcolor;
@@ -208,7 +232,7 @@ namespace civ2.Forms
             if (WaitingAtEndOfTurn)
             {
                 WaitingAtEndOfTurn = false;
-                Actions.NewPlayerTurn();
+                Game.NewPlayerTurn();
             }
             else
             {
@@ -288,7 +312,7 @@ namespace civ2.Forms
             get
             {
                 if (this == null) _boolSwitcher = true;
-                _boolSwitcher = !_boolSwitcher;   //change state when this is called
+                _boolSwitcher = !_boolSwitcher;   // Change state when this is called
                 return _boolSwitcher;
             }
         }

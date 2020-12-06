@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using civ2.Enums;
-using civ2.GameActions;
 using civ2.Events;
 using civ2.Bitmaps;
 using civ2.Sounds;
@@ -16,8 +15,8 @@ namespace civ2.Forms
         PictureBox MainPic;
         MapPanel MapPanel;
         //CityForm cityForm;
-        //MinimapPanel MinimapPanel;
-        //StatusPanel StatusPanel;
+        MinimapPanel MinimapPanel;
+        StatusPanel StatusPanel;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, MaxZoomInItem, MaxZoomOutItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
@@ -416,12 +415,12 @@ namespace civ2.Forms
 
         private void BuildIrrigation_Click(object sender, EventArgs e) 
         {
-            if (BuildIrrigationItem.Enabled) Actions.IssueUnitOrder(OrderType.BuildIrrigation); 
+            if (BuildIrrigationItem.Enabled) Game.IssueUnitOrder(OrderType.BuildIrrigation); 
         }
 
         private void BuildMinesChangeForest_Click(object sender, EventArgs e) 
         {
-            if (BuildMinesChangeForestItem.Enabled) Actions.IssueUnitOrder(OrderType.BuildMine); 
+            if (BuildMinesChangeForestItem.Enabled) Game.IssueUnitOrder(OrderType.BuildMine); 
         }
 
         private void CleanUpPollution_Click(object sender, EventArgs e) { }
@@ -430,22 +429,22 @@ namespace civ2.Forms
 
         private void GoTo_Click(object sender, EventArgs e) 
         {
-            if (GoToItem.Enabled) Actions.IssueUnitOrder(OrderType.GoTo);   //TODO: implement goto
+            if (GoToItem.Enabled) Game.IssueUnitOrder(OrderType.GoTo);   //TODO: implement goto
         }
 
         private void GoHomeToNearestCity_Click(object sender, EventArgs e) 
         {
-            if (GoHomeToNearestCityItem.Enabled) Actions.IssueUnitOrder(OrderType.GoHome); 
+            if (GoHomeToNearestCityItem.Enabled) Game.IssueUnitOrder(OrderType.GoHome); 
         }
 
         private void Fortify_Click(object sender, EventArgs e) 
         {
-            if (FortifyItem.Enabled) Actions.IssueUnitOrder(OrderType.Fortify); 
+            if (FortifyItem.Enabled) Game.IssueUnitOrder(OrderType.Fortify); 
         }
 
         private void Sleep_Click(object sender, EventArgs e) 
         {
-            if (SleepItem.Enabled) Actions.IssueUnitOrder(OrderType.Sleep); 
+            if (SleepItem.Enabled) Game.IssueUnitOrder(OrderType.Sleep); 
         }
 
         private void Disband_Click(object sender, EventArgs e) { }
@@ -457,24 +456,24 @@ namespace civ2.Forms
 
         private void Wait_Click(object sender, EventArgs e) 
         { 
-            if (Game.Instance.ActiveUnit != null) Actions.ChooseNextUnit(); 
+            if (Game.Instance.ActiveUnit != null) Game.ChooseNextUnit(); 
         }
 
         private void SkipTurn_Click(object sender, EventArgs e) 
         {
-            Actions.IssueUnitOrder(OrderType.SkipTurn); 
+            Game.IssueUnitOrder(OrderType.SkipTurn); 
         }
 
         private void EndPlayerTurn_Click(object sender, EventArgs e) { }
 
         private void BuildNewCity_Click(object sender, EventArgs e) 
         {
-            if(BuildNewCityItem.Enabled) Actions.IssueUnitOrder(OrderType.BuildCity); 
+            if(BuildNewCityItem.Enabled) Game.IssueUnitOrder(OrderType.BuildCity); 
         }
 
         private void AutomateSettler_Click(object sender, EventArgs e) 
         {
-            if (AutomateSettlerItem.Enabled) Actions.IssueUnitOrder(OrderType.Automate); 
+            if (AutomateSettlerItem.Enabled) Game.IssueUnitOrder(OrderType.Automate); 
         }
 
         private void Paradrop_Click(object sender, EventArgs e) { }
@@ -633,7 +632,7 @@ namespace civ2.Forms
 
 
 
-        //If view pieces mode is toggled on/off
+        // If view pieces mode is toggled on/off
         private void MapEventHappened(object sender, MapEventArgs e)
         {
             

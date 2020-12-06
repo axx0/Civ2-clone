@@ -1,6 +1,5 @@
 ﻿using System.Media;
 using civ2.Events;
-using civ2.GameActions;
 using civ2.Enums;
 
 namespace civ2.Sounds
@@ -13,7 +12,7 @@ namespace civ2.Sounds
         {
             MOVPIECE = new SoundPlayer(directoryPath + "Sound\\MOVPIECE.WAV");
 
-            Actions.OnUnitEvent += UnitEventHappened;
+            Game.OnUnitEvent += UnitEventHappened;
         }
 
         private static void UnitEventHappened(object sender, UnitEventArgs e)

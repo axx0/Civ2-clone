@@ -82,6 +82,15 @@
     <Compile Include="src\Forms\MapPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="src\Forms\MinimapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\StatusPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="src\Game.LoadGame.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -104,7 +113,7 @@
     <Compile Include="src\Forms\MainWindow.ShowIntroScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\GameActions\Actions.cs" />
+    <Compile Include="src\Game.Actions.cs" />
     <Compile Include="src\City.cs" />
     <Compile Include="src\Civilization.cs" />
     <Compile Include="src\BaseInstance.cs" />
@@ -204,7 +213,7 @@
     <Compile Include="src\Forms\MainWindow.KeyPressActions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\GameActions\Actions.Units.cs" />
+    <Compile Include="src\Game.ActionsUnits.cs" />
     <Compile Include="src\Bitmaps\Images.ImportDLLgifs.cs" />
     <Compile Include="src\Bitmaps\Draw.CityPanel.cs" />
     <Compile Include="src\Bitmaps\Draw.City.cs" />

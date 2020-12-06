@@ -13,7 +13,7 @@ namespace civ2
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
         public ITerrain[,] Tile { get; set; }
-        public bool[,][] Visibility { get; set; }
+        public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
         public Bitmap[] Graphic { get; set; }
         
         // Generate first instance of terrain tiles by importing game data
@@ -25,6 +25,7 @@ namespace civ2
             Seed = data.MapSeed;
             LocatorYdim = data.MapLocatorXdim;
             LocatorYdim = data.MapLocatorYdim;
+            Visibility = data.MapVisibilityCivs;
 
             Tile = new Terrain[Xdim, Ydim];
             for (int col = 0; col < Xdim; col++)
@@ -54,10 +55,7 @@ namespace civ2
                 }
             }
 
-            // Set visibility of tiles for each civ
-            Visibility = data.MapVisibilityCivs;
-
-            // Make graphics for all tiles
+            // Make graphics for all tiles (don't do this above, you have to know surrounding tiles)
             for (int col = 0; col < Xdim; col++)
             {
                 for (int row = 0; row < Ydim; row++)

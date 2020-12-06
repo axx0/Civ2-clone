@@ -9,7 +9,6 @@ using civ2.Events;
 using civ2.Bitmaps;
 using civ2.Units;
 using civ2.Enums;
-using civ2.GameActions;
 
 namespace civ2.Forms
 {
@@ -18,13 +17,11 @@ namespace civ2.Forms
         Game Game => Game.Instance;
         Map Map => Map.Instance;
 
-        StringFormat sf = new StringFormat();
         private static List<Bitmap> AnimationBitmap;        
         private int MapGridVar { get; set; }        // Style of map grid presentation
         private System.Windows.Forms.Timer Timer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         private static AnimationType AnimType;
-        public static int CivIdWhoseMapIsDisplayed { get; set; }
-        int TimerCounter { get; set; }
+        private int TimerCounter { get; set; }
         //Label HelpLabel;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
@@ -33,9 +30,9 @@ namespace civ2.Forms
         {
             this.Paint += new PaintEventHandler(MapPanel_Paint);
 
-            Actions.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
-            Actions.OnUnitEvent += UnitEventHappened;
-            Actions.OnPlayerEvent += PlayerEventHappened;
+            Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
+            Game.OnUnitEvent += UnitEventHappened;
+            Game.OnPlayerEvent += PlayerEventHappened;
             //MinimapPanel.OnMapEvent += MapEventHappened;
             //StatusPanel.OnMapEvent += MapEventHappened;
             MainWindow.OnMapEvent += MapEventHappened;
@@ -73,9 +70,6 @@ namespace civ2.Forms
             //};
             //DrawPanel.Controls.Add(HelpLabel);
 
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-
             //Timer for waiting unit/viewing piece
             //Timer = new System.Windows.Forms.Timer();
             //Timer.Tick += new EventHandler(Timer_Tick);
@@ -107,8 +101,8 @@ namespace civ2.Forms
                 Alignment = StringAlignment.Center
             };
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 15, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+            e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
         }
 
         // Draw map here
@@ -123,7 +117,7 @@ namespace civ2.Forms
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
             e.Graphics.DrawImage(Map.Graphic[Game.WhichCivsMapShown], 0, 0, rect, GraphicsUnit.Pixel);
-            //e.Graphics.DrawImage(Map.Graphic[2], 0, 0, rect, GraphicsUnit.Pixel);
+            //e.Graphics.DrawImage(Map.Graphic[8], 0, 0, rect, GraphicsUnit.Pixel);
 
             // Unit/viewing piece static
             switch (AnimType)
@@ -485,7 +479,7 @@ namespace civ2.Forms
                         if (TimerCounter == 7)  // Unit has completed movement
                         {
                             // First update world map with new visible tiles
-                            Actions.UpdateWorldMapAfterUnitHasMoved();
+                            Game.UpdateWorldMapAfterUnitHasMoved();
 
                             // Update the original world map image with image of new location of unit & redraw whole map
                             IUnit unit = Game.Instance.ActiveUnit;

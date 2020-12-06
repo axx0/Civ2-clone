@@ -219,7 +219,7 @@ namespace civ2.Bitmaps
                     if (xCiv2 >= 0 && yCiv2 >= 0 && xCiv2 < 2 * Map.Xdim && yCiv2 < Map.Ydim)    //make sure you're not drawing tiles outside map bounds
                     {
                         //Tiles
-                        int civId = MapPanel.CivIdWhoseMapIsDisplayed;
+                        int civId = Game.WhichCivsMapShown;
                         if ((civId < 8 && Map.Visibility[xReal, yReal][civId]) || civId == 8)
                         {
                             g.DrawImage(

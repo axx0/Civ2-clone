@@ -74,8 +74,6 @@ namespace civ2
         }
         #endregion  
 
-
-
         private IUnit _activeUnit;
         public IUnit ActiveUnit
         {

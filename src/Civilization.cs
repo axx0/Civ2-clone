@@ -17,6 +17,7 @@ namespace civ2
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
         public GovernmentType Government { get; set; }
+        public bool AnyUnitsAwaitingOrders => Game.GetUnits.Any(unit => unit.Owner == this && unit.AwaitingOrders);
 
         private int _luxRate;
         public int LuxRate 

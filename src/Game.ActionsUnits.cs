@@ -5,15 +5,15 @@ using civ2.Units;
 using civ2.Enums;
 using civ2.Events;
 
-namespace civ2.GameActions
+namespace civ2
 {
-    public partial class Actions
+    public partial class Game : BaseInstance
     {
         public static event EventHandler<WaitAtTurnEndEventArgs> OnWaitAtTurnEnd;
         public static event EventHandler<UnitEventArgs> OnUnitEvent;
         private static System.Windows.Forms.Timer UnitMovementTimer;
 
-        public static void IssueUnitOrder(OrderType order)
+        public void IssueUnitOrder(OrderType order)
         {
             switch (order)
             {
@@ -54,7 +54,7 @@ namespace civ2.GameActions
             }
         }
 
-        private static void StartUnitMovementTimer()
+        private void StartUnitMovementTimer()
         {
             Game.ActiveUnit.MovementCounter = 0;   //reset movement counter
             UnitMovementTimer = new System.Windows.Forms.Timer();
@@ -63,7 +63,7 @@ namespace civ2.GameActions
             UnitMovementTimer.Tick += new EventHandler(UnitMovementTimer_Tick);
         }
 
-        private static void UnitMovementTimer_Tick(object sender, EventArgs e)
+        private void UnitMovementTimer_Tick(object sender, EventArgs e)
         {
             OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.MoveCommand, Game.ActiveUnit.MovementCounter));
 
@@ -79,7 +79,7 @@ namespace civ2.GameActions
             }
         }
 
-        private static UnitMovementOrderResultType DetermineUnitMovementOrderResult(OrderType movementDirection)
+        private UnitMovementOrderResultType DetermineUnitMovementOrderResult(OrderType movementDirection)
         {
             int[] deltaXY = new int[] { 0, 0 };
             switch (movementDirection)
@@ -129,7 +129,7 @@ namespace civ2.GameActions
             }
         }
 
-        public static void UpdateUnit(IUnit unit)
+        public void UpdateUnit(IUnit unit)
         {
             //If unit is not waiting order, chose next unit in line, otherwise update its orders
             if (!unit.AwaitingOrders)
@@ -186,10 +186,10 @@ namespace civ2.GameActions
         }
 
         //Chose next unit for orders. If all units ended turn, update cities.
-        public static void ChooseNextUnit()
+        public void ChooseNextUnit()
         {
             //End turn if no units awaiting orders
-            if (!AnyUnitsAwaitingOrders(Game.ActiveCiv))
+            if (!Game.ActiveCiv.AnyUnitsAwaitingOrders)
             {
                 if (Game.Options.AlwaysWaitAtEndOfTurn)
                 {

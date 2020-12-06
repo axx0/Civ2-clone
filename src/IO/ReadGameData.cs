@@ -800,7 +800,7 @@ namespace civ2
                 // Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
                 data.MapVisibilityCivs[x, y] = new bool[8];
                 for (int civ = 0; civ < 8; civ++)
-                    data.MapVisibilityCivs[x, y][civ] = GetBit(bytes[ofsetB2 + i * 6 + 4], 7 - civ);
+                    data.MapVisibilityCivs[x, y][civ] = GetBit(bytes[ofsetB2 + i * 6 + 4], civ);
 
                 int intValueB26 = bytes[ofsetB2 + i * 6 + 5];       //?
 

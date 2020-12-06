@@ -7,14 +7,14 @@ using civ2.Bitmaps;
 using civ2.Events;
 using ExtensionMethods;
 
-namespace civ2.GameActions
+namespace civ2
 {
-    public partial class Actions : BaseInstance
+    public partial class Game : BaseInstance
     {
         public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
         //Update stats of all cities
-        public static void CitiesTurn()
+        public void CitiesTurn()
         {
             foreach (City city in Game.GetCities.Where(a => a.Owner == Game.PlayerCiv))
             {
@@ -22,7 +22,7 @@ namespace civ2.GameActions
             }
         }
 
-        public static void NewPlayerTurn()
+        public void NewPlayerTurn()
         {
             Game.TurnNumber++;
 
@@ -45,7 +45,7 @@ namespace civ2.GameActions
             OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
         }
 
-        public static void BuildCity(string cityName)
+        public void BuildCity(string cityName)
         {
             int x = Game.ActiveUnit.X;
             int y = Game.ActiveUnit.Y;
@@ -58,7 +58,7 @@ namespace civ2.GameActions
             DeleteUnit(Game.ActiveUnit);
         }
 
-        public static void DeleteUnit(IUnit unit)
+        public void DeleteUnit(IUnit unit)
         {
             if (Game.ActiveUnit == unit)
             {
@@ -72,7 +72,7 @@ namespace civ2.GameActions
         }
 
         //Make visible (potential) hidden tiles when active unit has completed movement
-        public static void UpdateWorldMapAfterUnitHasMoved()
+        public void UpdateWorldMapAfterUnitHasMoved()
         {
             //Offsets of tiles around active unit
             List<int[]> offsets = new List<int[]>
@@ -179,13 +179,6 @@ namespace civ2.GameActions
         //        default: break;
         //    }
         //}
-
-
-        //find out if certain civ has any units awaiting orders
-        public static bool AnyUnitsAwaitingOrders(Civilization civ)
-        {
-            return Game.GetUnits.Any(unit => unit.Owner == civ && unit.AwaitingOrders);
-        }
 
 
     }
