@@ -485,10 +485,10 @@ namespace civ2
             data.SelectedUnitIndex = (_selectedIndex == 65535) ? -1 : _selectedIndex;
 
             // Which human player is used
-            data.PlayerCivIndex = bytes[39];
+            data.PlayersCivIndex = bytes[39];    // TODO: how is this different from bytes[41]???
 
-            // Players map which is used
-            data.PlayersMapUsed = bytes[40];
+            // Players map currently shown
+            data.WhichCivsMapShown = bytes[40];
 
             // Players civ number used
             data.PlayersCivilizationNumberUsed = bytes[41];
@@ -505,7 +505,7 @@ namespace civ2
             // Civs in play
             data.CivsInPlay = new bool[8] { false, false, false, false, false, false, false, false };
             for (int i = 0; i < 8; i++)
-                data.CivsInPlay[i] = GetBit(bytes[46], i);  // TODO: check if this works!
+                data.CivsInPlay[i] = GetBit(bytes[46], i);
 
             // Civs with human player playing (multiplayer)
             //string humanPlayerPlayed = Convert.ToString(bytes[47], 2).PadLeft(8, '0');
@@ -565,7 +565,13 @@ namespace civ2
             data.CivLeaderName = new string[8];
             data.CivTribeName = new string[8];
             data.CivAdjective = new string[8];
-            for (int i = 0; i < 7; i++) // for 7 civs, but NOT for barbarians (barbarians have i=0, so begin count at 1)
+            // Manually add data for barbarians
+            data.CivCityStyle[0] = 0;
+            data.CivLeaderName[0] = "NULL";
+            data.CivTribeName[0] = "Barbarians";
+            data.CivAdjective[0] = "Barbarian";
+            // Add data for other 7 civs
+            for (int i = 0; i < 7; i++) 
             {
                 // City style
                 data.CivCityStyle[i + 1] = bytes[584 + 242 * i];
@@ -573,7 +579,7 @@ namespace civ2
                 // Leader names (if empty, get the name from RULES.TXT)
                 for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 242 * i + j]);
                 data.CivLeaderName[i + 1] = new string(asciich);
-                data.CivLeaderName[i + 1] = data.CivLeaderName[i + 1].Replace("\0", string.Empty);  //remove null characters
+                data.CivLeaderName[i + 1] = data.CivLeaderName[i + 1].Replace("\0", string.Empty);  // remove null characters
 
                 // Tribe name (if empty, get the name from RULES.TXT)
                 for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 23 + 242 * i + j]);
@@ -587,13 +593,7 @@ namespace civ2
 
                 //Leader titles (Anarchy, Despotism, ...)
                 // .... TO-DO ....
-
             }
-            //Manually add data for barbarians
-            data.CivCityStyle[0] = 0;
-            data.CivLeaderName[0] = "NULL";
-            data.CivTribeName[0] = "Barbarians";
-            data.CivAdjective[0] = "Barbarian";
             #endregion
             #region Tech & money
             //=========================

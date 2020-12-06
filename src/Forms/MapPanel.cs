@@ -122,8 +122,8 @@ namespace civ2.Forms
             int[] centerSqXY = CenterSqXY;
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
-            e.Graphics.DrawImage(Map.Graphic[Game.ActiveCiv.Id], 0, 0, rect, GraphicsUnit.Pixel);
-            //e.Graphics.DrawImage(Map.Graphic[8], 0, 0, rect, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(Map.Graphic[Game.WhichCivsMapShown], 0, 0, rect, GraphicsUnit.Pixel);
+            //e.Graphics.DrawImage(Map.Graphic[2], 0, 0, rect, GraphicsUnit.Pixel);
 
             // Unit/viewing piece static
             switch (AnimType)

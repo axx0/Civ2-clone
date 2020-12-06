@@ -46,7 +46,6 @@ namespace civ2.Terrains
         bool Farmland { get; set; }
         bool Airbase { get; set; }
         int Island { get; set; }
-        bool[] Visibility { get; set; }
         string Hexvalue { get; set; }
         Bitmap Graphic { get; set; }
     }

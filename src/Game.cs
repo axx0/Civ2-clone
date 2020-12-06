@@ -44,12 +44,10 @@ namespace civ2
 
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
-        public int PlayersMapUsed { get; set; }
-        public int PlayersCivilizationNumberUsed { get; set; }
+        public int WhichCivsMapShown { get; set; }
         public bool MapRevealed { get; set; }
         public DifficultyType DifficultyLevel => _difficultyLevel;
         public BarbarianActivityType BarbarianActivity => _barbarianActivity;
-        public bool[] CivsInPlay { get; set; }
         public int PollutionAmount { get; set; }
         public int GlobalTempRiseOccured { get; set; }
         public int NoOfTurnsOfPeace { get; set; }
@@ -342,7 +340,7 @@ namespace civ2
             _cities.Add(city);
         }
 
-        public void CreateCiv(int id, int whichHumanPlayerIsUsed, int style, string leaderName, string tribeName, string adjective, 
+        public void CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective, 
                             int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate, 
                             int government, int reputation, bool[] techs)
         {
@@ -356,11 +354,12 @@ namespace civ2
             if (id != 0 && adjective == "") adjective = Rules.LeaderAdjective[tribeNumber];
 
             // Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
-            if (id != 0 && id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
+            if (id != 0&& id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
 
             Civilization civ = new Civilization
             {
                 Id = id,
+                Alive = alive,
                 CityStyle = (CityStyleType)style,
                 LeaderName = leaderName,
                 TribeName = tribeName,

@@ -12,7 +12,8 @@ namespace civ2
         public int Seed { get; private set; }
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
-        public ITerrain[,] Tile { get; private set; }
+        public ITerrain[,] Tile { get; set; }
+        public bool[,][] Visibility { get; set; }
         public Bitmap[] Graphic { get; set; }
         
         // Generate first instance of terrain tiles by importing game data
@@ -48,11 +49,13 @@ namespace civ2
                         Farmland = data.MapFarmlandPresent[col, row],
                         Airbase = data.MapAirbasePresent[col, row],
                         Island = data.MapIslandNo[col, row],
-                        SpecType = data.MapSpecialType[col, row],
-                        Visibility = data.MapVisibilityCivs[col, row]
+                        SpecType = data.MapSpecialType[col, row]
                     };
                 }
             }
+
+            // Set visibility of tiles for each civ
+            Visibility = data.MapVisibilityCivs;
 
             // Make graphics for all tiles
             for (int col = 0; col < Xdim; col++)
@@ -63,7 +66,7 @@ namespace civ2
                 }
             }
 
-            // Make graphics of a map for each civ (including barbarians) + revealed map
+            // Make graphics of a map for each civ (including barbarians with id=0) + revealed map
             Graphic = new Bitmap[9];
             for (int civId = 0; civId < 9; civId++)
                 Graphic[civId] = Draw.DrawMap(civId);

@@ -220,7 +220,7 @@ namespace civ2.Bitmaps
                     {
                         //Tiles
                         int civId = MapPanel.CivIdWhoseMapIsDisplayed;
-                        if ((civId < 8 && Map.Tile[xReal, yReal].Visibility[civId]) || civId == 8)
+                        if ((civId < 8 && Map.Visibility[xReal, yReal][civId]) || civId == 8)
                         {
                             g.DrawImage(
                                 Map.Tile[xReal, yReal].Graphic,
@@ -238,7 +238,7 @@ namespace civ2.Bitmaps
                                         int xRealNew = (xCiv2New - yCiv2New % 2) / 2; //back to real coords
                                         int yRealNew = yCiv2New;
                                         if (xRealNew >= 0 && xRealNew < Map.Xdim && yRealNew >= 0 && yRealNew < Map.Ydim)   //don't observe outside map limits
-                                            if (!Map.Tile[xRealNew, yRealNew].Visibility[civId])   //surrounding tile is not visible -> dither
+                                            if (!Map.Visibility[xRealNew, yRealNew][civId])   //surrounding tile is not visible -> dither
                                                 g.DrawImage(Images.DitherDots[tileX, tileY],
                                                             32 * coordsOffsets[0] + 64 + 32 * tileX,
                                                             16 * coordsOffsets[1] + 48 + 16 * tileY);

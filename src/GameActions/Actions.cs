@@ -90,14 +90,14 @@ namespace civ2.GameActions
             //For each offset make the tile visible if it isn't yet
             foreach (int[] offset in offsets)
             {
-                int[] coords = Ext.Civ2xy(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
+                int[] coords = Ext.Civ2xy(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
                 coords[0] += offset[0];
                 coords[1] += offset[1];
-                Map.Tile[coords[0], coords[1]].Visibility[Game.Instance.ActiveCiv.Id] = true;
+                Map.Visibility[coords[0], coords[1]][Game.ActiveCiv.Id] = true;
             }
 
             //Update the map image
-            Draw.RedrawMap(new int[] { Game.Instance.ActiveUnit.X, Game.Instance.ActiveUnit.Y });
+            Draw.RedrawMap(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
         }
 
         //public static void GiveOrder(OrderType order)

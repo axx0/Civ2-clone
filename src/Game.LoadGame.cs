@@ -38,11 +38,9 @@ namespace civ2
 
             TurnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
-            PlayersMapUsed = SAVgameData.PlayersMapUsed;
-            PlayersCivilizationNumberUsed = SAVgameData.PlayersCivilizationNumberUsed;
+            WhichCivsMapShown = SAVgameData.WhichCivsMapShown;
             _difficultyLevel = SAVgameData.DifficultyLevel;
             _barbarianActivity = SAVgameData.BarbarianActivity;
-            CivsInPlay = SAVgameData.CivsInPlay;
             PollutionAmount = SAVgameData.PollutionAmount;
             GlobalTempRiseOccured = SAVgameData.GlobalTempRiseOccured;
             NoOfTurnsOfPeace = SAVgameData.NoOfTurnsOfPeace;
@@ -52,7 +50,7 @@ namespace civ2
             // Create all 8 civs (tribes)
             for (int i = 0; i < 8; i++)
             {
-                CreateCiv(i, SAVgameData.PlayerCivIndex, SAVgameData.CivCityStyle[i], SAVgameData.CivLeaderName[i], SAVgameData.CivTribeName[i],
+                CreateCiv(i, SAVgameData.PlayersCivIndex, SAVgameData.CivsInPlay[i], SAVgameData.CivCityStyle[i], SAVgameData.CivLeaderName[i], SAVgameData.CivTribeName[i],
                     SAVgameData.CivAdjective[i], SAVgameData.RulerGender[i], SAVgameData.CivMoney[i], SAVgameData.CivNumber[i],
                     SAVgameData.CivResearchProgress[i], SAVgameData.CivResearchingTech[i], SAVgameData.CivSciRate[i], SAVgameData.CivTaxRate[i],
                     SAVgameData.CivGovernment[i], SAVgameData.CivReputation[i], SAVgameData.CivTechs);
@@ -85,8 +83,8 @@ namespace civ2
             ActiveCursorXY = SAVgameData.ActiveCursorXY;
             ClickedXY = SAVgameData.ClickedXY;
 
-            _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    //null means all units have ended turn
-            _playerCiv = _civs.Find(civ => civ.Id == SAVgameData.PlayerCivIndex);
+            _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn
+            _playerCiv = _civs[SAVgameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
 
             ZoomLvl = 8;    // TODO: read this from SAV

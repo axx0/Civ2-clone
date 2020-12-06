@@ -9,7 +9,7 @@ namespace civ2.Bitmaps
     public partial class Draw
     {
         // civId
-        // = 0...7 for 8 civs (including barbarians with civId=0)
+        // = 0...7 for 8 civs (including barbarians with civId=7)
         // = 8 for revealed map
         public static Bitmap DrawMap(int civ)
         {
@@ -25,7 +25,7 @@ namespace civ2.Bitmaps
                     for (int col = 0; col < Map.Xdim; col++)
                     {
                         // Draw only if the tile is visible for each civ (index=8...whole map visible)
-                        if ((civ < 8 && Map.Tile[col, row].Visibility[civ]) || civ == 8)
+                        if ((civ < 8 && Map.Visibility[col, row][civ]) || civ == 8)
                         {
                             // Tiles
                             g.DrawImage(
@@ -44,7 +44,7 @@ namespace civ2.Bitmaps
                                         int rowNew = row + offset[tileY];
                                         int colNew = (colNew_ - rowNew % 2) / 2;    // Back to real coords
                                         if (colNew >= 0 && colNew < Map.Xdim && rowNew >= 0 && rowNew < Map.Ydim)   // Don't observe outside map limits
-                                            if (!Map.Tile[colNew, rowNew].Visibility[civ])   // Surrounding tile is not visible -> dither
+                                            if (!Map.Visibility[colNew, rowNew][civ])   // Surrounding tile is not visible -> dither
                                                 g.DrawImage(Images.DitherDots[tileX, tileY],
                                                             64 * col + 32 * (row % 2) + 32 * tileX,
                                                             16 * row + 16 * tileY);
@@ -85,7 +85,7 @@ namespace civ2.Bitmaps
                 foreach (City city in Game.GetCities)
                 {
                     int[] ColRow = Ext.Civ2xy(new int[] { city.X, city.Y });  // Real coords from civ2 coords
-                    if ((civ < 8 && Map.Tile[ColRow[0], ColRow[1]].Visibility[civ]) || civ == 8)
+                    if ((civ < 8 && Map.Visibility[ColRow[0], ColRow[1]][civ]) || civ == 8)
                     {
                         Bitmap cityNameBitmap = Draw.CityName(city, zoom);
                         g.DrawImage(

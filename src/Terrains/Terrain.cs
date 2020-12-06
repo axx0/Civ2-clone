@@ -90,7 +90,6 @@ namespace civ2.Terrains
         public bool Farmland { get; set; }
         public bool Airbase { get; set; }
         public int Island { get; set; }
-        public bool[] Visibility { get; set; }
         public string Hexvalue { get; set; }
 
         public Bitmap Graphic { get; set; }
