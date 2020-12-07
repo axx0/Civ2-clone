@@ -5,6 +5,6 @@
         None = 0,
         UnitWaiting = 1,
         UnitMoving = 2,
-        ViewPieces = 3
+        ViewPieces
     }
 }

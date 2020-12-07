@@ -7,7 +7,8 @@ namespace civ2.Events
     {
         public MapEventType EventType;
         public int[] CenterSqXY;
-        public int[] ActiveSqXY;
+        public int[] StartingSqXY;
+        public int[] DrawingSqXY;
 
         public MapEventArgs(MapEventType eventType)
         {
@@ -18,6 +19,13 @@ namespace civ2.Events
         {
             EventType = eventType;
             CenterSqXY = centerSqXY;
+        }
+
+        public MapEventArgs(MapEventType eventType, int[] startingSqXY, int[] drawingSqXY)
+        {
+            EventType = eventType;
+            StartingSqXY = startingSqXY;
+            DrawingSqXY = drawingSqXY;
         }
     }
 }

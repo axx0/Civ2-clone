@@ -15,6 +15,8 @@ namespace civ2.Forms
 
         private readonly Cursor MinimapCursor;
         private readonly int[] Offset;
+        private int[] StartingSqXY;
+        private int[] DrawingSqXY;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
@@ -32,6 +34,9 @@ namespace civ2.Forms
 
             // Determine the offset of minimap from panel edges
             Offset = new int[] { (DrawPanel.Width - 2 * Map.Xdim) / 2, (DrawPanel.Height - Map.Ydim) / 2 };
+
+            StartingSqXY = new int[] { 0, 0 };
+            DrawingSqXY = new int[] { 0, 0 };
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
@@ -58,8 +63,7 @@ namespace civ2.Forms
             }
 
             // Draw current view rectangle
-            // TODO: supply StartingSqXY from MapPanel to here
-            //e.Graphics.DrawRectangle(new Pen(Color.White), Offset[0] + MapPanel.StartingSqXY[0], Offset[1] + MapPanel.StartingSqXY[1], MapPanel.DrawingSqXY[0], MapPanel.DrawingSqXY[1]);
+            e.Graphics.DrawRectangle(new Pen(Color.White), Offset[0] + StartingSqXY[0], Offset[1] + StartingSqXY[1], DrawingSqXY[0], DrawingSqXY[1]);
             e.Dispose();
         }
         // TODO: Make sure minimap rectangle is correct immediately after game loading
@@ -93,6 +97,8 @@ namespace civ2.Forms
             {
                 case MapEventType.MapViewChanged:
                     {
+                        StartingSqXY = e.StartingSqXY;
+                        DrawingSqXY = e.DrawingSqXY;
                         DrawPanel.Refresh();
                         break;
                     }

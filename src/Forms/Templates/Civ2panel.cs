@@ -13,7 +13,7 @@ namespace civ2.Forms
 
     public partial class Civ2panel : DoubleBufferedPanel
     {
-        public Panel DrawPanel;
+        public DoubleBufferedPanel DrawPanel;
         private string? Title { get; set; }
         private bool ButtonsExist { get; set; }
         private int XtraSpacingUp => Title != null ? 27 : 0;
@@ -28,7 +28,7 @@ namespace civ2.Forms
             BackgroundImage = Images.PanelOuterWallpaper;
             this.Paint += new PaintEventHandler(Civ2panel_Paint);
 
-            DrawPanel = new Panel()
+            DrawPanel = new DoubleBufferedPanel()
             {
                 Location = new Point(11, XtraSpacingUp + 11),
                 Size = new Size(Width - 22, Height - 22 - XtraSpacingUp - XtraSpacingDwn),

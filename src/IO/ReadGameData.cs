@@ -1089,7 +1089,7 @@ namespace civ2
             data.ActiveCursorXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), 
                                               int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
-            // Clicked tile clicked with your mouse XY position (does not count if you clicked on a city)
+            // Clicked tile with your mouse XY position (does not count if you clicked on a city)
             intVal1 = bytes[ofsetO + 1425];
             intVal2 = bytes[ofsetO + 1426];
             intVal3 = bytes[ofsetO + 1427];

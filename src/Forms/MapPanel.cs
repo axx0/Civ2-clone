@@ -20,7 +20,7 @@ namespace civ2.Forms
         private static List<Bitmap> AnimationBitmap;        
         private int MapGridVar { get; set; }        // Style of map grid presentation
         private System.Windows.Forms.Timer Timer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
-        private static AnimationType AnimType;
+        private AnimationType AnimType;
         private int TimerCounter { get; set; }
         //Label HelpLabel;
 
@@ -33,8 +33,8 @@ namespace civ2.Forms
             Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
-            //MinimapPanel.OnMapEvent += MapEventHappened;
-            //StatusPanel.OnMapEvent += MapEventHappened;
+            MinimapPanel.OnMapEvent += MapEventHappened;
+            StatusPanel.OnMapEvent += MapEventHappened;
             MainWindow.OnMapEvent += MapEventHappened;
             MainWindow.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
 
@@ -70,11 +70,6 @@ namespace civ2.Forms
             //};
             //DrawPanel.Controls.Add(HelpLabel);
 
-            //Timer for waiting unit/viewing piece
-            //Timer = new System.Windows.Forms.Timer();
-            //Timer.Tick += new EventHandler(Timer_Tick);
-            //StartAnimation(AnimationType.UnitWaiting);
-
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
             DrawPanel.BackgroundImage = null;
@@ -86,10 +81,24 @@ namespace civ2.Forms
             MapGridVar = 0;
             ViewPiecesMode = Game.ActiveUnit == null;  // If no unit is active at start (all units ended turn or no exist) go to View pieces mode
             if (ViewPiecesMode)
+            {
                 ActiveXY = Game.ActiveCursorXY; // If NOT in ViewPiecesMode, then ActiveXY will be set equal to currently active unit coords.
-            CenterSqXY = Game.ClickedXY;
+                AnimType = AnimationType.ViewPieces;
+            }
+            else
+            {
+                AnimType = AnimationType.UnitWaiting;
+            }
+
+            //CenterSqXY = Game.ClickedXY;
+            MapViewChange(Game.ClickedXY);
             //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
             //TODO: Implement zoom
+
+            // Timer for waiting unit/ viewing piece
+            Timer = new System.Windows.Forms.Timer();
+            Timer.Tick += new EventHandler(Timer_Tick);
+            StartAnimation(AnimType);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -193,11 +202,12 @@ namespace civ2.Forms
         {
             CenterSqXY = newCenterCoords;
 
-            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));    
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, StartingSqXY, DrawingSqXY));
 
             DrawPanel.Refresh();
         }
 
+        #region Calculation of coordinates
         // Coordinates in DrawPanel upper left corner where map drawing begins
         private int[] _startingSqXY;
         public int[] StartingSqXY
@@ -310,6 +320,7 @@ namespace civ2.Forms
             }
             set { _activeXY = value; }
         }
+        #endregion
 
         public static bool ViewPiecesMode { get; set; }
 
