@@ -46,6 +46,7 @@ namespace civ2
             NoOfTurnsOfPeace = SAVgameData.NoOfTurnsOfPeace;
             NumberOfUnits = SAVgameData.NumberOfUnits;
             NumberOfCities = SAVgameData.NumberOfCities;
+            MapRevealed = SAVgameData.MapRevealed;
 
             // Create all 8 civs (tribes)
             for (int i = 0; i < 8; i++)

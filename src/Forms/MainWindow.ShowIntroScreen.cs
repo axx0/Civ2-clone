@@ -9,7 +9,6 @@ namespace civ2.Forms
     {
         ChoiceMenuPanel ChoiceMenu;
         PictureBox SinaiPanel;
-        Game Game;
 
         // Load intro screen
         public void ShowIntroScreen()

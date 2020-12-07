@@ -91,7 +91,7 @@ namespace civ2.Forms
             }
 
             //CenterSqXY = Game.ClickedXY;
-            MapViewChange(Game.ClickedXY);
+            MapViewChange(Game.ClickedXY);  // Center the map view
             //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
             //TODO: Implement zoom
 
@@ -125,8 +125,10 @@ namespace civ2.Forms
             int[] centerSqXY = CenterSqXY;
 
             Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
-            e.Graphics.DrawImage(Map.Graphic[Game.WhichCivsMapShown], 0, 0, rect, GraphicsUnit.Pixel);
-            //e.Graphics.DrawImage(Map.Graphic[8], 0, 0, rect, GraphicsUnit.Pixel);
+            if (Game.MapRevealed)
+                e.Graphics.DrawImage(Map.Graphic[8], 0, 0, rect, GraphicsUnit.Pixel);
+            else
+                e.Graphics.DrawImage(Map.Graphic[Game.WhichCivsMapShown], 0, 0, rect, GraphicsUnit.Pixel);
 
             // Unit/viewing piece static
             switch (AnimType)
@@ -286,22 +288,33 @@ namespace civ2.Forms
                 int[] _startingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
                 int[] drawingSqXY = DrawingSqXY;
                 // Limit movement so that map limits are not exceeded
-                if (_startingSqXY[0] < 0 && _startingSqXY[1] < 0)    // Movement beyond upper & left edge
-                    _startingSqXY = new int[] { 0, 0 };
-                else if ((_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim) && _startingSqXY[1] < 0)    // Movement beyond upper & right edge
-                    _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], 0 };
-                else if (_startingSqXY[0] < 0 && (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim))    // Movement beyond lower & left edge
-                    _startingSqXY = new int[] { 0, Map.Ydim - drawingSqXY[1] };
-                else if ((_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim) && (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim))    // Movement beyond lower & right edge
-                    _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], Map.Ydim - drawingSqXY[1] };
-                else if (_startingSqXY[0] < 0)     // Movement beyond left edge
-                    _startingSqXY = new int[] { _startingSqXY[1] % 2, _startingSqXY[1] };
-                else if (_startingSqXY[1] < 0)     // Movement beyond upper edge
-                    _startingSqXY = new int[] { _startingSqXY[0], _startingSqXY[0] % 2 };
-                else if (_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim)     // Movement beyond right edge
-                    _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0] - _startingSqXY[1] % 2, _startingSqXY[1] };
-                else if (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim)     // Movement beyond bottom edge
-                    _startingSqXY = new int[] { _startingSqXY[0], Map.Ydim - drawingSqXY[1] - _startingSqXY[0] % 2 };
+                if (Game.Options.FlatEarth)
+                {
+                    if (_startingSqXY[0] < 0 && _startingSqXY[1] < 0)    // Movement beyond upper & left edge
+                        _startingSqXY = new int[] { 0, 0 };
+                    else if ((_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim) && _startingSqXY[1] < 0)    // Movement beyond upper & right edge
+                        _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], 0 };
+                    else if (_startingSqXY[0] < 0 && (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim))    // Movement beyond lower & left edge
+                        _startingSqXY = new int[] { 0, Map.Ydim - drawingSqXY[1] };
+                    else if ((_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim) && (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim))    // Movement beyond lower & right edge
+                        _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], Map.Ydim - drawingSqXY[1] };
+                    else if (_startingSqXY[0] < 0)     // Movement beyond left edge
+                        _startingSqXY = new int[] { _startingSqXY[1] % 2, _startingSqXY[1] };
+                    else if (_startingSqXY[1] < 0)     // Movement beyond upper edge
+                        _startingSqXY = new int[] { _startingSqXY[0], _startingSqXY[0] % 2 };
+                    else if (_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim)     // Movement beyond right edge
+                        _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0] - _startingSqXY[1] % 2, _startingSqXY[1] };
+                    else if (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim)     // Movement beyond bottom edge
+                        _startingSqXY = new int[] { _startingSqXY[0], Map.Ydim - drawingSqXY[1] - _startingSqXY[0] % 2 };
+                }
+                else    // ROUND EARTH
+                {
+                    // Check only movement beyond upper and lower edge
+                    if (_startingSqXY[1] < 0)    // Upper edge
+                        _startingSqXY[1] = 0;
+                    else if (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim)    // Lower edge
+                        _startingSqXY[1] = Map.Ydim - drawingSqXY[1];
+                }
 
                 _centerSqXY = new int[] { centerDistanceXY[0] + _startingSqXY[0], centerDistanceXY[1] + _startingSqXY[1] };
             }

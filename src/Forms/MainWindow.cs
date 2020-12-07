@@ -11,6 +11,9 @@ namespace civ2.Forms
 {
     public partial class MainWindow : Form
     {
+        Game Game => Game.Instance;
+        Map Map => Map.Instance;
+
         MenuStrip MainMenuStrip;
         PictureBox MainPic;
         MapPanel MapPanel;
@@ -24,7 +27,6 @@ namespace civ2.Forms
         public bool AreWeInIntroScreen, LoadGameCalled;
         ToolStripMenuItem ShowMapGridItem;
         
-
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public MainWindow()
