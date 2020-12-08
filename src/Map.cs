@@ -4,7 +4,7 @@ using civ2.Bitmaps;
 
 namespace civ2
 {
-    public class Map
+    public class Map : BaseInstance
     {
         public int Xdim { get; private set; }
         public int Ydim { get; private set; }
@@ -60,7 +60,7 @@ namespace civ2
             {
                 for (int row = 0; row < Ydim; row++)
                 {
-                    Tile[col, row].Graphic = Draw.Terrain(Tile[col, row], col, row);
+                    Tile[col, row].Graphic = Draw.Terrain(Tile[col, row], col, row, Game.Options.FlatEarth);
                 }
             }
 

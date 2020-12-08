@@ -124,11 +124,25 @@ namespace civ2.Forms
             int[] activeXY = ActiveXY;
             int[] centerSqXY = CenterSqXY;
 
-            Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
+            Bitmap map;
             if (Game.MapRevealed)
-                e.Graphics.DrawImage(Map.Graphic[8], 0, 0, rect, GraphicsUnit.Pixel);
+                map = Map.Graphic[8];
             else
-                e.Graphics.DrawImage(Map.Graphic[Game.WhichCivsMapShown], 0, 0, rect, GraphicsUnit.Pixel);
+                map = Map.Graphic[Game.WhichCivsMapShown];
+
+            if (startingSqXY[0] < 0)
+            {
+                Rectangle rect1 = new Rectangle((2 * Map.Xdim + startingSqXY[0]) * 32, startingSqXY[1] * 16, (2 * Map.Xdim + startingSqXY[0]) * 32, DrawPanel.Height);
+                Rectangle rect2 = new Rectangle(0, startingSqXY[1] * 16, DrawPanel.Width - (2 * Map.Xdim + startingSqXY[0]) * 32, DrawPanel.Height);
+                e.Graphics.DrawImage(map, 0, 0, rect1, GraphicsUnit.Pixel);
+                e.Graphics.DrawImage(map, (2 * Map.Xdim + startingSqXY[0]) * 32, 0, rect2, GraphicsUnit.Pixel);
+            }
+            else
+            {
+                Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
+                e.Graphics.DrawImage(map, 0, 0, rect, GraphicsUnit.Pixel);
+            }            
+
 
             // Unit/viewing piece static
             switch (AnimType)

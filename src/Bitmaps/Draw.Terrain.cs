@@ -8,7 +8,7 @@ namespace civ2.Bitmaps
 {
     public partial class Draw
     {
-        public static Bitmap Terrain(ITerrain tile, int col, int row)
+        public static Bitmap Terrain(ITerrain tile, int col, int row, bool flatEarth)
         {
             // Define a bitmap for drawing
             Bitmap tilePic = new Bitmap(64, 32);
@@ -34,12 +34,34 @@ namespace civ2.Bitmaps
 
                 // Dither
                 int col_ = 2 * col + row % 2;   // to civ2-style
-                                                // First check if you are on map edge. If not, look at type of terrain in all 4 directions.
+                // Determine type of terrain in all 4 directions. Be careful if you're on map edge.
                 TerrainType?[,] tiletype = new TerrainType?[2, 2] { { null, null }, { null, null } };   // null = beyond map limits
-                if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Map.Tile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 2 * Map.Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.Tile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
-                if ((col_ != 0) && (row != Map.Ydim - 1)) tiletype[0, 1] = Map.Tile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
-                if ((col_ != 2 * Map.Xdim - 1) && (row != Map.Ydim - 1)) tiletype[1, 1] = Map.Tile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
+                if (flatEarth)
+                {
+                    // Determine type of NW tile
+                    if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Map.Tile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
+                    // Determine type of NE tile
+                    if ((col_ != 2 * Map.Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.Tile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
+                    // Determine type of SW tile
+                    if ((col_ != 0) && (row != Map.Ydim - 1)) tiletype[0, 1] = Map.Tile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
+                    // Determine type of SE tile
+                    if ((col_ != 2 * Map.Xdim - 1) && (row != Map.Ydim - 1)) tiletype[1, 1] = Map.Tile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
+                }
+                else    // Round earth
+                {
+                    // Determine type of NW tile
+                    if ((col_ == 0) && (row != 0)) tiletype[0, 0] = Map.Tile[2 * Map.Xdim - 1, row - 1].Type;   // if on left edge take tile from other side of map
+                    else if ((col_ != 0) && (row != 0)) tiletype[0, 0] = Map.Tile[((col_ - 1) - (row - 1) % 2) / 2, row - 1].Type;
+                    // Determine type of NE tile
+                    if ((col_ == 2 * Map.Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.Tile[0, row - 1].Type;   // if on right edge take tile from other side of map
+                    else if ((col_ != 2 * Map.Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.Tile[((col_ + 1) - (row - 1) % 2) / 2, row - 1].Type;
+                    // Determine type of SW tile
+                    if ((col_ == 0) && (row != Map.Ydim - 1)) tiletype[0, 1] = Map.Tile[2 * Map.Xdim - 1, row + 1].Type;   // if on left edge take tile from other side of map
+                    else if ((col_ != 0) && (row != Map.Ydim - 1)) tiletype[0, 1] = Map.Tile[((col_ - 1) - (row + 1) % 2) / 2, row + 1].Type;
+                    // Determine type of SE tile
+                    if ((col_ == 2 * Map.Xdim - 1) && (row != Map.Ydim - 1)) tiletype[1, 1] = Map.Tile[0, row + 1].Type;  // if on right edge take tile from other side of map
+                    else if ((col_ != 2 * Map.Xdim - 1) && (row != Map.Ydim - 1)) tiletype[1, 1] = Map.Tile[((col_ + 1) - (row + 1) % 2) / 2, row + 1].Type;
+                }
                 // Implement dither on 4 locations in square
                 for (int tileX = 0; tileX < 2; tileX++)    // for 4 directions
                     for (int tileY = 0; tileY < 2; tileY++)
@@ -62,7 +84,7 @@ namespace civ2.Bitmaps
                 // Draw coast & river mouth
                 if (Map.Tile[col, row].Type == TerrainType.Ocean)
                 {
-                    bool[] land = IsLandPresent(col, row);   // Determine if land is present in 8 directions
+                    bool[] land = IsLandPresent(col, row, flatEarth);   // Determine if land is present in 8 directions
 
                     // Draw coast & river mouth tiles
                     // NW+N+NE tiles
@@ -313,7 +335,7 @@ namespace civ2.Bitmaps
             return tilePic;
         }
 
-        private static bool[] IsLandPresent(int i, int j)
+        private static bool[] IsLandPresent(int i, int j, bool flatEarth)
         {
             // In start we presume all surrounding tiles are water (land=true, water=false). Index=0 is North, follows in clockwise direction.
             bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
@@ -325,13 +347,22 @@ namespace civ2.Bitmaps
 
             // Observe in all directions if land is present next to ocean
             // N:
-            if (j - 2 < 0) land[0] = true;   // if N tile is out of map (black tile), we presume it is land
+            if (j - 2 < 0) land[0] = true;   // if N tile is out of map limits, we presume it is land
             else if (Map.Tile[(i_ - (j - 2) % 2) / 2, j - 2].Type != TerrainType.Ocean) land[0] = true;
             // NE:
-            if (i_ + 1 >= Xdim || j - 1 < 0) land[1] = true;  // NE is black tile
+            if (j == 0) land[1] = true;  // NE is beyond limits
+            else if (i_ == Xdim - 1)    // you are on easter edge of map
+            {
+                if (flatEarth) land[1] = true;
+                else if (Map.Tile[0, j - 1].Type != TerrainType.Ocean) land[1] = true;  // tile on mirro side of map is not ocean
+            }
             else if (Map.Tile[((i_ + 1) - (j - 1) % 2) / 2, j - 1].Type != TerrainType.Ocean) land[1] = true;    // if it is not ocean, it is land
             // E:
-            if (i_ + 2 >= Xdim) land[2] = true;  // E is black tile
+            if (i_ + 2 >= Xdim) // you are on right edge of map
+            {
+                if (flatEarth) land[2] = true;
+                else if (Map.Tile[((i_ + 2 - Xdim) - j % 2) / 2, j].Type != TerrainType.Ocean) land[2] = true;
+            }                
             else if (Map.Tile[((i_ + 2) - j % 2) / 2, j].Type != TerrainType.Ocean) land[2] = true;
             // SE:
             if (i_ + 1 >= Xdim || j + 1 >= Ydim) land[3] = true;  // SE is black tile

@@ -440,7 +440,7 @@ namespace civ2
             data.Options = new bool[35];
             data.Options[0] = GetBit(bytes[12], 0);     // Bloodlust on/off            
             data.Options[1] = GetBit(bytes[12], 3);     // Simplified combat on/off
-            data.Options[2] = GetBit(bytes[13], 0);     // Flat/round earth
+            data.Options[2] = GetBit(bytes[13], 0);     // Flat earth
             data.Options[3] = GetBit(bytes[13], 7);     // Don't restart if eliminated
             data.Options[4] = GetBit(bytes[14], 0);     // Move units without mouse
             data.Options[5] = GetBit(bytes[14], 1);     // Enter closes city screen     

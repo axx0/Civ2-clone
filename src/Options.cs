@@ -48,9 +48,9 @@
 
         public void Set(bool[] optionsArray)
         {
-            SimplifiedCombat = optionsArray[0];
-            FlatEarth = optionsArray[1];
-            Bloodlust = optionsArray[2];
+            Bloodlust = optionsArray[0];
+            SimplifiedCombat = optionsArray[1];
+            FlatEarth = optionsArray[2];
             DontRestartIfEliminated = optionsArray[3];
             SoundEffects = optionsArray[4];
             Music = optionsArray[5];

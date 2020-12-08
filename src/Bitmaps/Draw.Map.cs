@@ -33,7 +33,7 @@ namespace civ2.Bitmaps
                                 64 * col + 32 * (row % 2),
                                 16 * row);
 
-                            // Implement dithering in all 4 directions if necessary
+                            // Implement dithering in all 4 directions where non-visible tiles are
                             if (civ != 8)
                                 for (int tileX = 0; tileX < 2; tileX++)
                                     for (int tileY = 0; tileY < 2; tileY++)
