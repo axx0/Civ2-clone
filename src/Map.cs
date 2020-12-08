@@ -15,7 +15,8 @@ namespace civ2
         public ITerrain[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
         public Bitmap[] Graphic { get; set; }
-        
+        public ITerrain TileC2(int xC2, int yC2) => Tile[(xC2 - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile
+
         // Generate first instance of terrain tiles by importing game data
         public void GenerateMap(GameData data)
         {

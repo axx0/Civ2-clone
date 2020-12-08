@@ -210,7 +210,7 @@ namespace civ2.Forms
                 OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
                 ActiveXY = Game.ClickedXY;
                 MapViewChange(Game.ClickedXY);
-                StartAnimation(AnimationType.ViewPieces);                
+                StartAnimation(AnimationType.ViewPieces);
             }
         }
 
