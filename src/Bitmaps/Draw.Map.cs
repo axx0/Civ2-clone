@@ -12,7 +12,7 @@ namespace civ2.Bitmaps
         // civId
         // = 0...7 for 8 civs (including barbarians with civId=7)
         // = 8 for revealed map
-        public static Bitmap DrawMap(int civ)
+        public static Bitmap DrawMap(int civ, bool flatEarth)
         {
             // Define a bitmap for drawing
             Bitmap mapPic = new Bitmap(64 * Map.Xdim + 32, 32 * Map.Ydim + 16);
@@ -21,9 +21,23 @@ namespace civ2.Bitmaps
             int zoom = 8;   // Default zoom
             using (Graphics g = Graphics.FromImage(mapPic))
             {
+                // Define starting and ending coords for drawing
+                int colStart, colEnd;
+                if (flatEarth)
+                {
+                    colStart = 0;
+                    colEnd = Map.Xdim;
+                }
+                else    // Round world --> go few tiles beyond E and W borders in order to fill up blank space at map edge
+                {
+                    colStart = -2;
+                    colEnd = Map.Xdim + 2;
+                }
+
+                // Draw
                 for (int _row = 0; _row < Map.Ydim; _row++)
                 {
-                    for (int _col = 0; _col < Map.Xdim; _col++)
+                    for (int _col = colStart; _col < colEnd; _col++)
                     {
                         // Determine column index in civ2-style coords
                         int col = 2 * _col + (_row % 2);

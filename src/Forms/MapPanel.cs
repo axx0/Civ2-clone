@@ -124,11 +124,7 @@ namespace civ2.Forms
             int[] activeXY = ActiveXY;
             int[] centerSqXY = CenterSqXY;
 
-            Bitmap map;
-            if (Game.MapRevealed)
-                map = Map.Graphic[8];
-            else
-                map = Map.Graphic[Game.WhichCivsMapShown];
+            Bitmap map = Game.MapRevealed ? Map.Graphic[8] : Map.Graphic[Game.WhichCivsMapShown];
 
             if (startingSqXY[0] < 0)
             {

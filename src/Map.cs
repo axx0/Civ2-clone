@@ -15,8 +15,8 @@ namespace civ2
         public ITerrain[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
         public Bitmap[] Graphic { get; set; }
-        public ITerrain TileC2(int xC2, int yC2) => Tile[(xC2 - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile
-        public bool VisibilityC2(int xC2, int yC2, int civ) => Visibility[(xC2 - yC2 % 2) / 2, yC2][civ];   // Returns Visibility for civ2-style coords
+        public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
+        public bool VisibilityC2(int xC2, int yC2, int civ) => Visibility[( ((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
 
         // Generate first instance of terrain tiles by importing game data
         public void GenerateMap(GameData data)
@@ -69,7 +69,7 @@ namespace civ2
             // Make graphics of a map for each civ (including barbarians with id=0) + revealed map
             Graphic = new Bitmap[9];
             for (int civId = 0; civId < 9; civId++)
-                Graphic[civId] = Draw.DrawMap(civId);
+                Graphic[civId] = Draw.DrawMap(civId, Game.Options.FlatEarth);
         }
 
         private static Map _instance;
