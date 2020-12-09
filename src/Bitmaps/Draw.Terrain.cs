@@ -90,7 +90,7 @@ namespace civ2.Bitmaps
                 // Draw coast & river mouth
                 if (Map.TileC2(col, row).Type == TerrainType.Ocean)
                 {
-                    bool[] land = IsLandPresent(col, row, flatEarth);   // Determine if land is present in 8 directions
+                    bool[] land = IsLandAround(col, row, flatEarth);   // Determine if land is present in 8 directions
 
                     // Draw coast & river mouth tiles
                     // NW+N+NE tiles
@@ -153,7 +153,7 @@ namespace civ2.Bitmaps
                 // Draw forests
                 if (Map.TileC2(col, row).Type == TerrainType.Forest)
                 {
-                    bool[] isForestAround = IsForestAround(col, row);
+                    bool[] isForestAround = IsTerrainAroundIn4directions(col, row, TerrainType.Forest, flatEarth);
 
                     // Draw forest tiles
                     if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.Forest[0], 0, 0);
@@ -178,7 +178,7 @@ namespace civ2.Bitmaps
                 // TODO: correct drawing mountains - IF SHIELD IS AT MOUNTAIN IT SHOULD BE Mountains[2] and Mountains[3] !!!
                 if (Map.TileC2(col, row).Type == TerrainType.Mountains)
                 {
-                    bool[] isMountAround = IsMountAround(col, row);
+                    bool[] isMountAround = IsTerrainAroundIn4directions(col, row, TerrainType.Mountains, flatEarth);
 
                     // Draw mountain tiles
                     if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.Mountains[0], 0, 0);
@@ -202,7 +202,7 @@ namespace civ2.Bitmaps
                 // Draw hills
                 if (Map.TileC2(col, row).Type == TerrainType.Hills)
                 {
-                    bool[] isHillAround = IsHillAround(col, row);
+                    bool[] isHillAround = IsTerrainAroundIn4directions(col, row, TerrainType.Hills, flatEarth);
 
                     // Draw hill tiles
                     if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.Hills[0], 0, 0);
@@ -226,7 +226,7 @@ namespace civ2.Bitmaps
                 // Draw rivers
                 if (Map.TileC2(col, row).River)
                 {
-                    bool[] isRiverAround = IsRiverAround(col, row);
+                    bool[] isRiverAround = IsRiverAround(col, row, flatEarth);
 
                     // Draw river tiles
                     if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.River[0], 0, 0);
@@ -282,7 +282,7 @@ namespace civ2.Bitmaps
                 // Roads (cites also act as road tiles)
                 if (Map.TileC2(col, row).Road || Map.TileC2(col, row).CityPresent)
                 {
-                    bool[] isRoadAround = IsRoadAround(col, row);
+                    bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
 
                     // Draw roads
                     if (isRoadAround[0]) graphics.DrawImage(Images.Road[8], 0, 0);  // to N
@@ -338,7 +338,7 @@ namespace civ2.Bitmaps
             return tilePic;
         }
 
-        private static bool[] IsLandPresent(int col, int row, bool flatEarth)
+        private static bool[] IsLandAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles are water (land=true, water=false). Index=0 is North, follows in clockwise direction.
             bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
@@ -362,7 +362,7 @@ namespace civ2.Bitmaps
             if (col + 2 >= Xdim) // you are on right edge of map
             {
                 if (flatEarth) land[2] = true;
-                else if (Map.TileC2(Xdim - col, j).Type != TerrainType.Ocean) land[2] = true;
+                else if (Map.TileC2(Xdim - col, row).Type != TerrainType.Ocean) land[2] = true;
             }                
             else if (Map.TileC2(col + 2, row).Type != TerrainType.Ocean) land[2] = true;
             // SE:
@@ -398,192 +398,232 @@ namespace civ2.Bitmaps
                 if (flatEarth) land[7] = true;
                 else if (Map.TileC2(Xdim - 1, row - 1).Type != TerrainType.Ocean) land[7] = true;
             }
-            else if (Map.TileC2(col - 1, row - 1).Type != TerrainType.Ocean) land[6] = true;
+            else if (Map.TileC2(col - 1, row - 1).Type != TerrainType.Ocean) land[7] = true;
 
             return land;
         }
 
-        private static bool[] IsForestAround(int col, int row)
+        // Check whether a certain type of terrain (mount./hills/forest) is present in 4 directions arount the tile
+        private static bool[] IsTerrainAroundIn4directions(int col, int row, TerrainType terrain, bool flatEarth)
         {
-            // In start we presume all surrounding tiles are not forest (forest=true, no forest=false). Index=0 is NE, follows in clockwise direction.
-            bool[] isForestAround = new bool[4] { false, false, false, false };
+            // In start we presume all surrounding tiles are not of same type (=false). Index=0 is NE, follows in clockwise direction.
+            bool[] isTerrainAround = new bool[4] { false, false, false, false };
 
             // Rewrite indexes in Civ2-style
             int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.Ydim;        // no need for such correction for Y
 
-            // Observe in all directions if forest is present
+            // Observe in all directions if terrain is present
             // NE:
-            if (i + 1 >= Xdim || j - 1 < 0) isForestAround[0] = false;  // NE is black tile (we presume no forest is there)
-            else if (Map.TileC2(i + 1, j - 1).Type == TerrainType.Forest) isForestAround[0] = true;
+            if (row == 0) isTerrainAround[0] = false;  // NE is beyond limits
+            else if (col == Xdim - 1)    // you are on eastern edge of map
+            {
+                if (flatEarth) isTerrainAround[0] = false;
+                else if (Map.TileC2(0, row - 1).Type == terrain) isTerrainAround[0] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row - 1).Type == terrain) isTerrainAround[0] = true;
             // SE:
-            if (i + 1 >= Xdim || j + 1 >= Ydim) isForestAround[1] = false;  // SE is black tile
-            else if (Map.TileC2(i + 1, j + 1).Type == TerrainType.Forest) isForestAround[1] = true;
+            if (row == Ydim - 1) isTerrainAround[1] = false;  // SE is beyond limits
+            else if (col == Xdim - 1)    // you are on eastern edge of map
+            {
+                if (flatEarth) isTerrainAround[1] = false;
+                else if (Map.TileC2(0, row + 1).Type == terrain) isTerrainAround[1] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row + 1).Type == terrain) isTerrainAround[1] = true;
             // SW:
-            if (i - 1 < 0 || j + 1 >= Ydim) isForestAround[2] = false;  // SW is black tile
-            else if (Map.TileC2(i - 1, j + 1).Type == TerrainType.Forest) isForestAround[2] = true;
+            if (row == Ydim - 1) isTerrainAround[2] = false; // SW is beyond limits
+            else if (col == 0)    // you are on western edge of map
+            {
+                if (flatEarth) isTerrainAround[2] = false;
+                else if (Map.TileC2(Xdim - 1, row + 1).Type == terrain) isTerrainAround[2] = true;
+            }
+            else if (Map.TileC2(col - 1, row + 1).Type == terrain) isTerrainAround[2] = true;
             // NW:
-            if (i - 1 < 0 || j - 1 < 0) isForestAround[3] = false;  // NW is black tile
-            else if (Map.TileC2(i - 1, j - 1).Type == TerrainType.Forest) isForestAround[3] = true;
+            if (row == 0) isTerrainAround[3] = false;  // NW is beyond limits
+            else if (col == 0) // you are on western edge of map
+            {
+                if (flatEarth) isTerrainAround[3] = false;
+                else if (Map.TileC2(Xdim - 1, row - 1).Type == terrain) isTerrainAround[3] = true;
+            }
+            else if (Map.TileC2(col - 1, row - 1).Type == terrain) isTerrainAround[3] = true;
 
-            return isForestAround;
+            return isTerrainAround;
         }
 
-        private static bool[] IsMountAround(int i, int j)
-        {
-            // In start we presume all surrounding tiles are not mountains (mount=true, no mount=false). Index=0 is NE, follows in clockwise direction.
-            bool[] isMountAround = new bool[4] { false, false, false, false };
-
-            // Rewrite indexes in Civ2-style
-            i = 2 * i + j % 2;
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
-
-            // Observe in all directions if mountain is present
-            // NE:
-            if (i + 1 >= Xdim || j - 1 < 0) isMountAround[0] = false;  // NE is black tile (we presume no mountain is there)
-            else if (Map.TileC2(i + 1, j - 1).Type == TerrainType.Mountains) isMountAround[0] = true;
-            // SE:
-            if (i + 1 >= Xdim || j + 1 >= Ydim) isMountAround[1] = false;  // SE is black tile
-            else if (Map.TileC2(i + 1, j + 1).Type == TerrainType.Mountains) isMountAround[1] = true;
-            // SW:
-            if (i - 1 < 0 || j + 1 >= Ydim) isMountAround[2] = false;  // SW is black tile
-            else if (Map.TileC2(i - 1, j + 1).Type == TerrainType.Mountains) isMountAround[2] = true;
-            // NW:
-            if (i - 1 < 0 || j - 1 < 0) isMountAround[3] = false;  // NW is black tile
-            else if (Map.TileC2(i - 1, j - 1).Type == TerrainType.Mountains) isMountAround[3] = true;
-
-            return isMountAround;
-        }
-
-        private static bool[] IsHillAround(int i, int j)
-        {
-            // In start we presume all surrounding tiles are not hills (hill=true, no hill=false). Index=0 is NE, follows in clockwise direction.
-            bool[] isHillAround = new bool[4] { false, false, false, false };
-
-            // Rewrite indexes in Civ2-style
-            i = 2 * i + j % 2;
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
-
-            // observe in all directions if hill is present
-            // NE:
-            if (i + 1 >= Xdim || j - 1 < 0) isHillAround[0] = false;  // NE is black tile (we presume no hill is there)
-            else if (Map.TileC2(i + 1, j - 1).Type == TerrainType.Hills) isHillAround[0] = true;
-            // SE:
-            if (i + 1 >= Xdim || j + 1 >= Ydim) isHillAround[1] = false;  // SE is black tile
-            else if (Map.TileC2(i + 1, j + 1).Type == TerrainType.Hills) isHillAround[1] = true;
-            // SW:
-            if (i - 1 < 0 || j + 1 >= Ydim) isHillAround[2] = false;  // SW is black tile
-            else if (Map.TileC2(i - 1, j + 1).Type == TerrainType.Hills) isHillAround[2] = true;
-            // NW:
-            if (i - 1 < 0 || j - 1 < 0) isHillAround[3] = false;  // NW is black tile
-            else if (Map.TileC2(i - 1, j - 1).Type == TerrainType.Hills) isHillAround[3] = true;
-
-            return isHillAround;
-        }
-
-        private static bool[] IsRiverAround(int i, int j)
+        private static bool[] IsRiverAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles are not rivers (river=true, no river=false). Index=0 is NE, follows in clockwise direction.
             bool[] isRiverAround = new bool[4] { false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            i = 2 * i + j % 2;
             int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.Ydim;        // no need for such correction for Y
 
             // Observe in all directions if river is present
             // NE:
-            if (i + 1 >= Xdim || j - 1 < 0) isRiverAround[0] = false;  // NE is black tile (we presume no river is there)
-            else if (Map.TileC2(i + 1, j - 1).River || Map.TileC2(i + 1, j - 1).Type == TerrainType.Ocean) isRiverAround[0] = true;
+            if (row == 0) isRiverAround[0] = false;  // NE is beyond limits
+            else if (col == Xdim - 1)    // you are on eastern edge of map
+            {
+                if (flatEarth) isRiverAround[0] = false;
+                else if (Map.TileC2(0, row - 1).River || Map.TileC2(0, row - 1).Type == TerrainType.Ocean) isRiverAround[0] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row - 1).River || Map.TileC2(col + 1, row - 1).Type == TerrainType.Ocean) isRiverAround[0] = true;
             // SE:
-            if (i + 1 >= Xdim || j + 1 >= Ydim) isRiverAround[1] = false;  // SE is black tile
-            else if (Map.TileC2(i + 1, j + 1).River || Map.TileC2(i + 1, j + 1).Type == TerrainType.Ocean) isRiverAround[1] = true;
+            if (row == Ydim - 1) isRiverAround[1] = false;  // SE is beyond limits
+            else if (col == Xdim - 1)    // you are on eastern edge of map
+            {
+                if (flatEarth) isRiverAround[1] = false;
+                else if (Map.TileC2(0, row + 1).River || Map.TileC2(0, row + 1).Type == TerrainType.Ocean) isRiverAround[1] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row + 1).River || Map.TileC2(col + 1, row + 1).Type == TerrainType.Ocean) isRiverAround[1] = true;
             // SW:
-            if (i - 1 < 0 || j + 1 >= Ydim) isRiverAround[2] = false;  // SW is black tile
-            else if (Map.TileC2(i - 1, j + 1).River || Map.TileC2(i - 1, j + 1).Type == TerrainType.Ocean) isRiverAround[2] = true;
+            if (row == Ydim - 1) isRiverAround[2] = false; // SW is beyond limits
+            else if (col == 0)    // you are on western edge of map
+            {
+                if (flatEarth) isRiverAround[2] = false;
+                else if (Map.TileC2(Xdim - 1, row + 1).River || Map.TileC2(Xdim - 1, row + 1).Type == TerrainType.Ocean) isRiverAround[2] = true;
+            }
+            else if (Map.TileC2(col - 1, row + 1).River || Map.TileC2(col - 1, row + 1).Type == TerrainType.Ocean) isRiverAround[2] = true;
             // NW:
-            if (i - 1 < 0 || j - 1 < 0) isRiverAround[3] = false;  // NW is black tile
-            else if (Map.TileC2(i - 1, j - 1).River || Map.TileC2(i - 1, j - 1).Type == TerrainType.Ocean) isRiverAround[3] = true;
+            if (row == 0) isRiverAround[3] = false;  // NW is beyond limits
+            else if (col == 0) // you are on western edge of map
+            {
+                if (flatEarth) isRiverAround[3] = false;
+                else if (Map.TileC2(Xdim - 1, row - 1).River || Map.TileC2(Xdim - 1, row - 1).Type == TerrainType.Ocean) isRiverAround[3] = true;
+            }
+            else if (Map.TileC2(col - 1, row - 1).River || Map.TileC2(col - 1, row - 1).Type == TerrainType.Ocean) isRiverAround[3] = true;
 
             return isRiverAround;
         }
 
-        private static bool[] IsRoadAround(int i, int j)
+        private static bool[] IsRoadAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles do not have roads. Index=0 is NE, follows in clockwise direction.
             bool[] isRoadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            i = 2 * i + j % 2;
             int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.Ydim;        // no need for such correction for Y
 
             // Observe in all directions if road or city is present next to tile
             // N:
-            if (j - 2 < 0) isRoadAround[0] = false;   // if N tile is out of map (black tile), we presume there is no road
-            else if (Map.TileC2(i, j - 2).Road || Map.TileC2(i, j - 2).CityPresent) isRoadAround[0] = true;
+            if (row - 2 < 0) isRoadAround[0] = false;   // if N tile is out of map limits
+            else if (Map.TileC2(col, row - 2).Road || Map.TileC2(col, row - 2).CityPresent) isRoadAround[0] = true;
             // NE:
-            if (i + 1 >= Xdim || j - 1 < 0) isRoadAround[1] = false;  // NE is black tile
-            else if (Map.TileC2(i + 1, j - 1).Road || Map.TileC2(i + 1, j - 1).CityPresent) isRoadAround[1] = true;
+            if (row == 0) isRoadAround[1] = false;  // NE is beyond limits
+            else if (col == Xdim - 1)    // you are on eastern edge of map
+            {
+                if (flatEarth) isRoadAround[1] = false;
+                else if (Map.TileC2(0, row - 1).Road || Map.TileC2(0, row - 1).CityPresent) isRoadAround[1] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row - 1).Road || Map.TileC2(col + 1, row - 1).CityPresent) isRoadAround[1] = true;
             // E:
-            if (i + 2 >= Xdim) isRoadAround[2] = false;  // E is black tile
-            else if (Map.TileC2(i + 2, j).Road || Map.TileC2(i + 2, j).CityPresent) isRoadAround[2] = true;
+            if (col + 2 >= Xdim) // you are on right edge of map
+            {
+                if (flatEarth) isRoadAround[2] = false;
+                else if (Map.TileC2(Xdim - col, row).Road || Map.TileC2(Xdim - col, row).CityPresent) isRoadAround[2] = true;
+            }
+            else if (Map.TileC2(col + 2, row).Road || Map.TileC2(col + 2, row).CityPresent) isRoadAround[2] = true;
             // SE:
-            if (i + 1 >= Xdim || j + 1 >= Ydim) isRoadAround[3] = false;  // SE is black tile
-            else if (Map.TileC2(i + 1, j + 1).Road || Map.TileC2(i + 1, j + 1).CityPresent) isRoadAround[3] = true;
+            if (row == Ydim - 1) isRoadAround[3] = false;  // SE is beyond limits
+            else if (col + 1 == Xdim)    // you are on eastern edge of map
+            {
+                if (flatEarth) isRoadAround[3] = false;
+                else if (Map.TileC2(0, row + 1).Road || Map.TileC2(0, row + 1).CityPresent) isRoadAround[3] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row + 1).Road || Map.TileC2(col + 1, row + 1).CityPresent) isRoadAround[3] = true;
             // S:
-            if (j + 2 >= Ydim) isRoadAround[4] = false;   // S is black tile
-            else if (Map.TileC2(i, j + 2).Road || Map.TileC2(i, j + 2).CityPresent) isRoadAround[4] = true;
+            if (row + 2 >= Ydim) isRoadAround[4] = false;   // S is beyond map limits
+            else if (Map.TileC2(col, row + 2).Road || Map.TileC2(col, row + 2).CityPresent) isRoadAround[4] = true;
             // SW:
-            if (i - 1 < 0 || j + 1 >= Ydim) isRoadAround[5] = false;  // SW is black tile
-            else if (Map.TileC2(i - 1, j + 1).Road || Map.TileC2(i - 1, j + 1).CityPresent) isRoadAround[5] = true;
+            if (row == Ydim - 1) isRoadAround[5] = false; // SW is beyond limits
+            else if (col == 0)    // you are on western edge of map
+            {
+                if (flatEarth) isRoadAround[5] = false;
+                else if (Map.TileC2(Xdim - 1, row + 1).Road || Map.TileC2(Xdim - 1, row + 1).CityPresent) isRoadAround[5] = true;
+            }
+            else if (Map.TileC2(col - 1, row + 1).Road || Map.TileC2(col - 1, row + 1).CityPresent) isRoadAround[5] = true;
             // W:
-            if (i - 2 < 0) isRoadAround[6] = false;  // W is black tile
-            else if (Map.TileC2(i - 2, j).Road || Map.TileC2(i - 2, j).CityPresent) isRoadAround[6] = true;
+            if (col - 2 < 0) // you are on left edge of map
+            {
+                if (flatEarth) isRoadAround[6] = false;
+                else if (Map.TileC2(Xdim - 2 + col, row).Road || Map.TileC2(Xdim - 2 + col, row).CityPresent) isRoadAround[6] = true;
+            }
+            else if (Map.TileC2(col - 2, row).Road || Map.TileC2(col - 2, row).CityPresent) isRoadAround[6] = true;
             // NW:
-            if (i - 1 < 0 || j - 1 < 0) isRoadAround[7] = false;  // NW is black tile
-            else if (Map.TileC2(i - 1, j - 1).Road || Map.TileC2(i - 1, j - 1).CityPresent) isRoadAround[7] = true;
+            if (row == 0) isRoadAround[7] = false;  // NW is beyond limits
+            else if (col == 0) // you are on western edge of map
+            {
+                if (flatEarth) isRoadAround[7] = false;
+                else if (Map.TileC2(Xdim - 1, row - 1).Road || Map.TileC2(Xdim - 1, row - 1).CityPresent) isRoadAround[7] = true;
+            }
+            else if (Map.TileC2(col - 1, row - 1).Road || Map.TileC2(col - 1, row - 1).CityPresent) isRoadAround[7] = true;
 
             return isRoadAround;
         }
 
-        private static bool[] IsRailroadAround(int i, int j)
+        private static bool[] IsRailroadAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles do not have railroads. Index=0 is NE, follows in clockwise direction.
             bool[] isRailroadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            i = 2 * i + j % 2;
             int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.Ydim;        // no need for such correction for Y
 
-            // Observe in all directions if road or city is present next to tile
+            // Observe in all directions if railroad or city is present next to tile
             // N:
-            if (j - 2 < 0) isRailroadAround[0] = false;   // if N tile is out of map (black tile), we presume there is no road
-            else if (Map.TileC2(i, j - 2).Railroad || Map.TileC2(i, j - 2).CityPresent) isRailroadAround[0] = true;
+            if (row - 2 < 0) isRailroadAround[0] = false;   // if N tile is out of map limits
+            else if (Map.TileC2(col, row - 2).Railroad || Map.TileC2(col, row - 2).CityPresent) isRailroadAround[0] = true;
             // NE:
-            if (i + 1 >= Xdim || j - 1 < 0) isRailroadAround[1] = false;  // NE is black tile
-            else if (Map.TileC2(i + 1, j - 1).Railroad || Map.TileC2(i + 1, j - 1).CityPresent) isRailroadAround[1] = true;
+            if (row == 0) isRailroadAround[1] = false;  // NE is beyond limits
+            else if (col == Xdim - 1)    // you are on eastern edge of map
+            {
+                if (flatEarth) isRailroadAround[1] = false;
+                else if (Map.TileC2(0, row - 1).Railroad || Map.TileC2(0, row - 1).CityPresent) isRailroadAround[1] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row - 1).Railroad || Map.TileC2(col + 1, row - 1).CityPresent) isRailroadAround[1] = true;
             // E:
-            if (i + 2 >= Xdim) isRailroadAround[2] = false;  // E is black tile
-            else if (Map.TileC2(i + 2, j).Railroad || Map.TileC2(i + 2, j).CityPresent) isRailroadAround[2] = true;
+            if (col + 2 >= Xdim) // you are on right edge of map
+            {
+                if (flatEarth) isRailroadAround[2] = false;
+                else if (Map.TileC2(Xdim - col, row).Railroad || Map.TileC2(Xdim - col, row).CityPresent) isRailroadAround[2] = true;
+            }
+            else if (Map.TileC2(col + 2, row).Railroad || Map.TileC2(col + 2, row).CityPresent) isRailroadAround[2] = true;
             // SE:
-            if (i + 1 >= Xdim || j + 1 >= Ydim) isRailroadAround[3] = false;  // SE is black tile
-            else if (Map.TileC2(i + 1, j + 1).Railroad || Map.TileC2(i + 1, j + 1).CityPresent) isRailroadAround[3] = true;
+            if (row == Ydim - 1) isRailroadAround[3] = false;  // SE is beyond limits
+            else if (col + 1 == Xdim)    // you are on eastern edge of map
+            {
+                if (flatEarth) isRailroadAround[3] = false;
+                else if (Map.TileC2(0, row + 1).Railroad || Map.TileC2(0, row + 1).CityPresent) isRailroadAround[3] = true;  // tile on mirror side of map
+            }
+            else if (Map.TileC2(col + 1, row + 1).Railroad || Map.TileC2(col + 1, row + 1).CityPresent) isRailroadAround[3] = true;
             // S:
-            if (j + 2 >= Ydim) isRailroadAround[4] = false;   // S is black tile
-            else if (Map.TileC2(i, j + 2).Railroad || Map.TileC2(i, j + 2).CityPresent) isRailroadAround[4] = true;
+            if (row + 2 >= Ydim) isRailroadAround[4] = false;   // S is beyond map limits
+            else if (Map.TileC2(col, row + 2).Railroad || Map.TileC2(col, row + 2).CityPresent) isRailroadAround[4] = true;
             // SW:
-            if (i - 1 < 0 || j + 1 >= Ydim) isRailroadAround[5] = false;  // SW is black tile
-            else if (Map.TileC2(i - 1, j + 1).Railroad || Map.TileC2(i - 1, j + 1).CityPresent) isRailroadAround[5] = true;
+            if (row == Ydim - 1) isRailroadAround[5] = false; // SW is beyond limits
+            else if (col == 0)    // you are on western edge of map
+            {
+                if (flatEarth) isRailroadAround[5] = false;
+                else if (Map.TileC2(Xdim - 1, row + 1).Railroad || Map.TileC2(Xdim - 1, row + 1).CityPresent) isRailroadAround[5] = true;
+            }
+            else if (Map.TileC2(col - 1, row + 1).Railroad || Map.TileC2(col - 1, row + 1).CityPresent) isRailroadAround[5] = true;
             // W:
-            if (i - 2 < 0) isRailroadAround[6] = false;  // W is black tile
-            else if (Map.TileC2(i - 2, j).Railroad || Map.TileC2(i - 2, j).CityPresent) isRailroadAround[6] = true;
+            if (col - 2 < 0) // you are on left edge of map
+            {
+                if (flatEarth) isRailroadAround[6] = false;
+                else if (Map.TileC2(Xdim - 2 + col, row).Railroad || Map.TileC2(Xdim - 2 + col, row).CityPresent) isRailroadAround[6] = true;
+            }
+            else if (Map.TileC2(col - 2, row).Railroad || Map.TileC2(col - 2, row).CityPresent) isRailroadAround[6] = true;
             // NW:
-            if (i - 1 < 0 || j - 1 < 0) isRailroadAround[7] = false;  // NW is black tile
-            else if (Map.TileC2(i - 1, j - 1).Railroad || Map.TileC2(i - 1, j - 1).CityPresent) isRailroadAround[7] = true;
+            if (row == 0) isRailroadAround[7] = false;  // NW is beyond limits
+            else if (col == 0) // you are on western edge of map
+            {
+                if (flatEarth) isRailroadAround[7] = false;
+                else if (Map.TileC2(Xdim - 1, row - 1).Railroad || Map.TileC2(Xdim - 1, row - 1).CityPresent) isRailroadAround[7] = true;
+            }
+            else if (Map.TileC2(col - 1, row - 1).Railroad || Map.TileC2(col - 1, row - 1).CityPresent) isRailroadAround[7] = true;
 
             return isRailroadAround;
         }
