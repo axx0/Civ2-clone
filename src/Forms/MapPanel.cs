@@ -111,6 +111,8 @@ namespace civ2.Forms
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
             e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
             e.Graphics.DrawString($"{Game.PlayerCiv.Adjective} Map", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            e.Dispose();
+            sf.Dispose();
         }
 
         // Draw map here
@@ -160,6 +162,7 @@ namespace civ2.Forms
                     }
             }
 
+            map.Dispose();
             e.Dispose();
         }
 
@@ -240,60 +243,58 @@ namespace civ2.Forms
             }
         }
 
-        private int[] StartingSqXYpx => new int[] { StartingSqXY[0] * 4 * (8 + Game.Zoom), StartingSqXY[1] * 2 * (8 + Game.Zoom) };
-        private int MapXdimPx => 2 * Map.Xdim * 4 * (8 + Game.Zoom);
-        private int MapYdimPx => Map.Ydim * 2 * (8 + Game.Zoom);
 
-        // Determines offset to StartingSqXY for drawing of squares on panel edge { left, up, right, down }
-        private int[] _edgePxDrawOffsetXY;
-        private int[] EdgePxDrawOffsetXY
-        {
-            get
-            {
-                int[] startingSqXY = StartingSqXY;
-                int[] drawingSqXY = DrawingSqXY;
-                int[] _edgeDrawOffsetXY = new int[] { -2, -2, 2, 2 };     // By default draw 2 squares more in each direction
-                if (startingSqXY[0] == 0 || startingSqXY[1] == 0)   // Starting on edge
-                {
-                    _edgeDrawOffsetXY[0] = -Math.Max(Math.Min(startingSqXY[0], 2), 0);
-                    _edgeDrawOffsetXY[1] = -Math.Max(Math.Min(startingSqXY[1], 2), 0);
-                }
-                if (startingSqXY[0] == 1 || startingSqXY[1] == 1)  // Starting in 1st row/column
-                {
-                    _edgeDrawOffsetXY[0] = -1;
-                    _edgeDrawOffsetXY[1] = -1;
-                }
-                if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)  // On right edge
-                {
-                    _edgeDrawOffsetXY[2] = 0;
-                    _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
-                }
-                if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)  // On bottom edge
-                {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
-                    _edgeDrawOffsetXY[3] = 0;
-                }
-                if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim - 1)  // 1 column left of right edge
-                {
-                    _edgeDrawOffsetXY[2] = 1;
-                    _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
-                }
-                if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim - 1)  // 1 column up of bottom edge
-                {
-                    _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
-                    _edgeDrawOffsetXY[3] = 1;
-                }
 
-                // Now convert it to pixels
-                _edgePxDrawOffsetXY = new int[] { 32 * _edgeDrawOffsetXY[0], 16 * _edgeDrawOffsetXY[1] };
-                if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)
-                    _edgePxDrawOffsetXY[0] = DrawPanel.Width - (32 + 32 * drawingSqXY[0] - 32 * _edgeDrawOffsetXY[0]);
-                if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)
-                    _edgePxDrawOffsetXY[1] = DrawPanel.Height - (16 + 16 * drawingSqXY[1] - 16 * _edgeDrawOffsetXY[1]);
+        //// Determines offset to StartingSqXY for drawing of squares on panel edge { left, up, right, down }
+        //private int[] _edgePxDrawOffsetXY;
+        //private int[] EdgePxDrawOffsetXY
+        //{
+        //    get
+        //    {
+        //        int[] startingSqXY = StartingSqXY;
+        //        int[] drawingSqXY = DrawingSqXY;
+        //        int[] _edgeDrawOffsetXY = new int[] { -2, -2, 2, 2 };     // By default draw 2 squares more in each direction
+        //        if (startingSqXY[0] == 0 || startingSqXY[1] == 0)   // Starting on edge
+        //        {
+        //            _edgeDrawOffsetXY[0] = -Math.Max(Math.Min(startingSqXY[0], 2), 0);
+        //            _edgeDrawOffsetXY[1] = -Math.Max(Math.Min(startingSqXY[1], 2), 0);
+        //        }
+        //        if (startingSqXY[0] == 1 || startingSqXY[1] == 1)  // Starting in 1st row/column
+        //        {
+        //            _edgeDrawOffsetXY[0] = -1;
+        //            _edgeDrawOffsetXY[1] = -1;
+        //        }
+        //        if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)  // On right edge
+        //        {
+        //            _edgeDrawOffsetXY[2] = 0;
+        //            _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
+        //        }
+        //        if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)  // On bottom edge
+        //        {
+        //            _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
+        //            _edgeDrawOffsetXY[3] = 0;
+        //        }
+        //        if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim - 1)  // 1 column left of right edge
+        //        {
+        //            _edgeDrawOffsetXY[2] = 1;
+        //            _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
+        //        }
+        //        if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim - 1)  // 1 column up of bottom edge
+        //        {
+        //            _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
+        //            _edgeDrawOffsetXY[3] = 1;
+        //        }
 
-                return _edgePxDrawOffsetXY;
-            }
-        }
+        //        // Now convert it to pixels
+        //        _edgePxDrawOffsetXY = new int[] { 32 * _edgeDrawOffsetXY[0], 16 * _edgeDrawOffsetXY[1] };
+        //        if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)
+        //            _edgePxDrawOffsetXY[0] = DrawPanel.Width - (32 + 32 * drawingSqXY[0] - 32 * _edgeDrawOffsetXY[0]);
+        //        if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)
+        //            _edgePxDrawOffsetXY[1] = DrawPanel.Height - (16 + 16 * drawingSqXY[1] - 16 * _edgeDrawOffsetXY[1]);
+
+        //        return _edgePxDrawOffsetXY;
+        //    }
+        //}
 
         // Squares to be drawn on the panel
         private int[] DrawingSqXY => new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * (8 + Game.Zoom))), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * (8 + Game.Zoom))) };
@@ -308,6 +309,16 @@ namespace civ2.Forms
                 int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.Zoom); // Offset of central tile from panel NW corner
                 int[] _startingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
                 int[] drawingSqXY = DrawingSqXY;
+
+                int mapWidth = 4 * (8 + Game.Zoom) * (2 * Map.Xdim + 1);
+                int mapHeight = 2 * (8 + Game.Zoom) * (2 * Map.Ydim + 1);
+
+                // First determine the Y-central coordinate
+                if (mapWidth < DrawPanel.Height)    // Center the map in panel center
+                {
+                    
+                }
+
                 // Limit movement so that map limits are not exceeded
                 if (Game.Options.FlatEarth)
                 {
@@ -355,6 +366,10 @@ namespace civ2.Forms
             set { _activeXY = value; }
         }
 
+        // Representation in pixels for drawing
+        private int[] StartingSqXYpx => new int[] { StartingSqXY[0] * 4 * (8 + Game.Zoom), StartingSqXY[1] * 2 * (8 + Game.Zoom) };
+        private int MapXdimPx => 2 * Map.Xdim * 4 * (8 + Game.Zoom);
+        private int MapYdimPx => Map.Ydim * 2 * (8 + Game.Zoom);
         private int[] ActiveXYpx => new int[] { 4 * (Game.Zoom + 8) * ActiveXY[0], 2 * (Game.Zoom + 8) * ActiveXY[1] };
         #endregion
 
@@ -572,6 +587,12 @@ namespace civ2.Forms
                 else
                     return false;
             }
+        }
+
+        // Function which sets various XY variables for drawing map on grid
+        private void ReturnCoordsAtMapViewChange(int[] proposedCentralCoords)
+        {
+
         }
     }
 }
