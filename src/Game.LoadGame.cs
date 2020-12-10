@@ -88,10 +88,8 @@ namespace civ2
             _playerCiv = _civs[SAVgameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
 
-            ZoomLvl = 8;    // TODO: read this from SAV
+            _zoom = SAVgameData.Zoom;
         }
-
-
 
     }
 }

@@ -136,6 +136,7 @@ namespace civ2
         // Other data        
         public int[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
+        public int Zoom { get; set; }
 
         //public int IndexOfLastActiveUnit { get; set; }
 

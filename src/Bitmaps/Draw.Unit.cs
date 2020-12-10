@@ -105,7 +105,7 @@ namespace civ2.Bitmaps
             }
 
             // Resize image if required
-            unitPic = ModifyImage.ResizeImage(unitPic, 8 * zoom, 6 * zoom);
+            unitPic = ModifyImage.ResizeImage(unitPic, 8 * (8 + zoom), 6 * (8 + zoom));
 
             return unitPic;
         }

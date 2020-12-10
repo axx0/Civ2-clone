@@ -56,13 +56,13 @@ namespace civ2
         public int[] ActiveCursorXY { get; set; } // Coordinates of either active unit or of viewing piece.
         public int[] ClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
 
-        private int _zoomLvl;
-        public int ZoomLvl
+        private int _zoom;
+        public int Zoom     // 1 (min) ... 16 (max), 8=std.
         {
-            get { return _zoomLvl; }
+            get { return _zoom; }
             set
             {
-                _zoomLvl = Math.Max(Math.Min(value, 16), 1);
+                _zoom = Math.Max(Math.Min(value, 16), 1);
             }
         }
 

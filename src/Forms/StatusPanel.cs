@@ -148,7 +148,7 @@ namespace civ2.Forms
                 int count;
                 for (count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
                 {
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
                     e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
                     e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
                     e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); // TODO: give proper conversion of orders to string
@@ -199,7 +199,7 @@ namespace civ2.Forms
                     }
                     else
                     {
-                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(UnitsOnThisTile[count], false, 8), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
                         e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 71 + count * 56);
                         e.Graphics.DrawString(UnitsOnThisTile[count].HomeCity.Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 70 + count * 56);
                         e.Graphics.DrawString(UnitsOnThisTile[count].Order.ToString(), font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 89 + count * 56); // TODO: give proper conversion of orders to string

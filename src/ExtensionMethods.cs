@@ -31,10 +31,10 @@ namespace ExtensionMethods
         }
 
         //Determine XY civ2 coords from x-y pixel location on panel
-        public static int[] PxToCoords(int x, int y, int zoomLvl)
+        public static int[] PxToCoords(int x, int y, int zoom)
         {
             double[] nxy = new double[] { x - 2 * y, -(-y - 0.5 * x) };  //crossing at x,y-axis
-            int[] nXY = new int[] { Convert.ToInt32(Math.Floor((nxy[0] + 4 * zoomLvl) / (8 * zoomLvl))), Convert.ToInt32(Math.Floor((nxy[1] - 2 * zoomLvl) / (4 * zoomLvl))) };   //converting crossing to int
+            int[] nXY = new int[] { Convert.ToInt32(Math.Floor((nxy[0] + 4 * (8 + zoom)) / (8 * (8 + zoom)))), Convert.ToInt32(Math.Floor((nxy[1] - 2 * (8 + zoom)) / (4 * (8 + zoom)))) };   //converting crossing to int
             return new int[] { nXY[0] + nXY[1], nXY[1] - nXY[0] };
         }
     }

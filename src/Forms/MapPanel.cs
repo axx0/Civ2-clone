@@ -17,7 +17,7 @@ namespace civ2.Forms
         Game Game => Game.Instance;
         Map Map => Map.Instance;
 
-        private static List<Bitmap> AnimationBitmap;        
+        private static List<Bitmap> AnimationBitmap;
         private int MapGridVar { get; set; }        // Style of map grid presentation
         private System.Windows.Forms.Timer Timer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         private AnimationType AnimType;
@@ -128,16 +128,16 @@ namespace civ2.Forms
 
             if (startingSqXY[0] < 0)
             {
-                Rectangle rect1 = new Rectangle((2 * Map.Xdim + startingSqXY[0]) * 32, startingSqXY[1] * 16, (2 * Map.Xdim + startingSqXY[0]) * 32, DrawPanel.Height);
-                Rectangle rect2 = new Rectangle(0, startingSqXY[1] * 16, DrawPanel.Width - (2 * Map.Xdim + startingSqXY[0]) * 32, DrawPanel.Height);
+                Rectangle rect1 = new Rectangle((2 * Map.Xdim + startingSqXY[0]) * 32, startingSqXY[1] * 16, -startingSqXY[0] * 32, DrawPanel.Height);
+                Rectangle rect2 = new Rectangle(0, startingSqXY[1] * 16, DrawPanel.Width + startingSqXY[0] * 32, DrawPanel.Height);
                 e.Graphics.DrawImage(map, 0, 0, rect1, GraphicsUnit.Pixel);
-                e.Graphics.DrawImage(map, (2 * Map.Xdim + startingSqXY[0]) * 32, 0, rect2, GraphicsUnit.Pixel);
+                e.Graphics.DrawImage(map, -startingSqXY[0] * 32, 0, rect2, GraphicsUnit.Pixel);
             }
             else
             {
                 Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
                 e.Graphics.DrawImage(map, 0, 0, rect, GraphicsUnit.Pixel);
-            }            
+            }
 
 
             // Unit/viewing piece static
@@ -167,7 +167,7 @@ namespace civ2.Forms
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            int[] coords = Ext.PxToCoords(e.Location.X, e.Location.Y, Game.ZoomLvl);
+            int[] coords = Ext.PxToCoords(e.Location.X, e.Location.Y, Game.Zoom);
             Game.ClickedXY = new int[] { StartingSqXY[0] + coords[0], StartingSqXY[1] + coords[1] };  // Coordinates of clicked square
 
             if (e.Button == MouseButtons.Left)
@@ -226,12 +226,23 @@ namespace civ2.Forms
         {
             get
             {
-                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.ZoomLvl); // Offset of central tile from panel NW corner
+                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.Zoom); // Offset of central tile from panel NW corner
                 int[] _centerSqXY = CenterSqXY;
                 _startingSqXY = new int[] { _centerSqXY[0] - centerDistanceXY[0], _centerSqXY[1] - centerDistanceXY[1] };
-                return _startingSqXY;
+
+                //if (!Game.Options.FlatEarth)    // Round world --> make sure starting X is never < 0
+                //{
+                //    if (_startingSqXY[0] < 0)
+                //    {
+                //        _startingSqXY[0] = _startingSqXY[0] % 
+                //    }
+                //}
+
+                return _startingSqXY;;
             }
         }
+
+        private int[] StartingSqXYpx => new int[] {};
 
         // Determines offset to StartingSqXY for drawing of squares on panel edge { left, up, right, down }
         private int[] _edgePxDrawOffsetXY;
@@ -285,7 +296,7 @@ namespace civ2.Forms
         }
 
         // Squares to be drawn on the panel
-        private int[] DrawingSqXY => new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * Game.ZoomLvl)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * Game.ZoomLvl)) };
+        private int[] DrawingSqXY => new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * (8 + Game.Zoom))), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * (8 + Game.Zoom))) };
 
         // Center square on the map
         private int[] _centerSqXY;
@@ -294,7 +305,7 @@ namespace civ2.Forms
             get { return _centerSqXY; }
             set
             {
-                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.ZoomLvl); // Offset of central tile from panel NW corner
+                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.Zoom); // Offset of central tile from panel NW corner
                 int[] _startingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
                 int[] drawingSqXY = DrawingSqXY;
                 // Limit movement so that map limits are not exceeded
@@ -356,12 +367,12 @@ namespace civ2.Forms
             return MapGridVar;
         }
 
-        public void ZoomOUTclicked(Object sender, EventArgs e) { Game.ZoomLvl--; DrawPanel.Refresh(); }
-        public void ZoomINclicked(Object sender, EventArgs e) { Game.ZoomLvl++; DrawPanel.Refresh(); }
-        public void MaxZoomINclicked(Object sender, EventArgs e) { Game.ZoomLvl = 16; DrawPanel.Refresh(); }
-        public void MaxZoomOUTclicked(Object sender, EventArgs e) { Game.ZoomLvl = 1; DrawPanel.Refresh(); }
-        public void StandardZOOMclicked(Object sender, EventArgs e) { Game.ZoomLvl = 8; DrawPanel.Refresh(); }
-        public void MediumZoomOUTclicked(Object sender, EventArgs e) { Game.ZoomLvl = 5; DrawPanel.Refresh(); }
+        public void ZoomOUTclicked(Object sender, EventArgs e) { Game.Zoom--; DrawPanel.Refresh(); }
+        public void ZoomINclicked(Object sender, EventArgs e) { Game.Zoom++; DrawPanel.Refresh(); }
+        public void MaxZoomINclicked(Object sender, EventArgs e) { Game.Zoom = 16; DrawPanel.Refresh(); }
+        public void MaxZoomOUTclicked(Object sender, EventArgs e) { Game.Zoom = 1; DrawPanel.Refresh(); }
+        public void StandardZOOMclicked(Object sender, EventArgs e) { Game.Zoom = 8; DrawPanel.Refresh(); }
+        public void MediumZoomOUTclicked(Object sender, EventArgs e) { Game.Zoom = 5; DrawPanel.Refresh(); }
 
         private void Timer_Tick(object sender, EventArgs e)
         {

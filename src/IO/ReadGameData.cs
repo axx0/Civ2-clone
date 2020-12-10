@@ -475,13 +475,13 @@ namespace civ2
             data.Options[34] = GetBit(bytes[23], 7);     // Warn when changing production will cost shileds on/off
 
             // Number of turns passed
-            data.TurnNumber = int.Parse(string.Concat(bytes[29].ToString("X"), bytes[28].ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
+            data.TurnNumber = short.Parse(string.Concat(bytes[29].ToString("X"), bytes[28].ToString("X")), System.Globalization.NumberStyles.HexNumber);    //convert hex value 2 & 1 (in that order) together to int
 
             // Number of turns passed for game year calculation
-            data.TurnNumberForGameYear = int.Parse(string.Concat(bytes[31].ToString("X"), bytes[30].ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.TurnNumberForGameYear = short.Parse(string.Concat(bytes[31].ToString("X"), bytes[30].ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Which unit is selected at start of game (return -1 if no unit is selected (FFFFhex=65535dec))
-            int _selectedIndex = int.Parse(string.Concat(bytes[35].ToString("X"), bytes[34].ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            int _selectedIndex = short.Parse(string.Concat(bytes[35].ToString("X"), bytes[34].ToString("X")), System.Globalization.NumberStyles.HexNumber);
             data.SelectedUnitIndex = (_selectedIndex == 65535) ? -1 : _selectedIndex;
 
             // Which human player is used
@@ -520,10 +520,10 @@ namespace civ2
             data.NoOfTurnsOfPeace = bytes[56];
 
             // Number of units
-            data.NumberOfUnits = int.Parse(string.Concat(bytes[59].ToString("X"), bytes[58].ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.NumberOfUnits = short.Parse(string.Concat(bytes[59].ToString("X"), bytes[58].ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Number of cities
-            data.NumberOfCities = int.Parse(string.Concat(bytes[61].ToString("X"), bytes[60].ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.NumberOfCities = short.Parse(string.Concat(bytes[61].ToString("X"), bytes[60].ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             #endregion
             #region Wonders
@@ -538,14 +538,14 @@ namespace civ2
                 // City number with the wonder
                 intVal1 = bytes[266 + 2 * i];
                 intVal2 = bytes[266 + 2 * i + 1];
-                data.WonderCity[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.WonderCity[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Determine if wonder is built/destroyed
-                if (data.WonderCity[i] == 65535) //FFFF(hex)
+                if (data.WonderCity[i] == -1)   // 0xFFFF
                 {
                     data.WonderBuilt[i] = false;
                 }
-                else if (data.WonderCity[i] == 65279)    //FEFF(hex)
+                else if (data.WonderCity[i] == -2)    // 0xFEFF
                 {
                     data.WonderDestroyed[i] = true;
                 }
@@ -613,35 +613,35 @@ namespace civ2
             for (int i = 0; i < 8; i++) // for each civ
             {
                 // Gender (0=male, 2=female)
-                data.RulerGender[i] = bytes[2278 + 1428 * i + 1]; //2nd byte in tribe block
+                data.RulerGender[i] = bytes[2278 + 1428 * i + 1]; // 2nd byte in tribe block
 
                 // Money
-                intVal1 = bytes[2278 + 1428 * i + 2];    //3rd byte in tribe block
-                intVal2 = bytes[2278 + 1428 * i + 3];    //4th byte in tribe block
-                data.CivMoney[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                intVal1 = bytes[2278 + 1428 * i + 2];    // 3rd byte in tribe block
+                intVal2 = bytes[2278 + 1428 * i + 3];    // 4th byte in tribe block
+                data.CivMoney[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Tribe number as per @Leaders table in RULES.TXT
-                data.CivNumber[i] = bytes[2278 + 1428 * i + 6];    //7th byte in tribe block
+                data.CivNumber[i] = bytes[2278 + 1428 * i + 6];    // 7th byte in tribe block
 
                 // Research progress
-                intVal1 = bytes[2278 + 1428 * i + 8];    //9th byte in tribe block
-                intVal2 = bytes[2278 + 1428 * i + 9];    //10th byte in tribe block
-                data.CivResearchProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                intVal1 = bytes[2278 + 1428 * i + 8];    // 9th byte in tribe block
+                intVal2 = bytes[2278 + 1428 * i + 9];    // 10th byte in tribe block
+                data.CivResearchProgress[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Tech currently being researched
-                data.CivResearchingTech[i] = bytes[2278 + 1428 * i + 10]; //11th byte in tribe block (FF(hex) = no goal)
+                data.CivResearchingTech[i] = bytes[2278 + 1428 * i + 10]; // 11th byte in tribe block (FF(hex) = no goal)
 
                 // Science rate (%/10)
-                data.CivSciRate[i] = bytes[2278 + 1428 * i + 19]; //20th byte in tribe block
+                data.CivSciRate[i] = bytes[2278 + 1428 * i + 19]; // 20th byte in tribe block
 
                 // Tax rate (%/10)
-                data.CivTaxRate[i] = bytes[2278 + 1428 * i + 20]; //21st byte in tribe block
+                data.CivTaxRate[i] = bytes[2278 + 1428 * i + 20]; // 21st byte in tribe block
 
                 // Government
-                data.CivGovernment[i] = bytes[2278 + 1428 * i + 21]; //22nd byte in tribe block (0=anarchy, ...)
+                data.CivGovernment[i] = bytes[2278 + 1428 * i + 21]; // 22nd byte in tribe block (0=anarchy, ...)
 
                 // Reputation
-                data.CivReputation[i] = bytes[2278 + 1428 * i + 30]; //31st byte in tribe block
+                data.CivReputation[i] = bytes[2278 + 1428 * i + 30]; // 31st byte in tribe block
 
                 // Treaties
                 // ..... TO-DO .....
@@ -698,37 +698,37 @@ namespace civ2
             // Map X dimension
             intVal1 = bytes[ofset + 0];
             intVal2 = bytes[ofset + 1];
-            data.MapXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
+            data.MapXdim = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
 
             // Map Y dimension
             intVal1 = bytes[ofset + 2];
             intVal2 = bytes[ofset + 3];
-            data.MapYdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.MapYdim = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Map area:
             intVal1 = bytes[ofset + 4];
             intVal2 = bytes[ofset + 5];
-            data.MapArea = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.MapArea = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //// Flat Earth flag (info already given before!!)
             //intVal1 = bytes[ofset + 6];
             //intVal2 = bytes[ofset + 7];
-            //flatEarth = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            //flatEarth = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Map seed
             intVal1 = bytes[ofset + 8];
             intVal2 = bytes[ofset + 9];
-            data.MapSeed = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.MapSeed = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Locator map X dimension
             intVal1 = bytes[ofset + 10];
             intVal2 = bytes[ofset + 11];
-            data.MapLocatorXdim = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
+            data.MapLocatorXdim = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
 
             // Locator map Y dimension
             int intValue11 = bytes[ofset + 12];
             int intValue12 = bytes[ofset + 13];
-            data.MapLocatorYdim = int.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.MapLocatorYdim = short.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Initialize Terrain array now that you know its size
             //TerrainTile = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
@@ -849,14 +849,14 @@ namespace civ2
                 // Unit X location
                 intVal1 = bytes[ofsetU + multipl * i + 0];
                 intVal2 = bytes[ofsetU + multipl * i + 1];
-                data.UnitXloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.UnitXloc[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 data.UnitDead[i] = GetBit(bytes[ofsetU + multipl * i + 1], 0);    // Unit is inactive (dead) if the value of X-Y is negative (1st bit = 1)
 
                 // Unit Y location
                 intVal1 = bytes[ofsetU + multipl * i + 2];
                 intVal2 = bytes[ofsetU + multipl * i + 3];
-                data.UnitYloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.UnitYloc[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 data.UnitFirstMove[i] = GetBit(bytes[ofsetU + multipl * i + 4], 1);         // If this is the unit's first move
                 data.UnitGreyStarShield[i] = GetBit(bytes[ofsetU + multipl * i + 5], 0);    // Grey star to the shield
@@ -873,22 +873,22 @@ namespace civ2
                 // Unit go-to X
                 intVal1 = bytes[ofsetU + multipl * i + 18];
                 intVal2 = bytes[ofsetU + multipl * i + 19];
-                data.UnitGotoX[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.UnitGotoX[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Unit go-to Y
                 intVal1 = bytes[ofsetU + multipl * i + 20];
                 intVal2 = bytes[ofsetU + multipl * i + 21];
-                data.UnitGotoY[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.UnitGotoY[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Unit link to other units on top of it
                 intVal1 = bytes[ofsetU + multipl * i + 22];
                 intVal2 = bytes[ofsetU + multipl * i + 23];
-                data.UnitLinkOtherUnitsOnTop[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.UnitLinkOtherUnitsOnTop[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Unit link to other units under it
                 intVal1 = bytes[ofsetU + multipl * i + 24];
                 intVal2 = bytes[ofsetU + multipl * i + 25];
-                data.UnitLinkOtherUnitsUnder[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.UnitLinkOtherUnitsUnder[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
             }
             #endregion
             #region Cities
@@ -941,12 +941,12 @@ namespace civ2
                 // City X location
                 intVal1 = bytes[ofsetC + multipl * i + 0];
                 intVal2 = bytes[ofsetC + multipl * i + 1];
-                data.CityXloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityXloc[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // City Y location
                 intVal1 = bytes[ofsetC + multipl * i + 2];
                 intVal2 = bytes[ofsetC + multipl * i + 3];
-                data.CityYloc[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityYloc[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 data.CityCanBuildCoastal[i] = GetBit(bytes[ofsetC + multipl * i + 4], 0);    // Can build coastal improvements
                 data.CityAutobuildMilitaryRule[i] = GetBit(bytes[ofsetC + multipl * i + 4], 3);    // Auto build under military rule
@@ -971,17 +971,17 @@ namespace civ2
                 // Food in storage
                 intVal1 = bytes[ofsetC + multipl * i + 26];
                 intVal2 = bytes[ofsetC + multipl * i + 27];
-                data.CityFoodInStorage[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityFoodInStorage[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Shield progress
                 intVal1 = bytes[ofsetC + multipl * i + 28];
                 intVal2 = bytes[ofsetC + multipl * i + 29];
-                data.CityShieldsProgress[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityShieldsProgress[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Net trade
                 intVal1 = bytes[ofsetC + multipl * i + 30];
                 intVal2 = bytes[ofsetC + multipl * i + 31];
-                data.CityNetTrade[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityNetTrade[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Name        
                 for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
@@ -1045,17 +1045,17 @@ namespace civ2
                 // Science
                 intVal1 = bytes[ofsetC + multipl * i + 74];
                 intVal2 = bytes[ofsetC + multipl * i + 75];
-                data.CityScience[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityScience[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Tax
                 intVal1 = bytes[ofsetC + multipl * i + 76];
                 intVal2 = bytes[ofsetC + multipl * i + 77];
-                data.CityTax[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityTax[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // No of trade icons
                 intVal1 = bytes[ofsetC + multipl * i + 78];
                 intVal2 = bytes[ofsetC + multipl * i + 79];
-                data.CityNoOfTradeIcons[i] = int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                data.CityNoOfTradeIcons[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 data.CityFoodProduction[i] = bytes[ofsetC + multipl * i + 80];  // Total food production
 
@@ -1086,16 +1086,21 @@ namespace civ2
             intVal2 = bytes[ofsetO + 64];
             intVal3 = bytes[ofsetO + 65];
             intVal4 = bytes[ofsetO + 66];
-            data.ActiveCursorXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), 
-                                              int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+            data.ActiveCursorXY = new int[] { short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber),
+                                              short.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
             // Clicked tile with your mouse XY position (does not count if you clicked on a city)
             intVal1 = bytes[ofsetO + 1425];
             intVal2 = bytes[ofsetO + 1426];
             intVal3 = bytes[ofsetO + 1427];
             intVal4 = bytes[ofsetO + 1428];
-            data.ClickedXY = new int[] { int.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber), 
-                                         int.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+            data.ClickedXY = new int[] { short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber),
+                                         short.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
+
+            // Zoom (returns -7...+8, add 8 for it to return 1...16)
+            intVal1 = bytes[ofsetO + 1429];
+            intVal2 = bytes[ofsetO + 1430];
+            data.Zoom = 8 + short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             #endregion
         }

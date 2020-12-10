@@ -18,7 +18,7 @@ namespace civ2.Bitmaps
             Bitmap mapPic = new Bitmap(64 * Map.Xdim + 32, 32 * Map.Ydim + 16);
 
             // Draw map
-            int zoom = 8;   // Default zoom
+            int zoom = 0;   // Default zoom
             using (Graphics g = Graphics.FromImage(mapPic))
             {
                 // Define starting and ending coords for drawing

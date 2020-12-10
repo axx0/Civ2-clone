@@ -335,7 +335,7 @@ namespace civ2.Units
         {
             get
             {
-                return Draw.Unit(this, IsInStack, Game.ZoomLvl);
+                return Draw.Unit(this, IsInStack, Game.Zoom);
             }
             //get
             //{
