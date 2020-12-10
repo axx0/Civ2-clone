@@ -1097,10 +1097,10 @@ namespace civ2
             data.ClickedXY = new int[] { short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber),
                                          short.Parse(string.Concat(intVal4.ToString("X"), intVal3.ToString("X")), System.Globalization.NumberStyles.HexNumber) };
 
-            // Zoom (returns -7...+8, add 8 for it to return 1...16)
+            // Zoom (=-7(min)...+8(max), 0=std.)
             intVal1 = bytes[ofsetO + 1429];
             intVal2 = bytes[ofsetO + 1430];
-            data.Zoom = 8 + short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+            data.Zoom = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             #endregion
         }

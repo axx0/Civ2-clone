@@ -43,7 +43,8 @@ namespace civ2.Forms
                 Location = new Point(11, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 23, 23)
+                //BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 23, 23)
+                BackgroundImage = Images.ZoomIN
             };
             ZoomINButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomINButton);
@@ -54,7 +55,8 @@ namespace civ2.Forms
                 Location = new Point(36, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 23, 23)
+                //BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 23, 23)
+                BackgroundImage = Images.ZoomOUT
             };
             ZoomOUTButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomOUTButton);
@@ -90,10 +92,7 @@ namespace civ2.Forms
                 AnimType = AnimationType.UnitWaiting;
             }
 
-            //CenterSqXY = Game.ClickedXY;
             MapViewChange(Game.ClickedXY);  // Center the map view
-            //TODO: when game starts make sure revealed map is either for current player's civ view or whole map is revealed
-            //TODO: Implement zoom
 
             // Timer for waiting unit/ viewing piece
             Timer = new System.Windows.Forms.Timer();
@@ -118,24 +117,23 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Calculate these once just for less computations
-            int[] drawingSqXY = DrawingSqXY;
-            int[] startingSqXY = StartingSqXY;
-            int[] edgePxDrawOffsetXY = EdgePxDrawOffsetXY;
-            int[] activeXY = ActiveXY;
-            int[] centerSqXY = CenterSqXY;
+            //int[] startingSqXY = StartingSqXY;
+            int[] startingSqXYpx = StartingSqXYpx;
+            //int[] activeXY = ActiveXY;
+            int[] activeXYpx = ActiveXYpx;
 
-            Bitmap map = Game.MapRevealed ? Map.Graphic[8] : Map.Graphic[Game.WhichCivsMapShown];
+            Bitmap map = Game.MapRevealed ? Map.Graphic(8, Game.Zoom) : Map.Graphic(Game.WhichCivsMapShown, Game.Zoom);
 
-            if (startingSqXY[0] < 0)
+            if (startingSqXYpx[0] < 0)
             {
-                Rectangle rect1 = new Rectangle((2 * Map.Xdim + startingSqXY[0]) * 32, startingSqXY[1] * 16, -startingSqXY[0] * 32, DrawPanel.Height);
-                Rectangle rect2 = new Rectangle(0, startingSqXY[1] * 16, DrawPanel.Width + startingSqXY[0] * 32, DrawPanel.Height);
+                Rectangle rect1 = new Rectangle(MapXdimPx + startingSqXYpx[0], startingSqXYpx[1], -startingSqXYpx[0], DrawPanel.Height);
+                Rectangle rect2 = new Rectangle(0, startingSqXYpx[1], DrawPanel.Width + startingSqXYpx[0], DrawPanel.Height);
                 e.Graphics.DrawImage(map, 0, 0, rect1, GraphicsUnit.Pixel);
-                e.Graphics.DrawImage(map, -startingSqXY[0] * 32, 0, rect2, GraphicsUnit.Pixel);
+                e.Graphics.DrawImage(map, -startingSqXYpx[0], 0, rect2, GraphicsUnit.Pixel);
             }
             else
             {
-                Rectangle rect = new Rectangle(startingSqXY[0] * 32, startingSqXY[1] * 16, DrawPanel.Width, DrawPanel.Height);
+                Rectangle rect = new Rectangle(startingSqXYpx[0], startingSqXYpx[1], DrawPanel.Width, DrawPanel.Height);
                 e.Graphics.DrawImage(map, 0, 0, rect, GraphicsUnit.Pixel);
             }
 
@@ -146,18 +144,18 @@ namespace civ2.Forms
                 case AnimationType.UnitWaiting:
                     {
                         IUnit unit = Game.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], (unit.X - startingSqXY[0]) * 32, (unit.Y - startingSqXY[1]) * 16 - 16);
+                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], unit.Xpx - startingSqXYpx[0], unit.Ypx - startingSqXYpx[1]);
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
                         IUnit unit = Game.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[Game.ActiveUnit.MovementCounter], (unit.LastXY[0] - startingSqXY[0]) * 32 - 64, (unit.LastXY[1] - startingSqXY[1]) * 16 - 48);
+                        e.Graphics.DrawImage(AnimationBitmap[Game.ActiveUnit.MovementCounter], unit.LastXYpx[0] - startingSqXYpx[0] - 8 * (Game.Zoom + 8), unit.LastXYpx[1] - startingSqXYpx[1] - 4 * (Game.Zoom + 8));
                         break;
                     }
                 case AnimationType.ViewPieces:
                     {
-                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, 32 * (activeXY[0] - startingSqXY[0]), 16 * (activeXY[1] - startingSqXY[1]), 64, 32);
+                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, activeXYpx[0] - startingSqXYpx[0], activeXYpx[1] - startingSqXYpx[1]);
                         break;
                     }
             }
@@ -242,7 +240,9 @@ namespace civ2.Forms
             }
         }
 
-        private int[] StartingSqXYpx => new int[] {};
+        private int[] StartingSqXYpx => new int[] { StartingSqXY[0] * 4 * (8 + Game.Zoom), StartingSqXY[1] * 2 * (8 + Game.Zoom) };
+        private int MapXdimPx => 2 * Map.Xdim * 4 * (8 + Game.Zoom);
+        private int MapYdimPx => Map.Ydim * 2 * (8 + Game.Zoom);
 
         // Determines offset to StartingSqXY for drawing of squares on panel edge { left, up, right, down }
         private int[] _edgePxDrawOffsetXY;
@@ -354,6 +354,8 @@ namespace civ2.Forms
             }
             set { _activeXY = value; }
         }
+
+        private int[] ActiveXYpx => new int[] { 4 * (Game.Zoom + 8) * ActiveXY[0], 2 * (Game.Zoom + 8) * ActiveXY[1] };
         #endregion
 
         public static bool ViewPiecesMode { get; set; }

@@ -44,6 +44,8 @@ namespace civ2.Units
         OrderType Order { get; set; }
         int X { get; set; }
         int Y { get; set; }
+        int Xpx { get; }
+        int Ypx { get; }
         int MovementCounter { get; set; }
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
@@ -58,6 +60,7 @@ namespace civ2.Units
         int LinkOtherUnitsUnder { get; set; }
         int Counter { get; set; }
         int[] LastXY { get; set; }
+        int[] LastXYpx { get; }
         void BuildCity();
         void BuildRoad();
         void BuildMines();

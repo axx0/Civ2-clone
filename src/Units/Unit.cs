@@ -86,6 +86,8 @@ namespace civ2.Units
         public int X { get; set; }
         public int Y { get; set; }
         public int MovementCounter { get; set; }
+        public int Xpx => 4 * X * (Game.Zoom + 8);
+        public int Ypx => 2 * (Y - 1) * (Game.Zoom + 8);
 
         public bool Move(OrderType movementDirection)
         {
@@ -224,6 +226,7 @@ namespace civ2.Units
         }
 
         public int[] LastXY { get; set; }   //XY position of unit before it moved
+        public int[] LastXYpx => new int[] { 4 * LastXY[0] * (Game.Zoom + 8), 2 * (LastXY[1] - 1) * (Game.Zoom + 8) };
 
         private bool _turnEnded;
         public bool TurnEnded
@@ -243,7 +246,7 @@ namespace civ2.Units
         {
             get
             {
-                _awaitingOrders = (Order == OrderType.NoOrders || Order == OrderType.GoTo) ? true : false;
+                _awaitingOrders = Order == OrderType.NoOrders || Order == OrderType.GoTo;
                 if (TurnEnded) _awaitingOrders = false;
                 return _awaitingOrders;
             }

@@ -127,7 +127,7 @@ namespace civ2.Bitmaps
                 sf.Dispose();
             }
 
-            cityPic = ModifyImage.ResizeImage(cityPic, 8 * (8 + zoom), 6 * (8 + zoom));
+            cityPic = ModifyImage.ResizeImage(cityPic, zoom);
 
             return cityPic;
         }

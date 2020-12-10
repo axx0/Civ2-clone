@@ -15,7 +15,7 @@ namespace civ2.Bitmaps
         public static Bitmap DrawMap(int civ, bool flatEarth)
         {
             // Define a bitmap for drawing
-            Bitmap mapPic = new Bitmap(64 * Map.Xdim + 32, 32 * Map.Ydim + 16);
+            Bitmap mapPic = new Bitmap(32 * (2 * Map.Xdim + 1), 16 * (2 * Map.Ydim + 1));
 
             // Draw map
             int zoom = 0;   // Default zoom
