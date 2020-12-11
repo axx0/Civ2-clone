@@ -92,7 +92,6 @@ namespace civ2.Forms
                 AnimType = AnimationType.UnitWaiting;
             }
 
-            ReturnCoordsAtMapViewChange(Game.ClickedXY);
             MapViewChange(Game.ClickedXY);  // Center the map view
 
             // Timer for waiting unit/ viewing piece
@@ -311,7 +310,14 @@ namespace civ2.Forms
                 int[] _startingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
                 int[] drawingSqXY = DrawingSqXY;
 
+                int mapWidth = 4 * (8 + Game.Zoom) * (2 * Map.Xdim + 1);
+                int mapHeight = 2 * (8 + Game.Zoom) * (2 * Map.Ydim + 1);
 
+                // First determine the Y-central coordinate
+                if (mapWidth < DrawPanel.Height)    // Center the map in panel center
+                {
+                    
+                }
 
                 // Limit movement so that map limits are not exceeded
                 if (Game.Options.FlatEarth)
@@ -586,59 +592,7 @@ namespace civ2.Forms
         // Function which sets various XY variables for drawing map on grid
         private void ReturnCoordsAtMapViewChange(int[] proposedCentralCoords)
         {
-            int[] PanelOffsetXYpx = new int[] { 0, 0 }; // Offset of NW point of panel from maps NW point (>0 if panel is larger than map)
-            int[] CentralXY = proposedCentralCoords;    // Central point of Draw Panel (in map's coordinates)
-            Rectangle mapRect1 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 1st part of map
-            Rectangle mapRect2 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 2nd part of map
 
-            int mapWidth = 4 * (8 + Game.Zoom) * (2 * Map.Xdim + 1);
-            int mapHeight = 2 * (8 + Game.Zoom) * (2 * Map.Ydim + 1);
-
-            // No of squares of panel and map
-            int[] PanelSq = new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * (8 + Game.Zoom))), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * (8 + Game.Zoom))) };
-            int[] MapSq = new int[] { 2 * Map.Xdim + 1, 2 * Map.Ydim + 1 };
-
-            // First determine the Y-central coordinate
-            if (PanelSq[1] > MapSq[1])    // Panel is larger than map in Y, center the map in panel center
-            {
-                PanelOffsetXYpx[1] = 2 * (8 + Game.Zoom) * (PanelSq[1] - MapSq[1]) / 2;
-                CentralXY[1] = MapSq[1] / 2;
-                mapRect1.Y = 0;
-                mapRect1.Height = mapHeight;
-            }
-            else    // Map larger than panel
-            {
-                if (CentralXY[1] < PanelSq[1] / 2)    // Limit Drawing Panel so it's not going beyond the map in north
-                {
-                    CentralXY[1] = PanelSq[1] / 2;
-                    PanelOffsetXYpx[1] = 0;
-                    mapRect1.Y = 0;
-                    mapRect1.Height = DrawPanel.Height;
-                }                    
-                else if (CentralXY[1] > MapSq[1] - PanelSq[1] / 2)  // Limit Drawing Panel so it's not going below the map in south
-                {
-                    CentralXY[1] = MapSq[1] - PanelSq[1] / 2;
-                    PanelOffsetXYpx[1] = DrawPanel.Height - mapHeight;
-                    mapRect1.Y = -PanelOffsetXYpx[1];
-                    mapRect1.Height = DrawPanel.Height;
-                }
-                else    // Drawing panel within map (Y-axis)
-                {
-                    CentralXY[1] = MapSq[1] - PanelSq[1] / 2;
-                    PanelOffsetXYpx[1] = 2 * (8 + Game.Zoom) * (PanelSq[1] / 2 - CentralXY[1]);
-                    mapRect1.Y = -PanelOffsetXYpx[1];
-                    mapRect1.Height = DrawPanel.Height;
-                }
-            }
-
-            // Then determine X-coordinate
-            if (PanelSq[0] > MapSq[0])    // Panel is larger than map in X, center the map in panel center
-            {
-                PanelOffsetXYpx[1] = 2 * (8 + Game.Zoom) * (PanelSq[1] - MapSq[1]) / 2;
-                CentralXY[1] = MapSq[1] / 2;
-                mapRect1.Y = 0;
-                mapRect1.Height = mapHeight;
-            }
         }
     }
 }
