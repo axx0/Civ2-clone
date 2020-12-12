@@ -4,10 +4,10 @@
     {
         // START GAME RULES
         public bool SimplifiedCombat { get; private set; }
-        public bool FlatEarth { get; private set; }
         public bool Bloodlust { get; private set; }
         public bool DontRestartIfEliminated { get; private set; }
-
+        public bool FlatEarth { get; private set; }
+        
         // GAME OPTIONS
         public bool SoundEffects { get; set; }
         public bool Music { get; set; }
@@ -48,41 +48,42 @@
 
         public void Set(bool[] optionsArray)
         {
-            Bloodlust = optionsArray[0];
-            SimplifiedCombat = optionsArray[1];
-            FlatEarth = optionsArray[2];
-            DontRestartIfEliminated = optionsArray[3];
-            SoundEffects = optionsArray[4];
-            Music = optionsArray[5];
-            CheatMenu = optionsArray[6];
-            AlwaysWaitAtEndOfTurn = optionsArray[7];
-            AutosaveEachTurn = optionsArray[8];
-            ShowEnemyMoves = optionsArray[9];
-            NoPauseAfterEnemyMoves = optionsArray[10];
+            SimplifiedCombat = optionsArray[0];
+            Bloodlust = optionsArray[1];
+            DontRestartIfEliminated = optionsArray[2];
+            FlatEarth = optionsArray[3];
+            Music = optionsArray[4];
+            SoundEffects = optionsArray[5];
+            Grid = optionsArray[6];
+            EnterClosestCityScreen = optionsArray[7];
+            MoveUnitsWithoutMouse = optionsArray[8];
+            TutorialHelp = optionsArray[9];
+            InstantAdvice = optionsArray[10];
             FastPieceSlide = optionsArray[11];
-            InstantAdvice = optionsArray[12];
-            TutorialHelp = optionsArray[13];
-            EnterClosestCityScreen = optionsArray[14];
-            MoveUnitsWithoutMouse = optionsArray[15];
-            ThroneRoomGraphics = optionsArray[16];
-            DiplomacyScreenGraphics = optionsArray[17];
-            AnimatedHeralds = optionsArray[18];
-            CivilopediaForAdvances = optionsArray[19];
-            HighCouncil = optionsArray[20];
-            WonderMovies = optionsArray[21];
-            WarnWhenCityGrowthHalted = optionsArray[22];
-            ShowCityImprovementsBuilt = optionsArray[23];
-            ShowNonCombatUnitsBuilt = optionsArray[24];
-            ShowInvalidBuildInstructions = optionsArray[25];
-            AnnounceCitiesInDisorder = optionsArray[26];
-            AnnounceOrderRestored = optionsArray[27];
-            AnnounceWeLoveKingDay = optionsArray[28];
-            WarnWhenFoodDangerouslyLow = optionsArray[29];
-            WarnWhenPollutionOccurs = optionsArray[30];
-            WarnChangProductWillCostShields = optionsArray[31];
-            ZoomToCityNotDefaultAction = optionsArray[32];
-            CheatPenaltyWarning = optionsArray[33];
-            Grid = optionsArray[34];
+            NoPauseAfterEnemyMoves = optionsArray[12];
+            ShowEnemyMoves = optionsArray[13];
+            AutosaveEachTurn = optionsArray[14];
+            AlwaysWaitAtEndOfTurn = optionsArray[15];
+            CheatMenu = optionsArray[16];
+            WonderMovies = optionsArray[17];
+            DiplomacyScreenGraphics = optionsArray[18];
+            ThroneRoomGraphics = optionsArray[19];
+            CivilopediaForAdvances = optionsArray[20];
+            HighCouncil = optionsArray[21];
+            AnimatedHeralds = optionsArray[22];
+            CheatPenaltyWarning = optionsArray[23];
+            ShowCityImprovementsBuilt = optionsArray[24];
+            WarnWhenCityGrowthHalted = optionsArray[25];
+            ShowInvalidBuildInstructions = optionsArray[26];
+            ShowNonCombatUnitsBuilt = optionsArray[27];
+            AnnounceOrderRestored = optionsArray[28];
+            AnnounceCitiesInDisorder = optionsArray[29];
+            WarnWhenFoodDangerouslyLow = optionsArray[30];
+            AnnounceWeLoveKingDay = optionsArray[31];
+            WarnChangProductWillCostShields = optionsArray[32];
+            WarnWhenPollutionOccurs = optionsArray[33];
+            ZoomToCityNotDefaultAction = optionsArray[34];
+            
         }
     }
 }
