@@ -24,6 +24,9 @@ namespace civ2.Forms
         private int TimerCounter { get; set; }
         //Label HelpLabel;
 
+        private int[] PanelOffsetXYpx, CentralXY;
+        private Rectangle mapRect1, mapRect2;
+
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public MapPanel(int _width, int _height) : base(_width, _height, "", false)
@@ -127,18 +130,19 @@ namespace civ2.Forms
 
             Bitmap map = Game.MapRevealed ? Map.Graphic(8, Game.Zoom) : Map.Graphic(Game.WhichCivsMapShown, Game.Zoom);
 
-            if (startingSqXYpx[0] < 0)
-            {
-                Rectangle rect1 = new Rectangle(MapXdimPx + startingSqXYpx[0], startingSqXYpx[1], -startingSqXYpx[0], DrawPanel.Height);
-                Rectangle rect2 = new Rectangle(0, startingSqXYpx[1], DrawPanel.Width + startingSqXYpx[0], DrawPanel.Height);
-                e.Graphics.DrawImage(map, 0, 0, rect1, GraphicsUnit.Pixel);
-                e.Graphics.DrawImage(map, -startingSqXYpx[0], 0, rect2, GraphicsUnit.Pixel);
-            }
-            else
-            {
-                Rectangle rect = new Rectangle(startingSqXYpx[0], startingSqXYpx[1], DrawPanel.Width, DrawPanel.Height);
-                e.Graphics.DrawImage(map, 0, 0, rect, GraphicsUnit.Pixel);
-            }
+            //if (startingSqXYpx[0] < 0)
+            //{
+            //    Rectangle rect1 = new Rectangle(MapXdimPx + startingSqXYpx[0], startingSqXYpx[1], -startingSqXYpx[0], DrawPanel.Height);
+            //    Rectangle rect2 = new Rectangle(0, startingSqXYpx[1], DrawPanel.Width + startingSqXYpx[0], DrawPanel.Height);
+            //    e.Graphics.DrawImage(map, 0, 0, rect1, GraphicsUnit.Pixel);
+            //    e.Graphics.DrawImage(map, -startingSqXYpx[0], 0, rect2, GraphicsUnit.Pixel);
+            //}
+            //else
+            //{
+            //    Rectangle rect = new Rectangle(startingSqXYpx[0], startingSqXYpx[1], DrawPanel.Width, DrawPanel.Height);
+            //    e.Graphics.DrawImage(map, 0, 0, rect, GraphicsUnit.Pixel);
+            //}
+            e.Graphics.DrawImage(map, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
 
 
             // Unit/viewing piece static
@@ -586,10 +590,10 @@ namespace civ2.Forms
         // Function which sets various XY variables for drawing map on grid
         private void ReturnCoordsAtMapViewChange(int[] proposedCentralCoords)
         {
-            int[] PanelOffsetXYpx = new int[] { 0, 0 }; // Offset of NW point of panel from maps NW point (>0 if panel is larger than map)
-            int[] CentralXY = proposedCentralCoords;    // Central point of Draw Panel (in map's coordinates)
-            Rectangle mapRect1 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 1st part of map
-            Rectangle mapRect2 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 2nd part of map
+            PanelOffsetXYpx = new int[] { 0, 0 }; // Offset of NW point of panel from maps NW point (>0 if panel is larger than map)
+            CentralXY = proposedCentralCoords;    // Central point of Draw Panel (in map's coordinates)
+            mapRect1 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 1st part of map
+            mapRect2 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 2nd part of map
 
             int mapWidth = 4 * (8 + Game.Zoom) * (2 * Map.Xdim + 1);
             int mapHeight = 2 * (8 + Game.Zoom) * (2 * Map.Ydim + 1);
@@ -606,27 +610,24 @@ namespace civ2.Forms
                 mapRect1.Y = 0;
                 mapRect1.Height = mapHeight;
             }
-            else    // Map larger than panel
+            else    // Map higher than panel
             {
+                PanelOffsetXYpx[1] = 0;
                 if (CentralXY[1] < PanelSq[1] / 2)    // Limit Drawing Panel so it's not going beyond the map in north
                 {
                     CentralXY[1] = PanelSq[1] / 2;
-                    PanelOffsetXYpx[1] = 0;
                     mapRect1.Y = 0;
                     mapRect1.Height = DrawPanel.Height;
                 }                    
                 else if (CentralXY[1] > MapSq[1] - PanelSq[1] / 2)  // Limit Drawing Panel so it's not going below the map in south
                 {
                     CentralXY[1] = MapSq[1] - PanelSq[1] / 2;
-                    PanelOffsetXYpx[1] = DrawPanel.Height - mapHeight;
-                    mapRect1.Y = -PanelOffsetXYpx[1];
+                    mapRect1.Y = mapHeight - DrawPanel.Height;
                     mapRect1.Height = DrawPanel.Height;
                 }
                 else    // Drawing panel within map (Y-axis)
                 {
-                    CentralXY[1] = MapSq[1] - PanelSq[1] / 2;
-                    PanelOffsetXYpx[1] = 2 * (8 + Game.Zoom) * (PanelSq[1] / 2 - CentralXY[1]);
-                    mapRect1.Y = -PanelOffsetXYpx[1];
+                    mapRect1.Y = 2 * (8 + Game.Zoom) * (CentralXY[1] - PanelSq[1] / 2);
                     mapRect1.Height = DrawPanel.Height;
                 }
             }
@@ -634,10 +635,55 @@ namespace civ2.Forms
             // Then determine X-coordinate
             if (PanelSq[0] > MapSq[0])    // Panel is larger than map in X, center the map in panel center
             {
-                PanelOffsetXYpx[1] = 2 * (8 + Game.Zoom) * (PanelSq[1] - MapSq[1]) / 2;
-                CentralXY[1] = MapSq[1] / 2;
-                mapRect1.Y = 0;
-                mapRect1.Height = mapHeight;
+                PanelOffsetXYpx[0] = 4 * (8 + Game.Zoom) * (PanelSq[0] - MapSq[0]) / 2;
+                CentralXY[0] = MapSq[0] / 2;
+                mapRect1.X = 0;
+                mapRect1.Width = mapWidth;
+
+                // If the tile at these coords doesn't exist, shift X to the right
+                if (CentralXY[0] % 2 != 0 && CentralXY[1] % 2 == 0) CentralXY[0]++;
+                if (CentralXY[0] % 2 == 0 && CentralXY[1] % 2 != 0) CentralXY[0]++;
+            }
+            else    // Map wider than panel
+            {
+                PanelOffsetXYpx[0] = 0;
+
+                if (Game.Options.FlatEarth)
+                {
+                    if (CentralXY[0] < PanelSq[1] / 2)  // Limit Drawing Panel so it's not going beyond the map in west
+                    {
+                        // If the tile at these coords doesn't exist, shift X to the right
+                        if (CentralXY[0] % 2 != 0 && CentralXY[1] % 2 == 0) CentralXY[0]++;
+                        if (CentralXY[0] % 2 == 0 && CentralXY[1] % 2 != 0) CentralXY[0]++;
+
+                        CentralXY[0] = PanelSq[0] / 2;
+                        mapRect1.X = 0;
+                        mapRect1.Width = DrawPanel.Width;
+                    }
+                    else if (CentralXY[0] > MapSq[0] - PanelSq[0] / 2)  // Limit Drawing Panel so it's not going below the map in east
+                    {
+                        // If the tile at these coords doesn't exist, shift X to the right
+                        if (CentralXY[0] % 2 != 0 && CentralXY[1] % 2 == 0) CentralXY[0]++;
+                        if (CentralXY[0] % 2 == 0 && CentralXY[1] % 2 != 0) CentralXY[0]++;
+
+                        CentralXY[0] = MapSq[0] - PanelSq[0] / 2;
+                        mapRect1.X = mapWidth - DrawPanel.Width;
+                        mapRect1.Width = DrawPanel.Width;
+                    }
+                    else    // Drawing panel within map (X-axis)
+                    {
+                        // If the tile at these coords doesn't exist, shift X to the right
+                        if (CentralXY[0] % 2 != 0 && CentralXY[1] % 2 == 0) CentralXY[0]++;
+                        if (CentralXY[0] % 2 == 0 && CentralXY[1] % 2 != 0) CentralXY[0]++;
+
+                        mapRect1.X = 4 * (8 + Game.Zoom) * (CentralXY[0] - PanelSq[0] / 2);
+                        mapRect1.Width = DrawPanel.Width;
+                    }
+                }
+                else    // Round world
+                {
+
+                }
             }
         }
     }
