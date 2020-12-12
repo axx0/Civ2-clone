@@ -22,7 +22,6 @@ namespace civ2.Forms
         private System.Windows.Forms.Timer Timer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         private AnimationType AnimType;
         private int TimerCounter { get; set; }
-        //Label HelpLabel;
 
         private int[] PanelOffsetXY, MapOffsetXY, CentralXY;
         private Rectangle mapRect1, mapRect2;
@@ -65,16 +64,6 @@ namespace civ2.Forms
             Controls.Add(ZoomOUTButton);
             ZoomOUTButton.Click += ZoomOUTclicked;
 
-            //Uncomment this for help in drawing-logic
-            //HelpLabel = new Label
-            //{
-            //    Location = new Point(1000, 50),
-            //    AutoSize = true,
-            //    BackColor = Color.White,
-            //    Text = "OK"
-            //};
-            //DrawPanel.Controls.Add(HelpLabel);
-
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
             DrawPanel.BackgroundImage = null;
@@ -95,13 +84,12 @@ namespace civ2.Forms
                 AnimType = AnimationType.UnitWaiting;
             }
 
-            //ReturnCoordsAtMapViewChange(Game.ClickedXY);
             MapViewChange(Game.ClickedXY);  // Center the map view
 
             // Timer for waiting unit/ viewing piece
-            //Timer = new System.Windows.Forms.Timer();
-            //Timer.Tick += new EventHandler(Timer_Tick);
-            //StartAnimation(AnimType);
+            Timer = new System.Windows.Forms.Timer();
+            Timer.Tick += new EventHandler(Timer_Tick);
+            StartAnimation(AnimType);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -134,14 +122,12 @@ namespace civ2.Forms
             e.Graphics.DrawImage(map, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
             e.Graphics.DrawImage(map, PanelOffsetXYpx[0] + mapRect1.Width, PanelOffsetXYpx[1], mapRect2, GraphicsUnit.Pixel);
 
-
-            // Unit/viewing piece static
+            // Draw animation
             switch (AnimType)
             {
                 case AnimationType.UnitWaiting:
                     {
-                        IUnit unit = Game.ActiveUnit;
-                        //e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], unit.Xpx - startingSqXYpx[0], unit.Ypx - startingSqXYpx[1]);
+                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], ActiveXYpx[0] - MapOffsetXYpx[0], ActiveXYpx[1] - MapOffsetXYpx[1]);
                         break;
                     }
                 case AnimationType.UnitMoving:
@@ -485,7 +471,7 @@ namespace civ2.Forms
                     TimerCounter = 0;
                     break;
                 case AnimationType.UnitWaiting:
-                    AnimType = AnimationType.UnitWaiting;
+                    //AnimType = AnimationType.UnitWaiting;
                     Timer.Stop();
                     AnimationBitmap = GetAnimationFrames.UnitWaiting();
                     TimerCounter = 0;
@@ -493,11 +479,11 @@ namespace civ2.Forms
                     Timer.Start();
                     break;
                 case AnimationType.UnitMoving:
-                    AnimType = AnimationType.UnitMoving;
+                    //AnimType = AnimationType.UnitMoving;
                     AnimationBitmap = GetAnimationFrames.UnitMoving();
                     break;
                 case AnimationType.ViewPieces:
-                    AnimType = AnimationType.ViewPieces;
+                    //AnimType = AnimationType.ViewPieces;
                     Timer.Stop();
                     TimerCounter = 0;
                     Timer.Interval = 200;    // ms                    
@@ -508,9 +494,6 @@ namespace civ2.Forms
 
         private void DrawAnimation()
         {
-            int[] startingSqXY = StartingSqXY;
-            int[] activeXY = ActiveXY;
-
             switch (AnimType)
             {
                 case AnimationType.UnitWaiting:
@@ -519,13 +502,13 @@ namespace civ2.Forms
                         if (TimerCounter == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32, (activeXY[1] - startingSqXY[1]) * 16 - 16, 64, 48));
+                            DrawPanel.Invalidate(new Rectangle((ActiveXY[0] - MapOffsetXY[0]) * 4 * (Game.Zoom + 8), (ActiveXY[1] - MapOffsetXY[1]) * 2 * (Game.Zoom + 8) - 2 * (Game.Zoom + 8), 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8)));
                         Update();
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
-                        DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32 - 64, (activeXY[1] - startingSqXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
+                        DrawPanel.Invalidate(new Rectangle((ActiveXY[0] - MapOffsetXY[0]) * 32 - 64, (ActiveXY[1] - MapOffsetXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
                         Update();
                         if (TimerCounter == 7)  // Unit has completed movement
                         {
@@ -557,7 +540,7 @@ namespace civ2.Forms
                         if (TimerCounter == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle((activeXY[0] - startingSqXY[0]) * 32, (activeXY[1] - startingSqXY[1]) * 16, 64, 32));
+                            DrawPanel.Invalidate(new Rectangle((ActiveXY[0] - MapOffsetXY[0]) * 32, (ActiveXY[1] - MapOffsetXY[1]) * 16, 64, 32));
                         Update();
                         break;
                     }
@@ -581,9 +564,9 @@ namespace civ2.Forms
         // Function which sets various variables for drawing map on grid
         private void ReturnCoordsAtMapViewChange(int[] proposedCentralCoords)
         {
+            CentralXY = proposedCentralCoords;    // Central point of Draw Panel (in map's coordinates)
             PanelOffsetXY = new int[] { 0, 0 }; // Offset of NW point of panel from maps NW point (=0 if map is larger than panel)
             MapOffsetXY = new int[] { 0, 0 }; // Offset of map NW point from panel NW point, in squares (=0 if panel is larger than map in any direction)
-            CentralXY = proposedCentralCoords;    // Central point of Draw Panel (in map's coordinates)
             mapRect1 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 1st part of map
             mapRect2 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 2nd part of map
 
