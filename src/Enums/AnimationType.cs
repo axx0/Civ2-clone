@@ -2,7 +2,7 @@
 {
     public enum AnimationType
     {
-        None = 0,
+        UpdateMap = 0,
         UnitWaiting = 1,
         UnitMoving = 2,
         ViewPieces

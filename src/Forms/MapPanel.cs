@@ -71,8 +71,11 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
             DrawPanel.MouseClick += DrawPanel_MouseClick;
 
-            // Initialize variables
+            // Center the map view and draw map
             MapGridVar = 0;
+            MapViewChange(Game.ClickedXY);
+            StartAnimation(AnimationType.UpdateMap);
+
             ViewPiecesMode = Game.ActiveUnit == null;  // If no unit is active at start (all units ended turn or no exist) go to View pieces mode
             if (ViewPiecesMode)
             {
@@ -83,8 +86,6 @@ namespace civ2.Forms
             {
                 AnimType = AnimationType.UnitWaiting;
             }
-
-            MapViewChange(Game.ClickedXY);  // Center the map view
 
             // Timer for waiting unit/ viewing piece
             Timer = new System.Windows.Forms.Timer();
@@ -117,13 +118,20 @@ namespace civ2.Forms
             //int[] activeXY = ActiveXY;
             int[] activeXYpx = ActiveXYpx;
 
-            // Draw map (for round world draw it from 2 parts)
-            e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
-            e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0] + mapRect1.Width, PanelOffsetXYpx[1], mapRect2, GraphicsUnit.Pixel);
-
             // Draw animation
             switch (AnimType)
             {
+                case AnimationType.UpdateMap:
+                    {
+                        // Draw map (for round world draw it from 2 parts)
+                        e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
+                        e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0] + mapRect1.Width, PanelOffsetXYpx[1], mapRect2, GraphicsUnit.Pixel);
+
+                        // For each map tile on screen draw cities & units
+
+
+                        break;
+                    }
                 case AnimationType.UnitWaiting:
                     {
                         e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], ActiveXYpx[0], ActiveXYpx[1]);
@@ -496,9 +504,10 @@ namespace civ2.Forms
         {
             switch (anim)
             {
-                case AnimationType.None:
+                case AnimationType.UpdateMap:
                     Timer.Stop();
                     TimerCounter = 0;
+                    DrawPanel.Invalidate();
                     break;
                 case AnimationType.UnitWaiting:
                     //AnimType = AnimationType.UnitWaiting;
@@ -532,7 +541,8 @@ namespace civ2.Forms
                         if (TimerCounter == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1] - 2 * (Game.Zoom + 8), 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8)));
+                            //DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1] - 2 * (Game.Zoom + 8), 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8)));
+                            DrawPanel.Invalidate(new Rectangle(0, 0, 64, 48));
                         Update();
                         break;
                     }
@@ -552,7 +562,7 @@ namespace civ2.Forms
                             Update();
 
                             // Then stop animation
-                            StartAnimation(AnimationType.None);
+                            StartAnimation(AnimationType.UpdateMap);
 
                             // Check if unit moved outside map view -> map view needs to be updated
                             if (UnitMovedOutsideMapView)
