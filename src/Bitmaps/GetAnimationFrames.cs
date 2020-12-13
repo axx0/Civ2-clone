@@ -9,137 +9,114 @@ namespace civ2.Bitmaps
 {
     public class GetAnimationFrames : BaseInstance
     {
-
-        //Get animation frames for waiting unit
+        // Get animation frames for waiting unit
         public static List<Bitmap> UnitWaiting()
         {
             List<Bitmap> animationFrames = new List<Bitmap>();
 
-            //Get coords of central tile & which squares are to be drawn
-            int[] centralCoords = Game.ActiveCursorXY;   //either from active unit or moving pieces
+            // Get coords of central tile & which squares are to be drawn
+            int[] centralCoords = Game.ActiveCursorXY;   // Either from active unit or moving pieces
             List<int[]> coordsOffsetsToBeDrawn = new List<int[]>
             {
-                new int[] {-2, -2},
                 new int[] {0, -2},
-                new int[] {2, -2},
                 new int[] {-1, -1},
                 new int[] {1, -1},
-                new int[] {-2, 0},
                 new int[] {0, 0},
-                new int[] {2, 0},
                 new int[] {-1, 1},
-                new int[] {1, 1},
-                new int[] {0, 2}
+                new int[] {1, 1}
+                //new int[] {2, -2},
+                //new int[] {-1, -1},
+                //new int[] {-2, 0},
+                //new int[] {2, 0},
+                //new int[] {1, 1},
+                //new int[] {0, 2}
             };
 
-            //Get 2 frames (one with and other without the active unit/moving piece)
+            // Get 2 frames (one with and other without the active unit/moving piece)
             for (int frame = 0; frame < 2; frame++)
             {
-                Bitmap _bitmap = new Bitmap(64, 48);
+                //Bitmap _bitmap = new Bitmap(64, 48);
+                Rectangle mapRect = new Rectangle(Game.ActiveCursorXYpx[0], Game.ActiveCursorXYpx[1], 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8));
+                Bitmap _bitmap = Map.ActiveCivMap.Clone(mapRect, System.Drawing.Imaging.PixelFormat.Format32bppArgb);   // Part of map which contains unit
                 using (Graphics g = Graphics.FromImage(_bitmap))
                 {
-                    g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 64, 48));    //fill bitmap with black (necessary for correct drawing if image is on upper map edge)
+                    //g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 64, 48));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
 
-                    int zoom = 8;
+
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
                         //change coords of central offset
                         int x = centralCoords[0] + coordsOffsets[0];
                         int y = centralCoords[1] + coordsOffsets[1];
+                        int[] coordsOffsetsPx = new int[] { coordsOffsets[0] * 4 * (Game.Zoom + 8), coordsOffsets[1] * 2 * (Game.Zoom + 8) };
 
-                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim)    //make sure you're not drawing tiles outside map bounds
+                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
+                        
+                        // Tiles
+                        //g.DrawImage(Map.TileC2(x, y).Graphic, 32 * coordsOffsets[0], 16 * coordsOffsets[1] + 16);
+
+                        // Units
+                        List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
+                        if (unitsHere.Any())
                         {
-                            //Tiles
-                            int[] realCoords = Ext.Civ2xy(new int[] { x, y });  //real coords from civ2 coords
-                            g.DrawImage(
-                                Map.Tile[realCoords[0], realCoords[1]].Graphic,
-                                32 * coordsOffsets[0],
-                                16 * coordsOffsets[1] + 16);
-
-                            //Units
-                            List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
-                            if (unitsHere.Any())
+                            IUnit unit;
+                            // If this is not tile with active unit or viewing piece, draw last unit on stack
+                            if (!(x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1]))
                             {
-                                IUnit unit;
-                                //If this is not tile with active unit or viewing piece, draw last unit on stack
-                                if (!(x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1]))
+                                unit = unitsHere.Last();
+                                if (!unit.IsInCity)
+                                    g.DrawImage(Draw.Unit(unit, unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+                            }
+                            // This tile has active unit/viewing piece
+                            else
+                            {
+                                // Viewing pieces mode is enabled, so draw last unit on stack
+                                if (MapPanel.ViewPiecesMode)
                                 {
                                     unit = unitsHere.Last();
                                     if (!unit.IsInCity)
-                                    {
-                                        g.DrawImage(
-                                            Draw.Unit(unit, unitsHere.Count() > 1, zoom),
-                                            32 * coordsOffsets[0],
-                                            16 * coordsOffsets[1]);
-                                    }
-                                }
-                                //This tile has active unit/viewing piece
-                                else
-                                {
-                                    //Viewing pieces mode is enabled, so draw last unit on stack
-                                    if (MapPanel.ViewPiecesMode)
-                                    {
-                                        unit = unitsHere.Last();
-                                        if (!unit.IsInCity)
-                                        {
-                                            g.DrawImage(
-                                                Draw.Unit(unit, unitsHere.Count() > 1, zoom),
-                                                32 * coordsOffsets[0],
-                                                16 * coordsOffsets[1]);
-                                        }
-                                    }
-                                }
-                            }
-
-                            //Cities
-                            City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                            if (city != null)
-                            {
-                                g.DrawImage(
-                                    Draw.City(city, true, 8),
-                                    32 * coordsOffsets[0],
-                                    16 * coordsOffsets[1]);
-                            }
-
-                            //Draw active unit if it's not moving
-                            if (unitsHere.Any())
-                            {
-                                //This tile has active unit/viewing piece
-                                if (x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1])
-                                {
-                                    if (!MapPanel.ViewPiecesMode)
-                                    {
-                                        if (frame == 0) //for first frame draw unit, for second not
-                                        {
-                                            g.DrawImage(
-                                                Draw.Unit(Game.Instance.ActiveUnit, unitsHere.Count() > 1, zoom),
-                                                32 * coordsOffsets[0],
-                                                16 * coordsOffsets[1]);
-                                        }
-                                    }
+                                        g.DrawImage(Draw.Unit(unit, unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
                                 }
                             }
                         }
+
+                        // City
+                        City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
+                        if (city != null)
+                            g.DrawImage(Draw.City(city, true, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+
+                        // Draw active unit if it's not moving
+                        if (unitsHere.Any())
+                        {
+                            // This tile has active unit/viewing piece
+                            if (x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1])
+                            {
+                                if (!MapPanel.ViewPiecesMode)
+                                {
+                                    if (frame == 0) // For first frame draw unit, for second not
+                                        g.DrawImage(Draw.Unit(Game.ActiveUnit, unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+                                }
+                            }
+                        }
+                        
                     }
 
-                    //City names
+                    // City names
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
-                        //change coords of central offset
+                        // Change coords of central offset
                         int x = centralCoords[0] + coordsOffsets[0];
                         int y = centralCoords[1] + coordsOffsets[1];
 
-                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim)    //make sure you're not drawing tiles outside map bounds
+                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
+                     
+                        City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
+                        if (city != null)
                         {
-                            City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                            if (city != null)
-                            {
-                                Bitmap cityNameBitmap = Draw.CityName(city, 8);
-                                g.DrawImage(
-                                    cityNameBitmap,
-                                    32 * coordsOffsets[0] + 32 - cityNameBitmap.Width / 2,
-                                    16 * coordsOffsets[1] + 3 * 8 + 16);
-                            }
+                            Bitmap cityNameBitmap = Draw.CityName(city, Game.Zoom);
+                            g.DrawImage(cityNameBitmap, 
+                                4 * (Game.Zoom + 8) * (coordsOffsets[0] + 1) - cityNameBitmap.Width / 2,
+                                2 * (Game.Zoom + 8) * coordsOffsets[1] + 3 * (Game.Zoom + 8) + 2 * (Game.Zoom + 8));
                         }
                     }
 
@@ -393,5 +370,5 @@ namespace civ2.Bitmaps
         //    return animationFrames;
         //}
 
-    }
+    }    
 }

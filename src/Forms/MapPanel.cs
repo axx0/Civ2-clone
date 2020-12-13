@@ -76,7 +76,7 @@ namespace civ2.Forms
             ViewPiecesMode = Game.ActiveUnit == null;  // If no unit is active at start (all units ended turn or no exist) go to View pieces mode
             if (ViewPiecesMode)
             {
-                ActiveXY = Game.ActiveCursorXY; // If NOT in ViewPiecesMode, then ActiveXY will be set equal to currently active unit coords.
+                //ActiveXY = Game.ActiveCursorXY; // If NOT in ViewPieceMode, then ActiveXY will be set equal to currently active unit coords.
                 AnimType = AnimationType.ViewPieces;
             }
             else
@@ -118,16 +118,15 @@ namespace civ2.Forms
             int[] activeXYpx = ActiveXYpx;
 
             // Draw map (for round world draw it from 2 parts)
-            Bitmap map = Game.MapRevealed ? Map.Graphic(8, Game.Zoom) : Map.Graphic(Game.WhichCivsMapShown, Game.Zoom);
-            e.Graphics.DrawImage(map, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
-            e.Graphics.DrawImage(map, PanelOffsetXYpx[0] + mapRect1.Width, PanelOffsetXYpx[1], mapRect2, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
+            e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0] + mapRect1.Width, PanelOffsetXYpx[1], mapRect2, GraphicsUnit.Pixel);
 
             // Draw animation
             switch (AnimType)
             {
                 case AnimationType.UnitWaiting:
                     {
-                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], ActiveXYpx[0] - MapOffsetXYpx[0], ActiveXYpx[1] - MapOffsetXYpx[1]);
+                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], ActiveXYpx[0], ActiveXYpx[1]);
                         break;
                     }
                 case AnimationType.UnitMoving:
@@ -143,7 +142,6 @@ namespace civ2.Forms
                     }
             }
 
-            map.Dispose();
             e.Dispose();
         }
 
@@ -156,7 +154,7 @@ namespace civ2.Forms
             {
                 if (Game.GetCities.Any(city => city.X == Game.ClickedXY[0] && city.Y == Game.ClickedXY[1]))    // City clicked
                 {
-                    if (ViewPiecesMode) ActiveXY = Game.ClickedXY;
+                    if (ViewPiecesMode) Game.ActiveCursorXY = Game.ClickedXY;
                     //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
                     //cityForm.Show();
                 }
@@ -178,7 +176,7 @@ namespace civ2.Forms
                 }
                 else    // Something else clicked
                 {
-                    if (ViewPiecesMode) ActiveXY = Game.ClickedXY;
+                    if (ViewPiecesMode) Game.ActiveCursorXY = Game.ClickedXY;
                     MapViewChange(Game.ClickedXY);
                 }
             }
@@ -186,7 +184,7 @@ namespace civ2.Forms
             {
                 ViewPiecesMode = true;
                 OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
-                ActiveXY = Game.ClickedXY;
+                Game.ActiveCursorXY = Game.ClickedXY;
                 MapViewChange(Game.ClickedXY);
                 StartAnimation(AnimationType.ViewPieces);
             }
@@ -328,24 +326,24 @@ namespace civ2.Forms
         }
 
         // Currently active box (active unit or viewing piece), civ2 coords
-        private int[] _activeXY;
-        public int[] ActiveXY
-        {
-            get
-            {
-                if (Game.ActiveUnit != null)
-                    return new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
-                else
-                    return _activeXY;
-            }
-            set { _activeXY = value; }
-        }
+        //private int[] _activeXY;
+        //public int[] ActiveXY
+        //{
+        //    get
+        //    {
+        //        if (Game.ActiveUnit != null)
+        //            return new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
+        //        else
+        //            return _activeXY;
+        //    }
+        //    set { _activeXY = value; }
+        //}
 
         // Representation in pixels for drawing
         private int[] StartingSqXYpx => new int[] { StartingSqXY[0] * 4 * (8 + Game.Zoom), StartingSqXY[1] * 2 * (8 + Game.Zoom) };
         private int MapXdimPx => 2 * Map.Xdim * 4 * (8 + Game.Zoom);
         private int MapYdimPx => Map.Ydim * 2 * (8 + Game.Zoom);
-        private int[] ActiveXYpx => new int[] { 4 * (Game.Zoom + 8) * ActiveXY[0], 2 * (Game.Zoom + 8) * ActiveXY[1] };
+        private int[] ActiveXYpx => new int[] { 4 * (Game.Zoom + 8) * (Game.ActiveCursorXY[0] - MapOffsetXYpx[0]), 2 * (Game.Zoom + 8) * (Game.ActiveCursorXY[1] - MapOffsetXYpx[1]) };
         #endregion
 
         public static bool ViewPiecesMode { get; set; }
@@ -359,12 +357,44 @@ namespace civ2.Forms
             return MapGridVar;
         }
 
-        public void ZoomOUTclicked(Object sender, EventArgs e) { Game.Zoom--; DrawPanel.Refresh(); }
-        public void ZoomINclicked(Object sender, EventArgs e) { Game.Zoom++; DrawPanel.Refresh(); }
-        public void MaxZoomINclicked(Object sender, EventArgs e) { Game.Zoom = 16; DrawPanel.Refresh(); }
-        public void MaxZoomOUTclicked(Object sender, EventArgs e) { Game.Zoom = 1; DrawPanel.Refresh(); }
-        public void StandardZOOMclicked(Object sender, EventArgs e) { Game.Zoom = 8; DrawPanel.Refresh(); }
-        public void MediumZoomOUTclicked(Object sender, EventArgs e) { Game.Zoom = 5; DrawPanel.Refresh(); }
+        #region ZoomInOut events
+        public void ZoomOUTclicked(Object sender, EventArgs e) 
+        { 
+            Game.Zoom--;
+            Map.SetNewActiveMapPic();
+            DrawPanel.Refresh(); 
+        }
+        public void ZoomINclicked(Object sender, EventArgs e) 
+        { 
+            Game.Zoom++;
+            Map.SetNewActiveMapPic();
+            DrawPanel.Refresh(); 
+        }
+        public void MaxZoomINclicked(Object sender, EventArgs e) 
+        { 
+            Game.Zoom = 16;
+            Map.SetNewActiveMapPic();
+            DrawPanel.Refresh(); 
+        }
+        public void MaxZoomOUTclicked(Object sender, EventArgs e) 
+        { 
+            Game.Zoom = 1;
+            Map.SetNewActiveMapPic(); 
+            DrawPanel.Refresh(); 
+        }
+        public void StandardZOOMclicked(Object sender, EventArgs e) 
+        { 
+            Game.Zoom = 8;
+            Map.SetNewActiveMapPic(); 
+            DrawPanel.Refresh(); 
+        }
+        public void MediumZoomOUTclicked(Object sender, EventArgs e) 
+        {
+            Game.Zoom = 5;
+            Map.SetNewActiveMapPic();
+            DrawPanel.Refresh();
+        }
+        #endregion
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -436,8 +466,8 @@ namespace civ2.Forms
                     }
                 case UnitEventType.NewUnitActivated:
                     {
-                        ActiveXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
-                        CenterSqXY = ActiveXY;
+                        Game.ActiveCursorXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
+                        CenterSqXY = Game.ActiveCursorXY;
                         StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
@@ -455,7 +485,7 @@ namespace civ2.Forms
         // If ENTER pressed when view piece above city --> enter city view
         private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
         {
-            if (ViewPiecesMode && Game.GetCities.Any(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]))
+            if (ViewPiecesMode && Game.GetCities.Any(city => city.X == Game.ActiveCursorXY[0] && city.Y == Game.ActiveCursorXY[1]))
             {
                 //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
                 //cityForm.Show();
@@ -502,13 +532,13 @@ namespace civ2.Forms
                         if (TimerCounter == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle((ActiveXY[0] - MapOffsetXY[0]) * 4 * (Game.Zoom + 8), (ActiveXY[1] - MapOffsetXY[1]) * 2 * (Game.Zoom + 8) - 2 * (Game.Zoom + 8), 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8)));
+                            DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1] - 2 * (Game.Zoom + 8), 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8)));
                         Update();
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
-                        DrawPanel.Invalidate(new Rectangle((ActiveXY[0] - MapOffsetXY[0]) * 32 - 64, (ActiveXY[1] - MapOffsetXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
+                        DrawPanel.Invalidate(new Rectangle((Game.ActiveCursorXY[0] - MapOffsetXY[0]) * 32 - 64, (Game.ActiveCursorXY[1] - MapOffsetXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
                         Update();
                         if (TimerCounter == 7)  // Unit has completed movement
                         {
@@ -527,7 +557,7 @@ namespace civ2.Forms
                             // Check if unit moved outside map view -> map view needs to be updated
                             if (UnitMovedOutsideMapView)
                             {
-                                CenterSqXY = ActiveXY;
+                                CenterSqXY = Game.ActiveCursorXY;
                                 DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                                 Update();
                             }
@@ -540,7 +570,7 @@ namespace civ2.Forms
                         if (TimerCounter == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle((ActiveXY[0] - MapOffsetXY[0]) * 32, (ActiveXY[1] - MapOffsetXY[1]) * 16, 64, 32));
+                            DrawPanel.Invalidate(new Rectangle((Game.ActiveCursorXY[0] - MapOffsetXY[0]) * 32, (Game.ActiveCursorXY[1] - MapOffsetXY[1]) * 16, 64, 32));
                         Update();
                         break;
                     }
@@ -551,10 +581,10 @@ namespace civ2.Forms
         {
             get
             {
-                if (ActiveXY[0] >= StartingSqXY[0] + DrawingSqXY[0] ||
-                ActiveXY[0] <= StartingSqXY[0] ||
-                ActiveXY[1] >= StartingSqXY[1] + DrawingSqXY[1] ||
-                ActiveXY[1] <= StartingSqXY[1])
+                if (Game.ActiveCursorXY[0] >= StartingSqXY[0] + DrawingSqXY[0] ||
+                Game.ActiveCursorXY[0] <= StartingSqXY[0] ||
+                Game.ActiveCursorXY[1] >= StartingSqXY[1] + DrawingSqXY[1] ||
+                Game.ActiveCursorXY[1] <= StartingSqXY[1])
                     return true;
                 else
                     return false;

@@ -12,7 +12,7 @@ namespace civ2.Bitmaps
         // civId
         // = 0...7 for 8 civs (including barbarians with civId=7)
         // = 8 for revealed map
-        public static Bitmap DrawMap(int civ, bool flatEarth)
+        public static Bitmap DrawMap(int civ, bool flatEarth)   // Draw for normal zoom level
         {
             // Define a bitmap for drawing
             Bitmap mapPic = new Bitmap(32 * (2 * Map.Xdim + 1), 16 * (2 * Map.Ydim + 1));

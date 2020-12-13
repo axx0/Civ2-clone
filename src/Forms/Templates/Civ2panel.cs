@@ -81,7 +81,6 @@ namespace civ2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10 + XtraSpacingUp, 10, Height - XtraSpacingDwn - 9 - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 10 + XtraSpacingUp, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - XtraSpacingDwn - 9 - 2, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
-            e.Dispose();
         }
 
     }
