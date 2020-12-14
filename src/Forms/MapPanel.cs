@@ -20,7 +20,7 @@ namespace civ2.Forms
         private static List<Bitmap> AnimationBitmap;
         private int MapGridVar { get; set; }        // Style of map grid presentation
         private System.Windows.Forms.Timer Timer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
-        private AnimationType AnimType;
+        private AnimationType AnimType { get; set; }
         private int TimerCounter { get; set; }
 
         private int[] PanelOffsetXY, MapOffsetXY, CentralXY;
@@ -73,24 +73,24 @@ namespace civ2.Forms
 
             // Center the map view and draw map
             MapGridVar = 0;
-            MapViewChange(Game.ClickedXY);
-            StartAnimation(AnimationType.UpdateMap);
+            AnimType = AnimationType.UpdateMap;
+            ReturnCoordsAtMapViewChange(Game.ClickedXY);
 
-            ViewPiecesMode = Game.ActiveUnit == null;  // If no unit is active at start (all units ended turn or no exist) go to View pieces mode
-            if (ViewPiecesMode)
-            {
-                //ActiveXY = Game.ActiveCursorXY; // If NOT in ViewPieceMode, then ActiveXY will be set equal to currently active unit coords.
-                AnimType = AnimationType.ViewPieces;
-            }
-            else
-            {
-                AnimType = AnimationType.UnitWaiting;
-            }
+            //ViewPiecesMode = Game.ActiveUnit == null;  // If no unit is active at start (all units ended turn or no exist) go to View pieces mode
+            //if (ViewPiecesMode)
+            //{
+            //    //ActiveXY = Game.ActiveCursorXY; // If NOT in ViewPieceMode, then ActiveXY will be set equal to currently active unit coords.
+            //    AnimType = AnimationType.ViewPieces;
+            //}
+            //else
+            //{
+            //    AnimType = AnimationType.UnitWaiting;
+            //}
 
             // Timer for waiting unit/ viewing piece
-            Timer = new System.Windows.Forms.Timer();
-            Timer.Tick += new EventHandler(Timer_Tick);
-            StartAnimation(AnimType);
+            //Timer = new System.Windows.Forms.Timer();
+            //Timer.Tick += new EventHandler(Timer_Tick);
+            //StartAnimation(AnimType);
         }
 
         private void MapPanel_Paint(object sender, PaintEventArgs e)
@@ -126,10 +126,6 @@ namespace civ2.Forms
                         // Draw map (for round world draw it from 2 parts)
                         e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0], PanelOffsetXYpx[1], mapRect1, GraphicsUnit.Pixel);
                         e.Graphics.DrawImage(Map.ActiveCivMap, PanelOffsetXYpx[0] + mapRect1.Width, PanelOffsetXYpx[1], mapRect2, GraphicsUnit.Pixel);
-
-                        // For each map tile on screen draw cities & units
-
-
                         break;
                     }
                 case AnimationType.UnitWaiting:
@@ -140,7 +136,7 @@ namespace civ2.Forms
                 case AnimationType.UnitMoving:
                     {
                         IUnit unit = Game.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[Game.ActiveUnit.MovementCounter], unit.LastXYpx[0] - startingSqXYpx[0] - 8 * (Game.Zoom + 8), unit.LastXYpx[1] - startingSqXYpx[1] - 4 * (Game.Zoom + 8));
+                        e.Graphics.DrawImage(AnimationBitmap[Game.ActiveUnit.MovementCounter], unit.LastXYpx[0] - startingSqXYpx[0] - 2 * Game.Xpx, unit.LastXYpx[1] - startingSqXYpx[1] - 2 * Game.Ypx);
                         break;
                     }
                 case AnimationType.ViewPieces:
@@ -610,11 +606,11 @@ namespace civ2.Forms
             mapRect1 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 1st part of map
             mapRect2 = new Rectangle(0, 0, 0, 0);  // Rectangle for drawing 2nd part of map
 
-            int mapWidth = 4 * (8 + Game.Zoom) * (2 * Map.Xdim + 1);
-            int mapHeight = 2 * (8 + Game.Zoom) * (Map.Ydim + 1);
+            int mapWidth = Game.Xpx * (2 * Map.Xdim + 1);
+            int mapHeight = Game.Ypx * (Map.Ydim + 1);
 
             // No of squares of panel and map
-            int[] PanelSq = new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * (8 + Game.Zoom))), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * (8 + Game.Zoom))) };
+            int[] PanelSq = new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (2 * Game.Xpx)), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (2 * Game.Ypx)) };
             int[] MapSq = new int[] { 2 * Map.Xdim + 1, Map.Ydim + 1 };
 
             // First determine the Y-central coordinate
@@ -641,7 +637,7 @@ namespace civ2.Forms
                 }
                 mapRect1.Height = DrawPanel.Height;
             }
-            mapRect1.Y = 2 * (8 + Game.Zoom) * MapOffsetXY[1];
+            mapRect1.Y = Game.Ypx * MapOffsetXY[1];
 
             // Then determine X-coordinate
             if (PanelSq[0] > MapSq[0])    // Panel is larger than map in X, center the map in panel center
@@ -684,7 +680,7 @@ namespace civ2.Forms
                         MapOffsetXY[0] = CentralXY[0] - PanelSq[0] / 2;
                     }
                     mapRect1.Width = DrawPanel.Width;
-                    mapRect1.X = 4 * (8 + Game.Zoom) * MapOffsetXY[0];
+                    mapRect1.X = Game.Xpx * MapOffsetXY[0];
                 }
                 else    // Round world
                 {
@@ -695,9 +691,9 @@ namespace civ2.Forms
                         if (CentralXY[0] % 2 == 0 && CentralXY[1] % 2 != 0) CentralXY[0]++;
 
                         MapOffsetXY[0] = MapSq[0] + (CentralXY[0] - PanelSq[0] / 2);
-                        mapRect1.X = 4 * (8 + Game.Zoom) * MapOffsetXY[0];
+                        mapRect1.X = Game.Xpx * MapOffsetXY[0];
                         mapRect1.Width = mapWidth - mapRect1.X;
-                        mapRect2.X = 4 * (8 + Game.Zoom);
+                        mapRect2.X = Game.Xpx;
                         mapRect2.Width = DrawPanel.Width - mapRect1.Width;
 
                     }
@@ -708,9 +704,9 @@ namespace civ2.Forms
                         if (CentralXY[0] % 2 == 0 && CentralXY[1] % 2 != 0) CentralXY[0]++;
 
                         MapOffsetXY[0] = CentralXY[0] - PanelSq[0] / 2;
-                        mapRect1.X = 4 * (8 + Game.Zoom) * MapOffsetXY[0];
+                        mapRect1.X = Game.Xpx * MapOffsetXY[0];
                         mapRect1.Width = mapWidth - mapRect1.X;
-                        mapRect2.X = 4 * (8 + Game.Zoom);
+                        mapRect2.X = Game.Xpx;
                         mapRect2.Width = DrawPanel.Width - mapRect1.Width;
                     }
                     else
@@ -721,7 +717,7 @@ namespace civ2.Forms
 
                         MapOffsetXY[0] = CentralXY[0] - PanelSq[0] / 2;
                         mapRect1.Width = DrawPanel.Width;
-                        mapRect1.X = 4 * (8 + Game.Zoom) * MapOffsetXY[0];
+                        mapRect1.X = Game.Xpx * MapOffsetXY[0];
                     }
                     mapRect2.Y = mapRect1.Y;
                     mapRect2.Height = mapRect1.Height;
@@ -729,7 +725,7 @@ namespace civ2.Forms
             }
         }
 
-        private int[] PanelOffsetXYpx => new int[] { 4 * (8 + Game.Zoom) * PanelOffsetXY[0], 2 * (8 + Game.Zoom) * PanelOffsetXY[1] };
-        private int[] MapOffsetXYpx => new int[] { 4 * (8 + Game.Zoom) * MapOffsetXY[0], 2 * (8 + Game.Zoom) * MapOffsetXY[1] };
+        private int[] PanelOffsetXYpx => new int[] { Game.Xpx * PanelOffsetXY[0], Game.Ypx * PanelOffsetXY[1] };
+        private int[] MapOffsetXYpx => new int[] { Game.Xpx * MapOffsetXY[0], Game.Ypx * MapOffsetXY[1] };
     }
 }

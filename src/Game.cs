@@ -66,6 +66,8 @@ namespace civ2
                 _zoom = Math.Max(Math.Min(value, 8), -7);
             }
         }
+        public int Xpx => 4 * (Game.Zoom + 8);    // Length of 1 map square in X
+        public int Ypx => 2 * (Game.Zoom + 8);    // Length of 1 map square in Y
 
         #region Loads stuff when civ2 starts
         public static void Preloading(string civ2path)
