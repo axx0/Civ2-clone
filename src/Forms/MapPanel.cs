@@ -93,6 +93,11 @@ namespace civ2.Forms
             //StartAnimation(AnimType);
         }
 
+        public void MapPanel_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void MapPanel_Paint(object sender, PaintEventArgs e)
         {
             // Title
