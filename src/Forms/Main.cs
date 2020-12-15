@@ -9,7 +9,7 @@ using civ2.Sounds;
 
 namespace civ2.Forms
 {
-    public partial class MainWindow : Form
+    public partial class Main : Form
     {
         Game Game => Game.Instance;
         Map Map => Map.Instance;
@@ -26,10 +26,12 @@ namespace civ2.Forms
         Civ2ToolStripMenuItem TaxRateItem, ViewThroneRoomItem, FindCityItem, RevolutionItem, BuildRoadItem, BuildIrrigationItem, MovePiecesItem, ViewPiecesItem, ZoomInItem, ZoomOutItem, StandardZoomItem, MediumZoomOutItem, ArrangeWindowsItem, ShowHiddenTerrainItem, CenterViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
         ToolStripMenuItem ShowMapGridItem;
+
+        public bool ViewPieceMode { get; set; }
         
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MainWindow()
+        public Main()
         {
             LoadInitialAssets();
             
@@ -282,29 +284,9 @@ namespace civ2.Forms
 
         }
 
-        private void MainWindow_Load(object sender, EventArgs e)
+        private void Main_Load(object sender, EventArgs e)
         {
             ShowIntroScreen();
-
-            //MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height);
-            //MapPanel.Location = new Point(0, MainMenuStrip.Height);
-            //Controls.Add(MapPanel);
-            //ZoomInItem.Click += MapPanel.ZoomINclicked;
-            //ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
-            //MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
-            //MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
-            //StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
-            //MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            //StatusPanel.OnMapEvent += MapEventHappened;
-            //MapPanel.OnMapEvent += MapEventHappened;
-
-            //MinimapPanel = new MinimapPanel(262, 149);
-            //MinimapPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height);
-            //Controls.Add(MinimapPanel);
-
-            //StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148);
-            //StatusPanel.Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148);
-            //Controls.Add(StatusPanel);
         }
 
         // Load assets at start of Civ2 program
@@ -382,16 +364,16 @@ namespace civ2.Forms
         #region VIEW MENU EVENTS
         private void MovePieces_Click(object sender, EventArgs e) 
         {
-            MapPanel.ViewPiecesMode = false;
-            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
+            ViewPieceMode = false;
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
             ViewPiecesItem.Enabled = true;
             MovePiecesItem.Enabled = false;
         }
 
         private void ViewPieces_Click(object sender, EventArgs e) 
         {
-            MapPanel.ViewPiecesMode = true;
-            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
+            ViewPieceMode = true;
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
             MovePiecesItem.Enabled = true;
             ViewPiecesItem.Enabled = false;
         }
@@ -640,9 +622,9 @@ namespace civ2.Forms
             
             switch (e.EventType)
             {
-                case MapEventType.SwitchViewMovePieces:
+                case MapEventType.SwitchViewMovePiece:
                     {
-                        if (MapPanel.ViewPiecesMode) 
+                        if (ViewPieceMode) 
                         {
                             MovePiecesItem.Enabled = true;
                             ViewPiecesItem.Enabled = false;

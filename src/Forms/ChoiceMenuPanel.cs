@@ -10,9 +10,9 @@ namespace civ2.Forms
     public partial class ChoiceMenuPanel : Civ2panel
     {
         readonly RadioButton[] RadioBtn = new RadioButton[8];
-        readonly MainWindow mainForm;
+        readonly Main mainForm;
 
-        public ChoiceMenuPanel(MainWindow _MainWindow) : 
+        public ChoiceMenuPanel(Main _MainWindow) : 
             base((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34), "Civilization II Multiplayer Gold", true)
         {
             InitializeComponent();

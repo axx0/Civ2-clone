@@ -10,7 +10,7 @@ namespace civ2.Bitmaps
     public class GetAnimationFrames : BaseInstance
     {
         // Get animation frames for waiting unit
-        public static List<Bitmap> UnitWaiting()
+        public static List<Bitmap> UnitWaiting(bool viewPieceMode)
         {
             List<Bitmap> animationFrames = new List<Bitmap>();
 
@@ -63,7 +63,7 @@ namespace civ2.Bitmaps
                             else
                             {
                                 // Viewing pieces mode is enabled, so draw last unit on stack
-                                if (MapPanel.ViewPiecesMode)
+                                if (viewPieceMode)
                                 {
                                     unit = unitsHere.Last();
                                     if (!unit.IsInCity)
@@ -83,7 +83,7 @@ namespace civ2.Bitmaps
                             // This tile has active unit/viewing piece
                             if (x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1])
                             {
-                                if (!MapPanel.ViewPiecesMode)
+                                if (!viewPieceMode)
                                 {
                                     if (frame == 0) // For first frame draw unit, for second not
                                         g.DrawImage(Draw.Unit(Game.ActiveUnit, unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
@@ -128,7 +128,7 @@ namespace civ2.Bitmaps
         }
 
         //Get animation frames for moving unit
-        public static List<Bitmap> UnitMoving()
+        public static List<Bitmap> UnitMoving(bool viewPieceMode)
         {
             List<Bitmap> animationFrames = new List<Bitmap>();
 
@@ -241,7 +241,7 @@ namespace civ2.Bitmaps
                             else
                             {
                                 //Viewing pieces mode is enabled, so draw last unit on stack
-                                if (MapPanel.ViewPiecesMode)
+                                if (viewPieceMode)
                                 {
                                     unit = unitsHere.Last();
                                     if (!unit.IsInCity)

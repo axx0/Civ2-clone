@@ -5,6 +5,6 @@
         UpdateMap = 0,
         UnitWaiting = 1,
         UnitMoving = 2,
-        ViewPieces
+        ViewPiece
     }
 }

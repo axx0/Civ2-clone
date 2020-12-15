@@ -3,9 +3,9 @@ using System.Drawing;
 
 namespace civ2.Forms
 {
-    public partial class MainWindow : Form
+    public partial class Main : Form
     {
-        public void ArrangeWindowControlsAfterGameStart()
+        public void LoadPanelsAfterGameStart()
         {
             ChoiceMenu.Visible = false;
             ChoiceMenu.Dispose();
@@ -15,7 +15,10 @@ namespace civ2.Forms
             SinaiPanel.Dispose();
             SinaiPanel = null;
 
-            MapPanel = new MapPanel(ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height)
+            // Initialize some variables
+            ViewPieceMode = Game.ActiveUnit == null;    // If no unit is active at start (all units ended turn or none exist) go to View piece mode
+
+            MapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height)
             {
                 Location = new Point(0, MainMenuStrip.Height)
             };
@@ -28,7 +31,7 @@ namespace civ2.Forms
             };
             Controls.Add(MinimapPanel);
 
-            StatusPanel = new StatusPanel(262, ClientSize.Height - MainMenuStrip.Height - 148)
+            StatusPanel = new StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148)
             };

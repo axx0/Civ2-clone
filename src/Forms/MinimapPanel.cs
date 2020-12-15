@@ -23,7 +23,7 @@ namespace civ2.Forms
         public MinimapPanel(int _width, int _height) : base(_width, _height, "World", false)
         {
             MapPanel.OnMapEvent += MapEventHappened;
-            MainWindow.OnMapEvent += MapEventHappened;
+            Main.OnMapEvent += MapEventHappened;
 
             Controls.Add(DrawPanel);
             DrawPanel.Paint += new PaintEventHandler(DrawPanel_Paint);

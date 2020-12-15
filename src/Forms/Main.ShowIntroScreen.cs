@@ -5,7 +5,7 @@ using civ2.Enums;
 
 namespace civ2.Forms
 {
-    public partial class MainWindow : Form
+    public partial class Main : Form
     {
         ChoiceMenuPanel ChoiceMenu;
         PictureBox SinaiPanel;
@@ -67,7 +67,7 @@ namespace civ2.Forms
                 case IntroScreenChoiceType.LoadGame:
                     {
                         Game.LoadGame(directoryPath, SAVname);
-                        ArrangeWindowControlsAfterGameStart();
+                        LoadPanelsAfterGameStart();
                         break;
                     }
                 case IntroScreenChoiceType.MultiplayerGame:

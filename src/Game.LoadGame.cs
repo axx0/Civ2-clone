@@ -89,6 +89,8 @@ namespace civ2
             _activeCiv = _playerCiv;
 
             _zoom = SAVgameData.Zoom;
+
+            
         }
 
     }

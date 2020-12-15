@@ -50,7 +50,7 @@ namespace civ2
             //HelpConsole.CreateConsole();
             //Application.Run(new Forms.IntroForm());
             Settings.LoadConfigSettings();
-            Application.Run(new Forms.MainWindow());
+            Application.Run(new Forms.Main());
         }
     }
 }

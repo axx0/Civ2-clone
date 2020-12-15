@@ -2,7 +2,7 @@
 {
     public enum MapEventType
     {
-        SwitchViewMovePieces = 0,
+        SwitchViewMovePiece = 0,
         MapViewChanged = 1,
         ViewPieceMoved = 2,
         ToggleBetweenCurrentEntireMapView = 3

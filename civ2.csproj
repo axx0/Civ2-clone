@@ -107,10 +107,10 @@
     <Compile Include="src\Events\MapEventArgs.cs" />
     <Compile Include="src\Events\PlayerEventArgs.cs" />
     <Compile Include="src\Events\UnitEventArgs.cs" />
-    <Compile Include="src\Forms\MainWindow.ArrangeWindowControlsAfterGameStart.cs">
+    <Compile Include="src\Forms\Main.LoadPanelsAfterGameStart.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Forms\MainWindow.ShowIntroScreen.cs">
+    <Compile Include="src\Forms\Main.ShowIntroScreen.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\Game.Actions.cs" />
@@ -137,11 +137,11 @@
     <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
       <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="src\Forms\MainWindow.cs">
+    <Compile Include="src\Forms\Main.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="src\Forms\MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <Compile Include="src\Forms\Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="src\Forms\Templates\NoSelectButton.cs">
       <SubType>Component</SubType>
@@ -188,8 +188,8 @@
     <Compile Include="src\Terrains\Terrain.cs" />
     <Compile Include="src\Units\Unit.cs" />
     <Compile Include="src\Units\IUnit.cs" />
-    <EmbeddedResource Include="src\Forms\MainWindow.resx">
-      <DependentUpon>MainWindow.cs</DependentUpon>
+    <EmbeddedResource Include="src\Forms\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="src\Forms\Templates\Civ2form.resx">
       <DependentUpon>Civ2form.cs</DependentUpon>
@@ -210,7 +210,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="SAVfile.xlsx" />
-    <Compile Include="src\Forms\MainWindow.KeyPressActions.cs">
+    <Compile Include="src\Forms\Main.KeyPressActions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="src\Game.ActionsUnits.cs" />

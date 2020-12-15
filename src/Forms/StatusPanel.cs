@@ -16,19 +16,22 @@ namespace civ2.Forms
         Game Game => Game.Instance;
         Map Map => Map.Instance;
 
+        private Main Main;
         private readonly DoubleBufferedPanel StatsPanel, UnitPanel;
         private readonly Timer Timer = new Timer();
         private bool WaitingAtEndOfTurn { get; set; }
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public StatusPanel(int _width, int _height)
+        public StatusPanel(Main parent, int _width, int _height)
         {
+            this.Main = parent;
+
             BackgroundImage = Images.PanelOuterWallpaper;
             Size = new Size(_width, _height);
             this.Paint += StatusPanel_Paint;
             MapPanel.OnMapEvent += MapEventHappened;
-            MainWindow.OnMapEvent += MapEventHappened;
+            Main.OnMapEvent += MapEventHappened;
             Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Game.OnPlayerEvent += PlayerEventHappened;
             Game.OnUnitEvent += UnitEventHappened;
@@ -136,7 +139,7 @@ namespace civ2.Forms
             List<IUnit> UnitsOnThisTile = Game.GetUnits.Where(u => u.X == Game.ActiveCursorXY[0] && u.Y == Game.ActiveCursorXY[1]).ToList();
             int maxUnitsToDraw = (int)Math.Floor((double)((UnitPanel.Height - 66) / 56));
 
-            if (MapPanel.ViewPiecesMode)
+            if (Main.ViewPieceMode)
             {
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
@@ -239,9 +242,9 @@ namespace civ2.Forms
             }
             else
             {
-                MapPanel.ViewPiecesMode = !MapPanel.ViewPiecesMode;
+                Main.ViewPieceMode = !Main.ViewPieceMode;
                 UnitPanel.Refresh();
-                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePieces));
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
             }
         }
 
