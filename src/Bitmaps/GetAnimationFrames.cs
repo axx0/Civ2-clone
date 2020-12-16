@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Drawing;
-using civ2.Forms;
 using civ2.Units;
-using ExtensionMethods;
 
 namespace civ2.Bitmaps
 {
@@ -23,7 +21,8 @@ namespace civ2.Bitmaps
                 new int[] {1, -1},
                 new int[] {0, 0},
                 new int[] {-1, 1},
-                new int[] {1, 1}
+                new int[] {1, 1},
+                new int[] {0, 2}
             };
 
             // Get 2 frames (one with and other without the active unit/moving piece)
@@ -42,10 +41,10 @@ namespace civ2.Bitmaps
                         int y = centralCoords[1] + coordsOffsets[1];
                         int[] coordsOffsetsPx = new int[] { coordsOffsets[0] * Game.Xpx, coordsOffsets[1] * Game.Ypx };
 
-                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
+                        if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
 
                         // Tiles
-                        g.DrawImage(Map.TileC2(x, y).Graphic, Game.Xpx * coordsOffsets[0], Game.Ypx * coordsOffsets[1] + Game.Ypx);
+                        g.DrawImage(Map.TileC2(x, y).Graphic, coordsOffsetsPx[0], coordsOffsetsPx[1] + Game.Ypx);
 
                         // Units
                         List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
@@ -62,7 +61,7 @@ namespace civ2.Bitmaps
                             // This tile has active unit/viewing piece
                             else
                             {
-                                // Viewing pieces mode is enabled, so draw last unit on stack
+                                // Viewing piece mode is enabled, so draw last unit on stack
                                 if (viewPieceMode)
                                 {
                                     unit = unitsHere.Last();

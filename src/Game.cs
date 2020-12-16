@@ -54,7 +54,7 @@ namespace civ2
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
         public int[] ActiveCursorXY { get; set; } // Coordinates of either active unit or of viewing piece.
-        public int[] ActiveCursorXYpx => new int[] { Game.ActiveCursorXY[0] * 4 * (Game.Zoom + 8), Game.ActiveCursorXY[1] * 2 * (Game.Zoom + 8) };
+        public int[] ActiveCursorXYpx => new int[] { Game.ActiveCursorXY[0] * Xpx, Game.ActiveCursorXY[1] * Ypx };
         public int[] ClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
 
         private int _zoom;

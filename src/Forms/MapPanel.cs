@@ -18,11 +18,11 @@ namespace civ2.Forms
         Map Map => Map.Instance;
 
         private Main Main;
-        private static List<Bitmap> AnimationBitmap;
+        private static List<Bitmap> AnimationFrames;
         private int MapGridVar { get; set; }        // Style of map grid presentation
-        private System.Windows.Forms.Timer Timer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
+        private System.Windows.Forms.Timer AnimationTimer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         private AnimationType AnimType { get; set; }
-        private int TimerCounter { get; set; }
+        private int AnimationCount { get; set; }
 
         private int[] PanelOffsetXY, MapOffsetXY, CentralXY;
         private Rectangle mapRect1, mapRect2;
@@ -85,8 +85,8 @@ namespace civ2.Forms
                 AnimType = AnimationType.UnitWaiting;
 
             // Timer for waiting unit/ viewing piece
-            Timer = new System.Windows.Forms.Timer();
-            Timer.Tick += new EventHandler(Timer_Tick);
+            AnimationTimer = new System.Windows.Forms.Timer();
+            AnimationTimer.Tick += new EventHandler(Animation_Tick);
             StartAnimation(AnimType);
         }
 
@@ -124,20 +124,21 @@ namespace civ2.Forms
             {
                 case AnimationType.UnitWaiting:
                     {
-                        e.Graphics.DrawImage(AnimationBitmap[TimerCounter % 2], ActiveXYpx[0], ActiveXYpx[1]);
+                        e.Graphics.DrawImage(AnimationFrames[AnimationCount % 2], ActiveXYpx[0], ActiveXYpx[1] - Game.Ypx);
+                        break;
+                    }
+                case AnimationType.ViewPiece:
+                    {
+                        if (AnimationCount % 2 == 0) 
+                            e.Graphics.DrawImage(Images.ViewPiece, ActiveXYpx[0], ActiveXYpx[1]);
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
                         IUnit unit = Game.ActiveUnit;
-                        e.Graphics.DrawImage(AnimationBitmap[Game.ActiveUnit.MovementCounter], unit.LastXYpx[0] - startingSqXYpx[0] - 2 * Game.Xpx, unit.LastXYpx[1] - startingSqXYpx[1] - 2 * Game.Ypx);
+                        e.Graphics.DrawImage(AnimationFrames[Game.ActiveUnit.MovementCounter], unit.LastXYpx[0] - startingSqXYpx[0] - 2 * Game.Xpx, unit.LastXYpx[1] - startingSqXYpx[1] - 2 * Game.Ypx);
                         break;
-                    }
-                case AnimationType.ViewPiece:
-                    {
-                        if (TimerCounter % 2 == 0) e.Graphics.DrawImage(Images.ViewPiece, activeXYpx[0] - startingSqXYpx[0], activeXYpx[1] - startingSqXYpx[1]);
-                        break;
-                    }
+                    } 
             }
 
             e.Dispose();
@@ -341,7 +342,6 @@ namespace civ2.Forms
         private int[] StartingSqXYpx => new int[] { StartingSqXY[0] * 4 * (8 + Game.Zoom), StartingSqXY[1] * 2 * (8 + Game.Zoom) };
         private int MapXdimPx => 2 * Map.Xdim * 4 * (8 + Game.Zoom);
         private int MapYdimPx => Map.Ydim * 2 * (8 + Game.Zoom);
-        private int[] ActiveXYpx => new int[] { 4 * (Game.Zoom + 8) * (Game.ActiveCursorXY[0] - MapOffsetXYpx[0]), 2 * (Game.Zoom + 8) * (Game.ActiveCursorXY[1] - MapOffsetXYpx[1]) };
         #endregion
 
         public int ToggleMapGrid()
@@ -392,11 +392,7 @@ namespace civ2.Forms
         }
         #endregion
 
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            DrawAnimation();
-            TimerCounter++;
-        }
+
 
         private void MapEventHappened(object sender, MapEventArgs e)
         {
@@ -435,9 +431,9 @@ namespace civ2.Forms
                 case PlayerEventType.NewTurn:
                     {
                         if (Game.ActiveUnit != null) Main.ViewPieceMode = false;
-                        Timer.Stop();
-                        TimerCounter = 0;
-                        Timer.Start();
+                        AnimationTimer.Stop();
+                        AnimationCount = 0;
+                        AnimationTimer.Start();
                         break;
                     }
             }
@@ -450,9 +446,9 @@ namespace civ2.Forms
                 // Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
                     {
-                        TimerCounter = Game.ActiveUnit.MovementCounter;
-                        if (TimerCounter == 0) StartAnimation(AnimationType.UnitMoving);
-                        DrawAnimation();
+                        AnimationCount = Game.ActiveUnit.MovementCounter;
+                        if (AnimationCount == 0) StartAnimation(AnimationType.UnitMoving);
+                        //DrawAnimation();
                         break;
                     }
                 case UnitEventType.StatusUpdate:
@@ -473,9 +469,9 @@ namespace civ2.Forms
         private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
         {
             Main.ViewPieceMode = true;
-            Timer.Stop();
-            TimerCounter = 0;
-            Timer.Start();
+            AnimationTimer.Stop();
+            AnimationCount = 0;
+            AnimationTimer.Start();
         }
 
         // If ENTER pressed when view piece above city --> enter city view
@@ -488,64 +484,72 @@ namespace civ2.Forms
             }
         }
 
+        #region Animation
         private void StartAnimation(AnimationType anim)
         {
             switch (anim)
             {
                 case AnimationType.UpdateMap:
-                    Timer.Stop();
-                    TimerCounter = 0;
+                    AnimationTimer.Stop();
+                    AnimationCount = 0;
                     DrawPanel.Invalidate();
                     break;
                 case AnimationType.UnitWaiting:
                     //AnimType = AnimationType.UnitWaiting;
-                    Timer.Stop();
-                    AnimationBitmap = GetAnimationFrames.UnitWaiting(Main.ViewPieceMode);
-                    TimerCounter = 0;
-                    Timer.Interval = 200;    // ms                    
-                    Timer.Start();
+                    AnimationTimer.Stop();
+                    AnimationFrames = GetAnimationFrames.UnitWaiting(Main.ViewPieceMode);
+                    AnimationCount = 0;
+                    AnimationTimer.Interval = 200;    // ms                    
+                    AnimationTimer.Start();
                     break;
                 case AnimationType.UnitMoving:
                     //AnimType = AnimationType.UnitMoving;
-                    AnimationBitmap = GetAnimationFrames.UnitMoving(Main.ViewPieceMode);
+                    AnimationFrames = GetAnimationFrames.UnitMoving(Main.ViewPieceMode);
                     break;
                 case AnimationType.ViewPiece:
                     //AnimType = AnimationType.ViewPieces;
-                    Timer.Stop();
-                    TimerCounter = 0;
-                    Timer.Interval = 200;    // ms                    
-                    Timer.Start();
+                    AnimationTimer.Stop();
+                    AnimationCount = 0;
+                    AnimationTimer.Interval = 200;    // ms                    
+                    AnimationTimer.Start();
                     break;
             }
         }
 
-        private void DrawAnimation()
+        private void Animation_Tick(object sender, EventArgs e)
         {
             switch (AnimType)
             {
                 case AnimationType.UnitWaiting:
                     {
                         // At new unit turn initially re-draw the whole map
-                        if (TimerCounter == 0)
+                        if (AnimationCount == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            //DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1] - 2 * (Game.Zoom + 8), 8 * (Game.Zoom + 8), 6 * (Game.Zoom + 8)));
-                            DrawPanel.Invalidate(new Rectangle(0, 0, 64, 48));
-                        Update();
+                            DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1] - Game.Ypx, 2 * Game.Xpx, 3 * Game.Ypx));
+                        break;
+                    }
+                case AnimationType.ViewPiece:
+                    {
+                        // At new unit turn initially re-draw the whole map
+                        if (AnimationCount == 0)
+                            DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
+                        else
+                            DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1], 2 * Game.Xpx, 2 * Game.Ypx));
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
                         DrawPanel.Invalidate(new Rectangle((Game.ActiveCursorXY[0] - MapOffsetXY[0]) * 32 - 64, (Game.ActiveCursorXY[1] - MapOffsetXY[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
                         Update();
-                        if (TimerCounter == 7)  // Unit has completed movement
+                        if (AnimationCount == 7)  // Unit has completed movement
                         {
                             // First update world map with new visible tiles
                             Game.UpdateWorldMapAfterUnitHasMoved();
 
                             // Update the original world map image with image of new location of unit & redraw whole map
                             IUnit unit = Game.Instance.ActiveUnit;
-                            // Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationBitmap[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
+                            // Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationFrames[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                             Update();
 
@@ -562,18 +566,12 @@ namespace civ2.Forms
                         }
                         break;
                     }
-                case AnimationType.ViewPiece:
-                    {
-                        // At new unit turn initially re-draw the whole map
-                        if (TimerCounter == 0)
-                            DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
-                        else
-                            DrawPanel.Invalidate(new Rectangle((Game.ActiveCursorXY[0] - MapOffsetXY[0]) * 32, (Game.ActiveCursorXY[1] - MapOffsetXY[1]) * 16, 64, 32));
-                        Update();
-                        break;
-                    }
+
             }
+
+            AnimationCount++;
         }
+        #endregion
 
         private bool UnitMovedOutsideMapView
         {
@@ -719,5 +717,7 @@ namespace civ2.Forms
 
         private int[] PanelOffsetXYpx => new int[] { Game.Xpx * PanelOffsetXY[0], Game.Ypx * PanelOffsetXY[1] };
         private int[] MapOffsetXYpx => new int[] { Game.Xpx * MapOffsetXY[0], Game.Ypx * MapOffsetXY[1] };
+        private int[] ActiveXYpx => new int[] { Game.ActiveCursorXYpx[0] - MapOffsetXYpx[0], Game.ActiveCursorXYpx[1] - MapOffsetXYpx[1] };
+
     }
 }

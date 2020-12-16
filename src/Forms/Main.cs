@@ -292,12 +292,8 @@ namespace civ2.Forms
         // Load assets at start of Civ2 program
         private void LoadInitialAssets()
         {
-
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
-
-            // Load wallpapers
-            //Draw.ImportWallpapersFromIconsFile();
 
             // Load sounds
             // ...
