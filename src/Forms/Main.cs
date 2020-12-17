@@ -28,6 +28,17 @@ namespace civ2.Forms
         ToolStripMenuItem ShowMapGridItem;
 
         public bool ViewPieceMode { get; set; }
+
+        private int[] _activeXY;
+        public int[] ActiveXY
+        {
+            get
+            {
+                if (Game.ActiveUnit != null) _activeXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
+                return _activeXY;
+            }
+            set { _activeXY = value; }
+        }
         
         public static event EventHandler<MapEventArgs> OnMapEvent;
 

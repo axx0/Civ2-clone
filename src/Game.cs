@@ -53,9 +53,9 @@ namespace civ2
         public int NoOfTurnsOfPeace { get; set; }
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
-        public int[] ActiveCursorXY { get; set; } // Coordinates of either active unit or of viewing piece.
-        public int[] ActiveCursorXYpx => new int[] { Game.ActiveCursorXY[0] * Xpx, Game.ActiveCursorXY[1] * Ypx };
-        public int[] ClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
+        public int[] StartingActiveCursorXY { get; } // Coordinates of either active unit or of viewing piece at game start
+        //public int[] ActiveCursorXYpx => new int[] { Game.ActiveCursorXY[0] * Xpx, Game.ActiveCursorXY[1] * Ypx };
+        public int[] StartingClickedXY { get; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
 
         private int _zoom;
         public int Zoom     // -7 (min) ... 8 (max), 0=std.

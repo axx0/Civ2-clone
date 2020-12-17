@@ -81,8 +81,8 @@ namespace civ2
                     SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
             }
 
-            ActiveCursorXY = SAVgameData.ActiveCursorXY;
-            ClickedXY = SAVgameData.ClickedXY;
+            StartingActiveCursorXY = SAVgameData.ActiveCursorXY;
+            StartingClickedXY = SAVgameData.ClickedXY;
 
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn
             _playerCiv = _civs[SAVgameData.PlayersCivIndex];
