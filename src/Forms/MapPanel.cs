@@ -24,7 +24,7 @@ namespace civ2.Forms
         private AnimationType AnimType { get; set; }
         private int AnimationCount { get; set; }
 
-        private int[] PanelMap_offset, MapPanel_offset, CentrXY, ActiveOffset, CentrOffset;
+        private int[] PanelMap_offset, MapPanel_offset, CentrXY, ActiveOffset, CentrOffset, ClickedXY;
         private Rectangle mapRect1, mapRect2;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
@@ -113,7 +113,7 @@ namespace civ2.Forms
             //int[] startingSqXYpx = StartingSqXYpx;
             int[] startingSqXYpx = new int[] { 0, 0 };
             //int[] activeXY = ActiveXY;
-            int[] activeXYpx = ActiveXYpx;
+            //int[] activeXYpx = ActiveXYpx;
 
             // Draw map (for round world draw it from 2 parts)
             e.Graphics.DrawImage(Map.ActiveCivMap, PanelMap_offsetpx[0], PanelMap_offsetpx[1], mapRect1, GraphicsUnit.Pixel);
@@ -124,13 +124,13 @@ namespace civ2.Forms
             {
                 case AnimationType.UnitWaiting:
                     {
-                        e.Graphics.DrawImage(AnimationFrames[AnimationCount % 2], ActiveXYpx[0], ActiveXYpx[1] - Game.Ypx);
+                        e.Graphics.DrawImage(AnimationFrames[AnimationCount % 2], ActiveOffsetPx[0], ActiveOffsetPx[1] - Game.Ypx);
                         break;
                     }
                 case AnimationType.ViewPiece:
                     {
                         if (AnimationCount % 2 == 0) 
-                            e.Graphics.DrawImage(Images.ViewPiece, ActiveXYpx[0], ActiveXYpx[1]);
+                            e.Graphics.DrawImage(Images.ViewPiece, ActiveOffsetPx[0], ActiveOffsetPx[1]);
                         break;
                     }
                 case AnimationType.UnitMoving:
@@ -147,19 +147,19 @@ namespace civ2.Forms
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
             int[] coords = Ext.PxToCoords(e.Location.X, e.Location.Y, Game.Zoom);
-            Game.ClickedXY = new int[] { (MapPanel_offset[0] + coords[0]) % (2 * Map.Xdim), MapPanel_offset[1] + coords[1] };  // Coordinates of clicked square
+            ClickedXY = new int[] { (MapPanel_offset[0] + coords[0]) % (2 * Map.Xdim), MapPanel_offset[1] + coords[1] };  // Coordinates of clicked square
 
             if (e.Button == MouseButtons.Left)
             {
-                if (Game.GetCities.Any(city => city.X == Game.ClickedXY[0] && city.Y == Game.ClickedXY[1]))    // City clicked
+                if (Game.GetCities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    // City clicked
                 {
-                    if (Main.ViewPieceMode) Game.ActiveCursorXY = Game.ClickedXY;
+                    if (Main.ViewPieceMode) Game.ActiveXY = ClickedXY;
                     //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
                     //cityForm.Show();
                 }
-                else if (Game.GetUnits.Any(unit => unit.X == Game.ClickedXY[0] && unit.Y == Game.ClickedXY[1]))    // Unit clicked
+                else if (Game.GetUnits.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    // Unit clicked
                 {
-                    int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == Game.ClickedXY[0] && a.Y == Game.ClickedXY[1]);
+                    int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == ClickedXY[0] && a.Y == ClickedXY[1]);
                     if (!Game.GetUnits[clickedUnitIndex].TurnEnded)
                     {
                         Game.ActiveUnit = Game.GetUnits[clickedUnitIndex];
@@ -171,20 +171,20 @@ namespace civ2.Forms
                     {
                         //TODO: determine what happens if unit has ended turn...
                     }
-                    MapViewChange(Game.ClickedXY);
+                    MapViewChange(ClickedXY);
                 }
                 else    // Something else clicked
                 {
-                    if (Main.ViewPieceMode) Game.ActiveCursorXY = Game.ClickedXY;
-                    MapViewChange(Game.ClickedXY);
+                    if (Main.ViewPieceMode) Game.ActiveXY = ClickedXY;
+                    MapViewChange(ClickedXY);
                 }
             }
             else    // Right click
             {
                 Main.ViewPieceMode = true;
                 OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-                Game.ActiveCursorXY = Game.ClickedXY;
-                MapViewChange(Game.ClickedXY);
+                Game.ActiveXY = ClickedXY;
+                MapViewChange(ClickedXY);
                 StartAnimation(AnimationType.ViewPiece);
             }
         }
@@ -458,8 +458,8 @@ namespace civ2.Forms
                     }
                 case UnitEventType.NewUnitActivated:
                     {
-                        Game.ActiveCursorXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
-                        CenterSqXY = Game.ActiveCursorXY;
+                        Game.ActiveXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
+                        CenterSqXY = Game.ActiveXY;
                         StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
@@ -477,7 +477,7 @@ namespace civ2.Forms
         // If ENTER pressed when view piece above city --> enter city view
         private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
         {
-            if (Main.ViewPieceMode && Game.GetCities.Any(city => city.X == Game.ActiveCursorXY[0] && city.Y == Game.ActiveCursorXY[1]))
+            if (Main.ViewPieceMode && Game.GetCities.Any(city => city.X == Game.ActiveXY[0] && city.Y == Game.ActiveXY[1]))
             {
                 //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
                 //cityForm.Show();
@@ -526,7 +526,7 @@ namespace civ2.Forms
                         if (AnimationCount == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1] - Game.Ypx, 2 * Game.Xpx, 3 * Game.Ypx));
+                            DrawPanel.Invalidate(new Rectangle(ActiveOffsetPx[0], ActiveOffsetPx[1] - Game.Ypx, 2 * Game.Xpx, 3 * Game.Ypx));
                         break;
                     }
                 case AnimationType.ViewPiece:
@@ -535,12 +535,12 @@ namespace civ2.Forms
                         if (AnimationCount == 0)
                             DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         else
-                            DrawPanel.Invalidate(new Rectangle(ActiveXYpx[0], ActiveXYpx[1], 2 * Game.Xpx, 2 * Game.Ypx));
+                            DrawPanel.Invalidate(new Rectangle(ActiveOffsetPx[0], ActiveOffsetPx[1], 2 * Game.Xpx, 2 * Game.Ypx));
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
-                        DrawPanel.Invalidate(new Rectangle((Game.ActiveCursorXY[0] - MapPanel_offset[0]) * 32 - 64, (Game.ActiveCursorXY[1] - MapPanel_offset[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
+                        DrawPanel.Invalidate(new Rectangle((Game.ActiveXY[0] - MapPanel_offset[0]) * 32 - 64, (Game.ActiveXY[1] - MapPanel_offset[1]) * 16 - 48, 3 * 64, 3 * 32 + 16));
                         Update();
                         if (AnimationCount == 7)  // Unit has completed movement
                         {
@@ -559,7 +559,7 @@ namespace civ2.Forms
                             // Check if unit moved outside map view -> map view needs to be updated
                             if (UnitMovedOutsideMapView)
                             {
-                                CenterSqXY = Game.ActiveCursorXY;
+                                CenterSqXY = Game.ActiveXY;
                                 DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                                 Update();
                             }
@@ -577,10 +577,10 @@ namespace civ2.Forms
         {
             get
             {
-                if (Game.ActiveCursorXY[0] >= StartingSqXY[0] + DrawingSqXY[0] ||
-                Game.ActiveCursorXY[0] <= StartingSqXY[0] ||
-                Game.ActiveCursorXY[1] >= StartingSqXY[1] + DrawingSqXY[1] ||
-                Game.ActiveCursorXY[1] <= StartingSqXY[1])
+                if (Game.ActiveXY[0] >= StartingSqXY[0] + DrawingSqXY[0] ||
+                Game.ActiveXY[0] <= StartingSqXY[0] ||
+                Game.ActiveXY[1] >= StartingSqXY[1] + DrawingSqXY[1] ||
+                Game.ActiveXY[1] <= StartingSqXY[1])
                     return true;
                 else
                     return false;
@@ -618,22 +618,26 @@ namespace civ2.Forms
             {
                 PanelMap_offset[1] = (PanelSq[1] - MapSq[1]) / 2;
                 CentrXY[1] = MapSq[1] / 2;
+                ActiveOffset[1] = PanelMap_offset[1] + Game.ActiveXY[1];
                 mapRect1.Height = mapHeight;
             }
-            else    // Map higher than panel
+            else    // Map wider than panel (in Y)
             {
-                if (CentrXY[1] < PanelSq[1] / 2)    // Limit Drawing Panel so it's not going beyond the map in north
+                if (CentrXY[1] < CentrOffset[1])    // Limit Drawing Panel so it's not going beyond the map in north
                 {
-                    CentrXY[1] = PanelSq[1] / 2;
+                    CentrXY[1] = CentrOffset[1];
+                    ActiveOffset[1] = Game.ActiveXY[1];
                 }
-                else if (CentrXY[1] > MapSq[1] - PanelSq[1] / 2)  // Limit Drawing Panel so it's not going below the map in south
+                else if (CentrXY[1] > MapSq[1] - CentrOffset[1])  // Limit Drawing Panel so it's not going below the map in south
                 {
                     MapPanel_offset[1] = MapSq[1] - PanelSq[1];
-                    CentrXY[1] = MapPanel_offset[1] + PanelSq[1] / 2;
+                    CentrXY[1] = MapPanel_offset[1] + CentrOffset[1];
+                    ActiveOffset[1] = Game.ActiveXY[1] - MapPanel_offset[1];
                 }
                 else    // Drawing panel within map (Y-axis)
                 {
-                    MapPanel_offset[1] = CentrXY[1] - PanelSq[1] / 2;
+                    MapPanel_offset[1] = CentrXY[1] - CentrOffset[1];
+                    ActiveOffset[1] = Game.ActiveXY[1] - MapPanel_offset[1];
                 }
                 mapRect1.Height = DrawPanel.Height;
             }
@@ -644,6 +648,7 @@ namespace civ2.Forms
             {
                 PanelMap_offset[0] = (PanelSq[0] - MapSq[0]) / 2;
                 CentrXY[0] = MapSq[0] / 2;
+                ActiveOffset[0] = PanelMap_offset[0] + Game.ActiveXY[0];
                 mapRect1.X = 0;
                 mapRect1.Width = mapWidth;
 
@@ -655,21 +660,23 @@ namespace civ2.Forms
             {
                 if (Game.Options.FlatEarth)
                 {
-                    if (CentrXY[0] < PanelSq[1] / 2)  // Limit Drawing Panel so it's not going beyond the map in west
+                    if (CentrXY[0] < CentrOffset[1])  // Limit Drawing Panel so it's not going beyond the map in west
                     {
-                        CentrXY[0] = PanelSq[0] / 2;
+                        CentrXY[0] = CentrOffset[0];
                         // If the tile at these coords doesn't exist, shift X to the right
                         if (CentrXY[0] % 2 != 0 && CentrXY[1] % 2 == 0) CentrXY[0]++;
-                        if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;                        
+                        if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;
+                        ActiveOffset[0] = Game.ActiveXY[0];
                     }
-                    else if (CentrXY[0] > MapSq[0] - PanelSq[0] / 2)  // Limit Drawing Panel so it's not going below the map in east
+                    else if (CentrXY[0] > MapSq[0] - CentrOffset[0])  // Limit Drawing Panel so it's not going below the map in east
                     {
-                        CentrXY[0] = MapSq[0] - PanelSq[0] / 2;
+                        CentrXY[0] = MapSq[0] - CentrOffset[0];
                         // If the tile at these coords doesn't exist, shift X to the right
                         if (CentrXY[0] % 2 != 0 && CentrXY[1] % 2 == 0) CentrXY[0]++;
                         if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;
 
-                        MapPanel_offset[0] = CentrXY[0] - PanelSq[0] / 2;
+                        MapPanel_offset[0] = CentrXY[0] - CentrOffset[0];
+                        ActiveOffset[0] = Game.ActiveXY[0] - MapPanel_offset[0];
                     }
                     else    // Drawing panel within map (X-axis)
                     {
@@ -677,33 +684,43 @@ namespace civ2.Forms
                         if (CentrXY[0] % 2 != 0 && CentrXY[1] % 2 == 0) CentrXY[0]++;
                         if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;
 
-                        MapPanel_offset[0] = CentrXY[0] - PanelSq[0] / 2;
+                        MapPanel_offset[0] = CentrXY[0] - CentrOffset[0];
+                        ActiveOffset[0] = Game.ActiveXY[0] - MapPanel_offset[0];
                     }
                     mapRect1.Width = DrawPanel.Width;
                     mapRect1.X = Game.Xpx * MapPanel_offset[0];
                 }
                 else    // Round world
                 {
-                    if (CentrXY[0] < PanelSq[1] / 2)  // Map reaches west of X=0 axis
+                    if (CentrXY[0] - CentrOffset[0] < 0)  // Panel reaches west of X=0 axis
                     {
                         // If the tile at these coords doesn't exist, shift X to the right
                         if (CentrXY[0] % 2 != 0 && CentrXY[1] % 2 == 0) CentrXY[0]++;
                         if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;
 
-                        MapPanel_offset[0] = MapSq[0] + (CentrXY[0] - PanelSq[0] / 2);
+                        MapPanel_offset[0] = MapSq[0] + (CentrXY[0] - CentrOffset[0]);
+                        if (Game.ActiveXY[0] > MapPanel_offset[0])  // Active square on the left side of 2-part map
+                            ActiveOffset[0] = Game.ActiveXY[0] - MapPanel_offset[0];
+                        else      // Active square on the right side of 2-part map
+                            ActiveOffset[0] = CentrOffset[0] - CentrXY[0] + Game.ActiveXY[0];
+
                         mapRect1.X = Game.Xpx * MapPanel_offset[0];
                         mapRect1.Width = mapWidth - mapRect1.X;
                         mapRect2.X = Game.Xpx;
                         mapRect2.Width = DrawPanel.Width - mapRect1.Width;
-
                     }
-                    else if (CentrXY[0] + PanelSq[0] / 2 > MapSq[0])  // Panel beyond map eastern edge
+                    else if (CentrXY[0] + CentrOffset[0] > MapSq[0])  // Panel beyond map eastern edge
                     {
                         // If the tile at these coords doesn't exist, shift X to the right
                         if (CentrXY[0] % 2 != 0 && CentrXY[1] % 2 == 0) CentrXY[0]++;
                         if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;
 
-                        MapPanel_offset[0] = CentrXY[0] - PanelSq[0] / 2;
+                        MapPanel_offset[0] = CentrXY[0] - CentrOffset[0];
+                        if (Game.ActiveXY[0] > MapPanel_offset[0])  // Active square on the left side of 2-part map
+                            ActiveOffset[0] = Game.ActiveXY[0] - MapPanel_offset[0];
+                        else   // Active square on the right side of 2-part map
+                            ActiveOffset[0] = MapSq[0] - MapPanel_offset[0] + Game.ActiveXY[0];
+
                         mapRect1.X = Game.Xpx * MapPanel_offset[0];
                         mapRect1.Width = mapWidth - mapRect1.X;
                         mapRect2.X = Game.Xpx;
@@ -715,7 +732,9 @@ namespace civ2.Forms
                         if (CentrXY[0] % 2 != 0 && CentrXY[1] % 2 == 0) CentrXY[0]++;
                         if (CentrXY[0] % 2 == 0 && CentrXY[1] % 2 != 0) CentrXY[0]++;
 
-                        MapPanel_offset[0] = CentrXY[0] - PanelSq[0] / 2;
+                        MapPanel_offset[0] = CentrXY[0] - CentrOffset[0];
+                        ActiveOffset[0] = MapPanel_offset[0] + Game.ActiveXY[0];
+
                         mapRect1.Width = DrawPanel.Width;
                         mapRect1.X = Game.Xpx * MapPanel_offset[0];
                     }
@@ -727,7 +746,7 @@ namespace civ2.Forms
 
         private int[] PanelMap_offsetpx => new int[] { Game.Xpx * PanelMap_offset[0], Game.Ypx * PanelMap_offset[1] };
         private int[] MapPanel_offsetpx => new int[] { Game.Xpx * MapPanel_offset[0], Game.Ypx * MapPanel_offset[1] };
-        private int[] ActiveXYpx => new int[] { Game.ActiveCursorXYpx[0] - MapPanel_offsetpx[0], Game.ActiveCursorXYpx[1] - MapPanel_offsetpx[1] };
+        private int[] ActiveOffsetPx => new int[] { Game.Xpx * ActiveOffset[0], Game.Ypx * ActiveOffset[1] };
 
     }
 }

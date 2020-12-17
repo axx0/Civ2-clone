@@ -67,7 +67,6 @@ namespace civ2.Forms
                 case IntroScreenChoiceType.LoadGame:
                     {
                         Game.LoadGame(directoryPath, SAVname);
-                        ActiveXY = Game.StartingActiveCursorXY;
                         LoadPanelsAfterGameStart();
                         break;
                     }

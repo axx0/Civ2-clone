@@ -81,7 +81,7 @@ namespace civ2
                     SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
             }
 
-            StartingActiveCursorXY = SAVgameData.ActiveCursorXY;
+            _activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
             StartingClickedXY = SAVgameData.ClickedXY;
 
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn

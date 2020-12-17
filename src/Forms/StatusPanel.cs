@@ -136,17 +136,17 @@ namespace civ2.Forms
             //List<IUnit> UnitsOnThisTile = new List<IUnit>();
             //foreach (IUnit unit in Game.GetUnits.Where(a => (a.X == Game.ActiveCursorXY[0]) && (a.Y == Game.ActiveCursorXY[1])))
             //    UnitsOnThisTile.Add(unit);
-            List<IUnit> UnitsOnThisTile = Game.GetUnits.Where(u => u.X == Game.ActiveCursorXY[0] && u.Y == Game.ActiveCursorXY[1]).ToList();
+            List<IUnit> UnitsOnThisTile = Game.GetUnits.Where(u => u.X == Game.ActiveXY[0] && u.Y == Game.ActiveXY[1]).ToList();
             int maxUnitsToDraw = (int)Math.Floor((double)((UnitPanel.Height - 66) / 56));
 
             if (Main.ViewPieceMode)
             {
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.Black), new Point(120 + 1, 0), sf);
                 e.Graphics.DrawString("Viewing Pieces", font, new SolidBrush(Color.White), new Point(120, 0), sf);
-                e.Graphics.DrawString($"Loc: ({Game.ActiveCursorXY[0]}, {Game.ActiveCursorXY[1]}) {Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
-                e.Graphics.DrawString($"Loc: ({Game.ActiveCursorXY[0]}, {Game.ActiveCursorXY[1]}) {Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
-                e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
-                e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
+                e.Graphics.DrawString($"Loc: ({Game.ActiveXY[0]}, {Game.ActiveXY[1]}) {Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 28);
+                e.Graphics.DrawString($"Loc: ({Game.ActiveXY[0]}, {Game.ActiveXY[1]}) {Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Island}", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 27);
+                e.Graphics.DrawString($"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 46);
+                e.Graphics.DrawString($"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 45);
 
                 int count;
                 for (count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
@@ -199,8 +199,8 @@ namespace civ2.Forms
                         e.Graphics.DrawString(Game.ActiveCiv.Adjective, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 79, 61);
                         e.Graphics.DrawString(Game.ActiveUnit.Name, font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 84);
                         e.Graphics.DrawString(Game.ActiveUnit.Name, font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 83);
-                        e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
-                        e.Graphics.DrawString($"({Map.Tile[(Game.ActiveCursorXY[0] - Game.ActiveCursorXY[1] % 2) / 2, Game.ActiveCursorXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
+                        e.Graphics.DrawString($"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 6, 102);
+                        e.Graphics.DrawString($"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", font, new SolidBrush(Color.FromArgb(51, 51, 51)), 5, 101);
                     }
                     else
                     {

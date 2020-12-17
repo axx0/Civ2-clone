@@ -13,7 +13,7 @@ namespace civ2.Bitmaps
             List<Bitmap> animationFrames = new List<Bitmap>();
 
             // Get coords of central tile & which squares are to be drawn
-            int[] centralCoords = Game.ActiveCursorXY;   // Either from active unit or moving pieces
+            int[] centralCoords = Game.ActiveXY;   // Either from active unit or moving pieces
             List<int[]> coordsOffsetsToBeDrawn = new List<int[]>
             {
                 new int[] {0, -2},
@@ -52,7 +52,7 @@ namespace civ2.Bitmaps
                         {
                             IUnit unit;
                             // If this is not tile with active unit or viewing piece, draw last unit on stack
-                            if (!(x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1]))
+                            if (!(x == Game.ActiveXY[0] && y == Game.ActiveXY[1]))
                             {
                                 unit = unitsHere.Last();
                                 if (!unit.IsInCity)
@@ -80,7 +80,7 @@ namespace civ2.Bitmaps
                         if (unitsHere.Any())
                         {
                             // This tile has active unit/viewing piece
-                            if (x == Game.ActiveCursorXY[0] && y == Game.ActiveCursorXY[1])
+                            if (x == Game.ActiveXY[0] && y == Game.ActiveXY[1])
                             {
                                 if (!viewPieceMode)
                                 {
