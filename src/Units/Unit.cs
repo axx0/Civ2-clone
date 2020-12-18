@@ -18,7 +18,7 @@ namespace civ2.Units
                 if (Game.Rules.UnitUntil[(int)Type] == "nil")
                     return null;
                 else
-                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.UnitUntil[(int)Type]);                  
+                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.UnitUntil[(int)Type]);
             }
         }
         public UnitGAS Domain => (UnitGAS)Game.Rules.UnitDomain[(int)Type];
@@ -64,9 +64,9 @@ namespace civ2.Units
             get { return MaxMovePoints - MovePointsLost; }
         }
         public int MovePointsLost { get; set; }
-        public int HitPoints 
-        { 
-            get { return MaxHitpoints - HitPointsLost; } 
+        public int HitPoints
+        {
+            get { return MaxHitpoints - HitPointsLost; }
         }
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
@@ -142,15 +142,15 @@ namespace civ2.Units
                     {
                         //Cannot move to ocean tile
                         if (Map.Tile[Xto_, Yto].Type == TerrainType.Ocean)
-                        { 
-                            break; 
+                        {
+                            break;
                         }
-                        
+
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim) 
-                        { 
+                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
+                        {
                             //TODO: display a message that a unit cannot move beyond map edges
-                            break; 
+                            break;
                         }
 
                         //Movement possible, reduce movement points
@@ -170,12 +170,12 @@ namespace civ2.Units
                 case UnitGAS.Sea:
                     {
                         if (Map.Tile[Xto_, Yto].Type != TerrainType.Ocean)
-                        { 
-                            break; 
+                        {
+                            break;
                         }
 
                         //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim) 
+                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
                         {
                             //TODO: display a message that a unit cannot move beyond map edges
                             break;
@@ -234,7 +234,7 @@ namespace civ2.Units
             get
             {
                 if (MovePoints <= 0) _turnEnded = true;
-                if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation || 
+                if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation ||
                     Order == OrderType.BuildRoad || Order == OrderType.BuildAirbase || Order == OrderType.BuildFortress || Order == OrderType.BuildMine) _turnEnded = true;
                 return _turnEnded;
             }
@@ -333,31 +333,7 @@ namespace civ2.Units
         public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
 
-        //private Bitmap _graphic;
-        public Bitmap Graphic 
-        {
-            get
-            {
-                return Draw.Unit(this, IsInStack, Game.Zoom);
-            }
-            //get
-            //{
-            //    if (_graphic == null)
-            //        return Draw.Unit(this, IsInStack, Game.ZoomLvl);
-            //    else
-            //        return _graphic;
-            //}
-            //set { _graphic = value; }
-        }
+        public Bitmap Graphic(bool isInStack, int zoom) => Draw.Unit(this, isInStack, zoom);
 
-        //private Bitmap _graphicMapPanel;
-        //public Bitmap Graphic
-        //{
-        //    get
-        //    {
-        //        //_graphicMapPanel = Images.CreateUnitBitmap(this, IsInStack, MapPanel.ZoomLvl);
-        //        return _graphicMapPanel;
-        //    }
-        //}
     }
 }

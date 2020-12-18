@@ -105,9 +105,7 @@ namespace civ2.Bitmaps
             }
 
             // Resize image if required
-            unitPic = ModifyImage.ResizeImage(unitPic, zoom);
-
-            return unitPic;
+            return zoom == 0 ? unitPic : ModifyImage.ResizeImage(unitPic, zoom);
         }
 
         //Draw unit type (not in game units and their stats, just unit types for e.g. defense minister statistics)

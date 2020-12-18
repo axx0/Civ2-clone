@@ -291,17 +291,6 @@ namespace civ2
             }
         }
 
-        private Bitmap _graphic;
-        public Bitmap Graphic
-        {
-            get
-            {
-                if (_graphic == null)
-                    _graphic = Draw.City(this, true, Game.Zoom);
-                return _graphic;
-            }
-        }
-
         private PeopleType[] _people;
         public PeopleType[] People
         {
@@ -346,12 +335,14 @@ namespace civ2
             }
         }
 
+        public Bitmap Graphic(bool citySizeWindow, int zoom) => Draw.City(this, citySizeWindow, zoom);
+
         private Bitmap _textGraphic;
         public Bitmap TextGraphic
         {
             get
             {
-                //Define text characteristics for zoom levels
+                // Define text characteristics for zoom levels
                 int shadowOffset, fontSize;
                 switch (Game.Zoom)
                 {
@@ -373,7 +364,7 @@ namespace civ2
                     case 8: shadowOffset = 2; fontSize = 28; break;
                     default: shadowOffset = 2; fontSize = 14; break;
                 }
-                //Draw
+                // Draw
                 Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
                 SizeF stringSize = gr.MeasureString(Name, new Font("Times New Roman", fontSize));
                 int stringWidth = (int)stringSize.Width;

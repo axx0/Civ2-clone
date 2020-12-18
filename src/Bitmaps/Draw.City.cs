@@ -127,9 +127,7 @@ namespace civ2.Bitmaps
                 sf.Dispose();
             }
 
-            cityPic = ModifyImage.ResizeImage(cityPic, zoom);
-
-            return cityPic;
+            return zoom == 0 ? cityPic : ModifyImage.ResizeImage(cityPic, zoom);
         }
 
         public static Bitmap CityName(City city, int zoom)

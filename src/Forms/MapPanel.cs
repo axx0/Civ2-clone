@@ -363,7 +363,9 @@ namespace civ2.Forms
         public void ZoomINclicked(Object sender, EventArgs e) 
         { 
             Game.Zoom++;
+            ReturnCoordsAtMapViewChange(CentrXY);
             Map.SetNewActiveMapPic();
+            StartAnimation(AnimType);
             DrawPanel.Refresh(); 
         }
         public void MaxZoomINclicked(Object sender, EventArgs e) 
