@@ -175,13 +175,13 @@ namespace civ2.Forms
                 int count;
                 for(count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
                 {
-                    if (Game.Instance.ActiveUnit == UnitsOnThisTile[count])
+                    if (Game.ActiveUnit == UnitsOnThisTile[count])
                     {
                         //e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(Game.Instance.ActiveUnit, false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 27);
-                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(Game.Instance.ActiveUnit, false, 0), 0), 6, 27); // TODO: do this again !!!
+                        e.Graphics.DrawImage(ModifyImage.ResizeImage(Draw.Unit(Game.ActiveUnit, false, 0), 0), 6, 27); // TODO: do this again !!!
                         // Show move points correctly
-                        int fullMovPts = Game.Instance.ActiveUnit.MovePoints / 3;
-                        int remMovPts = Game.Instance.ActiveUnit.MovePoints % 3;
+                        int fullMovPts = Game.ActiveUnit.MovePoints / 3;
+                        int remMovPts = Game.ActiveUnit.MovePoints % 3;
                         if (remMovPts == 0) // Only show full move pts
                         {
                             e.Graphics.DrawString($"Moves: {fullMovPts}", font, new SolidBrush(Color.FromArgb(191, 191, 191)), 80, 26);

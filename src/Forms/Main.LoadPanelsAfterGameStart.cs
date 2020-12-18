@@ -25,7 +25,7 @@ namespace civ2.Forms
             Controls.Add(MapPanel);
             MapPanel.BringToFront();
 
-            MinimapPanel = new MinimapPanel(262, 149)
+            MinimapPanel = new MinimapPanel(this, 262, 149)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height)
             };

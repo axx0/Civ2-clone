@@ -187,12 +187,7 @@ namespace civ2.Forms
 
         private void MapViewChange(int[] newCenterCoords)
         {
-            //CenterSqXY = newCenterCoords;
             ReturnCoordsAtMapViewChange(newCenterCoords);
-
-            //OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, StartingSqXY, DrawingSqXY));
-
-            DrawPanel.Refresh();
         }
 
         public int ToggleMapGrid()
@@ -594,6 +589,9 @@ namespace civ2.Forms
                     mapRect2.Height = mapRect1.Height;
                 }
             }
+
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, CentrXY, CentrOffset, ActiveOffset, PanelMap_offset, MapPanel_offset, mapRect1, mapRect2));
+            DrawPanel.Invalidate();
         }
 
         private int[] PanelMap_offsetpx => new int[] { Game.Xpx * PanelMap_offset[0], Game.Ypx * PanelMap_offset[1] };

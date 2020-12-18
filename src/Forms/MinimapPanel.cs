@@ -13,15 +13,18 @@ namespace civ2.Forms
         Game Game => Game.Instance;
         Map Map => Map.Instance;
 
+        private Main Main;
         private readonly Cursor MinimapCursor;
         private readonly int[] Offset;
-        private int[] StartingSqXY;
-        private int[] DrawingSqXY;
+        private int[] CentrXY, CentrOffset, ActiveOffset, PanelMap_offset, MapPanel_offset;
+        private Rectangle MapRect1, MapRect2;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MinimapPanel(int _width, int _height) : base(_width, _height, "World", false)
+        public MinimapPanel(Main parent, int _width, int _height) : base(_width, _height, "World", false)
         {
+            this.Main = parent;
+
             MapPanel.OnMapEvent += MapEventHappened;
             Main.OnMapEvent += MapEventHappened;
 
@@ -35,8 +38,11 @@ namespace civ2.Forms
             // Determine the offset of minimap from panel edges
             Offset = new int[] { (DrawPanel.Width - 2 * Map.Xdim) / 2, (DrawPanel.Height - Map.Ydim) / 2 };
 
-            StartingSqXY = new int[] { 0, 0 };
-            DrawingSqXY = new int[] { 0, 0 };
+            CentrXY = new int[] { 0, 0 };
+            CentrOffset = new int[] { 0, 0 };
+            ActiveOffset = new int[] { 0, 0 };
+            PanelMap_offset = new int[] { 0, 0 };
+            MapPanel_offset = new int[] { 0, 0 };
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
@@ -45,18 +51,16 @@ namespace civ2.Forms
             Color drawColor;
             for (int row = 0; row < Map.Ydim; row++)
                 for (int col = 0; col < Map.Xdim; col++)
-                {
                     if (Game.WhichCivsMapShown == 8 || Map.Visibility[col, row][Game.WhichCivsMapShown])
                     {
                         drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                         e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
                     }
-                }
 
             // Draw cities
             foreach (City city in Game.GetCities)
             {
-                if (Game.WhichCivsMapShown == 8 || Map.Visibility[(city.X - city.Y % 2) / 2, city.Y][Game.WhichCivsMapShown])
+                if (Game.WhichCivsMapShown == 8 || Map.VisibilityC2(city.X, city.Y, Game.WhichCivsMapShown))
                 {
                     e.Graphics.FillRectangle(new SolidBrush(CivColors.CityTextColor[city.Owner.Id]), Offset[0] + city.X, Offset[1] + city.Y, 2, 1);
                 }
@@ -97,8 +101,13 @@ namespace civ2.Forms
             {
                 case MapEventType.MapViewChanged:
                     {
-                        StartingSqXY = e.StartingSqXY;
-                        DrawingSqXY = e.DrawingSqXY;
+                        CentrXY = e.CentrXY;
+                        CentrOffset = e.CentrOffset;
+                        ActiveOffset = e.ActiveOffset;
+                        PanelMap_offset = e.PanelMap_offset;
+                        MapPanel_offset = e.MapPanel_offset;
+                        MapRect1 = e.MapRect1;
+                        MapRect2 = e.MapRect2;
                         DrawPanel.Refresh();
                         break;
                     }
