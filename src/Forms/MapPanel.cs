@@ -109,11 +109,7 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Calculate these once just for less computations
-            //int[] startingSqXY = StartingSqXY;
-            //int[] startingSqXYpx = StartingSqXYpx;
             int[] startingSqXYpx = new int[] { 0, 0 };
-            //int[] activeXY = ActiveXY;
-            //int[] activeXYpx = ActiveXYpx;
 
             // Draw map (for round world draw it from 2 parts)
             e.Graphics.DrawImage(Map.ActiveCivMap, PanelMap_offsetpx[0], PanelMap_offsetpx[1], mapRect1, GraphicsUnit.Pixel);
@@ -198,151 +194,6 @@ namespace civ2.Forms
 
             DrawPanel.Refresh();
         }
-
-        #region Calculation of coordinates
-        // Coordinates in DrawPanel upper left corner where map drawing begins
-        private int[] _startingSqXY;
-        public int[] StartingSqXY
-        {
-            get
-            {
-                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.Zoom); // Offset of central tile from panel NW corner
-                int[] _centerSqXY = CenterSqXY;
-                _startingSqXY = new int[] { _centerSqXY[0] - centerDistanceXY[0], _centerSqXY[1] - centerDistanceXY[1] };
-
-                //if (!Game.Options.FlatEarth)    // Round world --> make sure starting X is never < 0
-                //{
-                //    if (_startingSqXY[0] < 0)
-                //    {
-                //        _startingSqXY[0] = _startingSqXY[0] % 
-                //    }
-                //}
-
-                return _startingSqXY; ;
-            }
-        }
-
-
-
-        //// Determines offset to StartingSqXY for drawing of squares on panel edge { left, up, right, down }
-        //private int[] _edgePxDrawOffsetXY;
-        //private int[] EdgePxDrawOffsetXY
-        //{
-        //    get
-        //    {
-        //        int[] startingSqXY = StartingSqXY;
-        //        int[] drawingSqXY = DrawingSqXY;
-        //        int[] _edgeDrawOffsetXY = new int[] { -2, -2, 2, 2 };     // By default draw 2 squares more in each direction
-        //        if (startingSqXY[0] == 0 || startingSqXY[1] == 0)   // Starting on edge
-        //        {
-        //            _edgeDrawOffsetXY[0] = -Math.Max(Math.Min(startingSqXY[0], 2), 0);
-        //            _edgeDrawOffsetXY[1] = -Math.Max(Math.Min(startingSqXY[1], 2), 0);
-        //        }
-        //        if (startingSqXY[0] == 1 || startingSqXY[1] == 1)  // Starting in 1st row/column
-        //        {
-        //            _edgeDrawOffsetXY[0] = -1;
-        //            _edgeDrawOffsetXY[1] = -1;
-        //        }
-        //        if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)  // On right edge
-        //        {
-        //            _edgeDrawOffsetXY[2] = 0;
-        //            _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
-        //        }
-        //        if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)  // On bottom edge
-        //        {
-        //            _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
-        //            _edgeDrawOffsetXY[3] = 0;
-        //        }
-        //        if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim - 1)  // 1 column left of right edge
-        //        {
-        //            _edgeDrawOffsetXY[2] = 1;
-        //            _edgeDrawOffsetXY[3] = Math.Min(Map.Ydim - drawingSqXY[1] - startingSqXY[1], 2);
-        //        }
-        //        if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim - 1)  // 1 column up of bottom edge
-        //        {
-        //            _edgeDrawOffsetXY[2] = Math.Min(2 * Map.Xdim - drawingSqXY[0] - startingSqXY[0], 2);
-        //            _edgeDrawOffsetXY[3] = 1;
-        //        }
-
-        //        // Now convert it to pixels
-        //        _edgePxDrawOffsetXY = new int[] { 32 * _edgeDrawOffsetXY[0], 16 * _edgeDrawOffsetXY[1] };
-        //        if (startingSqXY[0] + drawingSqXY[0] == 2 * Map.Xdim)
-        //            _edgePxDrawOffsetXY[0] = DrawPanel.Width - (32 + 32 * drawingSqXY[0] - 32 * _edgeDrawOffsetXY[0]);
-        //        if (startingSqXY[1] + drawingSqXY[1] == Map.Ydim)
-        //            _edgePxDrawOffsetXY[1] = DrawPanel.Height - (16 + 16 * drawingSqXY[1] - 16 * _edgeDrawOffsetXY[1]);
-
-        //        return _edgePxDrawOffsetXY;
-        //    }
-        //}
-
-        // Squares to be drawn on the panel
-        private int[] DrawingSqXY => new int[] { 2 * (int)Math.Ceiling((double)DrawPanel.Width / (8 * (8 + Game.Zoom))), 2 * (int)Math.Ceiling((double)DrawPanel.Height / (4 * (8 + Game.Zoom))) };
-
-        // Center square on the map
-        private int[] _centerSqXY;
-        private int[] CenterSqXY
-        {
-            get { return _centerSqXY; }
-            set
-            {
-                int[] centerDistanceXY = Ext.PxToCoords(DrawPanel.Width / 2, DrawPanel.Height / 2, Game.Zoom); // Offset of central tile from panel NW corner
-                int[] _startingSqXY = new int[] { value[0] - centerDistanceXY[0], value[1] - centerDistanceXY[1] };
-                int[] drawingSqXY = DrawingSqXY;
-
-
-
-                // Limit movement so that map limits are not exceeded
-                if (Game.Options.FlatEarth)
-                {
-                    if (_startingSqXY[0] < 0 && _startingSqXY[1] < 0)    // Movement beyond upper & left edge
-                        _startingSqXY = new int[] { 0, 0 };
-                    else if ((_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim) && _startingSqXY[1] < 0)    // Movement beyond upper & right edge
-                        _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], 0 };
-                    else if (_startingSqXY[0] < 0 && (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim))    // Movement beyond lower & left edge
-                        _startingSqXY = new int[] { 0, Map.Ydim - drawingSqXY[1] };
-                    else if ((_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim) && (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim))    // Movement beyond lower & right edge
-                        _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0], Map.Ydim - drawingSqXY[1] };
-                    else if (_startingSqXY[0] < 0)     // Movement beyond left edge
-                        _startingSqXY = new int[] { _startingSqXY[1] % 2, _startingSqXY[1] };
-                    else if (_startingSqXY[1] < 0)     // Movement beyond upper edge
-                        _startingSqXY = new int[] { _startingSqXY[0], _startingSqXY[0] % 2 };
-                    else if (_startingSqXY[0] + drawingSqXY[0] >= 2 * Map.Xdim)     // Movement beyond right edge
-                        _startingSqXY = new int[] { 2 * Map.Xdim - drawingSqXY[0] - _startingSqXY[1] % 2, _startingSqXY[1] };
-                    else if (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim)     // Movement beyond bottom edge
-                        _startingSqXY = new int[] { _startingSqXY[0], Map.Ydim - drawingSqXY[1] - _startingSqXY[0] % 2 };
-                }
-                else    // ROUND EARTH
-                {
-                    // Check only movement beyond upper and lower edge
-                    if (_startingSqXY[1] < 0)    // Upper edge
-                        _startingSqXY[1] = 0;
-                    else if (_startingSqXY[1] + drawingSqXY[1] >= Map.Ydim)    // Lower edge
-                        _startingSqXY[1] = Map.Ydim - drawingSqXY[1];
-                }
-
-                _centerSqXY = new int[] { centerDistanceXY[0] + _startingSqXY[0], centerDistanceXY[1] + _startingSqXY[1] };
-            }
-        }
-
-        // Currently active box (active unit or viewing piece), civ2 coords
-        //private int[] _activeXY;
-        //public int[] ActiveXY
-        //{
-        //    get
-        //    {
-        //        if (Game.ActiveUnit != null)
-        //            return new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
-        //        else
-        //            return _activeXY;
-        //    }
-        //    set { _activeXY = value; }
-        //}
-
-        // Representation in pixels for drawing
-        private int[] StartingSqXYpx => new int[] { StartingSqXY[0] * 4 * (8 + Game.Zoom), StartingSqXY[1] * 2 * (8 + Game.Zoom) };
-        private int MapXdimPx => 2 * Map.Xdim * 4 * (8 + Game.Zoom);
-        private int MapYdimPx => Map.Ydim * 2 * (8 + Game.Zoom);
-        #endregion
 
         public int ToggleMapGrid()
         {
@@ -460,8 +311,7 @@ namespace civ2.Forms
                     }
                 case UnitEventType.NewUnitActivated:
                     {
-                        Game.ActiveXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
-                        CenterSqXY = Game.ActiveXY;
+                        ReturnCoordsAtMapViewChange(Game.ActiveXY);
                         StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
@@ -561,7 +411,7 @@ namespace civ2.Forms
                             // Check if unit moved outside map view -> map view needs to be updated
                             if (UnitMovedOutsideMapView)
                             {
-                                CenterSqXY = Game.ActiveXY;
+                                ReturnCoordsAtMapViewChange(Game.ActiveXY);
                                 DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                                 Update();
                             }
@@ -579,10 +429,10 @@ namespace civ2.Forms
         {
             get
             {
-                if (Game.ActiveXY[0] >= StartingSqXY[0] + DrawingSqXY[0] ||
-                Game.ActiveXY[0] <= StartingSqXY[0] ||
-                Game.ActiveXY[1] >= StartingSqXY[1] + DrawingSqXY[1] ||
-                Game.ActiveXY[1] <= StartingSqXY[1])
+                if (Game.ActiveXY[0] >= 2 * Map.Xdim ||
+                Game.ActiveXY[0] < 0 ||
+                Game.ActiveXY[1] >= Map.Ydim ||
+                Game.ActiveXY[1] < 0)
                     return true;
                 else
                     return false;
