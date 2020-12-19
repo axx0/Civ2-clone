@@ -1,166 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>5</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="src\Bitmaps\DrawMap_old!!!.cs" />
-    <Compile Remove="src\Forms\City view\CityForm.cs" />
-    <Compile Remove="src\Forms\City view\CityForm.Designer.cs" />
-    <Compile Remove="src\Forms\IntroForm.cs" />
-    <Compile Remove="src\Forms\IntroForm.Designer.cs" />
-    <Compile Remove="src\Forms\MainCiv2Window_.cs" />
-    <Compile Remove="src\Forms\MainCiv2Window_.Designer.cs" />
-    <Compile Remove="src\Forms\MapForm.cs" />
-    <Compile Remove="src\Forms\MapForm.Designer.cs" />
-    <Compile Remove="src\Forms\MapForm_.cs" />
-    <Compile Remove="src\Forms\MapForm_.Designer.cs" />
-    <Compile Remove="src\Forms\MapPanel_.cs" />
-    <Compile Remove="src\Forms\StatusForm_.cs" />
-    <Compile Remove="src\Forms\StatusForm_.Designer.cs" />
-    <Compile Remove="src\Forms\WorldMapForm_.cs" />
-    <Compile Remove="src\Forms\WorldMapForm_.Designer.cs" />
-    <Compile Remove="src\Improvements\Airport.cs" />
-    <Compile Remove="src\Improvements\ApolloProgr.cs" />
-    <Compile Remove="src\Improvements\Aqueduct.cs" />
-    <Compile Remove="src\Improvements\Bank.cs" />
-    <Compile Remove="src\Improvements\Barracks.cs" />
-    <Compile Remove="src\Improvements\BaseImprovement.cs" />
-    <Compile Remove="src\Improvements\Capitalization.cs" />
-    <Compile Remove="src\Improvements\Cathedral.cs" />
-    <Compile Remove="src\Improvements\CityWalls.cs" />
-    <Compile Remove="src\Improvements\CoastalFort.cs" />
-    <Compile Remove="src\Improvements\Colosseum.cs" />
-    <Compile Remove="src\Improvements\Colossus.cs" />
-    <Compile Remove="src\Improvements\CoperObserv.cs" />
-    <Compile Remove="src\Improvements\Courthouse.cs" />
-    <Compile Remove="src\Improvements\CureCancer.cs" />
-    <Compile Remove="src\Improvements\DarwinVoyage.cs" />
-    <Compile Remove="src\Improvements\DV_Workshop.cs" />
-    <Compile Remove="src\Improvements\EiffelTower.cs" />
-    <Compile Remove="src\Improvements\Factory.cs" />
-    <Compile Remove="src\Improvements\Granary.cs" />
-    <Compile Remove="src\Improvements\GreatLibrary.cs" />
-    <Compile Remove="src\Improvements\GreatWall.cs" />
-    <Compile Remove="src\Improvements\HangingGardens.cs" />
-    <Compile Remove="src\Improvements\Harbour.cs" />
-    <Compile Remove="src\Improvements\HooverDam.cs" />
-    <Compile Remove="src\Improvements\HydroPlant.cs" />
-    <Compile Remove="src\Improvements\IN_College.cs" />
-    <Compile Remove="src\Improvements\JSB_Cathedral.cs" />
-    <Compile Remove="src\Improvements\KR_Crusade.cs" />
-    <Compile Remove="src\Improvements\Library.cs" />
-    <Compile Remove="src\Improvements\Lighthouse.cs" />
-    <Compile Remove="src\Improvements\MagellExped.cs" />
-    <Compile Remove="src\Improvements\ManhattanProj.cs" />
-    <Compile Remove="src\Improvements\Marketplace.cs" />
-    <Compile Remove="src\Improvements\MassTransit.cs" />
-    <Compile Remove="src\Improvements\MfgPlant.cs" />
-    <Compile Remove="src\Improvements\MichChapel.cs" />
-    <Compile Remove="src\Improvements\MP_Embassy.cs" />
-    <Compile Remove="src\Improvements\NuclearPlant.cs" />
-    <Compile Remove="src\Improvements\OffshorePlat.cs" />
-    <Compile Remove="src\Improvements\Oracle.cs" />
-    <Compile Remove="src\Improvements\Palace.cs" />
-    <Compile Remove="src\Improvements\PoliceStat.cs" />
-    <Compile Remove="src\Improvements\PortFacil.cs" />
-    <Compile Remove="src\Improvements\PowerPlant.cs" />
-    <Compile Remove="src\Improvements\Pyramids.cs" />
-    <Compile Remove="src\Improvements\RecyclCentre.cs" />
-    <Compile Remove="src\Improvements\ResearchLab.cs" />
-    <Compile Remove="src\Improvements\SAMbattery.cs" />
-    <Compile Remove="src\Improvements\SDIdefense.cs" />
-    <Compile Remove="src\Improvements\SETIProgr.cs" />
-    <Compile Remove="src\Improvements\SewerSystem.cs" />
-    <Compile Remove="src\Improvements\ShakespTheat.cs" />
-    <Compile Remove="src\Improvements\SolarPlant.cs" />
-    <Compile Remove="src\Improvements\SScomponent.cs" />
-    <Compile Remove="src\Improvements\SSmodule.cs" />
-    <Compile Remove="src\Improvements\SSstructural.cs" />
-    <Compile Remove="src\Improvements\StatueLiberty.cs" />
-    <Compile Remove="src\Improvements\StockExch.cs" />
-    <Compile Remove="src\Improvements\Superhighways.cs" />
-    <Compile Remove="src\Improvements\Supermarket.cs" />
-    <Compile Remove="src\Improvements\Temple.cs" />
-    <Compile Remove="src\Improvements\TradingCompany.cs" />
-    <Compile Remove="src\Improvements\UnitedNations.cs" />
-    <Compile Remove="src\Improvements\University.cs" />
-    <Compile Remove="src\Improvements\WarAcademy.cs" />
-    <Compile Remove="src\Improvements\WomenSuffrage.cs" />
-    <Compile Remove="src\Resolution.cs" />
-    <Compile Remove="src\Terrains\BaseTerrain.cs" />
-    <Compile Remove="src\Terrains\Desert.cs" />
-    <Compile Remove="src\Terrains\Forest.cs" />
-    <Compile Remove="src\Terrains\Glacier.cs" />
-    <Compile Remove="src\Terrains\Grassland.cs" />
-    <Compile Remove="src\Terrains\Hills.cs" />
-    <Compile Remove="src\Terrains\Jungle.cs" />
-    <Compile Remove="src\Terrains\Mountains.cs" />
-    <Compile Remove="src\Terrains\Ocean.cs" />
-    <Compile Remove="src\Terrains\Plains.cs" />
-    <Compile Remove="src\Terrains\Swamp.cs" />
-    <Compile Remove="src\Terrains\Tundra.cs" />
-    <Compile Remove="src\Units\AEGISCruiser.cs" />
-    <Compile Remove="src\Units\AlpineTroops.cs" />
-    <Compile Remove="src\Units\Archers.cs" />
-    <Compile Remove="src\Units\Armor.cs" />
-    <Compile Remove="src\Units\Artillery.cs" />
-    <Compile Remove="src\Units\BaseUnit.cs" />
-    <Compile Remove="src\Units\Battleship.cs" />
-    <Compile Remove="src\Units\Bomber.cs" />
-    <Compile Remove="src\Units\Cannon.cs" />
-    <Compile Remove="src\Units\Caravan.cs" />
-    <Compile Remove="src\Units\Caravel.cs" />
-    <Compile Remove="src\Units\Carrier.cs" />
-    <Compile Remove="src\Units\Catapult.cs" />
-    <Compile Remove="src\Units\Cavalry.cs" />
-    <Compile Remove="src\Units\Chariot.cs" />
-    <Compile Remove="src\Units\CruiseMsl.cs" />
-    <Compile Remove="src\Units\Cruiser.cs" />
-    <Compile Remove="src\Units\Crusaders.cs" />
-    <Compile Remove="src\Units\Destroyer.cs" />
-    <Compile Remove="src\Units\Diplomat.cs" />
-    <Compile Remove="src\Units\Dragoons.cs" />
-    <Compile Remove="src\Units\Elephant.cs" />
-    <Compile Remove="src\Units\Engineers.cs" />
-    <Compile Remove="src\Units\Explorer.cs" />
-    <Compile Remove="src\Units\Fanatics.cs" />
-    <Compile Remove="src\Units\Fighter.cs" />
-    <Compile Remove="src\Units\Freight.cs" />
-    <Compile Remove="src\Units\Frigate.cs" />
-    <Compile Remove="src\Units\Galleon.cs" />
-    <Compile Remove="src\Units\Helicopter.cs" />
-    <Compile Remove="src\Units\Horsemen.cs" />
-    <Compile Remove="src\Units\Howitzer.cs" />
-    <Compile Remove="src\Units\Ironclad.cs" />
-    <Compile Remove="src\Units\Knights.cs" />
-    <Compile Remove="src\Units\Legions.cs" />
-    <Compile Remove="src\Units\Marines.cs" />
-    <Compile Remove="src\Units\MechInf.cs" />
-    <Compile Remove="src\Units\Musketeers.cs" />
-    <Compile Remove="src\Units\NuclearMsl.cs" />
-    <Compile Remove="src\Units\Paratroopers.cs" />
-    <Compile Remove="src\Units\Partisans.cs" />
-    <Compile Remove="src\Units\Phalanx.cs" />
-    <Compile Remove="src\Units\Pikemen.cs" />
-    <Compile Remove="src\Units\Riflemen.cs" />
-    <Compile Remove="src\Units\Settlers.cs" />
-    <Compile Remove="src\Units\Spy.cs" />
-    <Compile Remove="src\Units\StlthBmbr.cs" />
-    <Compile Remove="src\Units\StlthFtr.cs" />
-    <Compile Remove="src\Units\Submarine.cs" />
-    <Compile Remove="src\Units\Transport.cs" />
-    <Compile Remove="src\Units\Trireme.cs" />
-    <Compile Remove="src\Units\Warriors.cs" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="src\Forms\IntroForm.resx" />
-    <EmbeddedResource Remove="src\Forms\MainCiv2Window_.resx" />
-    <EmbeddedResource Remove="src\Forms\MapForm.resx" />
-    <EmbeddedResource Remove="src\Forms\MapForm_.resx" />
-    <EmbeddedResource Remove="src\Forms\StatusForm_.resx" />
-    <EmbeddedResource Remove="src\Forms\WorldMapForm_.resx" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 </Project>

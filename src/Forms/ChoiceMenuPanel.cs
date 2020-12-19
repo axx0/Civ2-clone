@@ -70,7 +70,7 @@ namespace civ2.Forms
             {
                 OpenFileDialog ofd = new OpenFileDialog
                 {
-                    InitialDirectory = Program.Path,
+                    InitialDirectory = Settings.Civ2Path,
                     Title = "Select Game To Load",
                     Filter = "Save Files (*.sav)|*.SAV"
                 };

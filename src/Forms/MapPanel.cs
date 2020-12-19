@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using System.Timers;
 using ExtensionMethods;
 using civ2.Events;
 using civ2.Bitmaps;
@@ -38,8 +37,8 @@ namespace civ2.Forms
             Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
-            MinimapPanel.OnMapEvent += MapEventHappened;
-            StatusPanel.OnMapEvent += MapEventHappened;
+            _MinimapPanel.OnMapEvent += MapEventHappened;
+            _StatusPanel.OnMapEvent += MapEventHappened;
             Main.OnMapEvent += MapEventHappened;
             Main.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
 
@@ -48,8 +47,7 @@ namespace civ2.Forms
                 Location = new Point(11, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                //BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 23, 23)
-                BackgroundImage = Images.ZoomIN
+                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 4)
             };
             ZoomINButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomINButton);
@@ -60,8 +58,7 @@ namespace civ2.Forms
                 Location = new Point(36, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                //BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 23, 23)
-                BackgroundImage = Images.ZoomOUT
+                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 4),
             };
             ZoomOUTButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomOUTButton);

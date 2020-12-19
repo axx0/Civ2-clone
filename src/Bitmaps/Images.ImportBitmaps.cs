@@ -38,6 +38,7 @@ namespace civ2.Bitmaps
         {
             ImportDLLimages();
             ImportWallpapersFromIconsFile();
+            ImportCiv2Icon();
         }
 
         // Extract icon from civ2.exe file

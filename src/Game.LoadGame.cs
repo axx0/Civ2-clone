@@ -31,6 +31,7 @@ namespace civ2
             _options = new Options();
             _rules = new Rules();
 
+            _civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = SAVgameData.GameVersion;
 
             _options.Set(SAVgameData.Options);

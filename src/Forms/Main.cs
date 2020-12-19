@@ -18,8 +18,8 @@ namespace civ2.Forms
         PictureBox MainPic;
         MapPanel MapPanel;
         //CityForm cityForm;
-        MinimapPanel MinimapPanel;
-        StatusPanel StatusPanel;
+        _MinimapPanel MinimapPanel;
+        _StatusPanel StatusPanel;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, MaxZoomInItem, MaxZoomOutItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;

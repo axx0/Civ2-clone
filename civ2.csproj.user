@@ -21,16 +21,16 @@
     <Compile Update="src\Forms\ChoiceMenuPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\CityBuyForm.cs">
+    <Compile Update="src\Forms\City view\_CityBuyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\CityChangeForm.cs">
+    <Compile Update="src\Forms\City view\_CityChangeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\CityPanel.cs">
+    <Compile Update="src\Forms\City view\_CityPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\CityRenameForm.cs">
+    <Compile Update="src\Forms\City view\_CityRenameForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="src\Forms\Main.cs">
@@ -48,52 +48,52 @@
     <Compile Update="src\Forms\MapPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\AttitudeAdvisorForm.cs">
+    <Compile Update="src\Forms\Menu Advisors\_AttitudeAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\CityStatusForm.cs">
+    <Compile Update="src\Forms\Menu Advisors\_CityStatusForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\DefenseMinisterForm.cs">
+    <Compile Update="src\Forms\Menu Advisors\_DefenseMinisterForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\ScienceAdvisorForm.cs">
+    <Compile Update="src\Forms\Menu Advisors\_ScienceAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\TradeAdvisorForm.cs">
+    <Compile Update="src\Forms\Menu Advisors\_TradeAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.cs">
+    <Compile Update="src\Forms\Menu Cheat\Create Unit\_CreateUnitForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.cs">
+    <Compile Update="src\Forms\Menu Cheat\Create Unit\_ForeignCreateUnitForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Cheat\SetGameYearForm.cs">
+    <Compile Update="src\Forms\Menu Cheat\_SetGameYearForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Game\CityReportOptionsForm.cs">
+    <Compile Update="src\Forms\Menu Game\_CityReportOptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Game\GameOptionsForm.cs">
+    <Compile Update="src\Forms\Menu Game\_GameOptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Game\GraphicOptionsForm.cs">
+    <Compile Update="src\Forms\Menu Game\_GraphicOptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu World\DemographicsForm.cs">
+    <Compile Update="src\Forms\Menu World\_DemographicsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu World\WondersOfWorldForm.cs">
+    <Compile Update="src\Forms\Menu World\_WondersOfWorldForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\MinimapPanel.cs">
+    <Compile Update="src\Forms\_MinimapPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\NameCityPanel.cs">
+    <Compile Update="src\Forms\_NameCityPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\StatusPanel.cs">
+    <Compile Update="src\Forms\_StatusPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="src\Forms\Templates\Civ2button.cs">

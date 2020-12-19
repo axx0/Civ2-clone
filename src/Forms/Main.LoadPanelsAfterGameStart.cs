@@ -25,26 +25,26 @@ namespace civ2.Forms
             Controls.Add(MapPanel);
             MapPanel.BringToFront();
 
-            MinimapPanel = new MinimapPanel(this, 262, 149)
+            MinimapPanel = new _MinimapPanel(this, 262, 149)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height)
             };
             Controls.Add(MinimapPanel);
 
-            StatusPanel = new StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
+            StatusPanel = new _StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148)
             };
             Controls.Add(StatusPanel);
 
-            ZoomInItem.Click += MapPanel.ZoomINclicked;
-            ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
-            MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
-            MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
-            StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
-            MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            StatusPanel.OnMapEvent += MapEventHappened;
-            MapPanel.OnMapEvent += MapEventHappened;
+            //ZoomInItem.Click += MapPanel.ZoomINclicked;
+            //ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
+            //MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
+            //MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
+            //StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
+            //MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
+            _StatusPanel.OnMapEvent += MapEventHappened;
+            //MapPanel.OnMapEvent += MapEventHappened;
         }
     }
 }

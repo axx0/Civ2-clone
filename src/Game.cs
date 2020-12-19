@@ -20,6 +20,7 @@ namespace civ2
         private readonly GameVersionType _gameVersion;
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
+        private readonly bool[] _civsInPlay;
 
         public List<IUnit> GetUnits => _units;
         public List<IUnit> GetCasualties => _casualties;
@@ -28,7 +29,7 @@ namespace civ2
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
-
+        public bool[] CivsInPlay => _civsInPlay;
         private int _gameYear;
         public int GameYear
         { 

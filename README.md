@@ -1,3 +1,3 @@
 # civ2
 
-Civ2
+Civ2 clone
