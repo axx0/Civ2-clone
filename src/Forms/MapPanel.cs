@@ -38,7 +38,7 @@ namespace civ2.Forms
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
             _MinimapPanel.OnMapEvent += MapEventHappened;
-            _StatusPanel.OnMapEvent += MapEventHappened;
+            StatusPanel.OnMapEvent += MapEventHappened;
             Main.OnMapEvent += MapEventHappened;
             Main.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
 

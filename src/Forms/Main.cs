@@ -19,7 +19,7 @@ namespace civ2.Forms
         MapPanel MapPanel;
         //CityForm cityForm;
         _MinimapPanel MinimapPanel;
-        _StatusPanel StatusPanel;
+        StatusPanel StatusPanel;
         ToolStripMenuItem OrdersMenu;
         ToolStripMenuItem BuildMinesChangeForestItem, CleanUpPollutionItem, PillageItem, UnloadItem, GoToItem, GoHomeToNearestCityItem, FortifyItem, SleepItem, DisbandItem, MaxZoomInItem, MaxZoomOutItem, ActivateUnitItem, WaitItem, SkipTurnItem, EndPlayerTurnItem, BuildNewCityItem, AutomateSettlerItem, ParadropItem;
         List<ToolStripItem> SettlerItems, NoSettlerItems;
@@ -466,9 +466,11 @@ namespace civ2.Forms
 
         private void CityStatus_Click(object sender, EventArgs e) 
         {
-            //CityStatusForm CityStatusForm = new CityStatusForm();
-            //CityStatusForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //CityStatusForm.ShowDialog(); 
+            CityStatusPanel CityStatusPanel = new CityStatusPanel(this, 622, 421);
+            Controls.Add(CityStatusPanel);
+            CityStatusPanel.Location = new Point(this.ClientSize.Width / 2 - CityStatusPanel.Size.Width / 2, this.ClientSize.Height / 2 - CityStatusPanel.Size.Height / 2);
+            CityStatusPanel.Show();
+            CityStatusPanel.BringToFront();
         }
 
         private void DefenseMinister_Click(object sender, EventArgs e) 

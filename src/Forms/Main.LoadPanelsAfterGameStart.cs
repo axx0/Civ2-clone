@@ -31,7 +31,7 @@ namespace civ2.Forms
             };
             Controls.Add(MinimapPanel);
 
-            StatusPanel = new _StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
+            StatusPanel = new StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148)
             };
@@ -43,7 +43,7 @@ namespace civ2.Forms
             //MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
             //StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
             //MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            _StatusPanel.OnMapEvent += MapEventHappened;
+            StatusPanel.OnMapEvent += MapEventHappened;
             //MapPanel.OnMapEvent += MapEventHappened;
         }
     }

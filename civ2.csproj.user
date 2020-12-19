@@ -48,10 +48,10 @@
     <Compile Update="src\Forms\MapPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\_AttitudeAdvisorForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Advisors\CityStatusPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\_CityStatusForm.cs">
+    <Compile Update="src\Forms\Menu Advisors\_AttitudeAdvisorForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="src\Forms\Menu Advisors\_DefenseMinisterForm.cs">
@@ -93,7 +93,7 @@
     <Compile Update="src\Forms\_NameCityPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\_StatusPanel.cs">
+    <Compile Update="src\Forms\StatusPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="src\Forms\Templates\Civ2button.cs">

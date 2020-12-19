@@ -21,6 +21,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Update="src\Forms\Menu Advisors\CityStatusPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

@@ -11,7 +11,7 @@ using civ2.Enums;
 
 namespace civ2.Forms
 {
-    public partial class _StatusPanel : DoubleBufferedPanel
+    public partial class StatusPanel : DoubleBufferedPanel
     {
         Game Game => Game.Instance;
         Map Map => Map.Instance;
@@ -23,7 +23,7 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public _StatusPanel(Main parent, int _width, int _height)
+        public StatusPanel(Main parent, int _width, int _height)
         {
             this.Main = parent;
 
