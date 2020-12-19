@@ -248,7 +248,7 @@ namespace civ2.Forms
             {
                 case MapEventType.MapViewChanged:
                     {
-                        MapViewChange(e.CenterSqXY);
+                        MapViewChange(e.CentrXY);
                         break;
                     }
                 case MapEventType.SwitchViewMovePiece:

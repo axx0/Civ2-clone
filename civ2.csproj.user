@@ -17,4 +17,105 @@
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="src\Forms\ChoiceMenuPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\City view\CityBuyForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\City view\CityChangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\City view\CityPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\City view\CityRenameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Main.KeyPressActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Main.LoadPanelsAfterGameStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Main.ShowIntroScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\MapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Advisors\AttitudeAdvisorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Advisors\CityStatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Advisors\DefenseMinisterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Advisors\ScienceAdvisorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Advisors\TradeAdvisorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Cheat\Create Unit\CreateUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Cheat\Create Unit\ForeignCreateUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Cheat\SetGameYearForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Game\CityReportOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Game\GameOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu Game\GraphicOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu World\DemographicsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Menu World\WondersOfWorldForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\MinimapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\NameCityPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\StatusPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\Civ2button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\Civ2form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\Civ2panel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\Civ2ToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\NoSelectButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\Templates\TransparentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
 </Project>

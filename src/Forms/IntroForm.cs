@@ -13,7 +13,6 @@ namespace civ2.Forms
         private ComboBox ResolBox;
         private TextBox PathBox, SAVbox, ResultBox;
         private Civ2button StartButton;
-        public List<Resolution> Resolutions = new List<Resolution>();
         private string Civ2Path { get; set; }
         private string SAVname { get; set; }
         private string WindowSize { get; set; }

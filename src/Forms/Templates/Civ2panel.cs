@@ -14,7 +14,7 @@ namespace civ2.Forms
     public partial class Civ2panel : DoubleBufferedPanel
     {
         public DoubleBufferedPanel DrawPanel;
-        private string? Title { get; set; }
+        private string Title { get; set; }
         private bool ButtonsExist { get; set; }
         private int XtraSpacingUp => Title != null ? 27 : 0;
         private int XtraSpacingDwn => ButtonsExist ? 35 : 0;

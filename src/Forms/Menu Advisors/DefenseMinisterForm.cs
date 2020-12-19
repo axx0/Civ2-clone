@@ -10,6 +10,9 @@ namespace civ2.Forms
 {
     public partial class DefenseMinisterForm : Civ2form
     {
+        Game Game => Game.Instance;
+        Map Map => Map.Instance;
+
         DoubleBufferedPanel MainPanel;
         VScrollBar VerticalBar;
         public int BarValue { get; set; }       //starting value of view of horizontal bar
@@ -70,12 +73,12 @@ namespace civ2.Forms
             for (int i = 0; i < 62; i++)
             {
                 //Count active units
-                foreach (IUnit unit in Game.Units.Where(n => n.CivId == Game.Instance.ActiveCiv.Id))   //search just for your civ
+                foreach (IUnit unit in Game.GetUnits.Where(n => n.Owner == Game.ActiveCiv))   //search just for your civ
                 {
-                    if (unit.Name == Rules.UnitName[i]) ActiveUnitCount[i]++;
+                    if (unit.Name == Game.Rules.UnitName[i]) ActiveUnitCount[i]++;
                 }
                 //Count units in production
-                foreach (City city in Game.Cities.Where(n => n.Owner == Game.Instance.ActiveCiv.Id)) //only search in cities for your civ
+                foreach (City city in Game.GetCities.Where(n => n.Owner == Game.ActiveCiv)) //only search in cities for your civ
                 {
                     if (city.ItemInProduction == i) UnitInProductionCount[i]++;
                 }
@@ -99,15 +102,15 @@ namespace civ2.Forms
             e.Graphics.DrawImage(Images.DefenseMinWallpaper, new Rectangle(2, 2, 600, 400));
             //Draw text
             string statText = (StatisticsActive) ? "Statistics" : "Casualties";
-            string bcad = (Data.GameYear < 0) ? "B.C." : "A.D.";
+            string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("DEFENSE MINISTER: " + statText, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("DEFENSE MINISTER: " + statText, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.Civs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString("King " + Game.Civs[1].LeaderName + ": " + Math.Abs(Data.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[1].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString("King " + Game.GetCivs[1].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString("King " + Game.GetCivs[1].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             //Units
             if (StatisticsActive)
             {
@@ -120,10 +123,10 @@ namespace civ2.Forms
                                         //Image of unit
                         //e.Graphics.DrawImage(Draw.DrawUnitType(i, civId), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
                         //Unit name
-                        e.Graphics.DrawString(Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
-                        e.Graphics.DrawString(Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
+                        e.Graphics.DrawString(Game.Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
+                        e.Graphics.DrawString(Game.Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
                         //Unit attack/defense/movement
-                        e.Graphics.DrawString(Rules.UnitAttack[i] + "/" + Rules.UnitDefense[i] + "/" + Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString(Game.Rules.UnitAttack[i] + "/" + Rules.UnitDefense[i] + "/" + Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
                         e.Graphics.DrawString(Rules.UnitAttack[i] + "/" + Rules.UnitDefense[i] + "/" + Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
                         //Hitpoints/firepower
                         e.Graphics.DrawString(Rules.UnitHitp[i] + "/" + Rules.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);

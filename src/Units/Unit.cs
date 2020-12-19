@@ -77,7 +77,7 @@ namespace civ2.Units
         public Civilization Owner { get; set; }
         public int LastMove { get; set; }
         public CommodityType CaravanCommodity { get; set; }
-        public City? HomeCity { get; set; }
+        public City HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
         public int LinkOtherUnitsOnTop { get; set; }

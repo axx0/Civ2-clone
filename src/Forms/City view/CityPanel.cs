@@ -1,21 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using RTciv2.Imagery;
-using RTciv2.Units;
-using RTciv2.Improvements;
+using civ2.Bitmaps;
+using civ2.Units;
+using civ2.Improvements;
 
-namespace RTciv2.Forms
+namespace civ2.Forms
 {
     public partial class CityPanel : Civ2panel
     {
-        public MainCiv2Window mainCiv2Window;
+        Game Game => Game.Instance;
+        Map Map => Map.Instance;
+
+        private Main Main;
         City ThisCity;
         Bitmap CityDrawing;
         DoubleBufferedPanel WallpaperPanel, Faces, ResourceMap, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
@@ -24,22 +22,20 @@ namespace RTciv2.Forms
         int[,] offsets;
         int ProductionItem;
 
-        public CityPanel(MainCiv2Window _mainCiv2Window)
-        {
-            InitializeComponent();
-            mainCiv2Window = _mainCiv2Window;
-        }
+        //public CityPanel(Main parent)
+        //{
+        //    this.Main = parent;
 
-        public CityPanel(City city)
+        //    InitializeComponent();
+        //}
+        public CityPanel(Main parent, City city, int _width, int _height) : base(_width, _height, "", false)
         {
-            InitializeComponent();
-
             ThisCity = city;
 
             Size = new Size(976, 681);  //normalen zoom = (657,459)
             //BorderStyle = FormBorderStyle.None;
-            BackgroundImage = Images.WallpaperMapForm;
-            
+            BackgroundImage = Images.PanelInnerWallpaper;
+
             //this.Load += new EventHandler(CityForm_Load);
             this.Paint += new PaintEventHandler(CityForm_Paint);
 
@@ -48,7 +44,7 @@ namespace RTciv2.Forms
             {
                 Location = new Point(12, 37),    //normal zoom = (8,25)
                 Size = new Size(960, 630),      //normal zoom = (640,420)
-                BackgroundImage = ModifyImage.ResizeImage(Images.CityWallpaper, 960, 630),
+                //BackgroundImage = ModifyImage.ResizeImage(Images.CityWallpaper, 960, 630),    // TODO: correct this
             };
             Controls.Add(WallpaperPanel);
             WallpaperPanel.Paint += new PaintEventHandler(WallpaperPanel_Paint);
@@ -271,8 +267,8 @@ namespace RTciv2.Forms
             StringFormat sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            string bcad = (Data.GameYear < 0) ? "B.C.": "A.D.";
-            string text = String.Format("City of {0}, {1} {2}, Population {3:n0} (Treasury: {4} Gold)", ThisCity.Name, Math.Abs(Data.GameYear), bcad, ThisCity.Population, Game.Civs[ThisCity.Owner].Money);
+            string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
+            string text = String.Format("City of {0}, {1} {2}, Population {3:n0} (Treasury: {4} Gold)", ThisCity.Name, Math.Abs(Game.GameYear), bcad, ThisCity.Population, Game.GetCivs[ThisCity.Owner.Id].Money);
 
             e.Graphics.DrawString(text, new Font("Times New Roman", 18), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
             e.Graphics.DrawString(text, new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
@@ -300,14 +296,14 @@ namespace RTciv2.Forms
         //Draw faces
         private void Faces_Paint(object sender, PaintEventArgs e)
         {
-           //e.Graphics.DrawImage(Draw.DrawFaces(ThisCity, 1.5), 0, 0);
+            //e.Graphics.DrawImage(Draw.DrawFaces(ThisCity, 1.5), 0, 0);
         }
 
         //Draw city map
         private void ResourceMap_Paint(object sender, PaintEventArgs e)
         {
             //map around city
-            e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, (int)((double)CityDrawing.Width * 1.125), (int)((double)CityDrawing.Height * 1.125)), 0, 0);
+            e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, 1), 0, 0);    // Zoom = +11.25%
             //Food/shield/trade icons around the city (21 of them altogether)
             for (int i = 0; i <= ThisCity.Size; i++)
             {
@@ -362,7 +358,7 @@ namespace RTciv2.Forms
             int row = 0;
             int col = 0;
             double resize_factor = 1;  //orignal images are 0.67 of original, because of 50% scaling it is 0.67*1.5=1
-            foreach (IUnit unit in Game.Units.Where(n => n.HomeCity == Game.Cities.FindIndex(x => x == ThisCity)))
+            foreach (IUnit unit in Game.GetUnits.Where(n => n.HomeCity == ThisCity))
             {
                 col = count % 5;
                 row = count / 5;
@@ -382,7 +378,7 @@ namespace RTciv2.Forms
             int row = 0;
             int col = 0;
             double resize_factor = 1.125;  //orignal images are 25% smaller, because of 50% scaling it is 0.75*1.5=1.125
-            foreach (IUnit unit in Game.Units.Where(unit => unit.X == ThisCity.X && unit.Y == ThisCity.Y ))
+            foreach (IUnit unit in Game.GetUnits.Where(unit => unit.X == ThisCity.X && unit.Y == ThisCity.Y))
             {
                 col = count % 5;
                 row = count / 5;
@@ -425,14 +421,14 @@ namespace RTciv2.Forms
             //Units are scaled by 1.15 compared to original, improvements are size 54x30
             if (ThisCity.ItemInProduction < 62)    //units
             {
-                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[ThisCity.ItemInProduction], 74, 55), new Point(106, 7));
+                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[ThisCity.ItemInProduction], 1), new Point(106, 7));   // Should it be zoom=1??
             }
             else    //improvements
             {
                 StringFormat sf = new StringFormat();
                 sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 146 + 1, 3 + 1, sf);
-                e.Graphics.DrawString(ReadFiles.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 146, 3, sf);
+                e.Graphics.DrawString(Game.Rules.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 146 + 1, 3 + 1, sf);
+                e.Graphics.DrawString(Game.Rules.ImprovementName[ThisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 146, 3, sf);
                 e.Graphics.DrawImage(Images.ImprovementsLarge[ThisCity.ItemInProduction - 62 + 1], new Point(119, 28));
                 sf.Dispose();
             }
@@ -441,7 +437,7 @@ namespace RTciv2.Forms
         }
 
         private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
-        {          
+        {
         }
 
         private void BuyButton_Click(object sender, EventArgs e)
@@ -454,9 +450,9 @@ namespace RTciv2.Forms
                 if (result == DialogResult.OK)  //buying item activated
                 {
                     int cost = 0;
-                    if (ThisCity.ItemInProduction < 62) cost = ReadFiles.UnitCost[ThisCity.ItemInProduction];
-                    else cost = ReadFiles.ImprovementCost[ThisCity.ItemInProduction - 62 + 1];
-                    Game.Civs[1].Money -= 10 * cost - ThisCity.ShieldsProgress;
+                    if (ThisCity.ItemInProduction < 62) cost = Game.Rules.UnitCost[ThisCity.ItemInProduction];
+                    else cost = Game.Rules.ImprovementCost[ThisCity.ItemInProduction - 62 + 1];
+                    Game.GetCivs[1].Money -= 10 * cost - ThisCity.ShieldsProgress;
                     ThisCity.ShieldsProgress = 10 * cost;
                     ProductionPanel.Refresh();
                 }
@@ -535,7 +531,7 @@ namespace RTciv2.Forms
             //Draw the arrow icon
             e.Graphics.DrawImage(Images.NextCityLarge, 2, 1);
         }
-                
+
         private void PrevCityButton_Paint(object sender, PaintEventArgs e)
         {
             //Draw lines in button

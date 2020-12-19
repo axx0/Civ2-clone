@@ -7,6 +7,9 @@ namespace civ2.Forms
 {
     public partial class CityRenameForm : Form
     {
+        Game Game => Game.Instance;
+        Map Map => Map.Instance;
+
         TextBox RenameTextBox;
         public event Action RefreshCityForm;
 
@@ -25,7 +28,7 @@ namespace civ2.Forms
             {
                 Location = new Point(5, 23),
                 Size = new Size(455, 30),
-                BackgroundImage = Images.WallpaperStatusForm,
+                BackgroundImage = Images.PanelOuterWallpaper,
                 BorderStyle = BorderStyle.Fixed3D
             };
             Controls.Add(CityPanel);
@@ -127,7 +130,7 @@ namespace civ2.Forms
         private void RenameCity(City ThisCity)
         {
             string NewCityName = RenameTextBox.Text;
-            Game.Cities.Find(city => city.X == ThisCity.X && city.Y == ThisCity.Y).Name = NewCityName;
+            Game.GetCities.Find(city => city.X == ThisCity.X && city.Y == ThisCity.Y).Name = NewCityName;
             RefreshCityForm();
             this.Close();
         }

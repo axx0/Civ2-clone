@@ -1,248 +1,166 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A696B539-71A6-481D-B5C0-2B4FAE91C626}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>civ2</RootNamespace>
-    <AssemblyName>civ2</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <LangVersion>8.0</LangVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <TargetFramework>net472</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="src\Bitmaps\DrawMap_old!!!.cs" />
+    <Compile Remove="src\Forms\City view\CityForm.cs" />
+    <Compile Remove="src\Forms\City view\CityForm.Designer.cs" />
+    <Compile Remove="src\Forms\IntroForm.cs" />
+    <Compile Remove="src\Forms\IntroForm.Designer.cs" />
+    <Compile Remove="src\Forms\MainCiv2Window_.cs" />
+    <Compile Remove="src\Forms\MainCiv2Window_.Designer.cs" />
+    <Compile Remove="src\Forms\MapForm.cs" />
+    <Compile Remove="src\Forms\MapForm.Designer.cs" />
+    <Compile Remove="src\Forms\MapForm_.cs" />
+    <Compile Remove="src\Forms\MapForm_.Designer.cs" />
+    <Compile Remove="src\Forms\MapPanel_.cs" />
+    <Compile Remove="src\Forms\StatusForm_.cs" />
+    <Compile Remove="src\Forms\StatusForm_.Designer.cs" />
+    <Compile Remove="src\Forms\WorldMapForm_.cs" />
+    <Compile Remove="src\Forms\WorldMapForm_.Designer.cs" />
+    <Compile Remove="src\Improvements\Airport.cs" />
+    <Compile Remove="src\Improvements\ApolloProgr.cs" />
+    <Compile Remove="src\Improvements\Aqueduct.cs" />
+    <Compile Remove="src\Improvements\Bank.cs" />
+    <Compile Remove="src\Improvements\Barracks.cs" />
+    <Compile Remove="src\Improvements\BaseImprovement.cs" />
+    <Compile Remove="src\Improvements\Capitalization.cs" />
+    <Compile Remove="src\Improvements\Cathedral.cs" />
+    <Compile Remove="src\Improvements\CityWalls.cs" />
+    <Compile Remove="src\Improvements\CoastalFort.cs" />
+    <Compile Remove="src\Improvements\Colosseum.cs" />
+    <Compile Remove="src\Improvements\Colossus.cs" />
+    <Compile Remove="src\Improvements\CoperObserv.cs" />
+    <Compile Remove="src\Improvements\Courthouse.cs" />
+    <Compile Remove="src\Improvements\CureCancer.cs" />
+    <Compile Remove="src\Improvements\DarwinVoyage.cs" />
+    <Compile Remove="src\Improvements\DV_Workshop.cs" />
+    <Compile Remove="src\Improvements\EiffelTower.cs" />
+    <Compile Remove="src\Improvements\Factory.cs" />
+    <Compile Remove="src\Improvements\Granary.cs" />
+    <Compile Remove="src\Improvements\GreatLibrary.cs" />
+    <Compile Remove="src\Improvements\GreatWall.cs" />
+    <Compile Remove="src\Improvements\HangingGardens.cs" />
+    <Compile Remove="src\Improvements\Harbour.cs" />
+    <Compile Remove="src\Improvements\HooverDam.cs" />
+    <Compile Remove="src\Improvements\HydroPlant.cs" />
+    <Compile Remove="src\Improvements\IN_College.cs" />
+    <Compile Remove="src\Improvements\JSB_Cathedral.cs" />
+    <Compile Remove="src\Improvements\KR_Crusade.cs" />
+    <Compile Remove="src\Improvements\Library.cs" />
+    <Compile Remove="src\Improvements\Lighthouse.cs" />
+    <Compile Remove="src\Improvements\MagellExped.cs" />
+    <Compile Remove="src\Improvements\ManhattanProj.cs" />
+    <Compile Remove="src\Improvements\Marketplace.cs" />
+    <Compile Remove="src\Improvements\MassTransit.cs" />
+    <Compile Remove="src\Improvements\MfgPlant.cs" />
+    <Compile Remove="src\Improvements\MichChapel.cs" />
+    <Compile Remove="src\Improvements\MP_Embassy.cs" />
+    <Compile Remove="src\Improvements\NuclearPlant.cs" />
+    <Compile Remove="src\Improvements\OffshorePlat.cs" />
+    <Compile Remove="src\Improvements\Oracle.cs" />
+    <Compile Remove="src\Improvements\Palace.cs" />
+    <Compile Remove="src\Improvements\PoliceStat.cs" />
+    <Compile Remove="src\Improvements\PortFacil.cs" />
+    <Compile Remove="src\Improvements\PowerPlant.cs" />
+    <Compile Remove="src\Improvements\Pyramids.cs" />
+    <Compile Remove="src\Improvements\RecyclCentre.cs" />
+    <Compile Remove="src\Improvements\ResearchLab.cs" />
+    <Compile Remove="src\Improvements\SAMbattery.cs" />
+    <Compile Remove="src\Improvements\SDIdefense.cs" />
+    <Compile Remove="src\Improvements\SETIProgr.cs" />
+    <Compile Remove="src\Improvements\SewerSystem.cs" />
+    <Compile Remove="src\Improvements\ShakespTheat.cs" />
+    <Compile Remove="src\Improvements\SolarPlant.cs" />
+    <Compile Remove="src\Improvements\SScomponent.cs" />
+    <Compile Remove="src\Improvements\SSmodule.cs" />
+    <Compile Remove="src\Improvements\SSstructural.cs" />
+    <Compile Remove="src\Improvements\StatueLiberty.cs" />
+    <Compile Remove="src\Improvements\StockExch.cs" />
+    <Compile Remove="src\Improvements\Superhighways.cs" />
+    <Compile Remove="src\Improvements\Supermarket.cs" />
+    <Compile Remove="src\Improvements\Temple.cs" />
+    <Compile Remove="src\Improvements\TradingCompany.cs" />
+    <Compile Remove="src\Improvements\UnitedNations.cs" />
+    <Compile Remove="src\Improvements\University.cs" />
+    <Compile Remove="src\Improvements\WarAcademy.cs" />
+    <Compile Remove="src\Improvements\WomenSuffrage.cs" />
+    <Compile Remove="src\Resolution.cs" />
+    <Compile Remove="src\Terrains\BaseTerrain.cs" />
+    <Compile Remove="src\Terrains\Desert.cs" />
+    <Compile Remove="src\Terrains\Forest.cs" />
+    <Compile Remove="src\Terrains\Glacier.cs" />
+    <Compile Remove="src\Terrains\Grassland.cs" />
+    <Compile Remove="src\Terrains\Hills.cs" />
+    <Compile Remove="src\Terrains\Jungle.cs" />
+    <Compile Remove="src\Terrains\Mountains.cs" />
+    <Compile Remove="src\Terrains\Ocean.cs" />
+    <Compile Remove="src\Terrains\Plains.cs" />
+    <Compile Remove="src\Terrains\Swamp.cs" />
+    <Compile Remove="src\Terrains\Tundra.cs" />
+    <Compile Remove="src\Units\AEGISCruiser.cs" />
+    <Compile Remove="src\Units\AlpineTroops.cs" />
+    <Compile Remove="src\Units\Archers.cs" />
+    <Compile Remove="src\Units\Armor.cs" />
+    <Compile Remove="src\Units\Artillery.cs" />
+    <Compile Remove="src\Units\BaseUnit.cs" />
+    <Compile Remove="src\Units\Battleship.cs" />
+    <Compile Remove="src\Units\Bomber.cs" />
+    <Compile Remove="src\Units\Cannon.cs" />
+    <Compile Remove="src\Units\Caravan.cs" />
+    <Compile Remove="src\Units\Caravel.cs" />
+    <Compile Remove="src\Units\Carrier.cs" />
+    <Compile Remove="src\Units\Catapult.cs" />
+    <Compile Remove="src\Units\Cavalry.cs" />
+    <Compile Remove="src\Units\Chariot.cs" />
+    <Compile Remove="src\Units\CruiseMsl.cs" />
+    <Compile Remove="src\Units\Cruiser.cs" />
+    <Compile Remove="src\Units\Crusaders.cs" />
+    <Compile Remove="src\Units\Destroyer.cs" />
+    <Compile Remove="src\Units\Diplomat.cs" />
+    <Compile Remove="src\Units\Dragoons.cs" />
+    <Compile Remove="src\Units\Elephant.cs" />
+    <Compile Remove="src\Units\Engineers.cs" />
+    <Compile Remove="src\Units\Explorer.cs" />
+    <Compile Remove="src\Units\Fanatics.cs" />
+    <Compile Remove="src\Units\Fighter.cs" />
+    <Compile Remove="src\Units\Freight.cs" />
+    <Compile Remove="src\Units\Frigate.cs" />
+    <Compile Remove="src\Units\Galleon.cs" />
+    <Compile Remove="src\Units\Helicopter.cs" />
+    <Compile Remove="src\Units\Horsemen.cs" />
+    <Compile Remove="src\Units\Howitzer.cs" />
+    <Compile Remove="src\Units\Ironclad.cs" />
+    <Compile Remove="src\Units\Knights.cs" />
+    <Compile Remove="src\Units\Legions.cs" />
+    <Compile Remove="src\Units\Marines.cs" />
+    <Compile Remove="src\Units\MechInf.cs" />
+    <Compile Remove="src\Units\Musketeers.cs" />
+    <Compile Remove="src\Units\NuclearMsl.cs" />
+    <Compile Remove="src\Units\Paratroopers.cs" />
+    <Compile Remove="src\Units\Partisans.cs" />
+    <Compile Remove="src\Units\Phalanx.cs" />
+    <Compile Remove="src\Units\Pikemen.cs" />
+    <Compile Remove="src\Units\Riflemen.cs" />
+    <Compile Remove="src\Units\Settlers.cs" />
+    <Compile Remove="src\Units\Spy.cs" />
+    <Compile Remove="src\Units\StlthBmbr.cs" />
+    <Compile Remove="src\Units\StlthFtr.cs" />
+    <Compile Remove="src\Units\Submarine.cs" />
+    <Compile Remove="src\Units\Transport.cs" />
+    <Compile Remove="src\Units\Trireme.cs" />
+    <Compile Remove="src\Units\Warriors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Advances\Advance.cs" />
-    <Compile Include="src\Advances\IAdvance.cs" />
-    <Compile Include="src\Bitmaps\Draw.Map.cs" />
-    <Compile Include="src\Bitmaps\Draw.Terrain.cs" />
-    <Compile Include="src\Bitmaps\Draw.Unit.cs" />
-    <Compile Include="src\Enums\AIroleType.cs" />
-    <Compile Include="src\Enums\BarbarianActivityType.cs" />
-    <Compile Include="src\Enums\CityStyleType.cs" />
-    <Compile Include="src\Enums\EpochType.cs" />
-    <Compile Include="src\Enums\GameVersionType.cs" />
-    <Compile Include="src\Enums\IntroScreenChoiceType.cs" />
-    <Compile Include="src\Enums\KnowledgeType.cs" />
-    <Compile Include="src\Forms\MapPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\MinimapPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\StatusPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Templates\DoubleBufferedPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Game.LoadGame.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="src\Bitmaps\Images.ImportBitmaps.cs" />
-    <Compile Include="src\Enums\AnimationType.cs" />
-    <Compile Include="src\Enums\PlayerEventType.cs" />
-    <Compile Include="src\Enums\MapEventType.cs" />
-    <Compile Include="src\Enums\UnitMovementOrderResultType.cs" />
-    <Compile Include="src\Enums\PeopleType.cs" />
-    <Compile Include="src\Enums\UnitEventType.cs" />
-    <Compile Include="src\Events\MapEventArgs.cs" />
-    <Compile Include="src\Events\PlayerEventArgs.cs" />
-    <Compile Include="src\Events\UnitEventArgs.cs" />
-    <Compile Include="src\Forms\Main.LoadPanelsAfterGameStart.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Main.ShowIntroScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Game.Actions.cs" />
-    <Compile Include="src\City.cs" />
-    <Compile Include="src\Civilization.cs" />
-    <Compile Include="src\BaseInstance.cs" />
-    <Compile Include="src\IO\GameData.cs" />
-    <Compile Include="src\Enums\AttitudeType.cs" />
-    <Compile Include="src\Enums\DifficultyType.cs" />
-    <Compile Include="src\Enums\CommodityType.cs" />
-    <Compile Include="src\Enums\LeaderType.cs" />
-    <Compile Include="src\Enums\ImprovementType.cs" />
-    <Compile Include="src\Enums\SpecialType.cs" />
-    <Compile Include="src\Enums\GovernmentType.cs" />
-    <Compile Include="src\Enums\OrderType.cs" />
-    <Compile Include="src\Enums\UnitGAS.cs" />
-    <Compile Include="src\Enums\AdvanceType.cs" />
-    <Compile Include="src\Events\CheckIfCityCanBeViewedEventArgs.cs" />
-    <Compile Include="src\Events\WaitAtTurnEndEventArgs.cs" />
-    <Compile Include="src\Events\NewPlayerTurnEventArgs.cs" />
-    <Compile Include="src\Forms\ChoiceMenuPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\ChoiceMenuPanel.Designer.cs">
-      <DependentUpon>ChoiceMenuPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Main.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Main.Designer.cs">
-      <DependentUpon>Main.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Forms\Templates\NoSelectButton.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Templates\Civ2button.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Templates\Civ2form.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Templates\Civ2form.Designer.cs">
-      <DependentUpon>Civ2form.cs</DependentUpon>
-    </Compile>
-    <Compile Include="src\Enums\TerrainType.cs" />
-    <Compile Include="src\Enums\UnitType.cs" />
-    <Compile Include="src\Forms\Templates\Civ2panel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Templates\Civ2ToolStripMenuItem.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Forms\Templates\TransparentPanel.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="src\Game.cs" />
-    <Compile Include="src\Bitmaps\GetAnimationFrames.cs" />
-    <Compile Include="src\HelpConsole.cs" />
-    <Compile Include="src\Bitmaps\CivColors.cs" />
-    <Compile Include="src\Bitmaps\DrawFunctions.cs" />
-    <Compile Include="src\Bitmaps\ModifyImage.cs" />
-    <Compile Include="src\Bitmaps\Draw.cs" />
-    <Compile Include="src\ExtensionMethods.cs" />
-    <Compile Include="src\Improvements\Improvement.cs" />
-    <Compile Include="src\Improvements\IImprovement.cs" />
-    <Compile Include="src\IO\ReadGameData.cs" />
-    <Compile Include="src\Map.cs" />
-    <Compile Include="src\Options.cs" />
-    <Compile Include="src\Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="src\Rules.cs" />
-    <Compile Include="src\Settings.cs" />
-    <Compile Include="src\Sounds\Sound.cs" />
-    <Compile Include="src\Terrains\ITerrain.cs" />
-    <Compile Include="src\Terrains\Terrain.cs" />
-    <Compile Include="src\Units\Unit.cs" />
-    <Compile Include="src\Units\IUnit.cs" />
-    <EmbeddedResource Include="src\Forms\Main.resx">
-      <DependentUpon>Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="src\Forms\Templates\Civ2form.resx">
-      <DependentUpon>Civ2form.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="app.manifest" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <None Include="SAVfile.xlsx" />
-    <Compile Include="src\Forms\Main.KeyPressActions.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="src\Game.ActionsUnits.cs" />
-    <Compile Include="src\Bitmaps\Images.ImportDLLgifs.cs" />
-    <Compile Include="src\Bitmaps\Draw.CityPanel.cs" />
-    <Compile Include="src\Bitmaps\Draw.City.cs" />
+    <EmbeddedResource Remove="src\Forms\IntroForm.resx" />
+    <EmbeddedResource Remove="src\Forms\MainCiv2Window_.resx" />
+    <EmbeddedResource Remove="src\Forms\MapForm.resx" />
+    <EmbeddedResource Remove="src\Forms\MapForm_.resx" />
+    <EmbeddedResource Remove="src\Forms\StatusForm_.resx" />
+    <EmbeddedResource Remove="src\Forms\WorldMapForm_.resx" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.6.1 %28x86 and x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="notes.txt" />
-    <None Include="Resources\MinimapCursor.cur" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="src\Forms\City view\" />
-    <Folder Include="src\Forms\Menu Advisors\" />
-    <Folder Include="src\Forms\Menu Cheat\Create Unit\" />
-    <Folder Include="src\Forms\Menu Game\" />
-    <Folder Include="src\Forms\Menu World\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
