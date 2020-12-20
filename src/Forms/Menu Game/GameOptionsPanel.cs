@@ -15,7 +15,7 @@ namespace civ2.Forms
         private readonly string[] _textOptions;
         private readonly bool[] _choiceOptions;        
 
-        public GameOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Civilization II Multiplayer Gold", true)
+        public GameOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Civilization II Multiplayer Gold", 38, 46)
         {
             Main = parent;
 

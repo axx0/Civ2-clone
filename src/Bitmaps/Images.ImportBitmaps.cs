@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Diagnostics;
 
 namespace civ2.Bitmaps
 {
@@ -32,6 +33,7 @@ namespace civ2.Bitmaps
             UnitsBitmapsImportFromFile(path);
             PeopleIconsBitmapsImportFromFile(path);
             IconsBitmapsImportFromFile(path);
+            CityWallpaperBitmapImportFromFile();
         }
 
         public static void LoadGraphicsAssetsAtIntroScreen()
@@ -50,7 +52,7 @@ namespace civ2.Bitmaps
             }
             catch
             {
-                Console.WriteLine("Civ2.exe not found!");
+                Debug.WriteLine("Civ2.exe not found!");
             }            
         }
 
@@ -70,7 +72,7 @@ namespace civ2.Bitmaps
             }
             else
             {
-                Console.WriteLine("TERRAIN1.GIF not found!");
+                Debug.WriteLine("TERRAIN1.GIF not found!");
             }
             
             Bitmap terrain2 = new Bitmap(640, 480);
@@ -86,7 +88,7 @@ namespace civ2.Bitmaps
             }
             else
             {
-                Console.WriteLine("TERRAIN2.GIF not found!");
+                Debug.WriteLine("TERRAIN2.GIF not found!");
             }
 
             // Initialize objects
@@ -326,7 +328,7 @@ namespace civ2.Bitmaps
             }
             else
             {
-                Console.WriteLine("CITIES.GIF not found!");
+                Debug.WriteLine("CITIES.GIF not found!");
             }
 
             // Initialize objects
@@ -508,7 +510,7 @@ namespace civ2.Bitmaps
             }
             else
             {
-                Console.WriteLine("UNITS.GIF not found!");
+                Debug.WriteLine("UNITS.GIF not found!");
             }
 
             // Initialize objects
@@ -612,7 +614,7 @@ namespace civ2.Bitmaps
             }
             else
             {
-                Console.WriteLine("PEOPLE.GIF not found!");
+                Debug.WriteLine("PEOPLE.GIF not found!");
             }
 
             // Initialize objects
@@ -651,7 +653,7 @@ namespace civ2.Bitmaps
             }
             catch
             {
-                Console.WriteLine("ICONS.GIF not found!");
+                Debug.WriteLine("ICONS.GIF not found!");
             }
 
             PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
@@ -674,7 +676,7 @@ namespace civ2.Bitmaps
             }
             else
             {
-                Console.WriteLine("ICONS.GIF not found!");
+                Debug.WriteLine("ICONS.GIF not found!");
             }
 
             // Initialize objects
@@ -719,7 +721,7 @@ namespace civ2.Bitmaps
             SellIcon.MakeTransparent(transparentLightPink);
 
             //SellIconLarge = ModifyImage.ResizeImage(SellIcon, 16, 16);
-            SellIconLarge = Images.SellIcon;
+            SellIconLarge = SellIcon;
 
             ViewPiece = icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
             ViewPiece.MakeTransparent(transparentLightPink);
@@ -737,7 +739,7 @@ namespace civ2.Bitmaps
             CitymapHungerLarge = icons.Clone(new Rectangle(1, 290, 14, 14), icons.PixelFormat);
             CitymapHungerLarge.MakeTransparent(transparentLightPink);
             //CitymapHungerLargeBigger = ModifyImage.ResizeImage(CitymapHungerLarge, 21, 21);    //50% larger
-            CitymapHungerLargeBigger = Images.CitymapHungerLarge;
+            CitymapHungerLargeBigger = CitymapHungerLarge;
 
             CitymapShortageLarge = icons.Clone(new Rectangle(16, 290, 14, 14), icons.PixelFormat);
             CitymapShortageLarge.MakeTransparent(transparentLightPink);
@@ -825,9 +827,8 @@ namespace civ2.Bitmaps
             }
             catch
             {
-                Console.WriteLine("CITY.GIF not found!");
+                Debug.WriteLine("CITY.GIF not found!");
             }
-
             CityWallpaper = ModifyImage.CropImage(cityWallpaper, new Rectangle(0, 0, 640, 420));
         }
 

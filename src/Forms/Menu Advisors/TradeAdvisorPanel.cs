@@ -19,7 +19,7 @@ namespace civ2.Forms
         private readonly int[] _upkeepOfImprovements, _noOfImprovements;   // In order according to RULES.TXT
         private int _barValue;
 
-        public TradeAdvisorPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
+        public TradeAdvisorPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
             Main = parent;
 

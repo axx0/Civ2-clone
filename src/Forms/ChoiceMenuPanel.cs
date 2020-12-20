@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using civ2.Bitmaps;
 using civ2.Enums;
 
 namespace civ2.Forms
@@ -13,7 +12,7 @@ namespace civ2.Forms
         readonly Main mainForm;
 
         public ChoiceMenuPanel(Main _MainWindow) : 
-            base((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34), "Civilization II Multiplayer Gold", true)
+            base((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34), "Civilization II Multiplayer Gold", 38, 46)
         {
             InitializeComponent();
             mainForm = _MainWindow;

@@ -28,7 +28,7 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public MapPanel(Main parent, int _width, int _height) : base(_width, _height, "", false)
+        public MapPanel(Main parent, int _width, int _height) : base(_width, _height, "", 38, 10)
         {
             this.Main = parent;
 
@@ -144,11 +144,15 @@ namespace civ2.Forms
 
             if (e.Button == MouseButtons.Left)
             {
-                if (Game.GetCities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))    // City clicked
+                // City clicked
+                if (Game.GetCities.Any(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]))
                 {
                     if (Main.ViewPieceMode) Game.ActiveXY = ClickedXY;
-                    //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]));
-                    //cityForm.Show();
+                    CityPanel cityPanel = new CityPanel(Main, Game.GetCities.Find(city => city.X == ClickedXY[0] && city.Y == ClickedXY[1]), 658, 459); // For normal zoom
+                    Main.Controls.Add(cityPanel);
+                    cityPanel.Location = new Point(this.ClientSize.Width / 2 - cityPanel.Size.Width / 2, this.ClientSize.Height / 2 - cityPanel.Size.Height / 2);
+                    cityPanel.Show();
+                    cityPanel.BringToFront();
                 }
                 else if (Game.GetUnits.Any(unit => unit.X == ClickedXY[0] && unit.Y == ClickedXY[1]))    // Unit clicked
                 {
@@ -201,7 +205,7 @@ namespace civ2.Forms
         { 
             Game.Zoom--;
             Map.SetNewActiveMapPic();
-            DrawPanel.Refresh(); 
+            DrawPanel.Invalidate(); 
         }
         public void ZoomINclicked(Object sender, EventArgs e) 
         { 
@@ -209,31 +213,31 @@ namespace civ2.Forms
             ReturnCoordsAtMapViewChange(CentrXY);
             Map.SetNewActiveMapPic();
             StartAnimation(AnimType);
-            DrawPanel.Refresh(); 
+            DrawPanel.Invalidate(); 
         }
         public void MaxZoomINclicked(Object sender, EventArgs e) 
         { 
             Game.Zoom = 16;
             Map.SetNewActiveMapPic();
-            DrawPanel.Refresh(); 
+            DrawPanel.Invalidate(); 
         }
         public void MaxZoomOUTclicked(Object sender, EventArgs e) 
         { 
             Game.Zoom = 1;
             Map.SetNewActiveMapPic(); 
-            DrawPanel.Refresh(); 
+            DrawPanel.Invalidate(); 
         }
         public void StandardZOOMclicked(Object sender, EventArgs e) 
         { 
             Game.Zoom = 8;
             Map.SetNewActiveMapPic(); 
-            DrawPanel.Refresh(); 
+            DrawPanel.Invalidate(); 
         }
         public void MediumZoomOUTclicked(Object sender, EventArgs e) 
         {
             Game.Zoom = 5;
             Map.SetNewActiveMapPic();
-            DrawPanel.Refresh();
+            DrawPanel.Invalidate();
         }
         #endregion
 

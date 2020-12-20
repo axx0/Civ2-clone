@@ -14,15 +14,14 @@ namespace civ2.Forms
     public partial class Civ2panel : DoubleBufferedPanel
     {
         public DoubleBufferedPanel DrawPanel;
-        private string Title { get; set; }
-        private bool ButtonsExist { get; set; }
-        private int XtraSpacingUp => Title != null ? 27 : 0;
-        private int XtraSpacingDwn => ButtonsExist ? 35 : 0;
+        private readonly string _title;
+        private readonly int _paddingTop, _paddingBtm;
 
-        public Civ2panel(int width, int height, string _title, bool _buttonsExist)
+        public Civ2panel(int width, int height, string title, int paddingTop, int paddingBottom)
         {
-            Title = _title;
-            ButtonsExist = _buttonsExist;
+            _title = title;
+            _paddingTop = paddingTop;
+            _paddingBtm = paddingBottom;
 
             Size = new Size(width, height);
             BackgroundImage = Images.PanelOuterWallpaper;
@@ -30,8 +29,8 @@ namespace civ2.Forms
 
             DrawPanel = new DoubleBufferedPanel()
             {
-                Location = new Point(11, XtraSpacingUp + 11),
-                Size = new Size(Width - 22, Height - 22 - XtraSpacingUp - XtraSpacingDwn),
+                Location = new Point(11, _paddingTop),
+                Size = new Size(Width - 22, Height - _paddingTop - _paddingBtm),
                 BackgroundImage = Images.PanelInnerWallpaper
             };
             Controls.Add(DrawPanel);
@@ -41,15 +40,15 @@ namespace civ2.Forms
         public virtual void Civ2panel_Paint(object sender, PaintEventArgs e)
         {
             // Title (if exists)
-            if (Title != null)
+            if (_title != null)
             {
                 StringFormat sf = new StringFormat
                 {
                     LineAlignment = StringAlignment.Center,
                     Alignment = StringAlignment.Center
                 };
-                e.Graphics.DrawString(Title, new Font("Times New Roman", 17), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-                e.Graphics.DrawString(Title, new Font("Times New Roman", 17), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+                e.Graphics.DrawString(_title, new Font("Times New Roman", 17), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
+                e.Graphics.DrawString(_title, new Font("Times New Roman", 17), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
             }
             // Outer border
             e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   // 1st layer of border
@@ -73,14 +72,14 @@ namespace civ2.Forms
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 5, 4, this.Width - 5, this.Height - 5);
             e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 4, this.Height - 5, this.Width - 5, this.Height - 5);
             // Border for draw panel
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 9 + XtraSpacingUp, 9 + (Width - 18 - 1), 9 + XtraSpacingUp);   // 1st layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, 9 + XtraSpacingUp, 9, Height - XtraSpacingDwn - 9 - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 1, 9 + XtraSpacingUp, Width - 9 - 1, Height - XtraSpacingDwn - 9 - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - XtraSpacingDwn - 9 - 1, Width - 9 - 1, Height - XtraSpacingDwn - 9 - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10 + XtraSpacingUp, 9 + (Width - 18 - 2), 10 + XtraSpacingUp);   // 2nd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, 10 + XtraSpacingUp, 10, Height - XtraSpacingDwn - 9 - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 9 - 2, 10 + XtraSpacingUp, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 10, Height - XtraSpacingDwn - 9 - 2, Width - 9 - 2, Height - XtraSpacingDwn - 9 - 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, _paddingTop - 1, 9 + (Width - 18 - 1), _paddingTop - 1);   // 1st layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, _paddingTop - 1, 10, Height - _paddingBtm - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 11, _paddingTop - 1, Width - 11, Height - _paddingBtm - 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - _paddingBtm, Width - 9 - 1, Height - _paddingBtm);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, _paddingTop - 2, 9 + (Width - 18 - 2), _paddingTop - 2);   // 2nd layer of border
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, _paddingTop - 2, 9, Height - _paddingBtm);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 10, _paddingTop - 2, Width - 10, Height - _paddingBtm);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
         }
 
     }

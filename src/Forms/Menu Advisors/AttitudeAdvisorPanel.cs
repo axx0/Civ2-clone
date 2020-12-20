@@ -15,7 +15,7 @@ namespace civ2.Forms
         private readonly VScrollBar _verticalBar;
         private int _barValue;       // Starting value of view of horizontal bar
 
-        public AttitudeAdvisorPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
+        public AttitudeAdvisorPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
             Main = parent;
 

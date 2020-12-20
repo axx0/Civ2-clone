@@ -19,7 +19,7 @@ namespace civ2.Forms
         private bool _showStatistics;  // true=statistics are shown, false=casualties are shown
         private int _barValue;       // Starting value of view of horizontal bar
 
-        public DefenseMinisterPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
+        public DefenseMinisterPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
             Main = parent;
 

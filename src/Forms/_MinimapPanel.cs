@@ -21,7 +21,7 @@ namespace civ2.Forms
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        public _MinimapPanel(Main parent, int _width, int _height) : base(_width, _height, "World", false)
+        public _MinimapPanel(Main parent, int _width, int _height) : base(_width, _height, "World", 38, 10)
         {
             this.Main = parent;
 

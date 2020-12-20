@@ -7,10 +7,12 @@ namespace civ2.Bitmaps
     class ModifyImage
     {
         // Resize the image according to zoom factor
-        public static Bitmap ResizeImage(Image image, int zoom)
+        public static Bitmap ResizeImage(Bitmap image, int zoom)
         {
-            int width = image.Width / 8 * (8 + zoom);
-            int height = image.Height / 8 * (8 + zoom);
+            //if (zoom == 0) return image;
+            
+            int width = (int)((8.0 + (float)zoom) / 8.0 * (float)image.Width);
+            int height = (int)((8.0 + (float)zoom) / 8.0 * (float)image.Height);
 
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);

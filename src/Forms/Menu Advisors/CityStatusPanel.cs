@@ -16,7 +16,7 @@ namespace civ2.Forms
         private readonly Civ2button _closeButton;
         private int _barValue;   // Starting value of view of horizontal bar
 
-        public CityStatusPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
+        public CityStatusPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
             Main = parent;
 

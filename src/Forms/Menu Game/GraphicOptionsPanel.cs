@@ -15,7 +15,7 @@ namespace civ2.Forms
         private readonly string[] _textOptions;
         private readonly bool[] _choiceOptions;
 
-        public GraphicOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Select Graphic Options", true)
+        public GraphicOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Select Graphic Options", 38, 46)
         {
             Main = parent;
 

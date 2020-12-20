@@ -1,11 +1,10 @@
 ﻿using System.Drawing;
+using civ2.Enums;
 
 namespace civ2.Bitmaps
 {
     public partial class Draw
     {
-
-
         public static Bitmap DrawFoodStorage(City city)
         {
             Bitmap icons = new Bitmap(291, 244);    //define a bitmap for drawing icons
@@ -79,51 +78,52 @@ namespace civ2.Bitmaps
             return icons;
         }
 
-        public static Bitmap DrawCitizens(City city, double scale_factor) //Draw faces in cityform
+        // Draw faces in City Panel
+        public static Bitmap Citizens(City city, int zoom)
         {
             Bitmap faces = new Bitmap(630, 50);
-            //using (Graphics graphics = Graphics.FromImage(faces))
-            //{
-            //    int spacing;
-            //    switch (city.Size)
-            //    {
-            //        case int n when (n <= 15): spacing = 42; break;    //50 % larger (orignal = 28)
-            //        case int n when (n == 16): spacing = 39; break;    //50 % larger (orignal = 26)
-            //        case int n when (n == 17): spacing = 36; break;    //50 % larger (orignal = 24)
-            //        case int n when (n == 18): spacing = 35; break;    //50 % larger (orignal = 23)
-            //        case int n when (n == 19): spacing = 32; break;    //50 % larger (orignal = 21)
-            //        case int n when (n == 20): spacing = 30; break;    //50 % larger (orignal = 20)
-            //        case int n when (n == 21): spacing = 29; break;   //50 % larger (orignal = 19)
-            //        case int n when (n == 22): spacing = 27; break;   //50 % larger (orignal = 18)
-            //        case int n when (n == 23 || n == 24): spacing = 26; break;   //50 % larger (orignal = 17)
-            //        case int n when (n == 25): spacing = 24; break;   //50 % larger (orignal = 16)
-            //        case int n when (n == 26 || n == 27): spacing = 23; break;   //50 % larger (orignal = 15)
-            //        case int n when (n == 28 || n == 29): spacing = 21; break;   //50 % larger (orignal = 14)
-            //        case int n when (n == 30 || n == 31): spacing = 20; break;   //50 % larger (orignal = 13)
-            //        case int n when (n == 32 || n == 33): spacing = 18; break;   //50 % larger (orignal = 12)
-            //        case int n when (n >= 34 && n <= 36): spacing = 17; break;   //50 % larger (orignal = 11)
-            //        case int n when (n >= 37 && n <= 41): spacing = 15; break;   //50 % larger (orignal = 10)
-            //        case int n when (n == 42 || n == 43): spacing = 14; break;   //50 % larger (orignal = 9)
-            //        case int n when (n >= 44 && n <= 50): spacing = 12; break;   //50 % larger (orignal = 8)
-            //        case int n when (n >= 51 && n <= 57): spacing = 11; break;   //50 % larger (orignal = 7)
-            //        case int n when (n >= 58 && n <= 66): spacing = 9; break;   //50 % larger (orignal = 6)
-            //        case int n when (n >= 67 && n <= 79): spacing = 8; break;   //50 % larger (orignal = 5)
-            //        case int n when (n >= 80 && n <= 99): spacing = 6; break;   //50 % larger (orignal = 4)
-            //        case int n when (n >= 100): spacing = 5; break;   //50 % larger (orignal = 3)
-            //        default: spacing = 30; break;
-            //    }
-            //    //Draw icons
-            //    PeopleType[] peoples = city.People;
-            //    int drawIndex = 0;
-            //    for (int i = 0; i < city.Size; i++)
-            //    {
-            //        drawIndex = (int)peoples[i];
-            //        if (i % 2 == 1 && (drawIndex == 0 || drawIndex == 2 || drawIndex == 4 || drawIndex == 6)) drawIndex++;  //to change men/woman appearance
-            //        graphics.DrawImage(ModifyImage.ResizeImage(PeopleLshadow[drawIndex, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing + 1, 1);   //shadow
-            //        graphics.DrawImage(ModifyImage.ResizeImage(PeopleL[drawIndex, 0], (int)(27 * scale_factor), (int)(30 * scale_factor)), i * spacing, 0);
-            //    }
-            //}
-
+            using (Graphics graphics = Graphics.FromImage(faces))
+            {
+                int spacing;
+                switch (city.Size)
+                {
+                    case int n when (n <= 15): spacing = 28; break;    // 28-42-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 16): spacing = 26; break;    // 26-39-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 17): spacing = 24; break;    // 24-36-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 18): spacing = 23; break;    // 23-35-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 19): spacing = 21; break;    // 21-32-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 20): spacing = 20; break;    // 20-30-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 21): spacing = 19; break;   // 19-29-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 22): spacing = 18; break;   // 18-27-xx (orig-50%larger-50%smaller)
+                    case int n when (n == 23 || n == 24): spacing = 17; break; // 17-26-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n == 25): spacing = 16; break;   // 16-24-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n == 26 || n == 27): spacing = 15; break;   // 15-23-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n == 28 || n == 29): spacing = 14; break;   // 14-21-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n == 30 || n == 31): spacing = 13; break;   // 13-20-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n == 32 || n == 33): spacing = 12; break;   // 12-18-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 34 && n <= 36): spacing = 11; break;   // 11-17-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 37 && n <= 41): spacing = 10; break;   // 10-15-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n == 42 || n == 43): spacing = 14; break;   // 9-14-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 44 && n <= 50): spacing = 8; break;   // 8-12-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 51 && n <= 57): spacing = 7; break;   // 7-11-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 58 && n <= 66): spacing = 6; break;   // 6-9-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 67 && n <= 79): spacing = 5; break;   // 5-8-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 80 && n <= 99): spacing = 4; break;   // 4-6-xx (orig - 50 % larger - 50 % smaller)
+                    case int n when (n >= 100): spacing = 3; break;   // 3-5-xx (orig - 50 % larger - 50 % smaller)
+                    default: spacing = 20; break;
+                }
+                // Draw icons
+                PeopleType[] peoples = city.People;
+                int drawIndex;
+                for (int i = 0; i < city.Size; i++)
+                {
+                    drawIndex = (int)peoples[i];
+                    if (i % 2 == 1 && (drawIndex == 0 || drawIndex == 2 || drawIndex == 4 || drawIndex == 6)) drawIndex++;  // Change men/woman appearance
+                    //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
+                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleLshadow[drawIndex, 0], zoom), i * spacing + 1, 1);   // Shadow
+                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleL[drawIndex, 0], zoom), i * spacing, 0);
+                }
+            }
             return faces;
         }
 

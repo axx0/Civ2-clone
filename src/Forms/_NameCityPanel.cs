@@ -12,8 +12,7 @@ namespace civ2.Forms
         private MapPanel MapPanel;
         Panel MainPanel;
 
-        public _NameCityPanel(Main parent, MapPanel mapPanel, int _width, int _height) : base(_width, _height, "", false)
-        //public NameCityPanel(MapPanel _mapForm)
+        public _NameCityPanel(Main parent, MapPanel mapPanel, int _width, int _height) : base(_width, _height, "", 38, 46)
         {
             //InitializeComponent();
             Main = parent;

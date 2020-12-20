@@ -15,7 +15,7 @@ namespace civ2.Forms
         private readonly string[] _textOptions;
         private readonly bool[] _choiceOptions;
 
-        public CityreportOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Select City Report Options", true)
+        public CityreportOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Select City Report Options", 38, 46)
         {
             Main = parent;
 
