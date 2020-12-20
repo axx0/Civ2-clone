@@ -28,7 +28,10 @@ namespace civ2.Forms
             MapPanel.OnMapEvent += MapEventHappened;
             Main.OnMapEvent += MapEventHappened;
 
+            // Add DrawPanel from base control
             Controls.Add(DrawPanel);
+            DrawPanel.BackgroundImage = null;
+            DrawPanel.BackColor = Color.Black;
             DrawPanel.Paint += new PaintEventHandler(DrawPanel_Paint);
             DrawPanel.MouseClick += DrawPanel_MouseClick;
             DrawPanel.MouseHover += DrawPanel_MouseHover;

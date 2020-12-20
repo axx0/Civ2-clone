@@ -72,14 +72,14 @@
     <Compile Update="src\Forms\Menu Cheat\_SetGameYearForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Game\_CityReportOptionsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Game\CityreportOptionsPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Game\_GameOptionsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Game\GameOptionsPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Game\_GraphicOptionsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Game\GraphicOptionsPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="src\Forms\Menu World\_DemographicsForm.cs">
       <SubType>Form</SubType>

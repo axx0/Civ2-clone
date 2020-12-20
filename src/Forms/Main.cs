@@ -304,42 +304,30 @@ namespace civ2.Forms
         #region GAME MENU EVENTS
         private void GameOptions_Click(object sender, EventArgs e) 
         {
-            //GameOptionsForm GameOptionsForm = new GameOptionsForm();
-            //GameOptionsForm.Load += new EventHandler(GameOptionsForm_Load);   //so you set the correct size of form
-            //GameOptionsForm.ShowDialog(); 
+            GameOptionsPanel GameOptionsPanel = new GameOptionsPanel(this, 746, 440);
+            Controls.Add(GameOptionsPanel);
+            GameOptionsPanel.Location = new Point(this.ClientSize.Width / 2 - GameOptionsPanel.Size.Width / 2, this.ClientSize.Height / 2 - GameOptionsPanel.Size.Height / 2);
+            GameOptionsPanel.Show();
+            GameOptionsPanel.BringToFront();
         }
-
-        private void GameOptionsForm_Load(object sender, EventArgs e) {
-            Form frm = sender as Form;
-            frm.Width = 746;
-            frm.Height = 440;
-            frm.Location = new Point(330, 250); }
 
         private void GraphicOptions_Click(object sender, EventArgs e) 
         {
-            //GraphicOptionsForm GraphicOptionsForm = new GraphicOptionsForm();
-            //GraphicOptionsForm.Load += new EventHandler(GraphicOptionsForm_Load);   //so you set the correct size of form
-            //GraphicOptionsForm.ShowDialog(); 
+            GraphicOptionsPanel GraphicOptionsPanel = new GraphicOptionsPanel(this, 746, 280);
+            Controls.Add(GraphicOptionsPanel);
+            GraphicOptionsPanel.Location = new Point(this.ClientSize.Width / 2 - GraphicOptionsPanel.Size.Width / 2, this.ClientSize.Height / 2 - GraphicOptionsPanel.Size.Height / 2);
+            GraphicOptionsPanel.Show();
+            GraphicOptionsPanel.BringToFront();
         }
-
-        private void GraphicOptionsForm_Load(object sender, EventArgs e) {
-            Form frm = sender as Form;
-            frm.Width = 746;
-            frm.Height = 280;
-            frm.Location = new Point(330, 250); }
 
         private void CityReportOptions_Click(object sender, EventArgs e) 
         {
-            //CityReportOptionsForm CityReportOptionsForm = new CityReportOptionsForm();
-            //CityReportOptionsForm.Load += new EventHandler(CityReportOptionsForm_Load);   //so you set the correct size of form
-            //CityReportOptionsForm.ShowDialog(); 
+            CityreportOptionsPanel CityreportOptionsPanel = new CityreportOptionsPanel(this, 746, 440);
+            Controls.Add(CityreportOptionsPanel);
+            CityreportOptionsPanel.Location = new Point(this.ClientSize.Width / 2 - CityreportOptionsPanel.Size.Width / 2, this.ClientSize.Height / 2 - CityreportOptionsPanel.Size.Height / 2);
+            CityreportOptionsPanel.Show();
+            CityreportOptionsPanel.BringToFront();
         }
-
-        private void CityReportOptionsForm_Load(object sender, EventArgs e) {
-            Form frm = sender as Form;
-            frm.Width = 746;
-            frm.Height = 440;
-            frm.Location = new Point(330, 250); }
 
         private void MultiplayerOptions_Click(object sender, EventArgs e) { }
         private void GameProfile_Click(object sender, EventArgs e) { }
