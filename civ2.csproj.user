@@ -57,11 +57,11 @@
     <Compile Update="src\Forms\Menu Advisors\DefenseMinisterPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\_ScienceAdvisorForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Advisors\ScienceAdvisorPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\_TradeAdvisorForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Advisors\TradeAdvisorPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="src\Forms\Menu Cheat\Create Unit\_CreateUnitForm.cs">
       <SubType>Form</SubType>

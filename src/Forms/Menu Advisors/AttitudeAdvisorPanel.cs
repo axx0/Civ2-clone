@@ -9,11 +9,10 @@ namespace civ2.Forms
     public partial class AttitudeAdvisorPanel : Civ2panel
     {
         Game Game => Game.Instance;
-        Map Map => Map.Instance;
 
-        private Main Main;
-        private Button _closeButton;
-        private VScrollBar _verticalBar;
+        private readonly Main Main;
+        private readonly Button _closeButton;
+        private readonly VScrollBar _verticalBar;
         private int _barValue;       // Starting value of view of horizontal bar
 
         public AttitudeAdvisorPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
@@ -56,10 +55,10 @@ namespace civ2.Forms
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("ATTITUDE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("ATTITUDE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[Game.ActiveCiv.Id].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[Game.ActiveCiv.Id].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString("King " + Game.GetCivs[Game.ActiveCiv.Id].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString("King " + Game.GetCivs[Game.ActiveCiv.Id].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             // Cities
             int count = 0;
             foreach (City city in Game.GetCities.Where(n => n.Owner == Game.ActiveCiv))
@@ -86,7 +85,7 @@ namespace civ2.Forms
         private void VerticalBarValueChanged(object sender, EventArgs e)
         {
             _barValue = _verticalBar.Value;
-            Refresh();
+            DrawPanel.Invalidate();
         }
     }
 }

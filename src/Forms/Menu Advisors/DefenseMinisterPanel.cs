@@ -11,14 +11,13 @@ namespace civ2.Forms
     public partial class DefenseMinisterPanel : Civ2panel
     {
         Game Game => Game.Instance;
-        Map Map => Map.Instance;
 
-        private Main Main;
-        private VScrollBar _verticalBar;
-        private int _barValue;       // Starting value of view of horizontal bar
-        private Civ2button _closeButton, _casualtiesButton;
-        private int[] _activeUnitCount, _unitInProductionCount;
+        private readonly Main Main;
+        private readonly VScrollBar _verticalBar;
+        private readonly Civ2button _closeButton, _casualtiesButton;
+        private readonly int[] _activeUnitCount, _unitInProductionCount;
         private bool _showStatistics;  // true=statistics are shown, false=casualties are shown
+        private int _barValue;       // Starting value of view of horizontal bar
 
         public DefenseMinisterPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
         {
@@ -91,10 +90,10 @@ namespace civ2.Forms
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("DEFENSE MINISTER: " + statText, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("DEFENSE MINISTER: " + statText, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[Game.ActiveCiv.Id].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[Game.ActiveCiv.Id].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString("King " + Game.GetCivs[Game.ActiveCiv.Id].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString("King " + Game.GetCivs[Game.ActiveCiv.Id].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             // Units
             if (_showStatistics)
             {
@@ -110,19 +109,19 @@ namespace civ2.Forms
                         e.Graphics.DrawString(Game.Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 85 + 24 * count + 1));
                         e.Graphics.DrawString(Game.Rules.UnitName[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 85 + 24 * count));
                         // Unit attack/defense/movement
-                        e.Graphics.DrawString(Game.Rules.UnitAttack[i] + "/" + Game.Rules.UnitDefense[i] + "/" + Game.Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
-                        e.Graphics.DrawString(Game.Rules.UnitAttack[i] + "/" + Game.Rules.UnitDefense[i] + "/" + Game.Rules.UnitMove[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
+                        e.Graphics.DrawString($"{Game.Rules.UnitAttack[i]} / {Game.Rules.UnitDefense[i]} / {Game.Rules.UnitMove[i]}", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString($"{Game.Rules.UnitAttack[i]} / {Game.Rules.UnitDefense[i]} / {Game.Rules.UnitMove[i]}", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 85 + 24 * count), sf);
                         // Hitpoints/firepower
-                        e.Graphics.DrawString(Game.Rules.UnitHitp[i] + "/" + Game.Rules.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);
-                        e.Graphics.DrawString(Game.Rules.UnitHitp[i] + "/" + Game.Rules.UnitFirepwr[i], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(300, 85 + 24 * count), sf);
+                        e.Graphics.DrawString($"{Game.Rules.UnitHitp[i]} / {Game.Rules.UnitFirepwr[i]}", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(300 + 1, 85 + 24 * count + 1), sf);
+                        e.Graphics.DrawString($"{Game.Rules.UnitHitp[i]} / {Game.Rules.UnitFirepwr[i]}", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(300, 85 + 24 * count), sf);
                         // No of active units
-                        e.Graphics.DrawString(_activeUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(325 + 1, 85 + 24 * count + 1));
-                        e.Graphics.DrawString(_activeUnitCount[i].ToString() + " active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(325, 85 + 24 * count));
+                        e.Graphics.DrawString($"{_activeUnitCount[i]} active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(325 + 1, 85 + 24 * count + 1));
+                        e.Graphics.DrawString($"{_activeUnitCount[i]} active", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(325, 85 + 24 * count));
                         // No of units in production
                         if (_unitInProductionCount[i] > 0)
                         {
-                            e.Graphics.DrawString(_unitInProductionCount[i].ToString() + " in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(390 + 1, 85 + 24 * count + 1));
-                            e.Graphics.DrawString(_unitInProductionCount[i].ToString() + " in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(390, 85 + 24 * count));
+                            e.Graphics.DrawString($"{_unitInProductionCount[i]} in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(390 + 1, 85 + 24 * count + 1));
+                            e.Graphics.DrawString($"{_unitInProductionCount[i]} in prod", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(390, 85 + 24 * count));
                         }
                         count++;
                     }
@@ -161,7 +160,7 @@ namespace civ2.Forms
         private void VerticalBarValueChanged(object sender, EventArgs e)
         {
             _barValue = _verticalBar.Value;
-            Refresh();
+            DrawPanel.Invalidate();
         }
     }
 }

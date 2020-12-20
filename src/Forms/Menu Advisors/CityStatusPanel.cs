@@ -10,10 +10,10 @@ namespace civ2.Forms
     public partial class CityStatusPanel : Civ2panel
     {
         Game Game => Game.Instance;
-        Map Map => Map.Instance;
 
-        public Main Main;
-        private VScrollBar _verticalBar;
+        private readonly Main Main;
+        private readonly VScrollBar _verticalBar;
+        private readonly Civ2button _closeButton;
         private int _barValue;   // Starting value of view of horizontal bar
 
         public CityStatusPanel(Main parent, int _width, int _height) : base(_width, _height, null, false)
@@ -26,7 +26,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // Close button
-            Civ2button _closeButton = new Civ2button
+            _closeButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
@@ -56,10 +56,10 @@ namespace civ2.Forms
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[Game.ActiveCiv.Id].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString("Kingdom of the " + Game.GetCivs[Game.ActiveCiv.Id].TribeName, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString("King " + Game.GetCivs[Game.ActiveCiv.Id].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString("King " + Game.GetCivs[Game.ActiveCiv.Id].LeaderName + ": " + Math.Abs(Game.GameYear).ToString() + " " + bcad, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             // Cities
             int count = 0;
             foreach (City city in Game.GetCities.Where(n => n.Owner == Game.ActiveCiv))
@@ -85,13 +85,13 @@ namespace civ2.Forms
                 int item = city.ItemInProduction;
                 if (city.ItemInProduction < 62) // Unit is in production
                 {
-                    e.Graphics.DrawString(Game.Rules.UnitName[item] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Game.Rules.UnitCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString(Game.Rules.UnitName[item] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Game.Rules.UnitCost[item]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
+                    e.Graphics.DrawString($"{Game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * Game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
+                    e.Graphics.DrawString($"{Game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * Game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
                 }
                 else    // Improvement
                 {
-                    e.Graphics.DrawString(Game.Rules.ImprovementName[item - 62 + 1] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Game.Rules.ImprovementCost[item - 62 + 1]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString(Game.Rules.ImprovementName[item - 62 + 1] + " (" + city.ShieldsProgress.ToString() + "/" + (10 * Game.Rules.ImprovementCost[item - 62 + 1]).ToString() + ")", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
+                    e.Graphics.DrawString($"{Game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * Game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
+                    e.Graphics.DrawString($"{Game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * Game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
                 }
                 count++;
             }
@@ -108,7 +108,7 @@ namespace civ2.Forms
         private void VerticalBarValueChanged(object sender, EventArgs e)
         {
             _barValue = _verticalBar.Value;
-            Refresh();
+            DrawPanel.Invalidate();
         }
     }
 }

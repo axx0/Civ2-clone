@@ -495,16 +495,20 @@ namespace civ2.Forms
 
         private void TradeAdvisor_Click(object sender, EventArgs e) 
         {
-            //TradeAdvisorForm TradeAdvisorForm = new TradeAdvisorForm();
-            //TradeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //TradeAdvisorForm.ShowDialog(); 
+            TradeAdvisorPanel TradeAdvisorPanel = new TradeAdvisorPanel(this, 622, 421);
+            Controls.Add(TradeAdvisorPanel);
+            TradeAdvisorPanel.Location = new Point(this.ClientSize.Width / 2 - TradeAdvisorPanel.Size.Width / 2, this.ClientSize.Height / 2 - TradeAdvisorPanel.Size.Height / 2);
+            TradeAdvisorPanel.Show();
+            TradeAdvisorPanel.BringToFront();
         }
 
         private void ScienceAdvisor_Click(object sender, EventArgs e) 
         {
-            //ScienceAdvisorForm ScienceAdvisorForm = new ScienceAdvisorForm();
-            //ScienceAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //ScienceAdvisorForm.ShowDialog(); 
+            ScienceAdvisorPanel ScienceAdvisorPanel = new ScienceAdvisorPanel(this, 622, 421);
+            Controls.Add(ScienceAdvisorPanel);
+            ScienceAdvisorPanel.Location = new Point(this.ClientSize.Width / 2 - ScienceAdvisorPanel.Size.Width / 2, this.ClientSize.Height / 2 - ScienceAdvisorPanel.Size.Height / 2);
+            ScienceAdvisorPanel.Show();
+            ScienceAdvisorPanel.BringToFront();
         }
 
         private void CasualtyTimeline_Click(object sender, EventArgs e) { }
