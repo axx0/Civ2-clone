@@ -475,18 +475,22 @@ namespace civ2.Forms
 
         private void DefenseMinister_Click(object sender, EventArgs e) 
         {
-            //DefenseMinisterForm DefenseMinisterForm = new DefenseMinisterForm();
-            //DefenseMinisterForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //DefenseMinisterForm.ShowDialog(); 
+            DefenseMinisterPanel DefenseMinisterPanel = new DefenseMinisterPanel(this, 622, 421);
+            Controls.Add(DefenseMinisterPanel);
+            DefenseMinisterPanel.Location = new Point(this.ClientSize.Width / 2 - DefenseMinisterPanel.Size.Width / 2, this.ClientSize.Height / 2 - DefenseMinisterPanel.Size.Height / 2);
+            DefenseMinisterPanel.Show();
+            DefenseMinisterPanel.BringToFront();
         }
 
         private void ForeignMinister_Click(object sender, EventArgs e) { }
 
         private void AttitudeAdvisor_Click(object sender, EventArgs e) 
         {
-            //AttitudeAdvisorForm AttitudeAdvisorForm = new AttitudeAdvisorForm();
-            //AttitudeAdvisorForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //AttitudeAdvisorForm.ShowDialog(); 
+            AttitudeAdvisorPanel AttitudeAdvisorPanel = new AttitudeAdvisorPanel(this, 622, 421);
+            Controls.Add(AttitudeAdvisorPanel);
+            AttitudeAdvisorPanel.Location = new Point(this.ClientSize.Width / 2 - AttitudeAdvisorPanel.Size.Width / 2, this.ClientSize.Height / 2 - AttitudeAdvisorPanel.Size.Height / 2);
+            AttitudeAdvisorPanel.Show();
+            AttitudeAdvisorPanel.BringToFront();
         }
 
         private void TradeAdvisor_Click(object sender, EventArgs e) 

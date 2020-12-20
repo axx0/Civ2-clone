@@ -108,8 +108,8 @@ namespace civ2.Bitmaps
             return zoom == 0 ? unitPic : ModifyImage.ResizeImage(unitPic, zoom);
         }
 
-        //Draw unit type (not in game units and their stats, just unit types for e.g. defense minister statistics)
-        public Bitmap UnitType(int Id, int civId)  //Id = order from RULES.TXT, civId = id of civ (0=barbarian)
+        // Draw unit type (not in game units and their stats, just unit types for e.g. defense minister statistics)
+        public static Bitmap UnitType(int Id, int civId)  //Id = order from RULES.TXT, civId = id of civ (0=barbarian)
         {
             Bitmap square = new Bitmap(64, 48);     //define a bitmap for drawing
 

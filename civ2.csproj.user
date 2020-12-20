@@ -48,14 +48,14 @@
     <Compile Update="src\Forms\MapPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="src\Forms\Menu Advisors\AttitudeAdvisorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="src\Forms\Menu Advisors\CityStatusPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu Advisors\_AttitudeAdvisorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="src\Forms\Menu Advisors\_DefenseMinisterForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu Advisors\DefenseMinisterPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="src\Forms\Menu Advisors\_ScienceAdvisorForm.cs">
       <SubType>Form</SubType>
