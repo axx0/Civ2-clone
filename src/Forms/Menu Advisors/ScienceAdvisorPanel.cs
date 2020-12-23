@@ -13,7 +13,6 @@ namespace civ2.Forms
 
         private readonly Main Main;
         private readonly HScrollBar _horizontalBar;
-        private readonly Civ2button _closeButton, _goalButton;
         private readonly List<int> _discoveredAdvances;
         private readonly int _techsPerColumn;
         private int _barValue;       // Starting value of view of horizontal bar
@@ -30,7 +29,7 @@ namespace civ2.Forms
             _barValue = 0;
 
             // Goal button
-            _goalButton = new Civ2button
+            Civ2button _goalButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(297, 24),
@@ -41,7 +40,7 @@ namespace civ2.Forms
             _goalButton.Click += new EventHandler(GoalButton_Click);
 
             // Close button
-            _closeButton = new Civ2button
+            Civ2button _closeButton = new Civ2button
             {
                 Location = new Point(301, 373),
                 Size = new Size(297, 24),

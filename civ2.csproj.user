@@ -81,11 +81,11 @@
     <Compile Update="src\Forms\Menu Game\GraphicOptionsPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu World\_DemographicsForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu World\DemographicsPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\Menu World\_WondersOfWorldForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\Menu World\WondersOfWorldPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Update="src\Forms\_MinimapPanel.cs">
       <SubType>Component</SubType>

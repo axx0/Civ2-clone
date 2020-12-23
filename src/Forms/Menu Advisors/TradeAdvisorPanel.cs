@@ -14,7 +14,6 @@ namespace civ2.Forms
 
         private readonly Main Main;
         private readonly VScrollBar _verticalBar;
-        private readonly Civ2button _closeButton, _supplyDemandButton;
         private readonly int _totalCost, _totalIncome, _totalScience, _discoveries;
         private readonly int[] _upkeepOfImprovements, _noOfImprovements;   // In order according to RULES.TXT
         private int _barValue;
@@ -29,7 +28,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // Casualties button
-            _supplyDemandButton = new Civ2button
+            Civ2button _supplyDemandButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(297, 24),
@@ -40,7 +39,7 @@ namespace civ2.Forms
             _supplyDemandButton.Click += new EventHandler(SupplyDemandButton_Click);
 
             // Close button
-            _closeButton = new Civ2button
+            Civ2button _closeButton = new Civ2button
             {
                 Location = new Point(301, 373),
                 Size = new Size(297, 24),

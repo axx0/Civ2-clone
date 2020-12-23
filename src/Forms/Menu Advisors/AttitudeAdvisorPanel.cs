@@ -11,7 +11,6 @@ namespace civ2.Forms
         Game Game => Game.Instance;
 
         private readonly Main Main;
-        private readonly Button _closeButton;
         private readonly VScrollBar _verticalBar;
         private int _barValue;       // Starting value of view of horizontal bar
 
@@ -25,7 +24,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // Close button
-            _closeButton = new Civ2button
+            Civ2button _closeButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),

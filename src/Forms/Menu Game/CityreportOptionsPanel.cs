@@ -10,7 +10,6 @@ namespace civ2.Forms
         Game Game => Game.Instance;
 
         private readonly Main Main;
-        private readonly Civ2button _OKButton, _cancelButton;
         private readonly List<DoubleBufferedPanel> _clickPanels;
         private readonly string[] _textOptions;
         private readonly bool[] _choiceOptions;
@@ -24,7 +23,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // OK button
-            _OKButton = new Civ2button
+            Civ2button _OKButton = new Civ2button
             {
                 Location = new Point(9, 398),
                 Size = new Size(363, 36),
@@ -35,7 +34,7 @@ namespace civ2.Forms
             _OKButton.Click += new EventHandler(OKButton_Click);
 
             // Cancel button
-            _cancelButton = new Civ2button
+            Civ2button _cancelButton = new Civ2button
             {
                 Location = new Point(374, 398),
                 Size = new Size(363, 36),

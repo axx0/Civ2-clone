@@ -13,8 +13,8 @@ namespace civ2.Forms
         Game Game => Game.Instance;
 
         private readonly Main Main;
+        private readonly Civ2button _casualtiesButton;
         private readonly VScrollBar _verticalBar;
-        private readonly Civ2button _closeButton, _casualtiesButton;
         private readonly int[] _activeUnitCount, _unitInProductionCount;
         private bool _showStatistics;  // true=statistics are shown, false=casualties are shown
         private int _barValue;       // Starting value of view of horizontal bar
@@ -42,7 +42,7 @@ namespace civ2.Forms
             _casualtiesButton.Click += new EventHandler(CasualtiesButton_Click);
 
             // Close button
-            _closeButton = new Civ2button
+            Civ2button _closeButton = new Civ2button
             {
                 Location = new Point(301, 373),
                 Size = new Size(297, 24),

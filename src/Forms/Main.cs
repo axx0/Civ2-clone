@@ -504,9 +504,11 @@ namespace civ2.Forms
         #region WORLD MENU EVENTS
         private void WondersOfWorld_Click(object sender, EventArgs e) 
         {
-            //WondersOfWorldForm WondersOfWorldForm = new WondersOfWorldForm();
-            //WondersOfWorldForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //WondersOfWorldForm.ShowDialog();
+            WondersOfWorldPanel WondersOfWorldPanel = new WondersOfWorldPanel(this, 622, 421);
+            Controls.Add(WondersOfWorldPanel);
+            WondersOfWorldPanel.Location = new Point(this.ClientSize.Width / 2 - WondersOfWorldPanel.Size.Width / 2, this.ClientSize.Height / 2 - WondersOfWorldPanel.Size.Height / 2);
+            WondersOfWorldPanel.Show();
+            WondersOfWorldPanel.BringToFront();
         }
 
         private void Top5Cities_Click(object sender, EventArgs e) { }
@@ -514,9 +516,11 @@ namespace civ2.Forms
 
         private void Demographics_Click(object sender, EventArgs e)
         {
-            //DemographicsForm DemographicsForm = new DemographicsForm();
-            //DemographicsForm.Load += new EventHandler(AdvisorsForm_Load);   //so you set the correct size of form
-            //DemographicsForm.ShowDialog();
+            DemographicsPanel DemographicsPanel = new DemographicsPanel(this, 622, 421);
+            Controls.Add(DemographicsPanel);
+            DemographicsPanel.Location = new Point(this.ClientSize.Width / 2 - DemographicsPanel.Size.Width / 2, this.ClientSize.Height / 2 - DemographicsPanel.Size.Height / 2);
+            DemographicsPanel.Show();
+            DemographicsPanel.BringToFront();
         }
         private void Spaceships_Click(object sender, EventArgs e) { }
         #endregion
