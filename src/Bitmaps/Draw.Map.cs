@@ -44,7 +44,7 @@ namespace civ2.Bitmaps
                         int row = _row;
 
                         // Draw only if the tile is visible for each civ (index=8...whole map visible)
-                        if ((civ < 8 && Map.VisibilityC2(col, row, civ)) || civ == 8)
+                        if ((civ < 8 && Map.IsTileVisibleC2(col, row, civ)) || civ == 8)
                         {
                             // Tiles
                             g.DrawImage(Map.TileC2(col, row).Graphic, 32 * col, 16 * row);
@@ -61,7 +61,7 @@ namespace civ2.Bitmaps
                                         int rowNew = row + offset[tileY];
                                         if (colNew >= 0 && colNew < 2 * Map.Xdim && rowNew >= 0 && rowNew < Map.Ydim)   // Don't observe outside map limits
                                         {
-                                            if (!Map.VisibilityC2(colNew, rowNew, civ))   // Surrounding tile is not visible -> dither
+                                            if (!Map.IsTileVisibleC2(colNew, rowNew, civ))   // Surrounding tile is not visible -> dither
                                                 g.DrawImage(Images.DitherDots[tileX, tileY], 32 * (col + tileX), 16 * (row + tileY));
                                         }
                                     }
@@ -93,7 +93,7 @@ namespace civ2.Bitmaps
                 foreach (City city in Game.GetCities)
                 {
                     //int[] ColRow = Ext.Civ2xy(new int[] { city.X, city.Y });  // Real coords from civ2 coords
-                    if ((civ < 8 && Map.VisibilityC2(city.X, city.Y, civ)) || civ == 8)
+                    if ((civ < 8 && Map.IsTileVisibleC2(city.X, city.Y, civ)) || civ == 8)
                     {
                         Bitmap cityNameBitmap = Draw.CityName(city, zoom);
                         g.DrawImage(cityNameBitmap, 32 * city.X + 32 - (cityNameBitmap.Width / 2), 16 * city.Y + 3 * 8);

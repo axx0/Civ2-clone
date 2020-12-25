@@ -10,8 +10,8 @@ namespace civ2.Forms
 {
     public partial class CityPanel : Civ2panel
     {
-        private Game _game => Game.Instance;
-        private Map _map => Map.Instance;
+        private Game Game => Game.Instance;
+        private Map Map => Map.Instance;
 
         private Main _main;
         private readonly City _thisCity;
@@ -55,7 +55,7 @@ namespace civ2.Forms
                 BackColor = Color.Transparent
             };
             DrawPanel.Controls.Add(_faces);
-            _faces.Paint += new PaintEventHandler(Faces_Paint);
+            _faces.Paint += Faces_Paint;
 
             // Resource map panel
             _resourceMap = new DoubleBufferedPanel
@@ -65,7 +65,7 @@ namespace civ2.Forms
                 BackColor = Color.Transparent
             };
             DrawPanel.Controls.Add(_resourceMap);
-            _resourceMap.Paint += new PaintEventHandler(ResourceMap_Paint);
+            _resourceMap.Paint += ResourceMap_Paint;
 
             ////City resources panel
             //CityResources = new DoubleBufferedPanel
@@ -248,8 +248,6 @@ namespace civ2.Forms
             //ProductionItem = 0; //item appearing in production menu on loadgame
         }
 
-
-
         //private void CityForm_Load(object sender, EventArgs e)
         //{
         //    Location = new Point(CallingForm.Width / 2 - this.Width / 2, CallingForm.Height / 2 - this.Height / 2 + 60);
@@ -257,20 +255,19 @@ namespace civ2.Forms
 
         private void CityPanel_Paint(object sender, PaintEventArgs e)
         {
-            StringFormat sf = new StringFormat();
+            var sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
-            string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
-            string text = String.Format($"City of {_thisCity.Name}, {Math.Abs(_game.GameYear)} {bcad}, Population {_thisCity.Population:n0} (Treasury: {_thisCity.Owner.Money} Gold)");
+            string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
+            string text = String.Format($"City of {_thisCity.Name}, {Math.Abs(Game.GameYear)} {bcad}, Population {_thisCity.Population:n0} (Treasury: {_thisCity.Owner.Money} Gold)");
 
-            e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 15), sf);
-            e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 15), sf);
+            e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point((Width / 2) + 1, 15), sf);
+            e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(Width / 2, 15), sf);
             sf.Dispose();
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         // Draw faces
@@ -279,7 +276,7 @@ namespace civ2.Forms
             // Image of faces
             e.Graphics.DrawImage(Draw.Citizens(_thisCity, 0), 2, 7);
             // Text
-            StringFormat sf = new StringFormat();
+            var sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
@@ -307,8 +304,6 @@ namespace civ2.Forms
         //    WallpaperPanel.Invalidate();
         //}
 
-
-
         //private void WallpaperPanel_Paint(object sender, PaintEventArgs e)
         //{
         //    //Borders of panel
@@ -326,10 +321,6 @@ namespace civ2.Forms
         //    e.Graphics.DrawString("City Resources", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(400, 70));
         //    e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
         //}
-
-
-
-
 
         ////Draw city resources
         //private void CityResources_Paint(object sender, PaintEventArgs e)

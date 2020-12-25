@@ -347,6 +347,5 @@ namespace civ2
                 Attitude[row] = rulesList[73][row];
             }
         }
-
     }
 }

@@ -63,7 +63,7 @@ namespace civ2.Forms
             // Draw cities
             foreach (City city in Game.GetCities)
             {
-                if (Game.WhichCivsMapShown == 8 || Map.VisibilityC2(city.X, city.Y, Game.WhichCivsMapShown))
+                if (Game.WhichCivsMapShown == 8 || Map.IsTileVisibleC2(city.X, city.Y, Game.WhichCivsMapShown))
                 {
                     e.Graphics.FillRectangle(new SolidBrush(CivColors.CityTextColor[city.Owner.Id]), Offset[0] + city.X, Offset[1] + city.Y, 2, 1);
                 }

@@ -100,6 +100,5 @@ namespace civ2.Forms
 
             return base.ProcessCmdKey(ref msg, keyData);
         }
-
     }
 }

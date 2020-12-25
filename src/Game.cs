@@ -356,16 +356,16 @@ namespace civ2
                             int government, int reputation, bool[] techs)
         {
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && leaderName == "") leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];
+            if (id != 0 && leaderName.Length == 0) leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];
 
             // If tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && tribeName == "") tribeName = Rules.LeaderPlural[tribeNumber];
+            if (id != 0 && tribeName.Length == 0) tribeName = Rules.LeaderPlural[tribeNumber];
 
             // If adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
-            if (id != 0 && adjective == "") adjective = Rules.LeaderAdjective[tribeNumber];
+            if (id != 0 && adjective.Length == 0) adjective = Rules.LeaderAdjective[tribeNumber];
 
             // Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
-            if (id != 0&& id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
+            if (id != 0 && id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
 
             Civilization civ = new Civilization
             {
@@ -399,6 +399,5 @@ namespace civ2
                 return _instance;
             }
         }
-
     }
 }

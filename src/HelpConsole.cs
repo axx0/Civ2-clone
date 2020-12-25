@@ -62,8 +62,8 @@ namespace civ2
                 {
                     Console.Write(">>");
                     var cmd = Console.ReadLine();
-                    if (cmd.ToLower() == "quit") break;
-                    if (cmd.ToLower() == "list units")
+                    if (string.Equals(cmd, "quit", StringComparison.OrdinalIgnoreCase)) break;
+                    if (string.Equals(cmd, "list units", StringComparison.OrdinalIgnoreCase))
                     {
                         //List for all civs
                         int count = 0;
@@ -98,7 +98,7 @@ namespace civ2
                             Console.WriteLine();
                         }
                     }
-                    if (cmd.ToLower() == "help")
+                    if (string.Equals(cmd, "help", StringComparison.OrdinalIgnoreCase))
                     {
                         Console.WriteLine("'list units' ... list units of all civs");
                         Console.WriteLine();

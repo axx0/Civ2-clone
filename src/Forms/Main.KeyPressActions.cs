@@ -15,14 +15,14 @@ namespace civ2.Forms
             {
                 case Keys.NumPad1:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveSW);
+                            Game.IssueUnitOrder(OrderType.MoveSW);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[0]--;
-                            _game.ActiveXY[1]++;
+                            Game.ActiveXY[0]--;
+                            Game.ActiveXY[1]++;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -30,27 +30,27 @@ namespace civ2.Forms
                 case Keys.Down:
                 case Keys.NumPad2:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveS);
+                            Game.IssueUnitOrder(OrderType.MoveS);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[1] += 2;
+                            Game.ActiveXY[1] += 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
                     }
                 case Keys.NumPad3:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveSE);
+                            Game.IssueUnitOrder(OrderType.MoveSE);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[0]++;
-                            _game.ActiveXY[1]++;
+                            Game.ActiveXY[0]++;
+                            Game.ActiveXY[1]++;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -58,13 +58,13 @@ namespace civ2.Forms
                 case Keys.Left:
                 case Keys.NumPad4:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveW);
+                            Game.IssueUnitOrder(OrderType.MoveW);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[0] -= 2;
+                            Game.ActiveXY[0] -= 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -72,27 +72,27 @@ namespace civ2.Forms
                 case Keys.Right:
                 case Keys.NumPad6:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveE);
+                            Game.IssueUnitOrder(OrderType.MoveE);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[0] += 2;
+                            Game.ActiveXY[0] += 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
                     }
                 case Keys.NumPad7:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveNW);
+                            Game.IssueUnitOrder(OrderType.MoveNW);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[0]--;
-                            _game.ActiveXY[1]--;
+                            Game.ActiveXY[0]--;
+                            Game.ActiveXY[1]--;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
@@ -100,92 +100,92 @@ namespace civ2.Forms
                 case Keys.Up:
                 case Keys.NumPad8:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveN);
+                            Game.IssueUnitOrder(OrderType.MoveN);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[1] -= 2;
+                            Game.ActiveXY[1] -= 2;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
                     }
                 case Keys.NumPad9:
                     {
-                        if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
+                        if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
                         {
-                            _game.IssueUnitOrder(OrderType.MoveNE);
+                            Game.IssueUnitOrder(OrderType.MoveNE);
                         }
                         else if (ViewPieceMode)
                         {
-                            _game.ActiveXY[0]++;
-                            _game.ActiveXY[1]--;
+                            Game.ActiveXY[0]++;
+                            Game.ActiveXY[1]--;
                             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ViewPieceMoved));
                         }
                         break;
                     }
                 case Keys.B:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.BuildCity);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.BuildCity);
                     break;
                 case Keys.F:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.Fortify);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.Fortify);
                     break;
                 case Keys.G:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.GoTo);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.GoTo);
                     break;
                 case Keys.H:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.GoHome);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.GoHome);
                     break;
                 case Keys.I:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.BuildIrrigation);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.BuildIrrigation);
                     break;
                 case Keys.K:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.Automate);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.Automate);
                     break;
                 case Keys.M:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.BuildMine);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.BuildMine);
                     break;
                 case Keys.O:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.Transform);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.Transform);
                     break;
                 case Keys.P:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.CleanPollution);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.CleanPollution);
                     break;
                 case Keys.R:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.BuildRoad);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.BuildRoad);
                     break;
                 case Keys.S:
-                    if (!ViewPieceMode && _game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.Sleep);
+                    if (!ViewPieceMode && Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.Sleep);
                     break;
                 case Keys.Enter:
-                    if (_game.Options.AlwaysWaitAtEndOfTurn && !_game.PlayerCiv.AnyUnitsAwaitingOrders)
-                        _game.NewPlayerTurn();
+                    if (Game.Options.AlwaysWaitAtEndOfTurn && !Game.PlayerCiv.AnyUnitsAwaitingOrders)
+                        Game.NewPlayerTurn();
                     else
                         OnCheckIfCityCanBeViewed?.Invoke(null, new CheckIfCityCanBeViewedEventArgs());  //if enter pressed when view piece above city --> enter city view
                     break;
                 case Keys.Space:
-                    if (_game.ActiveUnit?.MovementCounter == 0)
-                        _game.IssueUnitOrder(OrderType.SkipTurn);
+                    if (Game.ActiveUnit?.MovementCounter == 0)
+                        Game.IssueUnitOrder(OrderType.SkipTurn);
                     break;
                 case Keys.W:
-                    if (_game.ActiveUnit != null) _game.ChooseNextUnit();
+                    if (Game.ActiveUnit != null) Game.ChooseNextUnit();
                     break;
                 case Keys.Y:
                     {
-                        if (_game.WhichCivsMapShown == _game.ActiveCiv.Id) _game.WhichCivsMapShown = 8;   //show entire map
-                        else if (_game.WhichCivsMapShown == 8) _game.WhichCivsMapShown = _game.ActiveCiv.Id;   //show current civ's map view
+                        if (Game.WhichCivsMapShown == Game.ActiveCiv.Id) Game.WhichCivsMapShown = 8;   //show entire map
+                        else if (Game.WhichCivsMapShown == 8) Game.WhichCivsMapShown = Game.ActiveCiv.Id;   //show current civ's map view
                         OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ToggleBetweenCurrentEntireMapView));
                         break;
                     }

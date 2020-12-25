@@ -6,7 +6,7 @@ using System.IO;
 
 namespace civ2
 {
-    public class Settings
+    public static class Settings
     {
         // Game settings from App.config
         public static string Civ2Path { get; private set; }

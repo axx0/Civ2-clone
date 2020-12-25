@@ -120,37 +120,37 @@ namespace civ2.Bitmaps
             // Tiles
             for (int i = 0; i < 4; i++)
             {
-                Desert[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 1, 64, 32), terrain1.PixelFormat);
+                Desert[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), 1, 64, 32), terrain1.PixelFormat);
                 Desert[i].MakeTransparent(transparentGray);
                 Desert[i].MakeTransparent(transparentPink);
-                Plains[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 2 * 1 + 1 * 32, 64, 32), terrain1.PixelFormat);
+                Plains[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (2 * 1) + (1 * 32), 64, 32), terrain1.PixelFormat);
                 Plains[i].MakeTransparent(transparentGray);
                 Plains[i].MakeTransparent(transparentPink);
-                Grassland[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 3 * 1 + 2 * 32, 64, 32), terrain1.PixelFormat);
+                Grassland[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (3 * 1) + (2 * 32), 64, 32), terrain1.PixelFormat);
                 Grassland[i].MakeTransparent(transparentGray);
                 Grassland[i].MakeTransparent(transparentPink);
-                ForestBase[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 4 * 1 + 3 * 32, 64, 32), terrain1.PixelFormat);
+                ForestBase[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (4 * 1) + (3 * 32), 64, 32), terrain1.PixelFormat);
                 ForestBase[i].MakeTransparent(transparentGray);
                 ForestBase[i].MakeTransparent(transparentPink);
-                HillsBase[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 5 * 1 + 4 * 32, 64, 32), terrain1.PixelFormat);
+                HillsBase[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (5 * 1) + (4 * 32), 64, 32), terrain1.PixelFormat);
                 HillsBase[i].MakeTransparent(transparentGray);
                 HillsBase[i].MakeTransparent(transparentPink);
-                MtnsBase[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 6 * 1 + 5 * 32, 64, 32), terrain1.PixelFormat);
+                MtnsBase[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (6 * 1) + (5 * 32), 64, 32), terrain1.PixelFormat);
                 MtnsBase[i].MakeTransparent(transparentGray);
                 MtnsBase[i].MakeTransparent(transparentPink);
-                Tundra[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 7 * 1 + 6 * 32, 64, 32), terrain1.PixelFormat);
+                Tundra[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (7 * 1) + (6 * 32), 64, 32), terrain1.PixelFormat);
                 Tundra[i].MakeTransparent(transparentGray);
                 Tundra[i].MakeTransparent(transparentPink);
-                Glacier[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 8 * 1 + 7 * 32, 64, 32), terrain1.PixelFormat);
+                Glacier[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (8 * 1) + (7 * 32), 64, 32), terrain1.PixelFormat);
                 Glacier[i].MakeTransparent(transparentGray);
                 Glacier[i].MakeTransparent(transparentPink);
-                Swamp[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 9 * 1 + 8 * 32, 64, 32), terrain1.PixelFormat);
+                Swamp[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (9 * 1) + (8 * 32), 64, 32), terrain1.PixelFormat);
                 Swamp[i].MakeTransparent(transparentGray);
                 Swamp[i].MakeTransparent(transparentPink);
-                Jungle[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 10 * 1 + 9 * 32, 64, 32), terrain1.PixelFormat);
+                Jungle[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (10 * 1) + (9 * 32), 64, 32), terrain1.PixelFormat);
                 Jungle[i].MakeTransparent(transparentGray);
                 Jungle[i].MakeTransparent(transparentPink);
-                Ocean[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 11 * 1 + 10 * 32, 64, 32), terrain1.PixelFormat);
+                Ocean[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (11 * 1) + (10 * 32), 64, 32), terrain1.PixelFormat);
                 Ocean[i].MakeTransparent(transparentGray);
                 Ocean[i].MakeTransparent(transparentPink);
             }
@@ -162,7 +162,7 @@ namespace civ2.Bitmaps
             {
                 for (int tileY = 0; tileY < 2; tileY++)
                 {
-                    DitherBlank[tileX, tileY] = terrain1.Clone(new Rectangle(tileX * 32 + 1, tileY * 16 + 447, 32, 16), terrain1.PixelFormat);
+                    DitherBlank[tileX, tileY] = terrain1.Clone(new Rectangle((tileX * 32) + 1, (tileY * 16) + 447, 32, 16), terrain1.PixelFormat);
                     DitherDots[tileX, tileY] = DitherBlank[tileX, tileY];
                     DitherDots[tileX, tileY].MakeTransparent(transparentGray);
                     DitherDots[tileX, tileY].MakeTransparent(transparentPink);
@@ -210,16 +210,16 @@ namespace civ2.Bitmaps
                             replacementColor = DitherBlank[tileX, tileY].GetPixel(col, row);
                             if (replacementColor == Color.FromArgb(0, 0, 0))
                             {
-                                DitherDesert[tileX, tileY].SetPixel(col, row, Desert[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherPlains[tileX, tileY].SetPixel(col, row, Plains[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherGrassland[tileX, tileY].SetPixel(col, row, Grassland[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherForest[tileX, tileY].SetPixel(col, row, ForestBase[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherHills[tileX, tileY].SetPixel(col, row, HillsBase[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherMountains[tileX, tileY].SetPixel(col, row, MtnsBase[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherTundra[tileX, tileY].SetPixel(col, row, Tundra[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherGlacier[tileX, tileY].SetPixel(col, row, Glacier[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherSwamp[tileX, tileY].SetPixel(col, row, Swamp[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
-                                DitherJungle[tileX, tileY].SetPixel(col, row, Jungle[0].GetPixel(tileX * 32 + col, tileY * 16 + row));
+                                DitherDesert[tileX, tileY].SetPixel(col, row, Desert[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherPlains[tileX, tileY].SetPixel(col, row, Plains[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherGrassland[tileX, tileY].SetPixel(col, row, Grassland[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherForest[tileX, tileY].SetPixel(col, row, ForestBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherHills[tileX, tileY].SetPixel(col, row, HillsBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherMountains[tileX, tileY].SetPixel(col, row, MtnsBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherTundra[tileX, tileY].SetPixel(col, row, Tundra[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherGlacier[tileX, tileY].SetPixel(col, row, Glacier[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherSwamp[tileX, tileY].SetPixel(col, row, Swamp[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
+                                DitherJungle[tileX, tileY].SetPixel(col, row, Jungle[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
                             }
                             else
                             {
@@ -242,16 +242,16 @@ namespace civ2.Bitmaps
             // Rivers, Forest, Mountains, Hills
             for (int i = 0; i < 16; i++)
             {
-                River[i] = terrain2.Clone(new Rectangle(i % 8 + 1 + (i % 8) * 64, 3 + i / 8 + (2 + i / 8) * 32, 64, 32), terrain2.PixelFormat);
+                River[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 3 + (i / 8) + ((2 + (i / 8)) * 32), 64, 32), terrain2.PixelFormat);
                 River[i].MakeTransparent(transparentGray);
                 River[i].MakeTransparent(transparentPink);
-                Forest[i] = terrain2.Clone(new Rectangle(i % 8 + 1 + (i % 8) * 64, 5 + i / 8 + (4 + i / 8) * 32, 64, 32), terrain2.PixelFormat);
+                Forest[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 5 + (i / 8) + ((4 + (i / 8)) * 32), 64, 32), terrain2.PixelFormat);
                 Forest[i].MakeTransparent(transparentGray);
                 Forest[i].MakeTransparent(transparentPink);
-                Mountains[i] = terrain2.Clone(new Rectangle(i % 8 + 1 + (i % 8) * 64, 7 + i / 8 + (6 + i / 8) * 32, 64, 32), terrain2.PixelFormat);
+                Mountains[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 7 + (i / 8) + ((6 + (i / 8)) * 32), 64, 32), terrain2.PixelFormat);
                 Mountains[i].MakeTransparent(transparentGray);
                 Mountains[i].MakeTransparent(transparentPink);
-                Hills[i] = terrain2.Clone(new Rectangle(i % 8 + 1 + (i % 8) * 64, 9 + i / 8 + (8 + i / 8) * 32, 64, 32), terrain2.PixelFormat);
+                Hills[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 9 + (i / 8) + ((8 + (i / 8)) * 32), 64, 32), terrain2.PixelFormat);
                 Hills[i].MakeTransparent(transparentGray);
                 Hills[i].MakeTransparent(transparentPink);
             }
@@ -259,7 +259,7 @@ namespace civ2.Bitmaps
             // River mouths
             for (int i = 0; i < 4; i++)
             {
-                RiverMouth[i] = terrain2.Clone(new Rectangle(i + 1 + i * 64, 11 * 1 + 10 * 32, 64, 32), terrain2.PixelFormat);
+                RiverMouth[i] = terrain2.Clone(new Rectangle(i + 1 + (i * 64), (11 * 1) + (10 * 32), 64, 32), terrain2.PixelFormat);
                 RiverMouth[i].MakeTransparent(transparentGray);
                 RiverMouth[i].MakeTransparent(transparentPink);
                 RiverMouth[i].MakeTransparent(transparentCyan);
@@ -268,23 +268,23 @@ namespace civ2.Bitmaps
             // Coast
             for (int i = 0; i < 8; i++)
             {
-                Coast[i, 0] = terrain2.Clone(new Rectangle(2 * i + 1 + 2 * i * 32, 429, 32, 16), terrain2.PixelFormat);  // N
+                Coast[i, 0] = terrain2.Clone(new Rectangle((2 * i) + 1 + (2 * i * 32), 429, 32, 16), terrain2.PixelFormat);  // N
                 Coast[i, 0].MakeTransparent(transparentGray);
-                Coast[i, 1] = terrain2.Clone(new Rectangle(2 * i + 1 + 2 * i * 32, 429 + 1 * 1 + 1 * 16, 32, 16), terrain2.PixelFormat);  // S
+                Coast[i, 1] = terrain2.Clone(new Rectangle((2 * i) + 1 + (2 * i * 32), 429 + (1 * 1) + (1 * 16), 32, 16), terrain2.PixelFormat);  // S
                 Coast[i, 1].MakeTransparent(transparentGray);
-                Coast[i, 2] = terrain2.Clone(new Rectangle(2 * i + 1 + 2 * i * 32, 429 + 2 * 1 + 2 * 16, 32, 16), terrain2.PixelFormat);  // W
+                Coast[i, 2] = terrain2.Clone(new Rectangle((2 * i) + 1 + (2 * i * 32), 429 + (2 * 1) + (2 * 16), 32, 16), terrain2.PixelFormat);  // W
                 Coast[i, 2].MakeTransparent(transparentGray);
-                Coast[i, 3] = terrain2.Clone(new Rectangle(2 * (i + 1) + (2 * i + 1) * 32, 429 + 2 * 1 + 2 * 16, 32, 16), terrain2.PixelFormat);  // E
+                Coast[i, 3] = terrain2.Clone(new Rectangle((2 * (i + 1)) + (((2 * i) + 1) * 32), 429 + (2 * 1) + (2 * 16), 32, 16), terrain2.PixelFormat);  // E
                 Coast[i, 3].MakeTransparent(transparentGray);
             }
 
             // Road & railorad
             for (int i = 0; i < 9; i++)
             {
-                Road[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 364, 64, 32), terrain1.PixelFormat);
+                Road[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), 364, 64, 32), terrain1.PixelFormat);
                 Road[i].MakeTransparent(transparentGray);
                 Road[i].MakeTransparent(transparentPink);
-                Railroad[i] = terrain1.Clone(new Rectangle(i + 1 + i * 64, 397, 64, 32), terrain1.PixelFormat);
+                Railroad[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), 397, 64, 32), terrain1.PixelFormat);
                 Railroad[i].MakeTransparent(transparentGray);
                 Railroad[i].MakeTransparent(transparentPink);
             }
@@ -351,22 +351,22 @@ namespace civ2.Bitmaps
             {
                 for (int col = 0; col < 4; col++)
                 {
-                    City[row, col] = cities.Clone(new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48), cities.PixelFormat);
+                    City[row, col] = cities.Clone(new Rectangle(1 + (65 * col), 39 + (49 * row), 64, 48), cities.PixelFormat);
                     City[row, col].MakeTransparent(transparentGray);
                     City[row, col].MakeTransparent(transparentPink);
-                    CityWall[row, col] = cities.Clone(new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), cities.PixelFormat);
+                    CityWall[row, col] = cities.Clone(new Rectangle(334 + (65 * col), 39 + (49 * row), 64, 48), cities.PixelFormat);
                     CityWall[row, col].MakeTransparent(transparentGray);
                     CityWall[row, col].MakeTransparent(transparentPink);
                     //determine where the city size window is located (x-y)
                     for (int ix = 0; ix < 64; ix++)
                     { //in x-direction
-                        if (cities.GetPixel(65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 0] = ix;  //if pixel on border is blue
-                        if (cities.GetPixel(333 + 65 * col + ix, 38 + 49 * row) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 0] = ix;
+                        if (cities.GetPixel((65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 0] = ix;  //if pixel on border is blue
+                        if (cities.GetPixel(333 + (65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 0] = ix;
                     } //for cities with wall
                     for (int iy = 0; iy < 48; iy++)
                     { //in y-direction
-                        if (cities.GetPixel(65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 1] = iy;
-                        if (cities.GetPixel(333 + 65 * col, 38 + 49 * row + iy) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 1] = iy;
+                        if (cities.GetPixel(65 * col, 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 1] = iy;
+                        if (cities.GetPixel(333 + (65 * col), 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 1] = iy;
                     }
                 }
             }
@@ -374,7 +374,7 @@ namespace civ2.Bitmaps
             // Get flag bitmaps
             for (int col = 0; col < 9; col++)
             {
-                CityFlag[col] = cities.Clone(new Rectangle(1 + 15 * col, 425, 14, 22), cities.PixelFormat);
+                CityFlag[col] = cities.Clone(new Rectangle(1 + (15 * col), 425, 14, 22), cities.PixelFormat);
                 CityFlag[col].MakeTransparent(transparentGray);
             }
 
@@ -528,12 +528,12 @@ namespace civ2.Bitmaps
             {
                 for (int col = 0; col < 9; col++)
                 {
-                    Units[count] = units.Clone(new Rectangle(64 * col + 1 + col, 48 * row + 1 + row, 64, 48), units.PixelFormat);
+                    Units[count] = units.Clone(new Rectangle((64 * col) + 1 + col, (48 * row) + 1 + row, 64, 48), units.PixelFormat);
                     Units[count].MakeTransparent(transparentGray);
                     Units[count].MakeTransparent(transparentPink);
                     // Determine where the unit shield is located (x-y)
-                    for (int ix = 0; ix < 64; ix++) if (units.GetPixel(65 * col + ix, 49 * row) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 0] = ix;  //if pixel on border is blue, in x-direction
-                    for (int iy = 0; iy < 48; iy++) if (units.GetPixel(65 * col, 49 * row + iy) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 1] = iy;  //in y-direction
+                    for (int ix = 0; ix < 64; ix++) if (units.GetPixel((65 * col) + ix, 49 * row) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 0] = ix;  //if pixel on border is blue, in x-direction
+                    for (int iy = 0; iy < 48; iy++) if (units.GetPixel(65 * col, (49 * row) + iy) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 1] = iy;  //in y-direction
                     count++;
                 }
             }
@@ -630,7 +630,7 @@ namespace civ2.Bitmaps
             {
                 for (int col = 0; col < 11; col++)
                 {
-                    PeopleL[col, row] = pplIcons.Clone(new Rectangle(27 * col + 2 + col, 30 * row + 6 + row, 27, 30), pplIcons.PixelFormat);
+                    PeopleL[col, row] = pplIcons.Clone(new Rectangle((27 * col) + 2 + col, (30 * row) + 6 + row, 27, 30), pplIcons.PixelFormat);
 
                     PeopleLshadow[col, row] = CreateNonIndexedImage(PeopleL[col, row]); //convert GIF to non-indexed picture
 
@@ -667,6 +667,8 @@ namespace civ2.Bitmaps
 
             PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);
             PanelInnerWallpaper = icons.Clone(new Rectangle(299, 190, 31, 31), icons.PixelFormat);
+
+            icons.Dispose();
         }
 
         public static void IconsBitmapsImportFromFile(string path)
@@ -702,29 +704,37 @@ namespace civ2.Bitmaps
             // Improvement icons
             int count = 1;  //start at 1. 0 is for no improvement.
             for (int row = 0; row < 5; row++)
+            {
                 for (int col = 0; col < 8; col++)
                 {
-                    Improvements[count] = icons.Clone(new Rectangle(343 + 36 * col + col, 1 + 20 * row + row, 36, 20), icons.PixelFormat);
+                    Improvements[count] = icons.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 1 + row, 36, 20), icons.PixelFormat);
                     //ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
                     //ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
                     count++;
                     if (count == 39) break;
                 }
+            }
 
             // WondersIcons
             for (int row = 0; row < 4; row++)
+            {
                 for (int col = 0; col < 7; col++)
                 {
-                    Improvements[count] = icons.Clone(new Rectangle(343 + 36 * col + col, 106 + 20 * row + row, 36, 20), icons.PixelFormat);
+                    Improvements[count] = icons.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 106 + row, 36, 20), icons.PixelFormat);
                     //ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
                     //ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
                     count++;
                 }
+            }
 
             // Research icons
             for (int row = 0; row < 4; row++)
+            {
                 for (int col = 0; col < 5; col++)
-                    ResearchIcons[col, row] = icons.Clone(new Rectangle(343 + 36 * col + col, 211 + 20 * row + row, 36, 20), icons.PixelFormat);
+                {
+                    ResearchIcons[col, row] = icons.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 211 + row, 36, 20), icons.PixelFormat);
+                }
+            }
 
             SellIcon = icons.Clone(new Rectangle(16, 320, 14, 14), icons.PixelFormat);
             SellIcon.MakeTransparent(transparentLightPink);

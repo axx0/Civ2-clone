@@ -175,10 +175,10 @@ namespace civ2.Bitmaps
         // Draw resource map
         public static Bitmap CityResourcesMap(City city, int zoom)
         {
-            var _map = new Bitmap(4 * 8 * (8 + zoom), 4 * 4 * (8 + zoom));
+            var map = new Bitmap(4 * 8 * (8 + zoom), 4 * 4 * (8 + zoom));
 
-            Bitmap _image;
-            using (Graphics graphics = Graphics.FromImage(_map))
+            Bitmap image;
+            using (Graphics g = Graphics.FromImage(map))
             {
                 // First draw squares around city
                 for (int x_ = -3; x_ <= 3; x_++)
@@ -190,14 +190,19 @@ namespace civ2.Bitmaps
                             || (x_ == -3 && y_ == 1) || (x_ == -1 && y_ == 1) || (x_ == 1 && y_ == 1) || (x_ == 3 && y_ == 1) || (x_ == -2 && y_ == 2) || (x_ == 0 && y_ == 2)
                             || (x_ == 2 && y_ == 2) || (x_ == -1 && y_ == 3) || (x_ == 1 && y_ == 3))
                         {
-                            int newX = city.X + x_;
-                            int newY = city.Y + y_;
+                            g.DrawImage(ModifyImage.ResizeImage(Images.Blank, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                            if (Map.IsTileVisibleC2(city.X + x_, city.Y + y_, city.Owner.Id))
+                                g.DrawImage(ModifyImage.ResizeImage(Map.TileC2(city.X + x_, city.Y + y_).Graphic, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+
+
+                            //int newX = city.X + x_;
+                            //int newY = city.Y + y_;
                             //TODO: correct this
                             //if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
                             //else image = Blank;
                             //image = Blank;
                             //graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
-                            graphics.DrawImage(ModifyImage.ResizeImage(Images.Blank, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+
                         }
                     }
                 }
@@ -239,7 +244,7 @@ namespace civ2.Bitmaps
                 //            for (int j = 0; j < cityTrad[i]; j++) graphics.DrawImage(CitymapTradeSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + cityShld[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
                 //        }
             }
-            return _map;
+            return map;
         }
     }
 }

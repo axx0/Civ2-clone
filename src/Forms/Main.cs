@@ -11,8 +11,8 @@ namespace civ2.Forms
 {
     public partial class Main : Form
     {
-        private Game _game => Game.Instance;
-        private Map _map => Map.Instance;
+        private Game Game => Game.Instance;
+        private Map Map => Map.Instance;
 
         private MenuStrip MainMenuStrip;
         private PictureBox _mainPic;
@@ -385,12 +385,12 @@ namespace civ2.Forms
 
         private void BuildIrrigation_Click(object sender, EventArgs e)
         {
-            if (_buildIrrigationItem.Enabled) _game.IssueUnitOrder(OrderType.BuildIrrigation);
+            if (_buildIrrigationItem.Enabled) Game.IssueUnitOrder(OrderType.BuildIrrigation);
         }
 
         private void BuildMinesChangeForest_Click(object sender, EventArgs e)
         {
-            if (_buildMinesChangeForestItem.Enabled) _game.IssueUnitOrder(OrderType.BuildMine);
+            if (_buildMinesChangeForestItem.Enabled) Game.IssueUnitOrder(OrderType.BuildMine);
         }
 
         private void CleanUpPollution_Click(object sender, EventArgs e) { }
@@ -399,22 +399,22 @@ namespace civ2.Forms
 
         private void GoTo_Click(object sender, EventArgs e)
         {
-            if (_goToItem.Enabled) _game.IssueUnitOrder(OrderType.GoTo);   //TODO: implement goto
+            if (_goToItem.Enabled) Game.IssueUnitOrder(OrderType.GoTo);   //TODO: implement goto
         }
 
         private void GoHomeToNearestCity_Click(object sender, EventArgs e)
         {
-            if (_goHomeToNearestCityItem.Enabled) _game.IssueUnitOrder(OrderType.GoHome);
+            if (_goHomeToNearestCityItem.Enabled) Game.IssueUnitOrder(OrderType.GoHome);
         }
 
         private void Fortify_Click(object sender, EventArgs e)
         {
-            if (_fortifyItem.Enabled) _game.IssueUnitOrder(OrderType.Fortify);
+            if (_fortifyItem.Enabled) Game.IssueUnitOrder(OrderType.Fortify);
         }
 
         private void Sleep_Click(object sender, EventArgs e)
         {
-            if (_sleepItem.Enabled) _game.IssueUnitOrder(OrderType.Sleep);
+            if (_sleepItem.Enabled) Game.IssueUnitOrder(OrderType.Sleep);
         }
 
         private void Disband_Click(object sender, EventArgs e) { }
@@ -426,24 +426,24 @@ namespace civ2.Forms
 
         private void Wait_Click(object sender, EventArgs e)
         {
-            if (Game.Instance.ActiveUnit != null) _game.ChooseNextUnit();
+            if (Game.Instance.ActiveUnit != null) Game.ChooseNextUnit();
         }
 
         private void SkipTurn_Click(object sender, EventArgs e)
         {
-            _game.IssueUnitOrder(OrderType.SkipTurn);
+            Game.IssueUnitOrder(OrderType.SkipTurn);
         }
 
         private void EndPlayerTurn_Click(object sender, EventArgs e) { }
 
         private void BuildNewCity_Click(object sender, EventArgs e)
         {
-            if(_buildNewCityItem.Enabled) _game.IssueUnitOrder(OrderType.BuildCity);
+            if(_buildNewCityItem.Enabled) Game.IssueUnitOrder(OrderType.BuildCity);
         }
 
         private void AutomateSettler_Click(object sender, EventArgs e)
         {
-            if (_automateSettlerItem.Enabled) _game.IssueUnitOrder(OrderType.Automate);
+            if (_automateSettlerItem.Enabled) Game.IssueUnitOrder(OrderType.Automate);
         }
 
         private void Paradrop_Click(object sender, EventArgs e) { }
