@@ -27,7 +27,7 @@ namespace civ2
             Ydim = data.MapYdim;
             Area = data.MapArea;
             Seed = data.MapSeed;
-            LocatorYdim = data.MapLocatorXdim;
+            LocatorXdim = data.MapLocatorXdim;
             LocatorYdim = data.MapLocatorYdim;
             Visibility = data.MapVisibilityCivs;
 
@@ -72,7 +72,7 @@ namespace civ2
             BaseMapPic = new Bitmap[9];
             for (int civId = 0; civId < 9; civId++)
                 BaseMapPic[civId] = Draw.DrawMap(civId, Game.Options.FlatEarth);    // For std. zoom level
-            
+
             // Make a map grafic for current use in MapPanel
             SetNewActiveMapPic();
         }

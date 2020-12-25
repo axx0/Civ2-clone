@@ -62,9 +62,15 @@ namespace civ2.Bitmaps
                         graphics.DrawImage(Images.CitymapFoodLargeBigger, starting_x + wheat_spacing * col, 27 + wheatH * row);
                         count++;
 
-                        if (count >= city.FoodInStorage) break;
+                        if (count >= city.FoodInStorage)
+                        {
+                            break;
+                        }
                     }
-                    if (count >= city.FoodInStorage) break;
+                    if (count >= city.FoodInStorage)
+                    {
+                        break;
+                    }
                 }
 
                 //3rd horizontal line (shorter)
@@ -118,7 +124,10 @@ namespace civ2.Bitmaps
                 for (int i = 0; i < city.Size; i++)
                 {
                     drawIndex = (int)peoples[i];
-                    if (i % 2 == 1 && (drawIndex == 0 || drawIndex == 2 || drawIndex == 4 || drawIndex == 6)) drawIndex++;  // Change men/woman appearance
+                    if (i % 2 == 1 && (drawIndex == 0 || drawIndex == 2 || drawIndex == 4 || drawIndex == 6))
+                    {
+                        drawIndex++;  // Change men/woman appearance
+                    }
                     //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
                     graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleLshadow[drawIndex, 0], zoom), i * spacing + 1, 1);   // Shadow
                     graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleL[drawIndex, 0], zoom), i * spacing, 0);
@@ -163,65 +172,74 @@ namespace civ2.Bitmaps
             return icons;
         }
 
-        public static Bitmap DrawCityResourcesMap(City city)    //Draw terrain in city form
+        // Draw resource map
+        public static Bitmap CityResourcesMap(City city, int zoom)
         {
-            Bitmap map = new Bitmap(4 * 64, 4 * 32);
+            var _map = new Bitmap(4 * 8 * (8 + zoom), 4 * 4 * (8 + zoom));
 
-            //Bitmap image;
-            //using (Graphics graphics = Graphics.FromImage(map))
-            //{
-            //    //First draw squares around city
-            //    for (int x_ = -3; x_ <= 3; x_++)
-            //        for (int y_ = -3; y_ <= 3; y_++)
-            //            if ((x_ == -1 & y_ == -3) || (x_ == 1 & y_ == -3) || (x_ == -2 & y_ == -2) || (x_ == 0 & y_ == -2) || (x_ == 2 & y_ == -2) || (x_ == -3 & y_ == -1) || (x_ == -1 & y_ == -1) || (x_ == 1 & y_ == -1) || (x_ == 3 & y_ == -1) || (x_ == -2 & y_ == 0) || (x_ == 0 & y_ == 0) || (x_ == 2 & y_ == 0) || (x_ == -3 & y_ == 1) || (x_ == -1 & y_ == 1) || (x_ == 1 & y_ == 1) || (x_ == 3 & y_ == 1) || (x_ == -2 & y_ == 2) || (x_ == 0 & y_ == 2) || (x_ == 2 & y_ == 2) || (x_ == -1 & y_ == 3) || (x_ == 1 & y_ == 3))
-            //            {
-            //                int newX = city.X + x_;
-            //                int newY = city.Y + y_;
-            //                //TODO: correct this
-            //                //if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
-            //                //else image = Blank;
-            //                image = Blank;
-            //                graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
-            //            }
+            Bitmap _image;
+            using (Graphics graphics = Graphics.FromImage(_map))
+            {
+                // First draw squares around city
+                for (int x_ = -3; x_ <= 3; x_++)
+                {
+                    for (int y_ = -3; y_ <= 3; y_++)
+                    {
+                        if ((x_ == -1 && y_ == -3) || (x_ == 1 && y_ == -3) || (x_ == -2 && y_ == -2) || (x_ == 0 && y_ == -2) || (x_ == 2 && y_ == -2) || (x_ == -3 && y_ == -1)
+                            || (x_ == -1 && y_ == -1) || (x_ == 1 && y_ == -1) || (x_ == 3 && y_ == -1) || (x_ == -2 && y_ == 0) || (x_ == 0 && y_ == 0) || (x_ == 2 && y_ == 0)
+                            || (x_ == -3 && y_ == 1) || (x_ == -1 && y_ == 1) || (x_ == 1 && y_ == 1) || (x_ == 3 && y_ == 1) || (x_ == -2 && y_ == 2) || (x_ == 0 && y_ == 2)
+                            || (x_ == 2 && y_ == 2) || (x_ == -1 && y_ == 3) || (x_ == 1 && y_ == 3))
+                        {
+                            int newX = city.X + x_;
+                            int newY = city.Y + y_;
+                            //TODO: correct this
+                            //if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
+                            //else image = Blank;
+                            //image = Blank;
+                            //graphics.DrawImage(image, 32 * (x_ + 3), 16 * (y_ + 3));
+                            graphics.DrawImage(ModifyImage.ResizeImage(Images.Blank, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                        }
+                    }
+                }
 
-            //    //Then draw city
-            //    graphics.DrawImage(CreateCityBitmap(city, false, 8), 64 * 1 + 32 * (3 % 2) + 1, 16 * 2 + 1);
+                //    //Then draw city
+                //    graphics.DrawImage(CreateCityBitmap(city, false, 8), 64 * 1 + 32 * (3 % 2) + 1, 16 * 2 + 1);
 
-            //    //Then draw food/shield/trade icons around the city (21 squares around city)
-            //    int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 },
-            //                                      { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
-            //    int[] cityFood = city.FoodDistribution;
-            //    int[] cityShld = city.ShieldDistribution;
-            //    int[] cityTrad = city.TradeDistribution;
-            //    for (int i = 0; i < 21; i++)
-            //        if (city.DistributionWorkers[i] == 1)
-            //        {
-            //            //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
-            //            int spacing;
-            //            switch (cityFood[i] + cityShld[i] + cityTrad[i])
-            //            {
-            //                case 1:
-            //                case 2: spacing = 17; break;    //50 % larger (orignal = 11, 1 pixel gap)
-            //                case 3: spacing = 15; break;    //50 % larger (orignal = 10, no gap)
-            //                case 4: spacing = 11; break;    //50 % larger (orignal = 7)
-            //                case 5: spacing = 8; break;    //50 % larger (orignal = 5)
-            //                case 6: spacing = 6; break;    //50 % larger (orignal = 4)
-            //                case 7:
-            //                case 8: spacing = 5; break;    //50 % larger (orignal = 3)
-            //                case 9: spacing = 3; break;    //50 % larger (orignal = 2)
-            //                case 10: spacing = 2; break;    //50 % larger (orignal = 1)
-            //                default: spacing = 2; break;    //50 % larger (orignal = 1)
-            //            }
+                //    //Then draw food/shield/trade icons around the city (21 squares around city)
+                //    int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 },
+                //                                      { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    //offset of squares from city square (0,0)
+                //    int[] cityFood = city.FoodDistribution;
+                //    int[] cityShld = city.ShieldDistribution;
+                //    int[] cityTrad = city.TradeDistribution;
+                //    for (int i = 0; i < 21; i++)
+                //        if (city.DistributionWorkers[i] == 1)
+                //        {
+                //            //First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
+                //            int spacing;
+                //            switch (cityFood[i] + cityShld[i] + cityTrad[i])
+                //            {
+                //                case 1:
+                //                case 2: spacing = 17; break;    //50 % larger (orignal = 11, 1 pixel gap)
+                //                case 3: spacing = 15; break;    //50 % larger (orignal = 10, no gap)
+                //                case 4: spacing = 11; break;    //50 % larger (orignal = 7)
+                //                case 5: spacing = 8; break;    //50 % larger (orignal = 5)
+                //                case 6: spacing = 6; break;    //50 % larger (orignal = 4)
+                //                case 7:
+                //                case 8: spacing = 5; break;    //50 % larger (orignal = 3)
+                //                case 9: spacing = 3; break;    //50 % larger (orignal = 2)
+                //                case 10: spacing = 2; break;    //50 % larger (orignal = 1)
+                //                default: spacing = 2; break;    //50 % larger (orignal = 1)
+                //            }
 
-            //            //First draw food, then shields, then trade icons
-            //            int x_offset = 32 - ((cityFood[i] + cityShld[i] + cityTrad[i] - 1) * spacing + 15) / 2;
-            //            int y_offset = 9;
-            //            for (int j = 0; j < cityFood[i]; j++) graphics.DrawImage(CitymapFoodSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + j * spacing, y_offset + (3 + offsets[i, 1]) * 16);
-            //            for (int j = 0; j < cityShld[i]; j++) graphics.DrawImage(CitymapShieldSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
-            //            for (int j = 0; j < cityTrad[i]; j++) graphics.DrawImage(CitymapTradeSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + cityShld[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
-            //        }
-            //}
-            return map;
+                //            //First draw food, then shields, then trade icons
+                //            int x_offset = 32 - ((cityFood[i] + cityShld[i] + cityTrad[i] - 1) * spacing + 15) / 2;
+                //            int y_offset = 9;
+                //            for (int j = 0; j < cityFood[i]; j++) graphics.DrawImage(CitymapFoodSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + j * spacing, y_offset + (3 + offsets[i, 1]) * 16);
+                //            for (int j = 0; j < cityShld[i]; j++) graphics.DrawImage(CitymapShieldSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
+                //            for (int j = 0; j < cityTrad[i]; j++) graphics.DrawImage(CitymapTradeSmallBigger, x_offset + (3 + offsets[i, 0]) * 32 + (cityFood[i] + cityShld[i] + j) * spacing, y_offset + (3 + offsets[i, 1]) * 16);
+                //        }
+            }
+            return _map;
         }
     }
 }

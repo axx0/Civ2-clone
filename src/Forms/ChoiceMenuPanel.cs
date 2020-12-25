@@ -8,20 +8,20 @@ namespace civ2.Forms
 {
     public partial class ChoiceMenuPanel : Civ2panel
     {
-        readonly RadioButton[] RadioBtn = new RadioButton[8];
-        readonly Main mainForm;
+        private readonly RadioButton[] _radioBtn;
+        private readonly Main _mainForm;
 
-        public ChoiceMenuPanel(Main _MainWindow) : 
-            base((int)(_MainWindow.ClientSize.Width * 0.174), (int)(_MainWindow.ClientSize.Height * 0.34), "Civilization II Multiplayer Gold", 38, 46)
+        public ChoiceMenuPanel(Main mainForm) :
+            base((int)(mainForm.ClientSize.Width * 0.174), (int)(mainForm.ClientSize.Height * 0.34), "Civilization II Multiplayer Gold", 38, 46)
         {
-            InitializeComponent();
-            mainForm = _MainWindow;
+            _mainForm = mainForm;
 
             // Radio buttons
+            _radioBtn = new RadioButton[8];
             string[] txt = { "Start a New Game", "Start on Premade World", "Customize World", "Begin Scenario", "Load a Game", "Multiplayer Game", "View Hall of Fame", "View Credits" };
             for (int i = 0; i < 7; i++)
             {
-                RadioBtn[i] = new RadioButton
+                _radioBtn[i] = new RadioButton
                 {
                     Text = txt[i],
                     Location = new Point(10, (int)(DrawPanel.Height / 7) * i),
@@ -30,12 +30,12 @@ namespace civ2.Forms
                     ForeColor = Color.FromArgb(51, 51, 51),
                     AutoSize = true
                 };
-                DrawPanel.Controls.Add(RadioBtn[i]);
+                DrawPanel.Controls.Add(_radioBtn[i]);
             }
-            RadioBtn[0].Checked = true;
+            _radioBtn[0].Checked = true;
 
             // OK button
-            Civ2button OKButton = new Civ2button
+            var OKButton = new Civ2button
             {
                 Location = new Point(9, Height - 42),
                 Size = new Size(156, 36),
@@ -43,10 +43,10 @@ namespace civ2.Forms
                 Text = "OK"
             };
             Controls.Add(OKButton);
-            OKButton.Click += new EventHandler(OKButton_Click);
+            OKButton.Click += OKButton_Click;
 
             // Cancel button
-            Civ2button CancelButton = new Civ2button
+            var CancelButton = new Civ2button
             {
                 Location = new Point(168, Height - 42),
                 Size = new Size(157, 36),
@@ -54,10 +54,10 @@ namespace civ2.Forms
                 Text = "Cancel"
             };
             Controls.Add(CancelButton);
-            CancelButton.Click += new EventHandler(CancelButton_Click);
+            CancelButton.Click += CancelButton_Click;
         }
 
-        private void OKButton_Click(object sender, EventArgs e) 
+        private void OKButton_Click(object sender, EventArgs e)
         {
             ChoseResult();
         }
@@ -65,9 +65,9 @@ namespace civ2.Forms
         public void ChoseResult()
         {
             // Load game
-            if (RadioBtn[4].Checked)
+            if (_radioBtn[4].Checked)
             {
-                OpenFileDialog ofd = new OpenFileDialog
+                var ofd = new OpenFileDialog
                 {
                     InitialDirectory = Settings.Civ2Path,
                     Title = "Select Game To Load",
@@ -79,14 +79,14 @@ namespace civ2.Forms
                     // Get SAV name & directory name from result
                     string directoryPath = Path.GetDirectoryName(ofd.FileName);
                     string SAVname = Path.GetFileName(ofd.FileName);
-                    mainForm.ChoiceMenuResult(IntroScreenChoiceType.LoadGame, directoryPath, SAVname);
+                    _mainForm.ChoiceMenuResult(IntroScreenChoiceType.LoadGame, directoryPath, SAVname);
                 }
             }
         }
 
-        private void CancelButton_Click(object sender, EventArgs e) 
-        { 
-            Application.Exit(); 
+        private void CancelButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

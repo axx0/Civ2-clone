@@ -32,7 +32,7 @@ namespace civ2
         public bool[] CivsInPlay => _civsInPlay;
         private int _gameYear;
         public int GameYear
-        { 
+        {
             get
             {
                 if (TurnNumber < 250) return -4000 + (TurnNumber - 1) * 20;
@@ -208,8 +208,8 @@ namespace civ2
 
         public bool AnyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y);
 
-        public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId, 
-                                    int movePointsLost, int hitPointsLost, int lastMove, CommodityType caravanCommodity, OrderType orders, 
+        public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
+                                    int movePointsLost, int hitPointsLost, int lastMove, CommodityType caravanCommodity, OrderType orders,
                                     int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit = new Unit
@@ -237,13 +237,13 @@ namespace civ2
             if (dead)   _casualties.Add(unit);
             else        _units.Add(unit);
         }
-        
-        public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, 
-                                bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, 
-                                int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, 
-                                bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, 
-                                CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, 
-                                int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction, 
+
+        public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold,
+                                bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner,
+                                int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name,
+                                bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes,
+                                CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute,
+                                int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction,
                                 int happyCitizens, int unhappyCitizens)
         {
             City city = new City
@@ -317,7 +317,7 @@ namespace civ2
             if (improvements[31]) city.AddImprovement(new Improvement(ImprovementType.Airport));
             if (improvements[32]) city.AddImprovement(new Improvement(ImprovementType.PoliceStat));
             if (improvements[33]) city.AddImprovement(new Improvement(ImprovementType.PortFacil));
-            
+
             // TODO: add wonders to city at city import
             //if (wonders[0]) city.AddImprovement(new Improvement(ImprovementType.Pyramids));
             //if (wonders[1]) city.AddImprovement(new Improvement(ImprovementType.HangingGardens));
@@ -351,8 +351,8 @@ namespace civ2
             _cities.Add(city);
         }
 
-        public void CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective, 
-                            int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate, 
+        public void CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
+                            int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate,
                             int government, int reputation, bool[] techs)
         {
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
@@ -385,7 +385,7 @@ namespace civ2
 
             _civs.Add(civ);
         }
-        
+
         // Singleton instance of a game
         private static Game _instance;
         public static Game Instance
@@ -395,7 +395,7 @@ namespace civ2
                 if (_instance == null)
                 {
                     Console.WriteLine("Game instance does not exist!");
-                }                        
+                }
                 return _instance;
             }
         }

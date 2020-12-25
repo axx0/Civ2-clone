@@ -20,7 +20,7 @@ namespace civ2
         public bool AnyUnitsAwaitingOrders => Game.GetUnits.Any(unit => unit.Owner == this && unit.AwaitingOrders);
 
         private int _luxRate;
-        public int LuxRate 
+        public int LuxRate
         {
             get
             {

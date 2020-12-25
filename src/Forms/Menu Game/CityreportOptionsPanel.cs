@@ -5,25 +5,25 @@ using System.Windows.Forms;
 
 namespace civ2.Forms
 {
-    public partial class CityreportOptionsPanel : Civ2panel
+    public class CityreportOptionsPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
         private readonly List<DoubleBufferedPanel> _clickPanels;
         private readonly string[] _textOptions;
         private readonly bool[] _choiceOptions;
 
         public CityreportOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Select City Report Options", 38, 46)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
 
             // OK button
-            Civ2button _OKButton = new Civ2button
+            var _OKButton = new Civ2button
             {
                 Location = new Point(9, 398),
                 Size = new Size(363, 36),
@@ -31,10 +31,10 @@ namespace civ2.Forms
                 Text = "OK"
             };
             Controls.Add(_OKButton);
-            _OKButton.Click += new EventHandler(OKButton_Click);
+            _OKButton.Click += OKButton_Click;
 
             // Cancel button
-            Civ2button _cancelButton = new Civ2button
+            var _cancelButton = new Civ2button
             {
                 Location = new Point(374, 398),
                 Size = new Size(363, 36),
@@ -42,28 +42,28 @@ namespace civ2.Forms
                 Text = "Cancel"
             };
             Controls.Add(_cancelButton);
-            _cancelButton.Click += new EventHandler(CancelButton_Click);
+            _cancelButton.Click += CancelButton_Click;
 
             // Make an options array
-            _choiceOptions = new bool[11] { Game.Options.WarnWhenCityGrowthHalted, Game.Options.ShowCityImprovementsBuilt, Game.Options.ShowNonCombatUnitsBuilt,
-                Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored, Game.Options.AnnounceWeLoveKingDay,
-                Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs, Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction};
+            _choiceOptions = new bool[11] { _game.Options.WarnWhenCityGrowthHalted, _game.Options.ShowCityImprovementsBuilt, _game.Options.ShowNonCombatUnitsBuilt,
+                _game.Options.ShowInvalidBuildInstructions, _game.Options.AnnounceCitiesInDisorder, _game.Options.AnnounceOrderRestored, _game.Options.AnnounceWeLoveKingDay,
+                _game.Options.WarnWhenFoodDangerouslyLow, _game.Options.WarnWhenPollutionOccurs, _game.Options.WarnChangProductWillCostShields, _game.Options.ZoomToCityNotDefaultAction};
             // Write here individual options
-            _textOptions = new string[11] { "Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.", 
-                "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".", 
+            _textOptions = new string[11] { "Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.",
+                "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".",
                 "Warn when food dangerously low.", "Warn when new pollution occurs.", "Warn when changing production will cost shields.", "\"Zoom-to-City\" NOT default action." };
             // Make click panels for each options
             _clickPanels = new List<DoubleBufferedPanel>();
             for (int i = 0; i < 11; i++)
             {
-                DoubleBufferedPanel panel = new DoubleBufferedPanel
+                var panel = new DoubleBufferedPanel
                 {
-                    Location = new Point(10, 32 * i + 4),
+                    Location = new Point(10, (32 * i) + 4),
                     Size = new Size(100, 27),   // You will set the correct width once you measure text size below
                     BackColor = Color.Transparent
                 };
                 DrawPanel.Controls.Add(panel);
-                panel.Click += new EventHandler(ClickPanels_Click);
+                panel.Click += ClickPanels_Click;
                 _clickPanels.Add(panel);
             }
         }
@@ -103,23 +103,23 @@ namespace civ2.Forms
         // If OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Game.Options.WarnWhenCityGrowthHalted = _choiceOptions[0];
-            Game.Options.ShowCityImprovementsBuilt = _choiceOptions[1];
-            Game.Options.ShowNonCombatUnitsBuilt = _choiceOptions[2];
-            Game.Options.ShowInvalidBuildInstructions = _choiceOptions[3];
-            Game.Options.AnnounceCitiesInDisorder = _choiceOptions[4];
-            Game.Options.AnnounceOrderRestored = _choiceOptions[5];
-            Game.Options.AnnounceWeLoveKingDay = _choiceOptions[6];
-            Game.Options.WarnWhenFoodDangerouslyLow = _choiceOptions[7];
-            Game.Options.WarnWhenPollutionOccurs = _choiceOptions[8];
-            Game.Options.WarnChangProductWillCostShields = _choiceOptions[9];
-            Game.Options.ZoomToCityNotDefaultAction = _choiceOptions[10];
+            _game.Options.WarnWhenCityGrowthHalted = _choiceOptions[0];
+            _game.Options.ShowCityImprovementsBuilt = _choiceOptions[1];
+            _game.Options.ShowNonCombatUnitsBuilt = _choiceOptions[2];
+            _game.Options.ShowInvalidBuildInstructions = _choiceOptions[3];
+            _game.Options.AnnounceCitiesInDisorder = _choiceOptions[4];
+            _game.Options.AnnounceOrderRestored = _choiceOptions[5];
+            _game.Options.AnnounceWeLoveKingDay = _choiceOptions[6];
+            _game.Options.WarnWhenFoodDangerouslyLow = _choiceOptions[7];
+            _game.Options.WarnWhenPollutionOccurs = _choiceOptions[8];
+            _game.Options.WarnChangProductWillCostShields = _choiceOptions[9];
+            _game.Options.ZoomToCityNotDefaultAction = _choiceOptions[10];
             this.Visible = false;
             this.Dispose();
         }
 
         // If cancel is pressed --> just close the form
-        private void CancelButton_Click(object sender, EventArgs e) 
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

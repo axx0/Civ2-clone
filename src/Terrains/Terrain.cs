@@ -21,9 +21,9 @@ namespace civ2.Terrains
         public int Shields => Game.Rules.TerrainShields[(int)Type];
         public int Trade => Game.Rules.TerrainTrade[(int)Type];
         public bool CanBeIrrigated => Game.Rules.TerrainCanIrrigate[(int)Type] != "no";  // yes meaning the result can be irrigation or transform. of terrain
-        public TerrainType IrrigationResult 
+        public TerrainType IrrigationResult
         {
-            get 
+            get
             {
                 // If result == type of terrain before irrigation, this means that it's regular irrigation.
                 // (If it can actually be irrigated is determined by CanBeIrrigated.)
@@ -73,7 +73,6 @@ namespace civ2.Terrains
 
 
 
-        
 
 
 

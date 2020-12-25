@@ -121,7 +121,7 @@ namespace civ2.Forms
         {
             RenameCity(ThisCity);
         }
-        
+
         private void Keypressed(object sender, KeyPressEventArgs e, City ThisCity)
         {
             if (e.KeyChar == (char)Keys.Enter) { RenameCity(ThisCity); };   //if enter is pressed

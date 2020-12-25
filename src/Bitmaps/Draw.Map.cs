@@ -15,7 +15,7 @@ namespace civ2.Bitmaps
         public static Bitmap DrawMap(int civ, bool flatEarth)   // Draw for normal zoom level
         {
             // Define a bitmap for drawing
-            Bitmap mapPic = new Bitmap(32 * (2 * Map.Xdim + 1), 16 * (2 * Map.Ydim + 1));
+            var mapPic = new Bitmap(32 * (2 * Map.Xdim + 1), 16 * (2 * Map.Ydim + 1));
 
             // Draw map
             int zoom = 0;   // Default zoom
@@ -54,24 +54,28 @@ namespace civ2.Bitmaps
                             {
                                 int[] offset = new int[] { -1, 1 };
                                 for (int tileX = 0; tileX < 2; tileX++)
+                                {
                                     for (int tileY = 0; tileY < 2; tileY++)
                                     {
                                         int colNew = col + offset[tileX];
                                         int rowNew = row + offset[tileY];
                                         if (colNew >= 0 && colNew < 2 * Map.Xdim && rowNew >= 0 && rowNew < Map.Ydim)   // Don't observe outside map limits
+                                        {
                                             if (!Map.VisibilityC2(colNew, rowNew, civ))   // Surrounding tile is not visible -> dither
                                                 g.DrawImage(Images.DitherDots[tileX, tileY], 32 * (col + tileX), 16 * (row + tileY));
+                                        }
                                     }
+                                }
                             }
 
                             // Units
                             List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == col && u.Y == row).ToList();
-                            if (unitsHere.Any())
+                            if (unitsHere.Count > 0)
                             {
                                 IUnit unit = unitsHere.Last();
                                 if (!unit.IsInCity)
                                 {
-                                    g.DrawImage(Draw.Unit(unit, unitsHere.Count() > 1, zoom), 32 * col, 16 * row - 16);
+                                    g.DrawImage(Draw.Unit(unit, unitsHere.Count > 1, zoom), 32 * col, 16 * row - 16);
                                 }
                             }
 
@@ -92,7 +96,7 @@ namespace civ2.Bitmaps
                     if ((civ < 8 && Map.VisibilityC2(city.X, city.Y, civ)) || civ == 8)
                     {
                         Bitmap cityNameBitmap = Draw.CityName(city, zoom);
-                        g.DrawImage(cityNameBitmap, 32 * city.X + 32 - cityNameBitmap.Width / 2, 16 * city.Y + 3 * 8);
+                        g.DrawImage(cityNameBitmap, 32 * city.X + 32 - (cityNameBitmap.Width / 2), 16 * city.Y + 3 * 8);
                     }
                 }
             }

@@ -7,35 +7,35 @@ namespace civ2.Forms
     {
         public void LoadPanelsAfterGameStart()
         {
-            ChoiceMenu.Visible = false;
-            ChoiceMenu.Dispose();
-            ChoiceMenu = null;
+            _choiceMenu.Visible = false;
+            _choiceMenu.Dispose();
+            _choiceMenu = null;
             MainMenuStrip.Enabled = true;
 
-            SinaiPanel.Dispose();
-            SinaiPanel = null;
+            _sinaiPanel.Dispose();
+            _sinaiPanel = null;
 
             // Initialize some variables
-            ViewPieceMode = Game.ActiveUnit == null;    // If no unit is active at start (all units ended turn or none exist) go to View piece mode
+            ViewPieceMode = _game.ActiveUnit == null;    // If no unit is active at start (all units ended turn or none exist) go to View piece mode
 
-            MapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height)
+            _mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height)
             {
                 Location = new Point(0, MainMenuStrip.Height)
             };
-            Controls.Add(MapPanel);
-            MapPanel.BringToFront();
+            Controls.Add(_mapPanel);
+            _mapPanel.BringToFront();
 
-            MinimapPanel = new _MinimapPanel(this, 262, 149)
+            _minimapPanel = new _MinimapPanel(this, 262, 149)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height)
             };
-            Controls.Add(MinimapPanel);
+            Controls.Add(_minimapPanel);
 
-            StatusPanel = new StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
+            _statusPanel = new StatusPanel(this,262, ClientSize.Height - MainMenuStrip.Height - 148)
             {
                 Location = new Point(ClientSize.Width - 262, MainMenuStrip.Height + 148)
             };
-            Controls.Add(StatusPanel);
+            Controls.Add(_statusPanel);
 
             //ZoomInItem.Click += MapPanel.ZoomINclicked;
             //ZoomOutItem.Click += MapPanel.ZoomOUTclicked;

@@ -5,25 +5,25 @@ using System.Windows.Forms;
 
 namespace civ2.Forms
 {
-    public partial class GraphicOptionsPanel : Civ2panel
+    public class GraphicOptionsPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
         private readonly List<DoubleBufferedPanel> _clickPanels;
         private readonly string[] _textOptions;
         private readonly bool[] _choiceOptions;
 
         public GraphicOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Select Graphic Options", 38, 46)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
 
             // OK button
-            Civ2button _OKButton = new Civ2button
+            var _OKButton = new Civ2button
             {
                 Location = new Point(9, 238),
                 Size = new Size(363, 36),
@@ -31,10 +31,10 @@ namespace civ2.Forms
                 Text = "OK"
             };
             Controls.Add(_OKButton);
-            _OKButton.Click += new EventHandler(OKButton_Click);
+            _OKButton.Click += OKButton_Click;
 
             // Cancel button
-            Civ2button _cancelButton = new Civ2button
+            var _cancelButton = new Civ2button
             {
                 Location = new Point(374, 238),
                 Size = new Size(363, 36),
@@ -42,26 +42,26 @@ namespace civ2.Forms
                 Text = "Cancel"
             };
             Controls.Add(_cancelButton);
-            _cancelButton.Click += new EventHandler(CancelButton_Click);
+            _cancelButton.Click += CancelButton_Click;
 
             // Make an options array
-            _choiceOptions = new bool[6] { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds,
-                Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
+            _choiceOptions = new bool[6] { _game.Options.ThroneRoomGraphics, _game.Options.DiplomacyScreenGraphics, _game.Options.AnimatedHeralds,
+                _game.Options.CivilopediaForAdvances, _game.Options.HighCouncil, _game.Options.WonderMovies };
             // Individual options text
-            _textOptions = new string[6] { "Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)", 
+            _textOptions = new string[6] { "Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)",
                 "Civilopedia for Advances", "High Council", "Wonder Movies" };
             // Make click panels for each options
             _clickPanels = new List<DoubleBufferedPanel>();
             for (int i = 0; i < 6; i++)
             {
-                DoubleBufferedPanel panel = new DoubleBufferedPanel
+                var panel = new DoubleBufferedPanel
                 {
                     Location = new Point(10, 32 * i + 4),
                     Size = new Size(100, 27),   // You will set the correct width once you measure text size below
                     BackColor = Color.Transparent
                 };
                 DrawPanel.Controls.Add(panel);
-                panel.Click += new EventHandler(ClickPanels_Click);
+                panel.Click += ClickPanels_Click;
                 _clickPanels.Add(panel);
             }
         }
@@ -101,18 +101,18 @@ namespace civ2.Forms
         // If OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Game.Options.ThroneRoomGraphics = _choiceOptions[0];
-            Game.Options.DiplomacyScreenGraphics = _choiceOptions[1];
-            Game.Options.AnimatedHeralds = _choiceOptions[2];
-            Game.Options.CivilopediaForAdvances = _choiceOptions[3];
-            Game.Options.HighCouncil = _choiceOptions[4];
-            Game.Options.WonderMovies = _choiceOptions[5];
+            _game.Options.ThroneRoomGraphics = _choiceOptions[0];
+            _game.Options.DiplomacyScreenGraphics = _choiceOptions[1];
+            _game.Options.AnimatedHeralds = _choiceOptions[2];
+            _game.Options.CivilopediaForAdvances = _choiceOptions[3];
+            _game.Options.HighCouncil = _choiceOptions[4];
+            _game.Options.WonderMovies = _choiceOptions[5];
             this.Visible = false;
             this.Dispose();
         }
 
         // If cancel is pressed --> just close the form
-        private void CancelButton_Click(object sender, EventArgs e) 
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

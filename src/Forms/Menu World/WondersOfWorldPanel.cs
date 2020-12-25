@@ -5,11 +5,11 @@ using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    public partial class WondersOfWorldPanel : Civ2panel
+    public class WondersOfWorldPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
 
         private readonly VScrollBar _verticalBar;
         private int _barValue;       // Starting value of view of horizontal bar
@@ -19,7 +19,7 @@ namespace civ2.Forms
 
         public WondersOfWorldPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
@@ -27,7 +27,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // Close button
-            Civ2button _closeButton = new Civ2button
+            var _closeButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
@@ -35,7 +35,7 @@ namespace civ2.Forms
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);
-            _closeButton.Click += new EventHandler(CloseButton_Click);
+            _closeButton.Click += CloseButton_Click;
 
             // Vertical bar
             _verticalBar = new VScrollBar()
@@ -46,13 +46,13 @@ namespace civ2.Forms
                 //Maximum = TO-DO...
             };
             DrawPanel.Controls.Add(_verticalBar);
-            _verticalBar.ValueChanged += new EventHandler(VerticalBarValueChanged);
+            _verticalBar.ValueChanged += VerticalBarValueChanged;
 
             // Find if wonders are built and who owns them
             _wonderBuilt = new bool[28];
             _whoOwnsWonder = new int[28];
             _cityWonder = new string[28];
-            foreach (City city in Game.GetCities)
+            foreach (City city in _game.GetCities)
             {
                 for (int i = 0; i < city.Improvements.Length; i++) // Check for each improvement
                 {
@@ -77,7 +77,7 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Text
-            StringFormat sf = new System.Drawing.StringFormat();
+            var sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             sf.LineAlignment = StringAlignment.Center;
             e.Graphics.DrawString("WONDERS OF THE ANCIENT WORLD", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 22 + 1), sf);
@@ -89,7 +89,7 @@ namespace civ2.Forms
             {
                 if (_wonderBuilt[i])
                 {
-                    string wonderText = $"{Game.Rules.ImprovementName[i + 39]}  of {_cityWonder[i]} ( {Game.GetCivs[_whoOwnsWonder[i]].TribeName} )";
+                    string wonderText = $"{_game.Rules.ImprovementName[i + 39]}  of {_cityWonder[i]} ( {_game.GetCivs[_whoOwnsWonder[i]].TribeName} )";
 
                     e.Graphics.DrawString(wonderText, new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(292 + 1, 65 + 40 * count + 1), sf);
                     e.Graphics.DrawString(wonderText, new Font("Times New Roman", 13), new SolidBrush(CivColors.Light[_whoOwnsWonder[i]]), new Point(292, 65 + 40 * count), sf);
@@ -106,7 +106,7 @@ namespace civ2.Forms
             sf.Dispose();
         }
 
-        private void CloseButton_Click(object sender, EventArgs e) 
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

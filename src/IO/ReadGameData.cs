@@ -12,7 +12,7 @@ namespace civ2
     public class ReadGameData
     {
         public GameData data;
-        
+
         public GameData Read_SAV_and_RULES(string savPath, string savName)
         {
             data = new GameData();
@@ -44,7 +44,7 @@ namespace civ2
             data.Rules = new List<string[]>();
 
             // Read the file and display it line by line.  
-            StreamReader file = new StreamReader(filePath);
+            using StreamReader file = new StreamReader(filePath);
             string line;
             while ((line = file.ReadLine()) != null)
             {
@@ -208,7 +208,7 @@ namespace civ2
                     string[] terrainMineAI = new string[11];
                     string[] terrainTransform = new string[11];
                     string[] terrainShortName = new string[11];
-                    
+
                     for (int row = 0; row < 11; row++)
                     {
                         line = file.ReadLine();
@@ -571,7 +571,7 @@ namespace civ2
             data.CivTribeName[0] = "Barbarians";
             data.CivAdjective[0] = "Barbarian";
             // Add data for other 7 civs
-            for (int i = 0; i < 7; i++) 
+            for (int i = 0; i < 7; i++)
             {
                 // City style
                 data.CivCityStyle[i + 1] = bytes[584 + 242 * i];
@@ -773,7 +773,7 @@ namespace civ2
                 if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Jungle;  // xxxx 1001
                 if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Ocean;  // xxxx 1010
                 data.MapRiverPresent[x, y] = GetBit(bytes[terrB], 7);  // river (1xxx xxxx)
-                
+
                 // Determine if resources are present
                 data.MapResourcePresent[x, y] = false;
                 //!!! NOT WORKING PROPERLY !!!
@@ -807,7 +807,7 @@ namespace civ2
                 //string hexValue = intValueB26.ToString("X");
 
                 // SAV file doesn't tell where special resources are, so you have to set this yourself
-                
+
                 //data.MapSpecialType[x, y] = ReturnSpecial(x, y, data.MapTerrainType[x, y], data.MapXdim, data.MapYdim);
             }
             // block 3 - locator map
@@ -1151,256 +1151,250 @@ namespace civ2
                 special = 0;    //for start we presume this 
                 bool found = false;
 
-                if (row == 1) //prva posebna tocka
+                if (row == 1) // First special
                 {
-                    int novi_i = 0; //zacetna tocka pri j=1 (0,1)
-                    while (novi_i < mapXdim)  //keep jumping in x-direction till map end
+                    int new_i = 0; // Starting point at j=1 (0,1)
+                    while (new_i < mapXdim)  //keep jumping in x-direction till map end
                     {
-                        if (novi_i < mapXdim && col == novi_i) { special = 2; break; }   //tocke (3,1), (11,1), (19,1), ...
-                        novi_i += 3;
-                        if (novi_i < mapXdim && col == novi_i) { special = 1; break; }   //tocke (8,1), (16,1), (24,1), ...
-                        novi_i += 5;
+                        if (new_i < mapXdim && col == new_i) { special = 2; break; }   //points (3,1), (11,1), (19,1), ...
+                        new_i += 3;
+                        if (new_i < mapXdim && col == new_i) { special = 1; break; }   //points (8,1), (16,1), (24,1), ...
+                        new_i += 5;
                     }
-
                 }
-                else if (row == 3)    //druga posebna tocka
+                else if (row == 3)    // 2nd special
                 {
-                    int novi_i = 6; //zacetna tocka pri j=3 je (6,3)
-                    while (novi_i < mapXdim)
+                    int new_i = 6; //startin point at j=3 is (6,3)
+                    while (new_i < mapXdim)
                     {
-                        if (novi_i < mapXdim && col == novi_i) { special = 1; break; }
-                        novi_i += 8;
-                        if (novi_i < mapXdim && col == novi_i) { special = 2; break; }
-                        novi_i += 8;
+                        if (new_i < mapXdim && col == new_i) { special = 1; break; }
+                        new_i += 8;
+                        if (new_i < mapXdim && col == new_i) { special = 2; break; }
+                        new_i += 8;
                     }
-
                 }
                 else
                 {
-                    int novi_j = 3;
-                    while (novi_j < mapYdim)  //skakanje za 4 bloke naprej
+                    int new_j = 3;
+                    while (new_j < mapYdim)  //jumping 4 blocks forward
                     {
                         if (found) break;
 
                         //BLOCK 1
                         int counter = 0;
-                        novi_j += 5;   //jump to block beginning
-                        while (novi_j < mapYdim && counter < 7)  //7 jumps in y-direction
+                        new_j += 5;   //jump to block beginning
+                        while (new_j < mapYdim && counter < 7)  //7 jumps in y-direction
                         {
                             if (found) break;
 
-                            if (row == novi_j)    //correct y-loc found, now start looking for x
+                            if (row == new_j)    //correct y-loc found, now start looking for x
                             {
-                                int novi_i = startx_B1[counter];
+                                int new_i = startx_B1[counter];
                                 //set which resources will be and jumps
                                 int res1, res2;
-                                int skok_x1, skok_x2;
+                                int jump_x1, jump_x2;
                                 if (counter == 3)
                                 {
-                                    skok_x1 = 5;
-                                    skok_x2 = 3;
+                                    jump_x1 = 5;
+                                    jump_x2 = 3;
                                     res1 = 2;
                                     res2 = 1;
                                 }
                                 else if (counter == 0 || counter == 1 || counter == 4)
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 2;
                                     res2 = 2;
                                 }
                                 else
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 1;
                                     res2 = 1;
                                 }
 
-                                while (novi_i < mapXdim)
+                                while (new_i < mapXdim)
                                 {
-                                    if (novi_i < mapXdim && col == novi_i) { special = res1; found = true; break; }
-                                    novi_i += skok_x1;
-                                    if (novi_i < mapXdim && col == novi_i) { special = res2; found = true; break; }
-                                    novi_i += skok_x2;
+                                    if (new_i < mapXdim && col == new_i) { special = res1; found = true; break; }
+                                    new_i += jump_x1;
+                                    if (new_i < mapXdim && col == new_i) { special = res2; found = true; break; }
+                                    new_i += jump_x2;
 
                                     if (found) break;
                                 }
                                 break;   //terminate search
                             }
-                            novi_j += 2;
+                            new_j += 2;
                             counter += 1;
                         }
                         if (found) break;
 
                         //BLOCK 2
                         counter = 0;
-                        novi_j += 5;   //jump to block beginning
-                        while (novi_j < mapYdim && counter < 6)  //6 jumps in y-direction
+                        new_j += 5;   //jump to block beginning
+                        while (new_j < mapYdim && counter < 6)  //6 jumps in y-direction
                         {
                             if (found) break;
 
-                            if (row == novi_j)    //correct y-loc found, now start looking for x
+                            if (row == new_j)    //correct y-loc found, now start looking for x
                             {
-                                int novi_i = startx_B2[counter];
+                                int new_i = startx_B2[counter];
                                 //set which resources will be and jumps
                                 int res1, res2;
-                                int skok_x1, skok_x2;
+                                int jump_x1, jump_x2;
                                 if (counter == 1)   //1st jump
                                 {
-                                    skok_x1 = 5;
-                                    skok_x2 = 3;
+                                    jump_x1 = 5;
+                                    jump_x2 = 3;
                                     res1 = 1;
                                     res2 = 2;
                                 }
                                 else if (counter == 4)  //4th jump
                                 {
-                                    skok_x1 = 3;
-                                    skok_x2 = 5;
+                                    jump_x1 = 3;
+                                    jump_x2 = 5;
                                     res1 = 2;
                                     res2 = 1;
                                 }
                                 else if (counter == 0 || counter == 3)
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 2;
                                     res2 = 2;
                                 }
                                 else
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 1;
                                     res2 = 1;
                                 }
 
-                                while (novi_i < mapXdim)
+                                while (new_i < mapXdim)
                                 {
-                                    if (novi_i < mapXdim && col == novi_i) { special = res1; found = true; break; }
-                                    novi_i += skok_x1;
-                                    if (novi_i < mapXdim && col == novi_i) { special = res2; found = true; break; }
-                                    novi_i += skok_x2;
+                                    if (new_i < mapXdim && col == new_i) { special = res1; found = true; break; }
+                                    new_i += jump_x1;
+                                    if (new_i < mapXdim && col == new_i) { special = res2; found = true; break; }
+                                    new_i += jump_x2;
 
                                     if (found) break;
                                 }
                                 break;   //terminate search
                             }
-                            novi_j += 2;
+                            new_j += 2;
                             counter += 1;
                         }
                         if (found) break;
 
                         //BLOCK 3
                         counter = 0;
-                        novi_j += 5;   //jump to block beginning
-                        while (novi_j < mapYdim && counter < 7)  //7 jumps in y-direction
+                        new_j += 5;   //jump to block beginning
+                        while (new_j < mapYdim && counter < 7)  //7 jumps in y-direction
                         {
                             if (found) break;
 
-                            if (row == novi_j)    //correct y-loc found, now start looking for x
+                            if (row == new_j)    //correct y-loc found, now start looking for x
                             {
-                                int novi_i = startx_B3[counter];
+                                int new_i = startx_B3[counter];
                                 //set which resources will be and jumps
                                 int res1, res2;
-                                int skok_x1, skok_x2;
+                                int jump_x1, jump_x2;
                                 if (counter == 3)   //3rd jump
                                 {
-                                    skok_x1 = 3;
-                                    skok_x2 = 5;
+                                    jump_x1 = 3;
+                                    jump_x2 = 5;
                                     res1 = 1;
                                     res2 = 2;
                                 }
                                 else if (counter == 0 || counter == 1 || counter == 4)
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 2;
                                     res2 = 2;
                                 }
                                 else
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 1;
                                     res2 = 1;
                                 }
 
-                                while (novi_i < mapXdim)
+                                while (new_i < mapXdim)
                                 {
-                                    if (novi_i < mapXdim && col == novi_i) { special = res1; found = true; break; }
-                                    novi_i += skok_x1;
-                                    if (novi_i < mapXdim && col == novi_i) { special = res2; found = true; break; }
-                                    novi_i += skok_x2;
+                                    if (new_i < mapXdim && col == new_i) { special = res1; found = true; break; }
+                                    new_i += jump_x1;
+                                    if (new_i < mapXdim && col == new_i) { special = res2; found = true; break; }
+                                    new_i += jump_x2;
 
                                     if (found) break;
                                 }
                                 break;   //terminate search
                             }
-                            novi_j += 2;
+                            new_j += 2;
                             counter += 1;
                         }
                         if (found) break;
 
                         //BLOCK 4
                         counter = 0;
-                        novi_j += 5;   //jump to block beginning
-                        while (novi_j < mapYdim && counter < 6)  //6 jumps in y-direction
+                        new_j += 5;   //jump to block beginning
+                        while (new_j < mapYdim && counter < 6)  //6 jumps in y-direction
                         {
                             if (found) break;
 
-                            if (row == novi_j)    //correct y-loc found, now start looking for x
+                            if (row == new_j)    //correct y-loc found, now start looking for x
                             {
-                                int novi_i = startx_B4[counter];
+                                int new_i = startx_B4[counter];
                                 //set which resources will be and jumps
                                 int res1, res2;
-                                int skok_x1, skok_x2;
+                                int jump_x1, jump_x2;
                                 if (counter == 1 || counter == 4)   //1st & 3rd jump
                                 {
-                                    skok_x1 = 3;
-                                    skok_x2 = 5;
+                                    jump_x1 = 3;
+                                    jump_x2 = 5;
                                     res1 = 2;
                                     res2 = 1;
                                 }
                                 else if (counter == 0 || counter == 3)
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 2;
                                     res2 = 2;
                                 }
                                 else
                                 {
-                                    skok_x1 = 8;
-                                    skok_x2 = 8;
+                                    jump_x1 = 8;
+                                    jump_x2 = 8;
                                     res1 = 1;
                                     res2 = 1;
                                 }
 
-                                while (novi_i < mapXdim)
+                                while (new_i < mapXdim)
                                 {
-                                    if (novi_i < mapXdim && col == novi_i) { special = res1; found = true; break; }
-                                    novi_i += skok_x1;
-                                    if (novi_i < mapXdim && col == novi_i) { special = res2; found = true; break; }
-                                    novi_i += skok_x2;
+                                    if (new_i < mapXdim && col == new_i) { special = res1; found = true; break; }
+                                    new_i += jump_x1;
+                                    if (new_i < mapXdim && col == new_i) { special = res2; found = true; break; }
+                                    new_i += jump_x2;
 
                                     if (found) break;
                                 }
                                 break;   //terminate search
                             }
-                            novi_j += 2;
+                            new_j += 2;
                             counter += 1;
                         }
                         if (found) break;
-
                     }
                 }
-
             }
 
             return (SpecialType)special;
-
         }
-
     }
 }

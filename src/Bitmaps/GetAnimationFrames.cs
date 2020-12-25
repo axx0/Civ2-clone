@@ -48,7 +48,7 @@ namespace civ2.Bitmaps
 
                         // Units
                         List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
-                        if (unitsHere.Any())
+                        if (unitsHere.Count > 0)
                         {
                             IUnit unit;
                             // If this is not tile with active unit or viewing piece, draw last unit on stack
@@ -56,7 +56,7 @@ namespace civ2.Bitmaps
                             {
                                 unit = unitsHere.Last();
                                 if (!unit.IsInCity)
-                                    g.DrawImage(unit.Graphic(unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+                                    g.DrawImage(unit.Graphic(unitsHere.Count > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
                             }
                             // This tile has active unit/viewing piece
                             else
@@ -66,7 +66,7 @@ namespace civ2.Bitmaps
                                 {
                                     unit = unitsHere.Last();
                                     if (!unit.IsInCity)
-                                        g.DrawImage(unit.Graphic(unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+                                        g.DrawImage(unit.Graphic(unitsHere.Count > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
                                 }
                             }
                         }
@@ -77,7 +77,7 @@ namespace civ2.Bitmaps
                             g.DrawImage(city.Graphic(true, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
 
                         // Draw active unit if it's not moving
-                        if (unitsHere.Any())
+                        if (unitsHere.Count > 0)
                         {
                             // This tile has active unit/viewing piece
                             if (x == Game.ActiveXY[0] && y == Game.ActiveXY[1])
@@ -85,11 +85,10 @@ namespace civ2.Bitmaps
                                 if (!viewPieceMode)
                                 {
                                     if (frame == 0) // For first frame draw unit, for second not
-                                        g.DrawImage(Game.ActiveUnit.Graphic(unitsHere.Count() > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+                                        g.DrawImage(Game.ActiveUnit.Graphic(unitsHere.Count > 1, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
                                 }
                             }
                         }
-                        
                     }
 
                     // City names
@@ -100,12 +99,12 @@ namespace civ2.Bitmaps
                         int y = centralCoords[1] + coordsOffsets[1];
 
                         if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
-                     
+
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                         if (city != null)
                         {
                             Bitmap cityNameBitmap = Draw.CityName(city, Game.Zoom);
-                            g.DrawImage(cityNameBitmap, 
+                            g.DrawImage(cityNameBitmap,
                                 Game.Xpx * (coordsOffsets[0] + 1) - cityNameBitmap.Width / 2,
                                 Game.Ypx * coordsOffsets[1] + 5 * 2 / Game.Ypx + Game.Ypx);
                         }
@@ -220,7 +219,7 @@ namespace civ2.Bitmaps
                         {
                             unitsHere.Remove(Game.Instance.ActiveUnit);
                         }
-                        if (unitsHere.Any())
+                        if (unitsHere.Count > 0)
                         {
                             IUnit unit;
                             //If this is not tile with active unit or viewing piece, draw last unit on stack
@@ -231,7 +230,7 @@ namespace civ2.Bitmaps
                                 if (!unit.IsInCity)
                                 {
                                     g.DrawImage(
-                                        Draw.Unit(unit, unitsHere.Count() > 1, zoom),
+                                        Draw.Unit(unit, unitsHere.Count > 1, zoom),
                                         32 * coordsOffsets[0] + 64,
                                         16 * coordsOffsets[1] + 32);
                                 }
@@ -246,7 +245,7 @@ namespace civ2.Bitmaps
                                     if (!unit.IsInCity)
                                     {
                                         g.DrawImage(
-                                            Draw.Unit(unit, unitsHere.Count() > 1, zoom),
+                                            Draw.Unit(unit, unitsHere.Count > 1, zoom),
                                             32 * coordsOffsets[0] + 64,
                                             16 * coordsOffsets[1] + 32);
                                     }
@@ -361,5 +360,5 @@ namespace civ2.Bitmaps
         //    return animationFrames;
         //}
 
-    }    
+    }
 }

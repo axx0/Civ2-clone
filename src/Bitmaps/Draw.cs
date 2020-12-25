@@ -12,8 +12,6 @@ namespace civ2.Bitmaps
 {
     public partial class Draw : BaseInstance
     {
-
-
         //public static void CreateLoadGameGraphics()
         //{
         //    //Creates bitmaps from current folder
@@ -65,7 +63,6 @@ namespace civ2.Bitmaps
             //                                                64 * col + 32 * (row % 2) + 32 * tileX,
             //                                                16 * row + 16 * tileY);
             //                        }
-
 
             //                //Units
             //                int[] coords = Ext.XYciv2(new int[] { col, row });  //civ2 coords from real coords
@@ -283,9 +280,6 @@ namespace civ2.Bitmaps
             //    }
             //}
         }
-        
-
-        
 
         public static List<Bitmap> CreateMapAnimation(AnimationType animation)
         {
@@ -320,8 +314,5 @@ namespace civ2.Bitmaps
 
             return _bitmapList;
         }
-
-
     }
 }
- 

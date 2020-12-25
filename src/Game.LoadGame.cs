@@ -57,7 +57,7 @@ namespace civ2
                     SAVgameData.CivResearchProgress[i], SAVgameData.CivResearchingTech[i], SAVgameData.CivSciRate[i], SAVgameData.CivTaxRate[i],
                     SAVgameData.CivGovernment[i], SAVgameData.CivReputation[i], SAVgameData.CivTechs);
             }
-            
+
             // Create cities
             for (int i = 0; i < SAVgameData.NumberOfCities; i++)
             {
@@ -91,7 +91,6 @@ namespace civ2
 
             _zoom = SAVgameData.Zoom;
 
-            
         }
 
     }

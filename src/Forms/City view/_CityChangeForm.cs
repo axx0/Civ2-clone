@@ -46,7 +46,7 @@ namespace civ2.Forms
             //};
             //Controls.Add(BackgroundPanel);
             //BackgroundPanel.Paint += new PaintEventHandler(BackgroundPanel_Paint);
-            
+
             //Panel of choices
             //ChoicePanel = new DoubleBufferedPanel
             //{
@@ -153,7 +153,7 @@ namespace civ2.Forms
             VerticalBar.Value = BarValue;   //also update the bar value of control
 
             ChoicePanel.Refresh();  //refresh the panel
-            
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 

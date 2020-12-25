@@ -51,13 +51,13 @@ namespace civ2
             get
             {
                  _population = 0;
-                for (int i = 1; i <= Size; i++) 
+                for (int i = 1; i <= Size; i++)
                     _population += i * 10000;
                 return _population;
             }
         }
 
-        private List<IImprovement> _improvements = new List<IImprovement>();
+        private readonly List<IImprovement> _improvements = new List<IImprovement>();
         public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
         public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
@@ -69,21 +69,21 @@ namespace civ2
         public bool[] SupportedUnitsWhichCostShields()
         {
             List<IUnit> supportedUnits = SupportedUnits;
-            bool[] costShields = new bool[SupportedUnits.Count()];
+            bool[] costShields = new bool[SupportedUnits.Count];
             //First determine how many units have 0 costs due to different goverernment types
             int noCost = 0;
             switch (Game.GetCivs[OwnerId].Government)
             {
                 case GovernmentType.Anarchy:
                 case GovernmentType.Despotism:
-                    noCost = Math.Min(supportedUnits.Count(), Size); //only units above city size cost 1 shield
+                    noCost = Math.Min(supportedUnits.Count, Size); //only units above city size cost 1 shield
                     break;
                 case GovernmentType.Communism:
                 case GovernmentType.Monarchy:
-                    noCost = Math.Min(supportedUnits.Count(), 3);    //first 3 units have no shield cost
+                    noCost = Math.Min(supportedUnits.Count, 3);    //first 3 units have no shield cost
                     break;
                 case GovernmentType.Fundamentalism:
-                    noCost = Math.Min(supportedUnits.Count(), 10);   //first 10 units have no shield cost
+                    noCost = Math.Min(supportedUnits.Count, 10);   //first 10 units have no shield cost
                     break;
                 case GovernmentType.Republic:
                 case GovernmentType.Democracy:
@@ -91,7 +91,7 @@ namespace civ2
                     break;
             }
             //Now determine bools of units that require upkeep
-            for (int i = 0; i < supportedUnits.Count(); i++)
+            for (int i = 0; i < supportedUnits.Count; i++)
             {
                 if (supportedUnits[i].Type == UnitType.Diplomat || supportedUnits[i].Type == UnitType.Caravan || supportedUnits[i].Type == UnitType.Fanatics ||
                     supportedUnits[i].Type == UnitType.Spy || supportedUnits[i].Type == UnitType.Freight)   //some units never require upkeep
@@ -106,7 +106,7 @@ namespace civ2
                 else
                 {
                     costShields[i] = true;
-                }                    
+                }
             }
 
             return costShields;
@@ -299,7 +299,7 @@ namespace civ2
                 _people = new PeopleType[Size];
                 //Unhappy
                 int additUnhappy = Size - 6;    //without units & improvements present, 6 people are content
-                additUnhappy -= Math.Min(Game.GetUnits.Where(unit => unit.X == X && unit.Y == Y).Count(), 3);  //each new unit in city -> 1 less unhappy (up to 3 max)
+                additUnhappy -= Math.Min(Game.GetUnits.Count(unit => unit.X == X && unit.Y == Y), 3);  //each new unit in city -> 1 less unhappy (up to 3 max)
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Temple)) additUnhappy -= 2;
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Colosseum)) additUnhappy -= 3;
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Cathedral)) additUnhappy -= 3;

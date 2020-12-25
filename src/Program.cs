@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 
 namespace civ2
-{    
+{
     static class Program
     {
         /// <summary>

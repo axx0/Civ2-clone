@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace civ2.Bitmaps
 {
-    public partial class Images
+    public static partial class Images
     {
         public static Bitmap CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall,
                             CitymapFoodSmallBigger,
@@ -53,7 +53,7 @@ namespace civ2.Bitmaps
             catch
             {
                 Debug.WriteLine("Civ2.exe not found!");
-            }            
+            }
         }
 
         public static void TerrainBitmapsImportFromFile(string path)
@@ -74,7 +74,7 @@ namespace civ2.Bitmaps
             {
                 Debug.WriteLine("TERRAIN1.GIF not found!");
             }
-            
+
             Bitmap terrain2 = new Bitmap(640, 480);
             FilePath_local = path + "\\TERRAIN2.GIF";
             FilePath_root = Settings.Civ2Path + "TERRAIN2.GIF";
@@ -159,6 +159,7 @@ namespace civ2.Bitmaps
             DitherBlank = new Bitmap[2, 2];
             DitherDots = new Bitmap[2, 2];
             for (int tileX = 0; tileX < 2; tileX++)
+            {
                 for (int tileY = 0; tileY < 2; tileY++)
                 {
                     DitherBlank[tileX, tileY] = terrain1.Clone(new Rectangle(tileX * 32 + 1, tileY * 16 + 447, 32, 16), terrain1.PixelFormat);
@@ -166,6 +167,7 @@ namespace civ2.Bitmaps
                     DitherDots[tileX, tileY].MakeTransparent(transparentGray);
                     DitherDots[tileX, tileY].MakeTransparent(transparentPink);
                 }
+            }
 
             // Blank tile
             Blank = terrain1.Clone(new Rectangle(131, 447, 64, 32), terrain1.PixelFormat);
@@ -236,7 +238,6 @@ namespace civ2.Bitmaps
                     }
                 }
             }
-
 
             // Rivers, Forest, Mountains, Hills
             for (int i = 0; i < 16; i++)
@@ -626,6 +627,7 @@ namespace civ2.Bitmaps
 
             // Make shadows of faces
             for (int row = 0; row < 4; row++)
+            {
                 for (int col = 0; col < 11; col++)
                 {
                     PeopleL[col, row] = pplIcons.Clone(new Rectangle(27 * col + 2 + col, 30 * row + 6 + row, 27, 30), pplIcons.PixelFormat);
@@ -634,11 +636,18 @@ namespace civ2.Bitmaps
 
                     // If color is non-pink, replace it with black to get shadow (otherwise make transparent)
                     for (int x = 0; x < 27; x++)
+                    {
                         for (int y = 0; y < 30; y++)
-                            if (PeopleL[col, row].GetPixel(x, y) != transparentPink) PeopleLshadow[col, row].SetPixel(x, y, Color.Black);
-                            else PeopleLshadow[col, row].SetPixel(x, y, Color.Transparent);
+                        {
+                            if (PeopleL[col, row].GetPixel(x, y) != transparentPink)
+                                PeopleLshadow[col, row].SetPixel(x, y, Color.Black);
+                            else
+                                PeopleLshadow[col, row].SetPixel(x, y, Color.Transparent);
+                        }
+                    }
                     PeopleL[col, row].MakeTransparent(transparentPink);
                 }
+            }
 
             pplIcons.Dispose();
         }

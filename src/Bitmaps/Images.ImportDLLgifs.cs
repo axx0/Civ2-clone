@@ -4,7 +4,7 @@ using System.IO;
 
 namespace civ2.Bitmaps
 {
-    public partial class Images
+    public static partial class Images
     {
         // From Tiles.dll
         public static Bitmap CityStatusWallpaper, DefenseMinWallpaper, ForeignMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper,
@@ -20,7 +20,7 @@ namespace civ2.Bitmaps
         public static void ImportDLLimages()
         {
             // Manually read GIFs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)
-            
+
             // ========================================================================================
             // TILES.DLL
             string DLLname = "Tiles.dll";
@@ -30,9 +30,8 @@ namespace civ2.Bitmaps
             byte[] bytes = File.ReadAllBytes(DLLpath);
 
             // Extract GIF from bytes using known offsets and lengths of GIFS from DLL
-            Bitmap extractedGIF;
             // (50) City status wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "1E8B0", "13A3F");
+            Bitmap extractedGIF = ExtractBitmapFromDLL(bytes, "1E8B0", "13A3F");
             CityStatusWallpaper = ModifyImage.CropImage(extractedGIF, new Rectangle(0, 0, 600, 400));
             // (51) Defense minister wallpaper
             extractedGIF = ExtractBitmapFromDLL(bytes, "322F0", "DE6D");
@@ -94,7 +93,6 @@ namespace civ2.Bitmaps
 
             // (901) City status wallpaper
             SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
-
         }
 
         // Extract GIF image from DLL bytes
@@ -113,7 +111,7 @@ namespace civ2.Bitmaps
             {
                 returnImage = new Bitmap(ms);
             }
-            
+
             return returnImage;
         }
     }

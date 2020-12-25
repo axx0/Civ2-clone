@@ -8,11 +8,11 @@ using civ2.Units;
 
 namespace civ2.Forms
 {
-    public partial class TradeAdvisorPanel : Civ2panel
+    public class TradeAdvisorPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
         private readonly VScrollBar _verticalBar;
         private readonly int _totalCost, _totalIncome, _totalScience, _discoveries;
         private readonly int[] _upkeepOfImprovements, _noOfImprovements;   // In order according to RULES.TXT
@@ -20,7 +20,7 @@ namespace civ2.Forms
 
         public TradeAdvisorPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
@@ -28,7 +28,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // Casualties button
-            Civ2button _supplyDemandButton = new Civ2button
+            var _supplyDemandButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(297, 24),
@@ -36,10 +36,10 @@ namespace civ2.Forms
                 Text = "Casualties"
             };
             DrawPanel.Controls.Add(_supplyDemandButton);
-            _supplyDemandButton.Click += new EventHandler(SupplyDemandButton_Click);
+            _supplyDemandButton.Click += SupplyDemandButton_Click;
 
             // Close button
-            Civ2button _closeButton = new Civ2button
+            var _closeButton = new Civ2button
             {
                 Location = new Point(301, 373),
                 Size = new Size(297, 24),
@@ -47,7 +47,7 @@ namespace civ2.Forms
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);
-            _closeButton.Click += new EventHandler(CloseButton_Click);
+            _closeButton.Click += CloseButton_Click;
 
             // Vertical bar
             _verticalBar = new VScrollBar()
@@ -58,7 +58,7 @@ namespace civ2.Forms
                 // TODO: determine maximum value of Vscrollbar
             };
             DrawPanel.Controls.Add(_verticalBar);
-            _verticalBar.ValueChanged += new EventHandler(VerticalBarValueChanged);
+            _verticalBar.ValueChanged += VerticalBarValueChanged;
 
             // Calculate total numbers
             _totalCost = 0;
@@ -67,7 +67,7 @@ namespace civ2.Forms
             _discoveries = 0;
             _noOfImprovements = new int[67];
             _upkeepOfImprovements = new int[67];
-            foreach (City city in Game.GetCities.Where(n => n.Owner == Game.ActiveCiv))
+            foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
             {
                 for (int i = 0; i < city.Improvements.Count(); i++)
                 {
@@ -84,18 +84,18 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Text
-            string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
-            StringFormat sf = new StringFormat();
+            string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
+            var sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("TRADE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("TRADE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             // Cities
             int count = 0;
-            foreach (City city in Game.GetCities.Where(n => n.Owner == Game.ActiveCiv))
+            foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
             {
                 // City image
                 e.Graphics.DrawImage(Draw.City(city, true, 0), new Point(4 + 64 * ((count + 1) % 2), 95 + 24 * count));
@@ -125,10 +125,10 @@ namespace civ2.Forms
                 int count2 = 0;
                 for (int i = 0; i < 67; i++)
                 {
-                    if ((_noOfImprovements[i] > 0) && (Game.Rules.ImprovementUpkeep[i] > 0))  //only show improvements with upkeep > 0
+                    if ((_noOfImprovements[i] > 0) && (_game.Rules.ImprovementUpkeep[i] > 0))  //only show improvements with upkeep > 0
                     {
-                        e.Graphics.DrawString($"{_noOfImprovements[i]} {Game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(335 + 1, 105 + 24 * count2 + 1));
-                        e.Graphics.DrawString($"{_noOfImprovements[i]} {Game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(335, 105 + 24 * count2));
+                        e.Graphics.DrawString($"{_noOfImprovements[i]} {_game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(335 + 1, 105 + 24 * count2 + 1));
+                        e.Graphics.DrawString($"{_noOfImprovements[i]} {_game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(335, 105 + 24 * count2));
                         count2++;
                     }
                 }
@@ -160,7 +160,7 @@ namespace civ2.Forms
             // TODO: Add supply/demand panel
         }
 
-        private void CloseButton_Click(object sender, EventArgs e) 
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

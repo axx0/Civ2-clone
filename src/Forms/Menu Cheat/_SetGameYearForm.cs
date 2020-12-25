@@ -97,12 +97,12 @@ namespace civ2.Forms
             try
             {
                 newGameYear = Convert.ToInt32(ChangeTextBox.Text);
-            }            
+            }
             catch (System.FormatException)  //If format is invalid (input is string instead of number), then set the turn to 0
             {
                 newGameYear = 0;
             }
-            
+
             //Game.TurnNumber = newGameYear;
             //Application.OpenForms.OfType<StatusForm>().First().RefreshStatusForm();
             Close();

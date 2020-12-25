@@ -6,15 +6,15 @@ using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    public partial class DemographicsPanel : Civ2panel
+    public class DemographicsPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
 
         public DemographicsPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
@@ -22,7 +22,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             //Close button
-            Civ2button _closeButton = new Civ2button
+            var _closeButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
@@ -30,7 +30,7 @@ namespace civ2.Forms
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);
-            _closeButton.Click += new EventHandler(CloseButton_Click);
+            _closeButton.Click += CloseButton_Click;
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
@@ -41,7 +41,7 @@ namespace civ2.Forms
                 e.Graphics.DrawLine(new Pen(Color.FromArgb(35, 135, 155)), 4, 58 + 25 * row, DrawPanel.Width - 4, 58 + 25 * row);
             }
             // Text
-            StringFormat sf = new StringFormat();
+            var sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             sf.LineAlignment = StringAlignment.Center;
             e.Graphics.DrawString("Roman Demographics", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 1, 14 + 1), sf);
@@ -59,7 +59,7 @@ namespace civ2.Forms
             y = 47 + 25 * 1;
             e.Graphics.DrawString("Population:", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(4 + 1, y + 1), sf);
             e.Graphics.DrawString("Population:", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(4, y), sf);
-            string population = String.Format("{0:n0}", Game.ActiveCiv.Population);
+            string population = String.Format("{0:n0}", _game.ActiveCiv.Population);
             e.Graphics.DrawString(population, new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(181 + 1, y + 1), sf);
             e.Graphics.DrawString(population, new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(181, y), sf);
             e.Graphics.DrawString("?st", new Font("Times New Roman", 13), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(324 + 1, y + 1), sf);
@@ -156,7 +156,7 @@ namespace civ2.Forms
             sf.Dispose();
         }
 
-        private void CloseButton_Click(object sender, EventArgs e) 
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

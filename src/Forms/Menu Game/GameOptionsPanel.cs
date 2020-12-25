@@ -5,25 +5,25 @@ using System.Windows.Forms;
 
 namespace civ2.Forms
 {
-    public partial class GameOptionsPanel : Civ2panel
+    public class GameOptionsPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
         private readonly List<DoubleBufferedPanel> _clickPanels;
         private readonly string[] _textOptions;
-        private readonly bool[] _choiceOptions;        
+        private readonly bool[] _choiceOptions;
 
         public GameOptionsPanel(Main parent, int _width, int _height) : base(_width, _height, "Civilization II Multiplayer Gold", 38, 46)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
             DrawPanel.Paint += DrawPanel_Paint;
 
             // OK button
-            Civ2button _OKButton = new Civ2button
+            var _OKButton = new Civ2button
             {
                 Location = new Point(9, 398),
                 Size = new Size(363, 36),
@@ -31,10 +31,10 @@ namespace civ2.Forms
                 Text = "OK"
             };
             Controls.Add(_OKButton);
-            _OKButton.Click += new EventHandler(OKButton_Click);
+            _OKButton.Click += OKButton_Click;
 
             // Cancel button
-            Civ2button _cancelButton = new Civ2button
+            var _cancelButton = new Civ2button
             {
                 Location = new Point(374, 398),
                 Size = new Size(363, 36),
@@ -42,27 +42,27 @@ namespace civ2.Forms
                 Text = "Cancel"
             };
             Controls.Add(_cancelButton);
-            _cancelButton.Click += new EventHandler(CancelButton_Click);
+            _cancelButton.Click += CancelButton_Click;
 
             // Make an options array
-            _choiceOptions = new bool[11] { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn,
-                Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp,
-                Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
+            _choiceOptions = new bool[11] { _game.Options.SoundEffects, _game.Options.Music, _game.Options.AlwaysWaitAtEndOfTurn, _game.Options.AutosaveEachTurn,
+                _game.Options.ShowEnemyMoves, _game.Options.NoPauseAfterEnemyMoves, _game.Options.FastPieceSlide, _game.Options.InstantAdvice, _game.Options.TutorialHelp,
+                _game.Options.MoveUnitsWithoutMouse, _game.Options.EnterClosestCityScreen };
             // Individual options text
-            _textOptions = new string[11] { "Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.", 
+            _textOptions = new string[11] { "Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.",
                 "Fast piece slide.", "Instant advice.", "Tutorial help.", "Move units w/ mouse (cursor arrows).", "ENTER key closes City Screen." };
             // Make click panels for each options
             _clickPanels = new List<DoubleBufferedPanel>();
             for (int i = 0; i < 11; i++)
             {
-                DoubleBufferedPanel panel = new DoubleBufferedPanel
+                var panel = new DoubleBufferedPanel
                 {
                     Location = new Point(10, 32 * i + 4),
                     Size = new Size(100, 27),   // You will set the correct width once you measure text size below
                     BackColor = Color.Transparent
                 };
                 DrawPanel.Controls.Add(panel);
-                panel.Click += new EventHandler(ClickPanels_Click);
+                panel.Click += ClickPanels_Click;
                 _clickPanels.Add(panel);
             }
         }
@@ -102,23 +102,23 @@ namespace civ2.Forms
         // If OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            Game.Options.SoundEffects = _choiceOptions[0];
-            Game.Options.Music = _choiceOptions[1];
-            Game.Options.AlwaysWaitAtEndOfTurn = _choiceOptions[2];
-            Game.Options.AutosaveEachTurn = _choiceOptions[3];
-            Game.Options.ShowEnemyMoves = _choiceOptions[4];
-            Game.Options.NoPauseAfterEnemyMoves = _choiceOptions[5];
-            Game.Options.FastPieceSlide = _choiceOptions[6];
-            Game.Options.InstantAdvice = _choiceOptions[7];
-            Game.Options.TutorialHelp = _choiceOptions[8];
-            Game.Options.MoveUnitsWithoutMouse = _choiceOptions[9];
-            Game.Options.EnterClosestCityScreen = _choiceOptions[10];
+            _game.Options.SoundEffects = _choiceOptions[0];
+            _game.Options.Music = _choiceOptions[1];
+            _game.Options.AlwaysWaitAtEndOfTurn = _choiceOptions[2];
+            _game.Options.AutosaveEachTurn = _choiceOptions[3];
+            _game.Options.ShowEnemyMoves = _choiceOptions[4];
+            _game.Options.NoPauseAfterEnemyMoves = _choiceOptions[5];
+            _game.Options.FastPieceSlide = _choiceOptions[6];
+            _game.Options.InstantAdvice = _choiceOptions[7];
+            _game.Options.TutorialHelp = _choiceOptions[8];
+            _game.Options.MoveUnitsWithoutMouse = _choiceOptions[9];
+            _game.Options.EnterClosestCityScreen = _choiceOptions[10];
             this.Visible = false;
             this.Dispose();
         }
 
         // If cancel is pressed --> just close
-        private void CancelButton_Click(object sender, EventArgs e) 
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

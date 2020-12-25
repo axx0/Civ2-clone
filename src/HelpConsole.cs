@@ -109,5 +109,5 @@ namespace civ2
             t.IsBackground = true;
             t.Start();
         }
-    }    
+    }
 }

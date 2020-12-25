@@ -7,7 +7,7 @@
         public bool Bloodlust { get; private set; }
         public bool DontRestartIfEliminated { get; private set; }
         public bool FlatEarth { get; private set; }
-        
+
         // GAME OPTIONS
         public bool SoundEffects { get; set; }
         public bool Music { get; set; }
@@ -83,7 +83,6 @@
             WarnChangProductWillCostShields = optionsArray[32];
             WarnWhenPollutionOccurs = optionsArray[33];
             ZoomToCityNotDefaultAction = optionsArray[34];
-            
         }
     }
 }

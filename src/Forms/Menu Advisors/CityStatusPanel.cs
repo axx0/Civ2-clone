@@ -9,15 +9,15 @@ namespace civ2.Forms
 {
     public partial class CityStatusPanel : Civ2panel
     {
-        Game Game => Game.Instance;
+        private Game _game => Game.Instance;
 
-        private readonly Main Main;
+        private readonly Main _main;
         private readonly VScrollBar _verticalBar;
         private int _barValue;   // Starting value of view of horizontal bar
 
         public CityStatusPanel(Main parent, int _width, int _height) : base(_width, _height, null, 11, 10)
         {
-            Main = parent;
+            _main = parent;
 
             // Add DrawPanel from base control
             Controls.Add(DrawPanel);
@@ -25,7 +25,7 @@ namespace civ2.Forms
             DrawPanel.Paint += DrawPanel_Paint;
 
             // Close button
-            Civ2button _closeButton = new Civ2button
+            var _closeButton = new Civ2button
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
@@ -33,7 +33,7 @@ namespace civ2.Forms
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);
-            _closeButton.Click += new EventHandler(CloseButton_Click);
+            _closeButton.Click += CloseButton_Click;
 
             // Vertical bar
             _verticalBar = new VScrollBar()
@@ -44,24 +44,24 @@ namespace civ2.Forms
                 // TODO: determine maximum value of Vscrollbar
             };
             DrawPanel.Controls.Add(_verticalBar);
-            _verticalBar.ValueChanged += new EventHandler(VerticalBarValueChanged);
+            _verticalBar.ValueChanged += VerticalBarValueChanged;
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Text
-            string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
+            string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString($"Kingdom of the {Game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString($"King {Game.ActiveCiv.LeaderName} : {Math.Abs(Game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
+            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
+            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
+            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
             // Cities
             int count = 0;
-            foreach (City city in Game.GetCities.Where(n => n.Owner == Game.ActiveCiv))
+            foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
             {
                 // City image
                 e.Graphics.DrawImage(city.Graphic(true, 0), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
@@ -84,20 +84,20 @@ namespace civ2.Forms
                 int item = city.ItemInProduction;
                 if (city.ItemInProduction < 62) // Unit is in production
                 {
-                    e.Graphics.DrawString($"{Game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * Game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString($"{Game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * Game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
+                    e.Graphics.DrawString($"{_game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * _game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
+                    e.Graphics.DrawString($"{_game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * _game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
                 }
                 else    // Improvement
                 {
-                    e.Graphics.DrawString($"{Game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * Game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString($"{Game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * Game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
+                    e.Graphics.DrawString($"{_game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * _game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
+                    e.Graphics.DrawString($"{_game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * _game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
                 }
                 count++;
             }
             sf.Dispose();
         }
 
-        private void CloseButton_Click(object sender, EventArgs e) 
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             this.Visible = false;
             this.Dispose();

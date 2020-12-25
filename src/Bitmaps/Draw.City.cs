@@ -82,7 +82,7 @@ namespace civ2.Bitmaps
                 if (!city.ImprovementExists(ImprovementType.CityWalls))  // no city walls
                 {
                     graphics.DrawImage(Images.City[(int)style, sizeStyle], 0, 0);
-                    
+
                     // Draw city size window
                     if (citySizeWindow)
                     {
@@ -112,7 +112,7 @@ namespace civ2.Bitmaps
 
                         // Filling of rectangle
                         graphics.FillRectangle(new SolidBrush(CivColors.Light[city.OwnerId]), Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 0], Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 1], 8, 12);
-                        
+
                         // Size text
                         graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 0] + 4, Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 1] + 6, sf);
                     }

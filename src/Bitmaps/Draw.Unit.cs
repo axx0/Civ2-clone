@@ -10,7 +10,7 @@ namespace civ2.Bitmaps
         public static Bitmap Unit(IUnit unit, bool drawInStack, int zoom)
         {
             // Define a bitmap for drawing
-            Bitmap unitPic = new Bitmap(64, 48);     
+            Bitmap unitPic = new Bitmap(64, 48);
 
             using (Graphics graphics = Graphics.FromImage(unitPic))
             {

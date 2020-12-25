@@ -45,32 +45,70 @@ namespace civ2.Bitmaps
                 if (flatEarth)
                 {
                     // Determine type of NW tile
-                    if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
+                    if ((col != 0) && (row != 0))
+                    {
+                        tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
+                    }
                     // Determine type of NE tile
-                    if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
+                    if ((col != Xdim - 1) && (row != 0))
+                    {
+                        tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
+                    }
                     // Determine type of SW tile
-                    if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
+                    if ((col != 0) && (row != Ydim - 1))
+                    {
+                        tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
+                    }
                     // Determine type of SE tile
-                    if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
+                    if ((col != Xdim - 1) && (row != Ydim - 1))
+                    {
+                        tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
+                    }
                 }
                 else    // Round earth
                 {
                     // Determine type of NW tile
-                    if ((col == 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
-                    else if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
+                    if ((col == 0) && (row != 0))
+                    {
+                        tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
+                    }
+                    else if ((col != 0) && (row != 0))
+                    {
+                        tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
+                    }
                     // Determine type of NE tile
-                    if ((col == Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
-                    else if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
+                    if ((col == Xdim - 1) && (row != 0))
+                    {
+                        tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
+                    }
+                    else if ((col != Xdim - 1) && (row != 0))
+                    {
+                        tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
+                    }
                     // Determine type of SW tile
-                    if ((col == 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
-                    else if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
+                    if ((col == 0) && (row != Ydim - 1))
+                    {
+                        tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
+                    }
+                    else if ((col != 0) && (row != Ydim - 1))
+                    {
+                        tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
+                    }
                     // Determine type of SE tile
-                    if ((col == Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
-                    else if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
+                    if ((col == Xdim - 1) && (row != Ydim - 1))
+                    {
+                        tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
+                    }
+                    else if ((col != Xdim - 1) && (row != Ydim - 1))
+                    {
+                        tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
+                    }
                 }
                 // Implement dither on 4 locations in square
                 for (int tileX = 0; tileX < 2; tileX++)    // for 4 directions
+                {
                     for (int tileY = 0; tileY < 2; tileY++)
+                    {
                         switch (tiletype[tileX, tileY])
                         {
                             case TerrainType.Desert: graphics.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
@@ -86,6 +124,8 @@ namespace civ2.Bitmaps
                             case TerrainType.Ocean: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
                             default: break;
                         }
+                    }
+                }
 
                 // Draw coast & river mouth
                 if (Map.TileC2(col, row).Type == TerrainType.Ocean)
@@ -94,59 +134,195 @@ namespace civ2.Bitmaps
 
                     // Draw coast & river mouth tiles
                     // NW+N+NE tiles
-                    if (!land[7] && !land[0] && !land[1]) graphics.DrawImage(Images.Coast[0, 0], 16, 0);
-                    if (land[7] && !land[0] && !land[1]) graphics.DrawImage(Images.Coast[1, 0], 16, 0);
-                    if (!land[7] && land[0] && !land[1]) graphics.DrawImage(Images.Coast[2, 0], 16, 0);
-                    if (land[7] && land[0] && !land[1]) graphics.DrawImage(Images.Coast[3, 0], 16, 0);
-                    if (!land[7] && !land[0] && land[1]) graphics.DrawImage(Images.Coast[4, 0], 16, 0);
-                    if (land[7] && !land[0] && land[1]) graphics.DrawImage(Images.Coast[5, 0], 16, 0);
-                    if (!land[7] && land[0] && land[1]) graphics.DrawImage(Images.Coast[6, 0], 16, 0);
-                    if (land[7] && land[0] && land[1]) graphics.DrawImage(Images.Coast[7, 0], 16, 0);
+                    if (!land[7] && !land[0] && !land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[0, 0], 16, 0);
+                    }
+
+                    if (land[7] && !land[0] && !land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[1, 0], 16, 0);
+                    }
+
+                    if (!land[7] && land[0] && !land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[2, 0], 16, 0);
+                    }
+
+                    if (land[7] && land[0] && !land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[3, 0], 16, 0);
+                    }
+
+                    if (!land[7] && !land[0] && land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[4, 0], 16, 0);
+                    }
+
+                    if (land[7] && !land[0] && land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[5, 0], 16, 0);
+                    }
+
+                    if (!land[7] && land[0] && land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[6, 0], 16, 0);
+                    }
+
+                    if (land[7] && land[0] && land[1])
+                    {
+                        graphics.DrawImage(Images.Coast[7, 0], 16, 0);
+                    }
                     // SW+S+SE tiles
-                    if (!land[3] && !land[4] && !land[5]) graphics.DrawImage(Images.Coast[0, 1], 16, 16);
-                    if (land[3] && !land[4] && !land[5]) graphics.DrawImage(Images.Coast[1, 1], 16, 16);
-                    if (!land[3] && land[4] && !land[5]) graphics.DrawImage(Images.Coast[2, 1], 16, 16);
-                    if (land[3] && land[4] && !land[5]) graphics.DrawImage(Images.Coast[3, 1], 16, 16);
-                    if (!land[3] && !land[4] && land[5]) graphics.DrawImage(Images.Coast[4, 1], 16, 16);
-                    if (land[3] && !land[4] && land[5]) graphics.DrawImage(Images.Coast[5, 1], 16, 16);
-                    if (!land[3] && land[4] && land[5]) graphics.DrawImage(Images.Coast[6, 1], 16, 16);
-                    if (land[3] && land[4] && land[5]) graphics.DrawImage(Images.Coast[7, 1], 16, 16);
+                    if (!land[3] && !land[4] && !land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[0, 1], 16, 16);
+                    }
+
+                    if (land[3] && !land[4] && !land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[1, 1], 16, 16);
+                    }
+
+                    if (!land[3] && land[4] && !land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[2, 1], 16, 16);
+                    }
+
+                    if (land[3] && land[4] && !land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[3, 1], 16, 16);
+                    }
+
+                    if (!land[3] && !land[4] && land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[4, 1], 16, 16);
+                    }
+
+                    if (land[3] && !land[4] && land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[5, 1], 16, 16);
+                    }
+
+                    if (!land[3] && land[4] && land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[6, 1], 16, 16);
+                    }
+
+                    if (land[3] && land[4] && land[5])
+                    {
+                        graphics.DrawImage(Images.Coast[7, 1], 16, 16);
+                    }
                     // SW+W+NW tiles
-                    if (!land[5] && !land[6] && !land[7]) graphics.DrawImage(Images.Coast[0, 2], 0, 8);
-                    if (land[5] && !land[6] && !land[7]) graphics.DrawImage(Images.Coast[1, 2], 0, 8);
-                    if (!land[5] && land[6] && !land[7]) graphics.DrawImage(Images.Coast[2, 2], 0, 8);
-                    if (land[5] && land[6] && !land[7]) graphics.DrawImage(Images.Coast[3, 2], 0, 8);
-                    if (!land[5] && !land[6] && land[7]) graphics.DrawImage(Images.Coast[4, 2], 0, 8);
-                    if (land[5] && !land[6] && land[7]) graphics.DrawImage(Images.Coast[5, 2], 0, 8);
-                    if (!land[5] && land[6] && land[7]) graphics.DrawImage(Images.Coast[6, 2], 0, 8);
-                    if (land[5] && land[6] && land[7]) graphics.DrawImage(Images.Coast[7, 2], 0, 8);
+                    if (!land[5] && !land[6] && !land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[0, 2], 0, 8);
+                    }
+
+                    if (land[5] && !land[6] && !land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[1, 2], 0, 8);
+                    }
+
+                    if (!land[5] && land[6] && !land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[2, 2], 0, 8);
+                    }
+
+                    if (land[5] && land[6] && !land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[3, 2], 0, 8);
+                    }
+
+                    if (!land[5] && !land[6] && land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[4, 2], 0, 8);
+                    }
+
+                    if (land[5] && !land[6] && land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[5, 2], 0, 8);
+                    }
+
+                    if (!land[5] && land[6] && land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[6, 2], 0, 8);
+                    }
+
+                    if (land[5] && land[6] && land[7])
+                    {
+                        graphics.DrawImage(Images.Coast[7, 2], 0, 8);
+                    }
                     // NE+E+SE tiles
-                    if (!land[1] && !land[2] && !land[3]) graphics.DrawImage(Images.Coast[0, 3], 32, 8);
-                    if (land[1] && !land[2] && !land[3]) graphics.DrawImage(Images.Coast[1, 3], 32, 8);
-                    if (!land[1] && land[2] && !land[3]) graphics.DrawImage(Images.Coast[2, 3], 32, 8);
-                    if (land[1] && land[2] && !land[3]) graphics.DrawImage(Images.Coast[3, 3], 32, 8);
-                    if (!land[1] && !land[2] && land[3]) graphics.DrawImage(Images.Coast[4, 3], 32, 8);
-                    if (land[1] && !land[2] && land[3]) graphics.DrawImage(Images.Coast[5, 3], 32, 8);
-                    if (!land[1] && land[2] && land[3]) graphics.DrawImage(Images.Coast[6, 3], 32, 8);
-                    if (land[1] && land[2] && land[3]) graphics.DrawImage(Images.Coast[7, 3], 32, 8);
+                    if (!land[1] && !land[2] && !land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[0, 3], 32, 8);
+                    }
+
+                    if (land[1] && !land[2] && !land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[1, 3], 32, 8);
+                    }
+
+                    if (!land[1] && land[2] && !land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[2, 3], 32, 8);
+                    }
+
+                    if (land[1] && land[2] && !land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[3, 3], 32, 8);
+                    }
+
+                    if (!land[1] && !land[2] && land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[4, 3], 32, 8);
+                    }
+
+                    if (land[1] && !land[2] && land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[5, 3], 32, 8);
+                    }
+
+                    if (!land[1] && land[2] && land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[6, 3], 32, 8);
+                    }
+
+                    if (land[1] && land[2] && land[3])
+                    {
+                        graphics.DrawImage(Images.Coast[7, 3], 32, 8);
+                    }
 
                     // River mouth
                     // If river is next to ocean, draw river mouth on this tile.
                     if (col + 1 < Xdim && row - 1 >= 0)    // NE there is no edge of map
                     {
-                        if (land[1] && Map.TileC2(col + 1, row - 1).River) graphics.DrawImage(Images.RiverMouth[0], 0, 0);
+                        if (land[1] && Map.TileC2(col + 1, row - 1).River)
+                        {
+                            graphics.DrawImage(Images.RiverMouth[0], 0, 0);
+                        }
                     }
                     if (col + 1 < Xdim && row + 1 < Ydim)    // SE there is no edge of map
                     {
-                        if (land[3] && Map.TileC2(col + 1, row + 1).River) graphics.DrawImage(Images.RiverMouth[1], 0, 0);
+                        if (land[3] && Map.TileC2(col + 1, row + 1).River)
+                        {
+                            graphics.DrawImage(Images.RiverMouth[1], 0, 0);
+                        }
                     }
                     if (col - 1 >= 0 && row + 1 < Ydim)    // SW there is no edge of map
                     {
-                        if (land[5] && Map.TileC2(col - 1, row + 1).River) graphics.DrawImage(Images.RiverMouth[2], 0, 0);
+                        if (land[5] && Map.TileC2(col - 1, row + 1).River)
+                        {
+                            graphics.DrawImage(Images.RiverMouth[2], 0, 0);
+                        }
                     }
                     if (col - 1 >= 0 && row - 1 >= 0)    // NW there is no edge of map
                     {
-                        if (land[7] && Map.TileC2(col - 1, row - 1).River) graphics.DrawImage(Images.RiverMouth[3], 0, 0);
+                        if (land[7] && Map.TileC2(col - 1, row - 1).River)
+                        {
+                            graphics.DrawImage(Images.RiverMouth[3], 0, 0);
+                        }
                     }
                 }
 
@@ -156,22 +332,85 @@ namespace civ2.Bitmaps
                     bool[] isForestAround = IsTerrainAroundIn4directions(col, row, TerrainType.Forest, flatEarth);
 
                     // Draw forest tiles
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.Forest[0], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, false, false })) graphics.DrawImage(Images.Forest[1], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, false, false })) graphics.DrawImage(Images.Forest[2], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, false, false })) graphics.DrawImage(Images.Forest[3], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, true, false })) graphics.DrawImage(Images.Forest[4], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, true, false })) graphics.DrawImage(Images.Forest[5], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, true, false })) graphics.DrawImage(Images.Forest[6], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, true, false })) graphics.DrawImage(Images.Forest[7], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, true })) graphics.DrawImage(Images.Forest[8], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, false, true })) graphics.DrawImage(Images.Forest[9], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, false, true })) graphics.DrawImage(Images.Forest[10], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, false, true })) graphics.DrawImage(Images.Forest[11], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, true, true })) graphics.DrawImage(Images.Forest[12], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, true, true })) graphics.DrawImage(Images.Forest[13], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, true, true })) graphics.DrawImage(Images.Forest[14], 0, 0);
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, true, true })) graphics.DrawImage(Images.Forest[15], 0, 0);
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[0], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[1], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[2], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[3], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[4], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[5], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[6], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.Forest[7], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[8], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[9], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[10], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[11], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[12], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[13], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[14], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.Forest[15], 0, 0);
+                    }
                 }
 
                 // Draw mountains
@@ -181,22 +420,85 @@ namespace civ2.Bitmaps
                     bool[] isMountAround = IsTerrainAroundIn4directions(col, row, TerrainType.Mountains, flatEarth);
 
                     // Draw mountain tiles
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.Mountains[0], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, false, false })) graphics.DrawImage(Images.Mountains[1], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, false, false })) graphics.DrawImage(Images.Mountains[2], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, false, false })) graphics.DrawImage(Images.Mountains[3], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, true, false })) graphics.DrawImage(Images.Mountains[4], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, true, false })) graphics.DrawImage(Images.Mountains[5], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, true, false })) graphics.DrawImage(Images.Mountains[6], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, true, false })) graphics.DrawImage(Images.Mountains[7], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, true })) graphics.DrawImage(Images.Mountains[8], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, false, true })) graphics.DrawImage(Images.Mountains[9], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, false, true })) graphics.DrawImage(Images.Mountains[10], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, false, true })) graphics.DrawImage(Images.Mountains[11], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, true, true })) graphics.DrawImage(Images.Mountains[12], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, true, true })) graphics.DrawImage(Images.Mountains[13], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, true, true })) graphics.DrawImage(Images.Mountains[14], 0, 0);
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, true, true })) graphics.DrawImage(Images.Mountains[15], 0, 0);
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[0], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[1], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[2], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[3], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[4], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[5], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[6], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.Mountains[7], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[8], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[9], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[10], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[11], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[12], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[13], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[14], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.Mountains[15], 0, 0);
+                    }
                 }
 
                 // Draw hills
@@ -205,22 +507,85 @@ namespace civ2.Bitmaps
                     bool[] isHillAround = IsTerrainAroundIn4directions(col, row, TerrainType.Hills, flatEarth);
 
                     // Draw hill tiles
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.Hills[0], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, false, false })) graphics.DrawImage(Images.Hills[1], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, false, false })) graphics.DrawImage(Images.Hills[2], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, false, false })) graphics.DrawImage(Images.Hills[3], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, true, false })) graphics.DrawImage(Images.Hills[4], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, true, false })) graphics.DrawImage(Images.Hills[5], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, true, false })) graphics.DrawImage(Images.Hills[6], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, true, false })) graphics.DrawImage(Images.Hills[7], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, true })) graphics.DrawImage(Images.Hills[8], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, false, true })) graphics.DrawImage(Images.Hills[9], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, false, true })) graphics.DrawImage(Images.Hills[10], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, false, true })) graphics.DrawImage(Images.Hills[11], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, true, true })) graphics.DrawImage(Images.Hills[12], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, true, true })) graphics.DrawImage(Images.Hills[13], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, true, true })) graphics.DrawImage(Images.Hills[14], 0, 0);
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, true, true })) graphics.DrawImage(Images.Hills[15], 0, 0);
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[0], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[1], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[2], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[3], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[4], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[5], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[6], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.Hills[7], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[8], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[9], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[10], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[11], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[12], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[13], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[14], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.Hills[15], 0, 0);
+                    }
                 }
 
                 // Draw rivers
@@ -229,22 +594,85 @@ namespace civ2.Bitmaps
                     bool[] isRiverAround = IsRiverAround(col, row, flatEarth);
 
                     // Draw river tiles
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, false })) graphics.DrawImage(Images.River[0], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, false, false })) graphics.DrawImage(Images.River[1], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, false, false })) graphics.DrawImage(Images.River[2], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, false, false })) graphics.DrawImage(Images.River[3], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, true, false })) graphics.DrawImage(Images.River[4], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, true, false })) graphics.DrawImage(Images.River[5], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, true, false })) graphics.DrawImage(Images.River[6], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, true, false })) graphics.DrawImage(Images.River[7], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, true })) graphics.DrawImage(Images.River[8], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, false, true })) graphics.DrawImage(Images.River[9], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, false, true })) graphics.DrawImage(Images.River[10], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, false, true })) graphics.DrawImage(Images.River[11], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, true, true })) graphics.DrawImage(Images.River[12], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, true, true })) graphics.DrawImage(Images.River[13], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, true, true })) graphics.DrawImage(Images.River[14], 0, 0);
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, true, true })) graphics.DrawImage(Images.River[15], 0, 0);
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.River[0], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.River[1], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.River[2], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, false, false }))
+                    {
+                        graphics.DrawImage(Images.River[3], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.River[4], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, true, false }))
+                    {
+                        graphics.DrawImage(Images.River[5], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.River[6], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, true, false }))
+                    {
+                        graphics.DrawImage(Images.River[7], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.River[8], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, false, true }))
+                    {
+                        graphics.DrawImage(Images.River[9], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.River[10], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, false, true }))
+                    {
+                        graphics.DrawImage(Images.River[11], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.River[12], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, true, true }))
+                    {
+                        graphics.DrawImage(Images.River[13], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.River[14], 0, 0);
+                    }
+
+                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, true, true }))
+                    {
+                        graphics.DrawImage(Images.River[15], 0, 0);
+                    }
                 }
 
                 // Draw special resources if they exist
@@ -285,15 +713,50 @@ namespace civ2.Bitmaps
                     bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
 
                     // Draw roads
-                    if (isRoadAround[0]) graphics.DrawImage(Images.Road[8], 0, 0);  // to N
-                    if (isRoadAround[1]) graphics.DrawImage(Images.Road[1], 0, 0);  // to NE
-                    if (isRoadAround[2]) graphics.DrawImage(Images.Road[2], 0, 0);  // to E
-                    if (isRoadAround[3]) graphics.DrawImage(Images.Road[3], 0, 0);  // to SE
-                    if (isRoadAround[4]) graphics.DrawImage(Images.Road[4], 0, 0);  // to S
-                    if (isRoadAround[5]) graphics.DrawImage(Images.Road[5], 0, 0);  // to SW
-                    if (isRoadAround[6]) graphics.DrawImage(Images.Road[6], 0, 0);  // to W
-                    if (isRoadAround[7]) graphics.DrawImage(Images.Road[7], 0, 0);  // to NW
-                    if (Enumerable.SequenceEqual(isRoadAround, new bool[8] { false, false, false, false, false, false, false, false })) graphics.DrawImage(Images.Road[0], 0, 0);    // no road around
+                    if (isRoadAround[0])
+                    {
+                        graphics.DrawImage(Images.Road[8], 0, 0);  // to N
+                    }
+
+                    if (isRoadAround[1])
+                    {
+                        graphics.DrawImage(Images.Road[1], 0, 0);  // to NE
+                    }
+
+                    if (isRoadAround[2])
+                    {
+                        graphics.DrawImage(Images.Road[2], 0, 0);  // to E
+                    }
+
+                    if (isRoadAround[3])
+                    {
+                        graphics.DrawImage(Images.Road[3], 0, 0);  // to SE
+                    }
+
+                    if (isRoadAround[4])
+                    {
+                        graphics.DrawImage(Images.Road[4], 0, 0);  // to S
+                    }
+
+                    if (isRoadAround[5])
+                    {
+                        graphics.DrawImage(Images.Road[5], 0, 0);  // to SW
+                    }
+
+                    if (isRoadAround[6])
+                    {
+                        graphics.DrawImage(Images.Road[6], 0, 0);  // to W
+                    }
+
+                    if (isRoadAround[7])
+                    {
+                        graphics.DrawImage(Images.Road[7], 0, 0);  // to NW
+                    }
+
+                    if (Enumerable.SequenceEqual(isRoadAround, new bool[8] { false, false, false, false, false, false, false, false }))
+                    {
+                        graphics.DrawImage(Images.Road[0], 0, 0);    // no road around
+                    }
                 }
 
                 // TODO: make railroad drawing logic
@@ -316,23 +779,40 @@ namespace civ2.Bitmaps
                 //}
 
                 // Irrigation
-                if (Map.TileC2(col, row).Irrigation) graphics.DrawImage(Images.Irrigation, 0, 0);
+                if (Map.TileC2(col, row).Irrigation)
+                {
+                    graphics.DrawImage(Images.Irrigation, 0, 0);
+                }
 
                 // Farmland
-                if (Map.TileC2(col, row).Farmland) graphics.DrawImage(Images.Farmland, 0, 0);
+                if (Map.TileC2(col, row).Farmland)
+                {
+                    graphics.DrawImage(Images.Farmland, 0, 0);
+                }
 
                 // Mining
-                if (Map.TileC2(col, row).Mining) graphics.DrawImage(Images.Mining, 0, 0);
+                if (Map.TileC2(col, row).Mining)
+                {
+                    graphics.DrawImage(Images.Mining, 0, 0);
+                }
 
                 // Pollution
-                if (Map.TileC2(col, row).Pollution) graphics.DrawImage(Images.Pollution, 0, 0);
+                if (Map.TileC2(col, row).Pollution)
+                {
+                    graphics.DrawImage(Images.Pollution, 0, 0);
+                }
 
                 // Fortress
-                if (Map.TileC2(col, row).Fortress) graphics.DrawImage(Images.Fortress, 0, 0);
+                if (Map.TileC2(col, row).Fortress)
+                {
+                    graphics.DrawImage(Images.Fortress, 0, 0);
+                }
 
                 // Airbase
-                if (Map.TileC2(col, row).Airbase) graphics.DrawImage(Images.Airbase, 0, 0);
-
+                if (Map.TileC2(col, row).Airbase)
+                {
+                    graphics.DrawImage(Images.Airbase, 0, 0);
+                }
             }
 
             return tilePic;
@@ -348,57 +828,135 @@ namespace civ2.Bitmaps
 
             // Observe in all directions if land is present next to ocean
             // N:
-            if (row - 2 < 0) land[0] = true;   // if N tile is out of map limits, we presume it is land
-            else if (Map.TileC2(col, row - 2).Type != TerrainType.Ocean) land[0] = true;
+            if (row - 2 < 0)
+            {
+                land[0] = true;   // if N tile is out of map limits, we presume it is land
+            }
+            else if (Map.TileC2(col, row - 2).Type != TerrainType.Ocean)
+            {
+                land[0] = true;
+            }
             // NE:
-            if (row == 0) land[1] = true;  // NE is beyond limits
+            if (row == 0)
+            {
+                land[1] = true;  // NE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) land[1] = true;
-                else if (Map.TileC2(0, row - 1).Type != TerrainType.Ocean) land[1] = true;  // tile on mirror side of map is not ocean
+                if (flatEarth)
+                {
+                    land[1] = true;
+                }
+                else if (Map.TileC2(0, row - 1).Type != TerrainType.Ocean)
+                {
+                    land[1] = true;  // tile on mirror side of map is not ocean
+                }
             }
-            else if (Map.TileC2(col + 1, row - 1).Type != TerrainType.Ocean) land[1] = true;    // if it is not ocean, it is land
+            else if (Map.TileC2(col + 1, row - 1).Type != TerrainType.Ocean)
+            {
+                land[1] = true;    // if it is not ocean, it is land
+            }
             // E:
             if (col + 2 >= Xdim) // you are on right edge of map
             {
-                if (flatEarth) land[2] = true;
-                else if (Map.TileC2(Xdim - col, row).Type != TerrainType.Ocean) land[2] = true;
-            }                
-            else if (Map.TileC2(col + 2, row).Type != TerrainType.Ocean) land[2] = true;
+                if (flatEarth)
+                {
+                    land[2] = true;
+                }
+                else if (Map.TileC2(Xdim - col, row).Type != TerrainType.Ocean)
+                {
+                    land[2] = true;
+                }
+            }
+            else if (Map.TileC2(col + 2, row).Type != TerrainType.Ocean)
+            {
+                land[2] = true;
+            }
             // SE:
-            if (row == Ydim - 1) land[3] = true;  // SE is beyond limits
+            if (row == Ydim - 1)
+            {
+                land[3] = true;  // SE is beyond limits
+            }
             else if (col + 1 == Xdim)    // you are on eastern edge of map
             {
-                if (flatEarth) land[3] = true;
-                else if (Map.TileC2(0, row + 1).Type != TerrainType.Ocean) land[3] = true;  // tile on mirror side of map is not ocean
+                if (flatEarth)
+                {
+                    land[3] = true;
+                }
+                else if (Map.TileC2(0, row + 1).Type != TerrainType.Ocean)
+                {
+                    land[3] = true;  // tile on mirror side of map is not ocean
+                }
             }
-            else if (Map.TileC2(col + 1, row + 1).Type != TerrainType.Ocean) land[3] = true;
+            else if (Map.TileC2(col + 1, row + 1).Type != TerrainType.Ocean)
+            {
+                land[3] = true;
+            }
             // S:
-            if (row + 2 >= Ydim) land[4] = true;   // S is beyond map limits
-            else if (Map.TileC2(col, row + 2).Type != TerrainType.Ocean) land[4] = true;
+            if (row + 2 >= Ydim)
+            {
+                land[4] = true;   // S is beyond map limits
+            }
+            else if (Map.TileC2(col, row + 2).Type != TerrainType.Ocean)
+            {
+                land[4] = true;
+            }
             // SW:
-            if (row == Ydim - 1) land[5] = true; // SW is beyond limits
+            if (row == Ydim - 1)
+            {
+                land[5] = true; // SW is beyond limits
+            }
             else if (col == 0)    // you are on western edge of map
             {
-                if (flatEarth) land[5] = true;
-                else if (Map.TileC2(Xdim - 1, row + 1).Type != TerrainType.Ocean) land[5] = true;
+                if (flatEarth)
+                {
+                    land[5] = true;
+                }
+                else if (Map.TileC2(Xdim - 1, row + 1).Type != TerrainType.Ocean)
+                {
+                    land[5] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row + 1).Type != TerrainType.Ocean) land[5] = true;
+            else if (Map.TileC2(col - 1, row + 1).Type != TerrainType.Ocean)
+            {
+                land[5] = true;
+            }
             // W:
             if (col - 2 < 0) // you are on left edge of map
             {
-                if (flatEarth) land[6] = true;
-                else if (Map.TileC2(Xdim - 2 + col, row).Type != TerrainType.Ocean) land[6] = true;
+                if (flatEarth)
+                {
+                    land[6] = true;
+                }
+                else if (Map.TileC2(Xdim - 2 + col, row).Type != TerrainType.Ocean)
+                {
+                    land[6] = true;
+                }
             }
-            else if (Map.TileC2(col - 2, row).Type != TerrainType.Ocean) land[6] = true;
+            else if (Map.TileC2(col - 2, row).Type != TerrainType.Ocean)
+            {
+                land[6] = true;
+            }
             // NW:
-            if (row == 0) land[7] = true;  // NW is beyond limits
+            if (row == 0)
+            {
+                land[7] = true;  // NW is beyond limits
+            }
             else if (col == 0) // you are on western edge of map
             {
-                if (flatEarth) land[7] = true;
-                else if (Map.TileC2(Xdim - 1, row - 1).Type != TerrainType.Ocean) land[7] = true;
+                if (flatEarth)
+                {
+                    land[7] = true;
+                }
+                else if (Map.TileC2(Xdim - 1, row - 1).Type != TerrainType.Ocean)
+                {
+                    land[7] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row - 1).Type != TerrainType.Ocean) land[7] = true;
+            else if (Map.TileC2(col - 1, row - 1).Type != TerrainType.Ocean)
+            {
+                land[7] = true;
+            }
 
             return land;
         }
@@ -415,37 +973,85 @@ namespace civ2.Bitmaps
 
             // Observe in all directions if terrain is present
             // NE:
-            if (row == 0) isTerrainAround[0] = false;  // NE is beyond limits
+            if (row == 0)
+            {
+                isTerrainAround[0] = false;  // NE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) isTerrainAround[0] = false;
-                else if (Map.TileC2(0, row - 1).Type == terrain) isTerrainAround[0] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isTerrainAround[0] = false;
+                }
+                else if (Map.TileC2(0, row - 1).Type == terrain)
+                {
+                    isTerrainAround[0] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row - 1).Type == terrain) isTerrainAround[0] = true;
+            else if (Map.TileC2(col + 1, row - 1).Type == terrain)
+            {
+                isTerrainAround[0] = true;
+            }
             // SE:
-            if (row == Ydim - 1) isTerrainAround[1] = false;  // SE is beyond limits
+            if (row == Ydim - 1)
+            {
+                isTerrainAround[1] = false;  // SE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) isTerrainAround[1] = false;
-                else if (Map.TileC2(0, row + 1).Type == terrain) isTerrainAround[1] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isTerrainAround[1] = false;
+                }
+                else if (Map.TileC2(0, row + 1).Type == terrain)
+                {
+                    isTerrainAround[1] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row + 1).Type == terrain) isTerrainAround[1] = true;
+            else if (Map.TileC2(col + 1, row + 1).Type == terrain)
+            {
+                isTerrainAround[1] = true;
+            }
             // SW:
-            if (row == Ydim - 1) isTerrainAround[2] = false; // SW is beyond limits
+            if (row == Ydim - 1)
+            {
+                isTerrainAround[2] = false; // SW is beyond limits
+            }
             else if (col == 0)    // you are on western edge of map
             {
-                if (flatEarth) isTerrainAround[2] = false;
-                else if (Map.TileC2(Xdim - 1, row + 1).Type == terrain) isTerrainAround[2] = true;
+                if (flatEarth)
+                {
+                    isTerrainAround[2] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row + 1).Type == terrain)
+                {
+                    isTerrainAround[2] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row + 1).Type == terrain) isTerrainAround[2] = true;
+            else if (Map.TileC2(col - 1, row + 1).Type == terrain)
+            {
+                isTerrainAround[2] = true;
+            }
             // NW:
-            if (row == 0) isTerrainAround[3] = false;  // NW is beyond limits
+            if (row == 0)
+            {
+                isTerrainAround[3] = false;  // NW is beyond limits
+            }
             else if (col == 0) // you are on western edge of map
             {
-                if (flatEarth) isTerrainAround[3] = false;
-                else if (Map.TileC2(Xdim - 1, row - 1).Type == terrain) isTerrainAround[3] = true;
+                if (flatEarth)
+                {
+                    isTerrainAround[3] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row - 1).Type == terrain)
+                {
+                    isTerrainAround[3] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row - 1).Type == terrain) isTerrainAround[3] = true;
+            else if (Map.TileC2(col - 1, row - 1).Type == terrain)
+            {
+                isTerrainAround[3] = true;
+            }
 
             return isTerrainAround;
         }
@@ -461,37 +1067,85 @@ namespace civ2.Bitmaps
 
             // Observe in all directions if river is present
             // NE:
-            if (row == 0) isRiverAround[0] = false;  // NE is beyond limits
+            if (row == 0)
+            {
+                isRiverAround[0] = false;  // NE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) isRiverAround[0] = false;
-                else if (Map.TileC2(0, row - 1).River || Map.TileC2(0, row - 1).Type == TerrainType.Ocean) isRiverAround[0] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isRiverAround[0] = false;
+                }
+                else if (Map.TileC2(0, row - 1).River || Map.TileC2(0, row - 1).Type == TerrainType.Ocean)
+                {
+                    isRiverAround[0] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row - 1).River || Map.TileC2(col + 1, row - 1).Type == TerrainType.Ocean) isRiverAround[0] = true;
+            else if (Map.TileC2(col + 1, row - 1).River || Map.TileC2(col + 1, row - 1).Type == TerrainType.Ocean)
+            {
+                isRiverAround[0] = true;
+            }
             // SE:
-            if (row == Ydim - 1) isRiverAround[1] = false;  // SE is beyond limits
+            if (row == Ydim - 1)
+            {
+                isRiverAround[1] = false;  // SE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) isRiverAround[1] = false;
-                else if (Map.TileC2(0, row + 1).River || Map.TileC2(0, row + 1).Type == TerrainType.Ocean) isRiverAround[1] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isRiverAround[1] = false;
+                }
+                else if (Map.TileC2(0, row + 1).River || Map.TileC2(0, row + 1).Type == TerrainType.Ocean)
+                {
+                    isRiverAround[1] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row + 1).River || Map.TileC2(col + 1, row + 1).Type == TerrainType.Ocean) isRiverAround[1] = true;
+            else if (Map.TileC2(col + 1, row + 1).River || Map.TileC2(col + 1, row + 1).Type == TerrainType.Ocean)
+            {
+                isRiverAround[1] = true;
+            }
             // SW:
-            if (row == Ydim - 1) isRiverAround[2] = false; // SW is beyond limits
+            if (row == Ydim - 1)
+            {
+                isRiverAround[2] = false; // SW is beyond limits
+            }
             else if (col == 0)    // you are on western edge of map
             {
-                if (flatEarth) isRiverAround[2] = false;
-                else if (Map.TileC2(Xdim - 1, row + 1).River || Map.TileC2(Xdim - 1, row + 1).Type == TerrainType.Ocean) isRiverAround[2] = true;
+                if (flatEarth)
+                {
+                    isRiverAround[2] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row + 1).River || Map.TileC2(Xdim - 1, row + 1).Type == TerrainType.Ocean)
+                {
+                    isRiverAround[2] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row + 1).River || Map.TileC2(col - 1, row + 1).Type == TerrainType.Ocean) isRiverAround[2] = true;
+            else if (Map.TileC2(col - 1, row + 1).River || Map.TileC2(col - 1, row + 1).Type == TerrainType.Ocean)
+            {
+                isRiverAround[2] = true;
+            }
             // NW:
-            if (row == 0) isRiverAround[3] = false;  // NW is beyond limits
+            if (row == 0)
+            {
+                isRiverAround[3] = false;  // NW is beyond limits
+            }
             else if (col == 0) // you are on western edge of map
             {
-                if (flatEarth) isRiverAround[3] = false;
-                else if (Map.TileC2(Xdim - 1, row - 1).River || Map.TileC2(Xdim - 1, row - 1).Type == TerrainType.Ocean) isRiverAround[3] = true;
+                if (flatEarth)
+                {
+                    isRiverAround[3] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row - 1).River || Map.TileC2(Xdim - 1, row - 1).Type == TerrainType.Ocean)
+                {
+                    isRiverAround[3] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row - 1).River || Map.TileC2(col - 1, row - 1).Type == TerrainType.Ocean) isRiverAround[3] = true;
+            else if (Map.TileC2(col - 1, row - 1).River || Map.TileC2(col - 1, row - 1).Type == TerrainType.Ocean)
+            {
+                isRiverAround[3] = true;
+            }
 
             return isRiverAround;
         }
@@ -507,57 +1161,135 @@ namespace civ2.Bitmaps
 
             // Observe in all directions if road or city is present next to tile
             // N:
-            if (row - 2 < 0) isRoadAround[0] = false;   // if N tile is out of map limits
-            else if (Map.TileC2(col, row - 2).Road || Map.TileC2(col, row - 2).CityPresent) isRoadAround[0] = true;
+            if (row - 2 < 0)
+            {
+                isRoadAround[0] = false;   // if N tile is out of map limits
+            }
+            else if (Map.TileC2(col, row - 2).Road || Map.TileC2(col, row - 2).CityPresent)
+            {
+                isRoadAround[0] = true;
+            }
             // NE:
-            if (row == 0) isRoadAround[1] = false;  // NE is beyond limits
+            if (row == 0)
+            {
+                isRoadAround[1] = false;  // NE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) isRoadAround[1] = false;
-                else if (Map.TileC2(0, row - 1).Road || Map.TileC2(0, row - 1).CityPresent) isRoadAround[1] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isRoadAround[1] = false;
+                }
+                else if (Map.TileC2(0, row - 1).Road || Map.TileC2(0, row - 1).CityPresent)
+                {
+                    isRoadAround[1] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row - 1).Road || Map.TileC2(col + 1, row - 1).CityPresent) isRoadAround[1] = true;
+            else if (Map.TileC2(col + 1, row - 1).Road || Map.TileC2(col + 1, row - 1).CityPresent)
+            {
+                isRoadAround[1] = true;
+            }
             // E:
             if (col + 2 >= Xdim) // you are on right edge of map
             {
-                if (flatEarth) isRoadAround[2] = false;
-                else if (Map.TileC2(Xdim - col, row).Road || Map.TileC2(Xdim - col, row).CityPresent) isRoadAround[2] = true;
+                if (flatEarth)
+                {
+                    isRoadAround[2] = false;
+                }
+                else if (Map.TileC2(Xdim - col, row).Road || Map.TileC2(Xdim - col, row).CityPresent)
+                {
+                    isRoadAround[2] = true;
+                }
             }
-            else if (Map.TileC2(col + 2, row).Road || Map.TileC2(col + 2, row).CityPresent) isRoadAround[2] = true;
+            else if (Map.TileC2(col + 2, row).Road || Map.TileC2(col + 2, row).CityPresent)
+            {
+                isRoadAround[2] = true;
+            }
             // SE:
-            if (row == Ydim - 1) isRoadAround[3] = false;  // SE is beyond limits
+            if (row == Ydim - 1)
+            {
+                isRoadAround[3] = false;  // SE is beyond limits
+            }
             else if (col + 1 == Xdim)    // you are on eastern edge of map
             {
-                if (flatEarth) isRoadAround[3] = false;
-                else if (Map.TileC2(0, row + 1).Road || Map.TileC2(0, row + 1).CityPresent) isRoadAround[3] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isRoadAround[3] = false;
+                }
+                else if (Map.TileC2(0, row + 1).Road || Map.TileC2(0, row + 1).CityPresent)
+                {
+                    isRoadAround[3] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row + 1).Road || Map.TileC2(col + 1, row + 1).CityPresent) isRoadAround[3] = true;
+            else if (Map.TileC2(col + 1, row + 1).Road || Map.TileC2(col + 1, row + 1).CityPresent)
+            {
+                isRoadAround[3] = true;
+            }
             // S:
-            if (row + 2 >= Ydim) isRoadAround[4] = false;   // S is beyond map limits
-            else if (Map.TileC2(col, row + 2).Road || Map.TileC2(col, row + 2).CityPresent) isRoadAround[4] = true;
+            if (row + 2 >= Ydim)
+            {
+                isRoadAround[4] = false;   // S is beyond map limits
+            }
+            else if (Map.TileC2(col, row + 2).Road || Map.TileC2(col, row + 2).CityPresent)
+            {
+                isRoadAround[4] = true;
+            }
             // SW:
-            if (row == Ydim - 1) isRoadAround[5] = false; // SW is beyond limits
+            if (row == Ydim - 1)
+            {
+                isRoadAround[5] = false; // SW is beyond limits
+            }
             else if (col == 0)    // you are on western edge of map
             {
-                if (flatEarth) isRoadAround[5] = false;
-                else if (Map.TileC2(Xdim - 1, row + 1).Road || Map.TileC2(Xdim - 1, row + 1).CityPresent) isRoadAround[5] = true;
+                if (flatEarth)
+                {
+                    isRoadAround[5] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row + 1).Road || Map.TileC2(Xdim - 1, row + 1).CityPresent)
+                {
+                    isRoadAround[5] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row + 1).Road || Map.TileC2(col - 1, row + 1).CityPresent) isRoadAround[5] = true;
+            else if (Map.TileC2(col - 1, row + 1).Road || Map.TileC2(col - 1, row + 1).CityPresent)
+            {
+                isRoadAround[5] = true;
+            }
             // W:
             if (col - 2 < 0) // you are on left edge of map
             {
-                if (flatEarth) isRoadAround[6] = false;
-                else if (Map.TileC2(Xdim - 2 + col, row).Road || Map.TileC2(Xdim - 2 + col, row).CityPresent) isRoadAround[6] = true;
+                if (flatEarth)
+                {
+                    isRoadAround[6] = false;
+                }
+                else if (Map.TileC2(Xdim - 2 + col, row).Road || Map.TileC2(Xdim - 2 + col, row).CityPresent)
+                {
+                    isRoadAround[6] = true;
+                }
             }
-            else if (Map.TileC2(col - 2, row).Road || Map.TileC2(col - 2, row).CityPresent) isRoadAround[6] = true;
+            else if (Map.TileC2(col - 2, row).Road || Map.TileC2(col - 2, row).CityPresent)
+            {
+                isRoadAround[6] = true;
+            }
             // NW:
-            if (row == 0) isRoadAround[7] = false;  // NW is beyond limits
+            if (row == 0)
+            {
+                isRoadAround[7] = false;  // NW is beyond limits
+            }
             else if (col == 0) // you are on western edge of map
             {
-                if (flatEarth) isRoadAround[7] = false;
-                else if (Map.TileC2(Xdim - 1, row - 1).Road || Map.TileC2(Xdim - 1, row - 1).CityPresent) isRoadAround[7] = true;
+                if (flatEarth)
+                {
+                    isRoadAround[7] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row - 1).Road || Map.TileC2(Xdim - 1, row - 1).CityPresent)
+                {
+                    isRoadAround[7] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row - 1).Road || Map.TileC2(col - 1, row - 1).CityPresent) isRoadAround[7] = true;
+            else if (Map.TileC2(col - 1, row - 1).Road || Map.TileC2(col - 1, row - 1).CityPresent)
+            {
+                isRoadAround[7] = true;
+            }
 
             return isRoadAround;
         }
@@ -573,57 +1305,135 @@ namespace civ2.Bitmaps
 
             // Observe in all directions if railroad or city is present next to tile
             // N:
-            if (row - 2 < 0) isRailroadAround[0] = false;   // if N tile is out of map limits
-            else if (Map.TileC2(col, row - 2).Railroad || Map.TileC2(col, row - 2).CityPresent) isRailroadAround[0] = true;
+            if (row - 2 < 0)
+            {
+                isRailroadAround[0] = false;   // if N tile is out of map limits
+            }
+            else if (Map.TileC2(col, row - 2).Railroad || Map.TileC2(col, row - 2).CityPresent)
+            {
+                isRailroadAround[0] = true;
+            }
             // NE:
-            if (row == 0) isRailroadAround[1] = false;  // NE is beyond limits
+            if (row == 0)
+            {
+                isRailroadAround[1] = false;  // NE is beyond limits
+            }
             else if (col == Xdim - 1)    // you are on eastern edge of map
             {
-                if (flatEarth) isRailroadAround[1] = false;
-                else if (Map.TileC2(0, row - 1).Railroad || Map.TileC2(0, row - 1).CityPresent) isRailroadAround[1] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isRailroadAround[1] = false;
+                }
+                else if (Map.TileC2(0, row - 1).Railroad || Map.TileC2(0, row - 1).CityPresent)
+                {
+                    isRailroadAround[1] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row - 1).Railroad || Map.TileC2(col + 1, row - 1).CityPresent) isRailroadAround[1] = true;
+            else if (Map.TileC2(col + 1, row - 1).Railroad || Map.TileC2(col + 1, row - 1).CityPresent)
+            {
+                isRailroadAround[1] = true;
+            }
             // E:
             if (col + 2 >= Xdim) // you are on right edge of map
             {
-                if (flatEarth) isRailroadAround[2] = false;
-                else if (Map.TileC2(Xdim - col, row).Railroad || Map.TileC2(Xdim - col, row).CityPresent) isRailroadAround[2] = true;
+                if (flatEarth)
+                {
+                    isRailroadAround[2] = false;
+                }
+                else if (Map.TileC2(Xdim - col, row).Railroad || Map.TileC2(Xdim - col, row).CityPresent)
+                {
+                    isRailroadAround[2] = true;
+                }
             }
-            else if (Map.TileC2(col + 2, row).Railroad || Map.TileC2(col + 2, row).CityPresent) isRailroadAround[2] = true;
+            else if (Map.TileC2(col + 2, row).Railroad || Map.TileC2(col + 2, row).CityPresent)
+            {
+                isRailroadAround[2] = true;
+            }
             // SE:
-            if (row == Ydim - 1) isRailroadAround[3] = false;  // SE is beyond limits
+            if (row == Ydim - 1)
+            {
+                isRailroadAround[3] = false;  // SE is beyond limits
+            }
             else if (col + 1 == Xdim)    // you are on eastern edge of map
             {
-                if (flatEarth) isRailroadAround[3] = false;
-                else if (Map.TileC2(0, row + 1).Railroad || Map.TileC2(0, row + 1).CityPresent) isRailroadAround[3] = true;  // tile on mirror side of map
+                if (flatEarth)
+                {
+                    isRailroadAround[3] = false;
+                }
+                else if (Map.TileC2(0, row + 1).Railroad || Map.TileC2(0, row + 1).CityPresent)
+                {
+                    isRailroadAround[3] = true;  // tile on mirror side of map
+                }
             }
-            else if (Map.TileC2(col + 1, row + 1).Railroad || Map.TileC2(col + 1, row + 1).CityPresent) isRailroadAround[3] = true;
+            else if (Map.TileC2(col + 1, row + 1).Railroad || Map.TileC2(col + 1, row + 1).CityPresent)
+            {
+                isRailroadAround[3] = true;
+            }
             // S:
-            if (row + 2 >= Ydim) isRailroadAround[4] = false;   // S is beyond map limits
-            else if (Map.TileC2(col, row + 2).Railroad || Map.TileC2(col, row + 2).CityPresent) isRailroadAround[4] = true;
+            if (row + 2 >= Ydim)
+            {
+                isRailroadAround[4] = false;   // S is beyond map limits
+            }
+            else if (Map.TileC2(col, row + 2).Railroad || Map.TileC2(col, row + 2).CityPresent)
+            {
+                isRailroadAround[4] = true;
+            }
             // SW:
-            if (row == Ydim - 1) isRailroadAround[5] = false; // SW is beyond limits
+            if (row == Ydim - 1)
+            {
+                isRailroadAround[5] = false; // SW is beyond limits
+            }
             else if (col == 0)    // you are on western edge of map
             {
-                if (flatEarth) isRailroadAround[5] = false;
-                else if (Map.TileC2(Xdim - 1, row + 1).Railroad || Map.TileC2(Xdim - 1, row + 1).CityPresent) isRailroadAround[5] = true;
+                if (flatEarth)
+                {
+                    isRailroadAround[5] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row + 1).Railroad || Map.TileC2(Xdim - 1, row + 1).CityPresent)
+                {
+                    isRailroadAround[5] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row + 1).Railroad || Map.TileC2(col - 1, row + 1).CityPresent) isRailroadAround[5] = true;
+            else if (Map.TileC2(col - 1, row + 1).Railroad || Map.TileC2(col - 1, row + 1).CityPresent)
+            {
+                isRailroadAround[5] = true;
+            }
             // W:
             if (col - 2 < 0) // you are on left edge of map
             {
-                if (flatEarth) isRailroadAround[6] = false;
-                else if (Map.TileC2(Xdim - 2 + col, row).Railroad || Map.TileC2(Xdim - 2 + col, row).CityPresent) isRailroadAround[6] = true;
+                if (flatEarth)
+                {
+                    isRailroadAround[6] = false;
+                }
+                else if (Map.TileC2(Xdim - 2 + col, row).Railroad || Map.TileC2(Xdim - 2 + col, row).CityPresent)
+                {
+                    isRailroadAround[6] = true;
+                }
             }
-            else if (Map.TileC2(col - 2, row).Railroad || Map.TileC2(col - 2, row).CityPresent) isRailroadAround[6] = true;
+            else if (Map.TileC2(col - 2, row).Railroad || Map.TileC2(col - 2, row).CityPresent)
+            {
+                isRailroadAround[6] = true;
+            }
             // NW:
-            if (row == 0) isRailroadAround[7] = false;  // NW is beyond limits
+            if (row == 0)
+            {
+                isRailroadAround[7] = false;  // NW is beyond limits
+            }
             else if (col == 0) // you are on western edge of map
             {
-                if (flatEarth) isRailroadAround[7] = false;
-                else if (Map.TileC2(Xdim - 1, row - 1).Railroad || Map.TileC2(Xdim - 1, row - 1).CityPresent) isRailroadAround[7] = true;
+                if (flatEarth)
+                {
+                    isRailroadAround[7] = false;
+                }
+                else if (Map.TileC2(Xdim - 1, row - 1).Railroad || Map.TileC2(Xdim - 1, row - 1).CityPresent)
+                {
+                    isRailroadAround[7] = true;
+                }
             }
-            else if (Map.TileC2(col - 1, row - 1).Railroad || Map.TileC2(col - 1, row - 1).CityPresent) isRailroadAround[7] = true;
+            else if (Map.TileC2(col - 1, row - 1).Railroad || Map.TileC2(col - 1, row - 1).CityPresent)
+            {
+                isRailroadAround[7] = true;
+            }
 
             return isRailroadAround;
         }
