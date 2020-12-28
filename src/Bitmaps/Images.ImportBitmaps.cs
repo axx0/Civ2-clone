@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Diagnostics;
 
@@ -7,6 +6,7 @@ namespace civ2.Bitmaps
 {
     public static partial class Images
     {
+        public static Bitmap UnitSpritemap;
         public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig,
                             CityFoodSmall, CitySupportSmall, CityTradeSmall;
         public static Bitmap NextCity;
@@ -31,6 +31,8 @@ namespace civ2.Bitmaps
             PeopleIconsBitmapsImportFromFile(path);
             IconsBitmapsImportFromFile(path);
             CityWallpaperBitmapImportFromFile();
+
+            SpriteDict.Set();   // Set locations of sprites
         }
 
         public static void LoadGraphicsAssetsAtIntroScreen()
@@ -496,20 +498,26 @@ namespace civ2.Bitmaps
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             Bitmap units = new Bitmap(640, 480);
+            UnitSpritemap = new Bitmap(640, 480);
             string FilePath_local = path + "\\UNITS.GIF";
             string FilePath_root = Settings.Civ2Path + "UNITS.GIF";
             if (File.Exists(FilePath_local))
             {
                 units = new Bitmap(FilePath_local);
+                UnitSpritemap = new Bitmap(FilePath_local);
             }
             else if (File.Exists(FilePath_root))
             {
                 units = new Bitmap(FilePath_root);
+                UnitSpritemap = new Bitmap(FilePath_root);
             }
             else
             {
                 Debug.WriteLine("UNITS.GIF not found!");
             }
+
+            UnitSpritemap.MakeTransparent(Color.FromArgb(135, 83, 135));
+            UnitSpritemap.MakeTransparent(Color.FromArgb(255, 0, 255));
 
             // Initialize objects
             Units = new Bitmap[63];

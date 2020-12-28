@@ -3,6 +3,7 @@ using System.IO;
 using civ2.Bitmaps;
 using civ2.Units;
 using civ2.Enums;
+using System.Diagnostics;
 
 namespace civ2
 {

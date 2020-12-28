@@ -7,22 +7,32 @@ namespace civ2.Bitmaps
 {
     public static partial class Draw
     {
+        public static void UnitSprite(Graphics g, UnitType type, OrderType order, Rectangle destRect, int zoom)
+        {
+            var srcRect = SpriteDict.Units[type];
+            if (order != OrderType.Sleep)
+                g.DrawImage(ModifyImage.ResizeImage(Images.UnitSheet, zoom), destRect, srcRect, GraphicsUnit.Pixel);
+            else    // Sentry
+                g.DrawImage(ModifyImage.ResizeImage(Images.UnitSheet, zoom),, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height,
+                GraphicsUnit.Pixel, ModifyImage.ConvertToGray());
+        }
+
         public static Bitmap Unit(IUnit unit, bool drawInStack, int zoom)
         {
             // Define a bitmap for drawing
-            Bitmap unitPic = new Bitmap(64, 48);
+            var unitPic = new Bitmap(8 * (8 + zoom), 6 * (8 + zoom));
 
-            using (Graphics graphics = Graphics.FromImage(unitPic))
+            using (Graphics g = Graphics.FromImage(unitPic))
             {
-                StringFormat sf = new StringFormat();
+                using var sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
-                graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 
                 string shieldText;
                 switch (unit.Order)
                 {
-                    case OrderType.Fortify: shieldText = "F"; break;
+                    case OrderType.Fortify:
                     case OrderType.Fortified: shieldText = "F"; break;
                     case OrderType.Sleep: shieldText = "S"; break;
                     case OrderType.BuildFortress: shieldText = "F"; break;
@@ -88,15 +98,17 @@ namespace civ2.Bitmaps
                 graphics.DrawString(shieldText, new Font("Arial", 6.5f), new SolidBrush(Color.Black), Images.unitShieldLocation[(int)unit.Type, 0] + 7, Images.unitShieldLocation[(int)unit.Type, 1] + 12, sf);
 
                 // Draw unit
-                if (unit.Order != OrderType.Sleep)
-                {
-                    graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);
-                }
-                // Draw sentry unit
-                else
-                {
-                    graphics.DrawImage(Images.Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());
-                }
+                UnitSprite(graphics, unit.Type, unit.Order, new Rectangle(0, 0, 64, 48));
+                //if (unit.Order != OrderType.Sleep)
+                //{
+                //    UnitSprite(graphics, unit.Type, unit.Order new Rectangle(0, 0, 64, 48));
+                //    //graphics.DrawImage(Images.Units[(int)unit.Type], 0, 0);
+                //}
+                //// Draw sentry unit
+                //else
+                //{
+                //    graphics.DrawImage(Images.Units[(int)unit.Type], new Rectangle(0, 0, 64, 48), 0, 0, 64, 48, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());
+                //}
 
                 // Draw fortification
                 if (unit.Order == OrderType.Fortified) graphics.DrawImage(Images.Fortified, 0, 0);

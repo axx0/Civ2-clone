@@ -30,9 +30,6 @@
     <Compile Update="src\Forms\City view\CityRenamePanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\_CityBuyForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="src\Forms\City view\CityPanel.cs">
       <SubType>Component</SubType>
     </Compile>
