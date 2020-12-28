@@ -7,7 +7,7 @@ using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    public partial class CityStatusPanel : Civ2panel
+    public class CityStatusPanel : Civ2panel
     {
         private Game _game => Game.Instance;
 
@@ -71,15 +71,15 @@ namespace civ2.Forms
                 // Food production
                 e.Graphics.DrawString(city.Food.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 82 + 24 * count + 1), sf);
                 e.Graphics.DrawString(city.Food.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 82 + 24 * count), sf);
-                e.Graphics.DrawImage(Images.CitymapFoodLarge, new Point(265, 85 + 24 * count));
+                e.Graphics.DrawImage(Images.CityFoodBig, new Point(265, 85 + 24 * count));
                 // Shields
                 e.Graphics.DrawString(city.ShieldProduction.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(292 + 1, 82 + 24 * count + 1), sf);
                 e.Graphics.DrawString(city.ShieldProduction.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(292, 82 + 24 * count), sf);
-                e.Graphics.DrawImage(Images.CitymapSupportLarge, new Point(297, 85 + 24 * count));
+                e.Graphics.DrawImage(Images.CitySupportBig, new Point(297, 85 + 24 * count));
                 // Trade
                 e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(329 + 1, 82 + 24 * count + 1), sf);
                 e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(329, 82 + 24 * count), sf);
-                e.Graphics.DrawImage(Images.CitymapTradeLarge, new Point(335, 85 + 24 * count));
+                e.Graphics.DrawImage(Images.CityTradeBig, new Point(335, 85 + 24 * count));
                 // Item in production
                 int item = city.ItemInProduction;
                 if (city.ItemInProduction < 62) // Unit is in production

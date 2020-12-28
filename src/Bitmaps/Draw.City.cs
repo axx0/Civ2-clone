@@ -3,7 +3,7 @@ using civ2.Enums;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw
+    public static partial class Draw
     {
         // Draw an image of city
         public static Bitmap City(City city, bool citySizeWindow, int zoom)

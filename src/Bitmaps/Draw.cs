@@ -10,8 +10,11 @@ using civ2.Terrains;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw : BaseInstance
+    public static partial class Draw
     {
+        private static Game Game => Game.Instance;
+        private static Map Map => Map.Instance;
+
         //public static void CreateLoadGameGraphics()
         //{
         //    //Creates bitmaps from current folder

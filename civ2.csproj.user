@@ -21,17 +21,20 @@
     <Compile Update="src\Forms\ChoiceMenuPanel.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\_CityBuyForm.cs">
-      <SubType>Form</SubType>
+    <Compile Update="src\Forms\City view\CityBuyPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Update="src\Forms\City view\_CityChangeForm.cs">
+    <Compile Update="src\Forms\City view\CityChangePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\City view\CityRenamePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="src\Forms\City view\_CityBuyForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="src\Forms\City view\CityPanel.cs">
       <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="src\Forms\City view\_CityRenameForm.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Update="src\Forms\Main.cs">
       <SubType>Form</SubType>

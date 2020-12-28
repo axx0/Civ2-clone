@@ -8,20 +8,13 @@ using civ2.Improvements;
 
 namespace civ2.Forms
 {
-    public partial class CityPanel : Civ2panel
+    public class CityPanel : Civ2panel
     {
         private Game Game => Game.Instance;
-        private Map Map => Map.Instance;
-
-        private Main _main;
-        private readonly City _thisCity;
-        private readonly DoubleBufferedPanel _resourceMap;
-        private Bitmap CityDrawing;
-        private DoubleBufferedPanel WallpaperPanel, CityResources, UnitsFromCity, UnitsInCity, FoodStorage, ProductionPanel;
-        private Form CallingForm;
-        private VScrollBar ImprovementsBar;
-        private int[,] offsets;
-        private int ProductionItem;
+        private readonly Main _main;
+        private City _thisCity;
+        private readonly DoubleBufferedPanel _resourceMap, _cityResources, _foodStorage, _unitsFromCity, _unitsInCity, _productionPanel, _improvListPanel;
+        private readonly VScrollBar _improvementsBar;
 
         public CityPanel(Main parent, City city, int _width, int _height) : base(_width, _height, "", 27, 11)   // TODO: correct padding for max/min zoom
         {
@@ -33,25 +26,13 @@ namespace civ2.Forms
             DrawPanel.BackgroundImage = Images.CityWallpaper;
             DrawPanel.Paint += DrawPanel_Paint;
 
-            //this.Load += new EventHandler(CityForm_Load);
             this.Paint += CityPanel_Paint;
-
-            //Panel for wallpaper
-            //WallpaperPanel = new DoubleBufferedPanel
-            //{
-            //    Location = new Point(12, 37),    //normal zoom = (8,25)
-            //    Size = new Size(960, 630),      //normal zoom = (640,420)
-            //    //BackgroundImage = ModifyImage.ResizeImage(Images.CityWallpaper, 960, 630),    // TODO: correct this
-            //};
-            //Controls.Add(WallpaperPanel);
-            //WallpaperPanel.Paint += new PaintEventHandler(WallpaperPanel_Paint);
-            //WallpaperPanel.Paint += new PaintEventHandler(ImprovementsList_Paint);
 
             // Faces panel
             var _faces = new DoubleBufferedPanel
             {
                 Location = new Point(3, 2),
-                Size = new Size(433, 57),
+                Size = new Size(433, 44),
                 BackColor = Color.Transparent
             };
             DrawPanel.Controls.Add(_faces);
@@ -60,507 +41,450 @@ namespace civ2.Forms
             // Resource map panel
             _resourceMap = new DoubleBufferedPanel
             {
-                Location = new Point(5, 84),
-                Size = new Size(4 * 48, 4 * 24),
+                Location = new Point(3, 61),
+                Size = new Size(196, 145),
                 BackColor = Color.Transparent
             };
             DrawPanel.Controls.Add(_resourceMap);
             _resourceMap.Paint += ResourceMap_Paint;
 
-            ////City resources panel
-            //CityResources = new DoubleBufferedPanel
-            //{
-            //    Location = new Point(300, 70),
-            //    Size = new Size(350, 245),    //stretched by 12.5 %
-            //    BackColor = Color.Transparent
-            //};
-            //WallpaperPanel.Controls.Add(CityResources);
-            //CityResources.Paint += new PaintEventHandler(CityResources_Paint);
+            // City resources panel
+            _cityResources = new DoubleBufferedPanel
+            {
+                Location = new Point(205, 61),
+                Size = new Size(226, 151),
+                BackColor = Color.Transparent
+            };
+            DrawPanel.Controls.Add(_cityResources);
+            _cityResources.Paint += CityResources_Paint;
 
-            ////Units from city panel
-            //UnitsFromCity = new DoubleBufferedPanel
-            //{
-            //    Location = new Point(10, 321),
-            //    Size = new Size(270, 104),
-            //    BackColor = Color.Transparent
-            //};
-            //WallpaperPanel.Controls.Add(UnitsFromCity);
-            //UnitsFromCity.Paint += new PaintEventHandler(UnitsFromCity_Paint);
+            // Units from city panel
+            _unitsFromCity = new DoubleBufferedPanel
+            {
+                Location = new Point(7, 216),
+                Size = new Size(181, 69),
+                BackColor = Color.Transparent
+            };
+            DrawPanel.Controls.Add(_unitsFromCity);
+            _unitsFromCity.Paint += UnitsFromCity_Paint;
 
-            ////Units in city panel
-            //UnitsInCity = new DoubleBufferedPanel
-            //{
-            //    Location = new Point(288, 322),
-            //    Size = new Size(360, 245),
-            //    BackColor = Color.Transparent
-            //};
-            //WallpaperPanel.Controls.Add(UnitsInCity);
-            //UnitsInCity.Paint += new PaintEventHandler(UnitsInCity_Paint);
+            // Units in city panel
+            _unitsInCity = new DoubleBufferedPanel
+            {
+                Location = new Point(193, 212),
+                Size = new Size(242, 206),
+                BackColor = Color.Transparent
+            };
+            DrawPanel.Controls.Add(_unitsInCity);
+            _unitsInCity.Paint += UnitsInCity_Paint;
 
-            ////Food storage panel
-            //FoodStorage = new DoubleBufferedPanel
-            //{
-            //    Location = new Point(653, 0),
-            //    Size = new Size(291, 244),
-            //    BackColor = Color.Transparent
-            //};
-            //WallpaperPanel.Controls.Add(FoodStorage);
-            //FoodStorage.Paint += new PaintEventHandler(FoodStorage_Paint);
+            // Food storage panel
+            _foodStorage = new DoubleBufferedPanel
+            {
+                Location = new Point(437, 15),
+                Size = new Size(195, 146),
+                BackColor = Color.Transparent
+            };
+            DrawPanel.Controls.Add(_foodStorage);
+            _foodStorage.Paint += FoodStorage_Paint;
 
-            ////Production panel
-            //ProductionPanel = new DoubleBufferedPanel
-            //{
-            //    Location = new Point(657, 249),
-            //    Size = new Size(293, 287),
-            //    BackColor = Color.Transparent
-            //};
-            //WallpaperPanel.Controls.Add(ProductionPanel);
-            //ProductionPanel.Paint += new PaintEventHandler(ProductionPanel_Paint);
+            // Production panel
+            _productionPanel = new DoubleBufferedPanel
+            {
+                Location = new Point(437, 165),
+                Size = new Size(195, 191),
+                BackColor = Color.Transparent
+            };
+            DrawPanel.Controls.Add(_productionPanel);
+            _productionPanel.Paint += ProductionPanel_Paint;
 
-            ////Buy button
-            //Civ2button BuyButton = new Civ2button
-            //{
-            //    Location = new Point(8, 24),
-            //    Size = new Size(102, 36),
-            //    Font = new Font("Arial", 13),
-            //    Text = "Buy"
-            //};
-            //ProductionPanel.Controls.Add(BuyButton);
-            //BuyButton.Click += new EventHandler(BuyButton_Click);
+            // Buy button
+            var _buyButton = new Civ2button
+            {
+                Location = new Point(5, 16),
+                Size = new Size(68, 24),
+                Font = new Font("Arial", 9),
+                Text = "Buy"
+            };
+            _productionPanel.Controls.Add(_buyButton);
+            _buyButton.Click += BuyButton_Click;
 
-            ////Change button
-            //Civ2button ChangeButton = new Civ2button
-            //{
-            //    Location = new Point(180, 24),
-            //    Size = new Size(102, 36),
-            //    Font = new Font("Arial", 13),
-            //    Text = "Change"
-            //};
-            //ProductionPanel.Controls.Add(ChangeButton);
-            //ChangeButton.Click += new EventHandler(ChangeButton_Click);
+            // Change button
+            var _changeButton = new Civ2button
+            {
+                Location = new Point(120, 16),
+                Size = new Size(68, 24),
+                Font = new Font("Arial", 9),
+                Text = "Change"
+            };
+            _productionPanel.Controls.Add(_changeButton);
+            _changeButton.Click += ChangeButton_Click;
 
-            ////Info button
-            //Civ2button InfoButton = new Civ2button
-            //{
-            //    Location = new Point(692, 549), //original (461, 366)
-            //    Size = new Size(86, 36),  //original (57, 24)
-            //    Font = new Font("Arial", 13),
-            //    Text = "Info"
-            //};
-            //WallpaperPanel.Controls.Add(InfoButton);
-            //InfoButton.Click += new EventHandler(InfoButton_Click);
+            // Improvements list panel
+            _improvListPanel = new DoubleBufferedPanel()
+            {
+                Location = new Point(6, 306),
+                Size = new Size(166, 108),
+                BackColor = Color.Transparent
+            };
+            DrawPanel.Controls.Add(_improvListPanel);
+            _improvListPanel.Paint += ImprovementsList_Paint;
 
-            ////Map button
-            //Civ2button MapButton = new Civ2button
-            //{
-            //    Location = new Point(779, 549), //original (519, 366)
-            //    Size = new Size(86, 36),  //original (57, 24)
-            //    Font = new Font("Arial", 13),
-            //    Text = "Map"
-            //};
-            //WallpaperPanel.Controls.Add(MapButton);
-            //MapButton.Click += new EventHandler(MapButton_Click);
+            // Improvements vertical scrollbar
+            _improvementsBar = new VScrollBar()
+            {
+                Location = new Point(174, 291),
+                Size = new Size(17, 128),
+                Maximum = 66 - 9 + 9    // Max improvements=66, 9 can be shown, because of slider size it's 9 elements smaller
+            };
+            DrawPanel.Controls.Add(_improvementsBar);
+            _improvementsBar.ValueChanged += ImprovementsBarValueChanged;
 
-            ////Rename button
-            //Civ2button RenameButton = new Civ2button
-            //{
-            //    Location = new Point(866, 549), //original (577, 366)
-            //    Size = new Size(86, 36),  //original (57, 24)
-            //    Font = new Font("Arial", 13),
-            //    Text = "Rename"
-            //};
-            //WallpaperPanel.Controls.Add(RenameButton);
-            //RenameButton.Click += new EventHandler(RenameButton_Click);
+            // Info button
+            var _infoButton = new Civ2button
+            {
+                Location = new Point(461, 364), // norm=(461,364), big=(692,549)
+                Size = new Size(57, 24),  // norm=(57,24), big=(86,36)
+                Font = new Font("Arial", 9),
+                Text = "Info"
+            };
+            DrawPanel.Controls.Add(_infoButton);
+            _infoButton.Click += InfoButton_Click;
 
-            ////Happy button
-            //Civ2button HappyButton = new Civ2button
-            //{
-            //    Location = new Point(692, 587), //original (461, 391)
-            //    Size = new Size(86, 36),  //original (57, 24)
-            //    Font = new Font("Arial", 13),
-            //    Text = "Happy"
-            //};
-            //WallpaperPanel.Controls.Add(HappyButton);
-            //HappyButton.Click += new EventHandler(HappyButton_Click);
+            // Map button
+            var _mapButton = new Civ2button
+            {
+                Location = new Point(_infoButton.Location.X + 58, _infoButton.Location.Y),
+                Size = new Size(57, 24),  // norm=(57,24), big=(86,36)
+                Font = new Font("Arial", 9),
+                Text = "Map"
+            };
+            DrawPanel.Controls.Add(_mapButton);
+            _mapButton.Click += MapButton_Click;
 
-            ////View button
-            //Civ2button ViewButton = new Civ2button
-            //{
-            //    Location = new Point(779, 587), //original (519, 391)
-            //    Size = new Size(86, 36),  //original (57, 24)
-            //    Font = new Font("Arial", 13),
-            //    Text = "View"
-            //};
-            //WallpaperPanel.Controls.Add(ViewButton);
-            //ViewButton.Click += new EventHandler(ViewButton_Click);
+            // Rename button
+            var _renameButton = new Civ2button
+            {
+                Location = new Point(_infoButton.Location.X + 116, _infoButton.Location.Y),
+                Size = new Size(57, 24),  // norm=(57,24), big=(86,36)
+                Font = new Font("Arial", 9),
+                Text = "Rename"
+            };
+            DrawPanel.Controls.Add(_renameButton);
+            _renameButton.Click += RenameButton_Click;
 
-            ////Exit button
-            //Civ2button ExitButton = new Civ2button
-            //{
-            //    Location = new Point(866, 587), //original (577, 391)
-            //    Size = new Size(86, 36),  //original (57, 24)
-            //    Font = new Font("Arial", 13),
-            //    Text = "Exit"
-            //};
-            //WallpaperPanel.Controls.Add(ExitButton);
-            //ExitButton.Click += new EventHandler(ExitButton_Click);
+            // Happy button
+            var _happyButton = new Civ2button
+            {
+                Location = new Point(_infoButton.Location.X, _infoButton.Location.Y + 25),
+                Size = new Size(57, 24),  // norm=(57,24), big=(86,36)
+                Font = new Font("Arial", 9),
+                Text = "Happy"
+            };
+            DrawPanel.Controls.Add(_happyButton);
+            _happyButton.Click += HappyButton_Click;
 
-            ////Next city (UP) button
-            //NoSelectButton NextCityButton = new NoSelectButton
-            //{
-            //    Location = new Point(660, 550), //original (440, 367)
-            //    Size = new Size(32, 36),  //original (21, 24)
-            //    BackColor = Color.FromArgb(107, 107, 107)
-            //};
-            //NextCityButton.FlatStyle = FlatStyle.Flat;
-            //WallpaperPanel.Controls.Add(NextCityButton);
-            //NextCityButton.Click += new EventHandler(NextCityButton_Click);
-            //NextCityButton.Paint += new PaintEventHandler(NextCityButton_Paint);
+            // View button
+            var _viewButton = new Civ2button
+            {
+                Location = new Point(_infoButton.Location.X + 58, _infoButton.Location.Y + 25),
+                Size = new Size(57, 24),  // norm=(57,24), big=(86,36)
+                Font = new Font("Arial", 9),
+                Text = "View"
+            };
+            DrawPanel.Controls.Add(_viewButton);
+            _viewButton.Click += ViewButton_Click;
 
-            ////Previous city (DOWN) button
-            //NoSelectButton PrevCityButton = new NoSelectButton
-            //{
-            //    Location = new Point(660, 588), //original (440, 392)
-            //    Size = new Size(32, 36),  //original (21, 24)
-            //    BackColor = Color.FromArgb(107, 107, 107)
-            //};
-            //PrevCityButton.FlatStyle = FlatStyle.Flat;
-            //WallpaperPanel.Controls.Add(PrevCityButton);
-            //PrevCityButton.Click += new EventHandler(PrevCityButton_Click);
-            //PrevCityButton.Paint += new PaintEventHandler(PrevCityButton_Paint);
+            // Exit button
+            var _exitButton = new Civ2button
+            {
+                Location = new Point(_infoButton.Location.X + 116, _infoButton.Location.Y + 25),
+                Size = new Size(57, 24),  // norm=(57,24), big=(86,36)
+                Font = new Font("Arial", 9),
+                Text = "Exit"
+            };
+            DrawPanel.Controls.Add(_exitButton);
+            _exitButton.Click += ExitButton_Click;
 
-            ////Improvements vertical bar
-            //ImprovementsBar = new VScrollBar()
-            //{
-            //    Location = new Point(270, 433),
-            //    Size = new Size(15, 190),
-            //    Maximum = 66 - 9 + 9    //max improvements=66, 9 can be shown, because of slider size it's 9 elements smaller
-            //};
-            //WallpaperPanel.Controls.Add(ImprovementsBar);
-            //ImprovementsBar.ValueChanged += new EventHandler(ImprovementsBarValueChanged);
+            // Next city (UP) button
+            var _nextCityButton = new NoSelectButton
+            {
+                Location = new Point(440, 364), // norm=(440,364), big=(660,550)
+                Size = new Size(21, 24),  // norm=(21,24), big=(32,36)
+                BackColor = Color.FromArgb(107, 107, 107)
+            };
+            _nextCityButton.FlatStyle = FlatStyle.Flat;
+            DrawPanel.Controls.Add(_nextCityButton);
+            _nextCityButton.Click += NextCityButton_Click;
+            _nextCityButton.Paint += NextCityButton_Paint;
 
-            ////Initialize city drawing
-            ////CityDrawing = Draw.DrawCityFormMap(ThisCity);
-
-            ////Define offset map array
-            //offsets = new int[20, 2] { { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }, { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }, { -3, -1 }, { -2, -2 }, { -1, -3 }, { 1, -3 }, { 2, -2 }, { 3, -1 }, { 3, 1 }, { 2, 2 }, { 1, 3 }, { -1, 3 }, { -2, 2 }, { -3, 1 } };
-
-            //ProductionItem = 0; //item appearing in production menu on loadgame
+            // Previous city (DOWN) button
+            var _prevCityButton = new NoSelectButton
+            {
+                Location = new Point(440, 389), // norm=(440,389), big=(660,550)
+                Size = new Size(21, 24),  // norm=(21,24), big=(32,36)
+                BackColor = Color.FromArgb(107, 107, 107)
+            };
+            _prevCityButton.FlatStyle = FlatStyle.Flat;
+            DrawPanel.Controls.Add(_prevCityButton);
+            _prevCityButton.Click += PrevCityButton_Click;
+            _prevCityButton.Paint += PrevCityButton_Paint;
         }
-
-        //private void CityForm_Load(object sender, EventArgs e)
-        //{
-        //    Location = new Point(CallingForm.Width / 2 - this.Width / 2, CallingForm.Height / 2 - this.Height / 2 + 60);
-        //}
 
         private void CityPanel_Paint(object sender, PaintEventArgs e)
         {
-            var sf = new StringFormat();
+            using var sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
             string text = String.Format($"City of {_thisCity.Name}, {Math.Abs(Game.GameYear)} {bcad}, Population {_thisCity.Population:n0} (Treasury: {_thisCity.Owner.Money} Gold)");
-
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
             e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point((Width / 2) + 1, 15), sf);
             e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(Width / 2, 15), sf);
-            sf.Dispose();
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
+            // Texts
+            using var sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            e.Graphics.DrawString("Citizens", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(101 + 1, 53 + 1), sf);
+            e.Graphics.DrawString("Citizens", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(101, 53), sf);
+            e.Graphics.DrawString("City Resources", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(317 + 1, 52 + 1), sf);
+            e.Graphics.DrawString("City Resources", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(317, 52), sf);
+            e.Graphics.DrawString("Food Storage", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(535 + 1, 7 + 1), sf);
+            e.Graphics.DrawString("Food Storage", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(535, 7), sf);
+            e.Graphics.DrawString("City Improvements", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(96 + 1, 296 + 1), sf);
+            e.Graphics.DrawString("City Improvements", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(96, 296), sf);
         }
 
         // Draw faces
         private void Faces_Paint(object sender, PaintEventArgs e)
         {
-            // Image of faces
             e.Graphics.DrawImage(Draw.Citizens(_thisCity, 0), 2, 7);
-            // Text
-            var sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString("Citizens", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(98 + 1, 51 + 1), sf);
-            e.Graphics.DrawString("Citizens", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(98, 51), sf);
-            sf.Dispose();
         }
 
         // Draw resource map
         private void ResourceMap_Paint(object sender, PaintEventArgs e)
         {
             // Map around city
-            e.Graphics.DrawImage(Draw.CityResourcesMap(_thisCity, -2), 0, 0);
-            //e.Graphics.DrawImage(ModifyImage.ResizeImage(CityDrawing, -2), 0, 0);
-            //Food/shield/trade icons around the city (21 of them altogether)
-            for (int i = 0; i <= _thisCity.Size; i++)
+            e.Graphics.DrawImage(Draw.CityResourcesMap(_thisCity, -2), 0, 21);
+            // Text
+            using var sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+        }
+
+        // Draw city resources
+        private void CityResources_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(Draw.CityResources(_thisCity), new Point(0, 0));
+        }
+
+        private void FoodStorage_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(Draw.FoodStorage(_thisCity), new Point(0, 0));
+        }
+
+        private void UnitsFromCity_Paint(object sender, PaintEventArgs e)
+        {
+            int count = 0;
+            int row, col;
+            int zoom = -3;  // norm=0.67, big=0.67*1.5=1
+            foreach (IUnit unit in _thisCity.SupportedUnits)
             {
-                //e.Graphics.DrawImage(Draw.DrawCityFormMapIcons(ThisCity, ThisCity.PriorityOffsets[i, 0], ThisCity.PriorityOffsets[i, 1]), 36 * (ThisCity.PriorityOffsets[i, 0] + 3) + 13, 18 * (ThisCity.PriorityOffsets[i, 1] + 3) + 11);
+                col = count % 4;
+                row = count / 4;
+                e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, (4 * (8 + zoom + 3)) * row));
+                count++;
+
+                if (count >= 8) { break; }
             }
         }
 
-        //Once slider value changes --> redraw improvements list
-        //private void ImprovementsBarValueChanged(object sender, EventArgs e)
-        //{
-        //    WallpaperPanel.Invalidate();
-        //}
+        private void UnitsInCity_Paint(object sender, PaintEventArgs e)
+        {
+            using var sf = new StringFormat();
+            sf.Alignment = StringAlignment.Center;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            
+            int count = 0;
+            int row = 0;
+            int col = 0;
+            int zoom = -2;  // zoom=-2(norm), 1(big)
+            foreach (IUnit unit in _thisCity.UnitsInCity)
+            {
+                col = count % 5;
+                row = count / 5;
+                e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, 6 * (8 + zoom) * row + 5 * row));
+                e.Graphics.DrawString(unit.HomeCity.Name.Substring(0, 3), new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)),  // TODO: doesn't work for <3 characters in city name
+                    new Point(8 * (8 + zoom) * col + 8 * (8 + zoom) / 2 + 1, 6 * (8 + zoom) * row + 5 * row + 6 * (8 + zoom) + 1), sf);
+                e.Graphics.DrawString(unit.HomeCity.Name.Substring(0, 3), new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black),
+                    new Point(8 * (8 + zoom) * col + 8 * (8 + zoom) / 2, 6 * (8 + zoom) * row + 5 * row + 6 * (8 + zoom)), sf);
+                count++;
+            }
 
-        //private void WallpaperPanel_Paint(object sender, PaintEventArgs e)
-        //{
-        //    //Borders of panel
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, WallpaperPanel.Height - 2, WallpaperPanel.Width, WallpaperPanel.Height - 2);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 0, WallpaperPanel.Height - 1, WallpaperPanel.Width, WallpaperPanel.Height - 1);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), WallpaperPanel.Width - 2, 0, WallpaperPanel.Width - 2, WallpaperPanel.Height);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), WallpaperPanel.Width - 1, 0, WallpaperPanel.Width - 1, WallpaperPanel.Height);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, WallpaperPanel.Width - 2, 0);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 1, WallpaperPanel.Width - 3, 1);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 0, 0, 0, WallpaperPanel.Height - 2);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 1, 0, 1, WallpaperPanel.Height - 3);
+            // Trade text
+            e.Graphics.DrawString($"Supplies: {_thisCity.CommoditySupplied[0]}, {_thisCity.CommoditySupplied[2]}, {_thisCity.CommoditySupplied[2]}",
+                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(6 + 1, 135 + 1));
+            e.Graphics.DrawString($"Supplies: {_thisCity.CommoditySupplied[0]}, {_thisCity.CommoditySupplied[2]}, {_thisCity.CommoditySupplied[2]}",
+                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(6, 135));
+            e.Graphics.DrawString($"Demands: {_thisCity.CommodityDemanded[0]}, {_thisCity.CommodityDemanded[2]}, {_thisCity.CommodityDemanded[2]}",
+                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(6 + 1, 148 + 1));
+            e.Graphics.DrawString($"Demands: {_thisCity.CommodityDemanded[0]}, {_thisCity.CommodityDemanded[2]}, {_thisCity.CommodityDemanded[2]}",
+                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(6, 148));
+            e.Graphics.DrawString($"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
+                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(6 + 1, 163 + 1));
+            e.Graphics.DrawString($"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
+                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(6, 163));
+        }
 
-        //    //Texts
-        //    e.Graphics.DrawString("Resource Map", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(90, 280));
-        //    e.Graphics.DrawString("City Resources", new Font("Arial", 13), new SolidBrush(Color.FromArgb(243, 183, 7)), new Point(400, 70));
-        //    e.Graphics.DrawString("City Improvements", new Font("Arial", 13), new SolidBrush(Color.FromArgb(223, 187, 7)), new Point(56, 433));
-        //}
+        private void ProductionPanel_Paint(object sender, PaintEventArgs e)
+        {
+            // Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
+            // zoom: Units=-1(norm), Improvements=0(norm)
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            // Units
+            int zoom;
+            if (_thisCity.ItemInProduction < 62)
+            {
+                zoom = -1;
+                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[_thisCity.ItemInProduction], zoom), new Point(64, 0));
+            }
+            // Improvements
+            else
+            {
+                using var sf = new StringFormat();
+                sf.Alignment = StringAlignment.Center;
+                e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), 98 + 1, 5 + 1, sf);
+                e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 79, 167)), 98, 5, sf);
+                zoom = 0;
+                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Improvements[_thisCity.ItemInProduction - 62 + 1], zoom), new Point(79, 18));
+                sf.Dispose();
+            }
 
-        ////Draw city resources
-        //private void CityResources_Paint(object sender, PaintEventArgs e)
-        //{
-        //    StringFormat sf1 = new StringFormat();
-        //    StringFormat sf2 = new StringFormat();
-        //    sf1.Alignment = StringAlignment.Far;
-        //    sf2.Alignment = StringAlignment.Center;
+            e.Graphics.DrawImage(Draw.CityProduction(_thisCity), new Point(0, 0));  // Draw production shields and sqare around them
+        }
 
-        //    //Draw food+surplus/hunger strings
-        //    e.Graphics.DrawString("Food: " + _thisCity.Food.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 21));
-        //    e.Graphics.DrawString("Food: " + _thisCity.Food.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(87, 171, 39)), new Point(5, 20));
-        //    e.Graphics.DrawString("Surplus: " + _thisCity.SurplusHunger.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 21), sf1);
-        //    e.Graphics.DrawString("Surplus: " + _thisCity.SurplusHunger.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 139, 31)), new Point(345, 20), sf1);
+        private void ImprovementsList_Paint(object sender, PaintEventArgs e)
+        {
+            // Draw city improvements
+            int x = 2;
+            int y = 1;
+            int starting = _improvementsBar.Value;   // Starting improvement to draw (changes with slider)
+            int zoom;
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            for (int i = 0; i < 9; i++)
+            {
+                if ((i + starting) >= _thisCity.Improvements.Length) break;  // Break if no of improvements+wonders to small
 
-        //    //Draw trade+corruption strings
-        //    e.Graphics.DrawString("Trade: " + _thisCity.Trade.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 83));
-        //    e.Graphics.DrawString("Trade: " + _thisCity.Trade.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(5, 82));
-        //    e.Graphics.DrawString("Corruption: " + _thisCity.Corruption.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 83), sf1);
-        //    e.Graphics.DrawString("Corruption: " + _thisCity.Corruption.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(345, 82), sf1);
+                // Draw improvements
+                zoom = -4;  // For normal
+                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Improvements[(int)_thisCity.Improvements[i + starting].Type], zoom), new Point(2, 1 + 12 * i));
+                // Sell icons
+                zoom = -1;  // For normal
+                if ((int)_thisCity.Improvements[i + starting].Type < 39) // Wonders don't have a sell icon
+                {
+                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.SellIcon, zoom), new Point(148, 1 + 12 * i));
+                }
+                // Improvements text
+                e.Graphics.DrawString(_thisCity.Improvements[i + starting].Name, new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(x + 26 + 1, 2 + 12 * i));
+                e.Graphics.DrawString(_thisCity.Improvements[i + starting].Name, new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.White), new Point(x + 26, 2 + 12 * i));
+            }
+        }
 
-        //    //Draw tax/lux/sci strings
-        //    e.Graphics.DrawString("50% Tax: " + _thisCity.Tax.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 164));
-        //    e.Graphics.DrawString("50% Tax: " + _thisCity.Tax.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(5, 163));
-        //    e.Graphics.DrawString("0% Lux: " + _thisCity.Lux.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(180, 164), sf2);
-        //    e.Graphics.DrawString("0% Lux: " + _thisCity.Lux.ToString(), new Font("Arial", 14), new SolidBrush(Color.White), new Point(179, 163), sf2);
-        //    e.Graphics.DrawString("50% Sci: " + _thisCity.Science.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 164), sf1);
-        //    e.Graphics.DrawString("50% Sci: " + _thisCity.Science.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(345, 163), sf1);
+        // Once slider value changes --> redraw improvements list
+        private void ImprovementsBarValueChanged(object sender, EventArgs e)
+        {
+            DrawPanel.Invalidate();
+        }
 
-        //    //Support + production icons
-        //    e.Graphics.DrawString("Support: " + _thisCity.Support.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(6, 224));
-        //    e.Graphics.DrawString("Support: " + _thisCity.Support.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), new Point(5, 223));
-        //    e.Graphics.DrawString("Production: " + _thisCity.Production.ToString(), new Font("Arial", 14), new SolidBrush(Color.Black), new Point(346, 224), sf1);
-        //    e.Graphics.DrawString("Production: " + _thisCity.Production.ToString(), new Font("Arial", 14), new SolidBrush(Color.FromArgb(7, 11, 103)), new Point(345, 223), sf1);
+        private void BuyButton_Click(object sender, EventArgs e)
+        {
+            // Use this so the panel returns a chosen value (what it has chosen to produce)
+            var _cityBuyPanel = new CityBuyPanel(this, _thisCity);
+            _main.Controls.Add(_cityBuyPanel);
+            _cityBuyPanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityBuyPanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityBuyPanel.Height / 2));
+            _cityBuyPanel.Show();
+            _cityBuyPanel.BringToFront();
+            this.Enabled = false;   // Freze this panel while rename panel is shown
+        }
 
-        //    //Draw icons
-        //    //e.Graphics.DrawImage(Draw.DrawCityIcons(_thisCity, 5, -2, 5, 3, 7, 2, 6, 5, 3), new Point(7, 42));
+        // Panel that returns a chosen value (what it has chosen to produce)
+        private void ChangeButton_Click(object sender, EventArgs e)
+        {
+            var _cityChangePanel = new CityChangePanel(this, _thisCity);
+            _main.Controls.Add(_cityChangePanel);
+            _cityChangePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityChangePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityChangePanel.Height / 2));
+            _cityChangePanel.Show();
+            _cityChangePanel.BringToFront();
+            this.Enabled = false;   // Freze this panel while rename panel is shown
+        }
 
-        //    sf1.Dispose();
-        //    sf2.Dispose();
-        //}
+        private void InfoButton_Click(object sender, EventArgs e) { }
 
-        //private void UnitsFromCity_Paint(object sender, PaintEventArgs e)
-        //{
-        //    int count = 0;
-        //    int row = 0;
-        //    int col = 0;
-        //    double resize_factor = 1;  //orignal images are 0.67 of original, because of 50% scaling it is 0.67*1.5=1
-        //    foreach (IUnit unit in Game.GetUnits.Where(n => n.HomeCity == _thisCity))
-        //    {
-        //        col = count % 5;
-        //        row = count / 5;
-        //        //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row)));
-        //        count++;
+        private void MapButton_Click(object sender, EventArgs e) { }
 
-        //        if (count >= 10) { break; }
-        //    }
-        //}
+        private void RenameButton_Click(object sender, EventArgs e)
+        {
+            var _cityRenamePanel = new CityRenamePanel(this, _thisCity);
+            _main.Controls.Add(_cityRenamePanel);
+            _cityRenamePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityRenamePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityRenamePanel.Height / 2));
+            _cityRenamePanel.Show();
+            _cityRenamePanel.BringToFront();
+            this.Enabled = false;   // Freze this panel while rename panel is shown
+        }
 
-        //private void UnitsInCity_Paint(object sender, PaintEventArgs e)
-        //{
-        //    StringFormat sf = new StringFormat();
-        //    sf.Alignment = StringAlignment.Center;
+        private void HappyButton_Click(object sender, EventArgs e) { }
 
-        //    int count = 0;
-        //    int row = 0;
-        //    int col = 0;
-        //    double resize_factor = 1.125;  //orignal images are 25% smaller, because of 50% scaling it is 0.75*1.5=1.125
-        //    foreach (IUnit unit in Game.GetUnits.Where(unit => unit.X == _thisCity.X && unit.Y == _thisCity.Y))
-        //    {
-        //        col = count % 5;
-        //        row = count / 5;
-        //        //e.Graphics.DrawImage(Draw.DrawUnit(unit, false, resize_factor), new Point((int)(64 * resize_factor * col), (int)(48 * resize_factor * row) + 5 * row));
-        //        e.Graphics.DrawString(_thisCity.Name.Substring(0, 3), new Font("Arial", 12), new SolidBrush(Color.Black), new Point((int)(64 * resize_factor * col) + (int)(64 * resize_factor / 2), (int)(48 * resize_factor * row) + 5 * row + (int)(48 * resize_factor)), sf);
-        //        count++;
-        //    }
-        //    sf.Dispose();
-        //}
+        private void ViewButton_Click(object sender, EventArgs e) { }
 
-        //private void ImprovementsList_Paint(object sender, PaintEventArgs e)
-        //{
-        //    //Draw city improvements
-        //    int x = 12;
-        //    int y = 460;
-        //    int starting = ImprovementsBar.Value;   //starting improvement to draw (changes with slider)
-        //    for (int i = 0; i < 9; i++)
-        //    {
-        //        if ((i + starting) >= (_thisCity.Improvements.Count())) { break; }  //break if no of improvements+wonders to small
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            this.Visible = false;
+            this.Dispose();
+        }
 
-        //        //draw improvements
-        //        //e.Graphics.DrawImage(Images.ImprovementsSmall[(int)ThisCity.Improvements[i + starting].Type], new Point(x, y + 15 * i + 2 * i));
-        //        //if ((int)ThisCity.Improvements[i + starting].Type < 39) //wonders don't have a sell icon
-        //        //{
-        //        //    e.Graphics.DrawImage(Images.SellIconLarge, new Point(x + 220, y + 15 * i + 2 * i - 2));
-        //        //}
-        //        //e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.Black), new Point(x + 36, y + 15 * i + 2 * i - 3));
-        //        //e.Graphics.DrawString(ThisCity.Improvements[i + starting].Name, new Font("Arial", 13), new SolidBrush(Color.White), new Point(x + 35, y + 15 * i + 2 * i - 3));
-        //    }
-        //}
+        private void NextCityButton_Click(object sender, EventArgs e) 
+        {
+            _thisCity = Game.GetCities[1];  // TODO: search only in your civ's cities
+            Invalidate();
+            DrawPanel.Invalidate();
+        }
 
-        //private void FoodStorage_Paint(object sender, PaintEventArgs e)
-        //{
-        //    //e.Graphics.DrawImage(Draw.DrawFoodStorage(ThisCity), new Point(0, 0));
-        //}
+        private void PrevCityButton_Click(object sender, EventArgs e) { }
 
-        //private void ProductionPanel_Paint(object sender, PaintEventArgs e)
-        //{
-        //    //Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
-        //    //Units are scaled by 1.15 compared to original, improvements are size 54x30
-        //    if (_thisCity.ItemInProduction < 62)    //units
-        //    {
-        //        e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[_thisCity.ItemInProduction], 1), new Point(106, 7));   // Should it be zoom=1??
-        //    }
-        //    else    //improvements
-        //    {
-        //        StringFormat sf = new StringFormat();
-        //        sf.Alignment = StringAlignment.Center;
-        //        e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.Black), 146 + 1, 3 + 1, sf);
-        //        e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 14), new SolidBrush(Color.FromArgb(63, 79, 167)), 146, 3, sf);
-        //        //e.Graphics.DrawImage(Images.ImprovementsLarge[ThisCity.ItemInProduction - 62 + 1], new Point(119, 28));
-        //        sf.Dispose();
-        //    }
+        private void NextCityButton_Paint(object sender, PaintEventArgs e)
+        {
+            // Draw lines in button
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
+            // Draw the arrow icon
+            e.Graphics.DrawImage(Images.NextCityLarge, 2, 1);
+        }
 
-        //    //e.Graphics.DrawImage(Draw.DrawCityProduction(ThisCity), new Point(0, 0));  //draw production shields and sqare around them
-        //}
-
-        //private void ImprovementsPanel_Paint(object sender, PaintEventArgs e)
-        //{
-        //}
-
-        //private void BuyButton_Click(object sender, EventArgs e)
-        //{
-        //    //Use this so the form returns a chosen value (what it has chosen to produce)
-        //    using (var CityBuyForm = new _CityBuyForm(_thisCity))
-        //    {
-        //        CityBuyForm.Load += new EventHandler(CityBuyForm_Load);   //so you set the correct size of form
-        //        var result = CityBuyForm.ShowDialog();
-        //        if (result == DialogResult.OK)  //buying item activated
-        //        {
-        //            int cost = 0;
-        //            if (_thisCity.ItemInProduction < 62) cost = Game.Rules.UnitCost[_thisCity.ItemInProduction];
-        //            else cost = Game.Rules.ImprovementCost[_thisCity.ItemInProduction - 62 + 1];
-        //            Game.GetCivs[1].Money -= 10 * cost - _thisCity.ShieldsProgress;
-        //            _thisCity.ShieldsProgress = 10 * cost;
-        //            ProductionPanel.Refresh();
-        //        }
-        //    }
-        //}
-
-        //private void CityBuyForm_Load(object sender, EventArgs e)
-        //{
-        //    Form frm = sender as Form;
-        //    frm.Location = new Point(250, 300);
-        //    frm.Width = 758;
-        //    frm.Height = 212;
-        //}
-
-        //private void ChangeButton_Click(object sender, EventArgs e)
-        //{
-        //    //Use this so the form returns a chosen value (what it has chosen to produce)
-        //    using (var CityChangeForm = new _CityChangeForm(_thisCity))
-        //    {
-        //        CityChangeForm.Load += new EventHandler(CityChangeForm_Load);   //so you set the correct size of form
-        //        var result = CityChangeForm.ShowDialog();
-        //        if (result == DialogResult.OK)  //when form is closed
-        //        {
-        //            ProductionPanel.Refresh();
-        //        }
-        //    }
-        //}
-
-        //private void CityChangeForm_Load(object sender, EventArgs e)
-        //{
-        //    Form frm = sender as Form;
-        //    frm.Width = 686;
-        //    frm.Height = 458;
-        //    frm.Location = new Point(200, 100);
-        //}
-
-        //private void InfoButton_Click(object sender, EventArgs e)
-        //{
-        //}
-
-        //private void MapButton_Click(object sender, EventArgs e)
-        //{
-        //}
-
-        //private void RenameButton_Click(object sender, EventArgs e)
-        //{
-        //    _CityRenameForm CityRenameForm = new _CityRenameForm(_thisCity);
-        //    CityRenameForm.RefreshCityForm += RefreshThis;
-        //    CityRenameForm.ShowDialog();
-        //}
-
-        //void RefreshThis()
-        //{
-        //    Refresh();
-        //}
-
-        //private void HappyButton_Click(object sender, EventArgs e) { }
-
-        //private void ViewButton_Click(object sender, EventArgs e) { }
-
-        //private void NextCityButton_Click(object sender, EventArgs e) { }
-
-        //private void PrevCityButton_Click(object sender, EventArgs e) { }
-
-        //private void NextCityButton_Paint(object sender, PaintEventArgs e)
-        //{
-        //    //Draw lines in button
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
-        //    //Draw the arrow icon
-        //    e.Graphics.DrawImage(Images.NextCityLarge, 2, 1);
-        //}
-
-        //private void PrevCityButton_Paint(object sender, PaintEventArgs e)
-        //{
-        //    //Draw lines in button
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
-        //    e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
-        //    //Draw the arrow icon
-        //    e.Graphics.DrawImage(Images.PrevCityLarge, 2, 1);
-        //}
-
-        //private void ExitButton_Click(object sender, EventArgs e)
-        //{
-        //    //close panel???
-        //}
+        private void PrevCityButton_Paint(object sender, PaintEventArgs e)
+        {
+            // Draw lines in button
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
+            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
+            // Draw the arrow icon
+            e.Graphics.DrawImage(Images.PrevCityLarge, 2, 1);
+        }
     }
 }

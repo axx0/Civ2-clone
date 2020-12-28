@@ -110,11 +110,11 @@ namespace civ2.Forms
                 // Trade
                 e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 108 + 24 * count + 1), sf);
                 e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 108 + 24 * count), sf);
-                e.Graphics.DrawImage(Images.CitymapTaxLarge, new Point(260, 111 + 24 * count));
+                e.Graphics.DrawImage(Images.CityTaxBig, new Point(260, 111 + 24 * count));
                 // Science
                 e.Graphics.DrawString(city.Science.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(290 + 1, 108 + 24 * count + 1), sf);
                 e.Graphics.DrawString(city.Science.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(290, 108 + 24 * count), sf);
-                e.Graphics.DrawImage(Images.CitymapSciLarge, new Point(295, 111 + 24 * count));
+                e.Graphics.DrawImage(Images.CitySciBig, new Point(295, 111 + 24 * count));
                 count++;
 
                 // MAINTENTANCE COSTS
@@ -139,15 +139,15 @@ namespace civ2.Forms
                 // Total cost
                 e.Graphics.DrawString($"Total Cost: {_totalCost}", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 270 + 1));
                 e.Graphics.DrawString($"Total Cost: {_totalCost}", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 270));
-                e.Graphics.DrawImage(Images.CitymapTaxLarge, new Point(245, 270));
+                e.Graphics.DrawImage(Images.CityTaxBig, new Point(245, 270));
                 // Total income
                 e.Graphics.DrawString($"Total Income: {_totalIncome}", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 295 + 1));
                 e.Graphics.DrawString($"Total Income: {_totalIncome}", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 295));
-                e.Graphics.DrawImage(Images.CitymapTaxLarge, new Point(245, 295));
+                e.Graphics.DrawImage(Images.CityTaxBig, new Point(245, 295));
                 // Total science
                 e.Graphics.DrawString($"Total Science: {_totalScience}", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 320 + 1));
                 e.Graphics.DrawString($"Total Science: {_totalScience}", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 320));
-                e.Graphics.DrawImage(Images.CitymapSciLarge, new Point(245, 320));
+                e.Graphics.DrawImage(Images.CitySciBig, new Point(245, 320));
                 // Discoveries
                 e.Graphics.DrawString($"Discoveries: {_discoveries} Turns", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 345 + 1));
                 e.Graphics.DrawString($"Discoveries: {_discoveries} Turns", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 345));

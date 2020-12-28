@@ -9,7 +9,7 @@ namespace civ2.Bitmaps
         // Resize the image according to zoom factor
         public static Bitmap ResizeImage(Bitmap image, int zoom)
         {
-            //if (zoom == 0) return image;
+            if (zoom == 0) return image;
 
             int width = (int)((8.0 + (float)zoom) / 8.0 * (float)image.Width);
             int height = (int)((8.0 + (float)zoom) / 8.0 * (float)image.Height);

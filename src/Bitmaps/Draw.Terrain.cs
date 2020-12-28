@@ -6,7 +6,7 @@ using civ2.Terrains;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw
+    public static partial class Draw
     {
         public static Bitmap Terrain(ITerrain tile, int col, int row, bool flatEarth)
         {

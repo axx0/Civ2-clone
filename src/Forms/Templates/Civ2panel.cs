@@ -11,7 +11,7 @@ namespace civ2.Forms
     // - none
     // - both
 
-    public partial class Civ2panel : DoubleBufferedPanel
+    public class Civ2panel : DoubleBufferedPanel
     {
         public DoubleBufferedPanel DrawPanel;
         private readonly string _title;
@@ -25,7 +25,7 @@ namespace civ2.Forms
 
             Size = new Size(width, height);
             BackgroundImage = Images.PanelOuterWallpaper;
-            this.Paint += new PaintEventHandler(Civ2panel_Paint);
+            this.Paint += Civ2panel_Paint;
 
             DrawPanel = new DoubleBufferedPanel()
             {
@@ -40,9 +40,10 @@ namespace civ2.Forms
         public virtual void Civ2panel_Paint(object sender, PaintEventArgs e)
         {
             // Title (if exists)
+            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;  // Makes text sharp
             if (_title != null)
             {
-                StringFormat sf = new StringFormat
+                using var sf = new StringFormat
                 {
                     LineAlignment = StringAlignment.Center,
                     Alignment = StringAlignment.Center

@@ -7,18 +7,15 @@ namespace civ2.Bitmaps
 {
     public static partial class Images
     {
-        public static Bitmap CitymapFoodLarge, CitymapFoodLargeBigger, CitymapHungerLarge, CitymapHungerLargeBigger, CitymapFoodSmall,
-                            CitymapFoodSmallBigger,
-                            CitymapShieldLarge, CitymapShieldLargeBigger, CitymapShieldSmall, CitymapShieldSmallBigger, CitymapTradeLarge, CitymapTradeLargeBigger, CitymapTradeSmall,
-                            CitymapTradeSmallBigger, CitymapShortageLargeBigger, CitymapShortageLarge, CitymapCorruptionLarge, CitymapCorruptionLargeBigger, CitymapSupportLarge,
-                            CitymapSupportLargeBigger, CitymapLuxLarge, CitymapLuxLargeBigger, CitymapTaxLarge, CitymapTaxLargeBigger, CitymapSciLarge, CitymapSciLargeBigger, NextCity;
+        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig,
+                            CityFoodSmall, CitySupportSmall, CityTradeSmall;
+        public static Bitmap NextCity;
         public static Bitmap CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper,
                      Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane,
-                     Shield, ViewPiece, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase,
-                     SellIcon, SellIconLarge,
+                     Shield, ViewPiece, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon,
                      NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road,
-                               Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements, ImprovementsLarge, ImprovementsSmall;
+                               Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements;
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills,
                                 DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static int[,] unitShieldLocation = new int[63, 2];
@@ -692,8 +689,6 @@ namespace civ2.Bitmaps
 
             // Initialize objects
             Improvements = new Bitmap[67];
-            ImprovementsLarge = new Bitmap[67];
-            ImprovementsSmall = new Bitmap[67];
             ResearchIcons = new Bitmap[5, 4];
 
             // Define transparent colors
@@ -708,8 +703,6 @@ namespace civ2.Bitmaps
                 for (int col = 0; col < 8; col++)
                 {
                     Improvements[count] = icons.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 1 + row, 36, 20), icons.PixelFormat);
-                    //ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
-                    //ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
                     count++;
                     if (count == 39) break;
                 }
@@ -721,8 +714,6 @@ namespace civ2.Bitmaps
                 for (int col = 0; col < 7; col++)
                 {
                     Improvements[count] = icons.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 106 + row, 36, 20), icons.PixelFormat);
-                    //ImprovementsLarge[count] = ModifyImage.ResizeImage(Improvements[count], 54, 30);    //50% larger
-                    //ImprovementsSmall[count] = ModifyImage.ResizeImage(Improvements[count], 29, 16);    //25% smaller
                     count++;
                 }
             }
@@ -739,9 +730,6 @@ namespace civ2.Bitmaps
             SellIcon = icons.Clone(new Rectangle(16, 320, 14, 14), icons.PixelFormat);
             SellIcon.MakeTransparent(transparentLightPink);
 
-            //SellIconLarge = ModifyImage.ResizeImage(SellIcon, 16, 16);
-            SellIconLarge = SellIcon;
-
             ViewPiece = icons.Clone(new Rectangle(199, 256, 64, 32), icons.PixelFormat);
             ViewPiece.MakeTransparent(transparentLightPink);
             ViewPiece.MakeTransparent(transparentPink);
@@ -755,66 +743,32 @@ namespace civ2.Bitmaps
             GridLinesVisible.MakeTransparent(transparentPink);
 
             // Big icons in city resources
-            CitymapHungerLarge = icons.Clone(new Rectangle(1, 290, 14, 14), icons.PixelFormat);
-            CitymapHungerLarge.MakeTransparent(transparentLightPink);
-            //CitymapHungerLargeBigger = ModifyImage.ResizeImage(CitymapHungerLarge, 21, 21);    //50% larger
-            CitymapHungerLargeBigger = CitymapHungerLarge;
-
-            CitymapShortageLarge = icons.Clone(new Rectangle(16, 290, 14, 14), icons.PixelFormat);
-            CitymapShortageLarge.MakeTransparent(transparentLightPink);
-            //CitymapShortageLargeBigger = ModifyImage.ResizeImage(CitymapShortageLarge, 21, 21);    //50% larger
-            CitymapShortageLargeBigger = CitymapShortageLarge;
-
-            CitymapCorruptionLarge = icons.Clone(new Rectangle(31, 290, 14, 14), icons.PixelFormat);
-            CitymapCorruptionLarge.MakeTransparent(transparentLightPink);
-            //CitymapCorruptionLargeBigger = ModifyImage.ResizeImage(CitymapCorruptionLarge, 21, 21);    //50% larger
-            CitymapCorruptionLargeBigger = CitymapCorruptionLarge;
-
-            CitymapFoodLarge = icons.Clone(new Rectangle(1, 305, 14, 14), icons.PixelFormat);
-            CitymapFoodLarge.MakeTransparent(transparentLightPink);
-            //CitymapFoodLargeBigger = ModifyImage.ResizeImage(CitymapFoodLarge, 21, 21);    //50% larger
-            CitymapFoodLargeBigger = CitymapFoodLarge;
-
-            CitymapSupportLarge = icons.Clone(new Rectangle(16, 305, 14, 14), icons.PixelFormat);
-            CitymapSupportLarge.MakeTransparent(transparentLightPink);
-            //CitymapSupportLargeBigger = ModifyImage.ResizeImage(CitymapSupportLarge, 21, 21);    //50% larger
-            CitymapSupportLargeBigger = CitymapSupportLarge;
-
-            CitymapTradeLarge = icons.Clone(new Rectangle(31, 305, 14, 14), icons.PixelFormat);
-            CitymapTradeLarge.MakeTransparent(transparentLightPink);
-            //CitymapTradeLargeBigger = ModifyImage.ResizeImage(CitymapTradeLarge, 21, 21);    //50% larger
-            CitymapTradeLargeBigger = CitymapTradeLarge;
-
-            CitymapLuxLarge = icons.Clone(new Rectangle(1, 320, 14, 14), icons.PixelFormat);
-            CitymapLuxLarge.MakeTransparent(transparentLightPink);
-            //CitymapLuxLargeBigger = ModifyImage.ResizeImage(CitymapLuxLarge, 21, 21);    //50% larger
-            CitymapLuxLargeBigger = CitymapLuxLarge;
-
-            CitymapTaxLarge = icons.Clone(new Rectangle(16, 320, 14, 14), icons.PixelFormat);
-            CitymapTaxLarge.MakeTransparent(transparentLightPink);
-            //CitymapTaxLargeBigger = ModifyImage.ResizeImage(CitymapTaxLarge, 21, 21);    //50% larger
-            CitymapTaxLargeBigger = CitymapTaxLarge;
-
-            CitymapSciLarge = icons.Clone(new Rectangle(31, 320, 14, 14), icons.PixelFormat);
-            CitymapSciLarge.MakeTransparent(transparentLightPink);
-            //CitymapSciLargeBigger = ModifyImage.ResizeImage(CitymapSciLarge, 21, 21);    //50% larger
-            CitymapSciLargeBigger = CitymapSciLarge;
+            CityHungerBig = icons.Clone(new Rectangle(1, 290, 14, 14), icons.PixelFormat);
+            CityHungerBig.MakeTransparent(transparentLightPink);
+            CityShortageBig = icons.Clone(new Rectangle(16, 290, 14, 14), icons.PixelFormat);
+            CityShortageBig.MakeTransparent(transparentLightPink);
+            CityCorruptBig = icons.Clone(new Rectangle(31, 290, 14, 14), icons.PixelFormat);
+            CityCorruptBig.MakeTransparent(transparentLightPink);
+            CityFoodBig = icons.Clone(new Rectangle(1, 305, 14, 14), icons.PixelFormat);
+            CityFoodBig.MakeTransparent(transparentLightPink);
+            CitySupportBig = icons.Clone(new Rectangle(16, 305, 14, 14), icons.PixelFormat);
+            CitySupportBig.MakeTransparent(transparentLightPink);
+            CityTradeBig = icons.Clone(new Rectangle(31, 305, 14, 14), icons.PixelFormat);
+            CityTradeBig.MakeTransparent(transparentLightPink);
+            CityLuxBig = icons.Clone(new Rectangle(1, 320, 14, 14), icons.PixelFormat);
+            CityLuxBig.MakeTransparent(transparentLightPink);
+            CityTaxBig = icons.Clone(new Rectangle(16, 320, 14, 14), icons.PixelFormat);
+            CityTaxBig.MakeTransparent(transparentLightPink);
+            CitySciBig = icons.Clone(new Rectangle(31, 320, 14, 14), icons.PixelFormat);
+            CitySciBig.MakeTransparent(transparentLightPink);
 
             // Small icons in city resources
-            CitymapFoodSmall = icons.Clone(new Rectangle(49, 334, 10, 10), icons.PixelFormat);
-            CitymapFoodSmall.MakeTransparent(transparentLightPink);
-            //CitymapFoodSmallBigger = ModifyImage.ResizeImage(CitymapFoodSmall, 15, 15);    //50% larger
-            CitymapFoodSmallBigger = CitymapFoodSmall;
-
-            CitymapShieldSmall = icons.Clone(new Rectangle(60, 334, 10, 10), icons.PixelFormat);
-            CitymapShieldSmall.MakeTransparent(transparentLightPink);
-            //CitymapShieldSmallBigger = ModifyImage.ResizeImage(CitymapShieldSmall, 15, 15);    //50% larger
-            CitymapShieldSmallBigger = CitymapShieldSmall;
-
-            CitymapTradeSmall = icons.Clone(new Rectangle(71, 334, 10, 10), icons.PixelFormat);
-            CitymapTradeSmall.MakeTransparent(transparentLightPink);
-            //CitymapTradeSmallBigger = ModifyImage.ResizeImage(CitymapTradeSmall, 15, 15);    //50% larger
-            CitymapTradeSmallBigger = CitymapTradeSmall;
+            CityFoodSmall = icons.Clone(new Rectangle(49, 334, 10, 10), icons.PixelFormat);
+            CityFoodSmall.MakeTransparent(transparentLightPink);
+            CitySupportSmall = icons.Clone(new Rectangle(60, 334, 10, 10), icons.PixelFormat);
+            CitySupportSmall.MakeTransparent(transparentLightPink);
+            CityTradeSmall = icons.Clone(new Rectangle(71, 334, 10, 10), icons.PixelFormat);
+            CityTradeSmall.MakeTransparent(transparentLightPink);
 
             // Wallpaper icons
             PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32), icons.PixelFormat);

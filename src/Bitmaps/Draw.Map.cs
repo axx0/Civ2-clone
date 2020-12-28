@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw
+    public static partial class Draw
     {
         // civId
         // = 0...7 for 8 civs (including barbarians with civId=7)

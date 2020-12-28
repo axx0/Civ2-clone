@@ -5,7 +5,7 @@ using civ2.Enums;
 
 namespace civ2.Bitmaps
 {
-    public partial class Draw
+    public static partial class Draw
     {
         public static Bitmap Unit(IUnit unit, bool drawInStack, int zoom)
         {

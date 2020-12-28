@@ -108,6 +108,10 @@ namespace civ2
             set { _activeCiv = value; }
         }
 
+        // Helper functions
+        public City CityHere(int x, int y) => _cities.Find(city => city.X == x && city.Y == y);
+        public List<IUnit> UnitsHere(int x, int y) => _units.FindAll(unit => unit.X == x && unit.Y == y);
+
         //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
         //                                  bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
         //{
@@ -283,40 +287,8 @@ namespace civ2
                 UnhappyCitizens = unhappyCitizens
             };
 
-            if (improvements[0]) city.AddImprovement(new Improvement(ImprovementType.Palace));
-            if (improvements[1]) city.AddImprovement(new Improvement(ImprovementType.Barracks));
-            if (improvements[2]) city.AddImprovement(new Improvement(ImprovementType.Granary));
-            if (improvements[3]) city.AddImprovement(new Improvement(ImprovementType.Temple));
-            if (improvements[4]) city.AddImprovement(new Improvement(ImprovementType.Marketplace));
-            if (improvements[5]) city.AddImprovement(new Improvement(ImprovementType.Library));
-            if (improvements[6]) city.AddImprovement(new Improvement(ImprovementType.Courthouse));
-            if (improvements[7]) city.AddImprovement(new Improvement(ImprovementType.CityWalls));
-            if (improvements[8]) city.AddImprovement(new Improvement(ImprovementType.Aqueduct));
-            if (improvements[9]) city.AddImprovement(new Improvement(ImprovementType.Bank));
-            if (improvements[10]) city.AddImprovement(new Improvement(ImprovementType.Cathedral));
-            if (improvements[11]) city.AddImprovement(new Improvement(ImprovementType.University));
-            if (improvements[12]) city.AddImprovement(new Improvement(ImprovementType.MassTransit));
-            if (improvements[13]) city.AddImprovement(new Improvement(ImprovementType.Colosseum));
-            if (improvements[14]) city.AddImprovement(new Improvement(ImprovementType.Factory));
-            if (improvements[15]) city.AddImprovement(new Improvement(ImprovementType.MfgPlant));
-            if (improvements[16]) city.AddImprovement(new Improvement(ImprovementType.SDIdefense));
-            if (improvements[17]) city.AddImprovement(new Improvement(ImprovementType.RecyclCentre));
-            if (improvements[18]) city.AddImprovement(new Improvement(ImprovementType.PowerPlant));
-            if (improvements[19]) city.AddImprovement(new Improvement(ImprovementType.HydroPlant));
-            if (improvements[20]) city.AddImprovement(new Improvement(ImprovementType.NuclearPlant));
-            if (improvements[21]) city.AddImprovement(new Improvement(ImprovementType.StockExch));
-            if (improvements[22]) city.AddImprovement(new Improvement(ImprovementType.SewerSystem));
-            if (improvements[23]) city.AddImprovement(new Improvement(ImprovementType.Supermarket));
-            if (improvements[24]) city.AddImprovement(new Improvement(ImprovementType.Superhighways));
-            if (improvements[25]) city.AddImprovement(new Improvement(ImprovementType.ResearchLab));
-            if (improvements[26]) city.AddImprovement(new Improvement(ImprovementType.SAMbattery));
-            if (improvements[27]) city.AddImprovement(new Improvement(ImprovementType.CoastalFort));
-            if (improvements[28]) city.AddImprovement(new Improvement(ImprovementType.SolarPlant));
-            if (improvements[29]) city.AddImprovement(new Improvement(ImprovementType.Harbour));
-            if (improvements[30]) city.AddImprovement(new Improvement(ImprovementType.OffshorePlat));
-            if (improvements[31]) city.AddImprovement(new Improvement(ImprovementType.Airport));
-            if (improvements[32]) city.AddImprovement(new Improvement(ImprovementType.PoliceStat));
-            if (improvements[33]) city.AddImprovement(new Improvement(ImprovementType.PortFacil));
+            for (int improvNo = 0; improvNo < 34; improvNo++)
+                if (improvements[improvNo]) city.AddImprovement(new Improvement((ImprovementType)improvNo));
 
             // TODO: add wonders to city at city import
             //if (wonders[0]) city.AddImprovement(new Improvement(ImprovementType.Pyramids));
