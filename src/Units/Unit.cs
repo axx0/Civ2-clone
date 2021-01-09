@@ -333,7 +333,7 @@ namespace civ2.Units
         public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
 
-        public Bitmap Graphic(bool isInStack, int zoom) => Draw.Unit(this, isInStack, zoom);
+        //public Bitmap Graphic(bool isInStack, int zoom) => Draw.Unit(this, isInStack, zoom);
 
     }
 }

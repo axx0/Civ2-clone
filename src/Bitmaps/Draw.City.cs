@@ -130,7 +130,7 @@ namespace civ2.Bitmaps
             return zoom == 0 ? cityPic : ModifyImage.ResizeImage(cityPic, zoom);
         }
 
-        public static Bitmap CityName(City city, int zoom)
+        public static void CityName(Graphics g, City city, int zoom, Point dest)
         {
             // Define text characteristics for zoom levels
             int shadowOffset, fontSize;
@@ -155,19 +155,13 @@ namespace civ2.Bitmaps
                 default: shadowOffset = 2; fontSize = 14; break;
             }
 
-            // Draw
-            Graphics gr = Graphics.FromImage(new Bitmap(1, 1));
-            SizeF stringSize = gr.MeasureString(city.Name, new Font("Times New Roman", fontSize));
-            int stringWidth = (int)stringSize.Width;
-            int stringHeight = (int)stringSize.Height;
-            Bitmap _textGraphic = new Bitmap(stringWidth + 2, stringHeight + 2);
-            Graphics g = Graphics.FromImage(_textGraphic);
+            using var sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(shadowOffset, 0));
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new PointF(0, shadowOffset));
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.OwnerId]), new PointF(0, 0));
-
-            return _textGraphic;
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new Point(dest.X + shadowOffset, dest.Y), sf);
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new Point(dest.X, dest.Y + shadowOffset), sf);
+            g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.OwnerId]), dest, sf);
         }
     }
 }

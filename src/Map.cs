@@ -14,10 +14,11 @@ namespace civ2
         public int LocatorYdim { get; private set; }
         public ITerrain[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
-        public Bitmap[] BaseMapPic { get; set; }    // For normal zoom (=0)
-        public Bitmap ActiveCivMap { get; set; }   // Currently active map, for current zoom level
+        //public Bitmap[] BaseMapPic { get; set; }    // For normal zoom (=0)
+        //public Bitmap ActiveCivMap { get; set; }   // Currently active map, for current zoom level
 
         public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
+        public ITerrain TileC22(int xC2, int yC2) => Tile[(((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index 
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => Visibility[( ((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
 
         // Generate first instance of terrain tiles by importing game data
@@ -69,23 +70,23 @@ namespace civ2
             }
 
             // Make standard level zoom map graphics for each civ (including barbarians with id=0) + revealed map
-            BaseMapPic = new Bitmap[9];
-            for (int civId = 0; civId < 9; civId++)
-                BaseMapPic[civId] = Draw.DrawMap(civId, Game.Options.FlatEarth);    // For std. zoom level
+            //BaseMapPic = new Bitmap[9];
+            //for (int civId = 0; civId < 9; civId++)
+            //    BaseMapPic[civId] = Draw.DrawMap(civId, Game.Options.FlatEarth);    // For std. zoom level
 
             // Make a map grafic for current use in MapPanel
-            SetNewActiveMapPic();
+            //SetNewActiveMapPic();
         }
 
         // Set the new active map pic for MapPanel
-        public void SetNewActiveMapPic()
-        {
-            int mapId = Game.MapRevealed ? 8 : Game.ActiveCiv.Id;
-            if (Game.Zoom == 0) // No need to resize the map
-                ActiveCivMap = BaseMapPic[mapId];
-            else
-                ActiveCivMap = ModifyImage.ResizeImage(BaseMapPic[mapId], Game.Zoom);
-        }
+        //public void SetNewActiveMapPic()
+        //{
+        //    int mapId = Game.MapRevealed ? 8 : Game.ActiveCiv.Id;
+        //    if (Game.Zoom == 0) // No need to resize the map
+        //        ActiveCivMap = BaseMapPic[mapId];
+        //    else
+        //        ActiveCivMap = ModifyImage.ResizeImage(BaseMapPic[mapId], Game.Zoom);
+        //}
 
         private static Map _instance;
         public static Map Instance

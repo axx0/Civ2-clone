@@ -6,19 +6,18 @@ namespace civ2.Bitmaps
 {
     public static partial class Images
     {
-        public static Bitmap UnitSpritemap;
         public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig,
                             CityFoodSmall, CitySupportSmall, CityTradeSmall;
         public static Bitmap NextCity;
         public static Bitmap CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper,
                      Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane,
-                     Shield, ViewPiece, UnitShieldShadow, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon,
-                     NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT;
+                     Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon,
+                     NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT, ShieldShadow;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road,
-                               Railroad, Units, UnitShield, NoBorderUnitShield, CityFlag, Improvements;
+                               Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements;
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills,
                                 DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
-        public static int[,] unitShieldLocation = new int[63, 2];
+        public static Point[] UnitShieldLoc = new Point[63];
         public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
         //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
         public static Icon Civ2Icon;
@@ -31,8 +30,6 @@ namespace civ2.Bitmaps
             PeopleIconsBitmapsImportFromFile(path);
             IconsBitmapsImportFromFile(path);
             CityWallpaperBitmapImportFromFile();
-
-            SpriteDict.Set();   // Set locations of sprites
         }
 
         public static void LoadGraphicsAssetsAtIntroScreen()
@@ -497,32 +494,26 @@ namespace civ2.Bitmaps
         public static void UnitsBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            Bitmap units = new Bitmap(640, 480);
-            UnitSpritemap = new Bitmap(640, 480);
+            var units = new Bitmap(640, 480);
             string FilePath_local = path + "\\UNITS.GIF";
             string FilePath_root = Settings.Civ2Path + "UNITS.GIF";
             if (File.Exists(FilePath_local))
             {
                 units = new Bitmap(FilePath_local);
-                UnitSpritemap = new Bitmap(FilePath_local);
             }
             else if (File.Exists(FilePath_root))
             {
                 units = new Bitmap(FilePath_root);
-                UnitSpritemap = new Bitmap(FilePath_root);
             }
             else
             {
                 Debug.WriteLine("UNITS.GIF not found!");
             }
 
-            UnitSpritemap.MakeTransparent(Color.FromArgb(135, 83, 135));
-            UnitSpritemap.MakeTransparent(Color.FromArgb(255, 0, 255));
-
             // Initialize objects
             Units = new Bitmap[63];
-            UnitShield = new Bitmap[8];
-            NoBorderUnitShield = new Bitmap[8];
+            ShieldFront = new Bitmap[8];
+            ShieldBack = new Bitmap[8];
 
             // Define transparent colors
             Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
@@ -537,38 +528,40 @@ namespace civ2.Bitmaps
                     Units[count].MakeTransparent(transparentGray);
                     Units[count].MakeTransparent(transparentPink);
                     // Determine where the unit shield is located (x-y)
-                    for (int ix = 0; ix < 64; ix++) if (units.GetPixel((65 * col) + ix, 49 * row) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 0] = ix;  //if pixel on border is blue, in x-direction
-                    for (int iy = 0; iy < 48; iy++) if (units.GetPixel(65 * col, (49 * row) + iy) == Color.FromArgb(0, 0, 255)) unitShieldLocation[count, 1] = iy;  //in y-direction
+                    for (int ix = 0; ix < 64; ix++)
+                        if (units.GetPixel((65 * col) + ix, 49 * row) == Color.FromArgb(0, 0, 255)) UnitShieldLoc[count].X = ix - 1;  // If pixel on border is blue, in x-direction
+                    for (int iy = 0; iy < 48; iy++)
+                        if (units.GetPixel(65 * col, (49 * row) + iy) == Color.FromArgb(0, 0, 255)) UnitShieldLoc[count].Y = iy - 1;  // In y-direction
                     count++;
                 }
             }
 
             // Extract shield without black border (used for stacked units)
-            Bitmap _backUnitShield = units.Clone(new Rectangle(586, 1, 12, 20), units.PixelFormat);
+            var _backUnitShield = units.Clone(new Rectangle(586, 1, 12, 20), units.PixelFormat);
             _backUnitShield.MakeTransparent(transparentGray);
 
             // Extract unit shield
-            Bitmap _unitShield = units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
+            var _unitShield = units.Clone(new Rectangle(597, 30, 12, 20), units.PixelFormat);
             _unitShield.MakeTransparent(transparentGray);
 
             // Make shields of different colors for 8 different civs
-            UnitShield[0] = CreateNonIndexedImage(_unitShield); //convert GIF to non-indexed picture
-            UnitShield[1] = CreateNonIndexedImage(_unitShield);
-            UnitShield[2] = CreateNonIndexedImage(_unitShield);
-            UnitShield[3] = CreateNonIndexedImage(_unitShield);
-            UnitShield[4] = CreateNonIndexedImage(_unitShield);
-            UnitShield[5] = CreateNonIndexedImage(_unitShield);
-            UnitShield[6] = CreateNonIndexedImage(_unitShield);
-            UnitShield[7] = CreateNonIndexedImage(_unitShield);
-            NoBorderUnitShield[0] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[1] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[2] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[3] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[4] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[5] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[6] = CreateNonIndexedImage(_backUnitShield);
-            NoBorderUnitShield[7] = CreateNonIndexedImage(_backUnitShield);
-            UnitShieldShadow = CreateNonIndexedImage(_backUnitShield);
+            ShieldFront[0] = CreateNonIndexedImage(_unitShield); // convert GIF to non-indexed picture
+            ShieldFront[1] = CreateNonIndexedImage(_unitShield);
+            ShieldFront[2] = CreateNonIndexedImage(_unitShield);
+            ShieldFront[3] = CreateNonIndexedImage(_unitShield);
+            ShieldFront[4] = CreateNonIndexedImage(_unitShield);
+            ShieldFront[5] = CreateNonIndexedImage(_unitShield);
+            ShieldFront[6] = CreateNonIndexedImage(_unitShield);
+            ShieldFront[7] = CreateNonIndexedImage(_unitShield);
+            ShieldBack[0] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[1] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[2] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[3] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[4] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[5] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[6] = CreateNonIndexedImage(_backUnitShield);
+            ShieldBack[7] = CreateNonIndexedImage(_backUnitShield);
+            ShieldShadow = CreateNonIndexedImage(_backUnitShield);
             // Replace colors for unit shield and dark unit shield
             for (int x = 0; x < 12; x++)
             {
@@ -576,27 +569,27 @@ namespace civ2.Bitmaps
                 {
                     if (_unitShield.GetPixel(x, y) == transparentPink)   //if color is pink, replace it
                     {
-                        UnitShield[0].SetPixel(x, y, CivColors.Light[0]);  //red
-                        UnitShield[1].SetPixel(x, y, CivColors.Light[1]);  //white
-                        UnitShield[2].SetPixel(x, y, CivColors.Light[2]);  //green
-                        UnitShield[3].SetPixel(x, y, CivColors.Light[3]);  //blue
-                        UnitShield[4].SetPixel(x, y, CivColors.Light[4]);  //yellow
-                        UnitShield[5].SetPixel(x, y, CivColors.Light[5]);  //cyan
-                        UnitShield[6].SetPixel(x, y, CivColors.Light[6]);  //orange
-                        UnitShield[7].SetPixel(x, y, CivColors.Light[7]);  //purple
+                        ShieldFront[0].SetPixel(x, y, CivColors.Light[0]);  //red
+                        ShieldFront[1].SetPixel(x, y, CivColors.Light[1]);  //white
+                        ShieldFront[2].SetPixel(x, y, CivColors.Light[2]);  //green
+                        ShieldFront[3].SetPixel(x, y, CivColors.Light[3]);  //blue
+                        ShieldFront[4].SetPixel(x, y, CivColors.Light[4]);  //yellow
+                        ShieldFront[5].SetPixel(x, y, CivColors.Light[5]);  //cyan
+                        ShieldFront[6].SetPixel(x, y, CivColors.Light[6]);  //orange
+                        ShieldFront[7].SetPixel(x, y, CivColors.Light[7]);  //purple
                     }
 
                     if (_backUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    //if color is red, replace it
                     {
-                        NoBorderUnitShield[0].SetPixel(x, y, CivColors.Dark[0]);  //red
-                        NoBorderUnitShield[1].SetPixel(x, y, CivColors.Dark[1]);  //white
-                        NoBorderUnitShield[2].SetPixel(x, y, CivColors.Dark[2]);  //green
-                        NoBorderUnitShield[3].SetPixel(x, y, CivColors.Dark[3]);  //blue
-                        NoBorderUnitShield[4].SetPixel(x, y, CivColors.Dark[4]);  //yellow
-                        NoBorderUnitShield[5].SetPixel(x, y, CivColors.Dark[5]);  //cyan
-                        NoBorderUnitShield[6].SetPixel(x, y, CivColors.Dark[6]);  //orange
-                        NoBorderUnitShield[7].SetPixel(x, y, CivColors.Dark[7]);  //purple
-                        UnitShieldShadow.SetPixel(x, y, Color.FromArgb(51, 51, 51));    //color of the shield shadow
+                        ShieldBack[0].SetPixel(x, y, CivColors.Dark[0]);  //red
+                        ShieldBack[1].SetPixel(x, y, CivColors.Dark[1]);  //white
+                        ShieldBack[2].SetPixel(x, y, CivColors.Dark[2]);  //green
+                        ShieldBack[3].SetPixel(x, y, CivColors.Dark[3]);  //blue
+                        ShieldBack[4].SetPixel(x, y, CivColors.Dark[4]);  //yellow
+                        ShieldBack[5].SetPixel(x, y, CivColors.Dark[5]);  //cyan
+                        ShieldBack[6].SetPixel(x, y, CivColors.Dark[6]);  //orange
+                        ShieldBack[7].SetPixel(x, y, CivColors.Dark[7]);  //purple
+                        ShieldShadow.SetPixel(x, y, Color.FromArgb(51, 51, 51));    //color of the shield shadow
                     }
                 }
             }

@@ -298,7 +298,7 @@ namespace civ2.Forms
             {
                 col = count % 4;
                 row = count / 4;
-                e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, (4 * (8 + zoom + 3)) * row));
+                //e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, (4 * (8 + zoom + 3)) * row));
                 count++;
 
                 if (count >= 8) { break; }
@@ -319,7 +319,7 @@ namespace civ2.Forms
             {
                 col = count % 5;
                 row = count / 5;
-                e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, 6 * (8 + zoom) * row + 5 * row));
+                //e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, 6 * (8 + zoom) * row + 5 * row));
                 e.Graphics.DrawString(unit.HomeCity.Name.Substring(0, 3), new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)),  // TODO: doesn't work for <3 characters in city name
                     new Point(8 * (8 + zoom) * col + 8 * (8 + zoom) / 2 + 1, 6 * (8 + zoom) * row + 5 * row + 6 * (8 + zoom) + 1), sf);
                 e.Graphics.DrawString(unit.HomeCity.Name.Substring(0, 3), new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black),

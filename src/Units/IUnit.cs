@@ -75,7 +75,7 @@ namespace civ2.Units
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }
-        Bitmap Graphic(bool isInStack, int zoom);
+        //Bitmap Graphic(bool isInStack, int zoom);
 
     }
 }

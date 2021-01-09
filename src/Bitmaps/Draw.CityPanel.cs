@@ -351,8 +351,8 @@ namespace civ2.Bitmaps
                                 g.DrawImage(cityHere.Graphic(false, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
                             // Draw units
                             unitsHere = Game.UnitsHere(newX, newY).FindAll(unit => (unit.Owner != Game.ActiveCiv) && (unit.Type != Enums.UnitType.Settlers));
-                            if (unitsHere.Count > 0 && cityHere == null)
-                                g.DrawImage(unitsHere.Last().Graphic(true, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
+                            //if (unitsHere.Count > 0 && cityHere == null)
+                            //    g.DrawImage(unitsHere.Last().Graphic(true, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
 
                             // TODO: make sure you're not drawing beyond map edges
                             //if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);

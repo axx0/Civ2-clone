@@ -4,7 +4,7 @@ namespace civ2.Bitmaps
 {
     public static class CivColors
     {
-        public static readonly Color[] Light =
+        public readonly static Color[] Light =
         {
             Color.FromArgb(243, 0, 0),      //RED
             Color.FromArgb(239, 239, 239),  //WHITE
@@ -16,7 +16,7 @@ namespace civ2.Bitmaps
             Color.FromArgb(131, 103, 179)   //PURPLE
         };
 
-        public static readonly Color[] Dark =
+        public readonly static Color[] Dark =
         {
             Color.FromArgb(167, 0, 0),      //RED
             Color.FromArgb(175, 175, 175),  //WHITE
@@ -28,7 +28,7 @@ namespace civ2.Bitmaps
             Color.FromArgb(111, 63, 135)    //PURPLE
         };
 
-        public static readonly Color[] CityTextColor =
+        public static Color[] CityTextColor =
         {
             Color.FromArgb(243, 0, 0),      //RED
             Color.FromArgb(255, 255, 255),  //WHITE
