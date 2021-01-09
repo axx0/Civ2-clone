@@ -92,7 +92,7 @@ namespace civ2.Terrains
         public string Hexvalue { get; set; }
 
         public Bitmap Graphic { get; set; }
-        public Bitmap GraphicZoom(int zoom) => ModifyImage.ResizeImage(Graphic, zoom);
+        public Bitmap GraphicZoom(int zoom) => ModifyImage.Resize(Graphic, zoom);
 
     }
 }

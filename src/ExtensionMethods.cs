@@ -37,5 +37,11 @@ namespace ExtensionMethods
             int[] nXY = new int[] { Convert.ToInt32(Math.Floor((nxy[0] + 4 * (8 + zoom)) / (8 * (8 + zoom)))), Convert.ToInt32(Math.Floor((nxy[1] - 2 * (8 + zoom)) / (4 * (8 + zoom)))) };   //converting crossing to int
             return new int[] { nXY[0] + nXY[1], nXY[1] - nXY[0] };
         }
+
+        // Return position of "i" relative to zoom
+        public static int ZoomScale(int i, int zoom)
+        {
+            return (int)((8.0 + (float)zoom) / 8.0 * i);
+        }
     }
 }

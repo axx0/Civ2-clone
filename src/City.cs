@@ -335,7 +335,7 @@ namespace civ2
             }
         }
 
-        public Bitmap Graphic(bool citySizeWindow, int zoom) => Draw.City(this, citySizeWindow, zoom);
+        //public Bitmap Graphic(bool citySizeWindow, int zoom) => Draw.City(this, citySizeWindow, zoom);
 
         private Bitmap _textGraphic;
         public Bitmap TextGraphic

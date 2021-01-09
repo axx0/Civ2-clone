@@ -44,7 +44,7 @@ namespace civ2.Bitmaps
                         if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
 
                         // Tiles
-                        g.DrawImage(ModifyImage.ResizeImage(Map.TileC2(x, y).Graphic, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1] + Game.Ypx);
+                        g.DrawImage(ModifyImage.Resize(Map.TileC2(x, y).Graphic, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1] + Game.Ypx);
 
                         // Units
                         List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
@@ -74,7 +74,8 @@ namespace civ2.Bitmaps
                         // City
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                         if (city != null)
-                            g.DrawImage(city.Graphic(true, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);
+                            Draw.City(g, city, true, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                            //g.DrawImage(city.Graphic(true, Game.Zoom), coordsOffsetsPx[0], coordsOffsetsPx[1]);   // OLD
 
                         // Draw active unit if it's not moving
                         if (unitsHere.Count > 0)
@@ -257,10 +258,10 @@ namespace civ2.Bitmaps
                         City city = Game.GetCities.Find(c => c.X == xCiv2 && c.Y == yCiv2);
                         if (city != null)
                         {
-                            g.DrawImage(
-                                Draw.City(city, true, 8),
-                                32 * coordsOffsets[0] + 64,
-                                16 * coordsOffsets[1] + 32);
+                            //g.DrawImage(
+                            //    Draw.City(city, true, 8),
+                            //    32 * coordsOffsets[0] + 64,
+                            //    16 * coordsOffsets[1] + 32);
                         }
                     }
                 }

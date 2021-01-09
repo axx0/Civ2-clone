@@ -144,7 +144,7 @@ namespace civ2.Forms
                             $" {Game.Rules.UnitMove[_barValue + row]} HP: { Game.Rules.UnitHitp[_barValue + row]} / {Game.Rules.UnitFirepwr[_barValue + row]} )",
                             new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(_choicePanel.Width - _verticalBar.Width, row * 23 + 1), sf);
                     }
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[_barValue + row], -4), new Point(1 + ((_barValue + row) % 2) * 38, 3 + row * 23 - 8));  // big=0.75-times the normal size of units
+                    e.Graphics.DrawImage(ModifyImage.Resize(Images.Units[_barValue + row], -4), new Point(1 + ((_barValue + row) % 2) * 38, 3 + row * 23 - 8));  // big=0.75-times the normal size of units
                     e.Graphics.DrawString(Game.Rules.UnitName[_barValue + row], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
                     e.Graphics.DrawString($"(20 Turns, ADM: {Game.Rules.UnitAttack[_barValue + row]} / {Game.Rules.UnitDefense[_barValue + row]} / " +
                         $"{Game.Rules.UnitMove[_barValue + row]}  HP: {Game.Rules.UnitHitp[_barValue + row]} / {Game.Rules.UnitFirepwr[_barValue + row]} )",

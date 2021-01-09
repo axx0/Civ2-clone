@@ -1,16 +1,14 @@
 ﻿using System.Drawing;
 using civ2.Enums;
+using ExtensionMethods;
 
 namespace civ2.Bitmaps
 {
     public static partial class Draw
     {
         // Draw an image of city
-        public static Bitmap City(City city, bool citySizeWindow, int zoom)
+        public static void City(Graphics g, City city, bool isCitySizeWindow, int zoom, Point dest)
         {
-            // Define a bitmap for drawing
-            Bitmap cityPic = new Bitmap(64, 48);
-
             // Determine city style
             // For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
             // If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
@@ -70,64 +68,50 @@ namespace civ2.Bitmaps
                 }
             }
 
-            // If no units are in the city, draw no flag
-            bool flagPresent = city.AnyUnitsPresent();
+            using var sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
 
-            using (Graphics graphics = Graphics.FromImage(cityPic))
+            // Depending on the presence of a wall, get images of city and locations of size window & flag
+            var cityPic = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWall[(int)style, sizeStyle] : Images.City[(int)style, sizeStyle];
+            var sizeWinLoc = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallSizeWindowLoc[(int)style, sizeStyle] : Images.CitySizeWindowLoc[(int)style, sizeStyle];
+            var flagLoc = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallFlagLoc[(int)style, sizeStyle] : Images.CityFlagLoc[(int)style, sizeStyle];
+
+            // Draw city
+            g.DrawImage(ModifyImage.Resize(cityPic, zoom), dest.X, dest.Y);
+
+            // Draw city size window
+            if (isCitySizeWindow)
             {
-                StringFormat sf = new StringFormat();
-                sf.LineAlignment = StringAlignment.Center;
-                sf.Alignment = StringAlignment.Center;
+                // Rectangle
+                g.DrawRectangle(new Pen(Color.Black),
+                    dest.X + Ext.ZoomScale(sizeWinLoc.X, zoom) - 1,
+                    dest.Y + Ext.ZoomScale(sizeWinLoc.Y, zoom) - 1,
+                    Ext.ZoomScale(9, zoom),
+                    Ext.ZoomScale(13, zoom));
 
-                if (!city.ImprovementExists(ImprovementType.CityWalls))  // no city walls
-                {
-                    graphics.DrawImage(Images.City[(int)style, sizeStyle], 0, 0);
+                // Fill rectangle
+                g.FillRectangle(new SolidBrush(CivColors.Light[city.OwnerId]),
+                    dest.X + Ext.ZoomScale(sizeWinLoc.X, zoom),
+                    dest.Y + Ext.ZoomScale(sizeWinLoc.Y, zoom),
+                    Ext.ZoomScale(8, zoom),
+                    Ext.ZoomScale(12, zoom));
 
-                    // Draw city size window
-                    if (citySizeWindow)
-                    {
-                        // Rectangle
-                        graphics.DrawRectangle(new Pen(Color.Black), Images.citySizeWindowLoc[(int)style, sizeStyle, 0] - 1, Images.citySizeWindowLoc[(int)style, sizeStyle, 1] - 1, 9, 13);
-
-                        // Filling of rectangle
-                        graphics.FillRectangle(new SolidBrush(CivColors.Light[city.OwnerId]), Images.citySizeWindowLoc[(int)style, sizeStyle, 0], Images.citySizeWindowLoc[(int)style, sizeStyle, 1], 8, 12);
-
-                        // Size text
-                        graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.citySizeWindowLoc[(int)style, sizeStyle, 0] + 4, Images.citySizeWindowLoc[(int)style, sizeStyle, 1] + 6, sf);
-                    }
-
-                    // Draw city flag
-                    if (flagPresent)
-                    {
-                        graphics.DrawImage(Images.CityFlag[city.OwnerId], Images.cityFlagLoc[(int)style, sizeStyle, 0] - 3, Images.cityFlagLoc[(int)style, sizeStyle, 1] - 17);
-                    }
-                }
-                else
-                {
-                    graphics.DrawImage(Images.CityWall[(int)style, sizeStyle], 0, 0);
-                    if (citySizeWindow)
-                    {
-                        // Draw city (+Wall) size window
-                        graphics.DrawRectangle(new Pen(Color.Black), Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 0] - 1, Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 1] - 1, 9, 13);
-
-                        // Filling of rectangle
-                        graphics.FillRectangle(new SolidBrush(CivColors.Light[city.OwnerId]), Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 0], Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 1], 8, 12);
-
-                        // Size text
-                        graphics.DrawString(city.Size.ToString(), new Font("Times New Roman", 10.0f, FontStyle.Bold), new SolidBrush(Color.Black), Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 0] + 4, Images.cityWallSizeWindowLoc[(int)style, sizeStyle, 1] + 6, sf);
-                    }
-
-                    // Draw city flag
-                    if (flagPresent)
-                    {
-                        graphics.DrawImage(Images.CityFlag[city.OwnerId], Images.cityWallFlagLoc[(int)style, sizeStyle, 0] - 3, Images.cityWallFlagLoc[(int)style, sizeStyle, 1] - 17);
-                    }
-                }
-
-                sf.Dispose();
+                // Size text
+                g.DrawString(city.Size.ToString(),
+                    new Font("Times New Roman", Ext.ZoomScale(10, zoom), FontStyle.Bold), new SolidBrush(Color.Black),
+                    dest.X + Ext.ZoomScale(sizeWinLoc.X + 4, zoom),
+                    dest.Y + Ext.ZoomScale(sizeWinLoc.Y + 6, zoom),
+                    sf);
             }
 
-            return zoom == 0 ? cityPic : ModifyImage.ResizeImage(cityPic, zoom);
+            // Draw city flag if units are present in the city
+            if (city.AnyUnitsPresent())
+            {
+                g.DrawImage(ModifyImage.Resize(Images.CityFlag[city.OwnerId], zoom),
+                    dest.X + Ext.ZoomScale(flagLoc.X - 3, zoom),
+                    dest.Y + Ext.ZoomScale(flagLoc.Y - 17, zoom));
+            }
         }
 
         public static void CityName(Graphics g, City city, int zoom, Point dest)

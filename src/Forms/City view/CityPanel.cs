@@ -352,7 +352,7 @@ namespace civ2.Forms
             if (_thisCity.ItemInProduction < 62)
             {
                 zoom = -1;
-                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Units[_thisCity.ItemInProduction], zoom), new Point(64, 0));
+                e.Graphics.DrawImage(ModifyImage.Resize(Images.Units[_thisCity.ItemInProduction], zoom), new Point(64, 0));
             }
             // Improvements
             else
@@ -362,7 +362,7 @@ namespace civ2.Forms
                 e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), 98 + 1, 5 + 1, sf);
                 e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 79, 167)), 98, 5, sf);
                 zoom = 0;
-                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Improvements[_thisCity.ItemInProduction - 62 + 1], zoom), new Point(79, 18));
+                e.Graphics.DrawImage(ModifyImage.Resize(Images.Improvements[_thisCity.ItemInProduction - 62 + 1], zoom), new Point(79, 18));
                 sf.Dispose();
             }
 
@@ -383,12 +383,12 @@ namespace civ2.Forms
 
                 // Draw improvements
                 zoom = -4;  // For normal
-                e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.Improvements[(int)_thisCity.Improvements[i + starting].Type], zoom), new Point(2, 1 + 12 * i));
+                e.Graphics.DrawImage(ModifyImage.Resize(Images.Improvements[(int)_thisCity.Improvements[i + starting].Type], zoom), new Point(2, 1 + 12 * i));
                 // Sell icons
                 zoom = -1;  // For normal
                 if ((int)_thisCity.Improvements[i + starting].Type < 39) // Wonders don't have a sell icon
                 {
-                    e.Graphics.DrawImage(ModifyImage.ResizeImage(Images.SellIcon, zoom), new Point(148, 1 + 12 * i));
+                    e.Graphics.DrawImage(ModifyImage.Resize(Images.SellIcon, zoom), new Point(148, 1 + 12 * i));
                 }
                 // Improvements text
                 e.Graphics.DrawString(_thisCity.Improvements[i + starting].Name, new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(x + 26 + 1, 2 + 12 * i));

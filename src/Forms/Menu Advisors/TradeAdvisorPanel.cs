@@ -85,7 +85,7 @@ namespace civ2.Forms
         {
             // Text
             string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
-            var sf = new StringFormat();
+            using var sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("TRADE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("TRADE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
@@ -98,7 +98,8 @@ namespace civ2.Forms
             foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
             {
                 // City image
-                e.Graphics.DrawImage(Draw.City(city, true, 0), new Point(4 + 64 * ((count + 1) % 2), 95 + 24 * count));
+                Draw.City(e.Graphics, city, true, 0, new Point(4 + 64 * ((count + 1) % 2), 95 + 24 * count));
+                //e.Graphics.DrawImage(Draw.City(city, true, 0), new Point(4 + 64 * ((count + 1) % 2), 95 + 24 * count));
                 // City name
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 105 + 24 * count + 1));
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 105 + 24 * count));
@@ -152,7 +153,6 @@ namespace civ2.Forms
                 e.Graphics.DrawString($"Discoveries: {_discoveries} Turns", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 345 + 1));
                 e.Graphics.DrawString($"Discoveries: {_discoveries} Turns", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 345));
             }
-            sf.Dispose();
         }
 
         private void SupplyDemandButton_Click(object sender, EventArgs e)

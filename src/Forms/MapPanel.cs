@@ -55,7 +55,7 @@ namespace civ2.Forms
                 Location = new Point(11, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomIN, 4)
+                BackgroundImage = ModifyImage.Resize(Images.ZoomIN, 4)
             };
             ZoomINButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomINButton);
@@ -66,7 +66,7 @@ namespace civ2.Forms
                 Location = new Point(36, 9),
                 Size = new Size(23, 23),
                 FlatStyle = FlatStyle.Flat,
-                BackgroundImage = ModifyImage.ResizeImage(Images.ZoomOUT, 4),
+                BackgroundImage = ModifyImage.Resize(Images.ZoomOUT, 4),
             };
             ZoomOUTButton.FlatAppearance.BorderSize = 0;
             Controls.Add(ZoomOUTButton);

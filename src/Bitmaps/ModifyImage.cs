@@ -1,18 +1,19 @@
 ﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using ExtensionMethods;
 
 namespace civ2.Bitmaps
 {
     public static class ModifyImage
     {
         // Resize the image according to zoom factor
-        public static Bitmap ResizeImage(Bitmap image, int zoom)
+        public static Bitmap Resize(Bitmap image, int zoom)
         {
             if (zoom == 0) return image;
-
-            int width = (int)((8.0 + (float)zoom) / 8.0 * (float)image.Width);
-            int height = (int)((8.0 + (float)zoom) / 8.0 * (float)image.Height);
+            
+            int width = Ext.ZoomScale(image.Width, zoom);
+            int height = Ext.ZoomScale(image.Height, zoom);
 
             var destRect = new Rectangle(0, 0, width, height);
             var destImage = new Bitmap(width, height);
@@ -32,24 +33,22 @@ namespace civ2.Bitmaps
                 //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
                 graphics.PixelOffsetMode = PixelOffsetMode.None;
 
-                using (var wrapMode = new ImageAttributes())
-                {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-                }
+                using var wrapMode = new ImageAttributes();
+                wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
             }
 
             return destImage;
         }
 
-        //Crop image
+        // Crop image
         public static Bitmap CropImage(Bitmap img, Rectangle cropArea)
         {
-            Bitmap bmpImage = new Bitmap(img);
+            var bmpImage = new Bitmap(img);
             return bmpImage.Clone(cropArea, bmpImage.PixelFormat);
         }
 
-        //Merge 2 images
+        // Merge 2 images
         public static Bitmap MergedBitmaps(Bitmap original, Bitmap layer, int x, int y)
         {
             //Bitmap result = new Bitmap(original.Width, original.Height);
@@ -63,10 +62,10 @@ namespace civ2.Bitmaps
             return result;
         }
 
-        //Grey out an image
+        // Grey out an image
         public static ImageAttributes ConvertToGray()
         {
-            ImageAttributes imageAttributes = new ImageAttributes();
+            var imageAttributes = new ImageAttributes();
 
             float[][] colorMatrixElements = {
                 new float[] { 0, 0, 0, 0, 0},        // red
@@ -75,7 +74,7 @@ namespace civ2.Bitmaps
                 new float[] { 0,  0,  0,  1, 0},        // alpha scaling
                 new float[] { 0.529f, 0.529f, 0.529f,  0, 1}};    // translations
 
-            ColorMatrix colorMatrix = new ColorMatrix(colorMatrixElements);
+            var colorMatrix = new ColorMatrix(colorMatrixElements);
 
             imageAttributes.SetColorMatrix(
                colorMatrix,

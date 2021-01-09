@@ -213,7 +213,7 @@ namespace civ2
                 UnitRange[row] = Int32.Parse(rulesList[18][row]);
                 UnitAttack[row] = Int32.Parse(rulesList[19][row]);
                 UnitDefense[row] = Int32.Parse(rulesList[20][row]);
-                UnitHitp[row] = Int32.Parse(rulesList[21][row]);
+                UnitHitp[row] = 10 * Int32.Parse(rulesList[21][row]);
                 UnitFirepwr[row] = Int32.Parse(rulesList[22][row]);
                 UnitCost[row] = Int32.Parse(rulesList[23][row]);
                 UnitHold[row] = Int32.Parse(rulesList[24][row]);

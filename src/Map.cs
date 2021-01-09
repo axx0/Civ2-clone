@@ -85,7 +85,7 @@ namespace civ2
         //    if (Game.Zoom == 0) // No need to resize the map
         //        ActiveCivMap = BaseMapPic[mapId];
         //    else
-        //        ActiveCivMap = ModifyImage.ResizeImage(BaseMapPic[mapId], Game.Zoom);
+        //        ActiveCivMap = ModifyImage.Resize(BaseMapPic[mapId], Game.Zoom);
         //}
 
         private static Map _instance;

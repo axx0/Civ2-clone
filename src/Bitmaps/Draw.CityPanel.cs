@@ -273,8 +273,8 @@ namespace civ2.Bitmaps
                         drawIndex++;  // Change men/woman appearance
                     }
                     //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
-                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleLshadow[drawIndex, 0], zoom), i * spacing + 1, 1);   // Shadow
-                    graphics.DrawImage(ModifyImage.ResizeImage(Images.PeopleL[drawIndex, 0], zoom), i * spacing, 0);
+                    graphics.DrawImage(ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom), i * spacing + 1, 1);   // Shadow
+                    graphics.DrawImage(ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom), i * spacing, 0);
                 }
             }
             return faces;
@@ -340,15 +340,16 @@ namespace civ2.Bitmaps
                             newY = city.Y + y_;
 
                             // First draw blank tiles
-                            g.DrawImage(ModifyImage.ResizeImage(Images.Blank, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                            g.DrawImage(ModifyImage.Resize(Images.Blank, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
                             // Then draw tiles if they are visible
                             if (Map.IsTileVisibleC2(newX, newY, city.Owner.Id))
-                                g.DrawImage(ModifyImage.ResizeImage(Map.TileC2(newX, newY).Graphic, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                                g.DrawImage(ModifyImage.Resize(Map.TileC2(newX, newY).Graphic, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
                             // TODO: implement dithering on edges or depending on where invisible tiles are
                             // Draw cities
                             cityHere = Game.CityHere(newX, newY);
                             if (cityHere != null)
-                                g.DrawImage(cityHere.Graphic(false, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
+                                Draw.City(g, cityHere, false, zoom, new Point(4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
+                                //g.DrawImage(cityHere.Graphic(false, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
                             // Draw units
                             unitsHere = Game.UnitsHere(newX, newY).FindAll(unit => (unit.Owner != Game.ActiveCiv) && (unit.Type != Enums.UnitType.Settlers));
                             //if (unitsHere.Count > 0 && cityHere == null)

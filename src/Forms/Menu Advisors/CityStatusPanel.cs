@@ -51,7 +51,7 @@ namespace civ2.Forms
         {
             // Text
             string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
-            StringFormat sf = new StringFormat();
+            using var sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
             e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
@@ -64,7 +64,8 @@ namespace civ2.Forms
             foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
             {
                 // City image
-                e.Graphics.DrawImage(city.Graphic(true, 0), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
+                Draw.City(e.Graphics, city, true, 0, new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
+                //e.Graphics.DrawImage(city.Graphic(true, 0), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));  // OLD
                 // City name
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 82 + 24 * count + 1));
                 e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 82 + 24 * count));
@@ -94,7 +95,6 @@ namespace civ2.Forms
                 }
                 count++;
             }
-            sf.Dispose();
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

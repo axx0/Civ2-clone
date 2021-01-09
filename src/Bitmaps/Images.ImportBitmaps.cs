@@ -18,8 +18,7 @@ namespace civ2.Bitmaps
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills,
                                 DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
-        public static int[,,] cityFlagLoc, cityWallFlagLoc, citySizeWindowLoc, cityWallSizeWindowLoc;
-        //public static int[,,] cityWallFlagLoc = new int[6, 4, 2];
+        public static Point[,] CityFlagLoc, CitySizeWindowLoc, CityWallFlagLoc, CityWallSizeWindowLoc;
         public static Icon Civ2Icon;
 
         public static void LoadGraphicsAssetsFromFiles(string path)
@@ -332,10 +331,10 @@ namespace civ2.Bitmaps
             City = new Bitmap[6, 4];
             CityFlag = new Bitmap[9];
             CityWall = new Bitmap[6, 4];
-            cityFlagLoc = new int[6, 4, 2];
-            cityWallFlagLoc = new int[6, 4, 2];
-            citySizeWindowLoc = new int[6, 4, 2];
-            cityWallSizeWindowLoc = new int[6, 4, 2];
+            CityFlagLoc = new Point[6, 4];
+            CityWallFlagLoc = new Point[6, 4];
+            CitySizeWindowLoc = new Point[6, 4];
+            CityWallSizeWindowLoc = new Point[6, 4];
 
             // Define transparent colors
             Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
@@ -353,16 +352,17 @@ namespace civ2.Bitmaps
                     CityWall[row, col] = cities.Clone(new Rectangle(334 + (65 * col), 39 + (49 * row), 64, 48), cities.PixelFormat);
                     CityWall[row, col].MakeTransparent(transparentGray);
                     CityWall[row, col].MakeTransparent(transparentPink);
-                    //determine where the city size window is located (x-y)
-                    for (int ix = 0; ix < 64; ix++)
-                    { //in x-direction
-                        if (cities.GetPixel((65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 0] = ix;  //if pixel on border is blue
-                        if (cities.GetPixel(333 + (65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 0] = ix;
-                    } //for cities with wall
-                    for (int iy = 0; iy < 48; iy++)
-                    { //in y-direction
-                        if (cities.GetPixel(65 * col, 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) cityFlagLoc[row, col, 1] = iy;
-                        if (cities.GetPixel(333 + (65 * col), 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) cityWallFlagLoc[row, col, 1] = iy;
+                    // Determine where the city size window is located (x-y)
+                    for (int ix = 0; ix < 64; ix++) // In x-direction
+                    {
+                        if (cities.GetPixel((65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) CityFlagLoc[row, col].X = ix;  // If pixel on border is blue
+                        if (cities.GetPixel(333 + (65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) CityWallFlagLoc[row, col].X = ix;
+                    }
+                    // For cities with wall
+                    for (int iy = 0; iy < 48; iy++) // In y-direction
+                    {
+                        if (cities.GetPixel(65 * col, 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) CityFlagLoc[row, col].Y = iy;
+                        if (cities.GetPixel(333 + (65 * col), 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) CityWallFlagLoc[row, col].Y = iy;
                     }
                 }
             }
@@ -374,103 +374,55 @@ namespace civ2.Bitmaps
                 CityFlag[col].MakeTransparent(transparentGray);
             }
 
-            // Locations of city size windows
-            citySizeWindowLoc[0, 0, 0] = 13;    //stone age
-            citySizeWindowLoc[0, 0, 1] = 23;
-            citySizeWindowLoc[0, 1, 0] = 52;
-            citySizeWindowLoc[0, 1, 1] = 18;
-            citySizeWindowLoc[0, 2, 0] = 0;
-            citySizeWindowLoc[0, 2, 1] = 23;
-            citySizeWindowLoc[0, 3, 0] = 24;
-            citySizeWindowLoc[0, 3, 1] = 29;
-            citySizeWindowLoc[1, 0, 0] = 10;    //ancient
-            citySizeWindowLoc[1, 0, 1] = 23;
-            citySizeWindowLoc[1, 1, 0] = 50;
-            citySizeWindowLoc[1, 1, 1] = 25;
-            citySizeWindowLoc[1, 2, 0] = 1;
-            citySizeWindowLoc[1, 2, 1] = 17;
-            citySizeWindowLoc[1, 3, 0] = 12;
-            citySizeWindowLoc[1, 3, 1] = 27;
-            citySizeWindowLoc[2, 0, 0] = 3;    //far east
-            citySizeWindowLoc[2, 0, 1] = 20;
-            citySizeWindowLoc[2, 1, 0] = 48;
-            citySizeWindowLoc[2, 1, 1] = 7;
-            citySizeWindowLoc[2, 2, 0] = 50;
-            citySizeWindowLoc[2, 2, 1] = 5;
-            citySizeWindowLoc[2, 3, 0] = 28;
-            citySizeWindowLoc[2, 3, 1] = 27;
-            citySizeWindowLoc[3, 0, 0] = 5;    //medieval
-            citySizeWindowLoc[3, 0, 1] = 22;
-            citySizeWindowLoc[3, 1, 0] = 2;
-            citySizeWindowLoc[3, 1, 1] = 18;
-            citySizeWindowLoc[3, 2, 0] = 0;
-            citySizeWindowLoc[3, 2, 1] = 18;
-            citySizeWindowLoc[3, 3, 0] = 27;
-            citySizeWindowLoc[3, 3, 1] = 27;
-            citySizeWindowLoc[4, 0, 0] = 4;    //industrial
-            citySizeWindowLoc[4, 0, 1] = 20;
-            citySizeWindowLoc[4, 1, 0] = 1;
-            citySizeWindowLoc[4, 1, 1] = 20;
-            citySizeWindowLoc[4, 2, 0] = 2;
-            citySizeWindowLoc[4, 2, 1] = 22;
-            citySizeWindowLoc[4, 3, 0] = 28;
-            citySizeWindowLoc[4, 3, 1] = 30;
-            citySizeWindowLoc[5, 0, 0] = 8;    //modern
-            citySizeWindowLoc[5, 0, 1] = 18;
-            citySizeWindowLoc[5, 1, 0] = 2;
-            citySizeWindowLoc[5, 1, 1] = 19;
-            citySizeWindowLoc[5, 2, 0] = 8;
-            citySizeWindowLoc[5, 2, 1] = 20;
-            citySizeWindowLoc[5, 3, 0] = 27;
-            citySizeWindowLoc[5, 3, 1] = 30;
-            cityWallSizeWindowLoc[0, 0, 0] = 12;    //stone + wall
-            cityWallSizeWindowLoc[0, 0, 1] = 23;
-            cityWallSizeWindowLoc[0, 1, 0] = 52;
-            cityWallSizeWindowLoc[0, 1, 1] = 22;
-            cityWallSizeWindowLoc[0, 2, 0] = 0;
-            cityWallSizeWindowLoc[0, 2, 1] = 19;
-            cityWallSizeWindowLoc[0, 3, 0] = 24;
-            cityWallSizeWindowLoc[0, 3, 1] = 29;
-            cityWallSizeWindowLoc[1, 0, 0] = 10;    //ancient + wall
-            cityWallSizeWindowLoc[1, 0, 1] = 13;
-            cityWallSizeWindowLoc[1, 1, 0] = 50;
-            cityWallSizeWindowLoc[1, 1, 1] = 21;
-            cityWallSizeWindowLoc[1, 2, 0] = 1;
-            cityWallSizeWindowLoc[1, 2, 1] = 17;
-            cityWallSizeWindowLoc[1, 3, 0] = 11;
-            cityWallSizeWindowLoc[1, 3, 1] = 22;
-            cityWallSizeWindowLoc[2, 0, 0] = 4;    //far east + wall
-            cityWallSizeWindowLoc[2, 0, 1] = 18;
-            cityWallSizeWindowLoc[2, 1, 0] = 48;
-            cityWallSizeWindowLoc[2, 1, 1] = 6;
-            cityWallSizeWindowLoc[2, 2, 0] = 51;
-            cityWallSizeWindowLoc[2, 2, 1] = 4;
-            cityWallSizeWindowLoc[2, 3, 0] = 28;
-            cityWallSizeWindowLoc[2, 3, 1] = 27;
-            cityWallSizeWindowLoc[3, 0, 0] = 3;    //medieval + wall
-            cityWallSizeWindowLoc[3, 0, 1] = 18;
-            cityWallSizeWindowLoc[3, 1, 0] = 2;
-            cityWallSizeWindowLoc[3, 1, 1] = 20;
-            cityWallSizeWindowLoc[3, 2, 0] = 1;
-            cityWallSizeWindowLoc[3, 2, 1] = 15;
-            cityWallSizeWindowLoc[3, 3, 0] = 27;
-            cityWallSizeWindowLoc[3, 3, 1] = 29;
-            cityWallSizeWindowLoc[4, 0, 0] = 4;    //industrial + wall
-            cityWallSizeWindowLoc[4, 0, 1] = 18;
-            cityWallSizeWindowLoc[4, 1, 0] = 1;
-            cityWallSizeWindowLoc[4, 1, 1] = 20;
-            cityWallSizeWindowLoc[4, 2, 0] = 1;
-            cityWallSizeWindowLoc[4, 2, 1] = 18;
-            cityWallSizeWindowLoc[4, 3, 0] = 26;
-            cityWallSizeWindowLoc[4, 3, 1] = 28;
-            cityWallSizeWindowLoc[5, 0, 0] = 3;    //modern + wall
-            cityWallSizeWindowLoc[5, 0, 1] = 21;
-            cityWallSizeWindowLoc[5, 1, 0] = 0;
-            cityWallSizeWindowLoc[5, 1, 1] = 20;
-            cityWallSizeWindowLoc[5, 2, 0] = 8;
-            cityWallSizeWindowLoc[5, 2, 1] = 20;
-            cityWallSizeWindowLoc[5, 3, 0] = 27;
-            cityWallSizeWindowLoc[5, 3, 1] = 30;
+            // Locations of city size windows (for standard zoom)
+            CitySizeWindowLoc[0, 0] = new Point(13, 23);    // Stone age
+            CitySizeWindowLoc[0, 1] = new Point(52, 18);
+            CitySizeWindowLoc[0, 2] = new Point(0, 23);
+            CitySizeWindowLoc[0, 3] = new Point(24, 29);
+            CitySizeWindowLoc[1, 0] = new Point(10, 23);    // Ancient
+            CitySizeWindowLoc[1, 1] = new Point(50, 25);
+            CitySizeWindowLoc[1, 2] = new Point(1, 17);
+            CitySizeWindowLoc[1, 3] = new Point(12, 27);
+            CitySizeWindowLoc[2, 0] = new Point(3, 20);    // Far east
+            CitySizeWindowLoc[2, 1] = new Point(48, 7);
+            CitySizeWindowLoc[2, 2] = new Point(50, 5);
+            CitySizeWindowLoc[2, 3] = new Point(28, 27);
+            CitySizeWindowLoc[3, 0] = new Point(5, 22);    // Medieval
+            CitySizeWindowLoc[3, 1] = new Point(2, 18);
+            CitySizeWindowLoc[3, 2] = new Point(0, 18);
+            CitySizeWindowLoc[3, 3] = new Point(27, 27);
+            CitySizeWindowLoc[4, 0] = new Point(4, 20);    // Industrial
+            CitySizeWindowLoc[4, 1] = new Point(1, 20);
+            CitySizeWindowLoc[4, 2] = new Point(2, 22);
+            CitySizeWindowLoc[4, 3] = new Point(28, 30);
+            CitySizeWindowLoc[5, 0] = new Point(8, 18);    // Modern
+            CitySizeWindowLoc[5, 1] = new Point(2, 19);
+            CitySizeWindowLoc[5, 2] = new Point(8, 20);
+            CitySizeWindowLoc[5, 3] = new Point(27, 30);
+            CityWallSizeWindowLoc[0, 0] = new Point(12, 23);    // Stone + wall
+            CityWallSizeWindowLoc[0, 1] = new Point(52, 22);
+            CityWallSizeWindowLoc[0, 2] = new Point(0, 19);
+            CityWallSizeWindowLoc[0, 3] = new Point(24, 29);
+            CityWallSizeWindowLoc[1, 0] = new Point(10, 13);    // Ancient + wall
+            CityWallSizeWindowLoc[1, 1] = new Point(50, 21);
+            CityWallSizeWindowLoc[1, 2] = new Point(1, 17);
+            CityWallSizeWindowLoc[1, 3] = new Point(11, 22);
+            CityWallSizeWindowLoc[2, 0] = new Point(4, 18);    // Far east + wall
+            CityWallSizeWindowLoc[2, 1] = new Point(48, 6);
+            CityWallSizeWindowLoc[2, 2] = new Point(51, 4);
+            CityWallSizeWindowLoc[2, 3] = new Point(28, 27);
+            CityWallSizeWindowLoc[3, 0] = new Point(3, 18);    // Medieval + wall
+            CityWallSizeWindowLoc[3, 1] = new Point(2, 20);
+            CityWallSizeWindowLoc[3, 2] = new Point(1, 15);
+            CityWallSizeWindowLoc[3, 3] = new Point(27, 29);
+            CityWallSizeWindowLoc[4, 0] = new Point(4, 18);    // Industrial + wall
+            CityWallSizeWindowLoc[4, 1] = new Point(1, 20);
+            CityWallSizeWindowLoc[4, 2] = new Point(1, 18);
+            CityWallSizeWindowLoc[4, 3] = new Point(26, 28);
+            CityWallSizeWindowLoc[5, 0] = new Point(3, 21);    // Modern + wall
+            CityWallSizeWindowLoc[5, 1] = new Point(0, 20);
+            CityWallSizeWindowLoc[5, 2] = new Point(8, 20);
+            CityWallSizeWindowLoc[5, 3] = new Point(27, 30);
 
             Fortified = cities.Clone(new Rectangle(143, 423, 64, 48), cities.PixelFormat);
             Fortified.MakeTransparent(transparentGray);
@@ -780,9 +732,9 @@ namespace civ2.Bitmaps
             PrevCity = icons.Clone(new Rectangle(246, 389, 18, 24), icons.PixelFormat);
             NextCity.MakeTransparent(transparentLightPink);
             PrevCity.MakeTransparent(transparentLightPink);
-            //NextCityLarge = ModifyImage.ResizeImage(NextCity, 27, 36);    //50% larger
+            //NextCityLarge = ModifyImage.Resize(NextCity, 27, 36);    //50% larger
             NextCityLarge = NextCity;
-            //PrevCityLarge = ModifyImage.ResizeImage(PrevCity, 27, 36);    //50% larger
+            //PrevCityLarge = ModifyImage.Resize(PrevCity, 27, 36);    //50% larger
             PrevCityLarge = PrevCity;
 
             // Zoom icons

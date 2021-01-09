@@ -2,6 +2,7 @@
 using System.Drawing;
 using civ2.Units;
 using civ2.Enums;
+using ExtensionMethods;
 
 namespace civ2.Bitmaps
 {
@@ -9,7 +10,7 @@ namespace civ2.Bitmaps
     {
         public static void UnitSprite(Graphics g, UnitType type, bool isSleeping, bool isFortified, int zoom, Point dest)
         {
-            var image = ModifyImage.ResizeImage(Images.Units[(int)type], zoom);
+            var image = ModifyImage.Resize(Images.Units[(int)type], zoom);
             if (!isSleeping)
                 g.DrawImage(image, dest.X, dest.Y, new Rectangle(0, 0, image.Width, image.Height), GraphicsUnit.Pixel);
             else     // Sentry
@@ -17,7 +18,7 @@ namespace civ2.Bitmaps
                     0, 0, image.Width, image.Height, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());
 
             // Draw fortification
-            if (isFortified) g.DrawImage(Images.Fortified, dest.X, dest.Y);
+            if (isFortified) g.DrawImage(ModifyImage.Resize(Images.Fortified, zoom), dest.X, dest.Y);
         }
 
         public static void UnitShield(Graphics g, UnitType unitType, int ownerId, OrderType unitOrder, bool isStacked, int unitHP, int unitMaxHP, int zoom, Point dest)
@@ -29,39 +30,50 @@ namespace civ2.Bitmaps
             else backLoc.X += 4;
             int shadowXoffset = frontLoc.X < 32 ? -1 : 1;
             // Scale locations according to zoom (shadow is always offset by 1)
-            frontLoc.X = (int)((8.0 + (float)zoom) / 8.0 * (float)frontLoc.X);
-            frontLoc.Y = (int)((8.0 + (float)zoom) / 8.0 * (float)frontLoc.Y);
-
-            // Determine hitpoints bar size
-            int hitpointsBarX = (int)Math.Floor((float)unitHP * 12 / unitMaxHP);
-            Color hitpointsColor;
-            if (hitpointsBarX <= 3)
-                hitpointsColor = Color.FromArgb(243, 0, 0); // Red
-            else if (hitpointsBarX >= 4 && hitpointsBarX <= 8)
-                hitpointsColor = Color.FromArgb(255, 223, 79);  // Yellow
-            else
-                hitpointsColor = Color.FromArgb(87, 171, 39);   // Green
+            frontLoc.X = Ext.ZoomScale(frontLoc.X, zoom);
+            frontLoc.Y = Ext.ZoomScale(frontLoc.Y, zoom);
+            backLoc.X = Ext.ZoomScale(backLoc.X, zoom);
+            backLoc.Y = Ext.ZoomScale(backLoc.Y, zoom);
 
             // If unit stacked --> draw back shield with its shadow
-            var shadow = ModifyImage.ResizeImage(Images.ShieldShadow, zoom);
+            var shadow = ModifyImage.Resize(Images.ShieldShadow, zoom);
             if (isStacked)
             {
-                //// Back shield shadow
-                //g.DrawImage(shadow,
-                //            new Rectangle(backLoc.X + shadowXoffset, backLoc.Y + 1, shadow.Width, shadow.Height),
-                //            0, 0, shadow.Width, shadow.Height, GraphicsUnit.Pixel, attrShadow);
-                //// Back shield
-                //g.DrawImage(back,
-                //            new Rectangle(backLoc.X, backLoc.Y, back.Width, back.Height),
-                //            0, 0, back.Width, back.Height, GraphicsUnit.Pixel, attrBack);
+                // Back shield shadow
+                g.DrawImage(shadow,
+                            new Rectangle(dest.X + backLoc.X + shadowXoffset, dest.Y + backLoc.Y + 1, shadow.Width, shadow.Height),
+                            0, 0, shadow.Width, shadow.Height, GraphicsUnit.Pixel);
+                // Back shield
+                var back = ModifyImage.Resize(Images.ShieldBack[ownerId], zoom);
+                g.DrawImage(back,
+                            new Rectangle(dest.X + backLoc.X, dest.Y + backLoc.Y, back.Width, back.Height),
+                            0, 0, back.Width, back.Height, GraphicsUnit.Pixel);
             }
 
             // Front shield shadow
             g.DrawImage(shadow, dest.X + frontLoc.X + shadowXoffset, dest.Y + frontLoc.Y, new Rectangle(0, 0, shadow.Width, shadow.Height), GraphicsUnit.Pixel);
 
             // Front shield
-            var front = ModifyImage.ResizeImage(Images.ShieldFront[ownerId], zoom);
+            var front = ModifyImage.Resize(Images.ShieldFront[ownerId], zoom);
             g.DrawImage(front, dest.X + frontLoc.X, dest.Y + frontLoc.Y, new Rectangle(0, 0, front.Width, front.Height), GraphicsUnit.Pixel);
+
+            // Determine hitpoints bar size
+            int hpBarX = (int)Math.Floor((float)unitHP * 12 / unitMaxHP);
+            Color hpColor;
+            if (hpBarX <= 3)
+                hpColor = Color.FromArgb(243, 0, 0); // Red
+            else if (hpBarX >= 4 && hpBarX <= 8)
+                hpColor = Color.FromArgb(255, 223, 79);  // Yellow
+            else
+                hpColor = Color.FromArgb(87, 171, 39);   // Green
+            
+            // Draw black background for hitpoints bar
+            g.FillRectangle(new SolidBrush(Color.Black),
+                new Rectangle(dest.X + frontLoc.X, dest.Y + frontLoc.Y, Ext.ZoomScale(12, zoom), Ext.ZoomScale(7, zoom)));
+
+            // Draw hitpoints bar
+            g.FillRectangle(new SolidBrush(hpColor),
+                new Rectangle(dest.X + frontLoc.X, dest.Y + frontLoc.Y + Ext.ZoomScale(2, zoom), Ext.ZoomScale(hpBarX, zoom), Ext.ZoomScale(3, zoom)));
 
             // Text on front shield
             using var sf = new StringFormat();
@@ -85,7 +97,8 @@ namespace civ2.Bitmaps
                 case OrderType.NoOrders: shieldText = "-"; break;
                 default: shieldText = "-"; break;
             }
-            g.DrawString(shieldText, new Font("Arial", 8), new SolidBrush(Color.Black), dest.X + frontLoc.X + 6, dest.Y + frontLoc.Y + 12, sf);
+            g.DrawString(shieldText, new Font("Arial", Ext.ZoomScale(8, zoom)), new SolidBrush(Color.Black),
+                dest.X + frontLoc.X + Ext.ZoomScale(6, zoom), dest.Y + frontLoc.Y + Ext.ZoomScale(12, zoom), sf);
         }
 
         public static void Unit(Graphics g, IUnit unit, bool isStacked, int zoom, Point dest)
@@ -101,7 +114,7 @@ namespace civ2.Bitmaps
 
             using (var g = Graphics.FromImage(square))
             {
-                var sf = new StringFormat();
+                using var sf = new StringFormat();
                 sf.LineAlignment = StringAlignment.Center;
                 sf.Alignment = StringAlignment.Center;
 
@@ -127,7 +140,6 @@ namespace civ2.Bitmaps
                 //graphics.DrawImage(Images.UnitShield[civId], Images.unitShieldLocation[Id, 0], Images.unitShieldLocation[Id, 1]); //main shield
                 //graphics.DrawString("-", new Font("Arial", 8.0f), new SolidBrush(Color.Black), Images.unitShieldLocation[Id, 0] + 6, Images.unitShieldLocation[Id, 1] + 12, sf);    //Action on shield
                 g.DrawImage(Images.Units[Id], 0, 0);    //draw unit
-                sf.Dispose();
             }
 
             return square;
