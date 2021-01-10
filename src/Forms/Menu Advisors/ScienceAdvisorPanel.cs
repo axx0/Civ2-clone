@@ -73,40 +73,34 @@ namespace civ2.Forms
         {
             // Draw text
             string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("SCIENCE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
-            e.Graphics.DrawString("SCIENCE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            using var font1 = new Font("Times New Roman", 14);
+            Draw.Text(e.Graphics, "SCIENCE ADVISOR", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 3), Color.FromArgb(67, 67, 67), 2, 1);
+            Draw.Text(e.Graphics, $"Kingdom of the {_game.ActiveCiv.TribeName}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 24), Color.FromArgb(67, 67, 67), 2, 1);
+            Draw.Text(e.Graphics, $"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 45), Color.FromArgb(67, 67, 67), 2, 1);
+
             // If civ discovered all techs
             if (_game.ActiveCiv.ReseachingTech == 255)
             {
-                e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 71 + 1), sf);
-                e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 71), sf);
+                Draw.Text(e.Graphics, "Discoveries Every 80 Turns", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 71), Color.FromArgb(67, 67, 67), 2, 1);
             }
             // If civ is still researching
             else
             {
-                e.Graphics.DrawRectangle(new Pen(Color.White), new Rectangle(2, 73, 595, 53));  // White rectangle
-                e.Graphics.DrawString($"Researching: {_game.Rules.AdvanceName[_game.ActiveCiv.ReseachingTech]}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 74 + 1), sf);
-                e.Graphics.DrawString($"Researching: {_game.Rules.AdvanceName[_game.ActiveCiv.ReseachingTech]}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 74), sf);
-                e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 130 + 1), sf);
-                e.Graphics.DrawString("Discoveries Every 80 Turns", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 130), sf);
+                using var _pen = new Pen(Color.White);
+                e.Graphics.DrawRectangle(_pen, new Rectangle(2, 73, 595, 53));  // White rectangle
+                Draw.Text(e.Graphics, $"Researching: {_game.Rules.AdvanceName[_game.ActiveCiv.ReseachingTech]}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 74), Color.FromArgb(67, 67, 67), 2, 1);
+                Draw.Text(e.Graphics, "Discoveries Every 80 Turns", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 130), Color.FromArgb(67, 67, 67), 2, 1);
             }
-            sf.Dispose();
             // Write discovered advances
+            using var font2 = new Font("Times New Roman", 11, FontStyle.Bold);
             int count = 0;
             int startingOffset = (_game.ActiveCiv.ReseachingTech == 255) ? 100 : 160;
-            for (int i = _barValue * _techsPerColumn; i < _discoveredAdvances.Count(); i++)
+            for (int i = _barValue * _techsPerColumn; i < _discoveredAdvances.Count; i++)
             {
                 int x = 198 * (count / _techsPerColumn);
                 int y = 22 * (count % _techsPerColumn);
                 e.Graphics.DrawImage(Images.ResearchIcons[_game.Rules.AdvanceCategory[_discoveredAdvances[i]], _game.Rules.AdvanceEpoch[_discoveredAdvances[i]]], new Point(4 + x, startingOffset - 1 + y));
-                e.Graphics.DrawString(_game.Rules.AdvanceName[_discoveredAdvances[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(x + 42 + 2, y + startingOffset + 1));
-                e.Graphics.DrawString(_game.Rules.AdvanceName[_discoveredAdvances[i]], new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(x + 42, y + startingOffset));
+                Draw.Text(e.Graphics, _game.Rules.AdvanceName[_discoveredAdvances[i]], font1, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(63, 187, 199), new Point(x + 42, y + startingOffset), Color.FromArgb(67, 67, 67), 2, 1);
                 count++;
                 if (count == 3 * _techsPerColumn) break; // Only 3 columns can be shown
             }

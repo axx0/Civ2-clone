@@ -44,7 +44,7 @@ namespace civ2.Bitmaps
         // Crop image
         public static Bitmap CropImage(Bitmap img, Rectangle cropArea)
         {
-            var bmpImage = new Bitmap(img);
+            using var bmpImage = new Bitmap(img);
             return bmpImage.Clone(cropArea, bmpImage.PixelFormat);
         }
 

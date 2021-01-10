@@ -67,6 +67,7 @@ namespace civ2.Forms
                 case IntroScreenChoiceType.LoadGame:
                     {
                         Game.LoadGame(directoryPath, SAVname);
+                        ViewPieceMode = Game.ActiveUnit != null;
                         LoadPanelsAfterGameStart();
                         break;
                     }

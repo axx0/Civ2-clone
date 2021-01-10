@@ -39,7 +39,6 @@ namespace civ2.Bitmaps
                     if (city.Size <= 4) sizeStyle = 1;
                     else if (city.Size > 4 && city.Size <= 7) sizeStyle = 2;
                     else sizeStyle = 3;
-
                 }
                 else
                 {
@@ -84,22 +83,26 @@ namespace civ2.Bitmaps
             if (isCitySizeWindow)
             {
                 // Rectangle
-                g.DrawRectangle(new Pen(Color.Black),
+                using var _pen = new Pen(Color.Black);
+                g.DrawRectangle(_pen,
                     dest.X + Ext.ZoomScale(sizeWinLoc.X, zoom) - 1,
                     dest.Y + Ext.ZoomScale(sizeWinLoc.Y, zoom) - 1,
                     Ext.ZoomScale(9, zoom),
                     Ext.ZoomScale(13, zoom));
 
                 // Fill rectangle
-                g.FillRectangle(new SolidBrush(CivColors.Light[city.OwnerId]),
+                using var _brush1 = new SolidBrush(CivColors.Light[city.OwnerId]);
+                g.FillRectangle(_brush1,
                     dest.X + Ext.ZoomScale(sizeWinLoc.X, zoom),
                     dest.Y + Ext.ZoomScale(sizeWinLoc.Y, zoom),
                     Ext.ZoomScale(8, zoom),
                     Ext.ZoomScale(12, zoom));
 
                 // Size text
+                using var _brush2 = new SolidBrush(Color.Black);
+                using var _font = new Font("Times New Roman", Ext.ZoomScale(10, zoom), FontStyle.Bold);
                 g.DrawString(city.Size.ToString(),
-                    new Font("Times New Roman", Ext.ZoomScale(10, zoom), FontStyle.Bold), new SolidBrush(Color.Black),
+                    _font, _brush2,
                     dest.X + Ext.ZoomScale(sizeWinLoc.X + 4, zoom),
                     dest.Y + Ext.ZoomScale(sizeWinLoc.Y + 6, zoom),
                     sf);
@@ -143,9 +146,11 @@ namespace civ2.Bitmaps
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
             g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new Point(dest.X + shadowOffset, dest.Y), sf);
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), Brushes.Black, new Point(dest.X, dest.Y + shadowOffset), sf);
-            g.DrawString(city.Name, new Font("Times New Roman", fontSize), new SolidBrush(CivColors.CityTextColor[city.OwnerId]), dest, sf);
+            using var font = new Font("Times New Roman", fontSize);
+            using var brush = new SolidBrush(CivColors.CityTextColor[city.OwnerId]);
+            g.DrawString(city.Name, font, Brushes.Black, new Point(dest.X + shadowOffset, dest.Y), sf);
+            g.DrawString(city.Name, font, Brushes.Black, new Point(dest.X, dest.Y + shadowOffset), sf);
+            g.DrawString(city.Name, font, brush, dest, sf);
         }
     }
 }

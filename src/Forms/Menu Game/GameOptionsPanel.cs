@@ -7,7 +7,7 @@ namespace civ2.Forms
 {
     public class GameOptionsPanel : Civ2panel
     {
-        private Game _game => Game.Instance;
+        private Game Game => Game.Instance;
 
         private readonly Main _main;
         private readonly List<DoubleBufferedPanel> _clickPanels;
@@ -43,12 +43,20 @@ namespace civ2.Forms
             _cancelButton.Click += CancelButton_Click;
 
             // Make an options array
-            _choiceOptions = new bool[11] { _game.Options.SoundEffects, _game.Options.Music, _game.Options.AlwaysWaitAtEndOfTurn, _game.Options.AutosaveEachTurn,
-                _game.Options.ShowEnemyMoves, _game.Options.NoPauseAfterEnemyMoves, _game.Options.FastPieceSlide, _game.Options.InstantAdvice, _game.Options.TutorialHelp,
-                _game.Options.MoveUnitsWithoutMouse, _game.Options.EnterClosestCityScreen };
+            _choiceOptions = new bool[11] { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn, Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp, Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
             // Individual options text
-            _textOptions = new string[11] { "Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.",
-                "Fast piece slide.", "Instant advice.", "Tutorial help.", "Move units w/ mouse (cursor arrows).", "ENTER key closes City Screen." };
+            _textOptions = new string[11] {
+                "Sound Effects",
+                "Music",
+                "Always wait at end of turn.",
+                "Autosave each turn.",
+                "Show enemy moves.",
+                "No pause after enemy moves.",
+                "Fast piece slide.",
+                "Instant advice.",
+                "Tutorial help.",
+                "Move units w/ mouse (cursor arrows).",
+                "ENTER key closes City Screen." };
             // Make click panels for each options
             _clickPanels = new List<DoubleBufferedPanel>();
             for (int i = 0; i < 11; i++)
@@ -68,31 +76,39 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Show all options
-            SizeF[] stringSize = new SizeF[11];
+            var stringSize = new SizeF[11];
+            using var _font1 = new Font("Times New Roman", 18);
+            using var _font2 = new Font("Wingdings", 18);
+            using var _brush1 = new SolidBrush(Color.FromArgb(51, 51, 51));
+            using var _brush2 = new SolidBrush(Color.White);
+            using var _brush3 = new SolidBrush(Color.FromArgb(128, 128, 128));
+            using var _brush4 = new SolidBrush(Color.Black);
+            using var _brush5 = new SolidBrush(Color.FromArgb(192, 192, 192));
+            using var _pen = new Pen(Color.Black);
             for (int row = 0; row < 11; row++)
             {
                 // Text                
-                e.Graphics.DrawString(_textOptions[row], new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(36, 32 * row + 4));  // Text of option
-                stringSize[row] = e.Graphics.MeasureString(_textOptions[row], new Font("Times New Roman", 18));  // Measure size of text
+                e.Graphics.DrawString(_textOptions[row], _font1, _brush1, new Point(36, 32 * row + 4));  // Text of option
+                stringSize[row] = e.Graphics.MeasureString(_textOptions[row], _font1);  // Measure size of text
                 _clickPanels[row].Size = new Size(30 + (int)(stringSize[row].Width), _clickPanels[row].Height);   // Set the correct size of click panel
 
                 // Draw checkbox
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(13, 8 + 32 * row, 15, 17));
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(12, 9 + 32 * row, 17, 15));
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 128, 128)), new Rectangle(14, 9 + 32 * row, 13, 15));
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 128, 128)), new Rectangle(13, 10 + 32 * row, 15, 13));
-                e.Graphics.DrawLine(new Pen(Color.Black), 14, 9 + 32 * row, 26, 9 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 14, 25 + 32 * row, 27, 25 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 13, 10 + 32 * row, 13, 22 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 29, 10 + 32 * row, 29, 24 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 13, 10 + 32 * row, 14, 10 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 28, 24 + 32 * row, 28, 25 + 32 * row);
+                e.Graphics.FillRectangle(_brush2, new Rectangle(13, 8 + 32 * row, 15, 17));
+                e.Graphics.FillRectangle(_brush2, new Rectangle(12, 9 + 32 * row, 17, 15));
+                e.Graphics.FillRectangle(_brush3, new Rectangle(14, 9 + 32 * row, 13, 15));
+                e.Graphics.FillRectangle(_brush3, new Rectangle(13, 10 + 32 * row, 15, 13));
+                e.Graphics.DrawLine(_pen, 14, 9 + 32 * row, 26, 9 + 32 * row);
+                e.Graphics.DrawLine(_pen, 14, 25 + 32 * row, 27, 25 + 32 * row);
+                e.Graphics.DrawLine(_pen, 13, 10 + 32 * row, 13, 22 + 32 * row);
+                e.Graphics.DrawLine(_pen, 29, 10 + 32 * row, 29, 24 + 32 * row);
+                e.Graphics.DrawLine(_pen, 13, 10 + 32 * row, 14, 10 + 32 * row);
+                e.Graphics.DrawLine(_pen, 28, 24 + 32 * row, 28, 25 + 32 * row);
 
                 // Draw check marks
                 if (_choiceOptions[row])
                 {
-                    e.Graphics.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(Color.Black), new Point(10 + 1, 32 * row + 3 + 2));
-                    e.Graphics.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(Color.FromArgb(192, 192, 192)), new Point(10, 32 * row + 3));
+                    e.Graphics.DrawString("ü", _font2, _brush4, new Point(10 + 1, 32 * row + 3 + 2));
+                    e.Graphics.DrawString("ü", _font2, _brush5, new Point(10, 32 * row + 3));
                 }
             }
         }
@@ -100,17 +116,17 @@ namespace civ2.Forms
         // If OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _game.Options.SoundEffects = _choiceOptions[0];
-            _game.Options.Music = _choiceOptions[1];
-            _game.Options.AlwaysWaitAtEndOfTurn = _choiceOptions[2];
-            _game.Options.AutosaveEachTurn = _choiceOptions[3];
-            _game.Options.ShowEnemyMoves = _choiceOptions[4];
-            _game.Options.NoPauseAfterEnemyMoves = _choiceOptions[5];
-            _game.Options.FastPieceSlide = _choiceOptions[6];
-            _game.Options.InstantAdvice = _choiceOptions[7];
-            _game.Options.TutorialHelp = _choiceOptions[8];
-            _game.Options.MoveUnitsWithoutMouse = _choiceOptions[9];
-            _game.Options.EnterClosestCityScreen = _choiceOptions[10];
+            Game.Options.SoundEffects = _choiceOptions[0];
+            Game.Options.Music = _choiceOptions[1];
+            Game.Options.AlwaysWaitAtEndOfTurn = _choiceOptions[2];
+            Game.Options.AutosaveEachTurn = _choiceOptions[3];
+            Game.Options.ShowEnemyMoves = _choiceOptions[4];
+            Game.Options.NoPauseAfterEnemyMoves = _choiceOptions[5];
+            Game.Options.FastPieceSlide = _choiceOptions[6];
+            Game.Options.InstantAdvice = _choiceOptions[7];
+            Game.Options.TutorialHelp = _choiceOptions[8];
+            Game.Options.MoveUnitsWithoutMouse = _choiceOptions[9];
+            Game.Options.EnterClosestCityScreen = _choiceOptions[10];
             this.Visible = false;
             this.Dispose();
         }

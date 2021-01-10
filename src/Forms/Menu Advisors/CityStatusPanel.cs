@@ -50,14 +50,11 @@ namespace civ2.Forms
         {
             // Text
             string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
-            using var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
-            e.Graphics.DrawString("CITY STATUS", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            using var font1 = new Font("Times New Roman", 14);
+            Draw.Text(e.Graphics, "CITY STATUS", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 3), Color.FromArgb(67, 67, 67), 2, 1);
+            Draw.Text(e.Graphics, $"Kingdom of the {_game.ActiveCiv.TribeName}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 24), Color.FromArgb(67, 67, 67), 2, 1);
+            Draw.Text(e.Graphics, $"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 45), Color.FromArgb(67, 67, 67), 2, 1);
+            
             // Cities
             int count = 0;
             foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
@@ -65,32 +62,33 @@ namespace civ2.Forms
                 // City image
                 Draw.City(e.Graphics, city, true, 0, new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));
                 //e.Graphics.DrawImage(city.Graphic(true, 0), new Point(4 + 64 * ((count + 1) % 2), 69 + 24 * count));  // OLD
+
                 // City name
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 82 + 24 * count + 1));
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 82 + 24 * count));
+                using var font2 = new Font("Times New Roman", 11, FontStyle.Bold);
+                Draw.Text(e.Graphics, city.Name, font2, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(142, 82 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
+
                 // Food production
-                e.Graphics.DrawString(city.Food.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 82 + 24 * count + 1), sf);
-                e.Graphics.DrawString(city.Food.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 82 + 24 * count), sf);
+                Draw.Text(e.Graphics, city.Food.ToString(), font2, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(255, 82 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
                 e.Graphics.DrawImage(Images.CityFoodBig, new Point(265, 85 + 24 * count));
+
                 // Shields
-                e.Graphics.DrawString(city.ShieldProduction.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(292 + 1, 82 + 24 * count + 1), sf);
-                e.Graphics.DrawString(city.ShieldProduction.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(292, 82 + 24 * count), sf);
+                Draw.Text(e.Graphics, city.ShieldProduction.ToString(), font2, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(292, 82 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
                 e.Graphics.DrawImage(Images.CitySupportBig, new Point(297, 85 + 24 * count));
+
                 // Trade
-                e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(329 + 1, 82 + 24 * count + 1), sf);
-                e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(329, 82 + 24 * count), sf);
+                Draw.Text(e.Graphics, city.Trade.ToString(), font2, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(329, 82 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
                 e.Graphics.DrawImage(Images.CityTradeBig, new Point(335, 85 + 24 * count));
+
                 // Item in production
                 int item = city.ItemInProduction;
                 if (city.ItemInProduction < 62) // Unit is in production
                 {
-                    e.Graphics.DrawString($"{_game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * _game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString($"{_game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {(10 * _game.Rules.UnitCost[item])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(367, 82 + 24 * count));
+                    Draw.Text(e.Graphics, $"{_game.Rules.UnitName[item]} ( + {city.ShieldsProgress} / {10 * _game.Rules.UnitCost[item]} )", font2, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(255, 223, 79), new Point(367, 82 + 24 * count), Color.Black, 1, 1);
                 }
-                else    // Improvement
+                // Improvement
+                else
                 {
-                    e.Graphics.DrawString($"{_game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * _game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(367 + 1, 82 + 24 * count + 1));
-                    e.Graphics.DrawString($"{_game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {(10 * _game.Rules.ImprovementCost[item - 62 + 1])} )", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(367, 82 + 24 * count));
+                    Draw.Text(e.Graphics, $"{_game.Rules.ImprovementName[item - 62 + 1]} ( {city.ShieldsProgress} / {10 * _game.Rules.ImprovementCost[item - 62 + 1]} )", font2, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(367, 82 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
                 }
                 count++;
             }

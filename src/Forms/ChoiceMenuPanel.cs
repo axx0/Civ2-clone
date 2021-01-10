@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using civ2.Enums;
-using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
@@ -32,24 +31,24 @@ namespace civ2.Forms
             _radioBtn[0].Checked = true;
 
             // OK button
-            var OKButton = new Civ2button
+            var _OKbutton = new Civ2button
             {
                 Location = new Point(9, Height - 42),
                 Size = new Size(156, 36),
                 Text = "OK"
             };
-            Controls.Add(OKButton);
-            OKButton.Click += OKButton_Click;
+            Controls.Add(_OKbutton);
+            _OKbutton.Click += OKButton_Click;
 
             // Cancel button
-            var CancelButton = new Civ2button
+            var _cancelButton = new Civ2button
             {
                 Location = new Point(168, Height - 42),
                 Size = new Size(157, 36),
                 Text = "Cancel"
             };
-            Controls.Add(CancelButton);
-            CancelButton.Click += CancelButton_Click;
+            Controls.Add(_cancelButton);
+            _cancelButton.Click += CancelButton_Click;
         }
 
         private void OKButton_Click(object sender, EventArgs e)
@@ -62,7 +61,7 @@ namespace civ2.Forms
             // Load game
             if (_radioBtn[4].Checked)
             {
-                var ofd = new OpenFileDialog
+                using var ofd = new OpenFileDialog
                 {
                     InitialDirectory = Settings.Civ2Path,
                     Title = "Select Game To Load",

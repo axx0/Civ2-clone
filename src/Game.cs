@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Drawing;
 using civ2.Enums;
 using civ2.Units;
 using civ2.Improvements;
 using civ2.Sounds;
-using civ2.Bitmaps;
 
 namespace civ2
 {

@@ -6,17 +6,9 @@ namespace civ2.Bitmaps
 {
     public static partial class Images
     {
-        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig,
-                            CityFoodSmall, CitySupportSmall, CityTradeSmall;
-        public static Bitmap NextCity;
-        public static Bitmap CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper,
-                     Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane,
-                     Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon,
-                     NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT, ShieldShadow;
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road,
-                               Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements;
-        public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills,
-                                DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
+        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT, ShieldShadow;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements;
+        public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
         public static Point[,] CityFlagLoc, CitySizeWindowLoc, CityWallFlagLoc, CityWallSizeWindowLoc;
         public static Icon Civ2Icon;
@@ -54,7 +46,7 @@ namespace civ2.Bitmaps
         public static void TerrainBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            Bitmap terrain1 = new Bitmap(640, 480);
+            var terrain1 = new Bitmap(640, 480);
             string FilePath_local = path + "\\TERRAIN1.GIF";
             string FilePath_root = Settings.Civ2Path + "TERRAIN1.GIF";
             if (File.Exists(FilePath_local))
@@ -70,7 +62,7 @@ namespace civ2.Bitmaps
                 Debug.WriteLine("TERRAIN1.GIF not found!");
             }
 
-            Bitmap terrain2 = new Bitmap(640, 480);
+            var terrain2 = new Bitmap(640, 480);
             FilePath_local = path + "\\TERRAIN2.GIF";
             FilePath_root = Settings.Civ2Path + "TERRAIN2.GIF";
             if (File.Exists(FilePath_local))
@@ -108,9 +100,9 @@ namespace civ2.Bitmaps
             Railroad = new Bitmap[9];
 
             // Define transparent colors
-            Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
-            Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
-            Color transparentCyan = Color.FromArgb(0, 255, 255);    //define transparent back color (cyan)
+            Color transparentGray = Color.FromArgb(135, 135, 135);    // Define transparent back color (gray)
+            Color transparentPink = Color.FromArgb(255, 0, 255);    // Define transparent back color (pink)
+            Color transparentCyan = Color.FromArgb(0, 255, 255);    // Define transparent back color (cyan)
 
             // Tiles
             for (int i = 0; i < 4; i++)
@@ -311,7 +303,7 @@ namespace civ2.Bitmaps
         public static void CitiesBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            Bitmap cities = new Bitmap(640, 480);
+            var cities = new Bitmap(640, 480);
             string FilePath_local = path + "\\CITIES.GIF";
             string FilePath_root = Settings.Civ2Path + "CITIES.GIF";
             if (File.Exists(FilePath_local))
@@ -552,7 +544,7 @@ namespace civ2.Bitmaps
         public static void PeopleIconsBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            Bitmap pplIcons = new Bitmap(640, 480);
+            var pplIcons = new Bitmap(640, 480);
             string FilePath_local = path + "\\PEOPLE.GIF";
             string FilePath_root = Settings.Civ2Path + "PEOPLE.GIF";
             if (File.Exists(FilePath_local))
@@ -624,7 +616,7 @@ namespace civ2.Bitmaps
         public static void IconsBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            Bitmap icons = new Bitmap(640, 480);
+            var icons = new Bitmap(640, 480);
             string FilePath_local = path + "\\ICONS.GIF";
             string FilePath_root = Settings.Civ2Path + "ICONS.GIF";
             if (File.Exists(FilePath_local))
@@ -746,7 +738,7 @@ namespace civ2.Bitmaps
 
         public static void CityWallpaperBitmapImportFromFile()
         {
-            Bitmap cityWallpaper = new Bitmap(640, 480);
+            var cityWallpaper = new Bitmap(640, 480);
             try
             {
                 cityWallpaper = new Bitmap(Settings.Civ2Path + "CITY.GIF");
@@ -760,7 +752,7 @@ namespace civ2.Bitmaps
 
         private static Bitmap CreateNonIndexedImage(Image src)  //Converting GIFs to non-indexed images (required for SetPixel method)
         {
-            Bitmap newBmp = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            var newBmp = new Bitmap(src.Width, src.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             using (Graphics gfx = Graphics.FromImage(newBmp))
             {

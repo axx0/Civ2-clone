@@ -32,7 +32,7 @@ namespace civ2.Forms
             {
                 Location = new Point(2, 373),
                 Size = new Size(297, 24),
-                Text = "Casualties"
+                Text = "Supply and Demand"
             };
             DrawPanel.Controls.Add(_supplyDemandButton);
             _supplyDemandButton.Click += SupplyDemandButton_Click;
@@ -83,74 +83,66 @@ namespace civ2.Forms
         {
             // Text
             string bcad = (_game.GameYear < 0) ? "B.C." : "A.D.";
-            using var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.DrawString("TRADE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 3 + 1), sf);
-            e.Graphics.DrawString("TRADE ADVISOR", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 3), sf);
-            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 24 + 1), sf);
-            e.Graphics.DrawString($"Kingdom of the {_game.ActiveCiv.TribeName}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 24), sf);
-            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 45 + 1), sf);
-            e.Graphics.DrawString($"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(302, 45), sf);
+            using var font1 = new Font("Times New Roman", 14);
+            using var font2 = new Font("Times New Roman", 11, FontStyle.Bold);
+            using var font3 = new Font("Times New Roman", 13);
+            Draw.Text(e.Graphics, "TRADE ADVISOR", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 3), Color.FromArgb(67, 67, 67), 2, 1);
+            Draw.Text(e.Graphics, $"Kingdom of the {_game.ActiveCiv.TribeName}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 24), Color.FromArgb(67, 67, 67), 2, 1);
+            Draw.Text(e.Graphics, $"King {_game.ActiveCiv.LeaderName} : {Math.Abs(_game.GameYear)} {bcad}", font1, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(302, 45), Color.FromArgb(67, 67, 67), 2, 1);
+
+            // Trade & maintenance text
+            Draw.Text(e.Graphics, "City Trade", font3, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(140, 80), Color.Black, 1, 1);
+            Draw.Text(e.Graphics, "Maintenance Costs", font3, StringAlignment.Center, StringAlignment.Near, Color.White, new Point(355, 80), Color.Black, 1, 1);
+
             // Cities
             int count = 0;
             foreach (City city in _game.GetCities.Where(n => n.Owner == _game.ActiveCiv))
             {
                 // City image
                 Draw.City(e.Graphics, city, true, 0, new Point(4 + 64 * ((count + 1) % 2), 95 + 24 * count));
-                //e.Graphics.DrawImage(Draw.City(city, true, 0), new Point(4 + 64 * ((count + 1) % 2), 95 + 24 * count));
+
                 // City name
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(142 + 1, 105 + 24 * count + 1));
-                e.Graphics.DrawString(city.Name, new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(142, 105 + 24 * count));
+                Draw.Text(e.Graphics, city.Name, font2, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(142, 105 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
 
                 // CITY TRADE
-                // City trade text
-                e.Graphics.DrawString("City Trade", new Font("Times New Roman", 13), new SolidBrush(Color.Black), new Point(140 + 1, 80 + 1));
-                e.Graphics.DrawString("City Trade", new Font("Times New Roman", 13), new SolidBrush(Color.White), new Point(140, 80));
                 // Trade
-                e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(255 + 1, 108 + 24 * count + 1), sf);
-                e.Graphics.DrawString(city.Trade.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(255, 108 + 24 * count), sf);
+                Draw.Text(e.Graphics, city.Trade.ToString(), font2, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(255, 108 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
                 e.Graphics.DrawImage(Images.CityTaxBig, new Point(260, 111 + 24 * count));
+
                 // Science
-                e.Graphics.DrawString(city.Science.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(290 + 1, 108 + 24 * count + 1), sf);
-                e.Graphics.DrawString(city.Science.ToString(), new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(290, 108 + 24 * count), sf);
+                Draw.Text(e.Graphics, city.Science.ToString(), font2, StringAlignment.Center, StringAlignment.Near, Color.FromArgb(223, 223, 223), new Point(290, 108 + 24 * count), Color.FromArgb(67, 67, 67), 1, 1);
                 e.Graphics.DrawImage(Images.CitySciBig, new Point(295, 111 + 24 * count));
                 count++;
-
-                // MAINTENTANCE COSTS
-                // Maintenance text
-                e.Graphics.DrawString("Maintenance Costs", new Font("Times New Roman", 13), new SolidBrush(Color.Black), new Point(335 + 1, 80 + 1));
-                e.Graphics.DrawString("Maintenance Costs", new Font("Times New Roman", 13), new SolidBrush(Color.White), new Point(335, 80));
-                // Individual costs
-                int count2 = 0;
-                for (int i = 0; i < 67; i++)
-                {
-                    if ((_noOfImprovements[i] > 0) && (_game.Rules.ImprovementUpkeep[i] > 0))  //only show improvements with upkeep > 0
-                    {
-                        e.Graphics.DrawString($"{_noOfImprovements[i]} {_game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(335 + 1, 105 + 24 * count2 + 1));
-                        e.Graphics.DrawString($"{_noOfImprovements[i]} {_game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(335, 105 + 24 * count2));
-                        count2++;
-                    }
-                }
-                e.Graphics.DrawString($"Total Cost : {_totalCost}", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.Black), new Point(335 + 1, 300));
-                e.Graphics.DrawString($"Total Cost : {_totalCost}", new Font("Times New Roman", 11, FontStyle.Bold), new SolidBrush(Color.FromArgb(255, 223, 79)), new Point(335, 300));
-
-                // TOTALS
-                // Total cost
-                e.Graphics.DrawString($"Total Cost: {_totalCost}", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 270 + 1));
-                e.Graphics.DrawString($"Total Cost: {_totalCost}", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 270));
-                e.Graphics.DrawImage(Images.CityTaxBig, new Point(245, 270));
-                // Total income
-                e.Graphics.DrawString($"Total Income: {_totalIncome}", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 295 + 1));
-                e.Graphics.DrawString($"Total Income: {_totalIncome}", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 295));
-                e.Graphics.DrawImage(Images.CityTaxBig, new Point(245, 295));
-                // Total science
-                e.Graphics.DrawString($"Total Science: {_totalScience}", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 320 + 1));
-                e.Graphics.DrawString($"Total Science: {_totalScience}", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 320));
-                e.Graphics.DrawImage(Images.CitySciBig, new Point(245, 320));
-                // Discoveries
-                e.Graphics.DrawString($"Discoveries: {_discoveries} Turns", new Font("Times New Roman", 11), new SolidBrush(Color.Black), new Point(142 + 1, 345 + 1));
-                e.Graphics.DrawString($"Discoveries: {_discoveries} Turns", new Font("Times New Roman", 11), new SolidBrush(Color.White), new Point(142, 345));
             }
+
+            // MAINTENTANCE COSTS
+            // Individual costs
+            count = 0;
+            for (int i = 0; i < 67; i++)
+            {
+                if ((_noOfImprovements[i] > 0) && (_game.Rules.ImprovementUpkeep[i] > 0))  // Only show improvements with upkeep > 0
+                {
+                    Draw.Text(e.Graphics, $"{_noOfImprovements[i]} {_game.Rules.ImprovementName[i]} (Cost: {_upkeepOfImprovements[i]})", font2, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(255, 223, 79), new Point(355, 105 + 24 * count), Color.Black, 1, 1);
+                    count++;
+                }
+            }
+            Draw.Text(e.Graphics, $"Total Cost : {_totalCost}", font2, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(255, 223, 79), new Point(355, 300), Color.Black, 1, 1);
+
+            // TOTALS
+            // Total cost
+            Draw.Text(e.Graphics, $"Total Cost: {_totalCost}", font2, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(142, 270), Color.Black, 1, 1);
+            e.Graphics.DrawImage(Images.CityTaxBig, new Point(245, 270));
+
+            // Total income
+            Draw.Text(e.Graphics, $"Total Income: {_totalIncome}", font3, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(142, 295), Color.Black, 1, 1);
+            e.Graphics.DrawImage(Images.CityTaxBig, new Point(245, 295));
+
+            // Total science
+            Draw.Text(e.Graphics, $"Total Science: {_totalScience}", font3, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(142, 320), Color.Black, 1, 1);
+            e.Graphics.DrawImage(Images.CitySciBig, new Point(245, 320));
+
+            // Discoveries
+            Draw.Text(e.Graphics, $"Discoveries: {_discoveries} Turns", font3, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(142, 345), Color.Black, 1, 1);
         }
 
         private void SupplyDemandButton_Click(object sender, EventArgs e)

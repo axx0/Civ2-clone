@@ -39,48 +39,49 @@ namespace civ2.Forms
         // Draw border around panel
         public virtual void Civ2panel_Paint(object sender, PaintEventArgs e)
         {
-            using var sf = new StringFormat
-            {
-                LineAlignment = StringAlignment.Center,
-                Alignment = StringAlignment.Center
-            };
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;  // Makes text sharp
             // Title (if exists)
             if (_title != null)
             {
-                e.Graphics.DrawString("Title", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-                e.Graphics.DrawString("Title", new Font("Times New Roman", 17, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+                using var font = new Font("Times New Roman", 17, FontStyle.Bold);
+                Draw.Text(e.Graphics, _title, font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(135, 135, 135), new Point(this.Width / 2, 20), Color.Black, 1, 1);
             }
             // Outer border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, this.Width - 2, 0);   // 1st layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(227, 227, 227)), 0, 0, 0, this.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), this.Width - 1, 0, this.Width - 1, this.Height - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(105, 105, 105)), 0, this.Height - 1, this.Width - 1, this.Height - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 255, 255)), 1, 1, this.Width - 3, 1);   // 2nd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(255, 255, 255)), 1, 1, 1, this.Height - 3);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(160, 160, 160)), this.Width - 2, 1, this.Width - 2, this.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(160, 160, 160)), 1, this.Height - 2, this.Width - 2, this.Height - 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, 2, this.Width - 4, 2);   // 3rd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, 2, 2, this.Height - 4);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), this.Width - 3, 2, this.Width - 3, this.Height - 3);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(240, 240, 240)), 2, this.Height - 3, this.Width - 3, this.Height - 3);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 3, 3, this.Width - 5, 3);   // 4th layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 3, 3, 3, this.Height - 5);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 4, 3, this.Width - 4, this.Height - 4);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 3, this.Height - 4, this.Width - 4, this.Height - 4);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, this.Width - 6, 4);   // 5th layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 4, 4, 4, this.Height - 6);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), this.Width - 5, 4, this.Width - 5, this.Height - 5);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 4, this.Height - 5, this.Width - 5, this.Height - 5);
+            using var _pen1 = new Pen(Color.FromArgb(227, 227, 227));
+            using var _pen2 = new Pen(Color.FromArgb(105, 105, 105));
+            using var _pen3 = new Pen(Color.FromArgb(255, 255, 255));
+            using var _pen4 = new Pen(Color.FromArgb(160, 160, 160));
+            using var _pen5 = new Pen(Color.FromArgb(240, 240, 240));
+            using var _pen6 = new Pen(Color.FromArgb(223, 223, 223));
+            using var _pen7 = new Pen(Color.FromArgb(67, 67, 67));
+            e.Graphics.DrawLine(_pen1, 0, 0, this.Width - 2, 0);   // 1st layer of border
+            e.Graphics.DrawLine(_pen1, 0, 0, 0, this.Height - 2);
+            e.Graphics.DrawLine(_pen2, this.Width - 1, 0, this.Width - 1, this.Height - 1);
+            e.Graphics.DrawLine(_pen2, 0, this.Height - 1, this.Width - 1, this.Height - 1);
+            e.Graphics.DrawLine(_pen3, 1, 1, this.Width - 3, 1);   // 2nd layer of border
+            e.Graphics.DrawLine(_pen3, 1, 1, 1, this.Height - 3);
+            e.Graphics.DrawLine(_pen4, this.Width - 2, 1, this.Width - 2, this.Height - 2);
+            e.Graphics.DrawLine(_pen4, 1, this.Height - 2, this.Width - 2, this.Height - 2);
+            e.Graphics.DrawLine(_pen5, 2, 2, this.Width - 4, 2);   // 3rd layer of border
+            e.Graphics.DrawLine(_pen5, 2, 2, 2, this.Height - 4);
+            e.Graphics.DrawLine(_pen5, this.Width - 3, 2, this.Width - 3, this.Height - 3);
+            e.Graphics.DrawLine(_pen5, 2, this.Height - 3, this.Width - 3, this.Height - 3);
+            e.Graphics.DrawLine(_pen6, 3, 3, this.Width - 5, 3);   // 4th layer of border
+            e.Graphics.DrawLine(_pen6, 3, 3, 3, this.Height - 5);
+            e.Graphics.DrawLine(_pen7, this.Width - 4, 3, this.Width - 4, this.Height - 4);
+            e.Graphics.DrawLine(_pen7, 3, this.Height - 4, this.Width - 4, this.Height - 4);
+            e.Graphics.DrawLine(_pen6, 4, 4, this.Width - 6, 4);   // 5th layer of border
+            e.Graphics.DrawLine(_pen6, 4, 4, 4, this.Height - 6);
+            e.Graphics.DrawLine(_pen7, this.Width - 5, 4, this.Width - 5, this.Height - 5);
+            e.Graphics.DrawLine(_pen7, 4, this.Height - 5, this.Width - 5, this.Height - 5);
             // Border for draw panel
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, _paddingTop - 1, 9 + (Width - 18 - 1), _paddingTop - 1);   // 1st layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, _paddingTop - 1, 10, Height - _paddingBtm - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 11, _paddingTop - 1, Width - 11, Height - _paddingBtm - 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - _paddingBtm, Width - 9 - 1, Height - _paddingBtm);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 10, _paddingTop - 2, 9 + (Width - 18 - 2), _paddingTop - 2);   // 2nd layer of border
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 9, _paddingTop - 2, 9, Height - _paddingBtm);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), Width - 10, _paddingTop - 2, Width - 10, Height - _paddingBtm);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
+            e.Graphics.DrawLine(_pen7, 9, _paddingTop - 1, 9 + (Width - 18 - 1), _paddingTop - 1);   // 1st layer of border
+            e.Graphics.DrawLine(_pen7, 10, _paddingTop - 1, 10, Height - _paddingBtm - 1);
+            e.Graphics.DrawLine(_pen6, Width - 11, _paddingTop - 1, Width - 11, Height - _paddingBtm - 1);
+            e.Graphics.DrawLine(_pen6, 9, Height - _paddingBtm, Width - 9 - 1, Height - _paddingBtm);
+            e.Graphics.DrawLine(_pen7, 10, _paddingTop - 2, 9 + (Width - 18 - 2), _paddingTop - 2);   // 2nd layer of border
+            e.Graphics.DrawLine(_pen7, 9, _paddingTop - 2, 9, Height - _paddingBtm);
+            e.Graphics.DrawLine(_pen6, Width - 10, _paddingTop - 2, Width - 10, Height - _paddingBtm);
+            e.Graphics.DrawLine(_pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
         }
 
     }

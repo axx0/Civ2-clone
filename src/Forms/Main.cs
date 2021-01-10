@@ -41,7 +41,7 @@ namespace civ2.Forms
             WindowState = FormWindowState.Maximized;
 
             // Symbol image in the center of screen
-            Bitmap backimage = Images.MainScreenSymbol;
+            var backimage = Images.MainScreenSymbol;
             _mainPic = new PictureBox
             {
                 Image = backimage,
@@ -283,7 +283,6 @@ namespace civ2.Forms
             JoinGameItem.Enabled = false;
             ChangeTimerItem.Enabled = false;
             #endregion
-
         }
 
         private void Main_Load(object sender, EventArgs e)
@@ -579,9 +578,9 @@ namespace civ2.Forms
         public void Update_ordersMenu()
         {
             //if (MapForm.ViewingPiecesMode)  //disable all menus except disband & activate unit
-                if (1 == 1) //disable all menus except disband & activate unit
-                {
-                    foreach (ToolStripItem item in _ordersMenu.DropDownItems) item.Enabled = false;
+            if (1 == 1) //disable all menus except disband & activate unit
+            {
+                foreach (ToolStripItem item in _ordersMenu.DropDownItems) item.Enabled = false;
                 _disbandItem.Enabled = true;
                 _activateUnitItem.Enabled = true;
             }

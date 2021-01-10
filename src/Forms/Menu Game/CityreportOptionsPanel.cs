@@ -7,7 +7,7 @@ namespace civ2.Forms
 {
     public class CityreportOptionsPanel : Civ2panel
     {
-        private Game _game => Game.Instance;
+        private Game Game => Game.Instance;
 
         private readonly Main _main;
         private readonly List<DoubleBufferedPanel> _clickPanels;
@@ -43,13 +43,20 @@ namespace civ2.Forms
             _cancelButton.Click += CancelButton_Click;
 
             // Make an options array
-            _choiceOptions = new bool[11] { _game.Options.WarnWhenCityGrowthHalted, _game.Options.ShowCityImprovementsBuilt, _game.Options.ShowNonCombatUnitsBuilt,
-                _game.Options.ShowInvalidBuildInstructions, _game.Options.AnnounceCitiesInDisorder, _game.Options.AnnounceOrderRestored, _game.Options.AnnounceWeLoveKingDay,
-                _game.Options.WarnWhenFoodDangerouslyLow, _game.Options.WarnWhenPollutionOccurs, _game.Options.WarnChangProductWillCostShields, _game.Options.ZoomToCityNotDefaultAction};
+            _choiceOptions = new bool[11] { Game.Options.WarnWhenCityGrowthHalted, Game.Options.ShowCityImprovementsBuilt, Game.Options.ShowNonCombatUnitsBuilt, Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored, Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs, Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction};
             // Write here individual options
-            _textOptions = new string[11] { "Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.",
-                "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".",
-                "Warn when food dangerously low.", "Warn when new pollution occurs.", "Warn when changing production will cost shields.", "\"Zoom-to-City\" NOT default action." };
+            _textOptions = new string[11] {
+                "Warn when city growth halted (Aqueduct/Sewer System).",
+                "Show city improvements built.",
+                "Show non-combat units built.",
+                "Show invalid build instructions.",
+                "Announce cities in disorder.",
+                "Announce order restored in city.",
+                "Announce \"We Love The King Day\".",
+                "Warn when food dangerously low.",
+                "Warn when new pollution occurs.",
+                "Warn when changing production will cost shields.",
+                "\"Zoom-to-City\" NOT default action." };
             // Make click panels for each options
             _clickPanels = new List<DoubleBufferedPanel>();
             for (int i = 0; i < 11; i++)
@@ -69,31 +76,39 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Show all options
-            SizeF[] stringSize = new SizeF[11];
+            var stringSize = new SizeF[11];
+            using var _font1 = new Font("Times New Roman", 18);
+            using var _font2 = new Font("Wingdings", 18);
+            using var _brush1 = new SolidBrush(Color.FromArgb(51, 51, 51));
+            using var _brush2 = new SolidBrush(Color.White);
+            using var _brush3 = new SolidBrush(Color.FromArgb(128, 128, 128));
+            using var _brush4 = new SolidBrush(Color.Black);
+            using var _brush5 = new SolidBrush(Color.FromArgb(192, 192, 192));
+            using var _pen = new Pen(Color.Black);
             for (int row = 0; row < 11; row++)
             {
                 // Text
-                e.Graphics.DrawString(_textOptions[row], new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(36, 32 * row + 4));
-                stringSize[row] = e.Graphics.MeasureString(_textOptions[row], new Font("Times New Roman", 18));  // Measure size of text
+                e.Graphics.DrawString(_textOptions[row], _font1, _brush1, new Point(36, 32 * row + 4));
+                stringSize[row] = e.Graphics.MeasureString(_textOptions[row], _font1);  // Measure size of text
                 _clickPanels[row].Size = new Size(30 + (int)(stringSize[row].Width), _clickPanels[row].Height);   // Set the correct size of click panel
 
                 // Draw checkbox
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(13, 8 + 32 * row, 15, 17));
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(12, 9 + 32 * row, 17, 15));
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 128, 128)), new Rectangle(14, 9 + 32 * row, 13, 15));
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 128, 128)), new Rectangle(13, 10 + 32 * row, 15, 13));
-                e.Graphics.DrawLine(new Pen(Color.Black), 14, 9 + 32 * row, 26, 9 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 14, 25 + 32 * row, 27, 25 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 13, 10 + 32 * row, 13, 22 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 29, 10 + 32 * row, 29, 24 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 13, 10 + 32 * row, 14, 10 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 28, 24 + 32 * row, 28, 25 + 32 * row);
+                e.Graphics.FillRectangle(_brush2, new Rectangle(13, 8 + 32 * row, 15, 17));
+                e.Graphics.FillRectangle(_brush2, new Rectangle(12, 9 + 32 * row, 17, 15));
+                e.Graphics.FillRectangle(_brush3, new Rectangle(14, 9 + 32 * row, 13, 15));
+                e.Graphics.FillRectangle(_brush3, new Rectangle(13, 10 + 32 * row, 15, 13));
+                e.Graphics.DrawLine(_pen, 14, 9 + 32 * row, 26, 9 + 32 * row);
+                e.Graphics.DrawLine(_pen, 14, 25 + 32 * row, 27, 25 + 32 * row);
+                e.Graphics.DrawLine(_pen, 13, 10 + 32 * row, 13, 22 + 32 * row);
+                e.Graphics.DrawLine(_pen, 29, 10 + 32 * row, 29, 24 + 32 * row);
+                e.Graphics.DrawLine(_pen, 13, 10 + 32 * row, 14, 10 + 32 * row);
+                e.Graphics.DrawLine(_pen, 28, 24 + 32 * row, 28, 25 + 32 * row);
 
                 // Draw check marks
                 if (_choiceOptions[row])
                 {
-                    e.Graphics.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(Color.Black), new Point(10 + 1, 32 * row + 3 + 2));
-                    e.Graphics.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(Color.FromArgb(192, 192, 192)), new Point(10, 32 * row + 3));
+                    e.Graphics.DrawString("ü", _font2, _brush4, new Point(10 + 1, 32 * row + 3 + 2));
+                    e.Graphics.DrawString("ü", _font2, _brush5, new Point(10, 32 * row + 3));
                 }
             }
         }
@@ -101,17 +116,17 @@ namespace civ2.Forms
         // If OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _game.Options.WarnWhenCityGrowthHalted = _choiceOptions[0];
-            _game.Options.ShowCityImprovementsBuilt = _choiceOptions[1];
-            _game.Options.ShowNonCombatUnitsBuilt = _choiceOptions[2];
-            _game.Options.ShowInvalidBuildInstructions = _choiceOptions[3];
-            _game.Options.AnnounceCitiesInDisorder = _choiceOptions[4];
-            _game.Options.AnnounceOrderRestored = _choiceOptions[5];
-            _game.Options.AnnounceWeLoveKingDay = _choiceOptions[6];
-            _game.Options.WarnWhenFoodDangerouslyLow = _choiceOptions[7];
-            _game.Options.WarnWhenPollutionOccurs = _choiceOptions[8];
-            _game.Options.WarnChangProductWillCostShields = _choiceOptions[9];
-            _game.Options.ZoomToCityNotDefaultAction = _choiceOptions[10];
+            Game.Options.WarnWhenCityGrowthHalted = _choiceOptions[0];
+            Game.Options.ShowCityImprovementsBuilt = _choiceOptions[1];
+            Game.Options.ShowNonCombatUnitsBuilt = _choiceOptions[2];
+            Game.Options.ShowInvalidBuildInstructions = _choiceOptions[3];
+            Game.Options.AnnounceCitiesInDisorder = _choiceOptions[4];
+            Game.Options.AnnounceOrderRestored = _choiceOptions[5];
+            Game.Options.AnnounceWeLoveKingDay = _choiceOptions[6];
+            Game.Options.WarnWhenFoodDangerouslyLow = _choiceOptions[7];
+            Game.Options.WarnWhenPollutionOccurs = _choiceOptions[8];
+            Game.Options.WarnChangProductWillCostShields = _choiceOptions[9];
+            Game.Options.ZoomToCityNotDefaultAction = _choiceOptions[10];
             this.Visible = false;
             this.Dispose();
         }

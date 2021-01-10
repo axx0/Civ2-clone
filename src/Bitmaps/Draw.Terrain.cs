@@ -1002,6 +1002,5 @@ namespace civ2.Bitmaps
 
             return isRailroadAround;
         }
-
     }
 }

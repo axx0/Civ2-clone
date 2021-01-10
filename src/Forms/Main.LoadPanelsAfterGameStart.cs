@@ -15,9 +15,6 @@ namespace civ2.Forms
             _sinaiPanel.Dispose();
             _sinaiPanel = null;
 
-            // Initialize some variables
-            ViewPieceMode = Game.ActiveUnit == null;    // If no unit is active at start (all units ended turn or none exist) go to View piece mode
-
             _mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height - MainMenuStrip.Height)
             {
                 Location = new Point(0, MainMenuStrip.Height)

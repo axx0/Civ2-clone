@@ -12,7 +12,7 @@ namespace civ2.Bitmaps
         public static Bitmap FoodStorage(City city)
         {
             var panel = new Bitmap(195, 163);
-            using (Graphics g = Graphics.FromImage(panel))
+            using (var g = Graphics.FromImage(panel))
             {
                 // Icons
                 int wheatW = 14;   //width. Norm=14, big=21
@@ -46,16 +46,18 @@ namespace civ2.Bitmaps
                 int line_width = city.Size * wheat_spacing + wheatW + 7;
                 int starting_x = (panel.Width - line_width) / 2;
                 int starting_y = 0;
-                g.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
+                using var _pen1 = new Pen(Color.FromArgb(75, 155, 35));
+                using var _pen2 = new Pen(Color.FromArgb(0, 51, 0));
+                g.DrawLine(_pen1, starting_x, starting_y, starting_x + line_width, starting_y);
                 // 3rd horizontal line
                 starting_y = 145;    // norm=145, big=?
-                g.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x, starting_y, starting_x + line_width, starting_y);
+                g.DrawLine(_pen2, starting_x, starting_y, starting_x + line_width, starting_y);
                 // 1st vertical line
                 starting_y = 0;
                 int line_height = 144;  // norm=144, big=216
-                g.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x, starting_y + line_height);
+                g.DrawLine(_pen1, starting_x, starting_y, starting_x, starting_y + line_height);
                 // 2nd vertical line
-                g.DrawLine(new Pen(Color.FromArgb(0, 51, 0)), starting_x + line_width, starting_y, starting_x + line_width, starting_y + line_height);
+                g.DrawLine(_pen2, starting_x + line_width, starting_y, starting_x + line_width, starting_y + line_height);
 
                 // Draw wheat icons
                 int count = 0;
@@ -76,7 +78,8 @@ namespace civ2.Bitmaps
                 line_width -= 10;   // norm=8, big=12
                 starting_x += 2;
                 starting_y = 72;   // norm=72, big=?
-                g.DrawLine(new Pen(Color.FromArgb(75, 155, 35)), starting_x, starting_y, starting_x + line_width, starting_y);
+                using var _pen = new Pen(Color.FromArgb(75, 155, 35));
+                g.DrawLine(_pen, starting_x, starting_y, starting_x + line_width, starting_y);
             }
 
             return panel;
@@ -273,8 +276,10 @@ namespace civ2.Bitmaps
                         drawIndex++;  // Change men/woman appearance
                     }
                     //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
-                    graphics.DrawImage(ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom), i * spacing + 1, 1);   // Shadow
-                    graphics.DrawImage(ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom), i * spacing, 0);
+                    using var plpShPic = ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom);
+                    graphics.DrawImage(plpShPic, i * spacing + 1, 1);   // Shadow
+                    using var plpPic = ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom);
+                    graphics.DrawImage(plpPic, i * spacing, 0);
                 }
             }
             return faces;
@@ -290,10 +295,12 @@ namespace civ2.Bitmaps
                 if (city.ItemInProduction < 62) cost = Game.Rules.UnitCost[city.ItemInProduction];   // Item is unit
                 else cost = Game.Rules.ImprovementCost[city.ItemInProduction - 62 + 1];    // Item is improvement (first 62 are units, +1 because first improvement is "Nothing")
                 int vertSpacing = Math.Min(10, cost);    // Max 10 lines
-                g.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 5, 42, 5 + 182, 42);   // 1st horizontal
-                g.DrawLine(new Pen(Color.FromArgb(83, 103, 191)), 5, 42, 5, 42 + 4 + vertSpacing * 14);   // 1st vertical
-                g.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 5, 42 + 4 + vertSpacing * 14, 5 + 182, 42 + 4 + vertSpacing * 14);   // 2nd horizontal
-                g.DrawLine(new Pen(Color.FromArgb(0, 0, 95)), 5 + 182, 42, 5 + 182, 42 + 4 + vertSpacing * 14);   // 2nd vertical
+                using var _pen1 = new Pen(Color.FromArgb(83, 103, 191));
+                using var _pen2 = new Pen(Color.FromArgb(0, 0, 95));
+                g.DrawLine(_pen1, 5, 42, 5 + 182, 42);   // 1st horizontal
+                g.DrawLine(_pen1, 5, 42, 5, 42 + 4 + vertSpacing * 14);   // 1st vertical
+                g.DrawLine(_pen2, 5, 42 + 4 + vertSpacing * 14, 5 + 182, 42 + 4 + vertSpacing * 14);   // 2nd horizontal
+                g.DrawLine(_pen2, 5 + 182, 42, 5 + 182, 42 + 4 + vertSpacing * 14);   // 2nd vertical
 
                 // Draw icons
                 int count = 0;
@@ -340,10 +347,14 @@ namespace civ2.Bitmaps
                             newY = city.Y + y_;
 
                             // First draw blank tiles
-                            g.DrawImage(ModifyImage.Resize(Images.Blank, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                            using var blankPic = ModifyImage.Resize(Images.Blank, zoom);
+                            g.DrawImage(blankPic, 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
                             // Then draw tiles if they are visible
-                            if (Map.IsTileVisibleC2(newX, newY, city.Owner.Id))
-                                g.DrawImage(ModifyImage.Resize(Map.TileC2(newX, newY).Graphic, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                            if (Map.IsTileVisibleC2(newX, newY, city.Owner.Id)) 
+                            {
+                                using var mapPic = ModifyImage.Resize(Map.TileC2(newX, newY).Graphic, zoom);
+                                g.DrawImage(mapPic, 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
+                            }
                             // TODO: implement dithering on edges or depending on where invisible tiles are
                             // Draw cities
                             cityHere = Game.CityHere(newX, newY);

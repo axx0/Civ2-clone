@@ -233,60 +233,48 @@ namespace civ2.Forms
 
         private void CityPanel_Paint(object sender, PaintEventArgs e)
         {
-            using var sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
             string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
             string text = String.Format($"City of {_thisCity.Name}, {Math.Abs(Game.GameYear)} {bcad}, Population {_thisCity.Population:n0} (Treasury: {_thisCity.Owner.Money} Gold)");
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.Black), new Point((Width / 2) + 1, 15), sf);
-            e.Graphics.DrawString(text, new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(Width / 2, 15), sf);
+            using var font = new Font("Times New Roman", 14);
+            Draw.Text(e.Graphics, text, font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(135, 135, 135), new Point(Width / 2, 15), Color.Black, 1, 0);
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Texts
-            using var sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            e.Graphics.DrawString("Citizens", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(101 + 1, 53 + 1), sf);
-            e.Graphics.DrawString("Citizens", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(101, 53), sf);
-            e.Graphics.DrawString("City Resources", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(317 + 1, 52 + 1), sf);
-            e.Graphics.DrawString("City Resources", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(317, 52), sf);
-            e.Graphics.DrawString("Food Storage", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(535 + 1, 7 + 1), sf);
-            e.Graphics.DrawString("Food Storage", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(75, 155, 35)), new Point(535, 7), sf);
-            e.Graphics.DrawString("City Improvements", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(96 + 1, 296 + 1), sf);
-            e.Graphics.DrawString("City Improvements", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(223, 187, 63)), new Point(96, 296), sf);
+            using var font = new Font("Arial", 9, FontStyle.Bold);
+            Draw.Text(e.Graphics, "Citizens", font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(223, 187, 63), new Point(101, 53), Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, "City Resources", font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(223, 187, 63), new Point(317, 52), Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, "Food Storage", font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(75, 155, 35), new Point(535, 7), Color.Black, 1, 1);
+            Draw.Text(e.Graphics, "City Improvements", font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(223, 187, 63), new Point(96, 296), Color.FromArgb(67, 67, 67), 1, 1);
         }
 
         // Draw faces
         private void Faces_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(Draw.Citizens(_thisCity, 0), 2, 7);
+            using var citizensPic = Draw.Citizens(_thisCity, 0);
+            e.Graphics.DrawImage(citizensPic, 2, 7);
         }
 
         // Draw resource map
         private void ResourceMap_Paint(object sender, PaintEventArgs e)
         {
             // Map around city
-            e.Graphics.DrawImage(Draw.CityResourcesMap(_thisCity, -2), 0, 21);
-            // Text
-            using var sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            using var resMapPic = Draw.CityResourcesMap(_thisCity, -2);
+            e.Graphics.DrawImage(resMapPic, 0, 21);
         }
 
         // Draw city resources
         private void CityResources_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(Draw.CityResources(_thisCity), new Point(0, 0));
+            using var resPic = Draw.CityResources(_thisCity);
+            e.Graphics.DrawImage(resPic, new Point(0, 0));
         }
 
         private void FoodStorage_Paint(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawImage(Draw.FoodStorage(_thisCity), new Point(0, 0));
+            using var storagePic = Draw.FoodStorage(_thisCity);
+            e.Graphics.DrawImage(storagePic, new Point(0, 0));
         }
 
         private void UnitsFromCity_Paint(object sender, PaintEventArgs e)
@@ -307,66 +295,50 @@ namespace civ2.Forms
 
         private void UnitsInCity_Paint(object sender, PaintEventArgs e)
         {
-            using var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-            
             int count = 0;
             int row = 0;
             int col = 0;
             int zoom = -2;  // zoom=-2(norm), 1(big)
+            using var font = new Font("Arial", 9, FontStyle.Bold);
             foreach (IUnit unit in _thisCity.UnitsInCity)
             {
                 col = count % 5;
                 row = count / 5;
                 //e.Graphics.DrawImage(Draw.Unit(unit, false, zoom), new Point(8 * (8 + zoom) * col, 6 * (8 + zoom) * row + 5 * row));
-                e.Graphics.DrawString(unit.HomeCity.Name.Substring(0, 3), new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(135, 135, 135)),  // TODO: doesn't work for <3 characters in city name
-                    new Point(8 * (8 + zoom) * col + 8 * (8 + zoom) / 2 + 1, 6 * (8 + zoom) * row + 5 * row + 6 * (8 + zoom) + 1), sf);
-                e.Graphics.DrawString(unit.HomeCity.Name.Substring(0, 3), new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black),
-                    new Point(8 * (8 + zoom) * col + 8 * (8 + zoom) / 2, 6 * (8 + zoom) * row + 5 * row + 6 * (8 + zoom)), sf);
+                Draw.Text(e.Graphics, unit.HomeCity.Name.Substring(0, 3), font, StringAlignment.Center, StringAlignment.Center, Color.Black, new Point(8 * (8 + zoom) * col + 8 * (8 + zoom) / 2, 6 * (8 + zoom) * row + 5 * row + 6 * (8 + zoom)), Color.FromArgb(135, 135, 135), 1, 1);  // TODO: doesn't work for <3 characters in city name
                 count++;
             }
 
             // Trade text
-            e.Graphics.DrawString($"Supplies: {_thisCity.CommoditySupplied[0]}, {_thisCity.CommoditySupplied[2]}, {_thisCity.CommoditySupplied[2]}",
-                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(6 + 1, 135 + 1));
-            e.Graphics.DrawString($"Supplies: {_thisCity.CommoditySupplied[0]}, {_thisCity.CommoditySupplied[2]}, {_thisCity.CommoditySupplied[2]}",
-                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(6, 135));
-            e.Graphics.DrawString($"Demands: {_thisCity.CommodityDemanded[0]}, {_thisCity.CommodityDemanded[2]}, {_thisCity.CommodityDemanded[2]}",
-                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(6 + 1, 148 + 1));
-            e.Graphics.DrawString($"Demands: {_thisCity.CommodityDemanded[0]}, {_thisCity.CommodityDemanded[2]}, {_thisCity.CommodityDemanded[2]}",
-                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(6, 148));
-            e.Graphics.DrawString($"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
-                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(6 + 1, 163 + 1));
-            e.Graphics.DrawString($"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
-                new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(6, 163));
+            Draw.Text(e.Graphics, $"Supplies: {_thisCity.CommoditySupplied[0]}, {_thisCity.CommoditySupplied[2]}, {_thisCity.CommoditySupplied[2]}", font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(227, 83, 15), new Point(6, 135), Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, $"Demands: {_thisCity.CommodityDemanded[0]}, {_thisCity.CommodityDemanded[2]}, {_thisCity.CommodityDemanded[2]}", font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(227, 83, 15), new Point(6, 148), Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, $"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1", font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(227, 83, 15), new Point(6, 163), Color.FromArgb(67, 67, 67), 1, 1);
         }
 
         private void ProductionPanel_Paint(object sender, PaintEventArgs e)
         {
             // Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
             // zoom: Units=-1(norm), Improvements=0(norm)
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            using var font = new Font("Arial", 9, FontStyle.Bold);
             // Units
             int zoom;
             if (_thisCity.ItemInProduction < 62)
             {
                 zoom = -1;
-                e.Graphics.DrawImage(ModifyImage.Resize(Images.Units[_thisCity.ItemInProduction], zoom), new Point(64, 0));
+                using var unitPic = ModifyImage.Resize(Images.Units[_thisCity.ItemInProduction], zoom);
+                e.Graphics.DrawImage(unitPic, new Point(64, 0));
             }
             // Improvements
             else
             {
-                using var sf = new StringFormat();
-                sf.Alignment = StringAlignment.Center;
-                e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), 98 + 1, 5 + 1, sf);
-                e.Graphics.DrawString(Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 79, 167)), 98, 5, sf);
+                Draw.Text(e.Graphics, Game.Rules.ImprovementName[_thisCity.ItemInProduction - 62 + 1], font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(63, 79, 167), new Point(98, 5), Color.Black, 1, 1);
                 zoom = 0;
-                e.Graphics.DrawImage(ModifyImage.Resize(Images.Improvements[_thisCity.ItemInProduction - 62 + 1], zoom), new Point(79, 18));
-                sf.Dispose();
+                using var improvPic = ModifyImage.Resize(Images.Improvements[_thisCity.ItemInProduction - 62 + 1], zoom);
+                e.Graphics.DrawImage(improvPic, new Point(79, 18));
             }
 
-            e.Graphics.DrawImage(Draw.CityProduction(_thisCity), new Point(0, 0));  // Draw production shields and sqare around them
+            using var cityProdPic = Draw.CityProduction(_thisCity);
+            e.Graphics.DrawImage(cityProdPic, new Point(0, 0));  // Draw production shields and sqare around them
         }
 
         private void ImprovementsList_Paint(object sender, PaintEventArgs e)
@@ -376,23 +348,24 @@ namespace civ2.Forms
             int y = 1;
             int starting = _improvementsBar.Value;   // Starting improvement to draw (changes with slider)
             int zoom;
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+            using var font = new Font("Arial", 9, FontStyle.Bold);
             for (int i = 0; i < 9; i++)
             {
                 if ((i + starting) >= _thisCity.Improvements.Length) break;  // Break if no of improvements+wonders to small
 
                 // Draw improvements
                 zoom = -4;  // For normal
-                e.Graphics.DrawImage(ModifyImage.Resize(Images.Improvements[(int)_thisCity.Improvements[i + starting].Type], zoom), new Point(2, 1 + 12 * i));
+                using var improvPic = ModifyImage.Resize(Images.Improvements[(int)_thisCity.Improvements[i + starting].Type], zoom);
+                e.Graphics.DrawImage(improvPic, new Point(2, 1 + 12 * i));
                 // Sell icons
                 zoom = -1;  // For normal
                 if ((int)_thisCity.Improvements[i + starting].Type < 39) // Wonders don't have a sell icon
                 {
-                    e.Graphics.DrawImage(ModifyImage.Resize(Images.SellIcon, zoom), new Point(148, 1 + 12 * i));
+                    using var iconPic = ModifyImage.Resize(Images.SellIcon, zoom);
+                    e.Graphics.DrawImage(iconPic, new Point(148, 1 + 12 * i));
                 }
                 // Improvements text
-                e.Graphics.DrawString(_thisCity.Improvements[i + starting].Name, new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(x + 26 + 1, 2 + 12 * i));
-                e.Graphics.DrawString(_thisCity.Improvements[i + starting].Name, new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.White), new Point(x + 26, 2 + 12 * i));
+                Draw.Text(e.Graphics, _thisCity.Improvements[i + starting].Name, font, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(x + 26, 2 + 12 * i), Color.Black, 1, 0);
             }
         }
 
@@ -405,7 +378,7 @@ namespace civ2.Forms
         private void BuyButton_Click(object sender, EventArgs e)
         {
             // Use this so the panel returns a chosen value (what it has chosen to produce)
-            var _cityBuyPanel = new CityBuyPanel(this, _thisCity);
+            using var _cityBuyPanel = new CityBuyPanel(this, _thisCity);
             _main.Controls.Add(_cityBuyPanel);
             _cityBuyPanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityBuyPanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityBuyPanel.Height / 2));
             _cityBuyPanel.Show();
@@ -416,7 +389,7 @@ namespace civ2.Forms
         // Panel that returns a chosen value (what it has chosen to produce)
         private void ChangeButton_Click(object sender, EventArgs e)
         {
-            var _cityChangePanel = new CityChangePanel(this, _thisCity);
+            using var _cityChangePanel = new CityChangePanel(this, _thisCity);
             _main.Controls.Add(_cityChangePanel);
             _cityChangePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityChangePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityChangePanel.Height / 2));
             _cityChangePanel.Show();
@@ -430,7 +403,7 @@ namespace civ2.Forms
 
         private void RenameButton_Click(object sender, EventArgs e)
         {
-            var _cityRenamePanel = new CityRenamePanel(this, _thisCity);
+            using var _cityRenamePanel = new CityRenamePanel(this, _thisCity);
             _main.Controls.Add(_cityRenamePanel);
             _cityRenamePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityRenamePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityRenamePanel.Height / 2));
             _cityRenamePanel.Show();
@@ -460,14 +433,16 @@ namespace civ2.Forms
         private void NextCityButton_Paint(object sender, PaintEventArgs e)
         {
             // Draw lines in button
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
+            using var _pen1 = new Pen(Color.FromArgb(175, 175, 175));
+            using var _pen2 = new Pen(Color.FromArgb(43, 43, 43));
+            e.Graphics.DrawLine(_pen1, 1, 1, 30, 1);
+            e.Graphics.DrawLine(_pen1, 1, 2, 29, 2);
+            e.Graphics.DrawLine(_pen1, 1, 1, 1, 33);
+            e.Graphics.DrawLine(_pen1, 2, 1, 2, 32);
+            e.Graphics.DrawLine(_pen2, 1, 34, 30, 34);
+            e.Graphics.DrawLine(_pen2, 2, 33, 30, 33);
+            e.Graphics.DrawLine(_pen2, 29, 2, 29, 33);
+            e.Graphics.DrawLine(_pen2, 30, 1, 30, 33);
             // Draw the arrow icon
             e.Graphics.DrawImage(Images.NextCityLarge, 2, 1);
         }
@@ -475,14 +450,16 @@ namespace civ2.Forms
         private void PrevCityButton_Paint(object sender, PaintEventArgs e)
         {
             // Draw lines in button
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 30, 1);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 2, 29, 2);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 1, 1, 1, 33);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(175, 175, 175)), 2, 1, 2, 32);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 1, 34, 30, 34);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 2, 33, 30, 33);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 29, 2, 29, 33);
-            e.Graphics.DrawLine(new Pen(Color.FromArgb(43, 43, 43)), 30, 1, 30, 33);
+            using var _pen1 = new Pen(Color.FromArgb(175, 175, 175));
+            using var _pen2 = new Pen(Color.FromArgb(43, 43, 43));
+            e.Graphics.DrawLine(_pen1, 1, 1, 30, 1);
+            e.Graphics.DrawLine(_pen1, 1, 2, 29, 2);
+            e.Graphics.DrawLine(_pen1, 1, 1, 1, 33);
+            e.Graphics.DrawLine(_pen1, 2, 1, 2, 32);
+            e.Graphics.DrawLine(_pen2, 1, 34, 30, 34);
+            e.Graphics.DrawLine(_pen2, 2, 33, 30, 33);
+            e.Graphics.DrawLine(_pen2, 29, 2, 29, 33);
+            e.Graphics.DrawLine(_pen2, 30, 1, 30, 33);
             // Draw the arrow icon
             e.Graphics.DrawImage(Images.PrevCityLarge, 2, 1);
         }

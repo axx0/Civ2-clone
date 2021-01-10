@@ -7,7 +7,7 @@ namespace civ2.Forms
 {
     public class GraphicOptionsPanel : Civ2panel
     {
-        private Game _game => Game.Instance;
+        private Game Game => Game.Instance;
 
         private readonly Main _main;
         private readonly List<DoubleBufferedPanel> _clickPanels;
@@ -43,11 +43,16 @@ namespace civ2.Forms
             _cancelButton.Click += CancelButton_Click;
 
             // Make an options array
-            _choiceOptions = new bool[6] { _game.Options.ThroneRoomGraphics, _game.Options.DiplomacyScreenGraphics, _game.Options.AnimatedHeralds,
-                _game.Options.CivilopediaForAdvances, _game.Options.HighCouncil, _game.Options.WonderMovies };
+            _choiceOptions = new bool[6] { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds,
+                Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
             // Individual options text
-            _textOptions = new string[6] { "Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)",
-                "Civilopedia for Advances", "High Council", "Wonder Movies" };
+            _textOptions = new string[6] { 
+                "Throne Room",
+                "Diplomacy Screen",
+                "Animated Heralds (Requires 16 megabytes RAM)",
+                "Civilopedia for Advances",
+                "High Council",
+                "Wonder Movies" };
             // Make click panels for each options
             _clickPanels = new List<DoubleBufferedPanel>();
             for (int i = 0; i < 6; i++)
@@ -67,31 +72,39 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Show all options
-            SizeF[] stringSize = new SizeF[6];
+            var stringSize = new SizeF[6];
+            using var _font1 = new Font("Times New Roman", 18);
+            using var _font2 = new Font("Wingdings", 18);
+            using var _brush1 = new SolidBrush(Color.FromArgb(51, 51, 51));
+            using var _brush2 = new SolidBrush(Color.White);
+            using var _brush3 = new SolidBrush(Color.FromArgb(128, 128, 128));
+            using var _brush4 = new SolidBrush(Color.Black);
+            using var _brush5 = new SolidBrush(Color.FromArgb(192, 192, 192));
+            using var _pen = new Pen(Color.Black);
             for (int row = 0; row < 6; row++)
             {
                 // Text
-                e.Graphics.DrawString(_textOptions[row], new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(36, 32 * row + 4));  // Text of option
-                stringSize[row] = e.Graphics.MeasureString(_textOptions[row], new Font("Times New Roman", 18));  // Measure size of text
+                e.Graphics.DrawString(_textOptions[row], _font1, _brush1, new Point(36, 32 * row + 4));  // Text of option
+                stringSize[row] = e.Graphics.MeasureString(_textOptions[row], _font1);  // Measure size of text
                 _clickPanels[row].Size = new Size(30 + (int)(stringSize[row].Width), _clickPanels[row].Height);   // Set the correct size of click panel
 
                 // Draw checkbox
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(13, 8 + 32 * row, 15, 17));
-                e.Graphics.FillRectangle(new SolidBrush(Color.White), new Rectangle(12, 9 + 32 * row, 17, 15));
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 128, 128)), new Rectangle(14, 9 + 32 * row, 13, 15));
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(128, 128, 128)), new Rectangle(13, 10 + 32 * row, 15, 13));
-                e.Graphics.DrawLine(new Pen(Color.Black), 14, 9 + 32 * row, 26, 9 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 14, 25 + 32 * row, 27, 25 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 13, 10 + 32 * row, 13, 22 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 29, 10 + 32 * row, 29, 24 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 13, 10 + 32 * row, 14, 10 + 32 * row);
-                e.Graphics.DrawLine(new Pen(Color.Black), 28, 24 + 32 * row, 28, 25 + 32 * row);
+                e.Graphics.FillRectangle(_brush2, new Rectangle(13, 8 + 32 * row, 15, 17));
+                e.Graphics.FillRectangle(_brush2, new Rectangle(12, 9 + 32 * row, 17, 15));
+                e.Graphics.FillRectangle(_brush3, new Rectangle(14, 9 + 32 * row, 13, 15));
+                e.Graphics.FillRectangle(_brush3, new Rectangle(13, 10 + 32 * row, 15, 13));
+                e.Graphics.DrawLine(_pen, 14, 9 + 32 * row, 26, 9 + 32 * row);
+                e.Graphics.DrawLine(_pen, 14, 25 + 32 * row, 27, 25 + 32 * row);
+                e.Graphics.DrawLine(_pen, 13, 10 + 32 * row, 13, 22 + 32 * row);
+                e.Graphics.DrawLine(_pen, 29, 10 + 32 * row, 29, 24 + 32 * row);
+                e.Graphics.DrawLine(_pen, 13, 10 + 32 * row, 14, 10 + 32 * row);
+                e.Graphics.DrawLine(_pen, 28, 24 + 32 * row, 28, 25 + 32 * row);
 
                 // Draw check marks
                 if (_choiceOptions[row])
                 {
-                    e.Graphics.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(Color.Black), new Point(10 + 1, 32 * row + 3 + 2));
-                    e.Graphics.DrawString("ü", new Font("Wingdings", 18), new SolidBrush(Color.FromArgb(192, 192, 192)), new Point(10, 32 * row + 3));
+                    e.Graphics.DrawString("ü", _font2, _brush4, new Point(10 + 1, 32 * row + 3 + 2));
+                    e.Graphics.DrawString("ü", _font2, _brush5, new Point(10, 32 * row + 3));
                 }
             }
         }
@@ -99,12 +112,12 @@ namespace civ2.Forms
         // If OK is pressed --> update the options and close
         private void OKButton_Click(object sender, EventArgs e)
         {
-            _game.Options.ThroneRoomGraphics = _choiceOptions[0];
-            _game.Options.DiplomacyScreenGraphics = _choiceOptions[1];
-            _game.Options.AnimatedHeralds = _choiceOptions[2];
-            _game.Options.CivilopediaForAdvances = _choiceOptions[3];
-            _game.Options.HighCouncil = _choiceOptions[4];
-            _game.Options.WonderMovies = _choiceOptions[5];
+            Game.Options.ThroneRoomGraphics = _choiceOptions[0];
+            Game.Options.DiplomacyScreenGraphics = _choiceOptions[1];
+            Game.Options.AnimatedHeralds = _choiceOptions[2];
+            Game.Options.CivilopediaForAdvances = _choiceOptions[3];
+            Game.Options.HighCouncil = _choiceOptions[4];
+            Game.Options.WonderMovies = _choiceOptions[5];
             this.Visible = false;
             this.Dispose();
         }
