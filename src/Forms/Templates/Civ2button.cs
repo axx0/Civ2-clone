@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using System.Drawing;
+using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
@@ -9,6 +10,8 @@ namespace civ2.Forms
         {
             FlatStyle = FlatStyle.Flat;
             BackColor = Color.FromArgb(192, 192, 192);
+            ForeColor = Color.Black;
+            Font = new Font("Times New Roman", 11);
             FlatAppearance.MouseOverBackColor = Color.FromArgb(192, 192, 192);
             SetStyle(ControlStyles.Selectable, false);  // Lose focus from button (cannot be selected by tab)
         }
@@ -16,12 +19,6 @@ namespace civ2.Forms
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
-            // Play with this to make blurry text like in the original
-            //using var sf = new StringFormat();
-            //sf.LineAlignment = StringAlignment.Center;
-            //sf.Alignment = StringAlignment.Center;
-            //pe.Graphics.DrawString("Info", new Font("Arial", 9), new SolidBrush(Color.FromArgb(223, 223, 223)), new Point(Width / 2 + 1, Height / 2), sf);
-            //pe.Graphics.DrawString("Info", new Font("Arial", 9), new SolidBrush(Color.Black), new Point(Width / 2, Height / 2), sf);
             pe.Graphics.DrawLine(new Pen(Color.FromArgb(100, 100, 100)), 0, 0, this.Width - 1, 0);   // 1st layer of border
             pe.Graphics.DrawLine(new Pen(Color.FromArgb(100, 100, 100)), 0, 0, 0, this.Height - 2);
             pe.Graphics.DrawLine(new Pen(Color.FromArgb(100, 100, 100)), this.Width - 1, 0, this.Width - 1, this.Height - 1);

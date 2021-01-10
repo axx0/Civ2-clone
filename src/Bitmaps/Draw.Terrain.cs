@@ -21,21 +21,21 @@ namespace civ2.Bitmaps
             Bitmap tilePic = new Bitmap(64, 32);
 
             // Draw tile
-            using (Graphics graphics = Graphics.FromImage(tilePic))
+            using (var g = Graphics.FromImage(tilePic))
             {
                 switch (tile.Type)
                 {
-                    case TerrainType.Desert: graphics.DrawImage(Images.Desert[0], 0, 0); break;
-                    case TerrainType.Forest: graphics.DrawImage(Images.ForestBase[0], 0, 0); break;
-                    case TerrainType.Glacier: graphics.DrawImage(Images.Glacier[0], 0, 0); break;
-                    case TerrainType.Grassland: graphics.DrawImage(Images.Grassland[0], 0, 0); break;
-                    case TerrainType.Hills: graphics.DrawImage(Images.HillsBase[0], 0, 0); break;
-                    case TerrainType.Jungle: graphics.DrawImage(Images.Jungle[0], 0, 0); break;
-                    case TerrainType.Mountains: graphics.DrawImage(Images.MtnsBase[0], 0, 0); break;
-                    case TerrainType.Ocean: graphics.DrawImage(Images.Ocean[0], 0, 0); break;
-                    case TerrainType.Plains: graphics.DrawImage(Images.Plains[0], 0, 0); break;
-                    case TerrainType.Swamp: graphics.DrawImage(Images.Swamp[0], 0, 0); break;
-                    case TerrainType.Tundra: graphics.DrawImage(Images.Tundra[0], 0, 0); break;
+                    case TerrainType.Desert: g.DrawImage(Images.Desert[0], 0, 0); break;
+                    case TerrainType.Forest: g.DrawImage(Images.ForestBase[0], 0, 0); break;
+                    case TerrainType.Glacier: g.DrawImage(Images.Glacier[0], 0, 0); break;
+                    case TerrainType.Grassland: g.DrawImage(Images.Grassland[0], 0, 0); break;
+                    case TerrainType.Hills: g.DrawImage(Images.HillsBase[0], 0, 0); break;
+                    case TerrainType.Jungle: g.DrawImage(Images.Jungle[0], 0, 0); break;
+                    case TerrainType.Mountains: g.DrawImage(Images.MtnsBase[0], 0, 0); break;
+                    case TerrainType.Ocean: g.DrawImage(Images.Ocean[0], 0, 0); break;
+                    case TerrainType.Plains: g.DrawImage(Images.Plains[0], 0, 0); break;
+                    case TerrainType.Swamp: g.DrawImage(Images.Swamp[0], 0, 0); break;
+                    case TerrainType.Tundra: g.DrawImage(Images.Tundra[0], 0, 0); break;
                     default: throw new ArgumentOutOfRangeException();
                 }
 
@@ -111,17 +111,17 @@ namespace civ2.Bitmaps
                     {
                         switch (tiletype[tileX, tileY])
                         {
-                            case TerrainType.Desert: graphics.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Plains: graphics.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Grassland: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Forest: graphics.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Hills: graphics.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Mountains: graphics.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Tundra: graphics.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Glacier: graphics.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Swamp: graphics.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Jungle: graphics.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                            case TerrainType.Ocean: graphics.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Desert: g.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Plains: g.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Grassland: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Forest: g.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Hills: g.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Mountains: g.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Tundra: g.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Glacier: g.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Swamp: g.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Jungle: g.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                            case TerrainType.Ocean: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
                             default: break;
                         }
                     }
@@ -134,195 +134,62 @@ namespace civ2.Bitmaps
 
                     // Draw coast & river mouth tiles
                     // NW+N+NE tiles
-                    if (!land[7] && !land[0] && !land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[0, 0], 16, 0);
-                    }
-
-                    if (land[7] && !land[0] && !land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[1, 0], 16, 0);
-                    }
-
-                    if (!land[7] && land[0] && !land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[2, 0], 16, 0);
-                    }
-
-                    if (land[7] && land[0] && !land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[3, 0], 16, 0);
-                    }
-
-                    if (!land[7] && !land[0] && land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[4, 0], 16, 0);
-                    }
-
-                    if (land[7] && !land[0] && land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[5, 0], 16, 0);
-                    }
-
-                    if (!land[7] && land[0] && land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[6, 0], 16, 0);
-                    }
-
-                    if (land[7] && land[0] && land[1])
-                    {
-                        graphics.DrawImage(Images.Coast[7, 0], 16, 0);
-                    }
+                    if (!land[7] && !land[0] && !land[1]) g.DrawImage(Images.Coast[0, 0], 16, 0);
+                    if (land[7] && !land[0] && !land[1]) g.DrawImage(Images.Coast[1, 0], 16, 0);
+                    if (!land[7] && land[0] && !land[1]) g.DrawImage(Images.Coast[2, 0], 16, 0);
+                    if (land[7] && land[0] && !land[1]) g.DrawImage(Images.Coast[3, 0], 16, 0);
+                    if (!land[7] && !land[0] && land[1]) g.DrawImage(Images.Coast[4, 0], 16, 0);
+                    if (land[7] && !land[0] && land[1]) g.DrawImage(Images.Coast[5, 0], 16, 0);
+                    if (!land[7] && land[0] && land[1]) g.DrawImage(Images.Coast[6, 0], 16, 0);
+                    if (land[7] && land[0] && land[1]) g.DrawImage(Images.Coast[7, 0], 16, 0);
+                    
                     // SW+S+SE tiles
-                    if (!land[3] && !land[4] && !land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[0, 1], 16, 16);
-                    }
-
-                    if (land[3] && !land[4] && !land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[1, 1], 16, 16);
-                    }
-
-                    if (!land[3] && land[4] && !land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[2, 1], 16, 16);
-                    }
-
-                    if (land[3] && land[4] && !land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[3, 1], 16, 16);
-                    }
-
-                    if (!land[3] && !land[4] && land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[4, 1], 16, 16);
-                    }
-
-                    if (land[3] && !land[4] && land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[5, 1], 16, 16);
-                    }
-
-                    if (!land[3] && land[4] && land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[6, 1], 16, 16);
-                    }
-
-                    if (land[3] && land[4] && land[5])
-                    {
-                        graphics.DrawImage(Images.Coast[7, 1], 16, 16);
-                    }
+                    if (!land[3] && !land[4] && !land[5]) g.DrawImage(Images.Coast[0, 1], 16, 16);
+                    if (land[3] && !land[4] && !land[5]) g.DrawImage(Images.Coast[1, 1], 16, 16);
+                    if (!land[3] && land[4] && !land[5]) g.DrawImage(Images.Coast[2, 1], 16, 16);
+                    if (land[3] && land[4] && !land[5]) g.DrawImage(Images.Coast[3, 1], 16, 16);
+                    if (!land[3] && !land[4] && land[5]) g.DrawImage(Images.Coast[4, 1], 16, 16);
+                    if (land[3] && !land[4] && land[5]) g.DrawImage(Images.Coast[5, 1], 16, 16);
+                    if (!land[3] && land[4] && land[5]) g.DrawImage(Images.Coast[6, 1], 16, 16);
+                    if (land[3] && land[4] && land[5]) g.DrawImage(Images.Coast[7, 1], 16, 16);
+                    
                     // SW+W+NW tiles
-                    if (!land[5] && !land[6] && !land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[0, 2], 0, 8);
-                    }
-
-                    if (land[5] && !land[6] && !land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[1, 2], 0, 8);
-                    }
-
-                    if (!land[5] && land[6] && !land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[2, 2], 0, 8);
-                    }
-
-                    if (land[5] && land[6] && !land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[3, 2], 0, 8);
-                    }
-
-                    if (!land[5] && !land[6] && land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[4, 2], 0, 8);
-                    }
-
-                    if (land[5] && !land[6] && land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[5, 2], 0, 8);
-                    }
-
-                    if (!land[5] && land[6] && land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[6, 2], 0, 8);
-                    }
-
-                    if (land[5] && land[6] && land[7])
-                    {
-                        graphics.DrawImage(Images.Coast[7, 2], 0, 8);
-                    }
+                    if (!land[5] && !land[6] && !land[7]) g.DrawImage(Images.Coast[0, 2], 0, 8);
+                    if (land[5] && !land[6] && !land[7]) g.DrawImage(Images.Coast[1, 2], 0, 8);
+                    if (!land[5] && land[6] && !land[7]) g.DrawImage(Images.Coast[2, 2], 0, 8);
+                    if (land[5] && land[6] && !land[7]) g.DrawImage(Images.Coast[3, 2], 0, 8);
+                    if (!land[5] && !land[6] && land[7]) g.DrawImage(Images.Coast[4, 2], 0, 8);
+                    if (land[5] && !land[6] && land[7]) g.DrawImage(Images.Coast[5, 2], 0, 8);
+                    if (!land[5] && land[6] && land[7]) g.DrawImage(Images.Coast[6, 2], 0, 8);
+                    if (land[5] && land[6] && land[7]) g.DrawImage(Images.Coast[7, 2], 0, 8);
+                    
                     // NE+E+SE tiles
-                    if (!land[1] && !land[2] && !land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[0, 3], 32, 8);
-                    }
-
-                    if (land[1] && !land[2] && !land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[1, 3], 32, 8);
-                    }
-
-                    if (!land[1] && land[2] && !land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[2, 3], 32, 8);
-                    }
-
-                    if (land[1] && land[2] && !land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[3, 3], 32, 8);
-                    }
-
-                    if (!land[1] && !land[2] && land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[4, 3], 32, 8);
-                    }
-
-                    if (land[1] && !land[2] && land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[5, 3], 32, 8);
-                    }
-
-                    if (!land[1] && land[2] && land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[6, 3], 32, 8);
-                    }
-
-                    if (land[1] && land[2] && land[3])
-                    {
-                        graphics.DrawImage(Images.Coast[7, 3], 32, 8);
-                    }
+                    if (!land[1] && !land[2] && !land[3]) g.DrawImage(Images.Coast[0, 3], 32, 8);
+                    if (land[1] && !land[2] && !land[3]) g.DrawImage(Images.Coast[1, 3], 32, 8);
+                    if (!land[1] && land[2] && !land[3]) g.DrawImage(Images.Coast[2, 3], 32, 8);
+                    if (land[1] && land[2] && !land[3]) g.DrawImage(Images.Coast[3, 3], 32, 8);
+                    if (!land[1] && !land[2] && land[3]) g.DrawImage(Images.Coast[4, 3], 32, 8);
+                    if (land[1] && !land[2] && land[3]) g.DrawImage(Images.Coast[5, 3], 32, 8);
+                    if (!land[1] && land[2] && land[3]) g.DrawImage(Images.Coast[6, 3], 32, 8);
+                    if (land[1] && land[2] && land[3]) g.DrawImage(Images.Coast[7, 3], 32, 8);
 
                     // River mouth
                     // If river is next to ocean, draw river mouth on this tile.
                     if (col + 1 < Xdim && row - 1 >= 0)    // NE there is no edge of map
                     {
-                        if (land[1] && Map.TileC2(col + 1, row - 1).River)
-                        {
-                            graphics.DrawImage(Images.RiverMouth[0], 0, 0);
-                        }
+                        if (land[1] && Map.TileC2(col + 1, row - 1).River) g.DrawImage(Images.RiverMouth[0], 0, 0);
                     }
                     if (col + 1 < Xdim && row + 1 < Ydim)    // SE there is no edge of map
                     {
-                        if (land[3] && Map.TileC2(col + 1, row + 1).River)
-                        {
-                            graphics.DrawImage(Images.RiverMouth[1], 0, 0);
-                        }
+                        if (land[3] && Map.TileC2(col + 1, row + 1).River) g.DrawImage(Images.RiverMouth[1], 0, 0);
                     }
                     if (col - 1 >= 0 && row + 1 < Ydim)    // SW there is no edge of map
                     {
-                        if (land[5] && Map.TileC2(col - 1, row + 1).River)
-                        {
-                            graphics.DrawImage(Images.RiverMouth[2], 0, 0);
-                        }
+                        if (land[5] && Map.TileC2(col - 1, row + 1).River) g.DrawImage(Images.RiverMouth[2], 0, 0);
                     }
                     if (col - 1 >= 0 && row - 1 >= 0)    // NW there is no edge of map
                     {
-                        if (land[7] && Map.TileC2(col - 1, row - 1).River)
-                        {
-                            graphics.DrawImage(Images.RiverMouth[3], 0, 0);
-                        }
+                        if (land[7] && Map.TileC2(col - 1, row - 1).River) g.DrawImage(Images.RiverMouth[3], 0, 0);
                     }
                 }
 
@@ -332,85 +199,22 @@ namespace civ2.Bitmaps
                     bool[] isForestAround = IsTerrainAroundIn4directions(col, row, TerrainType.Forest, flatEarth);
 
                     // Draw forest tiles
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[0], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[1], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[2], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[3], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[4], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[5], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[6], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.Forest[7], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[8], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[9], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[10], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[11], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[12], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[13], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { false, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[14], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isForestAround, new bool[4] { true, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.Forest[15], 0, 0);
-                    }
+                    if (isForestAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.Forest[0], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.Forest[1], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.Forest[2], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.Forest[3], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.Forest[4], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.Forest[5], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.Forest[6], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.Forest[7], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.Forest[8], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.Forest[9], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.Forest[10], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.Forest[11], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.Forest[12], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.Forest[13], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.Forest[14], 0, 0);
+                    if (isForestAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.Forest[15], 0, 0);
                 }
 
                 // Draw mountains
@@ -420,85 +224,22 @@ namespace civ2.Bitmaps
                     bool[] isMountAround = IsTerrainAroundIn4directions(col, row, TerrainType.Mountains, flatEarth);
 
                     // Draw mountain tiles
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[0], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[1], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[2], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[3], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[4], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[5], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[6], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.Mountains[7], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[8], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[9], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[10], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[11], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[12], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[13], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { false, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[14], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isMountAround, new bool[4] { true, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.Mountains[15], 0, 0);
-                    }
+                    if (isMountAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.Mountains[0], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.Mountains[1], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.Mountains[2], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.Mountains[3], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.Mountains[4], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.Mountains[5], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.Mountains[6], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.Mountains[7], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.Mountains[8], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.Mountains[9], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.Mountains[10], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.Mountains[11], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.Mountains[12], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.Mountains[13], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.Mountains[14], 0, 0);
+                    if (isMountAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.Mountains[15], 0, 0);
                 }
 
                 // Draw hills
@@ -507,85 +248,22 @@ namespace civ2.Bitmaps
                     bool[] isHillAround = IsTerrainAroundIn4directions(col, row, TerrainType.Hills, flatEarth);
 
                     // Draw hill tiles
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[0], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[1], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[2], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[3], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[4], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[5], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[6], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.Hills[7], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[8], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[9], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[10], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[11], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[12], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[13], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { false, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[14], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isHillAround, new bool[4] { true, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.Hills[15], 0, 0);
-                    }
+                    if (isHillAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.Hills[0], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.Hills[1], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.Hills[2], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.Hills[3], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.Hills[4], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.Hills[5], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.Hills[6], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.Hills[7], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.Hills[8], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.Hills[9], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.Hills[10], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.Hills[11], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.Hills[12], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.Hills[13], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.Hills[14], 0, 0);
+                    if (isHillAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.Hills[15], 0, 0);
                 }
 
                 // Draw rivers
@@ -594,85 +272,22 @@ namespace civ2.Bitmaps
                     bool[] isRiverAround = IsRiverAround(col, row, flatEarth);
 
                     // Draw river tiles
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.River[0], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.River[1], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.River[2], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, false, false }))
-                    {
-                        graphics.DrawImage(Images.River[3], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.River[4], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, true, false }))
-                    {
-                        graphics.DrawImage(Images.River[5], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.River[6], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, true, false }))
-                    {
-                        graphics.DrawImage(Images.River[7], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.River[8], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, false, true }))
-                    {
-                        graphics.DrawImage(Images.River[9], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.River[10], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, false, true }))
-                    {
-                        graphics.DrawImage(Images.River[11], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.River[12], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, false, true, true }))
-                    {
-                        graphics.DrawImage(Images.River[13], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { false, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.River[14], 0, 0);
-                    }
-
-                    if (Enumerable.SequenceEqual(isRiverAround, new bool[4] { true, true, true, true }))
-                    {
-                        graphics.DrawImage(Images.River[15], 0, 0);
-                    }
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.River[0], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.River[1], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.River[2], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.River[3], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.River[4], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.River[5], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.River[6], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.River[7], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.River[8], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.River[9], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.River[10], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.River[11], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.River[12], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.River[13], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.River[14], 0, 0);
+                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.River[15], 0, 0);
                 }
 
                 // Draw special resources if they exist
@@ -681,28 +296,28 @@ namespace civ2.Bitmaps
                 {
                     switch (Map.TileC2(col, row).SpecType)
                     {
-                        case SpecialType.Oasis: graphics.DrawImage(Images.Desert[2], 0, 0); break;
-                        case SpecialType.Buffalo: graphics.DrawImage(Images.Plains[2], 0, 0); break;
-                        case SpecialType.Grassland: graphics.DrawImage(Images.Grassland[0], 0, 0); break;   // TODO: what is spectype for grassland?
-                        case SpecialType.Pheasant: graphics.DrawImage(Images.ForestBase[2], 0, 0); break;
-                        case SpecialType.Coal: graphics.DrawImage(Images.HillsBase[2], 0, 0); break;
-                        case SpecialType.Gold: graphics.DrawImage(Images.MtnsBase[2], 0, 0); break;
-                        case SpecialType.Game: graphics.DrawImage(Images.Tundra[2], 0, 0); break;
-                        case SpecialType.Ivory: graphics.DrawImage(Images.Glacier[2], 0, 0); break;
-                        case SpecialType.Peat: graphics.DrawImage(Images.Swamp[2], 0, 0); break;
-                        case SpecialType.Gems: graphics.DrawImage(Images.Jungle[2], 0, 0); break;
-                        case SpecialType.Fish: graphics.DrawImage(Images.Ocean[2], 0, 0); break;
-                        case SpecialType.DesertOil: graphics.DrawImage(Images.Desert[3], 0, 0); break;
-                        case SpecialType.Wheat: graphics.DrawImage(Images.Plains[3], 0, 0); break;
-                        case SpecialType.GrasslandShield: graphics.DrawImage(Images.Shield, 0, 0); break;   // TODO: what is spectype for grassland?
-                        case SpecialType.Silk: graphics.DrawImage(Images.ForestBase[3], 0, 0); break;
-                        case SpecialType.Wine: graphics.DrawImage(Images.HillsBase[3], 0, 0); break;
-                        case SpecialType.Iron: graphics.DrawImage(Images.MtnsBase[3], 0, 0); break;
-                        case SpecialType.Furs: graphics.DrawImage(Images.Tundra[3], 0, 0); break;
-                        case SpecialType.GlacierOil: graphics.DrawImage(Images.Glacier[3], 0, 0); break;
-                        case SpecialType.Spice: graphics.DrawImage(Images.Swamp[3], 0, 0); break;
-                        case SpecialType.Fruit: graphics.DrawImage(Images.Jungle[3], 0, 0); break;
-                        case SpecialType.Whales: graphics.DrawImage(Images.Ocean[3], 0, 0); break;
+                        case SpecialType.Oasis: g.DrawImage(Images.Desert[2], 0, 0); break;
+                        case SpecialType.Buffalo: g.DrawImage(Images.Plains[2], 0, 0); break;
+                        case SpecialType.Grassland: g.DrawImage(Images.Grassland[0], 0, 0); break;   // TODO: what is spectype for grassland?
+                        case SpecialType.Pheasant: g.DrawImage(Images.ForestBase[2], 0, 0); break;
+                        case SpecialType.Coal: g.DrawImage(Images.HillsBase[2], 0, 0); break;
+                        case SpecialType.Gold: g.DrawImage(Images.MtnsBase[2], 0, 0); break;
+                        case SpecialType.Game: g.DrawImage(Images.Tundra[2], 0, 0); break;
+                        case SpecialType.Ivory: g.DrawImage(Images.Glacier[2], 0, 0); break;
+                        case SpecialType.Peat: g.DrawImage(Images.Swamp[2], 0, 0); break;
+                        case SpecialType.Gems: g.DrawImage(Images.Jungle[2], 0, 0); break;
+                        case SpecialType.Fish: g.DrawImage(Images.Ocean[2], 0, 0); break;
+                        case SpecialType.DesertOil: g.DrawImage(Images.Desert[3], 0, 0); break;
+                        case SpecialType.Wheat: g.DrawImage(Images.Plains[3], 0, 0); break;
+                        case SpecialType.GrasslandShield: g.DrawImage(Images.Shield, 0, 0); break;   // TODO: what is spectype for grassland?
+                        case SpecialType.Silk: g.DrawImage(Images.ForestBase[3], 0, 0); break;
+                        case SpecialType.Wine: g.DrawImage(Images.HillsBase[3], 0, 0); break;
+                        case SpecialType.Iron: g.DrawImage(Images.MtnsBase[3], 0, 0); break;
+                        case SpecialType.Furs: g.DrawImage(Images.Tundra[3], 0, 0); break;
+                        case SpecialType.GlacierOil: g.DrawImage(Images.Glacier[3], 0, 0); break;
+                        case SpecialType.Spice: g.DrawImage(Images.Swamp[3], 0, 0); break;
+                        case SpecialType.Fruit: g.DrawImage(Images.Jungle[3], 0, 0); break;
+                        case SpecialType.Whales: g.DrawImage(Images.Ocean[3], 0, 0); break;
                         default: throw new ArgumentOutOfRangeException();
                     }
                 }
@@ -713,49 +328,17 @@ namespace civ2.Bitmaps
                     bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
 
                     // Draw roads
-                    if (isRoadAround[0])
+                    if (isRoadAround[0]) g.DrawImage(Images.Road[8], 0, 0);  // to N
+                    if (isRoadAround[1]) g.DrawImage(Images.Road[1], 0, 0);  // to NE
+                    if (isRoadAround[2]) g.DrawImage(Images.Road[2], 0, 0);  // to E
+                    if (isRoadAround[3]) g.DrawImage(Images.Road[3], 0, 0);  // to SE
+                    if (isRoadAround[4]) g.DrawImage(Images.Road[4], 0, 0);  // to S
+                    if (isRoadAround[5]) g.DrawImage(Images.Road[5], 0, 0);  // to SW
+                    if (isRoadAround[6]) g.DrawImage(Images.Road[6], 0, 0);  // to W
+                    if (isRoadAround[7]) g.DrawImage(Images.Road[7], 0, 0);  // to NW
+                    if (isRoadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false }))
                     {
-                        graphics.DrawImage(Images.Road[8], 0, 0);  // to N
-                    }
-
-                    if (isRoadAround[1])
-                    {
-                        graphics.DrawImage(Images.Road[1], 0, 0);  // to NE
-                    }
-
-                    if (isRoadAround[2])
-                    {
-                        graphics.DrawImage(Images.Road[2], 0, 0);  // to E
-                    }
-
-                    if (isRoadAround[3])
-                    {
-                        graphics.DrawImage(Images.Road[3], 0, 0);  // to SE
-                    }
-
-                    if (isRoadAround[4])
-                    {
-                        graphics.DrawImage(Images.Road[4], 0, 0);  // to S
-                    }
-
-                    if (isRoadAround[5])
-                    {
-                        graphics.DrawImage(Images.Road[5], 0, 0);  // to SW
-                    }
-
-                    if (isRoadAround[6])
-                    {
-                        graphics.DrawImage(Images.Road[6], 0, 0);  // to W
-                    }
-
-                    if (isRoadAround[7])
-                    {
-                        graphics.DrawImage(Images.Road[7], 0, 0);  // to NW
-                    }
-
-                    if (Enumerable.SequenceEqual(isRoadAround, new bool[8] { false, false, false, false, false, false, false, false }))
-                    {
-                        graphics.DrawImage(Images.Road[0], 0, 0);    // no road around
+                        g.DrawImage(Images.Road[0], 0, 0);    // No road around
                     }
                 }
 
@@ -766,53 +349,35 @@ namespace civ2.Bitmaps
                 //    bool[] isRailroadAround = IsRailroadAround(i, j);
                 //
                 //    // Draw railroads
-                //    if (isRailroadAround[0]) { graphics.DrawImage(Images.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to N
-                //    if (isRailroadAround[1]) { graphics.DrawImage(Images.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to NE
-                //    if (isRailroadAround[2]) { graphics.DrawImage(Images.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to E
-                //    if (isRailroadAround[3]) { graphics.DrawImage(Images.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to SE
-                //    if (isRailroadAround[4]) { graphics.DrawImage(Images.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to S
-                //    if (isRailroadAround[5]) { graphics.DrawImage(Images.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to SW
-                //    if (isRailroadAround[6]) { graphics.DrawImage(Images.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to W
-                //    if (isRailroadAround[7]) { graphics.DrawImage(Images.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1); }  // to NW
-                //    if (Enumerable.SequenceEqual(isRailroadAround, new bool[8] { false, false, false, false, false, false, false, false })) 
-                //      graphics.DrawImage(Images.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // no railroad around
+                //    if (isRailroadAround[0]) g.DrawImage(Images.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to N
+                //    if (isRailroadAround[1]) g.DrawImage(Images.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NE
+                //    if (isRailroadAround[2]) g.DrawImage(Images.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to E
+                //    if (isRailroadAround[3]) g.DrawImage(Images.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SE
+                //    if (isRailroadAround[4]) g.DrawImage(Images.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to S
+                //    if (isRailroadAround[5]) g.DrawImage(Images.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SW
+                //    if (isRailroadAround[6]) g.DrawImage(Images.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to W
+                //    if (isRailroadAround[7]) g.DrawImage(Images.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NW
+                //    if (isRailroadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false })) 
+                //      g.DrawImage(Images.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // No railroad around
                 //}
 
                 // Irrigation
-                if (Map.TileC2(col, row).Irrigation)
-                {
-                    graphics.DrawImage(Images.Irrigation, 0, 0);
-                }
+                if (Map.TileC2(col, row).Irrigation) g.DrawImage(Images.Irrigation, 0, 0);
 
                 // Farmland
-                if (Map.TileC2(col, row).Farmland)
-                {
-                    graphics.DrawImage(Images.Farmland, 0, 0);
-                }
+                if (Map.TileC2(col, row).Farmland) g.DrawImage(Images.Farmland, 0, 0);
 
                 // Mining
-                if (Map.TileC2(col, row).Mining)
-                {
-                    graphics.DrawImage(Images.Mining, 0, 0);
-                }
+                if (Map.TileC2(col, row).Mining) g.DrawImage(Images.Mining, 0, 0);
 
                 // Pollution
-                if (Map.TileC2(col, row).Pollution)
-                {
-                    graphics.DrawImage(Images.Pollution, 0, 0);
-                }
+                if (Map.TileC2(col, row).Pollution) g.DrawImage(Images.Pollution, 0, 0);
 
                 // Fortress
-                if (Map.TileC2(col, row).Fortress)
-                {
-                    graphics.DrawImage(Images.Fortress, 0, 0);
-                }
+                if (Map.TileC2(col, row).Fortress) g.DrawImage(Images.Fortress, 0, 0);
 
                 // Airbase
-                if (Map.TileC2(col, row).Airbase)
-                {
-                    graphics.DrawImage(Images.Airbase, 0, 0);
-                }
+                if (Map.TileC2(col, row).Airbase) g.DrawImage(Images.Airbase, 0, 0);
             }
 
             return tilePic;

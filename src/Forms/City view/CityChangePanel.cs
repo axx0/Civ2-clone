@@ -59,7 +59,6 @@ namespace civ2.Forms
             {
                 Location = new Point(9, 347),
                 Size = new Size(165, 36),
-                Font = new Font("Times New Roman", 12),
                 Text = "Auto"
             };
             Controls.Add(_autoButton);
@@ -70,7 +69,6 @@ namespace civ2.Forms
             {
                 Location = new Point(177, 347),
                 Size = new Size(165, 36),
-                Font = new Font("Times New Roman", 12),
                 Text = "Help"
             };
             Controls.Add(_helpButton);
@@ -81,7 +79,6 @@ namespace civ2.Forms
             {
                 Location = new Point(344, 347),
                 Size = new Size(165, 36),
-                Font = new Font("Times New Roman", 12),
                 Text = "Cheat!"
             };
             Controls.Add(_cheatButton);
@@ -92,7 +89,6 @@ namespace civ2.Forms
             {
                 Location = new Point(512, 347),
                 Size = new Size(165, 36),
-                Font = new Font("Times New Roman", 12),
                 Text = "OK"
             };
             Controls.Add(_OKButton);

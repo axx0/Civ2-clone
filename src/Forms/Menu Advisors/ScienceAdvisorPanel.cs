@@ -33,7 +33,6 @@ namespace civ2.Forms
             {
                 Location = new Point(2, 373),
                 Size = new Size(297, 24),
-                Font = new Font("Times New Roman", 11),
                 Text = "Goal"
             };
             DrawPanel.Controls.Add(_goalButton);
@@ -44,7 +43,6 @@ namespace civ2.Forms
             {
                 Location = new Point(301, 373),
                 Size = new Size(297, 24),
-                Font = new Font("Times New Roman", 11),
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);

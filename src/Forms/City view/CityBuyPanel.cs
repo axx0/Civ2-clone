@@ -12,7 +12,7 @@ namespace civ2.Forms
         private Game Game => Game.Instance;
         private readonly CityPanel _parent;
         private readonly City _city;
-        private readonly RadioButton _completeitButton, _nevermindButton;
+        private readonly Civ2radioBtn _completeitButton, _nevermindButton;
 
         public CityBuyPanel(CityPanel parent, City city) : base(814, 212, "", 38, 46)
         {
@@ -30,31 +30,24 @@ namespace civ2.Forms
             {
                 Location = new Point(9, 170),
                 Size = new Size(796, 36),
-                Font = new Font("Times New Roman", 11),
                 Text = "OK"
             };
             Controls.Add(_OKButton);
             _OKButton.Click += OKButton_Click;
 
             // Radio button 1
-            _completeitButton = new RadioButton
+            _completeitButton = new Civ2radioBtn
             {
                 Text = "Complete it.",
                 Location = new Point(140, 69),
-                BackColor = Color.Transparent,
-                Font = new Font("Times New Roman", 18),
-                AutoSize = true
             };
             DrawPanel.Controls.Add(_completeitButton);
 
             // Radio button 2
-            _nevermindButton = new RadioButton
+            _nevermindButton = new Civ2radioBtn
             {
                 Text = "Never mind.",
                 Location = new Point(140, 98),
-                BackColor = Color.Transparent,
-                Font = new Font("Times New Roman", 18),
-                AutoSize = true
             };
             DrawPanel.Controls.Add(_nevermindButton);
             _nevermindButton.Checked = true;

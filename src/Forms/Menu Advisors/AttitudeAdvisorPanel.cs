@@ -6,7 +6,7 @@ using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
-    public partial class AttitudeAdvisorPanel : Civ2panel
+    public class AttitudeAdvisorPanel : Civ2panel
     {
         private Game _game => Game.Instance;
 
@@ -28,7 +28,6 @@ namespace civ2.Forms
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
-                Font = new Font("Times New Roman", 11),
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);

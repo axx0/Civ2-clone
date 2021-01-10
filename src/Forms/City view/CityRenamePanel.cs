@@ -34,7 +34,6 @@ namespace civ2.Forms
             {
                 Location = new Point(9, 84),
                 Size = new Size(333, 36),
-                Font = new Font("Times New Roman", 12),
                 Text = "OK"
             };
             Controls.Add(_OKButton);
@@ -45,7 +44,6 @@ namespace civ2.Forms
             {
                 Location = new Point(344, 84),
                 Size = new Size(333, 36),
-                Font = new Font("Times New Roman", 12),
                 Text = "Cancel"
             };
             Controls.Add(_cancelButton);

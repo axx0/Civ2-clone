@@ -26,7 +26,6 @@ namespace civ2.Forms
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
-                Font = new Font("Times New Roman", 11),
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);

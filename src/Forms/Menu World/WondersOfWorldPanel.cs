@@ -31,7 +31,6 @@ namespace civ2.Forms
             {
                 Location = new Point(2, 373),
                 Size = new Size(596, 24),
-                Font = new Font("Times New Roman", 11),
                 Text = "Close"
             };
             DrawPanel.Controls.Add(_closeButton);
@@ -77,7 +76,7 @@ namespace civ2.Forms
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Text
-            var sf = new StringFormat();
+            using var sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             sf.LineAlignment = StringAlignment.Center;
             e.Graphics.DrawString("WONDERS OF THE ANCIENT WORLD", new Font("Times New Roman", 14), new SolidBrush(Color.FromArgb(67, 67, 67)), new Point(302 + 2, 22 + 1), sf);
@@ -103,7 +102,6 @@ namespace civ2.Forms
                     count++;
                 }
             }
-            sf.Dispose();
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

@@ -3,12 +3,13 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using civ2.Enums;
+using civ2.Bitmaps;
 
 namespace civ2.Forms
 {
     public partial class ChoiceMenuPanel : Civ2panel
     {
-        private readonly RadioButton[] _radioBtn;
+        private readonly Civ2radioBtn[] _radioBtn;
         private readonly Main _mainForm;
 
         public ChoiceMenuPanel(Main mainForm) :
@@ -17,18 +18,14 @@ namespace civ2.Forms
             _mainForm = mainForm;
 
             // Radio buttons
-            _radioBtn = new RadioButton[8];
+            _radioBtn = new Civ2radioBtn[8];
             string[] txt = { "Start a New Game", "Start on Premade World", "Customize World", "Begin Scenario", "Load a Game", "Multiplayer Game", "View Hall of Fame", "View Credits" };
             for (int i = 0; i < 7; i++)
             {
-                _radioBtn[i] = new RadioButton
+                _radioBtn[i] = new Civ2radioBtn
                 {
                     Text = txt[i],
                     Location = new Point(10, (int)(DrawPanel.Height / 7) * i),
-                    BackColor = Color.Transparent,
-                    Font = new Font("Times New Roman", 18),
-                    ForeColor = Color.FromArgb(51, 51, 51),
-                    AutoSize = true
                 };
                 DrawPanel.Controls.Add(_radioBtn[i]);
             }
@@ -39,7 +36,6 @@ namespace civ2.Forms
             {
                 Location = new Point(9, Height - 42),
                 Size = new Size(156, 36),
-                Font = new Font("Times New Roman", 11),
                 Text = "OK"
             };
             Controls.Add(OKButton);
@@ -50,7 +46,6 @@ namespace civ2.Forms
             {
                 Location = new Point(168, Height - 42),
                 Size = new Size(157, 36),
-                Font = new Font("Times New Roman", 11),
                 Text = "Cancel"
             };
             Controls.Add(CancelButton);
