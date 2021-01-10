@@ -110,7 +110,7 @@ namespace civ2.Bitmaps
             var mapPic = new Bitmap(Game.Xpx * (2 * width + 1), Game.Ypx * (height + 1));
 
             // Draw map
-            List<Tuple<City, Point>> cityList = new List<Tuple<City, Point>>(); // Make a list of cities on visible map + their locations so you can draw city names
+            var cityList = new List<City>(); // Make a list of cities on visible map + their locations so you can draw city names
             using (var g = Graphics.FromImage(mapPic))
             {
                 // Draw
@@ -126,7 +126,7 @@ namespace civ2.Bitmaps
                         if ((civ < 8 && Map.IsTileVisibleC2(startX + col, startY + row, civ)) || civ == 8)
                         {
                             // Tiles
-                            g.DrawImage(Map.TileC2(startX + col, startY + row).GraphicZoom(zoom), 4 * (8 + zoom) * col, 2 * (8 + zoom) * row);
+                            Draw.Tile(g, startX + col, startY + row, zoom, new Point(4 * (8 + zoom) * col, 2 * (8 + zoom) * row));
 
                             // Implement dithering in all 4 directions where non-visible tiles are
                             if (civ != 8)
@@ -164,7 +164,7 @@ namespace civ2.Bitmaps
                             {
                                 Draw.City(g, city, true, zoom, new Point(4 * (8 + zoom) * col, 2 * (8 + zoom) * (row - 1)));
                                 // Add city drawn on map & its position to list for drawing city names
-                                cityList.Add(new Tuple<City, Point>(city, new Point(4 * (8 + zoom) * col + 4 * (8 + zoom), 2 * (8 + zoom) * (row + 2) + 2)));
+                                cityList.Add(city);
                             }
                         }
                     }
@@ -184,16 +184,18 @@ namespace civ2.Bitmaps
                             // Draw only if the tile is visible for each civ (index=8...whole map visible)
                             if ((civ < 8 && Map.IsTileVisibleC2(startX + col, startY + row, civ)) || civ == 8)
                             {
-                                g.DrawImage(ModifyImage.Resize(Images.GridLines, zoom), 4 * (8 + zoom) * col, 2 * (8 + zoom) * row);
+                                Draw.Grid(g, zoom, new Point(4 * (8 + zoom) * col, 2 * (8 + zoom) * row));
+                                //g.DrawImage(ModifyImage.Resize(Images.GridLines, zoom), 4 * (8 + zoom) * col, 2 * (8 + zoom) * row);
                             }
                         }
                     }
                 }
 
                 // City name text is drawn last
-                foreach (Tuple<City, Point> city in cityList)
+                foreach (City city in cityList)
                 {
-                    Draw.CityName(g, city.Item1, zoom, city.Item2);
+                    int[] destSq = new int[] { city.X - startX, city.Y - startY };
+                    Draw.CityName(g, city, zoom, destSq);
                 }
             }
 

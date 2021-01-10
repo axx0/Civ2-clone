@@ -8,7 +8,13 @@ namespace civ2.Bitmaps
 {
     public static partial class Draw
     {
-        public static Bitmap Terrain(ITerrain tile, int col, int row, bool flatEarth)
+        public static void Tile(Graphics g, int xC2, int yC2, int zoom, Point dest)
+        {
+            var tilePic = ModifyImage.Resize(Map.TileC2(xC2, yC2).Graphic, zoom);
+            g.DrawImage(tilePic, dest);
+        }
+
+        public static Bitmap MakeTileGraphic(ITerrain tile, int col, int row, bool flatEarth)
         {
             // EVERYTHING HERE IS IN CIV2-COORDS AND NOT IN REGULAR COORDS!!!
 

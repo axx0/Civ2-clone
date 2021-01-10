@@ -48,6 +48,5 @@ namespace civ2.Terrains
         int Island { get; set; }
         string Hexvalue { get; set; }
         Bitmap Graphic { get; set; }
-        Bitmap GraphicZoom(int zoom);
     }
 }

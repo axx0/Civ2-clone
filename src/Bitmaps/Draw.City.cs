@@ -117,7 +117,7 @@ namespace civ2.Bitmaps
             }
         }
 
-        public static void CityName(Graphics g, City city, int zoom, Point dest)
+        public static void CityName(Graphics g, City city, int zoom, int[] offsetSqXY)
         {
             // Define text characteristics for zoom levels
             int shadowOffset, fontSize;
@@ -141,6 +141,8 @@ namespace civ2.Bitmaps
                 case 8: shadowOffset = 2; fontSize = 28; break;
                 default: shadowOffset = 2; fontSize = 14; break;
             }
+
+            Point dest = new Point(4 * (8 + zoom) * offsetSqXY[0] + 4 * (8 + zoom), 2 * (8 + zoom) * (offsetSqXY[1] + 2) + 2);
 
             using var sf = new StringFormat();
             sf.LineAlignment = StringAlignment.Center;

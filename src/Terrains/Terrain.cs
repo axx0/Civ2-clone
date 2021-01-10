@@ -71,11 +71,6 @@ namespace civ2.Terrains
         // TODO: put special resources logic into here
         public string SpecName => Game.Rules.TerrainSpec1Name[(int)SpecType];
 
-
-
-
-
-
         public bool Resource { get; set; }
         public bool River { get; set; }
         public bool UnitPresent => Game.GetUnits.Any(u => u.X == X && u.Y == Y);
@@ -90,9 +85,7 @@ namespace civ2.Terrains
         public bool Airbase { get; set; }
         public int Island { get; set; }
         public string Hexvalue { get; set; }
-
         public Bitmap Graphic { get; set; }
         public Bitmap GraphicZoom(int zoom) => ModifyImage.Resize(Graphic, zoom);
-
     }
 }

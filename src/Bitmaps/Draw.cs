@@ -15,6 +15,16 @@ namespace civ2.Bitmaps
         private static Game Game => Game.Instance;
         private static Map Map => Map.Instance;
 
+        public static void ViewPiece(Graphics g, int zoom, Point dest)
+        {
+            g.DrawImage(ModifyImage.Resize(Images.ViewPiece, zoom), dest);
+        }
+
+        public static void Grid(Graphics g, int zoom, Point dest)
+        {
+            g.DrawImage(ModifyImage.Resize(Images.GridLines, zoom), dest);
+        }
+
         //public static void CreateLoadGameGraphics()
         //{
         //    //Creates bitmaps from current folder
