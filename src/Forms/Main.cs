@@ -423,7 +423,10 @@ namespace civ2.Forms
         }
         private void ArrangeWindows_Click(object sender, EventArgs e) { }
         private void ShowHiddenTerrain_Click(object sender, EventArgs e) { }
-        private void CenterView_Click(object sender, EventArgs e) { }
+        private void CenterView_Click(object sender, EventArgs e)
+        {
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.CenterView));
+        }
         #endregion
         #region KINGDOM MENU EVENTS
         private void TaxRate_Click(object sender, EventArgs e) { }
@@ -620,11 +623,6 @@ namespace civ2.Forms
         private void ScenarioParameters_Click(object sender, EventArgs e) { }
         private void SaveAsScenario_Click(object sender, EventArgs e) { }
         #endregion
-        private void AdvisorsForm_Load(object sender, EventArgs e) {
-            Form frm = sender as Form;
-            frm.Location = new Point(330, 250);
-            frm.Width = 622;
-            frm.Height = 421; }
 
         #region If a new unit or no unit is active, update orders menu accordingly
         public void Update_ordersMenu()

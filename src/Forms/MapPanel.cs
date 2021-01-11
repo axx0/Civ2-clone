@@ -265,6 +265,12 @@ namespace civ2.Forms
                         DrawPanel.Invalidate();
                         break;
                     }
+                case MapEventType.CenterView:
+                    {
+                        MapViewChange(Game.ActiveXY);
+                        DrawPanel.Invalidate();
+                        break;
+                    }
                 default: break;
             }
         }
