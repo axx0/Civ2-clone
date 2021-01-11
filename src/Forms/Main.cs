@@ -19,12 +19,9 @@ namespace civ2.Forms
         private MapPanel _mapPanel;
         private _MinimapPanel _minimapPanel;
         private StatusPanel _statusPanel;
-        private readonly ToolStripMenuItem _buildMinesChangeForestItem, _cleanUpPollutionItem, _pillageItem, _unloadItem, _goToItem, _goHomeToNearestCityItem, _fortifyItem,
-            _sleepItem, _disbandItem, _maxZoomInItem, _maxZoomOutItem, _activateUnitItem, _waitItem, _skipTurnItem, _endPlayerTurnItem, _buildNewCityItem, _automateSettlerItem,
-            _paradropItem, _showMapGridItem, _ordersMenu;
+        private readonly ToolStripMenuItem _buildMinesChangeForestItem, _cleanUpPollutionItem, _pillageItem, _unloadItem, _goToItem, _goHomeToNearestCityItem, _fortifyItem, _sleepItem, _disbandItem, _maxZoomInItem, _maxZoomOutItem, _activateUnitItem, _waitItem, _skipTurnItem, _endPlayerTurnItem, _buildNewCityItem, _automateSettlerItem, _paradropItem, _showMapGridItem, _ordersMenu;
         private readonly List<ToolStripItem> _settlerItems, _noSettlerItems;
-        private readonly Civ2ToolStripMenuItem _taxRateItem, _viewThroneRoomItem, _findCityItem, _revolutionItem, _buildRoadItem, _buildIrrigationItem, _movePieceItem,
-            _viewPieceItem, _zoomInItem, _zoomOutItem, _standardZoomItem, _mediumZoomOutItem, _arrangeWindowsItem, _showHiddenTerrainItem, _centerViewItem;
+        private readonly Civ2ToolStripMenuItem _taxRateItem, _viewThroneRoomItem, _findCityItem, _revolutionItem, _buildRoadItem, _buildIrrigationItem, _movePieceItem, _viewPieceItem, _zoomInItem, _zoomOutItem, _standardZoomItem, _mediumZoomOutItem, _arrangeWindowsItem, _showHiddenTerrainItem, _centerViewItem;
         public bool AreWeInIntroScreen, LoadGameCalled;
         public bool ViewPieceMode { get; set; }
         public static event EventHandler<MapEventArgs> OnMapEvent;
@@ -160,13 +157,9 @@ namespace civ2.Forms
             _paradropItem = new ToolStripMenuItem("Paradrop", null, Paradrop_Click);   //Paratroopers only item
             MainMenuStrip.Items.Add(_ordersMenu);
 
-            _settlerItems = new List<ToolStripItem> { _buildNewCityItem, _buildRoadItem, _buildIrrigationItem, _buildMinesChangeForestItem, new ToolStripSeparator(),
-                _automateSettlerItem, _cleanUpPollutionItem, new ToolStripSeparator(), _goToItem, _goHomeToNearestCityItem, new ToolStripSeparator(), _sleepItem,
-                new ToolStripSeparator(), _disbandItem, _activateUnitItem, _waitItem, _skipTurnItem, new ToolStripSeparator(), _endPlayerTurnItem };
+            _settlerItems = new List<ToolStripItem> { _buildNewCityItem, _buildRoadItem, _buildIrrigationItem, _buildMinesChangeForestItem, new ToolStripSeparator(), _automateSettlerItem, _cleanUpPollutionItem, new ToolStripSeparator(), _goToItem, _goHomeToNearestCityItem, new ToolStripSeparator(), _sleepItem, new ToolStripSeparator(), _disbandItem, _activateUnitItem, _waitItem, _skipTurnItem, new ToolStripSeparator(), _endPlayerTurnItem };
 
-            _noSettlerItems = new List<ToolStripItem> { _buildRoadItem, _buildIrrigationItem, _buildMinesChangeForestItem, new ToolStripSeparator(), _cleanUpPollutionItem,
-                _pillageItem, new ToolStripSeparator(), _unloadItem, _goToItem, _paradropItem, _goHomeToNearestCityItem, new ToolStripSeparator(), _fortifyItem, _sleepItem,
-                new ToolStripSeparator(), _disbandItem, _activateUnitItem, _waitItem, _skipTurnItem, new ToolStripSeparator(), _endPlayerTurnItem };
+            _noSettlerItems = new List<ToolStripItem> { _buildRoadItem, _buildIrrigationItem, _buildMinesChangeForestItem, new ToolStripSeparator(), _cleanUpPollutionItem, _pillageItem, new ToolStripSeparator(), _unloadItem, _goToItem, _paradropItem, _goHomeToNearestCityItem, new ToolStripSeparator(), _fortifyItem, _sleepItem, new ToolStripSeparator(), _disbandItem, _activateUnitItem, _waitItem, _skipTurnItem, new ToolStripSeparator(), _endPlayerTurnItem };
 
             _ordersMenu.DropDownItems.Add(_buildNewCityItem);
             _ordersMenu.DropDownItems.Add(_buildRoadItem);
@@ -417,10 +410,11 @@ namespace civ2.Forms
 
         private void ShowMapGrid_Click(object sender, EventArgs e)
         {
-            //int var = MapPanel.ToggleMapGrid();
-            //if (var != 0) _showMapGridItem.Checked = true;
-            //else _showMapGridItem.Checked = false;
+            Game.Options.Grid = !Game.Options.Grid;
+            _showMapGridItem.Checked = Game.Options.Grid;
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ToggleGrid));
         }
+
         private void ArrangeWindows_Click(object sender, EventArgs e) { }
         private void ShowHiddenTerrain_Click(object sender, EventArgs e) { }
         private void CenterView_Click(object sender, EventArgs e)

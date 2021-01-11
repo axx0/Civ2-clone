@@ -26,6 +26,8 @@ namespace civ2.Bitmaps
             };
 
             // Get 2 frames (one with and other without the active unit/moving piece)
+            int[] coordsOffsetsPx;
+            int x, y;
             for (int frame = 0; frame < 2; frame++)
             {
                 var _bitmap = new Bitmap(2 * Game.Xpx, 3 * Game.Ypx);
@@ -34,12 +36,13 @@ namespace civ2.Bitmaps
                     // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
                     g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 2 * Game.Xpx, 3 * Game.Ypx));
 
+
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
                         // Change coords of central offset
-                        int x = centralCoords[0] + coordsOffsets[0];
-                        int y = centralCoords[1] + coordsOffsets[1];
-                        int[] coordsOffsetsPx = new int[] { coordsOffsets[0] * Game.Xpx, coordsOffsets[1] * Game.Ypx };
+                        x = centralCoords[0] + coordsOffsets[0];
+                        y = centralCoords[1] + coordsOffsets[1];
+                        coordsOffsetsPx = new int[] { coordsOffsets[0] * Game.Xpx, coordsOffsets[1] * Game.Ypx };
 
                         if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
 
@@ -88,12 +91,22 @@ namespace civ2.Bitmaps
                         }
                     }
 
+                    // Gridlines
+                    if (Game.Options.Grid)
+                    {
+                        foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
+                        {
+                            coordsOffsetsPx = new int[] { coordsOffsets[0] * Game.Xpx, coordsOffsets[1] * Game.Ypx + Game.Ypx };
+                            Draw.Grid(g, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                        }
+                    }
+
                     // City names
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
                         // Change coords of central offset
-                        int x = centralCoords[0] + coordsOffsets[0];
-                        int y = centralCoords[1] + coordsOffsets[1];
+                        x = centralCoords[0] + coordsOffsets[0];
+                        y = centralCoords[1] + coordsOffsets[1];
 
                         if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
 

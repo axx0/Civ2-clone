@@ -104,7 +104,7 @@ namespace civ2.Bitmaps
         //    return mapPic;
         //}
 
-        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, int zoom, bool flatEarth, bool drawGrid)
+        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, int zoom, bool flatEarth)
         {
             // Define a bitmap for drawing
             var mapPic = new Bitmap(Game.Xpx * (2 * width + 1), Game.Ypx * (height + 1));
@@ -171,7 +171,7 @@ namespace civ2.Bitmaps
                 }
 
                 // Grid
-                if (drawGrid)
+                if (Game.Options.Grid)
                 {
                     for (int _row = 0; _row < height; _row++)
                     {

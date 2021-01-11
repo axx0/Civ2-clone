@@ -19,7 +19,6 @@ namespace civ2.Forms
 
         private Main _main;
         private static List<Bitmap> AnimationFrames;
-        private int MapGridVar { get; set; }        // Style of map grid presentation
         private System.Windows.Forms.Timer animationTimer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         private AnimationType AnimType { get; set; }
         private int AnimationCount { get; set; }
@@ -77,7 +76,6 @@ namespace civ2.Forms
             DrawPanel.MouseClick += DrawPanel_MouseClick;
 
             // Center the map view and draw map
-            MapGridVar = 0;
             AnimType = AnimationType.UpdateMap;
             activeOffsetXY = new int[] { 0, 0 };    // Just initialize
             MapViewChange(Game.StartingClickedXY);
@@ -195,17 +193,8 @@ namespace civ2.Forms
         private void MapViewChange(int[] newCenterCoords)
         {
             ReturnCoordsAtMapViewChange(newCenterCoords);
-            map = Draw.MapPart(Game.ActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Zoom, Game.Options.FlatEarth, true);
+            map = Draw.MapPart(Game.ActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Zoom, Game.Options.FlatEarth);
             DrawPanel.Invalidate();
-        }
-
-        public int ToggleMapGrid()
-        {
-            MapGridVar++;
-            if (MapGridVar > 3) MapGridVar = 0;
-            //Options.Grid = (MapGridVar != 0) ? true : false;
-            Refresh();
-            return MapGridVar;
         }
 
         #region Zoom events
@@ -268,6 +257,13 @@ namespace civ2.Forms
                 case MapEventType.CenterView:
                     {
                         MapViewChange(Game.ActiveXY);
+                        DrawPanel.Invalidate();
+                        break;
+                    }
+                case MapEventType.ToggleGrid:
+                    {
+                        MapViewChange(CentrXY);
+                        StartAnimation(AnimType); 
                         DrawPanel.Invalidate();
                         break;
                     }

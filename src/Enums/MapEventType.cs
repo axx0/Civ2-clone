@@ -7,6 +7,7 @@
         ViewPieceMoved = 2,
         ToggleBetweenCurrentEntireMapView = 3,
         ZoomChanged = 4,
-        CenterView = 5
+        CenterView = 5,
+        ToggleGrid = 6
     }
 }
