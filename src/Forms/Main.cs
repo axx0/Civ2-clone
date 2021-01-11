@@ -97,14 +97,12 @@ namespace civ2.Forms
             var ViewMenu = new ToolStripMenuItem("View");
             _movePieceItem = new Civ2ToolStripMenuItem("Move Pieces", MovePieces_Click, "v");
             _viewPieceItem = new Civ2ToolStripMenuItem("View Pieces", ViewPieces_Click, "v");
-            _zoomInItem = new Civ2ToolStripMenuItem("Zoom In", null, "z");
-            _zoomOutItem = new Civ2ToolStripMenuItem("Zoom Out", null, "x");
-            _maxZoomInItem = new ToolStripMenuItem("Max Zoom In", null, null, (Keys)Shortcut.CtrlZ);
-            _standardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", null, "Shift+Z");
-            _mediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", null, "Shift+X");
-            _standardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", null, "Shift+Z");
-            _mediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", null, "Shift+X");
-            _maxZoomOutItem = new ToolStripMenuItem("Max Zoom Out", null, null, (Keys)Shortcut.CtrlX);
+            _zoomInItem = new Civ2ToolStripMenuItem("Zoom In", ZoomIn_Click, "z");
+            _zoomOutItem = new Civ2ToolStripMenuItem("Zoom Out", ZoomOut_Click, "x");
+            _maxZoomInItem = new ToolStripMenuItem("Max Zoom In", null, MaxZoomIn_Click, (Keys)Shortcut.CtrlZ);
+            _standardZoomItem = new Civ2ToolStripMenuItem("Standard Zoom", StandardZoom_Click, "Shift+Z");
+            _mediumZoomOutItem = new Civ2ToolStripMenuItem("Medium Zoom Out", MediumZoomOut_Click, "Shift+X");
+            _maxZoomOutItem = new ToolStripMenuItem("Max Zoom Out", null, MaxZoomOut_Click, (Keys)Shortcut.CtrlX);
             _showMapGridItem = new ToolStripMenuItem("Show Map Grid", null, ShowMapGrid_Click, (Keys)Shortcut.CtrlG);
             _arrangeWindowsItem = new Civ2ToolStripMenuItem("Arrange Windows", ArrangeWindows_Click, "");
             _showHiddenTerrainItem = new Civ2ToolStripMenuItem("Show Hidden Terrain", ShowHiddenTerrain_Click, "t");
@@ -361,6 +359,60 @@ namespace civ2.Forms
             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
             _movePieceItem.Enabled = true;
             _viewPieceItem.Enabled = false;
+        }
+
+        private void ZoomIn_Click(object sender, EventArgs e)
+        {
+            if (Game.Zoom != 8)
+            {
+                Game.Zoom++;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ZoomChanged));
+            }
+        }
+
+        private void ZoomOut_Click(object sender, EventArgs e)
+        {
+            if (Game.Zoom != -7)
+            {
+                Game.Zoom--;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ZoomChanged));
+            }
+        }
+
+        private void MaxZoomIn_Click(object sender, EventArgs e)
+        {
+            if (Game.Zoom != 8)
+            {
+                Game.Zoom = 8;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ZoomChanged));
+            }
+        }
+
+        private void MaxZoomOut_Click(object sender, EventArgs e)
+        {
+            if (Game.Zoom != -7)
+            {
+                Game.Zoom = -7;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ZoomChanged));
+            }
+        }
+
+        private void StandardZoom_Click(object sender, EventArgs e)
+        {
+            if (Game.Zoom != 0)
+            {
+                Game.Zoom = 0;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ZoomChanged));
+            }
+        }
+
+        private void MediumZoomOut_Click(object sender, EventArgs e)
+        {
+            if (Game.Zoom != -4)
+            {
+                Game.Zoom = -4;
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.ZoomChanged));
+            }
         }
 
         private void ShowMapGrid_Click(object sender, EventArgs e)

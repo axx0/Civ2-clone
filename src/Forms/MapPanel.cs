@@ -208,45 +208,27 @@ namespace civ2.Forms
             return MapGridVar;
         }
 
-        #region ZoomInOut events
-        public void ZoomOUTclicked(Object sender, EventArgs e)
-        {
-            Game.Zoom--;
-            //Map.SetNewActiveMapPic();
-            DrawPanel.Invalidate();
-        }
+        #region Zoom events
         public void ZoomINclicked(Object sender, EventArgs e)
         {
-            Game.Zoom++;
-            MapViewChange(CentrXY);
-            //ReturnCoordsAtMapViewChange(CentrXY);
-            //Map.SetNewActiveMapPic();
-            //StartAnimation(AnimType);
-            DrawPanel.Invalidate();
+            if (Game.Zoom != 8)
+            {
+                Game.Zoom++;
+                MapViewChange(CentrXY);
+                StartAnimation(AnimType);
+                DrawPanel.Invalidate();
+            }
         }
-        public void MaxZoomINclicked(Object sender, EventArgs e)
+
+        public void ZoomOUTclicked(Object sender, EventArgs e)
         {
-            Game.Zoom = 16;
-            //Map.SetNewActiveMapPic();
-            DrawPanel.Invalidate();
-        }
-        public void MaxZoomOUTclicked(Object sender, EventArgs e)
-        {
-            Game.Zoom = 1;
-            //Map.SetNewActiveMapPic();
-            DrawPanel.Invalidate();
-        }
-        public void StandardZOOMclicked(Object sender, EventArgs e)
-        {
-            Game.Zoom = 8;
-            //Map.SetNewActiveMapPic();
-            DrawPanel.Invalidate();
-        }
-        public void MediumZoomOUTclicked(Object sender, EventArgs e)
-        {
-            Game.Zoom = 5;
-            //Map.SetNewActiveMapPic();
-            DrawPanel.Invalidate();
+            if (Game.Zoom != 8)
+            {
+                Game.Zoom--;
+                MapViewChange(CentrXY);
+                StartAnimation(AnimType);
+                DrawPanel.Invalidate();
+            }
         }
         #endregion
 
@@ -274,6 +256,13 @@ namespace civ2.Forms
                     {
                         DrawPanel.Invalidate(new Rectangle(0, 0, DrawPanel.Width, DrawPanel.Height));
                         Update();
+                        break;
+                    }
+                case MapEventType.ZoomChanged:
+                    {
+                        MapViewChange(CentrXY);
+                        StartAnimation(AnimType);
+                        DrawPanel.Invalidate();
                         break;
                     }
                 default: break;

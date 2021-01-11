@@ -5,6 +5,7 @@
         SwitchViewMovePiece = 0,
         MapViewChanged = 1,
         ViewPieceMoved = 2,
-        ToggleBetweenCurrentEntireMapView = 3
+        ToggleBetweenCurrentEntireMapView = 3,
+        ZoomChanged = 4
     }
 }
