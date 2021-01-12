@@ -158,7 +158,8 @@ namespace civ2.Forms
                     cityPanel.Show();
                     cityPanel.BringToFront();
                 }
-                else if (Game.GetUnits.Any(unit => unit.X == clickedXY[0] && unit.Y == clickedXY[1]))    // Unit clicked
+                // Unit clicked
+                else if (Game.GetUnits.Any(unit => unit.X == clickedXY[0] && unit.Y == clickedXY[1]))
                 {
                     int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == clickedXY[0] && a.Y == clickedXY[1]);
                     if (!Game.GetUnits[clickedUnitIndex].TurnEnded)

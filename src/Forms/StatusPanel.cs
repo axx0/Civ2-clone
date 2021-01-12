@@ -115,7 +115,7 @@ namespace civ2.Forms
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
-            using var _font = new Font("Times New Roman", 10, FontStyle.Bold);
+            using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
             string showYear = (Game.GameYear < 0) ? $"{Math.Abs(Game.GameYear)} B.C." : $"A.D. {Math.Abs(Game.GameYear)}";
             Draw.Text(e.Graphics, Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(5, 2), Color.FromArgb(191, 191, 191), 1, 1);
             Draw.Text(e.Graphics, showYear, _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(5, 20), Color.FromArgb(191, 191, 191), 1, 1);
@@ -125,75 +125,121 @@ namespace civ2.Forms
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
-            var _frontColor = Color.FromArgb(51, 51, 51); 
+            var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
-            // List all units on active tile
-            //List<IUnit> UnitsOnThisTile = new List<IUnit>();
-            //foreach (IUnit unit in _game.GetUnits.Where(a => (a.X == _game.ActiveCursorXY[0]) && (a.Y == _game.ActiveCursorXY[1])))
-            //    UnitsOnThisTile.Add(unit);
-            List<IUnit> UnitsOnThisTile = Game.GetUnits.Where(u => u.X == Game.ActiveXY[0] && u.Y == Game.ActiveXY[1]).ToList();
-            int maxUnitsToDraw = (int)Math.Floor((double)((UnitPanel.Height - 66) / 56));
+            List<IUnit> _unitsOnThisTile = Game.UnitsHere(Game.ActiveXY[0], Game.ActiveXY[1]);
+
+            string _cityName, _wholeText, _roadText, _irrigText, _airbaseText;
+            int _column;
 
             // View piece mode
             if (_main.ViewPieceMode)
             {
-                Draw.Text(e.Graphics, "Viewing Pieces", _font, StringAlignment.Center, StringAlignment.Center, Color.White, new Point(120, 9), Color.Black, 1, 0);
+                Draw.Text(e.Graphics, "Viewing Pieces", _font, StringAlignment.Center, StringAlignment.Center, Color.White, new Point(119, 10), Color.Black, 1, 0);
 
                 // Draw location & tile type on active square
                 Draw.Text(e.Graphics, $"Loc: ({Game.ActiveXY[0]}, {Game.ActiveXY[1]}) {Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Island}", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, 27), _backColor, 1, 1);
                 Draw.Text(e.Graphics, $"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, 45), _backColor, 1, 1);
 
                 int count;
-                for (count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
-                {
-                    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-                    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
-                    Draw.Text(e.Graphics, UnitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
-                    Draw.Text(e.Graphics, UnitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
-                    Draw.Text(e.Graphics, UnitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
-                }
-                if (count < UnitsOnThisTile.Count)
-                {
-                    string _moreUnits = (UnitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
-                    Draw.Text(e.Graphics, $"({UnitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
-                }
+                //for (count = 0; count < Math.Min(_unitsOnThisTile.Count, maxUnitsToDraw); count++)
+                //{
+                //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
+                //    Draw.Text(e.Graphics, _unitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
+                //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
+                //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
+                //}
+                //if (count < _unitsOnThisTile.Count)
+                //{
+                //    string _moreUnits = (_unitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
+                //    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
+                //}
             }
             // Moving units mode
             else
             {
-                Draw.Text(e.Graphics, "Moving Units", _font, StringAlignment.Center, StringAlignment.Center, Color.White, new Point(120, 9), Color.Black, 1, 0);
+                Draw.Text(e.Graphics, "Moving Units", _font, StringAlignment.Center, StringAlignment.Center, Color.White, new Point(119, 10), Color.Black, 1, 0);
 
-                // Show info for each unit on this tile
-                for(int count = 0; count < Math.Min(UnitsOnThisTile.Count, maxUnitsToDraw); count++)
+                // Show active unit info
+                Draw.Unit(e.Graphics, Game.ActiveUnit, false, 1, new Point(7, 27));
+                // Show move points correctly
+                int _fullMovPts = Game.ActiveUnit.MovePoints / 3;
+                int _remMovPts = Game.ActiveUnit.MovePoints % 3;
+                string _text = $"Moves: {_fullMovPts} {_remMovPts}/3";
+                if (_remMovPts == 0) _text = $"Moves: {_fullMovPts}";
+                Draw.Text(e.Graphics, _text, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 25), _backColor, 1, 1);
+                // Show other unit info
+                _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
+                Draw.Text(e.Graphics, _cityName, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 43), _backColor, 1, 1);
+                Draw.Text(e.Graphics, Game.ActiveCiv.Adjective, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 61), _backColor, 1, 1);
+                _column = 83;
+                Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
+                _column += 18;
+                Draw.Text(e.Graphics, $"({Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Type})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
+                // If road/railroad/irrigation/farmland/mine present
+                _wholeText = null;
+                _roadText = null;
+                _irrigText = null;
+                if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Road || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Railroad || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Irrigation || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Farmland || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Mining)
                 {
-                    if (Game.ActiveUnit == UnitsOnThisTile[count])
-                    {
-                        // Draw unit
-                        Draw.Unit(e.Graphics, Game.ActiveUnit, Game.ActiveUnit.IsInStack, 1, new Point(6, 27));
+                    _column += 18;
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Road) _roadText = "Road";
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Railroad) _roadText = "Railroad";
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Irrigation) _irrigText = "Irrigation";
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Farmland) _irrigText = "Farmland";
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Mining) _irrigText = "Mining";
+                    if (_roadText != null && _irrigText == null) _wholeText = $"({_roadText})";
+                    else if (_roadText == null && _irrigText != null) _wholeText = $"({_irrigText})";
+                    else if (_roadText != null && _irrigText != null) _wholeText = $"({_roadText}, {_irrigText})";
+                    Draw.Text(e.Graphics, _wholeText, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
+                }
+                // If airbase/fortress present
+                _airbaseText = null;
+                if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Airbase || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Fortress)
+                {
+                    _column += 18;
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Fortress) _airbaseText = "Fortress";
+                    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Airbase) _airbaseText = "Airbase";
+                    Draw.Text(e.Graphics, $"({_airbaseText})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
+                }
+                // If pollution present
+                if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Pollution)
+                {
+                    _column += 18;
+                    Draw.Text(e.Graphics, "(Pollution)", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
+                }
+                _column += 5;
 
-                        // Show move points correctly
-                        int _fullMovPts = Game.ActiveUnit.MovePoints / 3;
-                        int _remMovPts = Game.ActiveUnit.MovePoints % 3;
-                        string _text = $"Moves: {_fullMovPts} {_remMovPts}/3";
-                        if (_remMovPts == 0) _text = $"Moves: {_fullMovPts}";
-                        if (_fullMovPts == 0) _text = $"Moves: {_remMovPts}/3";
-                        Draw.Text(e.Graphics, _text, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, 29), _backColor, 1, 1);
-                        
-                        // Show other unit info
-                        string _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
-                        Draw.Text(e.Graphics, _cityName, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, 47), _backColor, 1, 1);
-                        Draw.Text(e.Graphics, Game.ActiveCiv.Adjective, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, 65), _backColor, 1, 1);
-                        Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, 83), _backColor, 1, 1);
-                        Draw.Text(e.Graphics, $"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, 101), _backColor, 1, 1);
-                    }
-                    else
-                    {
-                        //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-                        //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
-                        Draw.Text(e.Graphics, UnitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
-                        Draw.Text(e.Graphics, UnitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
-                        Draw.Text(e.Graphics, UnitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
-                    }
+                // Show info for other units on the tile
+                int drawCount = 0;
+                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.ActiveUnit))
+                {
+                    // First check if there is vertical space still left for drawing in panel
+                    if (_column + 69 > UnitPanel.Height) break;
+
+                    // Draw unit
+                    Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
+                    // Show other unit info
+                    _column += 20;
+                    _cityName = (unit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
+                    Draw.Text(e.Graphics, _cityName, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, _column), _backColor, 1, 1);
+                    _column += 18;
+                    Draw.Text(e.Graphics, Order2string(unit.Order), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, _column), _backColor, 1, 1);
+                    _column += 18;
+                    Draw.Text(e.Graphics, unit.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, _column), _backColor, 1, 1);
+
+                    System.Diagnostics.Debug.WriteLine($"{unit.Name} drawn");
+
+                    drawCount++;
+                }
+
+                // If not all units were drawn print a message
+                if (_unitsOnThisTile.Count - 1 != drawCount)    // -1 because you must not count in active unit
+                {
+                    _column += 22;
+                    _text = _unitsOnThisTile.Count - 1 - drawCount == 1 ? "Unit" : "Units";
+                    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count - 1 - drawCount} More {_text})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(9, _column), _backColor, 1, 1);
                 }
             }
 
@@ -295,6 +341,23 @@ namespace civ2.Forms
                 _boolSwitcher = !_boolSwitcher;   // Change state when this is called
                 return _boolSwitcher;
             }
+        }
+
+        // Concert an order enum to string
+        private string Order2string(OrderType order)
+        {
+            if (order == OrderType.BuildAirbase) return "Build Airbase";
+            else if (order == OrderType.BuildFortress) return "Build Fortress";
+            else if (order == OrderType.BuildIrrigation) return "Build Irrigation";
+            else if (order == OrderType.BuildMine) return "Build Mine";
+            else if (order == OrderType.BuildRoad) return "Build Road";
+            else if (order == OrderType.CleanPollution) return "Clean Pollution";
+            else if (order == OrderType.Fortified) return "Fortify";
+            else if (order == OrderType.GoTo) return "Go to xxx";
+            else if (order == OrderType.NoOrders) return "No Orders";
+            else if (order == OrderType.Sleep) return "Sleep";
+            else if (order == OrderType.Transform) return "Transform";
+            else return null;
         }
     }
 }

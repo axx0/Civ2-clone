@@ -77,7 +77,8 @@ namespace civ2.Bitmaps
             var flagLoc = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallFlagLoc[(int)style, sizeStyle] : Images.CityFlagLoc[(int)style, sizeStyle];
 
             // Draw city
-            g.DrawImage(ModifyImage.Resize(cityPic, zoom), dest.X, dest.Y);
+            var _cityPic = ModifyImage.Resize(cityPic, zoom);
+            g.DrawImage(_cityPic, dest.X, dest.Y);
 
             // Draw city size window
             if (isCitySizeWindow)
@@ -111,7 +112,8 @@ namespace civ2.Bitmaps
             // Draw city flag if units are present in the city
             if (city.AnyUnitsPresent())
             {
-                g.DrawImage(ModifyImage.Resize(Images.CityFlag[city.OwnerId], zoom),
+                var _flagPic = ModifyImage.Resize(Images.CityFlag[city.OwnerId], zoom);
+                g.DrawImage(_flagPic,
                     dest.X + Ext.ZoomScale(flagLoc.X - 3, zoom),
                     dest.Y + Ext.ZoomScale(flagLoc.Y - 17, zoom));
             }

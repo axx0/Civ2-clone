@@ -209,7 +209,7 @@ namespace civ2
                 UnitName[row] = rulesList[14][row];
                 UnitUntil[row] = rulesList[15][row];
                 UnitDomain[row] = Int32.Parse(rulesList[16][row]);
-                UnitMove[row] = Int32.Parse(rulesList[17][row]);
+                UnitMove[row] = 3 * Int32.Parse(rulesList[17][row]);
                 UnitRange[row] = Int32.Parse(rulesList[18][row]);
                 UnitAttack[row] = Int32.Parse(rulesList[19][row]);
                 UnitDefense[row] = Int32.Parse(rulesList[20][row]);

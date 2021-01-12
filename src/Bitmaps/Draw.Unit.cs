@@ -17,7 +17,8 @@ namespace civ2.Bitmaps
                 g.DrawImage(image, new Rectangle(dest.X, dest.Y, image.Width, image.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());
 
             // Draw fortification
-            if (isFortified) g.DrawImage(ModifyImage.Resize(Images.Fortified, zoom), dest.X, dest.Y);
+            var fortPic = ModifyImage.Resize(Images.Fortified, zoom);
+            if (isFortified) g.DrawImage(fortPic, dest.X, dest.Y);
         }
 
         public static void UnitShield(Graphics g, UnitType unitType, int ownerId, OrderType unitOrder, bool isStacked, int unitHP, int unitMaxHP, int zoom, Point dest)

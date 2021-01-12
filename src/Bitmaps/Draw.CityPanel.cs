@@ -91,20 +91,14 @@ namespace civ2.Bitmaps
             int x_size = 226;
             int y_size = 151;
             var icons = new Bitmap(x_size, y_size);
-            using (Graphics g = Graphics.FromImage(icons))
+            using (var g = Graphics.FromImage(icons))
             {
-                using var sf1 = new StringFormat();
-                using var sf2 = new StringFormat();
-                sf1.Alignment = StringAlignment.Far;
-                sf2.Alignment = StringAlignment.Center;
-                g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                using var _font = new Font("Arial", 9, FontStyle.Bold);
 
                 // FOOD
                 // Text
-                g.DrawString($"Food: {city.Food}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(1, 1));
-                g.DrawString($"Food: {city.Food}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(87, 171, 39)), new Point(0, 0));
-                g.DrawString($"Surplus: {city.SurplusHunger}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(226, 1), sf1);
-                g.DrawString($"Surplus: {city.SurplusHunger}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 139, 31)), new Point(225, 0), sf1);
+                Draw.Text(g, $"Food: {city.Food}", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(87, 171, 39), new Point(0, 0), Color.Black, 1, 1);
+                Draw.Text(g, $"Surplus: {city.SurplusHunger}", _font, StringAlignment.Far, StringAlignment.Near, Color.FromArgb(63, 139, 31), new Point(225, 0), Color.Black, 1, 1);
                 // Number of food+surplus/hunger icons determines spacing between icons
                 int spacing;
                 switch (city.Food + Math.Abs(city.SurplusHunger))
@@ -137,10 +131,8 @@ namespace civ2.Bitmaps
 
                 // TRADE
                 // Text
-                g.DrawString($"Trade: {city.Trade}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(1, 42));
-                g.DrawString($"Trade: {city.Trade}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(0, 41));
-                g.DrawString($"Corruption: {city.Corruption}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(226, 42), sf1);
-                g.DrawString($"Corruption: {city.Corruption}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(227, 83, 15)), new Point(225, 41), sf1);
+                Draw.Text(g, $"Trade: {city.Trade}", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(239, 159, 7), new Point(0, 41), Color.Black, 1, 1);
+                Draw.Text(g, $"Corruption: {city.Corruption}", _font, StringAlignment.Far, StringAlignment.Near, Color.FromArgb(227, 83, 15), new Point(225, 41), Color.Black, 1, 1);
                 // Spacing between icons
                 switch (city.Trade + city.Corruption)
                 {
@@ -167,12 +159,9 @@ namespace civ2.Bitmaps
 
                 // TAX+LUX+SCI
                 // Text
-                g.DrawString($"50% Tax: {city.Tax}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(1, 96));
-                g.DrawString($"50% Tax: {city.Tax}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(239, 159, 7)), new Point(0, 95));
-                g.DrawString($"0% Lux: {city.Lux}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(112, 96), sf2);
-                g.DrawString($"0% Lux: {city.Lux}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.White), new Point(111, 95), sf2);
-                g.DrawString($"50% Sci: {city.Science}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(226, 96), sf1);
-                g.DrawString($"50% Sci: {city.Science}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 187, 199)), new Point(225, 95), sf1);
+                Draw.Text(g, $"50% Tax: {city.Tax}", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(239, 159, 7), new Point(0, 95), Color.Black, 1, 1);
+                Draw.Text(g, $"0% Lux: {city.Lux}", _font, StringAlignment.Center, StringAlignment.Near, Color.White, new Point(111, 95), Color.Black, 1, 1);
+                Draw.Text(g, $"50% Sci: {city.Science}", _font, StringAlignment.Far, StringAlignment.Near, Color.FromArgb(63, 187, 199), new Point(225, 95), Color.Black, 1, 1);
                 // Spacing between icons
                 switch (city.Tax + city.Lux + city.Science)
                 {
@@ -200,10 +189,8 @@ namespace civ2.Bitmaps
 
                 // SUPPORT+PRODUCTION
                 // Text
-                g.DrawString($"Support: {city.Support}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(1, 136));
-                g.DrawString($"Support: {city.Support}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(63, 79, 167)), new Point(0, 135));
-                g.DrawString($"Production: {city.Production}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.Black), new Point(226, 136), sf1);
-                g.DrawString($"Production: {city.Production}", new Font("Arial", 9, FontStyle.Bold), new SolidBrush(Color.FromArgb(7, 11, 103)), new Point(225, 135), sf1);
+                Draw.Text(g, $"Support: {city.Support}", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(63, 79, 167), new Point(0, 135), Color.Black, 1, 1);
+                Draw.Text(g, $"Production: {city.Production}", _font, StringAlignment.Far, StringAlignment.Near, Color.FromArgb(7, 11, 103), new Point(225, 135), Color.Black, 1, 1);
                 // Spacing between icons
                 switch (city.Support + city.Production)
                 {
@@ -234,8 +221,8 @@ namespace civ2.Bitmaps
         // Draw faces in City Panel
         public static Bitmap Citizens(City city, int zoom)
         {
-            Bitmap faces = new Bitmap(630, 50);
-            using (Graphics graphics = Graphics.FromImage(faces))
+            var faces = new Bitmap(630, 50);
+            using (var graphics = Graphics.FromImage(faces))
             {
                 int spacing;
                 switch (city.Size)
@@ -276,9 +263,9 @@ namespace civ2.Bitmaps
                         drawIndex++;  // Change men/woman appearance
                     }
                     //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
-                    using var plpShPic = ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom);
+                    var plpShPic = ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom);
                     graphics.DrawImage(plpShPic, i * spacing + 1, 1);   // Shadow
-                    using var plpPic = ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom);
+                    var plpPic = ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom);
                     graphics.DrawImage(plpPic, i * spacing, 0);
                 }
             }
@@ -328,7 +315,7 @@ namespace civ2.Bitmaps
         {
             var map = new Bitmap(4 * 8 * (8 + zoom), 4 * 4 * (8 + zoom));
 
-            using (Graphics g = Graphics.FromImage(map))
+            using (var g = Graphics.FromImage(map))
             {
                 // First draw squares around city
                 int newX, newY;
@@ -350,7 +337,7 @@ namespace civ2.Bitmaps
                             using var blankPic = ModifyImage.Resize(Images.Blank, zoom);
                             g.DrawImage(blankPic, 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
                             // Then draw tiles if they are visible
-                            if (Map.IsTileVisibleC2(newX, newY, city.Owner.Id)) 
+                            if (Map.IsTileVisibleC2(newX, newY, city.Owner.Id))
                             {
                                 using var mapPic = ModifyImage.Resize(Map.TileC2(newX, newY).Graphic, zoom);
                                 g.DrawImage(mapPic, 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3));
