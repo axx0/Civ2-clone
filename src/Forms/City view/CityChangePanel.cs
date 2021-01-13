@@ -1,4 +1,5 @@
 ﻿using civ2.Bitmaps;
+using civ2.Enums;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -105,62 +106,64 @@ namespace civ2.Forms
 
         private void ChoicePanel_Paint(object sender, PaintEventArgs e)
         {
+            using var _brush1 = new SolidBrush(Color.FromArgb(107, 107, 107));
+            using var _pen1 = new Pen(Color.FromArgb(223, 223, 223));
+            using var _pen2 = new Pen(Color.FromArgb(67, 67, 67));
+            using var _fontSelected = new Font("Times New Roman", 16, FontStyle.Bold);
+            using var _fontNotSelected = new Font("Times New Roman", 16, FontStyle.Regular);
+
             // Entries
-            using var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Far;
-            Color textColor;
-            FontStyle fontstyle;
             for (int row = 0; row < 16; row++)
             {
                 // Draw selection rectangle & set font of text in it
                 if (_barValue + row == _city.ItemInProduction)
                 {
-                    e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(107, 107, 107)), new Rectangle(85, 2 + row * 23, 556, 21));
-                    e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 84, 1 + row * 23, 84 + 556 + 1, 1 + row * 23);  // Border line
-                    e.Graphics.DrawLine(new Pen(Color.FromArgb(223, 223, 223)), 84, 1 + row * 23, 84, 1 + row * 23 + 21);       // Border line
-                    e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 84, 1 + row * 23 + 22, 84 + 556 + 1, 1 + row * 23 + 22);  // Border line
-                    e.Graphics.DrawLine(new Pen(Color.FromArgb(67, 67, 67)), 641, 1 + row * 23, 641, 1 + row * 23 + 21);       // Border line
-                    textColor = Color.White;
-                    fontstyle = FontStyle.Bold;
-                }
-                else
-                {
-                    textColor = Color.Black;
-                    fontstyle = FontStyle.Regular;
+                    e.Graphics.FillRectangle(_brush1, new Rectangle(85, 2 + row * 23, 556, 21));
+                    e.Graphics.DrawLine(_pen1, 84, 1 + row * 23, 84 + 556 + 1, 1 + row * 23);  // Border line
+                    e.Graphics.DrawLine(_pen1, 84, 1 + row * 23, 84, 1 + row * 23 + 21);       // Border line
+                    e.Graphics.DrawLine(_pen2, 84, 1 + row * 23 + 22, 84 + 556 + 1, 1 + row * 23 + 22);  // Border line
+                    e.Graphics.DrawLine(_pen2, 641, 1 + row * 23, 641, 1 + row * 23 + 21);       // Border line
                 }
 
                 // Draw units
                 if (_barValue + row < _totalNoUnits)
                 {
-                    if (_barValue + row == _city.ItemInProduction)   // Draw shadow of text for chosen line
+                    int _unitNo = _barValue + row;
+
+                    // Unit Pic
+                    Draw.UnitSprite(e.Graphics, (UnitType)(_barValue + row), false, false, -2, new Point(1 + ((_barValue + row) % 2) * 38, 3 + row * 23 - 8));
+
+                    // Text
+                    if (_barValue + row == _city.ItemInProduction)   // Chosen line, draw text with shadow
                     {
-                        e.Graphics.DrawString(Game.Rules.UnitName[_barValue + row], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black),
-                            new Point(85 + 1, row * 23 + 1));
-                        e.Graphics.DrawString($"(20 Turns, ADM: {Game.Rules.UnitAttack[_barValue + row]} / {Game.Rules.UnitDefense[_barValue + row]} /" +
-                            $" {Game.Rules.UnitMove[_barValue + row]} HP: { Game.Rules.UnitHitp[_barValue + row]} / {Game.Rules.UnitFirepwr[_barValue + row]} )",
-                            new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black), new Point(_choicePanel.Width - _verticalBar.Width, row * 23 + 1), sf);
+                        Draw.Text(e.Graphics, Game.Rules.UnitName[_unitNo], _fontSelected, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(85, row * 23), Color.Black, 1, 1);
+                        Draw.Text(e.Graphics, $"(20 Turns, ADM: {Game.Rules.UnitAttack[_unitNo]} / {Game.Rules.UnitDefense[_unitNo]} / {Game.Rules.UnitMove[_unitNo]} HP: { Game.Rules.UnitHitp[_unitNo]} / {Game.Rules.UnitFirepwr[_unitNo]} )", _fontSelected, StringAlignment.Far, StringAlignment.Near, Color.White, new Point(_choicePanel.Width - _verticalBar.Width, row * 23), Color.Black, 1, 1);
                     }
-                    e.Graphics.DrawImage(ModifyImage.Resize(Images.Units[_barValue + row], -4), new Point(1 + ((_barValue + row) % 2) * 38, 3 + row * 23 - 8));  // big=0.75-times the normal size of units
-                    e.Graphics.DrawString(Game.Rules.UnitName[_barValue + row], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
-                    e.Graphics.DrawString($"(20 Turns, ADM: {Game.Rules.UnitAttack[_barValue + row]} / {Game.Rules.UnitDefense[_barValue + row]} / " +
-                        $"{Game.Rules.UnitMove[_barValue + row]}  HP: {Game.Rules.UnitHitp[_barValue + row]} / {Game.Rules.UnitFirepwr[_barValue + row]} )",
-                        new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(_choicePanel.Width - _verticalBar.Width - 1, row * 23), sf);
+                    else    // No shadow
+                    {
+                        Draw.Text(e.Graphics, Game.Rules.UnitName[_unitNo], _fontNotSelected, StringAlignment.Near, StringAlignment.Near, Color.Black, new Point(85, row * 23));
+                        Draw.Text(e.Graphics, $"(20 Turns, ADM: {Game.Rules.UnitAttack[_unitNo]} / {Game.Rules.UnitDefense[_unitNo]} / {Game.Rules.UnitMove[_unitNo]} HP: { Game.Rules.UnitHitp[_unitNo]} / {Game.Rules.UnitFirepwr[_unitNo]} )", _fontNotSelected, StringAlignment.Far, StringAlignment.Near, Color.Black, new Point(_choicePanel.Width - _verticalBar.Width, row * 23));
+                    }
                 }
                 // Draw improvements
                 else
                 {
-                    int improvNo = _barValue + row - _totalNoUnits + 1;
-                    if (_barValue + row == _city.ItemInProduction)   // Draw shadow of text for chosen line
+                    int _improvNo = _barValue + row - _totalNoUnits + 1;
+
+                    // Improvement pic
+                    e.Graphics.DrawImage(Images.Improvements[_improvNo], new Point(1 + ((_barValue + row) % 2) * 38, 3 + row * 23));
+
+                    // Text
+                    if (_barValue + row == _city.ItemInProduction)  // Chosen line, draw text with shadow
                     {
-                        e.Graphics.DrawString(Game.Rules.ImprovementName[improvNo], new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black),
-                            new Point(85 + 1, row * 23 + 1));
-                        e.Graphics.DrawString("(20 Turns)", new Font("Times New Roman", 16, FontStyle.Bold), new SolidBrush(Color.Black),
-                            new Point(_choicePanel.Width - _verticalBar.Width, row * 23 + 1), sf);
+                        Draw.Text(e.Graphics, Game.Rules.ImprovementName[_improvNo], _fontSelected, StringAlignment.Near, StringAlignment.Near, Color.White, new Point(85, row * 23), Color.Black, 1, 1);
+                        Draw.Text(e.Graphics, "(20 Turns)", _fontSelected, StringAlignment.Far, StringAlignment.Near, Color.White, new Point(_choicePanel.Width - _verticalBar.Width, row * 23 + 1), Color.Black, 1, 1);
                     }
-                    e.Graphics.DrawImage(Images.Improvements[improvNo], new Point(1 + ((_barValue + row) % 2) * 38, 3 + row * 23));
-                    e.Graphics.DrawString(Game.Rules.ImprovementName[improvNo], new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(85, row * 23));
-                    e.Graphics.DrawString("(20 Turns)", new Font("Times New Roman", 16, fontstyle), new SolidBrush(textColor), new Point(_choicePanel.Width - _verticalBar.Width - 1,
-                        row * 23), sf);
+                    else    // No shadow
+                    {
+                        Draw.Text(e.Graphics, Game.Rules.ImprovementName[_improvNo], _fontNotSelected, StringAlignment.Near, StringAlignment.Near, Color.Black, new Point(85, row * 23));
+                        Draw.Text(e.Graphics, "(20 Turns)", _fontNotSelected, StringAlignment.Far, StringAlignment.Near, Color.Black, new Point(_choicePanel.Width - _verticalBar.Width - 1, row * 23));
+                    }
                 }
             }
         }
@@ -214,6 +217,12 @@ namespace civ2.Forms
         {
             _barValue = _verticalBar.Value;
             _choicePanel.Invalidate();
+        }
+
+        public void Dispose()
+        {
+            _choicePanel?.Dispose();
+            _verticalBar.Dispose();
         }
     }
 }

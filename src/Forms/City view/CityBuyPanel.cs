@@ -56,17 +56,15 @@ namespace civ2.Forms
         private void CityBuyPanel_Paint(object sender, PaintEventArgs e)
         {
             // Title
-            e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;  // Makes text sharp
-            using var sf = new StringFormat();
-            sf.LineAlignment = StringAlignment.Center;
-            sf.Alignment = StringAlignment.Center;
             string text = _city.ItemInProduction < 62 ? Game.Rules.UnitName[_city.ItemInProduction] : Game.Rules.ImprovementName[_city.ItemInProduction - 62 + 1];
-            e.Graphics.DrawString("Buy " + text, new Font("Times New Roman", 17), new SolidBrush(Color.Black), new Point(this.Width / 2 + 1, 20 + 1), sf);
-            e.Graphics.DrawString("Buy " + text, new Font("Times New Roman", 17), new SolidBrush(Color.FromArgb(135, 135, 135)), new Point(this.Width / 2, 20), sf);
+            using var _font = new Font("Times New Roman", 17);
+            Draw.Text(e.Graphics, "Buy " + text, _font, StringAlignment.Center, StringAlignment.Center, Color.FromArgb(135, 135, 135), new Point(this.Width / 2, 20), Color.Black, 1, 1);
         }
 
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
+            using var _font = new Font("Times New Roman", 18);
+
             // Draw icons and text
             int itemNo = _city.ItemInProduction;
             // It's a unit
@@ -75,11 +73,12 @@ namespace civ2.Forms
                 _completeitButton.Location = new Point(140, 69);
                 _nevermindButton.Location = new Point(140, 98);
 
-                string itemName = Game.Rules.UnitName[itemNo];
-                e.Graphics.DrawImage(ModifyImage.Resize(Images.Units[itemNo], 4), 4, 4); // 2-times larger
-                int costToComplete = 10 * Game.Rules.UnitCost[itemNo] - _city.ShieldsProgress;
-                e.Graphics.DrawString($"Cost to complete {itemName} : {costToComplete} gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(120, 8));
-                e.Graphics.DrawString($"Treasury: {Game.ActiveCiv.Money} gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(120, 35));
+                using var _unitPic = ModifyImage.Resize(Images.Units[itemNo], 4);
+                e.Graphics.DrawImage(_unitPic, 4, 4); // 2-times larger
+                int _costToComplete = 10 * Game.Rules.UnitCost[itemNo] - _city.ShieldsProgress;
+                string _itemName = Game.Rules.UnitName[itemNo];
+                Draw.Text(e.Graphics, $"Cost to complete {_itemName} : {_costToComplete} gold.", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(120, 8));
+                Draw.Text(e.Graphics, $"Treasury: {Game.ActiveCiv.Money} gold.", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(120, 35));
             }
             // It's an improvement
             else
@@ -87,11 +86,12 @@ namespace civ2.Forms
                 _completeitButton.Location = new Point(85, 69);
                 _nevermindButton.Location = new Point(85, 98);
 
-                string itemName = Game.Rules.ImprovementName[itemNo - 62 + 1];
-                e.Graphics.DrawImage(ModifyImage.Resize(Images.Improvements[itemNo - 62 + 1], 1), 4, 4);
-                int costToComplete = 10 * Game.Rules.ImprovementCost[itemNo - 62 + 1] - _city.ShieldsProgress;
-                e.Graphics.DrawString($"Cost to complete {itemName} : {costToComplete} gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(80, 8));
-                e.Graphics.DrawString($"Treasury: {Game.ActiveCiv.Money} gold.", new Font("Times New Roman", 18), new SolidBrush(Color.FromArgb(51, 51, 51)), new Point(80, 35));
+                string _itemName = Game.Rules.ImprovementName[itemNo - 62 + 1];
+                using var _improvPic = ModifyImage.Resize(Images.Improvements[itemNo - 62 + 1], 1);
+                e.Graphics.DrawImage(_improvPic, 4, 4);
+                int _costToComplete = 10 * Game.Rules.ImprovementCost[itemNo - 62 + 1] - _city.ShieldsProgress;
+                Draw.Text(e.Graphics, $"Cost to complete {_itemName} : {_costToComplete} gold.", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(80, 8));
+                Draw.Text(e.Graphics, $"Treasury: {Game.ActiveCiv.Money} gold.", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(80, 35));
             }
         }
 

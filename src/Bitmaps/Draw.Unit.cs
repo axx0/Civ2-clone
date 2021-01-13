@@ -10,15 +10,20 @@ namespace civ2.Bitmaps
     {
         public static void UnitSprite(Graphics g, UnitType type, bool isSleeping, bool isFortified, int zoom, Point dest)
         {
-            var image = ModifyImage.Resize(Images.Units[(int)type], zoom);
+            using var _unitPic = ModifyImage.Resize(Images.Units[(int)type], zoom);
             if (!isSleeping)
-                g.DrawImage(image, dest.X, dest.Y, new Rectangle(0, 0, image.Width, image.Height), GraphicsUnit.Pixel);
+            {
+                g.DrawImage(_unitPic, dest.X, dest.Y, new Rectangle(0, 0, _unitPic.Width, _unitPic.Height), GraphicsUnit.Pixel);
+            }
             else     // Sentry
-                g.DrawImage(image, new Rectangle(dest.X, dest.Y, image.Width, image.Height), 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, ModifyImage.ConvertToGray());
+            {
+                using var _attr = ModifyImage.ConvertToGray();
+                g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height), 0, 0, _unitPic.Width, _unitPic.Height, GraphicsUnit.Pixel, _attr);
+            }
 
             // Draw fortification
-            var fortPic = ModifyImage.Resize(Images.Fortified, zoom);
-            if (isFortified) g.DrawImage(fortPic, dest.X, dest.Y);
+            using var _fortPic = ModifyImage.Resize(Images.Fortified, zoom);
+            if (isFortified) g.DrawImage(_fortPic, dest.X, dest.Y);
         }
 
         public static void UnitShield(Graphics g, UnitType unitType, int ownerId, OrderType unitOrder, bool isStacked, int unitHP, int unitMaxHP, int zoom, Point dest)
@@ -36,22 +41,22 @@ namespace civ2.Bitmaps
             backLoc.Y = Ext.ZoomScale(backLoc.Y, zoom);
 
             // If unit stacked --> draw back shield with its shadow
-            var shadow = ModifyImage.Resize(Images.ShieldShadow, zoom);
+            using var _shadowPic = ModifyImage.Resize(Images.ShieldShadow, zoom);
             if (isStacked)
             {
                 // Back shield shadow
-                g.DrawImage(shadow, new Rectangle(dest.X + backLoc.X + shadowXoffset, dest.Y + backLoc.Y + 1, shadow.Width, shadow.Height), 0, 0, shadow.Width, shadow.Height, GraphicsUnit.Pixel);
+                g.DrawImage(_shadowPic, new Rectangle(dest.X + backLoc.X + shadowXoffset, dest.Y + backLoc.Y + 1, _shadowPic.Width, _shadowPic.Height), 0, 0, _shadowPic.Width, _shadowPic.Height, GraphicsUnit.Pixel);
                 // Back shield
-                var back = ModifyImage.Resize(Images.ShieldBack[ownerId], zoom);
-                g.DrawImage(back, new Rectangle(dest.X + backLoc.X, dest.Y + backLoc.Y, back.Width, back.Height), 0, 0, back.Width, back.Height, GraphicsUnit.Pixel);
+                using var _backPic = ModifyImage.Resize(Images.ShieldBack[ownerId], zoom);
+                g.DrawImage(_backPic, new Rectangle(dest.X + backLoc.X, dest.Y + backLoc.Y, _backPic.Width, _backPic.Height), 0, 0, _backPic.Width, _backPic.Height, GraphicsUnit.Pixel);
             }
 
             // Front shield shadow
-            g.DrawImage(shadow, dest.X + frontLoc.X + shadowXoffset, dest.Y + frontLoc.Y, new Rectangle(0, 0, shadow.Width, shadow.Height), GraphicsUnit.Pixel);
+            g.DrawImage(_shadowPic, dest.X + frontLoc.X + shadowXoffset, dest.Y + frontLoc.Y, new Rectangle(0, 0, _shadowPic.Width, _shadowPic.Height), GraphicsUnit.Pixel);
 
             // Front shield
-            var front = ModifyImage.Resize(Images.ShieldFront[ownerId], zoom);
-            g.DrawImage(front, dest.X + frontLoc.X, dest.Y + frontLoc.Y, new Rectangle(0, 0, front.Width, front.Height), GraphicsUnit.Pixel);
+            using var _frontPic = ModifyImage.Resize(Images.ShieldFront[ownerId], zoom);
+            g.DrawImage(_frontPic, dest.X + frontLoc.X, dest.Y + frontLoc.Y, new Rectangle(0, 0, _frontPic.Width, _frontPic.Height), GraphicsUnit.Pixel);
 
             // Determine hitpoints bar size
             int hpBarX = (int)Math.Floor((float)unitHP * 12 / unitMaxHP);

@@ -93,6 +93,8 @@ namespace civ2.Bitmaps
 
             // (901) City status wallpaper
             SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
+
+            extractedGIF.Dispose();
         }
 
         // Extract GIF image from DLL bytes

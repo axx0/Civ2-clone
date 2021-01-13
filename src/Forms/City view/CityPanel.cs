@@ -378,7 +378,7 @@ namespace civ2.Forms
         private void BuyButton_Click(object sender, EventArgs e)
         {
             // Use this so the panel returns a chosen value (what it has chosen to produce)
-            using var _cityBuyPanel = new CityBuyPanel(this, _thisCity);
+            var _cityBuyPanel = new CityBuyPanel(this, _thisCity);
             _main.Controls.Add(_cityBuyPanel);
             _cityBuyPanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityBuyPanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityBuyPanel.Height / 2));
             _cityBuyPanel.Show();
@@ -389,7 +389,7 @@ namespace civ2.Forms
         // Panel that returns a chosen value (what it has chosen to produce)
         private void ChangeButton_Click(object sender, EventArgs e)
         {
-            using var _cityChangePanel = new CityChangePanel(this, _thisCity);
+            var _cityChangePanel = new CityChangePanel(this, _thisCity);
             _main.Controls.Add(_cityChangePanel);
             _cityChangePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityChangePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityChangePanel.Height / 2));
             _cityChangePanel.Show();
@@ -403,7 +403,7 @@ namespace civ2.Forms
 
         private void RenameButton_Click(object sender, EventArgs e)
         {
-            using var _cityRenamePanel = new CityRenamePanel(this, _thisCity);
+            var _cityRenamePanel = new CityRenamePanel(this, _thisCity);
             _main.Controls.Add(_cityRenamePanel);
             _cityRenamePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityRenamePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityRenamePanel.Height / 2));
             _cityRenamePanel.Show();

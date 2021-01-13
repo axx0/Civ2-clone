@@ -10,7 +10,7 @@ namespace civ2.Bitmaps
         // Resize the image according to zoom factor
         public static Bitmap Resize(Bitmap image, int zoom)
         {
-            if (zoom == 0) return image;
+            if (zoom == 0) return (Bitmap)image.Clone();
             
             int width = Ext.ZoomScale(image.Width, zoom);
             int height = Ext.ZoomScale(image.Height, zoom);
@@ -51,12 +51,11 @@ namespace civ2.Bitmaps
         // Merge 2 images
         public static Bitmap MergedBitmaps(Bitmap original, Bitmap layer, int x, int y)
         {
-            //Bitmap result = new Bitmap(original.Width, original.Height);
+            // Bitmap result = new Bitmap(original.Width, original.Height);
             Bitmap result = original;
 
             using (Graphics g = Graphics.FromImage(result))
             {
-                //g.DrawImage(bmp2, Point.Empty);
                 g.DrawImage(layer, x, y);
             }
             return result;

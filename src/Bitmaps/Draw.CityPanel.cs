@@ -263,9 +263,9 @@ namespace civ2.Bitmaps
                         drawIndex++;  // Change men/woman appearance
                     }
                     //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
-                    var plpShPic = ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom);
+                    using var plpShPic = ModifyImage.Resize(Images.PeopleLshadow[drawIndex, 0], zoom);
                     graphics.DrawImage(plpShPic, i * spacing + 1, 1);   // Shadow
-                    var plpPic = ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom);
+                    using var plpPic = ModifyImage.Resize(Images.PeopleL[drawIndex, 0], zoom);
                     graphics.DrawImage(plpPic, i * spacing, 0);
                 }
             }

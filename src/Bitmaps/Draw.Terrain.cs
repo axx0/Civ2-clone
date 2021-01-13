@@ -10,8 +10,8 @@ namespace civ2.Bitmaps
     {
         public static void Tile(Graphics g, int xC2, int yC2, int zoom, Point dest)
         {
-            var tilePic = ModifyImage.Resize(Map.TileC2(xC2, yC2).Graphic, zoom);
-            g.DrawImage(tilePic, dest);
+            using var _tilePic = ModifyImage.Resize(Map.TileC2(xC2, yC2).Graphic, zoom);
+            g.DrawImage(_tilePic, dest);
         }
 
         public static Bitmap MakeTileGraphic(ITerrain tile, int col, int row, bool flatEarth)
@@ -24,10 +24,10 @@ namespace civ2.Bitmaps
             int Ydim = Map.Ydim;
 
             // Define a bitmap for drawing
-            Bitmap tilePic = new Bitmap(64, 32);
+            var _tilePic = new Bitmap(64, 32);
 
             // Draw tile
-            using (var g = Graphics.FromImage(tilePic))
+            using (var g = Graphics.FromImage(_tilePic))
             {
                 switch (tile.Type)
                 {
@@ -386,7 +386,7 @@ namespace civ2.Bitmaps
                 if (Map.TileC2(col, row).Airbase) g.DrawImage(Images.Airbase, 0, 0);
             }
 
-            return tilePic;
+            return _tilePic;
         }
 
         private static bool[] IsLandAround(int col, int row, bool flatEarth)

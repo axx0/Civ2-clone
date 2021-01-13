@@ -17,12 +17,14 @@ namespace civ2.Bitmaps
 
         public static void ViewPiece(Graphics g, int zoom, Point dest)
         {
-            g.DrawImage(ModifyImage.Resize(Images.ViewPiece, zoom), dest);
+            using var _piecePic = ModifyImage.Resize(Images.ViewPiece, zoom);
+            g.DrawImage(_piecePic, dest);
         }
 
         public static void Grid(Graphics g, int zoom, Point dest)
         {
-            g.DrawImage(ModifyImage.Resize(Images.GridLines, zoom), dest);
+            using var _gridPic = ModifyImage.Resize(Images.GridLines, zoom);
+            g.DrawImage(_gridPic, dest);
         }
 
         //public static void CreateLoadGameGraphics()
@@ -41,8 +43,8 @@ namespace civ2.Bitmaps
         //}
 
         //Create image of civ's world maps
-        public static void CreateWholeMapImage(int civ)
-        {
+        //public static void CreateWholeMapImage(int civ)
+        //{
             //Game.CivsMap[civ] = new Bitmap(64 * Data.MapXdim + 32, 32 * Data.MapYdim + 16);
 
             //using (Graphics g = Graphics.FromImage(Game.CivsMap[civ]))
@@ -122,11 +124,11 @@ namespace civ2.Bitmaps
             //        }
             //    }
             //}
-        }
+        //}
 
         //Redraw invisible to visible tiles in the map
-        public static void RedrawMap(int[] centralCoords)
-        {
+        //public static void RedrawMap(int[] centralCoords)
+        //{
             //Bitmap mapPart = new Bitmap(3 * 64, 3 * 32 + 16);   //part which will be pasted on top of existing world map
 
             ////Get coords of central tile & which squares are to be drawn
@@ -292,11 +294,11 @@ namespace civ2.Bitmaps
             //        }
             //    }
             //}
-        }
+        //}
 
-        public static List<Bitmap> CreateMapAnimation(AnimationType animation)
-        {
-            List<Bitmap> _bitmapList = new List<Bitmap>();
+        //public static List<Bitmap> CreateMapAnimation(AnimationType animation)
+        //{
+        //    List<Bitmap> _bitmapList = new List<Bitmap>();
 
             //switch (animation)
             //{
@@ -325,9 +327,7 @@ namespace civ2.Bitmaps
             //        }
             //}
 
-            return _bitmapList;
-        }
-
-
+        //    return _bitmapList;
+        //}
     }
 }
