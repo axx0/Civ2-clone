@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="ChoiceMenuPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="City view\CityBuyPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="City view\CityChangePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="City view\CityPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="City view\CityRenamePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Main.KeyPressActions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Main.LoadGameInitialization.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Main.ShowIntroScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="MapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Advisors\AttitudeAdvisorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Advisors\CityStatusPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Advisors\DefenseMinisterPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Advisors\ScienceAdvisorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Advisors\TradeAdvisorPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Cheat\Create Unit\_CreateUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Menu Cheat\Create Unit\_ForeignCreateUnitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Menu Cheat\_SetGameYearForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Menu Game\CityreportOptionsPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Game\GameOptionsPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu Game\GraphicOptionsPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu World\DemographicsPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Menu World\WondersOfWorldPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="StatusPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\Civ2button.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\Civ2form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Templates\Civ2panel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\Civ2radioBtn.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\Civ2ToolStripMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\NoSelectButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Templates\TransparentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="_MinimapPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="_NameCityPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>
