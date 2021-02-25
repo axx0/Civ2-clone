@@ -15,7 +15,7 @@ namespace EtoFormsUI
             int btnW = (this.Width - 2 * 9 - 3 * (buttonTexts.Length - 1)) / buttonTexts.Length;  // Determine width of one button
             for (int i = 0; i < buttonTexts.Length; i++)
             {
-                Button[i] = new Civ2button(buttonTexts[i], btnW, 36);
+                Button[i] = new Civ2button(buttonTexts[i], btnW, 36, new Font("Times new roman", 11));
                 MainPanelLayout.Add(Button[i], 9 + btnW * i + 3 * i, Height - 46);
             }
 

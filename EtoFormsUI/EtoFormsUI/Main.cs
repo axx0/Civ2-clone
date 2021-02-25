@@ -14,17 +14,31 @@ namespace EtoFormsUI
         private MapPanel mapPanel;
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
+        private bool suppressKeyEvent;
         public bool ViewPieceMode { get; set; }
+        public Sound Sounds;
+        private int[] _activeXY;
+        public int[] ActiveXY   // Coords of either active unit or view piece
+        {
+            get
+            {
+                if (!ViewPieceMode) _activeXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
+                return _activeXY;
+            }
+            set { _activeXY = value; }
+        }
 
         public Main()
         {
             this.Load += LoadEvent;
+            this.KeyDown += KeyPressedEvent;
             LoadInitialAssets();
 
             Title = "Civilization II Multiplayer Gold";
             BackgroundColor = Color.FromArgb(143, 123, 99);
             WindowState = WindowState.Maximized;
             Icon = new Icon(Settings.Civ2Path + "civ2.ico");
+            suppressKeyEvent = false;
 
             layout = new PixelLayout();
             var image = new ImageView { Image = Images.MainScreenSymbol };
@@ -68,6 +82,22 @@ namespace EtoFormsUI
 
             // Orders menu commands
             var BuildRoadCommand = new Command { MenuText = "Build Road", Shortcut = Keys.R };
+            var BuildIrrigationCommand = new Command { MenuText = "Build Irrigation", Shortcut = Keys.I };
+            var BuildMinesCommand = new Command { MenuText = "Build Mines", Shortcut = Keys.M };
+            var CleanPollutionCommand = new Command { MenuText = "Clean Up Pollution", Shortcut = Keys.P };
+            var PillageCommand = new Command { MenuText = "Pillage", Shortcut = Keys.Shift | Keys.P };
+            var UnloadCommand = new Command { MenuText = "Unload", Shortcut = Keys.U };
+            var GoToCommand = new Command { MenuText = "Go To", Shortcut = Keys.G };
+            var ParadropCommand = new Command { MenuText = "Paradrop", Shortcut = Keys.P };
+            var AirliftCommand = new Command { MenuText = "Airlift", Shortcut = Keys.L };
+            var GoHomeToNearestCityCommand = new Command { MenuText = "Go Home To Nearest City", Shortcut = Keys.H };
+            var FortifyCommand = new Command { MenuText = "Fortify", Shortcut = Keys.F };
+            var SleepCommand = new Command { MenuText = "Sleep", Shortcut = Keys.S };
+            var DisbandCommand = new Command { MenuText = "Disband", Shortcut = Keys.Shift | Keys.D };
+            var ActivateUnitCommand = new Command { MenuText = "Activate Unit", Shortcut = Keys.A };
+            var WaitCommand = new Command { MenuText = "Wait", Shortcut = Keys.W };
+            var SkipTurnCommand = new Command { MenuText = "Skip Turn", Shortcut = Keys.Space };
+            var EndPlayerTurn = new Command { MenuText = "End Player Turn", Shortcut = Keys.Control | Keys.N };
 
             Menu = new MenuBar
             {
@@ -77,7 +107,7 @@ namespace EtoFormsUI
                     new ButtonMenuItem { Text = "&Game", Items = { GameOptionsCommand, GraphicOptionsCommand, CityReportOptionsCommand, MultiplayerOptionsCommand, GameProfileCommand, PickMusicCommand, SaveGameCommand, LoadGameCommand, JoinGameCommand, SetPasswordCommand, ChangeTimerCommand, RetireCommand, QuitCommand } },
                     new ButtonMenuItem { Text = "&Kingdom", Items = { TaxRateCommand, ViewThroneRoomCommand, FindCityCommand, RevolutionCommand } },
                     new ButtonMenuItem { Text = "&View", Items = { MovePiecesCommand, ViewPiecesCommand, ZoomInCommand, ZoomOutCommand, MaxZoomInCommand, StandardZoomCommand, MediumZoomOutCommand, MaxZoomOutCommand, ShowMapGridCommand, ArrangeWindowsCommand, ShowHiddenTerrainCommand, CenterViewCommand } },
-                    new ButtonMenuItem { Text = "&Orders", Items = { BuildRoadCommand } },
+                    new ButtonMenuItem { Text = "&Orders", Items = { BuildRoadCommand, BuildIrrigationCommand, BuildMinesCommand, CleanPollutionCommand, PillageCommand, UnloadCommand, GoToCommand, ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand, FortifyCommand, SleepCommand, DisbandCommand, ActivateUnitCommand, WaitCommand, SkipTurnCommand, EndPlayerTurn } },
                     new ButtonMenuItem { Text = "&Advisors", Items = { } },
                     new ButtonMenuItem { Text = "&World", Items = { } },
                     new ButtonMenuItem { Text = "&Cheat", Items = { } },
@@ -85,11 +115,15 @@ namespace EtoFormsUI
                     new ButtonMenuItem { Text = "&Civilopedia", Items = { } },
                 },
             };
+
+            // Make a sound player
+            Sounds = new Sound(Settings.Civ2Path);
         }
 
         private void LoadEvent(object sender, EventArgs e)
         {
             ShowIntroScreen();
+            Sounds.PlayMenuLoop();
         }
 
         // Load assets at start of Civ2 program
@@ -99,9 +133,6 @@ namespace EtoFormsUI
 
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
-
-            // Load sounds
-            // ...
         }
     }
 }

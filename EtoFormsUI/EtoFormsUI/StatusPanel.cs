@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Linq;
+using System.Globalization;
+using System.Collections.Generic;
 using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Events;
 using Civ2engine.Enums;
+using Civ2engine.Units;
 
 namespace EtoFormsUI
 {
@@ -12,7 +16,7 @@ namespace EtoFormsUI
         private Game Game => Game.Instance;
         private Map Map => Map.Instance;
 
-        private readonly Main _main;
+        private readonly Main main;
         private readonly Drawable mainPanel, statsPanel, unitPanel;
         //private readonly DoubleBufferedPanel StatsPanel, UnitPanel;
         //private readonly Timer Timer = new Timer();
@@ -21,7 +25,7 @@ namespace EtoFormsUI
 
         public StatusPanel(Main parent, int width, int height)
         {
-            _main = parent;
+            main = parent;
 
             Size = new Size(width, height);
 
@@ -54,14 +58,12 @@ namespace EtoFormsUI
             mainPanel.Content = MainPanelLayout;
             Content = mainPanel;
 
-            //BackgroundImage = Images.PanelOuterWallpaper;
-            //Size = new Size(_width, _height);
             //Paint += StatusPanel_Paint;
             //MapPanel.OnMapEvent += MapEventHappened;
             ////Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             //Game.OnPlayerEvent += PlayerEventHappened;
-            //Game.OnUnitEvent += UnitEventHappened;
+            Game.OnUnitEvent += UnitEventHappened;
 
             //StatsPanel = new DoubleBufferedPanel()
             //{
@@ -100,7 +102,7 @@ namespace EtoFormsUI
                 }
             }
             // Paint title
-            Draw.Text(e.Graphics, "Status", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(this.Width / 2, 20), Color.FromArgb(0, 0, 0), 1, 1);
+            Draw.Text(e.Graphics, "Status", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(this.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
             // Paint panel borders
             // Outer border
             using var _pen1 = new Pen(Color.FromArgb(227, 227, 227));
@@ -152,133 +154,151 @@ namespace EtoFormsUI
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
-            //using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
-            //string showYear = (Game.GameYear < 0) ? $"{Math.Abs(Game.GameYear)} B.C." : $"A.D. {Math.Abs(Game.GameYear)}";
-            //Draw.Text(e.Graphics, Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(5, 2), Color.FromArgb(191, 191, 191), 1, 1);
-            //Draw.Text(e.Graphics, showYear, _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(5, 20), Color.FromArgb(191, 191, 191), 1, 1);
-            //Draw.Text(e.Graphics, $"{Game.PlayerCiv.Money} Gold 5.0.5", _font, StringAlignment.Near, StringAlignment.Near, Color.FromArgb(51, 51, 51), new Point(5, 38), Color.FromArgb(191, 191, 191), 1, 1);
+            // Paint wallpaper
+            var imgSize = Images.PanelInnerWallpaper.Size;
+            for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
+            {
+                for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
+                {
+                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
+                }
+            }
+            using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
+            string showYear = (Game.GameYear < 0) ? $"{Math.Abs(Game.GameYear)} B.C." : $"A.D. {Math.Abs(Game.GameYear)}";
+            Draw.Text(e.Graphics, Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", _font, Color.FromArgb(51, 51, 51), new Point(5, 2), false, false, Color.FromArgb(191, 191, 191), 1, 1);
+            Draw.Text(e.Graphics, showYear, _font, Color.FromArgb(51, 51, 51), new Point(5, 20), false, false, Color.FromArgb(191, 191, 191), 1, 1);
+            Draw.Text(e.Graphics, $"{Game.PlayerCiv.Money} Gold 5.0.5", _font, Color.FromArgb(51, 51, 51), new Point(5, 38), false, false, Color.FromArgb(191, 191, 191), 1, 1);
         }
 
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
-            //using var _font = new Font("Times new roman", 12, FontStyle.Bold);
-            //var _frontColor = Color.FromArgb(51, 51, 51);
-            //var _backColor = Color.FromArgb(191, 191, 191);
-            //List<IUnit> _unitsOnThisTile = Game.UnitsHere(Game.ActiveXY[0], Game.ActiveXY[1]);
+            // Paint wallpaper
+            var imgSize = Images.PanelInnerWallpaper.Size;
+            for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
+            {
+                for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
+                {
+                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
+                }
+            }
+            using var _font = new Font("Times new roman", 12, FontStyle.Bold);
+            var _frontColor = Color.FromArgb(51, 51, 51);
+            var _backColor = Color.FromArgb(191, 191, 191);
+            List<IUnit> _unitsOnThisTile = Game.UnitsHere(main.ActiveXY[0], main.ActiveXY[1]);
 
-            //string _cityName, _wholeText, _roadText, _irrigText, _airbaseText;
-            //int _column;
+            string _cityName, _wholeText, _roadText, _irrigText, _airbaseText;
+            int _column;
 
-            //// View piece mode
-            //if (_main.ViewPieceMode)
-            //{
-            //    Draw.Text(e.Graphics, "Viewing Pieces", _font, StringAlignment.Center, StringAlignment.Center, Color.White, new Point(119, 10), Color.Black, 1, 0);
+            // View piece mode
+            if (main.ViewPieceMode)
+            {
+                Draw.Text(e.Graphics, "Viewing Pieces", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
-            //    // Draw location & tile type on active square
-            //    Draw.Text(e.Graphics, $"Loc: ({Game.ActiveXY[0]}, {Game.ActiveXY[1]}) {Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Island}", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, 27), _backColor, 1, 1);
-            //    Draw.Text(e.Graphics, $"({Map.Tile[(Game.ActiveXY[0] - Game.ActiveXY[1] % 2) / 2, Game.ActiveXY[1]].Type})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, 45), _backColor, 1, 1);
+                // Draw location & tile type on active square
+                Draw.Text(e.Graphics, $"Loc: ({main.ActiveXY[0]}, {main.ActiveXY[1]}) {Map.Tile[(main.ActiveXY[0] - main.ActiveXY[1] % 2) / 2, main.ActiveXY[1]].Island}", _font, _frontColor, new Point(5, 27), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, $"({Map.Tile[(main.ActiveXY[0] - main.ActiveXY[1] % 2) / 2, main.ActiveXY[1]].Type})", _font, _frontColor, new Point(5, 45), false, false, _backColor, 1, 1);
 
-            //    int count;
-            //    //for (count = 0; count < Math.Min(_unitsOnThisTile.Count, maxUnitsToDraw); count++)
-            //    //{
-            //    //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-            //    //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
-            //    //    Draw.Text(e.Graphics, _unitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
-            //    //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
-            //    //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
-            //    //}
-            //    //if (count < _unitsOnThisTile.Count)
-            //    //{
-            //    //    string _moreUnits = (_unitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
-            //    //    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
-            //    //}
-            //}
-            //// Moving units mode
-            //else
-            //{
-            //    Draw.Text(e.Graphics, "Moving Units", _font, StringAlignment.Center, StringAlignment.Center, Color.White, new Point(119, 10), Color.Black, 1, 0);
+                //int count;
+                //for (count = 0; count < Math.Min(_unitsOnThisTile.Count, maxUnitsToDraw); count++)
+                //{
+                //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+                //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
+                //    Draw.Text(e.Graphics, _unitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
+                //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
+                //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
+                //}
+                //if (count < _unitsOnThisTile.Count)
+                //{
+                //    string _moreUnits = (_unitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
+                //    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
+                //}
+            }
+            // Moving units mode
+            else
+            {
+                Draw.Text(e.Graphics, "Moving Units", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
-            //    // Show active unit info
-            //    Draw.Unit(e.Graphics, Game.ActiveUnit, false, 1, new Point(7, 27));
-            //    // Show move points correctly
-            //    int _fullMovPts = Game.ActiveUnit.MovePoints / 3;
-            //    int _remMovPts = Game.ActiveUnit.MovePoints % 3;
-            //    string _text = $"Moves: {_fullMovPts} {_remMovPts}/3";
-            //    if (_remMovPts == 0) _text = $"Moves: {_fullMovPts}";
-            //    Draw.Text(e.Graphics, _text, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 25), _backColor, 1, 1);
-            //    // Show other unit info
-            //    _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
-            //    Draw.Text(e.Graphics, _cityName, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 43), _backColor, 1, 1);
-            //    Draw.Text(e.Graphics, Game.ActiveCiv.Adjective, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 61), _backColor, 1, 1);
-            //    _column = 83;
-            //    Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
-            //    _column += 18;
-            //    Draw.Text(e.Graphics, $"({Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Type})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
-            //    // If road/railroad/irrigation/farmland/mine present
-            //    _wholeText = null;
-            //    _roadText = null;
-            //    _irrigText = null;
-            //    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Road || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Railroad || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Irrigation || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Farmland || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Mining)
-            //    {
-            //        _column += 18;
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Road) _roadText = "Road";
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Railroad) _roadText = "Railroad";
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Irrigation) _irrigText = "Irrigation";
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Farmland) _irrigText = "Farmland";
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Mining) _irrigText = "Mining";
-            //        if (_roadText != null && _irrigText == null) _wholeText = $"({_roadText})";
-            //        else if (_roadText == null && _irrigText != null) _wholeText = $"({_irrigText})";
-            //        else if (_roadText != null && _irrigText != null) _wholeText = $"({_roadText}, {_irrigText})";
-            //        Draw.Text(e.Graphics, _wholeText, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
-            //    }
-            //    // If airbase/fortress present
-            //    _airbaseText = null;
-            //    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Airbase || Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Fortress)
-            //    {
-            //        _column += 18;
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Fortress) _airbaseText = "Fortress";
-            //        if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Airbase) _airbaseText = "Airbase";
-            //        Draw.Text(e.Graphics, $"({_airbaseText})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
-            //    }
-            //    // If pollution present
-            //    if (Map.TileC2(Game.ActiveXY[0], Game.ActiveXY[1]).Pollution)
-            //    {
-            //        _column += 18;
-            //        Draw.Text(e.Graphics, "(Pollution)", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, _column), _backColor, 1, 1);
-            //    }
-            //    _column += 5;
+                // Show active unit info
+                Draw.Unit(e.Graphics, Game.ActiveUnit, false, 1, new Point(7, 27));
+                // Show move points correctly
+                int _fullMovPts = Game.ActiveUnit.MovePoints / 3;
+                int _remMovPts = Game.ActiveUnit.MovePoints % 3;
+                string _text = $"Moves: {_fullMovPts} {_remMovPts}/3";
+                if (_remMovPts == 0) _text = $"Moves: {_fullMovPts}";
+                Draw.Text(e.Graphics, _text, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
+                // Show other unit info
+                _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
+                Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(79, 43), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, Game.ActiveCiv.Adjective, _font, _frontColor, new Point(79, 61), false, false, _backColor, 1, 1);
+                _column = 83;
+                Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                _column += 18;
+                Draw.Text(e.Graphics, $"({Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                // If road/railroad/irrigation/farmland/mine present
+                _wholeText = null;
+                _roadText = null;
+                _irrigText = null;
+                if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Road || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Railroad || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Irrigation || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Farmland || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Mining)
+                {
+                    _column += 18;
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Road) _roadText = "Road";
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Railroad) _roadText = "Railroad";
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Irrigation) _irrigText = "Irrigation";
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Farmland) _irrigText = "Farmland";
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Mining) _irrigText = "Mining";
+                    if (_roadText != null && _irrigText == null) _wholeText = $"({_roadText})";
+                    else if (_roadText == null && _irrigText != null) _wholeText = $"({_irrigText})";
+                    else if (_roadText != null && _irrigText != null) _wholeText = $"({_roadText}, {_irrigText})";
+                    Draw.Text(e.Graphics, _wholeText, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                }
+                // If airbase/fortress present
+                _airbaseText = null;
+                if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Airbase || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Fortress)
+                {
+                    _column += 18;
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Fortress) _airbaseText = "Fortress";
+                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Airbase) _airbaseText = "Airbase";
+                    Draw.Text(e.Graphics, $"({_airbaseText})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                }
+                // If pollution present
+                if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Pollution)
+                {
+                    _column += 18;
+                    Draw.Text(e.Graphics, "(Pollution)", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                }
+                _column += 5;
 
-            //    // Show info for other units on the tile
-            //    int drawCount = 0;
-            //    foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.ActiveUnit))
-            //    {
-            //        // First check if there is vertical space still left for drawing in panel
-            //        if (_column + 69 > UnitPanel.Height) break;
+                // Show info for other units on the tile
+                int drawCount = 0;
+                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.ActiveUnit))
+                {
+                    // First check if there is vertical space still left for drawing in panel
+                    if (_column + 69 > unitPanel.Height) break;
 
-            //        // Draw unit
-            //        Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
-            //        // Show other unit info
-            //        _column += 20;
-            //        _cityName = (unit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
-            //        Draw.Text(e.Graphics, _cityName, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, _column), _backColor, 1, 1);
-            //        _column += 18;
-            //        Draw.Text(e.Graphics, Order2string(unit.Order), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, _column), _backColor, 1, 1);
-            //        _column += 18;
-            //        Draw.Text(e.Graphics, unit.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(80, _column), _backColor, 1, 1);
+                    // Draw unit
+                    Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
+                    // Show other unit info
+                    _column += 20;
+                    _cityName = (unit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
+                    Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
+                    _column += 18;
+                    Draw.Text(e.Graphics, Order2string(unit.Order), _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
+                    _column += 18;
+                    Draw.Text(e.Graphics, unit.Name, _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
 
-            //        System.Diagnostics.Debug.WriteLine($"{unit.Name} drawn");
+                    //System.Diagnostics.Debug.WriteLine($"{unit.Name} drawn");
 
-            //        drawCount++;
-            //    }
+                    drawCount++;
+                }
 
-            //    // If not all units were drawn print a message
-            //    if (_unitsOnThisTile.Count - 1 != drawCount)    // -1 because you must not count in active unit
-            //    {
-            //        _column += 22;
-            //        _text = _unitsOnThisTile.Count - 1 - drawCount == 1 ? "Unit" : "Units";
-            //        Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count - 1 - drawCount} More {_text})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(9, _column), _backColor, 1, 1);
-            //    }
-            //}
+                // If not all units were drawn print a message
+                if (_unitsOnThisTile.Count - 1 != drawCount)    // -1 because you must not count in active unit
+                {
+                    _column += 22;
+                    _text = _unitsOnThisTile.Count - 1 - drawCount == 1 ? "Unit" : "Units";
+                    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count - 1 - drawCount} More {_text})", _font, _frontColor, new Point(9, _column), false, false, _backColor, 1, 1);
+                }
+            }
 
             //// Blinking "end of turn" message
             //if (WaitingAtEndOfTurn)
@@ -335,26 +355,27 @@ namespace EtoFormsUI
 
         private void UnitEventHappened(object sender, UnitEventArgs e)
         {
-            //switch (e.EventType)
-            //{
-            //    //Unit movement animation event was raised
-            //    case UnitEventType.MoveCommand:
-            //        {
-            //            break;
-            //        }
-            //    case UnitEventType.StatusUpdate:
-            //        {
-            //            UnitPanel.Refresh();
-            //            break;
-            //        }
-            //    case UnitEventType.NewUnitActivated:
-            //        {
-            //            UnitPanel.Refresh();
-            //            break;
-            //        }
-            //    default:
-            //        break;
-            //}
+            switch (e.EventType)
+            {
+                // Unit movement animation event was raised
+                //case UnitEventType.MoveCommand:
+                //    {
+                //        unitPanel.Invalidate();
+                //        break;
+                //    }
+                case UnitEventType.StatusUpdate:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
+                case UnitEventType.NewUnitActivated:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
+                default:
+                    break;
+            }
         }
 
         private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)

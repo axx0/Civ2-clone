@@ -93,7 +93,7 @@ namespace EtoFormsUI
             // Paint title (if it exists)
             if (_title != null)
             {
-                Draw.Text(e.Graphics, _title, new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(this.Width / 2, 20), Color.FromArgb(0, 0, 0), 1, 1);
+                Draw.Text(e.Graphics, _title, new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(this.Width / 2, _paddingTop / 2), true, true, Colors.Black, 1, 1);
             }
         }
 

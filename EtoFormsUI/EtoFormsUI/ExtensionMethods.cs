@@ -1,7 +1,5 @@
-﻿using Eto.Drawing;
-//using System.Drawing.Drawing2D;
-//using System.Drawing.Imaging;
-using System;
+﻿using System;
+using Eto.Drawing;
 
 namespace EtoFormsUIExtensionMethods
 {
@@ -15,28 +13,35 @@ namespace EtoFormsUIExtensionMethods
             int width = image.Width.ZoomScale(zoom);
             int height = image.Height.ZoomScale(zoom);
 
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height, Eto.Drawing.PixelFormat.Format32bppRgba);
+            //var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height, PixelFormat.Format32bppRgba);
+            //var destImage = new Bitmap(image, width, height, ImageInterpolation.Default);
 
             //destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
             //using (var graphics = Graphics.FromImage(destImage))
             //{
-            //    graphics.CompositingMode = CompositingMode.SourceCopy;
-            //    //graphics.CompositingQuality = CompositingQuality.HighQuality;
-            //    //graphics.CompositingQuality = CompositingQuality.AssumeLinear;
-            //    graphics.CompositingQuality = CompositingQuality.HighSpeed;
-            //    //graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //    graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-            //    //graphics.SmoothingMode = SmoothingMode.HighQuality;
-            //    graphics.SmoothingMode = SmoothingMode.HighSpeed;
-            //    //graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            //    graphics.PixelOffsetMode = PixelOffsetMode.None;
+            //graphics.CompositingMode = CompositingMode.SourceCopy;
+            ////graphics.CompositingQuality = CompositingQuality.HighQuality;
+            ////graphics.CompositingQuality = CompositingQuality.AssumeLinear;
+            //graphics.CompositingQuality = CompositingQuality.HighSpeed;
+            ////graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            //graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
+            ////graphics.SmoothingMode = SmoothingMode.HighQuality;
+            //graphics.SmoothingMode = SmoothingMode.HighSpeed;
+            ////graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //graphics.PixelOffsetMode = PixelOffsetMode.None;
 
-            //    using var wrapMode = new ImageAttributes();
-            //    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-            //    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-            //}
+            //using var wrapMode = new ImageAttributes();
+            //wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+            //graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+
+            using (var g = new Graphics(destImage))
+            {
+                g.AntiAlias = false;
+                g.ImageInterpolation = ImageInterpolation.None;
+                g.DrawImage(image, 0, 0, width, height);
+            }
 
             return destImage;
         }

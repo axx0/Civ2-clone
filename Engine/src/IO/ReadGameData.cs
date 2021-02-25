@@ -834,7 +834,8 @@ namespace Civ2engine
             data.UnitCiv = new int[data.NumberOfUnits];
             data.UnitMovePointsLost = new int[data.NumberOfUnits];
             data.UnitHitPointsLost = new int[data.NumberOfUnits];
-            data.UnitLastMove = new int[data.NumberOfUnits];
+            data.UnitPrevXloc = new int[data.NumberOfUnits];
+            data.UnitPrevYloc = new int[data.NumberOfUnits];
             data.UnitCaravanCommodity = new CommodityType[data.NumberOfUnits];
             data.UnitOrders = new OrderType[data.NumberOfUnits];
             data.UnitHomeCity = new int[data.NumberOfUnits];
@@ -863,7 +864,45 @@ namespace Civ2engine
                 data.UnitCiv[i] = bytes[ofsetU + multipl * i + 7];                          // Unit civ, 00 = barbarians                
                 data.UnitMovePointsLost[i] = bytes[ofsetU + multipl * i + 8];               // Unit move points expended                
                 data.UnitHitPointsLost[i] = bytes[ofsetU + multipl * i + 10];               // Unit hitpoints lost
-                data.UnitLastMove[i] = bytes[ofsetU + multipl * i + 11];                    // Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)                
+                switch (bytes[ofsetU + multipl * i + 11])                                   // Unit previous move (00=up-right, 01=right, ..., 07=up, FF=no movement)   
+                {
+                    case 0:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i] - 1;
+                        data.UnitPrevYloc[i] = data.UnitYloc[i] + 1;
+                        break;
+                    case 1:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i] - 2;
+                        data.UnitPrevYloc[i] = data.UnitYloc[i];
+                        break;
+                    case 2:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i] - 1;
+                        data.UnitPrevYloc[i] = data.UnitYloc[i] - 1;
+                        break;
+                    case 3:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i];
+                        data.UnitPrevYloc[i] = data.UnitYloc[i] - 2;
+                        break;
+                    case 4:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i] + 1;
+                        data.UnitPrevYloc[i] = data.UnitYloc[i] - 1;
+                        break;
+                    case 5:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i] + 2;
+                        data.UnitPrevYloc[i] = data.UnitYloc[i];
+                        break;
+                    case 6:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i] + 1;
+                        data.UnitPrevYloc[i] = data.UnitYloc[i] + 1;
+                        break;
+                    case 7:
+                        data.UnitPrevXloc[i] = data.UnitXloc[i];
+                        data.UnitPrevYloc[i] = data.UnitYloc[i] + 2;
+                        break;
+                    case 255:   // No movement
+                        data.UnitPrevXloc[i] = data.UnitXloc[i];
+                        data.UnitPrevYloc[i] = data.UnitYloc[i];
+                        break;
+                }
                 data.UnitCaravanCommodity[i] = (CommodityType)bytes[ofsetU + multipl * i + 13]; // Unit caravan commodity                
                 data.UnitOrders[i] = (OrderType)bytes[ofsetU + multipl * i + 15];           // Unit orders                
                 data.UnitHomeCity[i] = bytes[ofsetU + multipl * i + 16];                    // Unit home city

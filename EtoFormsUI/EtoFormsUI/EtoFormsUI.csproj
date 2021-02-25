@@ -5,7 +5,8 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.5.9" />
+    <PackageReference Include="Eto.Forms" Version="2.5.10" />
+    <PackageReference Include="System.Windows.Extensions" Version="6.0.0-preview.1.21102.12" />
   </ItemGroup>
   
   <ItemGroup>

@@ -13,7 +13,7 @@ namespace Civ2engine
         public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
         //Update stats of all cities
-        public void CitiesTurn()
+        private void CitiesTurn()
         {
             foreach (City city in Game.GetCities.Where(a => a.Owner == Game.PlayerCiv))
             {
@@ -21,7 +21,7 @@ namespace Civ2engine
             }
         }
 
-        public void NewPlayerTurn()
+        private void NewPlayerTurn()
         {
             Game.TurnNumber++;
 

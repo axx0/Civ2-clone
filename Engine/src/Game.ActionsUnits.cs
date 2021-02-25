@@ -12,7 +12,6 @@ namespace Civ2engine
     {
         public static event EventHandler<WaitAtTurnEndEventArgs> OnWaitAtTurnEnd;
         public static event EventHandler<UnitEventArgs> OnUnitEvent;
-        private static Timer UnitMovementTimer;
 
         public void IssueUnitOrder(OrderType order)
         {
@@ -27,15 +26,16 @@ namespace Civ2engine
                 case OrderType.MoveNW:
                 case OrderType.MoveW:
                     {
-                        //Movement - attack unit - attack city - conquer city
+                        // Movement - attack unit - attack city - conquer city
                         switch (DetermineUnitMovementOrderResult(order))
                         {
                             case UnitMovementOrderResultType.Movement:
                                 {
-                                    //Start movement timer only if move was successful (eg didn't hit obstacle)
-                                    if (Game.ActiveUnit.Move(order))
+                                    // Start movement timer only if move was successful (eg didn't hit obstacle)
+                                    if (_activeUnit.Move(order))
                                     {
-                                        StartUnitMovementTimer();   //Initiate unit movement timer
+                                        OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.MoveCommand));
+                                        //StartUnitMovementTimer();   //Initiate unit movement timer
                                     }
 
                                     break;
@@ -49,34 +49,9 @@ namespace Civ2engine
                         break;
                     }
                 case OrderType.SkipTurn:
-                    Game.ActiveUnit.SkipTurn();
-                    UpdateUnit(Game.ActiveUnit);
+                    _activeUnit.SkipTurn();
+                    UpdateUnit(_activeUnit);
                     break;
-            }
-        }
-
-        private void StartUnitMovementTimer()
-        {
-            Game.ActiveUnit.MovementCounter = 0;   //reset movement counter
-            UnitMovementTimer = new Timer();
-            UnitMovementTimer.Interval = 25;    //ms
-            UnitMovementTimer.Start();
-            UnitMovementTimer.Elapsed += UnitMovementTimer_Tick;
-        }
-
-        private void UnitMovementTimer_Tick(object sender, ElapsedEventArgs e)
-        {
-            OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.MoveCommand, Game.ActiveUnit.MovementCounter));
-
-            Game.ActiveUnit.MovementCounter++;
-
-            //Stop movement
-            if (Game.ActiveUnit.MovementCounter == 8)
-            {
-                Game.ActiveUnit.MovementCounter = 0;   //reset movement counter
-                UnitMovementTimer.Stop();
-                UnitMovementTimer.Dispose();
-                UpdateUnit(Game.ActiveUnit);
             }
         }
 
@@ -110,20 +85,20 @@ namespace Civ2engine
                     deltaXY = new int[] { -2, 0 };
                     break;
             }
-            int[] newXY = { Game.ActiveUnit.X + deltaXY[0], Game.ActiveUnit.Y + deltaXY[1] };
+            int[] newXY = { _activeUnit.X + deltaXY[0], _activeUnit.Y + deltaXY[1] };
 
-            //Determine what happens after command
-            //Enemy city is present
-            if (Game.GetUnits.Any(city => city.X == newXY[0] && city.Y == newXY[1] && city.Owner != Game.ActiveUnit.Owner))
+            // Determine what happens after command
+            // Enemy city is present
+            if (_units.Any(city => city.X == newXY[0] && city.Y == newXY[1] && city.Owner != _activeUnit.Owner))
             {
                 return UnitMovementOrderResultType.AttackCity;
             }
-            //Enemy unit is present
-            else if (Game.GetUnits.Any(unit => unit.X == newXY[0] && unit.Y == newXY[1] && unit.Owner != Game.ActiveUnit.Owner))
+            // Enemy unit is present
+            else if (_units.Any(unit => unit.X == newXY[0] && unit.Y == newXY[1] && unit.Owner != _activeUnit.Owner))
             {
                 return UnitMovementOrderResultType.AttackUnit;
             }
-            //Movement
+            // Movement
             else
             {
                 return UnitMovementOrderResultType.Movement;
@@ -132,7 +107,7 @@ namespace Civ2engine
 
         public void UpdateUnit(IUnit unit)
         {
-            //If unit is not waiting order, chose next unit in line, otherwise update its orders
+            // If unit is not waiting order, chose next unit in line, otherwise update its orders
             if (!unit.AwaitingOrders)
             {
                 ChooseNextUnit();
@@ -186,13 +161,13 @@ namespace Civ2engine
             }
         }
 
-        //Chose next unit for orders. If all units ended turn, update cities.
-        public void ChooseNextUnit()
+        // Choose next unit for orders. If all units ended turn, update cities.
+        private void ChooseNextUnit()
         {
-            //End turn if no units awaiting orders
-            if (!Game.ActiveCiv.AnyUnitsAwaitingOrders)
+            // End turn if no units awaiting orders
+            if (!_activeCiv.AnyUnitsAwaitingOrders)
             {
-                if (Game.Options.AlwaysWaitAtEndOfTurn)
+                if (Options.AlwaysWaitAtEndOfTurn)
                 {
                     OnWaitAtTurnEnd?.Invoke(null, new WaitAtTurnEndEventArgs());
                 }
@@ -201,26 +176,25 @@ namespace Civ2engine
                     NewPlayerTurn();
                 }
             }
-            //Choose next unit
+            // Choose next unit
             else
             {
-                //Create an array of indexes of units awaiting orders
-                List<int> indexUAO = new List<int>();
-                foreach (IUnit unit in Game.GetUnits)
-                    if (unit.Owner == Game.ActiveCiv && unit.AwaitingOrders) indexUAO.Add(unit.Id);
+                // Create an list of indexes of units awaiting orders
+                var indexUAO = new List<int>();
+                foreach (IUnit unit in _units.Where(u => u.Owner == _activeCiv && u.AwaitingOrders)) indexUAO.Add(unit.Id);
 
-                int indexActUnit = Game.GetUnits.FindIndex(unit => unit == Game.ActiveUnit);  //Determine index of unit that is currently still active but just ended turn
+                //int indexActUnit = Game.GetUnits.FindIndex(unit => unit == Game.ActiveUnit);  //Determine index of unit that is currently still active but just ended turn
 
-                //currently active unit is at beginning/end of list ==> choose next unit from beginning of list
-                if ((indexUAO[0] > indexActUnit) || (indexUAO[indexUAO.Count - 1] <= indexActUnit))
+                // Currently active unit is at beginning/end of list ==> choose next unit from beginning of list
+                if ((indexUAO.First() > _activeUnit.Id) || (indexUAO.Last() <= _activeUnit.Id))
                 {
-                    Game.ActiveUnit = Game.GetUnits[indexUAO[0]];
+                    _activeUnit = _units[indexUAO.First()];
                 }
-                //otherwise choose next unit from currently active unit in the list
+                // Otherwise choose next unit from currently active unit in the list
                 else
                 {
                     for (int i = 0; i < indexUAO.Count - 1; i++)
-                        if ((indexActUnit >= indexUAO[i]) && (indexActUnit < indexUAO[i + 1])) Game.ActiveUnit = Game.GetUnits[indexUAO[i + 1]];
+                        if ((_activeUnit.Id >= indexUAO[i]) && (_activeUnit.Id < indexUAO[i + 1])) _activeUnit = _units[indexUAO[i + 1]];
                 }
 
                 OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.NewUnitActivated));

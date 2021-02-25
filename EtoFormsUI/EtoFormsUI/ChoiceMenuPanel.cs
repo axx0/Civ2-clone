@@ -37,6 +37,7 @@ namespace EtoFormsUI
                     string directoryPath = ofd.Directory.LocalPath;
                     string SAVname = Path.GetFileName(ofd.FileName);
                     main.LoadGameInitialization(directoryPath, SAVname);
+                    main.Sounds.Stop();
                 }
             }
         }

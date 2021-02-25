@@ -74,7 +74,6 @@ namespace Civ2engine.Units
         public bool GreyStarShield { get; set; }
         public bool Veteran { get; set; }
         public Civilization Owner { get; set; }
-        public int LastMove { get; set; }
         public CommodityType CaravanCommodity { get; set; }
         public City HomeCity { get; set; }
         public int GoToX { get; set; }
@@ -85,12 +84,14 @@ namespace Civ2engine.Units
         public int X { get; set; }
         public int Y { get; set; }
         public int MovementCounter { get; set; }
-        public int Xpx => 4 * X * (Game.Zoom + 8);
-        public int Ypx => 2 * (Y - 1) * (Game.Zoom + 8);
+        public int Xpx => X * Game.Xpx;
+        public int Ypx => Y * Game.Ypx;
+        public int[] PrevXY { get; set; }   // XY position of unit before it moved
+        public int[] PrevXYpx => new int[] { PrevXY[0] * Game.Xpx, PrevXY[1] * Game.Ypx };
 
         public bool Move(OrderType movementDirection)
         {
-            //Determine coordinates of movement
+            // Determine coordinates of movement
             int Xto = 0;
             int Yto = 0;
             switch (movementDirection)
@@ -129,32 +130,24 @@ namespace Civ2engine.Units
                     break;
             }
 
-            //Convert civ2 coords to real coords (for existing & destination square)
-            int X_ = (X - Y % 2) / 2;
-            int Xto_ = (Xto - Yto % 2) / 2;
-
             bool unitMoved = false;
-
             switch (Domain)
             {
                 case UnitGAS.Ground:
                     {
-                        //Cannot move to ocean tile
-                        if (Map.Tile[Xto_, Yto].Type == TerrainType.Ocean)
-                        {
-                            break;
-                        }
+                        // Cannot move to ocean tile
+                        if (Map.TileC2(Xto, Yto).Type == TerrainType.Ocean) break;
 
-                        //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
+                        // Cannot move beyond map edge
+                        if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
                         {
                             //TODO: display a message that a unit cannot move beyond map edges
                             break;
                         }
 
-                        //Movement possible, reduce movement points
-                        if ((Map.Tile[X_, Y].Road || Map.Tile[X_, Y].CityPresent) && (Map.Tile[Xto_, Yto].Road || Map.Tile[Xto_, Yto].CityPresent) ||   //From & To must be cities, road
-                            (Map.Tile[X_, Y].River && Map.Tile[Xto_, Yto].River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        // Movement possible, reduce movement points
+                        if ((Map.TileC2(X, Y).Road || Map.TileC2(X, Y).CityPresent) && (Map.TileC2(Xto, Yto).Road || Map.TileC2(Xto, Yto).CityPresent) ||   //From & To must be cities, road
+                            (Map.TileC2(X, Y).River && Map.TileC2(Xto, Yto).River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
                         {
                             MovePointsLost += 1;
                         }
@@ -168,13 +161,10 @@ namespace Civ2engine.Units
                     }
                 case UnitGAS.Sea:
                     {
-                        if (Map.Tile[Xto_, Yto].Type != TerrainType.Ocean)
-                        {
-                            break;
-                        }
+                        if (Map.TileC2(Xto, Yto).Type != TerrainType.Ocean) break;
 
-                        //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
+                        // Cannot move beyond map edge
+                        if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
                         {
                             //TODO: display a message that a unit cannot move beyond map edges
                             break;
@@ -187,11 +177,8 @@ namespace Civ2engine.Units
                     }
                 case UnitGAS.Air:
                     {
-                        //Cannot move beyond map edge
-                        if (Xto_ < 0 || Xto_ >= Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
-                        {
-                            break;
-                        }
+                        // Cannot move beyond map edge
+                        if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim) break;
 
                         MovePointsLost += 3;
 
@@ -200,23 +187,13 @@ namespace Civ2engine.Units
                     }
             }
 
-            //If unit moved, update its X-Y coords
+            // If unit moved, update its X-Y coords
             if (unitMoved)
             {
-                //set previous coords
-                LastXY = new int[] { X, Y };
+                // Set previous coords
+                PrevXY = new int[] { X, Y };
 
-                //set last move for unit
-                if (movementDirection == OrderType.MoveNE) LastMove = 0;
-                else if (movementDirection == OrderType.MoveE) LastMove = 1;
-                else if (movementDirection == OrderType.MoveSE) LastMove = 2;
-                else if (movementDirection == OrderType.MoveS) LastMove = 3;
-                else if (movementDirection == OrderType.MoveSW) LastMove = 4;
-                else if (movementDirection == OrderType.MoveW) LastMove = 5;
-                else if (movementDirection == OrderType.MoveNW) LastMove = 6;
-                else if (movementDirection == OrderType.MoveN) LastMove = 7;
-
-                //set new coords
+                // Set new coords
                 X = Xto;
                 Y = Yto;
             }
@@ -224,8 +201,7 @@ namespace Civ2engine.Units
             return unitMoved;
         }
 
-        public int[] LastXY { get; set; }   //XY position of unit before it moved
-        public int[] LastXYpx => new int[] { 4 * LastXY[0] * (Game.Zoom + 8), 2 * (LastXY[1] - 1) * (Game.Zoom + 8) };
+
 
         private bool _turnEnded;
         public bool TurnEnded
@@ -255,7 +231,7 @@ namespace Civ2engine.Units
         public void SkipTurn()
         {
             TurnEnded = true;
-            LastMove = 255; //FF hex
+            PrevXY = new int[] { X, Y };
         }
 
         public void Fortify()

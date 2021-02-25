@@ -88,7 +88,8 @@ namespace Civ2engine
         public int[] UnitCiv { get; set; }
         public int[] UnitMovePointsLost { get; set; }
         public int[] UnitHitPointsLost { get; set; }
-        public int[] UnitLastMove { get; set; }
+        public int[] UnitPrevXloc { get; set; }
+        public int[] UnitPrevYloc { get; set; }
         public CommodityType[] UnitCaravanCommodity { get; set; }
         public OrderType[] UnitOrders { get; set; }
         public int[] UnitHomeCity { get; set; }

@@ -11,6 +11,8 @@ namespace EtoFormsUI
         // Load intro screen
         public void ShowIntroScreen()
         {
+            this.suppressKeyEvent = true;
+
             // Sinai pic
             sinaiPanel = new PicturePanel(Images.SinaiPic);
             layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));

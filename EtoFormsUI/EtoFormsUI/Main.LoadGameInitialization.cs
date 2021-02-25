@@ -8,6 +8,8 @@ namespace EtoFormsUI
     {
         public void LoadGameInitialization(string directoryPath, string SAVname)
         {
+            suppressKeyEvent = false;
+
             Game.LoadGame(directoryPath, SAVname);
             Images.LoadGraphicsAssetsFromFiles(directoryPath);
 

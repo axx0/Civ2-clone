@@ -7,9 +7,6 @@ namespace Civ2engine
     {
         public static void LoadGame(string savDirectoryPath, string SAVname)
         {
-            // Import graphical assets from SAV directory. If they don't exist import from root civ2 directory.
-            
-
             // Read SAV file & RULES.txt
             ReadGameData rd = new ReadGameData();
             GameData gameData = rd.Read_SAV_and_RULES(savDirectoryPath, SAVname);
@@ -61,10 +58,10 @@ namespace Civ2engine
             // Create units
             for (int i = 0; i < SAVgameData.NumberOfUnits; i++)
             {
-                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i], SAVgameData.UnitDead[i], SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i], SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i], SAVgameData.UnitMovePointsLost[i], SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitLastMove[i], SAVgameData.UnitCaravanCommodity[i], SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i], SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i], SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
+                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i], SAVgameData.UnitDead[i], SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i], SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i], SAVgameData.UnitMovePointsLost[i], SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitPrevXloc[i], SAVgameData.UnitPrevYloc[i], SAVgameData.UnitCaravanCommodity[i], SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i], SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i], SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
             }
 
-            _activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
+            //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
             StartingClickedXY = SAVgameData.ClickedXY;
 
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn

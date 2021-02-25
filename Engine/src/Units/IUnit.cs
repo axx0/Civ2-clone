@@ -51,7 +51,6 @@ namespace Civ2engine.Units
         bool GreyStarShield { get; set; }
         bool Veteran { get; set; }
         Civilization Owner { get; set; }
-        int LastMove { get; set; }
         CommodityType CaravanCommodity { get; set; }
         City HomeCity { get; set; }
         int GoToX { get; set; }
@@ -59,8 +58,8 @@ namespace Civ2engine.Units
         int LinkOtherUnitsOnTop { get; set; }
         int LinkOtherUnitsUnder { get; set; }
         int Counter { get; set; }
-        int[] LastXY { get; set; }
-        int[] LastXYpx { get; }
+        int[] PrevXY { get; set; }
+        int[] PrevXYpx { get; }
         void BuildCity();
         void BuildRoad();
         void BuildMines();

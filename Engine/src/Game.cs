@@ -53,17 +53,6 @@ namespace Civ2engine
         public int NoOfTurnsOfPeace { get; set; }
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
-
-        private int[] _activeXY;
-        public int[] ActiveXY   // Coords of either active unit or view piece
-        {
-            get
-            {
-                if (ActiveUnit != null) _activeXY = new int[] { ActiveUnit.X, ActiveUnit.Y };
-                return _activeXY;
-            }
-            set { _activeXY = value; }
-        }
         public int[] StartingClickedXY { get; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
 
         private int _zoom;
@@ -212,7 +201,7 @@ namespace Civ2engine
         public bool AnyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y);
 
         public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
-                                    int movePointsLost, int hitPointsLost, int lastMove, CommodityType caravanCommodity, OrderType orders,
+                                    int movePointsLost, int hitPointsLost, int prevX, int prevY, CommodityType caravanCommodity, OrderType orders,
                                     int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             IUnit unit = new Unit
@@ -227,7 +216,7 @@ namespace Civ2engine
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
                 Owner = _civs[civId],
-                LastMove = lastMove,
+                PrevXY = new int[] { prevX, prevY },
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
                 HomeCity = homeCity == 255 ? null : _cities[homeCity],
