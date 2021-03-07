@@ -4,14 +4,12 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Units;
 using Civ2engine.Improvements;
-using Civ2engine.Sounds;
 
 namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
         private readonly List<IUnit> _units;
-        private readonly List<IUnit> _casualties;
         private readonly List<City> _cities;
         private readonly List<Civilization> _civs;
         private readonly Options _options;
@@ -19,30 +17,33 @@ namespace Civ2engine
         private readonly GameVersionType _gameVersion;
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
-        private readonly bool[] _civsInPlay;
-
+        
         public List<IUnit> GetUnits => _units;
-        public List<IUnit> GetCasualties => _casualties;
+        public List<IUnit> GetCasualties => _units.Where(u => u.Dead).ToList();
+        public List<IUnit> GetActiveUnits => _units.Where(u => !u.Dead).ToList();
         public List<City> GetCities => _cities;
         public List<Civilization> GetCivs => _civs;
+        public List<Civilization> GetActiveCivs => _civs.Where(c => c.Alive).ToList();
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
-        public bool[] CivsInPlay => _civsInPlay;
+        //private readonly bool[] _civsInPlay;
+        //public bool[] CivsInPlay => _civsInPlay;
+        private int _turnNumber;
+        public int TurnNumber => _turnNumber;
         private int _gameYear;
-        public int GameYear
+        public int GetGameYear
         {
             get
             {
-                if (TurnNumber < 250) return -4000 + (TurnNumber - 1) * 20;
-                else if (TurnNumber >= 250 && TurnNumber < 300) return 1000 + (TurnNumber - 1 - 250) * 10;
-                else if (TurnNumber >= 300 && TurnNumber < 350) return 1500 + (TurnNumber - 1 - 300) * 5;
-                else if (TurnNumber >= 350 && TurnNumber < 400) return 1750 + (TurnNumber - 1 - 350) * 2;
-                else return 1850 + (TurnNumber - 1 - 400);
+                if (_turnNumber < 250) _gameYear = - 4000 + (_turnNumber - 1) * 20;
+                else if (_turnNumber >= 250 && _turnNumber < 300) _gameYear = 1000 + (_turnNumber - 1 - 250) * 10;
+                else if (_turnNumber >= 300 && _turnNumber < 350) _gameYear = 1500 + (_turnNumber - 1 - 300) * 5;
+                else if (_turnNumber >= 350 && _turnNumber < 400) _gameYear = 1750 + (_turnNumber - 1 - 350) * 2;
+                else _gameYear = 1850 + (_turnNumber - 1 - 400);
+                return _gameYear;
             }
         }
-
-        public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }
         public int WhichCivsMapShown { get; set; }
         public bool MapRevealed { get; set; }
@@ -66,14 +67,6 @@ namespace Civ2engine
         }
         public int Xpx => 4 * (Game.Zoom + 8);    // Length of 1 map square in X
         public int Ypx => 2 * (Game.Zoom + 8);    // Length of 1 map square in Y
-
-        #region Loads stuff when civ2 starts
-        public static void Preloading(string civ2path)
-        {
-            //Images.LoadDLLimages();
-            Sound.LoadSounds(civ2path);
-        }
-        #endregion  
 
         private IUnit _activeUnit;
         public IUnit ActiveUnit
@@ -206,7 +199,8 @@ namespace Civ2engine
         {
             IUnit unit = new Unit
             {
-                Id = _casualties.Count + _units.Count,
+                Id = _units.Count,
+                Dead = dead,
                 Type = type,
                 X = x,
                 Y = y,
@@ -226,8 +220,7 @@ namespace Civ2engine
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            if (dead)   _casualties.Add(unit);
-            else        _units.Add(unit);
+            _units.Add(unit);
         }
 
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold,

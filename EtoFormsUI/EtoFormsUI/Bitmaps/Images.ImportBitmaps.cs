@@ -10,7 +10,7 @@ namespace EtoFormsUI
     public static partial class Images
     {
         public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT, ShieldShadow;
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements, BattleAnim;
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
         public static Point[,] CityFlagLoc, CitySizeWindowLoc, CityWallFlagLoc, CityWallSizeWindowLoc;
@@ -589,7 +589,7 @@ namespace EtoFormsUI
                         for (int y = 0; y < 30; y++)
                         {
                             if (PeopleL[col, row].GetPixel(x, y) != transparentPink)
-                                PeopleLshadow[col, row].SetPixel(x, y, Color.FromArgb(0, 0, 0));
+                                PeopleLshadow[col, row].SetPixel(x, y, Colors.Black);
                             else
                             {
                                 Color transparent = PeopleLshadow[col, row].GetPixel(x, y);
@@ -744,6 +744,14 @@ namespace EtoFormsUI
             // Zoom icons
             ZoomIN = icons.Clone(new Rectangle(18, 389, 16, 16));
             ZoomOUT = icons.Clone(new Rectangle(35, 389, 16, 16));
+
+            // Battle sprites
+            BattleAnim = new Bitmap[8];
+            for (int i = 0; i < 8; i++)
+            {
+                BattleAnim[i] = icons.Clone(new Rectangle(1  + 33 * i, 356, 32, 32));
+                BattleAnim[i].ReplaceColors(transparentLightPink, Colors.Transparent);
+            }
 
             icons.Dispose();
         }

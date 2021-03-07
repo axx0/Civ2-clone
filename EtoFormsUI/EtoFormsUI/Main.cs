@@ -99,6 +99,64 @@ namespace EtoFormsUI
             var SkipTurnCommand = new Command { MenuText = "Skip Turn", Shortcut = Keys.Space };
             var EndPlayerTurn = new Command { MenuText = "End Player Turn", Shortcut = Keys.Control | Keys.N };
 
+            // Advisors menu commands
+            var ChatWithKingsCommand = new Command { MenuText = "Chat With Kings", Shortcut = Keys.Control | Keys.C };
+            var ConsultHighCouncilCommand = new Command { MenuText = "Consult High Council" };
+            var CityStatusCommand = new Command { MenuText = "City Status", Shortcut = Keys.F1 };
+            var DefenseMinisterCommand = new Command { MenuText = "Defense Minister", Shortcut = Keys.F2 };
+            var ForeignMinisterCommand = new Command { MenuText = "Foreign Minister", Shortcut = Keys.F3 };
+            var AttitudeAdvisorCommand = new Command { MenuText = "Attitude Advisor", Shortcut = Keys.F4 };
+            var TradeAdvisorCommand = new Command { MenuText = "Trade Advisor", Shortcut = Keys.F5 };
+            var ScienceAdvisorCommand = new Command { MenuText = "Science Advisor", Shortcut = Keys.F6 };
+            var CasualtyTimelineCommand = new Command { MenuText = "Casualty Timeline", Shortcut = Keys.Control | Keys.D };
+
+            // World menu commands
+            var WondersCommand = new Command { MenuText = "Wonders of the World", Shortcut = Keys.F7 };
+            var Top5citiesCommand = new Command { MenuText = "Top 5 Cities", Shortcut = Keys.F8 };
+            var CivScoreCommand = new Command { MenuText = "Civilization Score", Shortcut = Keys.F9 };
+            var DemographicsCommand = new Command { MenuText = "Demographics", Shortcut = Keys.F11 };
+            var SpaceshipsCommand = new Command { MenuText = "Spaceships", Shortcut = Keys.F12 };
+
+            // Cheat menu commands
+            var ToggleCheatModeCommand = new Command { MenuText = "Toggle Cheat Mode", Shortcut = Keys.Control | Keys.K };
+            var CreateUnitCommand = new Command { MenuText = "Toggle Cheat Mode", Shortcut = Keys.Shift | Keys.F1 };
+            var RevealMapCommand = new Command { MenuText = "Reveal Map", Shortcut = Keys.Shift | Keys.F2 };
+            var SetHumanPlayerCommand = new Command { MenuText = "Set Human Player", Shortcut = Keys.Shift | Keys.F3 };
+            var SetGameYearCommand = new Command { MenuText = "Set Game Year", Shortcut = Keys.Shift | Keys.F4 };
+            var KillCivilizationCommand = new Command { MenuText = "Kill Civilization", Shortcut = Keys.Shift | Keys.F5 };
+            var TechnologyAdvanceCommand = new Command { MenuText = "Technology Advance", Shortcut = Keys.Shift | Keys.F6 };
+            var EditTechsCommand = new Command { MenuText = "Edit Technologies", Shortcut = Keys.Control | Keys.Shift | Keys.F6 };
+            var ForceGovernmentCommand = new Command { MenuText = "Force Government", Shortcut = Keys.Shift | Keys.F7 };
+            var ChangeTerrainCursorCommand = new Command { MenuText = "Change Terrain at Cursor", Shortcut = Keys.Shift | Keys.F8 };
+            var DestroyUnitsCursorCommand = new Command { MenuText = "Destroy All Units At Cursor", Shortcut = Keys.Control | Keys.Shift | Keys.D };
+            var ChangeMoneyCommand = new Command { MenuText = "Change Money", Shortcut = Keys.Shift | Keys.F9 };
+            var EditUnitCommand = new Command { MenuText = "Edit Unit", Shortcut = Keys.Control | Keys.Shift | Keys.U };
+            var EditCityCommand = new Command { MenuText = "Edit City", Shortcut = Keys.Control | Keys.Shift | Keys.C };
+            var EditKingCommand = new Command { MenuText = "Edit King", Shortcut = Keys.Control | Keys.Shift | Keys.K };
+            var ScenarioParamsCommand = new Command { MenuText = "Scenario Parameters", Shortcut = Keys.Control | Keys.Shift | Keys.P };
+            var SaveAsScenCommand = new Command { MenuText = "Save As Scenario", Shortcut = Keys.Control | Keys.Shift | Keys.S };
+
+            // Editor menu commands
+            var ToggleScenFlagCommand = new Command { MenuText = "Toggle Scenario Flag", Shortcut = Keys.Control | Keys.F };
+            var AdvancesEditorCommand = new Command { MenuText = "Advances Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D1 };
+            var CitiesEditorCommand = new Command { MenuText = "Cities Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D2 };
+            var EffectsEditorCommand = new Command { MenuText = "Effects Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D3 };
+            var ImprovEditorCommand = new Command { MenuText = "Improvements Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D4 };
+            var TerrainEditorCommand = new Command { MenuText = "Terrain Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D5 };
+            var TribeEditorCommand = new Command { MenuText = "Tribe Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D6 };
+            var UnitsEditorCommand = new Command { MenuText = "Units Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D7 };
+            var EventsEditorCommand = new Command { MenuText = "Events Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D8 };
+
+            // Civilopedia menu commands
+            var CivAdvancesFlagCommand = new Command { MenuText = "Civilization Advances" };
+            var CityImprovFlagCommand = new Command { MenuText = "City Improvements" };
+            var WondersWorldCommand = new Command { MenuText = "Wonders of the World" };
+            var MilitaryUnitsCommand = new Command { MenuText = "Military Units" };
+            var GovernmentsCommand = new Command { MenuText = "Governments" };
+            var TerrainTypesCommand = new Command { MenuText = "Terrain Types" };
+            var GameConceptsCommand = new Command { MenuText = "Game Concepts" };
+            var AboutCommand = new Command { MenuText = "About Civilization II" };
+
             Menu = new MenuBar
             {
                 Items =
@@ -108,11 +166,11 @@ namespace EtoFormsUI
                     new ButtonMenuItem { Text = "&Kingdom", Items = { TaxRateCommand, ViewThroneRoomCommand, FindCityCommand, RevolutionCommand } },
                     new ButtonMenuItem { Text = "&View", Items = { MovePiecesCommand, ViewPiecesCommand, ZoomInCommand, ZoomOutCommand, MaxZoomInCommand, StandardZoomCommand, MediumZoomOutCommand, MaxZoomOutCommand, ShowMapGridCommand, ArrangeWindowsCommand, ShowHiddenTerrainCommand, CenterViewCommand } },
                     new ButtonMenuItem { Text = "&Orders", Items = { BuildRoadCommand, BuildIrrigationCommand, BuildMinesCommand, CleanPollutionCommand, PillageCommand, UnloadCommand, GoToCommand, ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand, FortifyCommand, SleepCommand, DisbandCommand, ActivateUnitCommand, WaitCommand, SkipTurnCommand, EndPlayerTurn } },
-                    new ButtonMenuItem { Text = "&Advisors", Items = { } },
-                    new ButtonMenuItem { Text = "&World", Items = { } },
-                    new ButtonMenuItem { Text = "&Cheat", Items = { } },
-                    new ButtonMenuItem { Text = "&Editor", Items = { } },
-                    new ButtonMenuItem { Text = "&Civilopedia", Items = { } },
+                    new ButtonMenuItem { Text = "&Advisors", Items = { ChatWithKingsCommand, ConsultHighCouncilCommand, CityStatusCommand, DefenseMinisterCommand, ForeignMinisterCommand, AttitudeAdvisorCommand, TradeAdvisorCommand, ScienceAdvisorCommand, CasualtyTimelineCommand } },
+                    new ButtonMenuItem { Text = "&World", Items = { WondersCommand, Top5citiesCommand, CivScoreCommand, DemographicsCommand, SpaceshipsCommand } },
+                    new ButtonMenuItem { Text = "&Cheat", Items = { ToggleCheatModeCommand, CreateUnitCommand, RevealMapCommand, SetHumanPlayerCommand, SetGameYearCommand, KillCivilizationCommand, TechnologyAdvanceCommand, EditTechsCommand, ForceGovernmentCommand, ChangeTerrainCursorCommand, DestroyUnitsCursorCommand, ChangeMoneyCommand, EditUnitCommand, EditCityCommand, EditKingCommand, ScenarioParamsCommand, SaveAsScenCommand } },
+                    new ButtonMenuItem { Text = "&Editor", Items = { ToggleScenFlagCommand, AdvancesEditorCommand, CitiesEditorCommand, EffectsEditorCommand, ImprovEditorCommand, TerrainEditorCommand, TribeEditorCommand, UnitsEditorCommand, EventsEditorCommand } },
+                    new ButtonMenuItem { Text = "&Civilopedia", Items = { CivAdvancesFlagCommand, CityImprovFlagCommand, WondersWorldCommand, MilitaryUnitsCommand, GovernmentsCommand, TerrainTypesCommand, GameConceptsCommand, AboutCommand } },
                 },
             };
 

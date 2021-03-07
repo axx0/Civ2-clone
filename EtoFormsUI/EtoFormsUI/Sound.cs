@@ -37,6 +37,21 @@ namespace EtoFormsUI
                     player.SoundLocation = location + "\\Sound\\MOVPIECE.WAV";
                     player.Play();
                     break;
+                case UnitEventType.Attack:
+                    switch (e.Attacker.Type)
+                    {
+                        case UnitType.Catapult:
+                            player.SoundLocation = location + "\\Sound\\CATAPULT.WAV";
+                            break;
+                        case UnitType.Elephant:
+                            player.SoundLocation = location + "\\Sound\\ELEPHANT.WAV";
+                            break;
+                        default:
+                            player.SoundLocation = location + "\\Sound\\SWORDFGT.WAV";
+                            break;
+                    }
+                    player.Play();
+                    break;
             }
         }
     }

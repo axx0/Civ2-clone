@@ -54,64 +54,28 @@ namespace EtoFormsUI
                 if (flatEarth)
                 {
                     // Determine type of NW tile
-                    if ((col != 0) && (row != 0))
-                    {
-                        tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
-                    }
+                    if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
                     // Determine type of NE tile
-                    if ((col != Xdim - 1) && (row != 0))
-                    {
-                        tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
-                    }
+                    if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
                     // Determine type of SW tile
-                    if ((col != 0) && (row != Ydim - 1))
-                    {
-                        tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
-                    }
+                    if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
                     // Determine type of SE tile
-                    if ((col != Xdim - 1) && (row != Ydim - 1))
-                    {
-                        tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
-                    }
+                    if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
                 }
                 else    // Round earth
                 {
                     // Determine type of NW tile
-                    if ((col == 0) && (row != 0))
-                    {
-                        tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
-                    }
-                    else if ((col != 0) && (row != 0))
-                    {
-                        tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
-                    }
+                    if ((col == 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
+                    else if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
                     // Determine type of NE tile
-                    if ((col == Xdim - 1) && (row != 0))
-                    {
-                        tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
-                    }
-                    else if ((col != Xdim - 1) && (row != 0))
-                    {
-                        tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
-                    }
+                    if ((col == Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
+                    else if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
                     // Determine type of SW tile
-                    if ((col == 0) && (row != Ydim - 1))
-                    {
-                        tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
-                    }
-                    else if ((col != 0) && (row != Ydim - 1))
-                    {
-                        tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
-                    }
+                    if ((col == 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
+                    else if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
                     // Determine type of SE tile
-                    if ((col == Xdim - 1) && (row != Ydim - 1))
-                    {
-                        tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
-                    }
-                    else if ((col != Xdim - 1) && (row != Ydim - 1))
-                    {
-                        tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
-                    }
+                    if ((col == Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
+                    else if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
                 }
                 // Implement dither on 4 locations in square
                 for (int tileX = 0; tileX < 2; tileX++)    // for 4 directions

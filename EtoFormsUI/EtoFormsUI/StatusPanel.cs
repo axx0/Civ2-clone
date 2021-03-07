@@ -164,7 +164,7 @@ namespace EtoFormsUI
                 }
             }
             using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
-            string showYear = (Game.GameYear < 0) ? $"{Math.Abs(Game.GameYear)} B.C." : $"A.D. {Math.Abs(Game.GameYear)}";
+            string showYear = (Game.GetGameYear < 0) ? $"{Math.Abs(Game.GetGameYear)} B.C." : $"A.D. {Math.Abs(Game.GetGameYear)}";
             Draw.Text(e.Graphics, Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", _font, Color.FromArgb(51, 51, 51), new Point(5, 2), false, false, Color.FromArgb(191, 191, 191), 1, 1);
             Draw.Text(e.Graphics, showYear, _font, Color.FromArgb(51, 51, 51), new Point(5, 20), false, false, Color.FromArgb(191, 191, 191), 1, 1);
             Draw.Text(e.Graphics, $"{Game.PlayerCiv.Money} Gold 5.0.5", _font, Color.FromArgb(51, 51, 51), new Point(5, 38), false, false, Color.FromArgb(191, 191, 191), 1, 1);

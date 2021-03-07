@@ -5,6 +5,7 @@
         UpdateMap = 0,
         UnitWaiting = 1,
         UnitMoving = 2,
-        ViewPiece
+        ViewPiece = 3,
+        Attack = 4
     }
 }

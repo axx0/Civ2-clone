@@ -4,6 +4,7 @@
     {
         MoveCommand = 0,
         StatusUpdate = 1,
-        NewUnitActivated = 2
+        NewUnitActivated = 2,
+        Attack
     }
 }

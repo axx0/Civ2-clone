@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Drawing;
 using Civ2engine.Enums;
 
 namespace Civ2engine.Units
@@ -10,6 +8,7 @@ namespace Civ2engine.Units
     {
         // From RULES.TXT
         public string Name => Game.Rules.UnitName[(int)Type];
+        public bool Dead { get; set; }
         public AdvanceType? UntilTech
         {
             get
@@ -23,10 +22,83 @@ namespace Civ2engine.Units
         public UnitGAS Domain => (UnitGAS)Game.Rules.UnitDomain[(int)Type];
         public int MaxMovePoints => Game.Rules.UnitMove[(int)Type];
         public int FuelRange => Game.Rules.UnitRange[(int)Type];
-        public int AttackFactor => Game.Rules.UnitAttack[(int)Type];
-        public int DefenseFactor => Game.Rules.UnitDefense[(int)Type];
-        public int MaxHitpoints => Game.Rules.UnitHitp[(int)Type];
-        public int Firepower => Game.Rules.UnitFirepwr[(int)Type];
+        public int AttackBase => Game.Rules.UnitAttack[(int)Type];
+        public int DefenseBase => Game.Rules.UnitDefense[(int)Type];
+
+        public int AttackFactor(IUnit defendingUnit)
+        {
+            // Base attack factor from RULES
+            double AF = (double)AttackBase;
+
+            // Bonus for veteran units
+            if (Veteran) AF *= 1.5;
+
+            // Partisan bonus agains non-combat units
+            if (Type == UnitType.Partisans && defendingUnit.AttackBase == 0) AF *= 8;
+
+            return (int)AF;
+        }
+
+        public int DefenseFactor(IUnit attackingUnit)
+        {
+            // Base defense factor from RULES
+            double DF = (double)DefenseBase;
+
+            // Bonus for veteran units
+            if (Veteran) DF *= 1.5;
+
+            // City walls bonus (applies only to land units)
+            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !NegatesCityWalls) DF *= 3;
+            // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
+            else if (Map.TileC2(X, Y).Fortress && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF *= 2;
+            // Fortified bonus
+            else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5;
+
+            // Effect of SAM batteries (only when attacked from air)
+            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.SAMbattery) && attackingUnit.Domain == UnitGAS.Air) DF *= 2;
+
+            // Effect of SDI
+            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.SDIdefense) && attackingUnit.Type == UnitType.CruiseMsl) DF *= 2;
+
+            // Effect of coastal fortress
+            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.CoastalFort) && attackingUnit.Domain == UnitGAS.Sea) DF *= 2;
+
+            // Effect of terrain
+            if ((Map.TileC2(X, Y).Type == TerrainType.Forest) || (Map.TileC2(X, Y).Type == TerrainType.Jungle) || (Map.TileC2(X, Y).Type == TerrainType.Swamp))
+            {
+                if (Map.TileC2(X, Y).River) DF *= 2;
+                else DF *= 1.5;
+            }
+            else if (Map.TileC2(X, Y).Type == TerrainType.Hills)
+            {
+                if (Map.TileC2(X, Y).River) DF *= 2.5;
+                else DF *= 2;
+            }
+            else if (Map.TileC2(X, Y).Type == TerrainType.Mountains) 
+            {
+                if (Map.TileC2(X, Y).River) DF *= 3.5;
+                else DF *= 3;
+            }
+
+            return (int)DF;
+        }
+
+        public int FirepowerBase => Game.Rules.UnitFirepwr[(int)Type];
+        public int Firepower(bool isThisUnitAttacker, IUnit otherUnit)
+        {
+            // Base firepower from RULES
+            double FP = (double)FirepowerBase;
+
+            // When a sea unit attacks a land unit, both units have their firepower reduced to 1
+            if (isThisUnitAttacker && Domain == UnitGAS.Sea && otherUnit.Domain == UnitGAS.Ground && Map.TileC2(otherUnit.X, otherUnit.Y).Type != TerrainType.Ocean) FP = 1;    // attacker (sea)
+            else if (!isThisUnitAttacker && Domain == UnitGAS.Ground && otherUnit.Domain == UnitGAS.Sea && Map.TileC2(otherUnit.X, otherUnit.Y).Type == TerrainType.Ocean) FP = 1;  // defender (land)
+
+            // Cought in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
+            if (!isThisUnitAttacker && Domain == UnitGAS.Sea && IsInCity && otherUnit.Domain == UnitGAS.Ground) FP = 1; // defender (sea unit in city)
+            else if (isThisUnitAttacker && Domain == UnitGAS.Ground && otherUnit.Domain == UnitGAS.Sea && otherUnit.IsInCity) FP *= 2;  // attacker (land)
+
+            return (int)FP;
+        }
         public int Cost => Game.Rules.UnitCost[(int)Type];
         public int ShipHold => Game.Rules.UnitHold[(int)Type];
         public AIroleType AIrole => (AIroleType)Game.Rules.UnitAIrole[(int)Type];
@@ -63,10 +135,8 @@ namespace Civ2engine.Units
             get { return MaxMovePoints - MovePointsLost; }
         }
         public int MovePointsLost { get; set; }
-        public int HitPoints
-        {
-            get { return MaxHitpoints - HitPointsLost; }
-        }
+        public int HitpointsBase => Game.Rules.UnitHitp[(int)Type];
+        public int HitPoints => HitpointsBase - HitPointsLost;
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
         public OrderType Order { get; set; }
@@ -307,8 +377,6 @@ namespace Civ2engine.Units
         public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
         public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
-
-        //public Bitmap Graphic(bool isInStack, int zoom) => Draw.Unit(this, isInStack, zoom);
-
+        public City CityWithThisUnit => Game.GetCities.Where(c => c.X == X && c.Y == Y).First();
     }
 }

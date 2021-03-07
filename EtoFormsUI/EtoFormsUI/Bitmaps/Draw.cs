@@ -28,6 +28,12 @@ namespace EtoFormsUI
             g.DrawImage(ditherPic, dest);
         }
 
+        public static void BattleAnim(Graphics g, int frame, int zoom, Point dest)
+        {
+            using var battlePic = Images.BattleAnim[frame].Resize(zoom);
+            g.DrawImage(battlePic, dest);
+        }
+
         //public static void CreateLoadGameGraphics()
         //{
         //    //Creates bitmaps from current folder

@@ -96,9 +96,6 @@ namespace EtoFormsUI
         // Draw map here
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
-            // Calculate these once just for less computations
-            //int[] startingSqXYpx = new int[] { 0, 0 };
-
             // Draw map (for round world draw it from 2 parts)
             //e.Graphics.DrawImage(map, mapSrc1, mapDest);
             //e.Graphics.DrawImage(Map.ActiveCivMap, PanelMap_offsetpx[0], PanelMap_offsetpx[1], mapRect1, GraphicsUnit.Pixel);
@@ -117,6 +114,7 @@ namespace EtoFormsUI
                     }
                 case AnimationType.UnitWaiting:
                     {
+                        if (animationCount == 0) e.Graphics.DrawImage(map, mapSrc1, mapDest);   // Update whole map at first frame
                         e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Game.Ypx);
                         break;
                     }
@@ -128,6 +126,11 @@ namespace EtoFormsUI
                 case AnimationType.UnitMoving:
                     {
                         e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Game.Xpx), Game.ActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Game.Ypx));
+                        break;
+                    }
+                case AnimationType.Attack:
+                    {
+                        e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.Xpx - MapStartPx.X - (2 * Game.Xpx), Game.ActiveUnit.Ypx - MapStartPx.Y - (3 * Game.Ypx));
                         break;
                     }
             }
@@ -198,7 +201,7 @@ namespace EtoFormsUI
         {
             if (map != null) map.Dispose();
             ReturnCoordsAtMapViewChange(newCenterCoords);
-            map = Draw.MapPart(Game.ActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Zoom, Game.Options.FlatEarth);
+            map = Draw.MapPart(Game.ActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth);
             animType = AnimationType.UpdateMap;
             StartAnimation(animType);
         }
@@ -298,28 +301,30 @@ namespace EtoFormsUI
                 // Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
                     {
-                        if (IsActiveUnitOutsideMapView) // Update map view if unit is outside visible map
-                        {
-                            ReturnCoordsAtMapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
-                            drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                        }
+                        //if (IsActiveUnitOutsideMapView) // Update map view if unit is outside visible map
+                        //{
+                        //    ReturnCoordsAtMapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
+                        //    drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
+                        //}
                         StartAnimation(AnimationType.UnitMoving);
+                        break;
+                    }
+                case UnitEventType.Attack:
+                    {
+                        animationFrames = GetAnimationFrames.UnitAttack(e);
+                        StartAnimation(AnimationType.Attack);
                         break;
                     }
                 case UnitEventType.StatusUpdate:
                     {
-                        StartAnimation(AnimationType.UnitWaiting);
+                        if (IsActiveUnitOutsideMapView) ReturnCoordsAtMapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y }); // Update map view if unit is outside visible map
+                        else StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
                 case UnitEventType.NewUnitActivated:
                     {
-                        if (IsActiveUnitOutsideMapView) // Update map view if unit is outside visible map
-                        {
-                            ReturnCoordsAtMapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
-                            drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                        }
-                        //ReturnCoordsAtMapViewChange(Game.ActiveXY);
-                        StartAnimation(AnimationType.UnitWaiting);
+                        if (IsActiveUnitOutsideMapView) MapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
+                        else StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
             }
@@ -375,6 +380,13 @@ namespace EtoFormsUI
                     animationTimer.Interval = 0.2;    // sec
                     animationTimer.Start();
                     break;
+                case AnimationType.Attack:
+                    animType = AnimationType.Attack;
+                    animationTimer.Stop();
+                    animationCount = 0;
+                    animationTimer.Interval = 0.07;    // sec
+                    animationTimer.Start();
+                    break;
             }
         }
 
@@ -403,35 +415,20 @@ namespace EtoFormsUI
                 case AnimationType.UnitMoving:
                     {
                         drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Game.Xpx, 7 * Game.Ypx));
-                        //drawPanel.Update(new Rectangle((Game.ActiveXY[0] - MapPanel_offset[0]) * 32 - 64, (Game.ActiveXY[1] - MapPanel_offset[1]) * 16 - 48, 3 * 64, (3 * 32) + 16));
                         if (animationCount == 7)  // Unit has completed movement
                         {
                             animationTimer.Stop();
-                            
-                            Game.UpdateUnit(Game.ActiveUnit);
-
-                            // First update world map with new visible tiles
-                            //TODO
-                            //Game.UpdateWorldMapAfterUnitHasMoved();
-
-                            // Update the original world map image with image of new location of unit & redraw whole map
-                            //IUnit unit = Game.Instance.ActiveUnit;
-                            // TODO
-                            // Game.CivsMap[Game.Instance.ActiveCiv.Id] = ModifyImage.MergedBitmaps(Game.CivsMap[Game.Instance.ActiveCiv.Id], AnimationFrames[TimerCounter], 32 * unit.LastXY[0] - 64, 16 * unit.LastXY[1] - 48);
-                            //drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                            //Update();
-
-                            // Then stop animation
-                            // TODO
-                            //StartAnimation(AnimationType.UpdateMap);
-
-                            // Check if unit moved outside map view -> map view needs to be updated
-                            //if (UnitMovedOutsideMapView)
-                            //{
-                            //    ReturnCoordsAtMapViewChange(Game.ActiveXY);
-                            //    drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                            //    //Update();
-                            //}
+                            Game.UpdateActiveUnit();
+                        }
+                        break;
+                    }
+                case AnimationType.Attack:
+                    {
+                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Game.Xpx, 7 * Game.Ypx));
+                        if (animationCount == animationFrames.Count - 1)
+                        {
+                            animationTimer.Stop();
+                            Game.UpdateActiveUnit();
                         }
                         break;
                     }
@@ -445,7 +442,7 @@ namespace EtoFormsUI
         {
             get
             {
-                if (main.ActiveXY[0] >= 2 * Map.Xdim || main.ActiveXY[0] < 0 || main.ActiveXY[1] >= Map.Ydim || main.ActiveXY[1] < 0) return true;
+                if (main.ActiveXY[0] >= mapStartXY[0] + PanelSq[0] - 2 || main.ActiveXY[0] <= mapStartXY[0] || main.ActiveXY[1] >= mapStartXY[1] + PanelSq[1] - 2 || main.ActiveXY[1] <= mapStartXY[1]) return true;
                 else return false;
             }
         }
@@ -466,7 +463,8 @@ namespace EtoFormsUI
             int fullMapHeight = Game.Ypx * (Map.Ydim + 1);
 
             // No of squares of panel and map
-            int[] panelSq = { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };
+            //int[] panelSq = { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };
+            int[] panelSq = PanelSq;
             centrOffset = new int[] { panelSq[0] / 2, panelSq[1] / 2 };
             if (centrOffset[0] % 2 != 1 && centrOffset[1] % 2 == 1) centrOffset[1]--;
             if (centrOffset[0] % 2 == 1 && centrOffset[1] % 2 != 1) centrOffset[0]--;
@@ -567,6 +565,7 @@ namespace EtoFormsUI
 
         //private int[] PanelMap_offsetpx => new int[] { Game.Xpx * PanelMap_offset[0], Game.Ypx * PanelMap_offset[1] };
         //private int[] MapPanel_offsetpx => new int[] { Game.Xpx * MapPanel_offset[0], Game.Ypx * MapPanel_offset[1] };
+        private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };   // No of squares of panel and map
         private int[] ActiveOffsetXY => new int[] { main.ActiveXY[0] - mapStartXY[0], main.ActiveXY[1] - mapStartXY[1] };
         private Point ActiveOffsetPx => new Point(Game.Xpx * ActiveOffsetXY[0], Game.Ypx * ActiveOffsetXY[1]);
         private Point MapStartPx => new Point(Game.Xpx * mapStartXY[0], Game.Ypx * mapStartXY[1]);

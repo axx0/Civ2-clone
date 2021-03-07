@@ -1,5 +1,4 @@
-﻿//using System.Drawing;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using EtoFormsUIExtensionMethods;
 using Civ2engine;
 using Civ2engine.Enums;
@@ -144,7 +143,7 @@ namespace EtoFormsUI
                 default: shadowOffset = 2; fontSize = 14; break;
             }
 
-            Point dest = new Point(4 * (8 + zoom) * offsetSqXY[0] + 4 * (8 + zoom), 2 * (8 + zoom) * (offsetSqXY[1] + 2) + 2);
+            Point dest = new Point(Game.Xpx * offsetSqXY[0] + Game.Xpx, Game.Ypx * (offsetSqXY[1] + 2) + 2);
 
             //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 

@@ -75,6 +75,14 @@ namespace EtoFormsUI
                         }
                         break;
                     }
+                case Keys.Space:
+                    {
+                        if (!ViewPieceMode)
+                        {
+                            Game.IssueUnitOrder(OrderType.SkipTurn);
+                        }
+                        break;
+                    }
             }
         }
     }

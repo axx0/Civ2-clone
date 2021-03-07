@@ -7,14 +7,17 @@ namespace Civ2engine.Units
     {
         //From RULES.TXT
         string Name { get; }
+        bool Dead { get; set; }
         AdvanceType? UntilTech { get; }
         UnitGAS Domain { get; }
         int MaxMovePoints { get; }
         int FuelRange { get; }
-        int AttackFactor { get; }
-        int DefenseFactor { get; }
-        int MaxHitpoints { get; }
-        int Firepower { get; }
+        int AttackBase { get; }
+        int DefenseBase { get; }
+        int AttackFactor(IUnit defendingUnit);
+        int DefenseFactor(IUnit attackingUnit);
+        int FirepowerBase { get; }
+        int Firepower(bool isThisUnitAttacker, IUnit otherUnit);
         int Cost { get; }
         int ShipHold { get; }
         AIroleType AIrole { get; }
@@ -38,6 +41,7 @@ namespace Civ2engine.Units
         int Id { get; set; }
         int MovePoints { get; }
         int MovePointsLost { get; set; }
+        int HitpointsBase { get; }
         int HitPoints { get; }
         int HitPointsLost { get; set; }
         UnitType Type { get; set; }

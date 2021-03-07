@@ -15,30 +15,46 @@ namespace Civ2engine
         //Update stats of all cities
         private void CitiesTurn()
         {
-            foreach (City city in Game.GetCities.Where(a => a.Owner == Game.PlayerCiv))
+            foreach (City city in _cities.Where(a => a.Owner == _activeCiv))
             {
                 //city.NewTurn();
             }
         }
 
-        private void NewPlayerTurn()
+        private void ChoseNextCiv()
         {
-            Game.TurnNumber++;
+            // Make a list of active civs
+            var civIds = new List<int>();
+            foreach (var civ in GetActiveCivs) civIds.Add(civ.Id);
 
-            //Set all units to active
-            foreach (IUnit unit in Game.GetUnits.Where(n => n.Owner == Game.ActiveCiv))
+            // Increase game turn
+            if (_activeCiv.Id == civIds.Last()) _turnNumber++;
+
+            // Chose next civ
+            for (int id = 0; id < civIds.Count; id++)
+            {
+                if (civIds[id] == _activeCiv.Id) 
+                {
+                    if (civIds[id] == civIds.Last()) _activeCiv = GetActiveCivs[0];
+                    else _activeCiv = GetActiveCivs[id + 1];
+                    break;
+                }
+            }
+
+            // Reset turns of all units
+            foreach (var unit in GetActiveUnits.Where(n => n.Owner == _activeCiv))
             {
                 unit.TurnEnded = false;
                 unit.MovePointsLost = 0;
 
-                //Increase counters
+                // Increase counters
                 if ((unit.Order == OrderType.BuildIrrigation) || (unit.Order == OrderType.BuildRoad) || (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
             }
 
-            //Update all cities
+            // Update all cities
             CitiesTurn();
 
-            //Choose next unit
+            // Choose next unit
             ChooseNextUnit();
 
             OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));

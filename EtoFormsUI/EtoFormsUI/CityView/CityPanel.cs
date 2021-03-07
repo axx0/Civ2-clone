@@ -163,8 +163,8 @@ namespace EtoFormsUI
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
-            string bcad = (Game.GameYear < 0) ? "B.C." : "A.D.";
-            string text = String.Format($"City of {_thisCity.Name}, {Math.Abs(Game.GameYear)} {bcad}, Population {_thisCity.Population:n0} (Treasury: {_thisCity.Owner.Money} Gold)");
+            string bcad = (Game.GetGameYear < 0) ? "B.C." : "A.D.";
+            string text = String.Format($"City of {_thisCity.Name}, {Math.Abs(Game.GetGameYear)} {bcad}, Population {_thisCity.Population:n0} (Treasury: {_thisCity.Owner.Money} Gold)");
             using var font = new Font("Times New Roman", 14);
             Draw.Text(e.Graphics, text, font, Color.FromArgb(135, 135, 135), new Point(Width / 2, 15), true, true, Colors.Black, 1, 0);
         }

@@ -19,19 +19,18 @@ namespace Civ2engine
         private Game(GameData SAVgameData)
         {
             _units = new List<IUnit>();
-            _casualties = new List<IUnit>();
             _cities = new List<City>();
             _civs = new List<Civilization>();
             _options = new Options();
             _rules = new Rules();
 
-            _civsInPlay = SAVgameData.CivsInPlay;
+            //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = SAVgameData.GameVersion;
 
             _options.Set(SAVgameData.Options);
             _rules.Set(SAVgameData.Rules);
 
-            TurnNumber = SAVgameData.TurnNumber;
+            _turnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
             WhichCivsMapShown = SAVgameData.WhichCivsMapShown;
             _difficultyLevel = SAVgameData.DifficultyLevel;

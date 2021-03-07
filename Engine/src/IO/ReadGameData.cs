@@ -904,7 +904,8 @@ namespace Civ2engine
                         break;
                 }
                 data.UnitCaravanCommodity[i] = (CommodityType)bytes[ofsetU + multipl * i + 13]; // Unit caravan commodity                
-                data.UnitOrders[i] = (OrderType)bytes[ofsetU + multipl * i + 15];           // Unit orders                
+                data.UnitOrders[i] = (OrderType)bytes[ofsetU + multipl * i + 15];           // Unit orders
+                if (bytes[ofsetU + multipl * i + 15] == 27) data.UnitOrders[i] = OrderType.NoOrders;    // TODO: (this is temp) find out what 0x1B means in unit orders
                 data.UnitHomeCity[i] = bytes[ofsetU + multipl * i + 16];                    // Unit home city
 
                 // Unit go-to X
