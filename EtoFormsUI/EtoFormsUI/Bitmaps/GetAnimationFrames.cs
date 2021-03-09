@@ -34,23 +34,23 @@ namespace EtoFormsUI
             int x, y;
             for (int frame = 0; frame < 2; frame++)
             {
-                var _bitmap = new Bitmap(2 * Game.Xpx, 3 * Game.Ypx, PixelFormat.Format32bppRgba);
+                var _bitmap = new Bitmap(2 * Map.Xpx, 3 * Map.Ypx, PixelFormat.Format32bppRgba);
                 using (var g = new Graphics(_bitmap))
                 {
                     // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
-                    g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 2 * Game.Xpx, 3 * Game.Ypx));
+                    g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 2 * Map.Xpx, 3 * Map.Ypx));
 
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
                         // Change coords of central offset
                         x = activeUnitXY[0] + coordsOffsets[0];
                         y = activeUnitXY[1] + coordsOffsets[1];
-                        coordsOffsetsPx = new int[] { coordsOffsets[0] * Game.Xpx, coordsOffsets[1] * Game.Ypx };
+                        coordsOffsetsPx = new int[] { coordsOffsets[0] * Map.Xpx, coordsOffsets[1] * Map.Ypx };
 
                         if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
 
                         // Tiles
-                        Draw.Tile(g, x, y, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Game.Ypx));
+                        Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Map.Ypx));
 
                         // Units
                         List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
@@ -61,13 +61,13 @@ namespace EtoFormsUI
                             if (x != activeUnitXY[0] || y != activeUnitXY[1])
                             {
                                 unit = unitsHere.Last();
-                                if (!unit.IsInCity) Draw.Unit(g, unit, unit.IsInStack, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                                if (!unit.IsInCity) Draw.Unit(g, unit, unit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                             }
                         }
 
                         // City
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                        if (city != null) Draw.City(g, city, true, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                        if (city != null) Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
                         // Draw active unit if it's not moving
                         if (unitsHere.Count > 0)
@@ -76,7 +76,7 @@ namespace EtoFormsUI
                             if (x == activeUnitXY[0] && y == activeUnitXY[1])
                             {
                                 // For first frame draw unit, for second not
-                                if (frame == 0) Draw.Unit(g, Game.ActiveUnit, Game.ActiveUnit.IsInStack, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                                if (frame == 0) Draw.Unit(g, Game.GetActiveUnit, Game.GetActiveUnit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                             }
                         }
                     }
@@ -86,8 +86,8 @@ namespace EtoFormsUI
                     {
                         foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                         {
-                            coordsOffsetsPx = new int[] { coordsOffsets[0] * Game.Xpx, coordsOffsets[1] * Game.Ypx + Game.Ypx };
-                            Draw.Grid(g, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                            coordsOffsetsPx = new int[] { coordsOffsets[0] * Map.Xpx, coordsOffsets[1] * Map.Ypx + Map.Ypx };
+                            Draw.Grid(g, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                         }
                     }
 
@@ -103,7 +103,7 @@ namespace EtoFormsUI
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                         if (city != null)
                         {
-                            Draw.CityName(g, city, Game.Zoom, new int[] { x, y });
+                            Draw.CityName(g, city, Map.Zoom, new int[] { x, y });
                             //Bitmap cityNameBitmap = Draw.CityName(city, Game.Zoom);
                             //g.DrawImage(cityNameBitmap,
                             //    Game.Xpx * (coordsOffsets[0] + 1) - cityNameBitmap.Width / 2,
@@ -170,28 +170,28 @@ namespace EtoFormsUI
 
             // First draw main bitmap with everything except the moving unit
             int[] coordsOffsetsPx;
-            var _mainBitmap = new Bitmap(6 * Game.Xpx, 7 * Game.Ypx, PixelFormat.Format32bppRgba);
+            var _mainBitmap = new Bitmap(6 * Map.Xpx, 7 * Map.Ypx, PixelFormat.Format32bppRgba);
             using (var g = new Graphics(_mainBitmap))
             {
-                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 6 * Game.Xpx, 7 * Game.Ypx));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
+                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 6 * Map.Xpx, 7 * Map.Ypx));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
 
                 foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                 {
                     // Change coords of central offset
                     int x = activeUnitPrevXY[0] + coordsOffsets[0];
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
-                    coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Game.Xpx, (coordsOffsets[1] + 3) * Game.Ypx };
+                    coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
                     if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
-                    int civId = Game.WhichCivsMapShown;
-                    if ((civId < 8 && Map.IsTileVisibleC2(x, y, civId)) || civId == 8)
+                    int civId = Map.WhichCivsMapShown;
+                    if (Map.IsTileVisibleC2(x, y, civId) || Map.MapRevealed)
                     {
-                        Draw.Tile(g, x, y, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                        Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
                         // Implement dithering in all 4 directions if necessary
-                        if (civId != 8)
+                        if (!Map.MapRevealed)
                         {
                             for (int tileX = 0; tileX < 2; tileX++)
                             {
@@ -202,7 +202,7 @@ namespace EtoFormsUI
                                     int yNew = y + offset[tileY];
                                     if (xNew >= 0 && xNew < 2 * Map.Xdim && yNew >= 0 && yNew < Map.Ydim)   // Don't observe outside map limits
                                         if (!Map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
-                                            Draw.Dither(g, tileX, tileY, Game.Zoom, new Point(coordsOffsetsPx[0] + Game.Xpx * tileX, coordsOffsetsPx[1] + Game.Ypx * tileY));
+                                            Draw.Dither(g, tileX, tileY, Map.Zoom, new Point(coordsOffsetsPx[0] + Map.Xpx * tileX, coordsOffsetsPx[1] + Map.Ypx * tileY));
                                 }
                             }
                         }
@@ -222,7 +222,7 @@ namespace EtoFormsUI
                             unit = unitsHere.Last();
                             if (!unit.IsInCity)
                             {
-                                Draw.Unit(g, unit, unitsHere.Count > 1, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Game.Ypx));
+                                Draw.Unit(g, unit, unitsHere.Count > 1, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                             }
                         }
                     }
@@ -231,7 +231,7 @@ namespace EtoFormsUI
                     City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                     if (city != null)
                     {
-                        Draw.City(g, city, true, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Game.Ypx));
+                        Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
                 }
 
@@ -258,7 +258,7 @@ namespace EtoFormsUI
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                         if (city != null)
                         {
-                            Draw.CityName(g, city, Game.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
+                            Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                         }
                     }
                 }
@@ -286,10 +286,10 @@ namespace EtoFormsUI
                     //    case 7: activeUnitDrawOffset = new int[] { 0, -2 }; break;
                     //}
                     int[] unitDrawOffset = new int[] { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
-                    unitDrawOffset[0] *= Game.Xpx / noFramesForOneMove * (frame + 1);
-                    unitDrawOffset[1] *= Game.Ypx / noFramesForOneMove * (frame + 1);
+                    unitDrawOffset[0] *= Map.Xpx / noFramesForOneMove * (frame + 1);
+                    unitDrawOffset[1] *= Map.Ypx / noFramesForOneMove * (frame + 1);
 
-                    Draw.Unit(g, activeUnit, false, Game.Zoom, new Point(2 * Game.Xpx + unitDrawOffset[0], 2 * Game.Ypx + unitDrawOffset[1]));
+                    Draw.Unit(g, activeUnit, false, Map.Zoom, new Point(2 * Map.Xpx + unitDrawOffset[0], 2 * Map.Ypx + unitDrawOffset[1]));
                 }
                 animationFrames.Add(_bitmapWithMovingUnit);
             }
@@ -359,28 +359,28 @@ namespace EtoFormsUI
 
             // First draw main bitmap with everything except the moving unit
             int[] coordsOffsetsPx;
-            var _mainBitmap = new Bitmap(6 * Game.Xpx, 7 * Game.Ypx, PixelFormat.Format32bppRgba);
+            var _mainBitmap = new Bitmap(6 * Map.Xpx, 7 * Map.Ypx, PixelFormat.Format32bppRgba);
             using (var g = new Graphics(_mainBitmap))
             {
-                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 6 * Game.Xpx, 7 * Game.Ypx));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
+                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 6 * Map.Xpx, 7 * Map.Ypx));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
 
                 foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                 {
                     // Change coords of central offset
                     int x = e.Attacker.X + coordsOffsets[0];
                     int y = e.Attacker.Y + coordsOffsets[1];
-                    coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Game.Xpx, (coordsOffsets[1] + 3) * Game.Ypx };
+                    coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
                     if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
-                    int civId = Game.WhichCivsMapShown;
-                    if ((civId < 8 && Map.IsTileVisibleC2(x, y, civId)) || civId == 8)
+                    int civId = Map.WhichCivsMapShown;
+                    if (Map.IsTileVisibleC2(x, y, civId) || Map.MapRevealed)
                     {
-                        Draw.Tile(g, x, y, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                        Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
                         // Implement dithering in all 4 directions if necessary
-                        if (civId != 8)
+                        if (!Map.MapRevealed)
                         {
                             for (int tileX = 0; tileX < 2; tileX++)
                             {
@@ -391,7 +391,7 @@ namespace EtoFormsUI
                                     int yNew = y + offset[tileY];
                                     if (xNew >= 0 && xNew < 2 * Map.Xdim && yNew >= 0 && yNew < Map.Ydim)   // Don't observe outside map limits
                                         if (!Map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
-                                            Draw.Dither(g, tileX, tileY, Game.Zoom, new Point(coordsOffsetsPx[0] + Game.Xpx * tileX, coordsOffsetsPx[1] + Game.Ypx * tileY));
+                                            Draw.Dither(g, tileX, tileY, Map.Zoom, new Point(coordsOffsetsPx[0] + Map.Xpx * tileX, coordsOffsetsPx[1] + Map.Ypx * tileY));
                                 }
                             }
                         }
@@ -402,11 +402,11 @@ namespace EtoFormsUI
                     // TODO: this won't draw correctly if unit is in city
                     if (x == e.Attacker.X && y == e.Attacker.Y)
                     {
-                        Draw.Unit(g, e.Attacker, e.Attacker.IsInStack, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Game.Ypx));
+                        Draw.Unit(g, e.Attacker, e.Attacker.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
                     else if (x == e.Defender.X && y == e.Defender.Y)
                     {
-                        Draw.Unit(g, e.Defender, e.Defender.IsInStack, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Game.Ypx));
+                        Draw.Unit(g, e.Defender, e.Defender.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
                     else    // Other units
                     {
@@ -416,7 +416,7 @@ namespace EtoFormsUI
                             var unit = units.Last();
                             if (!unit.IsInCity)
                             {
-                                Draw.Unit(g, unit, unit.IsInStack, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Game.Ypx));
+                                Draw.Unit(g, unit, unit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                             }
                         } 
                     }
@@ -425,7 +425,7 @@ namespace EtoFormsUI
                     City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                     if (city != null)
                     {
-                        Draw.City(g, city, true, Game.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Game.Ypx));
+                        Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
                 }
 
@@ -452,7 +452,7 @@ namespace EtoFormsUI
                         City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
                         if (city != null)
                         {
-                            Draw.CityName(g, city, Game.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
+                            Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                         }
                     }
                 }
@@ -477,22 +477,22 @@ namespace EtoFormsUI
 
                             if (x == e.Attacker.X && y == e.Attacker.Y)
                             {
-                                Draw.UnitShield(g, e.Attacker.Type, e.Attacker.Owner.Id, e.Attacker.Order, e.Attacker.IsInStack, e.AttackerHitpoints[explosion * 5], e.Attacker.HitpointsBase, Game.Zoom, new Point(2 * Game.Xpx, 2 * Game.Ypx));
-                                Draw.UnitSprite(g, e.Attacker.Type, false, false, Game.Zoom, new Point(2 * Game.Xpx, 2 * Game.Ypx));
+                                Draw.UnitShield(g, e.Attacker.Type, e.Attacker.Owner.Id, e.Attacker.Order, e.Attacker.IsInStack, e.AttackerHitpoints[explosion * 5], e.Attacker.HitpointsBase, Map.Zoom, new Point(2 * Map.Xpx, 2 * Map.Ypx));
+                                Draw.UnitSprite(g, e.Attacker.Type, false, false, Map.Zoom, new Point(2 * Map.Xpx, 2 * Map.Ypx));
                             }
                             else if (x == e.Defender.X && y == e.Defender.Y)
                             {
-                                Draw.UnitShield(g, e.Defender.Type, e.Defender.Owner.Id, e.Defender.Order, e.Defender.IsInStack, e.DefenderHitpoints[explosion * 5], e.Defender.HitpointsBase, Game.Zoom, new Point((2 + coordsOffsets[0]) * Game.Xpx, (2 + coordsOffsets[1]) * Game.Ypx));
-                                Draw.UnitSprite(g, e.Defender.Type, e.Defender.Order == OrderType.Sleep, e.Defender.Order == OrderType.Fortified, Game.Zoom, new Point((2 + coordsOffsets[0]) * Game.Xpx, (2 + coordsOffsets[1]) * Game.Ypx));
+                                Draw.UnitShield(g, e.Defender.Type, e.Defender.Owner.Id, e.Defender.Order, e.Defender.IsInStack, e.DefenderHitpoints[explosion * 5], e.Defender.HitpointsBase, Map.Zoom, new Point((2 + coordsOffsets[0]) * Map.Xpx, (2 + coordsOffsets[1]) * Map.Ypx));
+                                Draw.UnitSprite(g, e.Defender.Type, e.Defender.Order == OrderType.Sleep, e.Defender.Order == OrderType.Fortified, Map.Zoom, new Point((2 + coordsOffsets[0]) * Map.Xpx, (2 + coordsOffsets[1]) * Map.Ypx));
                             }
                         }
 
                         // Draw explosion
-                        if (e.CombatRoundsAttackerWins[explosion]) point = new Point((int)(Game.Xpx * (2.5 + e.Defender.X - e.Attacker.X)), Game.Ypx * (3 + (e.Defender.Y - e.Attacker.Y))); // Explosion on defender
-                        else point = new Point((int)(Game.Xpx * 2.5), Game.Ypx * 3); // Explosion on attacker
+                        if (e.CombatRoundsAttackerWins[explosion]) point = new Point((int)(Map.Xpx * (2.5 + e.Defender.X - e.Attacker.X)), Map.Ypx * (3 + (e.Defender.Y - e.Attacker.Y))); // Explosion on defender
+                        else point = new Point((int)(Map.Xpx * 2.5), Map.Ypx * 3); // Explosion on attacker
 
                         //g.DrawImage(Images.BattleAnim[frame], point);
-                        Draw.BattleAnim(g, frame, Game.Zoom, point);
+                        Draw.BattleAnim(g, frame, Map.Zoom, point);
                     }
                     animationFrames.Add(_bitmapWithExplosions);
                 }

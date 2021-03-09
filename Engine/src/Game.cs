@@ -27,8 +27,7 @@ namespace Civ2engine
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
-        //private readonly bool[] _civsInPlay;
-        //public bool[] CivsInPlay => _civsInPlay;
+        
         private int _turnNumber;
         public int TurnNumber => _turnNumber;
         private int _gameYear;
@@ -45,8 +44,6 @@ namespace Civ2engine
             }
         }
         public int TurnNumberForGameYear { get; set; }
-        public int WhichCivsMapShown { get; set; }
-        public bool MapRevealed { get; set; }
         public DifficultyType DifficultyLevel => _difficultyLevel;
         public BarbarianActivityType BarbarianActivity => _barbarianActivity;
         public int PollutionAmount { get; set; }
@@ -54,40 +51,16 @@ namespace Civ2engine
         public int NoOfTurnsOfPeace { get; set; }
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
-        public int[] StartingClickedXY { get; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
-
-        private int _zoom;
-        public int Zoom     // -7 (min) ... 8 (max), 0=std.
-        {
-            get { return _zoom; }
-            set
-            {
-                _zoom = Math.Max(Math.Min(value, 8), -7);
-            }
-        }
-        public int Xpx => 4 * (Game.Zoom + 8);    // Length of 1 map square in X
-        public int Ypx => 2 * (Game.Zoom + 8);    // Length of 1 map square in Y
 
         private IUnit _activeUnit;
-        public IUnit ActiveUnit
-        {
-            get { return _activeUnit; }
-            set { _activeUnit = value; }
-        }
+        public IUnit GetActiveUnit => _activeUnit;
+        public static IUnit SetActiveUnit(IUnit unit) => unit;
 
         private Civilization _playerCiv;
-        public Civilization PlayerCiv
-        {
-            get { return _playerCiv; }
-            set { _playerCiv = value; }
-        }
+        public Civilization GetPlayerCiv => _playerCiv;
 
         private Civilization _activeCiv;    // ActiveCiv can be AI. PlayerCiv is human. They are equal except during enemy turns.
-        public Civilization ActiveCiv
-        {
-            get { return _activeCiv; }
-            set { _activeCiv = value; }
-        }
+        public Civilization GetActiveCiv => _activeCiv;
 
         // Helper functions
         public City CityHere(int x, int y) => _cities.Find(city => city.X == x && city.Y == y);

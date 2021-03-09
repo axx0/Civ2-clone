@@ -4,6 +4,7 @@ using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.AI;
 
 namespace Civ2engine
 {
@@ -90,21 +91,21 @@ namespace Civ2engine
             if (_units.Any(unit => unit.X == newXY[0] && unit.Y == newXY[1] && unit.Owner != _activeUnit.Owner))
             {
                 // Units with attack factor = 0 cannot attack
-                if (ActiveUnit.AttackBase == 0) return UnitMovementOrderResultType.CombatStrength0CannotAttack;
+                if (_activeUnit.AttackBase == 0) return UnitMovementOrderResultType.CombatStrength0CannotAttack;
 
                 // Get a list of units on target square
                 var unitsOnTargetSquare = _units.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]);
                 // Find out if attack can be made based on unit domain
-                if (ActiveUnit.Domain == UnitGAS.Ground)    // LAND UNIT ATTACKING
+                if (_activeUnit.Domain == UnitGAS.Ground)    // LAND UNIT ATTACKING
                 {
                     // Land units can attack only other units on land (except if there are any bombers on target square)
                     if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr))) return UnitMovementOrderResultType.CannotAttackAirUnit;
                     else return UnitMovementOrderResultType.AttackUnit;
                 }
-                else if (ActiveUnit.Domain == UnitGAS.Air)  // AIR UNIT ATTACKING
+                else if (_activeUnit.Domain == UnitGAS.Air)  // AIR UNIT ATTACKING
                 {
                     // Air units cannot attack airborne bombers unless their "Can attack air units" flag is set
-                    if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr)) && !ActiveUnit.CanAttackAirUnits) return UnitMovementOrderResultType.CannotAttackAirUnit;
+                    if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr)) && !_activeUnit.CanAttackAirUnits) return UnitMovementOrderResultType.CannotAttackAirUnit;
                     else return UnitMovementOrderResultType.AttackUnit;
                 }
                 else    // SEA UNIT ATTACKING
@@ -112,7 +113,7 @@ namespace Civ2engine
                     // Sea units cannot attack bombers
                     if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr))) return UnitMovementOrderResultType.CannotAttackAirUnit;
                     // Submarines can attack only sea units (check if enemy unit is not on ocean, remember that land units can be on ocean (transporting))
-                    else if (ActiveUnit.SubmarineAdvantagesDisadvantages && Map.TileC2(unitsOnTargetSquare.First().X, unitsOnTargetSquare.First().Y).Type != TerrainType.Ocean) return UnitMovementOrderResultType.CannotMoveOrAttack;
+                    else if (_activeUnit.SubmarineAdvantagesDisadvantages && Map.TileC2(unitsOnTargetSquare.First().X, unitsOnTargetSquare.First().Y).Type != TerrainType.Ocean) return UnitMovementOrderResultType.CannotMoveOrAttack;
                     else return UnitMovementOrderResultType.AttackUnit;
                 }
             }
@@ -125,57 +126,65 @@ namespace Civ2engine
 
         public void UpdateActiveUnit()
         {
-            // If active unit died OR is not waiting order, chose next unit in line, otherwise update its orders
-            if (!_activeUnit.AwaitingOrders || !GetActiveUnits.Contains(_activeUnit))
+            if (_activeCiv == _playerCiv)
             {
-                ChooseNextUnit();
+                // If active unit died OR is not waiting order, chose next unit in line, otherwise update its orders
+                if (!_activeUnit.AwaitingOrders || !GetActiveUnits.Contains(_activeUnit))
+                {
+                    ChooseNextUnit();
+                }
+                else
+                {
+                    switch (_activeUnit.Order)
+                    {
+                        case OrderType.BuildIrrigation:
+                            if (_activeUnit.Counter == 2)
+                            {
+                                if (Map.TileC2(_activeUnit.X, _activeUnit.Y).Irrigation == false) // Build irrigation
+                                {
+                                    Map.TileC2(_activeUnit.X, _activeUnit.Y).Irrigation = true;
+                                }
+                                else if ((Map.TileC2(_activeUnit.X, _activeUnit.Y).Irrigation == true) && (Map.TileC2(_activeUnit.X, _activeUnit.Y).Farmland == false)) // Build farms
+                                {
+                                    Map.TileC2(_activeUnit.X, _activeUnit.Y).Farmland = true;
+                                }
+                                //Game.TerrainTile = Draw.DrawMap();  //Update game map
+                                //unit.Action = OrderType.NoOrders;
+                            }
+                            break;
+                        case OrderType.BuildRoad:
+                            if (_activeUnit.Counter == 2)
+                            {
+                                if (Map.TileC2(_activeUnit.X, _activeUnit.Y).Road == false) // Build road
+                                {
+                                    Map.TileC2(_activeUnit.X, _activeUnit.Y).Road = true;
+                                }
+                                else if ((Map.TileC2(_activeUnit.X, _activeUnit.Y).Road == true) && (Map.TileC2(_activeUnit.X, _activeUnit.Y).Railroad == false)) // Build railroad
+                                {
+                                    Map.TileC2(_activeUnit.X, _activeUnit.Y).Railroad = true;
+                                }
+                                //Game.TerrainTile = Draw.DrawMap();  //Update game map
+                                //unit.Action = OrderType.NoOrders;
+                            }
+                            break;
+                        case OrderType.BuildMine:
+                            if (_activeUnit.Counter == 2)
+                            {
+                                Map.TileC2(_activeUnit.X, _activeUnit.Y).Mining = true;
+                                //Game.TerrainTile = Draw.DrawMap();  //Update game map
+                                //unit.Action = OrderType.NoOrders;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.StatusUpdate));
+                }
             }
+            // AI
             else
             {
-                switch (_activeUnit.Order)
-                {
-                    case OrderType.BuildIrrigation:
-                        if (_activeUnit.Counter == 2)
-                        {
-                            if (Map.TileC2(_activeUnit.X, _activeUnit.Y).Irrigation == false) // Build irrigation
-                            {
-                                Map.TileC2(_activeUnit.X, _activeUnit.Y).Irrigation = true;
-                            }
-                            else if ((Map.TileC2(_activeUnit.X, _activeUnit.Y).Irrigation == true) && (Map.TileC2(_activeUnit.X, _activeUnit.Y).Farmland == false)) // Build farms
-                            {
-                                Map.TileC2(_activeUnit.X, _activeUnit.Y).Farmland = true;
-                            }
-                            //Game.TerrainTile = Draw.DrawMap();  //Update game map
-                            //unit.Action = OrderType.NoOrders;
-                        }
-                        break;
-                    case OrderType.BuildRoad:
-                        if (_activeUnit.Counter == 2)
-                        {
-                            if (Map.TileC2(_activeUnit.X, _activeUnit.Y).Road == false) // Build road
-                            {
-                                Map.TileC2(_activeUnit.X, _activeUnit.Y).Road = true;
-                            }
-                            else if ((Map.TileC2(_activeUnit.X, _activeUnit.Y).Road == true) && (Map.TileC2(_activeUnit.X, _activeUnit.Y).Railroad == false)) // Build railroad
-                            {
-                                Map.TileC2(_activeUnit.X, _activeUnit.Y).Railroad = true;
-                            }
-                            //Game.TerrainTile = Draw.DrawMap();  //Update game map
-                            //unit.Action = OrderType.NoOrders;
-                        }
-                        break;
-                    case OrderType.BuildMine:
-                        if (_activeUnit.Counter == 2)
-                        {
-                            Map.TileC2(_activeUnit.X, _activeUnit.Y).Mining = true;
-                            //Game.TerrainTile = Draw.DrawMap();  //Update game map
-                            //unit.Action = OrderType.NoOrders;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.StatusUpdate));
+                Game.IssueUnitOrder(UnitAI.UnitOrder());
             }
         }
 
@@ -235,7 +244,7 @@ namespace Civ2engine
                 // Set new unit command if player=AI
                 if (_activeCiv != _playerCiv)
                 {
-                    // TODO: AI for units
+                    Game.IssueUnitOrder(UnitAI.UnitOrder());
                 }
             }
         }

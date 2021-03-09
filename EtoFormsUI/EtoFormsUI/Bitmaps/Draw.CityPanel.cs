@@ -354,7 +354,7 @@ namespace EtoFormsUI
                                 Draw.City(g, cityHere, false, zoom, new Point(4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
                             //g.DrawImage(cityHere.Graphic(false, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
                             // Draw units
-                            unitsHere = Game.UnitsHere(newX, newY).FindAll(unit => (unit.Owner != Game.ActiveCiv) && (unit.Type != Civ2engine.Enums.UnitType.Settlers));
+                            unitsHere = Game.UnitsHere(newX, newY).FindAll(unit => (unit.Owner != Game.GetActiveCiv) && (unit.Type != Civ2engine.Enums.UnitType.Settlers));
                             //if (unitsHere.Count > 0 && cityHere == null)
                             //    g.DrawImage(unitsHere.Last().Graphic(true, zoom), 4 * (8 + zoom) * (x_ + 3), 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom));
 

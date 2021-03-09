@@ -106,10 +106,10 @@ namespace EtoFormsUI
         //    return mapPic;
         //}
 
-        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth)
+        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth, bool mapRevealed)
         {
             // Define a bitmap for drawing
-            var mapPic = new Bitmap(Game.Xpx * (2 * width + 1), Game.Ypx * (height + 1), PixelFormat.Format32bppRgba);
+            var mapPic = new Bitmap(Map.Xpx * (2 * width + 1), Map.Ypx * (height + 1), PixelFormat.Format32bppRgba);
 
             // Draw map
             var cityList = new List<City>(); // Make a list of cities on visible map + their locations so you can draw city names
@@ -124,14 +124,14 @@ namespace EtoFormsUI
                         int col = 2 * _col + (_row % 2);
                         int row = _row;
 
-                        // Draw only if the tile is visible for each civ (index=8...whole map visible)
-                        if ((civ < 8 && Map.IsTileVisibleC2(startX + col, startY + row, civ)) || civ == 8)
+                        // Draw only if the tile is visible for each civ
+                        if (Map.IsTileVisibleC2(startX + col, startY + row, civ) || mapRevealed)
                         {
                             // Tiles
-                            Draw.Tile(g, startX + col, startY + row, Game.Zoom, new Point(Game.Xpx * col, Game.Ypx * row));
+                            Draw.Tile(g, startX + col, startY + row, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * row));
 
                             // Implement dithering in all 4 directions where non-visible tiles are
-                            if (civ != 8)
+                            if (!mapRevealed)
                             {
                                 int[] offset = new int[] { -1, 1 };
                                 for (int tileX = 0; tileX < 2; tileX++)
@@ -143,7 +143,7 @@ namespace EtoFormsUI
                                         if (colNew >= 0 && colNew < 2 * Map.Xdim && rowNew >= 0 && rowNew < Map.Ydim)   // Don't observe outside map limits
                                         {
                                             if (!Map.IsTileVisibleC2(colNew, rowNew, civ))   // Surrounding tile is not visible -> dither
-                                                g.DrawImage(Images.DitherDots[tileX, tileY], Game.Xpx * (col + tileX), Game.Ypx * (row + tileY));
+                                                g.DrawImage(Images.DitherDots[tileX, tileY], Map.Xpx * (col + tileX), Map.Ypx * (row + tileY));
                                         }
                                     }
                                 }
@@ -156,7 +156,7 @@ namespace EtoFormsUI
                                 IUnit unit = unitsHere.Last();
                                 if (!unit.IsInCity)
                                 {
-                                    Draw.Unit(g, unit, unitsHere.Count > 1, Game.Zoom, new Point(Game.Xpx * col, Game.Ypx * (row - 1)));
+                                    Draw.Unit(g, unit, unitsHere.Count > 1, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
                                 }
                             }
 
@@ -164,7 +164,7 @@ namespace EtoFormsUI
                             City city = Game.GetCities.Find(c => c.X == startX + col && c.Y == startY + row);
                             if (city != null)
                             {
-                                Draw.City(g, city, true, Game.Zoom, new Point(Game.Xpx * col, Game.Ypx * (row - 1)));
+                                Draw.City(g, city, true, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
                                 // Add city drawn on map & its position to list for drawing city names
                                 cityList.Add(city);
                             }
@@ -186,7 +186,7 @@ namespace EtoFormsUI
                             // Draw only if the tile is visible for each civ (index=8...whole map visible)
                             if ((civ < 8 && Map.IsTileVisibleC2(startX + col, startY + row, civ)) || civ == 8)
                             {
-                                Draw.Grid(g, Game.Zoom, new Point(Game.Xpx * col, Game.Ypx * row));
+                                Draw.Grid(g, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * row));
                                 //g.DrawImage(ModifyImage.Resize(Images.GridLines, zoom), 4 * (8 + zoom) * col, 2 * (8 + zoom) * row);
                             }
                         }
@@ -197,7 +197,7 @@ namespace EtoFormsUI
                 foreach (City city in cityList)
                 {
                     int[] destSq = new int[] { city.X - startX, city.Y - startY };
-                    Draw.CityName(g, city, Game.Zoom, destSq);
+                    Draw.CityName(g, city, Map.Zoom, destSq);
                 }
             }
 

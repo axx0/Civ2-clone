@@ -165,9 +165,9 @@ namespace EtoFormsUI
             }
             using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
             string showYear = (Game.GetGameYear < 0) ? $"{Math.Abs(Game.GetGameYear)} B.C." : $"A.D. {Math.Abs(Game.GetGameYear)}";
-            Draw.Text(e.Graphics, Game.PlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", _font, Color.FromArgb(51, 51, 51), new Point(5, 2), false, false, Color.FromArgb(191, 191, 191), 1, 1);
+            Draw.Text(e.Graphics, Game.GetPlayerCiv.Population.ToString("###,###", new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " People", _font, Color.FromArgb(51, 51, 51), new Point(5, 2), false, false, Color.FromArgb(191, 191, 191), 1, 1);
             Draw.Text(e.Graphics, showYear, _font, Color.FromArgb(51, 51, 51), new Point(5, 20), false, false, Color.FromArgb(191, 191, 191), 1, 1);
-            Draw.Text(e.Graphics, $"{Game.PlayerCiv.Money} Gold 5.0.5", _font, Color.FromArgb(51, 51, 51), new Point(5, 38), false, false, Color.FromArgb(191, 191, 191), 1, 1);
+            Draw.Text(e.Graphics, $"{Game.GetPlayerCiv.Money} Gold 5.0.5", _font, Color.FromArgb(51, 51, 51), new Point(5, 38), false, false, Color.FromArgb(191, 191, 191), 1, 1);
         }
 
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
@@ -219,19 +219,19 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, "Moving Units", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Show active unit info
-                Draw.Unit(e.Graphics, Game.ActiveUnit, false, 1, new Point(7, 27));
+                Draw.Unit(e.Graphics, Game.GetActiveUnit, false, 1, new Point(7, 27));
                 // Show move points correctly
-                int _fullMovPts = Game.ActiveUnit.MovePoints / 3;
-                int _remMovPts = Game.ActiveUnit.MovePoints % 3;
+                int _fullMovPts = Game.GetActiveUnit.MovePoints / 3;
+                int _remMovPts = Game.GetActiveUnit.MovePoints % 3;
                 string _text = $"Moves: {_fullMovPts} {_remMovPts}/3";
                 if (_remMovPts == 0) _text = $"Moves: {_fullMovPts}";
                 Draw.Text(e.Graphics, _text, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
                 // Show other unit info
-                _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
+                _cityName = (Game.GetActiveUnit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
                 Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(79, 43), false, false, _backColor, 1, 1);
-                Draw.Text(e.Graphics, Game.ActiveCiv.Adjective, _font, _frontColor, new Point(79, 61), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, Game.GetActiveCiv.Adjective, _font, _frontColor, new Point(79, 61), false, false, _backColor, 1, 1);
                 _column = 83;
-                Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, Game.GetActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 _column += 18;
                 Draw.Text(e.Graphics, $"({Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 // If road/railroad/irrigation/farmland/mine present
@@ -270,7 +270,7 @@ namespace EtoFormsUI
 
                 // Show info for other units on the tile
                 int drawCount = 0;
-                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.ActiveUnit))
+                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.GetActiveUnit))
                 {
                     // First check if there is vertical space still left for drawing in panel
                     if (_column + 69 > unitPanel.Height) break;
@@ -279,7 +279,7 @@ namespace EtoFormsUI
                     Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
                     // Show other unit info
                     _column += 20;
-                    _cityName = (unit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
+                    _cityName = (unit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
                     Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
                     _column += 18;
                     Draw.Text(e.Graphics, Order2string(unit.Order), _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);

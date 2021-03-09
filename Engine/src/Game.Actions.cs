@@ -62,20 +62,20 @@ namespace Civ2engine
 
         public void BuildCity(string cityName)
         {
-            int x = Game.ActiveUnit.X;
-            int y = Game.ActiveUnit.Y;
+            int x = _activeUnit.X;
+            int y = _activeUnit.Y;
             bool[] improvements = new bool[34];
             bool[] wonders = new bool[28];
             for (int i = 0; i < 34; i++) improvements[i] = false;
             for (int i = 0; i < 28; i++) wonders[i] = false;
             //Game.CreateCity(x, y, false, false, false, false, false, false, false, false, false, Game.Instance.ActiveUnit.Civ, 1, Game.Instance.ActiveUnit.Civ, 0, 0, 0, cityName, 0, 0, 0, 0, improvements, 0, 0, 0, 0, 0, 0, 0, 0, 0, wonders);
 
-            DeleteUnit(Game.ActiveUnit);
+            DeleteUnit(_activeUnit);
         }
 
         public void DeleteUnit(IUnit unit)
         {
-            if (Game.ActiveUnit == unit)
+            if (_activeUnit == unit)
             {
                 Game.GetUnits.Remove(unit);
                 ChooseNextUnit();
@@ -105,10 +105,10 @@ namespace Civ2engine
             //For each offset make the tile visible if it isn't yet
             foreach (int[] offset in offsets)
             {
-                int[] coords = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y }.Civ2xy();
+                int[] coords = new int[] { _activeUnit.X, _activeUnit.Y }.Civ2xy();
                 coords[0] += offset[0];
                 coords[1] += offset[1];
-                Map.Visibility[coords[0], coords[1]][Game.ActiveCiv.Id] = true;
+                Map.Visibility[coords[0], coords[1]][_activeCiv.Id] = true;
             }
 
             //Update the map image

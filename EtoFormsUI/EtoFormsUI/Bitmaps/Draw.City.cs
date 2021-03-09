@@ -143,7 +143,7 @@ namespace EtoFormsUI
                 default: shadowOffset = 2; fontSize = 14; break;
             }
 
-            Point dest = new Point(Game.Xpx * offsetSqXY[0] + Game.Xpx, Game.Ypx * (offsetSqXY[1] + 2) + 2);
+            Point dest = new Point(Map.Xpx * offsetSqXY[0] + Map.Xpx, Map.Ypx * (offsetSqXY[1] + 2) + 2);
 
             //g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
 

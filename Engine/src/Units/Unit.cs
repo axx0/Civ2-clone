@@ -154,10 +154,10 @@ namespace Civ2engine.Units
         public int X { get; set; }
         public int Y { get; set; }
         public int MovementCounter { get; set; }
-        public int Xpx => X * Game.Xpx;
-        public int Ypx => Y * Game.Ypx;
+        public int Xpx => X * Map.Xpx;
+        public int Ypx => Y * Map.Ypx;
         public int[] PrevXY { get; set; }   // XY position of unit before it moved
-        public int[] PrevXYpx => new int[] { PrevXY[0] * Game.Xpx, PrevXY[1] * Game.Ypx };
+        public int[] PrevXYpx => new int[] { PrevXY[0] * Map.Xpx, PrevXY[1] * Map.Ypx };
 
         public bool Move(OrderType movementDirection)
         {

@@ -22,7 +22,7 @@ namespace EtoFormsUI
         {
             get
             {
-                if (!ViewPieceMode) _activeXY = new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
+                if (!ViewPieceMode) _activeXY = new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
                 return _activeXY;
             }
             set { _activeXY = value; }

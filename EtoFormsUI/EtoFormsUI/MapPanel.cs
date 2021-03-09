@@ -85,12 +85,12 @@ namespace EtoFormsUI
 
             // Center the map view and draw map
             //activeOffsetXY = new int[] { 0, 0 };    // Just initialize
-            MapViewChange(Game.StartingClickedXY);
+            MapViewChange(Map.StartingClickedXY);
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
-            Draw.Text(e.Graphics, $"{Game.ActiveCiv.Adjective} map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
+            Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
         }
 
         // Draw map here
@@ -115,22 +115,22 @@ namespace EtoFormsUI
                 case AnimationType.UnitWaiting:
                     {
                         if (animationCount == 0) e.Graphics.DrawImage(map, mapSrc1, mapDest);   // Update whole map at first frame
-                        e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Game.Ypx);
+                        e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx);
                         break;
                     }
                 case AnimationType.ViewPiece:
                     {
-                        if (animationCount % 2 == 0) Draw.ViewPiece(e.Graphics, Game.Zoom, ActiveOffsetPx);
+                        if (animationCount % 2 == 0) Draw.ViewPiece(e.Graphics, Map.Zoom, ActiveOffsetPx);
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
-                        e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Game.Xpx), Game.ActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Game.Ypx));
+                        e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx));
                         break;
                     }
                 case AnimationType.Attack:
                     {
-                        e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.Xpx - MapStartPx.X - (2 * Game.Xpx), Game.ActiveUnit.Ypx - MapStartPx.Y - (3 * Game.Ypx));
+                        e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx));
                         break;
                     }
             }
@@ -143,7 +143,7 @@ namespace EtoFormsUI
             // Else you clicked within the map
             int clickedX = (int)e.Location.X - mapDest.X;
             int clickedY = (int)e.Location.Y - mapDest.Y;
-            clickedXY = PxToCoords(clickedX, clickedY, Game.Zoom);
+            clickedXY = PxToCoords(clickedX, clickedY, Map.Zoom);
             clickedXY[0] += mapStartXY[0];
             clickedXY[1] += mapStartXY[1];
 
@@ -169,7 +169,7 @@ namespace EtoFormsUI
                     int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == clickedXY[0] && a.Y == clickedXY[1]);
                     if (!Game.GetUnits[clickedUnitIndex].TurnEnded)
                     {
-                        Game.ActiveUnit = Game.GetUnits[clickedUnitIndex];
+                        Game.SetActiveUnit(Game.GetUnits[clickedUnitIndex]);
                         main.ViewPieceMode = false;
                         OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
                         StartAnimation(AnimationType.UnitWaiting);
@@ -201,7 +201,7 @@ namespace EtoFormsUI
         {
             if (map != null) map.Dispose();
             ReturnCoordsAtMapViewChange(newCenterCoords);
-            map = Draw.MapPart(Game.ActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth);
+            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
             animType = AnimationType.UpdateMap;
             StartAnimation(animType);
         }
@@ -209,9 +209,9 @@ namespace EtoFormsUI
         #region Zoom events
         public void ZoomINclicked(Object sender, EventArgs e)
         {
-            if (Game.Zoom != 8)
+            if (Map.Zoom != 8)
             {
-                Game.Zoom++;
+                Map.Zoom++;
                 MapViewChange(CentrXY);
                 StartAnimation(animType);
                 drawPanel.Invalidate();
@@ -220,9 +220,9 @@ namespace EtoFormsUI
 
         public void ZoomOUTclicked(Object sender, EventArgs e)
         {
-            if (Game.Zoom != 8)
+            if (Map.Zoom != 8)
             {
-                Game.Zoom--;
+                Map.Zoom--;
                 MapViewChange(CentrXY);
                 StartAnimation(animType);
                 drawPanel.Invalidate();
@@ -285,7 +285,7 @@ namespace EtoFormsUI
             {
                 case PlayerEventType.NewTurn:
                     {
-                        if (Game.ActiveUnit != null) main.ViewPieceMode = false;
+                        if (Game.GetActiveUnit != null) main.ViewPieceMode = false;
                         animationTimer.Stop();
                         animationCount = 0;
                         animationTimer.Start();
@@ -317,13 +317,13 @@ namespace EtoFormsUI
                     }
                 case UnitEventType.StatusUpdate:
                     {
-                        if (IsActiveUnitOutsideMapView) ReturnCoordsAtMapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y }); // Update map view if unit is outside visible map
+                        if (IsActiveUnitOutsideMapView) ReturnCoordsAtMapViewChange(new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y }); // Update map view if unit is outside visible map
                         else StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
                 case UnitEventType.NewUnitActivated:
                     {
-                        if (IsActiveUnitOutsideMapView) MapViewChange(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
+                        if (IsActiveUnitOutsideMapView) MapViewChange(new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y });
                         else StartAnimation(AnimationType.UnitWaiting);
                         break;
                     }
@@ -361,14 +361,14 @@ namespace EtoFormsUI
                 case AnimationType.UnitWaiting:
                     animType = AnimationType.UnitWaiting;
                     animationTimer.Stop();
-                    animationFrames = GetAnimationFrames.UnitWaiting(Game.ActiveUnit);
+                    animationFrames = GetAnimationFrames.UnitWaiting(Game.GetActiveUnit);
                     animationCount = 0;
                     animationTimer.Interval = 0.2;    // sec
                     animationTimer.Start();
                     break;
                 case AnimationType.UnitMoving:
                     animType = AnimationType.UnitMoving;
-                    animationFrames = GetAnimationFrames.UnitMoving(Game.ActiveUnit);
+                    animationFrames = GetAnimationFrames.UnitMoving(Game.GetActiveUnit);
                     animationTimer.Stop();
                     animationCount = 0;
                     animationTimer.Interval = 0.01;    // sec
@@ -400,7 +400,7 @@ namespace EtoFormsUI
                         if (animationCount == 0)
                             drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
                         else
-                            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Game.Ypx, 2 * Game.Xpx, 3 * Game.Ypx));
+                            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
                         break;
                     }
                 case AnimationType.ViewPiece:
@@ -409,12 +409,12 @@ namespace EtoFormsUI
                         if (animationCount == 0)
                             drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
                         else if (ActiveOffsetPx.X >= 0 && ActiveOffsetPx.X <= drawPanel.Width && ActiveOffsetPx.Y >= 0 && ActiveOffsetPx.Y <= drawPanel.Height) // Draw only if active piece is within the panel
-                            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 2 * Game.Xpx, 2 * Game.Ypx));
+                            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 2 * Map.Xpx, 2 * Map.Ypx));
                         break;
                     }
                 case AnimationType.UnitMoving:
                     {
-                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Game.Xpx, 7 * Game.Ypx));
+                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Map.Xpx, 7 * Map.Ypx));
                         if (animationCount == 7)  // Unit has completed movement
                         {
                             animationTimer.Stop();
@@ -424,7 +424,7 @@ namespace EtoFormsUI
                     }
                 case AnimationType.Attack:
                     {
-                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Game.Xpx, 7 * Game.Ypx));
+                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Map.Xpx, 7 * Map.Ypx));
                         if (animationCount == animationFrames.Count - 1)
                         {
                             animationTimer.Stop();
@@ -459,8 +459,8 @@ namespace EtoFormsUI
             mapSrc1 = mapSrc2 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
             mapDest = new Point(0, 0);  // XY coords of whre map should be drawn on panel (in px)
 
-            int fullMapWidth = Game.Xpx * (2 * Map.Xdim + 1);
-            int fullMapHeight = Game.Ypx * (Map.Ydim + 1);
+            int fullMapWidth = Map.Xpx * (2 * Map.Xdim + 1);
+            int fullMapHeight = Map.Ypx * (Map.Ydim + 1);
 
             // No of squares of panel and map
             //int[] panelSq = { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };
@@ -470,8 +470,8 @@ namespace EtoFormsUI
             if (centrOffset[0] % 2 == 1 && centrOffset[1] % 2 != 1) centrOffset[0]--;
 
             // Number of drawn squares in both directions (in line with how game works). It's always multiple of 2 squares.
-            mapDrawSq[0] = 2 * (int)Math.Floor((double)Math.Min(fullMapWidth, drawPanel.Width) / (2 * Game.Xpx));
-            mapDrawSq[1] = 2 * (int)Math.Floor((double)Math.Min(fullMapHeight, drawPanel.Height) / (2 * Game.Ypx));
+            mapDrawSq[0] = 2 * (int)Math.Floor((double)Math.Min(fullMapWidth, drawPanel.Width) / (2 * Map.Xpx));
+            mapDrawSq[1] = 2 * (int)Math.Floor((double)Math.Min(fullMapHeight, drawPanel.Height) / (2 * Map.Ypx));
 
             // Initial calculation of map starting coords
             mapStartXY[0] = proposedCentralCoords[0] - centrOffset[0];
@@ -565,10 +565,10 @@ namespace EtoFormsUI
 
         //private int[] PanelMap_offsetpx => new int[] { Game.Xpx * PanelMap_offset[0], Game.Ypx * PanelMap_offset[1] };
         //private int[] MapPanel_offsetpx => new int[] { Game.Xpx * MapPanel_offset[0], Game.Ypx * MapPanel_offset[1] };
-        private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };   // No of squares of panel and map
+        private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Map.Ypx) };   // No of squares of panel and map
         private int[] ActiveOffsetXY => new int[] { main.ActiveXY[0] - mapStartXY[0], main.ActiveXY[1] - mapStartXY[1] };
-        private Point ActiveOffsetPx => new Point(Game.Xpx * ActiveOffsetXY[0], Game.Ypx * ActiveOffsetXY[1]);
-        private Point MapStartPx => new Point(Game.Xpx * mapStartXY[0], Game.Ypx * mapStartXY[1]);
+        private Point ActiveOffsetPx => new Point(Map.Xpx * ActiveOffsetXY[0], Map.Ypx * ActiveOffsetXY[1]);
+        private Point MapStartPx => new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1]);
 
         // Determine XY civ2 coords from x-y pixel location on panel
         private int[] PxToCoords(int x, int y, int zoom)

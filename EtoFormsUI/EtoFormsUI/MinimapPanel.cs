@@ -58,7 +58,7 @@ namespace EtoFormsUI
             Color drawColor;
             for (int row = 0; row < Map.Ydim; row++)
                 for (int col = 0; col < Map.Xdim; col++)
-                    if (Game.WhichCivsMapShown == 8 || Map.Visibility[col, row][Game.WhichCivsMapShown])
+                    if (Map.WhichCivsMapShown == 8 || Map.Visibility[col, row][Map.WhichCivsMapShown])
                     {
                         drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                         e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
@@ -67,7 +67,7 @@ namespace EtoFormsUI
             // Draw cities
             foreach (City city in Game.GetCities)
             {
-                if (Game.WhichCivsMapShown == 8 || Map.IsTileVisibleC2(city.X, city.Y, Game.WhichCivsMapShown))
+                if (Map.WhichCivsMapShown == 8 || Map.IsTileVisibleC2(city.X, city.Y, Map.WhichCivsMapShown))
                 {
                     e.Graphics.FillRectangle(new SolidBrush(CivColors.CityTextColor[city.Owner.Id]), Offset[0] + city.X, Offset[1] + city.Y, 2, 1);
                 }

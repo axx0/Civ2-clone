@@ -13,7 +13,11 @@ namespace Civ2engine
 
             // Make an instance of a new game & map
             _instance = new Game(gameData);
-            Map.Instance.GenerateMap(gameData);
+            Map.GenerateMap(gameData);
+            Map.MapRevealed = gameData.MapRevealed;
+            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
+            Map.Zoom = gameData.Zoom;
+            Map.StartingClickedXY = gameData.ClickedXY;
         }
 
         private Game(GameData SAVgameData)
@@ -32,7 +36,6 @@ namespace Civ2engine
 
             _turnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
-            WhichCivsMapShown = SAVgameData.WhichCivsMapShown;
             _difficultyLevel = SAVgameData.DifficultyLevel;
             _barbarianActivity = SAVgameData.BarbarianActivity;
             PollutionAmount = SAVgameData.PollutionAmount;
@@ -40,7 +43,6 @@ namespace Civ2engine
             NoOfTurnsOfPeace = SAVgameData.NoOfTurnsOfPeace;
             NumberOfUnits = SAVgameData.NumberOfUnits;
             NumberOfCities = SAVgameData.NumberOfCities;
-            MapRevealed = SAVgameData.MapRevealed;
 
             // Create all 8 civs (tribes)
             for (int i = 0; i < 8; i++)
@@ -61,13 +63,10 @@ namespace Civ2engine
             }
 
             //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
-            StartingClickedXY = SAVgameData.ClickedXY;
 
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn
             _playerCiv = _civs[SAVgameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
-
-            _zoom = SAVgameData.Zoom;
         }
     }
 }

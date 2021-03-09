@@ -1,4 +1,5 @@
-﻿using Civ2engine.Terrains;
+﻿using System;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -10,10 +11,25 @@ namespace Civ2engine
         public int Seed { get; private set; }
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
+        public bool MapRevealed { get; set; }
+        public int WhichCivsMapShown { get; set; }
         public ITerrain[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
         public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => Visibility[( ((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
+
+        private int _zoom;
+        public int Zoom     // -7 (min) ... 8 (max), 0=std.
+        {
+            get { return _zoom; }
+            set
+            {
+                _zoom = Math.Max(Math.Min(value, 8), -7);
+            }
+        }
+        public int Xpx => 4 * (_zoom + 8);    // Length of 1 map square in X
+        public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
+        public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
 
         // Generate first instance of terrain tiles by importing game data
         public void GenerateMap(GameData data)
