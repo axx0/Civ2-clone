@@ -24,6 +24,18 @@
             "cwd": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Gtk",
             "console": "internalConsole",
             "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Launch Mac",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net5.0/EtoFormsUI.Mac.app/Contents/MacOS/EtoFormsUI.Mac",
+            "args": [],
+            "cwd": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Mac",
+            "console": "internalConsole",
+            "stopAtEntry": false
         }
     ]
 }
