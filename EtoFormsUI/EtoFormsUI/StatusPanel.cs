@@ -18,9 +18,15 @@ namespace EtoFormsUI
 
         private readonly Main main;
         private readonly Drawable mainPanel, statsPanel, unitPanel;
-        //private readonly DoubleBufferedPanel StatsPanel, UnitPanel;
         //private readonly Timer Timer = new Timer();
-        private bool WaitingAtEndOfTurn { get; set; }
+        private bool WaitingAtEndOfTurn
+        {
+            get
+            {
+                if (!Game.GetActiveCiv.AnyUnitsAwaitingOrders && Game.Options.AlwaysWaitAtEndOfTurn) return true;
+                else return false;
+            }
+        }
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public StatusPanel(Main parent, int width, int height)
@@ -46,6 +52,7 @@ namespace EtoFormsUI
                 Size = new Size(240, 60)
             };
             statsPanel.Paint += StatsPanel_Paint;
+            statsPanel.MouseUp += Panel_Click;
             MainPanelLayout.Add(statsPanel, 11, 38);
             // Unit panel
             unitPanel = new Drawable()
@@ -53,13 +60,14 @@ namespace EtoFormsUI
                 Size = new Size(240, this.Height - 117)
             };
             unitPanel.Paint += UnitPanel_Paint;
+            unitPanel.MouseUp += Panel_Click;
             MainPanelLayout.Add(unitPanel, 11, 106);
             
             mainPanel.Content = MainPanelLayout;
             Content = mainPanel;
 
             //Paint += StatusPanel_Paint;
-            //MapPanel.OnMapEvent += MapEventHappened;
+            MapPanel.OnMapEvent += MapEventHappened;
             ////Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             //Game.OnPlayerEvent += PlayerEventHappened;
@@ -312,30 +320,29 @@ namespace EtoFormsUI
 
         private void Panel_Click(object sender, MouseEventArgs e)
         {
-            //if (WaitingAtEndOfTurn)
-            //{
-            //    WaitingAtEndOfTurn = false;
-            //    Game.NewPlayerTurn();
-            //}
-            //else
-            //{
-            //    _main.ViewPieceMode = !_main.ViewPieceMode;
-            //    UnitPanel.Refresh();
-            //    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-            //}
+            if (WaitingAtEndOfTurn)
+            {
+                //Game.NewPlayerTurn();
+            }
+            else
+            {
+                Map.ViewPieceMode = !Map.ViewPieceMode;
+                unitPanel.Invalidate();
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
+            }
         }
 
         private void MapEventHappened(object sender, MapEventArgs e)
         {
-            //switch (e.EventType)
-            //{
-            //    case MapEventType.MapViewChanged:
-            //        {
-            //            UnitPanel.Refresh();
-            //            break;
-            //        }
-            //    default: break;
-            //}
+            switch (e.EventType)
+            {
+                case MapEventType.MapViewChanged:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
+                default: break;
+            }
         }
 
         private void PlayerEventHappened(object sender, PlayerEventArgs e)

@@ -53,7 +53,7 @@ namespace EtoFormsUI
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
             //MinimapPanel.OnMapEvent += MapEventHappened;
-            //StatusPanel.OnMapEvent += MapEventHappened;
+            StatusPanel.OnMapEvent += MapEventHappened;
             //Main.OnMapEvent += MapEventHappened;
             //Main.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
 
@@ -107,8 +107,9 @@ namespace EtoFormsUI
                 case AnimationType.UpdateMap:
                     {
                         e.Graphics.DrawImage(map, mapSrc1, mapDest);
-                        if (Map.ViewPieceMode) animType = AnimationType.ViewPiece;
-                        else animType = AnimationType.Waiting;
+                        //if (Map.ViewPieceMode) animType = AnimationType.ViewPiece;
+                        //else animType = AnimationType.Waiting;
+                        animType = AnimationType.Waiting;
                         StartAnimation(animType);
                         break;
                     }
@@ -185,13 +186,15 @@ namespace EtoFormsUI
                 {
                     if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
                     MapViewChange(clickedXY);
+                    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));
                 }
             }
             else    // Right click
             {
                 Map.ViewPieceMode = true;
-                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
                 Map.ActiveXY = clickedXY;
+                if (!Map.ViewPieceMode) OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
+                else OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));
                 MapViewChange(clickedXY);
                 StartAnimation(AnimationType.Waiting);
             }
@@ -241,13 +244,12 @@ namespace EtoFormsUI
                     }
                 case MapEventType.SwitchViewMovePiece:
                     {
-                        if (Map.ViewPieceMode) StartAnimation(AnimationType.ViewPiece);
-                        else StartAnimation(AnimationType.Waiting);
+                        StartAnimation(AnimationType.Waiting);
                         break;
                     }
                 case MapEventType.ViewPieceMoved:
                     {
-                        StartAnimation(AnimationType.ViewPiece);
+                        StartAnimation(AnimationType.Waiting);
                         break;
                     }
                 case MapEventType.ToggleBetweenCurrentEntireMapView:
@@ -374,12 +376,6 @@ namespace EtoFormsUI
                     animationTimer.Interval = 0.01;    // sec
                     animationTimer.Start();
                     break;
-                case AnimationType.ViewPiece:
-                    animationTimer.Stop();
-                    animationCount = 0;
-                    animationTimer.Interval = 0.2;    // sec
-                    animationTimer.Start();
-                    break;
                 case AnimationType.Attack:
                     animType = AnimationType.Attack;
                     animationTimer.Stop();
@@ -401,15 +397,15 @@ namespace EtoFormsUI
                         else drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
                         break;
                     }
-                case AnimationType.ViewPiece:
-                    {
-                        // At new unit turn initially re-draw the whole map
-                        if (animationCount == 0)
-                            drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                        else if (ActiveOffsetPx.X >= 0 && ActiveOffsetPx.X <= drawPanel.Width && ActiveOffsetPx.Y >= 0 && ActiveOffsetPx.Y <= drawPanel.Height) // Draw only if active piece is within the panel
-                            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 2 * Map.Xpx, 2 * Map.Ypx));
-                        break;
-                    }
+                //case AnimationType.ViewPiece:
+                //    {
+                //        // At new unit turn initially re-draw the whole map
+                //        if (animationCount == 0)
+                //            drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
+                //        else if (ActiveOffsetPx.X >= 0 && ActiveOffsetPx.X <= drawPanel.Width && ActiveOffsetPx.Y >= 0 && ActiveOffsetPx.Y <= drawPanel.Height) // Draw only if active piece is within the panel
+                //            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 2 * Map.Xpx, 2 * Map.Ypx));
+                //        break;
+                //    }
                 case AnimationType.UnitMoving:
                     {
                         drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Map.Xpx, 7 * Map.Ypx));
