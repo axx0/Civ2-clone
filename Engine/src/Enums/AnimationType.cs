@@ -3,7 +3,7 @@
     public enum AnimationType
     {
         UpdateMap = 0,
-        UnitWaiting = 1,
+        Waiting = 1,
         UnitMoving = 2,
         ViewPiece = 3,
         Attack = 4

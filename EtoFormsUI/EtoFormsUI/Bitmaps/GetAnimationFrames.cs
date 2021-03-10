@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Eto.Drawing;
 using Civ2engine;
@@ -11,13 +10,12 @@ namespace EtoFormsUI
 {
     public class GetAnimationFrames : BaseInstance
     {
-        // Get animation frames for waiting unit
-        public static List<Bitmap> UnitWaiting(IUnit activeUnit)
+        // Get animation frames for waiting unit/view piece
+        public static List<Bitmap> Waiting(int[] activeXY)
         {
             var animationFrames = new List<Bitmap>();
 
             // Get coords of central tile & which squares are to be drawn
-            int[] activeUnitXY = new int[] { activeUnit.X, activeUnit.Y };
             var coordsOffsetsToBeDrawn = new List<int[]>
             {
                 new int[] {0, -2},
@@ -43,41 +41,37 @@ namespace EtoFormsUI
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
                         // Change coords of central offset
-                        x = activeUnitXY[0] + coordsOffsets[0];
-                        y = activeUnitXY[1] + coordsOffsets[1];
+                        x = activeXY[0] + coordsOffsets[0];
+                        y = activeXY[1] + coordsOffsets[1];
                         coordsOffsetsPx = new int[] { coordsOffsets[0] * Map.Xpx, coordsOffsets[1] * Map.Ypx };
 
-                        if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;    // Make sure you're not drawing tiles outside map bounds
+                        if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;    // Make sure you're not drawing tiles outside map bounds
 
                         // Tiles
                         Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Map.Ypx));
 
                         // Units
-                        List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
-                        if (unitsHere.Count > 0)
+                        List<IUnit> unitsHere = Game.UnitsHere(x, y);
+                        if (unitsHere.Count > 0 && Game.CityHere(x, y) == null)
                         {
                             IUnit unit;
                             // If this is not tile with active unit or viewing piece, draw last unit on stack
-                            if (x != activeUnitXY[0] || y != activeUnitXY[1])
+                            if (!(x == activeXY[0] && y == activeXY[1]) || Map.ViewPieceMode)
                             {
                                 unit = unitsHere.Last();
-                                if (!unit.IsInCity) Draw.Unit(g, unit, unit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                                Draw.Unit(g, unit, unit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                             }
                         }
 
                         // City
-                        City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
+                        City city = Game.CityHere(x, y);
                         if (city != null) Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
                         // Draw active unit if it's not moving
-                        if (unitsHere.Count > 0)
+                        if (unitsHere.Count > 0 && x == activeXY[0] && y == activeXY[1] && !Map.ViewPieceMode)
                         {
-                            // This tile has active unit/viewing piece
-                            if (x == activeUnitXY[0] && y == activeUnitXY[1])
-                            {
-                                // For first frame draw unit, for second not
-                                if (frame == 0) Draw.Unit(g, Game.GetActiveUnit, Game.GetActiveUnit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
-                            }
+                            // Draw unit only for 1st frame
+                            if (frame == 0) Draw.Unit(g, Game.GetActiveUnit, Game.GetActiveUnit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                         }
                     }
 
@@ -92,33 +86,27 @@ namespace EtoFormsUI
                     }
 
                     // City names
+                    coordsOffsetsToBeDrawn.Add(new int[] { -2, -2 });
+                    coordsOffsetsToBeDrawn.Add(new int[] { 2, -2 });
+                    coordsOffsetsToBeDrawn.Add(new int[] { -1, -3 });
+                    coordsOffsetsToBeDrawn.Add(new int[] { 1, -3 });
                     foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                     {
                         // Change coords of central offset
-                        x = activeUnitXY[0] + coordsOffsets[0];
-                        y = activeUnitXY[1] + coordsOffsets[1];
+                        x = activeXY[0] + coordsOffsets[0];
+                        y = activeXY[1] + coordsOffsets[1];
 
-                        if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
-
-                        City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                        if (city != null)
-                        {
-                            Draw.CityName(g, city, Map.Zoom, new int[] { x, y });
-                            //Bitmap cityNameBitmap = Draw.CityName(city, Game.Zoom);
-                            //g.DrawImage(cityNameBitmap,
-                            //    Game.Xpx * (coordsOffsets[0] + 1) - cityNameBitmap.Width / 2,
-                            //    Game.Ypx * coordsOffsets[1] + 5 * 2 / Game.Ypx + Game.Ypx);
-                        }
+                        if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;   // Make sure you're not drawing tiles outside map bounds
+                        
+                        City city = Game.CityHere(x, y);
+                        if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0], coordsOffsets[1] + 1 });
                     }
 
-                    ////Viewing piece (is drawn on top of everything)
-                    //if (MapPanel.ViewingPiecesMode)
-                    //{
-                    //    if (frame == 0)
-                    //    {
-                    //        g.DrawImage(Draw.ViewPiece, 0, 16);
-                    //    }
-                    //}
+                    // View piece (is drawn on top of everything)
+                    if (Map.ViewPieceMode)
+                    {
+                        if (frame == 1) Draw.ViewPiece(g, Map.Zoom, new Point(0, Map.Ypx));
+                    }
                 }
                 animationFrames.Add(_bitmap);
             }
@@ -182,7 +170,7 @@ namespace EtoFormsUI
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
                     coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;   // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
                     int civId = Map.WhichCivsMapShown;
@@ -209,7 +197,7 @@ namespace EtoFormsUI
                     }
 
                     // Units
-                    List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
+                    List<IUnit> unitsHere = Game.UnitsHere(x, y);
                     // If active unit is in this list-- > remove it
                     if (unitsHere.Contains(activeUnit)) unitsHere.Remove(activeUnit);
                     
@@ -228,7 +216,7 @@ namespace EtoFormsUI
                     }
 
                     // Cities
-                    City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
+                    City city = Game.CityHere(x, y);
                     if (city != null)
                     {
                         Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
@@ -253,14 +241,10 @@ namespace EtoFormsUI
                     int x = activeUnitPrevXY[0] + coordsOffsets[0];
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
 
-                    if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim)    // Make sure you're not drawing tiles outside map bounds
-                    {
-                        City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                        if (city != null)
-                        {
-                            Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
-                        }
-                    }
+                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;   // Make sure you're not drawing tiles outside map bounds
+                    
+                    City city = Game.CityHere(x, y);
+                    if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                 }
             }
 
@@ -297,26 +281,7 @@ namespace EtoFormsUI
             return animationFrames;
         }
 
-        //Get animation frames for view piece
-        //public static List<Bitmap> ViewPiece()
-        //{
-        //    List<Bitmap> animationFrames = new List<Bitmap>();
-        //    for (int frame = 0; frame < 2; frame++)
-        //    {
-        //        Bitmap _mainBitmap = new Bitmap(64, 32);
-        //        using (Graphics g = Graphics.FromImage(_mainBitmap))
-        //        {
-        //            g.DrawImage(Game.WholeMap, 0, 0, 32 * MapPanel.ActiveXY[0], 16 * MapPanel.ActiveXY[0]);
-        //            if (frame == 0)
-        //                g.DrawImage(Draw.ViewPiece, 0, 0, 32 * MapPanel.ActiveXY[0], 16 * MapPanel.ActiveXY[0]);
-        //        }
-        //        animationFrames.Add(_mainBitmap);
-        //    }
-        //    return animationFrames;
-        //}
-
         // Get attack animation frames
-        //public static List<Bitmap> UnitAttack(IUnit attacker, IUnit defender, List<bool> combatRoundsAttackerWins)
         public static List<Bitmap> UnitAttack(UnitEventArgs e)
         {
             List<Bitmap> animationFrames = new List<Bitmap>();
@@ -371,7 +336,7 @@ namespace EtoFormsUI
                     int y = e.Attacker.Y + coordsOffsets[1];
                     coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) break;   // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;    // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
                     int civId = Map.WhichCivsMapShown;
@@ -410,7 +375,7 @@ namespace EtoFormsUI
                     }
                     else    // Other units
                     {
-                        var units = Game.GetUnits.Where(u => u.X == x && u.Y == y).ToList();
+                        var units = Game.UnitsHere(x, y);
                         if (units.Count > 0) 
                         {
                             var unit = units.Last();
@@ -422,11 +387,8 @@ namespace EtoFormsUI
                     }
 
                     // Cities
-                    City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                    if (city != null)
-                    {
-                        Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
-                    }
+                    City city = Game.CityHere(x, y);
+                    if (city != null) Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                 }
 
                 // City names
@@ -447,14 +409,10 @@ namespace EtoFormsUI
                     int x = e.Attacker.X + coordsOffsets[0];
                     int y = e.Attacker.Y + coordsOffsets[1];
 
-                    if (x >= 0 && y >= 0 && x < 2 * Map.Xdim && y < Map.Ydim)    // Make sure you're not drawing tiles outside map bounds
-                    {
-                        City city = Game.GetCities.Find(c => c.X == x && c.Y == y);
-                        if (city != null)
-                        {
-                            Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
-                        }
-                    }
+                    if(x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    
+                    City city = Game.CityHere(x, y);
+                    if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                 }
             }
 
@@ -487,11 +445,11 @@ namespace EtoFormsUI
                             }
                         }
 
-                        // Draw explosion
-                        if (e.CombatRoundsAttackerWins[explosion]) point = new Point((int)(Map.Xpx * (2.5 + e.Defender.X - e.Attacker.X)), Map.Ypx * (3 + (e.Defender.Y - e.Attacker.Y))); // Explosion on defender
-                        else point = new Point((int)(Map.Xpx * 2.5), Map.Ypx * 3); // Explosion on attacker
+                        // Draw explosion on defender
+                        if (e.CombatRoundsAttackerWins[explosion]) point = new Point((int)(Map.Xpx * (2.5 + e.Defender.X - e.Attacker.X)), Map.Ypx * (3 + (e.Defender.Y - e.Attacker.Y)));
+                        // Draw explosion on attacker
+                        else point = new Point((int)(Map.Xpx * 2.5), Map.Ypx * 3);
 
-                        //g.DrawImage(Images.BattleAnim[frame], point);
                         Draw.BattleAnim(g, frame, Map.Zoom, point);
                     }
                     animationFrames.Add(_bitmapWithExplosions);

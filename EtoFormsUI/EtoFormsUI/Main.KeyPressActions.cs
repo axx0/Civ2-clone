@@ -13,7 +13,7 @@ namespace EtoFormsUI
             {
                 case Keys.Keypad1:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveSW);
                         }
@@ -21,7 +21,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad2:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveS);
                         }
@@ -29,7 +29,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad3:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveSE);
                         }
@@ -37,7 +37,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad4:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveW);
                         }
@@ -45,7 +45,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad6:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveE);
                         }
@@ -53,7 +53,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad7:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveNW);
                         }
@@ -61,7 +61,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad8:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveN);
                         }
@@ -69,7 +69,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Keypad9:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.MoveNE);
                         }
@@ -77,7 +77,7 @@ namespace EtoFormsUI
                     }
                 case Keys.Space:
                     {
-                        if (!ViewPieceMode)
+                        if (!Map.ViewPieceMode)
                         {
                             Game.IssueUnitOrder(OrderType.SkipTurn);
                         }

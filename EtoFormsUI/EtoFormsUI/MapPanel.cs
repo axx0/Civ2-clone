@@ -107,22 +107,22 @@ namespace EtoFormsUI
                 case AnimationType.UpdateMap:
                     {
                         e.Graphics.DrawImage(map, mapSrc1, mapDest);
-                        if (main.ViewPieceMode) animType = AnimationType.ViewPiece;
-                        else animType = AnimationType.UnitWaiting;
+                        if (Map.ViewPieceMode) animType = AnimationType.ViewPiece;
+                        else animType = AnimationType.Waiting;
                         StartAnimation(animType);
                         break;
                     }
-                case AnimationType.UnitWaiting:
+                case AnimationType.Waiting:
                     {
                         if (animationCount == 0) e.Graphics.DrawImage(map, mapSrc1, mapDest);   // Update whole map at first frame
-                        e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx);
+                        else e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx);
                         break;
                     }
-                case AnimationType.ViewPiece:
-                    {
-                        if (animationCount % 2 == 0) Draw.ViewPiece(e.Graphics, Map.Zoom, ActiveOffsetPx);
-                        break;
-                    }
+                //case AnimationType.ViewPiece:
+                //    {
+                //        //if (animationCount % 2 == 0) Draw.ViewPiece(e.Graphics, Map.Zoom, ActiveOffsetPx);
+                //        break;
+                //    }
                 case AnimationType.UnitMoving:
                     {
                         e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx));
@@ -158,7 +158,7 @@ namespace EtoFormsUI
                 // City clicked
                 if (Game.GetCities.Any(city => city.X == clickedXY[0] && city.Y == clickedXY[1]))
                 {
-                    if (main.ViewPieceMode) main.ActiveXY = clickedXY;
+                    if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
                     var cityPanel = new CityPanel(main, Game.GetCities.Find(city => city.X == clickedXY[0] && city.Y == clickedXY[1]), 658, 459); // For normal zoom
                     MainPanelLayout.Add(cityPanel, (drawPanel.Width / 2) - (cityPanel.Width / 2), (drawPanel.Height / 2) - (cityPanel.Height / 2));
                     MainPanel.Content = MainPanelLayout;
@@ -170,9 +170,9 @@ namespace EtoFormsUI
                     if (!Game.GetUnits[clickedUnitIndex].TurnEnded)
                     {
                         Game.SetActiveUnit(Game.GetUnits[clickedUnitIndex]);
-                        main.ViewPieceMode = false;
+                        Map.ViewPieceMode = false;
                         OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-                        StartAnimation(AnimationType.UnitWaiting);
+                        StartAnimation(AnimationType.Waiting);
                     }
                     else
                     {
@@ -183,17 +183,17 @@ namespace EtoFormsUI
                 // Something else clicked
                 else
                 {
-                    if (main.ViewPieceMode) main.ActiveXY = clickedXY;
+                    if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
                     MapViewChange(clickedXY);
                 }
             }
             else    // Right click
             {
-                main.ViewPieceMode = true;
+                Map.ViewPieceMode = true;
                 OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-                main.ActiveXY = clickedXY;
+                Map.ActiveXY = clickedXY;
                 MapViewChange(clickedXY);
-                StartAnimation(AnimationType.ViewPiece);
+                StartAnimation(AnimationType.Waiting);
             }
         }
 
@@ -241,8 +241,8 @@ namespace EtoFormsUI
                     }
                 case MapEventType.SwitchViewMovePiece:
                     {
-                        if (main.ViewPieceMode) StartAnimation(AnimationType.ViewPiece);
-                        else StartAnimation(AnimationType.UnitWaiting);
+                        if (Map.ViewPieceMode) StartAnimation(AnimationType.ViewPiece);
+                        else StartAnimation(AnimationType.Waiting);
                         break;
                     }
                 case MapEventType.ViewPieceMoved:
@@ -264,7 +264,7 @@ namespace EtoFormsUI
                     }
                 case MapEventType.CenterView:
                     {
-                        MapViewChange(main.ActiveXY);
+                        MapViewChange(Map.ActiveXY);
                         drawPanel.Invalidate();
                         break;
                     }
@@ -285,7 +285,7 @@ namespace EtoFormsUI
             {
                 case PlayerEventType.NewTurn:
                     {
-                        if (Game.GetActiveUnit != null) main.ViewPieceMode = false;
+                        if (Game.GetActiveUnit != null) Map.ViewPieceMode = false;
                         animationTimer.Stop();
                         animationCount = 0;
                         animationTimer.Start();
@@ -318,13 +318,13 @@ namespace EtoFormsUI
                 case UnitEventType.StatusUpdate:
                     {
                         if (IsActiveUnitOutsideMapView) ReturnCoordsAtMapViewChange(new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y }); // Update map view if unit is outside visible map
-                        else StartAnimation(AnimationType.UnitWaiting);
+                        else StartAnimation(AnimationType.Waiting);
                         break;
                     }
                 case UnitEventType.NewUnitActivated:
                     {
                         if (IsActiveUnitOutsideMapView) MapViewChange(new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y });
-                        else StartAnimation(AnimationType.UnitWaiting);
+                        else StartAnimation(AnimationType.Waiting);
                         break;
                     }
             }
@@ -332,7 +332,7 @@ namespace EtoFormsUI
 
         private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
         {
-            main.ViewPieceMode = true;
+            Map.ViewPieceMode = true;
             animationTimer.Stop();
             animationCount = 0;
             animationTimer.Start();
@@ -341,7 +341,7 @@ namespace EtoFormsUI
         // If ENTER pressed when view piece above city --> enter city view
         private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
         {
-            if (main.ViewPieceMode && Game.GetCities.Any(city => city.X == main.ActiveXY[0] && city.Y == main.ActiveXY[1]))
+            if (Map.ViewPieceMode && Game.GetCities.Any(city => city.X == Map.ActiveXY[0] && city.Y == Map.ActiveXY[1]))
             {
                 //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
                 //cityForm.Show();
@@ -358,10 +358,10 @@ namespace EtoFormsUI
                     animationCount = 0;
                     drawPanel.Invalidate();
                     break;
-                case AnimationType.UnitWaiting:
-                    animType = AnimationType.UnitWaiting;
+                case AnimationType.Waiting:
+                    animType = AnimationType.Waiting;
                     animationTimer.Stop();
-                    animationFrames = GetAnimationFrames.UnitWaiting(Game.GetActiveUnit);
+                    animationFrames = GetAnimationFrames.Waiting(Map.ActiveXY);
                     animationCount = 0;
                     animationTimer.Interval = 0.2;    // sec
                     animationTimer.Start();
@@ -394,13 +394,11 @@ namespace EtoFormsUI
         {
             switch (animType)
             {
-                case AnimationType.UnitWaiting:
+                case AnimationType.Waiting:
                     {
                         // At new unit turn initially re-draw the whole map
-                        if (animationCount == 0)
-                            drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                        else
-                            drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
+                        if (animationCount == 0) drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
+                        else drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
                         break;
                     }
                 case AnimationType.ViewPiece:
@@ -442,7 +440,7 @@ namespace EtoFormsUI
         {
             get
             {
-                if (main.ActiveXY[0] >= mapStartXY[0] + PanelSq[0] - 2 || main.ActiveXY[0] <= mapStartXY[0] || main.ActiveXY[1] >= mapStartXY[1] + PanelSq[1] - 2 || main.ActiveXY[1] <= mapStartXY[1]) return true;
+                if (Map.ActiveXY[0] >= mapStartXY[0] + PanelSq[0] - 2 || Map.ActiveXY[0] <= mapStartXY[0] || Map.ActiveXY[1] >= mapStartXY[1] + PanelSq[1] - 2 || Map.ActiveXY[1] <= mapStartXY[1]) return true;
                 else return false;
             }
         }
@@ -566,7 +564,7 @@ namespace EtoFormsUI
         //private int[] PanelMap_offsetpx => new int[] { Game.Xpx * PanelMap_offset[0], Game.Ypx * PanelMap_offset[1] };
         //private int[] MapPanel_offsetpx => new int[] { Game.Xpx * MapPanel_offset[0], Game.Ypx * MapPanel_offset[1] };
         private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Map.Ypx) };   // No of squares of panel and map
-        private int[] ActiveOffsetXY => new int[] { main.ActiveXY[0] - mapStartXY[0], main.ActiveXY[1] - mapStartXY[1] };
+        private int[] ActiveOffsetXY => new int[] { Map.ActiveXY[0] - mapStartXY[0], Map.ActiveXY[1] - mapStartXY[1] };
         private Point ActiveOffsetPx => new Point(Map.Xpx * ActiveOffsetXY[0], Map.Ypx * ActiveOffsetXY[1]);
         private Point MapStartPx => new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1]);
 
