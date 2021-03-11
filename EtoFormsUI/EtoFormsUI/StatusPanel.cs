@@ -18,9 +18,15 @@ namespace EtoFormsUI
 
         private readonly Main main;
         private readonly Drawable mainPanel, statsPanel, unitPanel;
-        //private readonly DoubleBufferedPanel StatsPanel, UnitPanel;
         //private readonly Timer Timer = new Timer();
-        private bool WaitingAtEndOfTurn { get; set; }
+        private bool WaitingAtEndOfTurn
+        {
+            get
+            {
+                if (!Game.GetActiveCiv.AnyUnitsAwaitingOrders && Game.Options.AlwaysWaitAtEndOfTurn) return true;
+                else return false;
+            }
+        }
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public StatusPanel(Main parent, int width, int height)
@@ -46,6 +52,7 @@ namespace EtoFormsUI
                 Size = new Size(240, 60)
             };
             statsPanel.Paint += StatsPanel_Paint;
+            statsPanel.MouseUp += Panel_Click;
             MainPanelLayout.Add(statsPanel, 11, 38);
             // Unit panel
             unitPanel = new Drawable()
@@ -53,13 +60,14 @@ namespace EtoFormsUI
                 Size = new Size(240, this.Height - 117)
             };
             unitPanel.Paint += UnitPanel_Paint;
+            unitPanel.MouseUp += Panel_Click;
             MainPanelLayout.Add(unitPanel, 11, 106);
             
             mainPanel.Content = MainPanelLayout;
             Content = mainPanel;
 
             //Paint += StatusPanel_Paint;
-            //MapPanel.OnMapEvent += MapEventHappened;
+            MapPanel.OnMapEvent += MapEventHappened;
             ////Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             //Game.OnPlayerEvent += PlayerEventHappened;
@@ -184,19 +192,19 @@ namespace EtoFormsUI
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
             var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
-            List<IUnit> _unitsOnThisTile = Game.UnitsHere(main.ActiveXY[0], main.ActiveXY[1]);
+            List<IUnit> _unitsOnThisTile = Game.UnitsHere(Map.ActiveXY[0], Map.ActiveXY[1]);
 
             string _cityName, _wholeText, _roadText, _irrigText, _airbaseText;
             int _column;
 
             // View piece mode
-            if (main.ViewPieceMode)
+            if (Map.ViewPieceMode)
             {
                 Draw.Text(e.Graphics, "Viewing Pieces", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Draw location & tile type on active square
-                Draw.Text(e.Graphics, $"Loc: ({main.ActiveXY[0]}, {main.ActiveXY[1]}) {Map.Tile[(main.ActiveXY[0] - main.ActiveXY[1] % 2) / 2, main.ActiveXY[1]].Island}", _font, _frontColor, new Point(5, 27), false, false, _backColor, 1, 1);
-                Draw.Text(e.Graphics, $"({Map.Tile[(main.ActiveXY[0] - main.ActiveXY[1] % 2) / 2, main.ActiveXY[1]].Type})", _font, _frontColor, new Point(5, 45), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, $"Loc: ({Map.ActiveXY[0]}, {Map.ActiveXY[1]}) {Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Island}", _font, _frontColor, new Point(5, 27), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, $"({Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Type})", _font, _frontColor, new Point(5, 45), false, false, _backColor, 1, 1);
 
                 //int count;
                 //for (count = 0; count < Math.Min(_unitsOnThisTile.Count, maxUnitsToDraw); count++)
@@ -233,19 +241,19 @@ namespace EtoFormsUI
                 _column = 83;
                 Draw.Text(e.Graphics, Game.GetActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 _column += 18;
-                Draw.Text(e.Graphics, $"({Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, $"({Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 // If road/railroad/irrigation/farmland/mine present
                 _wholeText = null;
                 _roadText = null;
                 _irrigText = null;
-                if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Road || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Railroad || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Irrigation || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Farmland || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Mining)
+                if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Road || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Railroad || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Irrigation || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Farmland || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Mining)
                 {
                     _column += 18;
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Road) _roadText = "Road";
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Railroad) _roadText = "Railroad";
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Irrigation) _irrigText = "Irrigation";
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Farmland) _irrigText = "Farmland";
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Mining) _irrigText = "Mining";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Road) _roadText = "Road";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Railroad) _roadText = "Railroad";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Irrigation) _irrigText = "Irrigation";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Farmland) _irrigText = "Farmland";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Mining) _irrigText = "Mining";
                     if (_roadText != null && _irrigText == null) _wholeText = $"({_roadText})";
                     else if (_roadText == null && _irrigText != null) _wholeText = $"({_irrigText})";
                     else if (_roadText != null && _irrigText != null) _wholeText = $"({_roadText}, {_irrigText})";
@@ -253,15 +261,15 @@ namespace EtoFormsUI
                 }
                 // If airbase/fortress present
                 _airbaseText = null;
-                if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Airbase || Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Fortress)
+                if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Airbase || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Fortress)
                 {
                     _column += 18;
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Fortress) _airbaseText = "Fortress";
-                    if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Airbase) _airbaseText = "Airbase";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Fortress) _airbaseText = "Fortress";
+                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Airbase) _airbaseText = "Airbase";
                     Draw.Text(e.Graphics, $"({_airbaseText})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 }
                 // If pollution present
-                if (Map.TileC2(main.ActiveXY[0], main.ActiveXY[1]).Pollution)
+                if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Pollution)
                 {
                     _column += 18;
                     Draw.Text(e.Graphics, "(Pollution)", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
@@ -312,30 +320,29 @@ namespace EtoFormsUI
 
         private void Panel_Click(object sender, MouseEventArgs e)
         {
-            //if (WaitingAtEndOfTurn)
-            //{
-            //    WaitingAtEndOfTurn = false;
-            //    Game.NewPlayerTurn();
-            //}
-            //else
-            //{
-            //    _main.ViewPieceMode = !_main.ViewPieceMode;
-            //    UnitPanel.Refresh();
-            //    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-            //}
+            if (WaitingAtEndOfTurn)
+            {
+                //Game.NewPlayerTurn();
+            }
+            else
+            {
+                Map.ViewPieceMode = !Map.ViewPieceMode;
+                unitPanel.Invalidate();
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
+            }
         }
 
         private void MapEventHappened(object sender, MapEventArgs e)
         {
-            //switch (e.EventType)
-            //{
-            //    case MapEventType.MapViewChanged:
-            //        {
-            //            UnitPanel.Refresh();
-            //            break;
-            //        }
-            //    default: break;
-            //}
+            switch (e.EventType)
+            {
+                case MapEventType.MapViewChanged:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
+                default: break;
+            }
         }
 
         private void PlayerEventHappened(object sender, PlayerEventArgs e)

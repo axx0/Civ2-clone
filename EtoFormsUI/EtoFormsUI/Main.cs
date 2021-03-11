@@ -15,18 +15,7 @@ namespace EtoFormsUI
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
         private bool suppressKeyEvent;
-        public bool ViewPieceMode { get; set; }
         public Sound Sounds;
-        private int[] _activeXY;
-        public int[] ActiveXY   // Coords of either active unit or view piece
-        {
-            get
-            {
-                if (!ViewPieceMode) _activeXY = new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
-                return _activeXY;
-            }
-            set { _activeXY = value; }
-        }
 
         public Main()
         {
