@@ -6,7 +6,7 @@ namespace EtoFormsUI
     public abstract class Civ2panel : Panel
     {
         public Drawable MainPanel, InnerPanel;
-        public PixelLayout MainPanelLayout;
+        public PixelLayout MainPanelLayout, InnerPanelLayout;
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
 
@@ -36,6 +36,9 @@ namespace EtoFormsUI
             MainPanel.Content = MainPanelLayout;
 
             Content = MainPanel;
+
+            InnerPanelLayout = new PixelLayout();
+            InnerPanelLayout.Size = new Size(width, height);
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)

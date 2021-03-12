@@ -35,6 +35,7 @@ namespace EtoFormsUI
 
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
+            GameOptionsCommand.Executed += GameOptionsCommand_Click;
             var GraphicOptionsCommand = new Command { MenuText = "Graphic Options", Shortcut = Keys.Control | Keys.P };
             var CityReportOptionsCommand = new Command { MenuText = "City Report Options", Shortcut = Keys.Control | Keys.E };
             var MultiplayerOptionsCommand = new Command { MenuText = "Multiplayer Options", Shortcut = Keys.Control | Keys.Y, Enabled = false };
@@ -180,6 +181,14 @@ namespace EtoFormsUI
 
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
+        }
+
+        private void GameOptionsCommand_Click(object sender, EventArgs e)
+        {
+            var GameOptionsPanel = new GameOptionsPanel();
+            layout.Add(GameOptionsPanel, this.Width / 2 - GameOptionsPanel.Width / 2, this.Height / 2 - GameOptionsPanel.Height / 2);
+            foreach (MenuItem item in Menu.Items) item.Enabled = false;
+            suppressKeyEvent = true;
         }
     }
 }
