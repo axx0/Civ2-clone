@@ -1,5 +1,4 @@
-﻿using System.IO;
-using SixLabors.ImageSharp;
+﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.PixelFormats;
@@ -14,7 +13,7 @@ namespace EtoFormsUI
 
         public static void LoadSpriteMaps()
         {
-            Terrain = Image.Load(Settings.Civ2Path + Path.DirectorySeparatorChar + "TERRAIN1.GIF");
+            Terrain = Image.Load(Settings.Civ2Path + System.IO.Path.DirectorySeparatorChar + "TERRAIN1.GIF");
         }
 
         public static Image GetImage()
