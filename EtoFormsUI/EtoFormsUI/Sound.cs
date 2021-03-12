@@ -1,13 +1,19 @@
-﻿using System.Media;
+﻿using System;
+using System.IO;
 using Civ2engine;
 using Civ2engine.Events;
 using Civ2engine.Enums;
+using LibVLCSharp.Shared;
 
 namespace EtoFormsUI
 {
     public class Sound
     {
-        private readonly SoundPlayer player;
+        private readonly LibVLC libVLC;
+        private readonly LibVLC libVLCLoop;
+        private readonly MediaPlayer player;
+        private readonly MediaPlayer playerLoop;
+
         private readonly string location;
 
         public Sound(string loc)
@@ -15,18 +21,30 @@ namespace EtoFormsUI
             location = loc;
             Game.OnUnitEvent += UnitEventHappened;
 
-            player = new SoundPlayer();
+            libVLC = new LibVLC();
+            player = new MediaPlayer(libVLC);
+
+            libVLCLoop = new LibVLC("--input-repeat=65535"); // See https://github.com/ZeBobo5/Vlc.DotNet/issues/96
+            playerLoop = new MediaPlayer(libVLCLoop);
+        }
+
+        private void PlaySound(string path){
+            player.Play(new Media(libVLC, new Uri(path)));
+        }
+
+        private void PlayLoop(string path){
+            playerLoop.Play(new Media(libVLC, new Uri(path)));
         }
 
         public void PlayMenuLoop()
         {
-            player.SoundLocation = location + "\\Sound\\MENULOOP.WAV";
-            player.PlayLooping();
+            this.PlayLoop(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "MENULOOP.WAV");
         }
 
         public void Stop()
         {
             player.Stop();
+            playerLoop.Stop();
         }
 
         private void UnitEventHappened(object sender, UnitEventArgs e)
@@ -34,23 +52,21 @@ namespace EtoFormsUI
             switch (e.EventType)
             {
                 case UnitEventType.MoveCommand:
-                    player.SoundLocation = location + "\\Sound\\MOVPIECE.WAV";
-                    player.Play();
+                    this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "MOVPIECE.WAV");
                     break;
                 case UnitEventType.Attack:
                     switch (e.Attacker.Type)
                     {
                         case UnitType.Catapult:
-                            player.SoundLocation = location + "\\Sound\\CATAPULT.WAV";
+                            this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "CATAPULT.WAV");
                             break;
                         case UnitType.Elephant:
-                            player.SoundLocation = location + "\\Sound\\ELEPHANT.WAV";
+                            this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "ELEPHANT.WAV");
                             break;
                         default:
-                            player.SoundLocation = location + "\\Sound\\SWORDFGT.WAV";
+                            this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "SWORDFGT.WAV");
                             break;
                     }
-                    player.Play();
                     break;
             }
         }
