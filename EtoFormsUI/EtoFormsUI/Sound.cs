@@ -21,6 +21,8 @@ namespace EtoFormsUI
             location = loc;
             Game.OnUnitEvent += UnitEventHappened;
 
+            LibVLCSharp.Shared.Core.Initialize();
+
             libVLC = new LibVLC();
             player = new MediaPlayer(libVLC);
 
