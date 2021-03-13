@@ -28,9 +28,6 @@ namespace EtoFormsUI
 
             //this.Paint += CityPanel_Paint;
 
-            var InnerPanelLayout = new PixelLayout();
-            InnerPanelLayout.Size = new Size(width, height);
-
             // Faces panel
             var faces = new Drawable();
             faces.Size = new Size(433, 44);
