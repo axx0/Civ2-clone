@@ -184,7 +184,13 @@ namespace Civ2engine
             // AI
             else
             {
-                Game.IssueUnitOrder(UnitAI.UnitOrder());
+                if (!_activeUnit.AwaitingOrders || !GetActiveUnits.Contains(_activeUnit))
+                {
+                    ChooseNextUnit();
+                }
+                else {
+                    Game.IssueUnitOrder(UnitAI.UnitOrder());
+                }
             }
         }
 

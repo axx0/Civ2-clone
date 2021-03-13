@@ -1,4 +1,5 @@
-﻿using System.Media;
+﻿using System;
+using System.Media;
 using Civ2engine.Events;
 using Civ2engine.Enums;
 
@@ -10,7 +11,7 @@ namespace Civ2engine.Sounds
 
         public static void LoadSounds(string directoryPath)
         {
-            //MOVPIECE = new SoundPlayer(directoryPath + "Sound\\MOVPIECE.WAV");
+            //MOVPIECE = new SoundPlayer(directoryPath + "Sound" + Path.DirectorySeparatorChar + "MOVPIECE.WAV");
 
             Game.OnUnitEvent += UnitEventHappened;
         }

@@ -13,7 +13,7 @@ namespace EtoFormsUI
 
         public static void LoadSpriteMaps()
         {
-            Terrain = Image.Load(Settings.Civ2Path + "\\TERRAIN1.GIF");
+            Terrain = Image.Load(Settings.Civ2Path + System.IO.Path.DirectorySeparatorChar + "TERRAIN1.GIF");
         }
 
         public static Image GetImage()

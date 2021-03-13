@@ -23,7 +23,7 @@ namespace Civ2engine
         public void ReadRules(string path)
         {
             // Read in SAV directory path. If it doesn't exist there, read from root civ2 directory.
-            string rulesPath1 = path + "\\RULES.TXT";
+            string rulesPath1 = path + Path.DirectorySeparatorChar + "RULES.TXT";
             string rulesPath2 = Settings.Civ2Path + "RULES.TXT";
             string filePath = null;
             if (File.Exists(rulesPath1))
@@ -419,7 +419,7 @@ namespace Civ2engine
             int intVal1, intVal2, intVal3, intVal4;
 
             // Read every byte from SAV
-            byte[] bytes = File.ReadAllBytes(savPath + "\\" + savName);
+            byte[] bytes = File.ReadAllBytes(savPath + Path.DirectorySeparatorChar + savName);
 
             #region Start of saved game file
             //=========================

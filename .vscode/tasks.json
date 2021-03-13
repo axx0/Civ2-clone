@@ -17,6 +17,12 @@
                 "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Gtk/EtoFormsUI.Gtk.csproj"
                 ],
             },
+            "osx": { 
+                "args": [
+                "build",
+                "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Mac/EtoFormsUI.Mac.csproj"
+                ],
+            },
             "group": "build",
             "presentation": {
                 "reveal": "always",

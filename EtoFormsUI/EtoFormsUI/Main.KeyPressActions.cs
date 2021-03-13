@@ -20,6 +20,7 @@ namespace EtoFormsUI
                         break;
                     }
                 case Keys.Keypad2:
+                case Keys.Down:
                     {
                         if (!Map.ViewPieceMode)
                         {
@@ -36,6 +37,7 @@ namespace EtoFormsUI
                         break;
                     }
                 case Keys.Keypad4:
+                case Keys.Left:
                     {
                         if (!Map.ViewPieceMode)
                         {
@@ -44,6 +46,7 @@ namespace EtoFormsUI
                         break;
                     }
                 case Keys.Keypad6:
+                case Keys.Right:
                     {
                         if (!Map.ViewPieceMode)
                         {
@@ -60,6 +63,7 @@ namespace EtoFormsUI
                         break;
                     }
                 case Keys.Keypad8:
+                case Keys.Up:
                     {
                         if (!Map.ViewPieceMode)
                         {

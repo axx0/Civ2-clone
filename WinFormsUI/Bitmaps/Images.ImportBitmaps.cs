@@ -50,7 +50,7 @@ namespace WinFormsUI
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             var terrain1 = new Bitmap(640, 480);
             //var terrain1 = new Image<Rgba32>(640, 480);
-            string FilePath_local = path + "\\TERRAIN1.GIF";
+            string FilePath_local = path + Path.DirectorySeparatorChar + "TERRAIN1.GIF";
             string FilePath_root = Settings.Civ2Path + "TERRAIN1.GIF";
             if (File.Exists(FilePath_local))
             {
@@ -66,7 +66,7 @@ namespace WinFormsUI
             }
 
             var terrain2 = new Bitmap(640, 480);
-            FilePath_local = path + "\\TERRAIN2.GIF";
+            FilePath_local = path + Path.DirectorySeparatorChar + "TERRAIN2.GIF";
             FilePath_root = Settings.Civ2Path + "TERRAIN2.GIF";
             if (File.Exists(FilePath_local))
             {
@@ -307,7 +307,7 @@ namespace WinFormsUI
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             var cities = new Bitmap(640, 480);
-            string FilePath_local = path + "\\CITIES.GIF";
+            string FilePath_local = path + Path.DirectorySeparatorChar + "CITIES.GIF";
             string FilePath_root = Settings.Civ2Path + "CITIES.GIF";
             if (File.Exists(FilePath_local))
             {
@@ -442,7 +442,7 @@ namespace WinFormsUI
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             var units = new Bitmap(640, 480);
-            string FilePath_local = path + "\\UNITS.GIF";
+            string FilePath_local = path + Path.DirectorySeparatorChar + "UNITS.GIF";
             string FilePath_root = Settings.Civ2Path + "UNITS.GIF";
             if (File.Exists(FilePath_local))
             {
@@ -548,7 +548,7 @@ namespace WinFormsUI
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             var pplIcons = new Bitmap(640, 480);
-            string FilePath_local = path + "\\PEOPLE.GIF";
+            string FilePath_local = path + Path.DirectorySeparatorChar + "PEOPLE.GIF";
             string FilePath_root = Settings.Civ2Path + "PEOPLE.GIF";
             if (File.Exists(FilePath_local))
             {
@@ -620,7 +620,7 @@ namespace WinFormsUI
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             var icons = new Bitmap(640, 480);
-            string FilePath_local = path + "\\ICONS.GIF";
+            string FilePath_local = path + Path.DirectorySeparatorChar + "ICONS.GIF";
             string FilePath_root = Settings.Civ2Path + "ICONS.GIF";
             if (File.Exists(FilePath_local))
             {
