@@ -157,15 +157,15 @@ namespace EtoFormsUI
             if (e.Buttons == MouseButtons.Primary)  // Left button
             {
                 // City clicked
-                if (Game.GetCities.Any(city => city.X == clickedXY[0] && city.Y == clickedXY[1]))
+                if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
                 {
                     if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
-                    var cityPanel = new CityPanel(main, Game.GetCities.Find(city => city.X == clickedXY[0] && city.Y == clickedXY[1]), 658, 459); // For normal zoom
+                    var cityPanel = new CityPanel(main, Game.CityHere(clickedXY[0], clickedXY[1]), 658, 459); // For normal zoom
                     MainPanelLayout.Add(cityPanel, (drawPanel.Width / 2) - (cityPanel.Width / 2), (drawPanel.Height / 2) - (cityPanel.Height / 2));
                     MainPanel.Content = MainPanelLayout;
                 }
                 // Unit clicked
-                else if (Game.GetUnits.Any(unit => unit.X == clickedXY[0] && unit.Y == clickedXY[1]))
+                else if (Game.AnyUnitsPresentHere(clickedXY[0], clickedXY[1]))
                 {
                     int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == clickedXY[0] && a.Y == clickedXY[1]);
                     if (!Game.GetUnits[clickedUnitIndex].TurnEnded)

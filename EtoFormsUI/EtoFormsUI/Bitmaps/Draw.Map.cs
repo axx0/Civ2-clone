@@ -149,7 +149,7 @@ namespace EtoFormsUI
                             }
 
                             // Units
-                            List<IUnit> unitsHere = Game.GetUnits.Where(u => u.X == startX + col && u.Y == startY + row).ToList();
+                            List<IUnit> unitsHere = Game.UnitsHere(startX + col, startY + row);
                             if (unitsHere.Count > 0)
                             {
                                 IUnit unit = unitsHere.Last();
@@ -164,7 +164,7 @@ namespace EtoFormsUI
                             }
 
                             // Cities
-                            City city = Game.GetCities.Find(c => c.X == startX + col && c.Y == startY + row);
+                            City city = Game.CityHere(startX + col, startY + row);
                             if (city != null)
                             {
                                 Draw.City(g, city, true, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
