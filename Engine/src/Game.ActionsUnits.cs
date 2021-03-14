@@ -245,10 +245,13 @@ namespace Civ2engine
                     }
                 }
 
-                OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.NewUnitActivated));
-
-                // Set new unit command if player=AI
-                if (_activeCiv != _playerCiv)
+                // Player => wait for new command
+                if (_activeCiv == _playerCiv)
+                {
+                    OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.StatusUpdate));
+                }
+                // AI => Set new unit command
+                else
                 {
                     Game.IssueUnitOrder(UnitAI.UnitOrder());
                 }
