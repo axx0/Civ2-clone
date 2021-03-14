@@ -43,6 +43,8 @@ namespace EtoFormsUI
 
             Content = layout;
 
+            BringToFront();
+
             ////ZoomInItem.Click += MapPanel.ZoomINclicked;
             ////ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
             ////MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;

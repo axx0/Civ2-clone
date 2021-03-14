@@ -30,7 +30,8 @@ namespace EtoFormsUI
             Game.Options.TutorialHelp = CheckboxState[8];
             Game.Options.MoveUnitsWithoutMouse = CheckboxState[9];
             Game.Options.EnterClosestCityScreen = CheckboxState[10];
-            Remove(this);
+            this.Dispose();
+            //RemoveAll();
         }
 
         // If cancel is pressed --> just close

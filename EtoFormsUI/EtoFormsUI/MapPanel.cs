@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -90,7 +90,7 @@ namespace EtoFormsUI
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
-            Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
+            Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} Map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
         }
 
         // Draw map here
@@ -373,7 +373,7 @@ namespace EtoFormsUI
                     animationFrames = GetAnimationFrames.UnitMoving(Game.GetActiveUnit);
                     animationTimer.Stop();
                     animationCount = 0;
-                    animationTimer.Interval = 0.01;    // sec
+                    animationTimer.Interval = 0.02;    // sec
                     animationTimer.Start();
                     break;
                 case AnimationType.Attack:
