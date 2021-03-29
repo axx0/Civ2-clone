@@ -204,7 +204,7 @@ namespace EtoFormsUI
             UpdateMap();
         }
 
-        private void UpdateMap()
+        public void UpdateMap()
         {
             updateMap = true;
             drawPanel.Invalidate();

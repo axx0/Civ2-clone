@@ -1,49 +1,47 @@
 ﻿using Eto.Forms;
 using Eto.Drawing;
+using System;
 
 namespace EtoFormsUI
 {
-    public abstract class Civ2panel : Panel
+    public abstract class Civ2dialog : Dialog
     {
-        protected Drawable MainPanel, InnerPanel;
-        protected PixelLayout MainPanelLayout, InnerPanelLayout;
+        protected Drawable Surface;
+        protected PixelLayout Layout;//, InnerPanelLayout;
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
 
-        public Civ2panel(int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
+        public Civ2dialog(int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
         {
+            WindowStyle = WindowStyle.None;
+            MovableByWindowBackground = true;
+            
             Size = new Size(width, height);
             _paddingTop = paddingTopInnerPanel;
             _paddingBtm = paddingBtmInnerPanel;
             _title = title;
 
-            // Main panel
-            MainPanel = new Drawable()
-            {
-                Size = new Size(width, height)
-            };
-            MainPanel.Paint += MainPanel_Paint;
+            Layout = new PixelLayout() { Size = new Size(width, height) };
+
+            // Drawable surface
+            Surface = new Drawable() { Size = new Size(width, height), CanFocus = false };
+            Surface.Paint += Surface_Paint;
 
             // Inner panel
-            MainPanelLayout = new PixelLayout();
-            MainPanelLayout.Size = new Size(MainPanel.Width, MainPanel.Height);
-            InnerPanel = new Drawable()
-            {
-                Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - _paddingTop - _paddingBtm)
-            };
-            InnerPanel.Paint += InnerPanel_Paint;
-            MainPanelLayout.Add(InnerPanel, 11, _paddingTop);
-            MainPanel.Content = MainPanelLayout;
+            //InnerPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - _paddingTop - _paddingBtm) };
+            //InnerPanel.Paint += InnerPanel_Paint;
+            //InnerPanelLayout = new PixelLayout() { Size = new Size(width, height) };
 
-            Content = MainPanel;
-
-            InnerPanelLayout = new PixelLayout();
-            InnerPanelLayout.Size = new Size(width, height);
+            //MainPanelLayout.Add(InnerPanel, 11, _paddingTop);
+            //MainPanel.Content = MainPanelLayout;
+            //Content = MainPanel;
+            Layout.Add(Surface, 0, 0);
         }
 
-        private void MainPanel_Paint(object sender, PaintEventArgs e)
+
+        private void Surface_Paint(object sender, PaintEventArgs e)
         {
-            // Paint wallpaper
+            // Paint outer wallpaper
             var imgSize = Images.PanelOuterWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
             {
@@ -83,7 +81,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen7, this.Width - 5, 4, this.Width - 5, this.Height - 5);
             e.Graphics.DrawLine(_pen7, 4, this.Height - 5, this.Width - 5, this.Height - 5);
 
-            // Inner panel
+            // Inner border
             e.Graphics.DrawLine(_pen7, 9, _paddingTop - 1, 9 + (Width - 18 - 1), _paddingTop - 1);   // 1st layer of border
             e.Graphics.DrawLine(_pen7, 10, _paddingTop - 1, 10, Height - _paddingBtm - 1);
             e.Graphics.DrawLine(_pen6, Width - 11, _paddingTop - 1, Width - 11, Height - _paddingBtm - 1);
@@ -93,6 +91,18 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen6, Width - 10, _paddingTop - 2, Width - 10, Height - _paddingBtm);
             e.Graphics.DrawLine(_pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
 
+            // Paint inner wallpaper
+            imgSize = Images.PanelInnerWallpaper.Size;
+            Rectangle rectS;
+            for (int row = 0; row < (this.Height - _paddingTop - _paddingBtm) / imgSize.Height + 1; row++)
+            {
+                for (int col = 0; col < (this.Width - 2 * 11) / imgSize.Width + 1; col++)
+                {
+                    rectS = new Rectangle(0, 0, Math.Min(this.Width - 2 * 11 - col * imgSize.Width, imgSize.Width), Math.Min(this.Height - _paddingBtm - _paddingTop - row * imgSize.Height, imgSize.Height));
+                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, rectS, new Point(col * imgSize.Width + 11, row * imgSize.Height + _paddingTop));
+                }
+            }
+
             // Paint title (if it exists)
             if (_title != null)
             {
@@ -100,17 +110,17 @@ namespace EtoFormsUI
             }
         }
 
-        private void InnerPanel_Paint(object sender, PaintEventArgs e)
-        {
-            // Paint inner wallpaper
-            var imgSize = Images.PanelInnerWallpaper.Size;
-            for (int row = 0; row < InnerPanel.Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < InnerPanel.Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
-        }
+        //private void InnerPanel_Paint(object sender, PaintEventArgs e)
+        //{
+        //    // Paint inner wallpaper
+        //    var imgSize = Images.PanelInnerWallpaper.Size;
+        //    for (int row = 0; row < InnerPanel.Height / imgSize.Height + 1; row++)
+        //    {
+        //        for (int col = 0; col < InnerPanel.Width / imgSize.Width + 1; col++)
+        //        {
+        //            e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
+        //        }
+        //    }
+        //}
     }
 }

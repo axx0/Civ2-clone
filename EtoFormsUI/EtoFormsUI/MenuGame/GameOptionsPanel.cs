@@ -1,5 +1,4 @@
-﻿using Eto.Forms;
-using Civ2engine;
+﻿using Civ2engine;
 
 namespace EtoFormsUI
 {
@@ -9,37 +8,40 @@ namespace EtoFormsUI
 
         public GameOptionsPanel() : base(746, 440, "Civilization II Multiplayer Gold", new string[11] {"Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.", "Fast piece slide.", "Instant advice.", "Tutorial help.", "Move units w/ mouse (cursor arrows).", "ENTER key closes City Screen." }, new string[2] { "OK", "Cancel" })
         {
-            Button[0].MouseUp += OKButton_Click;
-            Button[1].MouseUp += CancelButton_Click;
-
             // Put starting values into options
-            CheckboxState = new bool[11] { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn, Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp, Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
-        }
+            CheckBox[0].Checked = Game.Options.SoundEffects;
+            CheckBox[1].Checked = Game.Options.Music;
+            CheckBox[2].Checked = Game.Options.AlwaysWaitAtEndOfTurn;
+            CheckBox[3].Checked = Game.Options.AutosaveEachTurn;
+            CheckBox[4].Checked = Game.Options.ShowEnemyMoves;
+            CheckBox[5].Checked = Game.Options.NoPauseAfterEnemyMoves;
+            CheckBox[6].Checked = Game.Options.FastPieceSlide;
+            CheckBox[7].Checked = Game.Options.InstantAdvice;
+            CheckBox[8].Checked = Game.Options.TutorialHelp;
+            CheckBox[9].Checked = Game.Options.MoveUnitsWithoutMouse;
+            CheckBox[10].Checked = Game.Options.EnterClosestCityScreen;
 
-        // If OK is pressed --> update the options and close
-        private void OKButton_Click(object sender, MouseEventArgs e)
-        {
-            Game.Options.SoundEffects = CheckboxState[0];
-            Game.Options.Music = CheckboxState[1];
-            Game.Options.AlwaysWaitAtEndOfTurn = CheckboxState[2];
-            Game.Options.AutosaveEachTurn = CheckboxState[3];
-            Game.Options.ShowEnemyMoves = CheckboxState[4];
-            Game.Options.NoPauseAfterEnemyMoves = CheckboxState[5];
-            Game.Options.FastPieceSlide = CheckboxState[6];
-            Game.Options.InstantAdvice = CheckboxState[7];
-            Game.Options.TutorialHelp = CheckboxState[8];
-            Game.Options.MoveUnitsWithoutMouse = CheckboxState[9];
-            Game.Options.EnterClosestCityScreen = CheckboxState[10];
-            this.Dispose();
-            //RemoveAll();
-        }
+            // Define abort button (= Cancel) so that is also called with Esc
+            AbortButton = Button[1];
+            AbortButton.Click += (sender, e) => Close();
 
-        // If cancel is pressed --> just close
-        private void CancelButton_Click(object sender, MouseEventArgs e)
-        {
-            this.Visible = false;
-            this.Dispose();
+            // Define default button (= OK) so that it is also called with return key
+            DefaultButton = Button[0];
+            DefaultButton.Click += (sender, e) =>
+            {
+                Game.Options.SoundEffects = CheckBox[0].Checked == true;
+                Game.Options.Music = CheckBox[1].Checked == true;
+                Game.Options.AlwaysWaitAtEndOfTurn = CheckBox[2].Checked == true;
+                Game.Options.AutosaveEachTurn = CheckBox[3].Checked == true;
+                Game.Options.ShowEnemyMoves = CheckBox[4].Checked == true;
+                Game.Options.NoPauseAfterEnemyMoves = CheckBox[5].Checked == true;
+                Game.Options.FastPieceSlide = CheckBox[6].Checked == true;
+                Game.Options.InstantAdvice = CheckBox[7].Checked == true;
+                Game.Options.TutorialHelp = CheckBox[8].Checked == true;
+                Game.Options.MoveUnitsWithoutMouse = CheckBox[9].Checked == true;
+                Game.Options.EnterClosestCityScreen = CheckBox[10].Checked == true;
+                Close();
+            };
         }
-
     }
 }

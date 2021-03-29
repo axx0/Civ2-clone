@@ -3,10 +3,11 @@ using Eto.Drawing;
 
 namespace EtoFormsUI
 {
+    //public class RadioButtonPanel : Civ2panel
     public class RadioButtonPanel : Civ2panel
     {
-        public Civ2button[] Button;
-        public RadioButton[] RadioBtn;
+        protected Civ2button[] Button;
+        protected RadioButton[] RadioBtn;
 
         public RadioButtonPanel(int width, int height, string title, string[] choiceNames, string[] buttonTexts) : base(width, height, 38, 46, title)
         {

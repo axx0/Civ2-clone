@@ -35,9 +35,17 @@ namespace EtoFormsUI
 
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
-            GameOptionsCommand.Executed += GameOptionsCommand_Click;
+            GameOptionsCommand.Executed += (sender, e) => {
+                var gameOptionsPanel = new GameOptionsPanel();
+                gameOptionsPanel.ShowModal(); };
             var GraphicOptionsCommand = new Command { MenuText = "Graphic Options", Shortcut = Keys.Control | Keys.P };
+            GraphicOptionsCommand.Executed += (sender, e) => {
+                var graphicOptionsPanel = new GraphicOptionsPanel();
+                graphicOptionsPanel.ShowModal(); };
             var CityReportOptionsCommand = new Command { MenuText = "City Report Options", Shortcut = Keys.Control | Keys.E };
+            CityReportOptionsCommand.Executed += (sender, e) => {
+                var cityReportOptionsPanel = new CityReportOptionsPanel();
+                cityReportOptionsPanel.ShowModal(); };
             var MultiplayerOptionsCommand = new Command { MenuText = "Multiplayer Options", Shortcut = Keys.Control | Keys.Y, Enabled = false };
             var GameProfileCommand = new Command { MenuText = "Game Profile", Enabled = false };
             var PickMusicCommand = new Command { MenuText = "Pick Music" };
@@ -183,12 +191,11 @@ namespace EtoFormsUI
             Images.LoadGraphicsAssetsAtIntroScreen();
         }
 
-        private void GameOptionsCommand_Click(object sender, EventArgs e)
+        public void AfterClosePanel()
         {
-            var GameOptionsPanel = new GameOptionsPanel();
-            layout.Add(GameOptionsPanel, this.Width / 2 - GameOptionsPanel.Width / 2, this.Height / 2 - GameOptionsPanel.Height / 2);
-            foreach (MenuItem item in Menu.Items) item.Enabled = false;
-            suppressKeyEvent = true;
+            mapPanel.UpdateMap();
+            foreach (MenuItem item in Menu.Items) item.Enabled = true;
+            suppressKeyEvent = false;
         }
     }
 }

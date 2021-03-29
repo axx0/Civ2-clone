@@ -620,7 +620,7 @@ namespace EtoFormsUI
             }
 
             PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
-            PanelInnerWallpaper = icons.Clone(new Rectangle(299, 190, 31, 31));
+            PanelInnerWallpaper = icons.Clone(new Rectangle(298, 190, 32, 32));
 
             icons.Dispose();
         }
@@ -728,8 +728,8 @@ namespace EtoFormsUI
             CityTradeSmall.ReplaceColors(transparentLightPink, Colors.Transparent);
 
             // Wallpaper icons
-            PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
-            PanelInnerWallpaper = icons.Clone(new Rectangle(299, 190, 31, 31));
+            //PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
+            //PanelInnerWallpaper = icons.Clone(new Rectangle(298, 190, 32, 32));
 
             // Icon for next/previous city (black arrow)
             NextCity = icons.Clone(new Rectangle(227, 389, 18, 24));
