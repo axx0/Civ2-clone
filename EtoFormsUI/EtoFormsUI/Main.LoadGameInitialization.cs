@@ -25,9 +25,6 @@ namespace EtoFormsUI
 
             //ViewPieceMode = Game.ActiveUnit == null;
 
-            choiceMenu.Visible = false;
-            choiceMenu.Dispose();
-            choiceMenu = null;
             sinaiPanel.Dispose();
             sinaiPanel = null;
             foreach (MenuItem item in this.Menu.Items) item.Enabled = true;

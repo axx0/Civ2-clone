@@ -1,4 +1,5 @@
-﻿using Civ2engine;
+﻿using Eto.Forms;
+using Civ2engine;
 
 namespace EtoFormsUI
 {
@@ -6,8 +7,10 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
 
-        public GraphicOptionsPanel() : base(746, 280, "Select Graphic Options", new string[6] {"Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)", "Civilopedia for Advances", "High Council", "Wonder Movies" }, new string[2] { "OK", "Cancel" })
+        public GraphicOptionsPanel(Main parent) : base(parent, 746, 280, "Select Graphic Options", new string[6] {"Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)", "Civilopedia for Advances", "High Council", "Wonder Movies" }, new string[2] { "OK", "Cancel" })
         {
+            var owner = this.Owner;
+
             // Put starting values into options
             CheckBox[0].Checked = Game.Options.ThroneRoomGraphics;
             CheckBox[1].Checked = Game.Options.DiplomacyScreenGraphics;
@@ -18,7 +21,11 @@ namespace EtoFormsUI
 
             // Define abort button (= Cancel) so that is also called with Esc
             AbortButton = Button[1];
-            AbortButton.Click += (sender, e) => Close();
+            AbortButton.Click += (sender, e) =>
+            {
+                foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+                Close();
+            };
 
             // Define default button (= OK) so that it is also called with return key
             DefaultButton = Button[0];
@@ -30,6 +37,7 @@ namespace EtoFormsUI
                 Game.Options.CivilopediaForAdvances = CheckBox[3].Checked == true;
                 Game.Options.HighCouncil = CheckBox[4].Checked == true;
                 Game.Options.WonderMovies = CheckBox[5].Checked == true;
+                foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
                 Close();
             };
         }

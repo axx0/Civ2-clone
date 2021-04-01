@@ -19,7 +19,8 @@ namespace EtoFormsUI
 
         public Main()
         {
-            this.Load += LoadEvent;
+            this.Load += FormLoadEvent;
+            this.Shown += FormShownEvent;
             this.KeyDown += KeyPressedEvent;
             LoadInitialAssets();
 
@@ -36,15 +37,15 @@ namespace EtoFormsUI
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
             GameOptionsCommand.Executed += (sender, e) => {
-                var gameOptionsPanel = new GameOptionsPanel();
+                var gameOptionsPanel = new GameOptionsPanel(this);
                 gameOptionsPanel.ShowModal(); };
             var GraphicOptionsCommand = new Command { MenuText = "Graphic Options", Shortcut = Keys.Control | Keys.P };
             GraphicOptionsCommand.Executed += (sender, e) => {
-                var graphicOptionsPanel = new GraphicOptionsPanel();
+                var graphicOptionsPanel = new GraphicOptionsPanel(this);
                 graphicOptionsPanel.ShowModal(); };
             var CityReportOptionsCommand = new Command { MenuText = "City Report Options", Shortcut = Keys.Control | Keys.E };
             CityReportOptionsCommand.Executed += (sender, e) => {
-                var cityReportOptionsPanel = new CityReportOptionsPanel();
+                var cityReportOptionsPanel = new CityReportOptionsPanel(this);
                 cityReportOptionsPanel.ShowModal(); };
             var MultiplayerOptionsCommand = new Command { MenuText = "Multiplayer Options", Shortcut = Keys.Control | Keys.Y, Enabled = false };
             var GameProfileCommand = new Command { MenuText = "Game Profile", Enabled = false };
@@ -176,10 +177,18 @@ namespace EtoFormsUI
             Sounds = new Sound(Settings.Civ2Path);
         }
 
-        private void LoadEvent(object sender, EventArgs e)
+        private void FormLoadEvent(object sender, EventArgs e)
         {
             ShowIntroScreen();
             Sounds.PlayMenuLoop();
+        }
+
+        private void FormShownEvent(object sender, EventArgs e)
+        {
+            // Open this after the form is shown, otherwise it's opened too fast
+            choiceMenu = new ChoiceMenuPanel(this);
+            choiceMenu.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.745), (int)(Screen.PrimaryScreen.Bounds.Height * 0.570));
+            choiceMenu.ShowModal();
         }
 
         // Load assets at start of Civ2 program
@@ -189,13 +198,6 @@ namespace EtoFormsUI
 
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
-        }
-
-        public void AfterClosePanel()
-        {
-            mapPanel.UpdateMap();
-            foreach (MenuItem item in Menu.Items) item.Enabled = true;
-            suppressKeyEvent = false;
         }
     }
 }

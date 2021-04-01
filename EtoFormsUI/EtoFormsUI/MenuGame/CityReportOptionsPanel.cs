@@ -1,4 +1,5 @@
-﻿using Civ2engine;
+﻿using Eto.Forms;
+using Civ2engine;
 
 namespace EtoFormsUI
 {
@@ -6,7 +7,7 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
 
-        public CityReportOptionsPanel() : base(746, 440, "Select City Report Options", new string[11] {"Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.", "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".", "Warn when food dangerously low.", "Warn when new pollution occurs.", "Warn when changing production will cost shields.", "\"Zoom-to-City\" NOT default action." }, new string[2] { "OK", "Cancel" })
+        public CityReportOptionsPanel(Main parent) : base(parent, 746, 440, "Select City Report Options", new string[11] {"Warn when city growth halted (Aqueduct/Sewer System).", "Show city improvements built.", "Show non-combat units built.", "Show invalid build instructions.", "Announce cities in disorder.", "Announce order restored in city.", "Announce \"We Love The King Day\".", "Warn when food dangerously low.", "Warn when new pollution occurs.", "Warn when changing production will cost shields.", "\"Zoom-to-City\" NOT default action." }, new string[2] { "OK", "Cancel" })
         {
             // Put starting values into options
             CheckBox[0].Checked = Game.Options.WarnWhenCityGrowthHalted;
@@ -23,7 +24,11 @@ namespace EtoFormsUI
 
             // Define abort button (= Cancel) so that is also called with Esc
             AbortButton = Button[1];
-            AbortButton.Click += (sender, e) => Close();
+            AbortButton.Click += (sender, e) =>
+            {
+                foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+                Close();
+            };
 
             // Define default button (= OK) so that it is also called with return key
             DefaultButton = Button[0];
@@ -40,6 +45,7 @@ namespace EtoFormsUI
                 Game.Options.WarnWhenPollutionOccurs = CheckBox[8].Checked == true;
                 Game.Options.WarnChangProductWillCostShields = CheckBox[9].Checked == true;
                 Game.Options.ZoomToCityNotDefaultAction = CheckBox[10].Checked == true;
+                foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
                 Close();
             };
         }

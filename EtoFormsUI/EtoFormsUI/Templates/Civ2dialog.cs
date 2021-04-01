@@ -1,18 +1,20 @@
-﻿using Eto.Forms;
+﻿using System;
+using Eto.Forms;
 using Eto.Drawing;
-using System;
 
 namespace EtoFormsUI
 {
     public abstract class Civ2dialog : Dialog
     {
         protected Drawable Surface;
-        protected PixelLayout Layout;//, InnerPanelLayout;
+        protected PixelLayout Layout;
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
 
-        public Civ2dialog(int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
+        public Civ2dialog(Main parent, int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
         {
+            foreach (MenuItem item in parent.Menu.Items) item.Enabled = false;
+
             WindowStyle = WindowStyle.None;
             MovableByWindowBackground = true;
             
@@ -26,15 +28,7 @@ namespace EtoFormsUI
             // Drawable surface
             Surface = new Drawable() { Size = new Size(width, height), CanFocus = false };
             Surface.Paint += Surface_Paint;
-
-            // Inner panel
-            //InnerPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - _paddingTop - _paddingBtm) };
-            //InnerPanel.Paint += InnerPanel_Paint;
-            //InnerPanelLayout = new PixelLayout() { Size = new Size(width, height) };
-
-            //MainPanelLayout.Add(InnerPanel, 11, _paddingTop);
-            //MainPanel.Content = MainPanelLayout;
-            //Content = MainPanel;
+            
             Layout.Add(Surface, 0, 0);
         }
 
@@ -109,18 +103,5 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, _title, new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(this.Width / 2, _paddingTop / 2), true, true, Colors.Black, 1, 1);
             }
         }
-
-        //private void InnerPanel_Paint(object sender, PaintEventArgs e)
-        //{
-        //    // Paint inner wallpaper
-        //    var imgSize = Images.PanelInnerWallpaper.Size;
-        //    for (int row = 0; row < InnerPanel.Height / imgSize.Height + 1; row++)
-        //    {
-        //        for (int col = 0; col < InnerPanel.Width / imgSize.Width + 1; col++)
-        //        {
-        //            e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-        //        }
-        //    }
-        //}
     }
 }

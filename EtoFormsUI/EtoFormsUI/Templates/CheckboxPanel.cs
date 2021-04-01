@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Eto.Forms;
+﻿using Eto.Forms;
 using Eto.Drawing;
 
 namespace EtoFormsUI
@@ -10,7 +9,7 @@ namespace EtoFormsUI
         public CheckBox[] CheckBox;
         private readonly Drawable innerPanel;
 
-        public CheckboxPanel(int width, int height, string title, string[] checkboxNames, string[] buttonTexts) : base(width, height, 38, 46, title)
+        public CheckboxPanel(Main parent, int width, int height, string title, string[] checkboxNames, string[] buttonTexts) : base(parent, width, height, 38, 46, title)
         {
             // Define formatted texts
             var _font1 = new Font("Times New Roman", 18);

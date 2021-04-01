@@ -1,4 +1,5 @@
-﻿using Civ2engine;
+﻿using Eto.Forms;
+using Civ2engine;
 
 namespace EtoFormsUI
 {
@@ -6,7 +7,7 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
 
-        public GameOptionsPanel() : base(746, 440, "Civilization II Multiplayer Gold", new string[11] {"Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.", "Fast piece slide.", "Instant advice.", "Tutorial help.", "Move units w/ mouse (cursor arrows).", "ENTER key closes City Screen." }, new string[2] { "OK", "Cancel" })
+        public GameOptionsPanel(Main parent) : base(parent, 746, 440, "Civilization II Multiplayer Gold", new string[11] {"Sound Effects", "Music", "Always wait at end of turn.", "Autosave each turn.", "Show enemy moves.", "No pause after enemy moves.", "Fast piece slide.", "Instant advice.", "Tutorial help.", "Move units w/ mouse (cursor arrows).", "ENTER key closes City Screen." }, new string[2] { "OK", "Cancel" })
         {
             // Put starting values into options
             CheckBox[0].Checked = Game.Options.SoundEffects;
@@ -23,7 +24,11 @@ namespace EtoFormsUI
 
             // Define abort button (= Cancel) so that is also called with Esc
             AbortButton = Button[1];
-            AbortButton.Click += (sender, e) => Close();
+            AbortButton.Click += (sender, e) =>
+            {
+                foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+                Close();
+            };
 
             // Define default button (= OK) so that it is also called with return key
             DefaultButton = Button[0];
@@ -40,6 +45,7 @@ namespace EtoFormsUI
                 Game.Options.TutorialHelp = CheckBox[8].Checked == true;
                 Game.Options.MoveUnitsWithoutMouse = CheckBox[9].Checked == true;
                 Game.Options.EnterClosestCityScreen = CheckBox[10].Checked == true;
+                foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
                 Close();
             };
         }
