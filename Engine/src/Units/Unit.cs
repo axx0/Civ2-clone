@@ -153,6 +153,7 @@ namespace Civ2engine.Units
         public int Counter { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
+        public int[] XY => new int[] { X, Y };
         public int MovementCounter { get; set; }
         public int Xpx => X * Map.Xpx;
         public int Ypx => Y * Map.Ypx;

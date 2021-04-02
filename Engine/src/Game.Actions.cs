@@ -105,7 +105,7 @@ namespace Civ2engine
             //For each offset make the tile visible if it isn't yet
             foreach (int[] offset in offsets)
             {
-                int[] coords = new int[] { _activeUnit.X, _activeUnit.Y }.Civ2xy();
+                int[] coords = _activeUnit.XY.Civ2xy();
                 coords[0] += offset[0];
                 coords[1] += offset[1];
                 Map.Visibility[coords[0], coords[1]][_activeCiv.Id] = true;

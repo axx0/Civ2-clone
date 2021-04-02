@@ -4,7 +4,7 @@ using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.AI;
+using ExtensionMethods;
 
 namespace Civ2engine
 {
@@ -72,23 +72,25 @@ namespace Civ2engine
 
         private UnitMovementOrderResultType DetermineUnitMovementOrderResult(OrderType movementDirection)
         {
-            int[] deltaXY = new int[] { 0, 0 };
-            switch (movementDirection)
-            {
-                case OrderType.MoveSW: deltaXY = new int[] { -1, 1 }; break;
-                case OrderType.MoveS: deltaXY = new int[] { 0, 2 }; break;
-                case OrderType.MoveSE: deltaXY = new int[] { 1, 1 }; break;
-                case OrderType.MoveE: deltaXY = new int[] { 2, 0 }; break;
-                case OrderType.MoveNE: deltaXY = new int[] { 1, 1 }; break;
-                case OrderType.MoveN: deltaXY = new int[] { 0, -2 }; break;
-                case OrderType.MoveNW: deltaXY = new int[] { -1, -1 }; break;
-                case OrderType.MoveW: deltaXY = new int[] { -2, 0 }; break;
-            }
-            int[] newXY = { _activeUnit.X + deltaXY[0], _activeUnit.Y + deltaXY[1] };
+            //int[] deltaXY = new int[] { 0, 0 };
+            //switch (movementDirection)
+            //{
+            //    case OrderType.MoveSW: deltaXY = new int[] { -1, 1 }; break;
+            //    case OrderType.MoveS: deltaXY = new int[] { 0, 2 }; break;
+            //    case OrderType.MoveSE: deltaXY = new int[] { 1, 1 }; break;
+            //    case OrderType.MoveE: deltaXY = new int[] { 2, 0 }; break;
+            //    case OrderType.MoveNE: deltaXY = new int[] { 1, 1 }; break;
+            //    case OrderType.MoveN: deltaXY = new int[] { 0, -2 }; break;
+            //    case OrderType.MoveNW: deltaXY = new int[] { -1, -1 }; break;
+            //    case OrderType.MoveW: deltaXY = new int[] { -2, 0 }; break;
+            //}
+            //int[] newXY = { _activeUnit.X + deltaXY[0], _activeUnit.Y + deltaXY[1] };
+
+            int[] newXY = _activeUnit.NewUnitCoords(movementDirection);
 
             // Determine what happens after command
             // ATTACK
-            if (_units.Any(unit => unit.X == newXY[0] && unit.Y == newXY[1] && unit.Owner != _activeUnit.Owner))
+            if (EnemyUnitsPresentHere(newXY[0], newXY[1]))
             {
                 // Units with attack factor = 0 cannot attack
                 if (_activeUnit.AttackBase == 0) return UnitMovementOrderResultType.CombatStrength0CannotAttack;
@@ -189,7 +191,7 @@ namespace Civ2engine
                     ChooseNextUnit();
                 }
                 else {
-                    Game.IssueUnitOrder(UnitAI.UnitOrder());
+                    Game.IssueUnitOrder(AI_UnitOrder());
                 }
             }
         }
@@ -253,7 +255,7 @@ namespace Civ2engine
                 // AI => Set new unit command
                 else
                 {
-                    Game.IssueUnitOrder(UnitAI.UnitOrder());
+                    Game.IssueUnitOrder(AI_UnitOrder());
                 }
             }
         }

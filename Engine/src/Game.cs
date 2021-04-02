@@ -66,6 +66,7 @@ namespace Civ2engine
         public City CityHere(int x, int y) => _cities.Find(city => city.X == x && city.Y == y);
         public List<IUnit> UnitsHere(int x, int y) => _units.FindAll(unit => unit.X == x && unit.Y == y);
         public bool AnyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y);
+        public bool EnemyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
         public bool AnyCitiesPresentHere(int x, int y) => _cities.Any(city => city.X == x && city.Y == y);
 
         //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 

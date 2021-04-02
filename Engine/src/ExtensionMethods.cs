@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System;
+﻿using System;
+using Civ2engine.Enums;
+using Civ2engine.Units;
 
 namespace ExtensionMethods
 {
@@ -35,6 +34,24 @@ namespace ExtensionMethods
         public static int ZoomScale(this int i, int zoom)
         {
             return (int)((8.0 + (float)zoom) / 8.0 * i);
+        }
+
+        // Return new unit coords based on movement direction
+        public static int[] NewUnitCoords(this IUnit unit, OrderType movementDir)
+        {
+            int[] deltaXY = new int[] { 0, 0 };
+            switch (movementDir)
+            {
+                case OrderType.MoveSW: deltaXY = new int[] { -1, 1 }; break;
+                case OrderType.MoveS: deltaXY = new int[] { 0, 2 }; break;
+                case OrderType.MoveSE: deltaXY = new int[] { 1, 1 }; break;
+                case OrderType.MoveE: deltaXY = new int[] { 2, 0 }; break;
+                case OrderType.MoveNE: deltaXY = new int[] { 1, 1 }; break;
+                case OrderType.MoveN: deltaXY = new int[] { 0, -2 }; break;
+                case OrderType.MoveNW: deltaXY = new int[] { -1, -1 }; break;
+                case OrderType.MoveW: deltaXY = new int[] { -2, 0 }; break;
+            }
+            return new int[] { unit.X + deltaXY[0], unit.Y + deltaXY[1] };
         }
     }
 }
