@@ -6,7 +6,7 @@ namespace EtoFormsUI
     public class CheckboxPanel : Civ2dialog
     {
         protected Civ2button[] Button;
-        public CheckBox[] CheckBox;
+        protected CheckBox[] CheckBox;
         private readonly Drawable innerPanel;
 
         public CheckboxPanel(Main parent, int width, int height, string title, string[] checkboxNames, string[] buttonTexts) : base(parent, width, height, 38, 46, title)

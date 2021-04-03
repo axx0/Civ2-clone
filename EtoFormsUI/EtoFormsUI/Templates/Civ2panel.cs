@@ -18,19 +18,13 @@ namespace EtoFormsUI
             _title = title;
 
             // Main panel
-            MainPanel = new Drawable()
-            {
-                Size = new Size(width, height)
-            };
+            MainPanel = new Drawable() { Size = new Size(width, height) };
             MainPanel.Paint += MainPanel_Paint;
 
             // Inner panel
             MainPanelLayout = new PixelLayout();
             MainPanelLayout.Size = new Size(MainPanel.Width, MainPanel.Height);
-            InnerPanel = new Drawable()
-            {
-                Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - _paddingTop - _paddingBtm)
-            };
+            InnerPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - _paddingTop - _paddingBtm) };
             InnerPanel.Paint += InnerPanel_Paint;
             MainPanelLayout.Add(InnerPanel, 11, _paddingTop);
             MainPanel.Content = MainPanelLayout;

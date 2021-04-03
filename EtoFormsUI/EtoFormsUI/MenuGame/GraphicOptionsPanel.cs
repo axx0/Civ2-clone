@@ -7,7 +7,7 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
 
-        public GraphicOptionsPanel(Main parent) : base(parent, 746, 280, "Select Graphic Options", new string[6] {"Throne Room", "Diplomacy Screen", "Animated Heralds (Requires 16 megabytes RAM)", "Civilopedia for Advances", "High Council", "Wonder Movies" }, new string[2] { "OK", "Cancel" })
+        public GraphicOptionsPanel(Main parent) : base(parent, 746, 280, "Select Graphic Options", new string[6] { "Throne Room (TODO)", "Diplomacy Screen (TODO)", "Animated Heralds (Requires 16 megabytes RAM) (TODO)", "Civilopedia for Advances (TODO)", "High Council (TODO)", "Wonder Movies (TODO)" }, new string[2] { "OK", "Cancel" })
         {
             var owner = this.Owner;
 
