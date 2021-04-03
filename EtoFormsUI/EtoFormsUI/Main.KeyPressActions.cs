@@ -7,10 +7,13 @@ namespace EtoFormsUI
     {
         private void KeyPressedEvent(object sender, KeyEventArgs e)
         {
-            if (suppressKeyEvent) return;
-
             switch (e.Key)
             {
+                case Keys.Enter:
+                    {
+                        if (statusPanel.WaitingAtEndOfTurn) statusPanel.End_WaitAtEndOfTurn();
+                        break;
+                    }
                 case Keys.Keypad1:
                     {
                         if (!Map.ViewPieceMode)

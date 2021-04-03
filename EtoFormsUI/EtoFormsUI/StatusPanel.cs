@@ -18,84 +18,50 @@ namespace EtoFormsUI
 
         private readonly Main main;
         private readonly Drawable mainPanel, statsPanel, unitPanel;
-        //private readonly Timer Timer = new Timer();
-        private bool WaitingAtEndOfTurn
-        {
-            get
-            {
-                if (!Game.GetActiveCiv.AnyUnitsAwaitingOrders && Game.Options.AlwaysWaitAtEndOfTurn) return true;
-                else return false;
-            }
-        }
+        private bool eotWhite; // End of turn text color is white?
+        private readonly UITimer timer;
+
+        public bool WaitingAtEndOfTurn => Game.GetPlayerCiv == Game.GetActiveCiv && !Game.GetActiveCiv.AnyUnitsAwaitingOrders && Game.Options.AlwaysWaitAtEndOfTurn;
+
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public StatusPanel(Main parent, int width, int height)
         {
             main = parent;
-
             Size = new Size(width, height);
+            eotWhite = true;
 
             // Main panel
-            mainPanel = new Drawable()
-            {
-                Size = new Size(width, height)
-            };
+            mainPanel = new Drawable() { Size = new Size(width, height) };
             mainPanel.Paint += MainPanel_Paint;
 
-            var MainPanelLayout = new PixelLayout()
-            {
-                Size = new Size(mainPanel.Width, mainPanel.Height)
-            };
+            var MainPanelLayout = new PixelLayout() { Size = new Size(mainPanel.Width, mainPanel.Height) };
+
             // Stats panel
-            statsPanel = new Drawable()
-            {
-                Size = new Size(240, 60)
-            };
+            statsPanel = new Drawable() { Size = new Size(240, 60) };
             statsPanel.Paint += StatsPanel_Paint;
             statsPanel.MouseUp += Panel_Click;
             MainPanelLayout.Add(statsPanel, 11, 38);
+
             // Unit panel
-            unitPanel = new Drawable()
-            {
-                Size = new Size(240, this.Height - 117)
-            };
+            unitPanel = new Drawable() { Size = new Size(240, this.Height - 117) };
             unitPanel.Paint += UnitPanel_Paint;
             unitPanel.MouseUp += Panel_Click;
             MainPanelLayout.Add(unitPanel, 11, 106);
-            
+
             mainPanel.Content = MainPanelLayout;
             Content = mainPanel;
 
-            //Paint += StatusPanel_Paint;
             MapPanel.OnMapEvent += MapEventHappened;
-            ////Main.OnMapEvent += MapEventHappened;
+            Game.OnMapEvent += MapEventHappened;
+            //Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             //Game.OnPlayerEvent += PlayerEventHappened;
             Game.OnUnitEvent += UnitEventHappened;
 
-            //StatsPanel = new DoubleBufferedPanel()
-            //{
-            //    Location = new Point(11, 38),
-            //    Size = new Size(240, 60),
-            //    BackgroundImage = Images.PanelInnerWallpaper
-            //};
-            //Controls.Add(StatsPanel);
-            //StatsPanel.Paint += StatsPanel_Paint;
-            //StatsPanel.MouseClick += Panel_Click;
-
-            //UnitPanel = new DoubleBufferedPanel()
-            //{
-            //    Location = new Point(11, 106),
-            //    Size = new Size(240, Height - 117),
-            //    BackgroundImage = Images.PanelInnerWallpaper
-            //};
-            //Controls.Add(UnitPanel);
-            //UnitPanel.Paint += UnitPanel_Paint;
-            //UnitPanel.MouseClick += Panel_Click;
-
             // Timer for "end of turn" message
-            //Timer.Tick += Timer_Tick;
-            //Timer.Interval = 500;   // ms
+            timer = new UITimer() { Interval = 0.5 };
+            timer.Elapsed += (sender, e) => unitPanel.Invalidate();
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
@@ -308,21 +274,22 @@ namespace EtoFormsUI
                 }
             }
 
-            //// Blinking "end of turn" message
-            //if (WaitingAtEndOfTurn)
-            //{
-            //    using var _font2 = new Font("Times New Roman", 12, FontStyle.Bold);
-            //    Color _EoTcolor = BoolSwitcher ? Color.White : Color.FromArgb(135, 135, 135);
-            //    Draw.Text(e.Graphics, "End of Turn", _font2, StringAlignment.Near, StringAlignment.Near, _EoTcolor, new Point(5, UnitPanel.Height - 51), Color.Black, 1, 0);
-            //    Draw.Text(e.Graphics, "(Press ENTER)", _font2, StringAlignment.Near, StringAlignment.Near, _EoTcolor, new Point(10, UnitPanel.Height - 33), Color.Black, 1, 0);
-            //}
+            // Blinking "end of turn" message
+            if (WaitingAtEndOfTurn)
+            {
+                using var _font2 = new Font("Times New Roman", 12, FontStyle.Bold);
+                Color _EoTcolor = eotWhite ? Colors.White : Color.FromArgb(135, 135, 135);
+                Draw.Text(e.Graphics, "End of Turn", _font2, _EoTcolor, new Point(5, unitPanel.Height - 51), false, false, Colors.Black, 1, 0);
+                Draw.Text(e.Graphics, "(Press ENTER)", _font2, _EoTcolor, new Point(10, unitPanel.Height - 33), false, false, Colors.Black, 1, 0);
+                eotWhite = !eotWhite;
+            }
         }
 
         private void Panel_Click(object sender, MouseEventArgs e)
         {
             if (WaitingAtEndOfTurn)
             {
-                //Game.NewPlayerTurn();
+                End_WaitAtEndOfTurn();
             }
             else
             {
@@ -339,6 +306,11 @@ namespace EtoFormsUI
                 case MapEventType.MapViewChanged:
                     {
                         unitPanel.Invalidate();
+                        break;
+                    }
+                case MapEventType.WaitAtEndOfTurn:
+                    {
+                        timer.Start();
                         break;
                     }
                 default: break;
@@ -385,27 +357,10 @@ namespace EtoFormsUI
             }
         }
 
-        private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
+        public void End_WaitAtEndOfTurn()
         {
-            //WaitingAtEndOfTurn = true;
-            //Timer.Start();
-            //UnitPanel.Refresh();
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            //UnitPanel.Refresh();
-        }
-
-        private bool _boolSwitcher;
-        private bool BoolSwitcher
-        {
-            get
-            {
-                if (this == null) _boolSwitcher = true;
-                _boolSwitcher = !_boolSwitcher;   // Change state when this is called
-                return _boolSwitcher;
-            }
+            timer.Stop();
+            Game.ChoseNextCiv();
         }
 
         // Concert an order enum to string

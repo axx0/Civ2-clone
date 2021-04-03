@@ -37,11 +37,7 @@ namespace EtoFormsUI
         {
             main = parent;
 
-            drawPanel = new Drawable()
-            {
-                Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10),
-                BackgroundColor = Colors.Black
-            };
+            drawPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
             drawPanel.Paint += DrawPanel_Paint;
             MainPanelLayout.Add(drawPanel, 11, 38);
             MainPanel.Content = MainPanelLayout;
@@ -50,11 +46,11 @@ namespace EtoFormsUI
             drawPanel.Paint += DrawPanel_Paint;
             drawPanel.MouseUp += DrawPanel_MouseClick;
 
-            Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
             //MinimapPanel.OnMapEvent += MapEventHappened;
             StatusPanel.OnMapEvent += MapEventHappened;
+            Game.OnMapEvent += MapEventHappened;
             //Main.OnMapEvent += MapEventHappened;
             //Main.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
 
@@ -278,6 +274,12 @@ namespace EtoFormsUI
                         drawPanel.Invalidate();
                         break;
                     }
+                case MapEventType.WaitAtEndOfTurn:
+                    {
+                        Map.ViewPieceMode = true;
+                        StartAnimation(AnimationType.Waiting);
+                        break;
+                    }
                 default: break;
             }
         }
@@ -344,14 +346,6 @@ namespace EtoFormsUI
                 //        break;
                 //    }
             }
-        }
-
-        private void InitiateWaitAtTurnEnd(object sender, WaitAtTurnEndEventArgs e)
-        {
-            Map.ViewPieceMode = true;
-            animationTimer.Stop();
-            animationCount = 0;
-            animationTimer.Start();
         }
 
         // If ENTER pressed when view piece above city --> enter city view

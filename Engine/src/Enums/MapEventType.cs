@@ -8,6 +8,7 @@
         ToggleBetweenCurrentEntireMapView = 3,
         ZoomChanged = 4,
         CenterView = 5,
-        ToggleGrid = 6
+        ToggleGrid = 6,
+        WaitAtEndOfTurn = 7
     }
 }

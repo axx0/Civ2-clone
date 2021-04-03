@@ -21,7 +21,7 @@ namespace Civ2engine
             }
         }
 
-        private void ChoseNextCiv()
+        public void ChoseNextCiv()
         {
             // Make a list of active civs
             var civIds = new List<int>();

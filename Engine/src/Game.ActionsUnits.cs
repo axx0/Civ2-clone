@@ -10,7 +10,7 @@ namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
-        public static event EventHandler<WaitAtTurnEndEventArgs> OnWaitAtTurnEnd;
+        public static event EventHandler<MapEventArgs> OnMapEvent;
         public static event EventHandler<UnitEventArgs> OnUnitEvent;
 
         public void IssueUnitOrder(OrderType order)
@@ -72,20 +72,6 @@ namespace Civ2engine
 
         private UnitMovementOrderResultType DetermineUnitMovementOrderResult(OrderType movementDirection)
         {
-            //int[] deltaXY = new int[] { 0, 0 };
-            //switch (movementDirection)
-            //{
-            //    case OrderType.MoveSW: deltaXY = new int[] { -1, 1 }; break;
-            //    case OrderType.MoveS: deltaXY = new int[] { 0, 2 }; break;
-            //    case OrderType.MoveSE: deltaXY = new int[] { 1, 1 }; break;
-            //    case OrderType.MoveE: deltaXY = new int[] { 2, 0 }; break;
-            //    case OrderType.MoveNE: deltaXY = new int[] { 1, 1 }; break;
-            //    case OrderType.MoveN: deltaXY = new int[] { 0, -2 }; break;
-            //    case OrderType.MoveNW: deltaXY = new int[] { -1, -1 }; break;
-            //    case OrderType.MoveW: deltaXY = new int[] { -2, 0 }; break;
-            //}
-            //int[] newXY = { _activeUnit.X + deltaXY[0], _activeUnit.Y + deltaXY[1] };
-
             int[] newXY = _activeUnit.NewUnitCoords(movementDirection);
 
             // Determine what happens after command
@@ -202,17 +188,14 @@ namespace Civ2engine
             // End turn if no units awaiting orders
             if (!_activeCiv.AnyUnitsAwaitingOrders)
             {
-                ChoseNextCiv();
-
-                // TODO: implement wait at end of turn
-                //if (Options.AlwaysWaitAtEndOfTurn)
-                //{
-                //    OnWaitAtTurnEnd?.Invoke(null, new WaitAtTurnEndEventArgs());
-                //}
-                //else
-                //{
-                    
-                //}
+                if (Options.AlwaysWaitAtEndOfTurn && _activeCiv == _playerCiv)
+                {
+                    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.WaitAtEndOfTurn));
+                }
+                else
+                {
+                    ChoseNextCiv();
+                }
             }
             // Choose next unit
             else

@@ -14,7 +14,6 @@ namespace EtoFormsUI
         private MapPanel mapPanel;
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
-        private bool suppressKeyEvent;
         public Sound Sounds;
 
         public Main()
@@ -28,7 +27,6 @@ namespace EtoFormsUI
             BackgroundColor = Color.FromArgb(143, 123, 99);
             WindowState = WindowState.Maximized;
             Icon = new Icon(Settings.Civ2Path + "civ2.ico");
-            suppressKeyEvent = false;
 
             layout = new PixelLayout();
             var image = new ImageView { Image = Images.MainScreenSymbol };
