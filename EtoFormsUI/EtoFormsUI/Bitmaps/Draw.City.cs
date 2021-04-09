@@ -171,5 +171,12 @@ namespace EtoFormsUI
             g.DrawText(formattedShadow2Text, new Point(dest.X - (int)textSize.Width / 2, dest.Y + shadowOffset - (int)textSize.Height / 2));
             g.DrawText(formattedFrontText, new Point(dest.X - (int)textSize.Width / 2, dest.Y - (int)textSize.Height / 2));
         }
+
+        public static void CityImprovement(Graphics g, ImprovementType type, int zoom, Point dest)
+        {
+            using var improvPic = Images.Improvements[(int)type].Resize(zoom);
+            g.DrawImage(improvPic, dest);
+        }
+
     }
 }

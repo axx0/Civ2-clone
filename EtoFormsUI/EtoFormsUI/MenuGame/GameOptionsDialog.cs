@@ -3,11 +3,11 @@ using Civ2engine;
 
 namespace EtoFormsUI
 {
-    public class GameOptionsPanel : CheckboxPanel
+    public class GameOptionsDialog : CheckboxPanel
     {
         private Game Game => Game.Instance;
 
-        public GameOptionsPanel(Main parent) : base(parent, 746, 440, "Civilization II Multiplayer Gold", new string[11] { "Sound Effects (TODO)", "Music (TODO)", "Always wait at end of turn.", "Autosave each turn. (TODO)", "Show enemy moves. (TODO)", "No pause after enemy moves. (TODO)", "Fast piece slide. (TODO)", "Instant advice. (TODO)", "Tutorial help. (TODO)", "Move units w/ mouse (cursor arrows). (TODO)", "ENTER key closes City Screen. (TODO)" }, new string[2] { "OK", "Cancel" })
+        public GameOptionsDialog(Main parent) : base(parent, 746, 440, "Civilization II Multiplayer Gold", new string[11] { "Sound Effects (TODO)", "Music (TODO)", "Always wait at end of turn.", "Autosave each turn. (TODO)", "Show enemy moves. (TODO)", "No pause after enemy moves. (TODO)", "Fast piece slide. (TODO)", "Instant advice. (TODO)", "Tutorial help. (TODO)", "Move units w/ mouse (cursor arrows). (TODO)", "ENTER key closes City Screen. (TODO)" }, new string[2] { "OK", "Cancel" })
         {
             // Put starting values into options
             CheckBox[0].Checked = Game.Options.SoundEffects;

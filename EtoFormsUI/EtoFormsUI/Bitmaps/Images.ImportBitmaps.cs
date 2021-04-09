@@ -9,7 +9,7 @@ namespace EtoFormsUI
 {
     public static partial class Images
     {
-        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, ZoomIN, ZoomOUT, ShieldShadow;
+        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT, ShieldShadow;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements, BattleAnim;
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
@@ -741,9 +741,10 @@ namespace EtoFormsUI
             //PrevCityLarge = ModifyImage.Resize(PrevCity, 27, 36);    //50% larger
             PrevCityLarge = PrevCity;
 
-            // Zoom icons
-            ZoomIN = icons.Clone(new Rectangle(18, 389, 16, 16));
-            ZoomOUT = icons.Clone(new Rectangle(35, 389, 16, 16));
+            // City window icons
+            CityExit = icons.Clone(new Rectangle(1, 389, 16, 16));
+            CityZoomOUT = icons.Clone(new Rectangle(18, 389, 16, 16));
+            CityZoomIN = icons.Clone(new Rectangle(35, 389, 16, 16));
 
             // Battle sprites
             BattleAnim = new Bitmap[8];
@@ -767,7 +768,7 @@ namespace EtoFormsUI
             {
                 Debug.WriteLine("CITY.GIF not found!");
             }
-            CityWallpaper = cityWallpaper.CropImage(new Rectangle(0, 0, 640, 420));
+            CityWallpaper = cityWallpaper.CropImage(new Rectangle(0, 0, 636, 421));
         }
 
         private static Bitmap CreateNonIndexedImage(Image src)  //Converting GIFs to non-indexed images (required for SetPixel method)

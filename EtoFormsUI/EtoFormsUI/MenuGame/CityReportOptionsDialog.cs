@@ -3,11 +3,11 @@ using Civ2engine;
 
 namespace EtoFormsUI
 {
-    public class CityReportOptionsPanel : CheckboxPanel
+    public class CityReportOptionsDialog : CheckboxPanel
     {
         private Game Game => Game.Instance;
 
-        public CityReportOptionsPanel(Main parent) : base(parent, 746, 440, "Select City Report Options", new string[11] { "Warn when city growth halted (Aqueduct/Sewer System). (TODO)", "Show city improvements built. (TODO)", "Show non-combat units built. (TODO)", "Show invalid build instructions. (TODO)", "Announce cities in disorder. (TODO)", "Announce order restored in city. (TODO)", "Announce \"We Love The King Day\". (TODO)", "Warn when food dangerously low. (TODO)", "Warn when new pollution occurs. (TODO)", "Warn when changing production will cost shields. (TODO)", "\"Zoom-to-City\" NOT default action. (TODO)" }, new string[2] { "OK", "Cancel" })
+        public CityReportOptionsDialog(Main parent) : base(parent, 746, 440, "Select City Report Options", new string[11] { "Warn when city growth halted (Aqueduct/Sewer System). (TODO)", "Show city improvements built. (TODO)", "Show non-combat units built. (TODO)", "Show invalid build instructions. (TODO)", "Announce cities in disorder. (TODO)", "Announce order restored in city. (TODO)", "Announce \"We Love The King Day\". (TODO)", "Warn when food dangerously low. (TODO)", "Warn when new pollution occurs. (TODO)", "Warn when changing production will cost shields. (TODO)", "\"Zoom-to-City\" NOT default action. (TODO)" }, new string[2] { "OK", "Cancel" })
         {
             // Put starting values into options
             CheckBox[0].Checked = Game.Options.WarnWhenCityGrowthHalted;

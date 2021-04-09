@@ -21,7 +21,7 @@ namespace EtoFormsUI
         private readonly UITimer animationTimer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         private AnimationType animType;
         private int animationCount;
-        private readonly Drawable drawPanel;
+        public Drawable drawPanel;
 
         private int[] CentrXY, centrOffset;
         private Rectangle mapSrc1, mapSrc2;
@@ -152,9 +152,9 @@ namespace EtoFormsUI
                 if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
                 {
                     if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
-                    var cityPanel = new CityPanel(main, Game.CityHere(clickedXY[0], clickedXY[1]), 658, 459); // For normal zoom
-                    MainPanelLayout.Add(cityPanel, (drawPanel.Width / 2) - (cityPanel.Width / 2), (drawPanel.Height / 2) - (cityPanel.Height / 2));
-                    MainPanel.Content = MainPanelLayout;
+                    int cityZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
+                    var cityView = new CityWindow(main, Game.CityHere(clickedXY[0], clickedXY[1]), cityZoom);
+                    cityView.Show();
                 }
                 // Unit clicked
                 else if (Game.AnyUnitsPresentHere(clickedXY[0], clickedXY[1]))

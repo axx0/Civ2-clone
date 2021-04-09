@@ -35,15 +35,15 @@ namespace EtoFormsUI
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
             GameOptionsCommand.Executed += (sender, e) => {
-                var gameOptionsPanel = new GameOptionsPanel(this);
+                var gameOptionsPanel = new GameOptionsDialog(this);
                 gameOptionsPanel.ShowModal(); };
             var GraphicOptionsCommand = new Command { MenuText = "Graphic Options", Shortcut = Keys.Control | Keys.P };
             GraphicOptionsCommand.Executed += (sender, e) => {
-                var graphicOptionsPanel = new GraphicOptionsPanel(this);
+                var graphicOptionsPanel = new GraphicOptionsDialog(this);
                 graphicOptionsPanel.ShowModal(); };
             var CityReportOptionsCommand = new Command { MenuText = "City Report Options", Shortcut = Keys.Control | Keys.E };
             CityReportOptionsCommand.Executed += (sender, e) => {
-                var cityReportOptionsPanel = new CityReportOptionsPanel(this);
+                var cityReportOptionsPanel = new CityReportOptionsDialog(this);
                 cityReportOptionsPanel.ShowModal(); };
             var MultiplayerOptionsCommand = new Command { MenuText = "Multiplayer Options", Shortcut = Keys.Control | Keys.Y, Enabled = false };
             var GameProfileCommand = new Command { MenuText = "Game Profile", Enabled = false };

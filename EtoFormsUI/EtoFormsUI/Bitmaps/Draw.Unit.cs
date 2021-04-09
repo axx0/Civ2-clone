@@ -1,5 +1,4 @@
 ﻿using System;
-//using System.Drawing;
 using Eto.Drawing;
 using EtoFormsUIExtensionMethods;
 using Civ2engine.Units;
