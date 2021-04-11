@@ -28,9 +28,9 @@ namespace EtoFormsUI
         private int[] mapStartXY, activeOffsetXY, mapDrawSq, clickedXY;
         private Point mapDest;
         private bool updateMap;
-        private int cityZoom;
-        public Point CityWindowLocation;
         private CityWindow cityWindow;
+        public Point CityWindowLocation;
+        public int CityWindowZoom;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
@@ -79,8 +79,8 @@ namespace EtoFormsUI
             //ZoomOUTButton.Click += ZoomOUTclicked;
 
             // City window
-            cityZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
-            CityWindowLocation = new Point((this.Width / 2) - (636 * (2 + cityZoom) / 2 + 2 * 11), (this.Height / 2) - (421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39))));
+            CityWindowZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
+            CityWindowLocation = new Point((this.Width / 2) - (636 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom == -1 ? 21 : (CityWindowZoom == 0 ? 27 : 39))));
 
             // Starting animation
             animationTimer = new UITimer(); // Timer for waiting unit/ viewing piece
@@ -149,16 +149,22 @@ namespace EtoFormsUI
                 // City clicked
                 if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
                 {
+                    // If in view piece mode move the viewing piece there
+                    if (Map.ViewPieceMode)
+                    {
+                        Map.ActiveXY = clickedXY;
+                        animType = AnimationType.Waiting;
+                        UpdateMap();
+                    }
+
                     // If city window is already open, close it before opening new instance
                     if (cityWindow != null)
                     {
                         CityWindowLocation = cityWindow.Location;
                         cityWindow.Close();
-                        cityWindow.Dispose();
-                        cityWindow = null;
                     }
-                    if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
-                    cityWindow = new CityWindow(this, Game.CityHere(clickedXY[0], clickedXY[1]), cityZoom);
+                    
+                    cityWindow = new CityWindow(this, Game.CityHere(clickedXY[0], clickedXY[1]), CityWindowZoom);
                     cityWindow.Show();
                 }
                 // Unit clicked
@@ -246,7 +252,8 @@ namespace EtoFormsUI
                     }
                 case MapEventType.SwitchViewMovePiece:
                     {
-                        StartAnimation(AnimationType.Waiting);
+                        animType = AnimationType.Waiting;
+                        UpdateMap();
                         break;
                     }
                 case MapEventType.ViewPieceMoved:
@@ -338,8 +345,8 @@ namespace EtoFormsUI
                             UpdateMap();
                         }
                         else 
-                        { 
-                            StartAnimation(animType); 
+                        {
+                            StartAnimation(animType);
                         }
                         break;
                     }
@@ -368,11 +375,6 @@ namespace EtoFormsUI
         {
             switch (anim)
             {
-                case AnimationType.UpdateMap:
-                    animationTimer.Stop();
-                    animationCount = 0;
-                    drawPanel.Invalidate();
-                    break;
                 case AnimationType.Waiting:
                     animType = AnimationType.Waiting;
                     animationTimer.Stop();

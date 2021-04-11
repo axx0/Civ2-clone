@@ -78,8 +78,10 @@ namespace EtoFormsUI
             exitButton = new Civ2button("Exit", 57.ZoomScale(_cityZoom * 4), 24.ZoomScale(_cityZoom * 4), new Font("Arial", 9.ZoomScale(_cityZoom * 4)));
             exitButton.Click += (sender, e) =>
             {
+                parent.CityWindowZoom = _cityZoom;
+                parent.CityWindowLocation = this.Location;
                 this.Visible = false;
-                this.Dispose();
+                this.Close();
             };
             Layout.Add(exitButton, infoButton.Location.X + 116.ZoomScale(_cityZoom * 4), infoButton.Location.Y + 25.ZoomScale(_cityZoom * 4));
 
@@ -110,8 +112,10 @@ namespace EtoFormsUI
             closeIcon = new ImageButton { Image = Images.CityExit, Size = new Size(16, 16) };
             closeIcon.MouseDown += (sender, e) =>
             {
+                parent.CityWindowZoom = _cityZoom;
+                parent.CityWindowLocation = this.Location;
                 this.Visible = false;
-                this.Dispose();
+                this.Close();
             };
             Layout.Add(closeIcon, 11, 7);
 
@@ -121,6 +125,7 @@ namespace EtoFormsUI
                 if (_cityZoom > -1)
                 {
                     _cityZoom--;
+                    parent.CityWindowZoom = _cityZoom;
                     RedrawWindowAndControls();
                 }
             };
@@ -132,6 +137,7 @@ namespace EtoFormsUI
                 if (_cityZoom < 1)
                 {
                     _cityZoom++;
+                    parent.CityWindowZoom = _cityZoom;
                     RedrawWindowAndControls();
                 }
             };

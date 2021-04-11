@@ -253,7 +253,7 @@ namespace EtoFormsUI
                     Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
                     // Show other unit info
                     _column += 20;
-                    _cityName = (unit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
+                    _cityName = (unit.HomeCity == null) ? "NONE" : unit.HomeCity.Name;
                     Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
                     _column += 18;
                     Draw.Text(e.Graphics, Order2string(unit.Order), _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);

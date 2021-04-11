@@ -256,24 +256,14 @@ namespace EtoFormsUI
                 var _bitmapWithMovingUnit = new Bitmap(_mainBitmap);
                 using (var g = new Graphics(_bitmapWithMovingUnit))
                 {
-                    // Draw active unit on top of everything
-                    //int[] activeUnitDrawOffset = new int[] { 0, 0 };
-                    //switch (Game.ActiveUnit.PrevXY)
-                    //{
-                    //    case 0: activeUnitDrawOffset = new int[] { 1, -1 }; break;
-                    //    case 1: activeUnitDrawOffset = new int[] { 2, 0 }; break;
-                    //    case 2: activeUnitDrawOffset = new int[] { 1, 1 }; break;
-                    //    case 3: activeUnitDrawOffset = new int[] { 0, 2 }; break;
-                    //    case 4: activeUnitDrawOffset = new int[] { -1, 1 }; break;
-                    //    case 5: activeUnitDrawOffset = new int[] { -2, 0 }; break;
-                    //    case 6: activeUnitDrawOffset = new int[] { -1, -1 }; break;
-                    //    case 7: activeUnitDrawOffset = new int[] { 0, -2 }; break;
-                    //}
-                    int[] unitDrawOffset = new int[] { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
-                    unitDrawOffset[0] *= Map.Xpx / noFramesForOneMove * (frame + 1);
-                    unitDrawOffset[1] *= Map.Ypx / noFramesForOneMove * (frame + 1);
-
-                    Draw.Unit(g, activeUnit, false, Map.Zoom, new Point(2 * Map.Xpx + unitDrawOffset[0], 2 * Map.Ypx + unitDrawOffset[1]));
+                    // Draw active unit on top of everything (except if it's city, then don't draw the unit in last frame)
+                    if (!(frame == noFramesForOneMove - 1 && Game.CityHere(activeUnit.X, activeUnit.Y) != null))
+                    {
+                        int[] unitDrawOffset = new int[] { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
+                        unitDrawOffset[0] *= Map.Xpx / noFramesForOneMove * (frame + 1);
+                        unitDrawOffset[1] *= Map.Ypx / noFramesForOneMove * (frame + 1);
+                        Draw.Unit(g, activeUnit, false, Map.Zoom, new Point(2 * Map.Xpx + unitDrawOffset[0], 2 * Map.Ypx + unitDrawOffset[1]));
+                    }
                 }
                 animationFrames.Add(_bitmapWithMovingUnit);
             }
