@@ -28,6 +28,9 @@ namespace EtoFormsUI
         private int[] mapStartXY, activeOffsetXY, mapDrawSq, clickedXY;
         private Point mapDest;
         private bool updateMap;
+        private int cityZoom;
+        public Point CityWindowLocation;
+        private CityWindow cityWindow;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
@@ -39,12 +42,11 @@ namespace EtoFormsUI
 
             drawPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
             drawPanel.Paint += DrawPanel_Paint;
+            drawPanel.MouseUp += DrawPanel_MouseClick;
             MainPanelLayout.Add(drawPanel, 11, 38);
             MainPanel.Content = MainPanelLayout;
 
-            MainPanel.Paint += MainPanel_Paint;
-            drawPanel.Paint += DrawPanel_Paint;
-            drawPanel.MouseUp += DrawPanel_MouseClick;
+            MainPanel.Paint += (sender, e) => Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} Map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
 
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
@@ -76,6 +78,10 @@ namespace EtoFormsUI
             //Controls.Add(ZoomOUTButton);
             //ZoomOUTButton.Click += ZoomOUTclicked;
 
+            // City window
+            cityZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
+            CityWindowLocation = new Point((this.Width / 2) - (636 * (2 + cityZoom) / 2 + 2 * 11), (this.Height / 2) - (421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39))));
+
             // Starting animation
             animationTimer = new UITimer(); // Timer for waiting unit/ viewing piece
             animationTimer.Elapsed += OnAnimationElapsedEvent;
@@ -83,11 +89,6 @@ namespace EtoFormsUI
 
             // Center the map view and draw map
             MapViewChange(Map.StartingClickedXY);
-        }
-
-        private void MainPanel_Paint(object sender, PaintEventArgs e)
-        {
-            Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} Map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
         }
 
         // Draw map here
@@ -134,27 +135,31 @@ namespace EtoFormsUI
             // If clicked location is beyond map limits --> exit method
             if (e.Location.X < mapDest.X || e.Location.X > mapDest.X + mapSrc1.Width || e.Location.Y < mapDest.Y || e.Location.Y > mapDest.Y + mapSrc1.Height) return;
             // Else you clicked within the map
-            int clickedX = (int)e.Location.X - mapDest.X;
-            int clickedY = (int)e.Location.Y - mapDest.Y;
-            clickedXY = PxToCoords(clickedX, clickedY, Map.Zoom);
+            clickedXY = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Map.Zoom);
             clickedXY[0] += mapStartXY[0];
             clickedXY[1] += mapStartXY[1];
-
+            
             Debug.WriteLine($"clickedXY={clickedXY[0]},{clickedXY[1]}");
 
-            // TODO: Make sure that edge black tiles are also ignored!
 
-            //clickedXY = new int[] { (MapPanel_offset[0] + coords[0]) % (2 * Map.Xdim), MapPanel_offset[1] + coords[1] };  // Coordinates of clicked square
+            // TODO: Make sure that edge black tiles are also ignored!
 
             if (e.Buttons == MouseButtons.Primary)  // Left button
             {
                 // City clicked
                 if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
                 {
+                    // If city window is already open, close it before opening new instance
+                    if (cityWindow != null)
+                    {
+                        CityWindowLocation = cityWindow.Location;
+                        cityWindow.Close();
+                        cityWindow.Dispose();
+                        cityWindow = null;
+                    }
                     if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
-                    int cityZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
-                    var cityView = new CityWindow(main, Game.CityHere(clickedXY[0], clickedXY[1]), cityZoom);
-                    cityView.Show();
+                    cityWindow = new CityWindow(this, Game.CityHere(clickedXY[0], clickedXY[1]), cityZoom);
+                    cityWindow.Show();
                 }
                 // Unit clicked
                 else if (Game.AnyUnitsPresentHere(clickedXY[0], clickedXY[1]))
@@ -547,7 +552,7 @@ namespace EtoFormsUI
             }
 
             Debug.WriteLine($"panelSq {panelSq[0]},{panelSq[1]}");
-            Debug.WriteLine($"mapStartXY {mapStartXY}");
+            Debug.WriteLine($"mapStartXY {mapStartXY[0]},{mapStartXY[1]}");
             Debug.WriteLine($"mapDrawSq X={mapDrawSq[0]} Y={mapDrawSq[1]}");
             Debug.WriteLine($"mapSrc1 {mapSrc1}");
             Debug.WriteLine($"mapDest {mapDest}");

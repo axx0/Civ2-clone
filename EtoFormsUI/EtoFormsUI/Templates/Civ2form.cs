@@ -11,12 +11,11 @@ namespace EtoFormsUI
         protected int _paddingTop, _paddingBtm;
         private readonly string _title;
 
-        public Civ2form(Main parent, int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
+        public Civ2form(int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
         {
             WindowStyle = WindowStyle.None;
             MovableByWindowBackground = true;
             ShowInTaskbar = false;
-            Owner = parent;
             
             Size = new Size(width, height);
             _paddingTop = paddingTopInnerPanel;

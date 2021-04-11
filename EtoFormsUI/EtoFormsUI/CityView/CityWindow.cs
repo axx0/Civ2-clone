@@ -13,21 +13,20 @@ namespace EtoFormsUI
     public class CityWindow : Civ2form
     {
         private Game Game => Game.Instance;
-        private readonly Main _main;
+        private readonly MapPanel _parent;
         private readonly ImageButton closeIcon, zoomInIcon, zoomOutIcon;
         private readonly Civ2button infoButton, mapButton, renameButton, happyButton, viewButton, exitButton, buyButton, changeButton;
         private City _thisCity;
         private int _cityZoom;
         //private readonly VScrollBar _improvementsBar;
 
-        public CityWindow(Main parent, City city, int cityZoom) : base(parent, 636 * (2 + cityZoom) / 2 + 2 * 11, 421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39)), cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39), 11, "")
+        public CityWindow(MapPanel parent, City city, int cityZoom) : base(636 * (2 + cityZoom) / 2 + 2 * 11, 421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39)), cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39), 11, "")
         {
             _cityZoom = cityZoom;
-            _main = parent;
+            _parent = parent;
             _thisCity = city;
 
-            Location = new Point((_main.Width / 2) - (this.Width / 2), (_main.Height / 2) - (this.Height / 2));
-
+            Location = _parent.CityWindowLocation;
             Surface.Paint += Surface_Paint;
 
             // Buy button
