@@ -132,7 +132,7 @@ namespace EtoFormsUI
             // TRADE
             // Text
             Draw.Text(g, $"Trade: {city.Trade}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            Draw.Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
             // Spacing between icons
             switch (city.Trade + city.Corruption)
             {
@@ -192,7 +192,7 @@ namespace EtoFormsUI
             // SUPPORT+PRODUCTION
             // Text
             Draw.Text(g, $"Support: {city.Support}", _font, Color.FromArgb(63, 79, 167), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Production: {city.Production}", _font, Color.FromArgb(7, 11, 103), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            Draw.Text(g, $"Production: {city.Production}", _font, Color.FromArgb(7, 11, 103), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
             // Spacing between icons
             switch (city.Support + city.Production)
             {
@@ -386,18 +386,18 @@ namespace EtoFormsUI
                     switch (cityFood[i] + cityShld[i] + cityTrad[i])
                     {
                         case 1:
-                        case 2: spacing = 11; break;    // normal=11, big = 17, 1 pixel gap
-                        case 3: spacing = 10; break;    // normal=10, big = 15, no gap
-                        case 4: spacing = 7; break;    // normal=7, big = 11
-                        case 5: spacing = 5; break;    // normal=5, big = 8
-                        case 6: spacing = 4; break;    // normal=4, big = 6
+                        case 2: spacing = 11; break;
+                        case 3: spacing = 10; break;
+                        case 4: spacing = 7; break;
+                        case 5: spacing = 5; break;
+                        case 6: spacing = 4; break;
                         case 7:
-                        case 8: spacing = 3; break;    // normal=3, big = 5
-                        case 9: spacing = 2; break;    // normal=2, big = 3
-                        case 10: spacing = 1; break;    // normal=1, big = 2
-                        default: spacing = 1; break;    //  normal=1, big = 2
+                        case 8: spacing = 3; break;
+                        case 9: spacing = 2; break;
+                        case 10: spacing = 1; break;
+                        default: spacing = 1; break;
                     }
-                    spacing = (int)(spacing * (1 + ((float)zoom / 8.0)));   // Make spacing city zoom dependent
+                    spacing = (int)((float)spacing * (2.0 + (float)cityZoom) / 2.0);    // Make spacing zoom dependent
 
                     // First draw food, then shields, then trade icons
                     int x_offset = 4 * (8 + zoom) - ((cityFood[i] + cityShld[i] + cityTrad[i] - 1) * spacing + 15) / 2;

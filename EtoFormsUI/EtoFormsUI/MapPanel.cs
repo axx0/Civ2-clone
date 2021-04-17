@@ -80,7 +80,7 @@ namespace EtoFormsUI
 
             // City window
             CityWindowZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
-            CityWindowLocation = new Point((this.Width / 2) - (636 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom == -1 ? 21 : (CityWindowZoom == 0 ? 27 : 39))));
+            CityWindowLocation = new Point((this.Width / 2) - (636 / 2 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 / 2 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom == -1 ? 21 : (CityWindowZoom == 0 ? 27 : 39))));
 
             // Starting animation
             animationTimer = new UITimer(); // Timer for waiting unit/ viewing piece

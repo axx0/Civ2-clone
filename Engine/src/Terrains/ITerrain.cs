@@ -8,7 +8,8 @@ namespace Civ2engine.Terrains
         int X { get; set; }
         int Y { get; set; }
         TerrainType Type { get; set; }
-        SpecialType? SpecType { get; set; }
+        SpecialType? SpecType { get; }
+        bool HasShield { get; }
 
         //From RULES.TXT
         string Name { get; }
@@ -35,8 +36,8 @@ namespace Civ2engine.Terrains
 
         bool Resource { get; set; }
         bool River { get; set; }
-        bool UnitPresent { get; }
-        bool CityPresent { get; }
+        bool IsUnitPresent { get; }
+        bool IsCityPresent { get; }
         bool Irrigation { get; set; }
         bool Mining { get; set; }
         bool Road { get; set; }

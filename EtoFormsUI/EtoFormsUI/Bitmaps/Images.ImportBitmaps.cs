@@ -1,5 +1,4 @@
-﻿//using System.Drawing;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 using System.IO;
 using System.Diagnostics;
 using Civ2engine;
@@ -9,7 +8,7 @@ namespace EtoFormsUI
 {
     public static partial class Images
     {
-        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, Shield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT, ShieldShadow;
+        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, GrasslandShield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT, ShieldShadow;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements, BattleAnim;
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
@@ -299,9 +298,9 @@ namespace EtoFormsUI
             Pollution.ReplaceColors(transparentGray, Colors.Transparent);
             Pollution.ReplaceColors(transparentPink, Colors.Transparent);
 
-            Shield = terrain1.Clone(new Rectangle(456, 232, 64, 32));
-            Shield.ReplaceColors(transparentGray, Colors.Transparent);
-            Shield.ReplaceColors(transparentPink, Colors.Transparent);
+            GrasslandShield = terrain1.Clone(new Rectangle(456, 232, 64, 32));
+            GrasslandShield.ReplaceColors(transparentGray, Colors.Transparent);
+            GrasslandShield.ReplaceColors(transparentPink, Colors.Transparent);
 
             terrain1.Dispose();
             terrain2.Dispose();

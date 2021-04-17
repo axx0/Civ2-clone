@@ -8,7 +8,7 @@ namespace Civ2engine
         public int Xdim { get; private set; }
         public int Ydim { get; private set; }
         public int Area { get; private set; }
-        public int Seed { get; private set; }
+        public int ResourceSeed { get; private set; }
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
         public bool MapRevealed { get; set; }
@@ -48,7 +48,7 @@ namespace Civ2engine
             Xdim = data.MapXdim;
             Ydim = data.MapYdim;
             Area = data.MapArea;
-            Seed = data.MapSeed;
+            ResourceSeed = data.MapResourceSeed;
             LocatorXdim = data.MapLocatorXdim;
             LocatorYdim = data.MapLocatorYdim;
             Visibility = data.MapVisibilityCivs;
@@ -75,8 +75,7 @@ namespace Civ2engine
                         Pollution = data.MapPollutionPresent[col, row],
                         Farmland = data.MapFarmlandPresent[col, row],
                         Airbase = data.MapAirbasePresent[col, row],
-                        Island = data.MapIslandNo[col, row],
-                        SpecType = data.MapSpecialType[col, row]
+                        Island = data.MapIslandNo[col, row]
                     };
                 }
             }

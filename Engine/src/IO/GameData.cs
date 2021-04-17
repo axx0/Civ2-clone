@@ -57,7 +57,7 @@ namespace Civ2engine
         public int MapXdim { get; set; }
         public int MapYdim { get; set; }
         public int MapArea { get; set; }
-        public int MapSeed { get; set; }
+        public int MapResourceSeed { get; set; }
         public int MapLocatorXdim { get; set; }
         public int MapLocatorYdim { get; set; }
         public TerrainType[,] MapTerrainType { get; set; }
@@ -129,8 +129,8 @@ namespace Civ2engine
         public int[] CityScience { get; set; }
         public int[] CityTax { get; set; }
         public int[] CityNoOfTradeIcons { get; set; }
-        public int[] CityFoodProduction { get; set; }
-        public int[] CityShieldProduction { get; set; }
+        public int[] CityTotalFoodProduction { get; set; }
+        public int[] CityTotalShieldProduction { get; set; }
         public int[] CityHappyCitizens { get; set; }
         public int[] CityUnhappyCitizens { get; set; }
 

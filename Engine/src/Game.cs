@@ -197,13 +197,7 @@ namespace Civ2engine
             _units.Add(unit);
         }
 
-        public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold,
-                                bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner,
-                                int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name,
-                                bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes,
-                                CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute,
-                                int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int foodProduction, int shieldProduction,
-                                int happyCitizens, int unhappyCitizens)
+        public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
         {
             City city = new City
             {
@@ -236,8 +230,8 @@ namespace Civ2engine
                 //Science = science,    //what does this mean???
                 //Tax = tax,
                 //NoOfTradeIcons = noOfTradeIcons,
-                FoodProduction = foodProduction,
-                ShieldProduction = shieldProduction,
+                //TotalFoodProduction = totalFoodProduction,    // No need to import this, it's calculated
+                //TotalShieldProduction = totalShieldProduction,    // No need to import this, it's calculated
                 HappyCitizens = happyCitizens,
                 UnhappyCitizens = unhappyCitizens
             };

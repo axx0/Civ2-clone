@@ -10,13 +10,92 @@ namespace Civ2engine.Terrains
         public int X { get; set; }
         public int Y { get; set; }
         public TerrainType Type { get; set; }
-        public SpecialType? SpecType { get; set; }
+
+        // Get special resource type based on map seed & tile location
+        public SpecialType? SpecType 
+        {
+            // Courtesy of Civfanatics
+            // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
+            //
+            get 
+            {
+                var a = (X + Y) >> 1;
+                var b = X - a;
+                var c = 13 * (b >> 2) + 11 * ((X + Y) >> 3) + Map.ResourceSeed;
+                if ((a & 3) + 4 * (b & 3) == (c & 15))
+                {
+                    var d = 1 << ((Map.ResourceSeed >> 4) & 3);
+                    if ((d & a) == (d & b))
+                    {
+                        // Return 2nd spec type
+                        switch (Type)
+                        {
+                            case TerrainType.Desert: return SpecialType.DesertOil;
+                            case TerrainType.Plains: return SpecialType.Wheat;
+                            case TerrainType.Grassland: return SpecialType.Grassland2;
+                            case TerrainType.Forest: return SpecialType.Silk;
+                            case TerrainType.Hills: return SpecialType.Wine;
+                            case TerrainType.Mountains: return SpecialType.Iron;
+                            case TerrainType.Tundra: return SpecialType.Furs;
+                            case TerrainType.Glacier: return SpecialType.GlacierOil;
+                            case TerrainType.Swamp: return SpecialType.Spice;
+                            case TerrainType.Jungle: return SpecialType.Fruit;
+                            case TerrainType.Ocean: return SpecialType.Whales;
+                            default: throw new ArgumentOutOfRangeException();
+                        }
+                    }
+
+                    // Return 1st spec type
+                    switch (Type)
+                    {
+                        case TerrainType.Desert: return SpecialType.Oasis;
+                        case TerrainType.Plains: return SpecialType.Buffalo;
+                        case TerrainType.Grassland: return SpecialType.Grassland1;
+                        case TerrainType.Forest: return SpecialType.Pheasant;
+                        case TerrainType.Hills: return SpecialType.Coal;
+                        case TerrainType.Mountains: return SpecialType.Gold;
+                        case TerrainType.Tundra: return SpecialType.Game;
+                        case TerrainType.Glacier: return SpecialType.Ivory;
+                        case TerrainType.Swamp: return SpecialType.Peat;
+                        case TerrainType.Jungle: return SpecialType.Gems;
+                        case TerrainType.Ocean: return SpecialType.Fish;
+                        default: throw new ArgumentOutOfRangeException();
+                    }
+                }
+
+                // No spec type
+                return null;
+            }
+        }
+
+        public bool HasShield
+        {
+            get
+            {
+                if (Type == TerrainType.Grassland)
+                {
+                    // Formula for determining where grassland shield is based on X-Y coords
+                    int rez4 = (Y / 2 + 2 * (Y % 2)) % 4;
+                    int rez3 = 8 - 2 * (rez4 % 4);
+                    int rez = (X - (Y % 2) + rez3) % 8;
+                    return rez < 4;
+                }
+                return false;
+            }
+        }
 
         // From RULES.TXT
         public string Name => Game.Rules.TerrainName[(int)Type];
         public int MoveCost => Game.Rules.TerrainMovecost[(int)Type];
         public int Defense => Game.Rules.TerrainDefense[(int)Type];
-        public int Food => Game.Rules.TerrainFood[(int)Type];
+        public int Food 
+        {
+            get 
+            {
+                if (SpecType != null) return Game.Rules.TerrainSpecFood[(int)SpecType];
+                return Game.Rules.TerrainFood[(int)Type];
+            }
+        }
         public int Shields => Game.Rules.TerrainShields[(int)Type];
         public int Trade => Game.Rules.TerrainTrade[(int)Type];
         public bool CanBeIrrigated => Game.Rules.TerrainCanIrrigate[(int)Type] != "no";  // yes meaning the result can be irrigation or transform. of terrain
@@ -68,12 +147,12 @@ namespace Civ2engine.Terrains
         }
 
         // TODO: put special resources logic into here
-        public string SpecName => Game.Rules.TerrainSpec1Name[(int)SpecType];
+        public string SpecName => Game.Rules.TerrainSpecName[(int)SpecType];
 
         public bool Resource { get; set; }
         public bool River { get; set; }
-        public bool UnitPresent => Game.GetUnits.Any(u => u.X == X && u.Y == Y);
-        public bool CityPresent => Game.GetCities.Any(c => c.X == X && c.Y == Y);
+        public bool IsUnitPresent => Game.GetUnits.Any(u => u.X == X && u.Y == Y);
+        public bool IsCityPresent => Game.GetCities.Any(c => c.X == X && c.Y == Y);
         public bool Irrigation { get; set; }
         public bool Mining { get; set; }
         public bool Road { get; set; }

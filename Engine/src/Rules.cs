@@ -85,18 +85,12 @@ namespace Civ2engine
         public string[] TerrainShortName { get; private set; }
 
         // Special terrain
-        public string[] TerrainSpec1Name { get; private set; }
-        public string[] TerrainSpec2Name { get; private set; }
-        public int[] TerrainSpec1Movecost { get; private set; }
-        public int[] TerrainSpec2Movecost { get; private set; }
-        public int[] TerrainSpec1Defense { get; private set; }
-        public int[] TerrainSpec2Defense { get; private set; }
-        public int[] TerrainSpec1Food { get; private set; }
-        public int[] TerrainSpec2Food { get; private set; }
-        public int[] TerrainSpec1Shields { get; private set; }
-        public int[] TerrainSpec2Shields { get; private set; }
-        public int[] TerrainSpec1Trade { get; private set; }
-        public int[] TerrainSpec2Trade { get; private set; }
+        public string[] TerrainSpecName { get; private set; }
+        public int[] TerrainSpecMovecost { get; private set; }
+        public int[] TerrainSpecDefense { get; private set; }
+        public int[] TerrainSpecFood { get; private set; }
+        public int[] TerrainSpecShields { get; private set; }
+        public int[] TerrainSpecTrade { get; private set; }
 
         // Governments
         public string[] GovernmentName { get; private set; }
@@ -256,33 +250,20 @@ namespace Civ2engine
                 TerrainShortName[row] = rulesList[43][row];
             }
 
-            TerrainSpec1Name = new string[11];
-            TerrainSpec1Movecost = new int[11];
-            TerrainSpec1Defense = new int[11];
-            TerrainSpec1Food = new int[11];
-            TerrainSpec1Shields = new int[11];
-            TerrainSpec1Trade = new int[11];
-            TerrainSpec2Name = new string[11];
-            TerrainSpec2Movecost = new int[11];
-            TerrainSpec2Defense = new int[11];
-            TerrainSpec2Food = new int[11];
-            TerrainSpec2Shields = new int[11];
-            TerrainSpec2Trade = new int[11];
-            for (int row = 0; row < 11; row++)
+            TerrainSpecName = new string[22];
+            TerrainSpecMovecost = new int[22];
+            TerrainSpecDefense = new int[22];
+            TerrainSpecFood = new int[22];
+            TerrainSpecShields = new int[22];
+            TerrainSpecTrade = new int[22];
+            for (int row = 0; row < 22; row++)
             {
-                TerrainSpec1Name[row] = rulesList[44][row];
-                TerrainSpec1Movecost[row] = Int32.Parse(rulesList[45][row]);
-                TerrainSpec1Defense[row] = Int32.Parse(rulesList[46][row]);
-                TerrainSpec1Food[row] = Int32.Parse(rulesList[47][row]);
-                TerrainSpec1Shields[row] = Int32.Parse(rulesList[48][row]);
-                TerrainSpec1Trade[row] = Int32.Parse(rulesList[49][row]);
-
-                TerrainSpec2Name[row] = rulesList[50][row];
-                TerrainSpec2Movecost[row] = Int32.Parse(rulesList[51][row]);
-                TerrainSpec2Defense[row] = Int32.Parse(rulesList[52][row]);
-                TerrainSpec2Food[row] = Int32.Parse(rulesList[53][row]);
-                TerrainSpec2Shields[row] = Int32.Parse(rulesList[54][row]);
-                TerrainSpec2Trade[row] = Int32.Parse(rulesList[55][row]);
+                TerrainSpecName[row] = rulesList[44][row];
+                TerrainSpecMovecost[row] = Int32.Parse(rulesList[45][row]);
+                TerrainSpecDefense[row] = Int32.Parse(rulesList[46][row]);
+                TerrainSpecFood[row] = Int32.Parse(rulesList[47][row]);
+                TerrainSpecShields[row] = Int32.Parse(rulesList[48][row]);
+                TerrainSpecTrade[row] = Int32.Parse(rulesList[49][row]);
             }
 
             GovernmentName = new string[7];
@@ -290,9 +271,9 @@ namespace Civ2engine
             GovernmentTitleHER = new string[7];
             for (int row = 0; row < 7; row++)
             {
-                GovernmentName[row] = rulesList[56][row];
-                GovernmentTitleHIS[row] = rulesList[57][row];
-                GovernmentTitleHER[row] = rulesList[58][row];
+                GovernmentName[row] = rulesList[50][row];
+                GovernmentTitleHIS[row] = rulesList[51][row];
+                GovernmentTitleHER[row] = rulesList[52][row];
             }
 
             LeaderNameHIS = new string[21];
@@ -307,42 +288,42 @@ namespace Civ2engine
             LeaderCivilize = new int[21];
             for (int row = 0; row < 21; row++)
             {
-                LeaderNameHIS[row] = rulesList[59][row];
-                LeaderNameHER[row] = rulesList[60][row];
-                LeaderFemale[row] = Int32.Parse(rulesList[61][row]);
-                LeaderColor[row] = Int32.Parse(rulesList[62][row]);
-                LeaderCityStyle[row] = Int32.Parse(rulesList[63][row]);
-                LeaderPlural[row] = rulesList[64][row];
-                LeaderAdjective[row] = rulesList[65][row];
-                LeaderAttack[row] = Int32.Parse(rulesList[66][row]);
-                LeaderExpand[row] = Int32.Parse(rulesList[67][row]);
-                LeaderCivilize[row] = Int32.Parse(rulesList[68][row]);
+                LeaderNameHIS[row] = rulesList[53][row];
+                LeaderNameHER[row] = rulesList[54][row];
+                LeaderFemale[row] = Int32.Parse(rulesList[55][row]);
+                LeaderColor[row] = Int32.Parse(rulesList[56][row]);
+                LeaderCityStyle[row] = Int32.Parse(rulesList[57][row]);
+                LeaderPlural[row] = rulesList[58][row];
+                LeaderAdjective[row] = rulesList[59][row];
+                LeaderAttack[row] = Int32.Parse(rulesList[60][row]);
+                LeaderExpand[row] = Int32.Parse(rulesList[61][row]);
+                LeaderCivilize[row] = Int32.Parse(rulesList[62][row]);
             }
 
             CaravanCommoditie = new string[16];
             for (int row = 0; row < 16; row++)
             {
-                CaravanCommoditie[row] = rulesList[69][row];
+                CaravanCommoditie[row] = rulesList[63][row];
             }
 
             OrderName = new string[70];
             OrderShortcut = new string[70];
             for (int row = 0; row < 11; row++)
             {
-                OrderName[row] = rulesList[70][row];
-                OrderShortcut[row] = rulesList[71][row];
+                OrderName[row] = rulesList[64][row];
+                OrderShortcut[row] = rulesList[65][row];
             }
 
             Difficulty = new string[6];
             for (int row = 0; row < 6; row++)
             {
-                Difficulty[row] = rulesList[72][row];
+                Difficulty[row] = rulesList[66][row];
             }
 
             Attitude = new string[9];
             for (int row = 0; row < 9; row++)
             {
-                Attitude[row] = rulesList[73][row];
+                Attitude[row] = rulesList[67][row];
             }
         }
     }

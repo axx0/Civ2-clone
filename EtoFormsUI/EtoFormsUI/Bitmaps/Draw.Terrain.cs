@@ -264,14 +264,13 @@ namespace EtoFormsUI
                 }
 
                 // Draw special resources if they exist
-                Map.TileC2(col, row).SpecType = null; // TODO: temporary
                 if (Map.TileC2(col, row).SpecType != null)
                 {
                     switch (Map.TileC2(col, row).SpecType)
                     {
                         case SpecialType.Oasis: g.DrawImage(Images.Desert[2], 0, 0); break;
                         case SpecialType.Buffalo: g.DrawImage(Images.Plains[2], 0, 0); break;
-                        case SpecialType.Grassland: g.DrawImage(Images.Grassland[0], 0, 0); break;   // TODO: what is spectype for grassland?
+                        case SpecialType.Grassland1: break; // g.DrawImage(Images.Grassland[0], 0, 0); break;   // Grassland has no special type
                         case SpecialType.Pheasant: g.DrawImage(Images.ForestBase[2], 0, 0); break;
                         case SpecialType.Coal: g.DrawImage(Images.HillsBase[2], 0, 0); break;
                         case SpecialType.Gold: g.DrawImage(Images.MtnsBase[2], 0, 0); break;
@@ -282,7 +281,7 @@ namespace EtoFormsUI
                         case SpecialType.Fish: g.DrawImage(Images.Ocean[2], 0, 0); break;
                         case SpecialType.DesertOil: g.DrawImage(Images.Desert[3], 0, 0); break;
                         case SpecialType.Wheat: g.DrawImage(Images.Plains[3], 0, 0); break;
-                        case SpecialType.GrasslandShield: g.DrawImage(Images.Shield, 0, 0); break;   // TODO: what is spectype for grassland?
+                        case SpecialType.Grassland2: break; // g.DrawImage(Images.Shield, 0, 0); break;   // Grassland has no special type
                         case SpecialType.Silk: g.DrawImage(Images.ForestBase[3], 0, 0); break;
                         case SpecialType.Wine: g.DrawImage(Images.HillsBase[3], 0, 0); break;
                         case SpecialType.Iron: g.DrawImage(Images.MtnsBase[3], 0, 0); break;
@@ -295,8 +294,14 @@ namespace EtoFormsUI
                     }
                 }
 
+                // Draw shield for grasslands
+                if (Map.TileC2(col, row).HasShield)
+                {
+                    g.DrawImage(Images.GrasslandShield, 0, 0);
+                }
+
                 // Roads (cites also act as road tiles)
-                if (Map.TileC2(col, row).Road || Map.TileC2(col, row).CityPresent)
+                if (Map.TileC2(col, row).Road || Map.TileC2(col, row).IsCityPresent)
                 {
                     bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
 
@@ -703,7 +708,7 @@ namespace EtoFormsUI
             {
                 isRoadAround[0] = false;   // if N tile is out of map limits
             }
-            else if (Map.TileC2(col, row - 2).Road || Map.TileC2(col, row - 2).CityPresent)
+            else if (Map.TileC2(col, row - 2).Road || Map.TileC2(col, row - 2).IsCityPresent)
             {
                 isRoadAround[0] = true;
             }
@@ -718,12 +723,12 @@ namespace EtoFormsUI
                 {
                     isRoadAround[1] = false;
                 }
-                else if (Map.TileC2(0, row - 1).Road || Map.TileC2(0, row - 1).CityPresent)
+                else if (Map.TileC2(0, row - 1).Road || Map.TileC2(0, row - 1).IsCityPresent)
                 {
                     isRoadAround[1] = true;  // tile on mirror side of map
                 }
             }
-            else if (Map.TileC2(col + 1, row - 1).Road || Map.TileC2(col + 1, row - 1).CityPresent)
+            else if (Map.TileC2(col + 1, row - 1).Road || Map.TileC2(col + 1, row - 1).IsCityPresent)
             {
                 isRoadAround[1] = true;
             }
@@ -734,12 +739,12 @@ namespace EtoFormsUI
                 {
                     isRoadAround[2] = false;
                 }
-                else if (Map.TileC2(Xdim - col, row).Road || Map.TileC2(Xdim - col, row).CityPresent)
+                else if (Map.TileC2(Xdim - col, row).Road || Map.TileC2(Xdim - col, row).IsCityPresent)
                 {
                     isRoadAround[2] = true;
                 }
             }
-            else if (Map.TileC2(col + 2, row).Road || Map.TileC2(col + 2, row).CityPresent)
+            else if (Map.TileC2(col + 2, row).Road || Map.TileC2(col + 2, row).IsCityPresent)
             {
                 isRoadAround[2] = true;
             }
@@ -754,12 +759,12 @@ namespace EtoFormsUI
                 {
                     isRoadAround[3] = false;
                 }
-                else if (Map.TileC2(0, row + 1).Road || Map.TileC2(0, row + 1).CityPresent)
+                else if (Map.TileC2(0, row + 1).Road || Map.TileC2(0, row + 1).IsCityPresent)
                 {
                     isRoadAround[3] = true;  // tile on mirror side of map
                 }
             }
-            else if (Map.TileC2(col + 1, row + 1).Road || Map.TileC2(col + 1, row + 1).CityPresent)
+            else if (Map.TileC2(col + 1, row + 1).Road || Map.TileC2(col + 1, row + 1).IsCityPresent)
             {
                 isRoadAround[3] = true;
             }
@@ -768,7 +773,7 @@ namespace EtoFormsUI
             {
                 isRoadAround[4] = false;   // S is beyond map limits
             }
-            else if (Map.TileC2(col, row + 2).Road || Map.TileC2(col, row + 2).CityPresent)
+            else if (Map.TileC2(col, row + 2).Road || Map.TileC2(col, row + 2).IsCityPresent)
             {
                 isRoadAround[4] = true;
             }
@@ -783,12 +788,12 @@ namespace EtoFormsUI
                 {
                     isRoadAround[5] = false;
                 }
-                else if (Map.TileC2(Xdim - 1, row + 1).Road || Map.TileC2(Xdim - 1, row + 1).CityPresent)
+                else if (Map.TileC2(Xdim - 1, row + 1).Road || Map.TileC2(Xdim - 1, row + 1).IsCityPresent)
                 {
                     isRoadAround[5] = true;
                 }
             }
-            else if (Map.TileC2(col - 1, row + 1).Road || Map.TileC2(col - 1, row + 1).CityPresent)
+            else if (Map.TileC2(col - 1, row + 1).Road || Map.TileC2(col - 1, row + 1).IsCityPresent)
             {
                 isRoadAround[5] = true;
             }
@@ -799,12 +804,12 @@ namespace EtoFormsUI
                 {
                     isRoadAround[6] = false;
                 }
-                else if (Map.TileC2(Xdim - 2 + col, row).Road || Map.TileC2(Xdim - 2 + col, row).CityPresent)
+                else if (Map.TileC2(Xdim - 2 + col, row).Road || Map.TileC2(Xdim - 2 + col, row).IsCityPresent)
                 {
                     isRoadAround[6] = true;
                 }
             }
-            else if (Map.TileC2(col - 2, row).Road || Map.TileC2(col - 2, row).CityPresent)
+            else if (Map.TileC2(col - 2, row).Road || Map.TileC2(col - 2, row).IsCityPresent)
             {
                 isRoadAround[6] = true;
             }
@@ -819,12 +824,12 @@ namespace EtoFormsUI
                 {
                     isRoadAround[7] = false;
                 }
-                else if (Map.TileC2(Xdim - 1, row - 1).Road || Map.TileC2(Xdim - 1, row - 1).CityPresent)
+                else if (Map.TileC2(Xdim - 1, row - 1).Road || Map.TileC2(Xdim - 1, row - 1).IsCityPresent)
                 {
                     isRoadAround[7] = true;
                 }
             }
-            else if (Map.TileC2(col - 1, row - 1).Road || Map.TileC2(col - 1, row - 1).CityPresent)
+            else if (Map.TileC2(col - 1, row - 1).Road || Map.TileC2(col - 1, row - 1).IsCityPresent)
             {
                 isRoadAround[7] = true;
             }
@@ -847,7 +852,7 @@ namespace EtoFormsUI
             {
                 isRailroadAround[0] = false;   // if N tile is out of map limits
             }
-            else if (Map.TileC2(col, row - 2).Railroad || Map.TileC2(col, row - 2).CityPresent)
+            else if (Map.TileC2(col, row - 2).Railroad || Map.TileC2(col, row - 2).IsCityPresent)
             {
                 isRailroadAround[0] = true;
             }
@@ -862,12 +867,12 @@ namespace EtoFormsUI
                 {
                     isRailroadAround[1] = false;
                 }
-                else if (Map.TileC2(0, row - 1).Railroad || Map.TileC2(0, row - 1).CityPresent)
+                else if (Map.TileC2(0, row - 1).Railroad || Map.TileC2(0, row - 1).IsCityPresent)
                 {
                     isRailroadAround[1] = true;  // tile on mirror side of map
                 }
             }
-            else if (Map.TileC2(col + 1, row - 1).Railroad || Map.TileC2(col + 1, row - 1).CityPresent)
+            else if (Map.TileC2(col + 1, row - 1).Railroad || Map.TileC2(col + 1, row - 1).IsCityPresent)
             {
                 isRailroadAround[1] = true;
             }
@@ -878,12 +883,12 @@ namespace EtoFormsUI
                 {
                     isRailroadAround[2] = false;
                 }
-                else if (Map.TileC2(Xdim - col, row).Railroad || Map.TileC2(Xdim - col, row).CityPresent)
+                else if (Map.TileC2(Xdim - col, row).Railroad || Map.TileC2(Xdim - col, row).IsCityPresent)
                 {
                     isRailroadAround[2] = true;
                 }
             }
-            else if (Map.TileC2(col + 2, row).Railroad || Map.TileC2(col + 2, row).CityPresent)
+            else if (Map.TileC2(col + 2, row).Railroad || Map.TileC2(col + 2, row).IsCityPresent)
             {
                 isRailroadAround[2] = true;
             }
@@ -898,12 +903,12 @@ namespace EtoFormsUI
                 {
                     isRailroadAround[3] = false;
                 }
-                else if (Map.TileC2(0, row + 1).Railroad || Map.TileC2(0, row + 1).CityPresent)
+                else if (Map.TileC2(0, row + 1).Railroad || Map.TileC2(0, row + 1).IsCityPresent)
                 {
                     isRailroadAround[3] = true;  // tile on mirror side of map
                 }
             }
-            else if (Map.TileC2(col + 1, row + 1).Railroad || Map.TileC2(col + 1, row + 1).CityPresent)
+            else if (Map.TileC2(col + 1, row + 1).Railroad || Map.TileC2(col + 1, row + 1).IsCityPresent)
             {
                 isRailroadAround[3] = true;
             }
@@ -912,7 +917,7 @@ namespace EtoFormsUI
             {
                 isRailroadAround[4] = false;   // S is beyond map limits
             }
-            else if (Map.TileC2(col, row + 2).Railroad || Map.TileC2(col, row + 2).CityPresent)
+            else if (Map.TileC2(col, row + 2).Railroad || Map.TileC2(col, row + 2).IsCityPresent)
             {
                 isRailroadAround[4] = true;
             }
@@ -927,12 +932,12 @@ namespace EtoFormsUI
                 {
                     isRailroadAround[5] = false;
                 }
-                else if (Map.TileC2(Xdim - 1, row + 1).Railroad || Map.TileC2(Xdim - 1, row + 1).CityPresent)
+                else if (Map.TileC2(Xdim - 1, row + 1).Railroad || Map.TileC2(Xdim - 1, row + 1).IsCityPresent)
                 {
                     isRailroadAround[5] = true;
                 }
             }
-            else if (Map.TileC2(col - 1, row + 1).Railroad || Map.TileC2(col - 1, row + 1).CityPresent)
+            else if (Map.TileC2(col - 1, row + 1).Railroad || Map.TileC2(col - 1, row + 1).IsCityPresent)
             {
                 isRailroadAround[5] = true;
             }
@@ -943,12 +948,12 @@ namespace EtoFormsUI
                 {
                     isRailroadAround[6] = false;
                 }
-                else if (Map.TileC2(Xdim - 2 + col, row).Railroad || Map.TileC2(Xdim - 2 + col, row).CityPresent)
+                else if (Map.TileC2(Xdim - 2 + col, row).Railroad || Map.TileC2(Xdim - 2 + col, row).IsCityPresent)
                 {
                     isRailroadAround[6] = true;
                 }
             }
-            else if (Map.TileC2(col - 2, row).Railroad || Map.TileC2(col - 2, row).CityPresent)
+            else if (Map.TileC2(col - 2, row).Railroad || Map.TileC2(col - 2, row).IsCityPresent)
             {
                 isRailroadAround[6] = true;
             }
@@ -963,12 +968,12 @@ namespace EtoFormsUI
                 {
                     isRailroadAround[7] = false;
                 }
-                else if (Map.TileC2(Xdim - 1, row - 1).Railroad || Map.TileC2(Xdim - 1, row - 1).CityPresent)
+                else if (Map.TileC2(Xdim - 1, row - 1).Railroad || Map.TileC2(Xdim - 1, row - 1).IsCityPresent)
                 {
                     isRailroadAround[7] = true;
                 }
             }
-            else if (Map.TileC2(col - 1, row - 1).Railroad || Map.TileC2(col - 1, row - 1).CityPresent)
+            else if (Map.TileC2(col - 1, row - 1).Railroad || Map.TileC2(col - 1, row - 1).IsCityPresent)
             {
                 isRailroadAround[7] = true;
             }

@@ -4,7 +4,7 @@
     {
         Oasis = 0,
         Buffalo = 1,
-        Grassland = 2,
+        Grassland1 = 2,
         Pheasant = 3,
         Coal = 4,
         Gold = 5,
@@ -15,7 +15,7 @@
         Fish = 10,
         DesertOil = 11,
         Wheat = 12,
-        GrasslandShield = 13,
+        Grassland2 = 13,
         Silk = 14,
         Wine = 15,
         Iron = 16,

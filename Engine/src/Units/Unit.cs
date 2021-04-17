@@ -217,7 +217,7 @@ namespace Civ2engine.Units
                         }
 
                         // Movement possible, reduce movement points
-                        if ((Map.TileC2(X, Y).Road || Map.TileC2(X, Y).CityPresent) && (Map.TileC2(Xto, Yto).Road || Map.TileC2(Xto, Yto).CityPresent) ||   //From & To must be cities, road
+                        if ((Map.TileC2(X, Y).Road || Map.TileC2(X, Y).IsCityPresent) && (Map.TileC2(Xto, Yto).Road || Map.TileC2(Xto, Yto).IsCityPresent) ||   //From & To must be cities, road
                             (Map.TileC2(X, Y).River && Map.TileC2(Xto, Yto).River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
                         {
                             MovePointsLost += 1;
