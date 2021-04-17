@@ -8,6 +8,7 @@ using Civ2engine;
 using Civ2engine.Events;
 using Civ2engine.Enums;
 using Civ2engine.Units;
+using System.Diagnostics;
 
 namespace EtoFormsUI
 {
@@ -56,7 +57,7 @@ namespace EtoFormsUI
             Game.OnMapEvent += MapEventHappened;
             //Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
-            //Game.OnPlayerEvent += PlayerEventHappened;
+            Game.OnPlayerEvent += PlayerEventHappened;
             Game.OnUnitEvent += UnitEventHappened;
 
             // Timer for "end of turn" message
@@ -283,6 +284,9 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, "(Press ENTER)", _font2, _EoTcolor, new Point(10, unitPanel.Height - 33), false, false, Colors.Black, 1, 0);
                 eotWhite = !eotWhite;
             }
+
+            // AI turn civ indicator
+            if (Game.GetActiveCiv != Game.GetPlayerCiv) e.Graphics.FillRectangle(CivColors.Light[Game.GetActiveCiv.Id], new Rectangle(unitPanel.Width - 8, unitPanel.Height - 6, 8, 6));
         }
 
         private void Panel_Click(object sender, MouseEventArgs e)
@@ -319,17 +323,15 @@ namespace EtoFormsUI
 
         private void PlayerEventHappened(object sender, PlayerEventArgs e)
         {
-            //switch (e.EventType)
-            //{
-            //    case PlayerEventType.NewTurn:
-            //        {
-            //            WaitingAtEndOfTurn = false;
-            //            StatsPanel.Refresh();
-            //            UnitPanel.Refresh();
-            //            break;
-            //        }
-            //    default: break;
-            //}
+            switch (e.EventType)
+            {
+                case PlayerEventType.NewTurn:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
+                default: break;
+            }
         }
 
         private void UnitEventHappened(object sender, UnitEventArgs e)
