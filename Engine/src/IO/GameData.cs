@@ -82,6 +82,7 @@ namespace Civ2engine
         public int[] UnitYloc { get; set; }
         public bool[] UnitDead { get; set; }
         public bool[] UnitFirstMove { get; set; }
+        public bool[] UnitImmobile { get; set; }
         public bool[] UnitGreyStarShield { get; set; }
         public bool[] UnitVeteran { get; set; }
         public UnitType[] UnitType { get; set; }

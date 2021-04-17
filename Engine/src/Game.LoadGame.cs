@@ -18,6 +18,7 @@ namespace Civ2engine
             Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
             Map.Zoom = gameData.Zoom;
             Map.StartingClickedXY = gameData.ClickedXY;
+            Map.ActiveXY = gameData.ActiveCursorXY;
         }
 
         private Game(GameData SAVgameData)

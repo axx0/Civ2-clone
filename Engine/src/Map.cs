@@ -40,7 +40,16 @@ namespace Civ2engine
             }
             set { _activeXY = value; }
         }
-        public bool ViewPieceMode { get; set; }
+        private bool _viewPieceMode;
+        public bool ViewPieceMode 
+        {
+            get
+            {
+                if (!Game.GetActiveCiv.AnyUnitsAwaitingOrders) return true;
+                else return _viewPieceMode;
+            }
+            set { _viewPieceMode = value; }
+        }
 
         // Generate first instance of terrain tiles by importing game data
         public void GenerateMap(GameData data)

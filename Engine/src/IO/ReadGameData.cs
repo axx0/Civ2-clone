@@ -804,6 +804,7 @@ namespace Civ2engine
             data.UnitYloc = new int[data.NumberOfUnits];
             data.UnitDead = new bool[data.NumberOfUnits];
             data.UnitFirstMove = new bool[data.NumberOfUnits];
+            data.UnitImmobile = new bool[data.NumberOfUnits];
             data.UnitGreyStarShield = new bool[data.NumberOfUnits];
             data.UnitVeteran = new bool[data.NumberOfUnits];
             data.UnitType = new UnitType[data.NumberOfUnits];
@@ -834,6 +835,7 @@ namespace Civ2engine
                 data.UnitYloc[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 data.UnitFirstMove[i] = GetBit(bytes[ofsetU + multipl * i + 4], 1);         // If this is the unit's first move
+                data.UnitImmobile[i] = GetBit(bytes[ofsetU + multipl * i + 4], 6);          // Immobile
                 data.UnitGreyStarShield[i] = GetBit(bytes[ofsetU + multipl * i + 5], 0);    // Grey star to the shield
                 data.UnitVeteran[i] = GetBit(bytes[ofsetU + multipl * i + 5], 2);           // Veteran status
                 data.UnitType[i] = (UnitType)bytes[ofsetU + multipl * i + 6];               // Unit type
