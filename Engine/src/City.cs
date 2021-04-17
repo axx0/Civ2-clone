@@ -121,8 +121,9 @@ namespace Civ2engine
                     {
                         _foodDistribution[i] = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Food;
                         if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Irrigation) _foodDistribution[i] += Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).IrrigationBonus;
-                        if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Farmland && Game.Instance.CityHere(X + offsets[i, 0], Y + offsets[i, 1]).ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // Farmland has effect only if city has supermarket
+                        if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Farmland && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // Farmland has effect only if city has supermarket
                         if (offsets[i, 0] == 0 && offsets[i, 1] == 0) _foodDistribution[i] += 1;    // City square has +1 food
+                        if (offsets[i, 0] == 0 && offsets[i, 1] == 0 && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // +1 food if city has supermarket
                     }
                     else _foodDistribution[i] = 0;
                 }

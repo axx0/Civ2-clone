@@ -1,5 +1,4 @@
 ﻿using System;
-//using System.Drawing;
 using Eto.Drawing;
 using System.Linq;
 using Civ2engine;
@@ -346,7 +345,7 @@ namespace EtoFormsUI
                 if (Map.TileC2(col, row).Farmland) g.DrawImage(Images.Farmland, 0, 0);
 
                 // Mining
-                if (Map.TileC2(col, row).Mining) g.DrawImage(Images.Mining, 0, 0);
+                if (Map.TileC2(col, row).Mining && !Map.TileC2(col, row).Farmland) g.DrawImage(Images.Mining, 0, 0);
 
                 // Pollution
                 if (Map.TileC2(col, row).Pollution) g.DrawImage(Images.Pollution, 0, 0);

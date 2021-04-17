@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using Civ2engine.Enums;
 
 namespace Civ2engine
@@ -763,7 +764,7 @@ namespace Civ2engine
                 data.MapRailroadPresent[x, y] = GetBit(bytes[terrB], 4) && GetBit(bytes[terrB], 5);
                 data.MapFortressPresent[x, y] = GetBit(bytes[terrB], 6);
                 data.MapPollutionPresent[x, y] = GetBit(bytes[terrB], 7);
-                data.MapFarmlandPresent[x, y] = GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 6);
+                data.MapFarmlandPresent[x, y] = GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3);
                 data.MapAirbasePresent[x, y] = GetBit(bytes[terrB], 3) && GetBit(bytes[terrB], 4);
 
                 int intValueB23 = bytes[ofsetB2 + i * 6 + 2];       // TODO: city radius
