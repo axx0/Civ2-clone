@@ -26,7 +26,11 @@ namespace Civ2engine
                 if (city.FoodInStorage > city.MaxFoodInStorage)
                 {
                     city.FoodInStorage -= city.MaxFoodInStorage;
+                    
                     city.Size += 1;
+
+                    if (city.ImprovementExists(ImprovementType.Granary)) city.FoodInStorage += city.MaxFoodInStorage / 2;
+
                     AutoAddDistributionWorkers(city);    // Automatically add a workers on a tile
                 }
                 else if (city.FoodInStorage < 0)

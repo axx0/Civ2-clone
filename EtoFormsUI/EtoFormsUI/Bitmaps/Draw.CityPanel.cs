@@ -45,14 +45,14 @@ namespace EtoFormsUI
             wheat_spacing = (int)(wheat_spacing * (1 + ((float)zoom / 8.0)));   // Make spacing city zoom dependent
 
             // Draw rectangle around wheat icons     
+            using var _pen1 = new Pen(Color.FromArgb(75, 155, 35));
+            using var _pen2 = new Pen(Color.FromArgb(0, 51, 0));
             // 1st horizontal line
             int line_width = (city.Size * wheat_spacing + wheatW + 7) * (2 + cityZoom) / 2;
             int starting_x = dest.X + 532 * (2 + cityZoom) / 2 - line_width / 2;
             int starting_y = dest.Y + 15 * (2 + cityZoom) / 2;
-            using var _pen1 = new Pen(Color.FromArgb(75, 155, 35));
-            using var _pen2 = new Pen(Color.FromArgb(0, 51, 0));
             g.DrawLine(_pen1, starting_x, starting_y, starting_x + line_width, starting_y);
-            // 3rd horizontal line
+            // 2nd horizontal line
             starting_y = dest.Y + 160 * (2 + cityZoom) / 2;
             g.DrawLine(_pen2, starting_x, starting_y, starting_x + line_width, starting_y);
             // 1st vertical line
@@ -77,12 +77,14 @@ namespace EtoFormsUI
                 if (count >= city.FoodInStorage) break;
             }
 
-            // 3rd horizontal line (shorter)
-            line_width -= 10 * (2 + cityZoom) / 2;   // norm=8, big=12
-            starting_x += 2 * (2 + cityZoom) / 2;
-            starting_y = 72 * (2 + cityZoom) / 2;   // norm=72, big=?
-            using var _pen = new Pen(Color.FromArgb(75, 155, 35));
-            g.DrawLine(_pen, starting_x, starting_y, starting_x + line_width, starting_y);
+            // 3rd horizontal line (granary effect)
+            if (city.ImprovementExists(ImprovementType.Granary))
+            {
+                line_width -= 10 * (2 + cityZoom) / 2;
+                starting_x += 2 * (2 + cityZoom) / 2;
+                starting_y = dest.Y + 87 * (2 + cityZoom) / 2;
+                g.DrawLine(_pen1, starting_x, starting_y, starting_x + line_width, starting_y);
+            }
         }
 
         // Draw icons in city resources (surplus < 0 is hunger)
