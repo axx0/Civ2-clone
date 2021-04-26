@@ -186,7 +186,12 @@ namespace EtoFormsUI
             // Open this after the form is shown, otherwise it's opened too fast
             choiceMenu = new ChoiceMenuPanel(this);
             choiceMenu.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.745), (int)(Screen.PrimaryScreen.Bounds.Height * 0.570));
-            choiceMenu.ShowModal();
+            choiceMenu.ShowModal(Parent);
+            if (choiceMenu.SelectedIndex == 4)
+            {
+                LoadGameInitialization(choiceMenu.DirectoryPath, choiceMenu.SAVname);
+                Sounds.Stop();
+            }
         }
 
         // Load assets at start of Civ2 program

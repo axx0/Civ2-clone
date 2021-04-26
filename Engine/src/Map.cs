@@ -1,4 +1,5 @@
 ﻿using System;
+using Civ2engine.Enums;
 using Civ2engine.Terrains;
 
 namespace Civ2engine
@@ -17,6 +18,7 @@ namespace Civ2engine
         public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
         public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => Visibility[( ((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
+        public bool TileHasEnemyUnit(int xC2, int yC2, UnitType unitType) => (Game.UnitsHere(xC2, yC2).Count == 1) && (Game.UnitsHere(xC2, yC2)[0].Type == unitType);
 
         private int _zoom;
         public int Zoom     // -7 (min) ... 8 (max), 0=std.

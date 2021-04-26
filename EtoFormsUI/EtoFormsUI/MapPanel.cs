@@ -89,6 +89,7 @@ namespace EtoFormsUI
 
             // Center the map view and draw map
             MapViewChange(Map.StartingClickedXY);
+            UpdateMap();
         }
 
         // Draw map here
@@ -189,6 +190,7 @@ namespace EtoFormsUI
                 {
                     if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
                     MapViewChange(clickedXY);
+                    UpdateMap();
                     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));
                 }
             }
@@ -205,15 +207,17 @@ namespace EtoFormsUI
 
         private void MapViewChange(int[] newCenterCoords)
         {
-            if (map != null) map.Dispose();
-            ReturnCoordsAtMapViewChange(newCenterCoords);
-            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
-            UpdateMap();
+            //if (map != null) map.Dispose();
+            SetCoordsAtMapViewChange(newCenterCoords);
+            //map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
+            //UpdateMap();
         }
 
         public void UpdateMap()
         {
             updateMap = true;
+            if (map != null) map.Dispose();
+            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
             drawPanel.Invalidate();
         }
 
@@ -319,15 +323,12 @@ namespace EtoFormsUI
                 case UnitEventType.MoveCommand:
                     {
                         animType = AnimationType.UnitMoving;
-                        if (IsActiveSquareOutsideMapView) // Update map view if unit is outside visible map
-                        {
+                        if (IsActiveSquareOutsideMapView) 
+                        { 
                             MapViewChange(Map.ActiveXY);
                             UpdateMap();
                         }
-                        else
-                        {
-                            StartAnimation(animType);
-                        }
+                        StartAnimation(animType);
                         break;
                     }
                 case UnitEventType.Attack:
@@ -339,24 +340,10 @@ namespace EtoFormsUI
                 case UnitEventType.StatusUpdate:
                     {
                         animType = AnimationType.Waiting;
-                        if (IsActiveSquareOutsideMapView) // Update map view if unit is outside visible map
-                        {
-                            MapViewChange(Map.ActiveXY);
-                            UpdateMap();
-                        }
-                        else 
-                        {
-                            StartAnimation(animType);
-                        }
+                        if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
+                        UpdateMap();
                         break;
                     }
-                //case UnitEventType.NewUnitActivated:
-                //    {
-                //        animType = AnimationType.Waiting;
-                //        if (IsActiveSquareOutsideMapView) MapViewChange(new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y });
-                //        else StartAnimation(AnimationType.Waiting);
-                //        break;
-                //    }
             }
         }
 
@@ -449,7 +436,7 @@ namespace EtoFormsUI
         }
 
         // Function which sets various variables for drawing map on grid
-        private void ReturnCoordsAtMapViewChange(int[] proposedCentralCoords)
+        private void SetCoordsAtMapViewChange(int[] proposedCentralCoords)
         {
             CentrXY = proposedCentralCoords;
 

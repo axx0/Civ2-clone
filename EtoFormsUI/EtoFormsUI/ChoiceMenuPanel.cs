@@ -9,6 +9,9 @@ namespace EtoFormsUI
     {
         private Main main;
 
+        public int SelectedIndex;
+        public string DirectoryPath, SAVname;
+
         public ChoiceMenuPanel(Main parent) :
             base(parent, 333, 344, "Civilization II Multiplayer Gold", new string[] { "Start a New Game", "Start on Premade World", "Customize World", "Begin Scenario", "Load a Game", "Multiplayer Game", "View Hall of Fame", "View Credits" }, new string[] { "OK", "Cancel" })
         {
@@ -26,6 +29,8 @@ namespace EtoFormsUI
             DefaultButton = Button[0];
             DefaultButton.Click += (sender, e) =>
             {
+                SelectedIndex = RadioBtnList.SelectedIndex;
+
                 // Load game
                 if (RadioBtnList.SelectedIndex == 4)
                 {
@@ -39,11 +44,9 @@ namespace EtoFormsUI
                     if (ofd.ShowDialog(this.ParentWindow) == DialogResult.Ok)
                     {
                         // Get SAV name & directory name from result
-                        string directoryPath = ofd.Directory.LocalPath;
-                        string SAVname = Path.GetFileName(ofd.FileName);
-                        main.LoadGameInitialization(directoryPath, SAVname);
-                        main.Sounds.Stop();
-                        this.Close();
+                        DirectoryPath = ofd.Directory.LocalPath;
+                        SAVname = Path.GetFileName(ofd.FileName);
+                        Close();
                     }
                 }
             };

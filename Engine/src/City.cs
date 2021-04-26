@@ -26,6 +26,7 @@ namespace Civ2engine
         public int Size { get; set; }
         public Civilization WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
+        public int MaxFoodInStorage => 10 * (Size + 1);
         public int NetTrade { get; set; }
         public string Name { get; set; }
         public bool[] DistributionWorkers { get; set; }
@@ -37,7 +38,6 @@ namespace Civ2engine
         public CommodityType[] CommodityInRoute { get; set; }
         public int[] TradeRoutePartnerCity { get; set; }
         public int NoOfTradeIcons { get; set; }
-        public int TotalFoodProduction => _foodDistribution.Sum();
 
         public int HappyCitizens { get; set; }
         public int UnhappyCitizens { get; set; }
@@ -117,15 +117,11 @@ namespace Civ2engine
                 int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city square (0,0)
                 for (int i = 0; i < 21; i++)
                 {
-                    if (DistributionWorkers[i])
-                    {
-                        _foodDistribution[i] = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Food;
-                        if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Irrigation) _foodDistribution[i] += Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).IrrigationBonus;
-                        if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Farmland && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // Farmland has effect only if city has supermarket
-                        if (offsets[i, 0] == 0 && offsets[i, 1] == 0) _foodDistribution[i] += 1;    // City square has +1 food
-                        if (offsets[i, 0] == 0 && offsets[i, 1] == 0 && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // +1 food if city has supermarket
-                    }
-                    else _foodDistribution[i] = 0;
+                    _foodDistribution[i] = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Food;
+                    if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Irrigation && !Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).River) _foodDistribution[i] += Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).IrrigationBonus;
+                    if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Farmland && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // Farmland has effect only if city has supermarket
+                    if (offsets[i, 0] == 0 && offsets[i, 1] == 0) _foodDistribution[i] += 1;    // City square has +1 food
+                    if (offsets[i, 0] == 0 && offsets[i, 1] == 0 && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // +1 food if city has supermarket
                 }
                 return _foodDistribution;
             }
@@ -140,13 +136,9 @@ namespace Civ2engine
                 int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city square (0,0)
                 for (int i = 0; i < 21; i++)
                 {
-                    if (DistributionWorkers[i])
-                    {
-                        ITerrain map = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]);
-                        _tradeDistribution[i] = map.Trade;
-                        if (map.Road && (map.Type == TerrainType.Desert || map.Type == TerrainType.Grassland || map.Type == TerrainType.Plains)) _tradeDistribution[i]++;
-                    }
-                    else _tradeDistribution[i] = 0;
+                    ITerrain map = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]);
+                    _tradeDistribution[i] = map.Trade;
+                    if (map.Road && (map.Type == TerrainType.Desert || map.Type == TerrainType.Grassland || map.Type == TerrainType.Plains)) _tradeDistribution[i]++;
                 }
                 return _tradeDistribution;
             }
@@ -158,8 +150,10 @@ namespace Civ2engine
             get
             {
                 int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  // Increase max food for settlers & enineers with this home city
-                _food = Math.Min(FoodDistribution.Sum(), maxFood);
+                foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  // Increase max food for settlers & engineers with this home city
+                int _foodFromWorkers = 0;
+                for (int i = 0; i < 21; i++) _foodFromWorkers += FoodDistribution[i] * (DistributionWorkers[i] ? 1 : 0);
+                _food = Math.Min(_foodFromWorkers, maxFood);
                 return _food;
             }
         }
@@ -171,12 +165,23 @@ namespace Civ2engine
             {
                 int maxFood = 2 * Size;
                 foreach (IUnit unit in Game.GetUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  // Increase max food for settlers & enineers with this home city
-                _surplusHunger = FoodDistribution.Sum() - maxFood;
+                int _foodFromWorkers = 0;
+                for (int i = 0; i < 21; i++) _foodFromWorkers += FoodDistribution[i] * (DistributionWorkers[i] ? 1 : 0);
+                _surplusHunger = _foodFromWorkers - maxFood;
                 return _surplusHunger;
             }
         }
 
-        public int Trade => TradeDistribution.Sum();
+        private int _trade;
+        public int Trade
+        {
+            get
+            {
+                _trade = 0;
+                for (int i = 0; i < 21; i++) _trade += TradeDistribution[i] * (DistributionWorkers[i] ? 1 : 0);
+                return _trade;
+            }
+        }
 
         private int _corruption;
         public int Corruption
@@ -203,18 +208,24 @@ namespace Civ2engine
                 int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city square (0,0)
                 for (int i = 0; i < 21; i++)
                 {
-                    if (DistributionWorkers[i])
-                    {
-                        _shieldDistribution[i] = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Shields;
-                        if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Mining) _shieldDistribution[i] += Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).MiningBonus;
-                    }
-                    else _shieldDistribution[i] = 0;
+                    _shieldDistribution[i] = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Shields;
+                    if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Mining) _shieldDistribution[i] += Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).MiningBonus;
                 }
                 return _shieldDistribution;
             }
         }
 
-        public int TotalShieldProduction => ShieldDistribution.Sum();
+        private int _totalShieldProduction;
+        public int TotalShieldProduction
+        {
+            get
+            {
+                _totalShieldProduction = 0;
+                for (int i = 0; i < 21; i++) _totalShieldProduction += ShieldDistribution[i] * (DistributionWorkers[i] ? 1 : 0);
+                return _totalShieldProduction;
+            }
+        }
+
         public int Production => TotalShieldProduction - Support;
         public int Support => SupportedUnitsWhichCostShields().Count(c => c);   // Count true occurances
         public int ShieldsProgress { get; set; }

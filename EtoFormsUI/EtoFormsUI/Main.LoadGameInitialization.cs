@@ -1,6 +1,7 @@
 ﻿using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
+using System.Diagnostics;
 
 namespace EtoFormsUI
 {
