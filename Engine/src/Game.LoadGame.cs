@@ -8,8 +8,7 @@ namespace Civ2engine
         public static void LoadGame(string savDirectoryPath, string SAVname)
         {
             // Read SAV file & RULES.txt
-            ReadGameData rd = new ReadGameData();
-            GameData gameData = rd.Read_SAV_and_RULES(savDirectoryPath, SAVname);
+            GameData gameData = Read.SAV_and_RULES(savDirectoryPath, SAVname);
 
             // Make an instance of a new game & map
             _instance = new Game(gameData);
