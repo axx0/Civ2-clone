@@ -51,38 +51,8 @@ namespace EtoFormsUI
         public static void TerrainBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var terrain1 = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            //var terrain1 = new Image<Rgba32>(640, 480);
-            string FilePath_local = path + Path.DirectorySeparatorChar + "TERRAIN1.GIF";
-            string FilePath_root = Settings.Civ2Path + "TERRAIN1.GIF";
-            if (File.Exists(FilePath_local))
-            {
-                terrain1 = new Bitmap(FilePath_local);
-            }
-            else if (File.Exists(FilePath_root))
-            {
-                terrain1 = new Bitmap(FilePath_root);
-            }
-            else
-            {
-                Debug.WriteLine("TERRAIN1.GIF not found!");
-            }
-
-            var terrain2 = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            FilePath_local = path + Path.DirectorySeparatorChar + "TERRAIN2.GIF";
-            FilePath_root = Settings.Civ2Path + "TERRAIN2.GIF";
-            if (File.Exists(FilePath_local))
-            {
-                terrain2 = new Bitmap(FilePath_local);
-            }
-            else if (File.Exists(FilePath_root))
-            {
-                terrain2 = new Bitmap(FilePath_root);
-            }
-            else
-            {
-                Debug.WriteLine("TERRAIN2.GIF not found!");
-            }
+            var terrain1 = LoadBitmapFrom("TERRAIN1.GIF", path);
+            var terrain2 = LoadBitmapFrom( "TERRAIN2.GIF", path);
 
             // Initialize objects
             Desert = new Bitmap[4];
@@ -309,21 +279,7 @@ namespace EtoFormsUI
         public static void CitiesBitmapsImportFromFile(string path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var cities = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            string FilePath_local = path + Path.DirectorySeparatorChar + "CITIES.GIF";
-            string FilePath_root = Settings.Civ2Path + "CITIES.GIF";
-            if (File.Exists(FilePath_local))
-            {
-                cities = new Bitmap(FilePath_local);
-            }
-            else if (File.Exists(FilePath_root))
-            {
-                cities = new Bitmap(FilePath_root);
-            }
-            else
-            {
-                Debug.WriteLine("CITIES.GIF not found!");
-            }
+            var cities = LoadBitmapFrom("CITIES.GIF", path);
 
             // Initialize objects
             City = new Bitmap[6, 4];
@@ -443,22 +399,7 @@ namespace EtoFormsUI
 
         public static void UnitsBitmapsImportFromFile(string path)
         {
-            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var units = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            string FilePath_local = path + Path.DirectorySeparatorChar + "UNITS.GIF";
-            string FilePath_root = Settings.Civ2Path + "UNITS.GIF";
-            if (File.Exists(FilePath_local))
-            {
-                units = new Bitmap(FilePath_local);
-            }
-            else if (File.Exists(FilePath_root))
-            {
-                units = new Bitmap(FilePath_root);
-            }
-            else
-            {
-                Debug.WriteLine("UNITS.GIF not found!");
-            }
+            var units = LoadBitmapFrom("UNITS.GIF", path);
 
             // Initialize objects
             Units = new Bitmap[63];
@@ -466,8 +407,9 @@ namespace EtoFormsUI
             ShieldBack = new Bitmap[8];
 
             // Define transparent colors
-            Color transparentGray = Color.FromArgb(135, 83, 135);    //define transparent back color (gray)
-            Color transparentPink = Color.FromArgb(255, 0, 255);    //define transparent back color (pink)
+            Color transparentGray = units.GetPixel(1, 2); //define transparent back color (gray)
+            Color transparentPink = units.GetPixel(1, 1); //define transparent back color (pink)
+
 
             int count = 0;
             for (int row = 0; row < 7; row++)
@@ -549,22 +491,7 @@ namespace EtoFormsUI
 
         public static void PeopleIconsBitmapsImportFromFile(string path)
         {
-            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var pplIcons = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            string FilePath_local = path + Path.DirectorySeparatorChar + "PEOPLE.GIF";
-            string FilePath_root = Settings.Civ2Path + "PEOPLE.GIF";
-            if (File.Exists(FilePath_local))
-            {
-                pplIcons = new Bitmap(FilePath_local);
-            }
-            else if (File.Exists(FilePath_root))
-            {
-                pplIcons = new Bitmap(FilePath_root);
-            }
-            else
-            {
-                Debug.WriteLine("PEOPLE.GIF not found!");
-            }
+            var pplIcons = LoadBitmapFrom("PEOPLE.GIF", path);
 
             // Initialize objects
             PeopleL = new Bitmap[11, 4];
@@ -608,40 +535,42 @@ namespace EtoFormsUI
         // Import wallpapers for intro screen
         public static void ImportWallpapersFromIconsFile()
         {
-            Bitmap icons = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            try
+            using (var icons = LoadBitmapFrom("ICONS.GIF"))
             {
-                icons = new Bitmap(Settings.Civ2Path + "ICONS.GIF");
+                PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
+                PanelInnerWallpaper = icons.Clone(new Rectangle(298, 190, 32, 32));
             }
-            catch
+        }
+
+        /// <summary>
+        //  Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
+        /// </summary>
+        /// <param name="name">the filename to load</param>
+        /// <param name="path">the local directory to load from</param>
+        /// <returns></returns>
+        private static Bitmap LoadBitmapFrom(string name, string path = null)
+        {
+            if (!string.IsNullOrWhiteSpace(path))
             {
-                Debug.WriteLine("ICONS.GIF not found!");
+                string FilePath_local = path + Path.DirectorySeparatorChar + name;
+                if (File.Exists(FilePath_local))
+                {
+                    return new Bitmap(FilePath_local);
+                }
             }
 
-            PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
-            PanelInnerWallpaper = icons.Clone(new Rectangle(298, 190, 32, 32));
-
-            icons.Dispose();
+            string FilePath_root = Settings.Civ2Path + name;
+            if (File.Exists(FilePath_root))
+            {
+                return new Bitmap(FilePath_root);
+            }
+            Debug.WriteLine(name + " not found!");
+            return new Bitmap(640, 480, PixelFormat.Format32bppRgba);
         }
 
         public static void IconsBitmapsImportFromFile(string path)
         {
-            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var icons = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            string FilePath_local = path + Path.DirectorySeparatorChar + "ICONS.GIF";
-            string FilePath_root = Settings.Civ2Path + "ICONS.GIF";
-            if (File.Exists(FilePath_local))
-            {
-                icons = new Bitmap(FilePath_local);
-            }
-            else if (File.Exists(FilePath_root))
-            {
-                icons = new Bitmap(FilePath_root);
-            }
-            else
-            {
-                Debug.WriteLine("ICONS.GIF not found!");
-            }
+            var icons = LoadBitmapFrom(path, "ICONS.GIF");
 
             // Initialize objects
             Improvements = new Bitmap[67];
@@ -758,15 +687,7 @@ namespace EtoFormsUI
 
         public static void CityWallpaperBitmapImportFromFile()
         {
-            var cityWallpaper = new Bitmap(640, 480, PixelFormat.Format32bppRgba);
-            try
-            {
-                cityWallpaper = new Bitmap(Settings.Civ2Path + "CITY.GIF");
-            }
-            catch
-            {
-                Debug.WriteLine("CITY.GIF not found!");
-            }
+            var cityWallpaper = LoadBitmapFrom("CITY.GIF");
             CityWallpaper = cityWallpaper.CropImage(new Rectangle(0, 0, 636, 421));
         }
 
