@@ -130,10 +130,9 @@ namespace Civ2engine.Units
 
 
         public int Id { get; set; }
-        public int MovePoints
-        {
-            get { return MaxMovePoints - MovePointsLost; }
-        }
+
+        public int MovePoints => MaxMovePoints - MovePointsLost;
+
         public int MovePointsLost { get; set; }
         public int HitpointsBase => Game.Rules.UnitHitp[(int)Type];
         public int HitPoints => HitpointsBase - HitPointsLost;
@@ -273,35 +272,18 @@ namespace Civ2engine.Units
         }
 
 
+        public bool TurnEnded => MovePoints <= 0 ||
+                                 Order is OrderType.Fortified or OrderType.Transform or OrderType.Fortify or
+                                     OrderType.BuildIrrigation or OrderType.BuildRoad or OrderType.BuildAirbase or
+                                     OrderType
+                                         .BuildFortress or OrderType.BuildMine;
+    
 
-        private bool _turnEnded;
-        public bool TurnEnded
-        {
-            get
-            {
-                if (MovePoints <= 0) _turnEnded = true;
-                if (Order == OrderType.Fortified || Order == OrderType.Transform || Order == OrderType.Fortify || Order == OrderType.BuildIrrigation ||
-                    Order == OrderType.BuildRoad || Order == OrderType.BuildAirbase || Order == OrderType.BuildFortress || Order == OrderType.BuildMine) _turnEnded = true;
-                return _turnEnded;
-            }
-            set { _turnEnded = value; }
-        }
-
-        private bool _awaitingOrders;
-        public bool AwaitingOrders
-        {
-            get
-            {
-                _awaitingOrders = Order == OrderType.NoOrders || Order == OrderType.GoTo;
-                if (TurnEnded) _awaitingOrders = false;
-                return _awaitingOrders;
-            }
-            set { _awaitingOrders = value; }
-        }
+        public bool AwaitingOrders => !TurnEnded && (Order is OrderType.NoOrders or OrderType.GoTo);
 
         public void SkipTurn()
         {
-            TurnEnded = true;
+            MovePointsLost = MovePoints;
             PrevXY = new int[] { X, Y };
         }
 

@@ -185,8 +185,26 @@ namespace Civ2engine
         // Choose next unit for orders. If all units ended turn, update cities.
         private void ChooseNextUnit()
         {
+            
+            IUnit nextUnit = null;
+            int unitIndex;
+            for (unitIndex = _activeUnit.Id + 1; unitIndex < _units.Count && nextUnit == null; unitIndex++)
+            {
+                if (!_units[unitIndex].Dead && _units[unitIndex].Owner == _activeCiv && _units[unitIndex].AwaitingOrders)
+                {
+                    nextUnit = _units[unitIndex];
+                }
+            }
+
+            for (unitIndex = 0; nextUnit == null && unitIndex < _activeUnit.Id; unitIndex++)
+            {
+                if (!_units[unitIndex].Dead && _units[unitIndex].Owner == _activeCiv && _units[unitIndex].AwaitingOrders)
+                {
+                    nextUnit = _units[unitIndex];
+                }
+            }
             // End turn if no units awaiting orders
-            if (!_activeCiv.AnyUnitsAwaitingOrders)
+            if (nextUnit == null)
             {
                 if (Options.AlwaysWaitAtEndOfTurn && _activeCiv == _playerCiv)
                 {
@@ -200,35 +218,7 @@ namespace Civ2engine
             // Choose next unit
             else
             {
-                // Create an list of indexes of units awaiting orders
-                var indexUAO = new List<int>();
-                foreach (IUnit unit in _units.Where(u => u.Owner == _activeCiv && !u.Dead && u.AwaitingOrders && _activeUnit != u)) indexUAO.Add(unit.Id);
-
-                //int indexActUnit = Game.GetUnits.FindIndex(unit => unit == Game.ActiveUnit);  //Determine index of unit that is currently still active but just ended turn
-
-                if (_activeUnit.Id < indexUAO.First())
-                {
-                    _activeUnit = _units[indexUAO.First()];
-                }
-                else if (_activeUnit.Id == indexUAO.First())
-                {
-                    _activeUnit = _units[indexUAO.First() + 1];
-                }
-                else if (_activeUnit.Id >= indexUAO.Last())
-                {
-                    _activeUnit = _units[indexUAO.First()];
-                }
-                else
-                {
-                    for (int i = 0; i < indexUAO.Count; i++)
-                    {
-                        if ((_activeUnit.Id >= indexUAO[i]) && (_activeUnit.Id < indexUAO[i + 1]))
-                        {
-                            _activeUnit = _units[indexUAO[i + 1]];
-                            break;
-                        }
-                    }
-                }
+                _activeUnit = nextUnit;
 
                 // Player => wait for new command
                 if (_activeCiv == _playerCiv)

@@ -8,7 +8,7 @@ namespace EtoFormsUIExtensionMethods
         // Resize image (according to zoom)
         public static Bitmap Resize(this Bitmap image, int zoom)
         {
-            if (zoom == 0) return (Bitmap)image.Clone();
+            if (zoom == 0) return image.Clone();
 
             int width = image.Width.ZoomScale(zoom);
             int height = image.Height.ZoomScale(zoom);
@@ -36,12 +36,8 @@ namespace EtoFormsUIExtensionMethods
             //wrapMode.SetWrapMode(WrapMode.TileFlipXY);
             //graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
 
-            using (var g = new Graphics(destImage))
-            {
-                g.AntiAlias = false;
-                g.ImageInterpolation = ImageInterpolation.None;
-                g.DrawImage(image, 0, 0, width, height);
-            }
+            using var g = new Graphics(destImage) {AntiAlias = false, ImageInterpolation = ImageInterpolation.None};
+            g.DrawImage(image, 0, 0, width, height);
 
             return destImage;
         }

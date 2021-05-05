@@ -77,22 +77,22 @@ namespace Civ2engine
                             foreach (IUnit unit in Game.GetUnits.Where(u => u.Owner.TribeName == civ.TribeName))
                             {
                                 int id = Game.GetUnits.FindIndex(n => n == unit);
-                                string active;
-                                if (unit.TurnEnded) active = "(turn ended)";
-                                else active = "(active)";
-                                string order;
-                                if (unit.Order == OrderType.Fortify) order = "fortifying";
-                                else if (unit.Order == OrderType.Fortified) order = "fortified";
-                                else if (unit.Order == OrderType.Sleep) order = "sleep";
-                                else if (unit.Order == OrderType.BuildFortress) order = "building fortress";
-                                else if (unit.Order == OrderType.BuildRoad) order = "building road";
-                                else if (unit.Order == OrderType.BuildIrrigation) order = "building irrigation";
-                                else if (unit.Order == OrderType.BuildMine) order = "building mine";
-                                else if (unit.Order == OrderType.Transform) order = "transforming";
-                                else if (unit.Order == OrderType.CleanPollution) order = "cleaning pollution";
-                                else if (unit.Order == OrderType.BuildAirbase) order = "building airbase";
-                                else if (unit.Order == OrderType.GoTo) order = "Go-To";
-                                else order = "no orders";
+                                var active = unit.TurnEnded ? "(turn ended)" : "(active)";
+                                var order = unit.Order switch
+                                {
+                                    OrderType.Fortify => "fortifying",
+                                    OrderType.Fortified => "fortified",
+                                    OrderType.Sleep => "sleep",
+                                    OrderType.BuildFortress => "building fortress",
+                                    OrderType.BuildRoad => "building road",
+                                    OrderType.BuildIrrigation => "building irrigation",
+                                    OrderType.BuildMine => "building mine",
+                                    OrderType.Transform => "transforming",
+                                    OrderType.CleanPollution => "cleaning pollution",
+                                    OrderType.BuildAirbase => "building airbase",
+                                    OrderType.GoTo => "Go-To",
+                                    _ => "no orders"
+                                };
                                 Console.WriteLine($"#{id} {unit.Type}, XY=({unit.X},{unit.Y}), {active}, {order}");
                             }
                             Console.WriteLine();

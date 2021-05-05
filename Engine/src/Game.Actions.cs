@@ -35,11 +35,10 @@ namespace Civ2engine
             // Reset turns of all units
             foreach (var unit in GetActiveUnits.Where(n => n.Owner == _activeCiv))
             {
-                unit.TurnEnded = false;
                 unit.MovePointsLost = 0;
 
                 // Increase counters
-                if ((unit.Order == OrderType.BuildIrrigation) || (unit.Order == OrderType.BuildRoad) || (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
+                if (unit.Order == OrderType.BuildIrrigation || (unit.Order == OrderType.BuildRoad) || (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
             }
 
             // Update all cities

@@ -54,13 +54,32 @@ namespace Civ2engine
             // Create cities
             for (int i = 0; i < SAVgameData.NumberOfCities; i++)
             {
-                CreateCity(SAVgameData.CityXloc[i], SAVgameData.CityYloc[i], SAVgameData.CityCanBuildCoastal[i], SAVgameData.CityAutobuildMilitaryRule[i], SAVgameData.CityStolenTech[i], SAVgameData.CityImprovementSold[i], SAVgameData.CityWeLoveKingDay[i], SAVgameData.CityCivilDisorder[i], SAVgameData.CityCanBuildShips[i], SAVgameData.CityObjectivex3[i], SAVgameData.CityObjectivex1[i], SAVgameData.CityOwner[i], SAVgameData.CitySize[i], SAVgameData.CityWhoBuiltIt[i], SAVgameData.CityFoodInStorage[i], SAVgameData.CityShieldsProgress[i], SAVgameData.CityNetTrade[i], SAVgameData.CityName[i], SAVgameData.CityDistributionWorkers[i], SAVgameData.CityNoOfSpecialistsx4[i], SAVgameData.CityImprovements[i], SAVgameData.CityItemInProduction[i], SAVgameData.CityActiveTradeRoutes[i], SAVgameData.CityCommoditySupplied[i], SAVgameData.CityCommodityDemanded[i], SAVgameData.CityCommodityInRoute[i], SAVgameData.CityTradeRoutePartnerCity[i], SAVgameData.CityScience[i], SAVgameData.CityTax[i], SAVgameData.CityNoOfTradeIcons[i], SAVgameData.CityTotalFoodProduction[i], SAVgameData.CityTotalShieldProduction[i], SAVgameData.CityHappyCitizens[i], SAVgameData.CityUnhappyCitizens[i]);
+                CreateCity(SAVgameData.CityXloc[i], SAVgameData.CityYloc[i], SAVgameData.CityCanBuildCoastal[i],
+                    SAVgameData.CityAutobuildMilitaryRule[i], SAVgameData.CityStolenTech[i],
+                    SAVgameData.CityImprovementSold[i], SAVgameData.CityWeLoveKingDay[i],
+                    SAVgameData.CityCivilDisorder[i], SAVgameData.CityCanBuildShips[i], SAVgameData.CityObjectivex3[i],
+                    SAVgameData.CityObjectivex1[i], SAVgameData.CityOwner[i], SAVgameData.CitySize[i],
+                    SAVgameData.CityWhoBuiltIt[i], SAVgameData.CityFoodInStorage[i], SAVgameData.CityShieldsProgress[i],
+                    SAVgameData.CityNetTrade[i], SAVgameData.CityName[i], SAVgameData.CityDistributionWorkers[i],
+                    SAVgameData.CityNoOfSpecialistsx4[i], SAVgameData.CityImprovements[i],
+                    SAVgameData.CityItemInProduction[i], SAVgameData.CityActiveTradeRoutes[i],
+                    SAVgameData.CityCommoditySupplied[i], SAVgameData.CityCommodityDemanded[i],
+                    SAVgameData.CityCommodityInRoute[i], SAVgameData.CityTradeRoutePartnerCity[i],
+                    SAVgameData.CityScience[i], SAVgameData.CityTax[i], SAVgameData.CityNoOfTradeIcons[i],
+                    SAVgameData.CityTotalFoodProduction[i], SAVgameData.CityTotalShieldProduction[i],
+                    SAVgameData.CityHappyCitizens[i], SAVgameData.CityUnhappyCitizens[i]);
             }
 
             // Create units
             for (int i = 0; i < SAVgameData.NumberOfUnits; i++)
             {
-                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i], SAVgameData.UnitDead[i], SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i], SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i], SAVgameData.UnitMovePointsLost[i], SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitPrevXloc[i], SAVgameData.UnitPrevYloc[i], SAVgameData.UnitCaravanCommodity[i], SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i], SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i], SAVgameData.UnitLinkOtherUnitsOnTop[i], SAVgameData.UnitLinkOtherUnitsUnder[i]);
+                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i],
+                    SAVgameData.UnitDead[i], SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i],
+                    SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i], SAVgameData.UnitMovePointsLost[i],
+                    SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitPrevXloc[i], SAVgameData.UnitPrevYloc[i],
+                    SAVgameData.UnitCaravanCommodity[i], SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i],
+                    SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i], SAVgameData.UnitLinkOtherUnitsOnTop[i],
+                    SAVgameData.UnitLinkOtherUnitsUnder[i]);
             }
 
             //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
