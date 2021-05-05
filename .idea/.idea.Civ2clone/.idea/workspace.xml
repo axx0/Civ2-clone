@@ -8,6 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6355a1f4-7981-42fc-9a24-6e0baecee4c5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" afterDir="false" />
@@ -21,24 +26,11 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/GetAnimationFrames.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/IUnit.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/WinFormsUI/Bitmaps/Images.ImportBitmaps.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/316AB451-6B81-40E7-B94D-342A1F91D04E/30/Icon.Windows.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Bitmaps/Images.ImportBitmaps.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.ActionsUnits.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/GetAnimationFrames.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/113/NativeWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/ExtensionMethods.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/Draw.Terrain.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/316AB451-6B81-40E7-B94D-342A1F91D04E/10/Gdiplus.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/HelpConsole.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/Images.ImportBitmaps.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -55,6 +47,7 @@
       <option value="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Game.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" />
+      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1s5LfMErJMB9LIXuqxoyRcfCxmS" />
@@ -162,6 +155,7 @@
       <workItem from="1620157619596" duration="6594000" />
       <workItem from="1620204601634" duration="1896000" />
       <workItem from="1620206764861" duration="9348000" />
+      <workItem from="1620250925518" duration="745000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -188,6 +182,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
@@ -203,10 +198,10 @@
           <line>20</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Game.LoadGame.cs" initialLine="20" containingFunctionPresentation="method 'LoadGame'">
             <startOffsets>
-              <option value="751" />
+              <option value="698" />
             </startOffsets>
             <endOffsets>
-              <option value="790" />
+              <option value="737" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="6" />

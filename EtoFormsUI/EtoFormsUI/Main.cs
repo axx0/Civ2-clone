@@ -5,6 +5,7 @@ using Civ2engine;
 using Civ2engine.Events;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.IO;
 
 namespace EtoFormsUI
 {
@@ -33,7 +34,10 @@ namespace EtoFormsUI
             Title = "Civilization II Multiplayer Gold";
             BackgroundColor = Color.FromArgb(143, 123, 99);
             WindowState = WindowState.Maximized;
-            Icon = new Icon(Settings.Civ2Path + "civ2.ico");
+            if(File.Exists(Settings.Civ2Path + "civ2.ico"))
+            {
+                Icon = new Icon(Settings.Civ2Path + "civ2.ico");
+            }
 
             layout = new PixelLayout();
             var image = new ImageView { Image = Images.MainScreenSymbol };
