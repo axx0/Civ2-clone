@@ -8,20 +8,18 @@ using Civ2engine.Enums;
 namespace Civ2engine
 {
     // Read game data from SAV and RULES.txt
-    public class ReadGameData
+    public partial class Read
     {
-        public GameData data;
-
-        public GameData Read_SAV_and_RULES(string savPath, string savName)
+        public static GameData SAV_and_RULES(string savPath, string savName)
         {
-            data = new GameData();
-            ReadRules(savPath);
-            ReadSAV(savPath, savName);
+            var data = new GameData();
+            Rules(data, savPath);
+            SAV(data, savPath, savName);
             return data;
         }
 
         // Read RULES.TXT
-        public void ReadRules(string path)
+        public static void Rules(GameData data, string path)
         {
             // Read in SAV directory path. If it doesn't exist there, read from root civ2 directory.
             string rulesPath1 = path + Path.DirectorySeparatorChar + "RULES.TXT";
@@ -390,7 +388,7 @@ namespace Civ2engine
         }
 
         // READ SAV GAME
-        public void ReadSAV(string savPath, string savName)
+        public static void SAV(GameData data, string savPath, string savName)
         {
             int intVal1, intVal2, intVal3, intVal4;
 
@@ -1122,13 +1120,13 @@ namespace Civ2engine
         }
 
         // Helper function
-        private bool GetBit(byte b, int bitNumber)
+        private static bool GetBit(byte b, int bitNumber)
         {
             return (b & (1 << bitNumber)) != 0;
         }
 
         // Helper function
-        private string Reverse(string s)   //Reverse a string
+        private static string Reverse(string s)   //Reverse a string
         {
             char[] charArray = s.ToCharArray();
             Array.Reverse(charArray);

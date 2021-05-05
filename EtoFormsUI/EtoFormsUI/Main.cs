@@ -2,7 +2,9 @@ using System;
 using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
+using Civ2engine.Events;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace EtoFormsUI
 {
@@ -14,13 +16,18 @@ namespace EtoFormsUI
         private MapPanel mapPanel;
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
+        private List<PopupBox> popupBoxList;
         public Sound Sounds;
-
+        public static event EventHandler<PopupboxEventArgs> OnPopupboxEvent;
+        
         public Main()
         {
             this.Load += FormLoadEvent;
-            this.Shown += FormShownEvent;
+            //this.Shown += FormShownEvent;
+            this.Shown += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
             this.KeyDown += KeyPressedEvent;
+            Main.OnPopupboxEvent += PopupboxEvent;
+            //popupBoxList = Read.PopupBoxes(Settings.Civ2Path);
             LoadInitialAssets();
 
             Title = "Civilization II Multiplayer Gold";
@@ -181,19 +188,6 @@ namespace EtoFormsUI
             Sounds.PlayMenuLoop();
         }
 
-        private void FormShownEvent(object sender, EventArgs e)
-        {
-            // Open this after the form is shown, otherwise it's opened too fast
-            choiceMenu = new ChoiceMenuPanel(this);
-            choiceMenu.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.745), (int)(Screen.PrimaryScreen.Bounds.Height * 0.570));
-            choiceMenu.ShowModal(Parent);
-            if (choiceMenu.SelectedIndex == 4)
-            {
-                LoadGameInitialization(choiceMenu.DirectoryPath, choiceMenu.SAVname);
-                Sounds.Stop();
-            }
-        }
-
         // Load assets at start of Civ2 program
         private void LoadInitialAssets()
         {
@@ -201,6 +195,9 @@ namespace EtoFormsUI
 
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
+
+            // Load popup boxes info (Game.txt)
+            popupBoxList = Read.PopupBoxes(Settings.Civ2Path);
         }
     }
 }
