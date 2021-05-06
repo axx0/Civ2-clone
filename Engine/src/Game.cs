@@ -174,7 +174,7 @@ namespace Civ2engine
             IUnit unit = new Unit
             {
                 Id = _units.Count,
-                Dead = dead,
+                Dead = dead || y < 0 || x < 0,
                 Type = type,
                 X = x,
                 Y = y,

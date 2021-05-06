@@ -74,8 +74,8 @@ namespace Civ2engine.Units
         void Fortify();
         void Transform();
         void Sleep();
-        bool TurnEnded { get; set; }
-        bool AwaitingOrders { get; set; }
+        bool TurnEnded { get; }
+        bool AwaitingOrders { get; }
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }

@@ -37,20 +37,19 @@ namespace Civ2engine
         {
             get
             {
-                if (!ViewPieceMode) _activeXY = new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
+                if (!ViewPieceMode )
+                {
+                    _activeXY = new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
+                }
                 return _activeXY;
             }
-            set { _activeXY = value; }
+            set => _activeXY = value;
         }
         private bool _viewPieceMode;
         public bool ViewPieceMode 
         {
-            get
-            {
-                if (!Game.GetActiveCiv.AnyUnitsAwaitingOrders) return true;
-                else return _viewPieceMode;
-            }
-            set { _viewPieceMode = value; }
+            get => !Game.GetActiveCiv.AnyUnitsAwaitingOrders || _viewPieceMode;
+            set => _viewPieceMode = value;
         }
 
         // Generate first instance of terrain tiles by importing game data
