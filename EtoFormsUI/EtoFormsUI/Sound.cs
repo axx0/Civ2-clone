@@ -20,6 +20,7 @@ namespace EtoFormsUI
         {
             location = loc;
             Game.OnUnitEvent += UnitEventHappened;
+            Main.OnPopupboxEvent += PopupboxEventHappened;
 
             LibVLCSharp.Shared.Core.Initialize();
 
@@ -30,17 +31,21 @@ namespace EtoFormsUI
             playerLoop = new MediaPlayer(libVLCLoop);
         }
 
-        private void PlaySound(string path){
+        private void PlaySound(string soundName)
+        {
+            string path = location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + soundName;
             player.Play(new Media(libVLC, new Uri(path)));
         }
 
-        private void PlayLoop(string path){
+        private void PlayLoop(string soundName)
+        {
+            string path = location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + soundName;
             playerLoop.Play(new Media(libVLC, new Uri(path)));
         }
 
         public void PlayMenuLoop()
         {
-            this.PlayLoop(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "MENULOOP.WAV");
+            this.PlayLoop("MENULOOP.WAV");
         }
 
         public void Stop()
@@ -54,21 +59,32 @@ namespace EtoFormsUI
             switch (e.EventType)
             {
                 case UnitEventType.MoveCommand:
-                    this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "MOVPIECE.WAV");
+                    this.PlaySound("MOVPIECE.WAV");
                     break;
                 case UnitEventType.Attack:
                     switch (e.Attacker.Type)
                     {
                         case UnitType.Catapult:
-                            this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "CATAPULT.WAV");
+                            this.PlaySound("CATAPULT.WAV");
                             break;
                         case UnitType.Elephant:
-                            this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "ELEPHANT.WAV");
+                            this.PlaySound("ELEPHANT.WAV");
                             break;
                         default:
-                            this.PlaySound(location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + "SWORDFGT.WAV");
+                            this.PlaySound("SWORDFGT.WAV");
                             break;
                     }
+                    break;
+            }
+        }
+
+        private void PopupboxEventHappened(object sender, PopupboxEventArgs e)
+        {
+            switch (e.BoxName)
+            {
+                case "LOADOK":
+                    Stop();
+                    this.PlaySound("MENUOK.WAV");
                     break;
             }
         }

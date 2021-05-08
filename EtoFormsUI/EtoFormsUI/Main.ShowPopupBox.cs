@@ -4,6 +4,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine.Events;
 using Civ2engine;
+using System.Collections.Generic;
 
 namespace EtoFormsUI
 {
@@ -35,18 +36,19 @@ namespace EtoFormsUI
                                 // Get SAV name & directory name from result
                                 savDirectory = ofd.Directory.LocalPath;
                                 savName = Path.GetFileName(ofd.FileName);
+                                LoadGameInitialization(savDirectory, savName);
                                 Sounds.Stop();
-                                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("LOADOK"));
-                                
+
+                                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("LOADOK", new List<string> { Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName, Game.GetActiveCiv.TribeName, Game.GetGameYearString, Game.DifficultyLevel.ToString() }));
                             }
                         }
                         break;
                     }
                 case "LOADOK":
                     {
-                        var menu = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == "LOADOK"));
+                        var menu = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == "LOADOK"), e.ReplaceStrings);
                         menu.ShowModal(Parent);
-                        LoadGameInitialization(savDirectory, savName);
+                        StartGame();
                         break;
                     }
                 default: break;

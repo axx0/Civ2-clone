@@ -11,7 +11,12 @@ namespace EtoFormsUI
         {
             Game.LoadGame(directoryPath, SAVname);
             Images.LoadGraphicsAssetsFromFiles(directoryPath);
+            sinaiPanel.Dispose();
+            sinaiPanel = null;
+        }
 
+        public void StartGame()
+        {
             // Generate map tile graphics
             Images.MapTileGraphic = new Bitmap[Map.Xdim, Map.Ydim];
             for (int col = 0; col < Map.Xdim; col++)
@@ -21,11 +26,7 @@ namespace EtoFormsUI
                     Images.MapTileGraphic[col, row] = Draw.MakeTileGraphic(Map.Tile[col, row], col, row, Game.Options.FlatEarth);
                 }
             }
-
-            //ViewPieceMode = Game.ActiveUnit == null;
-
-            sinaiPanel.Dispose();
-            sinaiPanel = null;
+            
             foreach (MenuItem item in this.Menu.Items) item.Enabled = true;
 
             mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height);
@@ -40,15 +41,6 @@ namespace EtoFormsUI
             Content = layout;
 
             BringToFront();
-
-            ////ZoomInItem.Click += MapPanel.ZoomINclicked;
-            ////ZoomOutItem.Click += MapPanel.ZoomOUTclicked;
-            ////MaxZoomInItem.Click += MapPanel.MaxZoomINclicked;
-            ////MaxZoomOutItem.Click += MapPanel.MaxZoomOUTclicked;
-            ////StandardZoomItem.Click += MapPanel.StandardZOOMclicked;
-            ////MediumZoomOutItem.Click += MapPanel.MediumZoomOUTclicked;
-            //StatusPanel.OnMapEvent += MapEventHappened;
-            ////MapPanel.OnMapEvent += MapEventHappened;
         }
     }
 }

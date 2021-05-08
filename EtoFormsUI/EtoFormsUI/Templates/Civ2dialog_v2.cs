@@ -4,6 +4,7 @@ using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
+using ExtensionMethods;
 using System.Diagnostics;
 
 namespace EtoFormsUI
@@ -14,11 +15,13 @@ namespace EtoFormsUI
         private readonly RadioButtonList radioBtnList;
         private readonly FormattedText[] formattedOptionsTexts;
         private readonly PopupBox _popupBox;
+        private readonly List<string> _replaceStrings;
         public int SelectedIndex;
-
-        public Civ2dialog_v2(Main parent, PopupBox popupBox)
+        
+        public Civ2dialog_v2(Main parent, PopupBox popupBox, List<string> replaceStrings = null)
         {
             _popupBox = popupBox;
+            _replaceStrings = replaceStrings;
 
             foreach (MenuItem item in parent.Menu.Items) item.Enabled = false;
 
@@ -27,6 +30,21 @@ namespace EtoFormsUI
 
             WindowStyle = WindowStyle.None;
             MovableByWindowBackground = true;
+
+            // Replace %STRING in texts
+            popupBox.Title = ReplaceSTRING(popupBox.Title, replaceStrings);
+            if (popupBox.CenterText != null)
+            {
+                var copyList = new List<string>();
+                foreach (var text in popupBox.CenterText) copyList.Add(ReplaceSTRING(text, replaceStrings));
+                popupBox.CenterText = copyList;
+            }
+            if (popupBox.LeftText != null)
+            {
+                var copyList = new List<string>();
+                foreach (var text in popupBox.LeftText) copyList.Add(ReplaceSTRING(text, replaceStrings));
+                popupBox.LeftText = copyList;
+            }
 
             // Determine size of inner panel
             int optionRows = popupBox.Options == null ? 0 : popupBox.Options.Count;
@@ -215,6 +233,19 @@ namespace EtoFormsUI
             }
 
             return Math.Max(width1, width2);
+        }
+
+        // Find occurences of %STRING in text and replace it with strings
+        private string ReplaceSTRING(string text, List<string> replacementStrings)
+        {
+            int replStringNo, pos;
+            while (text.Contains("%STRING"))
+            {
+                pos = text.IndexOf("%STRING") + 7; // %STRING number position
+                replStringNo = (int)Char.GetNumericValue(text[pos]);  // Get number x in %STRINGx
+                text = text.Replace("%STRING".Insert(7, replStringNo.ToString()), replacementStrings[replStringNo]);
+            }
+            return text;
         }
     }
 }

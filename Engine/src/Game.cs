@@ -43,6 +43,7 @@ namespace Civ2engine
                 return _gameYear;
             }
         }
+        public string GetGameYearString => GetGameYear < 0 ? string.Join(" ", new string[] { Math.Abs(GetGameYear).ToString(), "B.C." }) : string.Join(" ", new string[] { GetGameYear.ToString(), "A.D." });
         public int TurnNumberForGameYear { get; set; }
         public DifficultyType DifficultyLevel => _difficultyLevel;
         public BarbarianActivityType BarbarianActivity => _barbarianActivity;
@@ -294,6 +295,8 @@ namespace Civ2engine
                 Alive = alive,
                 CityStyle = (CityStyleType)style,
                 LeaderName = leaderName,
+                LeaderGender = gender,
+                LeaderTitle = (gender == 0) ? Rules.GovernmentTitleHIS[government] : Rules.GovernmentTitleHIS[government],
                 TribeName = tribeName,
                 Adjective = adjective,
                 Money = money,
