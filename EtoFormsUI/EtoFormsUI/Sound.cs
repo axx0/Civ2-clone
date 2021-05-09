@@ -31,13 +31,13 @@ namespace EtoFormsUI
             playerLoop = new MediaPlayer(libVLCLoop);
         }
 
-        private void PlaySound(string soundName)
+        public void PlaySound(string soundName)
         {
             string path = location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + soundName;
             player.Play(new Media(libVLC, new Uri(path)));
         }
 
-        private void PlayLoop(string soundName)
+        public void PlayLoop(string soundName)
         {
             string path = location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + soundName;
             playerLoop.Play(new Media(libVLC, new Uri(path)));
@@ -80,13 +80,13 @@ namespace EtoFormsUI
 
         private void PopupboxEventHappened(object sender, PopupboxEventArgs e)
         {
-            switch (e.BoxName)
-            {
-                case "LOADOK":
-                    Stop();
-                    this.PlaySound("MENUOK.WAV");
-                    break;
-            }
+            //switch (e.BoxName)
+            //{
+            //    case "LOADOK":
+            //        Stop();
+            //        this.PlaySound("MENUOK.WAV");
+            //        break;
+            //}
         }
     }
 }

@@ -14,5 +14,6 @@ namespace Civ2engine
         public int Y { get; set; }
         public List<string> Button { get; set; }
         public List<string> Options { get; set; }
+        public bool Checkbox { get; set; }
     }
 }
