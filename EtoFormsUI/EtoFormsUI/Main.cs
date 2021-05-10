@@ -24,11 +24,9 @@ namespace EtoFormsUI
         public Main()
         {
             this.Load += FormLoadEvent;
-            //this.Shown += FormShownEvent;
             this.Shown += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
             this.KeyDown += KeyPressedEvent;
             Main.OnPopupboxEvent += PopupboxEvent;
-            //popupBoxList = Read.PopupBoxes(Settings.Civ2Path);
             LoadInitialAssets();
 
             Title = "Civilization II Multiplayer Gold";
@@ -45,17 +43,11 @@ namespace EtoFormsUI
 
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
-            GameOptionsCommand.Executed += (sender, e) => {
-                var gameOptionsPanel = new GameOptionsDialog(this);
-                gameOptionsPanel.ShowModal(); };
+            GameOptionsCommand.Executed += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("GAMEOPTIONS", new List<string> { "Patch xxx" }));    // TODO: Get patch version
             var GraphicOptionsCommand = new Command { MenuText = "Graphic Options", Shortcut = Keys.Control | Keys.P };
-            GraphicOptionsCommand.Executed += (sender, e) => {
-                var graphicOptionsPanel = new GraphicOptionsDialog(this);
-                graphicOptionsPanel.ShowModal(); };
+            GraphicOptionsCommand.Executed += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("GRAPHICOPTIONS"));
             var CityReportOptionsCommand = new Command { MenuText = "City Report Options", Shortcut = Keys.Control | Keys.E };
-            CityReportOptionsCommand.Executed += (sender, e) => {
-                var cityReportOptionsPanel = new CityReportOptionsDialog(this);
-                cityReportOptionsPanel.ShowModal(); };
+            CityReportOptionsCommand.Executed += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MESSAGEOPTIONS"));
             var MultiplayerOptionsCommand = new Command { MenuText = "Multiplayer Options", Shortcut = Keys.Control | Keys.Y, Enabled = false };
             var GameProfileCommand = new Command { MenuText = "Game Profile", Enabled = false };
             var PickMusicCommand = new Command { MenuText = "Pick Music" };

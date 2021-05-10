@@ -34,11 +34,12 @@ namespace Civ2engine
                 count += 1;
             }
 
+            // Read popubpox definitions
             var startIndex = startIndexList.ToArray();
             var lines = File.ReadAllLines(filePath);
             for (int group = 0; group < startIndex.Length - 1; group++) // Group = one popupbox definition
             {
-                var popupBox = new PopupBox { Name = lines[startIndex[group]].Remove(0, 1) };
+                var popupBox = new PopupBox { Name = lines[startIndex[group]].Remove(0, 1), Checkbox = false };
                 bool optionsStart = false;
                 for (int row = startIndex[group]; row < startIndex[group + 1]; row++)
                 {
@@ -70,6 +71,7 @@ namespace Civ2engine
                         if (popupBox.Options == null) popupBox.Options = new List<string>();
                         popupBox.Options.Add(lines[row]);
                     }
+                    if (lines[row].Contains("@checkbox")) popupBox.Checkbox = true;
                 }
 
                 // Add OK/cancel buttons if @options exist

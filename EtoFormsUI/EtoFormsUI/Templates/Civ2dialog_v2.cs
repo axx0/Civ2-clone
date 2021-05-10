@@ -10,15 +10,25 @@ namespace EtoFormsUI
 {
     public class Civ2dialog_v2 : Dialog
     {
+        public int SelectedIndex;
+        public List<bool> CheckboxReturnStates;
         private readonly int paddingTop, paddingBtm;
         private readonly RadioButtonList radioBtnList;
+        private readonly CheckBox[] checkBox;
         private readonly FormattedText[] formattedOptionsTexts;
         private readonly PopupBox _popupBox;
-        public int SelectedIndex;
 
-        public Civ2dialog_v2(Main parent, PopupBox popupBox)
+        /// <summary>
+        /// Show a popup box (dialog).
+        /// </summary>
+        /// <param name="parent">Main window.</param>
+        /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
+        /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
+        /// <param name="checkboxOptionState">A list of bools representing states of checkbox options.</param>
+        public Civ2dialog_v2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, List<bool> checkboxOptionState = null)
         {
             _popupBox = popupBox;
+            if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
 
             foreach (MenuItem item in parent.Menu.Items) item.Enabled = false;
 
@@ -27,6 +37,21 @@ namespace EtoFormsUI
 
             WindowStyle = WindowStyle.None;
             MovableByWindowBackground = true;
+
+            // Replace %STRING in texts
+            popupBox.Title = ReplaceSTRING(popupBox.Title, replaceStrings);
+            if (popupBox.CenterText != null)
+            {
+                var copyList = new List<string>();
+                foreach (var text in popupBox.CenterText) copyList.Add(ReplaceSTRING(text, replaceStrings));
+                popupBox.CenterText = copyList;
+            }
+            if (popupBox.LeftText != null)
+            {
+                var copyList = new List<string>();
+                foreach (var text in popupBox.LeftText) copyList.Add(ReplaceSTRING(text, replaceStrings));
+                popupBox.LeftText = copyList;
+            }
 
             // Determine size of inner panel
             int optionRows = popupBox.Options == null ? 0 : popupBox.Options.Count;
@@ -39,18 +64,34 @@ namespace EtoFormsUI
 
             var layout = new PixelLayout() { Size = new Size(this.Width, this.Height) };
 
-            // Options (if they exist)
+            // Options (if they exist) <- either checkbox or radio btn.
             if (popupBox.Options != null)
             {
                 // Texts
                 formattedOptionsTexts = new FormattedText[optionRows];
                 for (int i = 0; i < optionRows; i++) formattedOptionsTexts[i] = new FormattedText() { Font = new Font("Times New Roman", 18), ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)), Text = _popupBox.Options[i] };
 
-                // Radio buttons (options)
-                radioBtnList = new RadioButtonList() { DataStore = _popupBox.Options, Orientation = Orientation.Vertical };
-                radioBtnList.SelectedIndexChanged += (sender, e) => Invalidate();
-                radioBtnList.GotFocus += (sender, e) => Invalidate();
-                layout.Add(radioBtnList, 11 + 10, 40);
+                // Checkboxes
+                if (popupBox.Checkbox)
+                {
+                    checkBox = new CheckBox[_popupBox.Options.Count];
+                    for (int row = 0; row < _popupBox.Options.Count; row++)
+                    {
+                        checkBox[row] = new CheckBox() { Text = _popupBox.Options[row], Font = new Font("Times New Roman", 18), TextColor = Color.FromArgb(51, 51, 51), BackgroundColor = Colors.Transparent };
+                        checkBox[row].Checked = checkboxOptionState[row];
+                        checkBox[row].CheckedChanged += (sender, e) => Invalidate();
+                        checkBox[row].GotFocus += (sender, e) => Invalidate();
+                        layout.Add(checkBox[row], 11 + 10, 40 + 32 * row);
+                    }
+                }
+                // Radio btns.
+                else
+                {
+                    radioBtnList = new RadioButtonList() { DataStore = _popupBox.Options, Orientation = Orientation.Vertical };
+                    radioBtnList.SelectedIndexChanged += (sender, e) => Invalidate();
+                    radioBtnList.GotFocus += (sender, e) => Invalidate();
+                    layout.Add(radioBtnList, 11 + 10, 40);
+                }
             }
 
             // Drawable surface
@@ -73,21 +114,80 @@ namespace EtoFormsUI
                     AbortButton.Click += (sender, e) =>
                     {
                         foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
-                        Application.Instance.Quit();
+                        
+                        if (_popupBox.Name == "MAINMENU") 
+                        { 
+                            Application.Instance.Quit(); 
+                        }
+                        else
+                        {
+                            Close();
+                        }
                     };
                 }
 
                 // Define default button so that it is also called with return key
                 if (_popupBox.Button[i] == "OK")
                 {
+                    foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+
                     DefaultButton = buttons[i];
-                    DefaultButton.Click += (sender, e) => 
-                    { 
-                        if (radioBtnList != null) SelectedIndex = radioBtnList.SelectedIndex; 
+                    DefaultButton.Click += (sender, e) =>
+                    {
+                        if (_popupBox.Checkbox)
+                        {
+                            for (int row = 0; row < _popupBox.Options.Count; row++)
+                            {
+                                CheckboxReturnStates[row] = checkBox[row].Checked == true;
+                            }
+                        }
+                        else if (radioBtnList != null) 
+                        {
+                            SelectedIndex = radioBtnList.SelectedIndex;
+                        }
+
                         Close(); 
                     };
                 }
             }
+
+            // Update checkbox/choose radiobtn. with mouse click
+            surface.MouseDown += (sender, e) =>
+            {
+                // Select radio button if clicked
+                if (_popupBox.Options != null)
+                {
+                    int y_offset = 0;
+                    if (_popupBox.CenterText != null) y_offset += _popupBox.CenterText.Count * 30;
+
+                    // Update checkbox
+                    if (_popupBox.Checkbox)
+                    {
+                        for (int row = 0; row < _popupBox.Options.Count; row++)
+                        {
+                            // Update if checkbox is clicked
+                            if (e.Location.X > 14 && e.Location.X < 47 + (int)formattedOptionsTexts[row].Measure().Width && e.Location.Y > paddingTop + y_offset + 5 + 32 * row && e.Location.Y < paddingTop + y_offset + 5 + 32 * (row + 1))
+                            {
+                                checkBox[row].Checked = !checkBox[row].Checked;
+                                checkBox[row].Focus();
+                                Invalidate();
+                            }
+                        }
+                    }
+                    // Update radio btn
+                    else
+                    {
+                        for (int row = 0; row < _popupBox.Options.Count; row++)
+                        {
+                            if (e.Location.X > 14 && e.Location.X < this.Width - 14 && e.Location.Y > paddingTop + y_offset + 5 + 32 * row && e.Location.Y < paddingTop + y_offset + 5 + 32 * (row + 1))
+                            {
+                                radioBtnList.SelectedIndex = row;
+                                Invalidate();
+                            }
+                        }
+                    }
+                }
+            };
 
             Content = layout;
         }
@@ -177,26 +277,41 @@ namespace EtoFormsUI
                 }
             }
 
-            // Options (if they exist)
+            // Options (if they exist) <- either checkbox or radio btn.
             if (_popupBox.Options != null)
             {
                 rowCount = 0;
                 foreach (var option in _popupBox.Options)
                 {
-                    Draw.RadioBtn(e.Graphics, radioBtnList.SelectedIndex == rowCount, new Point(21, paddingTop + 9 + y_offset));
+                    // Draw checkboxes
+                    if (_popupBox.Checkbox)
+                    {
+                        Draw.Checkbox(e.Graphics, checkBox[rowCount].Checked == true, new Point(21, paddingTop + 9 + y_offset));
 
-                    e.Graphics.DrawText(formattedOptionsTexts[rowCount], new Point(47, paddingTop + 5 + y_offset));
+                        e.Graphics.DrawText(formattedOptionsTexts[rowCount], new Point(47, paddingTop + 5 + y_offset));
 
-                    using var _pen = new Pen(Color.FromArgb(64, 64, 64));
-                    if (radioBtnList.SelectedIndex == rowCount) e.Graphics.DrawRectangle(_pen, new Rectangle(45, paddingTop + 5 + y_offset, this.Width - 45 - 14, 26));
+                        using var _pen = new Pen(Color.FromArgb(64, 64, 64));
+                        if (checkBox[rowCount].HasFocus) e.Graphics.DrawRectangle(_pen, new Rectangle(45, paddingTop + 5 + y_offset, (int)formattedOptionsTexts[rowCount].Measure().Width, 26));
+                    }
+                    // Draw radio buttons
+                    else
+                    {
+                        Draw.RadioBtn(e.Graphics, radioBtnList.SelectedIndex == rowCount, new Point(21, paddingTop + 9 + y_offset));
 
+                        e.Graphics.DrawText(formattedOptionsTexts[rowCount], new Point(47, paddingTop + 5 + y_offset));
+
+                        using var _pen = new Pen(Color.FromArgb(64, 64, 64));
+                        if (radioBtnList.SelectedIndex == rowCount) e.Graphics.DrawRectangle(_pen, new Rectangle(45, paddingTop + 5 + y_offset, this.Width - 45 - 14, 26));
+                    }
                     y_offset += 32;
                     rowCount++;
                 }
             }
         }
 
-        // Determine max width of panel
+        /// <summary>
+        /// Determine max width of a popup box.
+        /// </summary>
         private int MaxWidth()
         {
             // 1) Input from Game.txt
@@ -215,6 +330,24 @@ namespace EtoFormsUI
             }
 
             return Math.Max(width1, width2);
+        }
+
+
+        /// <summary>
+        /// Find occurences of %STRING in text and replace it with other strings.
+        /// </summary>
+        /// <param name="text">Text where replacement takes place.</param>
+        /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
+        private string ReplaceSTRING(string text, List<string> replacementStrings)
+        {
+            int replStringNo, pos;
+            while (text.Contains("%STRING"))
+            {
+                pos = text.IndexOf("%STRING") + 7; // %STRING number position
+                replStringNo = (int)Char.GetNumericValue(text[pos]);  // Get number x in %STRINGx
+                text = text.Replace("%STRING".Insert(7, replStringNo.ToString()), replacementStrings[replStringNo]);
+            }
+            return text;
         }
     }
 }

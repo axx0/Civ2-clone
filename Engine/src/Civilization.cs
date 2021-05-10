@@ -9,6 +9,8 @@ namespace Civ2engine
         public bool Alive { get; set; }
         public CityStyleType CityStyle { get; set; }
         public string LeaderName { get; set; }
+        public int LeaderGender { get; set; }
+        public string LeaderTitle { get; set; }
         public string TribeName { get; set; }
         public string Adjective { get; set; }
         public int Money { get; set; }
