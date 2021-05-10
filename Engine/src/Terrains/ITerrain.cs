@@ -5,10 +5,10 @@ namespace Civ2engine.Terrains
 {
     public interface ITerrain
     {
-        int X { get; set; }
-        int Y { get; set; }
-        TerrainType Type { get; set; }
-        SpecialType? SpecType { get; }
+        int X { get; }
+        int Y { get; }
+        TerrainType Type { get; }
+        int special { get; }
         bool HasShield { get; }
 
         //From RULES.TXT
@@ -44,5 +44,6 @@ namespace Civ2engine.Terrains
         int Island { get; set; }
         string Hexvalue { get; set; }
         Bitmap Graphic { get; set; }
+        SpecialType? SpecType { get; }
     }
 }

@@ -33,7 +33,6 @@ namespace Civ2engine
             _gameVersion = SAVgameData.GameVersion;
 
             _options.Set(SAVgameData.Options);
-            _rules.Set(SAVgameData.Rules);
 
             _turnNumber = SAVgameData.TurnNumber;
             TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;

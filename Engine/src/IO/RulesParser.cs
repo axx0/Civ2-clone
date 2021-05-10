@@ -24,6 +24,89 @@ namespace Civ2engine
             _sectionHandlers.Add("ENDWONDER", ProcessEndWonders);
             _sectionHandlers.Add("UNITS", ProcessUnits);
             _sectionHandlers.Add("TERRAIN", ProcessTerrain);
+            _sectionHandlers.Add("GOVERNMENTS", ProcessGovernments);
+            _sectionHandlers.Add("LEADERS", ProcessLeaders);
+            _sectionHandlers.Add("ORDERS", ProcessOrders);
+            _sectionHandlers.Add("CARAVAN", ProcessGoods);
+            _sectionHandlers.Add("CIVILIZE2", ProcessAdvanceGroups);
+            _sectionHandlers.Add("DIFFICULTY", strings => Rules.Difficulty = strings.ToArray() );
+            _sectionHandlers.Add("@ATTITUDES", strings => Rules.Attitude = strings.ToArray());
+        }
+
+        private void ProcessAdvanceGroups(string[] values)
+        {
+            var limit = values.Length < Rules.Advances.Length ? values.Length : Rules.Advances.Length;
+            for (var i = 0; i < limit ; i++)
+            {
+                Rules.Advances[i].AdvanceGroup = int.Parse(values[i].Split(',', 2, StringSplitOptions.TrimEntries)[0]);
+            }
+        }
+
+        private void ProcessOrders(string[] values)
+        {
+            Rules.Orders = values.Select((line, id) =>
+            {
+                var parts = line.Split(',', StringSplitOptions.TrimEntries);
+                return new Order
+                {
+                    Id = id,
+                    Name = parts[0],
+                    Key = parts[1]
+                };
+            }).ToArray();
+        }
+
+        private void ProcessGoods(string[] values)
+        {
+            Rules.CaravanCommoditie =
+                values.Select((value => value.Split(',', StringSplitOptions.TrimEntries)[0])).ToArray();
+        }
+
+        private void ProcessLeaders(string[] values)
+        {
+            Rules.Leaders = values.Select((value) =>
+            {
+                var line = value.Split(',', StringSplitOptions.TrimEntries);
+                var titles = new List<LeaderTitle>(
+                );
+                for(var i = 12; i < line.Length;i+=3)
+                {
+                    titles.Add(new LeaderTitle
+                    {
+                        Gov = int.Parse(line[i-2]),
+                        TitleMale = line[i-1],
+                        TitleFemale = line[i],
+                    });
+                }
+                return new LeaderDefaults()
+                {
+                    NameMale = line[0],
+                    NameFemale = line[1],
+                    Female = int.Parse(line[2]),
+                    Color = int.Parse(line[3]),
+                    CityStyle = int.Parse(line[4]),
+                    Plural = line[5],
+                    Adjective = line[6],
+                    Attack = int.Parse(line[7]),
+                    Expand = int.Parse(line[8]),
+                    Civilize = int.Parse(line[9]),
+                    Titles = titles.ToArray()
+                };
+            }).ToArray();
+        }
+
+        private void ProcessGovernments(string[] values)
+        {
+            Rules.Governments = values.Select((value =>
+            {
+                var line = value.Split(',', StringSplitOptions.TrimEntries);
+                return new Government
+                {
+                    Name = line[0],
+                    TitleMale = line[1],
+                    TitleFemale = line[2]
+                };
+            })).ToArray();
         }
 
         private void ProcessTerrain(string[] values)
@@ -89,7 +172,7 @@ namespace Civ2engine
                     Range = int.Parse(text[4]),
                     Attack = int.Parse(text[5].Replace("a", string.Empty)),
                     Defense = int.Parse(text[6].Replace("d", string.Empty)),
-                    Hitp = int.Parse(text[7].Replace("h", string.Empty)),
+                    Hitp = 10 * int.Parse(text[7].Replace("h", string.Empty)),
                     Firepwr = int.Parse(text[8].Replace("f", string.Empty)),
                     Cost = int.Parse(text[9]),
                     Hold = int.Parse(text[10]),
@@ -205,4 +288,13 @@ namespace Civ2engine
             };
         }
     }
+
+    public struct Order
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Key { get; set; }
+    }
 }
+
+    

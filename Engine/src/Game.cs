@@ -278,18 +278,20 @@ namespace Civ2engine
                             int gender, int money, int tribeNumber, int researchProgress, int researchingTech, int sciRate, int taxRate,
                             int government, int reputation, bool[] techs)
         {
+            var tribe = Rules.Leaders[tribeNumber];
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && leaderName.Length == 0) leaderName = (gender == 0) ? Rules.LeaderNameHIS[tribeNumber] : Rules.LeaderNameHER[tribeNumber];
+            if (id != 0 && leaderName.Length == 0) leaderName = (gender == 0) ? tribe.NameMale : tribe.NameFemale;
 
             // If tribe name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
-            if (id != 0 && tribeName.Length == 0) tribeName = Rules.LeaderPlural[tribeNumber];
+            if (id != 0 && tribeName.Length == 0) tribeName = tribe.Plural;
 
             // If adjective string is empty (no manual input), find adjective in RULES.TXT (don't search for barbarians)
-            if (id != 0 && adjective.Length == 0) adjective = Rules.LeaderAdjective[tribeNumber];
+            if (id != 0 && adjective.Length == 0) adjective = tribe.Adjective;
 
             // Set citystyle from input only for player civ. Other civs (AI) have set citystyle from RULES.TXT
-            if (id != 0 && id != whichHumanPlayerIsUsed) style = Rules.LeaderCityStyle[tribeNumber];
+            if (id != 0 && id != whichHumanPlayerIsUsed) style = tribe.CityStyle;
 
+            var gov = Rules.Governments[government];
             Civilization civ = new Civilization
             {
                 Id = id,
@@ -297,7 +299,7 @@ namespace Civ2engine
                 CityStyle = (CityStyleType)style,
                 LeaderName = leaderName,
                 LeaderGender = gender,
-                LeaderTitle = (gender == 0) ? Rules.GovernmentTitleHIS[government] : Rules.GovernmentTitleHIS[government],
+                LeaderTitle = (gender == 0) ? gov.TitleMale : gov.TitleFemale,
                 TribeName = tribeName,
                 Adjective = adjective,
                 Money = money,

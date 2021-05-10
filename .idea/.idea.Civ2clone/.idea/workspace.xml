@@ -8,14 +8,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6355a1f4-7981-42fc-9a24-6e0baecee4c5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Engine/src/Government.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/LeaderDefaults.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/LeaderTitle.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/City.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/City.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Map.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Rules.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/Unit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Terrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Terrain.cs" afterDir="false" />
     </list>
     <list id="31b0ad03-acbf-47fd-a211-e6f519f5c6e7" name="Local changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +63,7 @@
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.ActionsUnits.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Enums/UnitType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/3C/Control.cs" root0="SKIP_HIGHLIGHTING" />
@@ -64,6 +73,7 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/B8EF69D3-A481-43FE-8568-E981A8FFA98B/E2/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/113/NativeWindow.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
@@ -78,6 +88,7 @@
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/B8EF69D3-A481-43FE-8568-E981A8FFA98B/B7/Number.Parsing.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/316AB451-6B81-40E7-B94D-342A1F91D04E/10/Gdiplus.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -94,7 +105,6 @@
       <option value="$PROJECT_DIR$/Engine/src/IO/Read.GameData.cs" />
       <option value="$PROJECT_DIR$/Engine/src/IO/GameData.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Advances/Tech.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" />
       <option value="$PROJECT_DIR$/Engine/src/CosmicRules.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Improvements/Improvement.cs" />
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" />
@@ -104,19 +114,23 @@
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Sound.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Game.ActionsCities.cs" />
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Unit.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.cs" />
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/City.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Terrains/Special.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Map.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Units/Unit.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Rules.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Units/Unit.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" />
+      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Terrain.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Map.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/City.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/IO/LeaderDefaults.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/LeaderDefaults.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Game.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Rules.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1s5LfMErJMB9LIXuqxoyRcfCxmS" />
@@ -125,7 +139,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.48270962" />
+    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.48270315" />
     <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -270,6 +284,73 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs</url>
+          <line>335</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\MapPanel.cs" initialLine="335" containingFunctionPresentation="method 'UnitEventHappened'">
+            <startOffsets>
+              <option value="13637" />
+            </startOffsets>
+            <endOffsets>
+              <option value="13688" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs</url>
+          <line>385</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\Bitmaps\GetAnimationFrames.cs" initialLine="385" containingFunctionPresentation="method 'UnitAttack'">
+            <startOffsets>
+              <option value="18615" />
+            </startOffsets>
+            <endOffsets>
+              <option value="18664" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs</url>
+          <line>370</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\Bitmaps\GetAnimationFrames.cs" initialLine="370" containingFunctionPresentation="method 'UnitAttack'">
+            <startOffsets>
+              <option value="17946" />
+            </startOffsets>
+            <endOffsets>
+              <option value="17970" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs</url>
+          <line>239</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Game.ActionsUnits.cs" initialLine="239" containingFunctionPresentation="method 'Attack'">
+            <startOffsets>
+              <option value="10878" />
+            </startOffsets>
+            <endOffsets>
+              <option value="10907" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/IO/RulesParser.cs</url>
+          <line>95</line>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\IO\RulesParser.cs" initialLine="62" containingFunctionPresentation="method 'ProcessLeaders'">
+            <startOffsets>
+              <option value="3630" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3631" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" log-stack="true" type="DotNet Exception Breakpoints" />
       </default-breakpoints>

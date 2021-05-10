@@ -5,12 +5,14 @@ namespace Civ2engine.Advances
 {
     public class Advance
     {
-        public string Name { get; set; }
-        public int AIvalue { get; set; }
-        public int Modifier { get; set; }
-        public int Prereq1 { get; set; }
-        public int Prereq2{ get; set; }
-        public EpochType Epoch { get; set; }
-        public KnowledgeType KnowledgeCategory { get; set; }
+        public string Name { get; internal set; }
+        public int AIvalue { get; internal set; }
+        public int Modifier { get;internal  set; }
+        public int Prereq1 { get; internal set; }
+        public int Prereq2{ get;internal set; }
+        public EpochType Epoch { get; internal set; }
+        public KnowledgeType KnowledgeCategory { get; internal set; }
+        
+        public int AdvanceGroup { get; internal set; }
     }
 }

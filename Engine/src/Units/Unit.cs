@@ -57,21 +57,7 @@ namespace Civ2engine.Units
             if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.CoastalFort) && attackingUnit.Domain == UnitGAS.Sea) DF *= 2;
 
             // Effect of terrain
-            if ((Map.TileC2(X, Y).Type == TerrainType.Forest) || (Map.TileC2(X, Y).Type == TerrainType.Jungle) || (Map.TileC2(X, Y).Type == TerrainType.Swamp))
-            {
-                if (Map.TileC2(X, Y).River) DF *= 2;
-                else DF *= 1.5;
-            }
-            else if (Map.TileC2(X, Y).Type == TerrainType.Hills)
-            {
-                if (Map.TileC2(X, Y).River) DF *= 2.5;
-                else DF *= 2;
-            }
-            else if (Map.TileC2(X, Y).Type == TerrainType.Mountains) 
-            {
-                if (Map.TileC2(X, Y).River) DF *= 3.5;
-                else DF *= 3;
-            }
+            DF *= Map.TileC2(X, Y).Defense;
 
             return (int)DF;
         }

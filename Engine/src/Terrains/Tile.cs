@@ -1,86 +1,92 @@
 
         using System;
         using System.Drawing;
+        using System.Drawing.Text;
         using System.Linq;
 using Civ2engine.Enums;
         namespace Civ2engine.Terrains
 {
     public class Tile : BaseInstance, ITerrain
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int X { get; }
+        public int Y { get; }
 
-        public Terrain Terrain { get; set; }
-        public TerrainType Type { get; set; }
+        public Terrain Terrain { get; }
+        public TerrainType Type { get; }
+
+        public int special { get; }
+
+        public SpecialType? SpecType { get; }
 
         // Get special resource type based on map seed & tile location
-        public SpecialType? SpecType 
+        public Tile(int x, int y, Terrain terrain, int seed)
         {
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
             //
-            get 
+            X = x;
+            Y = y;
+            Terrain = terrain;
+            Type = terrain.Type;
+
+            HasShield = HasSheild();
+
+            var a = (X + Y) >> 1;
+            var b = X - a;
+            var c = 13 * (b >> 2) + 11 * ((X + Y) >> 3) + seed;
+            if ((a & 3) + 4 * (b & 3) != (c & 15)) return;
+
+            var d = 1 << ((seed >> 4) & 3);
+            if ((d & a) == (d & b))
             {
-                var a = (X + Y) >> 1;
-                var b = X - a;
-                var c = 13 * (b >> 2) + 11 * ((X + Y) >> 3) + Map.ResourceSeed;
-                if ((a & 3) + 4 * (b & 3) == (c & 15))
+                special = 2;
+                SpecType = Type switch
                 {
-                    var d = 1 << ((Map.ResourceSeed >> 4) & 3);
-                    if ((d & a) == (d & b))
-                    {
-                        // Return 2nd spec type
-                        switch (Type)
-                        {
-                            case TerrainType.Desert: return SpecialType.DesertOil;
-                            case TerrainType.Plains: return SpecialType.Wheat;
-                            case TerrainType.Grassland: return SpecialType.Grassland2;
-                            case TerrainType.Forest: return SpecialType.Silk;
-                            case TerrainType.Hills: return SpecialType.Wine;
-                            case TerrainType.Mountains: return SpecialType.Iron;
-                            case TerrainType.Tundra: return SpecialType.Furs;
-                            case TerrainType.Glacier: return SpecialType.GlacierOil;
-                            case TerrainType.Swamp: return SpecialType.Spice;
-                            case TerrainType.Jungle: return SpecialType.Fruit;
-                            case TerrainType.Ocean: return SpecialType.Whales;
-                            default: throw new ArgumentOutOfRangeException();
-                        }
-                    }
-
-                    // Return 1st spec type
-                    switch (Type)
-                    {
-                        case TerrainType.Desert: return SpecialType.Oasis;
-                        case TerrainType.Plains: return SpecialType.Buffalo;
-                        case TerrainType.Grassland: return SpecialType.Grassland1;
-                        case TerrainType.Forest: return SpecialType.Pheasant;
-                        case TerrainType.Hills: return SpecialType.Coal;
-                        case TerrainType.Mountains: return SpecialType.Gold;
-                        case TerrainType.Tundra: return SpecialType.Game;
-                        case TerrainType.Glacier: return SpecialType.Ivory;
-                        case TerrainType.Swamp: return SpecialType.Peat;
-                        case TerrainType.Jungle: return SpecialType.Gems;
-                        case TerrainType.Ocean: return SpecialType.Fish;
-                        default: throw new ArgumentOutOfRangeException();
-                    }
-                }
-
-                // No spec type
-                return null;
+                    TerrainType.Desert => SpecialType.DesertOil,
+                    TerrainType.Plains => SpecialType.Wheat,
+                    TerrainType.Grassland => SpecialType.Grassland2,
+                    TerrainType.Forest => SpecialType.Silk,
+                    TerrainType.Hills => SpecialType.Wine,
+                    TerrainType.Mountains => SpecialType.Iron,
+                    TerrainType.Tundra => SpecialType.Furs,
+                    TerrainType.Glacier => SpecialType.GlacierOil,
+                    TerrainType.Swamp => SpecialType.Spice,
+                    TerrainType.Jungle => SpecialType.Fruit,
+                    TerrainType.Ocean => SpecialType.Whales,
+                    _ => SpecType
+                };
+            }
+            else
+            {
+                special = 1;
+                SpecType = Type switch
+                {
+                    TerrainType.Desert => SpecialType.Oasis,
+                    TerrainType.Plains => SpecialType.Buffalo,
+                    TerrainType.Grassland => SpecialType.Grassland1,
+                    TerrainType.Forest => SpecialType.Pheasant,
+                    TerrainType.Hills => SpecialType.Coal,
+                    TerrainType.Mountains => SpecialType.Gold,
+                    TerrainType.Tundra => SpecialType.Game,
+                    TerrainType.Glacier => SpecialType.Ivory,
+                    TerrainType.Swamp => SpecialType.Peat,
+                    TerrainType.Jungle => SpecialType.Gems,
+                    TerrainType.Ocean => SpecialType.Fish,
+                    _ => SpecType
+                };
             }
         }
 
-        public bool HasShield
+        public bool HasShield { get; }
+
+        private bool HasSheild()
         {
-            get
-            {
-                if (Type != TerrainType.Grassland) return false;
-                // Formula for determining where grassland shield is based on X-Y coords
-                int rez4 = (Y / 2 + 2 * (Y % 2)) % 4;
-                int rez3 = 8 - 2 * (rez4 % 4);
-                int rez = (X - (Y % 2) + rez3) % 8;
-                return rez < 4;
-            }
+            // Formula for determining where grassland shield is based on X-Y coords
+            int rez4 = (Y / 2 + 2 * (Y % 2)) % 4;
+            int rez3 = 8 - 2 * (rez4 % 4);
+
+            int rez = (X - (Y % 2) + rez3) % 8;
+            return rez < 4;
         }
 
         // From RULES.TXT
@@ -88,7 +94,7 @@ using Civ2engine.Enums;
 
 
         public int MoveCost => Terrain.MoveCost;
-        public int Defense => Terrain.Defense;
+        public int Defense => (River ? Terrain.Defense + 1 : Terrain.Defense) / 2;
         public int Food => Irrigation ? Terrain.Food + Terrain.IrrigationBonus : Terrain.Food;
         public int Shields => Mining ? Terrain.Shields + Terrain.MiningBonus : Terrain.Shields;
         public int Trade => River ? Terrain.Trade + 1 : Terrain.Trade;
