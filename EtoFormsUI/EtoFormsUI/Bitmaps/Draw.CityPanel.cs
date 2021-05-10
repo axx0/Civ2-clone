@@ -282,22 +282,25 @@ namespace EtoFormsUI
             // zoom: Units=-1(norm), Improvements=0(norm)
             var fontSize = cityZoom == -1 ? 4 : (cityZoom == 0 ? 9 : 13);
             using var font = new Font("Arial", fontSize, FontStyle.Bold);
+            var maxUnitIndex = Game.Rules.UnitTypes.Length;
+            int cost;
             // Units
-            if (city.ItemInProduction < 62)
+            if (city.ItemInProduction < maxUnitIndex)
             {
                 Draw.UnitSprite(g, (UnitType)city.ItemInProduction, false, false, 4 * cityZoom - 1, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 163 * (2 + cityZoom) / 2));
+                cost = Game.Rules.UnitTypes[city.ItemInProduction].Cost;
+
             }
             // Improvements
             else
             {
-                Draw.Text(g, Game.Rules.ImprovementName[city.ItemInProduction - 62 + 1], font, Color.FromArgb(63, 79, 167), new Point(dest.X + 534 * (2 + cityZoom) / 2, dest.Y + 175 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
-                Draw.CityImprovement(g, (ImprovementType)(city.ItemInProduction - 62 + 1), 4 * cityZoom, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 183 * (2 + cityZoom) / 2));
+                var improvementIndex = city.ItemInProduction - Game.Rules.UnitTypes.Length + 1;
+                Draw.Text(g, Game.Rules.Improvements[improvementIndex].Name, font, Color.FromArgb(63, 79, 167), new Point(dest.X + 534 * (2 + cityZoom) / 2, dest.Y + 175 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
+                Draw.CityImprovement(g, (ImprovementType)(improvementIndex), 4 * cityZoom, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 183 * (2 + cityZoom) / 2));
+                cost = Game.Rules.Improvements[improvementIndex].Cost;
             }
 
             // Draw rectangle around icons
-            int cost;
-            if (city.ItemInProduction < 62) cost = Game.Rules.UnitCost[city.ItemInProduction];   // Item is unit
-            else cost = Game.Rules.ImprovementCost[city.ItemInProduction - 62 + 1];    // Item is improvement (first 62 are units, +1 because first improvement is "Nothing")
             int vertSpacing = Math.Min(10, cost);    // Max 10 lines
             using var _pen1 = new Pen(Color.FromArgb(83, 103, 191));
             using var _pen2 = new Pen(Color.FromArgb(0, 0, 95));

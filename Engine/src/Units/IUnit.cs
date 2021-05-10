@@ -8,7 +8,7 @@ namespace Civ2engine.Units
         //From RULES.TXT
         string Name { get; }
         bool Dead { get; set; }
-        AdvanceType? UntilTech { get; }
+        int UntilTech { get; }
         UnitGAS Domain { get; }
         int MaxMovePoints { get; }
         int FuelRange { get; }
@@ -21,7 +21,6 @@ namespace Civ2engine.Units
         int Cost { get; }
         int ShipHold { get; }
         AIroleType AIrole { get; }
-        AdvanceType? PrereqAdvance { get; }
         bool TwoSpaceVisibility { get; }
         bool IgnoreZonesOfControl { get; }
         bool CanMakeAmphibiousAssaults { get; }

@@ -15,7 +15,13 @@ namespace Civ2engine
         public bool MapRevealed { get; set; }
         public int WhichCivsMapShown { get; set; }
         public ITerrain[,] Tile { get; set; }
-        public bool[,][] Visibility { get; set; }    // Visibility of tiles for each civ
+        public bool[,][] Visibility { get; set; } // Visibility of tiles for each civ
+        
+        public bool IsValidTile(int xC2, int yC2)
+        {
+            var x = (((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2);
+            return -1 < x && x < Xdim && -1 < yC2 && yC2 < Ydim;
+        }
         public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => Visibility[( ((xC2 + 2 * Xdim) % (2 * Xdim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
         public bool TileHasEnemyUnit(int xC2, int yC2, UnitType unitType) => (Game.UnitsHere(xC2, yC2).Count == 1) && (Game.UnitsHere(xC2, yC2)[0].Type == unitType);
@@ -53,7 +59,7 @@ namespace Civ2engine
         }
 
         // Generate first instance of terrain tiles by importing game data
-        public void GenerateMap(GameData data)
+        public void GenerateMap(GameData data, Rules rules)
         {
             Xdim = data.MapXdim;
             Ydim = data.MapYdim;
@@ -63,16 +69,14 @@ namespace Civ2engine
             LocatorYdim = data.MapLocatorYdim;
             Visibility = data.MapVisibilityCivs;
 
-            Tile = new Terrain[Xdim, Ydim];
+            Tile = new Tile[Xdim, Ydim];
             for (int col = 0; col < Xdim; col++)
             {
                 for (int row = 0; row < Ydim; row++)
                 {
-                    Tile[col, row] = new Terrain
+                    var terrain = data.MapTerrainType[col, row];
+                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[(int) terrain], Map.ResourceSeed)
                     {
-                        X = 2 * col + (row % 2),
-                        Y = row,
-                        Type = data.MapTerrainType[col, row],
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
                         //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself

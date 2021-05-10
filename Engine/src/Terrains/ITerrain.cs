@@ -5,10 +5,10 @@ namespace Civ2engine.Terrains
 {
     public interface ITerrain
     {
-        int X { get; set; }
-        int Y { get; set; }
-        TerrainType Type { get; set; }
-        SpecialType? SpecType { get; }
+        int X { get; }
+        int Y { get; }
+        TerrainType Type { get; }
+        int special { get; }
         bool HasShield { get; }
 
         //From RULES.TXT
@@ -20,8 +20,7 @@ namespace Civ2engine.Terrains
         int Trade { get; }
         bool CanBeIrrigated { get; }
         TerrainType IrrigationResult { get; }
-        int IrrigationBonus { get; }
-        int TurnsToIrrigate { get; }
+
         GovernmentType MinGovrnLevelAItoPerformIrrigation { get; }
         bool CanBeMined { get; }
         TerrainType MiningResult { get; }
@@ -30,10 +29,6 @@ namespace Civ2engine.Terrains
         GovernmentType MinGovrnLevelAItoPerformMining { get; }
         bool CanBeTransformed { get; }
         TerrainType TransformResult { get; }
-
-        string SpecName { get; }
-
-
         bool Resource { get; set; }
         bool River { get; set; }
         bool IsUnitPresent { get; }
@@ -49,5 +44,6 @@ namespace Civ2engine.Terrains
         int Island { get; set; }
         string Hexvalue { get; set; }
         Bitmap Graphic { get; set; }
+        SpecialType? SpecType { get; }
     }
 }
