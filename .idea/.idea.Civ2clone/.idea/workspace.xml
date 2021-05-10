@@ -8,88 +8,77 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6355a1f4-7981-42fc-9a24-6e0baecee4c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Engine/src/CosmicRules.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/IO/Extensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/IO/TextFileParser.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Terrains/Special.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Units/UnitType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/City.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/City.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Improvements/IImprovement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Improvements/Improvement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Improvements/Improvement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Map.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Rules.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/Unit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" afterDir="false" />
     </list>
-    <list id="31b0ad03-acbf-47fd-a211-e6f519f5c6e7" name="Local changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
-    </list>
+    <list id="31b0ad03-acbf-47fd-a211-e6f519f5c6e7" name="Local changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/3C/Control.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2A34C79A-D307-40C2-858E-3EE2AE987EC5/72/27457b29/Control.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.ActionsCities.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/B8EF69D3-A481-43FE-8568-E981A8FFA98B/E2/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/113/NativeWindow.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/Draw.Terrain.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/B8EF69D3-A481-43FE-8568-E981A8FFA98B/bc/1f845cc7/Dictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/Images.ImportBitmaps.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Sound.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/WinFormsUI/Bitmaps/GetAnimationFrames.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Advances/Advance.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/B8EF69D3-A481-43FE-8568-E981A8FFA98B/41A/List.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/IO/Read.GameData.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/316AB451-6B81-40E7-B94D-342A1F91D04E/30/Icon.Windows.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Unit.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/IO/GameData.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.ActionsUnits.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Enums/UnitType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/3C/Control.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Advances/Advance.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2A34C79A-D307-40C2-858E-3EE2AE987EC5/72/27457b29/Control.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/B8EF69D3-A481-43FE-8568-E981A8FFA98B/E2/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/01AB0978-A39D-4F9D-8E15-93AAAF43E569/113/NativeWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Units/Unit.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/316AB451-6B81-40E7-B94D-342A1F91D04E/30/Icon.Windows.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/City.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Rules.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Enums/UnitType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/316AB451-6B81-40E7-B94D-342A1F91D04E/10/Gdiplus.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -108,7 +97,6 @@
       <option value="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" />
       <option value="$PROJECT_DIR$/Engine/src/CosmicRules.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Improvements/Improvement.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" />
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Enums/UnitType.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" />
@@ -118,16 +106,17 @@
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Unit.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Game.cs" />
       <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Units/Unit.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Rules.cs" />
       <option value="$PROJECT_DIR$/Engine/src/City.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Terrains/Special.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" />
       <option value="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" />
       <option value="$PROJECT_DIR$/Engine/src/Map.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Units/Unit.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Rules.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" />
+      <option value="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1s5LfMErJMB9LIXuqxoyRcfCxmS" />

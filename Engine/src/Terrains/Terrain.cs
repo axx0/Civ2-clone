@@ -17,8 +17,6 @@ namespace Civ2engine.Terrains
         public int Food { get; set; }
         public int Shields { get; set; }
         public int Trade  { get; set; }
-        public bool CanBeIrrigated => CanIrrigate != -2;  // yes meaning the result can be irrigation or transform. of terrain
-
         public int IrrigationBonus { get; set; }
         public int TurnsToIrrigate { get; set; }
         public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; }   // Be careful, 0=never!

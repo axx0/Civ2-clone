@@ -21,7 +21,6 @@ namespace Civ2engine.Units
         int Cost { get; }
         int ShipHold { get; }
         AIroleType AIrole { get; }
-        AdvanceType? PrereqAdvance { get; }
         bool TwoSpaceVisibility { get; }
         bool IgnoreZonesOfControl { get; }
         bool CanMakeAmphibiousAssaults { get; }

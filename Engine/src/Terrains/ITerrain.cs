@@ -29,10 +29,6 @@ namespace Civ2engine.Terrains
         GovernmentType MinGovrnLevelAItoPerformMining { get; }
         bool CanBeTransformed { get; }
         TerrainType TransformResult { get; }
-
-        string SpecName { get; }
-
-
         bool Resource { get; set; }
         bool River { get; set; }
         bool IsUnitPresent { get; }

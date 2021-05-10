@@ -96,31 +96,21 @@ namespace Civ2engine.Units
         public int Cost => TypeDefinition.Cost;
         public int ShipHold => TypeDefinition.Hold;
         public AIroleType AIrole => (AIroleType)TypeDefinition.AIrole;
-        public AdvanceType? PrereqAdvance
-        {
-            get
-            {
-                if (Game.Rules.UnitPrereq[(int)Type] == "nil" || Game.Rules.UnitPrereq[(int)Type] == "no")
-                    return null;
-                else
-                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.UnitPrereq[(int)Type]);
-            }
-        }
-        public bool TwoSpaceVisibility => Game.Rules.UnitFlags[(int)Type][14] == '1';
-        public bool IgnoreZonesOfControl => Game.Rules.UnitFlags[(int)Type][13] == '1';
-        public bool CanMakeAmphibiousAssaults => Game.Rules.UnitFlags[(int)Type][12] == '1';
-        public bool SubmarineAdvantagesDisadvantages => Game.Rules.UnitFlags[(int)Type][11] == '1';
-        public bool CanAttackAirUnits => Game.Rules.UnitFlags[(int)Type][10] == '1';    // fighter
-        public bool ShipMustStayNearLand => Game.Rules.UnitFlags[(int)Type][9] == '1';  // trireme
-        public bool NegatesCityWalls => Game.Rules.UnitFlags[(int)Type][8] == '1';  // howitzer
-        public bool CanCarryAirUnits => Game.Rules.UnitFlags[(int)Type][7] == '1';  // carrier
-        public bool CanMakeParadrops => Game.Rules.UnitFlags[(int)Type][6] == '1';
-        public bool Alpine => Game.Rules.UnitFlags[(int)Type][5] == '1';    // treats all squares as road
-        public bool X2onDefenseVersusHorse => Game.Rules.UnitFlags[(int)Type][4] == '1';    // pikemen
-        public bool FreeSupportForFundamentalism => Game.Rules.UnitFlags[(int)Type][3] == '1';    // fanatics
-        public bool DestroyedAfterAttacking => Game.Rules.UnitFlags[(int)Type][2] == '1';    // missiles
-        public bool X2onDefenseVersusAir => Game.Rules.UnitFlags[(int)Type][1] == '1';    // AEGIS
-        public bool UnitCanSpotSubmarines => Game.Rules.UnitFlags[(int)Type][0] == '1';
+        public bool TwoSpaceVisibility => TypeDefinition.Flags[14] == '1';
+        public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1';
+        public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[12] == '1';
+        public bool SubmarineAdvantagesDisadvantages => TypeDefinition.Flags[11] == '1';
+        public bool CanAttackAirUnits => TypeDefinition.Flags[10] == '1';    // fighter
+        public bool ShipMustStayNearLand => TypeDefinition.Flags[9] == '1';  // trireme
+        public bool NegatesCityWalls => TypeDefinition.Flags[8] == '1';  // howitzer
+        public bool CanCarryAirUnits => TypeDefinition.Flags[7] == '1';  // carrier
+        public bool CanMakeParadrops => TypeDefinition.Flags[6] == '1';
+        public bool Alpine => TypeDefinition.Flags[5] == '1';    // treats all squares as road
+        public bool X2onDefenseVersusHorse => TypeDefinition.Flags[4] == '1';    // pikemen
+        public bool FreeSupportForFundamentalism => TypeDefinition.Flags[3] == '1';    // fanatics
+        public bool DestroyedAfterAttacking => TypeDefinition.Flags[2] == '1';    // missiles
+        public bool X2onDefenseVersusAir => TypeDefinition.Flags[1] == '1';    // AEGIS
+        public bool UnitCanSpotSubmarines => TypeDefinition.Flags[0] == '1';
 
 
         public int Id { get; set; }

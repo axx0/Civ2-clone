@@ -92,54 +92,37 @@ using Civ2engine.Enums;
         public int Food => Irrigation ? Terrain.Food + Terrain.IrrigationBonus : Terrain.Food;
         public int Shields => Mining ? Terrain.Shields + Terrain.MiningBonus : Terrain.Shields;
         public int Trade => River ? Terrain.Trade + 1 : Terrain.Trade;
-        public bool CanBeIrrigated => Terrain.CanBeIrrigated;  // yes meaning the result can be irrigation or transform. of terrain
-        public TerrainType IrrigationResult
-        {
-            get
-            {
-                // If result == type of terrain before irrigation, this means that it's regular irrigation.
-                // (If it can actually be irrigated is determined by CanBeIrrigated.)
-                if (Game.Rules.TerrainCanIrrigate[(int)Type] == "yes" || Game.Rules.TerrainCanIrrigate[(int)Type] == "no")
-                    return Type;
-                // Otherwise the result is the type of terrain which is formed.
-                else
-                    return (TerrainType)Array.IndexOf(Game.Rules.TerrainShortName, Game.Rules.TerrainCanIrrigate[(int)Type]);
-            }
-        }
+        public bool CanBeIrrigated => Terrain.CanIrrigate != -2;  // yes meaning the result can be irrigation or transform. of terrain
+        
+        /// <summary>
+        /// If result == type of terrain before irrigation, this means that it's regular irrigation.
+        /// (If it can actually be irrigated is determined by CanBeIrrigated.)
+        /// Otherwise the result is the type of terrain which is formed.
+        /// </summary>
+        public TerrainType IrrigationResult => Terrain.CanIrrigate < 0 ? Type : (TerrainType) Terrain.CanIrrigate;
+
         public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; }   // Be careful, 0=never!
         public bool CanBeMined => Terrain.CanMine != -2 ;  // yes meaning the result can be mining or transform. of terrain
-        public TerrainType MiningResult
-        {
-            get
-            {
-                // If result == type of terrain before mining, this means that it's regular mine.
-                // (If it can actually be mined is determined by CanBeMined.)
-                if (Game.Rules.TerrainCanMine[(int)Type] == "yes" || Game.Rules.TerrainCanMine[(int)Type] == "no")
-                    return Type;
-                // Otherwise the result is the type of terrain which is formed.
-                else
-                    return (TerrainType)Array.IndexOf(Game.Rules.TerrainShortName, Game.Rules.TerrainCanMine[(int)Type]);
-            }
-        }
+        
+        /// <summary>
+        /// If result == type of terrain before mining, this means that it's regular mine.
+        /// (If it can actually be mined is determined by CanBeMined.)
+        /// Otherwise the result is the type of terrain which is formed.
+        /// </summary>
+        public TerrainType MiningResult => Terrain.CanMine < 0 ? Type : (TerrainType) Terrain.CanMine;
         public int MiningBonus { get; set; }
         public int TurnsToMine { get; set; }
         public GovernmentType MinGovrnLevelAItoPerformMining { get; set; }     // Be careful, 0=never!
         public bool CanBeTransformed => Terrain.Transform != -2 ; // usually only ocean can't be transformed
-        public TerrainType TransformResult
-        {
-            get
-            {
-                // If result == type of terrain before transformation, it means it can't be transformed.
-                if (Game.Rules.TerrainTransform[(int)Type] == "no")
-                    return Type;
-                // Otherwise the result is the type of terrain which is transformed.
-                else
-                    return (TerrainType)Array.IndexOf(Game.Rules.TerrainShortName, Game.Rules.TerrainTransform[(int)Type]);
-            }
-        }
+
+        /// <summary>
+        ///  If result == type of terrain before transformation, it means it can't be transformed.
+        /// Otherwise the result is the type of terrain which is transformed.
+        /// </summary>
+        public TerrainType TransformResult => Terrain.Transform < 0 ? Type : (TerrainType) Terrain.Transform;
+
 
         // TODO: put special resources logic into here
-        public string SpecName => Game.Rules.TerrainSpecName[(int)SpecType];
 
         public bool Resource { get; set; }
         public bool River { get; set; }
