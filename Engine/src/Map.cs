@@ -53,7 +53,7 @@ namespace Civ2engine
         }
 
         // Generate first instance of terrain tiles by importing game data
-        public void GenerateMap(GameData data)
+        public void GenerateMap(GameData data, Rules rules)
         {
             Xdim = data.MapXdim;
             Ydim = data.MapYdim;
@@ -63,16 +63,18 @@ namespace Civ2engine
             LocatorYdim = data.MapLocatorYdim;
             Visibility = data.MapVisibilityCivs;
 
-            Tile = new Terrain[Xdim, Ydim];
+            Tile = new Tile[Xdim, Ydim];
             for (int col = 0; col < Xdim; col++)
             {
                 for (int row = 0; row < Ydim; row++)
                 {
-                    Tile[col, row] = new Terrain
+                    var terrain = data.MapTerrainType[col, row];
+                    Tile[col, row] = new Tile()
                     {
                         X = 2 * col + (row % 2),
                         Y = row,
-                        Type = data.MapTerrainType[col, row],
+                        Terrain = rules.Terrains[(int)terrain],
+                        Type = terrain,
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
                         //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself

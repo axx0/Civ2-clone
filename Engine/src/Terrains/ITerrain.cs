@@ -20,8 +20,7 @@ namespace Civ2engine.Terrains
         int Trade { get; }
         bool CanBeIrrigated { get; }
         TerrainType IrrigationResult { get; }
-        int IrrigationBonus { get; }
-        int TurnsToIrrigate { get; }
+
         GovernmentType MinGovrnLevelAItoPerformIrrigation { get; }
         bool CanBeMined { get; }
         TerrainType MiningResult { get; }

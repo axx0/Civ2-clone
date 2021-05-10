@@ -174,6 +174,7 @@ namespace Civ2engine
             IUnit unit = new Unit
             {
                 Id = _units.Count,
+                TypeDefinition = Rules.UnitTypes[(int)type],
                 Dead = dead || y < 0 || x < 0,
                 Type = type,
                 X = x,
@@ -237,7 +238,7 @@ namespace Civ2engine
             };
 
             for (int improvNo = 0; improvNo < 34; improvNo++)
-                if (improvements[improvNo]) city.AddImprovement(new Improvement((ImprovementType)(improvNo + 1)));
+                if (improvements[improvNo]) city.AddImprovement(Rules.Improvements[improvNo+1]);
 
             // TODO: add wonders to city at city import
             //if (wonders[0]) city.AddImprovement(new Improvement(ImprovementType.Pyramids));

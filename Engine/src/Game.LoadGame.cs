@@ -8,11 +8,12 @@ namespace Civ2engine
         public static void LoadGame(string savDirectoryPath, string SAVname)
         {
             // Read SAV file & RULES.txt
+            var rules = RulesParser.ParseRules(savDirectoryPath);
             GameData gameData = Read.SAV_and_RULES(savDirectoryPath, SAVname);
 
             // Make an instance of a new game & map
-            _instance = new Game(gameData);
-            Map.GenerateMap(gameData);
+            _instance = new Game(rules, gameData);
+            Map.GenerateMap(gameData, rules);
             Map.MapRevealed = gameData.MapRevealed;
             Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
             Map.Zoom = gameData.Zoom;
@@ -20,13 +21,13 @@ namespace Civ2engine
             Map.ActiveXY = gameData.ActiveCursorXY;
         }
 
-        private Game(GameData SAVgameData)
+        private Game(Rules rules, GameData SAVgameData)
         {
             _units = new List<IUnit>();
             _cities = new List<City>();
             _civs = new List<Civilization>();
             _options = new Options();
-            _rules = new Rules();
+            _rules = rules;
 
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = SAVgameData.GameVersion;

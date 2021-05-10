@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Civ2engine.Advances;
+using Civ2engine.Improvements;
+using Civ2engine.Terrains;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
@@ -8,28 +12,7 @@ namespace Civ2engine
         // Game rules from RULES.txt
 
         // Cosmic rules
-        public int RoadMultiplier { get; private set; }
-        public int ChanceTriremeLost { get; private set; }
-        public int FoodEatenPerTurn { get; private set; }
-        public int RowsFoodBox { get; private set; }
-        public int RowsShieldBox { get; private set; }
-        public int SettlersEatTillMonarchy { get; private set; }
-        public int SettlersEatFromCommunism { get; private set; }
-        public int CitySizeUnhappyChieftain { get; private set; }
-        public int RiotFactor { get; private set; }
-        public int ToExceedCitySizeAqueductNeeded { get; private set; }
-        public int SewerNeeded { get; private set; }
-        public int TechParadigm { get; private set; }
-        public int BaseTimeEngineersTransform { get; private set; }
-        public int MonarchyPaysSupport { get; private set; }
-        public int CommunismPaysSupport { get; private set; }
-        public int FundamentalismPaysSupport { get; private set; }
-        public int CommunismEquivalentPalaceDistance { get; private set; }
-        public int FundamentalismScienceLost { get; private set; }
-        public int ShieldPenaltyTypeChange { get; private set; }
-        public int MaxParadropRange { get; private set; }
-        public int MassThrustParadigm { get; private set; }
-        public int MaxEffectiveScienceRate { get; private set; }
+        public CosmicRules Cosmic { get; } = new();
 
         // Units
         public string[] UnitName { get; set; }
@@ -48,6 +31,13 @@ namespace Civ2engine
         public string[] UnitFlags { get; private set; }
 
         // Advances
+        public Advance[] Advances { get; set; }
+
+        public Dictionary<string, int> AdvanceMappings = new()
+        {
+            {"nil", -1},
+            {"no", -2}
+        };
         public string[] AdvanceName { get; private set; }
         public int[] AdvanceAIvalue { get; private set; }
         public int[] AdvanceModifier { get; private set; }
@@ -121,53 +111,12 @@ namespace Civ2engine
 
         // Attitudes
         public string[] Attitude { get; private set; }
+        public Improvement[] Improvements { get; set; }
+        public UnitDefinition[] UnitTypes { get; set; }
+        public Terrain[] Terrains { get; set; }
 
         public void Set(List<string[]> rulesList)
         {
-            // Set cosmic principles
-            RoadMultiplier = Int32.Parse(rulesList[0][0]);
-            ChanceTriremeLost = Int32.Parse(rulesList[0][1]);
-            FoodEatenPerTurn = Int32.Parse(rulesList[0][2]);
-            RowsFoodBox = Int32.Parse(rulesList[0][3]);
-            RowsShieldBox = Int32.Parse(rulesList[0][4]);
-            SettlersEatTillMonarchy = Int32.Parse(rulesList[0][5]);
-            SettlersEatFromCommunism = Int32.Parse(rulesList[0][6]);
-            CitySizeUnhappyChieftain = Int32.Parse(rulesList[0][7]);
-            RiotFactor = Int32.Parse(rulesList[0][8]);
-            ToExceedCitySizeAqueductNeeded = Int32.Parse(rulesList[0][9]);
-            SewerNeeded = Int32.Parse(rulesList[0][10]);
-            TechParadigm = Int32.Parse(rulesList[0][11]);
-            BaseTimeEngineersTransform = Int32.Parse(rulesList[0][12]);
-            MonarchyPaysSupport = Int32.Parse(rulesList[0][13]);
-            CommunismPaysSupport = Int32.Parse(rulesList[0][14]);
-            FundamentalismPaysSupport = Int32.Parse(rulesList[0][15]);
-            CommunismEquivalentPalaceDistance = Int32.Parse(rulesList[0][16]);
-            FundamentalismScienceLost = Int32.Parse(rulesList[0][17]);
-            ShieldPenaltyTypeChange = Int32.Parse(rulesList[0][18]);
-            MaxParadropRange = Int32.Parse(rulesList[0][19]);
-            MassThrustParadigm = Int32.Parse(rulesList[0][20]);
-            MaxEffectiveScienceRate = Int32.Parse(rulesList[0][21]);
-
-            AdvanceName = new string[100];
-            AdvanceAIvalue = new int[100];
-            AdvanceModifier = new int[100];
-            AdvancePrereq1 = new string[100];
-            AdvancePrereq2 = new string[100];
-            AdvanceEpoch = new int[100];
-            AdvanceCategory = new int[100];
-            AdvanceShortName = new string[100];
-            for (int row = 0; row < 100; row++)
-            {
-                AdvanceName[row] = rulesList[1][row];
-                AdvanceAIvalue[row] = Int32.Parse(rulesList[2][row]);
-                AdvanceModifier[row] = Int32.Parse(rulesList[3][row]);
-                AdvancePrereq1[row] = rulesList[4][row];
-                AdvancePrereq2[row] = rulesList[5][row];
-                AdvanceEpoch[row] = Int32.Parse(rulesList[6][row]);
-                AdvanceCategory[row] = Int32.Parse(rulesList[7][row]);
-                AdvanceShortName[row] = rulesList[8][row];
-            }
-
             ImprovementName = new string[67];
             ImprovementCost = new int[67];
             ImprovementUpkeep = new int[67];
@@ -201,7 +150,7 @@ namespace Civ2engine
                 UnitName[row] = rulesList[14][row];
                 UnitUntil[row] = rulesList[15][row];
                 UnitDomain[row] = Int32.Parse(rulesList[16][row]);
-                UnitMove[row] = 3 * Int32.Parse(rulesList[17][row]);
+                UnitMove[row] = Cosmic.RoadMultiplier * Int32.Parse(rulesList[17][row]);
                 UnitRange[row] = Int32.Parse(rulesList[18][row]);
                 UnitAttack[row] = Int32.Parse(rulesList[19][row]);
                 UnitDefense[row] = Int32.Parse(rulesList[20][row]);

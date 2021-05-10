@@ -54,9 +54,9 @@ namespace Civ2engine
             }
         }
 
-        private readonly List<IImprovement> _improvements = new List<IImprovement>();
-        public IImprovement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
-        public void AddImprovement(IImprovement improvement) => _improvements.Add(improvement);
+        private readonly List<Improvement> _improvements = new List<Improvement>();
+        public Improvement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
+        public void AddImprovement(Improvement improvement) => _improvements.Add(improvement);
         public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
         public List<IUnit> UnitsInCity => Game.GetUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
         public List<IUnit> SupportedUnits => Game.GetUnits.Where(unit => unit.HomeCity == this).ToList();
@@ -118,7 +118,6 @@ namespace Civ2engine
                 for (int i = 0; i < 21; i++)
                 {
                     _foodDistribution[i] = Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Food;
-                    if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Irrigation && !Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).River) _foodDistribution[i] += Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).IrrigationBonus;
                     if (Map.TileC2(X + offsets[i, 0], Y + offsets[i, 1]).Farmland && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // Farmland has effect only if city has supermarket
                     if (offsets[i, 0] == 0 && offsets[i, 1] == 0) _foodDistribution[i] += 1;    // City square has +1 food
                     if (offsets[i, 0] == 0 && offsets[i, 1] == 0 && ImprovementExists(ImprovementType.Supermarket)) _foodDistribution[i] += 1;    // +1 food if city has supermarket

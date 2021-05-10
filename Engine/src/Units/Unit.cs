@@ -7,23 +7,16 @@ namespace Civ2engine.Units
     internal class Unit : BaseInstance, IUnit
     {
         // From RULES.TXT
-        public string Name => Game.Rules.UnitName[(int)Type];
+        public string Name => TypeDefinition.Name;
         public bool Dead { get; set; }
-        public AdvanceType? UntilTech
-        {
-            get
-            {
-                if (Game.Rules.UnitUntil[(int)Type] == "nil")
-                    return null;
-                else
-                    return (AdvanceType)Array.IndexOf(Game.Rules.AdvanceShortName, Game.Rules.UnitUntil[(int)Type]);
-            }
-        }
-        public UnitGAS Domain => (UnitGAS)Game.Rules.UnitDomain[(int)Type];
-        public int MaxMovePoints => Game.Rules.UnitMove[(int)Type];
-        public int FuelRange => Game.Rules.UnitRange[(int)Type];
-        public int AttackBase => Game.Rules.UnitAttack[(int)Type];
-        public int DefenseBase => Game.Rules.UnitDefense[(int)Type];
+        public int UntilTech => TypeDefinition.Until;
+        public UnitGAS Domain => TypeDefinition.Domain;
+        public int MaxMovePoints => TypeDefinition.Move;
+        public int FuelRange => TypeDefinition.Range;
+        public int AttackBase => TypeDefinition.Attack;
+        public int DefenseBase => TypeDefinition.Defense;
+        
+        public UnitDefinition TypeDefinition { get; set; }
 
         public int AttackFactor(IUnit defendingUnit)
         {
@@ -83,7 +76,7 @@ namespace Civ2engine.Units
             return (int)DF;
         }
 
-        public int FirepowerBase => Game.Rules.UnitFirepwr[(int)Type];
+        public int FirepowerBase => TypeDefinition.Firepwr;
         public int Firepower(bool isThisUnitAttacker, IUnit otherUnit)
         {
             // Base firepower from RULES
@@ -99,9 +92,10 @@ namespace Civ2engine.Units
 
             return (int)FP;
         }
-        public int Cost => Game.Rules.UnitCost[(int)Type];
-        public int ShipHold => Game.Rules.UnitHold[(int)Type];
-        public AIroleType AIrole => (AIroleType)Game.Rules.UnitAIrole[(int)Type];
+
+        public int Cost => TypeDefinition.Cost;
+        public int ShipHold => TypeDefinition.Hold;
+        public AIroleType AIrole => (AIroleType)TypeDefinition.AIrole;
         public AdvanceType? PrereqAdvance
         {
             get
@@ -134,7 +128,7 @@ namespace Civ2engine.Units
         public int MovePoints => MaxMovePoints - MovePointsLost;
 
         public int MovePointsLost { get; set; }
-        public int HitpointsBase => Game.Rules.UnitHitp[(int)Type];
+        public int HitpointsBase => TypeDefinition.Hitp;
         public int HitPoints => HitpointsBase - HitPointsLost;
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
@@ -199,31 +193,32 @@ namespace Civ2engine.Units
                     Yto = Y + 0;
                     break;
             }
+            
+            // Cannot move beyond map edge
+            if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
+            {
+                //TODO: display a message that a unit cannot move beyond map edges
+                return false;
+            }
 
+            var tileTo = Map.TileC2(Xto, Yto);
             bool unitMoved = false;
             switch (Domain)
             {
                 case UnitGAS.Ground:
-                    {
-                        // Cannot move to ocean tile
-                        if (Map.TileC2(Xto, Yto).Type == TerrainType.Ocean) break;
-
-                        // Cannot move beyond map edge
-                        if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
-                        {
-                            //TODO: display a message that a unit cannot move beyond map edges
-                            break;
-                        }
+                {
+                        if (tileTo.Type == TerrainType.Ocean) break;
 
                         // Movement possible, reduce movement points
-                        if ((Map.TileC2(X, Y).Road || Map.TileC2(X, Y).IsCityPresent) && (Map.TileC2(Xto, Yto).Road || Map.TileC2(Xto, Yto).IsCityPresent) ||   //From & To must be cities, road
-                            (Map.TileC2(X, Y).River && Map.TileC2(Xto, Yto).River && (movementDirection == OrderType.MoveSW || movementDirection == OrderType.MoveSE || movementDirection == OrderType.MoveNE || movementDirection == OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        var tileFrom = Map.TileC2(X, Y);
+                        if ((tileFrom.Road || tileFrom.IsCityPresent) && (tileTo.Road || tileTo.IsCityPresent) ||   //From & To must be cities, road
+                            (tileFrom.River && tileTo.River && (movementDirection is OrderType.MoveSW or OrderType.MoveSE or OrderType.MoveNE or OrderType.MoveNW)))    //For rivers only for diagonal movement
                         {
                             MovePointsLost += 1;
                         }
                         else
                         {
-                            MovePointsLost += 3;
+                            MovePointsLost += Game.Rules.Cosmic.RoadMultiplier * tileTo.MoveCost;
                         }
 
                         unitMoved = true;
@@ -231,26 +226,17 @@ namespace Civ2engine.Units
                     }
                 case UnitGAS.Sea:
                     {
-                        if (Map.TileC2(Xto, Yto).Type != TerrainType.Ocean) break;
 
-                        // Cannot move beyond map edge
-                        if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
-                        {
-                            //TODO: display a message that a unit cannot move beyond map edges
-                            break;
-                        }
+                        if (tileTo.Type != TerrainType.Ocean) break;
 
-                        MovePointsLost += 3;
+                        MovePointsLost += Game.Rules.Cosmic.RoadMultiplier;
 
                         unitMoved = true;
                         break;
                     }
                 case UnitGAS.Air:
                     {
-                        // Cannot move beyond map edge
-                        if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim) break;
-
-                        MovePointsLost += 3;
+                        MovePointsLost += Game.Rules.Cosmic.RoadMultiplier;
 
                         unitMoved = true;
                         break;

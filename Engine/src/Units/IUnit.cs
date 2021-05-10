@@ -8,7 +8,7 @@ namespace Civ2engine.Units
         //From RULES.TXT
         string Name { get; }
         bool Dead { get; set; }
-        AdvanceType? UntilTech { get; }
+        int UntilTech { get; }
         UnitGAS Domain { get; }
         int MaxMovePoints { get; }
         int FuelRange { get; }
