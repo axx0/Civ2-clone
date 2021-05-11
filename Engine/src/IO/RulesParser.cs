@@ -48,7 +48,7 @@ namespace Civ2engine
             var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
             for (var i = 0; i < limit ; i++)
             {
-                var soundFile = values[i].Split(',', 2, StringSplitOptions.TrimEntries)[0];
+                var soundFile = values[i].Split(';', 2, StringSplitOptions.TrimEntries)[0];
                 if (!string.IsNullOrWhiteSpace(soundFile) && soundFile != "<none>")
                 {
                     // TODO: Check if file actually exists?
@@ -62,7 +62,7 @@ namespace Civ2engine
             var limit = values.Length < Rules.Advances.Length ? values.Length : Rules.Advances.Length;
             for (var i = 0; i < limit ; i++)
             {
-                Rules.Advances[i].AdvanceGroup = int.Parse(values[i].Split(',', 2, StringSplitOptions.TrimEntries)[0]);
+                Rules.Advances[i].AdvanceGroup = int.Parse(values[i].Split(';', 2, StringSplitOptions.TrimEntries)[0]);
             }
         }
 
@@ -249,10 +249,11 @@ namespace Civ2engine
             var type = typeof(CosmicRules);
             var props = type.GetProperties();
             var cosmic = this.Rules.Cosmic;
-            for (var i = 0; i < values.Length; i++)
+            var limit = values.Length < 30 ? values.Length : 30;
+            for (var i = 0; i < limit; i++)
             {
                 var value = values[i].Split(";", 2, StringSplitOptions.TrimEntries)[0];
-
+                
                 if (int.TryParse(value, out var result))
                 {
                     props[i].SetValue(cosmic, result);
