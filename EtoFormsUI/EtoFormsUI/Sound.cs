@@ -62,18 +62,7 @@ namespace EtoFormsUI
                     this.PlaySound("MOVPIECE.WAV");
                     break;
                 case UnitEventType.Attack:
-                    switch (e.Attacker.Type)
-                    {
-                        case UnitType.Catapult:
-                            this.PlaySound("CATAPULT.WAV");
-                            break;
-                        case UnitType.Elephant:
-                            this.PlaySound("ELEPHANT.WAV");
-                            break;
-                        default:
-                            this.PlaySound("SWORDFGT.WAV");
-                            break;
-                    }
+                    PlaySound(string.IsNullOrWhiteSpace(e.Attacker.AttackSound) ?  "SWORDFGT.WAV" : e.Attacker.AttackSound);
                     break;
             }
         }

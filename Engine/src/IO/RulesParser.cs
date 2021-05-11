@@ -30,7 +30,31 @@ namespace Civ2engine
             _sectionHandlers.Add("CARAVAN", ProcessGoods);
             _sectionHandlers.Add("CIVILIZE2", ProcessAdvanceGroups);
             _sectionHandlers.Add("DIFFICULTY", strings => Rules.Difficulty = strings.ToArray() );
-            _sectionHandlers.Add("@ATTITUDES", strings => Rules.Attitude = strings.ToArray());
+            _sectionHandlers.Add("ATTITUDES", strings => Rules.Attitude = strings.ToArray());
+            _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
+        }
+        
+        
+        public static Rules ParseRules(string path)
+        {
+            var rules = new Rules();
+            var filePath = Utils.GetFilePath("RULES.txt", path);
+            TextFileParser.ParseFile(filePath, new RulesParser {Rules = rules});
+            return rules;
+        }
+
+        private void ProcessAttackSounds(string[] values)
+        {
+            var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
+            for (var i = 0; i < limit ; i++)
+            {
+                var soundFile = values[i].Split(',', 2, StringSplitOptions.TrimEntries)[0];
+                if (!string.IsNullOrWhiteSpace(soundFile) && soundFile != "<none>")
+                {
+                    // TODO: Check if file actually exists?
+                    Rules.UnitTypes[i].AttackSound = soundFile;
+                }
+            }
         }
 
         private void ProcessAdvanceGroups(string[] values)
@@ -157,6 +181,11 @@ namespace Civ2engine
             }).ToArray();
         }
 
+        private readonly Tuple<int, string>[] _defaultAttackSounds = {
+            Tuple.Create((int)UnitType.Catapult, "CATAPULT.WAV"),
+            Tuple.Create((int)UnitType.Elephant, "ELEPHANT.WAV")
+        }; 
+
         private void ProcessUnits(string[] values)
         {
             Rules.UnitTypes = values.Select((line, type) =>
@@ -178,7 +207,8 @@ namespace Civ2engine
                     Hold = int.Parse(text[10]),
                     AIrole = int.Parse(text[11]),
                     Prereq = Rules.AdvanceMappings[text[12]],
-                    Flags = text[13]
+                    Flags = text[13],
+                    AttackSound = _defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
             }).ToArray();
         }
@@ -257,13 +287,6 @@ namespace Civ2engine
             }).ToArray();
         }
 
-        public static Rules ParseRules(string path)
-        {
-            var rules = new Rules();
-            var filePath = Utils.GetFilePath("RULES.txt", path);
-            TextFileParser.ParseFile(filePath, new RulesParser {Rules = rules});
-            return rules;
-        }
 
         public void ProcessSection(string section, List<string> contents)
         {
@@ -287,13 +310,6 @@ namespace Civ2engine
                 Trade = int.Parse(line[5]),
             };
         }
-    }
-
-    public struct Order
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Key { get; set; }
     }
 }
 

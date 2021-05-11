@@ -245,8 +245,8 @@ namespace Civ2engine.Units
 
         public void SkipTurn()
         {
-            MovePointsLost = MovePoints;
-            PrevXY = new int[] { X, Y };
+            MovePointsLost = MaxMovePoints;
+            PrevXY = new[] { X, Y };
         }
 
         public void Fortify()
@@ -322,6 +322,8 @@ namespace Civ2engine.Units
         public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
         public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
+
+        public string AttackSound => TypeDefinition.AttackSound;
         public City CityWithThisUnit => Game.GetCities.Where(c => c.X == X && c.Y == Y).First();
     }
 }
