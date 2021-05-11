@@ -78,7 +78,6 @@ namespace Civ2engine.Units
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }
-        //Bitmap Graphic(bool isInStack, int zoom);
-
+        string AttackSound { get; }
     }
 }

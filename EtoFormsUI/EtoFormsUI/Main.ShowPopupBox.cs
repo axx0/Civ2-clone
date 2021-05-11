@@ -34,7 +34,7 @@ namespace EtoFormsUI
                             if (ofd.ShowDialog(this.ParentWindow) == DialogResult.Ok)
                             {
                                 // Get SAV name & directory name from result
-                                savDirectory = ofd.Directory.LocalPath;
+                                savDirectory = Path.GetDirectoryName(ofd.FileName);
                                 savName = Path.GetFileName(ofd.FileName);
                                 LoadGameInitialization(savDirectory, savName);
                                 Sounds.Stop();

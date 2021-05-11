@@ -19,5 +19,7 @@ namespace Civ2engine.Units
         public int Prereq { get; set; }
         public string Flags { get; set; }
         public Enums.UnitType Type { get; set; }
+        
+        public string AttackSound { get; set; }
     }
 }
