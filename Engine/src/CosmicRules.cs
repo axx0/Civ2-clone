@@ -56,7 +56,7 @@ namespace Civ2engine
         /// <summary>
         /// bitmask for goodie huts, right bit =map0, 0=no goodie huts
         /// </summary>
-        public int MapHasGoddyHuts { get; set; } = 1;
+        public bool[] MapHasGoddyHuts { get; set; }
 
         /// Helicopters pick up huts 0=no 1=yes
         public bool HelicoptersCanCollectHuts { get; set; } = false;

@@ -98,7 +98,7 @@ using Civ2engine.Enums;
         public int Food => Irrigation ? Terrain.Food + Terrain.IrrigationBonus : Terrain.Food;
         public int Shields => Mining ? Terrain.Shields + Terrain.MiningBonus : Terrain.Shields;
         public int Trade => River ? Terrain.Trade + 1 : Terrain.Trade;
-        public bool CanBeIrrigated => Terrain.CanIrrigate != -2;  // yes meaning the result can be irrigation or transform. of terrain
+        public bool CanBeIrrigated => Terrain.CanIrrigate != -2 && (!Irrigation ||!Farmland);  // yes meaning the result can be irrigation or transform. of terrain
         
         /// <summary>
         /// If result == type of terrain before irrigation, this means that it's regular irrigation.
@@ -108,7 +108,7 @@ using Civ2engine.Enums;
         public TerrainType IrrigationResult => Terrain.CanIrrigate < 0 ? Type : (TerrainType) Terrain.CanIrrigate;
 
         public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; }   // Be careful, 0=never!
-        public bool CanBeMined => Terrain.CanMine != -2 ;  // yes meaning the result can be mining or transform. of terrain
+        public bool CanBeMined => Terrain.CanMine != -2 && (!Mining);  // yes meaning the result can be mining or transform. of terrain
         
         /// <summary>
         /// If result == type of terrain before mining, this means that it's regular mine.

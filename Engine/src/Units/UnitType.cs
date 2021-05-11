@@ -18,8 +18,15 @@ namespace Civ2engine.Units
         public int AIrole { get; set; }
         public int Prereq { get; set; }
         public string Flags { get; set; }
-        public Enums.UnitType Type { get; set; }
-        
+        public UnitType Type { get; set; }
         public string AttackSound { get; set; }
+        
+        public bool IsSettler { get; set; }
+        
+        public int WorkRate { get; set; }
+        public bool IsEngineer { get; set; }
+        public bool[] CivCanBuild { get; set; }
+        public bool[] CanBeOnMap { get; set; }
+        public int MinBribe { get; set; }
     }
 }

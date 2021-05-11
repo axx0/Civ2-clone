@@ -256,7 +256,7 @@ namespace Civ2engine.Units
 
         public void BuildIrrigation()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Map.Tile[X, Y].Irrigation == false) || (Map.Tile[X, Y].Farmland == false)))
+            if (TypeDefinition.IsSettler && Map.Tile[X, Y].CanBeIrrigated)
             {
                 Order = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
@@ -269,7 +269,7 @@ namespace Civ2engine.Units
 
         public void BuildMines()
         {
-            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Map.Tile[X, Y].Mining == false && (Map.Tile[X, Y].Type == TerrainType.Mountains || Map.Tile[X, Y].Type == TerrainType.Hills))
+            if (TypeDefinition.IsSettler && Map.Tile[X,Y].CanBeMined)
             {
                 Order = OrderType.BuildMine;
                 Counter = 0;    //reset counter
@@ -282,7 +282,7 @@ namespace Civ2engine.Units
 
         public void Transform()
         {
-            if (Type == UnitType.Engineers)
+            if (TypeDefinition.IsEngineer)
             {
                 Order = OrderType.Transform;
             }
@@ -295,7 +295,7 @@ namespace Civ2engine.Units
 
         public void BuildRoad()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
+            if (TypeDefinition.IsSettler && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
             {
                 Order = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
@@ -308,7 +308,7 @@ namespace Civ2engine.Units
 
         public void BuildCity()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Map.Tile[X, Y].Type != TerrainType.Ocean))
+            if (TypeDefinition.IsSettler && (Map.Tile[X, Y].Type != TerrainType.Ocean))
             {
                 //First invoke city name panel. If cancel is pressed, do nothing.
                 //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();

@@ -32,9 +32,9 @@ namespace Civ2engine
             _sectionHandlers.Add("DIFFICULTY", strings => Rules.Difficulty = strings.ToArray() );
             _sectionHandlers.Add("ATTITUDES", strings => Rules.Attitude = strings.ToArray());
             _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
+            _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
         }
-        
-        
+
         public static Rules ParseRules(string path)
         {
             var rules = new Rules();
@@ -191,7 +191,7 @@ namespace Civ2engine
             Rules.UnitTypes = values.Select((line, type) =>
             {
                 var text = line.Split(',', StringSplitOptions.TrimEntries);
-                return new UnitDefinition
+                var unit = new UnitDefinition
                 {
                     Type = (UnitType) type,
                     Name = text[0],
@@ -210,9 +210,42 @@ namespace Civ2engine
                     Flags = text[13],
                     AttackSound = _defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
+                unit.IsSettler = unit.AIrole == 5;
+                
+                if (!unit.IsSettler) return unit;
+                
+                if (unit.Prereq == -1)
+                {
+                    unit.WorkRate = 1;
+                }
+                else
+                {
+                    unit.WorkRate = 2;
+                    unit.IsEngineer = true;
+                }
+                return unit;
             }).ToArray();
+            
+        }
+        
+        private void ProcessAdvancedUnitFlags(string[] values)
+        {
+            
+            var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
+            for (int i = 0; i < limit; i++)
+            {
+                var line = values[i].Split(',', StringSplitOptions.TrimEntries);
+                var unit = Rules.UnitTypes[i];
+                unit.CivCanBuild = ReadBitsReversed(line[0]);
+                unit.CanBeOnMap = ReadBitsReversed(line[1]);
+                unit.MinBribe = int.Parse(line[2]);
+            }
         }
 
+        private bool[] ReadBitsReversed(string bitfield)
+        {
+            return bitfield.Select(c => c == '1').Reverse().ToArray();
+        }
 
         private void ProcessEndWonders(string[] values)
         {
@@ -258,6 +291,16 @@ namespace Civ2engine
                 {
                     props[i].SetValue(cosmic, result);
                 }
+            }
+
+            if (30 >= values.Length) return;
+            
+            Rules.Cosmic.MapHasGoddyHuts =
+                ReadBitsReversed(values[30].Split(';', 2, StringSplitOptions.TrimEntries)[0]);
+            
+            if (31 < values.Length)
+            {
+                Rules.Cosmic.HelicoptersCanCollectHuts = values[31][0] == '1';
             }
         }
 
