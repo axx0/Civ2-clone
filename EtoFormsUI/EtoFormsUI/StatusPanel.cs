@@ -199,7 +199,19 @@ namespace EtoFormsUI
                 var commonMultiplier = Game.Rules.Cosmic.MovementMultiplier;
                 var remainingFullPoints = Game.GetActiveUnit.MovePoints / commonMultiplier;
                 var fractionalMove = Game.GetActiveUnit.MovePoints % commonMultiplier;
-                var moveText = fractionalMove > 0 ? $"Moves: {remainingFullPoints} {fractionalMove}/{commonMultiplier}" : $"Moves: {remainingFullPoints}";
+                
+                string moveText;
+                if (fractionalMove > 0)
+                {
+                    var gcf = Utils.GreatestCommonFactor(fractionalMove, commonMultiplier);
+                    moveText =
+                        $"Moves: {(remainingFullPoints > 0 ? remainingFullPoints : "")} {fractionalMove / gcf}/{commonMultiplier / gcf}";
+                }
+                else
+                {
+                    moveText = $"Moves: {remainingFullPoints}";
+                }
+
                 Draw.Text(e.Graphics, moveText, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
                 
                 // Show other unit info

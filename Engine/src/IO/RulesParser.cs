@@ -312,22 +312,7 @@ namespace Civ2engine
             }
         }
         
-        int gcf(int a, int b)
-        {
-            while (b != 0)
-            {
-                var temp = b;
-                b = a % b;
-                a = temp;
-            }
-            return a;
-        }
 
-        int lcm(int a, int b)
-        {
-            if (a == b || b < 1) return a;
-            return (a / gcf(a, b)) * b;
-        }
 
         int individualMoveMultiplier(int multiplier, int commonMultiplier)
         {
@@ -339,7 +324,7 @@ namespace Civ2engine
             var multipliers = values.Select(v => int.Parse(v.Split(',', StringSplitOptions.TrimEntries).Last()))
                 .ToList();
 
-            var commonMultiplier = multipliers.Aggregate(1, lcm);
+            var commonMultiplier = multipliers.Aggregate(1, Utils.LowestCommonMultiple);
 
             Rules.Cosmic.RoadMovement = individualMoveMultiplier(multipliers[0], commonMultiplier);
             Rules.Cosmic.RiverMovement = individualMoveMultiplier(multipliers[1], commonMultiplier);
