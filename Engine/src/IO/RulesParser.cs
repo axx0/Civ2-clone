@@ -234,11 +234,18 @@ namespace Civ2engine
             var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
             for (int i = 0; i < limit; i++)
             {
-                var line = values[i].Split(',', StringSplitOptions.TrimEntries);
+                var line = values[i].Split(new []{ ',',';'}, StringSplitOptions.TrimEntries);
                 var unit = Rules.UnitTypes[i];
                 unit.CivCanBuild = ReadBitsReversed(line[0]);
                 unit.CanBeOnMap = ReadBitsReversed(line[1]);
                 unit.MinBribe = int.Parse(line[2]);
+                var extraFlags = ReadBitsReversed(line[6]);
+                unit.Invisible = extraFlags[0];
+                unit.NonDispandable = extraFlags[1];
+                unit.UnbribaleBarb = extraFlags[3];
+                unit.NothingImpassable = extraFlags[4];
+                unit.IsEngineer = unit.IsEngineer || extraFlags[5];
+                unit.NonExpireForBarbarian = extraFlags[6];
             }
         }
 

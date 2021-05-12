@@ -28,5 +28,10 @@ namespace Civ2engine.Units
         public bool[] CivCanBuild { get; set; }
         public bool[] CanBeOnMap { get; set; }
         public int MinBribe { get; set; }
+        public bool Invisible { get; set; }
+        public bool NonDispandable { get; set; }
+        public bool UnbribaleBarb { get; set; }
+        public bool NothingImpassable { get; set; }
+        public bool NonExpireForBarbarian { get; set; }
     }
 }
