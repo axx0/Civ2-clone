@@ -194,12 +194,14 @@ namespace EtoFormsUI
 
                 // Show active unit info
                 Draw.Unit(e.Graphics, Game.GetActiveUnit, false, 1, new Point(7, 27));
+                
                 // Show move points correctly
-                int _fullMovPts = Game.GetActiveUnit.MovePoints / 3;
-                int _remMovPts = Game.GetActiveUnit.MovePoints % 3;
-                string _text = $"Moves: {_fullMovPts} {_remMovPts}/3";
-                if (_remMovPts == 0) _text = $"Moves: {_fullMovPts}";
-                Draw.Text(e.Graphics, _text, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
+                var commonMultiplier = Game.Rules.Cosmic.MovementMultiplier;
+                var remainingFullPoints = Game.GetActiveUnit.MovePoints / commonMultiplier;
+                var fractionalMove = Game.GetActiveUnit.MovePoints % commonMultiplier;
+                var moveText = fractionalMove > 0 ? $"Moves: {remainingFullPoints} {fractionalMove}/{commonMultiplier}" : $"Moves: {remainingFullPoints}";
+                Draw.Text(e.Graphics, moveText, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
+                
                 // Show other unit info
                 _cityName = (Game.GetActiveUnit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
                 Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(79, 43), false, false, _backColor, 1, 1);
@@ -269,8 +271,8 @@ namespace EtoFormsUI
                 if (_unitsOnThisTile.Count - 1 != drawCount)    // -1 because you must not count in active unit
                 {
                     _column += 22;
-                    _text = _unitsOnThisTile.Count - 1 - drawCount == 1 ? "Unit" : "Units";
-                    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count - 1 - drawCount} More {_text})", _font, _frontColor, new Point(9, _column), false, false, _backColor, 1, 1);
+                    moveText = _unitsOnThisTile.Count - 1 - drawCount == 1 ? "Unit" : "Units";
+                    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count - 1 - drawCount} More {moveText})", _font, _frontColor, new Point(9, _column), false, false, _backColor, 1, 1);
                 }
             }
 

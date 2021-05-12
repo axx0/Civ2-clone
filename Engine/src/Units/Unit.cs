@@ -178,23 +178,44 @@ namespace Civ2engine.Units
             }
 
             var tileTo = Map.TileC2(Xto, Yto);
-            bool unitMoved = false;
+            var isCity = tileTo.IsCityPresent;
+            bool unitMoved = isCity;
+            var moveCost = Game.Rules.Cosmic.MovementMultiplier;
             switch (Domain)
             {
                 case UnitGAS.Ground:
                 {
                         if (tileTo.Type == TerrainType.Ocean) break;
 
-                        // Movement possible, reduce movement points
+
                         var tileFrom = Map.TileC2(X, Y);
-                        if ((tileFrom.Road || tileFrom.IsCityPresent) && (tileTo.Road || tileTo.IsCityPresent) ||   //From & To must be cities, road
-                            (tileFrom.River && tileTo.River && (movementDirection is OrderType.MoveSW or OrderType.MoveSE or OrderType.MoveNE or OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        if (isCity || tileTo.Railroad)
                         {
-                            MovePointsLost += 1;
+                            if (tileFrom.Railroad)
+                            {
+                                moveCost = Game.Rules.Cosmic.RailroadMovement;
+                            }else if (tileFrom.Road)
+                            {
+                                moveCost = Game.Rules.Cosmic.RoadMovement;
+                            }
+                        }else if (tileTo.Road && (tileFrom.Road || tileFrom.IsCityPresent || tileFrom.Railroad))
+                        {
+                            moveCost = Game.Rules.Cosmic.RoadMovement;
                         }
                         else
                         {
-                            MovePointsLost += Game.Rules.Cosmic.RoadMultiplier * tileTo.MoveCost;
+                            moveCost *= tileTo.MoveCost;
+                        }
+                        
+                        // If alpine movement could be less use that
+                        if (Game.Rules.Cosmic.AlpineMovement < moveCost && Alpine)
+                        {
+                            moveCost = Game.Rules.Cosmic.AlpineMovement;
+                        }
+                        
+                        if (Game.Rules.Cosmic.RiverMovement < moveCost && tileFrom.River && tileTo.River && (movementDirection is OrderType.MoveSW or OrderType.MoveSE or OrderType.MoveNE or OrderType.MoveNW))    //For rivers only for diagonal movement
+                        {
+                            moveCost = Game.Rules.Cosmic.RiverMovement;
                         }
 
                         unitMoved = true;
@@ -202,18 +223,12 @@ namespace Civ2engine.Units
                     }
                 case UnitGAS.Sea:
                     {
-
                         if (tileTo.Type != TerrainType.Ocean) break;
-
-                        MovePointsLost += Game.Rules.Cosmic.RoadMultiplier;
-
                         unitMoved = true;
                         break;
                     }
                 case UnitGAS.Air:
                     {
-                        MovePointsLost += Game.Rules.Cosmic.RoadMultiplier;
-
                         unitMoved = true;
                         break;
                     }
@@ -222,6 +237,7 @@ namespace Civ2engine.Units
             // If unit moved, update its X-Y coords
             if (unitMoved)
             {
+                MovePointsLost += moveCost;
                 // Set previous coords
                 PrevXY = new int[] { X, Y };
 

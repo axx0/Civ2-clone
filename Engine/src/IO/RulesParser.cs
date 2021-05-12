@@ -18,6 +18,7 @@ namespace Civ2engine
         private RulesParser()
         {
             _sectionHandlers.Add("COSMIC", ProcessCosmicRules);
+            _sectionHandlers.Add("COSMIC2", ProcessExtraMovementAdjustments);
             _sectionHandlers.Add("CIVILIZE", ProcessTech);
             _sectionHandlers.Add("IMPROVE", ProcessImprovements);
             // ReSharper disable once StringLiteralTypo
@@ -197,7 +198,7 @@ namespace Civ2engine
                     Name = text[0],
                     Until = Rules.AdvanceMappings[text[1]],
                     Domain = (UnitGAS) int.Parse(text[2]),
-                    Move = Rules.Cosmic.RoadMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
+                    Move = Rules.Cosmic.MovementMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
                     Range = int.Parse(text[4]),
                     Attack = int.Parse(text[5].Replace("a", string.Empty)),
                     Defense = int.Parse(text[6].Replace("d", string.Empty)),
@@ -299,7 +300,7 @@ namespace Civ2engine
                     props[i].SetValue(cosmic, result);
                 }
             }
-
+            
             if (30 >= values.Length) return;
             
             Rules.Cosmic.MapHasGoddyHuts =
@@ -309,6 +310,56 @@ namespace Civ2engine
             {
                 Rules.Cosmic.HelicoptersCanCollectHuts = values[31][0] == '1';
             }
+        }
+        
+        int gcf(int a, int b)
+        {
+            while (b != 0)
+            {
+                var temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        int lcm(int a, int b)
+        {
+            if (a == b || b < 1) return a;
+            return (a / gcf(a, b)) * b;
+        }
+
+        int individualMoveMultiplier(int multiplier, int commonMultiplier)
+        {
+            return multiplier > 0 ? commonMultiplier / multiplier : 0;
+        }
+
+        private void ProcessExtraMovementAdjustments(string[] values)
+        {
+            var multipliers = values.Select(v => int.Parse(v.Split(',', StringSplitOptions.TrimEntries).Last()))
+                .ToList();
+
+            var commonMultiplier = multipliers.Aggregate(1, lcm);
+
+            Rules.Cosmic.RoadMovement = individualMoveMultiplier(multipliers[0], commonMultiplier);
+            Rules.Cosmic.RiverMovement = individualMoveMultiplier(multipliers[1], commonMultiplier);
+            Rules.Cosmic.AlpineMovement = multipliers.Count > 2
+                ? individualMoveMultiplier(multipliers[2], commonMultiplier)
+                : Rules.Cosmic.RoadMovement;
+            Rules.Cosmic.RailroadMovement =
+                multipliers.Count > 3 ? individualMoveMultiplier(multipliers[3], commonMultiplier) : 0;
+
+            if (Rules.Cosmic.MovementMultiplier == commonMultiplier) return;
+
+            if (Rules.UnitTypes != null)
+            {
+                foreach (var unitType in Rules.UnitTypes)
+                {
+                    unitType.Move = (unitType.Move / Rules.Cosmic.MovementMultiplier) * commonMultiplier;
+                }
+            }
+
+            Rules.Cosmic.MovementMultiplier = commonMultiplier;
         }
 
 
