@@ -61,16 +61,16 @@ namespace EtoFormsUI
             var selectedRulesPath = rulesFiles[0].Item2; 
             if (rulesFiles.Count > 1)
             {
-                var popupBox = new Civ2dialog_v2(this, new PopupBox{ Title = "Select game version",  Options = rulesFiles.Select(f=>f.Item1).ToList(), Button = new List<string> { "OK", "Cancel"}})
-                {
-                    Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
-                        (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
-                };
+                var popupBox = new Civ2dialog_v2(this,
+                    new PopupBox
+                    {
+                        Title = "Select game version", Options = rulesFiles.Select(f => f.Item1).ToList(),
+                        Button = new List<string> {"OK", "Cancel"}
+                    });
                 popupBox.ShowModal(Parent);
 
                 if (popupBox.SelectedIndex == int.MinValue)
                 {
-                    
                     OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
                     return;
                 }
@@ -79,7 +79,19 @@ namespace EtoFormsUI
             }
 
             var worldSize = new Civ2dialog_v2(this, popupBoxList.Find(b => b.Name == "SIZEOFMAP"));
-            worldSize.ShowModal(Parent);
+            
+            worldSize.ShowModal(Parent);                
+            if (worldSize.SelectedIndex == int.MinValue)
+            {
+                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
+                return;
+            }
+            if (worldSize.SelectedButton == "Custom")
+            {
+                var customSize = new Civ2dialog_v2(this, popupBoxList.Find(b => b.Name == "CUSTOMSIZE"));
+                
+                customSize.ShowModal();
+            }
         }
 
         private IList<Tuple<string, string>> LocateRules(params string[] searchPaths)

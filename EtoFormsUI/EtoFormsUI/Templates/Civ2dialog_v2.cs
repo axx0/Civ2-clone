@@ -11,6 +11,7 @@ namespace EtoFormsUI
     public class Civ2dialog_v2 : Dialog
     {
         public int SelectedIndex;
+        public string SelectedButton;
         public List<bool> CheckboxReturnStates;
         private readonly int paddingTop, paddingBtm;
         private readonly RadioButtonList radioBtnList;
@@ -54,8 +55,8 @@ namespace EtoFormsUI
             }
 
             // Determine size of inner panel
-            int optionRows = popupBox.Options == null ? 0 : popupBox.Options.Count;
-            int textRows = popupBox.CenterText == null ? 0 : popupBox.CenterText.Count;
+            int optionRows = popupBox.Options?.Count ?? 0;
+            int textRows = popupBox.CenterText?.Count ?? 0;
             var innerSize = new Size(2 * 2 + MaxWidth(), 2 * 2 + optionRows * 32 + textRows * 30);
             Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + paddingTop + paddingBtm);
             
@@ -104,50 +105,63 @@ namespace EtoFormsUI
             int buttonWidth = (this.Width - 2 * 9 - 3 * (_popupBox.Button.Count - 1)) / _popupBox.Button.Count;
             for (int i = 0; i < _popupBox.Button.Count; i++)
             {
-                buttons[i] = new Civ2button(_popupBox.Button[i], buttonWidth, 36, new Font("Times new roman", 11));
+                var text = _popupBox.Button[i];
+                buttons[i] = new Civ2button(text, buttonWidth, 36, new Font("Times new roman", 11));
                 layout.Add(buttons[i], 9 + buttonWidth * i + 3 * i, Height - 46);
+                buttons[i].Click += (sender, e) => SelectedButton = ((Civ2button) sender).Text;
 
-                // Define abort button so that is also called with Esc
-                if (_popupBox.Button[i] == "Cancel")
+                switch (text)
                 {
-                    AbortButton = buttons[i];
-                    AbortButton.Click += (sender, e) =>
+                    // Define abort button so that is also called with Esc
+                    case "Cancel":
+                        AbortButton = buttons[i];
+                        AbortButton.Click += (sender, e) =>
+                        {
+                            foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+                            SelectedIndex = int.MinValue;
+                            if (_popupBox.Name == "MAINMENU") 
+                            { 
+                                Application.Instance.Quit(); 
+                            }
+                            else
+                            {
+                                Close();
+                            }
+                        };
+                        break;
+                    // Define default button so that it is also called with return key
+                    case "OK":
                     {
                         foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
-                        SelectedIndex = int.MinValue;
-                        if (_popupBox.Name == "MAINMENU") 
-                        { 
-                            Application.Instance.Quit(); 
-                        }
-                        else
-                        {
-                            Close();
-                        }
-                    };
-                }
 
-                // Define default button so that it is also called with return key
-                if (_popupBox.Button[i] == "OK")
-                {
-                    foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
-
-                    DefaultButton = buttons[i];
-                    DefaultButton.Click += (sender, e) =>
-                    {
-                        if (_popupBox.Checkbox)
+                        DefaultButton = buttons[i];
+                        DefaultButton.Click += (sender, e) =>
                         {
-                            for (int row = 0; row < _popupBox.Options.Count; row++)
+                            if (_popupBox.Checkbox)
                             {
-                                CheckboxReturnStates[row] = checkBox[row].Checked == true;
+                                for (int row = 0; row < _popupBox.Options.Count; row++)
+                                {
+                                    CheckboxReturnStates[row] = checkBox[row].Checked == true;
+                                }
                             }
-                        }
-                        else if (radioBtnList != null) 
-                        {
-                            SelectedIndex = radioBtnList.SelectedIndex;
-                        }
+                            else if (radioBtnList != null) 
+                            {
+                                SelectedIndex = radioBtnList.SelectedIndex;
+                            }
 
-                        Close(); 
-                    };
+                            Close(); 
+                        };
+                        break;
+                    }
+                    default:
+                    {
+                        buttons[i].Click += (sender, args) =>
+                        {
+                            SelectedButton = text;
+                            Close();
+                        };
+                        break;
+                    }
                 }
             }
 
