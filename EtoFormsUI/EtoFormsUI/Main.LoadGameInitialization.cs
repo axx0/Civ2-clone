@@ -11,8 +11,16 @@ namespace EtoFormsUI
         {
             Game.LoadGame(directoryPath, SAVname);
             Images.LoadGraphicsAssetsFromFiles(directoryPath);
-            sinaiPanel.Dispose();
-            sinaiPanel = null;
+        }
+
+        public void LoadScenarioInit(string directoryPath, string SCNname)
+        {
+            
+        }
+        
+        public void StartPremadeInit(string directoryPath, string SCNname)
+        {
+            
         }
 
         public void StartGame()
@@ -41,6 +49,11 @@ namespace EtoFormsUI
             Content = layout;
 
             BringToFront();
+        }
+
+        private void NewGame(bool customizeWorld)
+        {
+            var rulesFiles = Game.LocateRules(Settings.Civ2Path);
         }
     }
 }

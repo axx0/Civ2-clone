@@ -9,7 +9,7 @@ namespace Civ2engine
         {
             // Read SAV file & RULES.txt
             var rules = RulesParser.ParseRules(savDirectoryPath);
-            GameData gameData = Read.SAV_and_RULES(savDirectoryPath, SAVname);
+            GameData gameData = Read.ReadSAVFile(savDirectoryPath, SAVname);
 
             // Make an instance of a new game & map
             _instance = new Game(rules, gameData);
@@ -86,6 +86,11 @@ namespace Civ2engine
             _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn
             _playerCiv = _civs[SAVgameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
+        }
+
+        public object LocateRules(string civ2Path)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
