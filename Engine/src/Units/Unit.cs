@@ -32,7 +32,7 @@ namespace Civ2engine.Units
             return (int)AF;
         }
 
-        public int DefenseFactor(IUnit attackingUnit)
+        public int DefenseFactor(IUnit attackingUnit, City cityHere)
         {
             // Base defense factor from RULES
             double DF = (double)DefenseBase;
@@ -41,20 +41,47 @@ namespace Civ2engine.Units
             if (Veteran) DF *= 1.5;
 
             // City walls bonus (applies only to land units)
-            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !NegatesCityWalls) DF *= 3;
+            if (cityHere != null && cityHere.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !attackingUnit.NegatesCityWalls) DF *= 3;
             // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
             else if (Map.TileC2(X, Y).Fortress && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF *= 2;
             // Fortified bonus
             else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5;
 
-            // Effect of SAM batteries (only when attacked from air)
-            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.SAMbattery) && attackingUnit.Domain == UnitGAS.Air) DF *= 2;
+            // Helicopters are vulnerable to anti air
+            if (Domain == UnitGAS.Air && FuelRange == 0 && attackingUnit.CanAttackAirUnits)
+            {
+                DF /= 2;
+            }
 
-            // Effect of SDI
-            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.SDIdefense) && attackingUnit.Type == UnitType.CruiseMsl) DF *= 2;
+            if (cityHere != null)
+            {
+                if (Domain == UnitGAS.Air && FuelRange == 1 && attackingUnit.Domain == UnitGAS.Air)
+                {
+                    // TODO: Message box about fighters scrambling for defence
+                    if (attackingUnit.FuelRange != 1)
+                    {
+                        DF *= 4;
+                    }
+                    else
+                    {
+                        DF *= 2;
+                    }
+                }
+                else
+                {
+                    // Effect of SAM batteries (only when attacked from air)
+                    if (cityHere.ImprovementExists(ImprovementType.SAMbattery) &&
+                        attackingUnit.Domain == UnitGAS.Air) DF *= 2;
+                }
 
-            // Effect of coastal fortress
-            if (IsInCity && CityWithThisUnit.ImprovementExists(ImprovementType.CoastalFort) && attackingUnit.Domain == UnitGAS.Sea) DF *= 2;
+                // Effect of SDI
+                if (cityHere.ImprovementExists(ImprovementType.SDIdefense) &&
+                    attackingUnit.Type == UnitType.CruiseMsl) DF *= 2;
+
+                // Effect of coastal fortress
+                if (cityHere.ImprovementExists(ImprovementType.CoastalFort) &&
+                    attackingUnit.Domain == UnitGAS.Sea) DF *= 2;
+            }
 
             // Effect of terrain
             DF *= Map.TileC2(X, Y).Defense;
@@ -63,21 +90,6 @@ namespace Civ2engine.Units
         }
 
         public int FirepowerBase => TypeDefinition.Firepwr;
-        public int Firepower(bool isThisUnitAttacker, IUnit otherUnit)
-        {
-            // Base firepower from RULES
-            double FP = (double)FirepowerBase;
-
-            // When a sea unit attacks a land unit, both units have their firepower reduced to 1
-            if (isThisUnitAttacker && Domain == UnitGAS.Sea && otherUnit.Domain == UnitGAS.Ground && Map.TileC2(otherUnit.X, otherUnit.Y).Type != TerrainType.Ocean) FP = 1;    // attacker (sea)
-            else if (!isThisUnitAttacker && Domain == UnitGAS.Ground && otherUnit.Domain == UnitGAS.Sea && Map.TileC2(otherUnit.X, otherUnit.Y).Type == TerrainType.Ocean) FP = 1;  // defender (land)
-
-            // Cought in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
-            if (!isThisUnitAttacker && Domain == UnitGAS.Sea && IsInCity && otherUnit.Domain == UnitGAS.Ground) FP = 1; // defender (sea unit in city)
-            else if (isThisUnitAttacker && Domain == UnitGAS.Ground && otherUnit.Domain == UnitGAS.Sea && otherUnit.IsInCity) FP *= 2;  // attacker (land)
-
-            return (int)FP;
-        }
 
         public int Cost => TypeDefinition.Cost;
         public int ShipHold => TypeDefinition.Hold;
@@ -178,23 +190,44 @@ namespace Civ2engine.Units
             }
 
             var tileTo = Map.TileC2(Xto, Yto);
-            bool unitMoved = false;
+            var isCity = tileTo.IsCityPresent;
+            bool unitMoved = isCity;
+            var moveCost = Game.Rules.Cosmic.MovementMultiplier;
             switch (Domain)
             {
                 case UnitGAS.Ground:
                 {
                         if (tileTo.Type == TerrainType.Ocean) break;
 
-                        // Movement possible, reduce movement points
+
                         var tileFrom = Map.TileC2(X, Y);
-                        if ((tileFrom.Road || tileFrom.IsCityPresent) && (tileTo.Road || tileTo.IsCityPresent) ||   //From & To must be cities, road
-                            (tileFrom.River && tileTo.River && (movementDirection is OrderType.MoveSW or OrderType.MoveSE or OrderType.MoveNE or OrderType.MoveNW)))    //For rivers only for diagonal movement
+                        if (isCity || tileTo.Railroad)
                         {
-                            MovePointsLost += 1;
+                            if (tileFrom.Railroad)
+                            {
+                                moveCost = Game.Rules.Cosmic.RailroadMovement;
+                            }else if (tileFrom.Road)
+                            {
+                                moveCost = Game.Rules.Cosmic.RoadMovement;
+                            }
+                        }else if (tileTo.Road && (tileFrom.Road || tileFrom.IsCityPresent || tileFrom.Railroad))
+                        {
+                            moveCost = Game.Rules.Cosmic.RoadMovement;
                         }
                         else
                         {
-                            MovePointsLost += Game.Rules.Cosmic.RoadMultiplier * tileTo.MoveCost;
+                            moveCost *= tileTo.MoveCost;
+                        }
+                        
+                        // If alpine movement could be less use that
+                        if (Game.Rules.Cosmic.AlpineMovement < moveCost && Alpine)
+                        {
+                            moveCost = Game.Rules.Cosmic.AlpineMovement;
+                        }
+                        
+                        if (Game.Rules.Cosmic.RiverMovement < moveCost && tileFrom.River && tileTo.River && (movementDirection is OrderType.MoveSW or OrderType.MoveSE or OrderType.MoveNE or OrderType.MoveNW))    //For rivers only for diagonal movement
+                        {
+                            moveCost = Game.Rules.Cosmic.RiverMovement;
                         }
 
                         unitMoved = true;
@@ -202,18 +235,12 @@ namespace Civ2engine.Units
                     }
                 case UnitGAS.Sea:
                     {
-
                         if (tileTo.Type != TerrainType.Ocean) break;
-
-                        MovePointsLost += Game.Rules.Cosmic.RoadMultiplier;
-
                         unitMoved = true;
                         break;
                     }
                 case UnitGAS.Air:
                     {
-                        MovePointsLost += Game.Rules.Cosmic.RoadMultiplier;
-
                         unitMoved = true;
                         break;
                     }
@@ -222,6 +249,7 @@ namespace Civ2engine.Units
             // If unit moved, update its X-Y coords
             if (unitMoved)
             {
+                MovePointsLost += moveCost;
                 // Set previous coords
                 PrevXY = new int[] { X, Y };
 
@@ -256,7 +284,7 @@ namespace Civ2engine.Units
 
         public void BuildIrrigation()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Map.Tile[X, Y].Irrigation == false) || (Map.Tile[X, Y].Farmland == false)))
+            if (TypeDefinition.IsSettler && Map.Tile[X, Y].CanBeIrrigated)
             {
                 Order = OrderType.BuildIrrigation;
                 Counter = 0;    //reset counter
@@ -269,7 +297,7 @@ namespace Civ2engine.Units
 
         public void BuildMines()
         {
-            if ((Type == UnitType.Settlers || Type == UnitType.Engineers) && Map.Tile[X, Y].Mining == false && (Map.Tile[X, Y].Type == TerrainType.Mountains || Map.Tile[X, Y].Type == TerrainType.Hills))
+            if (TypeDefinition.IsSettler && Map.Tile[X,Y].CanBeMined)
             {
                 Order = OrderType.BuildMine;
                 Counter = 0;    //reset counter
@@ -282,7 +310,7 @@ namespace Civ2engine.Units
 
         public void Transform()
         {
-            if (Type == UnitType.Engineers)
+            if (TypeDefinition.IsEngineer)
             {
                 Order = OrderType.Transform;
             }
@@ -295,7 +323,7 @@ namespace Civ2engine.Units
 
         public void BuildRoad()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
+            if (TypeDefinition.IsSettler && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
             {
                 Order = OrderType.BuildRoad;
                 Counter = 0;    //reset counter
@@ -308,7 +336,7 @@ namespace Civ2engine.Units
 
         public void BuildCity()
         {
-            if (((Type == UnitType.Settlers) || (Type == UnitType.Engineers)) && (Map.Tile[X, Y].Type != TerrainType.Ocean))
+            if (TypeDefinition.IsSettler && (Map.Tile[X, Y].Type != TerrainType.Ocean))
             {
                 //First invoke city name panel. If cancel is pressed, do nothing.
                 //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
@@ -324,6 +352,6 @@ namespace Civ2engine.Units
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
 
         public string AttackSound => TypeDefinition.AttackSound;
-        public City CityWithThisUnit => Game.GetCities.Where(c => c.X == X && c.Y == Y).First();
+        public City CityWithThisUnit => Game.GetCities.FirstOrDefault(c => c.X == X && c.Y == Y);
     }
 }

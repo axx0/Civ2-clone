@@ -4,7 +4,7 @@ namespace Civ2engine
 {
     public class CosmicRules
     {
-        public int RoadMultiplier { get; private set; } = 3;
+        public int MovementMultiplier { get; internal set; } = 3;
         public int ChanceTriremeLost { get; private set; } = 2;
         public int FoodEatenPerTurn { get; private set; } = 2;
         public int RowsFoodBox { get; private set; } = 10;
@@ -56,9 +56,14 @@ namespace Civ2engine
         /// <summary>
         /// bitmask for goodie huts, right bit =map0, 0=no goodie huts
         /// </summary>
-        public int MapHasGoddyHuts { get; set; } = 1;
+        public bool[] MapHasGoddyHuts { get; set; }
 
         /// Helicopters pick up huts 0=no 1=yes
         public bool HelicoptersCanCollectHuts { get; set; } = false;
+
+        public int RoadMovement { get; internal set; } = 1;
+        public int RiverMovement { get; internal set; } = 1;
+        public int AlpineMovement { get; internal set; } = 1;
+        public int RailroadMovement { get; internal set; } = 0;
     }
 }

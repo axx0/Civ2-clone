@@ -18,6 +18,7 @@ namespace Civ2engine
         private RulesParser()
         {
             _sectionHandlers.Add("COSMIC", ProcessCosmicRules);
+            _sectionHandlers.Add("COSMIC2", ProcessExtraMovementAdjustments);
             _sectionHandlers.Add("CIVILIZE", ProcessTech);
             _sectionHandlers.Add("IMPROVE", ProcessImprovements);
             // ReSharper disable once StringLiteralTypo
@@ -32,9 +33,9 @@ namespace Civ2engine
             _sectionHandlers.Add("DIFFICULTY", strings => Rules.Difficulty = strings.ToArray() );
             _sectionHandlers.Add("ATTITUDES", strings => Rules.Attitude = strings.ToArray());
             _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
+            _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
         }
-        
-        
+
         public static Rules ParseRules(string path)
         {
             var rules = new Rules();
@@ -191,13 +192,13 @@ namespace Civ2engine
             Rules.UnitTypes = values.Select((line, type) =>
             {
                 var text = line.Split(',', StringSplitOptions.TrimEntries);
-                return new UnitDefinition
+                var unit = new UnitDefinition
                 {
                     Type = (UnitType) type,
                     Name = text[0],
                     Until = Rules.AdvanceMappings[text[1]],
                     Domain = (UnitGAS) int.Parse(text[2]),
-                    Move = Rules.Cosmic.RoadMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
+                    Move = Rules.Cosmic.MovementMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
                     Range = int.Parse(text[4]),
                     Attack = int.Parse(text[5].Replace("a", string.Empty)),
                     Defense = int.Parse(text[6].Replace("d", string.Empty)),
@@ -210,9 +211,49 @@ namespace Civ2engine
                     Flags = text[13],
                     AttackSound = _defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
+                unit.IsSettler = unit.AIrole == 5;
+                
+                if (!unit.IsSettler) return unit;
+                
+                if (unit.Prereq == -1)
+                {
+                    unit.WorkRate = 1;
+                }
+                else
+                {
+                    unit.WorkRate = 2;
+                    unit.IsEngineer = true;
+                }
+                return unit;
             }).ToArray();
+            
+        }
+        
+        private void ProcessAdvancedUnitFlags(string[] values)
+        {
+            
+            var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
+            for (int i = 0; i < limit; i++)
+            {
+                var line = values[i].Split(new []{ ',',';'}, StringSplitOptions.TrimEntries);
+                var unit = Rules.UnitTypes[i];
+                unit.CivCanBuild = ReadBitsReversed(line[0]);
+                unit.CanBeOnMap = ReadBitsReversed(line[1]);
+                unit.MinBribe = int.Parse(line[2]);
+                var extraFlags = ReadBitsReversed(line[6]);
+                unit.Invisible = extraFlags[0];
+                unit.NonDispandable = extraFlags[1];
+                unit.UnbribaleBarb = extraFlags[3];
+                unit.NothingImpassable = extraFlags[4];
+                unit.IsEngineer = unit.IsEngineer || extraFlags[5];
+                unit.NonExpireForBarbarian = extraFlags[6];
+            }
         }
 
+        private bool[] ReadBitsReversed(string bitfield)
+        {
+            return bitfield.Select(c => c == '1').Reverse().ToArray();
+        }
 
         private void ProcessEndWonders(string[] values)
         {
@@ -259,6 +300,51 @@ namespace Civ2engine
                     props[i].SetValue(cosmic, result);
                 }
             }
+            
+            if (30 >= values.Length) return;
+            
+            Rules.Cosmic.MapHasGoddyHuts =
+                ReadBitsReversed(values[30].Split(';', 2, StringSplitOptions.TrimEntries)[0]);
+            
+            if (31 < values.Length)
+            {
+                Rules.Cosmic.HelicoptersCanCollectHuts = values[31][0] == '1';
+            }
+        }
+        
+
+
+        int individualMoveMultiplier(int multiplier, int commonMultiplier)
+        {
+            return multiplier > 0 ? commonMultiplier / multiplier : 0;
+        }
+
+        private void ProcessExtraMovementAdjustments(string[] values)
+        {
+            var multipliers = values.Select(v => int.Parse(v.Split(',', StringSplitOptions.TrimEntries).Last()))
+                .ToList();
+
+            var commonMultiplier = multipliers.Aggregate(1, Utils.LowestCommonMultiple);
+
+            Rules.Cosmic.RoadMovement = individualMoveMultiplier(multipliers[0], commonMultiplier);
+            Rules.Cosmic.RiverMovement = individualMoveMultiplier(multipliers[1], commonMultiplier);
+            Rules.Cosmic.AlpineMovement = multipliers.Count > 2
+                ? individualMoveMultiplier(multipliers[2], commonMultiplier)
+                : Rules.Cosmic.RoadMovement;
+            Rules.Cosmic.RailroadMovement =
+                multipliers.Count > 3 ? individualMoveMultiplier(multipliers[3], commonMultiplier) : 0;
+
+            if (Rules.Cosmic.MovementMultiplier == commonMultiplier) return;
+
+            if (Rules.UnitTypes != null)
+            {
+                foreach (var unitType in Rules.UnitTypes)
+                {
+                    unitType.Move = (unitType.Move / Rules.Cosmic.MovementMultiplier) * commonMultiplier;
+                }
+            }
+
+            Rules.Cosmic.MovementMultiplier = commonMultiplier;
         }
 
 
