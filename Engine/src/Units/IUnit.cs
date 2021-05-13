@@ -15,9 +15,8 @@ namespace Civ2engine.Units
         int AttackBase { get; }
         int DefenseBase { get; }
         int AttackFactor(IUnit defendingUnit);
-        int DefenseFactor(IUnit attackingUnit);
+        int DefenseFactor(IUnit attackingUnit, City cityDefended);
         int FirepowerBase { get; }
-        int Firepower(bool isThisUnitAttacker, IUnit otherUnit);
         int Cost { get; }
         int ShipHold { get; }
         AIroleType AIrole { get; }

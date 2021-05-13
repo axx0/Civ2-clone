@@ -160,9 +160,6 @@ namespace EtoFormsUI
             var _backColor = Color.FromArgb(191, 191, 191);
             List<IUnit> _unitsOnThisTile = Game.UnitsHere(Map.ActiveXY[0], Map.ActiveXY[1]);
 
-            string _cityName, _wholeText, _roadText, _irrigText, _airbaseText;
-            int _column;
-
             // View piece mode
             if (Map.ViewPieceMode)
             {
@@ -215,41 +212,41 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, moveText, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
                 
                 // Show other unit info
-                _cityName = (Game.GetActiveUnit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
+                var _cityName = (Game.GetActiveUnit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
                 Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(79, 43), false, false, _backColor, 1, 1);
                 Draw.Text(e.Graphics, Game.GetActiveCiv.Adjective, _font, _frontColor, new Point(79, 61), false, false, _backColor, 1, 1);
-                _column = 83;
+                var _column = 83;
                 Draw.Text(e.Graphics, Game.GetActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 _column += 18;
-                Draw.Text(e.Graphics, $"({Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                var activeTile = Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]);
+                Draw.Text(e.Graphics, $"({activeTile.Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                
                 // If road/railroad/irrigation/farmland/mine present
-                _wholeText = null;
-                _roadText = null;
-                _irrigText = null;
-                if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Road || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Railroad || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Irrigation || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Farmland || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Mining)
+                string improvementText = null;
+                if (activeTile.Railroad) improvementText = "Railroad";
+                else if (activeTile.Road) improvementText = "Road";
+                
+                if (activeTile.Mining) improvementText = improvementText!= null ? $"{improvementText}, Mining" : "Mining";
+                else if (activeTile.Farmland) improvementText = improvementText!= null ? $"{improvementText}, Farmland" : "Farmland";
+                else if(activeTile.Irrigation) improvementText = improvementText!= null ? $"{improvementText}, Irrigation" : "Irrigation";
+                
+                if (!string.IsNullOrEmpty(improvementText))
                 {
                     _column += 18;
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Road) _roadText = "Road";
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Railroad) _roadText = "Railroad";
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Irrigation) _irrigText = "Irrigation";
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Farmland) _irrigText = "Farmland";
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Mining) _irrigText = "Mining";
-                    if (_roadText != null && _irrigText == null) _wholeText = $"({_roadText})";
-                    else if (_roadText == null && _irrigText != null) _wholeText = $"({_irrigText})";
-                    else if (_roadText != null && _irrigText != null) _wholeText = $"({_roadText}, {_irrigText})";
-                    Draw.Text(e.Graphics, _wholeText, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                    Draw.Text(e.Graphics, $"({improvementText})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 }
+                
                 // If airbase/fortress present
-                _airbaseText = null;
-                if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Airbase || Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Fortress)
+                if (activeTile.Airbase || activeTile.Fortress)
                 {
                     _column += 18;
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Fortress) _airbaseText = "Fortress";
-                    if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Airbase) _airbaseText = "Airbase";
+                    string _airbaseText = null;
+                    if (activeTile.Fortress) _airbaseText = "Fortress";
+                    if (activeTile.Airbase) _airbaseText = "Airbase";
                     Draw.Text(e.Graphics, $"({_airbaseText})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 }
                 // If pollution present
-                if (Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]).Pollution)
+                if (activeTile.Pollution)
                 {
                     _column += 18;
                     Draw.Text(e.Graphics, "(Pollution)", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);

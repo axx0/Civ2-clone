@@ -237,71 +237,92 @@ namespace Civ2engine
         {
             // Logic from "The Complete Civilization II Combat Guide v1.1"
 
-            IUnit attacker = _activeUnit;
+            var attacker = _activeUnit;
 
             // Determine direction of attack and all units on that square
-            int[] deltaXY = new int[] { 0, 0 };
-            switch (attackDirection)
+            var deltaXY = attackDirection switch
             {
-                case OrderType.MoveSW: deltaXY = new int[] { -1, 1 }; break;
-                case OrderType.MoveS: deltaXY = new int[] { 0, 2 }; break;
-                case OrderType.MoveSE: deltaXY = new int[] { 1, 1 }; break;
-                case OrderType.MoveE: deltaXY = new int[] { 2, 0 }; break;
-                case OrderType.MoveNE: deltaXY = new int[] { 1, 1 }; break;
-                case OrderType.MoveN: deltaXY = new int[] { 0, -2 }; break;
-                case OrderType.MoveNW: deltaXY = new int[] { -1, -1 }; break;
-                case OrderType.MoveW: deltaXY = new int[] { -2, 0 }; break;
-            }
+                OrderType.MoveSW => new[] {-1, 1},
+                OrderType.MoveS => new[] {0, 2},
+                OrderType.MoveSE => new[] {1, 1},
+                OrderType.MoveE => new[] {2, 0},
+                OrderType.MoveNE => new[] {1, 1},
+                OrderType.MoveN => new[] {0, -2},
+                OrderType.MoveNW => new[] {-1, -1},
+                OrderType.MoveW => new[] {-2, 0},
+                _ => new[] {0, 0}
+            };
             int[] newXY = { attacker.X + deltaXY[0], attacker.Y + deltaXY[1] };
+            var cityOnTargetSquare = Game.GetCities.FirstOrDefault(c => c.X == newXY[0] && c.Y == newXY[1]);
             var unitsOnTargetSquare = _units.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]).ToList();
 
             // Primary defender is the unit with largest defense factor
-            IUnit defender = unitsOnTargetSquare.OrderBy(u => u.DefenseFactor(attacker)).First();
+            var defender = unitsOnTargetSquare[0];
+            var defenseFactor = defender.DefenseFactor(attacker, cityOnTargetSquare);
+            for (var i = 1; i < unitsOnTargetSquare.Count; i++)
+            {
+                var altDefenseFactor = unitsOnTargetSquare[i].DefenseFactor(attacker, cityOnTargetSquare);
+                if (altDefenseFactor > defenseFactor)
+                {
+                    defender = unitsOnTargetSquare[i];
+                    defenseFactor = altDefenseFactor;
+                }
+            }
 
             // Calculate odds of attacker winning combat (a round of battle)
-            double A = attacker.AttackFactor(defender);
-            double D = defender.DefenseFactor(attacker);
-            double FP_A = attacker.Firepower(true, defender);
-            double FP_D = defender.Firepower(false, attacker);
-            double probAttackerWins;
-            if (D >= A)
+            double a = attacker.AttackFactor(defender);
+
+            //Calculate the firepower of the attacker and defender
+            var fpA = attacker.FirepowerBase;
+            var fpD = defender.FirepowerBase;
+
+            if (attacker.Domain == UnitGAS.Sea && defender.Domain == UnitGAS.Ground)
             {
-                probAttackerWins = (A * 8 - 1) / (2 * D * 8);
-            }
-            else
+                // When a sea unit attacks a land unit, both units have their firepower reduced to 1
+                fpA = 1;
+                fpD = 1;
+            }else if (attacker.Domain != UnitGAS.Sea && defender.Domain == UnitGAS.Sea &&
+                      Map.TileC2(defender.X, defender.Y).Type != TerrainType.Ocean)
             {
-                probAttackerWins = 1 - ((D * 8 + 1) / (2 * A * 8));
+                // Cought in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
+                fpA *= 2;
+                fpD = 1;
+            }else if (attacker.Domain == UnitGAS.Air && defender.Domain == UnitGAS.Air && defender.FuelRange == 0)
+            {
+                // Helicopters attacked by fighters have firepower reduced to 1
+                fpD = 1;
             }
+            
+            var probAttackerWins = defenseFactor >= a ? (a * 8 - 1) / (2 * defenseFactor * 8) : 1 - (defenseFactor * 8 + 1) / (2 * a * 8);
 
             // Battle -> Loop through combat rounds until a unit loses its HP
-            Random random = new Random();
-            double rand;
-            bool attackerWinsRound;
-            List<bool> combatRoundsAttackerWins = new List<bool>();  // Register combat outcomes
-            List<int> attackerHitpoints = new List<int>();  // Register attacker hitpoints in each round
-            List<int> defenderHitpoints = new List<int>();  // Register defender hitpoints in each round
+            var random = new Random();
+            var combatRoundsAttackerWins = new List<bool>();  // Register combat outcomes
+            var attackerHitpoints = new List<int>();  // Register attacker hitpoints in each round
+            var defenderHitpoints = new List<int>();  // Register defender hitpoints in each round
             do
             {
-                rand = random.Next(0, 1000) / 1000.0;   // Generate a random number between 0 and 1 to determine who won
-                attackerWinsRound = probAttackerWins > rand;
+                var rand = random.Next(0, 1000) / 1000.0;
+                var attackerWinsRound = probAttackerWins > rand;
                 attackerHitpoints.Add(attacker.HitPoints);
                 defenderHitpoints.Add(defender.HitPoints);
                 if (attackerWinsRound)
                 {
-                    defender.HitPointsLost += (int)FP_A;
+                    defender.HitPointsLost += fpA;
                     combatRoundsAttackerWins.Add(true);
                 }
                 else 
                 { 
-                    attacker.HitPointsLost += (int)FP_D;
+                    attacker.HitPointsLost += fpD;
                     combatRoundsAttackerWins.Add(false);
                 }
             } while (attacker.HitPoints > 0 && defender.HitPoints > 0);
 
-            bool attackerWinsBattle = defender.HitPoints <= 0;
+            var attackerWinsBattle = defender.HitPoints <= 0;
 
             if (attackerWinsBattle)
             {
+                attacker.MovePointsLost += Rules.Cosmic.MovementMultiplier;
                 // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
                 if (defender.IsInCity || Map.TileC2(defender.X, defender.Y).Fortress || Map.TileC2(defender.X, defender.Y).Airbase)
                 {
@@ -311,7 +332,7 @@ namespace Civ2engine
                 }
                 else
                 {
-                    foreach (IUnit unit in unitsOnTargetSquare)
+                    foreach (var unit in unitsOnTargetSquare)
                     {
                         unit.Dead = true;
                         //_casualties.Add(unit);
