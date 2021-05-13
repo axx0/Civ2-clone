@@ -54,6 +54,7 @@ namespace EtoFormsUI
                                 (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
                         };
                         popupBox.ShowModal(Parent);
+                        
                         switch (popupBox.SelectedIndex)
                         {
                             //New Game

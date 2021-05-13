@@ -24,7 +24,7 @@ namespace EtoFormsUI
         /// <param name="parent">Main window.</param>
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
-        /// <param name="checkboxOptionState">A list of bools representing states of checkbox options.</param>
+        /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
         public Civ2dialog_v2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, List<bool> checkboxOptionState = null)
         {
             _popupBox = popupBox;
@@ -114,7 +114,7 @@ namespace EtoFormsUI
                     AbortButton.Click += (sender, e) =>
                     {
                         foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
-                        
+                        SelectedIndex = int.MinValue;
                         if (_popupBox.Name == "MAINMENU") 
                         { 
                             Application.Instance.Quit(); 

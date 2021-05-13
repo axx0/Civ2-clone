@@ -1,7 +1,11 @@
-﻿using Eto.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
-using System.Diagnostics;
+using Civ2engine.Events;
 
 namespace EtoFormsUI
 {
@@ -53,7 +57,57 @@ namespace EtoFormsUI
 
         private void NewGame(bool customizeWorld)
         {
-            var rulesFiles = Game.LocateRules(Settings.Civ2Path);
+            var rulesFiles = LocateRules(Settings.SearchPaths);
+            var selectedRulesPath = rulesFiles[0].Item2; 
+            if (rulesFiles.Count > 1)
+            {
+                var popupBox = new Civ2dialog_v2(this, new PopupBox{ Title = "Select game version",  Options = rulesFiles.Select(f=>f.Item1).ToList(), Button = new List<string> { "OK", "Cancel"}})
+                {
+                    Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
+                        (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
+                };
+                popupBox.ShowModal(Parent);
+
+                if (popupBox.SelectedIndex == int.MinValue)
+                {
+                    
+                    OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
+                    return;
+                }
+
+                selectedRulesPath = rulesFiles[popupBox.SelectedIndex].Item2;
+            }
+
+            var worldSize = new Civ2dialog_v2(this, popupBoxList.Find(b => b.Name == "SIZEOFMAP"));
+            worldSize.ShowModal(Parent);
+        }
+
+        private IList<Tuple<string, string>> LocateRules(params string[] searchPaths)
+        {
+            var foundRules = new List<Tuple<string, string>>();
+            foreach (var searchPath in searchPaths)
+            {
+                var rules = searchPath + Path.DirectorySeparatorChar + "rules.txt";
+                if (File.Exists(rules))
+                {
+                    var game = searchPath + Path.DirectorySeparatorChar + "game.txt";
+                    var name = "Default";
+                    if (File.Exists(game))
+                    {
+                        foreach (var line in File.ReadLines(game))
+
+                        {
+                            if (!line.StartsWith("@title")) continue;
+                            name = line[7..];
+                            break;
+                        }
+                    }
+
+                    foundRules.Add(Tuple.Create(name, rules));
+                }
+            }
+
+            return foundRules;
         }
     }
 }

@@ -37,6 +37,11 @@ namespace Civ2engine
                     .GetChildren()
                     .Select(c => c.Value)
                     .Where(Directory.Exists).ToArray();
+
+                if (!SearchPaths.Contains(Civ2Path))
+                {
+                    SearchPaths = new[] {Civ2Path}.Concat(SearchPaths).ToArray();
+                }
             }
             catch
             {

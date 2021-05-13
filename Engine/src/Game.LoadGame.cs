@@ -87,10 +87,5 @@ namespace Civ2engine
             _playerCiv = _civs[SAVgameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
         }
-
-        public object LocateRules(string civ2Path)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
