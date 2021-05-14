@@ -19,7 +19,7 @@ namespace EtoFormsUI
         private readonly FormattedText[] _formattedOptionsTexts;
 
         private readonly List<string> _options;
-        private readonly List<string> _centeredText;
+        private readonly List<string> _text;
         private readonly string _popupTitle;
 
         private readonly bool _hasCheckBoxes;
@@ -48,7 +48,7 @@ namespace EtoFormsUI
             _popupTitle = ReplaceString(popupBox.Title, replaceStrings);
             if (popupBox.Text != null)
             {
-                _centeredText = popupBox.Text.Select(t => ReplaceString(t, replaceStrings)).ToList();
+                _text = popupBox.Text.Select(t => ReplaceString(t, replaceStrings)).ToList();
                 _TextStyles = popupBox.LineStyles;
             }
 
@@ -188,7 +188,7 @@ namespace EtoFormsUI
                 if (_options != null)
                 {
                     int yOffset = 0;
-                    if (_centeredText != null) yOffset += _centeredText.Count * 30;
+                    if (_text != null) yOffset += _text.Count * 30;
 
                     // Update checkbox
                     if (_hasCheckBoxes)
@@ -290,28 +290,30 @@ namespace EtoFormsUI
             // Title
             Draw.Text(e.Graphics, _popupTitle, new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(Width / 2, _paddingTop / 2), true, true, Colors.Black, 1, 1);
 
-            int yOffset = 0;
+            var yOffset = 0;
 
             // Centered text
-            int rowCount;
-            if (_centeredText != null)
+           
+            if (_text != null)
             {
-                for (rowCount = 0; rowCount < _centeredText.Count; 
-                    rowCount++)
+
+                for (var i = 0; i < _text.Count; i++)
                 {
-                    Draw.Text(e.Graphics, _centeredText[rowCount], new Font("Times new roman", 18),
-                        Color.FromArgb(51, 51, 51), new Point(Width / 2, _paddingTop + 5 + yOffset),
-                        _TextStyles[rowCount] == TextStyles.Centered, false,
+                    var centered = _TextStyles[i] == TextStyles.Centered;
+                    Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
+                        Color.FromArgb(51, 51, 51), 
+                        new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
+                        centered, false,
                         Color.FromArgb(191, 191, 191), 1, 1);
 
-                    yOffset += 30;;
+                    yOffset += 30;
                 }
             }
 
             // Options (if they exist) <- either checkbox or radio btn.
             if (_options != null)
             {
-                rowCount = 0;
+                var rowCount = 0;
                 foreach (var option in _options)
                 {
                     // Draw checkboxes
