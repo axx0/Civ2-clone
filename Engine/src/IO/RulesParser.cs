@@ -312,8 +312,6 @@ namespace Civ2engine
             }
         }
         
-
-
         int individualMoveMultiplier(int multiplier, int commonMultiplier)
         {
             return multiplier > 0 ? commonMultiplier / multiplier : 0;

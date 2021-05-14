@@ -61,7 +61,7 @@ namespace EtoFormsUI
             var selectedRulesPath = rulesFiles[0].Item2; 
             if (rulesFiles.Count > 1)
             {
-                var popupBox = new Civ2dialog_v2(this,
+                var popupBox = new Civ2dialogV2(this,
                     new PopupBox
                     {
                         Title = "Select game version", Options = rulesFiles.Select(f => f.Item1).ToList(),
@@ -78,7 +78,7 @@ namespace EtoFormsUI
                 selectedRulesPath = rulesFiles[popupBox.SelectedIndex].Item2;
             }
 
-            var worldSize = new Civ2dialog_v2(this, popupBoxList.Find(b => b.Name == "SIZEOFMAP"));
+            var worldSize = new Civ2dialogV2(this, popupBoxList.Find(b => b.Name == "SIZEOFMAP"));
             
             worldSize.ShowModal(Parent);                
             if (worldSize.SelectedIndex == int.MinValue)
@@ -88,7 +88,7 @@ namespace EtoFormsUI
             }
             if (worldSize.SelectedButton == "Custom")
             {
-                var customSize = new Civ2dialog_v2(this, popupBoxList.Find(b => b.Name == "CUSTOMSIZE"));
+                var customSize = new Civ2dialogV2(this, popupBoxList.Find(b => b.Name == "CUSTOMSIZE"));
                 
                 customSize.ShowModal();
             }
