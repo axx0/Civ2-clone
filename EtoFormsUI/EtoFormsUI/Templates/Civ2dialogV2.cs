@@ -27,6 +27,8 @@ namespace EtoFormsUI
         private readonly bool _hasCheckBoxes;
         private readonly List<TextStyles> _TextStyles;
 
+        private int _textBoxAlignment;
+
         /// <summary>
         /// Show a popup box (dialog).
         /// </summary>
@@ -59,7 +61,7 @@ namespace EtoFormsUI
             // Determine size of inner panel
             var optionRows = popupBox.Options?.Count ?? 0;
             var textRows = popupBox.Text?.Count ?? 0;
-            var innerSize = new Size(2 * 2 + MaxWidth(popupBox), 2 * 2 + optionRows * 32 + textRows * 30);
+            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + optionRows * 32 + textRows * 30);
             Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + _paddingTop + _paddingBtm);
             
             // Center the dialog on screen by default
@@ -184,42 +186,56 @@ namespace EtoFormsUI
             }
 
             // Update checkbox/choose radiobtn. with mouse click
-            surface.MouseDown += (sender, e) =>
+            surface.MouseDown += (_, e) =>
             {
                 // Select radio button if clicked
-                if (_options != null)
-                {
-                    int yOffset = 0;
-                    if (_text != null) yOffset += _text.Count * 30;
+                if (_options == null) return;
 
-                    // Update checkbox
-                    if (_hasCheckBoxes)
+                var yOffset = _text?.Count * 30 ?? 0;
+
+                // Update checkbox
+                if (_hasCheckBoxes)
+                {
+                    for (var row = 0; row < _options.Count; row++)
                     {
-                        for (int row = 0; row < _options.Count; row++)
+                        // Update if checkbox is clicked
+                        if (e.Location.X > 14 && e.Location.X < 47 + (int)_formattedOptionsTexts[row].Measure().Width && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
                         {
-                            // Update if checkbox is clicked
-                            if (e.Location.X > 14 && e.Location.X < 47 + (int)_formattedOptionsTexts[row].Measure().Width && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
-                            {
-                                _checkBox[row].Checked = !_checkBox[row].Checked;
-                                _checkBox[row].Focus();
-                                Invalidate();
-                            }
+                            _checkBox[row].Checked = !_checkBox[row].Checked;
+                            _checkBox[row].Focus();
+                            Invalidate();
                         }
                     }
-                    // Update radio btn
-                    else
+                }
+                // Update radio btn
+                else
+                {
+                    for (var row = 0; row < _options.Count; row++)
                     {
-                        for (int row = 0; row < _options.Count; row++)
+                        if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
                         {
-                            if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
-                            {
-                                _radioBtnList.SelectedIndex = row;
-                                Invalidate();
-                            }
+                            _radioBtnList.SelectedIndex = row;
+                            Invalidate();
                         }
                     }
                 }
             };
+            
+            
+            if (textBoxes != null)
+            {
+                foreach (var textBox in textBoxes)
+                {
+                    TextValues[textBox.Name] = textBox.InitialValue;
+                    var box = new TextBox
+                    {
+                        Text = textBox.InitialValue,
+                        Width = innerSize.Width - 20 - _textBoxAlignment,
+                    };
+                    box.TextChanged += (_, _) => TextValues[textBox.Name] = box.Text;  
+                    layout.Add(box, _textBoxAlignment + 10, 40 + 32 * textBox.index);
+                }
+            }
 
             Content = layout;
         }
@@ -348,24 +364,54 @@ namespace EtoFormsUI
         /// <summary>
         /// Determine max width of a popup box.
         /// </summary>
-        private int MaxWidth(PopupBox popupBox)
-        {
+        private int MaxWidth(PopupBox popupBox, List<TextBoxDefinition> textBoxDefinitions)
+        { 
             // 1) Input from Game.txt
-            int width1 = (int)(popupBox.Width * 1.5);
+            int width = (int)(popupBox.Width * 1.5);
 
             // 2) Max length of strings
             // First title
             var titleText = new FormattedText { Text = popupBox.Title, Font = new Font("Times new roman", 17, FontStyle.Bold) };
-            int width2 = (int)titleText.Measure().Width;
-            // Then options strings
-            foreach (var text in popupBox.Options ?? Enumerable.Empty<string>())
+            int titleWidth = (int)titleText.Measure().Width;
+            if (titleWidth > width)
             {
-                var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
+                width = titleWidth;
+            }
+            
+            // Then options strings
+            foreach (var optionsText in popupBox.Options ?? Enumerable.Empty<string>())
+            {
+                var textWidthCandidate = (int)(new FormattedText { Text = optionsText, Font = new Font("Times new roman", 18) }.Measure().Width);
                 var widthCandidate = textWidthCandidate + 32;   // Count in width of radio button
-                if (widthCandidate > width2) width2 = widthCandidate;
+                if (widthCandidate > width) width = widthCandidate;
             }
 
-            return Math.Max(width1, width2);
+            int minTextBox = 0;
+            
+            // Then other text
+            for (int i = 0; i < _text?.Count  ; i++)
+            {
+                var box = textBoxDefinitions?.FirstOrDefault(b => b.index == i);
+                var text = _text[i];
+                if (box != null)
+                {
+                    var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
+                    if (textWidthCandidate > minTextBox)
+                    {
+                        minTextBox = textWidthCandidate;
+                    }
+                    var widthCandidate = textWidthCandidate + 50;   // Count in width of text box
+                    if (widthCandidate > width) width = widthCandidate;
+                }else if (_TextStyles[i] == TextStyles.Centered)
+                {
+                    var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
+                    if (textWidthCandidate > width) width = textWidthCandidate;              
+                }
+            }
+
+            _textBoxAlignment = minTextBox;
+
+            return width;
         }
 
 
