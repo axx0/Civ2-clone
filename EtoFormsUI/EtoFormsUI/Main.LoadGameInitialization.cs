@@ -78,19 +78,43 @@ namespace EtoFormsUI
                 selectedRulesPath = rulesFiles[popupBox.SelectedIndex].Item2;
             }
 
-            var worldSize = new Civ2dialogV2(this, popupBoxList.Find(b => b.Name == "SIZEOFMAP"));
+            var worldSizeDialog = new Civ2dialogV2(this, popupBoxList.Find(b => b.Name == "SIZEOFMAP"));
             
-            worldSize.ShowModal(Parent);                
-            if (worldSize.SelectedIndex == int.MinValue)
+            worldSizeDialog.ShowModal(Parent);                
+            if (worldSizeDialog.SelectedIndex == int.MinValue)
             {
                 OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
                 return;
             }
-            if (worldSize.SelectedButton == "Custom")
+
+            int[] worldSize = worldSizeDialog.SelectedIndex switch
             {
-                var customSize = new Civ2dialogV2(this, popupBoxList.Find(b => b.Name == "CUSTOMSIZE"));
+                1 => new[] {50, 80},
+                2 => new[] {75, 120},
+                _ => new[] {40, 50}
+            };
+            if (worldSizeDialog.SelectedButton == "Custom")
+            {
+                var customSize = new Civ2dialogV2(this, popupBoxList.Find(b => b.Name == "CUSTOMSIZE"), textBoxes: new List<TextBoxDefinition>
+                {
+                    new TextBoxDefinition
+                    {
+                        index = 3, Name = "Width", Numeric = true, InitialValue = worldSize[0].ToString()
+                    },  new TextBoxDefinition
+                    {
+                    index = 4, Name = "Height", Numeric = true, InitialValue = worldSize[1].ToString()
+                    }
+                } );
                 
                 customSize.ShowModal();
+                if (int.TryParse(customSize.TextValues["Width"], out var width))
+                {
+                    worldSize[0] = width;
+                }
+                if (int.TryParse(customSize.TextValues["Height"], out var height))
+                {
+                    worldSize[1] = height;
+                }
             }
         }
 

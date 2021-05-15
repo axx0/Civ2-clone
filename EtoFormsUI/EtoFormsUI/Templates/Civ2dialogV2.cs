@@ -12,6 +12,8 @@ namespace EtoFormsUI
         public int SelectedIndex;
         public string SelectedButton;
         public List<bool> CheckboxReturnStates;
+        public IDictionary<string, string> TextValues = new Dictionary<string, string>();
+
         
         private readonly int _paddingTop, _paddingBtm;
         private readonly RadioButtonList _radioBtnList;
@@ -32,7 +34,7 @@ namespace EtoFormsUI
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, List<bool> checkboxOptionState = null)
+        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, List<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null)
         {
             if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
 
@@ -221,6 +223,7 @@ namespace EtoFormsUI
 
             Content = layout;
         }
+
 
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
