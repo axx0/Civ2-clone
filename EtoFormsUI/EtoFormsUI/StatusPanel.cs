@@ -155,6 +155,15 @@ namespace EtoFormsUI
                     e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
                 }
             }
+
+            // AI turn civ indicator
+            if (Game.GetActiveCiv != Game.GetPlayerCiv) 
+                e.Graphics.FillRectangle(CivColors.Light[Game.GetActiveCiv.Id], new Rectangle(unitPanel.Width - 8, unitPanel.Height - 6, 8, 6));
+
+            // Don't update the panel if it's enemy turn
+            if (Game.GetActiveCiv != Game.GetPlayerCiv) 
+                return;
+
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
             var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
@@ -294,9 +303,6 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, "(Press ENTER)", _font2, _EoTcolor, new Point(10, unitPanel.Height - 33), false, false, Colors.Black, 1, 0);
                 eotWhite = !eotWhite;
             }
-
-            // AI turn civ indicator
-            if (Game.GetActiveCiv != Game.GetPlayerCiv) e.Graphics.FillRectangle(CivColors.Light[Game.GetActiveCiv.Id], new Rectangle(unitPanel.Width - 8, unitPanel.Height - 6, 8, 6));
         }
 
         private void Panel_Click(object sender, MouseEventArgs e)

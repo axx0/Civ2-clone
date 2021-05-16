@@ -46,7 +46,7 @@ namespace ExtensionMethods
                 case OrderType.MoveS: deltaXY = new int[] { 0, 2 }; break;
                 case OrderType.MoveSE: deltaXY = new int[] { 1, 1 }; break;
                 case OrderType.MoveE: deltaXY = new int[] { 2, 0 }; break;
-                case OrderType.MoveNE: deltaXY = new int[] { 1, 1 }; break;
+                case OrderType.MoveNE: deltaXY = new int[] { 1, -1 }; break;
                 case OrderType.MoveN: deltaXY = new int[] { 0, -2 }; break;
                 case OrderType.MoveNW: deltaXY = new int[] { -1, -1 }; break;
                 case OrderType.MoveW: deltaXY = new int[] { -2, 0 }; break;
