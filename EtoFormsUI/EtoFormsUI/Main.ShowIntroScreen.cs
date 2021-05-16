@@ -6,7 +6,6 @@ namespace EtoFormsUI
     public partial class Main : Form
     {
         private PicturePanel sinaiPanel;
-        private ChoiceMenuPanel choiceMenu;
 
         // Load intro screen
         public void ShowIntroScreen()
