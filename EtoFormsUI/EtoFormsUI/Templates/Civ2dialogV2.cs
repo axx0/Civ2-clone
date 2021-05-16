@@ -232,7 +232,39 @@ namespace EtoFormsUI
                         Text = textBox.InitialValue,
                         Width = innerSize.Width - 20 - _textBoxAlignment,
                     };
-                    box.TextChanged += (_, _) => TextValues[textBox.Name] = box.Text;  
+                    if (textBox.MinValue.HasValue)
+                    {
+                        box.TextChanged += (_, _) =>
+                        {
+                            var cleaned = new string(box.Text.Where(char.IsNumber).ToArray());
+                            if (cleaned.Length == 0)
+                            {
+                                box.Text = textBox.InitialValue;
+                            }else if (!int.TryParse(cleaned, out var result) || !(result >= textBox.MinValue))
+                            {
+                                box.Text = textBox.MinValue.ToString();
+                            }
+                            else if(box.Text.Length > cleaned.Length)
+                            {
+                                box.Text = cleaned;
+                            }
+
+                            TextValues[textBox.Name] = box.Text;
+                        };
+                    }
+                    else
+                    {
+                        box.TextChanged += (_, _) =>
+                        {
+                            if (box.Text.Length < 0 && textBox.InitialValue.Length > 0)
+                            {
+                                box.Text = textBox.InitialValue;
+                            }
+
+                            TextValues[textBox.Name] = box.Text;
+                        };
+                    }
+
                     layout.Add(box, _textBoxAlignment + 10, 40 + 32 * textBox.index);
                 }
             }

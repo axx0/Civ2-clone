@@ -12,11 +12,11 @@ namespace EtoFormsUI
         /// </summary>
         public string Name { get; set; }
         
-        /// <summary>
-        /// Force the box to have numeric values
-        /// </summary>
-        public bool Numeric { get; set; }
-
         public string InitialValue { get; set; }
+
+        /// <summary>
+        /// Minimum numeric value
+        /// </summary>
+        public int? MinValue { get; set; }
     }
 }

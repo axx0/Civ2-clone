@@ -99,10 +99,10 @@ namespace EtoFormsUI
                 {
                     new TextBoxDefinition
                     {
-                        index = 3, Name = "Width", Numeric = true, InitialValue = worldSize[0].ToString()
+                        index = 3, Name = "Width", MinValue = 20, InitialValue = worldSize[0].ToString()
                     },  new TextBoxDefinition
                     {
-                    index = 4, Name = "Height", Numeric = true, InitialValue = worldSize[1].ToString()
+                    index = 4, Name = "Height", MinValue = 20, InitialValue = worldSize[1].ToString()
                     }
                 } );
                 
@@ -118,7 +118,7 @@ namespace EtoFormsUI
             }
         }
 
-        private IList<Tuple<string, string>> LocateRules(params string[] searchPaths)
+        private static IList<Tuple<string, string>> LocateRules(params string[] searchPaths)
         {
             var foundRules = new List<Tuple<string, string>>();
             foreach (var searchPath in searchPaths)
