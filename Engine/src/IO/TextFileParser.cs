@@ -6,7 +6,7 @@ namespace Civ2engine
 {
     public static class TextFileParser
     {
-        public static void ParseFile(string filePath, IFileHandler handler)
+        public static void ParseFile(string filePath, IFileHandler handler, bool allowBlanks = false)
         {
             if(string.IsNullOrWhiteSpace(filePath)) return;
             
@@ -20,7 +20,26 @@ namespace Civ2engine
             {
                 if (reading)
                 {
-                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith(';'))
+                    if (allowBlanks && string.IsNullOrWhiteSpace(line))
+                    {
+                        line = file.ReadLine();
+                        if (string.IsNullOrWhiteSpace(line) || line.StartsWith(';'))
+                        {
+                            handler.ProcessSection(section, contents);
+                            reading = false;
+                        }
+                        else if (line.StartsWith('@'))
+                        {
+                            handler.ProcessSection(section, contents);
+                            section = line[1..];
+                            contents = new List<string>();
+                        }
+                        else
+                        {
+                            contents.Add("");
+                            contents.Add(line);
+                        }
+                    }else if (string.IsNullOrWhiteSpace(line) || line.StartsWith(';'))
                     {
                         handler.ProcessSection(section, contents);
                         reading = false;

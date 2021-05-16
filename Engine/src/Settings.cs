@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 
@@ -10,6 +11,8 @@ namespace Civ2engine
     {
         // Game settings from App.config
         public static string Civ2Path { get; private set; }
+        
+        public static string[] SearchPaths { get; private set; }
 
         public static void LoadConfigSettings()
         {
@@ -28,6 +31,16 @@ namespace Civ2engine
                 {
                     Debug.WriteLine("Civ2 directory doesn't exist!");
                     Environment.Exit(ERROR_INVALID_NAME);
+                }
+
+                SearchPaths = config.GetSection(nameof(SearchPaths))
+                    .GetChildren()
+                    .Select(c => c.Value)
+                    .Where(Directory.Exists).ToArray();
+
+                if (!SearchPaths.Contains(Civ2Path))
+                {
+                    SearchPaths = new[] {Civ2Path}.Concat(SearchPaths).ToArray();
                 }
             }
             catch

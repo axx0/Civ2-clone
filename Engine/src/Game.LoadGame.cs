@@ -9,7 +9,7 @@ namespace Civ2engine
         {
             // Read SAV file & RULES.txt
             var rules = RulesParser.ParseRules(savDirectoryPath);
-            GameData gameData = Read.SAV_and_RULES(savDirectoryPath, SAVname);
+            GameData gameData = Read.ReadSAVFile(savDirectoryPath, SAVname);
 
             // Make an instance of a new game & map
             _instance = new Game(rules, gameData);

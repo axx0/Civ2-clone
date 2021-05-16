@@ -10,9 +10,6 @@ namespace Civ2engine
         // Options
         public bool[] Options { get; set; }
 
-        // Rules
-        public List<string[]> Rules { get; set; }
-
         // General game data
         public int TurnNumber { get; set; }
         public int TurnNumberForGameYear { get; set; }

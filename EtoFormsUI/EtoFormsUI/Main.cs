@@ -193,7 +193,7 @@ namespace EtoFormsUI
             Images.LoadGraphicsAssetsAtIntroScreen();
 
             // Load popup boxes info (Game.txt)
-            popupBoxList = Read.PopupBoxes(Settings.Civ2Path);
+            popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
         }
     }
 }

@@ -12,35 +12,101 @@ namespace EtoFormsUI
     {
         private string savDirectory, savName;
 
+        private void LocateStartingFiles(string title, FileFilter filter, Action<string, string> initializer,
+            Action start)
+        {
+            using var ofd = new OpenFileDialog
+            {
+                Directory = new Uri(Settings.Civ2Path),
+                Title = title,
+                Filters = { filter }
+            };
+
+            var result = ofd.ShowDialog(this.ParentWindow);
+            sinaiPanel.Dispose();
+            sinaiPanel = null;
+            if (result == DialogResult.Ok)
+            {
+                // Get SAV name & directory name from result
+                savDirectory = Path.GetDirectoryName(ofd.FileName);
+                savName = Path.GetFileName(ofd.FileName);
+                initializer(savDirectory, savName);
+                Sounds.Stop();
+                Sounds.PlaySound("MENUOK.WAV");
+
+                start();
+            }
+            else
+            {
+                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
+            }
+        }
+
         private void PopupboxEvent(object sender, PopupboxEventArgs e)
         {
             switch (e.BoxName)
             {
                 case "MAINMENU":
                     {
-                        var popupbox = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == e.BoxName));
-                        popupbox.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.745), (int)(Screen.PrimaryScreen.Bounds.Height * 0.570));
-                        popupbox.ShowModal(Parent);
-                        // Load game
-                        if (popupbox.SelectedIndex == 4)
+                        var popupBox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName))
                         {
-                            using var ofd = new OpenFileDialog
+                            Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
+                                (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
+                        };
+                        popupBox.ShowModal(Parent);
+                        
+                        switch (popupBox.SelectedIndex)
+                        {
+                            //New Game
+                            case 0:
                             {
-                                Directory = new Uri(Settings.Civ2Path),
-                                Title = "Select Game To Load",
-                                Filters = { new FileFilter("Save Files (*.sav)", ".SAV") }
-                            };
-
-                            if (ofd.ShowDialog(this.ParentWindow) == DialogResult.Ok)
+                                NewGame(false);
+                                break;
+                            }
+                            // Start premade
+                            case 1:
                             {
-                                // Get SAV name & directory name from result
-                                savDirectory = Path.GetDirectoryName(ofd.FileName);
-                                savName = Path.GetFileName(ofd.FileName);
-                                LoadGameInitialization(savDirectory, savName);
-                                Sounds.Stop();
-                                Sounds.PlaySound("MENUOK.WAV");
+                                LocateStartingFiles("Select Map To Load",
+                                    new FileFilter("Save Files (*.mp)", ".mp"), LoadScenarioInit,
+                                    () => { });
+                                break;
+                            }
 
-                                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("LOADOK", new List<string> { Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName, Game.GetActiveCiv.TribeName, Game.GetGameYearString, Game.DifficultyLevel.ToString() }));
+                            //Customise World
+                            case 2:
+                            {
+                                NewGame(true);
+                                break;
+                            }
+                            // Load scenario
+                            case 3:
+                            {
+                                LocateStartingFiles("Select Scenario To Load",
+                                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit,
+                                    () =>
+                                    {
+
+                                    });
+                            
+
+                                break;
+                            }
+                            // Load game
+                            case 4:
+                            {
+                                LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
+                                    LoadGameInitialization, () =>
+                                        OnPopupboxEvent?.Invoke(null,
+                                            new PopupboxEventArgs("LOADOK",
+                                                new List<string>
+                                                {
+                                                    Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
+                                                    Game.GetActiveCiv.TribeName, Game.GetGameYearString,
+                                                    Game.DifficultyLevel.ToString()
+                                                }))
+                                );
+
+                                break;
                             }
                         }
                         break;
@@ -50,7 +116,7 @@ namespace EtoFormsUI
                         var checkboxOptions = new List<bool> { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn,
                             Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp,
                             Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
-                        var popupbox = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings, checkboxOptions);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings, checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.SoundEffects = popupbox.CheckboxReturnStates[0];
                         Game.Options.Music = popupbox.CheckboxReturnStates[1];
@@ -69,7 +135,7 @@ namespace EtoFormsUI
                     {
                         var checkboxOptions = new List<bool> { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds, 
                             Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
-                        var popupbox = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings, checkboxOptions);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings, checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.ThroneRoomGraphics = popupbox.CheckboxReturnStates[0];
                         Game.Options.DiplomacyScreenGraphics = popupbox.CheckboxReturnStates[1];
@@ -85,7 +151,7 @@ namespace EtoFormsUI
                             Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored,
                             Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs,
                             Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction };
-                        var popupbox = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings, checkboxOptions);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings, checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.WarnWhenCityGrowthHalted = popupbox.CheckboxReturnStates[0];
                         Game.Options.ShowCityImprovementsBuilt = popupbox.CheckboxReturnStates[1];
@@ -102,7 +168,7 @@ namespace EtoFormsUI
                     }
                 case "LOADOK":
                     {
-                        var popupbox = new Civ2dialog_v2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName), e.ReplaceStrings);
                         popupbox.ShowModal(Parent);
                         StartGame();
                         Sounds.PlaySound("MENUOK.WAV");
