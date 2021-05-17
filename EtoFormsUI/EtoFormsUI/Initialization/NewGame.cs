@@ -83,11 +83,11 @@ namespace EtoFormsUI.Initialization
                 {
                     new()
                     {
-                        index = 3, Name = "Width", MinValue = 20, InitialValue = config.WorldSize.ToString()
+                        index = 3, Name = "Width", MinValue = 20, InitialValue = config.WorldSize[0].ToString()
                     },
                     new()
                     {
-                        index = 4, Name = "Height", MinValue = 20, InitialValue = config.WorldSize.ToString()
+                        index = 4, Name = "Height", MinValue = 20, InitialValue = config.WorldSize[1].ToString()
                     }
                 });
 
@@ -160,16 +160,18 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectCustomizeRules(Main mainForm, GameInitializationConfig config)
         {
-            var rulesDialog = new Civ2dialogV2(mainForm, config.PopUps["RULES"]);
-            rulesDialog.ShowModal(mainForm);
-
-            if (rulesDialog.SelectedIndex == int.MinValue)
+            while (true)
             {
-                mainForm.MainMenu();
-                return;
-            }
+                var rulesDialog = new Civ2dialogV2(mainForm, config.PopUps["RULES"]);
+                rulesDialog.ShowModal(mainForm);
 
-            var customizeRules = rulesDialog.SelectedIndex == 1;
+                if (rulesDialog.SelectedIndex == int.MinValue)
+                {
+                    mainForm.MainMenu();
+                    return;
+                }
+
+                var customizeRules = rulesDialog.SelectedIndex == 1;
 
                 config.SimplifiedCombat = false;
                 config.FlatWorld = false;
@@ -179,8 +181,7 @@ namespace EtoFormsUI.Initialization
                 config.DontRestartEliminatedPlayers = false;
                 if (customizeRules)
                 {
-                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"],
-                        checkboxOptionState: new[] {false, false, false, false, false, false});
+                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] {false, false, false, false, false, false});
                     customRulesDialog.ShowModal(mainForm);
 
                     if (customRulesDialog.SelectedIndex != int.MinValue)
@@ -192,14 +193,12 @@ namespace EtoFormsUI.Initialization
                         config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
                         if (customRulesDialog.CheckboxReturnStates[3])
                         {
-                            var startYearDialog = new Civ2dialogV2(mainForm, config.PopUps["ACCELERATED"],
-                                new List<string> {"4000", "3000", "2000"});
+                            var startYearDialog = new Civ2dialogV2(mainForm, config.PopUps["ACCELERATED"], new List<string> {"4000", "3000", "2000"});
                             startYearDialog.ShowModal(mainForm);
 
                             if (startYearDialog.SelectedIndex == int.MinValue)
                             {
-                                SelectCustomizeRules(mainForm, config);
-                                return;
+                                continue;
                             }
 
                             config.AcceleratedStartup = startYearDialog.SelectedIndex;
@@ -209,6 +208,8 @@ namespace EtoFormsUI.Initialization
 
 
                 SelectGender(mainForm, config);
+                break;
+            }
         }
 
         private static void SelectGender(Main mainForm, GameInitializationConfig config)
