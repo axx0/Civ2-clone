@@ -28,6 +28,8 @@ namespace EtoFormsUI
         private readonly List<TextStyles> _TextStyles;
 
         private int _textBoxAlignment;
+        private readonly int _optionsColumns;
+        private readonly int _optionRows;
 
         /// <summary>
         /// Show a popup box (dialog).
@@ -36,8 +38,9 @@ namespace EtoFormsUI
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null)
+        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1)
         {
+            _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
             if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
 
             foreach (var item in parent.Menu.Items) item.Enabled = false;
@@ -59,9 +62,9 @@ namespace EtoFormsUI
             _hasCheckBoxes = popupBox.Checkbox;
 
             // Determine size of inner panel
-            var optionRows = popupBox.Options?.Count ?? 0;
+            _optionRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
             var textRows = popupBox.Text?.Count ?? 0;
-            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + optionRows * 32 + textRows * 30);
+            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + _optionRows * 32 + textRows * 30);
             Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + _paddingTop + _paddingBtm);
             
             // Center the dialog on screen by default
@@ -74,15 +77,12 @@ namespace EtoFormsUI
             {
                 _options = popupBox.Options.Select(o=>ReplaceString(o, replaceStrings)).ToList();
                 // Texts
-                _formattedOptionsTexts = new FormattedText[optionRows];
-                for (var i = 0; i < optionRows; i++)
-                {
-                    _formattedOptionsTexts[i] = new FormattedText()
+                _formattedOptionsTexts = _options.Select(option => new FormattedText
                     {
                         Font = new Font("Times New Roman", 18),
-                        ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)), Text = _options[i]
-                    };
-                }
+                        ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)), Text = option
+                    }
+                ).ToArray();
 
                 // Checkboxes
                 if (popupBox.Checkbox)
@@ -176,7 +176,7 @@ namespace EtoFormsUI
                     {
                         buttons[i].Click += (sender, args) =>
                         {
-                            foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+                            foreach (var item in parent.Menu.Items) item.Enabled = true;
                             SelectedButton = text;
                             Close();
                         };
@@ -214,7 +214,16 @@ namespace EtoFormsUI
                     {
                         if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
                         {
-                            _radioBtnList.SelectedIndex = row;
+                            if (_optionsColumns > 1)
+                            {
+                                var which = Width / _optionsColumns;
+                                _radioBtnList.SelectedIndex = row + ((int)e.Location.X / which) * _optionRows;
+                            }
+                            else
+                            {
+                                _radioBtnList.SelectedIndex = row;
+                            }
+
                             Invalidate();
                         }
                     }
@@ -270,6 +279,17 @@ namespace EtoFormsUI
             }
 
             Content = layout;
+        }
+
+        private static int GetOptionsRows(int? optionsCount, int optionsCols)
+        {
+            if (optionsCount is null or 0) return 0;
+            if (optionsCols == 1) return optionsCount.Value;
+            if (optionsCount.Value % optionsCols == 0)
+            {
+                return optionsCount.Value / optionsCols;
+            }
+            return optionsCount.Value / optionsCols + 1;
         }
 
 
@@ -347,7 +367,6 @@ namespace EtoFormsUI
            
             if (_text != null)
             {
-
                 for (var i = 0; i < _text.Count; i++)
                 {
                     var centered = _TextStyles[i] == TextStyles.Centered;
@@ -364,31 +383,49 @@ namespace EtoFormsUI
             // Options (if they exist) <- either checkbox or radio btn.
             if (_options != null)
             {
-                var rowCount = 0;
-                foreach (var option in _options)
+                var initialY = yOffset;
+                var widthOffset = 21;
+                var column = 1;
+                for (var rowCount = 0; rowCount < _options.Count; rowCount++)
                 {
                     // Draw checkboxes
                     if (_hasCheckBoxes)
                     {
-                        Draw.Checkbox(e.Graphics, _checkBox[rowCount].Checked == true, new Point(21, _paddingTop + 9 + yOffset));
+                        Draw.Checkbox(e.Graphics, _checkBox[rowCount].Checked == true,
+                            new Point(widthOffset, _paddingTop + 9 + yOffset));
 
-                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(47, _paddingTop + 5 + yOffset));
+                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
                         using var pen = new Pen(Color.FromArgb(64, 64, 64));
-                        if (_checkBox[rowCount].HasFocus) e.Graphics.DrawRectangle(pen, new Rectangle(45, _paddingTop + 5 + yOffset, (int)_formattedOptionsTexts[rowCount].Measure().Width, 26));
+                        if (_checkBox[rowCount].HasFocus)
+                            e.Graphics.DrawRectangle(pen,
+                                new Rectangle(45, _paddingTop + 5 + yOffset,
+                                    (int) _formattedOptionsTexts[rowCount].Measure().Width, 26));
                     }
                     // Draw radio buttons
                     else
                     {
-                        Draw.RadioBtn(e.Graphics, _radioBtnList.SelectedIndex == rowCount, new Point(21, _paddingTop + 9 + yOffset));
+                        Draw.RadioBtn(e.Graphics, _radioBtnList.SelectedIndex == rowCount,
+                            new Point(widthOffset, _paddingTop + 9 + yOffset));
 
-                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(47, _paddingTop + 5 + yOffset));
+                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
                         using var pen = new Pen(Color.FromArgb(64, 64, 64));
-                        if (_radioBtnList.SelectedIndex == rowCount) e.Graphics.DrawRectangle(pen, new Rectangle(45, _paddingTop + 5 + yOffset, Width - 45 - 14, 26));
+                        if (_radioBtnList.SelectedIndex == rowCount)
+                            e.Graphics.DrawRectangle(pen,
+                                new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset, column == _optionsColumns ? Width / _optionsColumns - 45 -14 : Width / _optionsColumns - 25, 26));
                     }
-                    yOffset += 32;
-                    rowCount++;
+
+                    if (rowCount % _optionRows == _optionRows -1)
+                    {
+                        widthOffset += Width / _optionsColumns;
+                        yOffset = initialY;
+                        column++;
+                    }
+                    else
+                    {
+                        yOffset += 32;
+                    }
                 }
             }
         }

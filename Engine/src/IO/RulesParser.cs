@@ -36,6 +36,10 @@ namespace Civ2engine
             _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
         }
 
+        public static Rules ParseRules(Ruleset configRuleSet)
+        {
+            return ParseRules(configRuleSet.FolderPath);
+        }
         public static Rules ParseRules(string path)
         {
             var rules = new Rules();
@@ -395,6 +399,8 @@ namespace Civ2engine
                 Trade = int.Parse(line[5]),
             };
         }
+
+
     }
 }
 

@@ -22,5 +22,6 @@ namespace EtoFormsUI.Initialization
         public bool Bloodlust { get; set; }
         public bool DontRestartEliminatedPlayers { get; set; }
         public int Gender { get; set; }
+        public Rules Rules { get; set; }
     }
 }

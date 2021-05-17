@@ -228,7 +228,11 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectTribe(Main mainForm, GameInitializationConfig config)
         {
-            throw new NotImplementedException();
+            config.Rules = RulesParser.ParseRules(config.RuleSet);
+            var popup = config.PopUps["TRIBE"];
+            popup.Options = config.Rules.Leaders.Select(l => l.Plural).ToList();
+            var tribeDialog = new Civ2dialogV2(mainForm, popup, optionsCols: 3);
+            tribeDialog.ShowModal(mainForm);
         }
     }
 }
