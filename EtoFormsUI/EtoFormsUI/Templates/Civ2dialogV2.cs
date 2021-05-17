@@ -16,7 +16,6 @@ namespace EtoFormsUI
 
         
         private readonly int _paddingTop, _paddingBtm;
-        private readonly RadioButtonList _radioBtnList;
         private readonly CheckBox[] _checkBox;
         private readonly FormattedText[] _formattedOptionsTexts;
 
@@ -25,7 +24,7 @@ namespace EtoFormsUI
         private readonly string _popupTitle;
 
         private readonly bool _hasCheckBoxes;
-        private readonly List<TextStyles> _TextStyles;
+        private readonly List<TextStyles> _textStyles;
 
         private int _textBoxAlignment;
         private readonly int _optionsColumns;
@@ -56,7 +55,7 @@ namespace EtoFormsUI
             if (popupBox.Text != null)
             {
                 _text = popupBox.Text.Select(t => ReplaceString(t, replaceStrings)).ToList();
-                _TextStyles = popupBox.LineStyles;
+                _textStyles = popupBox.LineStyles;
             }
 
             _hasCheckBoxes = popupBox.Checkbox;
@@ -102,14 +101,6 @@ namespace EtoFormsUI
                         _checkBox[row].GotFocus += (_, _) => Invalidate();
                         layout.Add(_checkBox[row], 11 + 10, 40 + 32 * row);
                     }
-                }
-                // Radio buttons.
-                else
-                {
-                    _radioBtnList = new RadioButtonList() { DataStore = _options, Orientation = Orientation.Vertical };
-                    _radioBtnList.SelectedIndexChanged += (_, _) => Invalidate();
-                    _radioBtnList.GotFocus += (_, _) => Invalidate();
-                    layout.Add(_radioBtnList, 11 + 10, 40);
                 }
             }
 
@@ -163,10 +154,6 @@ namespace EtoFormsUI
                                     CheckboxReturnStates[row] = _checkBox[row].Checked == true;
                                 }
                             }
-                            else if (_radioBtnList != null) 
-                            {
-                                SelectedIndex = _radioBtnList.SelectedIndex;
-                            }
 
                             Close(); 
                         };
@@ -210,20 +197,22 @@ namespace EtoFormsUI
                 // Update radio btn
                 else
                 {
-                    for (var row = 0; row < _options.Count; row++)
+                    for (var row = 0; row < _optionRows; row++)
                     {
                         if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
                         {
                             if (_optionsColumns > 1)
                             {
                                 var which = Width / _optionsColumns;
-                                _radioBtnList.SelectedIndex = row + ((int)e.Location.X / which) * _optionRows;
+                                SelectedIndex = row + ((int)e.Location.X / which) * _optionRows;
                             }
                             else
                             {
-                                _radioBtnList.SelectedIndex = row;
+                                SelectedIndex = row;
                             }
 
+                            if (SelectedIndex < 0) SelectedIndex = 0;
+                            else if (SelectedIndex > _options.Count) SelectedIndex = _options.Count;
                             Invalidate();
                         }
                     }
@@ -369,7 +358,7 @@ namespace EtoFormsUI
             {
                 for (var i = 0; i < _text.Count; i++)
                 {
-                    var centered = _TextStyles[i] == TextStyles.Centered;
+                    var centered = _textStyles[i] == TextStyles.Centered;
                     Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
                         Color.FromArgb(51, 51, 51), 
                         new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
@@ -405,13 +394,13 @@ namespace EtoFormsUI
                     // Draw radio buttons
                     else
                     {
-                        Draw.RadioBtn(e.Graphics, _radioBtnList.SelectedIndex == rowCount,
+                        Draw.RadioBtn(e.Graphics, SelectedIndex == rowCount,
                             new Point(widthOffset, _paddingTop + 9 + yOffset));
 
                         e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
                         using var pen = new Pen(Color.FromArgb(64, 64, 64));
-                        if (_radioBtnList.SelectedIndex == rowCount)
+                        if (SelectedIndex == rowCount)
                             e.Graphics.DrawRectangle(pen,
                                 new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset, column == _optionsColumns ? Width / _optionsColumns - 45 -14 : Width / _optionsColumns - 25, 26));
                     }
@@ -471,7 +460,7 @@ namespace EtoFormsUI
                     }
                     var widthCandidate = textWidthCandidate + 50;   // Count in width of text box
                     if (widthCandidate > width) width = widthCandidate;
-                }else if (_TextStyles[i] == TextStyles.Centered)
+                }else if (_textStyles[i] == TextStyles.Centered)
                 {
                     var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
                     if (textWidthCandidate > width) width = textWidthCandidate;              
