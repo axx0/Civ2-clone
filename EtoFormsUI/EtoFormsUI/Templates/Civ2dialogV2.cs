@@ -172,7 +172,7 @@ namespace EtoFormsUI
                     }
                 }
             };
-            if (_options != null)
+            if (_options != null && !popupBox.Checkbox)
             {
                 KeyUp += (sender, args) =>
                 {
