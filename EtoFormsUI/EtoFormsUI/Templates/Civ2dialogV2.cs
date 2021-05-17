@@ -72,7 +72,7 @@ namespace EtoFormsUI
             // Options (if they exist) <- either checkbox or radio btn.
             if (popupBox.Options != null)
             {
-                _options = popupBox.Options;
+                _options = popupBox.Options.Select(o=>ReplaceString(o, replaceStrings)).ToList();
                 // Texts
                 _formattedOptionsTexts = new FormattedText[optionRows];
                 for (var i = 0; i < optionRows; i++)
@@ -158,7 +158,7 @@ namespace EtoFormsUI
                         {
                             if (popupBox.Checkbox)
                             {
-                                for (int row = 0; row < _options.Count; row++)
+                                for (var row = 0; row < _options.Count; row++)
                                 {
                                     CheckboxReturnStates[row] = _checkBox[row].Checked == true;
                                 }
@@ -454,13 +454,19 @@ namespace EtoFormsUI
         /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         private static string ReplaceString(string text, List<string> replacementStrings)
         {
-            var index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            return Replace(Replace(text, replacementStrings, "%STRING"), replacementStrings, "%NUMBER");
+        }
+
+        private static string Replace(string text, List<string> replacementStrings, string replacementKey)
+        {
+            var index = text.IndexOf(replacementKey, StringComparison.Ordinal);
             while (index != -1)
             {
                 var numericChar = text[index + 7];
-                text = text.Replace("%STRING" + numericChar, replacementStrings[(int)char.GetNumericValue(numericChar)]);
-                index = text.IndexOf("%STRING", StringComparison.Ordinal);
+                text = text.Replace(replacementKey + numericChar, replacementStrings[(int) char.GetNumericValue(numericChar)]);
+                index = text.IndexOf(replacementKey, StringComparison.Ordinal);
             }
+
             return text;
         }
     }

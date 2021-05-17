@@ -163,32 +163,52 @@ namespace EtoFormsUI.Initialization
             var rulesDialog = new Civ2dialogV2(mainForm, config.PopUps["RULES"]);
             rulesDialog.ShowModal(mainForm);
 
-            if (rulesDialog.SelectedIndex == -1)
+            if (rulesDialog.SelectedIndex == int.MinValue)
             {
-                SelectDifficultly(mainForm, config);
+                mainForm.MainMenu();
                 return;
             }
 
             var customizeRules = rulesDialog.SelectedIndex == 1;
 
-            if (customizeRules)
-            {
-                var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"],
-                    checkboxOptionState: new[] {false, false, false, false, false, false});
-                customRulesDialog.ShowModal(mainForm);
-
-                if (customRulesDialog.SelectedIndex != int.MinValue)
+                config.SimplifiedCombat = false;
+                config.FlatWorld = false;
+                config.SelectComputerOpponents = false;
+                config.AcceleratedStartup = 0;
+                config.Bloodlust = false;
+                config.DontRestartEliminatedPlayers = false;
+                if (customizeRules)
                 {
-                    config.SimplifiedCombat = customRulesDialog.CheckboxReturnStates[0];
-                    config.FlatWorld = customRulesDialog.CheckboxReturnStates[1];
-                    config.SelectComputerOpponents = customRulesDialog.CheckboxReturnStates[2];
-                    config.AcceleratedStartup = customRulesDialog.CheckboxReturnStates[3];
-                    config.Bloodlust = customRulesDialog.CheckboxReturnStates[4];
-                    config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
-                }
-            }
+                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"],
+                        checkboxOptionState: new[] {false, false, false, false, false, false});
+                    customRulesDialog.ShowModal(mainForm);
 
-            SelectGender(mainForm, config);
+                    if (customRulesDialog.SelectedIndex != int.MinValue)
+                    {
+                        config.SimplifiedCombat = customRulesDialog.CheckboxReturnStates[0];
+                        config.FlatWorld = customRulesDialog.CheckboxReturnStates[1];
+                        config.SelectComputerOpponents = customRulesDialog.CheckboxReturnStates[2];
+                        config.Bloodlust = customRulesDialog.CheckboxReturnStates[4];
+                        config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
+                        if (customRulesDialog.CheckboxReturnStates[3])
+                        {
+                            var startYearDialog = new Civ2dialogV2(mainForm, config.PopUps["ACCELERATED"],
+                                new List<string> {"4000", "3000", "2000"});
+                            startYearDialog.ShowModal(mainForm);
+
+                            if (startYearDialog.SelectedIndex == int.MinValue)
+                            {
+                                SelectCustomizeRules(mainForm, config);
+                                return;
+                            }
+
+                            config.AcceleratedStartup = startYearDialog.SelectedIndex;
+                        }
+                    }
+                }
+
+
+                SelectGender(mainForm, config);
         }
 
         private static void SelectGender(Main mainForm, GameInitializationConfig config)
@@ -196,27 +216,19 @@ namespace EtoFormsUI.Initialization
 
             var genderDialog = new Civ2dialogV2(mainForm, config.PopUps["GENDER"]);
             genderDialog.ShowModal(mainForm);
+            if (genderDialog.SelectedIndex == int.MinValue)
+            {
+                SelectDifficultly(mainForm, config);
+                return;
+            }
+            config.Gender = genderDialog.SelectedIndex;
 
-            var gender = genderDialog.SelectedIndex;
+            SelectTribe(mainForm, config);
         }
-    }
 
-    internal class GameInitializationConfig
-    {
-        public bool CustomizeWorld { get; set; }
-        public Random Random { get; set; }
-        public Ruleset RuleSet { get; set; }
-        
-        public Dictionary<string,PopupBox> PopUps { get; set; }
-        public int[] WorldSize { get; set; }
-        public int DifficultlyLevel { get; set; }
-        public int NumberOfCivs { get; set; }
-        public int BarbarianActivity { get; set; }
-        public bool SimplifiedCombat { get; set; }
-        public bool FlatWorld { get; set; }
-        public bool SelectComputerOpponents { get; set; }
-        public bool AcceleratedStartup { get; set; }
-        public bool Bloodlust { get; set; }
-        public bool DontRestartEliminatedPlayers { get; set; }
+        private static void SelectTribe(Main mainForm, GameInitializationConfig config)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
