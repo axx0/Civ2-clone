@@ -16,7 +16,6 @@ namespace EtoFormsUI
 
         
         private readonly int _paddingTop, _paddingBtm;
-        private readonly RadioButtonList _radioBtnList;
         private readonly CheckBox[] _checkBox;
         private readonly FormattedText[] _formattedOptionsTexts;
 
@@ -25,10 +24,13 @@ namespace EtoFormsUI
         private readonly string _popupTitle;
 
         private readonly bool _hasCheckBoxes;
-        private readonly List<TextStyles> _TextStyles;
+        private readonly List<TextStyles> _textStyles;
 
         private int _textBoxAlignment;
-
+        private readonly int _optionsColumns;
+        private readonly int _optionRows;
+        private readonly Drawable _surface;
+        
         /// <summary>
         /// Show a popup box (dialog).
         /// </summary>
@@ -36,8 +38,9 @@ namespace EtoFormsUI
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, List<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null)
+        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1)
         {
+            _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
             if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
 
             foreach (var item in parent.Menu.Items) item.Enabled = false;
@@ -53,15 +56,15 @@ namespace EtoFormsUI
             if (popupBox.Text != null)
             {
                 _text = popupBox.Text.Select(t => ReplaceString(t, replaceStrings)).ToList();
-                _TextStyles = popupBox.LineStyles;
+                _textStyles = popupBox.LineStyles;
             }
 
             _hasCheckBoxes = popupBox.Checkbox;
 
             // Determine size of inner panel
-            var optionRows = popupBox.Options?.Count ?? 0;
+            _optionRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
             var textRows = popupBox.Text?.Count ?? 0;
-            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + optionRows * 32 + textRows * 30);
+            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + _optionRows * 32 + textRows * 30);
             Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + _paddingTop + _paddingBtm);
             
             // Center the dialog on screen by default
@@ -72,17 +75,14 @@ namespace EtoFormsUI
             // Options (if they exist) <- either checkbox or radio btn.
             if (popupBox.Options != null)
             {
-                _options = popupBox.Options;
+                _options = popupBox.Options.Select(o=>ReplaceString(o, replaceStrings)).ToList();
                 // Texts
-                _formattedOptionsTexts = new FormattedText[optionRows];
-                for (var i = 0; i < optionRows; i++)
-                {
-                    _formattedOptionsTexts[i] = new FormattedText()
+                _formattedOptionsTexts = _options.Select(option => new FormattedText
                     {
                         Font = new Font("Times New Roman", 18),
-                        ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)), Text = _options[i]
-                    };
-                }
+                        ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)), Text = option
+                    }
+                ).ToArray();
 
                 // Checkboxes
                 if (popupBox.Checkbox)
@@ -98,25 +98,17 @@ namespace EtoFormsUI
                             BackgroundColor = Colors.Transparent,
                             Checked = checkboxOptionState[row]
                         };
-                        _checkBox[row].CheckedChanged += (_, _) => Invalidate();
-                        _checkBox[row].GotFocus += (_, _) => Invalidate();
+                        _checkBox[row].CheckedChanged += (_, _) => _surface.Invalidate();
+                        _checkBox[row].GotFocus += (_, _) => _surface.Invalidate();
                         layout.Add(_checkBox[row], 11 + 10, 40 + 32 * row);
                     }
-                }
-                // Radio buttons.
-                else
-                {
-                    _radioBtnList = new RadioButtonList() { DataStore = _options, Orientation = Orientation.Vertical };
-                    _radioBtnList.SelectedIndexChanged += (_, _) => Invalidate();
-                    _radioBtnList.GotFocus += (_, _) => Invalidate();
-                    layout.Add(_radioBtnList, 11 + 10, 40);
                 }
             }
 
             // Drawable surface
-            var surface = new Drawable() { Size = new Size(Width, Height), CanFocus = false };
-            surface.Paint += Surface_Paint;
-            layout.Add(surface, 0, 0);
+            _surface = new Drawable() { Size = new Size(Width, Height), CanFocus = false };
+            _surface.Paint += Surface_Paint;
+            layout.Add(_surface, 0, 0);
 
             // Buttons
             var buttonTitles = popupBox.Button;
@@ -158,14 +150,10 @@ namespace EtoFormsUI
                         {
                             if (popupBox.Checkbox)
                             {
-                                for (int row = 0; row < _options.Count; row++)
+                                for (var row = 0; row < _options.Count; row++)
                                 {
                                     CheckboxReturnStates[row] = _checkBox[row].Checked == true;
                                 }
-                            }
-                            else if (_radioBtnList != null) 
-                            {
-                                SelectedIndex = _radioBtnList.SelectedIndex;
                             }
 
                             Close(); 
@@ -176,17 +164,64 @@ namespace EtoFormsUI
                     {
                         buttons[i].Click += (sender, args) =>
                         {
-                            foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
+                            foreach (var item in parent.Menu.Items) item.Enabled = true;
                             SelectedButton = text;
                             Close();
                         };
                         break;
                     }
                 }
+            };
+            if (_options != null && !popupBox.Checkbox)
+            {
+                KeyUp += (sender, args) =>
+                {
+                    if (args.Key is not (Keys.Up or Keys.Down or Keys.Left or Keys.Right)) return;
+
+                    var newIndex = SelectedIndex;
+                    if (optionsCols > 1 && args.Key is Keys.Left or Keys.Right)
+                    {
+                        if (args.Key is Keys.Right)
+                        {
+                            newIndex += _optionRows;
+                        }
+                        else
+                        {
+                            newIndex -= _optionRows;
+                        }
+                        if (newIndex < 0)
+                        {
+                            newIndex += _options.Count;
+                        }
+                        else if (newIndex >= _options.Count)
+                        {
+                            newIndex -= _options.Count;
+                        }
+                    }
+                    else
+                    {
+                        newIndex += (args.Key is Keys.Down or Keys.Right ? 1 : -1);
+                        if (newIndex < 0)
+                        {
+                            newIndex = _options.Count - 1;
+                        }
+                        else if (newIndex >= _options.Count)
+                        {
+                            newIndex = 0;
+                        }
+                    }
+
+
+
+                    SelectedIndex = newIndex;
+                    buttons.FirstOrDefault(n=>n.Text == "OK")?.Focus();
+                    _surface.Invalidate();
+                    args.Handled = true;
+                };
             }
 
             // Update checkbox/choose radiobtn. with mouse click
-            surface.MouseDown += (_, e) =>
+            _surface.MouseDown += (_, e) =>
             {
                 // Select radio button if clicked
                 if (_options == null) return;
@@ -203,19 +238,28 @@ namespace EtoFormsUI
                         {
                             _checkBox[row].Checked = !_checkBox[row].Checked;
                             _checkBox[row].Focus();
-                            Invalidate();
+                            _surface.Invalidate();
                         }
                     }
                 }
                 // Update radio btn
                 else
                 {
-                    for (var row = 0; row < _options.Count; row++)
+                    for (var row = 0; row < _optionRows; row++)
                     {
                         if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
                         {
-                            _radioBtnList.SelectedIndex = row;
-                            Invalidate();
+                            var selectedIndex = row;
+                            if (_optionsColumns > 1)
+                            {
+                                var which = Width / _optionsColumns;
+                                selectedIndex +=  ((int)e.Location.X / which) * _optionRows;
+                            }
+
+                            if (selectedIndex < 0) selectedIndex = 0;
+                            else if (selectedIndex > _options.Count) selectedIndex = _options.Count;
+                            SelectedIndex = selectedIndex;
+                            _surface.Invalidate();
                         }
                     }
                 }
@@ -232,15 +276,57 @@ namespace EtoFormsUI
                         Text = textBox.InitialValue,
                         Width = innerSize.Width - 20 - _textBoxAlignment,
                     };
-                    box.TextChanged += (_, _) => TextValues[textBox.Name] = box.Text;  
-                    layout.Add(box, _textBoxAlignment + 10, 40 + 32 * textBox.index);
+                    if (textBox.MinValue.HasValue)
+                    {
+                        box.TextChanged += (_, _) =>
+                        {
+                            var cleaned = new string(box.Text.Where(char.IsNumber).ToArray());
+                            if (cleaned.Length == 0)
+                            {
+                                box.Text = textBox.InitialValue;
+                            }else if (!int.TryParse(cleaned, out var result) || !(result >= textBox.MinValue))
+                            {
+                                box.Text = textBox.MinValue.ToString();
+                            }
+                            else if(box.Text.Length > cleaned.Length)
+                            {
+                                box.Text = cleaned;
+                            }
+
+                            TextValues[textBox.Name] = box.Text;
+                        };
+                    }
+                    else
+                    {
+                        box.TextChanged += (_, _) =>
+                        {
+                            if(string.IsNullOrWhiteSpace(box.Text) && textBox.InitialValue.Length > 0)
+                            {
+                                box.Text = textBox.InitialValue;
+                            }
+
+                            TextValues[textBox.Name] = box.Text;
+                        };
+                    }
+
+                    layout.Add(box, _textBoxAlignment + 10, 45 + 30 * textBox.index);
                 }
             }
 
             Content = layout;
         }
 
-
+        private static int GetOptionsRows(int? optionsCount, int optionsCols)
+        {
+            if (optionsCount is null or 0) return 0;
+            if (optionsCols == 1) return optionsCount.Value;
+            if (optionsCount.Value % optionsCols == 0)
+            {
+                return optionsCount.Value / optionsCols;
+            }
+            return optionsCount.Value / optionsCols + 1;
+        }
+        
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.AntiAlias = false;
@@ -315,10 +401,9 @@ namespace EtoFormsUI
            
             if (_text != null)
             {
-
                 for (var i = 0; i < _text.Count; i++)
                 {
-                    var centered = _TextStyles[i] == TextStyles.Centered;
+                    var centered = (_textStyles?.Count ?? 0) > i && _textStyles[i] == TextStyles.Centered;
                     Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
                         Color.FromArgb(51, 51, 51), 
                         new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
@@ -332,31 +417,49 @@ namespace EtoFormsUI
             // Options (if they exist) <- either checkbox or radio btn.
             if (_options != null)
             {
-                var rowCount = 0;
-                foreach (var option in _options)
+                var initialY = yOffset;
+                var widthOffset = 21;
+                var column = 1;
+                for (var rowCount = 0; rowCount < _options.Count; rowCount++)
                 {
                     // Draw checkboxes
                     if (_hasCheckBoxes)
                     {
-                        Draw.Checkbox(e.Graphics, _checkBox[rowCount].Checked == true, new Point(21, _paddingTop + 9 + yOffset));
+                        Draw.Checkbox(e.Graphics, _checkBox[rowCount].Checked == true,
+                            new Point(widthOffset, _paddingTop + 9 + yOffset));
 
-                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(47, _paddingTop + 5 + yOffset));
+                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
                         using var pen = new Pen(Color.FromArgb(64, 64, 64));
-                        if (_checkBox[rowCount].HasFocus) e.Graphics.DrawRectangle(pen, new Rectangle(45, _paddingTop + 5 + yOffset, (int)_formattedOptionsTexts[rowCount].Measure().Width, 26));
+                        if (_checkBox[rowCount].HasFocus)
+                            e.Graphics.DrawRectangle(pen,
+                                new Rectangle(45, _paddingTop + 5 + yOffset,
+                                    (int) _formattedOptionsTexts[rowCount].Measure().Width, 26));
                     }
                     // Draw radio buttons
                     else
                     {
-                        Draw.RadioBtn(e.Graphics, _radioBtnList.SelectedIndex == rowCount, new Point(21, _paddingTop + 9 + yOffset));
+                        Draw.RadioBtn(e.Graphics, SelectedIndex == rowCount,
+                            new Point(widthOffset, _paddingTop + 9 + yOffset));
 
-                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(47, _paddingTop + 5 + yOffset));
+                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
                         using var pen = new Pen(Color.FromArgb(64, 64, 64));
-                        if (_radioBtnList.SelectedIndex == rowCount) e.Graphics.DrawRectangle(pen, new Rectangle(45, _paddingTop + 5 + yOffset, Width - 45 - 14, 26));
+                        if (SelectedIndex == rowCount)
+                            e.Graphics.DrawRectangle(pen,
+                                new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset, column == _optionsColumns ? Width / _optionsColumns - 45 -14 : Width / _optionsColumns - 25, 26));
                     }
-                    yOffset += 32;
-                    rowCount++;
+
+                    if (rowCount % _optionRows == _optionRows -1)
+                    {
+                        widthOffset += Width / _optionsColumns;
+                        yOffset = initialY;
+                        column++;
+                    }
+                    else
+                    {
+                        yOffset += 32;
+                    }
                 }
             }
         }
@@ -402,7 +505,7 @@ namespace EtoFormsUI
                     }
                     var widthCandidate = textWidthCandidate + 50;   // Count in width of text box
                     if (widthCandidate > width) width = widthCandidate;
-                }else if (_TextStyles[i] == TextStyles.Centered)
+                }else if ((_textStyles?.Count ?? 0 )> i && _textStyles[i] == TextStyles.Centered)
                 {
                     var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
                     if (textWidthCandidate > width) width = textWidthCandidate;              
@@ -422,13 +525,19 @@ namespace EtoFormsUI
         /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         private static string ReplaceString(string text, List<string> replacementStrings)
         {
-            var index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            return Replace(Replace(text, replacementStrings, "%STRING"), replacementStrings, "%NUMBER");
+        }
+
+        private static string Replace(string text, List<string> replacementStrings, string replacementKey)
+        {
+            var index = text.IndexOf(replacementKey, StringComparison.Ordinal);
             while (index != -1)
             {
                 var numericChar = text[index + 7];
-                text = text.Replace("%STRING" + numericChar, replacementStrings[(int)char.GetNumericValue(numericChar)]);
-                index = text.IndexOf("%STRING", StringComparison.Ordinal);
+                text = text.Replace(replacementKey + numericChar, replacementStrings[(int) char.GetNumericValue(numericChar)]);
+                index = text.IndexOf(replacementKey, StringComparison.Ordinal);
             }
+
             return text;
         }
     }

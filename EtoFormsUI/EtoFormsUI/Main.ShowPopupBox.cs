@@ -5,6 +5,7 @@ using Eto.Drawing;
 using Civ2engine.Events;
 using Civ2engine;
 using System.Collections.Generic;
+using EtoFormsUI.Initialization;
 
 namespace EtoFormsUI
 {
@@ -60,7 +61,7 @@ namespace EtoFormsUI
                             //New Game
                             case 0:
                             {
-                                NewGame(false);
+                                NewGame.Start(this, false);
                                 break;
                             }
                             // Start premade
@@ -75,7 +76,7 @@ namespace EtoFormsUI
                             //Customise World
                             case 2:
                             {
-                                NewGame(true);
+                                NewGame.Start(this, true);
                                 break;
                             }
                             // Load scenario
