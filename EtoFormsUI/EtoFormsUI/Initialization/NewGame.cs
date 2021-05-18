@@ -327,8 +327,38 @@ namespace EtoFormsUI.Initialization
             }
             else
             {
-                
+                var namePopup = config.PopUps["NAME"];
+                if (namePopup.Text == null)
+                {
+                    namePopup.Text = namePopup.Options;
+                    namePopup.Options = null;
+                }
+
+                var nameDialog = new Civ2dialogV2(mainForm, namePopup, textBoxes: new List<TextBoxDefinition>
+                {
+                    new()
+                    {
+                        index = 0,
+                        InitialValue = playerCiv.LeaderName,
+                        Name = "LeaderName"
+                    }
+                });
+                nameDialog.ShowModal(mainForm);
+                if (nameDialog.SelectedButton == "Cancel")
+                {
+                    SelectGender(mainForm, config);
+                    return;
+                }
+
+                playerCiv.LeaderName = nameDialog.TextValues["LeaderName"];
             }
+
+            SelectCityStyle(mainForm, config);
+        }
+
+        private static void SelectCityStyle(Main mainForm, GameInitializationConfig config)
+        {
+            throw new NotImplementedException();
         }
 
         private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe)
