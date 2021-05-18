@@ -23,5 +23,6 @@ namespace EtoFormsUI.Initialization
         public bool DontRestartEliminatedPlayers { get; set; }
         public int Gender { get; set; }
         public Rules Rules { get; set; }
+        public List<Civilization> Civilizations { get; set; }
     }
 }

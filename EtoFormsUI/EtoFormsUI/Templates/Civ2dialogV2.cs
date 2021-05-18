@@ -300,7 +300,7 @@ namespace EtoFormsUI
                     {
                         box.TextChanged += (_, _) =>
                         {
-                            if (box.Text.Length < 0 && textBox.InitialValue.Length > 0)
+                            if(string.IsNullOrWhiteSpace(box.Text) && textBox.InitialValue.Length > 0)
                             {
                                 box.Text = textBox.InitialValue;
                             }
@@ -309,7 +309,7 @@ namespace EtoFormsUI
                         };
                     }
 
-                    layout.Add(box, _textBoxAlignment + 10, 40 + 32 * textBox.index);
+                    layout.Add(box, _textBoxAlignment + 10, 45 + 30 * textBox.index);
                 }
             }
 
@@ -403,7 +403,7 @@ namespace EtoFormsUI
             {
                 for (var i = 0; i < _text.Count; i++)
                 {
-                    var centered = _textStyles[i] == TextStyles.Centered;
+                    var centered = (_textStyles?.Count ?? 0) > i && _textStyles[i] == TextStyles.Centered;
                     Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
                         Color.FromArgb(51, 51, 51), 
                         new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
@@ -505,7 +505,7 @@ namespace EtoFormsUI
                     }
                     var widthCandidate = textWidthCandidate + 50;   // Count in width of text box
                     if (widthCandidate > width) width = widthCandidate;
-                }else if (_textStyles[i] == TextStyles.Centered)
+                }else if ((_textStyles?.Count ?? 0 )> i && _textStyles[i] == TextStyles.Centered)
                 {
                     var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
                     if (textWidthCandidate > width) width = textWidthCandidate;              
