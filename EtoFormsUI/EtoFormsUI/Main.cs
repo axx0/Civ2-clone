@@ -2,10 +2,12 @@ using System;
 using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
+using Civ2engine.Enums;
 using Civ2engine.Events;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace EtoFormsUI
 {
@@ -20,6 +22,7 @@ namespace EtoFormsUI
         private List<PopupBox> popupBoxList;
         public Sound Sounds;
         public static event EventHandler<PopupboxEventArgs> OnPopupboxEvent;
+        public static event EventHandler<MapEventArgs> OnMapEvent;
         
         public Main()
         {
@@ -121,6 +124,14 @@ namespace EtoFormsUI
             var ToggleCheatModeCommand = new Command { MenuText = "Toggle Cheat Mode", Shortcut = Keys.Control | Keys.K };
             var CreateUnitCommand = new Command { MenuText = "Toggle Cheat Mode", Shortcut = Keys.Shift | Keys.F1 };
             var RevealMapCommand = new Command { MenuText = "Reveal Map", Shortcut = Keys.Shift | Keys.F2 };
+            RevealMapCommand.Executed += (sender, e) =>
+            {
+                var options = Game.GetActiveCivs.Select(c => c.Adjective).ToList();
+                options.AddRange(new string[] { "Entire Map", "No Special View" });
+                var popupbox = new RevealMapPanel(this, options.ToArray());
+                popupbox.ShowModal(Parent);
+                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.UpdateMap));
+            };
             var SetHumanPlayerCommand = new Command { MenuText = "Set Human Player", Shortcut = Keys.Shift | Keys.F3 };
             var SetGameYearCommand = new Command { MenuText = "Set Game Year", Shortcut = Keys.Shift | Keys.F4 };
             var KillCivilizationCommand = new Command { MenuText = "Kill Civilization", Shortcut = Keys.Shift | Keys.F5 };

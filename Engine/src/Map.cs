@@ -58,7 +58,11 @@ namespace Civ2engine
             set => _viewPieceMode = value;
         }
 
-        // Generate first instance of terrain tiles by importing game data
+        /// <summary>
+        /// Generate first instance of terrain tiles by importing game data.
+        /// </summary>
+        /// <param name="data">Game data.</param>
+        /// <param name="rules">Game rules.</param>
         public void GenerateMap(GameData data, Rules rules)
         {
             Xdim = data.MapXdim;
