@@ -217,7 +217,8 @@ namespace EtoFormsUI
         {
             updateMap = true;
             if (map != null) map.Dispose();
-            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
+            //map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
+            map = Draw.MapPart(Map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
             drawPanel.Invalidate();
         }
 
@@ -294,6 +295,11 @@ namespace EtoFormsUI
                     {
                         Map.ViewPieceMode = true;
                         StartAnimation(AnimationType.Waiting);
+                        break;
+                    }
+                case MapEventType.UpdateMap:
+                    {
+                        UpdateMap();
                         break;
                     }
                 default: break;

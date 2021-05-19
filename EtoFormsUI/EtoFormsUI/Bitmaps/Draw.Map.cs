@@ -8,6 +8,17 @@ namespace EtoFormsUI
 {
     public static partial class Draw
     {
+        /// <summary>
+        /// Make a bitmap of a part of map.
+        /// </summary>
+        /// <param name="civ">Map view of a of tribe (tribe's id).</param>
+        /// <param name="startX">Starting X-coord shown on map.</param>
+        /// <param name="startY">Starting Y-coord shown on map.</param>
+        /// <param name="width">Width of map shown.</param>
+        /// <param name="height">Height of map shown.</param>
+        /// <param name="flatEarth">Flat earth map?</param>
+        /// <param name="mapRevealed">Is map revealed?</param>
+        /// <returns></returns>
         public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth, bool mapRevealed)
         {
             // Define a bitmap for drawing

@@ -48,5 +48,7 @@ namespace Civ2engine
                 return _population;
             }
         }
+
+        public string[] Titles { get; set; }
     }
 }
