@@ -7,7 +7,7 @@ namespace EtoFormsUI
     {
         protected Civ2button[] Button;
         protected RadioButtonList RadioBtnList;
-        private readonly Drawable innerPanel;
+        protected Drawable innerPanel;
 
         public RadiobuttonPanel(Main parent, int width, int height, string title, string[] checkboxNames, string[] buttonTexts) : base(parent, width, height, 38, 46, title)
         {

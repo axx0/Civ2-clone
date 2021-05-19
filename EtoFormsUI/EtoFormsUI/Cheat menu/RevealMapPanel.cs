@@ -1,6 +1,5 @@
-﻿using System;
-using Civ2engine;
-using Civ2engine.Events;
+﻿using Civ2engine;
+using Eto.Forms;
 
 namespace EtoFormsUI
 {
@@ -10,23 +9,38 @@ namespace EtoFormsUI
     public class RevealMapPanel : RadiobuttonPanel
     {
         private Map Map => Map.Instance;
-        private Main main;
-        public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public RevealMapPanel(Main mainForm, string[] activeCivs) :
             base(mainForm, 686, 4 + activeCivs.Length * 32 + 38 + 46, "Select Map View", activeCivs, new string[] { "OK", "Cancel" })
         {
-            main = mainForm;
+            RadioBtnList.SelectedIndex = activeCivs.Length - 2;    // TODO: this default selection doesn't work for some reason
+            innerPanel.Invalidate();
 
             DefaultButton = Button[0];
             DefaultButton.Click += (sender, e) => 
             {
-                Map.WhichCivsMapShown = RadioBtnList.SelectedIndex;
+                if (RadioBtnList.SelectedIndex > activeCivs.Length - 3)
+                {
+                    if (RadioBtnList.SelectedIndex == activeCivs.Length - 2)
+                        Map.MapRevealed = true;
+                    else
+                        Map.MapRevealed = false;
+                }
+                else
+                {
+                    Map.WhichCivsMapShown = RadioBtnList.SelectedIndex;
+                }
+
+                foreach (MenuItem item in mainForm.Menu.Items) item.Enabled = true;
                 Close();
             };
 
             AbortButton = Button[1];
-            AbortButton.Click += (sender, e) => Close();
+            AbortButton.Click += (sender, e) =>
+            {
+                foreach (MenuItem item in mainForm.Menu.Items) item.Enabled = true;
+                Close();
+            };
         }
     }
 }
