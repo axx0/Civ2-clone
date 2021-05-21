@@ -375,7 +375,17 @@ namespace EtoFormsUI.Initialization
                     MapImageLoader.Cities[7].Bitmap, MapImageLoader.Cities[15].Bitmap, 
                     MapImageLoader.Cities[23].Bitmap, MapImageLoader.Cities[31].Bitmap
                 });
+            citiesDialog.SelectedIndex = (int)config.Civilizations[0].CityStyle;
             citiesDialog.ShowModal(mainForm);
+            if (citiesDialog.SelectedIndex == int.MinValue)
+            {
+                SelectGender(mainForm, config);
+                return;
+            }
+
+            config.Civilizations[0].CityStyle = (CityStyleType) citiesDialog.SelectedIndex;
+            
+            //TODO: Start game...
         }
 
         private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe)
