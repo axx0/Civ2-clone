@@ -407,7 +407,7 @@ namespace EtoFormsUI
             {
                 for (var i = 0; i < _text.Count; i++)
                 {
-                    var centered = (_textStyles?.Count ?? 0) > i && _textStyles[i] == TextStyles.Centered;
+                    var centered = _textStyles != null && (int) _textStyles?.Count > i && _textStyles[i] == TextStyles.Centered;
                     Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
                         Color.FromArgb(51, 51, 51), 
                         new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
@@ -424,6 +424,8 @@ namespace EtoFormsUI
                 var initialY = yOffset;
                 var widthOffset = 21;
                 var column = 1;
+                
+                using var pen = new Pen(Color.FromArgb(64, 64, 64));
                 for (var rowCount = 0; rowCount < _options.Count; rowCount++)
                 {
                     // Draw checkboxes
@@ -434,7 +436,6 @@ namespace EtoFormsUI
 
                         e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
-                        using var pen = new Pen(Color.FromArgb(64, 64, 64));
                         if (_checkBox[rowCount].HasFocus)
                             e.Graphics.DrawRectangle(pen,
                                 new Rectangle(45, _paddingTop + 5 + yOffset,
@@ -447,10 +448,9 @@ namespace EtoFormsUI
                         {
                             e.Graphics.DrawImage(_icons[rowCount], new Point(widthOffset , _paddingTop + 5 + yOffset));
                             e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
-                                new Point(_icons[rowCount].Width + 25, _paddingTop + 5 + yOffset + _icons[rowCount].Height / 2 -9));
+                                new Point(_icons[rowCount].Width + 25, _paddingTop + 5 + yOffset + _icons[rowCount].Height / 2 -18));
                             if (SelectedIndex == rowCount)
                             {
-                                using var pen = new Pen(Color.FromArgb(64, 64, 64));
                                 e.Graphics.DrawRectangle(pen,
                                     new Rectangle(widthOffset, _paddingTop + yOffset,
                                         _icons[rowCount].Width, _icons[rowCount].Height -5));
@@ -467,7 +467,6 @@ namespace EtoFormsUI
                             e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
                                 new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
-                            using var pen = new Pen(Color.FromArgb(64, 64, 64));
                             if (SelectedIndex == rowCount)
                                 e.Graphics.DrawRectangle(pen,
                                     new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset,
