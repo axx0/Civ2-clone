@@ -94,8 +94,8 @@ namespace EtoFormsUI
 
             for (var i = firstRow; i < citiesImage.Height - firstRow; i++)
             {
-                if (citiesImage.GetPixel(1, i) != borderColour ||
-                    citiesImage.GetPixel(1, i + height) != borderColour) continue;
+                if (borderColours.IndexOf(citiesImage.GetPixel(1, i)) == -1 ||
+                    borderColours.IndexOf(citiesImage.GetPixel(1, i + height)) == -1) continue;
                 //We have a candidate row
                 for (var j = 0; j < citiesImage.Width - width; j++)
                 {
@@ -159,10 +159,12 @@ namespace EtoFormsUI
                 if (colour != _flagColour)
                 {
                     sizeX = i - x;
+                    if (flagX == 0) flagX = sizeX;
                 }
                 else
                 {
                     flagX = i - x;
+                    if (sizeX == 0) sizeX = flagX;
                 }
             }
             for (var i = y; i < y + height; i++)
@@ -173,12 +175,15 @@ namespace EtoFormsUI
                 if (colour != _flagColour)
                 {
                     sizeY = i - y;
+                    if (flagY == 0) flagY = sizeY;
                 }
                 else
                 {
                     flagY = i - y;
+                    if (sizeY == 0) sizeY = flagY;
                 }
             }
+            
 
             if (flagX == 0 || flagY == 0 || sizeX == 0 || sizeY == 0)
             {
