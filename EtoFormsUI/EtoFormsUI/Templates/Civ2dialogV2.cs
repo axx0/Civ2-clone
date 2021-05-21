@@ -9,7 +9,6 @@ namespace EtoFormsUI
 {
     public sealed class Civ2dialogV2 : Dialog
     {
-        private readonly Bitmap[] _icons;
         public int SelectedIndex;
         public string SelectedButton;
         public List<bool> CheckboxReturnStates;
@@ -31,6 +30,7 @@ namespace EtoFormsUI
         private readonly int _optionsColumns;
         private readonly int _optionRows;
         private readonly Drawable _surface;
+        private readonly Bitmap[] _icons;
         
         /// <summary>
         /// Show a popup box (dialog).
@@ -248,9 +248,10 @@ namespace EtoFormsUI
                 // Update radio btn
                 else
                 {
+                    var rowHeight = _icons.Length > 0 ? _icons[0].Height : 32;
                     for (var row = 0; row < _optionRows; row++)
                     {
-                        if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
+                        if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + rowHeight * row && e.Location.Y < _paddingTop + yOffset + 5 + rowHeight * (row + 1))
                         {
                             var selectedIndex = row;
                             if (_optionsColumns > 1)
