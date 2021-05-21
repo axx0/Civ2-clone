@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine;
 using Eto.Drawing;
 using EtoFormsUIExtensionMethods;
@@ -27,7 +28,7 @@ namespace EtoFormsUI
         public static void LoadCities(Ruleset path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var citiesImage = LoadBitmapFrom("CITIES.GIF", path);
+            var citiesImage = LoadBitmapFrom("CITIES.bmp", path);
 
             // Initialize objects
             var cities = new List<CityImage>();
@@ -68,18 +69,22 @@ namespace EtoFormsUI
             var firstTransparent = citiesImage.GetPixel(0, 0);
             var secondTransparent = citiesImage.GetPixel(1, firstRow + 1);
             
+            var borderColours = colours.Where((_, i) => first[i] >= firstRow).ToList();
+            
             var height = 0;
             for (var i = firstRow + 1; i < citiesImage.Height; i++)
             {
-                if (citiesImage.GetPixel(1, i) != borderColour) continue;
+                if (borderColours.IndexOf(citiesImage.GetPixel(1, i)) == -1) continue;
                 height = i - firstRow;
                 break;
             }
 
             var width = 0;
+
+            
             for (var i = 1; i < citiesImage.Width; i++)
             {
-                if (citiesImage.GetPixel(i, firstRow + 1) != borderColour) continue;
+                if (borderColours.IndexOf(citiesImage.GetPixel(i, firstRow + 1)) == -1) continue;
                 width = i;
                 break;
             }
