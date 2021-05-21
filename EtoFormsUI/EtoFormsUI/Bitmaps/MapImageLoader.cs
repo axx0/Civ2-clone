@@ -16,7 +16,7 @@ namespace EtoFormsUI
         /// <returns></returns>
         private static Bitmap LoadBitmapFrom(string name, Ruleset ruleset)
         {
-            var filePath = Utils.GetFilePath(name, ruleset.FolderPath, ruleset.Root);
+            var filePath = Utils.GetFilePath(name, ruleset.Paths, "bmp", "gif");
 
             return filePath == null ? new Bitmap(640, 480, PixelFormat.Format32bppRgba) : new Bitmap(filePath);
         }
@@ -28,7 +28,7 @@ namespace EtoFormsUI
         public static void LoadCities(Ruleset path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var citiesImage = LoadBitmapFrom("CITIES.bmp", path);
+            var citiesImage = LoadBitmapFrom("CITIES", path);
 
             // Initialize objects
             var cities = new List<CityImage>();

@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Civ2engine
 {
@@ -21,14 +24,29 @@ namespace Civ2engine
             if (a == b || b < 1) return a;
             return (a / GreatestCommonFactor(a, b)) * b;
         }
-        public static string GetFilePath(string filename, params string[] searchPaths)
+        public static string GetFilePath(string filename, IEnumerable<string> searchPaths = null, params string[] extensions)
         {
-            foreach (var path in searchPaths)
+            if (searchPaths != null)
             {
-                var searchPath = path + Path.DirectorySeparatorChar + filename;
-                if (File.Exists(searchPath))
+                foreach (var path in searchPaths)
                 {
-                    return searchPath;
+                    var searchPath = path + Path.DirectorySeparatorChar + filename;
+                    if (extensions.Length > 0)
+                    {
+                        foreach (var extension in extensions)
+                        {
+                            var filePath = searchPath + "." + extension;
+                            if (File.Exists(filePath))
+                            {
+                                return filePath;
+                            }
+
+                        }
+                    }
+                    else if (File.Exists(searchPath))
+                    {
+                        return searchPath;
+                    }
                 }
             }
 

@@ -14,7 +14,7 @@ namespace Civ2engine
         
         public static void UpdateLabels(Ruleset rules)
         {
-            var labelPath = rules != null ? Utils.GetFilePath("labels.txt", rules.FolderPath, rules.Root) : Utils.GetFilePath("labels.txt");
+            var labelPath = rules != null ? Utils.GetFilePath("labels.txt", rules.Paths) : Utils.GetFilePath("labels.txt");
             if (labelPath == _currentPath) return;
             
             _currentPath = labelPath;

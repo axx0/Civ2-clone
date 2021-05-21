@@ -12,18 +12,18 @@ namespace EtoFormsUI
 {
     public partial class Main : Form
     {
-        public void LoadGameInitialization(string directoryPath, string SAVname)
+        public void LoadGameInitialization(Ruleset ruleset, string SAVname)
         {
-            Game.LoadGame(directoryPath, SAVname);
-            Images.LoadGraphicsAssetsFromFiles(directoryPath);
+            Game.LoadGame(ruleset, SAVname);
+            Images.LoadGraphicsAssetsFromFiles(ruleset.Root);
         }
 
-        public void LoadScenarioInit(string directoryPath, string SCNname)
+        public void LoadScenarioInit(Ruleset ruleset, string SCNname)
         {
             
         }
         
-        public void StartPremadeInit(string directoryPath, string SCNname)
+        public void StartPremadeInit(Ruleset ruleset, string SCNname)
         {
             
         }
