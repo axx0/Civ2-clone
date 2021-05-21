@@ -13,11 +13,12 @@ namespace EtoFormsUI
         public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
         public static Point[,] CityFlagLoc, CitySizeWindowLoc, CityWallFlagLoc, CityWallSizeWindowLoc;
-        public static Icon Civ2Icon;
+        
         public static Bitmap[,] MapTileGraphic;
 
         public static void LoadGraphicsAssetsFromFiles(string path)
         {
+            MapImageLoader.LoadCities(new Ruleset { FolderPath = path});
             TerrainBitmapsImportFromFile(path);
             CitiesBitmapsImportFromFile(path);
             UnitsBitmapsImportFromFile(path);
@@ -282,13 +283,13 @@ namespace EtoFormsUI
             var cities = LoadBitmapFrom("CITIES.GIF", path);
 
             // Initialize objects
-            City = new Bitmap[6, 4];
+            // City = new Bitmap[6, 4];
             CityFlag = new Bitmap[9];
-            CityWall = new Bitmap[6, 4];
-            CityFlagLoc = new Point[6, 4];
-            CityWallFlagLoc = new Point[6, 4];
-            CitySizeWindowLoc = new Point[6, 4];
-            CityWallSizeWindowLoc = new Point[6, 4];
+            // CityWall = new Bitmap[6, 4];
+            // CityFlagLoc = new Point[6, 4];
+            // CityWallFlagLoc = new Point[6, 4];
+            // CitySizeWindowLoc = new Point[6, 4];
+            // CityWallSizeWindowLoc = new Point[6, 4];
 
             // Define transparent colors
             Color transparentGray = Color.FromArgb(135, 135, 135);    //define transparent back color (gray)
@@ -296,30 +297,30 @@ namespace EtoFormsUI
             //Color transparentCyan = Color.FromArgb(0, 255, 255);    //define transparent back color (cyan)
 
             // Get city bitmaps
-            for (int row = 0; row < 6; row++)
-            {
-                for (int col = 0; col < 4; col++)
-                {
-                    City[row, col] = cities.Clone(new Rectangle(1 + (65 * col), 39 + (49 * row), 64, 48));
-                    City[row, col].ReplaceColors(transparentGray, Colors.Transparent);
-                    City[row, col].ReplaceColors(transparentPink, Colors.Transparent);
-                    CityWall[row, col] = cities.Clone(new Rectangle(334 + (65 * col), 39 + (49 * row), 64, 48));
-                    CityWall[row, col].ReplaceColors(transparentGray, Colors.Transparent);
-                    CityWall[row, col].ReplaceColors(transparentPink, Colors.Transparent);
+            // for (int row = 0; row < 6; row++)
+            // {
+            //     for (int col = 0; col < 4; col++)
+            //     {
+                    // City[row, col] = cities.Clone(new Rectangle(1 + (65 * col), 39 + (49 * row), 64, 48));
+                    // City[row, col].ReplaceColors(transparentGray, Colors.Transparent);
+                    // City[row, col].ReplaceColors(transparentPink, Colors.Transparent);
+                    // CityWall[row, col] = cities.Clone(new Rectangle(334 + (65 * col), 39 + (49 * row), 64, 48));
+                    // CityWall[row, col].ReplaceColors(transparentGray, Colors.Transparent);
+                    // CityWall[row, col].ReplaceColors(transparentPink, Colors.Transparent);
                     // Determine where the city size window is located (x-y)
                     for (int ix = 0; ix < 64; ix++) // In x-direction
                     {
-                        if (cities.GetPixel((65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) CityFlagLoc[row, col].X = ix;  // If pixel on border is blue
-                        if (cities.GetPixel(333 + (65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) CityWallFlagLoc[row, col].X = ix;
+                        // if (cities.GetPixel((65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) CityFlagLoc[row, col].X = ix;  // If pixel on border is blue
+                        // if (cities.GetPixel(333 + (65 * col) + ix, 38 + (49 * row)) == Color.FromArgb(0, 0, 255)) CityWallFlagLoc[row, col].X = ix;
                     }
                     // For cities with wall
-                    for (int iy = 0; iy < 48; iy++) // In y-direction
-                    {
-                        if (cities.GetPixel(65 * col, 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) CityFlagLoc[row, col].Y = iy;
-                        if (cities.GetPixel(333 + (65 * col), 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) CityWallFlagLoc[row, col].Y = iy;
-                    }
-                }
-            }
+                    // for (int iy = 0; iy < 48; iy++) // In y-direction
+                    // {
+                        // if (cities.GetPixel(65 * col, 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) CityFlagLoc[row, col].Y = iy;
+                        // if (cities.GetPixel(333 + (65 * col), 38 + (49 * row) + iy) == Color.FromArgb(0, 0, 255)) CityWallFlagLoc[row, col].Y = iy;
+                    // }
+            //     }
+            // }
 
             // Get flag bitmaps
             for (int col = 0; col < 9; col++)
@@ -329,54 +330,54 @@ namespace EtoFormsUI
             }
 
             // Locations of city size windows (for standard zoom)
-            CitySizeWindowLoc[0, 0] = new Point(13, 23);    // Stone age
-            CitySizeWindowLoc[0, 1] = new Point(52, 18);
-            CitySizeWindowLoc[0, 2] = new Point(0, 23);
-            CitySizeWindowLoc[0, 3] = new Point(24, 29);
-            CitySizeWindowLoc[1, 0] = new Point(10, 23);    // Ancient
-            CitySizeWindowLoc[1, 1] = new Point(50, 25);
-            CitySizeWindowLoc[1, 2] = new Point(1, 17);
-            CitySizeWindowLoc[1, 3] = new Point(12, 27);
-            CitySizeWindowLoc[2, 0] = new Point(3, 20);    // Far east
-            CitySizeWindowLoc[2, 1] = new Point(48, 7);
-            CitySizeWindowLoc[2, 2] = new Point(50, 5);
-            CitySizeWindowLoc[2, 3] = new Point(28, 27);
-            CitySizeWindowLoc[3, 0] = new Point(5, 22);    // Medieval
-            CitySizeWindowLoc[3, 1] = new Point(2, 18);
-            CitySizeWindowLoc[3, 2] = new Point(0, 18);
-            CitySizeWindowLoc[3, 3] = new Point(27, 27);
-            CitySizeWindowLoc[4, 0] = new Point(4, 20);    // Industrial
-            CitySizeWindowLoc[4, 1] = new Point(1, 20);
-            CitySizeWindowLoc[4, 2] = new Point(2, 22);
-            CitySizeWindowLoc[4, 3] = new Point(28, 30);
-            CitySizeWindowLoc[5, 0] = new Point(8, 18);    // Modern
-            CitySizeWindowLoc[5, 1] = new Point(2, 19);
-            CitySizeWindowLoc[5, 2] = new Point(8, 20);
-            CitySizeWindowLoc[5, 3] = new Point(27, 30);
-            CityWallSizeWindowLoc[0, 0] = new Point(12, 23);    // Stone + wall
-            CityWallSizeWindowLoc[0, 1] = new Point(52, 22);
-            CityWallSizeWindowLoc[0, 2] = new Point(0, 19);
-            CityWallSizeWindowLoc[0, 3] = new Point(24, 29);
-            CityWallSizeWindowLoc[1, 0] = new Point(10, 13);    // Ancient + wall
-            CityWallSizeWindowLoc[1, 1] = new Point(50, 21);
-            CityWallSizeWindowLoc[1, 2] = new Point(1, 17);
-            CityWallSizeWindowLoc[1, 3] = new Point(11, 22);
-            CityWallSizeWindowLoc[2, 0] = new Point(4, 18);    // Far east + wall
-            CityWallSizeWindowLoc[2, 1] = new Point(48, 6);
-            CityWallSizeWindowLoc[2, 2] = new Point(51, 4);
-            CityWallSizeWindowLoc[2, 3] = new Point(28, 27);
-            CityWallSizeWindowLoc[3, 0] = new Point(3, 18);    // Medieval + wall
-            CityWallSizeWindowLoc[3, 1] = new Point(2, 20);
-            CityWallSizeWindowLoc[3, 2] = new Point(1, 15);
-            CityWallSizeWindowLoc[3, 3] = new Point(27, 29);
-            CityWallSizeWindowLoc[4, 0] = new Point(4, 18);    // Industrial + wall
-            CityWallSizeWindowLoc[4, 1] = new Point(1, 20);
-            CityWallSizeWindowLoc[4, 2] = new Point(1, 18);
-            CityWallSizeWindowLoc[4, 3] = new Point(26, 28);
-            CityWallSizeWindowLoc[5, 0] = new Point(3, 21);    // Modern + wall
-            CityWallSizeWindowLoc[5, 1] = new Point(0, 20);
-            CityWallSizeWindowLoc[5, 2] = new Point(8, 20);
-            CityWallSizeWindowLoc[5, 3] = new Point(27, 30);
+            // CitySizeWindowLoc[0, 0] = new Point(13, 23);    // Stone age
+            // CitySizeWindowLoc[0, 1] = new Point(52, 18);
+            // CitySizeWindowLoc[0, 2] = new Point(0, 23);
+            // CitySizeWindowLoc[0, 3] = new Point(24, 29);
+            // CitySizeWindowLoc[1, 0] = new Point(10, 23);    // Ancient
+            // CitySizeWindowLoc[1, 1] = new Point(50, 25);
+            // CitySizeWindowLoc[1, 2] = new Point(1, 17);
+            // CitySizeWindowLoc[1, 3] = new Point(12, 27);
+            // CitySizeWindowLoc[2, 0] = new Point(3, 20);    // Far east
+            // CitySizeWindowLoc[2, 1] = new Point(48, 7);
+            // CitySizeWindowLoc[2, 2] = new Point(50, 5);
+            // CitySizeWindowLoc[2, 3] = new Point(28, 27);
+            // CitySizeWindowLoc[3, 0] = new Point(5, 22);    // Medieval
+            // CitySizeWindowLoc[3, 1] = new Point(2, 18);
+            // CitySizeWindowLoc[3, 2] = new Point(0, 18);
+            // CitySizeWindowLoc[3, 3] = new Point(27, 27);
+            // CitySizeWindowLoc[4, 0] = new Point(4, 20);    // Industrial
+            // CitySizeWindowLoc[4, 1] = new Point(1, 20);
+            // CitySizeWindowLoc[4, 2] = new Point(2, 22);
+            // CitySizeWindowLoc[4, 3] = new Point(28, 30);
+            // CitySizeWindowLoc[5, 0] = new Point(8, 18);    // Modern
+            // CitySizeWindowLoc[5, 1] = new Point(2, 19);
+            // CitySizeWindowLoc[5, 2] = new Point(8, 20);
+            // CitySizeWindowLoc[5, 3] = new Point(27, 30);
+            // CityWallSizeWindowLoc[0, 0] = new Point(12, 23);    // Stone + wall
+            // CityWallSizeWindowLoc[0, 1] = new Point(52, 22);
+            // CityWallSizeWindowLoc[0, 2] = new Point(0, 19);
+            // CityWallSizeWindowLoc[0, 3] = new Point(24, 29);
+            // CityWallSizeWindowLoc[1, 0] = new Point(10, 13);    // Ancient + wall
+            // CityWallSizeWindowLoc[1, 1] = new Point(50, 21);
+            // CityWallSizeWindowLoc[1, 2] = new Point(1, 17);
+            // CityWallSizeWindowLoc[1, 3] = new Point(11, 22);
+            // CityWallSizeWindowLoc[2, 0] = new Point(4, 18);    // Far east + wall
+            // CityWallSizeWindowLoc[2, 1] = new Point(48, 6);
+            // CityWallSizeWindowLoc[2, 2] = new Point(51, 4);
+            // CityWallSizeWindowLoc[2, 3] = new Point(28, 27);
+            // CityWallSizeWindowLoc[3, 0] = new Point(3, 18);    // Medieval + wall
+            // CityWallSizeWindowLoc[3, 1] = new Point(2, 20);
+            // CityWallSizeWindowLoc[3, 2] = new Point(1, 15);
+            // CityWallSizeWindowLoc[3, 3] = new Point(27, 29);
+            // CityWallSizeWindowLoc[4, 0] = new Point(4, 18);    // Industrial + wall
+            // CityWallSizeWindowLoc[4, 1] = new Point(1, 20);
+            // CityWallSizeWindowLoc[4, 2] = new Point(1, 18);
+            // CityWallSizeWindowLoc[4, 3] = new Point(26, 28);
+            // CityWallSizeWindowLoc[5, 0] = new Point(3, 21);    // Modern + wall
+            // CityWallSizeWindowLoc[5, 1] = new Point(0, 20);
+            // CityWallSizeWindowLoc[5, 2] = new Point(8, 20);
+            // CityWallSizeWindowLoc[5, 3] = new Point(27, 30);
 
             Fortified = cities.Clone(new Rectangle(143, 423, 64, 48));
             Fortified.ReplaceColors(transparentGray, Colors.Transparent);

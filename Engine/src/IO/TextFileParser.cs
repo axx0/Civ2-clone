@@ -57,6 +57,11 @@ namespace Civ2engine
                     contents = new List<string>();
                 }
             }
+
+            if (reading && contents.Count > 0)
+            {
+                handler.ProcessSection(section, contents);
+            }
         }
     }
 

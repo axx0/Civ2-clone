@@ -202,6 +202,8 @@ namespace EtoFormsUI
 
             // Load images
             Images.LoadGraphicsAssetsAtIntroScreen();
+            
+            Labels.UpdateLabels(null);
 
             // Load popup boxes info (Game.txt)
             popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
