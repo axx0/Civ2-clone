@@ -357,7 +357,7 @@ namespace Civ2engine
             {
                 var parts = values[i].Split(';', StringSplitOptions.TrimEntries);
                 techs.Add(parts[0]);
-                Rules.AdvanceMappings.Add(parts[1], i);
+                Rules.AdvanceMappings.Add(parts[1].Split(" ", 2, StringSplitOptions.TrimEntries )[0], i);
             }
 
             Rules.Advances = techs.Select(line =>
