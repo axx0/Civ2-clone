@@ -18,7 +18,7 @@ namespace EtoFormsUI
 
         public static void LoadGraphicsAssetsFromFiles(string path)
         {
-            MapImageLoader.LoadCities(new Ruleset { FolderPath = path});
+            MapImages.LoadCities(new Ruleset { FolderPath = path});
             TerrainBitmapsImportFromFile(path);
             CitiesBitmapsImportFromFile(path);
             UnitsBitmapsImportFromFile(path);

@@ -53,7 +53,7 @@ namespace EtoFormsUI.Initialization
             else
             {
                 Labels.UpdateLabels(config.RuleSet);
-                MapImageLoader.LoadCities(config.RuleSet);
+                MapImages.LoadCities(config.RuleSet);
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
                 {
                     boxes[box.Name] = box;
@@ -372,8 +372,8 @@ namespace EtoFormsUI.Initialization
             var citiesDialog = new Civ2dialogV2(mainForm, citiesPopup,
                 icons: new[]
                 {
-                    MapImageLoader.Cities[7].Bitmap, MapImageLoader.Cities[15].Bitmap, 
-                    MapImageLoader.Cities[23].Bitmap, MapImageLoader.Cities[31].Bitmap
+                    MapImages.Cities[7].Bitmap, MapImages.Cities[15].Bitmap, 
+                    MapImages.Cities[23].Bitmap, MapImages.Cities[31].Bitmap
                 });
             citiesDialog.SelectedIndex = (int)config.Civilizations[0].CityStyle;
             citiesDialog.ShowModal(mainForm);

@@ -6,7 +6,7 @@ using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI
 {
-    public static class MapImageLoader
+    public static class MapImages
     {
         /// <summary>
         //  Read file in local directory. If it doesn't exist there, read it in root civ2 directory.

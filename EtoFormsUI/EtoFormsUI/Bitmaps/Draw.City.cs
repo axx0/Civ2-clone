@@ -63,7 +63,7 @@ namespace EtoFormsUI
                 cityIndex += 4;
             }
 
-            var cityImage = MapImageLoader.Cities[cityIndex];
+            var cityImage = MapImages.Cities[cityIndex];
 
             // Depending on the presence of a wall, get images of city and locations of size window & flag
             var cityPic = cityImage.Bitmap; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWall[(int)style, sizeStyle] : Images.City[(int)style, sizeStyle];
