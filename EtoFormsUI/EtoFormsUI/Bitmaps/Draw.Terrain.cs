@@ -171,74 +171,29 @@ namespace EtoFormsUI
                     // Draw forests
                     case TerrainType.Forest:
                     {
-                        bool[] isForestAround = IsTerrainAroundIn4directions(col, row, TerrainType.Forest, flatEarth);
+                        var forestIndex = IsTerrainAroundIn4directions(col, row, TerrainType.Forest, flatEarth);
 
                         // Draw forest tiles
-                        if (isForestAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.Forest[0], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.Forest[1], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.Forest[2], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.Forest[3], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.Forest[4], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.Forest[5], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.Forest[6], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.Forest[7], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.Forest[8], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.Forest[9], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.Forest[10], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.Forest[11], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.Forest[12], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.Forest[13], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.Forest[14], 0, 0);
-                        if (isForestAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.Forest[15], 0, 0);
+                        g.DrawImage(Images.Forest[forestIndex], 0, 0);
                         break;
                     }
                     // Draw mountains
                     // TODO: correct drawing mountains - IF SHIELD IS AT MOUNTAIN IT SHOULD BE Mountains[2] and Mountains[3] !!!
                     case TerrainType.Mountains:
                     {
-                        bool[] isMountAround = IsTerrainAroundIn4directions(col, row, TerrainType.Mountains, flatEarth);
+                        var mountainsIndex = IsTerrainAroundIn4directions(col, row, TerrainType.Mountains, flatEarth);
 
                         // Draw mountain tiles
-                        if (isMountAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.Mountains[0], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.Mountains[1], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.Mountains[2], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.Mountains[3], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.Mountains[4], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.Mountains[5], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.Mountains[6], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.Mountains[7], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.Mountains[8], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.Mountains[9], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.Mountains[10], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.Mountains[11], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.Mountains[12], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.Mountains[13], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.Mountains[14], 0, 0);
-                        if (isMountAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.Mountains[15], 0, 0);
+                        g.DrawImage(Images.Mountains[mountainsIndex], 0, 0);
                         break;
                     }
                     // Draw hills
                     case TerrainType.Hills:
                     {
-                        bool[] isHillAround = IsTerrainAroundIn4directions(col, row, TerrainType.Hills, flatEarth);
+                        var hillIndex = IsTerrainAroundIn4directions(col, row, TerrainType.Hills, flatEarth);
 
                         // Draw hill tiles
-                        if (isHillAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.Hills[0], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.Hills[1], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.Hills[2], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.Hills[3], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.Hills[4], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.Hills[5], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.Hills[6], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.Hills[7], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.Hills[8], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.Hills[9], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.Hills[10], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.Hills[11], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.Hills[12], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.Hills[13], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.Hills[14], 0, 0);
-                        if (isHillAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.Hills[15], 0, 0);
+                        g.DrawImage(Images.Hills[hillIndex], 0, 0);
                         break;
                     }
                     
@@ -498,10 +453,10 @@ namespace EtoFormsUI
         }
 
         // Check whether a certain type of terrain (mount./hills/forest) is present in 4 directions arount the tile
-        private static bool[] IsTerrainAroundIn4directions(int col, int row, TerrainType terrain, bool flatEarth)
+        private static int IsTerrainAroundIn4directions(int col, int row, TerrainType terrain, bool flatEarth)
         {
             // In start we presume all surrounding tiles are not of same type (=false). Index=0 is NE, follows in clockwise direction.
-            bool[] isTerrainAround = new bool[4] { false, false, false, false };
+            var index = 0;
 
             // Rewrite indexes in Civ2-style
             int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
@@ -509,103 +464,79 @@ namespace EtoFormsUI
 
             // Observe in all directions if terrain is present
             // NE:
-            if (row == 0)
+            if (row != 0)
             {
-                isTerrainAround[0] = false;  // NE is beyond limits
-            }
-            else if (col == Xdim - 1)    // you are on eastern edge of map
-            {
-                if (flatEarth)
+                if (col == Xdim - 1) // you are on eastern edge of map
                 {
-                    isTerrainAround[0] = false;
+                    if (!flatEarth && Map.TileC2(0, row - 1).Type == terrain)
+                    {
+                        index = 1; // tile on mirror side of map
+                    }
                 }
-                else if (Map.TileC2(0, row - 1).Type == terrain)
+                else if (Map.TileC2(col + 1, row - 1).Type == terrain)
                 {
-                    isTerrainAround[0] = true;  // tile on mirror side of map
+                    index = 1;
                 }
-            }
-            else if (Map.TileC2(col + 1, row - 1).Type == terrain)
-            {
-                isTerrainAround[0] = true;
-            }
-            // SE:
-            if (row == Ydim - 1)
-            {
-                isTerrainAround[1] = false;  // SE is beyond limits
-            }
-            else if (col == Xdim - 1)    // you are on eastern edge of map
-            {
-                if (flatEarth)
+
+                if (col == 0) // you are on western edge of map
                 {
-                    isTerrainAround[1] = false;
+                    if (!flatEarth && Map.TileC2(Xdim - 1, row - 1).Type == terrain)
+                    {
+                        index += 8;
+                    }
                 }
-                else if (Map.TileC2(0, row + 1).Type == terrain)
+                else if (Map.TileC2(col - 1, row - 1).Type == terrain)
                 {
-                    isTerrainAround[1] = true;  // tile on mirror side of map
+                    index += 8;
                 }
-            }
-            else if (Map.TileC2(col + 1, row + 1).Type == terrain)
-            {
-                isTerrainAround[1] = true;
-            }
-            // SW:
-            if (row == Ydim - 1)
-            {
-                isTerrainAround[2] = false; // SW is beyond limits
-            }
-            else if (col == 0)    // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isTerrainAround[2] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row + 1).Type == terrain)
-                {
-                    isTerrainAround[2] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row + 1).Type == terrain)
-            {
-                isTerrainAround[2] = true;
-            }
-            // NW:
-            if (row == 0)
-            {
-                isTerrainAround[3] = false;  // NW is beyond limits
-            }
-            else if (col == 0) // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isTerrainAround[3] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row - 1).Type == terrain)
-                {
-                    isTerrainAround[3] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row - 1).Type == terrain)
-            {
-                isTerrainAround[3] = true;
             }
 
-            return isTerrainAround;
+            if (row != Ydim - 1)
+            {
+                // SE:
+                if (col == Xdim - 1) // you are on eastern edge of map
+                {
+                    if (!flatEarth && Map.TileC2(0, row + 1).Type == terrain)
+                    {
+                        index += 2; // tile on mirror side of map
+                    }
+                }
+                else if (Map.TileC2(col + 1, row + 1).Type == terrain)
+                {
+                    index += 2;
+                }
+
+                // SW:
+                if (col == 0) // you are on western edge of map
+                {
+                    if (!flatEarth && Map.TileC2(Xdim - 1, row + 1).Type == terrain)
+                    {
+                        index += 4;
+                    }
+                }
+                else if (Map.TileC2(col - 1, row + 1).Type == terrain)
+                {
+                    index += 4;
+                }
+            }
+
+            return index;
         }
 
         private static int IsRiverAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles are not rivers (river=true, no river=false). Index=0 is NE, follows in clockwise direction.
-            int river = 0;
+            var river = 0;
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim; // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim; // no need for such correction for Y
+            var xDim = 2 * Map.Xdim; // X=50 in marked as X=100 in Civ2
+            var yDim = Map.Ydim; // no need for such correction for Y
 
             // Observe in all directions if river is present
             if (row != 0)
             { 
                 // NE:
-                if (col == Xdim - 1) // you are on eastern edge of map
+                if (col == xDim - 1) // you are on eastern edge of map
                 {
                     if (!flatEarth && (Map.TileC2(0, row - 1).River || Map.TileC2(0, row - 1).Type == TerrainType.Ocean))
                     {
@@ -621,7 +552,7 @@ namespace EtoFormsUI
                 // NW:
                 if (col == 0) // you are on western edge of map
                 {
-                    if (!flatEarth && (Map.TileC2(Xdim - 1, row - 1).River || Map.TileC2(Xdim - 1, row - 1).Type == TerrainType.Ocean))
+                    if (!flatEarth && (Map.TileC2(xDim - 1, row - 1).River || Map.TileC2(xDim - 1, row - 1).Type == TerrainType.Ocean))
                     {
                         river += 8;
                     }
@@ -633,9 +564,9 @@ namespace EtoFormsUI
             }
 
             // SE:
-            if (row != Ydim - 1)
+            if (row != yDim - 1)
             {
-                if (col == Xdim - 1) // you are on eastern edge of map
+                if (col == xDim - 1) // you are on eastern edge of map
                 {
                     if (!flatEarth && (Map.TileC2(0, row + 1).River || Map.TileC2(0, row + 1).Type == TerrainType.Ocean))
                     {
@@ -650,8 +581,8 @@ namespace EtoFormsUI
 
                 if (col == 0) // you are on western edge of map
                 {
-                    if (!flatEarth && (Map.TileC2(Xdim - 1, row + 1).River ||
-                             Map.TileC2(Xdim - 1, row + 1).Type == TerrainType.Ocean))
+                    if (!flatEarth && (Map.TileC2(xDim - 1, row + 1).River ||
+                             Map.TileC2(xDim - 1, row + 1).Type == TerrainType.Ocean))
                     {
                         river += 4;
                     }
