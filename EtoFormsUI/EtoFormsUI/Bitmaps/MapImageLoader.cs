@@ -32,7 +32,6 @@ namespace EtoFormsUI
 
             // Initialize objects
             var cities = new List<CityImage>();
-            var flags = new List<Bitmap>();
             
             // Load special colours
             var colours = new List<Color>();
@@ -113,9 +112,49 @@ namespace EtoFormsUI
             Cities = cities.ToArray();
 
             var lastRow = last[max];
+            var flagHeight = 0;
+            for (var i = lastRow - 1; i > 0; i--)
+            {
+                if (citiesImage.GetPixel(1, i) != borderColour) continue;
+                flagHeight = lastRow - i;
+                break;
+            }
+
+            var flagWidth = 0;
+            for (var i = 1; i < flagHeight; i++)
+            {
+                if (citiesImage.GetPixel(i, lastRow -1) != borderColour) continue;
+                flagWidth = i;
+                break;
+            }
+
+            var flags = new List<PlayerFlag>();
+            var playerColours = new List<Color>();
+            var topLeft = lastRow - 2 * flagHeight + 1;
+            var col = 1;
+            for (; col < citiesImage.Width; col += flagWidth)
+            {
+                if (citiesImage.GetPixel(col + flagWidth -1, topLeft) == borderColour)
+                {
+                    flags.Add(new PlayerFlag
+                    {
+                        Normal = citiesImage.Clone(new Rectangle(col, topLeft + flagHeight, flagWidth -1, flagHeight -1)),
+                        Smaller = citiesImage.Clone(new Rectangle(col, topLeft, flagWidth -1, flagHeight -1))
+                    });
+                    playerColours.Add(citiesImage.GetPixel(col, topLeft -2));
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            PlayerColours = playerColours.ToArray();
+            Flags = flags.ToArray();
+
+            var specials = new List<Bitmap>();
             
-
-
+            
             //
             // // Get flag bitmaps
             // for (int col = 0; col < 9; col++)
@@ -143,6 +182,10 @@ namespace EtoFormsUI
             //
             // citiesImage.Dispose();
         }
+
+        public static PlayerFlag[] Flags { get; set; }
+
+        public static Color[] PlayerColours { get; set; }
 
         private static CityImage MakeCityImage(Bitmap citiesImage, int y, int x, int width, int height)
         {
@@ -197,6 +240,12 @@ namespace EtoFormsUI
                 SizeLoc = new Point(sizeX, sizeY)
             };
         }
+    }
+
+    public class PlayerFlag
+    {
+        public Bitmap Normal { get; set; }
+        public Bitmap Smaller { get; set; }
     }
 
     public sealed class CityImage
