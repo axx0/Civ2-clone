@@ -360,10 +360,10 @@ namespace EtoFormsUI
                 if (tile.Pollution) g.DrawImage(Images.Pollution, 0, 0);
 
                 // Fortress
-                if (tile.Fortress) g.DrawImage(Images.Fortress, 0, 0);
-
+                if (tile.Fortress) g.DrawImage(MapImages.Specials[1], 0, 0);
+                
                 // Airbase
-                if (tile.Airbase) g.DrawImage(Images.Airbase, 0, 0);
+                else if (tile.Airbase) g.DrawImage(MapImages.Specials[tile.IsUnitPresent ? 3 : 2], 0, 0); 
             }
 
             return _tilePic;

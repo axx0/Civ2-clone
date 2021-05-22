@@ -107,7 +107,7 @@ namespace EtoFormsUI
             // Draw city flag if units are present in the city
             if (city.AnyUnitsPresent())
             {
-                using var _flagPic = Images.CityFlag[city.OwnerId].Resize(zoom);
+                using var _flagPic = MapImages.Flags[city.OwnerId].Normal.Resize(zoom);
                 g.DrawImage(_flagPic,
                     dest.X + (flagLoc.X - 3).ZoomScale(zoom),
                     dest.Y + (flagLoc.Y - 17).ZoomScale(zoom));

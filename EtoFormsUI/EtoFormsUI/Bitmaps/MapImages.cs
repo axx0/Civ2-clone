@@ -139,8 +139,8 @@ namespace EtoFormsUI
                 {
                     flags.Add(new PlayerFlag
                     {
-                        Normal = citiesImage.Clone(new Rectangle(col, topLeft + flagHeight, flagWidth -1, flagHeight -1)),
-                        Smaller = citiesImage.Clone(new Rectangle(col, topLeft, flagWidth -1, flagHeight -1))
+                        Smaller = citiesImage.Clone(new Rectangle(col, topLeft + flagHeight, flagWidth -1, flagHeight -1)),
+                        Normal = citiesImage.Clone(new Rectangle(col, topLeft, flagWidth -1, flagHeight -1))
                     });
                     playerColours.Add(citiesImage.GetPixel(col, topLeft -2));
                     darkColours.Add(citiesImage.GetPixel(col, topLeft - 3) == Colors.Transparent
