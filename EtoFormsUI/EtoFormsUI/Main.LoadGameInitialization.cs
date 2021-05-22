@@ -15,7 +15,7 @@ namespace EtoFormsUI
         public void LoadGameInitialization(Ruleset ruleset, string SAVname)
         {
             Game.LoadGame(ruleset, SAVname);
-            Images.LoadGraphicsAssetsFromFiles(ruleset.Root);
+            Images.LoadGraphicsAssetsFromFiles(ruleset);
         }
 
         public void LoadScenarioInit(Ruleset ruleset, string SCNname)

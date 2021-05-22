@@ -10,20 +10,19 @@ namespace EtoFormsUI
     {
         public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, GrasslandShield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT, ShieldShadow;
         public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, CityFlag, Improvements, BattleAnim;
-        public static Bitmap[,] Coast, City, CityWall, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
+        public static Bitmap[,] Coast, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
         public static Point[] UnitShieldLoc = new Point[63];
-        public static Point[,] CityFlagLoc, CitySizeWindowLoc, CityWallFlagLoc, CityWallSizeWindowLoc;
         
         public static Bitmap[,] MapTileGraphic;
 
-        public static void LoadGraphicsAssetsFromFiles(string path)
+        public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset)
         {
-            MapImages.LoadCities(new Ruleset { FolderPath = path});
-            TerrainBitmapsImportFromFile(path);
-            CitiesBitmapsImportFromFile(path);
-            UnitsBitmapsImportFromFile(path);
-            PeopleIconsBitmapsImportFromFile(path);
-            IconsBitmapsImportFromFile(path);
+            MapImages.LoadCities(ruleset);
+            TerrainBitmapsImportFromFile(ruleset.Root);
+            CitiesBitmapsImportFromFile(ruleset.Root);
+            UnitsBitmapsImportFromFile(ruleset.Root);
+            PeopleIconsBitmapsImportFromFile(ruleset.Root);
+            IconsBitmapsImportFromFile(ruleset.Root);
             CityWallpaperBitmapImportFromFile();
         }
 
