@@ -21,7 +21,7 @@ namespace EtoFormsUI
             // EVERYTHING HERE IS IN CIV2-COORDS AND NOT IN REGULAR COORDS!!!
 
             // First convert regular coords to civ2-style
-            col = 2 * col + row % 2;   // you don't change row
+            col = 2 * col + row % 2; // you don't change row
             int Xdim = 2 * Map.Xdim;
             int Ydim = Map.Ydim;
 
@@ -49,7 +49,8 @@ namespace EtoFormsUI
 
                 // Dither
                 // Determine type of terrain in all 4 directions. Be careful if you're on map edge.
-                TerrainType?[,] tiletype = new TerrainType?[2, 2] { { null, null }, { null, null } };   // null = beyond map limits
+                TerrainType?[,]
+                    tiletype = new TerrainType?[2, 2] {{null, null}, {null, null}}; // null = beyond map limits
                 if (flatEarth)
                 {
                     // Determine type of NW tile
@@ -61,7 +62,7 @@ namespace EtoFormsUI
                     // Determine type of SE tile
                     if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
                 }
-                else    // Round earth
+                else // Round earth
                 {
                     // Determine type of NW tile
                     if ((col == 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
@@ -76,8 +77,9 @@ namespace EtoFormsUI
                     if ((col == Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
                     else if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
                 }
+
                 // Implement dither on 4 locations in square
-                for (int tileX = 0; tileX < 2; tileX++)    // for 4 directions
+                for (int tileX = 0; tileX < 2; tileX++) // for 4 directions
                 {
                     for (int tileY = 0; tileY < 2; tileY++)
                     {
@@ -104,7 +106,7 @@ namespace EtoFormsUI
                     // Draw coast & river mouth
                     case TerrainType.Ocean:
                     {
-                        bool[] land = IsLandAround(col, row, flatEarth);   // Determine if land is present in 8 directions
+                        bool[] land = IsLandAround(col, row, flatEarth); // Determine if land is present in 8 directions
 
                         // Draw coast & river mouth tiles
                         // NW+N+NE tiles
@@ -149,19 +151,22 @@ namespace EtoFormsUI
 
                         // River mouth
                         // If river is next to ocean, draw river mouth on this tile.
-                        if (col + 1 < Xdim && row - 1 >= 0)    // NE there is no edge of map
+                        if (col + 1 < Xdim && row - 1 >= 0) // NE there is no edge of map
                         {
                             if (land[1] && Map.TileC2(col + 1, row - 1).River) g.DrawImage(Images.RiverMouth[0], 0, 0);
                         }
-                        if (col + 1 < Xdim && row + 1 < Ydim)    // SE there is no edge of map
+
+                        if (col + 1 < Xdim && row + 1 < Ydim) // SE there is no edge of map
                         {
                             if (land[3] && Map.TileC2(col + 1, row + 1).River) g.DrawImage(Images.RiverMouth[1], 0, 0);
                         }
-                        if (col - 1 >= 0 && row + 1 < Ydim)    // SW there is no edge of map
+
+                        if (col - 1 >= 0 && row + 1 < Ydim) // SW there is no edge of map
                         {
                             if (land[5] && Map.TileC2(col - 1, row + 1).River) g.DrawImage(Images.RiverMouth[2], 0, 0);
                         }
-                        if (col - 1 >= 0 && row - 1 >= 0)    // NW there is no edge of map
+
+                        if (col - 1 >= 0 && row - 1 >= 0) // NW there is no edge of map
                         {
                             if (land[7] && Map.TileC2(col - 1, row - 1).River) g.DrawImage(Images.RiverMouth[3], 0, 0);
                         }
@@ -196,14 +201,7 @@ namespace EtoFormsUI
                         g.DrawImage(Images.Hills[hillIndex], 0, 0);
                         break;
                     }
-                    
-                    case TerrainType.Grassland:
-                        // Draw shield for grasslands
-                        if (tile.HasShield)
-                        {
-                            g.DrawImage(Images.GrasslandShield, 0, 0);
-                        }
-                        break;
+
                 }
 
                 // Draw rivers
@@ -214,6 +212,13 @@ namespace EtoFormsUI
                     // Draw river tiles
                     g.DrawImage(Images.River[riverIndex], 0, 0);
                 }
+
+                // Draw shield for grasslands
+                if (tile.Type == TerrainType.Grassland && tile.HasShield)
+                {
+                    g.DrawImage(Images.GrasslandShield, 0, 0);
+                }
+
 
                 // Draw special resources if they exist
                 if (tile.SpecType != null)
@@ -246,7 +251,7 @@ namespace EtoFormsUI
                     }
                 }
 
-                
+
 
                 // Roads (cites also act as road tiles)
                 if (tile.Road || tile.IsCityPresent)
@@ -264,7 +269,7 @@ namespace EtoFormsUI
                     if (isRoadAround[7]) g.DrawImage(Images.Road[7], 0, 0);  // to NW
                     if (isRoadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false }))
                     {
-                        g.DrawImage(Images.Road[0], 0, 0);    // No road around
+                        g.DrawImage(Images.Road[0], 0, 0); // No road around
                     }
                 }
 
@@ -301,9 +306,9 @@ namespace EtoFormsUI
 
                 // Fortress
                 if (tile.Fortress) g.DrawImage(MapImages.Specials[1], 0, 0);
-                
+
                 // Airbase
-                else if (tile.Airbase) g.DrawImage(MapImages.Specials[tile.IsUnitPresent ? 3 : 2], 0, 0); 
+                else if (tile.Airbase) g.DrawImage(MapImages.Specials[tile.IsUnitPresent ? 3 : 2], 0, 0);
             }
 
             return _tilePic;
