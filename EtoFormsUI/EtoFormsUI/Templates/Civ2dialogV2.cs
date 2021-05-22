@@ -19,17 +19,18 @@ namespace EtoFormsUI
         private readonly CheckBox[] _checkBox;
         private readonly FormattedText[] _formattedOptionsTexts;
 
-        private readonly List<string> _options;
-        private readonly List<string> _text;
+        private readonly IList<string> _options;
+        private readonly IList<string> _text;
         private readonly string _popupTitle;
 
         private readonly bool _hasCheckBoxes;
-        private readonly List<TextStyles> _textStyles;
+        private readonly IList<TextStyles> _textStyles;
 
         private int _textBoxAlignment;
         private readonly int _optionsColumns;
         private readonly int _optionRows;
         private readonly Drawable _surface;
+        private readonly Bitmap[] _icons;
         
         /// <summary>
         /// Show a popup box (dialog).
@@ -38,8 +39,9 @@ namespace EtoFormsUI
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1)
+        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null)
         {
+            _icons = icons ?? Array.Empty<Bitmap>();
             _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
             if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
 
@@ -62,9 +64,10 @@ namespace EtoFormsUI
             _hasCheckBoxes = popupBox.Checkbox;
 
             // Determine size of inner panel
-            _optionRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
+            _optionRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns) ;
             var textRows = popupBox.Text?.Count ?? 0;
-            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + _optionRows * 32 + textRows * 30);
+            var iconRows = _icons.Sum(i => i.Height);
+            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + (_optionRows - _icons.Length) * 32 + textRows * 30 + iconRows);
             Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + _paddingTop + _paddingBtm);
             
             // Center the dialog on screen by default
@@ -245,9 +248,10 @@ namespace EtoFormsUI
                 // Update radio btn
                 else
                 {
+                    var rowHeight = _icons.Length > 0 ? _icons[0].Height : 32;
                     for (var row = 0; row < _optionRows; row++)
                     {
-                        if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + 32 * row && e.Location.Y < _paddingTop + yOffset + 5 + 32 * (row + 1))
+                        if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + rowHeight * row && e.Location.Y < _paddingTop + yOffset + 5 + rowHeight * (row + 1))
                         {
                             var selectedIndex = row;
                             if (_optionsColumns > 1)
@@ -403,7 +407,7 @@ namespace EtoFormsUI
             {
                 for (var i = 0; i < _text.Count; i++)
                 {
-                    var centered = (_textStyles?.Count ?? 0) > i && _textStyles[i] == TextStyles.Centered;
+                    var centered = _textStyles != null && (int) _textStyles?.Count > i && _textStyles[i] == TextStyles.Centered;
                     Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
                         Color.FromArgb(51, 51, 51), 
                         new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
@@ -420,6 +424,8 @@ namespace EtoFormsUI
                 var initialY = yOffset;
                 var widthOffset = 21;
                 var column = 1;
+                
+                using var pen = new Pen(Color.FromArgb(64, 64, 64));
                 for (var rowCount = 0; rowCount < _options.Count; rowCount++)
                 {
                     // Draw checkboxes
@@ -430,7 +436,6 @@ namespace EtoFormsUI
 
                         e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
 
-                        using var pen = new Pen(Color.FromArgb(64, 64, 64));
                         if (_checkBox[rowCount].HasFocus)
                             e.Graphics.DrawRectangle(pen,
                                 new Rectangle(45, _paddingTop + 5 + yOffset,
@@ -439,15 +444,36 @@ namespace EtoFormsUI
                     // Draw radio buttons
                     else
                     {
-                        Draw.RadioBtn(e.Graphics, SelectedIndex == rowCount,
-                            new Point(widthOffset, _paddingTop + 9 + yOffset));
+                        if (rowCount < _icons.Length)
+                        {
+                            e.Graphics.DrawImage(_icons[rowCount], new Point(widthOffset , _paddingTop + 5 + yOffset));
+                            e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
+                                new Point(_icons[rowCount].Width + 25, _paddingTop + 5 + yOffset + _icons[rowCount].Height / 2 -18));
+                            if (SelectedIndex == rowCount)
+                            {
+                                e.Graphics.DrawRectangle(pen,
+                                    new Rectangle(widthOffset, _paddingTop + yOffset,
+                                        _icons[rowCount].Width, _icons[rowCount].Height -5));
+                            }
 
-                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
+                            yOffset += _icons[rowCount].Height - 32;
+                        }
+                        else
+                        {
 
-                        using var pen = new Pen(Color.FromArgb(64, 64, 64));
-                        if (SelectedIndex == rowCount)
-                            e.Graphics.DrawRectangle(pen,
-                                new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset, column == _optionsColumns ? Width / _optionsColumns - 45 -14 : Width / _optionsColumns - 25, 26));
+                            Draw.RadioBtn(e.Graphics, SelectedIndex == rowCount,
+                                new Point(widthOffset, _paddingTop + 9 + yOffset));
+
+                            e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
+                                new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
+
+                            if (SelectedIndex == rowCount)
+                                e.Graphics.DrawRectangle(pen,
+                                    new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset,
+                                        column == _optionsColumns
+                                            ? Width / _optionsColumns - 45 - 14
+                                            : Width / _optionsColumns - 25, 26));
+                        }
                     }
 
                     if (rowCount % _optionRows == _optionRows -1)

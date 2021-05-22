@@ -35,15 +35,11 @@ namespace Civ2engine
             _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
             _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
         }
-
-        public static Rules ParseRules(Ruleset configRuleSet)
-        {
-            return ParseRules(configRuleSet.FolderPath);
-        }
-        public static Rules ParseRules(string path)
+        
+        public static Rules ParseRules(Ruleset ruleset)
         {
             var rules = new Rules();
-            var filePath = Utils.GetFilePath("RULES.txt", path);
+            var filePath = Utils.GetFilePath("RULES.txt", ruleset.Paths);
             TextFileParser.ParseFile(filePath, new RulesParser {Rules = rules});
             return rules;
         }
@@ -357,7 +353,7 @@ namespace Civ2engine
             {
                 var parts = values[i].Split(';', StringSplitOptions.TrimEntries);
                 techs.Add(parts[0]);
-                Rules.AdvanceMappings.Add(parts[1], i);
+                Rules.AdvanceMappings.Add(parts[1].Split(" ", 2, StringSplitOptions.TrimEntries )[0], i);
             }
 
             Rules.Advances = techs.Select(line =>

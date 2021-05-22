@@ -12,7 +12,7 @@ namespace Civ2engine
         public static List<PopupBox> LoadPopupBoxes(string root)
         {
             var boxes = new List<PopupBox>();
-            var filePath = Utils.GetFilePath("game.txt", root);
+            var filePath = Utils.GetFilePath("game.txt", new []{ root});
             TextFileParser.ParseFile(filePath, new PopupBoxReader {Boxes = boxes}, true);
             return boxes;
         }

@@ -5,11 +5,11 @@ namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
-        public static void LoadGame(string savDirectoryPath, string SAVname)
+        public static void LoadGame(Ruleset ruleset, string SAVname)
         {
             // Read SAV file & RULES.txt
-            var rules = RulesParser.ParseRules(savDirectoryPath);
-            GameData gameData = Read.ReadSAVFile(savDirectoryPath, SAVname);
+            var rules = RulesParser.ParseRules(ruleset);
+            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, SAVname);
 
             // Make an instance of a new game & map
             _instance = new Game(rules, gameData);

@@ -14,65 +14,61 @@ namespace EtoFormsUI
             // Determine city style
             // For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
             // If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
-            CityStyleType style = city.Owner.CityStyle;
+            var style = city.Owner.CityStyle;
             int sizeStyle;
             if (style != CityStyleType.Industrial && style != CityStyleType.Modern)
             {
-                if (city.ImprovementExists(ImprovementType.Palace)) // Palace exists
+                sizeStyle = city.Size switch
                 {
-                    if (city.Size <= 3) sizeStyle = 1;
-                    else if (city.Size > 3 && city.Size <= 5) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-                else
-                {
-                    if (city.Size <= 3) sizeStyle = 0;
-                    else if (city.Size > 3 && city.Size <= 5) sizeStyle = 1;
-                    else if (city.Size > 5 && city.Size <= 7) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
+                    <= 3 => 0,
+                    > 3 and <= 5 => 1,
+                    > 5 and <= 7 => 2,
+                    _ => 3
+                };
+
             }
             // If city is industrial => 4 city size styles (0=sizes 1...4, 1=sizes 5...7, 2=sizes 8...10, 3=sizes >= 11)
             // If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...7, 3=sizes >= 8)
             else if (style == CityStyleType.Industrial)
             {
-                if (city.ImprovementExists(ImprovementType.Palace)) // Palace exists
+                sizeStyle = city.Size switch
                 {
-                    if (city.Size <= 4) sizeStyle = 1;
-                    else if (city.Size > 4 && city.Size <= 7) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-                else
-                {
-                    if (city.Size <= 4) sizeStyle = 0;
-                    else if (city.Size > 4 && city.Size <= 7) sizeStyle = 1;
-                    else if (city.Size > 7 && city.Size <= 10) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
+                    <= 4 => 0,
+                    > 4 and <= 7 => 1,
+                    > 7 and <= 10 => 2,
+                    _ => 3
+                };
             }
             // If city is modern => 4 city size styles (0=sizes 1...4, 1=sizes 5...10, 2=sizes 11...18, 3=sizes >= 19)
             // If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...10, 3=sizes >= 11)
             else
             {
-                if (city.ImprovementExists(ImprovementType.Palace)) // Palace exists
+                sizeStyle = city.Size switch
                 {
-                    if (city.Size <= 4) sizeStyle = 1;
-                    else if (city.Size > 4 && city.Size <= 10) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
-                else
-                {
-                    if (city.Size <= 4) sizeStyle = 0;
-                    else if (city.Size > 4 && city.Size <= 10) sizeStyle = 1;
-                    else if (city.Size > 10 && city.Size <= 18) sizeStyle = 2;
-                    else sizeStyle = 3;
-                }
+                    <= 4 => 0,
+                    > 4 and <= 10 => 1,
+                    > 10 and <= 18 => 2,
+                    _ => 3
+                };
             }
 
+            if (sizeStyle < 3 && city.ImprovementExists(ImprovementType.Palace))
+            {
+                sizeStyle++;
+            }
+
+            var cityIndex = (int) style * 8 + sizeStyle;
+            if(city.ImprovementExists(ImprovementType.CityWalls))
+            {
+                cityIndex += 4;
+            }
+
+            var cityImage = MapImages.Cities[cityIndex];
+
             // Depending on the presence of a wall, get images of city and locations of size window & flag
-            var cityPic = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWall[(int)style, sizeStyle] : Images.City[(int)style, sizeStyle];
-            var sizeWinLoc = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallSizeWindowLoc[(int)style, sizeStyle] : Images.CitySizeWindowLoc[(int)style, sizeStyle];
-            var flagLoc = city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallFlagLoc[(int)style, sizeStyle] : Images.CityFlagLoc[(int)style, sizeStyle];
+            var cityPic = cityImage.Bitmap; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWall[(int)style, sizeStyle] : Images.City[(int)style, sizeStyle];
+            var sizeWinLoc = cityImage.SizeLoc; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallSizeWindowLoc[(int)style, sizeStyle] : Images.CitySizeWindowLoc[(int)style, sizeStyle];
+            var flagLoc = cityImage.FlagLoc; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallFlagLoc[(int)style, sizeStyle] : Images.CityFlagLoc[(int)style, sizeStyle];
 
             // Draw city
             using var _cityPic = cityPic.Resize(zoom);
@@ -111,7 +107,7 @@ namespace EtoFormsUI
             // Draw city flag if units are present in the city
             if (city.AnyUnitsPresent())
             {
-                using var _flagPic = Images.CityFlag[city.OwnerId].Resize(zoom);
+                using var _flagPic = MapImages.Flags[city.OwnerId].Normal.Resize(zoom);
                 g.DrawImage(_flagPic,
                     dest.X + (flagLoc.X - 3).ZoomScale(zoom),
                     dest.Y + (flagLoc.Y - 17).ZoomScale(zoom));

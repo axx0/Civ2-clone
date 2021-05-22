@@ -5,6 +5,7 @@ using Eto.Drawing;
 using Civ2engine.Events;
 using Civ2engine;
 using System.Collections.Generic;
+using System.Linq;
 using EtoFormsUI.Initialization;
 
 namespace EtoFormsUI
@@ -13,7 +14,7 @@ namespace EtoFormsUI
     {
         private string savDirectory, savName;
 
-        private void LocateStartingFiles(string title, FileFilter filter, Action<string, string> initializer,
+        private void LocateStartingFiles(string title, FileFilter filter, Action<Ruleset, string> initializer,
             Action start)
         {
             using var ofd = new OpenFileDialog
@@ -30,8 +31,13 @@ namespace EtoFormsUI
             {
                 // Get SAV name & directory name from result
                 savDirectory = Path.GetDirectoryName(ofd.FileName);
+                var ruleSet = new Ruleset
+                {
+                    FolderPath = savDirectory,
+                    Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.Civ2Path
+                };
                 savName = Path.GetFileName(ofd.FileName);
-                initializer(savDirectory, savName);
+                initializer(ruleSet, savName);
                 Sounds.Stop();
                 Sounds.PlaySound("MENUOK.WAV");
 
@@ -68,7 +74,7 @@ namespace EtoFormsUI
                             case 1:
                             {
                                 LocateStartingFiles("Select Map To Load",
-                                    new FileFilter("Save Files (*.mp)", ".mp"), LoadScenarioInit,
+                                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit,
                                     () => { });
                                 break;
                             }

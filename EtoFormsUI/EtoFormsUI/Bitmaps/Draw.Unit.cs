@@ -22,8 +22,10 @@ namespace EtoFormsUI
             }
 
             // Draw fortification
-            using var _fortPic = Images.Fortified.Resize(zoom);
-            if (isFortified) g.DrawImage(_fortPic, dest.X, dest.Y);
+            if (!isFortified) return;
+            
+            using var fortPic = MapImages.Specials[0].Resize(zoom);
+            g.DrawImage(fortPic, dest.X, dest.Y);
         }
 
         public static void UnitShield(Graphics g, UnitType unitType, int ownerId, OrderType unitOrder, bool isStacked, int unitHP, int unitMaxHP, int zoom, Point dest)

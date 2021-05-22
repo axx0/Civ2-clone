@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
@@ -33,7 +34,7 @@ namespace EtoFormsUI.Initialization
                         new PopupBox
                         {
                             Title = "Select game version", Options = rulesFiles.Select(f => f.Name).ToList(),
-                            Button = new List<string> {"OK", "Cancel"}
+                            Button = new List<string> {"OK",Labels.Cancel}
                         });
                     popupBox.ShowModal(main);
 
@@ -45,13 +46,14 @@ namespace EtoFormsUI.Initialization
         {
             var config = new GameInitializationConfig
                 {CustomizeWorld = customizeWorld, Random = new Random(), RuleSet = SelectGameToStart(mainForm)};
-
             if (config.RuleSet == null)
             {
                 mainForm.MainMenu();
             }
             else
             {
+                Labels.UpdateLabels(config.RuleSet);
+                MapImages.LoadCities(config.RuleSet);
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
                 {
                     boxes[box.Name] = box;
@@ -233,9 +235,9 @@ namespace EtoFormsUI.Initialization
         {
             config.Rules = RulesParser.ParseRules(config.RuleSet);
             var popup = config.PopUps["TRIBE"];
-            if (!popup.Button.Contains("Cancel"))
+            if (!popup.Button.Contains(Labels.Cancel))
             {
-                popup.Button.Add("Cancel");
+                popup.Button.Add(Labels.Cancel);
             }
             popup.Options = config.Rules.Leaders.Select(l => l.Plural).ToList();
             var tribeDialog = new Civ2dialogV2(mainForm, popup, optionsCols: 3);
@@ -253,7 +255,7 @@ namespace EtoFormsUI.Initialization
             {
                 playerCiv
             };
-            if (tribeDialog.SelectedButton == "Custom")
+            if (tribeDialog.SelectedButton == Labels.Custom)
             {
                 var tribePopup = config.PopUps["CUSTOMTRIBE"];
                 if (tribePopup.Text == null)
@@ -301,9 +303,9 @@ namespace EtoFormsUI.Initialization
                         var titlesPop = config.PopUps["CUSTOMTRIBE2"];
                         titlesPop.Text = config.Rules.Governments.Select(g => g.Name + ": ").ToList();
                         
-                        if (!titlesPop.Button.Contains("Cancel"))
+                        if (!titlesPop.Button.Contains(Labels.Cancel))
                         {
-                            titlesPop.Button.Add("Cancel");
+                            titlesPop.Button.Add(Labels.Cancel);
                         }
                         var customTitles = new Civ2dialogV2(mainForm, titlesPop, textBoxes: playerCiv.Titles.Select(
                             ((s, i) => new TextBoxDefinition
@@ -313,7 +315,7 @@ namespace EtoFormsUI.Initialization
                                 InitialValue = s
                             })).ToList());
                         customTitles.ShowModal(mainForm);
-                        if (customTitles.SelectedButton == "OK")
+                        if (customTitles.SelectedButton == Labels.Ok)
                         {
                             playerCiv.Titles = config.Rules.Governments.Select(g => customTitles.TextValues[g.Name])
                                 .ToArray();
@@ -344,7 +346,7 @@ namespace EtoFormsUI.Initialization
                     }
                 });
                 nameDialog.ShowModal(mainForm);
-                if (nameDialog.SelectedButton == "Cancel")
+                if (nameDialog.SelectedButton == Labels.Cancel)
                 {
                     SelectGender(mainForm, config);
                     return;
@@ -358,7 +360,32 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectCityStyle(Main mainForm, GameInitializationConfig config)
         {
-            throw new NotImplementedException();
+
+            var citiesPopup = config.PopUps["CUSTOMCITY"];
+            citiesPopup.Options ??= Labels.Items[247..251];
+
+            if (citiesPopup.Button.IndexOf(Labels.Cancel) == -1)
+            {
+                citiesPopup.Button.Add(Labels.Cancel);
+            }
+
+            var citiesDialog = new Civ2dialogV2(mainForm, citiesPopup,
+                icons: new[]
+                {
+                    MapImages.Cities[7].Bitmap, MapImages.Cities[15].Bitmap, 
+                    MapImages.Cities[23].Bitmap, MapImages.Cities[31].Bitmap
+                });
+            citiesDialog.SelectedIndex = (int)config.Civilizations[0].CityStyle;
+            citiesDialog.ShowModal(mainForm);
+            if (citiesDialog.SelectedIndex == int.MinValue)
+            {
+                SelectGender(mainForm, config);
+                return;
+            }
+
+            config.Civilizations[0].CityStyle = (CityStyleType) citiesDialog.SelectedIndex;
+            
+            //TODO: Start game...
         }
 
         private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe)
