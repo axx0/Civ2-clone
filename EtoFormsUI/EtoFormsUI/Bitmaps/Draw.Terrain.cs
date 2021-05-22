@@ -254,25 +254,10 @@ namespace EtoFormsUI
                 // Draw rivers
                 if (tile.River)
                 {
-                    bool[] isRiverAround = IsRiverAround(col, row, flatEarth);
+                    var riverIndex = IsRiverAround(col, row, flatEarth);
 
                     // Draw river tiles
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, false, false })) g.DrawImage(Images.River[0], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, false, false })) g.DrawImage(Images.River[1], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, false, false })) g.DrawImage(Images.River[2], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, false, false })) g.DrawImage(Images.River[3], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, true, false })) g.DrawImage(Images.River[4], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, true, false })) g.DrawImage(Images.River[5], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, true, false })) g.DrawImage(Images.River[6], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, true, false })) g.DrawImage(Images.River[7], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, false, true })) g.DrawImage(Images.River[8], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, false, true })) g.DrawImage(Images.River[9], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, false, true })) g.DrawImage(Images.River[10], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, false, true })) g.DrawImage(Images.River[11], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, false, true, true })) g.DrawImage(Images.River[12], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, false, true, true })) g.DrawImage(Images.River[13], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { false, true, true, true })) g.DrawImage(Images.River[14], 0, 0);
-                    if (isRiverAround.SequenceEqual(new bool[4] { true, true, true, true })) g.DrawImage(Images.River[15], 0, 0);
+                    g.DrawImage(Images.River[riverIndex], 0, 0);
                 }
 
                 // Draw special resources if they exist
@@ -607,98 +592,76 @@ namespace EtoFormsUI
             return isTerrainAround;
         }
 
-        private static bool[] IsRiverAround(int col, int row, bool flatEarth)
+        private static int IsRiverAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles are not rivers (river=true, no river=false). Index=0 is NE, follows in clockwise direction.
-            bool[] isRiverAround = new bool[4] { false, false, false, false };
+            int river = 0;
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.Xdim; // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.Ydim; // no need for such correction for Y
 
             // Observe in all directions if river is present
-            // NE:
-            if (row == 0)
-            {
-                isRiverAround[0] = false;  // NE is beyond limits
-            }
-            else if (col == Xdim - 1)    // you are on eastern edge of map
-            {
-                if (flatEarth)
+            if (row != 0)
+            { 
+                // NE:
+                if (col == Xdim - 1) // you are on eastern edge of map
                 {
-                    isRiverAround[0] = false;
+                    if (!flatEarth && (Map.TileC2(0, row - 1).River || Map.TileC2(0, row - 1).Type == TerrainType.Ocean))
+                    {
+                        river = 1; // tile on mirror side of map
+                    }
                 }
-                else if (Map.TileC2(0, row - 1).River || Map.TileC2(0, row - 1).Type == TerrainType.Ocean)
+                else if (Map.TileC2(col + 1, row - 1).River || Map.TileC2(col + 1, row - 1).Type == TerrainType.Ocean)
                 {
-                    isRiverAround[0] = true;  // tile on mirror side of map
+                    river = 1;
                 }
-            }
-            else if (Map.TileC2(col + 1, row - 1).River || Map.TileC2(col + 1, row - 1).Type == TerrainType.Ocean)
-            {
-                isRiverAround[0] = true;
-            }
-            // SE:
-            if (row == Ydim - 1)
-            {
-                isRiverAround[1] = false;  // SE is beyond limits
-            }
-            else if (col == Xdim - 1)    // you are on eastern edge of map
-            {
-                if (flatEarth)
+                
+                
+                // NW:
+                if (col == 0) // you are on western edge of map
                 {
-                    isRiverAround[1] = false;
+                    if (!flatEarth && (Map.TileC2(Xdim - 1, row - 1).River || Map.TileC2(Xdim - 1, row - 1).Type == TerrainType.Ocean))
+                    {
+                        river += 8;
+                    }
                 }
-                else if (Map.TileC2(0, row + 1).River || Map.TileC2(0, row + 1).Type == TerrainType.Ocean)
+                else if (Map.TileC2(col - 1, row - 1).River || Map.TileC2(col - 1, row - 1).Type == TerrainType.Ocean)
                 {
-                    isRiverAround[1] = true;  // tile on mirror side of map
+                    river += 8;
                 }
-            }
-            else if (Map.TileC2(col + 1, row + 1).River || Map.TileC2(col + 1, row + 1).Type == TerrainType.Ocean)
-            {
-                isRiverAround[1] = true;
-            }
-            // SW:
-            if (row == Ydim - 1)
-            {
-                isRiverAround[2] = false; // SW is beyond limits
-            }
-            else if (col == 0)    // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isRiverAround[2] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row + 1).River || Map.TileC2(Xdim - 1, row + 1).Type == TerrainType.Ocean)
-                {
-                    isRiverAround[2] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row + 1).River || Map.TileC2(col - 1, row + 1).Type == TerrainType.Ocean)
-            {
-                isRiverAround[2] = true;
-            }
-            // NW:
-            if (row == 0)
-            {
-                isRiverAround[3] = false;  // NW is beyond limits
-            }
-            else if (col == 0) // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isRiverAround[3] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row - 1).River || Map.TileC2(Xdim - 1, row - 1).Type == TerrainType.Ocean)
-                {
-                    isRiverAround[3] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row - 1).River || Map.TileC2(col - 1, row - 1).Type == TerrainType.Ocean)
-            {
-                isRiverAround[3] = true;
             }
 
-            return isRiverAround;
+            // SE:
+            if (row != Ydim - 1)
+            {
+                if (col == Xdim - 1) // you are on eastern edge of map
+                {
+                    if (!flatEarth && (Map.TileC2(0, row + 1).River || Map.TileC2(0, row + 1).Type == TerrainType.Ocean))
+                    {
+                        // tile on mirror side of map
+                        river += 2;
+                    }
+                }
+                else if (Map.TileC2(col + 1, row + 1).River || Map.TileC2(col + 1, row + 1).Type == TerrainType.Ocean)
+                {
+                    river += 2;
+                }
+
+                if (col == 0) // you are on western edge of map
+                {
+                    if (!flatEarth && (Map.TileC2(Xdim - 1, row + 1).River ||
+                             Map.TileC2(Xdim - 1, row + 1).Type == TerrainType.Ocean))
+                    {
+                        river += 4;
+                    }
+                }
+                else if (Map.TileC2(col - 1, row + 1).River || Map.TileC2(col - 1, row + 1).Type == TerrainType.Ocean)
+                {
+                    river += 4;
+                }
+            }
+            return river;
         }
 
         private static bool[] IsRoadAround(int col, int row, bool flatEarth)
