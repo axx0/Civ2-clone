@@ -70,6 +70,20 @@ namespace Civ2engine
         public bool EnemyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
         public bool AnyCitiesPresentHere(int x, int y) => _cities.Any(city => city.X == x && city.Y == y);
 
+        /// <summary>
+        /// Determine all units inside a ship.
+        /// </summary>
+        /// <param name="ship">Ship.</param>
+        /// <returns>A list of all units in a ship.</returns>
+        public List<IUnit> UnitsOnShip(IUnit ship)
+        {
+            var unitsHere = Game.UnitsHere(ship.XY[0], ship.XY[1]);
+            unitsHere.Remove(ship);
+            var unitsInShip = unitsHere.Take(ship.ShipHold).ToList();
+
+            return unitsInShip;
+        }
+
         //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
         //                                  bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
         //{

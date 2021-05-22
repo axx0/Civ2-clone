@@ -31,9 +31,20 @@ namespace Civ2engine
                         {
                             case UnitMovementOrderResultType.Movement:
                                 {
+                                    var unitsOnShip = UnitsOnShip(_activeUnit); // Write down units in ship before it moves
+
                                     // Check if move was success (eg didn't hit obstacle)
                                     if (_activeUnit.Move(order))
                                     {
+                                        // If naval unit moved, move all units in hold
+                                        foreach (IUnit unit in unitsOnShip)
+                                        {
+                                            unit.PrevXY = unit.XY;
+                                            unit.X = _activeUnit.X;
+                                            unit.Y = _activeUnit.Y;
+                                            unit.Sleep();
+                                        }
+
                                         OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.MoveCommand));
                                     }
                                     break;

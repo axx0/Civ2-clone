@@ -198,6 +198,11 @@ namespace EtoFormsUI
 
                     // Units
                     List<IUnit> unitsHere = Game.UnitsHere(x, y);
+
+                    // If unit is ship, remove units that are in it
+                    var unitsonship = Game.UnitsOnShip(activeUnit);
+                    unitsHere.RemoveAll(u => unitsonship.Contains(u));
+
                     // If active unit is in this list-- > remove it
                     if (unitsHere.Contains(activeUnit)) unitsHere.Remove(activeUnit);
                     
