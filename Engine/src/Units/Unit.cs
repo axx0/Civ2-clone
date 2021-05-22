@@ -350,6 +350,15 @@ namespace Civ2engine.Units
         public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
         public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
+        public bool IsInShip
+        {
+            get
+            {
+                var ship = Game.UnitsHere(X, Y).Where(u => u.Domain == UnitGAS.Sea).First();
+                var unitsOnShip = Game.UnitsOnShip(ship);
+                return unitsOnShip.Contains(this);
+            }
+        }
 
         public string AttackSound => TypeDefinition.AttackSound;
         public City CityWithThisUnit => Game.GetCities.FirstOrDefault(c => c.X == X && c.Y == Y);

@@ -77,6 +77,7 @@ namespace Civ2engine.Units
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }
+        bool IsInShip { get; }
         string AttackSound { get; }
     }
 }
