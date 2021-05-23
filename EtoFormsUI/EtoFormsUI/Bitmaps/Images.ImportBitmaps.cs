@@ -339,26 +339,26 @@ namespace EtoFormsUI
                 {
                     if (_unitShield.GetPixel(x, y) == transparentPink)   // If color is pink, replace it
                     {
-                        ShieldFront[0].SetPixel(x, y, CivColors.Light[0]);  // red
-                        ShieldFront[1].SetPixel(x, y, CivColors.Light[1]);  // white
-                        ShieldFront[2].SetPixel(x, y, CivColors.Light[2]);  // green
-                        ShieldFront[3].SetPixel(x, y, CivColors.Light[3]);  // blue
-                        ShieldFront[4].SetPixel(x, y, CivColors.Light[4]);  // yellow
-                        ShieldFront[5].SetPixel(x, y, CivColors.Light[5]);  // cyan
-                        ShieldFront[6].SetPixel(x, y, CivColors.Light[6]);  // orange
-                        ShieldFront[7].SetPixel(x, y, CivColors.Light[7]);  // purple
+                        ShieldFront[0].SetPixel(x, y, MapImages.PlayerColours[0]);  // red
+                        ShieldFront[1].SetPixel(x, y, MapImages.PlayerColours[1]);  // white
+                        ShieldFront[2].SetPixel(x, y, MapImages.PlayerColours[2]);  // green
+                        ShieldFront[3].SetPixel(x, y, MapImages.PlayerColours[3]);  // blue
+                        ShieldFront[4].SetPixel(x, y, MapImages.PlayerColours[4]);  // yellow
+                        ShieldFront[5].SetPixel(x, y, MapImages.PlayerColours[5]);  // cyan
+                        ShieldFront[6].SetPixel(x, y, MapImages.PlayerColours[6]);  // orange
+                        ShieldFront[7].SetPixel(x, y, MapImages.PlayerColours[7]);  // purple
                     }
 
                     if (_backUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    // If color is red, replace it
                     {
-                        ShieldBack[0].SetPixel(x, y, CivColors.Dark[0]);  // red
-                        ShieldBack[1].SetPixel(x, y, CivColors.Dark[1]);  // white
-                        ShieldBack[2].SetPixel(x, y, CivColors.Dark[2]);  // green
-                        ShieldBack[3].SetPixel(x, y, CivColors.Dark[3]);  // blue
-                        ShieldBack[4].SetPixel(x, y, CivColors.Dark[4]);  // yellow
-                        ShieldBack[5].SetPixel(x, y, CivColors.Dark[5]);  // cyan
-                        ShieldBack[6].SetPixel(x, y, CivColors.Dark[6]);  // orange
-                        ShieldBack[7].SetPixel(x, y, CivColors.Dark[7]);  // purple
+                        ShieldBack[0].SetPixel(x, y, MapImages.DarkColours[0]);  // red
+                        ShieldBack[1].SetPixel(x, y, MapImages.DarkColours[1]);  // white
+                        ShieldBack[2].SetPixel(x, y, MapImages.DarkColours[2]);  // green
+                        ShieldBack[3].SetPixel(x, y, MapImages.DarkColours[3]);  // blue
+                        ShieldBack[4].SetPixel(x, y, MapImages.DarkColours[4]);  // yellow
+                        ShieldBack[5].SetPixel(x, y, MapImages.DarkColours[5]);  // cyan
+                        ShieldBack[6].SetPixel(x, y, MapImages.DarkColours[6]);  // orange
+                        ShieldBack[7].SetPixel(x, y, MapImages.DarkColours[7]);  // purple
                         ShieldShadow.SetPixel(x, y, Color.FromArgb(51, 51, 51));    // Color of the shield shadow
                     }
                 }

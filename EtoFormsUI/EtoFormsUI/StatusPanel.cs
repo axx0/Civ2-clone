@@ -158,7 +158,7 @@ namespace EtoFormsUI
 
             // AI turn civ indicator
             if (Game.GetActiveCiv != Game.GetPlayerCiv) 
-                e.Graphics.FillRectangle(CivColors.Light[Game.GetActiveCiv.Id], new Rectangle(unitPanel.Width - 8, unitPanel.Height - 6, 8, 6));
+                e.Graphics.FillRectangle(MapImages.PlayerColours[Game.GetActiveCiv.Id], new Rectangle(unitPanel.Width - 8, unitPanel.Height - 6, 8, 6));
 
             // Don't update the panel if it's enemy turn
             if (Game.GetActiveCiv != Game.GetPlayerCiv) 

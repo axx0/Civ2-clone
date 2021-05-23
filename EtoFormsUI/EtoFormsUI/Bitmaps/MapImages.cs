@@ -28,7 +28,7 @@ namespace EtoFormsUI
         public static void LoadCities(Ruleset path)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var citiesImage = LoadBitmapFrom("CITIES", path);
+            using var citiesImage = LoadBitmapFrom("CITIES", path);
 
             // Initialize objects
             var cities = new List<CityImage>();
@@ -129,8 +129,9 @@ namespace EtoFormsUI
             }
 
             var flags = new List<PlayerFlag>();
-            var playerColours = new List<Color>();
+            var textColours = new List<Color>();
             var darkColours = new List<Color>();
+            var lightColours = new List<Color>();
             var topLeft = lastRow - 2 * flagHeight + 1;
             var col = 1;
             for (; col < citiesImage.Width; col += flagWidth)
@@ -142,10 +143,14 @@ namespace EtoFormsUI
                         Smaller = citiesImage.Clone(new Rectangle(col, topLeft + flagHeight, flagWidth -1, flagHeight -1)),
                         Normal = citiesImage.Clone(new Rectangle(col, topLeft, flagWidth -1, flagHeight -1))
                     });
-                    playerColours.Add(citiesImage.GetPixel(col, topLeft -2));
+                    textColours.Add(citiesImage.GetPixel(col, topLeft -2));
                     darkColours.Add(citiesImage.GetPixel(col, topLeft - 3) == Colors.Transparent
                         ? citiesImage.GetPixel(col + 6, topLeft + 5)
                         : citiesImage.GetPixel(col, topLeft - 3));
+                    var lightCandidate = citiesImage.GetPixel(col, topLeft - 4);
+                    lightColours.Add(lightCandidate == Colors.Transparent || lightCandidate == borderColour
+                        ? citiesImage.GetPixel(col + 5, topLeft + 6)
+                        : lightCandidate);
                 }
                 else
                 {
@@ -153,8 +158,9 @@ namespace EtoFormsUI
                 }
             }
 
-            PlayerColours = playerColours.ToArray();
+            TextColours = textColours.ToArray();
             DarkColours = darkColours.ToArray();
+            PlayerColours = lightColours.ToArray();
             Flags = flags.ToArray();
 
             var specials = new List<Bitmap>();
@@ -181,33 +187,6 @@ namespace EtoFormsUI
             }
 
             Specials = specials.ToArray();
-
-            //
-            // // Get flag bitmaps
-            // for (int col = 0; col < 9; col++)
-            // {
-            //     CityFlag[col] = citiesImage.Clone(new Rectangle(1 + (15 * col), 425, 14, 22));
-            //     CityFlag[col].ReplaceColors(transparentGray, Colors.Transparent);
-            // }
-            //
-
-            // Fortified = citiesImage.Clone(new Rectangle(143, 423, 64, 48));
-            // Fortified.ReplaceColors(transparentGray, Colors.Transparent);
-            // Fortified.ReplaceColors(transparentPink, Colors.Transparent);
-            //
-            // Fortress = citiesImage.Clone(new Rectangle(208, 423, 64, 48));
-            // Fortress.ReplaceColors(transparentGray, Colors.Transparent);
-            // Fortress.ReplaceColors(transparentPink, Colors.Transparent);
-            //
-            // Airbase = citiesImage.Clone(new Rectangle(273, 423, 64, 48));
-            // Airbase.ReplaceColors(transparentGray, Colors.Transparent);
-            // Airbase.ReplaceColors(transparentPink, Colors.Transparent);
-            //
-            // AirbasePlane = citiesImage.Clone(new Rectangle(338, 423, 64, 48));
-            // AirbasePlane.ReplaceColors(transparentGray, Colors.Transparent);
-            // AirbasePlane.ReplaceColors(transparentPink, Colors.Transparent);
-            //
-            // citiesImage.Dispose();
         }
 
         public static Bitmap[] Specials { get; set; }
@@ -217,6 +196,8 @@ namespace EtoFormsUI
         public static PlayerFlag[] Flags { get; set; }
 
         public static Color[] PlayerColours { get; set; }
+        
+        public static Color[] TextColours { get; set; }
 
         private static CityImage MakeCityImage(Bitmap citiesImage, int y, int x, int width, int height)
         {
