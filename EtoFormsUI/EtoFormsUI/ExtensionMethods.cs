@@ -83,6 +83,21 @@ namespace EtoFormsUIExtensionMethods
             }
         }
 
+        // Convert image to grayscale
+        public static void ToGrayscale(this Bitmap orig)
+        {
+            for (int col = 0; col < orig.Width; col++)
+            {
+                for (int row = 0; row < orig.Height; row++)
+                {
+                    if (orig.GetPixel(col, row) != Colors.Transparent)
+                    {
+                        orig.SetPixel(col, row, Colors.Gray);
+                    }
+                }
+            }
+        }
+
         // Return position of "i" relative to zoom
         public static int ZoomScale(this int i, int zoom)
         {

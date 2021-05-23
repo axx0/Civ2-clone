@@ -90,6 +90,14 @@ namespace EtoFormsUI
                         }
                         break;
                     }
+                case Keys.S:
+                    {
+                        if (!Map.ViewPieceMode)
+                        {
+                            Game.IssueUnitOrder(OrderType.Sleep);
+                        }
+                        break;
+                    }
             }
         }
     }
