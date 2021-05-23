@@ -2,6 +2,7 @@
 using System.Linq;
 using Eto.Drawing;
 using Civ2engine;
+using Civ2engine.Enums;
 using Civ2engine.Units;
 
 namespace EtoFormsUI
@@ -70,10 +71,7 @@ namespace EtoFormsUI
                         if (unitsHere.Count > 0)
                         {
                             IUnit unit = unitsHere.Last();
-                            //if (unitsHere.Contains(Game.GetActiveUnit) && Main.ViewPieceMode)
-                            //{
-
-                            //}
+                            if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Where(u => u.Domain == UnitGAS.Sea).Last();   // Show naval unit
                             if (!unit.IsInCity)
                             {
                                 Draw.Unit(g, unit, unitsHere.Count > 1, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
