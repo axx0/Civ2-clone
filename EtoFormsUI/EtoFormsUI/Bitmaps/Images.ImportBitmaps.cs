@@ -2,6 +2,7 @@
 using System.IO;
 using System.Diagnostics;
 using Civ2engine;
+using EtoFormsUI.ImageLoader;
 using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI
@@ -17,8 +18,9 @@ namespace EtoFormsUI
 
         public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset)
         {
-            MapImages.LoadCities(ruleset);
+            CityLoader.LoadCities(ruleset);
             TerrainBitmapsImportFromFile(ruleset.Root);
+            UnitLoader.LoadUnits(ruleset);
             UnitsBitmapsImportFromFile(ruleset.Root);
             PeopleIconsBitmapsImportFromFile(ruleset.Root);
             IconsBitmapsImportFromFile(ruleset.Root);
