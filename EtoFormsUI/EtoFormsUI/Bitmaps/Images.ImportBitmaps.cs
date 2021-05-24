@@ -2,24 +2,25 @@
 using System.IO;
 using System.Diagnostics;
 using Civ2engine;
+using EtoFormsUI.ImageLoader;
 using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI
 {
     public static partial class Images
     {
-        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, GrasslandShield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT, ShieldShadow;
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Units, ShieldFront, ShieldBack, Improvements, BattleAnim;
+        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, GrasslandShield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT;
+        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Improvements, BattleAnim;
         public static Bitmap[,] Coast, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
-        public static Point[] UnitShieldLoc = new Point[63];
+        
         
         public static Bitmap[,] MapTileGraphic;
 
         public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset)
         {
-            MapImages.LoadCities(ruleset);
+            CityLoader.LoadCities(ruleset);
             TerrainBitmapsImportFromFile(ruleset.Root);
-            UnitsBitmapsImportFromFile(ruleset.Root);
+            UnitLoader.LoadUnits(ruleset);
             PeopleIconsBitmapsImportFromFile(ruleset.Root);
             IconsBitmapsImportFromFile(ruleset.Root);
             CityWallpaperBitmapImportFromFile();
@@ -273,98 +274,6 @@ namespace EtoFormsUI
 
             terrain1.Dispose();
             terrain2.Dispose();
-        }
-
-        public static void UnitsBitmapsImportFromFile(string path)
-        {
-            var units = LoadBitmapFrom("UNITS.GIF", path);
-
-            // Initialize objects
-            Units = new Bitmap[63];
-            ShieldFront = new Bitmap[8];
-            ShieldBack = new Bitmap[8];
-
-            // Define transparent colors
-            Color transparentGray = units.GetPixel(1, 2); //define transparent back color (gray)
-            Color transparentPink = units.GetPixel(1, 1); //define transparent back color (pink)
-
-
-            int count = 0;
-            for (int row = 0; row < 7; row++)
-            {
-                for (int col = 0; col < 9; col++)
-                {
-                    Units[count] = units.Clone(new Rectangle((64 * col) + 1 + col, (48 * row) + 1 + row, 64, 48));
-                    Units[count].ReplaceColors(transparentGray, Colors.Transparent);
-                    Units[count].ReplaceColors(transparentPink, Colors.Transparent);
-                    // Determine where the unit shield is located (x-y)
-                    for (int ix = 0; ix < 64; ix++)
-                        if (units.GetPixel((65 * col) + ix, 49 * row) == Color.FromArgb(0, 0, 255)) UnitShieldLoc[count].X = ix - 1;  // If pixel on border is blue, in x-direction
-                    for (int iy = 0; iy < 48; iy++)
-                        if (units.GetPixel(65 * col, (49 * row) + iy) == Color.FromArgb(0, 0, 255)) UnitShieldLoc[count].Y = iy - 1;  // In y-direction
-                    count++;
-                }
-            }
-
-            // Extract shield without black border (used for stacked units)
-            var _backUnitShield = units.Clone(new Rectangle(586, 1, 12, 20));
-            _backUnitShield.ReplaceColors(transparentGray, Colors.Transparent);
-
-            // Extract unit shield
-            var _unitShield = units.Clone(new Rectangle(597, 30, 12, 20));
-            _unitShield.ReplaceColors(transparentGray, Colors.Transparent);
-
-            // Make shields of different colors for 8 different civs
-            ShieldFront[0] = CreateNonIndexedImage(_unitShield); // convert GIF to non-indexed picture
-            ShieldFront[1] = CreateNonIndexedImage(_unitShield);
-            ShieldFront[2] = CreateNonIndexedImage(_unitShield);
-            ShieldFront[3] = CreateNonIndexedImage(_unitShield);
-            ShieldFront[4] = CreateNonIndexedImage(_unitShield);
-            ShieldFront[5] = CreateNonIndexedImage(_unitShield);
-            ShieldFront[6] = CreateNonIndexedImage(_unitShield);
-            ShieldFront[7] = CreateNonIndexedImage(_unitShield);
-            ShieldBack[0] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[1] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[2] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[3] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[4] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[5] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[6] = CreateNonIndexedImage(_backUnitShield);
-            ShieldBack[7] = CreateNonIndexedImage(_backUnitShield);
-            ShieldShadow = CreateNonIndexedImage(_backUnitShield);
-            // Replace colors for unit shield and dark unit shield
-            for (int x = 0; x < 12; x++)
-            {
-                for (int y = 0; y < 20; y++)
-                {
-                    if (_unitShield.GetPixel(x, y) == transparentPink)   // If color is pink, replace it
-                    {
-                        ShieldFront[0].SetPixel(x, y, CivColors.Light[0]);  // red
-                        ShieldFront[1].SetPixel(x, y, CivColors.Light[1]);  // white
-                        ShieldFront[2].SetPixel(x, y, CivColors.Light[2]);  // green
-                        ShieldFront[3].SetPixel(x, y, CivColors.Light[3]);  // blue
-                        ShieldFront[4].SetPixel(x, y, CivColors.Light[4]);  // yellow
-                        ShieldFront[5].SetPixel(x, y, CivColors.Light[5]);  // cyan
-                        ShieldFront[6].SetPixel(x, y, CivColors.Light[6]);  // orange
-                        ShieldFront[7].SetPixel(x, y, CivColors.Light[7]);  // purple
-                    }
-
-                    if (_backUnitShield.GetPixel(x, y) == Color.FromArgb(255, 0, 0))    // If color is red, replace it
-                    {
-                        ShieldBack[0].SetPixel(x, y, CivColors.Dark[0]);  // red
-                        ShieldBack[1].SetPixel(x, y, CivColors.Dark[1]);  // white
-                        ShieldBack[2].SetPixel(x, y, CivColors.Dark[2]);  // green
-                        ShieldBack[3].SetPixel(x, y, CivColors.Dark[3]);  // blue
-                        ShieldBack[4].SetPixel(x, y, CivColors.Dark[4]);  // yellow
-                        ShieldBack[5].SetPixel(x, y, CivColors.Dark[5]);  // cyan
-                        ShieldBack[6].SetPixel(x, y, CivColors.Dark[6]);  // orange
-                        ShieldBack[7].SetPixel(x, y, CivColors.Dark[7]);  // purple
-                        ShieldShadow.SetPixel(x, y, Color.FromArgb(51, 51, 51));    // Color of the shield shadow
-                    }
-                }
-            }
-
-            units.Dispose();
         }
 
         public static void PeopleIconsBitmapsImportFromFile(string path)

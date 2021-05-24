@@ -86,7 +86,7 @@ namespace EtoFormsUI
                     13.ZoomScale(zoom));
 
                 // Fill rectangle
-                using var _brush1 = new SolidBrush(CivColors.Light[city.OwnerId]);
+                using var _brush1 = new SolidBrush(MapImages.PlayerColours[city.OwnerId]);
                 g.FillRectangle(_brush1,
                     dest.X + sizeWinLoc.X.ZoomScale(zoom),
                     dest.Y + sizeWinLoc.Y.ZoomScale(zoom),
@@ -146,7 +146,7 @@ namespace EtoFormsUI
             var formattedFrontText = new FormattedText()
             {
                 Font = new Font("Times New Roman", fontSize),
-                ForegroundBrush = new SolidBrush(CivColors.CityTextColor[city.OwnerId]),
+                ForegroundBrush = new SolidBrush(MapImages.TextColours[city.OwnerId]),
                 Text = city.Name
             };
             var formattedShadow1Text = new FormattedText()
