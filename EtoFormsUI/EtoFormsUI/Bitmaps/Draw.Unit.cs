@@ -10,7 +10,7 @@ namespace EtoFormsUI
     {
         public static void UnitSprite(Graphics g, UnitType type, bool isSleeping, bool isFortified, int zoom, Point dest)
         {
-            using var _unitPic = Images.Units[(int)type].Resize(zoom);
+            using var _unitPic = MapImages.Units[(int)type].Bitmap.Resize(zoom);
             if (!isSleeping)
             {
                 g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height));
@@ -31,10 +31,11 @@ namespace EtoFormsUI
         public static void UnitShield(Graphics g, UnitType unitType, int ownerId, OrderType unitOrder, bool isStacked, int unitHP, int unitMaxHP, int zoom, Point dest)
         {
             // Draw unit shields. First determine if the shield is on the left or right side
-            Point frontLoc = Images.UnitShieldLoc[(int)unitType];
-            Point backLoc = frontLoc;
+            var frontLoc = MapImages.Units[(int)unitType].FlagLoc;
+            var backLoc = frontLoc;
             if (frontLoc.X < 32) backLoc.X -= 4;
             else backLoc.X += 4;
+            
             int shadowXoffset = frontLoc.X < 32 ? -1 : 1;
             // Scale locations according to zoom (shadow is always offset by 1)
             frontLoc.X = frontLoc.X.ZoomScale(zoom);
@@ -43,13 +44,13 @@ namespace EtoFormsUI
             backLoc.Y = backLoc.Y.ZoomScale(zoom);
 
             // If unit stacked --> draw back shield with its shadow
-            using var _shadowPic = Images.ShieldShadow.Resize(zoom);
+            using var _shadowPic = MapImages.ShieldShadow.Resize(zoom);
             if (isStacked)
             {
                 // Back shield shadow
                 g.DrawImage(_shadowPic, new Rectangle(dest.X + backLoc.X + shadowXoffset, dest.Y + backLoc.Y + 1, _shadowPic.Width, _shadowPic.Height));
                 // Back shield
-                using var _backPic = Images.ShieldBack[ownerId].Resize(zoom);
+                using var _backPic = MapImages.ShieldBack[ownerId].Resize(zoom);
                 g.DrawImage(_backPic, new Rectangle(dest.X + backLoc.X, dest.Y + backLoc.Y, _backPic.Width, _backPic.Height));
             }
 
@@ -57,18 +58,17 @@ namespace EtoFormsUI
             g.DrawImage(_shadowPic, new Rectangle(dest.X + frontLoc.X + shadowXoffset, dest.Y + frontLoc.Y, _shadowPic.Width, _shadowPic.Height));
 
             // Front shield
-            using var _frontPic = Images.ShieldFront[ownerId].Resize(zoom);
+            using var _frontPic = MapImages.Shields[ownerId].Resize(zoom);
             g.DrawImage(_frontPic, new Rectangle(dest.X + frontLoc.X, dest.Y + frontLoc.Y, _frontPic.Width, _frontPic.Height));
 
             // Determine hitpoints bar size
-            int hpBarX = (int)Math.Floor((float)unitHP * 12 / unitMaxHP);
-            Color hpColor;
-            if (hpBarX <= 3)
-                hpColor = Color.FromArgb(243, 0, 0); // Red
-            else if (hpBarX >= 4 && hpBarX <= 8)
-                hpColor = Color.FromArgb(255, 223, 79);  // Yellow
-            else
-                hpColor = Color.FromArgb(87, 171, 39);   // Green
+            var hpBarX = (int)Math.Floor((float)unitHP * 12 / unitMaxHP);
+            var hpColor = hpBarX switch
+            {
+                <= 3 => Color.FromArgb(243, 0, 0),
+                >= 4 and <= 8 => Color.FromArgb(255, 223, 79),
+                _ => Color.FromArgb(87, 171, 39)
+            };
 
             // Draw black background for hitpoints bar
             using var _brush1 = new SolidBrush(Color.FromArgb(0, 0, 0));

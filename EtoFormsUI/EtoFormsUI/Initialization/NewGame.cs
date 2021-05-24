@@ -7,6 +7,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Eto.Forms;
+using EtoFormsUI.ImageLoader;
 
 namespace EtoFormsUI.Initialization
 {
@@ -53,7 +54,7 @@ namespace EtoFormsUI.Initialization
             else
             {
                 Labels.UpdateLabels(config.RuleSet);
-                MapImages.LoadCities(config.RuleSet);
+                CityLoader.LoadCities(config.RuleSet);
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
                 {
                     boxes[box.Name] = box;
