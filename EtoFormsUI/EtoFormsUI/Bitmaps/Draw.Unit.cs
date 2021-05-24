@@ -10,7 +10,7 @@ namespace EtoFormsUI
     {
         public static void UnitSprite(Graphics g, UnitType type, bool isSleeping, bool isFortified, int zoom, Point dest)
         {
-            using var _unitPic = Images.Units[(int)type].Resize(zoom);
+            using var _unitPic = MapImages.Units[(int)type].Bitmap.Resize(zoom);
             if (!isSleeping)
             {
                 g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height));
@@ -31,7 +31,7 @@ namespace EtoFormsUI
         public static void UnitShield(Graphics g, UnitType unitType, int ownerId, OrderType unitOrder, bool isStacked, int unitHP, int unitMaxHP, int zoom, Point dest)
         {
             // Draw unit shields. First determine if the shield is on the left or right side
-            Point frontLoc = Images.UnitShieldLoc[(int)unitType];
+            Point frontLoc = MapImages.Units[(int)unitType].FlagLoc;
             Point backLoc = frontLoc;
             if (frontLoc.X < 32) backLoc.X -= 4;
             else backLoc.X += 4;

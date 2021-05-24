@@ -61,7 +61,7 @@ namespace EtoFormsUI.ImageLoader
                     {
                         var colour = unitsImage.GetPixel(i, row);
                         if (colour == borderColour) continue;
-                        flagX = i - col;
+                        flagX = i - col -1;
                         break;
                     }
 
@@ -69,7 +69,7 @@ namespace EtoFormsUI.ImageLoader
                     {
                         var colour = unitsImage.GetPixel(col, i);
                         if (colour == borderColour) continue;
-                        flagY = i - row;
+                        flagY = i - row -1;
                         break;
                     }
 
