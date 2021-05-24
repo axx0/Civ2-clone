@@ -21,5 +21,8 @@ namespace EtoFormsUI
         
         public static Color[] TextColours { get; set; }
         public static UnitImage[] Units { get; set; }
+        public static Bitmap[] Shields { get; set; }
+        public static Bitmap[] ShieldBack { get; set; }
+        public static Bitmap ShieldShadow { get; set; }
     }
 }
