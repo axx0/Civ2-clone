@@ -32,5 +32,6 @@ namespace Civ2engine.Terrains
         public int CanMine { get; set; }
         public int Transform { get; set; }
         public Special[] Specials { get; set; }
+        public bool Impassable { get; set; }
     }
 }

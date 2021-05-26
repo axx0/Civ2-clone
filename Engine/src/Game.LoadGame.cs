@@ -13,7 +13,7 @@ namespace Civ2engine
 
             // Make an instance of a new game & map
             _instance = new Game(rules, gameData);
-            Map.GenerateMap(gameData, rules);
+            Map.PopulateTitleData(gameData, rules);
             Map.MapRevealed = gameData.MapRevealed;
             Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
             Map.Zoom = gameData.Zoom;

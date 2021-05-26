@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
@@ -25,7 +26,6 @@ namespace Civ2engine
             // ReSharper disable once StringLiteralTypo
             _sectionHandlers.Add("ENDWONDER", ProcessEndWonders);
             _sectionHandlers.Add("UNITS", ProcessUnits);
-            _sectionHandlers.Add("TERRAIN", ProcessTerrain);
             _sectionHandlers.Add("GOVERNMENTS", ProcessGovernments);
             _sectionHandlers.Add("LEADERS", ProcessLeaders);
             _sectionHandlers.Add("ORDERS", ProcessOrders);
@@ -203,7 +203,7 @@ namespace Civ2engine
             })).ToArray();
         }
 
-        private void ProcessTerrain(string[] values)
+        private void ProcessTerrain(IEnumerable<string> values)
         {
             var terrains = new List<string>();
             var bonus = new List<string>();
@@ -222,7 +222,9 @@ namespace Civ2engine
                 }
             }
 
-            Rules.Terrains = terrains.Select((value, type) =>
+            Rules.Terrains ??= new List<Terrain[]>();
+
+            Rules.Terrains.Add(values.Select((value, type) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
                 return new Terrain
@@ -243,12 +245,13 @@ namespace Civ2engine
                     TurnsToMine = int.Parse(line[12]),
                     MinGovrnLevelAItoPerformMining = (GovernmentType) int.Parse(line[13]),
                     Transform = mappings[line[14]],
+                    Impassable = line[15] == "yes",
                     Specials = new[]
                     {
                         MakeSpecial(bonus[type]), MakeSpecial(bonus[type + terrains.Count])
                     }
                 };
-            }).ToArray();
+            }).ToArray());
         }
 
         private readonly Tuple<int, string>[] _defaultAttackSounds = {
@@ -444,7 +447,10 @@ namespace Civ2engine
 
         public void ProcessSection(string section, List<string> contents)
         {
-            if (_sectionHandlers.ContainsKey(section))
+            if (section.StartsWith("TERRAIN"))
+            {
+                ProcessTerrain(contents);
+            }else if (_sectionHandlers.ContainsKey(section))
             {
                 _sectionHandlers[section](contents.ToArray());
             }

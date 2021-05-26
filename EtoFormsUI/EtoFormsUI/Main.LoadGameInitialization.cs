@@ -31,10 +31,10 @@ namespace EtoFormsUI
         public void StartGame()
         {
             // Generate map tile graphics
-            Images.MapTileGraphic = new Bitmap[Map.Xdim, Map.Ydim];
-            for (int col = 0; col < Map.Xdim; col++)
+            Images.MapTileGraphic = new Bitmap[Map.XDim, Map.YDim];
+            for (int col = 0; col < Map.XDim; col++)
             {
-                for (int row = 0; row < Map.Ydim; row++)
+                for (int row = 0; row < Map.YDim; row++)
                 {
                     Images.MapTileGraphic[col, row] = Draw.MakeTileGraphic(Map.Tile[col, row], col, row, Game.Options.FlatEarth);
                 }

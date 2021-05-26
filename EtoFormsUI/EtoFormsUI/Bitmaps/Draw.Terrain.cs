@@ -22,8 +22,8 @@ namespace EtoFormsUI
 
             // First convert regular coords to civ2-style
             col = 2 * col + row % 2; // you don't change row
-            int Xdim = 2 * Map.Xdim;
-            int Ydim = Map.Ydim;
+            int Xdim = 2 * Map.XDim;
+            int Ydim = Map.YDim;
 
             // Define a bitmap for drawing
             var _tilePic = new Bitmap(64, 32, PixelFormat.Format32bppRgba);
@@ -319,8 +319,8 @@ namespace EtoFormsUI
             bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
             var indicies = new int[] {0, 0, 0, 0};
 
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if land is present next to ocean
             // N:
@@ -466,8 +466,8 @@ namespace EtoFormsUI
             var index = 0;
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if terrain is present
             // NE:
@@ -536,8 +536,8 @@ namespace EtoFormsUI
             var river = 0;
 
             // Rewrite indexes in Civ2-style
-            var xDim = 2 * Map.Xdim; // X=50 in marked as X=100 in Civ2
-            var yDim = Map.Ydim; // no need for such correction for Y
+            var xDim = 2 * Map.XDim; // X=50 in marked as X=100 in Civ2
+            var yDim = Map.YDim; // no need for such correction for Y
 
             // Observe in all directions if river is present
             if (row != 0)
@@ -608,8 +608,8 @@ namespace EtoFormsUI
             bool[] isRoadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if road or city is present next to tile
             // N:
@@ -752,8 +752,8 @@ namespace EtoFormsUI
             bool[] isRailroadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if railroad or city is present next to tile
             // N:

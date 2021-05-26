@@ -38,7 +38,7 @@ namespace EtoFormsUI
                         int row = _row;
 
                         // Don't draw beyond borders
-                        if (startX + col < 0 || startY + row < 0 || startX + col >= 2 * Map.Xdim || startY + row >= Map.Ydim) continue;
+                        if (startX + col < 0 || startY + row < 0 || startX + col >= 2 * Map.XDim || startY + row >= Map.YDim) continue;
 
                         // Draw only if the tile is visible for each civ
                         if (!Map.IsTileVisibleC2(startX + col, startY + row, civ) && !mapRevealed) continue;
@@ -56,7 +56,7 @@ namespace EtoFormsUI
                                 {
                                     int colNew = startX + col + offset[tileX];
                                     int rowNew = startY + row + offset[tileY];
-                                    if (colNew >= 0 && colNew < 2 * Map.Xdim && rowNew >= 0 && rowNew < Map.Ydim)   // Don't observe outside map limits
+                                    if (colNew >= 0 && colNew < 2 * Map.XDim && rowNew >= 0 && rowNew < Map.YDim)   // Don't observe outside map limits
                                     {
                                         if (!Map.IsTileVisibleC2(colNew, rowNew, civ))   // Surrounding tile is not visible -> dither
                                             g.DrawImage(Images.DitherDots[tileX, tileY], Map.Xpx * (col + tileX), Map.Ypx * (row + tileY));

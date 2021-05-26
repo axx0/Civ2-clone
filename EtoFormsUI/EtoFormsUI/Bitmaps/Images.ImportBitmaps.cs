@@ -33,7 +33,7 @@ namespace EtoFormsUI
             //ImportCiv2Icon();
         }
 
-        public static Bitmap MapTileGraphicC2(int xC2, int yC2) => MapTileGraphic[(((xC2 + 2 * Map.Instance.Xdim) % (2 * Map.Instance.Xdim)) - yC2 % 2) / 2, yC2];  // Return tile graphics for civ2-coords input
+        public static Bitmap MapTileGraphicC2(int xC2, int yC2) => MapTileGraphic[(((xC2 + 2 * Map.Instance.XDim) % (2 * Map.Instance.XDim)) - yC2 % 2) / 2, yC2];  // Return tile graphics for civ2-coords input
 
         // Extract icon from civ2.exe file
         //public static void ImportCiv2Icon()

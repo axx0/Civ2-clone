@@ -39,7 +39,7 @@ namespace Civ2engine
         public Improvement[] Improvements { get; internal set; }
         
         
-        public Terrain[] Terrains { get; internal set; }
+        public IList<Terrain[]> Terrains { get; internal set; }
         public Government[] Governments { get; internal set; }
         public LeaderDefaults[] Leaders { get; internal set; }
         public Order[] Orders { get; internal set; }
