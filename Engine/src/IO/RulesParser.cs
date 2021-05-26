@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
@@ -34,6 +35,7 @@ namespace Civ2engine
             _sectionHandlers.Add("ATTITUDES", strings => Rules.Attitude = strings.ToArray());
             _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
             _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
+            _sectionHandlers.Add("SECONDARY_MAPS", SecondaryMaps);
         }
         
         public static Rules ParseRules(Ruleset ruleset)
@@ -56,6 +58,73 @@ namespace Civ2engine
                     Rules.UnitTypes[i].AttackSound = soundFile;
                 }
             }
+        }
+
+        private void SecondaryMaps(string[] values)
+        {
+            var maps = new List<MapParams>(Rules.Maps);       
+            maps.AddRange(values.Select(line =>
+            {
+                var parts = line.Split(",", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+                var mapParams = new MapParams
+                {
+                    Type = (MapType) parts[0],
+                    BlobSize = parts[1],
+                    NumberOfBlobs = parts[2],
+                    BridgeLength = parts[3],
+                    BridgesPerBlob = parts[4]
+                };
+                var terrainParams = new List<TerrainParams>();
+                if (parts[5] > 0 || parts[8] > 0)
+                {
+                    terrainParams.Add(new TerrainParams { Type= TerrainType.Mountains, Frequency = parts[5] > parts[8] ? parts[5] : parts[8]});
+                }
+
+                if (parts[6] > 0)
+                {
+                    terrainParams.Add(new TerrainParams { Type= TerrainType.Forest, Frequency = parts[6]});
+                }
+
+                if (parts[7] > 0)
+                {
+                    terrainParams.Add(new TerrainParams { Type = TerrainType.Plains, Frequency = parts[7]});
+                }
+
+                for (var i = 11; i < parts.Length; i += 3)
+                {
+                    if (parts[i] > 0)
+                    {
+                        terrainParams.Add(new TerrainParams { Type = GetTypeFor(mapParams.Type, (i - 11) / 3), Frequency = parts[i], MinLength = parts[i-1], MeanLength = parts[i-2] });
+                    }
+                }
+                mapParams.TerrainParams = terrainParams.ToArray();
+                return mapParams;
+            }));
+            Rules.Maps = maps.ToArray();
+        }
+
+        private readonly IDictionary<MapType, TerrainType[]> _dmfTypesMap = new Dictionary<MapType, TerrainType[]>()
+        {
+            {MapType.Undersea, new [] {TerrainType.Forest, TerrainType.Jungle}},
+            {MapType.Floating, new [] {TerrainType.Mountains, TerrainType.Hills}},
+            {MapType.LandDominant, new [] {TerrainType.Forest, TerrainType.Mountains, TerrainType.Hills}},
+            {MapType.GasGiant, new [] {TerrainType.Hills}}
+        };
+
+        private TerrainType GetTypeFor(MapType mapType, int dmfIndex)
+        {
+            if (!_dmfTypesMap.ContainsKey(mapType))
+            {
+                throw new ArgumentException($"No mappings exist for type {mapType}");
+            }
+
+            if (_dmfTypesMap[mapType].Length > dmfIndex)
+            {
+                return _dmfTypesMap[mapType][dmfIndex];
+            }
+            
+            throw new ArgumentException(
+                $"There are only {_dmfTypesMap[mapType].Length} mapping for type {mapType}. {dmfIndex} requested!");
         }
 
         private void ProcessAdvanceGroups(string[] values)
