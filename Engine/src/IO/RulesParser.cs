@@ -224,7 +224,7 @@ namespace Civ2engine
 
             Rules.Terrains ??= new List<Terrain[]>();
 
-            Rules.Terrains.Add(values.Select((value, type) =>
+            Rules.Terrains.Add(terrains.Select((value, type) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
                 return new Terrain
