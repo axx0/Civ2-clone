@@ -36,7 +36,7 @@ namespace EtoFormsUI
             {
                 for (int row = 0; row < Map.YDim; row++)
                 {
-                    Images.MapTileGraphic[col, row] = Draw.MakeTileGraphic(Map.Tile[col, row], col, row, Game.Options.FlatEarth);
+                    Images.MapTileGraphic[col, row] = Draw.MakeTileGraphic(Map.Tile[col, row], col, row, Game.Options.FlatEarth, MapImages.Terrains[Map.MapIndex]);
                 }
             }
             

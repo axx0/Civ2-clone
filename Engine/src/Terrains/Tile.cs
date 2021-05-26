@@ -14,7 +14,7 @@ using Civ2engine.Enums;
         public Terrain Terrain { get; }
         public TerrainType Type { get; }
 
-        public int special { get; }
+        public int special { get; } = -1;
 
         public SpecialType? SpecType { get; }
 
@@ -39,7 +39,7 @@ using Civ2engine.Enums;
             var d = 1 << ((seed >> 4) & 3);
             if ((d & a) == (d & b))
             {
-                special = 2;
+                special = 1;
                 SpecType = Type switch
                 {
                     TerrainType.Desert => SpecialType.DesertOil,
@@ -58,7 +58,7 @@ using Civ2engine.Enums;
             }
             else
             {
-                special = 1;
+                special = 0;
                 SpecType = Type switch
                 {
                     TerrainType.Desert => SpecialType.Oasis,

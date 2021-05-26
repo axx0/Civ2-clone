@@ -16,7 +16,7 @@ namespace EtoFormsUI
             g.DrawImage(_tilePic, dest);
         }
 
-        public static Bitmap MakeTileGraphic(ITerrain tile, int col, int row, bool flatEarth)
+        public static Bitmap MakeTileGraphic(ITerrain tile, int col, int row, bool flatEarth, TerrainSet terrainSet)
         {
             // EVERYTHING HERE IS IN CIV2-COORDS AND NOT IN REGULAR COORDS!!!
 
@@ -31,21 +31,7 @@ namespace EtoFormsUI
             // Draw tile
             using var g = new Graphics(_tilePic);
             
-            switch (tile.Type)
-            {
-                case TerrainType.Desert: g.DrawImage(Images.Desert[0], 0, 0); break;
-                case TerrainType.Forest: g.DrawImage(Images.ForestBase[0], 0, 0); break;
-                case TerrainType.Glacier: g.DrawImage(Images.Glacier[0], 0, 0); break;
-                case TerrainType.Grassland: g.DrawImage(Images.Grassland[0], 0, 0); break;
-                case TerrainType.Hills: g.DrawImage(Images.HillsBase[0], 0, 0); break;
-                case TerrainType.Jungle: g.DrawImage(Images.Jungle[0], 0, 0); break;
-                case TerrainType.Mountains: g.DrawImage(Images.MtnsBase[0], 0, 0); break;
-                case TerrainType.Ocean: g.DrawImage(Images.Ocean[0], 0, 0); break;
-                case TerrainType.Plains: g.DrawImage(Images.Plains[0], 0, 0); break;
-                case TerrainType.Swamp: g.DrawImage(Images.Swamp[0], 0, 0); break;
-                case TerrainType.Tundra: g.DrawImage(Images.Tundra[0], 0, 0); break;
-                default: throw new ArgumentOutOfRangeException();
-            }
+            g.DrawImage(terrainSet.BaseTiles[(int)tile.Type], 0, 0);
 
             // Dither
             // Determine type of terrain in all 4 directions. Be careful if you're on map edge.
@@ -97,7 +83,6 @@ namespace EtoFormsUI
                         case TerrainType.Swamp: g.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
                         case TerrainType.Jungle: g.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
                         case TerrainType.Ocean: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        default: break;
                     }
                 }
             }
@@ -214,43 +199,18 @@ namespace EtoFormsUI
             }
 
             // Draw shield for grasslands
-            if (tile.Type == TerrainType.Grassland && tile.HasShield)
+            
+            if (tile.Type == TerrainType.Grassland)
             {
-                g.DrawImage(Images.GrasslandShield, 0, 0);
-            }
-
-
-            // Draw special resources if they exist
-            if (tile.SpecType != null)
-            {
-                switch (tile.SpecType)
+                if (tile.HasShield)
                 {
-                    case SpecialType.Oasis: g.DrawImage(Images.Desert[2], 0, 0); break;
-                    case SpecialType.Buffalo: g.DrawImage(Images.Plains[2], 0, 0); break;
-                    case SpecialType.Grassland1: break; // g.DrawImage(Images.Grassland[0], 0, 0); break;   // Grassland has no special type
-                    case SpecialType.Pheasant: g.DrawImage(Images.ForestBase[2], 0, 0); break;
-                    case SpecialType.Coal: g.DrawImage(Images.HillsBase[2], 0, 0); break;
-                    case SpecialType.Gold: g.DrawImage(Images.MtnsBase[2], 0, 0); break;
-                    case SpecialType.Game: g.DrawImage(Images.Tundra[2], 0, 0); break;
-                    case SpecialType.Ivory: g.DrawImage(Images.Glacier[2], 0, 0); break;
-                    case SpecialType.Peat: g.DrawImage(Images.Swamp[2], 0, 0); break;
-                    case SpecialType.Gems: g.DrawImage(Images.Jungle[2], 0, 0); break;
-                    case SpecialType.Fish: g.DrawImage(Images.Ocean[2], 0, 0); break;
-                    case SpecialType.DesertOil: g.DrawImage(Images.Desert[3], 0, 0); break;
-                    case SpecialType.Wheat: g.DrawImage(Images.Plains[3], 0, 0); break;
-                    case SpecialType.Grassland2: break; // g.DrawImage(Images.Shield, 0, 0); break;   // Grassland has no special type
-                    case SpecialType.Silk: g.DrawImage(Images.ForestBase[3], 0, 0); break;
-                    case SpecialType.Wine: g.DrawImage(Images.HillsBase[3], 0, 0); break;
-                    case SpecialType.Iron: g.DrawImage(Images.MtnsBase[3], 0, 0); break;
-                    case SpecialType.Furs: g.DrawImage(Images.Tundra[3], 0, 0); break;
-                    case SpecialType.GlacierOil: g.DrawImage(Images.Glacier[3], 0, 0); break;
-                    case SpecialType.Spice: g.DrawImage(Images.Swamp[3], 0, 0); break;
-                    case SpecialType.Fruit: g.DrawImage(Images.Jungle[3], 0, 0); break;
-                    case SpecialType.Whales: g.DrawImage(Images.Ocean[3], 0, 0); break;
-                    default: throw new ArgumentOutOfRangeException();
+                    g.DrawImage(Images.GrasslandShield, 0, 0);
                 }
+            }else if (tile.special != -1)
+            {
+                // Draw special resources if they exist
+                g.DrawImage(terrainSet.Specials[tile.special][(int) tile.Type], 0, 0);
             }
-
 
 
             // Roads (cites also act as road tiles)

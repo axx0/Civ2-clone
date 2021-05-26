@@ -24,5 +24,12 @@ namespace EtoFormsUI
         public static Bitmap[] Shields { get; set; }
         public static Bitmap[] ShieldBack { get; set; }
         public static Bitmap ShieldShadow { get; set; }
+        public static TerrainSet[] Terrains { get; set; }
+    }
+
+    public class TerrainSet
+    {
+        public Bitmap[] BaseTiles { get; set; }
+        public Bitmap[][] Specials { get; set; }
     }
 }
