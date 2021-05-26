@@ -78,6 +78,10 @@ namespace Civ2engine
                     _activeUnit.SkipTurn();
                     UpdateActiveUnit();
                     break;
+                case OrderType.Sleep:
+                    _activeUnit.Sleep();
+                    UpdateActiveUnit();
+                    break;
             }
         }
 

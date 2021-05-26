@@ -96,6 +96,7 @@ namespace EtoFormsUI
             var GoHomeToNearestCityCommand = new Command { MenuText = "Go Home To Nearest City", Shortcut = Keys.H };
             var FortifyCommand = new Command { MenuText = "Fortify", Shortcut = Keys.F };
             var SleepCommand = new Command { MenuText = "Sleep", Shortcut = Keys.S };
+            SleepCommand.Executed += (sender, e) => Game.IssueUnitOrder(OrderType.Sleep);
             var DisbandCommand = new Command { MenuText = "Disband", Shortcut = Keys.Shift | Keys.D };
             var ActivateUnitCommand = new Command { MenuText = "Activate Unit", Shortcut = Keys.A };
             var WaitCommand = new Command { MenuText = "Wait", Shortcut = Keys.W };
