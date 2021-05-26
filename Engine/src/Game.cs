@@ -78,7 +78,7 @@ namespace Civ2engine
         public List<IUnit> UnitsOnShip(IUnit ship)
         {
             var unitsHere = Game.UnitsHere(ship.XY[0], ship.XY[1]);
-            unitsHere.Remove(ship);
+            unitsHere.RemoveAll(u => u.Domain != UnitGAS.Ground);  // Remove all naval/air units
             var unitsInShip = unitsHere.Take(ship.ShipHold).ToList();
 
             return unitsInShip;

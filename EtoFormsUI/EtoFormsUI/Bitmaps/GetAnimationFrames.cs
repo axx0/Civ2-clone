@@ -59,6 +59,7 @@ namespace EtoFormsUI
                             if (!(x == activeXY[0] && y == activeXY[1]) || Map.ViewPieceMode)
                             {
                                 unit = unitsHere.Last();
+                                if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Where(u => u.Domain == UnitGAS.Sea).Last();
                                 Draw.Unit(g, unit, unit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                             }
                         }
@@ -205,18 +206,15 @@ namespace EtoFormsUI
 
                     // If active unit is in this list-- > remove it
                     if (unitsHere.Contains(activeUnit)) unitsHere.Remove(activeUnit);
-                    
+
                     if (unitsHere.Count > 0)
                     {
                         IUnit unit;
-                        // If this is not tile with active unit or viewing piece, draw last unit on stack
-                        if (!unitsHere.Contains(activeUnit))
+                        unit = unitsHere.Last();
+                        if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Where(u => u.Domain == UnitGAS.Sea).Last();
+                        if (!unit.IsInCity)
                         {
-                            unit = unitsHere.Last();
-                            if (!unit.IsInCity)
-                            {
-                                Draw.Unit(g, unit, unitsHere.Count > 1, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
-                            }
+                            Draw.Unit(g, unit, Game.UnitsHere(x, y).Count > 1, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                         }
                     }
 
@@ -267,7 +265,7 @@ namespace EtoFormsUI
                         int[] unitDrawOffset = new int[] { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
                         unitDrawOffset[0] *= Map.Xpx / noFramesForOneMove * (frame + 1);
                         unitDrawOffset[1] *= Map.Ypx / noFramesForOneMove * (frame + 1);
-                        Draw.Unit(g, activeUnit, false, Map.Zoom, new Point(2 * Map.Xpx + unitDrawOffset[0], 2 * Map.Ypx + unitDrawOffset[1]));
+                        Draw.Unit(g, activeUnit, Game.UnitsOnShip(activeUnit).Count > 1, Map.Zoom, new Point(2 * Map.Xpx + unitDrawOffset[0], 2 * Map.Ypx + unitDrawOffset[1]));
                     }
                 }
                 animationFrames.Add(_bitmapWithMovingUnit);
