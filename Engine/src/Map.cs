@@ -46,7 +46,7 @@ namespace Civ2engine
             {
                 if (!ViewPieceMode )
                 {
-                    _activeXY = new int[] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
+                    _activeXY = new [] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
                 }
                 return _activeXY;
             }
@@ -55,7 +55,7 @@ namespace Civ2engine
         private bool _viewPieceMode;
         public bool ViewPieceMode 
         {
-            get => !Game.GetActiveCiv.AnyUnitsAwaitingOrders || _viewPieceMode;
+            get => Game.GetActiveUnit == null || !Game.GetActiveCiv.AnyUnitsAwaitingOrders || _viewPieceMode;
             set => _viewPieceMode = value;
         }
 
