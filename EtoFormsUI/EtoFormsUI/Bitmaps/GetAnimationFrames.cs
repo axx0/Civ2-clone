@@ -45,8 +45,8 @@ namespace EtoFormsUI
                         y = activeXY[1] + coordsOffsets[1];
                         coordsOffsetsPx = new int[] { coordsOffsets[0] * Map.Xpx, coordsOffsets[1] * Map.Ypx };
 
-                        if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
-
+                        if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim || !Map.IsTileVisibleC2(x, y,Map.WhichCivsMapShown)) continue;    // Make sure you're not drawing tiles outside map bounds
+                        
                         // Tiles
                         Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Map.Ypx));
 
