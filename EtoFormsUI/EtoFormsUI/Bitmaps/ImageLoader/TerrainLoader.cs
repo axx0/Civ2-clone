@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
 using Eto.Drawing;
@@ -16,6 +17,9 @@ namespace EtoFormsUI.ImageLoader
                 MapImages.Terrains[i] = LoadTerrain(ruleset, i);
             }
         }
+
+
+        private static Color _black = Color.FromArgb(0, 0, 0);
 
         private static TerrainSet LoadTerrain(Ruleset ruleset, int index)
         {
@@ -46,110 +50,64 @@ namespace EtoFormsUI.ImageLoader
 
             // Define transparent colors
             var borderColour = tileData.GetPixel(0, 0);
-            var transparentGray = Color.FromArgb(135, 135, 135);    // Define transparent back color (gray)
-            var transparentPink = Color.FromArgb(255, 0, 255);    // Define transparent back color (pink)
-            var transparentCyan = Color.FromArgb(0, 255, 255);    // Define transparent back color (cyan)
+            var transparentGray = Color.FromArgb(135, 135, 135); // Define transparent back color (gray)
+            var transparentPink = Color.FromArgb(255, 0, 255); // Define transparent back color (pink)
+            var transparentCyan = Color.FromArgb(0, 255, 255); // Define transparent back color (cyan)
 
             tileData.ReplaceColors(transparentGray, Colors.Transparent);
             tileData.ReplaceColors(transparentPink, Colors.Transparent);
 
             terrain.BaseTiles = Enumerable.Range(0, 11)
-                .Select(i => tileData.Clone(new Rectangle(1, 1 + (33*i), 64, 32))).ToArray();
-            
-            
+                .Select(i => tileData.Clone(new Rectangle(1, 1 + (33 * i), 64, 32))).ToArray();
+
+
             var secondSpecial = tileData.GetPixel(262, 0) == borderColour ? 261 : 196;
             var firstSpecial = secondSpecial - 65;
 
-            terrain.Specials = new [] { Enumerable.Range(0, 11)
-                .Select(i => tileData.Clone(new Rectangle(firstSpecial, 1 + (33*i), 64, 32))).ToArray(),           
-             Enumerable.Range(0, 11)
-                .Select(i => tileData.Clone(new Rectangle(secondSpecial, 1 + (33*i), 64, 32))).ToArray()};
-            
-            return terrain;
+            terrain.Specials = new[]
+            {
+                Enumerable.Range(0, 11)
+                    .Select(i => tileData.Clone(new Rectangle(firstSpecial, 1 + (33 * i), 64, 32))).ToArray(),
+                Enumerable.Range(0, 11)
+                    .Select(i => tileData.Clone(new Rectangle(secondSpecial, 1 + (33 * i), 64, 32))).ToArray()
+            };
 
-            // // 4 small dither tiles
-            // DitherBlank = new Bitmap[2, 2];
-            // DitherDots = new Bitmap[2, 2];
-            // for (int tileX = 0; tileX < 2; tileX++)
-            // {
-            //     for (int tileY = 0; tileY < 2; tileY++)
-            //     {
-            //         DitherBlank[tileX, tileY] = tileData.Clone(new Rectangle((tileX * 32) + 1, (tileY * 16) + 447, 32, 16));
-            //         DitherDots[tileX, tileY] = DitherBlank[tileX, tileY];
-            //         DitherDots[tileX, tileY].ReplaceColors(transparentGray, Colors.Transparent);
-            //         DitherDots[tileX, tileY].ReplaceColors(transparentPink, Colors.Transparent);
-            //     }
-            // }
-            //
-            // // Blank tile
-            // Blank = tileData.Clone(new Rectangle(131, 447, 64, 32));
-            // Blank.ReplaceColors(transparentGray, Colors.Transparent);
-            //
-            // // Dither base (only useful for grasland?)
-            // DitherBase = tileData.Clone(new Rectangle(196, 447, 64, 32));
-            //
-            // // Replace black dither pixels with base pixels
-            // DitherDesert = new Bitmap[2, 2];   // 4 dither tiles for one 64x32 map tile
-            // DitherPlains = new Bitmap[2, 2];
-            // DitherGrassland = new Bitmap[2, 2];
-            // DitherForest = new Bitmap[2, 2];
-            // DitherHills = new Bitmap[2, 2];
-            // DitherMountains = new Bitmap[2, 2];
-            // DitherTundra = new Bitmap[2, 2];
-            // DitherGlacier = new Bitmap[2, 2];
-            // DitherSwamp = new Bitmap[2, 2];
-            // DitherJungle = new Bitmap[2, 2];
-            // Color replacementColor;
-            // for (int tileX = 0; tileX < 2; tileX++)
-            // {    // For 4 directions (NE, SE, SW, NW)
-            //     for (int tileY = 0; tileY < 2; tileY++)
-            //     {
-            //         DitherDesert[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherPlains[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherGrassland[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherForest[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherHills[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherMountains[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherTundra[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherGlacier[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherSwamp[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         DitherJungle[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-            //         for (int col = 0; col < 32; col++)
-            //         {
-            //             for (int row = 0; row < 16; row++)
-            //             {
-            //                 // replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
-            //                 replacementColor = DitherBlank[tileX, tileY].GetPixel(col, row);
-            //                 if (replacementColor == Color.FromArgb(0, 0, 0))
-            //                 {
-            //                     DitherDesert[tileX, tileY].SetPixel(col, row, Desert[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherPlains[tileX, tileY].SetPixel(col, row, Plains[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherGrassland[tileX, tileY].SetPixel(col, row, Grassland[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherForest[tileX, tileY].SetPixel(col, row, ForestBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherHills[tileX, tileY].SetPixel(col, row, HillsBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherMountains[tileX, tileY].SetPixel(col, row, MtnsBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherTundra[tileX, tileY].SetPixel(col, row, Tundra[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherGlacier[tileX, tileY].SetPixel(col, row, Glacier[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherSwamp[tileX, tileY].SetPixel(col, row, Swamp[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                     DitherJungle[tileX, tileY].SetPixel(col, row, Jungle[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-            //                 }
-            //                 else
-            //                 {
-            //                     DitherDesert[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherPlains[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherGrassland[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherForest[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherHills[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherMountains[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherTundra[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherGlacier[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherSwamp[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                     DitherJungle[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
+
+            // 4 small dither tiles
+            var DitherBlank = new Bitmap[2, 2];
+            var DitherDots = new Bitmap[2, 2];
+            for (int tileX = 0; tileX < 2; tileX++)
+            {
+                for (int tileY = 0; tileY < 2; tileY++)
+                {
+                    DitherBlank[tileX, tileY] =
+                        tileData.Clone(new Rectangle((tileX * 32) + 1, (tileY * 16) + 447, 32, 16));
+                    DitherDots[tileX, tileY] = DitherBlank[tileX, tileY];
+                }
+            }
+
+            // Blank tile
+            terrain.Blank = tileData.Clone(new Rectangle(131, 447, 64, 32));
+
+            var ditherMask = new[]
+            {
+                tileData.Clone(new Rectangle(1, 447, 32, 16)),
+                tileData.Clone(new Rectangle(33, 447, 32, 16)),
+                tileData.Clone(new Rectangle(1, 463, 32, 16)),
+                tileData.Clone(new Rectangle(33, 463, 32, 16))
+            };
+
+
+            terrain.DitherMaps = new[]
+            {
+                BuildDitherMaps(ditherMask[0], terrain.BaseTiles, terrain.Blank, 0, 0),
+                BuildDitherMaps(ditherMask[1], terrain.BaseTiles, terrain.Blank, 32, 0),
+                BuildDitherMaps(ditherMask[2], terrain.BaseTiles, terrain.Blank, 0, 16),
+                BuildDitherMaps(ditherMask[3], terrain.BaseTiles, terrain.Blank, 32, 16)
+            };
+
+
+            return terrain;
             //
             // // Rivers, Forest, Mountains, Hills
             // for (int i = 0; i < 16; i++)
@@ -220,6 +178,27 @@ namespace EtoFormsUI.ImageLoader
             // GrasslandShield = tileData.Clone(new Rectangle(456, 232, 64, 32));
             // GrasslandShield.ReplaceColors(transparentGray, Colors.Transparent);
             // GrasslandShield.ReplaceColors(transparentPink, Colors.Transparent);
+        }
+
+        private static Bitmap[] BuildDitherMaps(Bitmap mask, IReadOnlyList<Bitmap> baseTiles, Bitmap blank, int offsetX,
+            int offsetY)
+        {
+            var ditherMaps = Enumerable.Range(0, 10).Select((_) => new Bitmap(32, 16, PixelFormat.Format32bppRgba))
+                .ToArray();
+            for (var col = 0; col < 32; col++)
+            {
+                for (var row = 0; row < 16; row++)
+                {
+                    if (mask.GetPixel(col, row) != _black) continue;
+                    // Only need to set the non transparent pixels since the default is transparent
+                    for (var i = 0; i < ditherMaps.Length; i++)
+                    {
+                        ditherMaps[i].SetPixel(col, row, baseTiles[i].GetPixel(offsetX + col, offsetY + row));
+                    }
+                }
+            }
+
+            return ditherMaps;
         }
     }
 }

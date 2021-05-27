@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Eto.Drawing;
 using System.Linq;
 using Civ2engine;
@@ -34,58 +35,93 @@ namespace EtoFormsUI
             g.DrawImage(terrainSet.BaseTiles[(int)tile.Type], 0, 0);
 
             // Dither
-            // Determine type of terrain in all 4 directions. Be careful if you're on map edge.
-            TerrainType?[,]
-                tiletype = new TerrainType?[2, 2] {{null, null}, {null, null}}; // null = beyond map limits
-            if (flatEarth)
+            if (tile.Type != TerrainType.Ocean)
             {
-                // Determine type of NW tile
-                if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
-                // Determine type of NE tile
-                if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
-                // Determine type of SW tile
-                if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
-                // Determine type of SE tile
-                if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
-            }
-            else // Round earth
-            {
-                // Determine type of NW tile
-                if ((col == 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
-                else if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
-                // Determine type of NE tile
-                if ((col == Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
-                else if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
-                // Determine type of SW tile
-                if ((col == 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
-                else if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
-                // Determine type of SE tile
-                if ((col == Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
-                else if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
-            }
-
-            // Implement dither on 4 locations in square
-            for (int tileX = 0; tileX < 2; tileX++) // for 4 directions
-            {
-                for (int tileY = 0; tileY < 2; tileY++)
+                if (flatEarth)
                 {
-                    if(tiletype[tileX, tileY] == tile.Type) continue; //Don't dither same terrain 
-                    switch (tiletype[tileX, tileY])
+                    // Determine type of NW tile
+                    if ((col != 0) && row != 0) ApplyDither(g,Map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
+                    // Determine type of NE tile
+                    if (col != Xdim - 1 && (row != 0)) ApplyDither(g, Map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
+                    // Determine type of SW tile
+                    if (col != 0 && (row != Ydim - 1)) ApplyDither(g, Map.TileC2(col - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
+                    // Determine type of SE tile
+                    if (col != Xdim - 1 && (row != Ydim - 1)) ApplyDither(g,Map.TileC2(col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
+                }
+                else // Round earth
+                {
+                    if (row != 0)
                     {
-                        case TerrainType.Desert: g.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Plains: g.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Grassland: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Forest: g.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Hills: g.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Mountains: g.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Tundra: g.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Glacier: g.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Swamp: g.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Jungle: g.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Ocean: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+                        ApplyDither(g, Map.TileC2((col == 0 ? Xdim : col) - 1, row - 1).Type, tile.Type,
+                            terrainSet.DitherMaps[0], 0, 0);
+
+                        ApplyDither(g, Map.TileC2(col == Xdim - 1 ? 0 : col + 1, row - 1).Type, tile.Type,
+                            terrainSet.DitherMaps[1], 32, 0);
+                    }
+
+                    if (row != Ydim - 1)
+                    {
+                        ApplyDither(g, Map.TileC2((col == 0 ? Xdim : col) - 1, row + 1).Type, tile.Type,
+                            terrainSet.DitherMaps[2], 0, 16);
+
+                        ApplyDither(g, Map.TileC2(col == Xdim - 1 ? 0 : col + 1, row + 1).Type, tile.Type,
+                            terrainSet.DitherMaps[3], 32, 16);
                     }
                 }
             }
+            // // Determine type of terrain in all 4 directions. Be careful if you're on map edge.
+            // TerrainType?[,]
+            //     tiletype = new TerrainType?[2, 2] {{null, null}, {null, null}}; // null = beyond map limits
+            // if (flatEarth)
+            // {
+            //     // Determine type of NW tile
+            //     if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
+            //     // Determine type of NE tile
+            //     if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
+            //     // Determine type of SW tile
+            //     if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
+            //     // Determine type of SE tile
+            //     if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
+            // }
+            // else // Round earth
+            // {
+            //     // Determine type of NW tile
+            //     if ((col == 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
+            //     else if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
+            //     // Determine type of NE tile
+            //     if ((col == Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
+            //     else if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
+            //     // Determine type of SW tile
+            //     if ((col == 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
+            //     else if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
+            //     // Determine type of SE tile
+            //     if ((col == Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
+            //     else if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
+            // }
+            //
+            //
+            // // Implement dither on 4 locations in square
+            // for (int tileX = 0; tileX < 2; tileX++) // for 4 directions
+            // {
+            //     for (int tileY = 0; tileY < 2; tileY++)
+            //     {
+            //         if(tiletype[tileX, tileY] == tile.Type) continue; //Don't dither same terrain 
+            //         switch (tiletype[tileX, tileY])
+            //         {
+            //             case TerrainType.Desert: g.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Plains: g.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Grassland: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Forest: g.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Hills: g.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Mountains: g.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Tundra: g.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Glacier: g.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Swamp: g.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Jungle: g.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //             case TerrainType.Ocean: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
+            //         }
+            //     }
+            // }
 
             switch (tile.Type)
             {
@@ -271,6 +307,16 @@ namespace EtoFormsUI
             else if (tile.Airbase) g.DrawImage(MapImages.Specials[tile.IsUnitPresent ? 3 : 2], 0, 0);
 
             return _tilePic;
+        }
+
+        private static void ApplyDither(Graphics g, TerrainType neighbourType, TerrainType tileType, IReadOnlyList<Bitmap> ditherMap, int offsetX, int offsetY)    
+        {
+            if (neighbourType == TerrainType.Ocean)
+            {
+                neighbourType = TerrainType.Grassland;
+            }
+            if(neighbourType == tileType) return;
+            g.DrawImage(ditherMap[(int)neighbourType], offsetX, offsetY);
         }
 
         private static bool[] IsLandAround(int col, int row, bool flatEarth)

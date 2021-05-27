@@ -31,5 +31,7 @@ namespace EtoFormsUI
     {
         public Bitmap[] BaseTiles { get; set; }
         public Bitmap[][] Specials { get; set; }
+        public Bitmap Blank { get; set; }
+        public Bitmap[][] DitherMaps { get; set; }
     }
 }
