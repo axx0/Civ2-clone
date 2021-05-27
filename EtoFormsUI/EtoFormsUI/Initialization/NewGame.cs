@@ -6,6 +6,7 @@ using System.Threading;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.IO;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
 

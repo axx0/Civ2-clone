@@ -1,19 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 
-namespace Civ2engine
+namespace Civ2engine.IO
 {
     public class RulesParser : IFileHandler
     {
-        private Rules Rules { get; set; }
+        private Rules Rules { get; init; }
 
         private readonly Dictionary<string, Action<string[]>> _sectionHandlers = new();
 
