@@ -32,6 +32,8 @@ namespace EtoFormsUI
         public Point CityWindowLocation;
         public int CityWindowZoom;
 
+        private int _topOffset = 0;
+
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         private Bitmap map;
@@ -114,17 +116,17 @@ namespace EtoFormsUI
                 {
                     case AnimationType.Waiting:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx);
+                            e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx + mapDest.Y);
                             break;
                         }
                     case AnimationType.UnitMoving:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx));
+                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
                             break;
                         }
                     case AnimationType.Attack:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx));
+                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
                             break;
                         }
                 }
