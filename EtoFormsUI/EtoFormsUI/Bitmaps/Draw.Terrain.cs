@@ -17,12 +17,12 @@ namespace EtoFormsUI
             g.DrawImage(_tilePic, dest);
         }
 
-        public static Bitmap MakeTileGraphic(ITerrain tile, int col, int row, bool flatEarth, TerrainSet terrainSet)
+        public static Bitmap MakeTileGraphic(ITerrain tile, int arrayCol, int row, bool flatEarth, TerrainSet terrainSet)
         {
             // EVERYTHING HERE IS IN CIV2-COORDS AND NOT IN REGULAR COORDS!!!
 
             // First convert regular coords to civ2-style
-            col = 2 * col + row % 2; // you don't change row
+            int col = 2 * arrayCol + row % 2; // you don't change row
             int Xdim = 2 * Map.XDim;
             int Ydim = Map.YDim;
 

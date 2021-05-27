@@ -18,7 +18,7 @@ namespace Civ2engine
         public ITerrain[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; } // Visibility of tiles for each civ
         
-        public bool IsValidTile(int xC2, int yC2)
+        public bool IsValidTileC2(int xC2, int yC2)
         {
             var x = (((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2);
             return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;

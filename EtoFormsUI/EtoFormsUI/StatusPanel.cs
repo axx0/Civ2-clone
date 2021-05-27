@@ -175,7 +175,7 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, "Viewing Pieces", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Draw location & tile type on active square
-                if (Map.IsValidTile(Map.ActiveXY[0], Map.ActiveXY[1]))
+                if (Map.IsValidTileC2(Map.ActiveXY[0], Map.ActiveXY[1]))
                 {
                     Draw.Text(e.Graphics,
                         $"Loc: ({Map.ActiveXY[0]}, {Map.ActiveXY[1]}) {Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Island}",
