@@ -55,12 +55,11 @@ namespace EtoFormsUI
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Draw map
-            Color drawColor;
-            for (int row = 0; row < Map.YDim; row++)
-                for (int col = 0; col < Map.XDim; col++)
+            for (var row = 0; row < Map.YDim; row++)
+                for (var col = 0; col < Map.XDim; col++)
                     if (Map.WhichCivsMapShown == 8 || Map.Visibility[col, row][Map.WhichCivsMapShown])
                     {
-                        drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
+                        var drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                         e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
                     }
 

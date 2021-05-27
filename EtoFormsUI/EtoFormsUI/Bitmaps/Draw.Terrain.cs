@@ -40,7 +40,7 @@ namespace EtoFormsUI
                 if (flatEarth)
                 {
                     // Determine type of NW tile
-                    if ((col != 0) && row != 0) ApplyDither(g,Map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
+                    if (col != 0 && row != 0) ApplyDither(g,Map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
                     // Determine type of NE tile
                     if (col != Xdim - 1 && (row != 0)) ApplyDither(g, Map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
                     // Determine type of SW tile

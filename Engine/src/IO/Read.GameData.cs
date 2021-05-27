@@ -623,8 +623,8 @@ namespace Civ2engine
 
                 // Name        
                 for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
-                string cityName = new string(asciichar);
-                data.CityName[i] = cityName.Replace("\0", string.Empty);
+                var cityName = new string(asciichar);
+                data.CityName[i] = cityName[..cityName.IndexOf('\0')];
 
                 // Distribution of workers on map in city view
                 string cityWorkDistr1 = Convert.ToString(bytes[ofsetC + multipl * i + 48], 2).PadLeft(8, '0');  // inner circle (starting from N, going in counter-clokwise direction)                
