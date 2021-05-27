@@ -52,11 +52,10 @@ namespace EtoFormsUI
 
             Game.OnUnitEvent += UnitEventHappened;
             Game.OnPlayerEvent += PlayerEventHappened;
-            //MinimapPanel.OnMapEvent += MapEventHappened;
+            MinimapPanel.OnMapEvent += MapEventHappened;
             StatusPanel.OnMapEvent += MapEventHappened;
             Game.OnMapEvent += MapEventHappened;
             Main.OnMapEvent += MapEventHappened;
-            //Main.OnCheckIfCityCanBeViewed += CheckIfCityCanBeViewed;
 
             //var ZoomINButton = new NoSelectButton
             //{
@@ -91,7 +90,6 @@ namespace EtoFormsUI
 
             // Center the map view and draw map
             MapViewChange(Map.StartingClickedXY);
-            UpdateMap();
         }
 
         // Draw map here
@@ -192,27 +190,24 @@ namespace EtoFormsUI
                 {
                     if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
                     MapViewChange(clickedXY);
-                    UpdateMap();
-                    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));
                 }
             }
             else    // Right click
             {
                 Map.ViewPieceMode = true;
                 Map.ActiveXY = clickedXY;
-                if (!Map.ViewPieceMode) OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-                else OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged));
                 MapViewChange(clickedXY);
-                StartAnimation(AnimationType.Waiting);
+                //StartAnimation(AnimationType.Waiting);
             }
         }
 
         private void MapViewChange(int[] newCenterCoords)
         {
-            //if (map != null) map.Dispose();
+            if (map != null) map.Dispose();
             SetCoordsAtMapViewChange(newCenterCoords);
-            //map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
-            //UpdateMap();
+            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
+            UpdateMap();
+            OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, mapStartXY, mapDrawSq));
         }
 
         public void UpdateMap()
@@ -230,8 +225,8 @@ namespace EtoFormsUI
             {
                 Map.Zoom++;
                 MapViewChange(CentrXY);
-                StartAnimation(animType);
-                drawPanel.Invalidate();
+                //StartAnimation(animType);
+                //drawPanel.Invalidate();
             }
         }
 
@@ -241,8 +236,8 @@ namespace EtoFormsUI
             {
                 Map.Zoom--;
                 MapViewChange(CentrXY);
-                StartAnimation(animType);
-                drawPanel.Invalidate();
+                //StartAnimation(animType);
+                //drawPanel.Invalidate();
             }
         }
         #endregion
@@ -275,21 +270,21 @@ namespace EtoFormsUI
                 case MapEventType.ZoomChanged:
                     {
                         MapViewChange(CentrXY);
-                        StartAnimation(animType);
-                        drawPanel.Invalidate();
+                        //StartAnimation(animType);
+                        //drawPanel.Invalidate();
                         break;
                     }
                 case MapEventType.CenterView:
                     {
                         MapViewChange(Map.ActiveXY);
-                        drawPanel.Invalidate();
+                        //drawPanel.Invalidate();
                         break;
                     }
                 case MapEventType.ToggleGrid:
                     {
                         MapViewChange(CentrXY);
-                        StartAnimation(animType);
-                        drawPanel.Invalidate();
+                        //StartAnimation(animType);
+                        //drawPanel.Invalidate();
                         break;
                     }
                 case MapEventType.WaitAtEndOfTurn:
@@ -333,7 +328,6 @@ namespace EtoFormsUI
                         if (IsActiveSquareOutsideMapView) 
                         { 
                             MapViewChange(Map.ActiveXY);
-                            UpdateMap();
                         }
                         StartAnimation(animType);
                         break;
@@ -355,14 +349,14 @@ namespace EtoFormsUI
         }
 
         // If ENTER pressed when view piece above city --> enter city view
-        private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
-        {
-            if (Map.ViewPieceMode && Game.GetCities.Any(city => city.X == Map.ActiveXY[0] && city.Y == Map.ActiveXY[1]))
-            {
-                //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
-                //cityForm.Show();
-            }
-        }
+        //private void CheckIfCityCanBeViewed(object sender, CheckIfCityCanBeViewedEventArgs e)
+        //{
+        //    if (Map.ViewPieceMode && Game.GetCities.Any(city => city.X == Map.ActiveXY[0] && city.Y == Map.ActiveXY[1]))
+        //    {
+        //        //CityForm cityForm = new CityForm(this, Game.Cities.Find(city => city.X == ActiveXY[0] && city.Y == ActiveXY[1]));
+        //        //cityForm.Show();
+        //    }
+        //}
 
         #region Animation
         private void StartAnimation(AnimationType anim)
@@ -452,7 +446,7 @@ namespace EtoFormsUI
             mapDrawSq = new int[] { 0, 0 }; // Squares to be drawn on map pic
             // For drawing map on panel
             mapSrc1 = mapSrc2 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
-            mapDest = new Point(0, 0);  // XY coords of whre map should be drawn on panel (in px)
+            mapDest = new Point(0, 0);  // XY coords of where map should be drawn on panel (in px)
 
             int fullMapWidth = Map.Xpx * (2 * Map.XDim + 1);
             int fullMapHeight = Map.Ypx * (Map.YDim + 1);
@@ -553,13 +547,8 @@ namespace EtoFormsUI
             Debug.WriteLine($"mapSrc1 {mapSrc1}");
             Debug.WriteLine($"mapDest {mapDest}");
             Debug.WriteLine("");
-
-            //OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, CentrXY, CentrOffset, ActiveOffset, PanelMap_offset, MapPanel_offset, mapRect1, mapRect2));
-            //DrawPanel.Invalidate();
         }
 
-        //private int[] PanelMap_offsetpx => new int[] { Game.Xpx * PanelMap_offset[0], Game.Ypx * PanelMap_offset[1] };
-        //private int[] MapPanel_offsetpx => new int[] { Game.Xpx * MapPanel_offset[0], Game.Ypx * MapPanel_offset[1] };
         private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Map.Ypx) };   // No of squares of panel and map
         private int[] ActiveOffsetXY => new int[] { Map.ActiveXY[0] - mapStartXY[0], Map.ActiveXY[1] - mapStartXY[1] };
         private Point ActiveOffsetPx => new Point(Map.Xpx * ActiveOffsetXY[0], Map.Ypx * ActiveOffsetXY[1]);

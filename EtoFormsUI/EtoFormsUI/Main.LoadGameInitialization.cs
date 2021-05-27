@@ -42,11 +42,11 @@ namespace EtoFormsUI
             
             foreach (MenuItem item in this.Menu.Items) item.Enabled = true;
 
-            mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height);
-            layout.Add(mapPanel, 0, 0);
-
             minimapPanel = new MinimapPanel(this, 262, 149);
             layout.Add(minimapPanel, ClientSize.Width - 262, 0);
+
+            mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height);
+            layout.Add(mapPanel, 0, 0);
 
             statusPanel = new StatusPanel(this, 262, ClientSize.Height - 148);
             layout.Add(statusPanel, ClientSize.Width - 262, 148);
