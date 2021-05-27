@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Civ2engine.Advances;
+using Civ2engine.Enums;
 using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
@@ -38,9 +39,11 @@ namespace Civ2engine
         public Improvement[] Improvements { get; internal set; }
         
         
-        public Terrain[] Terrains { get; internal set; }
+        public IList<Terrain[]> Terrains { get; internal set; }
         public Government[] Governments { get; internal set; }
         public LeaderDefaults[] Leaders { get; internal set; }
         public Order[] Orders { get; internal set; }
+
+        public MapParams[] Maps { get; internal set; } = {new() {Type = MapType.Standard}};
     }
 }

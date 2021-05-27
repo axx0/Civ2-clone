@@ -12,18 +12,18 @@ namespace EtoFormsUI
 {
     public partial class Main : Form
     {
-        public void LoadGameInitialization(Ruleset ruleset, string SAVname)
+        public void LoadGameInitialization(Ruleset ruleset, string saveFileName)
         {
-            Game.LoadGame(ruleset, SAVname);
+            Game.LoadGame(ruleset, saveFileName);
             Images.LoadGraphicsAssetsFromFiles(ruleset);
         }
 
-        public void LoadScenarioInit(Ruleset ruleset, string SCNname)
+        public void LoadScenarioInit(Ruleset ruleset, string scenarioFileName)
         {
             
         }
         
-        public void StartPremadeInit(Ruleset ruleset, string SCNname)
+        public void StartPremadeInit(Ruleset ruleset, string mapFileName)
         {
             
         }
@@ -31,12 +31,12 @@ namespace EtoFormsUI
         public void StartGame()
         {
             // Generate map tile graphics
-            Images.MapTileGraphic = new Bitmap[Map.Xdim, Map.Ydim];
-            for (int col = 0; col < Map.Xdim; col++)
+            Images.MapTileGraphic = new Bitmap[Map.XDim, Map.YDim];
+            for (var col = 0; col < Map.XDim; col++)
             {
-                for (int row = 0; row < Map.Ydim; row++)
+                for (var row = 0; row < Map.YDim; row++)
                 {
-                    Images.MapTileGraphic[col, row] = Draw.MakeTileGraphic(Map.Tile[col, row], col, row, Game.Options.FlatEarth);
+                    Images.MapTileGraphic[col, row] = Draw.MakeTileGraphic(Map.Tile[col, row], col, row, Game.Options.FlatEarth, MapImages.Terrains[Map.MapIndex]);
                 }
             }
             

@@ -9,9 +9,9 @@ namespace EtoFormsUI
 {
     public static partial class Images
     {
-        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, Irrigation, Farmland, Mining, Pollution, Fortified, Fortress, Airbase, AirbasePlane, GrasslandShield, ViewPiece, GridLines, GridLinesVisible, Dither, Blank, DitherBase, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT;
-        public static Bitmap[] Desert, Plains, Grassland, ForestBase, HillsBase, MtnsBase, Tundra, Glacier, Swamp, Jungle, Ocean, River, Forest, Mountains, Hills, RiverMouth, Road, Railroad, Improvements, BattleAnim;
-        public static Bitmap[,] Coast, DitherBlank, DitherDots, DitherDesert, DitherPlains, DitherGrassland, DitherForest, DitherHills, DitherMountains, DitherTundra, DitherGlacier, DitherSwamp, DitherJungle, PeopleL, PeopleLshadow, ResearchIcons;
+        public static Bitmap CityHungerBig, CityShortageBig, CityCorruptBig, CityFoodBig, CitySupportBig, CityTradeBig, CityLuxBig, CityTaxBig, CitySciBig, CityFoodSmall, CitySupportSmall, CityTradeSmall, NextCity, CityWallpaper, PanelOuterWallpaper, PanelInnerWallpaper, ViewPiece, GridLines, GridLinesVisible, SellIcon, NextCityLarge, PrevCity, PrevCityLarge, CityExit, CityZoomIN, CityZoomOUT;
+        public static Bitmap[] Improvements, BattleAnim;
+        public static Bitmap[,] PeopleL, PeopleLshadow, ResearchIcons;
         
         
         public static Bitmap[,] MapTileGraphic;
@@ -19,7 +19,7 @@ namespace EtoFormsUI
         public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset)
         {
             CityLoader.LoadCities(ruleset);
-            TerrainBitmapsImportFromFile(ruleset.Root);
+            TerrainLoader.LoadTerrain(ruleset, Game.Instance.Rules);
             UnitLoader.LoadUnits(ruleset);
             PeopleIconsBitmapsImportFromFile(ruleset.Root);
             IconsBitmapsImportFromFile(ruleset.Root);
@@ -33,7 +33,7 @@ namespace EtoFormsUI
             //ImportCiv2Icon();
         }
 
-        public static Bitmap MapTileGraphicC2(int xC2, int yC2) => MapTileGraphic[(((xC2 + 2 * Map.Instance.Xdim) % (2 * Map.Instance.Xdim)) - yC2 % 2) / 2, yC2];  // Return tile graphics for civ2-coords input
+        public static Bitmap MapTileGraphicC2(int xC2, int yC2) => MapTileGraphic[(((xC2 + 2 * Map.Instance.XDim) % (2 * Map.Instance.XDim)) - yC2 % 2) / 2, yC2];  // Return tile graphics for civ2-coords input
 
         // Extract icon from civ2.exe file
         //public static void ImportCiv2Icon()
@@ -47,234 +47,6 @@ namespace EtoFormsUI
         //        Debug.WriteLine("Civ2.exe not found!");
         //    }
         //}
-
-        public static void TerrainBitmapsImportFromFile(string path)
-        {
-            // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            var terrain1 = LoadBitmapFrom("TERRAIN1.GIF", path);
-            var terrain2 = LoadBitmapFrom( "TERRAIN2.GIF", path);
-
-            // Initialize objects
-            Desert = new Bitmap[4];
-            Plains = new Bitmap[4];
-            Grassland = new Bitmap[4];
-            ForestBase = new Bitmap[4];
-            HillsBase = new Bitmap[4];
-            MtnsBase = new Bitmap[4];
-            Tundra = new Bitmap[4];
-            Glacier = new Bitmap[4];
-            Swamp = new Bitmap[4];
-            Jungle = new Bitmap[4];
-            Ocean = new Bitmap[4];
-            Coast = new Bitmap[8, 4];
-            River = new Bitmap[16];
-            Forest = new Bitmap[16];
-            Mountains = new Bitmap[16];
-            Hills = new Bitmap[16];
-            RiverMouth = new Bitmap[4];
-            Road = new Bitmap[9];
-            Railroad = new Bitmap[9];
-
-            // Define transparent colors
-            Color transparentGray = Color.FromArgb(135, 135, 135);    // Define transparent back color (gray)
-            Color transparentPink = Color.FromArgb(255, 0, 255);    // Define transparent back color (pink)
-            Color transparentCyan = Color.FromArgb(0, 255, 255);    // Define transparent back color (cyan)
-
-            // Tiles
-            for (int i = 0; i < 4; i++)
-            {
-                Desert[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), 1, 64, 32));
-                Desert[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Desert[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Plains[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (2 * 1) + (1 * 32), 64, 32));
-                Plains[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Plains[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Grassland[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (3 * 1) + (2 * 32), 64, 32));
-                Grassland[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Grassland[i].ReplaceColors(transparentPink, Colors.Transparent);
-                ForestBase[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (4 * 1) + (3 * 32), 64, 32));
-                ForestBase[i].ReplaceColors(transparentGray, Colors.Transparent);
-                ForestBase[i].ReplaceColors(transparentPink, Colors.Transparent);
-                HillsBase[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (5 * 1) + (4 * 32), 64, 32));
-                HillsBase[i].ReplaceColors(transparentGray, Colors.Transparent);
-                HillsBase[i].ReplaceColors(transparentPink, Colors.Transparent);
-                MtnsBase[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (6 * 1) + (5 * 32), 64, 32));
-                MtnsBase[i].ReplaceColors(transparentGray, Colors.Transparent);
-                MtnsBase[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Tundra[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (7 * 1) + (6 * 32), 64, 32));
-                Tundra[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Tundra[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Glacier[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (8 * 1) + (7 * 32), 64, 32));
-                Glacier[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Glacier[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Swamp[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (9 * 1) + (8 * 32), 64, 32));
-                Swamp[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Swamp[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Jungle[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (10 * 1) + (9 * 32), 64, 32));
-                Jungle[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Jungle[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Ocean[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), (11 * 1) + (10 * 32), 64, 32));
-                Ocean[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Ocean[i].ReplaceColors(transparentPink, Colors.Transparent);
-            }
-
-            // 4 small dither tiles
-            DitherBlank = new Bitmap[2, 2];
-            DitherDots = new Bitmap[2, 2];
-            for (int tileX = 0; tileX < 2; tileX++)
-            {
-                for (int tileY = 0; tileY < 2; tileY++)
-                {
-                    DitherBlank[tileX, tileY] = terrain1.Clone(new Rectangle((tileX * 32) + 1, (tileY * 16) + 447, 32, 16));
-                    DitherDots[tileX, tileY] = DitherBlank[tileX, tileY];
-                    DitherDots[tileX, tileY].ReplaceColors(transparentGray, Colors.Transparent);
-                    DitherDots[tileX, tileY].ReplaceColors(transparentPink, Colors.Transparent);
-                }
-            }
-
-            // Blank tile
-            Blank = terrain1.Clone(new Rectangle(131, 447, 64, 32));
-            Blank.ReplaceColors(transparentGray, Colors.Transparent);
-
-            // Dither base (only useful for grasland?)
-            DitherBase = terrain1.Clone(new Rectangle(196, 447, 64, 32));
-
-            // Replace black dither pixels with base pixels
-            DitherDesert = new Bitmap[2, 2];   // 4 dither tiles for one 64x32 map tile
-            DitherPlains = new Bitmap[2, 2];
-            DitherGrassland = new Bitmap[2, 2];
-            DitherForest = new Bitmap[2, 2];
-            DitherHills = new Bitmap[2, 2];
-            DitherMountains = new Bitmap[2, 2];
-            DitherTundra = new Bitmap[2, 2];
-            DitherGlacier = new Bitmap[2, 2];
-            DitherSwamp = new Bitmap[2, 2];
-            DitherJungle = new Bitmap[2, 2];
-            Color replacementColor;
-            for (int tileX = 0; tileX < 2; tileX++)
-            {    // For 4 directions (NE, SE, SW, NW)
-                for (int tileY = 0; tileY < 2; tileY++)
-                {
-                    DitherDesert[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherPlains[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherGrassland[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherForest[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherHills[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherMountains[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherTundra[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherGlacier[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherSwamp[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    DitherJungle[tileX, tileY] = new Bitmap(32, 16, PixelFormat.Format32bppRgba);
-                    for (int col = 0; col < 32; col++)
-                    {
-                        for (int row = 0; row < 16; row++)
-                        {
-                            // replacementColor = DitherBlank.GetPixel(tileX * 32 + col, tileY * 16 + row);
-                            replacementColor = DitherBlank[tileX, tileY].GetPixel(col, row);
-                            if (replacementColor == Color.FromArgb(0, 0, 0))
-                            {
-                                DitherDesert[tileX, tileY].SetPixel(col, row, Desert[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherPlains[tileX, tileY].SetPixel(col, row, Plains[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherGrassland[tileX, tileY].SetPixel(col, row, Grassland[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherForest[tileX, tileY].SetPixel(col, row, ForestBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherHills[tileX, tileY].SetPixel(col, row, HillsBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherMountains[tileX, tileY].SetPixel(col, row, MtnsBase[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherTundra[tileX, tileY].SetPixel(col, row, Tundra[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherGlacier[tileX, tileY].SetPixel(col, row, Glacier[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherSwamp[tileX, tileY].SetPixel(col, row, Swamp[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                                DitherJungle[tileX, tileY].SetPixel(col, row, Jungle[0].GetPixel((tileX * 32) + col, (tileY * 16) + row));
-                            }
-                            else
-                            {
-                                DitherDesert[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherPlains[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherGrassland[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherForest[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherHills[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherMountains[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherTundra[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherGlacier[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherSwamp[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                                DitherJungle[tileX, tileY].SetPixel(col, row, Color.FromArgb(0, 0, 0, 0));
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Rivers, Forest, Mountains, Hills
-            for (int i = 0; i < 16; i++)
-            {
-                River[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 3 + (i / 8) + ((2 + (i / 8)) * 32), 64, 32));
-                River[i].ReplaceColors(transparentGray, Colors.Transparent);
-                River[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Forest[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 5 + (i / 8) + ((4 + (i / 8)) * 32), 64, 32));
-                Forest[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Forest[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Mountains[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 7 + (i / 8) + ((6 + (i / 8)) * 32), 64, 32));
-                Mountains[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Mountains[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Hills[i] = terrain2.Clone(new Rectangle((i % 8) + 1 + ((i % 8) * 64), 9 + (i / 8) + ((8 + (i / 8)) * 32), 64, 32));
-                Hills[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Hills[i].ReplaceColors(transparentPink, Colors.Transparent);
-            }
-
-            // River mouths
-            for (int i = 0; i < 4; i++)
-            {
-                RiverMouth[i] = terrain2.Clone(new Rectangle(i + 1 + (i * 64), (11 * 1) + (10 * 32), 64, 32));
-                RiverMouth[i].ReplaceColors(transparentGray, Colors.Transparent);
-                RiverMouth[i].ReplaceColors(transparentPink, Colors.Transparent);
-                RiverMouth[i].ReplaceColors(transparentCyan, Colors.Transparent);
-            }
-
-            // Coast
-            for (int i = 0; i < 8; i++)
-            {
-                Coast[i, 0] = terrain2.Clone(new Rectangle((2 * i) + 1 + (2 * i * 32), 429, 32, 16));  // N
-                Coast[i, 0].ReplaceColors(transparentGray, Colors.Transparent);
-                Coast[i, 1] = terrain2.Clone(new Rectangle((2 * i) + 1 + (2 * i * 32), 429 + (1 * 1) + (1 * 16), 32, 16));  // S
-                Coast[i, 1].ReplaceColors(transparentGray, Colors.Transparent);
-                Coast[i, 2] = terrain2.Clone(new Rectangle((2 * i) + 1 + (2 * i * 32), 429 + (2 * 1) + (2 * 16), 32, 16));  // W
-                Coast[i, 2].ReplaceColors(transparentGray, Colors.Transparent);
-                Coast[i, 3] = terrain2.Clone(new Rectangle((2 * (i + 1)) + (((2 * i) + 1) * 32), 429 + (2 * 1) + (2 * 16), 32, 16));  // E
-                Coast[i, 3].ReplaceColors(transparentGray, Colors.Transparent);
-            }
-
-            // Road & railorad
-            for (int i = 0; i < 9; i++)
-            {
-                Road[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), 364, 64, 32));
-                Road[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Road[i].ReplaceColors(transparentPink, Colors.Transparent);
-                Railroad[i] = terrain1.Clone(new Rectangle(i + 1 + (i * 64), 397, 64, 32));
-                Railroad[i].ReplaceColors(transparentGray, Colors.Transparent);
-                Railroad[i].ReplaceColors(transparentPink, Colors.Transparent);
-            }
-
-            Irrigation = terrain1.Clone(new Rectangle(456, 100, 64, 32));
-            Irrigation.ReplaceColors(transparentGray, Colors.Transparent);
-            Irrigation.ReplaceColors(transparentPink, Colors.Transparent);
-
-            Farmland = terrain1.Clone(new Rectangle(456, 133, 64, 32));
-            Farmland.ReplaceColors(transparentGray, Colors.Transparent);
-            Farmland.ReplaceColors(transparentPink, Colors.Transparent);
-
-            Mining = terrain1.Clone(new Rectangle(456, 166, 64, 32));
-            Mining.ReplaceColors(transparentGray, Colors.Transparent);
-            Mining.ReplaceColors(transparentPink, Colors.Transparent);
-
-            Pollution = terrain1.Clone(new Rectangle(456, 199, 64, 32));
-            Pollution.ReplaceColors(transparentGray, Colors.Transparent);
-            Pollution.ReplaceColors(transparentPink, Colors.Transparent);
-
-            GrasslandShield = terrain1.Clone(new Rectangle(456, 232, 64, 32));
-            GrasslandShield.ReplaceColors(transparentGray, Colors.Transparent);
-            GrasslandShield.ReplaceColors(transparentPink, Colors.Transparent);
-
-            terrain1.Dispose();
-            terrain2.Dispose();
-        }
 
         public static void PeopleIconsBitmapsImportFromFile(string path)
         {

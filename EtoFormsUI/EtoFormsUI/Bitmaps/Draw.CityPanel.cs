@@ -356,7 +356,7 @@ namespace EtoFormsUI
                         newY = city.Y + y_;
 
                         // First draw blank tiles
-                        using var blankPic = Images.Blank.Resize(zoom);
+                        using var blankPic = MapImages.Terrains[Map.MapIndex].Blank.Resize(zoom);
                         g.DrawImage(blankPic, dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3), dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3));
                         // Then draw tiles if they are visible
                         if (Map.IsTileVisibleC2(newX, newY, city.Owner.Id))

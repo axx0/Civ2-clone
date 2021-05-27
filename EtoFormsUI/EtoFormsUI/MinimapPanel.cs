@@ -42,7 +42,7 @@ namespace EtoFormsUI
             //MinimapCursor = new Cursor(new MemoryStream(Properties.Resources.MinimapCursor));
 
             // Determine the offset of minimap from panel edges
-            Offset = new int[] { (drawPanel.Width - 2 * Map.Xdim) / 2, (drawPanel.Height - Map.Ydim) / 2 };
+            Offset = new int[] { (drawPanel.Width - 2 * Map.XDim) / 2, (drawPanel.Height - Map.YDim) / 2 };
 
             CentrXY = new int[] { 0, 0 };
             CentrOffset = new int[] { 0, 0 };
@@ -55,12 +55,11 @@ namespace EtoFormsUI
         private void DrawPanel_Paint(object sender, PaintEventArgs e)
         {
             // Draw map
-            Color drawColor;
-            for (int row = 0; row < Map.Ydim; row++)
-                for (int col = 0; col < Map.Xdim; col++)
+            for (var row = 0; row < Map.YDim; row++)
+                for (var col = 0; col < Map.XDim; col++)
                     if (Map.WhichCivsMapShown == 8 || Map.Visibility[col, row][Map.WhichCivsMapShown])
                     {
-                        drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
+                        var drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                         e.Graphics.FillRectangle(new SolidBrush(drawColor), Offset[0] + 2 * col + (row % 2), Offset[1] + row, 2, 1);
                     }
 
@@ -85,7 +84,7 @@ namespace EtoFormsUI
                 int clickedX = (int)e.Location.X;
                 int clickedY = (int)e.Location.Y;
                 // Determine if you clicked within the drawn minimap
-                if (clickedX >= Offset[0] && clickedX < Offset[0] + 2 * Map.Xdim && clickedY >= Offset[1] && clickedY < Offset[1] + Map.Ydim)
+                if (clickedX >= Offset[0] && clickedX < Offset[0] + 2 * Map.XDim && clickedY >= Offset[1] && clickedY < Offset[1] + Map.YDim)
                 {
                     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, new int[] { clickedX - Offset[0], clickedY - Offset[1] }));
                 }

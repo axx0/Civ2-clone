@@ -32,6 +32,8 @@ namespace EtoFormsUI
         public Point CityWindowLocation;
         public int CityWindowZoom;
 
+        private int _topOffset = 0;
+
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         private Bitmap map;
@@ -114,17 +116,17 @@ namespace EtoFormsUI
                 {
                     case AnimationType.Waiting:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx);
+                            e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx + mapDest.Y);
                             break;
                         }
                     case AnimationType.UnitMoving:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx));
+                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
                             break;
                         }
                     case AnimationType.Attack:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx));
+                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
                             break;
                         }
                 }
@@ -452,8 +454,8 @@ namespace EtoFormsUI
             mapSrc1 = mapSrc2 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
             mapDest = new Point(0, 0);  // XY coords of whre map should be drawn on panel (in px)
 
-            int fullMapWidth = Map.Xpx * (2 * Map.Xdim + 1);
-            int fullMapHeight = Map.Ypx * (Map.Ydim + 1);
+            int fullMapWidth = Map.Xpx * (2 * Map.XDim + 1);
+            int fullMapHeight = Map.Ypx * (Map.YDim + 1);
 
             // No of squares of panel and map
             //int[] panelSq = { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };
@@ -478,25 +480,25 @@ namespace EtoFormsUI
                 {
                     mapStartXY[1] = 0;
                 }
-                else if (mapStartXY[1] + mapDrawSq[1] >= Map.Ydim)
+                else if (mapStartXY[1] + mapDrawSq[1] >= Map.YDim)
                 {
-                    mapStartXY[1] = Map.Ydim - mapDrawSq[1];
+                    mapStartXY[1] = Map.YDim - mapDrawSq[1];
                 }
                 else
                 {
                     if (mapStartXY[1] % 2 != 0) mapStartXY[1]--;
                 }
             }
-            else if (mapStartXY[0] + mapDrawSq[0] >= 2 * Map.Xdim)
+            else if (mapStartXY[0] + mapDrawSq[0] >= 2 * Map.XDim)
             {
-                mapStartXY[0] = 2 * Map.Xdim - mapDrawSq[0];
+                mapStartXY[0] = 2 * Map.XDim - mapDrawSq[0];
                 if (mapStartXY[1] <= 0)
                 {
                     mapStartXY[1] = 0;
                 }
-                else if (mapStartXY[1] + mapDrawSq[1] >= Map.Ydim)
+                else if (mapStartXY[1] + mapDrawSq[1] >= Map.YDim)
                 {
-                    mapStartXY[1] = Map.Ydim - mapDrawSq[1];
+                    mapStartXY[1] = Map.YDim - mapDrawSq[1];
                 }
                 else
                 {
@@ -510,9 +512,9 @@ namespace EtoFormsUI
                     mapStartXY[1] = 0;
                     if (mapStartXY[0] % 2 != 0) mapStartXY[0]--;
                 }
-                else if (mapStartXY[1] + mapDrawSq[1] >= Map.Ydim)
+                else if (mapStartXY[1] + mapDrawSq[1] >= Map.YDim)
                 {
-                    mapStartXY[1] = Map.Ydim - mapDrawSq[1];
+                    mapStartXY[1] = Map.YDim - mapDrawSq[1];
                     if (mapStartXY[0] % 2 != 0) mapStartXY[0]--;
                 }
                 else
@@ -523,7 +525,7 @@ namespace EtoFormsUI
             }
 
             // Determine drawing rectangles
-            if (panelSq[0] > 2 * Map.Xdim + 1)
+            if (panelSq[0] > 2 * Map.XDim + 1)
             {
                 mapSrc1.Width = fullMapWidth;
                 mapDest.X = (drawPanel.Width - fullMapWidth) / 2;
@@ -534,7 +536,7 @@ namespace EtoFormsUI
                 mapDest.X = 0;
             }
 
-            if (panelSq[1] > Map.Ydim + 1)
+            if (panelSq[1] > Map.YDim + 1)
             {
                 mapSrc1.Height = fullMapHeight;
                 mapDest.Y = (drawPanel.Height - fullMapHeight) / 2;

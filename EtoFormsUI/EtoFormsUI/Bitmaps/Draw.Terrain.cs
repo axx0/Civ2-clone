@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Eto.Drawing;
 using System.Linq;
 using Civ2engine;
@@ -16,14 +17,14 @@ namespace EtoFormsUI
             g.DrawImage(_tilePic, dest);
         }
 
-        public static Bitmap MakeTileGraphic(ITerrain tile, int col, int row, bool flatEarth)
+        public static Bitmap MakeTileGraphic(ITerrain tile, int arrayCol, int row, bool flatEarth, TerrainSet terrainSet)
         {
             // EVERYTHING HERE IS IN CIV2-COORDS AND NOT IN REGULAR COORDS!!!
 
             // First convert regular coords to civ2-style
-            col = 2 * col + row % 2; // you don't change row
-            int Xdim = 2 * Map.Xdim;
-            int Ydim = Map.Ydim;
+            int col = 2 * arrayCol + row % 2; // you don't change row
+            int Xdim = 2 * Map.XDim;
+            int Ydim = Map.YDim;
 
             // Define a bitmap for drawing
             var _tilePic = new Bitmap(64, 32, PixelFormat.Format32bppRgba);
@@ -31,73 +32,40 @@ namespace EtoFormsUI
             // Draw tile
             using var g = new Graphics(_tilePic);
             
-            switch (tile.Type)
-            {
-                case TerrainType.Desert: g.DrawImage(Images.Desert[0], 0, 0); break;
-                case TerrainType.Forest: g.DrawImage(Images.ForestBase[0], 0, 0); break;
-                case TerrainType.Glacier: g.DrawImage(Images.Glacier[0], 0, 0); break;
-                case TerrainType.Grassland: g.DrawImage(Images.Grassland[0], 0, 0); break;
-                case TerrainType.Hills: g.DrawImage(Images.HillsBase[0], 0, 0); break;
-                case TerrainType.Jungle: g.DrawImage(Images.Jungle[0], 0, 0); break;
-                case TerrainType.Mountains: g.DrawImage(Images.MtnsBase[0], 0, 0); break;
-                case TerrainType.Ocean: g.DrawImage(Images.Ocean[0], 0, 0); break;
-                case TerrainType.Plains: g.DrawImage(Images.Plains[0], 0, 0); break;
-                case TerrainType.Swamp: g.DrawImage(Images.Swamp[0], 0, 0); break;
-                case TerrainType.Tundra: g.DrawImage(Images.Tundra[0], 0, 0); break;
-                default: throw new ArgumentOutOfRangeException();
-            }
+            g.DrawImage(terrainSet.BaseTiles[(int)tile.Type], 0, 0);
 
             // Dither
-            // Determine type of terrain in all 4 directions. Be careful if you're on map edge.
-            TerrainType?[,]
-                tiletype = new TerrainType?[2, 2] {{null, null}, {null, null}}; // null = beyond map limits
-            if (flatEarth)
+            if (tile.Type != TerrainType.Ocean)
             {
-                // Determine type of NW tile
-                if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
-                // Determine type of NE tile
-                if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
-                // Determine type of SW tile
-                if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
-                // Determine type of SE tile
-                if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
-            }
-            else // Round earth
-            {
-                // Determine type of NW tile
-                if ((col == 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(Xdim - 1, row - 1).Type;   // if on left edge take tile from other side of map
-                else if ((col != 0) && (row != 0)) tiletype[0, 0] = Map.TileC2(col - 1, row - 1).Type;
-                // Determine type of NE tile
-                if ((col == Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(0, row - 1).Type;   // if on right edge take tile from other side of map
-                else if ((col != Xdim - 1) && (row != 0)) tiletype[1, 0] = Map.TileC2(col + 1, row - 1).Type;
-                // Determine type of SW tile
-                if ((col == 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(Xdim - 1, row + 1).Type;   // if on left edge take tile from other side of map
-                else if ((col != 0) && (row != Ydim - 1)) tiletype[0, 1] = Map.TileC2(col - 1, row + 1).Type;
-                // Determine type of SE tile
-                if ((col == Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(0, row + 1).Type;  // if on right edge take tile from other side of map
-                else if ((col != Xdim - 1) && (row != Ydim - 1)) tiletype[1, 1] = Map.TileC2(col + 1, row + 1).Type;
-            }
-
-            // Implement dither on 4 locations in square
-            for (int tileX = 0; tileX < 2; tileX++) // for 4 directions
-            {
-                for (int tileY = 0; tileY < 2; tileY++)
+                if (flatEarth)
                 {
-                    if(tiletype[tileX, tileY] == tile.Type) continue; //Don't dither same terrain 
-                    switch (tiletype[tileX, tileY])
+                    // Determine type of NW tile
+                    if (col != 0 && row != 0) ApplyDither(g,Map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
+                    // Determine type of NE tile
+                    if (col != Xdim - 1 && (row != 0)) ApplyDither(g, Map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
+                    // Determine type of SW tile
+                    if (col != 0 && (row != Ydim - 1)) ApplyDither(g, Map.TileC2(col - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
+                    // Determine type of SE tile
+                    if (col != Xdim - 1 && (row != Ydim - 1)) ApplyDither(g,Map.TileC2(col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
+                }
+                else // Round earth
+                {
+                    if (row != 0)
                     {
-                        case TerrainType.Desert: g.DrawImage(Images.DitherDesert[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Plains: g.DrawImage(Images.DitherPlains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Grassland: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Forest: g.DrawImage(Images.DitherForest[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Hills: g.DrawImage(Images.DitherHills[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Mountains: g.DrawImage(Images.DitherMountains[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Tundra: g.DrawImage(Images.DitherTundra[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Glacier: g.DrawImage(Images.DitherGlacier[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Swamp: g.DrawImage(Images.DitherSwamp[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Jungle: g.DrawImage(Images.DitherJungle[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        case TerrainType.Ocean: g.DrawImage(Images.DitherGrassland[tileX, tileY], 32 * tileX, 16 * tileY); break;
-                        default: break;
+                        ApplyDither(g, Map.TileC2((col == 0 ? Xdim : col) - 1, row - 1).Type, tile.Type,
+                            terrainSet.DitherMaps[0], 0, 0);
+
+                        ApplyDither(g, Map.TileC2(col == Xdim - 1 ? 0 : col + 1, row - 1).Type, tile.Type,
+                            terrainSet.DitherMaps[1], 32, 0);
+                    }
+
+                    if (row != Ydim - 1)
+                    {
+                        ApplyDither(g, Map.TileC2((col == 0 ? Xdim : col) - 1, row + 1).Type, tile.Type,
+                            terrainSet.DitherMaps[2], 0, 16);
+
+                        ApplyDither(g, Map.TileC2(col == Xdim - 1 ? 0 : col + 1, row + 1).Type, tile.Type,
+                            terrainSet.DitherMaps[3], 32, 16);
                     }
                 }
             }
@@ -107,69 +75,69 @@ namespace EtoFormsUI
                 // Draw coast & river mouth
                 case TerrainType.Ocean:
                 {
-                    bool[] land = IsLandAround(col, row, flatEarth); // Determine if land is present in 8 directions
+                    var land = IsLandAround(col, row, flatEarth); // Determine if land is present in 8 directions
 
                     // Draw coast & river mouth tiles
                     // NW+N+NE tiles
-                    if (!land[7] && !land[0] && !land[1]) g.DrawImage(Images.Coast[0, 0], 16, 0);
-                    if (land[7] && !land[0] && !land[1]) g.DrawImage(Images.Coast[1, 0], 16, 0);
-                    if (!land[7] && land[0] && !land[1]) g.DrawImage(Images.Coast[2, 0], 16, 0);
-                    if (land[7] && land[0] && !land[1]) g.DrawImage(Images.Coast[3, 0], 16, 0);
-                    if (!land[7] && !land[0] && land[1]) g.DrawImage(Images.Coast[4, 0], 16, 0);
-                    if (land[7] && !land[0] && land[1]) g.DrawImage(Images.Coast[5, 0], 16, 0);
-                    if (!land[7] && land[0] && land[1]) g.DrawImage(Images.Coast[6, 0], 16, 0);
-                    if (land[7] && land[0] && land[1]) g.DrawImage(Images.Coast[7, 0], 16, 0);
+                    if (!land[7] && !land[0] && !land[1]) g.DrawImage(terrainSet.Coast[0, 0], 16, 0);
+                    if (land[7] && !land[0] && !land[1]) g.DrawImage(terrainSet.Coast[1, 0], 16, 0);
+                    if (!land[7] && land[0] && !land[1]) g.DrawImage(terrainSet.Coast[2, 0], 16, 0);
+                    if (land[7] && land[0] && !land[1]) g.DrawImage(terrainSet.Coast[3, 0], 16, 0);
+                    if (!land[7] && !land[0] && land[1]) g.DrawImage(terrainSet.Coast[4, 0], 16, 0);
+                    if (land[7] && !land[0] && land[1]) g.DrawImage(terrainSet.Coast[5, 0], 16, 0);
+                    if (!land[7] && land[0] && land[1]) g.DrawImage(terrainSet.Coast[6, 0], 16, 0);
+                    if (land[7] && land[0] && land[1]) g.DrawImage(terrainSet.Coast[7, 0], 16, 0);
 
                     // SW+S+SE tiles
-                    if (!land[3] && !land[4] && !land[5]) g.DrawImage(Images.Coast[0, 1], 16, 16);
-                    if (land[3] && !land[4] && !land[5]) g.DrawImage(Images.Coast[1, 1], 16, 16);
-                    if (!land[3] && land[4] && !land[5]) g.DrawImage(Images.Coast[2, 1], 16, 16);
-                    if (land[3] && land[4] && !land[5]) g.DrawImage(Images.Coast[3, 1], 16, 16);
-                    if (!land[3] && !land[4] && land[5]) g.DrawImage(Images.Coast[4, 1], 16, 16);
-                    if (land[3] && !land[4] && land[5]) g.DrawImage(Images.Coast[5, 1], 16, 16);
-                    if (!land[3] && land[4] && land[5]) g.DrawImage(Images.Coast[6, 1], 16, 16);
-                    if (land[3] && land[4] && land[5]) g.DrawImage(Images.Coast[7, 1], 16, 16);
+                    if (!land[3] && !land[4] && !land[5]) g.DrawImage(terrainSet.Coast[0, 1], 16, 16);
+                    if (land[3] && !land[4] && !land[5]) g.DrawImage(terrainSet.Coast[1, 1], 16, 16);
+                    if (!land[3] && land[4] && !land[5]) g.DrawImage(terrainSet.Coast[2, 1], 16, 16);
+                    if (land[3] && land[4] && !land[5]) g.DrawImage(terrainSet.Coast[3, 1], 16, 16);
+                    if (!land[3] && !land[4] && land[5]) g.DrawImage(terrainSet.Coast[4, 1], 16, 16);
+                    if (land[3] && !land[4] && land[5]) g.DrawImage(terrainSet.Coast[5, 1], 16, 16);
+                    if (!land[3] && land[4] && land[5]) g.DrawImage(terrainSet.Coast[6, 1], 16, 16);
+                    if (land[3] && land[4] && land[5]) g.DrawImage(terrainSet.Coast[7, 1], 16, 16);
 
                     // SW+W+NW tiles
-                    if (!land[5] && !land[6] && !land[7]) g.DrawImage(Images.Coast[0, 2], 0, 8);
-                    if (land[5] && !land[6] && !land[7]) g.DrawImage(Images.Coast[1, 2], 0, 8);
-                    if (!land[5] && land[6] && !land[7]) g.DrawImage(Images.Coast[2, 2], 0, 8);
-                    if (land[5] && land[6] && !land[7]) g.DrawImage(Images.Coast[3, 2], 0, 8);
-                    if (!land[5] && !land[6] && land[7]) g.DrawImage(Images.Coast[4, 2], 0, 8);
-                    if (land[5] && !land[6] && land[7]) g.DrawImage(Images.Coast[5, 2], 0, 8);
-                    if (!land[5] && land[6] && land[7]) g.DrawImage(Images.Coast[6, 2], 0, 8);
-                    if (land[5] && land[6] && land[7]) g.DrawImage(Images.Coast[7, 2], 0, 8);
+                    if (!land[5] && !land[6] && !land[7]) g.DrawImage(terrainSet.Coast[0, 2], 0, 8);
+                    if (land[5] && !land[6] && !land[7]) g.DrawImage(terrainSet.Coast[1, 2], 0, 8);
+                    if (!land[5] && land[6] && !land[7]) g.DrawImage(terrainSet.Coast[2, 2], 0, 8);
+                    if (land[5] && land[6] && !land[7]) g.DrawImage(terrainSet.Coast[3, 2], 0, 8);
+                    if (!land[5] && !land[6] && land[7]) g.DrawImage(terrainSet.Coast[4, 2], 0, 8);
+                    if (land[5] && !land[6] && land[7]) g.DrawImage(terrainSet.Coast[5, 2], 0, 8);
+                    if (!land[5] && land[6] && land[7]) g.DrawImage(terrainSet.Coast[6, 2], 0, 8);
+                    if (land[5] && land[6] && land[7]) g.DrawImage(terrainSet.Coast[7, 2], 0, 8);
 
                     // NE+E+SE tiles
-                    if (!land[1] && !land[2] && !land[3]) g.DrawImage(Images.Coast[0, 3], 32, 8);
-                    if (land[1] && !land[2] && !land[3]) g.DrawImage(Images.Coast[1, 3], 32, 8);
-                    if (!land[1] && land[2] && !land[3]) g.DrawImage(Images.Coast[2, 3], 32, 8);
-                    if (land[1] && land[2] && !land[3]) g.DrawImage(Images.Coast[3, 3], 32, 8);
-                    if (!land[1] && !land[2] && land[3]) g.DrawImage(Images.Coast[4, 3], 32, 8);
-                    if (land[1] && !land[2] && land[3]) g.DrawImage(Images.Coast[5, 3], 32, 8);
-                    if (!land[1] && land[2] && land[3]) g.DrawImage(Images.Coast[6, 3], 32, 8);
-                    if (land[1] && land[2] && land[3]) g.DrawImage(Images.Coast[7, 3], 32, 8);
+                    if (!land[1] && !land[2] && !land[3]) g.DrawImage(terrainSet.Coast[0, 3], 32, 8);
+                    if (land[1] && !land[2] && !land[3]) g.DrawImage(terrainSet.Coast[1, 3], 32, 8);
+                    if (!land[1] && land[2] && !land[3]) g.DrawImage(terrainSet.Coast[2, 3], 32, 8);
+                    if (land[1] && land[2] && !land[3]) g.DrawImage(terrainSet.Coast[3, 3], 32, 8);
+                    if (!land[1] && !land[2] && land[3]) g.DrawImage(terrainSet.Coast[4, 3], 32, 8);
+                    if (land[1] && !land[2] && land[3]) g.DrawImage(terrainSet.Coast[5, 3], 32, 8);
+                    if (!land[1] && land[2] && land[3]) g.DrawImage(terrainSet.Coast[6, 3], 32, 8);
+                    if (land[1] && land[2] && land[3]) g.DrawImage(terrainSet.Coast[7, 3], 32, 8);
 
                     // River mouth
                     // If river is next to ocean, draw river mouth on this tile.
                     if (col + 1 < Xdim && row - 1 >= 0) // NE there is no edge of map
                     {
-                        if (land[1] && Map.TileC2(col + 1, row - 1).River) g.DrawImage(Images.RiverMouth[0], 0, 0);
+                        if (land[1] && Map.TileC2(col + 1, row - 1).River) g.DrawImage(terrainSet.RiverMouth[0], 0, 0);
                     }
 
                     if (col + 1 < Xdim && row + 1 < Ydim) // SE there is no edge of map
                     {
-                        if (land[3] && Map.TileC2(col + 1, row + 1).River) g.DrawImage(Images.RiverMouth[1], 0, 0);
+                        if (land[3] && Map.TileC2(col + 1, row + 1).River) g.DrawImage(terrainSet.RiverMouth[1], 0, 0);
                     }
 
                     if (col - 1 >= 0 && row + 1 < Ydim) // SW there is no edge of map
                     {
-                        if (land[5] && Map.TileC2(col - 1, row + 1).River) g.DrawImage(Images.RiverMouth[2], 0, 0);
+                        if (land[5] && Map.TileC2(col - 1, row + 1).River) g.DrawImage(terrainSet.RiverMouth[2], 0, 0);
                     }
 
                     if (col - 1 >= 0 && row - 1 >= 0) // NW there is no edge of map
                     {
-                        if (land[7] && Map.TileC2(col - 1, row - 1).River) g.DrawImage(Images.RiverMouth[3], 0, 0);
+                        if (land[7] && Map.TileC2(col - 1, row - 1).River) g.DrawImage(terrainSet.RiverMouth[3], 0, 0);
                     }
 
                     break;
@@ -180,7 +148,7 @@ namespace EtoFormsUI
                     var forestIndex = IsTerrainAroundIn4directions(col, row, TerrainType.Forest, flatEarth);
 
                     // Draw forest tiles
-                    g.DrawImage(Images.Forest[forestIndex], 0, 0);
+                    g.DrawImage(terrainSet.Forest[forestIndex], 0, 0);
                     break;
                 }
                 // Draw mountains
@@ -189,7 +157,7 @@ namespace EtoFormsUI
                     var mountainsIndex = IsTerrainAroundIn4directions(col, row, TerrainType.Mountains, flatEarth);
 
                     // Draw mountain tiles
-                    g.DrawImage(Images.Mountains[mountainsIndex], 0, 0);
+                    g.DrawImage(terrainSet.Mountains[mountainsIndex], 0, 0);
                     break;
                 }
                 // Draw hills
@@ -198,10 +166,9 @@ namespace EtoFormsUI
                     var hillIndex = IsTerrainAroundIn4directions(col, row, TerrainType.Hills, flatEarth);
 
                     // Draw hill tiles
-                    g.DrawImage(Images.Hills[hillIndex], 0, 0);
+                    g.DrawImage(terrainSet.Hills[hillIndex], 0, 0);
                     break;
                 }
-
             }
 
             // Draw rivers
@@ -210,47 +177,22 @@ namespace EtoFormsUI
                 var riverIndex = IsRiverAround(col, row, flatEarth);
 
                 // Draw river tiles
-                g.DrawImage(Images.River[riverIndex], 0, 0);
+                g.DrawImage(terrainSet.River[riverIndex], 0, 0);
             }
 
             // Draw shield for grasslands
-            if (tile.Type == TerrainType.Grassland && tile.HasShield)
+            
+            if (tile.Type == TerrainType.Grassland)
             {
-                g.DrawImage(Images.GrasslandShield, 0, 0);
-            }
-
-
-            // Draw special resources if they exist
-            if (tile.SpecType != null)
-            {
-                switch (tile.SpecType)
+                if (tile.HasShield)
                 {
-                    case SpecialType.Oasis: g.DrawImage(Images.Desert[2], 0, 0); break;
-                    case SpecialType.Buffalo: g.DrawImage(Images.Plains[2], 0, 0); break;
-                    case SpecialType.Grassland1: break; // g.DrawImage(Images.Grassland[0], 0, 0); break;   // Grassland has no special type
-                    case SpecialType.Pheasant: g.DrawImage(Images.ForestBase[2], 0, 0); break;
-                    case SpecialType.Coal: g.DrawImage(Images.HillsBase[2], 0, 0); break;
-                    case SpecialType.Gold: g.DrawImage(Images.MtnsBase[2], 0, 0); break;
-                    case SpecialType.Game: g.DrawImage(Images.Tundra[2], 0, 0); break;
-                    case SpecialType.Ivory: g.DrawImage(Images.Glacier[2], 0, 0); break;
-                    case SpecialType.Peat: g.DrawImage(Images.Swamp[2], 0, 0); break;
-                    case SpecialType.Gems: g.DrawImage(Images.Jungle[2], 0, 0); break;
-                    case SpecialType.Fish: g.DrawImage(Images.Ocean[2], 0, 0); break;
-                    case SpecialType.DesertOil: g.DrawImage(Images.Desert[3], 0, 0); break;
-                    case SpecialType.Wheat: g.DrawImage(Images.Plains[3], 0, 0); break;
-                    case SpecialType.Grassland2: break; // g.DrawImage(Images.Shield, 0, 0); break;   // Grassland has no special type
-                    case SpecialType.Silk: g.DrawImage(Images.ForestBase[3], 0, 0); break;
-                    case SpecialType.Wine: g.DrawImage(Images.HillsBase[3], 0, 0); break;
-                    case SpecialType.Iron: g.DrawImage(Images.MtnsBase[3], 0, 0); break;
-                    case SpecialType.Furs: g.DrawImage(Images.Tundra[3], 0, 0); break;
-                    case SpecialType.GlacierOil: g.DrawImage(Images.Glacier[3], 0, 0); break;
-                    case SpecialType.Spice: g.DrawImage(Images.Swamp[3], 0, 0); break;
-                    case SpecialType.Fruit: g.DrawImage(Images.Jungle[3], 0, 0); break;
-                    case SpecialType.Whales: g.DrawImage(Images.Ocean[3], 0, 0); break;
-                    default: throw new ArgumentOutOfRangeException();
+                    g.DrawImage(terrainSet.GrasslandShield, 0, 0);
                 }
+            }else if (tile.special != -1)
+            {
+                // Draw special resources if they exist
+                g.DrawImage(terrainSet.Specials[tile.special][(int) tile.Type], 0, 0);
             }
-
 
 
             // Roads (cites also act as road tiles)
@@ -259,17 +201,17 @@ namespace EtoFormsUI
                 bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
 
                 // Draw roads
-                if (isRoadAround[0]) g.DrawImage(Images.Road[8], 0, 0);  // to N
-                if (isRoadAround[1]) g.DrawImage(Images.Road[1], 0, 0);  // to NE
-                if (isRoadAround[2]) g.DrawImage(Images.Road[2], 0, 0);  // to E
-                if (isRoadAround[3]) g.DrawImage(Images.Road[3], 0, 0);  // to SE
-                if (isRoadAround[4]) g.DrawImage(Images.Road[4], 0, 0);  // to S
-                if (isRoadAround[5]) g.DrawImage(Images.Road[5], 0, 0);  // to SW
-                if (isRoadAround[6]) g.DrawImage(Images.Road[6], 0, 0);  // to W
-                if (isRoadAround[7]) g.DrawImage(Images.Road[7], 0, 0);  // to NW
+                if (isRoadAround[0]) g.DrawImage(terrainSet.Road[8], 0, 0);  // to N
+                if (isRoadAround[1]) g.DrawImage(terrainSet.Road[1], 0, 0);  // to NE
+                if (isRoadAround[2]) g.DrawImage(terrainSet.Road[2], 0, 0);  // to E
+                if (isRoadAround[3]) g.DrawImage(terrainSet.Road[3], 0, 0);  // to SE
+                if (isRoadAround[4]) g.DrawImage(terrainSet.Road[4], 0, 0);  // to S
+                if (isRoadAround[5]) g.DrawImage(terrainSet.Road[5], 0, 0);  // to SW
+                if (isRoadAround[6]) g.DrawImage(terrainSet.Road[6], 0, 0);  // to W
+                if (isRoadAround[7]) g.DrawImage(terrainSet.Road[7], 0, 0);  // to NW
                 if (isRoadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false }))
                 {
-                    g.DrawImage(Images.Road[0], 0, 0); // No road around
+                    g.DrawImage(terrainSet.Road[0], 0, 0); // No road around
                 }
             }
 
@@ -280,29 +222,29 @@ namespace EtoFormsUI
             //    bool[] isRailroadAround = IsRailroadAround(i, j);
             //
             //    // Draw railroads
-            //    if (isRailroadAround[0]) g.DrawImage(Images.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to N
-            //    if (isRailroadAround[1]) g.DrawImage(Images.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NE
-            //    if (isRailroadAround[2]) g.DrawImage(Images.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to E
-            //    if (isRailroadAround[3]) g.DrawImage(Images.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SE
-            //    if (isRailroadAround[4]) g.DrawImage(Images.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to S
-            //    if (isRailroadAround[5]) g.DrawImage(Images.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SW
-            //    if (isRailroadAround[6]) g.DrawImage(Images.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to W
-            //    if (isRailroadAround[7]) g.DrawImage(Images.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NW
+            //    if (isRailroadAround[0]) g.DrawImage(terrainSet.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to N
+            //    if (isRailroadAround[1]) g.DrawImage(terrainSet.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NE
+            //    if (isRailroadAround[2]) g.DrawImage(terrainSet.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to E
+            //    if (isRailroadAround[3]) g.DrawImage(terrainSet.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SE
+            //    if (isRailroadAround[4]) g.DrawImage(terrainSet.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to S
+            //    if (isRailroadAround[5]) g.DrawImage(terrainSet.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SW
+            //    if (isRailroadAround[6]) g.DrawImage(terrainSet.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to W
+            //    if (isRailroadAround[7]) g.DrawImage(terrainSet.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NW
             //    if (isRailroadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false })) 
-            //      g.DrawImage(Images.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // No railroad around
+            //      g.DrawImage(terrainSet.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // No railroad around
             //}
 
             // Irrigation
-            if (tile.Irrigation) g.DrawImage(Images.Irrigation, 0, 0);
+            if (tile.Irrigation) g.DrawImage(terrainSet.Irrigation, 0, 0);
 
             // Farmland
-            if (tile.Farmland) g.DrawImage(Images.Farmland, 0, 0);
+            if (tile.Farmland) g.DrawImage(terrainSet.Farmland, 0, 0);
 
             // Mining
-            if (tile.Mining && !tile.Farmland) g.DrawImage(Images.Mining, 0, 0);
+            if (tile.Mining && !tile.Farmland) g.DrawImage(terrainSet.Mining, 0, 0);
 
             // Pollution
-            if (tile.Pollution) g.DrawImage(Images.Pollution, 0, 0);
+            if (tile.Pollution) g.DrawImage(terrainSet.Pollution, 0, 0);
 
             // Fortress
             if (tile.Fortress) g.DrawImage(MapImages.Specials[1], 0, 0);
@@ -313,14 +255,24 @@ namespace EtoFormsUI
             return _tilePic;
         }
 
+        private static void ApplyDither(Graphics g, TerrainType neighbourType, TerrainType tileType, IReadOnlyList<Bitmap> ditherMap, int offsetX, int offsetY)    
+        {
+            if (neighbourType == TerrainType.Ocean)
+            {
+                neighbourType = TerrainType.Grassland;
+            }
+            if(neighbourType == tileType) return;
+            g.DrawImage(ditherMap[(int)neighbourType], offsetX, offsetY);
+        }
+
         private static bool[] IsLandAround(int col, int row, bool flatEarth)
         {
             // In start we presume all surrounding tiles are water (land=true, water=false). Index=0 is North, follows in clockwise direction.
             bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
             var indicies = new int[] {0, 0, 0, 0};
 
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if land is present next to ocean
             // N:
@@ -466,8 +418,8 @@ namespace EtoFormsUI
             var index = 0;
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if terrain is present
             // NE:
@@ -536,8 +488,8 @@ namespace EtoFormsUI
             var river = 0;
 
             // Rewrite indexes in Civ2-style
-            var xDim = 2 * Map.Xdim; // X=50 in marked as X=100 in Civ2
-            var yDim = Map.Ydim; // no need for such correction for Y
+            var xDim = 2 * Map.XDim; // X=50 in marked as X=100 in Civ2
+            var yDim = Map.YDim; // no need for such correction for Y
 
             // Observe in all directions if river is present
             if (row != 0)
@@ -608,8 +560,8 @@ namespace EtoFormsUI
             bool[] isRoadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if road or city is present next to tile
             // N:
@@ -752,8 +704,8 @@ namespace EtoFormsUI
             bool[] isRailroadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.Xdim;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.Ydim;        // no need for such correction for Y
+            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if railroad or city is present next to tile
             // N:

@@ -45,8 +45,8 @@ namespace EtoFormsUI
                         y = activeXY[1] + coordsOffsets[1];
                         coordsOffsetsPx = new int[] { coordsOffsets[0] * Map.Xpx, coordsOffsets[1] * Map.Ypx };
 
-                        if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;    // Make sure you're not drawing tiles outside map bounds
-
+                        if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim || !Map.IsTileVisibleC2(x, y,Map.WhichCivsMapShown)) continue;    // Make sure you're not drawing tiles outside map bounds
+                        
                         // Tiles
                         Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Map.Ypx));
 
@@ -97,7 +97,7 @@ namespace EtoFormsUI
                         x = activeXY[0] + coordsOffsets[0];
                         y = activeXY[1] + coordsOffsets[1];
 
-                        if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;   // Make sure you're not drawing tiles outside map bounds
+                        if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
                         
                         City city = Game.CityHere(x, y);
                         if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0], coordsOffsets[1] + 1 });
@@ -171,7 +171,7 @@ namespace EtoFormsUI
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
                     coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;   // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
                     int civId = Map.WhichCivsMapShown;
@@ -189,7 +189,7 @@ namespace EtoFormsUI
                                     int[] offset = new int[] { -1, 1 };
                                     int xNew = x + offset[tileX];
                                     int yNew = y + offset[tileY];
-                                    if (xNew >= 0 && xNew < 2 * Map.Xdim && yNew >= 0 && yNew < Map.Ydim)   // Don't observe outside map limits
+                                    if (xNew >= 0 && xNew < 2 * Map.XDim && yNew >= 0 && yNew < Map.YDim)   // Don't observe outside map limits
                                         if (!Map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
                                             Draw.Dither(g, tileX, tileY, Map.Zoom, new Point(coordsOffsetsPx[0] + Map.Xpx * tileX, coordsOffsetsPx[1] + Map.Ypx * tileY));
                                 }
@@ -244,7 +244,7 @@ namespace EtoFormsUI
                     int x = activeUnitPrevXY[0] + coordsOffsets[0];
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;   // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
                     
                     City city = Game.CityHere(x, y);
                     if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
@@ -329,7 +329,7 @@ namespace EtoFormsUI
                     int y = e.Attacker.Y + coordsOffsets[1];
                     coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
                     int civId = Map.WhichCivsMapShown;
@@ -347,7 +347,7 @@ namespace EtoFormsUI
                                     int[] offset = new int[] { -1, 1 };
                                     int xNew = x + offset[tileX];
                                     int yNew = y + offset[tileY];
-                                    if (xNew >= 0 && xNew < 2 * Map.Xdim && yNew >= 0 && yNew < Map.Ydim)   // Don't observe outside map limits
+                                    if (xNew >= 0 && xNew < 2 * Map.XDim && yNew >= 0 && yNew < Map.YDim)   // Don't observe outside map limits
                                         if (!Map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
                                             Draw.Dither(g, tileX, tileY, Map.Zoom, new Point(coordsOffsetsPx[0] + Map.Xpx * tileX, coordsOffsetsPx[1] + Map.Ypx * tileY));
                                 }
@@ -402,7 +402,7 @@ namespace EtoFormsUI
                     int x = e.Attacker.X + coordsOffsets[0];
                     int y = e.Attacker.Y + coordsOffsets[1];
 
-                    if(x < 0 || y < 0 || x >= 2 * Map.Xdim || y >= Map.Ydim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    if(x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
                     
                     City city = Game.CityHere(x, y);
                     if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });

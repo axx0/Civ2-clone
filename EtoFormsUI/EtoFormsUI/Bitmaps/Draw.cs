@@ -23,7 +23,7 @@ namespace EtoFormsUI
 
         public static void Dither(Graphics g, int tileX, int tileY, int zoom, Point dest)
         {
-            using var ditherPic = Images.DitherDots[tileX, tileY].Resize(zoom);
+            using var ditherPic = MapImages.Terrains[Map.MapIndex].DitherMask[tileX *2 + tileY].Resize(zoom);
             g.DrawImage(ditherPic, dest);
         }
 

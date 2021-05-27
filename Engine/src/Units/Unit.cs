@@ -183,7 +183,7 @@ namespace Civ2engine.Units
             }
             
             // Cannot move beyond map edge
-            if (Xto < 0 || Xto >= 2 * Map.Xdim || Yto < 0 || Yto >= Map.Ydim)
+            if (Xto < 0 || Xto >= 2 * Map.XDim || Yto < 0 || Yto >= Map.YDim)
             {
                 //TODO: display a message that a unit cannot move beyond map edges
                 return false;
