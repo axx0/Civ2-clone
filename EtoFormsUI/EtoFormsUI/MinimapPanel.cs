@@ -13,7 +13,6 @@ namespace EtoFormsUI
         Map Map => Map.Instance;
 
         private Main Main;
-        private readonly Cursor MinimapCursor;
         private int[] offset, mapStartXY, mapDrawSq;
         private readonly Drawable drawPanel;
 
@@ -29,21 +28,16 @@ namespace EtoFormsUI
             drawPanel = new Drawable()
             {
                 Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10),
-                BackgroundColor = Colors.Black
+                BackgroundColor = Colors.Black,
+                Cursor = new Cursor(MakeCursor(), new Point(7, 7))
             };
             drawPanel.Paint += DrawPanel_Paint;
-            drawPanel.MouseEnter += DrawPanel_MouseHover;
             drawPanel.MouseDown += DrawPanel_MouseClick;
             MainPanelLayout.Add(drawPanel, 11, 38);
             MainPanel.Content = MainPanelLayout;
 
-            //MinimapCursor = new Cursor(new MemoryStream(Properties.Resources.MinimapCursor));
-
             // Determine the offset of minimap from panel edges
             offset = new int[] { (drawPanel.Width - 2 * Map.XDim) / 2, (drawPanel.Height - Map.YDim) / 2 };
-
-            mapStartXY = new int[] { 0, 0 };
-            mapDrawSq = new int[] { 0, 0 };
         }
 
 
@@ -70,7 +64,6 @@ namespace EtoFormsUI
             // Draw current view rectangle
             e.Graphics.DrawRectangle(new Pen(Colors.White), offset[0] + mapStartXY[0], offset[1] + mapStartXY[1], mapDrawSq[0], mapDrawSq[1]);
         }
-        // TODO: Make sure minimap rectangle is correct immediately after game loading
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
         {
@@ -88,11 +81,6 @@ namespace EtoFormsUI
             {
                 // TODO: right click logic on minimap panel
             }
-        }
-
-        private void DrawPanel_MouseHover(object sender, EventArgs e)
-        {
-            if (drawPanel.Cursor != Cursors.Crosshair) drawPanel.Cursor = MinimapCursor;
         }
 
         private void MapEventHappened(object sender, MapEventArgs e)
@@ -113,6 +101,40 @@ namespace EtoFormsUI
                     }
                 default: break;
             }
+        }
+
+        private static Bitmap MakeCursor()
+        {
+            var _cursorBmp = new Bitmap(15, 15, PixelFormat.Format32bppRgba);
+            using (var g = new Graphics(_cursorBmp))
+            {
+                g.AntiAlias = false;
+                g.DrawLine(Colors.White, 0, 7, 5, 7);
+                g.DrawLine(Colors.White, 9, 7, 14, 7);
+                g.DrawLine(Colors.White, 7, 0, 7, 5);
+                g.DrawLine(Colors.White, 7, 9, 7, 14);
+                g.DrawLine(Colors.White, 5, 1, 9, 1);
+                g.DrawLine(Colors.White, 10, 2, 11, 2);
+                g.DrawLine(Colors.White, 12, 3, 12, 4);
+                g.DrawLine(Colors.White, 13, 5, 13, 9);
+                g.DrawLine(Colors.White, 12, 10, 12, 11);
+                g.DrawLine(Colors.White, 10, 12, 11, 12);
+                g.DrawLine(Colors.White, 5, 13, 9, 13);
+                g.DrawLine(Colors.White, 3, 12, 4, 12);
+                g.DrawLine(Colors.White, 2, 10, 2, 11);
+                g.DrawLine(Colors.White, 1, 5, 1, 9);
+                g.DrawLine(Colors.White, 2, 3, 2, 4);
+                g.DrawLine(Colors.White, 3, 2, 4, 2);
+                g.DrawLine(Colors.White, 6, 4, 8, 4);
+                g.FillRectangle(Colors.White, 9, 5, 1, 1);
+                g.DrawLine(Colors.White, 10, 6, 10, 8);
+                g.FillRectangle(Colors.White, 9, 9, 1, 1);
+                g.DrawLine(Colors.White, 6, 10, 8, 10);
+                g.FillRectangle(Colors.White, 5, 9, 1, 1);
+                g.DrawLine(Colors.White, 4, 6, 4, 8);
+                g.FillRectangle(Colors.White, 5, 5, 1, 1);
+            }
+            return _cursorBmp;
         }
     }
 }
