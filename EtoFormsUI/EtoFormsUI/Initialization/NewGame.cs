@@ -44,6 +44,43 @@ namespace EtoFormsUI.Initialization
             }
         }
 
+        internal static bool StartPremade(Ruleset ruleset, string mapFileName)
+        {
+            Labels.UpdateLabels(ruleset);
+            CityLoader.LoadCities(ruleset);
+            try
+            {
+                var mapData = MapReader.Read(ruleset, mapFileName);
+
+                    //FAILEDTOLOAD
+                // 
+                //
+                // USESEED
+                //     @width=320
+                // @title=Map Resources
+                //     Do you wish to randomize this world's
+                // villages and resource squares?
+                //
+                //     Yes
+                // No
+                //
+                // @USESTARTLOC
+                //     @width=320
+                // @title=Starting Locations
+                //     Do you wish to randomize this world's
+                // player starting locations?
+                //
+                //     Yes
+                // No
+            }
+            catch
+            {
+                
+            }
+
+            return false;
+        }
+
         internal static void Start(Main mainForm, bool customizeWorld)
         {
             var config = new GameInitializationConfig

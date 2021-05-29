@@ -7,25 +7,27 @@ using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
 using Civ2engine.Events;
+using EtoFormsUI.Initialization;
 
 namespace EtoFormsUI
 {
     public partial class Main : Form
     {
-        public void LoadGameInitialization(Ruleset ruleset, string saveFileName)
+        public bool LoadGameInitialization(Ruleset ruleset, string saveFileName)
         {
             Game.LoadGame(ruleset, saveFileName);
             Images.LoadGraphicsAssetsFromFiles(ruleset);
+            return true;
         }
 
-        public void LoadScenarioInit(Ruleset ruleset, string scenarioFileName)
+        public bool LoadScenarioInit(Ruleset ruleset, string scenarioFileName)
         {
-            
+            return false;
         }
         
-        public void StartPremadeInit(Ruleset ruleset, string mapFileName)
+        public bool StartPremadeInit(Ruleset ruleset, string mapFileName)
         {
-            
+            return NewGame.StartPremade(ruleset, mapFileName);
         }
 
         public void StartGame()

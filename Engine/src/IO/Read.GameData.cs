@@ -286,24 +286,24 @@ namespace Civ2engine
             //=========================
             //MAP
             //=========================
-            // Map header ofset
-            int ofset;
-            if (bytes[10] > 39) ofset = 13702;  // FW and later (offset=3586hex)
-            else ofset = 13432;                 // Conflicts (offset=3478hex)
+            // Map header offset
+            // FW and later (offset=3586hex)
+            // Conflicts (offset=3478hex)
+            var mapDataOffset = bytes[10] > 39 ? 13702 : 13432;
 
             // Map X dimension
-            intVal1 = bytes[ofset + 0];
-            intVal2 = bytes[ofset + 1];
+            intVal1 = bytes[mapDataOffset + 0];
+            intVal2 = bytes[mapDataOffset + 1];
             data.MapXdim = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber) / 2; //map 150x120 is really 75x120
 
             // Map Y dimension
-            intVal1 = bytes[ofset + 2];
-            intVal2 = bytes[ofset + 3];
+            intVal1 = bytes[mapDataOffset + 2];
+            intVal2 = bytes[mapDataOffset + 3];
             data.MapYdim = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Map area:
-            intVal1 = bytes[ofset + 4];
-            intVal2 = bytes[ofset + 5];
+            intVal1 = bytes[mapDataOffset + 4];
+            intVal2 = bytes[mapDataOffset + 5];
             data.MapArea = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             //// Flat Earth flag (info already given before!!)
@@ -312,25 +312,25 @@ namespace Civ2engine
             //flatEarth = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Map resource seed
-            intVal1 = bytes[ofset + 8];
-            intVal2 = bytes[ofset + 9];
+            intVal1 = bytes[mapDataOffset + 8];
+            intVal2 = bytes[mapDataOffset + 9];
             data.MapResourceSeed = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Locator map X dimension
-            intVal1 = bytes[ofset + 10];
-            intVal2 = bytes[ofset + 11];
+            intVal1 = bytes[mapDataOffset + 10];
+            intVal2 = bytes[mapDataOffset + 11];
             data.MapLocatorXdim = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);  //TODO: what does this do?
 
             // Locator map Y dimension
-            int intValue11 = bytes[ofset + 12];
-            int intValue12 = bytes[ofset + 13];
+            int intValue11 = bytes[mapDataOffset + 12];
+            int intValue12 = bytes[mapDataOffset + 13];
             data.MapLocatorYdim = short.Parse(string.Concat(intValue12.ToString("X"), intValue11.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
             // Initialize Terrain array now that you know its size
             //TerrainTile = new ITerrain[Data.MapXdim, Data.MapYdim];   //TODO: where to put this?
 
             // block 1 - terrain improvements (for individual civs)
-            int ofsetB1 = ofset + 14; //offset for block 2 values
+            int ofsetB1 = mapDataOffset + 14; //offset for block 2 values
             //...........
             // block 2 - terrain type
             int ofsetB2 = ofsetB1 + 7 * data.MapArea; //offset for block 2 values
@@ -357,17 +357,7 @@ namespace Civ2engine
 
                 // Terrain type
                 int terrB = ofsetB2 + i * 6 + 0;
-                if (!GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Desert;   // xxxx 0000
-                if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Plains;  // xxxx 0001
-                if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Grassland;  // xxxx 0010
-                if (GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Forest;   // xxxx 0011
-                if (!GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Hills;  // xxxx 0100
-                if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Mountains;  // xxxx 0101
-                if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Tundra;  // xxxx 0110
-                if (GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 2) && !GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Glacier;  // xxxx 0111
-                if (!GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Swamp;  // xxxx 1000
-                if (GetBit(bytes[terrB], 0) && !GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Jungle;  // xxxx 1001
-                if (!GetBit(bytes[terrB], 0) && GetBit(bytes[terrB], 1) && !GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3)) data.MapTerrainType[x, y] = TerrainType.Ocean;  // xxxx 1010
+                data.MapTerrainType[x,y] = (TerrainType)(bytes[terrB] & 0xF);
                 data.MapRiverPresent[x, y] = GetBit(bytes[terrB], 7);  // river (1xxx xxxx)
 
                 // Determine if resources are present

@@ -14,14 +14,13 @@ namespace EtoFormsUI
     {
         private string savDirectory, savName;
 
-        private void LocateStartingFiles(string title, FileFilter filter, Action<Ruleset, string> initializer,
-            Action start)
+        private void LocateStartingFiles(string title, FileFilter filter, Func<Ruleset, string, bool> initializer)
         {
             using var ofd = new OpenFileDialog
             {
                 Directory = new Uri(Settings.Civ2Path),
                 Title = title,
-                Filters = { filter }
+                Filters = {filter}
             };
 
             var result = ofd.ShowDialog(this.ParentWindow);
@@ -37,16 +36,24 @@ namespace EtoFormsUI
                     Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.Civ2Path
                 };
                 savName = Path.GetFileName(ofd.FileName);
-                initializer(ruleSet, savName);
-                Sounds.Stop();
-                Sounds.PlaySound("MENUOK.WAV");
+                if (initializer(ruleSet, savName))
+                {
+                    Sounds.Stop();
+                    Sounds.PlaySound("MENUOK.WAV");
 
-                start();
+                    OnPopupboxEvent?.Invoke(null,
+                        new PopupboxEventArgs("LOADOK",
+                            new List<string>
+                            {
+                                Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
+                                Game.GetActiveCiv.TribeName, Game.GetGameYearString,
+                                Game.DifficultyLevel.ToString()
+                            }));
+                    return;
+                }
             }
-            else
-            {
-                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
-            }
+
+            MainMenu();
         }
 
         private void PopupboxEvent(object sender, PopupboxEventArgs e)
@@ -74,8 +81,7 @@ namespace EtoFormsUI
                             case 1:
                             {
                                 LocateStartingFiles("Select Map To Load",
-                                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit,
-                                    () => { });
+                                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
                                 break;
                             }
 
@@ -89,11 +95,7 @@ namespace EtoFormsUI
                             case 3:
                             {
                                 LocateStartingFiles("Select Scenario To Load",
-                                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit,
-                                    () =>
-                                    {
-
-                                    });
+                                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
                             
 
                                 break;
@@ -102,15 +104,7 @@ namespace EtoFormsUI
                             case 4:
                             {
                                 LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
-                                    LoadGameInitialization, () =>
-                                        OnPopupboxEvent?.Invoke(null,
-                                            new PopupboxEventArgs("LOADOK",
-                                                new List<string>
-                                                {
-                                                    Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
-                                                    Game.GetActiveCiv.TribeName, Game.GetGameYearString,
-                                                    Game.DifficultyLevel.ToString()
-                                                }))
+                                    LoadGameInitialization
                                 );
 
                                 break;
