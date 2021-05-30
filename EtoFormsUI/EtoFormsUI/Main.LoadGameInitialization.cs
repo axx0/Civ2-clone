@@ -27,7 +27,7 @@ namespace EtoFormsUI
         
         public bool StartPremadeInit(Ruleset ruleset, string mapFileName)
         {
-            return NewGame.StartPremade(ruleset, mapFileName);
+            return NewGame.StartPremade(this, ruleset, mapFileName);
         }
 
         public void StartGame()

@@ -7,6 +7,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.IO;
+using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
 
@@ -44,40 +45,66 @@ namespace EtoFormsUI.Initialization
             }
         }
 
-        internal static bool StartPremade(Ruleset ruleset, string mapFileName)
+        internal static bool StartPremade(Main mainForm, Ruleset ruleset, string mapFileName)
         {
             Labels.UpdateLabels(ruleset);
             CityLoader.LoadCities(ruleset);
+            var config = new GameInitializationConfig {RuleSet = ruleset};
+            config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
+            {
+                boxes[box.Name] = box;
+                return boxes;
+            });
             try
             {
+                PopupBox CorrectedPopup(string popupId)
+                {
+                    var popUp = config.PopUps[popupId];
+                    if (popUp.Options != null && popUp.Options.Count != 0) return popUp;
+                    popUp.Options = new[] {popUp.Text[^2], popUp.Text[^1]};
+                    popUp.Text = popUp.Text.Where(t => !popUp.Options.Contains(t)).ToArray();
+
+                    return popUp;
+                }
+
                 var mapData = MapReader.Read(ruleset, mapFileName);
 
-                    //FAILEDTOLOAD
-                // 
-                //
-                // USESEED
-                //     @width=320
-                // @title=Map Resources
-                //     Do you wish to randomize this world's
-                // villages and resource squares?
-                //
-                //     Yes
-                // No
-                //
-                // @USESTARTLOC
-                //     @width=320
-                // @title=Starting Locations
-                //     Do you wish to randomize this world's
-                // player starting locations?
-                //
-                //     Yes
-                // No
+                if (mapData.ResourceSeed > 1)
+                {
+                    var resourceSeedDialog = new Civ2dialogV2(mainForm, CorrectedPopup("USESEED"));
+                    resourceSeedDialog.ShowModal(mainForm);
+
+                    if (resourceSeedDialog.SelectedIndex == 1)
+                    {
+                        config.ResourceSeed = mapData.ResourceSeed;
+                    }
+                }
+                
+                if (mapData.StartPositions.Any(p=>p.First != -1 && p.Second != -1))
+                {
+                    
+                    var startPositions = new Civ2dialogV2(mainForm, CorrectedPopup("USESTARTLOC"));
+                    startPositions.ShowModal(mainForm);
+
+                    if (startPositions.SelectedIndex == 1)
+                    {
+                        config.StartPositions = mapData.StartPositions.Select(p=> new Point(p.First, p.Second)).ToArray();
+                    }
+                }
+
+                config.FlatWorld = mapData.FlatWorld;
+                config.WorldSize = new[] {mapData.Width, mapData.Height};
+                config.TerrainData = mapData.TerrainData;
+                config.MapArea = mapData.Area;
+                SelectDifficultly(mainForm, config);
             }
             catch
             {
-                
+                var failedToLoad = new Civ2dialogV2(mainForm, config.PopUps["FAILEDTOLOAD"]);
+                failedToLoad.ShowModal(mainForm);
+                return false;
             }
-
+            
             return false;
         }
 
@@ -216,15 +243,9 @@ namespace EtoFormsUI.Initialization
 
                 var customizeRules = rulesDialog.SelectedIndex == 1;
 
-                config.SimplifiedCombat = false;
-                config.FlatWorld = false;
-                config.SelectComputerOpponents = false;
-                config.AcceleratedStartup = 0;
-                config.Bloodlust = false;
-                config.DontRestartEliminatedPlayers = false;
                 if (customizeRules)
                 {
-                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] {false, false, false, false, false, false});
+                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] { config.SimplifiedCombat, config.FlatWorld, config.SelectComputerOpponents,config.AcceleratedStartup > 0, config.Bloodlust, config.DontRestartEliminatedPlayers});
                     customRulesDialog.ShowModal(mainForm);
 
                     if (customRulesDialog.SelectedIndex != int.MinValue)

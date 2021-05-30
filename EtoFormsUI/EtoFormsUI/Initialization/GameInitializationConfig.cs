@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Civ2engine;
+using Eto.Drawing;
 
 namespace EtoFormsUI.Initialization
 {
@@ -24,5 +25,9 @@ namespace EtoFormsUI.Initialization
         public int Gender { get; set; }
         public Rules Rules { get; set; }
         public List<Civilization> Civilizations { get; set; }
+        public int ResourceSeed { get; set; }
+        public Point[] StartPositions { get; set; }
+        public byte[] TerrainData { get; set; }
+        public int MapArea { get; set; }
     }
 }
