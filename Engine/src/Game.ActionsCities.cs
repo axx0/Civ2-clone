@@ -14,7 +14,7 @@ namespace Civ2engine
         // Update stats of all cities
         private void CitiesTurn()
         {
-            foreach (City city in _cities.Where(a => a.Owner == _activeCiv))
+            foreach (City city in GetCities.Where(a => a.Owner == _activeCiv))
             {
                 // Change food in storage
                 city.FoodInStorage += city.SurplusHunger;

@@ -24,15 +24,12 @@ namespace Civ2engine
 
         private Game(Rules rules, GameData gameData)
         {
-            _units = new List<IUnit>();
-            _cities = new List<City>();
-            _civs = new List<Civilization>();
-            _options = new Options();
             _rules = rules;
 
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
+            _options = new Options();
             _options.Set(gameData.Options);
 
             _turnNumber = gameData.TurnNumber;
@@ -46,7 +43,7 @@ namespace Civ2engine
             NumberOfCities = gameData.NumberOfCities;
 
             // Create all 8 civs (tribes)
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i], gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i], gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i], gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i], gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i], gameData.CivTechs);
             }
@@ -84,8 +81,8 @@ namespace Civ2engine
 
             //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
 
-            _activeUnit = gameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == gameData.SelectedUnitIndex);    // null means all units have ended turn
-            _playerCiv = _civs[gameData.PlayersCivIndex];
+            _activeUnit = gameData.SelectedUnitIndex == -1 ? null : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex);    // null means all units have ended turn
+            _playerCiv = GetCivs[gameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
         }
     }

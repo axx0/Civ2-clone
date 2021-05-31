@@ -19,7 +19,7 @@ namespace Civ2engine
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
         public GovernmentType Government { get; set; }
-        public bool AnyUnitsAwaitingOrders => Game.GetUnits.Any(unit => unit.Owner == this && unit.AwaitingOrders);
+        public bool AnyUnitsAwaitingOrders => Game.AllUnits.Any(unit => unit.Owner == this && unit.AwaitingOrders);
 
         private int _luxRate;
         public int LuxRate

@@ -171,10 +171,10 @@ namespace EtoFormsUI
                 // Unit clicked
                 else if (Game.AnyUnitsPresentHere(clickedXY[0], clickedXY[1]))
                 {
-                    int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == clickedXY[0] && a.Y == clickedXY[1]);
-                    if (!Game.GetUnits[clickedUnitIndex].TurnEnded)
+                    int clickedUnitIndex = Game.AllUnits.FindIndex(a => a.X == clickedXY[0] && a.Y == clickedXY[1]);
+                    if (!Game.AllUnits[clickedUnitIndex].TurnEnded)
                     {
-                        Game.SetActiveUnit(Game.GetUnits[clickedUnitIndex]);
+                        Game.SetActiveUnit(Game.AllUnits[clickedUnitIndex]);
                         Map.ViewPieceMode = false;
                         OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
                         StartAnimation(AnimationType.Waiting);

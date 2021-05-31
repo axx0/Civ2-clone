@@ -67,16 +67,16 @@ namespace Civ2engine
                     {
                         //List for all civs
                         int count = 0;
-                        foreach(IUnit unit in Game.GetUnits)
+                        foreach(IUnit unit in Game.AllUnits)
                             Console.WriteLine($"#{count++} {unit.Type}, XY=({unit.X},{unit.Y}), {unit.Owner.TribeName}");
                         Console.WriteLine();
                         //List for specific civs
                         foreach(Civilization civ in Game.GetCivs)
                         {
                             Console.WriteLine($"{civ.TribeName}");
-                            foreach (IUnit unit in Game.GetUnits.Where(u => u.Owner.TribeName == civ.TribeName))
+                            foreach (IUnit unit in Game.AllUnits.Where(u => u.Owner.TribeName == civ.TribeName))
                             {
-                                int id = Game.GetUnits.FindIndex(n => n == unit);
+                                int id = Game.AllUnits.FindIndex(n => n == unit);
                                 var active = unit.TurnEnded ? "(turn ended)" : "(active)";
                                 var order = unit.Order switch
                                 {

@@ -9,21 +9,21 @@ namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
-        private readonly List<IUnit> _units;
-        private readonly List<City> _cities;
-        private readonly List<Civilization> _civs;
         private readonly Options _options;
         private readonly Rules _rules;
         private readonly GameVersionType _gameVersion;
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         
-        public List<IUnit> GetUnits => _units;
-        public List<IUnit> GetCasualties => _units.Where(u => u.Dead).ToList();
-        public List<IUnit> GetActiveUnits => _units.Where(u => !u.Dead).ToList();
-        public List<City> GetCities => _cities;
-        public List<Civilization> GetCivs => _civs;
-        public List<Civilization> GetActiveCivs => _civs.Where(c => c.Alive).ToList();
+        public List<IUnit> AllUnits { get; } = new();
+
+        public List<IUnit> GetCasualties => AllUnits.Where(u => u.Dead).ToList();
+        public List<IUnit> GetActiveUnits => AllUnits.Where(u => !u.Dead).ToList();
+        public List<City> GetCities { get; } = new();
+
+        public List<Civilization> GetCivs { get; } = new();
+
+        public List<Civilization> GetActiveCivs => GetCivs.Where(c => c.Alive).ToList();
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
@@ -64,11 +64,11 @@ namespace Civ2engine
         public Civilization GetActiveCiv => _activeCiv;
 
         // Helper functions
-        public City CityHere(int x, int y) => _cities.Find(city => city.X == x && city.Y == y);
-        public List<IUnit> UnitsHere(int x, int y) => _units.FindAll(unit => unit.X == x && unit.Y == y);
-        public bool AnyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y);
-        public bool EnemyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
-        public bool AnyCitiesPresentHere(int x, int y) => _cities.Any(city => city.X == x && city.Y == y);
+        public City CityHere(int x, int y) => GetCities.Find(city => city.X == x && city.Y == y);
+        public List<IUnit> UnitsHere(int x, int y) => AllUnits.FindAll(unit => unit.X == x && unit.Y == y);
+        public bool AnyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y);
+        public bool EnemyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
+        public bool AnyCitiesPresentHere(int x, int y) => GetCities.Any(city => city.X == x && city.Y == y);
 
         /// <summary>
         /// Determine all units inside a ship.
@@ -188,7 +188,7 @@ namespace Civ2engine
         {
             IUnit unit = new Unit
             {
-                Id = _units.Count,
+                Id = AllUnits.Count,
                 TypeDefinition = Rules.UnitTypes[(int)type],
                 Dead = dead || y < 0 || x < 0,
                 Type = type,
@@ -199,18 +199,18 @@ namespace Civ2engine
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
-                Owner = _civs[civId],
+                Owner = GetCivs[civId],
                 PrevXY = new int[] { prevX, prevY },
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
-                HomeCity = homeCity == 255 ? null : _cities[homeCity],
+                HomeCity = homeCity == 255 ? null : GetCities[homeCity],
                 GoToX = goToX,
                 GoToY = goToY,
                 LinkOtherUnitsOnTop = linkOtherUnitsOnTop,
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            _units.Add(unit);
+            AllUnits.Add(unit);
         }
 
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
@@ -228,9 +228,9 @@ namespace Civ2engine
                 CanBuildShips = canBuildShips,
                 Objectivex3 = objectivex3,
                 Objectivex1 = objectivex1,
-                Owner = _civs[owner],
+                Owner = GetCivs[owner],
                 Size = size,
-                WhoBuiltIt = _civs[whoBuiltIt],
+                WhoBuiltIt = GetCivs[whoBuiltIt],
                 FoodInStorage = foodInStorage,
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,
@@ -285,7 +285,7 @@ namespace Civ2engine
             //if (wonders[26]) city.AddImprovement(new Improvement(ImprovementType.SETIProgr));
             //if (wonders[27]) city.AddImprovement(new Improvement(ImprovementType.CureCancer));
 
-            _cities.Add(city);
+            GetCities.Add(city);
         }
 
         public void CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
@@ -324,7 +324,7 @@ namespace Civ2engine
                 Government = (GovernmentType)government
             };
 
-            _civs.Add(civ);
+            GetCivs.Add(civ);
         }
 
         // Singleton instance of a game
