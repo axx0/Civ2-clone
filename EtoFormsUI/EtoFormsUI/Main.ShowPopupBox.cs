@@ -62,6 +62,10 @@ namespace EtoFormsUI
             {
                 case "MAINMENU":
                     {
+                        // Sinai pic
+                        sinaiPanel = new PicturePanel(Images.SinaiPic);
+                        layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));
+                        
                         var popupBox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName))
                         {
                             Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),

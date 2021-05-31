@@ -111,7 +111,7 @@ namespace EtoFormsUI.Initialization
         internal static void Start(Main mainForm, bool customizeWorld)
         {
             var config = new GameInitializationConfig
-                {CustomizeWorld = customizeWorld, Random = new Random(), RuleSet = SelectGameToStart(mainForm)};
+                { RuleSet = SelectGameToStart(mainForm)};
             if (config.RuleSet == null)
             {
                 mainForm.MainMenu();
@@ -120,12 +120,22 @@ namespace EtoFormsUI.Initialization
             {
                 Labels.UpdateLabels(config.RuleSet);
                 CityLoader.LoadCities(config.RuleSet);
+                
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
                 {
                     boxes[box.Name] = box;
                     return boxes;
                 });
+
+                
                 GetWorldSize(mainForm, config);
+                if (customizeWorld)
+                {
+                    
+                }
+                
+                
+                SelectDifficultly(mainForm, config);
             }
         }
 
@@ -146,10 +156,11 @@ namespace EtoFormsUI.Initialization
                 2 => new[] {75, 120},
                 _ => new[] {40, 50}
             };
-            if (worldSizeDialog.SelectedButton == "Custom")
-            {
-                var customSize = new Civ2dialogV2(mainForm, config.PopUps["CUSTOMSIZE"],
-                    textBoxes: new List<TextBoxDefinition>
+            
+            if (worldSizeDialog.SelectedButton != "Custom") return;
+            
+            var customSize = new Civ2dialogV2(mainForm, config.PopUps["CUSTOMSIZE"],
+                textBoxes: new List<TextBoxDefinition>
                 {
                     new()
                     {
@@ -161,19 +172,16 @@ namespace EtoFormsUI.Initialization
                     }
                 });
 
-                customSize.ShowModal(mainForm);
-                if (int.TryParse(customSize.TextValues["Width"], out var width))
-                {
-                    config.WorldSize[0] = width;
-                }
-
-                if (int.TryParse(customSize.TextValues["Height"], out var height))
-                {
-                    config.WorldSize[1] = height;
-                }
+            customSize.ShowModal(mainForm);
+            if (int.TryParse(customSize.TextValues["Width"], out var width))
+            {
+                config.WorldSize[0] = width;
             }
 
-            SelectDifficultly(mainForm, config);
+            if (int.TryParse(customSize.TextValues["Height"], out var height))
+            {
+                config.WorldSize[1] = height;
+            }
         }
 
         private static void SelectDifficultly(Main mainForm, GameInitializationConfig config)

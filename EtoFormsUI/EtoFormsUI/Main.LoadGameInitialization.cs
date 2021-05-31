@@ -57,9 +57,5 @@ namespace EtoFormsUI
 
             BringToFront();
         }
-
-      
-
-       
     }
 }

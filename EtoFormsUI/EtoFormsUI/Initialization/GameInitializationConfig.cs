@@ -7,8 +7,7 @@ namespace EtoFormsUI.Initialization
 {
     internal class GameInitializationConfig
     {
-        public bool CustomizeWorld { get; set; }
-        public Random Random { get; set; }
+        public Random Random { get; set; } = new ();
         public Ruleset RuleSet { get; set; }
         
         public Dictionary<string,PopupBox> PopUps { get; set; }
