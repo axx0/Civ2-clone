@@ -55,7 +55,7 @@ namespace Civ2engine
 
         private IUnit _activeUnit;
         public IUnit GetActiveUnit => _activeUnit;
-        public static IUnit SetActiveUnit(IUnit unit) => unit;
+        public IUnit SetActiveUnit(IUnit unit) => _activeUnit = unit;
 
         private Civilization _playerCiv;
         public Civilization GetPlayerCiv => _playerCiv;
@@ -65,7 +65,7 @@ namespace Civ2engine
 
         // Helper functions
         public City CityHere(int x, int y) => _cities.Find(city => city.X == x && city.Y == y);
-        public List<IUnit> UnitsHere(int x, int y) => _units.FindAll(unit => unit.X == x && unit.Y == y);
+        public List<IUnit> UnitsHere(int x, int y) => _units.FindAll(unit => unit.X == x && unit.Y == y).AsEnumerable().Reverse().ToList();
         public bool AnyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y);
         public bool EnemyUnitsPresentHere(int x, int y) => _units.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
         public bool AnyCitiesPresentHere(int x, int y) => _cities.Any(city => city.X == x && city.Y == y);

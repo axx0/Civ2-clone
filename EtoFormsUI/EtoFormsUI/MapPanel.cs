@@ -147,6 +147,8 @@ namespace EtoFormsUI
 
             if (e.Buttons == MouseButtons.Primary)  // Left button
             {
+                var unitsHere = Game.UnitsHere(clickedXY[0], clickedXY[1]);
+
                 // City clicked
                 if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
                 {
@@ -169,21 +171,31 @@ namespace EtoFormsUI
                     cityWindow.Show();
                 }
                 // Unit clicked
-                else if (Game.AnyUnitsPresentHere(clickedXY[0], clickedXY[1]))
+                else if (unitsHere.Count > 0 && unitsHere.Last().Owner == Game.GetActiveCiv)
                 {
-                    int clickedUnitIndex = Game.GetUnits.FindIndex(a => a.X == clickedXY[0] && a.Y == clickedXY[1]);
-                    if (!Game.GetUnits[clickedUnitIndex].TurnEnded)
+                    // Single unit on square
+                    if (unitsHere.Count == 1)
                     {
-                        Game.SetActiveUnit(Game.GetUnits[clickedUnitIndex]);
-                        Map.ViewPieceMode = false;
-                        OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
-                        StartAnimation(AnimationType.Waiting);
+                        if (!unitsHere.First().TurnEnded)
+                        {
+                            Game.SetActiveUnit(unitsHere.First());
+                            Map.ViewPieceMode = false;
+                        }
+                        MapViewChange(clickedXY);
                     }
+                    // Multiple units on this square => open unit selection dialog
                     else
                     {
-                        //TODO: determine what happens if unit has ended turn...
+                        var selectUnitDialog = new SelectUnitDialog(main, unitsHere);
+                        selectUnitDialog.ShowModal(main);
+
+                        if (selectUnitDialog.SelectedIndex >= 0)
+                        {
+                            Game.SetActiveUnit(unitsHere[selectUnitDialog.SelectedIndex]);
+                            Map.ViewPieceMode = false;
+                            MapViewChange(clickedXY);
+                        }
                     }
-                    MapViewChange(clickedXY);
                 }
                 // Something else clicked
                 else
