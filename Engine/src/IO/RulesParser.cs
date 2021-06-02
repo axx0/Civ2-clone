@@ -156,7 +156,7 @@ namespace Civ2engine.IO
 
         private void ProcessLeaders(string[] values)
         {
-            Rules.Leaders = values.Select((value) =>
+            Rules.Leaders = values.Select((value,index) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
                 var titles = new List<LeaderTitle>(
@@ -174,7 +174,7 @@ namespace Civ2engine.IO
                 {
                     NameMale = line[0],
                     NameFemale = line[1],
-                    Female = int.Parse(line[2]),
+                    Female = int.Parse(line[2]) == 1,
                     Color = int.Parse(line[3]),
                     CityStyle = int.Parse(line[4]),
                     Plural = line[5],
@@ -182,6 +182,7 @@ namespace Civ2engine.IO
                     Attack = int.Parse(line[7]),
                     Expand = int.Parse(line[8]),
                     Civilize = int.Parse(line[9]),
+                    PreferredColour = (index % 7) +1,
                     Titles = titles.ToArray()
                 };
             }).ToArray();

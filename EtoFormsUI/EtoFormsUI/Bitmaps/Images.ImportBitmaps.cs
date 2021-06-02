@@ -16,10 +16,10 @@ namespace EtoFormsUI
         
         public static Bitmap[,] MapTileGraphic;
 
-        public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset)
+        public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset, Rules rules)
         {
             CityLoader.LoadCities(ruleset);
-            TerrainLoader.LoadTerrain(ruleset, Game.Instance.Rules);
+            TerrainLoader.LoadTerrain(ruleset, rules);
             UnitLoader.LoadUnits(ruleset);
             PeopleIconsBitmapsImportFromFile(ruleset.Root);
             IconsBitmapsImportFromFile(ruleset.Root);

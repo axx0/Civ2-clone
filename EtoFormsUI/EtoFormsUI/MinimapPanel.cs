@@ -57,7 +57,7 @@ namespace EtoFormsUI
             {
                 if (Map.WhichCivsMapShown == 8 || Map.IsTileVisibleC2(city.X, city.Y, Map.WhichCivsMapShown))
                 {
-                    e.Graphics.FillRectangle(new SolidBrush(MapImages.TextColours[city.Owner.Id]), offset[0] + city.X, offset[1] + city.Y, 2, 1);
+                    e.Graphics.FillRectangle(new SolidBrush(MapImages.PlayerColours[city.Owner.Id].TextColour), offset[0] + city.X, offset[1] + city.Y, 2, 1);
                 }
             }
 

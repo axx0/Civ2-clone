@@ -2,9 +2,11 @@ using Eto.Drawing;
 
 namespace EtoFormsUI
 {
-    public class PlayerFlag
+    public class PlayerColour
     {
         public Bitmap Normal { get; set; }
-        public Bitmap Smaller { get; set; }
+        public Color DarkColour { get; set; }
+        public Color TextColour { get; set; }
+        public Color LightColour { get; set; }
     }
 }

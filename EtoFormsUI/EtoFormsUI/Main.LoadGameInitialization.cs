@@ -7,6 +7,7 @@ using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
 using Civ2engine.Events;
+using Civ2engine.IO;
 using EtoFormsUI.Initialization;
 
 namespace EtoFormsUI
@@ -15,8 +16,19 @@ namespace EtoFormsUI
     {
         public bool LoadGameInitialization(Ruleset ruleset, string saveFileName)
         {
-            Game.LoadGame(ruleset, saveFileName);
-            Images.LoadGraphicsAssetsFromFiles(ruleset);
+            var rules = RulesParser.ParseRules(ruleset);
+            Images.LoadGraphicsAssetsFromFiles(ruleset, rules);
+            // Read SAV file & RULES.txt
+            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);
+
+            // Make an instance of a new game & map
+            Game.Create(rules, gameData);
+            Map.PopulateTitleData(gameData, rules);
+            Map.MapRevealed = gameData.MapRevealed;
+            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
+            Map.Zoom = gameData.Zoom;
+            Map.StartingClickedXY = gameData.ClickedXY;
+            Map.ActiveXY = gameData.ActiveCursorXY;
             return true;
         }
 

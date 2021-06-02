@@ -132,8 +132,8 @@ namespace EtoFormsUI.ImageLoader
                 return shield;
             }
 
-            MapImages.Shields = MapImages.PlayerColours.Select((Func<Color,Bitmap>) MakeShield).ToArray();
-            MapImages.ShieldBack = MapImages.DarkColours.Select((Func<Color,Bitmap>) MakeShield).ToArray();
+            MapImages.Shields = MapImages.PlayerColours.Select(c=>c.LightColour).Select((Func<Color,Bitmap>) MakeShield).ToArray();
+            MapImages.ShieldBack = MapImages.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Bitmap>) MakeShield).ToArray();
             MapImages.ShieldShadow = MakeShield(_shadowColour);
         }
     }

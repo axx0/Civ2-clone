@@ -86,7 +86,7 @@ namespace EtoFormsUI
                     13.ZoomScale(zoom));
 
                 // Fill rectangle
-                using var _brush1 = new SolidBrush(MapImages.PlayerColours[city.OwnerId]);
+                using var _brush1 = new SolidBrush(MapImages.PlayerColours[city.OwnerId].LightColour);
                 g.FillRectangle(_brush1,
                     dest.X + sizeWinLoc.X.ZoomScale(zoom),
                     dest.Y + sizeWinLoc.Y.ZoomScale(zoom),
@@ -107,7 +107,7 @@ namespace EtoFormsUI
             // Draw city flag if units are present in the city
             if (city.AnyUnitsPresent())
             {
-                using var _flagPic = MapImages.Flags[city.OwnerId].Normal.Resize(zoom);
+                using var _flagPic = MapImages.PlayerColours[city.OwnerId].Normal.Resize(zoom);
                 g.DrawImage(_flagPic,
                     dest.X + (flagLoc.X - 3).ZoomScale(zoom),
                     dest.Y + (flagLoc.Y - 17).ZoomScale(zoom));
@@ -146,7 +146,7 @@ namespace EtoFormsUI
             var formattedFrontText = new FormattedText()
             {
                 Font = new Font("Times New Roman", fontSize),
-                ForegroundBrush = new SolidBrush(MapImages.TextColours[city.OwnerId]),
+                ForegroundBrush = new SolidBrush(MapImages.PlayerColours[city.OwnerId].TextColour),
                 Text = city.Name
             };
             var formattedShadow1Text = new FormattedText()

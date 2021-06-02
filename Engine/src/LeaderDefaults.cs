@@ -4,7 +4,7 @@ namespace Civ2engine
     {
         public string NameMale { get; set; }
         public string NameFemale { get; set; }
-        public int Female { get; set; }
+        public bool Female { get; set; }
         public int Color { get; set; }
         public int CityStyle { get; set; }
         public string Plural { get; set; }
@@ -14,5 +14,6 @@ namespace Civ2engine
         public int Civilize { get; set; }
 
         public LeaderTitle[] Titles { get; set; }
+        public int PreferredColour { get; set; }
     }
 }

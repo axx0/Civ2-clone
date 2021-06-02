@@ -12,14 +12,9 @@ namespace EtoFormsUI
         public static CityImage[] Cities { get; set; }
 
         public static Bitmap[] Specials { get; set; }
-
-        public static Color[] DarkColours { get; set; }
-
-        public static PlayerFlag[] Flags { get; set; }
-
-        public static Color[] PlayerColours { get; set; }
         
-        public static Color[] TextColours { get; set; }
+        public static PlayerColour[] PlayerColours { get; set; }
+        
         public static UnitImage[] Units { get; set; }
         public static Bitmap[] Shields { get; set; }
         public static Bitmap[] ShieldBack { get; set; }

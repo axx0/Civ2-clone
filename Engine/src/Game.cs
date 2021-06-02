@@ -35,11 +35,14 @@ namespace Civ2engine
         {
             get
             {
-                if (_turnNumber < 250) _gameYear = - 4000 + (_turnNumber - 1) * 20;
-                else if (_turnNumber >= 250 && _turnNumber < 300) _gameYear = 1000 + (_turnNumber - 1 - 250) * 10;
-                else if (_turnNumber >= 300 && _turnNumber < 350) _gameYear = 1500 + (_turnNumber - 1 - 300) * 5;
-                else if (_turnNumber >= 350 && _turnNumber < 400) _gameYear = 1750 + (_turnNumber - 1 - 350) * 2;
-                else _gameYear = 1850 + (_turnNumber - 1 - 400);
+                _gameYear = _turnNumber switch
+                {
+                    < 250 => -4000 + (_turnNumber - 1) * 20,
+                    >= 250 and < 300 => 1000 + (_turnNumber - 1 - 250) * 10,
+                    >= 300 and < 350 => 1500 + (_turnNumber - 1 - 300) * 5,
+                    >= 350 and < 400 => 1750 + (_turnNumber - 1 - 350) * 2,
+                    _ => 1850 + (_turnNumber - 1 - 400)
+                };
                 return _gameYear;
             }
         }

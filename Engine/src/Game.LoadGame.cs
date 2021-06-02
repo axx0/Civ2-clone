@@ -6,23 +6,11 @@ namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
-        public static void LoadGame(Ruleset ruleset, string SAVname)
+        public static void Create(Rules rules, GameData gameData)
         {
-            // Read SAV file & RULES.txt
-            var rules = RulesParser.ParseRules(ruleset);
-            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, SAVname);
-
-            // Make an instance of a new game & map
             _instance = new Game(rules, gameData);
-            Map.PopulateTitleData(gameData, rules);
-            Map.MapRevealed = gameData.MapRevealed;
-            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
-            Map.Zoom = gameData.Zoom;
-            Map.StartingClickedXY = gameData.ClickedXY;
-            Map.ActiveXY = gameData.ActiveCursorXY;
         }
-
-        private Game(Rules rules, GameData gameData)
+        public Game(Rules rules, GameData gameData)
         {
             _rules = rules;
 
@@ -30,7 +18,7 @@ namespace Civ2engine
             _gameVersion = gameData.GameVersion;
 
             _options = new Options();
-            _options.Set(gameData.Options);
+            _options.Set(gameData.OptionsArray);
 
             _turnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
