@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine.Units;
+using Civ2engine.Enums;
 
 namespace EtoFormsUI
 {
@@ -55,15 +56,12 @@ namespace EtoFormsUI
             };
             innerPanel.MouseDown += (sender, e) =>
             {
-                for (int row = 0; row < shownUnits.Count; row++)
-                {
-                    // Update if row is clicked
-                    if (e.Location.X > 1 && e.Location.X < innerPanel.Width - 2 && e.Location.Y > 1 + 46 * row && e.Location.Y < 1 + 46 * (row + 1))
-                    {
-                        radioBtnList.SelectedIndex = row;
-                        innerPanel.Invalidate();
-                    }
-                }
+                int clickedRow = ((int)e.Location.Y - 1) / 46;
+
+                shownUnits[clickedRow].Order = OrderType.NoOrders;
+
+                radioBtnList.SelectedIndex = clickedRow;
+                innerPanel.Invalidate();
             };
             Layout.Add(innerPanel, 11, 38);
 

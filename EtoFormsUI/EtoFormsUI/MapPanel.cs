@@ -176,11 +176,9 @@ namespace EtoFormsUI
                     // Single unit on square
                     if (unitsHere.Count == 1)
                     {
-                        if (!unitsHere.First().TurnEnded)
-                        {
-                            Game.SetActiveUnit(unitsHere.First());
-                            Map.ViewPieceMode = false;
-                        }
+                        Game.SetActiveUnit(unitsHere.First());
+                        unitsHere.First().Order = OrderType.NoOrders;   // Always clear order when clicked, no matter if the unit is activated
+                        Map.ViewPieceMode = false;
                         MapViewChange(clickedXY);
                     }
                     // Multiple units on this square => open unit selection dialog

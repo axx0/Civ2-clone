@@ -55,7 +55,11 @@ namespace Civ2engine
 
         private IUnit _activeUnit;
         public IUnit GetActiveUnit => _activeUnit;
-        public IUnit SetActiveUnit(IUnit unit) => _activeUnit = unit;
+        public void SetActiveUnit(IUnit unit) 
+        { 
+            if (!unit.TurnEnded)
+                _activeUnit = unit; 
+        }
 
         private Civilization _playerCiv;
         public Civilization GetPlayerCiv => _playerCiv;
