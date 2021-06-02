@@ -35,6 +35,8 @@ namespace EtoFormsUI
 
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.AntiAlias = false;
+
             // Paint outer wallpaper
             var imgSize = Images.PanelOuterWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
