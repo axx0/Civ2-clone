@@ -8,6 +8,7 @@ using Eto.Forms;
 using Civ2engine;
 using Civ2engine.Events;
 using Civ2engine.IO;
+using EtoFormsUI.ImageLoader;
 using EtoFormsUI.Initialization;
 
 namespace EtoFormsUI
@@ -17,6 +18,7 @@ namespace EtoFormsUI
         public bool LoadGameInitialization(Ruleset ruleset, string saveFileName)
         {
             var rules = RulesParser.ParseRules(ruleset);
+            CityLoader.LoadCities(ruleset);
             Images.LoadGraphicsAssetsFromFiles(ruleset, rules);
             // Read SAV file & RULES.txt
             GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);

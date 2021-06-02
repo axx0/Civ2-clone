@@ -80,7 +80,7 @@ namespace Civ2engine
                 for (int row = 0; row < YDim; row++)
                 {
                     var terrain = data.MapTerrainType[col, row];
-                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[this.MapIndex][(int) terrain], Map.ResourceSeed)
+                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], Map.ResourceSeed)
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],

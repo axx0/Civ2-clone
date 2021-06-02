@@ -17,8 +17,15 @@ namespace Civ2engine
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
-            _options = new Options();
-            _options.Set(gameData.OptionsArray);
+            if (gameData.Options != null)
+            {
+                _options = gameData.Options;
+            }
+            else
+            {
+                _options = new Options();
+                _options.Set(gameData.OptionsArray);
+            }
 
             _turnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
@@ -30,10 +37,22 @@ namespace Civ2engine
             NumberOfUnits = gameData.NumberOfUnits;
             NumberOfCities = gameData.NumberOfCities;
 
-            // Create all 8 civs (tribes)
-            for (var i = 0; i < 8; i++)
+            if (gameData.Civilizations != null)
             {
-                CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i], gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i], gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i], gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i], gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i], gameData.CivTechs);
+                GetCivs.AddRange(gameData.Civilizations);
+            }
+            else
+            {
+                // Create all 8 civs (tribes)
+                for (var i = 0; i < 8; i++)
+                {
+                    CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i],
+                        gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i],
+                        gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i],
+                        gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i],
+                        gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
+                        gameData.CivTechs);
+                }
             }
 
             // Create cities

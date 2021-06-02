@@ -38,22 +38,27 @@ namespace EtoFormsUI
                 savName = Path.GetFileName(ofd.FileName);
                 if (initializer(ruleSet, savName))
                 {
-                    Sounds.Stop();
-                    Sounds.PlaySound("MENUOK.WAV");
-
-                    OnPopupboxEvent?.Invoke(null,
-                        new PopupboxEventArgs("LOADOK",
-                            new List<string>
-                            {
-                                Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
-                                Game.GetActiveCiv.TribeName, Game.GetGameYearString,
-                                Game.DifficultyLevel.ToString()
-                            }));
+                    Playgame();
                     return;
                 }
             }
 
             MainMenu();
+        }
+
+        public void Playgame()
+        {
+            Sounds.Stop();
+            Sounds.PlaySound("MENUOK.WAV");
+
+            OnPopupboxEvent?.Invoke(null,
+                new PopupboxEventArgs("LOADOK",
+                    new List<string>
+                    {
+                        Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
+                        Game.GetActiveCiv.TribeName, Game.GetGameYearString,
+                        Game.DifficultyLevel.ToString()
+                    }));
         }
 
         private void PopupboxEvent(object sender, PopupboxEventArgs e)

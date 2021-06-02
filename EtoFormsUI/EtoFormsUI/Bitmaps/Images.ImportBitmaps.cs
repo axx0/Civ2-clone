@@ -18,7 +18,6 @@ namespace EtoFormsUI
 
         public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset, Rules rules)
         {
-            CityLoader.LoadCities(ruleset);
             TerrainLoader.LoadTerrain(ruleset, rules);
             UnitLoader.LoadUnits(ruleset);
             PeopleIconsBitmapsImportFromFile(ruleset.Root);
