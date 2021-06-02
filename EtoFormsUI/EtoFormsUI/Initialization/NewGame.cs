@@ -201,7 +201,18 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectNumberOfCivs(Main mainForm, GameInitializationConfig config)
         {
-            var numberOfCivsDialog = new Civ2dialogV2(mainForm, config.PopUps["ENEMIES"]);
+            var enemiesPopup = config.PopUps["ENEMIES"];
+            var possibleCivs = MapImages.PlayerColours.Length - 1;
+
+            if (enemiesPopup.Options.Count + 2 != possibleCivs)
+            {
+                var suffix = enemiesPopup.Options[0].Split(" ", 2,
+                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)[1];
+                enemiesPopup.Options = Enumerable.Range(0, possibleCivs - 2)
+                    .Select(v => $"{(possibleCivs - v)} {suffix}").ToArray();
+            }
+            var numberOfCivsDialog = new Civ2dialogV2(mainForm, enemiesPopup);
+            
             numberOfCivsDialog.ShowModal(mainForm);
 
             if (numberOfCivsDialog.SelectedIndex == int.MinValue)
@@ -211,8 +222,8 @@ namespace EtoFormsUI.Initialization
             }
 
 
-            config.NumberOfCivs = 7 - (numberOfCivsDialog.SelectedButton == "Random"
-                ? config.Random.Next(0, 5)
+            config.NumberOfCivs = possibleCivs - (numberOfCivsDialog.SelectedButton == "Random"
+                ? config.Random.Next(0, possibleCivs -2)
                 : numberOfCivsDialog.SelectedIndex);
 
             SelectBarbarity(mainForm, config);
@@ -460,12 +471,10 @@ namespace EtoFormsUI.Initialization
             if (config.SelectComputerOpponents)
             {  
                 var opponentPop = config.PopUps["OPPONENT"];
-                for (var i = 1; i < groupedTribes.Count && civilizations.Count +1  <= config.NumberOfCivs ; i++)
+                for (var i = 1; civilizations.Count <= config.NumberOfCivs ; i++)
                 {
                     if (i == config.PlayerCiv.Id) continue;
                     
-                    if (i == config.PlayerCiv.Id) continue;
-
                     var group = groupedTribes.Contains(i)
                         ? groupedTribes[i].ToList()
                         : config.Rules.Leaders
@@ -490,7 +499,7 @@ namespace EtoFormsUI.Initialization
             }
             else
             {
-                for (var i = 1; civilizations.Count + 1 <= config.NumberOfCivs; i++)
+                for (var i = 1; civilizations.Count <= config.NumberOfCivs; i++)
                 {
                     if (i == config.PlayerCiv.Id) continue;
 
