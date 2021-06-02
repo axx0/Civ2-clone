@@ -14,6 +14,5 @@ namespace Civ2engine
         public int Civilize { get; set; }
 
         public LeaderTitle[] Titles { get; set; }
-        public int PreferredColour { get; set; }
     }
 }

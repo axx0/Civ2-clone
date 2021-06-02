@@ -329,7 +329,7 @@ namespace EtoFormsUI.Initialization
             }
 
             var tribe = config.Rules.Leaders[tribeDialog.SelectedIndex];
-            config.PlayerCiv = MakeCivilization(config, tribe, true, tribe.PreferredColour);
+            config.PlayerCiv = MakeCivilization(config, tribe, true, tribe.Color);
             
             if (tribeDialog.SelectedButton == Labels.Custom)
             {
@@ -460,7 +460,7 @@ namespace EtoFormsUI.Initialization
 
             config.PlayerCiv.CityStyle = (CityStyleType) citiesDialog.SelectedIndex;
             var groupedTribes = config.Rules.Leaders
-                .ToLookup(g => g.PreferredColour);
+                .ToLookup(g => g.Color);
 
    
             var civilizations = new List<Civilization>
