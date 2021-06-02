@@ -31,7 +31,7 @@ namespace EtoFormsUI
         private readonly int _optionRows;
         private readonly Drawable _surface;
         private readonly Bitmap[] _icons;
-        
+
         /// <summary>
         /// Show a popup box (dialog).
         /// </summary>
@@ -39,6 +39,9 @@ namespace EtoFormsUI
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
         /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
+        /// <param name="textBoxes">Definitions for any text input on the dialog</param>
+        /// <param name="optionsCols">The number of columns to break options into</param>
+        /// <param name="icons">Icons to show next to options</param>
         public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null)
         {
             _icons = icons ?? Array.Empty<Bitmap>();
@@ -508,11 +511,18 @@ namespace EtoFormsUI
             }
             
             // Then options strings
-            foreach (var optionsText in popupBox.Options ?? Enumerable.Empty<string>())
+            var rows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
+            if (rows > 0)
             {
-                var textWidthCandidate = (int)(new FormattedText { Text = optionsText, Font = new Font("Times new roman", 18) }.Measure().Width);
-                var widthCandidate = textWidthCandidate + 32;   // Count in width of radio button
-                if (widthCandidate > width) width = widthCandidate;
+                for (var index = 0; index < rows; index++)
+                {
+                    var textWidthCandidate = Enumerable.Range(0, _optionsColumns).Select(n => n * rows + index)
+                        .Where(n => n < popupBox.Options.Count).Select(n => (int) (new FormattedText
+                            {Text = popupBox.Options[n], Font = new Font("Times new roman", 18)}.Measure().Width))
+                        .Sum();
+                    var widthCandidate = textWidthCandidate + (_icons.Length > index ? _icons[index].Width : 40 * _optionsColumns); // Count in width of radio button
+                    if (widthCandidate > width) width = widthCandidate;
+                }
             }
 
             int minTextBox = 0;

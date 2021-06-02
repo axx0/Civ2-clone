@@ -471,9 +471,14 @@ namespace EtoFormsUI.Initialization
             if (config.SelectComputerOpponents)
             {  
                 var opponentPop = config.PopUps["OPPONENT"];
-                for (var i = 1; civilizations.Count <= config.NumberOfCivs ; i++)
+                var opponentNumber = 1;
+                for (var i = 1; civilizations.Count <= config.NumberOfCivs ; i++, opponentNumber++)
                 {
-                    if (i == config.PlayerCiv.Id) continue;
+                    if (i == config.PlayerCiv.Id)
+                    {
+                        opponentNumber--;
+                        continue;
+                    }
                     
                     var group = groupedTribes.Contains(i)
                         ? groupedTribes[i].ToList()
@@ -482,7 +487,7 @@ namespace EtoFormsUI.Initialization
                     
                     opponentPop.Options =
                         new[] {opponentPop.Options[0]}.Concat(@group.Select(leader => $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
-                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(i + 1).ToString()},optionsCols: group.Count / 6);
+                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: group.Count / 6);
                     oppDia.ShowModal(mainForm);
 
                     if (oppDia.SelectedIndex == int.MinValue)
