@@ -107,7 +107,7 @@ namespace EtoFormsUI.Initialization
                 return false;
             }
             
-            return false;
+            return config.Started;
         }
 
         internal static void Start(Main mainForm, bool customizeWorld)
@@ -529,6 +529,7 @@ namespace EtoFormsUI.Initialization
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.Playgame();
+            config.Started = true;
         }
 
         private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe, bool human, int id)

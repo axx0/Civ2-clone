@@ -29,5 +29,6 @@ namespace Civ2engine
         public int MapArea { get; set; }
         public Civilization PlayerCiv { get; set; }
         public Task<Map[]> MapTask { get; set; }
+        public bool Started { get; set; }
     }
 }
