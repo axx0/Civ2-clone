@@ -14,7 +14,7 @@ namespace EtoFormsUI
     public class MapPanel : Civ2panel
     {
         private Game Game => Game.Instance;
-        private Map Map => Map.Instance;
+        private Map Map => Game.CurrentMap;
         
         private Main main;
         private List<Bitmap> animationFrames;

@@ -7,7 +7,7 @@ namespace EtoFormsUI
     public static partial class Draw
     {
         private static Game Game => Game.Instance;
-        private static Map Map => Map.Instance;
+        private static Map Map => Game.CurrentMap;
 
         public static void ViewPiece(Graphics g, int zoom, Point dest)
         {

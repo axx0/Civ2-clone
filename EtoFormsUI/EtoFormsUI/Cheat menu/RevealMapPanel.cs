@@ -8,7 +8,7 @@ namespace EtoFormsUI
     /// </summary>
     public class RevealMapPanel : RadiobuttonPanel
     {
-        private Map Map => Map.Instance;
+        private Map Map => Game.Instance.CurrentMap;
 
         public RevealMapPanel(Main mainForm, string[] activeCivs) :
             base(mainForm, 686, 4 + activeCivs.Length * 32 + 38 + 46, "Select Map View", activeCivs, new string[] { "OK", "Cancel" })

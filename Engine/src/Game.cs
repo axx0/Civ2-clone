@@ -332,6 +332,8 @@ namespace Civ2engine
 
         // Singleton instance of a game
         private static Game _instance;
+        private readonly Map[] _maps;
+
         public static Game Instance
         {
             get
@@ -343,5 +345,9 @@ namespace Civ2engine
                 return _instance;
             }
         }
+
+        private int _currentMap = 0;
+
+        public Map CurrentMap => _maps[_currentMap];
     }
 }

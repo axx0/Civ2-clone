@@ -4,7 +4,7 @@ using Civ2engine.Enums;
 
 namespace Civ2engine.Units
 {
-    internal class Unit : BaseInstance, IUnit
+    public class Unit : BaseInstance, IUnit
     {
         // From RULES.TXT
         public string Name => TypeDefinition.Name;

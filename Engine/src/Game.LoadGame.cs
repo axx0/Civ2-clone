@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.Units;
 
@@ -10,6 +13,7 @@ namespace Civ2engine
         {
             _instance = new Game(rules, gameData);
         }
+
         public Game(Rules rules, GameData gameData)
         {
             _rules = rules;
@@ -17,15 +21,8 @@ namespace Civ2engine
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
-            if (gameData.Options != null)
-            {
-                _options = gameData.Options;
-            }
-            else
-            {
-                _options = new Options();
-                _options.Set(gameData.OptionsArray);
-            }
+            _options = new Options();
+            _options.Set(gameData.OptionsArray);
 
             _turnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
@@ -36,23 +33,16 @@ namespace Civ2engine
             NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;
             NumberOfUnits = gameData.NumberOfUnits;
             NumberOfCities = gameData.NumberOfCities;
-
-            if (gameData.Civilizations != null)
+            
+            // Create all 8 civs (tribes)
+            for (var i = 0; i < 8; i++)
             {
-                GetCivs.AddRange(gameData.Civilizations);
-            }
-            else
-            {
-                // Create all 8 civs (tribes)
-                for (var i = 0; i < 8; i++)
-                {
-                    CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i],
-                        gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i],
-                        gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i],
-                        gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i],
-                        gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
-                        gameData.CivTechs);
-                }
+                CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i],
+                    gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i],
+                    gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i],
+                    gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i],
+                    gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
+                    gameData.CivTechs);
             }
 
             // Create cities
@@ -88,9 +78,69 @@ namespace Civ2engine
 
             //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
 
-            _activeUnit = gameData.SelectedUnitIndex == -1 ? null : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex);    // null means all units have ended turn
+            _activeUnit = gameData.SelectedUnitIndex == -1
+                ? null
+                : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex); // null means all units have ended turn
             _playerCiv = GetCivs[gameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
         }
+
+        public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
+        {
+            var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
+            var units = civilizations.Skip(1).Select(c => new
+            {
+                Civ = c, StartLocation = GetStartLoc(c, config)
+            }).Select((c, id) => new Unit
+            {
+                Counter = 0,
+                Dead = false,
+                Id = id,
+                Order = OrderType.NoOrders,
+                Owner = c.Civ,
+                Type = UnitType.Settlers,
+                Veteran = false,
+                X = c.StartLocation[0],
+                Y = c.StartLocation[1],
+                TypeDefinition = settlerType
+            }).ToList();
+            
+            _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
+
+        }
+
+
+        private static int[] GetStartLoc(Civilization civilization, GameInitializationConfig config)
+        {
+            if (config.StartPositions != null)
+            {
+                var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
+                if (index > -1 && index < config.StartPositions.Length)
+                {
+                    var pos = config.StartPositions[index];
+                    if (pos[0] != -1 && pos[1] != -1)
+                    {
+                        return pos;
+                    }
+                }
+            }
+
+            return new[]
+                {config.Random.Next(2, config.WorldSize[0] - 1), config.Random.Next(2, config.WorldSize[1] - 2)};
+        }
+
+        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units)
+        {
+            _options = new Options();
+            _maps = maps;
+            GetCivs.AddRange(civilizations);
+            AllUnits.AddRange(units);
+            _rules = configRules;
+            _activeUnit = units[0];
+            _activeCiv = civilizations[1];
+            CurrentMap.ActiveXY = _activeUnit.XY;
+            CurrentMap.StartingClickedXY = _activeUnit.XY;
+        }
+
     }
 }

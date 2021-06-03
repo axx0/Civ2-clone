@@ -10,7 +10,7 @@ namespace EtoFormsUI
     public class MinimapPanel : Civ2panel
     {
         Game Game => Game.Instance;
-        Map Map => Map.Instance;
+        Map Map => Game.CurrentMap;
 
         private Main Main;
         private int[] offset, mapStartXY, mapDrawSq;

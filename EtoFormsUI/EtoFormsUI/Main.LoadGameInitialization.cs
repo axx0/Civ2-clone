@@ -25,7 +25,7 @@ namespace EtoFormsUI
 
             // Make an instance of a new game & map
             Game.Create(rules, gameData);
-            Map.PopulateTitleData(gameData, rules);
+            Map.PopulateTilesFromGameData(gameData, rules);
             Map.MapRevealed = gameData.MapRevealed;
             Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
             Map.Zoom = gameData.Zoom;

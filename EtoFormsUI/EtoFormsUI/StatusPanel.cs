@@ -15,7 +15,7 @@ namespace EtoFormsUI
     public class StatusPanel : Panel
     {
         private Game Game => Game.Instance;
-        private Map Map => Map.Instance;
+        private Map Map => Game.CurrentMap;
 
         private readonly Main main;
         private readonly Drawable mainPanel, statsPanel, unitPanel;

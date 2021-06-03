@@ -1,5 +1,6 @@
 ﻿using Civ2engine.Enums;
 using System.Collections.Generic;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
@@ -8,7 +9,6 @@ namespace Civ2engine
         public GameVersionType GameVersion { get; set; }
 
         // Options
-        public Options Options { get; set; }
         public bool[] OptionsArray { get; set; }
 
         // General game data
@@ -137,7 +137,6 @@ namespace Civ2engine
         public int[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
         public int Zoom { get; set; }
-        public List<Civilization> Civilizations { get; set; }
 
         //public int IndexOfLastActiveUnit { get; set; }
 

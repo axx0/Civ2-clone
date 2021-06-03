@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Civ2engine;
-using Eto.Drawing;
+using System.Threading.Tasks;
 
-namespace EtoFormsUI.Initialization
+namespace Civ2engine
 {
-    internal class GameInitializationConfig
+    public class GameInitializationConfig
     {
         public Random Random { get; set; } = new ();
         public Ruleset RuleSet { get; set; }
@@ -24,9 +23,11 @@ namespace EtoFormsUI.Initialization
         public int Gender { get; set; }
         public Rules Rules { get; set; }
         public int ResourceSeed { get; set; }
-        public Point[] StartPositions { get; set; }
+        
+        public int[][] StartPositions { get; set; }
         public byte[] TerrainData { get; set; }
         public int MapArea { get; set; }
         public Civilization PlayerCiv { get; set; }
+        public Task<Map[]> MapTask { get; set; }
     }
 }

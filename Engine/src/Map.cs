@@ -7,15 +7,15 @@ namespace Civ2engine
     public class Map : BaseInstance
     {
         public int MapIndex { get; } = 0;
-        public int XDim { get; private set; }
-        public int YDim { get; private set; }
+        public int XDim { get; internal set; }
+        public int YDim { get; internal set; }
         public int Area { get; private set; }
-        public int ResourceSeed { get; private set; }
+        public int ResourceSeed { get; internal set; }
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
         public bool MapRevealed { get; set; }
         public int WhichCivsMapShown { get; set; }
-        public ITerrain[,] Tile { get; set; }
+        public Tile[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; } // Visibility of tiles for each civ
         
         public bool IsValidTileC2(int xC2, int yC2)
@@ -64,7 +64,7 @@ namespace Civ2engine
         /// </summary>
         /// <param name="data">Game data.</param>
         /// <param name="rules">Game rules.</param>
-        public void PopulateTitleData(GameData data, Rules rules)
+        public void PopulateTilesFromGameData(GameData data, Rules rules)
         {
             XDim = data.MapXdim;
             YDim = data.MapYdim;
@@ -97,17 +97,6 @@ namespace Civ2engine
                         Island = data.MapIslandNo[col, row]
                     };
                 }
-            }
-        }
-
-        private static Map _instance;
-        public static Map Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    _instance = new Map();
-                return _instance;
             }
         }
     }

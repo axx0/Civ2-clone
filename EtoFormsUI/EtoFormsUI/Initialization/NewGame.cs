@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.IO;
+using Civ2engine.Units;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
@@ -88,7 +90,7 @@ namespace EtoFormsUI.Initialization
 
                     if (startPositions.SelectedIndex == 1)
                     {
-                        config.StartPositions = mapData.StartPositions.Select(p=> new Point(p.First, p.Second)).ToArray();
+                        config.StartPositions = mapData.StartPositions.Select(p=> new int[] {p.First, p.Second}).ToArray();
                     }
                 }
 
@@ -186,6 +188,8 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectDifficultly(Main mainForm, GameInitializationConfig config)
         {
+            
+            config.Rules = RulesParser.ParseRules(config.RuleSet);
             var difficultyDialog = new Civ2dialogV2(mainForm, config.PopUps["DIFFICULTY"]);
             difficultyDialog.ShowModal(mainForm);
 
@@ -289,6 +293,7 @@ namespace EtoFormsUI.Initialization
                     }
                 }
 
+                config.MapTask = MapGenerator.GenerateMap(config);
 
                 SelectGender(mainForm, config);
                 break;
@@ -312,7 +317,6 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectTribe(Main mainForm, GameInitializationConfig config)
         {
-            config.Rules = RulesParser.ParseRules(config.RuleSet);
             var popup = config.PopUps["TRIBE"];
             if (!popup.Button.Contains(Labels.Cancel))
             {
@@ -518,67 +522,13 @@ namespace EtoFormsUI.Initialization
                 }
             }
 
-            //TODO: Start game...
-            var gameData = new GameData
-            {
-                MapArea = config.MapArea,
-                MapXdim = config.WorldSize[0],
-                MapYdim = config.WorldSize[1],
-                Options = new Options
-                {
 
-                },
-                Civilizations = civilizations.OrderBy(C => C.Id).ToList()
-            };
-            gameData.PlayersCivIndex = gameData.Civilizations.IndexOf(config.PlayerCiv);
-
-            CreateMapData(gameData, config);
+            var maps = config.MapTask.Result;
             
-            Game.Create(config.Rules,gameData);
-       
-            Map.Instance.PopulateTitleData(gameData, config.Rules);
+            Game.NewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList());
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.Playgame();
-        }
-
-        private static void CreateMapData(GameData gameData, GameInitializationConfig config)
-        {
-            var width = gameData.MapXdim ;
-            gameData.MapRiverPresent = new bool[width, gameData.MapYdim];
-            gameData.MapResourcePresent = new bool[width, gameData.MapYdim];
-            gameData.MapIrrigationPresent = new bool[width, gameData.MapYdim];
-            gameData.MapMiningPresent = new bool[width, gameData.MapYdim];
-            gameData.MapRoadPresent = new bool[width, gameData.MapYdim];
-            gameData.MapRailroadPresent = new bool[width, gameData.MapYdim];
-            gameData.MapFortressPresent = new bool[width, gameData.MapYdim];
-            gameData.MapPollutionPresent = new bool[width, gameData.MapYdim];
-            gameData.MapFarmlandPresent = new bool[width, gameData.MapYdim];
-            gameData.MapAirbasePresent = new bool[width, gameData.MapYdim];
-            gameData.MapIslandNo = new int[width, gameData.MapYdim];
-            gameData.MapTerrainType = new TerrainType[width, gameData.MapYdim];
-            if (config.TerrainData != null)
-            {
-                for (int y = 0; y < gameData.MapYdim; y++)
-                {
-                    for (int x = 0; x < width; x++)
-                    {
-                        var terra = config.TerrainData[x + y * width];
-                        gameData.MapTerrainType[x, y] = (TerrainType)( terra & 0xF);
-                        gameData.MapRiverPresent[x, y] = terra > 100;
-                       gameData.MapResourcePresent[x, y] = false;
-                       gameData.MapIrrigationPresent[x, y] = false;
-                       gameData.MapMiningPresent[x, y] = false;
-                       gameData.MapRoadPresent[x, y] = false;
-                       gameData.MapRailroadPresent[x, y] = false;
-                       gameData.MapFortressPresent[x, y] = false;
-                       gameData.MapPollutionPresent[x, y] = false;
-                       gameData.MapFarmlandPresent[x, y] = false;
-                       gameData.MapAirbasePresent[x, y] = false;
-                       gameData.MapIslandNo[x, y] = 0;
-                    }
-                }
-            }
         }
 
         private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe, bool human, int id)
@@ -611,4 +561,6 @@ namespace EtoFormsUI.Initialization
             return config.Gender == 0 ? govt.TitleMale : govt.TitleFemale;
         }
     }
+
+
 }
