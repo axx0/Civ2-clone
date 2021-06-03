@@ -21,19 +21,22 @@ namespace Civ2engine
                 {
                     XDim = width,
                     YDim = height,
-                    ResourceSeed = config.ResourceSeed, Tile = new Tile[height,width],
-                    Visibility = new bool[height,width][]
+                    ResourceSeed = config.ResourceSeed, Tile = new Tile[width,height],
+                    Visibility = new bool[width,height][]
                 };
                 var terrains = config.Rules.Terrains;
+                var index = 0;
                 if (config.TerrainData != null)
                 {
-                    for (int y = 0; y < width; y++)
+                    for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
                     {
-                        for (int x = 0; x < height; x++)
+                        for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
-                            var terra = config.TerrainData[x + y * height];
-                            mainMap.Tile[x, y] = new Tile(x, y, terrains[0][(int) terra & 0xF], config.ResourceSeed);
-                            mainMap.Tile[x, y].River = terra > 100;
+                            var terra = config.TerrainData[index++];
+                            mainMap.Tile[x, y] = new Tile(x, y, terrains[0][(int) terra & 0xF], config.ResourceSeed)
+                            {
+                                River = terra > 100
+                            };
                             mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
                         }
                     }
