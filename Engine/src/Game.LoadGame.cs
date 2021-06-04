@@ -83,6 +83,8 @@ namespace Civ2engine
                 : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex); // null means all units have ended turn
             _playerCiv = GetCivs[gameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
+            
+            _maps = new[] {new Map()};
         }
 
         public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
