@@ -512,7 +512,7 @@ namespace EtoFormsUI.Initialization
                 {
                     if (i == config.PlayerCiv.Id) continue;
 
-                    var group = groupedTribes.Count < i && groupedTribes[i].Any()
+                    var group = groupedTribes.Contains(i)
                         ? groupedTribes[i].ToList()
                         : config.Rules.Leaders
                             .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
