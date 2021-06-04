@@ -133,6 +133,9 @@ namespace Civ2engine
             //For each offset make the tile visible if it isn't yet
             foreach (int[] offset in offsets)
             {
+                var x = coords[0] + offset[0];
+                var y = coords[1] + offset[1];
+                if(x < 0 || x > XDim || y < 0 || y > YDim) continue;
                 this.Visibility[coords[0] + offset[0], coords[1]+ offset[1]][ownerId] = true;
             }
         }
