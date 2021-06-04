@@ -522,6 +522,14 @@ namespace EtoFormsUI.Initialization
                 }
             }
 
+            if (config.PlayerCiv.Id >= civilizations.Count)
+            {
+                var correctColour = MapImages.PlayerColours[config.PlayerCiv.Id];
+                var colours =
+                    new List<PlayerColour>(MapImages.PlayerColours[0..(civilizations.Count - 1)]) {correctColour};
+                MapImages.PlayerColours = colours.ToArray();
+                config.PlayerCiv.Id = MapImages.PlayerColours.Length - 1;
+            }
 
             var maps = config.MapTask.Result;
             
