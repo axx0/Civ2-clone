@@ -107,14 +107,26 @@ namespace Civ2engine
             int[] coords = unitXy.Civ2xy();
             var offsets = new List<int[]>
             {
-                new int[] {0, -2},
+                new int[] {0, -1},
+                new int[] {0, 1},
                 new int[] {1, -1},
-                new int[] {2, 0},
+                new int[] {1, 0},
                 new int[] {1, 1},
+                new int[] {1, 2},
+                new int[] {1, -2},
+                new int[] {0, -2},
+                new int[] {0, -3},
                 new int[] {0, 2},
+                new int[] {0, 3},
+                new int[] {-1, 2},
                 new int[] {-1, 1},
-                new int[] {-2, 0},
-                new int[] {-1, -1}
+                new int[] {-1, 0},
+                new int[] {-1, -1},
+                new int[] {-2, -1},
+                new int[] {-2, 1},
+                new int[] {-1, -2},
+                new int[] {-1, -3},
+                new int[] {-1, 3}
             };
 
             this.Visibility[coords[0], coords[1]][ownerId] = true;
