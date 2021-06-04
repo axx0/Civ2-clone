@@ -51,12 +51,13 @@ namespace EtoFormsUI
             Sounds.Stop();
             Sounds.PlaySound("MENUOK.WAV");
 
+            var playerCiv = Game.GetPlayerCiv;
             OnPopupboxEvent?.Invoke(null,
                 new PopupboxEventArgs("LOADOK",
                     new List<string>
                     {
-                        Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
-                        Game.GetActiveCiv.TribeName, Game.GetGameYearString,
+                        playerCiv.LeaderTitle, playerCiv.LeaderName,
+                        playerCiv.TribeName, Game.GetGameYearString,
                         Game.DifficultyLevel.ToString()
                     }));
         }
