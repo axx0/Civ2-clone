@@ -491,7 +491,7 @@ namespace EtoFormsUI.Initialization
                     
                     opponentPop.Options =
                         new[] {opponentPop.Options[0]}.Concat(@group.Select(leader => $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
-                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: group.Count / 6);
+                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: group.Count / 5);
                     oppDia.ShowModal(mainForm);
 
                     if (oppDia.SelectedIndex == int.MinValue)
@@ -503,7 +503,7 @@ namespace EtoFormsUI.Initialization
                             @group[
                                 oppDia.SelectedIndex == 0
                                     ? config.Random.Next(0, @group.Count)
-                                    : oppDia.SelectedIndex - 1], false, i +1));
+                                    : oppDia.SelectedIndex - 1], false, i));
                 }
             }
             else
@@ -518,7 +518,7 @@ namespace EtoFormsUI.Initialization
                             .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
 
                     civilizations.Add(MakeCivilization(config, @group[config.Random.Next(0, @group.Count)], false,
-                        i + 1));
+                        i));
                 }
             }
 
