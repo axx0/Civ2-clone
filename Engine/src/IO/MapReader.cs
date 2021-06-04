@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -33,11 +34,15 @@ namespace Civ2engine.IO
             // var startOffsetY =
             //     bytes[0x00000038]; //Y coordinates of all 21 civilization starting points, in the same order as in the RULES.TXT.
             data.StartPositions = startingXCoords.Zip(startingYCoords).ToArray();
-            data.TerrainData = Enumerable.Range(0, data.Area).Select(_ =>
+            var bytes = reader.ReadBytes(6);
+            var terrainData = new List<byte>(data.Area);
+            while (bytes.Length > 0)
             {
-                var bytes = reader.ReadBytes(6);
-                return bytes[0];
-            }).ToArray();
+                terrainData.Add(bytes[0]);
+                
+                bytes = reader.ReadBytes(6);
+            }
+            data.TerrainData =terrainData.ToArray();
             return data;
         }
     }

@@ -140,6 +140,7 @@ namespace Civ2engine
             _activeCiv = civilizations[1];
             CurrentMap.ActiveXY = _activeUnit.XY;
             CurrentMap.StartingClickedXY = _activeUnit.XY;
+            CurrentMap.MapRevealed = true;
         }
 
     }

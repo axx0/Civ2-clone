@@ -15,8 +15,8 @@ namespace Civ2engine
                 var area = config.WorldSize;
                 var maps = new Map[secondaryMaps?.Length ?? 0 + 1];
 
-                var width = area[1];
-                var height = area[0];
+                var width = area[0];
+                var height = area[1];
                 var mainMap = new Map
                 {
                     XDim = width,
