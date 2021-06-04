@@ -21,10 +21,7 @@ namespace EtoFormsUI
             {
                 if (RadioBtnList.SelectedIndex > activeCivs.Length - 3)
                 {
-                    if (RadioBtnList.SelectedIndex == activeCivs.Length - 2)
-                        Map.MapRevealed = true;
-                    else
-                        Map.MapRevealed = false;
+                    Map.MapRevealed = RadioBtnList.SelectedIndex == activeCivs.Length - 2;
                 }
                 else
                 {

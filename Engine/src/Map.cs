@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
+using ExtensionMethods;
 
 namespace Civ2engine
 {
@@ -97,6 +99,29 @@ namespace Civ2engine
                         Island = data.MapIslandNo[col, row]
                     };
                 }
+            }
+        }
+        
+        public void SetStartingVisibilityS2(int[] unitXy, int ownerId)
+        {
+            int[] coords = unitXy.Civ2xy();
+            var offsets = new List<int[]>
+            {
+                new int[] {0, -2},
+                new int[] {1, -1},
+                new int[] {2, 0},
+                new int[] {1, 1},
+                new int[] {0, 2},
+                new int[] {-1, 1},
+                new int[] {-2, 0},
+                new int[] {-1, -1}
+            };
+
+            this.Visibility[coords[0], coords[1]][ownerId] = true;
+            //For each offset make the tile visible if it isn't yet
+            foreach (int[] offset in offsets)
+            {
+                this.Visibility[coords[0] + offset[0], coords[1]+ offset[1]][ownerId] = true;
             }
         }
     }

@@ -104,6 +104,12 @@ namespace Civ2engine
                 Y = c.StartLocation[1],
                 TypeDefinition = settlerType
             }).ToList();
+
+            maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
+            foreach (var unit in units)
+            {
+                maps[0].SetStartingVisibilityS2(unit.XY, unit.Owner.Id);
+            }
             
             _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
 
@@ -125,6 +131,7 @@ namespace Civ2engine
                 }
             }
 
+            //TODO: find good random start locations 
             return new[]
                 {config.Random.Next(2, config.WorldSize[0] - 1), config.Random.Next(2, config.WorldSize[1] - 2)};
         }
@@ -140,7 +147,6 @@ namespace Civ2engine
             _activeCiv = civilizations[1];
             CurrentMap.ActiveXY = _activeUnit.XY;
             CurrentMap.StartingClickedXY = _activeUnit.XY;
-            CurrentMap.MapRevealed = true;
         }
 
     }
