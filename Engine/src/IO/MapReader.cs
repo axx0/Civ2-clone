@@ -39,7 +39,6 @@ namespace Civ2engine.IO
             while (bytes.Length > 0)
             {
                 terrainData.Add(bytes[0]);
-                
                 bytes = reader.ReadBytes(6);
             }
             data.TerrainData =terrainData.ToArray();

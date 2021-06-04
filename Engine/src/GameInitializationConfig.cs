@@ -22,7 +22,7 @@ namespace Civ2engine
         public bool DontRestartEliminatedPlayers { get; set; }
         public int Gender { get; set; }
         public Rules Rules { get; set; }
-        public int ResourceSeed { get; set; }
+        public int? ResourceSeed { get; set; }
         
         public int[][] StartPositions { get; set; }
         public byte[] TerrainData { get; set; }

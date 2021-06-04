@@ -78,7 +78,7 @@ namespace EtoFormsUI.Initialization
 
                     if (resourceSeedDialog.SelectedIndex == 1)
                     {
-                        config.ResourceSeed = mapData.ResourceSeed;
+                        config.ResourceSeed = mapData.ResourceSeed % 64;
                     }
                 }
                 

@@ -21,7 +21,8 @@ namespace Civ2engine
                 {
                     XDim = width,
                     YDim = height,
-                    ResourceSeed = config.ResourceSeed, Tile = new Tile[width,height],
+                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(0, 64), 
+                    Tile = new Tile[width,height],
                     Visibility = new bool[width,height][]
                 };
                 var terrains = config.Rules.Terrains;
@@ -33,7 +34,7 @@ namespace Civ2engine
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             var terra = config.TerrainData[index++];
-                            mainMap.Tile[x, y] = new Tile(x, y, terrains[0][(int) terra & 0xF], config.ResourceSeed)
+                            mainMap.Tile[x, y] = new Tile(2 * x + (y % 2), y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
                             {
                                 River = terra > 100
                             };
