@@ -104,29 +104,30 @@ namespace Civ2engine
         
         public void SetStartingVisibilityS2(int[] unitXy, int ownerId)
         {
-            int[] coords = unitXy.Civ2xy();
+            var evenOdd = unitXy[1] % 2;
+            var coords = new [] { (unitXy[0] - evenOdd) / 2, unitXy[1] };
             var offsets = new List<int[]>
             {
-                new int[] {0, -1},
-                new int[] {0, 1},
-                new int[] {1, -1},
-                new int[] {1, 0},
-                new int[] {1, 1},
-                new int[] {1, 2},
-                new int[] {1, -2},
-                new int[] {0, -2},
-                new int[] {0, -3},
-                new int[] {0, 2},
-                new int[] {0, 3},
-                new int[] {-1, 2},
-                new int[] {-1, 1},
-                new int[] {-1, 0},
-                new int[] {-1, -1},
-                new int[] {-2, -1},
-                new int[] {-2, 1},
-                new int[] {-1, -2},
-                new int[] {-1, -3},
-                new int[] {-1, 3}
+                new[] {0 + evenOdd, -1},
+                new[] {0 + evenOdd, 1},
+                new[] {1 + evenOdd, -1},
+                new[] {1, 0},
+                new[] {1 + evenOdd, 1},
+                new[] {1, 2},
+                new[] {1, -2},
+                new[] {0, -2},
+                new[] {0 + evenOdd, -3},
+                new[] {0, 2},
+                new[] {0 + evenOdd, 3},
+                new[] {-1, 2},
+                new[] {-1 + evenOdd, 1},
+                new[] {-1, 0},
+                new[] {-1 + evenOdd, -1},
+                new[] {-2 + evenOdd, -1},
+                new[] {-2 + evenOdd, 1},
+                new[] {-1, -2},
+                new[] {-1 + evenOdd, -3},
+                new[] {-1 + evenOdd, 3}
             };
 
             this.Visibility[coords[0], coords[1]][ownerId] = true;
