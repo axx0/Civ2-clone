@@ -41,7 +41,7 @@ namespace EtoFormsUI
         public MapPanel(Main parent, int width, int height) : base(width, height, 38, 10)
         {
             main = parent;
-
+            
             drawPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
             drawPanel.Paint += DrawPanel_Paint;
             drawPanel.MouseUp += DrawPanel_MouseClick;
@@ -167,7 +167,7 @@ namespace EtoFormsUI
                         cityWindow.Close();
                     }
                     
-                    cityWindow = new CityWindow(this, Game.CityHere(clickedXY[0], clickedXY[1]), CityWindowZoom);
+                    cityWindow = new CityWindow(main, this, Game.CityHere(clickedXY[0], clickedXY[1]), CityWindowZoom);
                     cityWindow.Show();
                 }
                 // Unit clicked
