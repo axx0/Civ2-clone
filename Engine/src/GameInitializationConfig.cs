@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Civ2engine;
+using System.Threading.Tasks;
 
-namespace EtoFormsUI.Initialization
+namespace Civ2engine
 {
-    internal class GameInitializationConfig
+    public class GameInitializationConfig
     {
-        public bool CustomizeWorld { get; set; }
-        public Random Random { get; set; }
+        public Random Random { get; set; } = new ();
         public Ruleset RuleSet { get; set; }
         
         public Dictionary<string,PopupBox> PopUps { get; set; }
@@ -23,6 +22,13 @@ namespace EtoFormsUI.Initialization
         public bool DontRestartEliminatedPlayers { get; set; }
         public int Gender { get; set; }
         public Rules Rules { get; set; }
-        public List<Civilization> Civilizations { get; set; }
+        public int? ResourceSeed { get; set; }
+        
+        public int[][] StartPositions { get; set; }
+        public byte[] TerrainData { get; set; }
+        public int MapArea { get; set; }
+        public Civilization PlayerCiv { get; set; }
+        public Task<Map[]> MapTask { get; set; }
+        public bool Started { get; set; }
     }
 }

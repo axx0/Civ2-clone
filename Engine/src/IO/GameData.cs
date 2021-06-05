@@ -1,5 +1,6 @@
 ﻿using Civ2engine.Enums;
 using System.Collections.Generic;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
@@ -8,7 +9,7 @@ namespace Civ2engine
         public GameVersionType GameVersion { get; set; }
 
         // Options
-        public bool[] Options { get; set; }
+        public bool[] OptionsArray { get; set; }
 
         // General game data
         public int TurnNumber { get; set; }

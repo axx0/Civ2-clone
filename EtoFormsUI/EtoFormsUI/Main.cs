@@ -14,7 +14,7 @@ namespace EtoFormsUI
     public partial class Main : Form
     {
         private Game Game => Game.Instance;
-        private Map Map => Map.Instance;
+        private Map Map => Game.CurrentMap;
         private readonly PixelLayout layout;
         private MapPanel mapPanel;
         private MinimapPanel minimapPanel;

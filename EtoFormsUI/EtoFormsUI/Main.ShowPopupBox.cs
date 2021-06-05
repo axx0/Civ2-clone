@@ -14,14 +14,13 @@ namespace EtoFormsUI
     {
         private string savDirectory, savName;
 
-        private void LocateStartingFiles(string title, FileFilter filter, Action<Ruleset, string> initializer,
-            Action start)
+        private void LocateStartingFiles(string title, FileFilter filter, Func<Ruleset, string, bool> initializer)
         {
             using var ofd = new OpenFileDialog
             {
                 Directory = new Uri(Settings.Civ2Path),
                 Title = title,
-                Filters = { filter }
+                Filters = {filter}
             };
 
             var result = ofd.ShowDialog(this.ParentWindow);
@@ -37,16 +36,30 @@ namespace EtoFormsUI
                     Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.Civ2Path
                 };
                 savName = Path.GetFileName(ofd.FileName);
-                initializer(ruleSet, savName);
-                Sounds.Stop();
-                Sounds.PlaySound("MENUOK.WAV");
+                if (initializer(ruleSet, savName))
+                {
+                    Playgame();
+                    return;
+                }
+            }
 
-                start();
-            }
-            else
-            {
-                OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
-            }
+            MainMenu();
+        }
+
+        public void Playgame()
+        {
+            Sounds.Stop();
+            Sounds.PlaySound("MENUOK.WAV");
+
+            var playerCiv = Game.GetPlayerCiv;
+            OnPopupboxEvent?.Invoke(null,
+                new PopupboxEventArgs("LOADOK",
+                    new List<string>
+                    {
+                        playerCiv.LeaderTitle, playerCiv.LeaderName,
+                        playerCiv.TribeName, Game.GetGameYearString,
+                        Game.DifficultyLevel.ToString()
+                    }));
         }
 
         private void PopupboxEvent(object sender, PopupboxEventArgs e)
@@ -55,6 +68,10 @@ namespace EtoFormsUI
             {
                 case "MAINMENU":
                     {
+                        // Sinai pic
+                        sinaiPanel = new PicturePanel(Images.SinaiPic);
+                        layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));
+                        
                         var popupBox = new Civ2dialogV2(this, popupBoxList.Find(p => p.Name == e.BoxName))
                         {
                             Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
@@ -74,8 +91,7 @@ namespace EtoFormsUI
                             case 1:
                             {
                                 LocateStartingFiles("Select Map To Load",
-                                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit,
-                                    () => { });
+                                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
                                 break;
                             }
 
@@ -89,11 +105,7 @@ namespace EtoFormsUI
                             case 3:
                             {
                                 LocateStartingFiles("Select Scenario To Load",
-                                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit,
-                                    () =>
-                                    {
-
-                                    });
+                                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
                             
 
                                 break;
@@ -102,15 +114,7 @@ namespace EtoFormsUI
                             case 4:
                             {
                                 LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
-                                    LoadGameInitialization, () =>
-                                        OnPopupboxEvent?.Invoke(null,
-                                            new PopupboxEventArgs("LOADOK",
-                                                new List<string>
-                                                {
-                                                    Game.GetActiveCiv.LeaderTitle, Game.GetActiveCiv.LeaderName,
-                                                    Game.GetActiveCiv.TribeName, Game.GetGameYearString,
-                                                    Game.DifficultyLevel.ToString()
-                                                }))
+                                    LoadGameInitialization
                                 );
 
                                 break;

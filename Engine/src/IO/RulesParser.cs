@@ -174,7 +174,7 @@ namespace Civ2engine.IO
                 {
                     NameMale = line[0],
                     NameFemale = line[1],
-                    Female = int.Parse(line[2]),
+                    Female = int.Parse(line[2]) == 1,
                     Color = int.Parse(line[3]),
                     CityStyle = int.Parse(line[4]),
                     Plural = line[5],

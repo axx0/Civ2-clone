@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
+using ExtensionMethods;
 
 namespace Civ2engine
 {
     public class Map : BaseInstance
     {
         public int MapIndex { get; } = 0;
-        public int XDim { get; private set; }
-        public int YDim { get; private set; }
+        public int XDim { get; internal set; }
+        public int YDim { get; internal set; }
         public int Area { get; private set; }
-        public int ResourceSeed { get; private set; }
+        public int ResourceSeed { get; internal set; }
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
         public bool MapRevealed { get; set; }
         public int WhichCivsMapShown { get; set; }
-        public ITerrain[,] Tile { get; set; }
+        public Tile[,] Tile { get; set; }
         public bool[,][] Visibility { get; set; } // Visibility of tiles for each civ
         
         public bool IsValidTileC2(int xC2, int yC2)
@@ -24,7 +26,7 @@ namespace Civ2engine
             return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;
         }
         public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
-        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => Visibility[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
+        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Visibility[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
         public bool TileHasEnemyUnit(int xC2, int yC2, UnitType unitType) => (Game.UnitsHere(xC2, yC2).Count == 1) && (Game.UnitsHere(xC2, yC2)[0].Type == unitType);
 
         private int _zoom;
@@ -64,7 +66,7 @@ namespace Civ2engine
         /// </summary>
         /// <param name="data">Game data.</param>
         /// <param name="rules">Game rules.</param>
-        public void PopulateTitleData(GameData data, Rules rules)
+        public void PopulateTilesFromGameData(GameData data, Rules rules)
         {
             XDim = data.MapXdim;
             YDim = data.MapYdim;
@@ -80,7 +82,7 @@ namespace Civ2engine
                 for (int row = 0; row < YDim; row++)
                 {
                     var terrain = data.MapTerrainType[col, row];
-                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[this.MapIndex][(int) terrain], Map.ResourceSeed)
+                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], Map.ResourceSeed)
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
@@ -99,15 +101,43 @@ namespace Civ2engine
                 }
             }
         }
-
-        private static Map _instance;
-        public static Map Instance
+        
+        public void SetStartingVisibilityS2(int[] unitXy, int ownerId)
         {
-            get
+            var evenOdd = unitXy[1] % 2;
+            var coords = new [] { (unitXy[0] - evenOdd) / 2, unitXy[1] };
+            var offsets = new List<int[]>
             {
-                if (_instance == null)
-                    _instance = new Map();
-                return _instance;
+                new[] {0 + evenOdd, -1},
+                new[] {0 + evenOdd, 1},
+                new[] {1 + evenOdd, -1},
+                new[] {1, 0},
+                new[] {1 + evenOdd, 1},
+                new[] {1, 2},
+                new[] {1, -2},
+                new[] {0, -2},
+                new[] {0 + evenOdd, -3},
+                new[] {0, 2},
+                new[] {0 + evenOdd, 3},
+                new[] {-1, 2},
+                new[] {-1 + evenOdd, 1},
+                new[] {-1, 0},
+                new[] {-1 + evenOdd, -1},
+                new[] {-2 + evenOdd, -1},
+                new[] {-2 + evenOdd, 1},
+                new[] {-1, -2},
+                new[] {-1 + evenOdd, -3},
+                new[] {-1 + evenOdd, 3}
+            };
+
+            this.Visibility[coords[0], coords[1]][ownerId] = true;
+            //For each offset make the tile visible if it isn't yet
+            foreach (int[] offset in offsets)
+            {
+                var x = coords[0] + offset[0];
+                var y = coords[1] + offset[1];
+                if(x < 0 || x > XDim || y < 0 || y > YDim) continue;
+                this.Visibility[coords[0] + offset[0], coords[1]+ offset[1]][ownerId] = true;
             }
         }
     }

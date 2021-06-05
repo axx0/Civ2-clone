@@ -132,7 +132,7 @@ using Civ2engine.Enums;
 
         public bool Resource { get; set; }
         public bool River { get; set; }
-        public bool IsUnitPresent => Game.GetUnits.Any(u => u.X == X && u.Y == Y);
+        public bool IsUnitPresent => Game.AllUnits.Any(u => u.X == X && u.Y == Y);
         public bool IsCityPresent => Game.GetCities.Any(c => c.X == X && c.Y == Y);
         public bool Irrigation { get; set; }
         public bool Mining { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Civ2engine
 {
-    public class Options : BaseInstance
+    public class Options
     {
         // START GAME RULES
         public bool SimplifiedCombat { get; private set; }

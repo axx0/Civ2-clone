@@ -7,25 +7,41 @@ using Eto.Drawing;
 using Eto.Forms;
 using Civ2engine;
 using Civ2engine.Events;
+using Civ2engine.IO;
+using EtoFormsUI.ImageLoader;
+using EtoFormsUI.Initialization;
 
 namespace EtoFormsUI
 {
     public partial class Main : Form
     {
-        public void LoadGameInitialization(Ruleset ruleset, string saveFileName)
+        public bool LoadGameInitialization(Ruleset ruleset, string saveFileName)
         {
-            Game.LoadGame(ruleset, saveFileName);
-            Images.LoadGraphicsAssetsFromFiles(ruleset);
+            var rules = RulesParser.ParseRules(ruleset);
+            CityLoader.LoadCities(ruleset);
+            Images.LoadGraphicsAssetsFromFiles(ruleset, rules);
+            // Read SAV file & RULES.txt
+            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);
+
+            // Make an instance of a new game & map
+            Game.Create(rules, gameData);
+            Map.PopulateTilesFromGameData(gameData, rules);
+            Map.MapRevealed = gameData.MapRevealed;
+            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
+            Map.Zoom = gameData.Zoom;
+            Map.StartingClickedXY = gameData.ClickedXY;
+            Map.ActiveXY = gameData.ActiveCursorXY;
+            return true;
         }
 
-        public void LoadScenarioInit(Ruleset ruleset, string scenarioFileName)
+        public bool LoadScenarioInit(Ruleset ruleset, string scenarioFileName)
         {
-            
+            return false;
         }
         
-        public void StartPremadeInit(Ruleset ruleset, string mapFileName)
+        public bool StartPremadeInit(Ruleset ruleset, string mapFileName)
         {
-            
+            return NewGame.StartPremade(this, ruleset, mapFileName);
         }
 
         public void StartGame()
@@ -55,9 +71,5 @@ namespace EtoFormsUI
 
             BringToFront();
         }
-
-      
-
-       
     }
 }

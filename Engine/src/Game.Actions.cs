@@ -54,12 +54,12 @@ namespace Civ2engine
         {
             if (_activeUnit == unit)
             {
-                Game.GetUnits.Remove(unit);
+                Game.AllUnits.Remove(unit);
                 ChooseNextUnit();
             }
             else
             {
-                Game.GetUnits.Remove(unit);
+                Game.AllUnits.Remove(unit);
             }
         }
 

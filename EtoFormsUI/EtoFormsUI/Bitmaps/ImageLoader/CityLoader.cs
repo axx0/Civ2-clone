@@ -112,29 +112,26 @@ namespace EtoFormsUI.ImageLoader
                 break;
             }
 
-            var flags = new List<PlayerFlag>();
-            var textColours = new List<Color>();
-            var darkColours = new List<Color>();
-            var lightColours = new List<Color>();
+            var playerColours = new List<PlayerColour>();
             var topLeft = lastRow - 2 * flagHeight + 1;
             var col = 1;
             for (; col < citiesImage.Width; col += flagWidth)
             {
-                if (citiesImage.GetPixel(col + flagWidth -1, topLeft) == borderColour)
+                if (citiesImage.GetPixel(col + flagWidth - 1, topLeft) == borderColour)
                 {
-                    flags.Add(new PlayerFlag
-                    {
-                        Smaller = citiesImage.Clone(new Rectangle(col, topLeft + flagHeight, flagWidth -1, flagHeight -1)),
-                        Normal = citiesImage.Clone(new Rectangle(col, topLeft, flagWidth -1, flagHeight -1))
-                    });
-                    textColours.Add(citiesImage.GetPixel(col, topLeft -2));
-                    darkColours.Add(citiesImage.GetPixel(col, topLeft - 3) == Colors.Transparent
-                        ? citiesImage.GetPixel(col + 6, topLeft + 5)
-                        : citiesImage.GetPixel(col, topLeft - 3));
                     var lightCandidate = citiesImage.GetPixel(col, topLeft - 4);
-                    lightColours.Add(lightCandidate == Colors.Transparent || lightCandidate == borderColour
-                        ? citiesImage.GetPixel(col + 5, topLeft + 6)
-                        : lightCandidate);
+                    playerColours.Add(new PlayerColour
+                    {
+                        Normal = citiesImage.Clone(new Rectangle(col, topLeft, flagWidth - 1, flagHeight - 1)),
+                        TextColour = citiesImage.GetPixel(col, topLeft - 2),
+                        DarkColour = citiesImage.GetPixel(col, topLeft - 3) == Colors.Transparent
+                            ? citiesImage.GetPixel(col + 6, topLeft + 5)
+                            : citiesImage.GetPixel(col, topLeft - 3),
+                        LightColour = lightCandidate == Colors.Transparent || lightCandidate == borderColour
+                            ? citiesImage.GetPixel(col + 5, topLeft + 6)
+                            : lightCandidate
+
+                    });
                 }
                 else
                 {
@@ -142,10 +139,7 @@ namespace EtoFormsUI.ImageLoader
                 }
             }
 
-            MapImages.TextColours = textColours.ToArray();
-            MapImages.DarkColours = darkColours.ToArray();
-            MapImages.PlayerColours = lightColours.ToArray();
-            MapImages.Flags = flags.ToArray();
+            MapImages.PlayerColours  = playerColours.ToArray();
 
             var specials = new List<Bitmap>();
             var specialStart = col + 1;

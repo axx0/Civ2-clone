@@ -97,7 +97,7 @@ namespace Civ2engine
                 if (_activeUnit.AttackBase == 0) return UnitMovementOrderResultType.CombatStrength0CannotAttack;
 
                 // Get a list of units on target square
-                var unitsOnTargetSquare = _units.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]);
+                var unitsOnTargetSquare = AllUnits.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]);
                 // Find out if attack can be made based on unit domain
                 if (_activeUnit.Domain == UnitGAS.Ground)    // LAND UNIT ATTACKING
                 {
@@ -203,19 +203,19 @@ namespace Civ2engine
             
             IUnit nextUnit = null;
             int unitIndex;
-            for (unitIndex = _activeUnit.Id + 1; unitIndex < _units.Count && nextUnit == null; unitIndex++)
+            for (unitIndex = _activeUnit.Id + 1; unitIndex < AllUnits.Count && nextUnit == null; unitIndex++)
             {
-                if (!_units[unitIndex].Dead && _units[unitIndex].Owner == _activeCiv && _units[unitIndex].AwaitingOrders)
+                if (!AllUnits[unitIndex].Dead && AllUnits[unitIndex].Owner == _activeCiv && AllUnits[unitIndex].AwaitingOrders)
                 {
-                    nextUnit = _units[unitIndex];
+                    nextUnit = AllUnits[unitIndex];
                 }
             }
 
             for (unitIndex = 0; nextUnit == null && unitIndex < _activeUnit.Id; unitIndex++)
             {
-                if (!_units[unitIndex].Dead && _units[unitIndex].Owner == _activeCiv && _units[unitIndex].AwaitingOrders)
+                if (!AllUnits[unitIndex].Dead && AllUnits[unitIndex].Owner == _activeCiv && AllUnits[unitIndex].AwaitingOrders)
                 {
-                    nextUnit = _units[unitIndex];
+                    nextUnit = AllUnits[unitIndex];
                 }
             }
             // End turn if no units awaiting orders
@@ -269,7 +269,7 @@ namespace Civ2engine
             };
             int[] newXY = { attacker.X + deltaXY[0], attacker.Y + deltaXY[1] };
             var cityOnTargetSquare = Game.GetCities.FirstOrDefault(c => c.X == newXY[0] && c.Y == newXY[1]);
-            var unitsOnTargetSquare = _units.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]).ToList();
+            var unitsOnTargetSquare = AllUnits.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]).ToList();
 
             // Primary defender is the unit with largest defense factor
             var defender = unitsOnTargetSquare[0];

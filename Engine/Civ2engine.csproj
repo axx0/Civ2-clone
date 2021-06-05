@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="src\Map" />
   </ItemGroup>
 
 </Project>

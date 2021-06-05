@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.Units;
 
@@ -6,87 +9,147 @@ namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
-        public static void LoadGame(Ruleset ruleset, string SAVname)
+        public static void Create(Rules rules, GameData gameData)
         {
-            // Read SAV file & RULES.txt
-            var rules = RulesParser.ParseRules(ruleset);
-            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, SAVname);
-
-            // Make an instance of a new game & map
             _instance = new Game(rules, gameData);
-            Map.PopulateTitleData(gameData, rules);
-            Map.MapRevealed = gameData.MapRevealed;
-            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
-            Map.Zoom = gameData.Zoom;
-            Map.StartingClickedXY = gameData.ClickedXY;
-            Map.ActiveXY = gameData.ActiveCursorXY;
         }
 
-        private Game(Rules rules, GameData SAVgameData)
+        public Game(Rules rules, GameData gameData)
         {
-            _units = new List<IUnit>();
-            _cities = new List<City>();
-            _civs = new List<Civilization>();
-            _options = new Options();
             _rules = rules;
 
             //_civsInPlay = SAVgameData.CivsInPlay;
-            _gameVersion = SAVgameData.GameVersion;
+            _gameVersion = gameData.GameVersion;
 
-            _options.Set(SAVgameData.Options);
+            _options = new Options();
+            _options.Set(gameData.OptionsArray);
 
-            _turnNumber = SAVgameData.TurnNumber;
-            TurnNumberForGameYear = SAVgameData.TurnNumberForGameYear;
-            _difficultyLevel = SAVgameData.DifficultyLevel;
-            _barbarianActivity = SAVgameData.BarbarianActivity;
-            PollutionAmount = SAVgameData.PollutionAmount;
-            GlobalTempRiseOccured = SAVgameData.GlobalTempRiseOccured;
-            NoOfTurnsOfPeace = SAVgameData.NoOfTurnsOfPeace;
-            NumberOfUnits = SAVgameData.NumberOfUnits;
-            NumberOfCities = SAVgameData.NumberOfCities;
-
+            _turnNumber = gameData.TurnNumber;
+            TurnNumberForGameYear = gameData.TurnNumberForGameYear;
+            _difficultyLevel = gameData.DifficultyLevel;
+            _barbarianActivity = gameData.BarbarianActivity;
+            PollutionAmount = gameData.PollutionAmount;
+            GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
+            NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;
+            NumberOfUnits = gameData.NumberOfUnits;
+            NumberOfCities = gameData.NumberOfCities;
+            
             // Create all 8 civs (tribes)
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
-                CreateCiv(i, SAVgameData.PlayersCivIndex, SAVgameData.CivsInPlay[i], SAVgameData.CivCityStyle[i], SAVgameData.CivLeaderName[i], SAVgameData.CivTribeName[i], SAVgameData.CivAdjective[i], SAVgameData.RulerGender[i], SAVgameData.CivMoney[i], SAVgameData.CivNumber[i], SAVgameData.CivResearchProgress[i], SAVgameData.CivResearchingTech[i], SAVgameData.CivSciRate[i], SAVgameData.CivTaxRate[i], SAVgameData.CivGovernment[i], SAVgameData.CivReputation[i], SAVgameData.CivTechs);
+                CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i],
+                    gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i],
+                    gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i],
+                    gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i],
+                    gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
+                    gameData.CivTechs);
             }
 
             // Create cities
-            for (int i = 0; i < SAVgameData.NumberOfCities; i++)
+            for (var i = 0; i < gameData.NumberOfCities; i++)
             {
-                CreateCity(SAVgameData.CityXloc[i], SAVgameData.CityYloc[i], SAVgameData.CityCanBuildCoastal[i],
-                    SAVgameData.CityAutobuildMilitaryRule[i], SAVgameData.CityStolenTech[i],
-                    SAVgameData.CityImprovementSold[i], SAVgameData.CityWeLoveKingDay[i],
-                    SAVgameData.CityCivilDisorder[i], SAVgameData.CityCanBuildShips[i], SAVgameData.CityObjectivex3[i],
-                    SAVgameData.CityObjectivex1[i], SAVgameData.CityOwner[i], SAVgameData.CitySize[i],
-                    SAVgameData.CityWhoBuiltIt[i], SAVgameData.CityFoodInStorage[i], SAVgameData.CityShieldsProgress[i],
-                    SAVgameData.CityNetTrade[i], SAVgameData.CityName[i], SAVgameData.CityDistributionWorkers[i],
-                    SAVgameData.CityNoOfSpecialistsx4[i], SAVgameData.CityImprovements[i],
-                    SAVgameData.CityItemInProduction[i], SAVgameData.CityActiveTradeRoutes[i],
-                    SAVgameData.CityCommoditySupplied[i], SAVgameData.CityCommodityDemanded[i],
-                    SAVgameData.CityCommodityInRoute[i], SAVgameData.CityTradeRoutePartnerCity[i],
-                    SAVgameData.CityScience[i], SAVgameData.CityTax[i], SAVgameData.CityNoOfTradeIcons[i],
-                    SAVgameData.CityTotalFoodProduction[i], SAVgameData.CityTotalShieldProduction[i],
-                    SAVgameData.CityHappyCitizens[i], SAVgameData.CityUnhappyCitizens[i]);
+                CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityCanBuildCoastal[i],
+                    gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenTech[i],
+                    gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i],
+                    gameData.CityCivilDisorder[i], gameData.CityCanBuildShips[i], gameData.CityObjectivex3[i],
+                    gameData.CityObjectivex1[i], gameData.CityOwner[i], gameData.CitySize[i],
+                    gameData.CityWhoBuiltIt[i], gameData.CityFoodInStorage[i], gameData.CityShieldsProgress[i],
+                    gameData.CityNetTrade[i], gameData.CityName[i], gameData.CityDistributionWorkers[i],
+                    gameData.CityNoOfSpecialistsx4[i], gameData.CityImprovements[i],
+                    gameData.CityItemInProduction[i], gameData.CityActiveTradeRoutes[i],
+                    gameData.CityCommoditySupplied[i], gameData.CityCommodityDemanded[i],
+                    gameData.CityCommodityInRoute[i], gameData.CityTradeRoutePartnerCity[i],
+                    gameData.CityScience[i], gameData.CityTax[i], gameData.CityNoOfTradeIcons[i],
+                    gameData.CityTotalFoodProduction[i], gameData.CityTotalShieldProduction[i],
+                    gameData.CityHappyCitizens[i], gameData.CityUnhappyCitizens[i]);
             }
 
             // Create units
-            for (int i = 0; i < SAVgameData.NumberOfUnits; i++)
+            for (int i = 0; i < gameData.NumberOfUnits; i++)
             {
-                CreateUnit(SAVgameData.UnitType[i], SAVgameData.UnitXloc[i], SAVgameData.UnitYloc[i],
-                    SAVgameData.UnitDead[i], SAVgameData.UnitFirstMove[i], SAVgameData.UnitGreyStarShield[i],
-                    SAVgameData.UnitVeteran[i], SAVgameData.UnitCiv[i], SAVgameData.UnitMovePointsLost[i],
-                    SAVgameData.UnitHitPointsLost[i], SAVgameData.UnitPrevXloc[i], SAVgameData.UnitPrevYloc[i],
-                    SAVgameData.UnitCaravanCommodity[i], SAVgameData.UnitOrders[i], SAVgameData.UnitHomeCity[i],
-                    SAVgameData.UnitGotoX[i], SAVgameData.UnitGotoY[i], SAVgameData.UnitLinkOtherUnitsOnTop[i],
-                    SAVgameData.UnitLinkOtherUnitsUnder[i]);
+                CreateUnit(gameData.UnitType[i], gameData.UnitXloc[i], gameData.UnitYloc[i],
+                    gameData.UnitDead[i], gameData.UnitFirstMove[i], gameData.UnitGreyStarShield[i],
+                    gameData.UnitVeteran[i], gameData.UnitCiv[i], gameData.UnitMovePointsLost[i],
+                    gameData.UnitHitPointsLost[i], gameData.UnitPrevXloc[i], gameData.UnitPrevYloc[i],
+                    gameData.UnitCaravanCommodity[i], gameData.UnitOrders[i], gameData.UnitHomeCity[i],
+                    gameData.UnitGotoX[i], gameData.UnitGotoY[i], gameData.UnitLinkOtherUnitsOnTop[i],
+                    gameData.UnitLinkOtherUnitsUnder[i]);
             }
 
             //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
 
-            _activeUnit = SAVgameData.SelectedUnitIndex == -1 ? null : _units.Find(unit => unit.Id == SAVgameData.SelectedUnitIndex);    // null means all units have ended turn
-            _playerCiv = _civs[SAVgameData.PlayersCivIndex];
+            _activeUnit = gameData.SelectedUnitIndex == -1
+                ? null
+                : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex); // null means all units have ended turn
+            _playerCiv = GetCivs[gameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
+            
+            _maps = new[] {new Map()};
         }
+
+        public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
+        {
+            var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
+            var units = civilizations.Skip(1).Select(c => new
+            {
+                Civ = c, StartLocation = GetStartLoc(c, config)
+            }).Select((c, id) => new Unit
+            {
+                Counter = 0,
+                Dead = false,
+                Id = id,
+                Order = OrderType.NoOrders,
+                Owner = c.Civ,
+                Type = UnitType.Settlers,
+                Veteran = false,
+                X = c.StartLocation[0],
+                Y = c.StartLocation[1],
+                TypeDefinition = settlerType
+            }).ToList();
+
+            maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
+            foreach (var unit in units)
+            {
+                maps[0].SetStartingVisibilityS2(unit.XY, unit.Owner.Id);
+            }
+            
+            _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
+
+        }
+
+
+        private static int[] GetStartLoc(Civilization civilization, GameInitializationConfig config)
+        {
+            if (config.StartPositions != null)
+            {
+                var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
+                if (index > -1 && index < config.StartPositions.Length)
+                {
+                    var pos = config.StartPositions[index];
+                    if (pos[0] != -1 && pos[1] != -1)
+                    {
+                        return pos;
+                    }
+                }
+            }
+
+            //TODO: find good random start locations 
+            return new[]
+                {config.Random.Next(2, config.WorldSize[0] - 1), config.Random.Next(2, config.WorldSize[1] - 2)};
+        }
+
+        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units)
+        {
+            _options = new Options();
+            _maps = maps;
+            GetCivs.AddRange(civilizations);
+            AllUnits.AddRange(units);
+            _rules = configRules;
+            _activeUnit = units[0];
+            _activeCiv = civilizations[1];
+            CurrentMap.ActiveXY = _activeUnit.XY;
+            CurrentMap.StartingClickedXY = _activeUnit.XY;
+        }
+
     }
 }

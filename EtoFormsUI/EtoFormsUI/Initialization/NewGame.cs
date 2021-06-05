@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.IO;
+using Civ2engine.Units;
+using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
 
@@ -44,10 +47,73 @@ namespace EtoFormsUI.Initialization
             }
         }
 
+        internal static bool StartPremade(Main mainForm, Ruleset ruleset, string mapFileName)
+        {
+            Labels.UpdateLabels(ruleset);
+            CityLoader.LoadCities(ruleset);
+            var config = new GameInitializationConfig {RuleSet = ruleset};
+            config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
+            {
+                boxes[box.Name] = box;
+                return boxes;
+            });
+            try
+            {
+                PopupBox CorrectedPopup(string popupId)
+                {
+                    var popUp = config.PopUps[popupId];
+                    if (popUp.Options != null && popUp.Options.Count != 0) return popUp;
+                    popUp.Options = new[] {popUp.Text[^2], popUp.Text[^1]};
+                    popUp.Text = popUp.Text.Where(t => !popUp.Options.Contains(t)).ToArray();
+
+                    return popUp;
+                }
+
+                var mapData = MapReader.Read(ruleset, mapFileName);
+
+                if (mapData.ResourceSeed > 1)
+                {
+                    var resourceSeedDialog = new Civ2dialogV2(mainForm, CorrectedPopup("USESEED"));
+                    resourceSeedDialog.ShowModal(mainForm);
+
+                    if (resourceSeedDialog.SelectedIndex == 1)
+                    {
+                        config.ResourceSeed = mapData.ResourceSeed % 64;
+                    }
+                }
+                
+                if (mapData.StartPositions.Any(p=>p.First != -1 && p.Second != -1))
+                {
+                    
+                    var startPositions = new Civ2dialogV2(mainForm, CorrectedPopup("USESTARTLOC"));
+                    startPositions.ShowModal(mainForm);
+
+                    if (startPositions.SelectedIndex == 1)
+                    {
+                        config.StartPositions = mapData.StartPositions.Select(p=> new int[] {p.First, p.Second}).ToArray();
+                    }
+                }
+
+                config.FlatWorld = mapData.FlatWorld;
+                config.WorldSize = new[] {mapData.Width /2, mapData.Height};
+                config.TerrainData = mapData.TerrainData;
+                config.MapArea = mapData.Area;
+                SelectDifficultly(mainForm, config);
+            }
+            catch
+            {
+                var failedToLoad = new Civ2dialogV2(mainForm, config.PopUps["FAILEDTOLOAD"]);
+                failedToLoad.ShowModal(mainForm);
+                return false;
+            }
+            
+            return config.Started;
+        }
+
         internal static void Start(Main mainForm, bool customizeWorld)
         {
             var config = new GameInitializationConfig
-                {CustomizeWorld = customizeWorld, Random = new Random(), RuleSet = SelectGameToStart(mainForm)};
+                { RuleSet = SelectGameToStart(mainForm)};
             if (config.RuleSet == null)
             {
                 mainForm.MainMenu();
@@ -56,12 +122,22 @@ namespace EtoFormsUI.Initialization
             {
                 Labels.UpdateLabels(config.RuleSet);
                 CityLoader.LoadCities(config.RuleSet);
+                
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
                 {
                     boxes[box.Name] = box;
                     return boxes;
                 });
+
+                
                 GetWorldSize(mainForm, config);
+                if (customizeWorld)
+                {
+                    
+                }
+                
+                
+                SelectDifficultly(mainForm, config);
             }
         }
 
@@ -82,10 +158,11 @@ namespace EtoFormsUI.Initialization
                 2 => new[] {75, 120},
                 _ => new[] {40, 50}
             };
-            if (worldSizeDialog.SelectedButton == "Custom")
-            {
-                var customSize = new Civ2dialogV2(mainForm, config.PopUps["CUSTOMSIZE"],
-                    textBoxes: new List<TextBoxDefinition>
+            
+            if (worldSizeDialog.SelectedButton != "Custom") return;
+            
+            var customSize = new Civ2dialogV2(mainForm, config.PopUps["CUSTOMSIZE"],
+                textBoxes: new List<TextBoxDefinition>
                 {
                     new()
                     {
@@ -97,23 +174,22 @@ namespace EtoFormsUI.Initialization
                     }
                 });
 
-                customSize.ShowModal(mainForm);
-                if (int.TryParse(customSize.TextValues["Width"], out var width))
-                {
-                    config.WorldSize[0] = width;
-                }
-
-                if (int.TryParse(customSize.TextValues["Height"], out var height))
-                {
-                    config.WorldSize[1] = height;
-                }
+            customSize.ShowModal(mainForm);
+            if (int.TryParse(customSize.TextValues["Width"], out var width))
+            {
+                config.WorldSize[0] = width;
             }
 
-            SelectDifficultly(mainForm, config);
+            if (int.TryParse(customSize.TextValues["Height"], out var height))
+            {
+                config.WorldSize[1] = height;
+            }
         }
 
         private static void SelectDifficultly(Main mainForm, GameInitializationConfig config)
         {
+            
+            config.Rules = RulesParser.ParseRules(config.RuleSet);
             var difficultyDialog = new Civ2dialogV2(mainForm, config.PopUps["DIFFICULTY"]);
             difficultyDialog.ShowModal(mainForm);
 
@@ -129,7 +205,18 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectNumberOfCivs(Main mainForm, GameInitializationConfig config)
         {
-            var numberOfCivsDialog = new Civ2dialogV2(mainForm, config.PopUps["ENEMIES"]);
+            var enemiesPopup = config.PopUps["ENEMIES"];
+            var possibleCivs = MapImages.PlayerColours.Length - 1;
+
+            if (enemiesPopup.Options.Count + 2 != possibleCivs)
+            {
+                var suffix = enemiesPopup.Options[0].Split(" ", 2,
+                    StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)[1];
+                enemiesPopup.Options = Enumerable.Range(0, possibleCivs - 2)
+                    .Select(v => $"{(possibleCivs - v)} {suffix}").ToArray();
+            }
+            var numberOfCivsDialog = new Civ2dialogV2(mainForm, enemiesPopup);
+            
             numberOfCivsDialog.ShowModal(mainForm);
 
             if (numberOfCivsDialog.SelectedIndex == int.MinValue)
@@ -139,8 +226,8 @@ namespace EtoFormsUI.Initialization
             }
 
 
-            config.NumberOfCivs = 7 - (numberOfCivsDialog.SelectedButton == "Random"
-                ? config.Random.Next(0, 5)
+            config.NumberOfCivs = possibleCivs - (numberOfCivsDialog.SelectedButton == "Random"
+                ? config.Random.Next(0, possibleCivs -2)
                 : numberOfCivsDialog.SelectedIndex);
 
             SelectBarbarity(mainForm, config);
@@ -179,15 +266,9 @@ namespace EtoFormsUI.Initialization
 
                 var customizeRules = rulesDialog.SelectedIndex == 1;
 
-                config.SimplifiedCombat = false;
-                config.FlatWorld = false;
-                config.SelectComputerOpponents = false;
-                config.AcceleratedStartup = 0;
-                config.Bloodlust = false;
-                config.DontRestartEliminatedPlayers = false;
                 if (customizeRules)
                 {
-                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] {false, false, false, false, false, false});
+                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] { config.SimplifiedCombat, config.FlatWorld, config.SelectComputerOpponents,config.AcceleratedStartup > 0, config.Bloodlust, config.DontRestartEliminatedPlayers});
                     customRulesDialog.ShowModal(mainForm);
 
                     if (customRulesDialog.SelectedIndex != int.MinValue)
@@ -212,6 +293,7 @@ namespace EtoFormsUI.Initialization
                     }
                 }
 
+                config.MapTask = MapGenerator.GenerateMap(config);
 
                 SelectGender(mainForm, config);
                 break;
@@ -235,7 +317,6 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectTribe(Main mainForm, GameInitializationConfig config)
         {
-            config.Rules = RulesParser.ParseRules(config.RuleSet);
             var popup = config.PopUps["TRIBE"];
             if (!popup.Button.Contains(Labels.Cancel))
             {
@@ -252,11 +333,8 @@ namespace EtoFormsUI.Initialization
             }
 
             var tribe = config.Rules.Leaders[tribeDialog.SelectedIndex];
-            var playerCiv = MakeCivilization(config, tribe);
-            config.Civilizations = new List<Civilization>
-            {
-                playerCiv
-            };
+            config.PlayerCiv = MakeCivilization(config, tribe, true, tribe.Color);
+            
             if (tribeDialog.SelectedButton == Labels.Custom)
             {
                 var tribePopup = config.PopUps["CUSTOMTRIBE"];
@@ -274,19 +352,19 @@ namespace EtoFormsUI.Initialization
                             new()
                             {
                                 index = 0,
-                                InitialValue = playerCiv.LeaderName,
+                                InitialValue = config.PlayerCiv.LeaderName,
                                 Name = "LeaderName"
                             },
                             new()
                             {
                                 index = 1,
-                                InitialValue = playerCiv.TribeName,
+                                InitialValue = config.PlayerCiv.TribeName,
                                 Name = "Tribe"
                             },
                             new()
                             {
                                 index = 2,
-                                InitialValue = playerCiv.Adjective,
+                                InitialValue = config.PlayerCiv.Adjective,
                                 Name = "Adjective"
                             }
                         });
@@ -297,9 +375,9 @@ namespace EtoFormsUI.Initialization
                         return;
                     }
 
-                    playerCiv.LeaderName = customTribe.TextValues["LeaderName"];
-                    playerCiv.Adjective = customTribe.TextValues["Adjective"];
-                    playerCiv.TribeName = customTribe.TextValues["Tribe"];
+                    config.PlayerCiv.LeaderName = customTribe.TextValues["LeaderName"];
+                    config.PlayerCiv.Adjective = customTribe.TextValues["Adjective"];
+                    config.PlayerCiv.TribeName = customTribe.TextValues["Tribe"];
                     if (customTribe.SelectedButton == "Titles")
                     {
                         var titlesPop = config.PopUps["CUSTOMTRIBE2"];
@@ -309,7 +387,7 @@ namespace EtoFormsUI.Initialization
                         {
                             titlesPop.Button.Add(Labels.Cancel);
                         }
-                        var customTitles = new Civ2dialogV2(mainForm, titlesPop, textBoxes: playerCiv.Titles.Select(
+                        var customTitles = new Civ2dialogV2(mainForm, titlesPop, textBoxes: config.PlayerCiv.Titles.Select(
                             ((s, i) => new TextBoxDefinition
                             {
                                 index = i,
@@ -319,7 +397,7 @@ namespace EtoFormsUI.Initialization
                         customTitles.ShowModal(mainForm);
                         if (customTitles.SelectedButton == Labels.Ok)
                         {
-                            playerCiv.Titles = config.Rules.Governments.Select(g => customTitles.TextValues[g.Name])
+                            config.PlayerCiv.Titles = config.Rules.Governments.Select(g => customTitles.TextValues[g.Name])
                                 .ToArray();
                         }
                     }
@@ -343,7 +421,7 @@ namespace EtoFormsUI.Initialization
                     new()
                     {
                         index = 0,
-                        InitialValue = playerCiv.LeaderName,
+                        InitialValue = config.PlayerCiv.LeaderName,
                         Name = "LeaderName"
                     }
                 });
@@ -354,9 +432,9 @@ namespace EtoFormsUI.Initialization
                     return;
                 }
 
-                playerCiv.LeaderName = nameDialog.TextValues["LeaderName"];
+                config.PlayerCiv.LeaderName = nameDialog.TextValues["LeaderName"];
             }
-
+            
             SelectCityStyle(mainForm, config);
         }
 
@@ -374,10 +452,9 @@ namespace EtoFormsUI.Initialization
             var citiesDialog = new Civ2dialogV2(mainForm, citiesPopup,
                 icons: new[]
                 {
-                    MapImages.Cities[7].Bitmap, MapImages.Cities[15].Bitmap, 
-                    MapImages.Cities[23].Bitmap, MapImages.Cities[31].Bitmap
-                });
-            citiesDialog.SelectedIndex = (int)config.Civilizations[0].CityStyle;
+                    MapImages.Cities[7].Bitmap, MapImages.Cities[15].Bitmap, MapImages.Cities[23].Bitmap,
+                    MapImages.Cities[31].Bitmap
+                }) {SelectedIndex = (int) config.PlayerCiv.CityStyle};
             citiesDialog.ShowModal(mainForm);
             if (citiesDialog.SelectedIndex == int.MinValue)
             {
@@ -385,25 +462,99 @@ namespace EtoFormsUI.Initialization
                 return;
             }
 
-            config.Civilizations[0].CityStyle = (CityStyleType) citiesDialog.SelectedIndex;
+            config.PlayerCiv.CityStyle = (CityStyleType) citiesDialog.SelectedIndex;
+            var groupedTribes = config.Rules.Leaders
+                .ToLookup(g => g.Color);
+
+   
+            var civilizations = new List<Civilization>
+            {
+                new () {Adjective = Labels.Items[17], LeaderName = Labels.Items[18], Alive = true, Id = 0},
+                config.PlayerCiv
+            };
+            if (config.SelectComputerOpponents)
+            {  
+                var opponentPop = config.PopUps["OPPONENT"];
+                var opponentNumber = 1;
+                for (var i = 1; civilizations.Count <= config.NumberOfCivs ; i++, opponentNumber++)
+                {
+                    if (i == config.PlayerCiv.Id)
+                    {
+                        opponentNumber--;
+                        continue;
+                    }
+                    
+                    var group = groupedTribes.Contains(i)
+                        ? groupedTribes[i].ToList()
+                        : config.Rules.Leaders
+                            .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
+                    
+                    opponentPop.Options =
+                        new[] {opponentPop.Options[0]}.Concat(@group.Select(leader => $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
+                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: group.Count / 5);
+                    oppDia.ShowModal(mainForm);
+
+                    if (oppDia.SelectedIndex == int.MinValue)
+                    {
+                        SelectCityStyle(mainForm, config);
+                        return;
+                    }
+                    civilizations.Add(MakeCivilization(config,
+                            @group[
+                                oppDia.SelectedIndex == 0
+                                    ? config.Random.Next(0, @group.Count)
+                                    : oppDia.SelectedIndex - 1], false, i));
+                }
+            }
+            else
+            {
+                for (var i = 1; civilizations.Count <= config.NumberOfCivs; i++)
+                {
+                    if (i == config.PlayerCiv.Id) continue;
+
+                    var group = groupedTribes.Contains(i)
+                        ? groupedTribes[i].ToList()
+                        : config.Rules.Leaders
+                            .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
+
+                    civilizations.Add(MakeCivilization(config, @group[config.Random.Next(0, @group.Count)], false,
+                        i));
+                }
+            }
+
+            if (config.PlayerCiv.Id >= civilizations.Count)
+            {
+                var correctColour = MapImages.PlayerColours[config.PlayerCiv.Id];
+                var colours =
+                    new List<PlayerColour>(MapImages.PlayerColours[0..(civilizations.Count - 1)]) {correctColour};
+                MapImages.PlayerColours = colours.ToArray();
+                config.PlayerCiv.Id = MapImages.PlayerColours.Length - 1;
+            }
+
+            var maps = config.MapTask.Result;
             
-            //TODO: Start game...
+            Game.NewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList());
+            
+            Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
+            mainForm.Playgame();
+            config.Started = true;
         }
 
-        private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe)
+        private static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe, bool human, int id)
         {
             var titles = config.Rules.Governments.Select((g, i) => GetLeaderTitle(config, tribe, g, i)).ToArray();
+            var gender = human ? config.Gender : tribe.Female ? 1 : 0;
             return new Civilization
             {
                 Adjective = tribe.Adjective,
                 Alive = true,
                 Government = GovernmentType.Despotism,
-                Id = 0,
+                Id = id,
                 Money = 0,
                 Techs = new bool[config.Rules.Advances.Length],
                 CityStyle = (CityStyleType) tribe.CityStyle,
-                LeaderGender = config.Gender,
-                LeaderName = config.Gender == 0 ? tribe.NameMale : tribe.NameFemale,
+                LeaderGender =gender ,
+                LeaderName = gender == 0 ? tribe.NameMale : tribe.NameFemale,
                 LeaderTitle = titles[(int)GovernmentType.Despotism],
                 LuxRate = 0,
                 ScienceRate = 60,
@@ -419,4 +570,6 @@ namespace EtoFormsUI.Initialization
             return config.Gender == 0 ? govt.TitleMale : govt.TitleFemale;
         }
     }
+
+
 }

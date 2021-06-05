@@ -4,7 +4,7 @@ using Civ2engine.Enums;
 
 namespace Civ2engine.Units
 {
-    internal class Unit : BaseInstance, IUnit
+    public class Unit : BaseInstance, IUnit
     {
         // From RULES.TXT
         public string Name => TypeDefinition.Name;
@@ -348,8 +348,8 @@ namespace Civ2engine.Units
         }
 
         public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
-        public bool IsInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
-        public bool IsLastInStack => Game.GetUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
+        public bool IsInStack => Game.AllUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
+        public bool IsLastInStack => Game.AllUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
         public bool IsInShip
         {
             get
