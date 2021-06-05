@@ -133,6 +133,7 @@ namespace Civ2engine.Units
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
         public int X { get; set; }
+        public int Xreal => (X - Y % 2) / 2;
         public int Y { get; set; }
         public int[] XY => new int[] { X, Y };
         public int MovementCounter { get; set; }

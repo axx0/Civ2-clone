@@ -46,6 +46,7 @@ namespace Civ2engine.Units
         OrderType Order { get; set; }
         int X { get; set; }
         int Y { get; set; }
+        int Xreal { get; }
         int[] XY { get; }
         int Xpx { get; }
         int Ypx { get; }
