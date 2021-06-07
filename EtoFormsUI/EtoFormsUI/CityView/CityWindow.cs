@@ -13,7 +13,7 @@ namespace EtoFormsUI
     public class CityWindow : Civ2form
     {
         private Game Game => Game.Instance;
-        private Map Map => Map.Instance;
+        private Map Map => Game.CurrentMap;
         private readonly MapPanel _parent;
         private readonly ImageButton closeIcon, zoomInIcon, zoomOutIcon;
         private readonly Civ2button infoButton, mapButton, renameButton, happyButton, viewButton, exitButton, buyButton, changeButton;
@@ -87,7 +87,11 @@ namespace EtoFormsUI
 
             // View button
             viewButton = new Civ2button("View", 57.ZoomScale(_cityZoom * 4), 24.ZoomScale(_cityZoom * 4), new Font("Arial", 9.ZoomScale(_cityZoom * 4)));
-            viewButton.Click += ViewButton_Click;
+            viewButton.Click += (sender, _) =>
+            {
+                var cityView = new CityViewWindow(_thisCity);
+                cityView.Show();
+            };
             Layout.Add(viewButton, infoButton.Location.X + 58.ZoomScale(_cityZoom * 4), infoButton.Location.Y + 25.ZoomScale(_cityZoom * 4));
 
             // Exit button
@@ -224,6 +228,8 @@ namespace EtoFormsUI
 
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
+            _paddingTop = _cityZoom == -1 ? 21 : (_cityZoom == 0 ? 27 : 39);
+
             // TITLE
             string text = "";
             int fontSize = 12;
@@ -303,7 +309,10 @@ namespace EtoFormsUI
                             col = count % 5;
                             row = count / 5;
                             Draw.Unit(e.Graphics, unit, false, zoom, new Point(11 + (197 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (216 + 41 * row).ZoomScale(4 * _cityZoom)));
-                            Draw.Text(e.Graphics, unit.HomeCity.Name.Substring(0, 3), font, Colors.Black, new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true, Color.FromArgb(135, 135, 135), 1, 1);  // TODO: doesn't work for <3 characters in city name
+                            if (unit.HomeCity == null)
+                                Draw.Text(e.Graphics, "NON", font, Colors.Black, new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true, Color.FromArgb(135, 135, 135), 1, 1);
+                            else
+                                Draw.Text(e.Graphics, unit.HomeCity.Name.Substring(0, 3), font, Colors.Black, new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true, Color.FromArgb(135, 135, 135), 1, 1);  // TODO: doesn't work for <3 characters in city name
                             count++;
                         }
 
@@ -317,8 +326,8 @@ namespace EtoFormsUI
                 case WhatToDraw.SupportMap:
                     {
                         Color _color;
-                        int _drawingOffsetX = 225;
-                        int _drawingOffsetY = 263;
+                        int _drawingOffsetX = 11 + 107 * (2 + _cityZoom);
+                        int _drawingOffsetY = _paddingTop + 118 * (2 + _cityZoom);
                         int sqW = 2 * (2 + _cityZoom);
                         int sqH = 1 * (2 + _cityZoom);
                         e.Graphics.AntiAlias = false;
@@ -337,12 +346,17 @@ namespace EtoFormsUI
                         foreach(IUnit unit in _thisCity.SupportedUnits.Where(u => u.X != _thisCity.X && u.Y != _thisCity.Y))
                             e.Graphics.FillRectangle(Color.FromArgb(159, 159, 159), _drawingOffsetX + sqW * unit.Xreal, _drawingOffsetY + sqH * unit.Y, sqH, sqH);
                         // Text
-                        Draw.Text(e.Graphics, "Support map", font, Color.FromArgb(223, 187, 63), new Point(310 * (2 + _cityZoom) / 2 + 11, 226 * (2 + _cityZoom) / 2 + _paddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
+                        Draw.Text(e.Graphics, "Support Map", font, Color.FromArgb(223, 187, 63), new Point(310 * (2 + _cityZoom) / 2 + 11, 226 * (2 + _cityZoom) / 2 + _paddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
 
                         break;
                     }
                 case WhatToDraw.HappinessAnalysis:
-                    break;
+                    {
+                        // Text
+                        Draw.Text(e.Graphics, "Happiness Analysis", font, Color.FromArgb(223, 187, 63), new Point(310 * (2 + _cityZoom) / 2 + 11, 226 * (2 + _cityZoom) / 2 + _paddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
+
+                        break;
+                    }
             }
 
             // CITY IMPROVEMENTS LIST
@@ -405,8 +419,6 @@ namespace EtoFormsUI
             //_cityRenamePanel.BringToFront();
             //this.Enabled = false;   // Freze this panel while rename panel is shown
         }
-
-        private void ViewButton_Click(object sender, EventArgs e) { }
 
         private void NextCityButton_Click(object sender, EventArgs e)
         {

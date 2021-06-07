@@ -5,6 +5,7 @@ using Civ2engine.Enums;
 using Civ2engine.Improvements;
 using Civ2engine.Units;
 using Civ2engine.Terrains;
+using System.Diagnostics;
 
 namespace Civ2engine
 {
@@ -283,6 +284,60 @@ namespace Civ2engine
             set
             {
                 _people = value;
+            }
+        }
+
+        private bool _isNextToRiver;
+        public bool IsNextToRiver
+        {
+            get
+            {
+                _isNextToRiver = false;
+                var surroundingTiles = new List<int[]>
+                {
+                    new int[] {X + 0, Y + 0},
+                    new int[] {X - 1, Y - 1},
+                    new int[] {X + 0, Y - 2},
+                    new int[] {X + 1, Y - 1},
+                    new int[] {X + 2, Y + 0},
+                    new int[] {X + 1, Y + 1},
+                    new int[] {X + 0, Y + 2},
+                    new int[] {X - 1, Y + 1},
+                    new int[] {X - 2, Y + 0}
+                };
+                foreach (int[] surroundingTile in surroundingTiles)
+                {
+                    //Debug.WriteLine($"X={X}, Y={Y}, is valid={Map.IsValidTileC2(surroundingTile[0], surroundingTile[1])}");
+                    //Debug.WriteLine($"X={X}, Y={Y}, river={Map.TileC2(surroundingTile[0], surroundingTile[1]).River}");
+                    if (Map.IsValidTileC2(surroundingTile[0], surroundingTile[1]) && Map.TileC2(surroundingTile[0], surroundingTile[1]).River)
+                        _isNextToRiver = true;
+                }
+                    
+                return _isNextToRiver;
+            }
+        }
+
+        private bool _isNextToOcean;
+        public bool IsNextToOcean
+        {
+            get
+            {
+                _isNextToOcean = false;
+                var surroundingTiles = new List<int[]>
+                {
+                    new int[] {X - 1, Y - 1},
+                    new int[] {X + 0, Y - 2},
+                    new int[] {X + 1, Y - 1},
+                    new int[] {X + 2, Y + 0},
+                    new int[] {X + 1, Y + 1},
+                    new int[] {X + 0, Y + 2},
+                    new int[] {X - 1, Y + 1},
+                    new int[] {X - 2, Y + 0}
+                };
+                foreach (int[] surroundingTile in surroundingTiles)
+                    if (Map.IsValidTileC2(surroundingTile[0], surroundingTile[1]) && Map.TileC2(surroundingTile[0], surroundingTile[1]).Type == TerrainType.Ocean)
+                        _isNextToOcean = true;
+                return _isNextToOcean;
             }
         }
     }

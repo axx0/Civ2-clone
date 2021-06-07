@@ -1,4 +1,4 @@
-﻿using Eto.Drawing;
+using Eto.Drawing;
 using System.IO;
 using System.Diagnostics;
 using Civ2engine;

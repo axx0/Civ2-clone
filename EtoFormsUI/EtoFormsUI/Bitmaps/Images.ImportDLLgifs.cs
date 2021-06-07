@@ -19,6 +19,9 @@ namespace EtoFormsUI
         // From Intro.dll
         public static Bitmap SinaiPic;
 
+        // From cv.dll
+        public static Bitmap CityViewLand, CityViewOcean, CityViewRiver;
+
         // Import gifs from various DLL files
         public static void ImportDLLimages()
         {
@@ -96,6 +99,19 @@ namespace EtoFormsUI
 
             // (901) City status wallpaper
             SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
+
+            // ========================================================================================
+            // INTRO.DLL
+            DLLname = "cv.dll";
+            DLLpath = Settings.Civ2Path + DLLname;
+            bytes = File.ReadAllBytes(DLLpath);
+
+            // (340) Empty city view (ocean)
+            CityViewOcean = ExtractBitmapFromDLL(bytes, "9D250", "45423");
+            // (345) Empty city view (river)
+            CityViewRiver = ExtractBitmapFromDLL(bytes, "1B2648", "47B68");
+            // (350) Empty city view (land)
+            CityViewLand = ExtractBitmapFromDLL(bytes, "2D17D8", "48D0A");
 
             extractedGIF.Dispose();
         }
