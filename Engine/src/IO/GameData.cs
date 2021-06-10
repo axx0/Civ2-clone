@@ -39,17 +39,17 @@ namespace Civ2engine
         public string[] CivTribeName { get; set; }
         public string[] CivAdjective { get; set; }
 
-        // Civ tech & money
+        // Civ advances & money
         public int[] RulerGender { get; set; }
         public int[] CivMoney { get; set; }
         public int[] CivNumber { get; set; }
         public int[] CivResearchProgress { get; set; }
-        public int[] CivResearchingTech { get; set; }
+        public int[] CivResearchingAdvance { get; set; }
         public int[] CivSciRate { get; set; }
         public int[] CivTaxRate { get; set; }
         public int[] CivGovernment { get; set; }
         public int[] CivReputation { get; set; }
-        public bool[] CivTechs { get; set; }
+        public bool[] CivAdvances { get; set; }
 
         // Map data
         public int MapXdim { get; set; }
@@ -102,7 +102,7 @@ namespace Civ2engine
         public int[] CityYloc { get; set; }
         public bool[] CityCanBuildCoastal { get; set; }
         public bool[] CityAutobuildMilitaryRule { get; set; }
-        public bool[] CityStolenTech { get; set; }
+        public bool[] CityStolenAdvance { get; set; }
         public bool[] CityImprovementSold { get; set; }
         public bool[] CityWeLoveKingDay { get; set; }
         public bool[] CityCivilDisorder { get; set; }

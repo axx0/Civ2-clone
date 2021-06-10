@@ -40,16 +40,16 @@ namespace Civ2engine
                 CreateCiv(i, gameData.PlayersCivIndex, gameData.CivsInPlay[i], gameData.CivCityStyle[i],
                     gameData.CivLeaderName[i], gameData.CivTribeName[i], gameData.CivAdjective[i],
                     gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i],
-                    gameData.CivResearchProgress[i], gameData.CivResearchingTech[i], gameData.CivSciRate[i],
+                    gameData.CivResearchProgress[i], gameData.CivResearchingAdvance[i], gameData.CivSciRate[i],
                     gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
-                    gameData.CivTechs);
+                    gameData.CivAdvances);
             }
 
             // Create cities
             for (var i = 0; i < gameData.NumberOfCities; i++)
             {
                 CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityCanBuildCoastal[i],
-                    gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenTech[i],
+                    gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenAdvance[i],
                     gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i],
                     gameData.CityCivilDisorder[i], gameData.CityCanBuildShips[i], gameData.CityObjectivex3[i],
                     gameData.CityObjectivex1[i], gameData.CityOwner[i], gameData.CitySize[i],
