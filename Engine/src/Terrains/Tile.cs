@@ -11,12 +11,12 @@ using Civ2engine.Enums;
         public int X { get; }
         public int Y { get; }
 
-        public Terrain Terrain { get; }
-        public TerrainType Type { get; }
+        public Terrain Terrain { get; internal set; }
+
+        public TerrainType Type => Terrain.Type;
 
         public int special { get; } = -1;
 
-        public SpecialType? SpecType { get; }
 
         // Get special resource type based on map seed & tile location
         public Tile(int x, int y, Terrain terrain, int seed)
@@ -27,7 +27,6 @@ using Civ2engine.Enums;
             X = x;
             Y = y;
             Terrain = terrain;
-            Type = terrain.Type;
 
             HasShield = HasSheild();
 
@@ -37,44 +36,7 @@ using Civ2engine.Enums;
             if ((a & 3) + 4 * (b & 3) != (c & 15)) return;
 
             var d = 1 << ((seed >> 4) & 3);
-            if ((d & a) == (d & b))
-            {
-                special = 1;
-                SpecType = Type switch
-                {
-                    TerrainType.Desert => SpecialType.DesertOil,
-                    TerrainType.Plains => SpecialType.Wheat,
-                    TerrainType.Grassland => SpecialType.Grassland2,
-                    TerrainType.Forest => SpecialType.Silk,
-                    TerrainType.Hills => SpecialType.Wine,
-                    TerrainType.Mountains => SpecialType.Iron,
-                    TerrainType.Tundra => SpecialType.Furs,
-                    TerrainType.Glacier => SpecialType.GlacierOil,
-                    TerrainType.Swamp => SpecialType.Spice,
-                    TerrainType.Jungle => SpecialType.Fruit,
-                    TerrainType.Ocean => SpecialType.Whales,
-                    _ => SpecType
-                };
-            }
-            else
-            {
-                special = 0;
-                SpecType = Type switch
-                {
-                    TerrainType.Desert => SpecialType.Oasis,
-                    TerrainType.Plains => SpecialType.Buffalo,
-                    TerrainType.Grassland => SpecialType.Grassland1,
-                    TerrainType.Forest => SpecialType.Pheasant,
-                    TerrainType.Hills => SpecialType.Coal,
-                    TerrainType.Mountains => SpecialType.Gold,
-                    TerrainType.Tundra => SpecialType.Game,
-                    TerrainType.Glacier => SpecialType.Ivory,
-                    TerrainType.Swamp => SpecialType.Peat,
-                    TerrainType.Jungle => SpecialType.Gems,
-                    TerrainType.Ocean => SpecialType.Fish,
-                    _ => SpecType
-                };
-            }
+            special = (d & a) == (d & b) ? 1 : 0;
         }
 
         public bool HasShield { get; }
@@ -145,6 +107,6 @@ using Civ2engine.Enums;
         public int Island { get; set; }
         public string Hexvalue { get; set; }
         public Bitmap Graphic { get; set; }
-
+        
     }
 }

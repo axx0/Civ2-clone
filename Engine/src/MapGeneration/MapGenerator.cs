@@ -31,16 +31,39 @@ namespace Civ2engine
                 {
                     for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
                     {
+                        var odd = y % 2;
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             var terra = config.TerrainData[index++];
-                            mainMap.Tile[x, y] = new Tile(2 * x + (y % 2), y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
+                            mainMap.Tile[x, y] = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
                             {
                                 River = terra > 100
                             };
                             mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
                         }
                     }
+
+                    if (!config.FlatWorld)
+                    {
+                        var ocean = terrains[0][(int)TerrainType.Ocean];
+                        var arctic = terrains[0][(int)TerrainType.Glacier];
+                        var yMax = mainMap.Tile.GetLength(1) - 1;
+                        for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
+                        {
+                            if (mainMap.Tile[x, 0].Terrain == ocean)
+                            {
+                                mainMap.Tile[x, 0].Terrain = arctic;
+                            }                        
+                            if (mainMap.Tile[x, yMax].Terrain == ocean)
+                            {
+                                mainMap.Tile[x, yMax].Terrain = arctic;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    
                 }
 
                 maps[0] = mainMap;
