@@ -18,15 +18,13 @@ namespace Civ2engine
         public bool MapRevealed { get; set; }
         public int WhichCivsMapShown { get; set; }
         public Tile[,] Tile { get; set; }
-        public bool[,][] Visibility { get; set; } // Visibility of tiles for each civ
-        
         public bool IsValidTileC2(int xC2, int yC2)
         {
             var x = (((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2);
             return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;
         }
         public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
-        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Visibility[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2][civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
+        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
         public bool TileHasEnemyUnit(int xC2, int yC2, UnitType unitType) => (Game.UnitsHere(xC2, yC2).Count == 1) && (Game.UnitsHere(xC2, yC2)[0].Type == unitType);
 
         private int _zoom;
@@ -73,7 +71,6 @@ namespace Civ2engine
             ResourceSeed = data.MapResourceSeed;
             LocatorXdim = data.MapLocatorXdim;
             LocatorYdim = data.MapLocatorYdim;
-            Visibility = data.MapVisibilityCivs;
 
             Tile = new Tile[XDim, YDim];
             for (int col = 0; col < XDim; col++)
@@ -95,57 +92,50 @@ namespace Civ2engine
                         Pollution = data.MapPollutionPresent[col, row],
                         Farmland = data.MapFarmlandPresent[col, row],
                         Airbase = data.MapAirbasePresent[col, row],
-                        Island = data.MapIslandNo[col, row]
+                        Island = data.MapIslandNo[col, row],
+                        Visibility = data.MapVisibilityCivs[col,row]
                     };
                 }
             }
         }
 
-        public IEnumerable<int[]> CityRadius(int[] xy)
+        public IEnumerable<Tile> CityRadius(Tile tile)
         {
-            var evenOdd = xy[1] % 2;
-            var coords = new [] { (xy[0] - evenOdd) / 2, xy[1] };
+            var coords = new [] { (tile.X - tile.odd) / 2, tile.Y };
             var offsets = new List<int[]>
             {
-                new[] {0 + evenOdd, -1},
-                new[] {0 + evenOdd, 1},
-                new[] {1 + evenOdd, -1},
+                new[] {0 + tile.odd, -1},
+                new[] {0 + tile.odd, 1},
+                new[] {1 + tile.odd, -1},
                 new[] {1, 0},
-                new[] {1 + evenOdd, 1},
+                new[] {1 + tile.odd, 1},
                 new[] {1, 2},
                 new[] {1, -2},
                 new[] {0, -2},
-                new[] {0 + evenOdd, -3},
+                new[] {0 + tile.odd, -3},
                 new[] {0, 2},
-                new[] {0 + evenOdd, 3},
+                new[] {0 + tile.odd, 3},
                 new[] {-1, 2},
-                new[] {-1 + evenOdd, 1},
+                new[] {-1 + tile.odd, 1},
                 new[] {-1, 0},
-                new[] {-1 + evenOdd, -1},
-                new[] {-2 + evenOdd, -1},
-                new[] {-2 + evenOdd, 1},
+                new[] {-1 + tile.odd, -1},
+                new[] {-2 + tile.odd, -1},
+                new[] {-2 + tile.odd, 1},
                 new[] {-1, -2},
-                new[] {-1 + evenOdd, -3},
-                new[] {-1 + evenOdd, 3}
+                new[] {-1 + tile.odd, -3},
+                new[] {-1 + tile.odd, 3}
             };
             
-            yield return coords;
+            yield return tile;
             foreach (var offset in offsets)
             {
                 var x = coords[0] + offset[0];
                 var y = coords[1] + offset[1];
                 if(x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
-                yield return new[] {x, y};
+                yield return Tile[x,y];
             }
         }
-        
-        public void SetStartingVisibilityC2(int[] unitXy, int ownerId)
-        {
-            foreach (var point in this.CityRadius(unitXy))
-            {
-                Visibility[point[0], point[1]][ownerId] = true;
-            }
-        }
+
 
         public IEnumerable<Tile> DirectNeighbours(Tile candidate)
         {
@@ -191,10 +181,20 @@ namespace Civ2engine
             }
         }
 
-        public void ReduceFertility(Tile tile)
+        public void SetAsStartingLocation(Tile tile, int ownerId)
         {
             tile.Fertility = -1;
-            //TODO: reduce neighbours
+            tile.Visibility[ownerId] = true;
+            foreach (var neighbour in Neighbours(tile))
+            {
+                neighbour.Fertility /= 2;
+            }
+
+            foreach (var radiusTile in CityRadius(tile))
+            {
+                radiusTile.Visibility[ownerId] = true;
+                radiusTile.Fertility /= 2;
+            }
         }
     }
 }

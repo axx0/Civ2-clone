@@ -113,10 +113,6 @@ namespace Civ2engine
             }).ToList();
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
-            foreach (var unit in units)
-            {
-                maps[0].SetStartingVisibilityC2(unit.XY, unit.Owner.Id);
-            }
             
             _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
 
@@ -133,7 +129,7 @@ namespace Civ2engine
                     var tile = map.Tile[pos[0], pos[1]];
                     if (tile.Fertility > -1)
                     {
-                        map.ReduceFertility(tile);
+                        map.SetAsStartingLocation(tile, civilization.Id);
                         return tile;
                     }
                 }
@@ -164,7 +160,7 @@ namespace Civ2engine
             }
 
             var selectedTile = tiles.ElementAt(config.Random.Next(tiles.Count));
-            map.ReduceFertility(selectedTile);
+            map.SetAsStartingLocation(selectedTile, civilization.Id);
             return selectedTile;
         }
 

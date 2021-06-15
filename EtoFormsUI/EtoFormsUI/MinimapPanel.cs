@@ -46,7 +46,7 @@ namespace EtoFormsUI
             // Draw map
             for (var row = 0; row < Map.YDim; row++)
                 for (var col = 0; col < Map.XDim; col++)
-                    if (Map.WhichCivsMapShown == 8 || Map.Visibility[col, row][Map.WhichCivsMapShown])
+                    if (Map.WhichCivsMapShown == 8 || Map.Tile[col, row].Visibility[Map.WhichCivsMapShown])
                     {
                         var drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
                         e.Graphics.FillRectangle(new SolidBrush(drawColor), offset[0] + 2 * col + (row % 2), offset[1] + row, 2, 1);

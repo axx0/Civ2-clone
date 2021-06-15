@@ -11,6 +11,7 @@ using Civ2engine.Enums;
         public int X { get; }
         public int Y { get; }
 
+        public int odd { get; }
         public Terrain Terrain { get; internal set; }
 
         public TerrainType Type => Terrain.Type;
@@ -26,6 +27,7 @@ using Civ2engine.Enums;
             //
             X = x;
             Y = y;
+            odd = y % 2;
             Terrain = terrain;
 
             HasShield = HasSheild();
@@ -108,5 +110,6 @@ using Civ2engine.Enums;
         public string Hexvalue { get; set; }
         public Bitmap Graphic { get; set; }
         public decimal Fertility { get; set; }
+        public bool[] Visibility { get; set; }
     }
 }

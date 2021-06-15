@@ -24,8 +24,7 @@ namespace Civ2engine
                     XDim = width,
                     YDim = height,
                     ResourceSeed = config.ResourceSeed ?? config.Random.Next(0, 64),
-                    Tile = new Tile[width, height],
-                    Visibility = new bool[width, height][]
+                    Tile = new Tile[width, height]
                 };
                 var terrains = config.Rules.Terrains;
                 var index = 0;
@@ -43,15 +42,17 @@ namespace Civ2engine
                             var terra = config.TerrainData[index++];
                             var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
                             {
-                                River = terra > 100
+                                River = terra > 100,
+                                Fertility = -1,
+                                Visibility = new bool[config.NumberOfCivs + 1]
                             };
                             if (tile.Type != TerrainType.Ocean)
                             {
                                 land.Add(tile);
+                                tile.Fertility = 0;
                             }
 
                             mainMap.Tile[x, y] = tile;
-                            mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
                         }
                     }
 
@@ -87,11 +88,11 @@ namespace Civ2engine
                             var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed)
                             {
                                 Island = -1,
-                                Fertility = -1
+                                Fertility = -1,
+                                Visibility = new bool[config.NumberOfCivs + 1]
                             };
                             avaliableLand.Add(tile);
                             mainMap.Tile[x, y] = tile;
-                            mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
                         }
                     }
 
@@ -153,8 +154,7 @@ namespace Civ2engine
                 foreach (var tile in land)
                 {
                     var coastal = mainMap.Neighbours(tile).Any(t => t.Terrain.Type == TerrainType.Ocean);
-                    tile.Fertility = mainMap.CityRadius(new[] {tile.X, tile.Y})
-                        .Select(point => mainMap.Tile[point[0], point[1]]).Sum(
+                    tile.Fertility = mainMap.CityRadius( tile).Sum(
                             nTile =>
                             {
                                 var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special +1];
