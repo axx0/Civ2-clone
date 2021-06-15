@@ -194,8 +194,8 @@ namespace Civ2engine
 
             foreach (var radiusTile in CityRadius(tile))
             {
-                if(radiusTile.Fertility <= 0) continue;
                 radiusTile.Visibility[ownerId] = true;
+                if(radiusTile.Fertility <= 0) continue;
                 radiusTile.Fertility /= 2;
             }
         }
