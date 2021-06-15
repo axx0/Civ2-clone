@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
@@ -21,12 +23,16 @@ namespace Civ2engine
                 {
                     XDim = width,
                     YDim = height,
-                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(0, 64), 
-                    Tile = new Tile[width,height],
-                    Visibility = new bool[width,height][]
+                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(0, 64),
+                    Tile = new Tile[width, height],
+                    Visibility = new bool[width, height][]
                 };
                 var terrains = config.Rules.Terrains;
                 var index = 0;
+
+
+                var yMax = mainMap.Tile.GetLength(1) - 1;
+                var land = new List<Tile>();
                 if (config.TerrainData != null)
                 {
                     for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
@@ -35,25 +41,31 @@ namespace Civ2engine
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             var terra = config.TerrainData[index++];
-                            mainMap.Tile[x, y] = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
+                            var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
                             {
                                 River = terra > 100
                             };
+                            if (tile.Type != TerrainType.Ocean)
+                            {
+                                land.Add(tile);
+                            }
+
+                            mainMap.Tile[x, y] = tile;
                             mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
                         }
                     }
 
                     if (!config.FlatWorld)
                     {
-                        var ocean = terrains[0][(int)TerrainType.Ocean];
-                        var arctic = terrains[0][(int)TerrainType.Glacier];
-                        var yMax = mainMap.Tile.GetLength(1) - 1;
+                        var ocean = terrains[0][(int) TerrainType.Ocean];
+                        var arctic = terrains[0][(int) TerrainType.Glacier];
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             if (mainMap.Tile[x, 0].Terrain == ocean)
                             {
                                 mainMap.Tile[x, 0].Terrain = arctic;
-                            }                        
+                            }
+
                             if (mainMap.Tile[x, yMax].Terrain == ocean)
                             {
                                 mainMap.Tile[x, yMax].Terrain = arctic;
@@ -63,8 +75,78 @@ namespace Civ2engine
                 }
                 else
                 {
-                    
+                    var avaliableLand = new HashSet<Tile>();
+                    var ocean = terrains[0][(int) TerrainType.Ocean];
+                    var arctic = terrains[0][(int) TerrainType.Glacier];
+                    for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
+                    {
+                        var odd = y % 2;
+                        var defaultTerrain = config.FlatWorld || (y > 0 && y < yMax) ? ocean : arctic;
+                        for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
+                        {
+                            var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed)
+                            {
+                                Island = -1
+                            };
+                            avaliableLand.Add(tile);
+                            mainMap.Tile[x, y] = tile;
+                            mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
+                        }
+                    }
+
+                    var landRequired = (area[0] * area[1]) / 4;
+
+                    var landUsed = 0;
+
+                    var minIslandSize = 3;
+
+                    var maxIslandSize = 300;
+
+                    var grassland = terrains[0][(int) TerrainType.Grassland];
+
+                    var continents = 0;
+
+                    while (landUsed < landRequired && avaliableLand.Count > 0)
+                    {
+                        var candidate = avaliableLand.ElementAt(config.Random.Next(avaliableLand.Count));
+                        avaliableLand.Remove(candidate);
+                        land.Add(candidate);
+
+                        var edgeSet = new HashSet<Tile>();
+                        candidate.Island = continents++;
+                        candidate.Terrain = grassland;
+                        var islandTiles = new List<Tile> {candidate};
+
+                        var size = config.Random.Next(minIslandSize, maxIslandSize);
+
+                        foreach (var tile in mainMap.DirectNeighbours(candidate))
+                        {
+                            if (tile.Island != -1) continue;
+                            edgeSet.Add(tile);
+                            avaliableLand.Remove(tile);
+                            tile.Island = 0;
+                        }
+
+                        while (islandTiles.Count < size && edgeSet.Count > 0)
+                        {
+                            var choice = edgeSet.ElementAt(config.Random.Next(edgeSet.Count));
+                            islandTiles.Add(choice);
+                            land.Add(choice);
+
+                            choice.Island = candidate.Island;
+                            choice.Terrain = grassland;
+                            foreach (var tile in mainMap.DirectNeighbours(choice))
+                            {
+                                if (tile.Island != -1 || !avaliableLand.Contains(tile)) continue;
+                                edgeSet.Add(tile);
+                                avaliableLand.Remove(tile);
+                                tile.Island = 0;
+                            }
+                        }
+                    }
                 }
+                
+                
 
                 maps[0] = mainMap;
                 return maps;

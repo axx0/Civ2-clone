@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
@@ -11,7 +12,6 @@ namespace Civ2engine
         public int MapIndex { get; } = 0;
         public int XDim { get; internal set; }
         public int YDim { get; internal set; }
-        public int Area { get; private set; }
         public int ResourceSeed { get; internal set; }
         public int LocatorXdim { get; private set; }
         public int LocatorYdim { get; private set; }
@@ -70,7 +70,6 @@ namespace Civ2engine
         {
             XDim = data.MapXdim;
             YDim = data.MapYdim;
-            Area = data.MapArea;
             ResourceSeed = data.MapResourceSeed;
             LocatorXdim = data.MapLocatorXdim;
             LocatorYdim = data.MapLocatorYdim;
@@ -101,11 +100,11 @@ namespace Civ2engine
                 }
             }
         }
-        
-        public void SetStartingVisibilityS2(int[] unitXy, int ownerId)
+
+        public IEnumerable<int[]> CityRadius(int[] xy)
         {
-            var evenOdd = unitXy[1] % 2;
-            var coords = new [] { (unitXy[0] - evenOdd) / 2, unitXy[1] };
+            var evenOdd = xy[1] % 2;
+            var coords = new [] { (xy[0] - evenOdd) / 2, xy[1] };
             var offsets = new List<int[]>
             {
                 new[] {0 + evenOdd, -1},
@@ -129,15 +128,42 @@ namespace Civ2engine
                 new[] {-1 + evenOdd, -3},
                 new[] {-1 + evenOdd, 3}
             };
-
-            this.Visibility[coords[0], coords[1]][ownerId] = true;
-            //For each offset make the tile visible if it isn't yet
-            foreach (int[] offset in offsets)
+            
+            yield return coords;
+            foreach (var offset in offsets)
             {
                 var x = coords[0] + offset[0];
                 var y = coords[1] + offset[1];
                 if(x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
-                this.Visibility[x, y][ownerId] = true;
+                yield return new[] {x, y};
+            }
+        }
+        
+        public void SetStartingVisibilityC2(int[] unitXy, int ownerId)
+        {
+            foreach (var point in this.CityRadius(unitXy))
+            {
+                Visibility[point[0], point[1]][ownerId] = true;
+            }
+        }
+
+        public IEnumerable<Tile> DirectNeighbours(Tile candidate)
+        {
+            var evenOdd = candidate.Y % 2;
+            var coords = new [] { (candidate.X - evenOdd) / 2, candidate.Y };
+            var offsets = new List<int[]>
+            {
+                new[] {0 + evenOdd, -1},
+                new[] {0 + evenOdd, 1},
+                new[] {-1 + evenOdd, 1},
+                new[] {-1 + evenOdd, -1}
+            };
+            foreach (var offset in offsets)
+            {
+                var x = coords[0] + offset[0];
+                var y = coords[1] + offset[1];
+                if (x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
+                yield return Tile[x, y];
             }
         }
     }

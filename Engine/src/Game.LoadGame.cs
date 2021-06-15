@@ -110,7 +110,7 @@ namespace Civ2engine
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
             foreach (var unit in units)
             {
-                maps[0].SetStartingVisibilityS2(unit.XY, unit.Owner.Id);
+                maps[0].SetStartingVisibilityC2(unit.XY, unit.Owner.Id);
             }
             
             _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
