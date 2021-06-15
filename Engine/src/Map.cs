@@ -166,5 +166,29 @@ namespace Civ2engine
                 yield return Tile[x, y];
             }
         }
+        
+        public IEnumerable<Tile> Neighbours(Tile candidate)
+        {
+            var evenOdd = candidate.Y % 2;
+            var coords = new [] { (candidate.X - evenOdd) / 2, candidate.Y };
+            var offsets = new List<int[]>
+            {
+                new []{ 1, 0},
+                new []{ -1, 0},
+                new []{ 0, -2},
+                new []{ 0 +2},
+                new[] {0 + evenOdd, -1},
+                new[] {0 + evenOdd, 1},
+                new[] {-1 + evenOdd, 1},
+                new[] {-1 + evenOdd, -1}
+            };
+            foreach (var offset in offsets)
+            {
+                var x = coords[0] + offset[0];
+                var y = coords[1] + offset[1];
+                if (x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
+                yield return Tile[x, y];
+            }
+        }
     }
 }

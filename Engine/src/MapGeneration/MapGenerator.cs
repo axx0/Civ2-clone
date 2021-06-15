@@ -86,7 +86,8 @@ namespace Civ2engine
                         {
                             var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed)
                             {
-                                Island = -1
+                                Island = -1,
+                                Fertility = -1
                             };
                             avaliableLand.Add(tile);
                             mainMap.Tile[x, y] = tile;
@@ -100,7 +101,7 @@ namespace Civ2engine
 
                     var minIslandSize = 3;
 
-                    var maxIslandSize = 300;
+                    var maxIslandSize = 30;
 
                     var grassland = terrains[0][(int) TerrainType.Grassland];
 
@@ -143,14 +144,41 @@ namespace Civ2engine
                                 tile.Island = 0;
                             }
                         }
+
+                        landUsed += islandTiles.Count;
                     }
                 }
-                
-                
+
+                var fertilityValues = terrains[0].Select(GetFertilityValue).ToArray();
+                foreach (var tile in land)
+                {
+                    var coastal = mainMap.Neighbours(tile).Any(t => t.Terrain.Type == TerrainType.Ocean);
+                    tile.Fertility = mainMap.CityRadius(new[] {tile.X, tile.Y})
+                        .Select(point => mainMap.Tile[point[0], point[1]]).Sum(
+                            nTile =>
+                            {
+                                var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special];
+                                if (coastal || nTile.Type != TerrainType.Ocean)
+                                {
+                                    return value;
+                                }
+
+                                return -value;
+                            });
+                }
 
                 maps[0] = mainMap;
                 return maps;
             });
+        }
+
+        private static decimal[] GetFertilityValue(Terrain terrain)
+        {
+            var baseValue = terrain.Food * 1.5m + terrain.Shields + terrain.Trade * 0.5m;
+            var specials = terrain.Specials.Select(s => s.Food * 1.5m + s.Shields + s.Trade * 0.5m);
+            var result = new List<decimal> {baseValue};
+            result.AddRange(specials);
+            return result.ToArray();
         }
     }
 }

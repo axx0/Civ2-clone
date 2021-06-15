@@ -107,6 +107,6 @@ using Civ2engine.Enums;
         public int Island { get; set; }
         public string Hexvalue { get; set; }
         public Bitmap Graphic { get; set; }
-        
+        public decimal Fertility { get; set; }
     }
 }
