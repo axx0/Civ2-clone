@@ -126,10 +126,11 @@ namespace Civ2engine
                 var pos = config.StartPositions[index];
                 if (pos[0] != -1 && pos[1] != -1)
                 {
-                    var tile = map.Tile[pos[0], pos[1]];
+                    var tile = map.TileC2(pos[0], pos[1]);
                     if (tile.Fertility > -1)
                     {
                         map.SetAsStartingLocation(tile, civilization.Id);
+                        config.StartTiles.Add(tile);
                         return tile;
                     }
                 }
@@ -159,9 +160,43 @@ namespace Civ2engine
                 }
             }
 
-            var selectedTile = tiles.ElementAt(config.Random.Next(tiles.Count));
+            var selectedTile = tiles.OrderByDescending(t=> DistanceToNearestStart(config, t)).First();
+            
+            config.StartTiles.Add(selectedTile);
             map.SetAsStartingLocation(selectedTile, civilization.Id);
             return selectedTile;
+        }
+
+        private static double DistanceToNearestStart(GameInitializationConfig config, Tile tile)
+        {
+            if (config.StartTiles.Count == 0)
+            {
+                return config.Random.Next();
+            }
+
+            
+            var minDist = DistanceTo(config.StartTiles[0], tile);
+            for (int i = 1; i < config.StartTiles.Count; i++)
+            {
+                var dist = DistanceTo(config.StartTiles[i], tile);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                }
+            }
+
+            return minDist;
+        }
+
+        /// <summary>
+        /// Compute the square euclidian distance between to tiles
+        /// </summary>
+        /// <param name="startTile"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        private static double DistanceTo(Tile startTile, Tile tile)
+        {
+             return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units)
