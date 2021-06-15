@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using ExtensionMethods;
@@ -23,7 +24,7 @@ namespace Civ2engine
             var x = (((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2);
             return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;
         }
-        public ITerrain TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
+        public Tile TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
         public bool TileHasEnemyUnit(int xC2, int yC2, UnitType unitType) => (Game.UnitsHere(xC2, yC2).Count == 1) && (Game.UnitsHere(xC2, yC2)[0].Type == unitType);
 
@@ -183,8 +184,9 @@ namespace Civ2engine
 
         public void SetAsStartingLocation(Tile tile, int ownerId)
         {
-            tile.Fertility = -1;
+            tile.Fertility = -2;
             tile.Visibility[ownerId] = true;
+            var tiles = new HashSet<Tile>();
             foreach (var neighbour in Neighbours(tile))
             {
                 neighbour.Fertility /= 2;
@@ -192,6 +194,7 @@ namespace Civ2engine
 
             foreach (var radiusTile in CityRadius(tile))
             {
+                if(radiusTile.Fertility <= 0) continue;
                 radiusTile.Visibility[ownerId] = true;
                 radiusTile.Fertility /= 2;
             }

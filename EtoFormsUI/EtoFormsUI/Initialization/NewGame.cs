@@ -97,8 +97,6 @@ namespace EtoFormsUI.Initialization
                 config.FlatWorld = mapData.FlatWorld;
                 config.WorldSize = new[] {mapData.Width /2, mapData.Height};
                 config.TerrainData = mapData.TerrainData;
-                config.MapArea = mapData.Area;
-                SelectDifficultly(mainForm, config);
             }
             catch
             {
@@ -106,6 +104,8 @@ namespace EtoFormsUI.Initialization
                 failedToLoad.ShowModal(mainForm);
                 return false;
             }
+            
+            SelectDifficultly(mainForm, config);
             
             return config.Started;
         }

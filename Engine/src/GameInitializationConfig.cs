@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -26,9 +27,9 @@ namespace Civ2engine
         
         public int[][] StartPositions { get; set; }
         public byte[] TerrainData { get; set; }
-        public int MapArea { get; set; }
         public Civilization PlayerCiv { get; set; }
         public Task<Map[]> MapTask { get; set; }
         public bool Started { get; set; }
+        public List<Tile> StartTiles { get; } = new();
     }
 }
