@@ -100,7 +100,7 @@ namespace Civ2engine
                     var landUsed = 0;
 
                     var minIslandSize = 3;
-
+                    
                     var maxIslandSize = 30;
 
                     var grassland = terrains[0][(int) TerrainType.Grassland];
@@ -165,6 +165,10 @@ namespace Civ2engine
 
                                 return -value;
                             });
+                    if (tile.Fertility < 0)
+                    {
+                        tile.Fertility = 0;
+                    }
                 }
 
                 maps[0] = mainMap;
