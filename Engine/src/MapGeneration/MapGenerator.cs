@@ -76,7 +76,7 @@ namespace Civ2engine
                 }
                 else
                 {
-                    var avaliableLand = new HashSet<Tile>();
+                    var remainingTiles = new HashSet<Tile>();
                     var ocean = terrains[0][(int) TerrainType.Ocean];
                     var arctic = terrains[0][(int) TerrainType.Glacier];
                     for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
@@ -91,7 +91,7 @@ namespace Civ2engine
                                 Fertility = -1,
                                 Visibility = new bool[config.NumberOfCivs + 1]
                             };
-                            avaliableLand.Add(tile);
+                            remainingTiles.Add(tile);
                             mainMap.Tile[x, y] = tile;
                         }
                     }
@@ -108,10 +108,10 @@ namespace Civ2engine
 
                     var continents = 0;
 
-                    while (landUsed < landRequired && avaliableLand.Count > 0)
+                    while (landUsed < landRequired && remainingTiles.Count > 0)
                     {
-                        var candidate = avaliableLand.ElementAt(config.Random.Next(avaliableLand.Count));
-                        avaliableLand.Remove(candidate);
+                        var candidate = remainingTiles.ElementAt(config.Random.Next(remainingTiles.Count));
+                        remainingTiles.Remove(candidate);
                         land.Add(candidate);
 
                         var edgeSet = new HashSet<Tile>();
@@ -125,7 +125,7 @@ namespace Civ2engine
                         {
                             if (tile.Island != -1) continue;
                             edgeSet.Add(tile);
-                            avaliableLand.Remove(tile);
+                            remainingTiles.Remove(tile);
                             tile.Island = 0;
                         }
 
@@ -139,9 +139,9 @@ namespace Civ2engine
                             choice.Terrain = grassland;
                             foreach (var tile in mainMap.DirectNeighbours(choice))
                             {
-                                if (tile.Island != -1 || !avaliableLand.Contains(tile)) continue;
+                                if (tile.Island != -1 || !remainingTiles.Contains(tile)) continue;
                                 edgeSet.Add(tile);
-                                avaliableLand.Remove(tile);
+                                remainingTiles.Remove(tile);
                                 tile.Island = 0;
                             }
                         }
@@ -154,17 +154,22 @@ namespace Civ2engine
                 foreach (var tile in land)
                 {
                     var coastal = mainMap.Neighbours(tile).Any(t => t.Terrain.Type == TerrainType.Ocean);
-                    tile.Fertility = mainMap.CityRadius( tile).Sum(
+                    tile.Fertility = mainMap.CityRadius(tile).Sum(
                             nTile =>
                             {
                                 var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special +1];
+                                if (tile.River)
+                                {
+                                    value += 1;
+                                }
                                 if (coastal || nTile.Type != TerrainType.Ocean)
                                 {
                                     return value;
                                 }
 
                                 return -value;
-                            });
+                            }) * (tile.Terrain.CanIrrigate == -1 ? tile.Terrain.Food +1 : tile.Terrain.Food);
+                    
                     if (tile.Fertility < 0)
                     {
                         tile.Fertility = 0;
