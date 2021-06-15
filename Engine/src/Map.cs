@@ -176,7 +176,7 @@ namespace Civ2engine
                 new []{ 1, 0},
                 new []{ -1, 0},
                 new []{ 0, -2},
-                new []{ 0 +2},
+                new []{ 0, 2},
                 new[] {0 + evenOdd, -1},
                 new[] {0 + evenOdd, 1},
                 new[] {-1 + evenOdd, 1},
@@ -189,6 +189,12 @@ namespace Civ2engine
                 if (x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
                 yield return Tile[x, y];
             }
+        }
+
+        public void ReduceFertility(Tile tile)
+        {
+            tile.Fertility = -1;
+            //TODO: reduce neighbours
         }
     }
 }

@@ -157,7 +157,7 @@ namespace Civ2engine
                         .Select(point => mainMap.Tile[point[0], point[1]]).Sum(
                             nTile =>
                             {
-                                var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special];
+                                var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special +1];
                                 if (coastal || nTile.Type != TerrainType.Ocean)
                                 {
                                     return value;

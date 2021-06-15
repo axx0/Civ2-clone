@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.IO;
+using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 namespace Civ2engine
@@ -90,9 +91,13 @@ namespace Civ2engine
         public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
         {
             var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
-            var units = civilizations.Skip(1).Select(c => new
+            var playingCivs = civilizations.Skip(1).ToList();
+            
+            var units = civilizations.Skip(1).Select(c=> new { Civ = c, DefaultStart = config.StartPositions != null ? GetDefaultStart(config, c, maps[0]) : null })
+                .OrderBy( c => c.DefaultStart != null)
+                .Select(c => new
             {
-                Civ = c, StartLocation = GetStartLoc(c, config)
+                c.Civ, StartLocation = c.DefaultStart ?? GetStartLoc(c.Civ, config, maps[0])
             }).Select((c, id) => new Unit
             {
                 Counter = 0,
@@ -102,8 +107,8 @@ namespace Civ2engine
                 Owner = c.Civ,
                 Type = UnitType.Settlers,
                 Veteran = false,
-                X = c.StartLocation[0],
-                Y = c.StartLocation[1],
+                X = c.StartLocation.X,
+                Y = c.StartLocation.Y,
                 TypeDefinition = settlerType
             }).ToList();
 
@@ -117,25 +122,50 @@ namespace Civ2engine
 
         }
 
-
-        private static int[] GetStartLoc(Civilization civilization, GameInitializationConfig config)
+        private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
         {
-            if (config.StartPositions != null)
+            var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
+            if (index > -1 && index < config.StartPositions.Length)
             {
-                var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
-                if (index > -1 && index < config.StartPositions.Length)
+                var pos = config.StartPositions[index];
+                if (pos[0] != -1 && pos[1] != -1)
                 {
-                    var pos = config.StartPositions[index];
-                    if (pos[0] != -1 && pos[1] != -1)
+                    var tile = map.Tile[pos[0], pos[1]];
+                    if (tile.Fertility > -1)
                     {
-                        return pos;
+                        map.ReduceFertility(tile);
+                        return tile;
                     }
                 }
             }
 
-            //TODO: find good random start locations 
-            return new[]
-                {config.Random.Next(2, config.WorldSize[0] - 1), config.Random.Next(2, config.WorldSize[1] - 2)};
+            return null;
+        }
+
+
+        private static Tile GetStartLoc(Civilization civilization, GameInitializationConfig config, Map map)
+        {
+            var maxFertility = 0m;
+            var tiles = new HashSet<Tile>();
+            for (int y = 0; y < map.Tile.GetLength(1); y++)
+            {
+                for (int x = 0; x < map.Tile.GetLength(0); x++)
+                {
+                    var tile = map.Tile[x, y];
+                    if(tile.Fertility < maxFertility) continue;
+                    if (tile.Fertility > maxFertility)
+                    {
+                        tiles.Clear();
+                        maxFertility = tile.Fertility;
+                    }
+
+                    tiles.Add(tile);
+                }
+            }
+
+            var selectedTile = tiles.ElementAt(config.Random.Next(tiles.Count));
+            map.ReduceFertility(selectedTile);
+            return selectedTile;
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units)
