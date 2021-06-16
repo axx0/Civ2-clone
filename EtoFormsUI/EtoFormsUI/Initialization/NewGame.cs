@@ -110,6 +110,15 @@ namespace EtoFormsUI.Initialization
             return config.Started;
         }
 
+        private static int CustomWorldDialog(Main mainForm, PopupBox configPopUp, GameInitializationConfig config)
+        {
+            var dialog = new Civ2dialogV2(mainForm, configPopUp);
+
+            dialog.ShowModal(mainForm);
+
+            return dialog.SelectedButton == configPopUp.Button[0] ? config.Random.Next(configPopUp.Options.Count) : dialog.SelectedIndex;
+        }
+
         internal static void Start(Main mainForm, bool customizeWorld)
         {
             var config = new GameInitializationConfig
@@ -133,7 +142,48 @@ namespace EtoFormsUI.Initialization
                 GetWorldSize(mainForm, config);
                 if (customizeWorld)
                 {
+                    var configPopUp = config.PopUps["CUSTOMLAND"];
+
+                    config.PropLand = CustomWorldDialog(mainForm, configPopUp, config);
+                    if (config.PropLand == int.MinValue)
+                    {
+                        mainForm.MainMenu();
+                        return;
+                    }
                     
+                    configPopUp = config.PopUps["CUSTOMFORM"];
+
+                    config.Landform = CustomWorldDialog(mainForm, configPopUp, config);
+                    if (config.Landform == int.MinValue)
+                    {
+                        mainForm.MainMenu();
+                        return;
+                    }
+                    
+                    configPopUp = config.PopUps["CUSTOMCLIMATE"];
+                    config.Climate = CustomWorldDialog(mainForm, configPopUp, config);
+                    if (config.Climate == int.MinValue)
+                    {
+                        mainForm.MainMenu();
+                        return;
+                    }                    
+                    
+                    configPopUp = config.PopUps["CUSTOMTEMP"];
+
+                    config.Temperature = CustomWorldDialog(mainForm, configPopUp, config);
+                    if (config.Temperature == int.MinValue)
+                    {
+                        mainForm.MainMenu();
+                        return;
+                    }                    
+                    configPopUp = config.PopUps["CUSTOMAGE"];
+
+                    config.Age = CustomWorldDialog(mainForm, configPopUp, config);
+                    if (config.Age == int.MinValue)
+                    {
+                        mainForm.MainMenu();
+                        return;
+                    }
                 }
                 
                 

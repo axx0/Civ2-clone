@@ -31,5 +31,10 @@ namespace Civ2engine
         public Task<Map[]> MapTask { get; set; }
         public bool Started { get; set; }
         public List<Tile> StartTiles { get; } = new();
+        public int PropLand { get; set; } = 1;
+        public int Landform { get; set; } = 1;
+        public int Climate { get; set; } = 1;
+        public int Temperature { get; set; } = 1;
+        public int Age { get; set; } = 1;
     }
 }
