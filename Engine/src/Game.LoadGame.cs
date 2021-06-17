@@ -22,8 +22,7 @@ namespace Civ2engine
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
-            _options = new Options();
-            _options.Set(gameData.OptionsArray);
+            _options = new Options(gameData.OptionsArray);
 
             _turnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
@@ -91,7 +90,6 @@ namespace Civ2engine
         public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
         {
             var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
-            var playingCivs = civilizations.Skip(1).ToList();
             
             var units = civilizations.Skip(1).Select(c=> new { Civ = c, DefaultStart = config.StartPositions != null ? GetDefaultStart(config, c, maps[0]) : null })
                 .OrderBy( c => c.DefaultStart != null)
@@ -114,8 +112,7 @@ namespace Civ2engine
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
             
-            _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
-
+            _instance = new Game(maps, config.Rules, civilizations, units, new Options(config)) {_playerCiv = config.PlayerCiv};
         }
 
         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
@@ -199,9 +196,9 @@ namespace Civ2engine
              return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
 
-        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units)
+        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units, Options options)
         {
-            _options = new Options();
+            _options = options;
             _maps = maps;
             GetCivs.AddRange(civilizations);
             AllUnits.AddRange(units);
