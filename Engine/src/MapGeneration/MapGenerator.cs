@@ -151,6 +151,14 @@ namespace Civ2engine
                             }
                         }
 
+                        foreach (var neighbour in edgeSet.SelectMany(tile =>
+                            mainMap.DirectNeighbours(tile).Where(n =>
+                                n.Island == -1 && mainMap.Neighbours(n).Any(t => t.Type != TerrainType.Ocean))))
+                        {
+                            remainingTiles.Remove(neighbour);
+                            neighbour.Island = 0;
+                        }
+
                         landUsed += islandTiles.Count;
                     }
                 }
