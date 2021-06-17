@@ -7,7 +7,7 @@ namespace Civ2engine
 {
     public class GameInitializationConfig
     {
-        public Random Random { get; set; } = new ();
+        public FastRandom Random { get; set; } = new (1);
         public Ruleset RuleSet { get; set; }
         
         public Dictionary<string,PopupBox> PopUps { get; set; }

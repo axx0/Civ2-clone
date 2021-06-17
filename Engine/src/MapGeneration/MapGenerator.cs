@@ -23,7 +23,7 @@ namespace Civ2engine
                 {
                     XDim = width,
                     YDim = height,
-                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(0, 64),
+                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(64),
                     Tile = new Tile[width, height]
                 };
                 var terrains = config.Rules.Terrains;
@@ -115,7 +115,7 @@ namespace Civ2engine
 
                     while (landUsed < landRequired && remainingTiles.Count > 0)
                     {
-                        var candidate = remainingTiles.ElementAt(config.Random.Next(remainingTiles.Count));
+                        var candidate = config.Random.ChooseFrom<Tile>(remainingTiles);
                         remainingTiles.Remove(candidate);
                         land.Add(candidate);
 
@@ -136,7 +136,7 @@ namespace Civ2engine
 
                         while (islandTiles.Count < size && edgeSet.Count > 0)
                         {
-                            var choice = edgeSet.ElementAt(config.Random.Next(edgeSet.Count));
+                            var choice = config.Random.ChooseFrom(edgeSet);
                             islandTiles.Add(choice);
                             land.Add(choice);
 

@@ -277,7 +277,7 @@ namespace EtoFormsUI.Initialization
 
 
             config.NumberOfCivs = possibleCivs - (numberOfCivsDialog.SelectedButton == "Random"
-                ? config.Random.Next(0, possibleCivs -2)
+                ? config.Random.Next(possibleCivs -2)
                 : numberOfCivsDialog.SelectedIndex);
 
             SelectBarbarity(mainForm, config);
@@ -295,7 +295,7 @@ namespace EtoFormsUI.Initialization
             }
 
             config.BarbarianActivity = (barbarityDialog.SelectedButton == "Random"
-                ? config.Random.Next(0, 4)
+                ? config.Random.Next(4)
                 : barbarityDialog.SelectedIndex);
 
             SelectCustomizeRules(mainForm, config);
@@ -534,14 +534,14 @@ namespace EtoFormsUI.Initialization
                         continue;
                     }
                     
-                    var group = groupedTribes.Contains(i)
+                    var tribes = groupedTribes.Contains(i)
                         ? groupedTribes[i].ToList()
                         : config.Rules.Leaders
                             .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
                     
                     opponentPop.Options =
-                        new[] {opponentPop.Options[0]}.Concat(@group.Select(leader => $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
-                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: group.Count / 5);
+                        new[] {opponentPop.Options[0]}.Concat(tribes.Select(leader => $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
+                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: tribes.Count / 5);
                     oppDia.ShowModal(mainForm);
 
                     if (oppDia.SelectedIndex == int.MinValue)
@@ -550,9 +550,9 @@ namespace EtoFormsUI.Initialization
                         return;
                     }
                     civilizations.Add(MakeCivilization(config,
-                            @group[
+                            tribes[
                                 oppDia.SelectedIndex == 0
-                                    ? config.Random.Next(0, @group.Count)
+                                    ? config.Random.Next(tribes.Count)
                                     : oppDia.SelectedIndex - 1], false, i));
                 }
             }
@@ -562,12 +562,12 @@ namespace EtoFormsUI.Initialization
                 {
                     if (i == config.PlayerCiv.Id) continue;
 
-                    var group = groupedTribes.Contains(i)
+                    var tribes = groupedTribes.Contains(i)
                         ? groupedTribes[i].ToList()
                         : config.Rules.Leaders
                             .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
 
-                    civilizations.Add(MakeCivilization(config, @group[config.Random.Next(0, @group.Count)], false,
+                    civilizations.Add(MakeCivilization(config, config.Random.ChooseFrom(tribes), false,
                         i));
                 }
             }
@@ -576,7 +576,7 @@ namespace EtoFormsUI.Initialization
             {
                 var correctColour = MapImages.PlayerColours[config.PlayerCiv.Id];
                 var colours =
-                    new List<PlayerColour>(MapImages.PlayerColours[0..(civilizations.Count - 1)]) {correctColour};
+                    new List<PlayerColour>(MapImages.PlayerColours[..(civilizations.Count - 1)]) {correctColour};
                 MapImages.PlayerColours = colours.ToArray();
                 config.PlayerCiv.Id = MapImages.PlayerColours.Length - 1;
             }
