@@ -96,7 +96,12 @@ namespace Civ2engine
                         }
                     }
 
-                    var landRequired = (area[0] * area[1]) / 4;
+                    var landRequired = config.PropLand switch
+                    {
+                        0 => (area[0] * area[1]) / 6,
+                        1 => (area[0] * area[1]) / 4,
+                        _ => (area[0] * area[1]) / 2
+                    };
 
                     var landUsed = 0;
 
