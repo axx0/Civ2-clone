@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
@@ -21,31 +23,184 @@ namespace Civ2engine
                 {
                     XDim = width,
                     YDim = height,
-                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(0, 64), 
-                    Tile = new Tile[width,height],
-                    Visibility = new bool[width,height][]
+                    ResourceSeed = config.ResourceSeed ?? config.Random.Next(64),
+                    Tile = new Tile[width, height]
                 };
                 var terrains = config.Rules.Terrains;
                 var index = 0;
+
+
+                var yMax = mainMap.Tile.GetLength(1) - 1;
+                var land = new List<Tile>();
                 if (config.TerrainData != null)
                 {
                     for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
                     {
+                        var odd = y % 2;
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             var terra = config.TerrainData[index++];
-                            mainMap.Tile[x, y] = new Tile(2 * x + (y % 2), y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
+                            var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
                             {
-                                River = terra > 100
+                                River = terra > 100,
+                                Fertility = -1,
+                                Visibility = new bool[config.NumberOfCivs + 1]
                             };
-                            mainMap.Visibility[x, y] = new bool[config.NumberOfCivs + 1];
+                            if (tile.Type != TerrainType.Ocean)
+                            {
+                                land.Add(tile);
+                                tile.Fertility = 0;
+                            }
+
+                            mainMap.Tile[x, y] = tile;
                         }
+                    }
+
+                    if (!config.FlatWorld)
+                    {
+                        var ocean = terrains[0][(int) TerrainType.Ocean];
+                        var arctic = terrains[0][(int) TerrainType.Glacier];
+                        for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
+                        {
+                            if (mainMap.Tile[x, 0].Terrain == ocean)
+                            {
+                                mainMap.Tile[x, 0].Terrain = arctic;
+                            }
+
+                            if (mainMap.Tile[x, yMax].Terrain == ocean)
+                            {
+                                mainMap.Tile[x, yMax].Terrain = arctic;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    var remainingTiles = new HashSet<Tile>();
+                    var ocean = terrains[0][(int) TerrainType.Ocean];
+                    var arctic = terrains[0][(int) TerrainType.Glacier];
+                    for (int y = 0; y < mainMap.Tile.GetLength(1); y++)
+                    {
+                        var odd = y % 2;
+                        var defaultTerrain = config.FlatWorld || (y > 0 && y < yMax) ? ocean : arctic;
+                        for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
+                        {
+                            var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed)
+                            {
+                                Island = -1,
+                                Fertility = -1,
+                                Visibility = new bool[config.NumberOfCivs + 1]
+                            };
+                            remainingTiles.Add(tile);
+                            mainMap.Tile[x, y] = tile;
+                        }
+                    }
+
+                    var landRequired = config.PropLand switch
+                    {
+                        0 => (area[0] * area[1]) / 6,
+                        1 => (area[0] * area[1]) / 4,
+                        _ => (area[0] * area[1]) / 2
+                    };
+
+                    var landUsed = 0;
+
+                    var minIslandSize = 3;
+                    
+                    var maxIslandSize = 30;
+
+                    var grassland = terrains[0][(int) TerrainType.Grassland];
+
+                    var continents = 0;
+
+                    while (landUsed < landRequired && remainingTiles.Count > 0)
+                    {
+                        var candidate = config.Random.ChooseFrom<Tile>(remainingTiles);
+                        remainingTiles.Remove(candidate);
+                        land.Add(candidate);
+
+                        var edgeSet = new HashSet<Tile>();
+                        candidate.Island = continents++;
+                        candidate.Terrain = grassland;
+                        var islandTiles = new List<Tile> {candidate};
+
+                        var size = config.Random.Next(minIslandSize, maxIslandSize);
+
+                        foreach (var tile in mainMap.DirectNeighbours(candidate))
+                        {
+                            if (tile.Island != -1) continue;
+                            edgeSet.Add(tile);
+                            remainingTiles.Remove(tile);
+                            tile.Island = 0;
+                        }
+
+                        while (islandTiles.Count < size && edgeSet.Count > 0)
+                        {
+                            var choice = config.Random.ChooseFrom(edgeSet);
+                            islandTiles.Add(choice);
+                            land.Add(choice);
+
+                            choice.Island = candidate.Island;
+                            choice.Terrain = grassland;
+                            foreach (var tile in mainMap.DirectNeighbours(choice))
+                            {
+                                if (tile.Island != -1 || !remainingTiles.Contains(tile)) continue;
+                                edgeSet.Add(tile);
+                                remainingTiles.Remove(tile);
+                                tile.Island = 0;
+                            }
+                        }
+
+                        foreach (var neighbour in edgeSet.SelectMany(tile =>
+                            mainMap.DirectNeighbours(tile).Where(n =>
+                                n.Island == -1 && mainMap.Neighbours(n).Any(t => t.Type != TerrainType.Ocean))))
+                        {
+                            remainingTiles.Remove(neighbour);
+                            neighbour.Island = 0;
+                        }
+
+                        landUsed += islandTiles.Count;
+                    }
+                }
+
+                var fertilityValues = terrains[0].Select(GetFertilityValue).ToArray();
+                foreach (var tile in land)
+                {
+                    var coastal = mainMap.Neighbours(tile).Any(t => t.Terrain.Type == TerrainType.Ocean);
+                    tile.Fertility = mainMap.CityRadius(tile).Sum(
+                            nTile =>
+                            {
+                                var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special +1];
+                                if (tile.River)
+                                {
+                                    value += 1;
+                                }
+                                if (coastal || nTile.Type != TerrainType.Ocean)
+                                {
+                                    return value;
+                                }
+
+                                return -value;
+                            }) * (tile.Terrain.CanIrrigate == -1 ? tile.Terrain.Food +1 : tile.Terrain.Food);
+                    
+                    if (tile.Fertility < 0)
+                    {
+                        tile.Fertility = 0;
                     }
                 }
 
                 maps[0] = mainMap;
                 return maps;
             });
+        }
+
+        private static decimal[] GetFertilityValue(Terrain terrain)
+        {
+            var baseValue = terrain.Food * 1.5m + terrain.Shields + terrain.Trade * 0.5m;
+            var specials = terrain.Specials.Select(s => s.Food * 1.5m + s.Shields + s.Trade * 0.5m);
+            var result = new List<decimal> {baseValue};
+            result.AddRange(specials);
+            return result.ToArray();
         }
     }
 }

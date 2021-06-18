@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.IO;
+using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 namespace Civ2engine
@@ -21,8 +22,7 @@ namespace Civ2engine
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
-            _options = new Options();
-            _options.Set(gameData.OptionsArray);
+            _options = new Options(gameData.OptionsArray);
 
             _turnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
@@ -90,9 +90,12 @@ namespace Civ2engine
         public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
         {
             var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
-            var units = civilizations.Skip(1).Select(c => new
+            
+            var units = civilizations.Skip(1).Select(c=> new { Civ = c, DefaultStart = config.StartPositions != null ? GetDefaultStart(config, c, maps[0]) : null })
+                .OrderBy( c => c.DefaultStart != null)
+                .Select(c => new
             {
-                Civ = c, StartLocation = GetStartLoc(c, config)
+                c.Civ, StartLocation = c.DefaultStart ?? GetStartLoc(c.Civ, config, maps[0])
             }).Select((c, id) => new Unit
             {
                 Counter = 0,
@@ -102,45 +105,100 @@ namespace Civ2engine
                 Owner = c.Civ,
                 Type = UnitType.Settlers,
                 Veteran = false,
-                X = c.StartLocation[0],
-                Y = c.StartLocation[1],
+                X = c.StartLocation.X,
+                Y = c.StartLocation.Y,
                 TypeDefinition = settlerType
             }).ToList();
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
-            foreach (var unit in units)
-            {
-                maps[0].SetStartingVisibilityS2(unit.XY, unit.Owner.Id);
-            }
             
-            _instance = new Game(maps, config.Rules, civilizations, units) {_playerCiv = config.PlayerCiv};
-
+            _instance = new Game(maps, config.Rules, civilizations, units, new Options(config)) {_playerCiv = config.PlayerCiv};
         }
 
-
-        private static int[] GetStartLoc(Civilization civilization, GameInitializationConfig config)
+        private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
         {
-            if (config.StartPositions != null)
+            var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
+            if (index > -1 && index < config.StartPositions.Length)
             {
-                var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
-                if (index > -1 && index < config.StartPositions.Length)
+                var pos = config.StartPositions[index];
+                if (pos[0] != -1 && pos[1] != -1)
                 {
-                    var pos = config.StartPositions[index];
-                    if (pos[0] != -1 && pos[1] != -1)
+                    var tile = map.TileC2(pos[0], pos[1]);
+                    if (tile.Fertility > -1)
                     {
-                        return pos;
+                        map.SetAsStartingLocation(tile, civilization.Id);
+                        config.StartTiles.Add(tile);
+                        return tile;
                     }
                 }
             }
 
-            //TODO: find good random start locations 
-            return new[]
-                {config.Random.Next(2, config.WorldSize[0] - 1), config.Random.Next(2, config.WorldSize[1] - 2)};
+            return null;
         }
 
-        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units)
+
+        private static Tile GetStartLoc(Civilization civilization, GameInitializationConfig config, Map map)
         {
-            _options = new Options();
+            var maxFertility = 0m;
+            var tiles = new HashSet<Tile>();
+            for (int y = 0; y < map.Tile.GetLength(1); y++)
+            {
+                for (int x = 0; x < map.Tile.GetLength(0); x++)
+                {
+                    var tile = map.Tile[x, y];
+                    if(tile.Fertility < maxFertility) continue;
+                    if (tile.Fertility > maxFertility)
+                    {
+                        tiles.Clear();
+                        maxFertility = tile.Fertility;
+                    }
+
+                    tiles.Add(tile);
+                }
+            }
+
+            var selectedTile = tiles.OrderByDescending(t=> DistanceToNearestStart(config, t)).First();
+            
+            config.StartTiles.Add(selectedTile);
+            map.SetAsStartingLocation(selectedTile, civilization.Id);
+            return selectedTile;
+        }
+
+        private static double DistanceToNearestStart(GameInitializationConfig config, Tile tile)
+        {
+            if (config.StartTiles.Count == 0)
+            {
+                return config.Random.Next();
+            }
+
+            
+            var minDist = DistanceTo(config.StartTiles[0], tile);
+            for (int i = 1; i < config.StartTiles.Count; i++)
+            {
+                var dist = DistanceTo(config.StartTiles[i], tile);
+                if (dist < minDist)
+                {
+                    minDist = dist;
+                }
+            }
+
+            return minDist;
+        }
+
+        /// <summary>
+        /// Compute the square euclidian distance between to tiles
+        /// </summary>
+        /// <param name="startTile"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        private static double DistanceTo(Tile startTile, Tile tile)
+        {
+             return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
+        }
+
+        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units, Options options)
+        {
+            _options = options;
             _maps = maps;
             GetCivs.AddRange(civilizations);
             AllUnits.AddRange(units);

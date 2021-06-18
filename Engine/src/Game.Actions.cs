@@ -85,7 +85,7 @@ namespace Civ2engine
                 int[] coords = _activeUnit.XY.Civ2xy();
                 coords[0] += offset[0];
                 coords[1] += offset[1];
-                Map.Visibility[coords[0], coords[1]][_activeCiv.Id] = true;
+                Map.Tile[coords[0], coords[1]].Visibility[_activeCiv.Id] = true;
             }
 
             //Update the map image
