@@ -2,6 +2,14 @@
 {
     public class Options
     {
+        public Options(GameInitializationConfig config)
+        {
+            SimplifiedCombat = config.SimplifiedCombat;
+            Bloodlust = config.Bloodlust;
+            DontRestartIfEliminated = config.DontRestartEliminatedPlayers;
+            FlatEarth = config.FlatWorld;
+        }
+
         // START GAME RULES
         public bool SimplifiedCombat { get; private set; }
         public bool Bloodlust { get; private set; }
@@ -46,7 +54,7 @@
         public bool CheatPenaltyWarning { get; set; }
         public bool Grid { get; set; }
 
-        public void Set(bool[] optionsArray)
+        public Options(bool[] optionsArray)
         {
             SimplifiedCombat = optionsArray[0];
             Bloodlust = optionsArray[1];

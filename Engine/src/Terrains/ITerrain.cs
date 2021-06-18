@@ -44,6 +44,5 @@ namespace Civ2engine.Terrains
         int Island { get; set; }
         string Hexvalue { get; set; }
         Bitmap Graphic { get; set; }
-        SpecialType? SpecType { get; }
     }
 }
