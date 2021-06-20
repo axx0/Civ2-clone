@@ -33,7 +33,7 @@ namespace Civ2engine
             }
 
             // Reset turns of all units
-            foreach (var unit in GetActiveUnits.Where(n => n.Owner == _activeCiv))
+            foreach (var unit in ActiveUnits.Where(n => n.Owner == _activeCiv))
             {
                 unit.MovePointsLost = 0;
 
@@ -50,7 +50,7 @@ namespace Civ2engine
             OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
         }
 
-        public void DeleteUnit(IUnit unit)
+        public void DeleteUnit(Unit unit)
         {
             if (_activeUnit == unit)
             {

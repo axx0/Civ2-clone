@@ -7,6 +7,12 @@ namespace EtoFormsUI
     {
         private void KeyPressedEvent(object sender, KeyEventArgs e)
         {
+            if (CurrentGameMode.Actions.ContainsKey(e.Key))
+            {
+                CurrentGameMode.Actions[e.Key].TriggerAction();
+                return;
+            }
+        
             switch (e.Key)
             {
                 case Keys.Enter:

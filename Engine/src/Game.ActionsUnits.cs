@@ -132,7 +132,7 @@ namespace Civ2engine
             if (_activeCiv == _playerCiv)
             {
                 // If active unit died OR is not waiting order, chose next unit in line, otherwise update its orders
-                if (!_activeUnit.AwaitingOrders || !GetActiveUnits.Contains(_activeUnit))
+                if (!_activeUnit.AwaitingOrders || !ActiveUnits.Contains(_activeUnit))
                 {
                     ChooseNextUnit();
                 }
@@ -187,7 +187,7 @@ namespace Civ2engine
             // AI
             else
             {
-                if (!_activeUnit.AwaitingOrders || !GetActiveUnits.Contains(_activeUnit))
+                if (!_activeUnit.AwaitingOrders || !ActiveUnits.Contains(_activeUnit))
                 {
                     ChooseNextUnit();
                 }
@@ -201,7 +201,7 @@ namespace Civ2engine
         private void ChooseNextUnit()
         {
             
-            IUnit nextUnit = null;
+            Unit nextUnit = null;
             int unitIndex;
             for (unitIndex = _activeUnit.Id + 1; unitIndex < AllUnits.Count && nextUnit == null; unitIndex++)
             {

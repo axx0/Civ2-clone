@@ -342,7 +342,7 @@ namespace EtoFormsUI
             // First draw squares around city
             int newX, newY;
             City cityHere;
-            List<IUnit> unitsHere;
+            List<Unit> unitsHere;
             for (int y_ = -3; y_ <= 3; y_++)
             {
                 for (int x_ = -3; x_ <= 3; x_++)

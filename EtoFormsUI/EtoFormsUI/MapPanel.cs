@@ -119,12 +119,12 @@ namespace EtoFormsUI
                         }
                     case AnimationType.UnitMoving:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
+                            e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.ActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
                             break;
                         }
                     case AnimationType.Attack:
                         {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.GetActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.GetActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
+                            e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.ActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
                             break;
                         }
                 }
@@ -176,8 +176,13 @@ namespace EtoFormsUI
                     // Single unit on square
                     if (unitsHere.Count == 1)
                     {
-                        Game.SetActiveUnit(unitsHere.First());
-                        unitsHere.First().Order = OrderType.NoOrders;   // Always clear order when clicked, no matter if the unit is activated
+                        var unit = unitsHere[0];
+                        if (!unit.TurnEnded)
+                        {
+                            Game.ActiveUnit = unit;
+                        }
+
+                        unit.Order = OrderType.NoOrders;   // Always clear order when clicked, no matter if the unit is activated
                         Map.ViewPieceMode = false;
                         MapViewChange(clickedXY);
                     }
@@ -189,7 +194,7 @@ namespace EtoFormsUI
 
                         if (selectUnitDialog.SelectedIndex >= 0)
                         {
-                            Game.SetActiveUnit(unitsHere[selectUnitDialog.SelectedIndex]);
+                            Game.ActiveUnit = unitsHere[selectUnitDialog.SelectedIndex];
                             Map.ViewPieceMode = false;
                             MapViewChange(clickedXY);
                         }
@@ -318,7 +323,7 @@ namespace EtoFormsUI
             {
                 case PlayerEventType.NewTurn:
                     {
-                        if (Game.GetActiveUnit != null) Map.ViewPieceMode = false;
+                        if (Game.ActiveUnit != null) Map.ViewPieceMode = false;
                         animationTimer.Stop();
                         animationCount = 0;
                         animationTimer.Start();
@@ -383,7 +388,7 @@ namespace EtoFormsUI
                     break;
                 case AnimationType.UnitMoving:
                     animType = AnimationType.UnitMoving;
-                    animationFrames = GetAnimationFrames.UnitMoving(Game.GetActiveUnit);
+                    animationFrames = GetAnimationFrames.UnitMoving(Game.ActiveUnit);
                     animationTimer.Stop();
                     animationCount = 0;
                     animationTimer.Interval = 0.02;    // sec
@@ -437,14 +442,10 @@ namespace EtoFormsUI
         }
         #endregion
 
-        private bool IsActiveSquareOutsideMapView
-        {
-            get
-            {
-                if (Map.ActiveXY[0] >= mapStartXY[0] + PanelSq[0] - 2 || Map.ActiveXY[0] <= mapStartXY[0] || Map.ActiveXY[1] >= mapStartXY[1] + PanelSq[1] - 2 || Map.ActiveXY[1] <= mapStartXY[1]) return true;
-                else return false;
-            }
-        }
+        private bool IsActiveSquareOutsideMapView => Map.ActiveXY[0] >= mapStartXY[0] + PanelSq[0] - 2 ||
+                                                     Map.ActiveXY[0] <= mapStartXY[0] ||
+                                                     Map.ActiveXY[1] >= mapStartXY[1] + PanelSq[1] - 2 ||
+                                                     Map.ActiveXY[1] <= mapStartXY[1];
 
         // Function which sets various variables for drawing map on grid
         private void SetCoordsAtMapViewChange(int[] proposedCentralCoords)

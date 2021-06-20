@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using EtoFormsUI.GameModes;
 
 namespace EtoFormsUI
 {
@@ -15,11 +16,18 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
         private Map Map => Game.CurrentMap;
+        public IGameMode CurrentGameMode { get; set; }
+
+        private Processing Processing = new();
+        private MovingPieces Moving;
+        private ViewPiece View;
+
         private readonly PixelLayout layout;
         private MapPanel mapPanel;
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
-        private List<PopupBox> popupBoxList;
+        
+        internal Dictionary<string, PopupBox> popupBoxList;
         public Sound Sounds;
         public static event EventHandler<PopupboxEventArgs> OnPopupboxEvent;
         public static event EventHandler<MapEventArgs> OnMapEvent;
@@ -208,6 +216,13 @@ namespace EtoFormsUI
 
             // Load popup boxes info (Game.txt)
             popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        }
+        
+        private void SetupGameModes()
+        {
+            View = new ViewPiece();
+            Moving = new MovingPieces(this);
+            CurrentGameMode = Moving;
         }
     }
 }

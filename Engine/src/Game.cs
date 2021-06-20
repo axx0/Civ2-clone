@@ -15,10 +15,10 @@ namespace Civ2engine
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         
-        public List<IUnit> AllUnits { get; } = new();
+        public List<Unit> AllUnits { get; } = new();
 
-        public List<IUnit> GetCasualties => AllUnits.Where(u => u.Dead).ToList();
-        public List<IUnit> GetActiveUnits => AllUnits.Where(u => !u.Dead).ToList();
+        public List<Unit> GetCasualties => AllUnits.Where(u => u.Dead).ToList();
+        public List<Unit> ActiveUnits => AllUnits.Where(u => !u.Dead).ToList();
         public List<City> GetCities { get; } = new();
 
         public List<Civilization> GetCivs { get; } = new();
@@ -56,12 +56,26 @@ namespace Civ2engine
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
 
-        private IUnit _activeUnit;
-        public IUnit GetActiveUnit => _activeUnit;
-        public void SetActiveUnit(IUnit unit) 
-        { 
-            if (!unit.TurnEnded)
-                _activeUnit = unit; 
+        private Unit _activeUnit;
+        public Unit ActiveUnit
+        {
+            get
+            {
+                return _activeUnit;
+            }
+            set
+            {
+                if (!value.TurnEnded)
+                {
+                    _activeUnit = value;
+                }
+                else
+                {
+#if DEBUG
+                    throw new NotSupportedException("Tried to set ended unit to active");
+#endif
+                }
+            }
         }
 
         private Civilization _playerCiv;
@@ -72,7 +86,7 @@ namespace Civ2engine
 
         // Helper functions
         public City CityHere(int x, int y) => GetCities.Find(city => city.X == x && city.Y == y);
-        public List<IUnit> UnitsHere(int x, int y) => AllUnits.FindAll(unit => unit.X == x && unit.Y == y).AsEnumerable().Reverse().ToList();
+        public List<Unit> UnitsHere(int x, int y) => AllUnits.FindAll(unit => unit.X == x && unit.Y == y).AsEnumerable().Reverse().ToList();
         public bool AnyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y);
         public bool EnemyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
         public bool AnyCitiesPresentHere(int x, int y) => GetCities.Any(city => city.X == x && city.Y == y);
@@ -82,7 +96,7 @@ namespace Civ2engine
         /// </summary>
         /// <param name="ship">Ship.</param>
         /// <returns>A list of all units in a ship.</returns>
-        public List<IUnit> UnitsOnShip(IUnit ship)
+        public List<Unit> UnitsOnShip(IUnit ship)
         {
             var unitsHere = Game.UnitsHere(ship.XY[0], ship.XY[1]);
             unitsHere.RemoveAll(u => u.Domain != UnitGAS.Ground);  // Remove all naval/air units
@@ -193,7 +207,7 @@ namespace Civ2engine
                                     int movePointsLost, int hitPointsLost, int prevX, int prevY, CommodityType caravanCommodity, OrderType orders,
                                     int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
-            IUnit unit = new Unit
+            Unit unit = new Unit
             {
                 Id = AllUnits.Count,
                 TypeDefinition = Rules.UnitTypes[(int)type],

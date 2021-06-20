@@ -59,14 +59,14 @@ namespace Civ2engine
         public Improvement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public void AddImprovement(Improvement improvement) => _improvements.Add(improvement);
         public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
-        public List<IUnit> UnitsInCity => Game.AllUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
-        public List<IUnit> SupportedUnits => Game.AllUnits.Where(unit => unit.HomeCity == this).ToList();
+        public List<Unit> UnitsInCity => Game.AllUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
+        public List<Unit> SupportedUnits => Game.AllUnits.Where(unit => unit.HomeCity == this).ToList();
         public bool AnyUnitsPresent() => Game.AllUnits.Any(unit => unit.X == this.X && unit.Y == this.Y);
 
         // Determine which units, supported by this city, cost shields
         public bool[] SupportedUnitsWhichCostShields()
         {
-            List<IUnit> supportedUnits = SupportedUnits;
+            List<Unit> supportedUnits = SupportedUnits;
             bool[] costShields = new bool[SupportedUnits.Count];
             // First determine how many units have 0 costs due to different goverernment types
             int noCost = 0;

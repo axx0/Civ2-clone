@@ -69,6 +69,8 @@ namespace EtoFormsUI
 
             Content = layout;
 
+            SetupGameModes();
+
             BringToFront();
         }
     }

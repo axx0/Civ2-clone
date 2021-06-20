@@ -33,5 +33,6 @@ namespace Civ2engine.Terrains
         public int Transform { get; set; }
         public Special[] Specials { get; set; }
         public bool Impassable { get; set; }
+        public bool CanHaveCity => !Impassable && TerrainType.Ocean != Type;
     }
 }

@@ -33,5 +33,7 @@ namespace Civ2engine.Units
         public bool UnbribaleBarb { get; set; }
         public bool NothingImpassable { get; set; }
         public bool NonExpireForBarbarian { get; set; }
+
+        public bool CanBuildCities => IsSettler || IsEngineer;
     }
 }

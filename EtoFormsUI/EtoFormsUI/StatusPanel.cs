@@ -22,7 +22,10 @@ namespace EtoFormsUI
         private bool eotWhite; // End of turn text color is white?
         private readonly UITimer timer;
 
-        public bool WaitingAtEndOfTurn => Game.GetPlayerCiv == Game.GetActiveCiv && !Game.GetActiveCiv.AnyUnitsAwaitingOrders && Game.Options.AlwaysWaitAtEndOfTurn;
+        public bool WaitingAtEndOfTurn =>
+            Game.GetPlayerCiv == Game.GetActiveCiv && 
+            !Game.GetActiveCiv.AnyUnitsAwaitingOrders &&
+            Game.Options.AlwaysWaitAtEndOfTurn;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
@@ -167,7 +170,7 @@ namespace EtoFormsUI
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
             var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
-            List<IUnit> _unitsOnThisTile = Game.UnitsHere(Map.ActiveXY[0], Map.ActiveXY[1]);
+            var _unitsOnThisTile = Game.UnitsHere(Map.ActiveXY[0], Map.ActiveXY[1]);
 
             // View piece mode
             if (Map.ViewPieceMode)
@@ -205,12 +208,12 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, "Moving Units", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Show active unit info
-                Draw.Unit(e.Graphics, Game.GetActiveUnit, false, 1, new Point(7, 27));
+                Draw.Unit(e.Graphics, Game.ActiveUnit, false, 1, new Point(7, 27));
                 
                 // Show move points correctly
                 var commonMultiplier = Game.Rules.Cosmic.MovementMultiplier;
-                var remainingFullPoints = Game.GetActiveUnit.MovePoints / commonMultiplier;
-                var fractionalMove = Game.GetActiveUnit.MovePoints % commonMultiplier;
+                var remainingFullPoints = Game.ActiveUnit.MovePoints / commonMultiplier;
+                var fractionalMove = Game.ActiveUnit.MovePoints % commonMultiplier;
                 
                 string moveText;
                 if (fractionalMove > 0)
@@ -227,11 +230,11 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, moveText, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
                 
                 // Show other unit info
-                var _cityName = (Game.GetActiveUnit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
+                var _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
                 Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(79, 43), false, false, _backColor, 1, 1);
                 Draw.Text(e.Graphics, Game.GetActiveCiv.Adjective, _font, _frontColor, new Point(79, 61), false, false, _backColor, 1, 1);
                 var _column = 83;
-                Draw.Text(e.Graphics, Game.GetActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 _column += 18;
                 var activeTile = Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]);
                 Draw.Text(e.Graphics, $"({activeTile.Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
@@ -270,7 +273,7 @@ namespace EtoFormsUI
 
                 // Show info for other units on the tile
                 int drawCount = 0;
-                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.GetActiveUnit))
+                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.ActiveUnit))
                 {
                     // First check if there is vertical space still left for drawing in panel
                     if (_column + 69 > unitPanel.Height) break;

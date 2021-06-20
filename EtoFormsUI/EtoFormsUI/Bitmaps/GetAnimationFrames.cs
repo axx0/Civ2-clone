@@ -51,7 +51,7 @@ namespace EtoFormsUI
                         Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Map.Ypx));
 
                         // Units
-                        List<IUnit> unitsHere = Game.UnitsHere(x, y);
+                        var unitsHere = Game.UnitsHere(x, y);
                         if (unitsHere.Count > 0 && Game.CityHere(x, y) == null)
                         {
                             IUnit unit;
@@ -72,7 +72,7 @@ namespace EtoFormsUI
                         if (unitsHere.Count > 0 && x == activeXY[0] && y == activeXY[1] && !Map.ViewPieceMode)
                         {
                             // Draw unit only for 1st frame
-                            if (frame == 0) Draw.Unit(g, Game.GetActiveUnit, Game.GetActiveUnit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                            if (frame == 0) Draw.Unit(g, Game.ActiveUnit, Game.ActiveUnit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                         }
                     }
 
@@ -116,7 +116,7 @@ namespace EtoFormsUI
         }
 
         // Get animation frames for moving unit
-        public static List<Bitmap> UnitMoving(IUnit activeUnit)
+        public static List<Bitmap> UnitMoving(Unit activeUnit)
         {
             List<Bitmap> animationFrames = new List<Bitmap>();
 
@@ -198,7 +198,7 @@ namespace EtoFormsUI
                     }
 
                     // Units
-                    List<IUnit> unitsHere = Game.UnitsHere(x, y);
+                    var unitsHere = Game.UnitsHere(x, y);
 
                     // If unit is ship, remove units that are in it
                     var unitsonship = Game.UnitsOnShip(activeUnit);

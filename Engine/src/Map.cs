@@ -44,7 +44,7 @@ namespace Civ2engine
             {
                 if (!ViewPieceMode )
                 {
-                    _activeXY = new [] { Game.GetActiveUnit.X, Game.GetActiveUnit.Y };
+                    _activeXY = new [] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
                 }
                 return _activeXY;
             }
@@ -53,9 +53,11 @@ namespace Civ2engine
         private bool _viewPieceMode;
         public bool ViewPieceMode 
         {
-            get => Game.GetActiveUnit == null || !Game.GetActiveCiv.AnyUnitsAwaitingOrders || _viewPieceMode;
+            get => Game.ActiveUnit == null || !Game.GetActiveCiv.AnyUnitsAwaitingOrders || _viewPieceMode;
             set => _viewPieceMode = value;
         }
+
+        public Tile ActiveTile => TileC2(ActiveXY[0], ActiveXY[1]);
 
         /// <summary>
         /// Generate first instance of terrain tiles by importing game data.

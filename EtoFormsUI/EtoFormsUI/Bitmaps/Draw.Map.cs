@@ -66,11 +66,11 @@ namespace EtoFormsUI
                     }
 
                     // Units
-                    List<IUnit> unitsHere = Game.UnitsHere(startX + col, startY + row);
+                    var unitsHere = Game.UnitsHere(startX + col, startY + row);
                     if (unitsHere.Count > 0)
                     {
                         IUnit unit = unitsHere.Last();
-                        if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Where(u => u.Domain == UnitGAS.Sea).Last();   // Show naval unit
+                        if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Last(u => u.Domain == UnitGAS.Sea);   // Show naval unit
                         if (!unit.IsInCity)
                         {
                             Draw.Unit(g, unit, unitsHere.Count > 1, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
