@@ -17,6 +17,12 @@ namespace Civ2engine.Events
         {
             EventType = eventType;
         }
+        
+        public UnitEventArgs(UnitEventType eventType, Unit subjectUnit)
+        {
+            EventType = eventType;
+            Attacker = subjectUnit;
+        }
 
         public UnitEventArgs(UnitEventType eventType, IUnit attacker, IUnit defender, List<bool> combatRoundsAttackerWins, List<int> attackerHitpoints, List<int> defenderHitpoints)
         {

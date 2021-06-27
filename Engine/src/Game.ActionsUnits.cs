@@ -98,33 +98,44 @@ namespace Civ2engine
 
                 // Get a list of units on target square
                 var unitsOnTargetSquare = AllUnits.Where(unit => unit.X == newXY[0] && unit.Y == newXY[1]);
-                // Find out if attack can be made based on unit domain
-                if (_activeUnit.Domain == UnitGAS.Ground)    // LAND UNIT ATTACKING
+                switch (_activeUnit.Domain)
                 {
+                    // Find out if attack can be made based on unit domain
+                    // LAND UNIT ATTACKING
                     // Land units can attack only other units on land (except if there are any bombers on target square)
-                    if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr))) return UnitMovementOrderResultType.CannotAttackAirUnit;
-                    else return UnitMovementOrderResultType.AttackUnit;
-                }
-                else if (_activeUnit.Domain == UnitGAS.Air)  // AIR UNIT ATTACKING
-                {
-                    // Air units cannot attack airborne bombers unless their "Can attack air units" flag is set
-                    if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr)) && !_activeUnit.CanAttackAirUnits) return UnitMovementOrderResultType.CannotAttackAirUnit;
-                    else return UnitMovementOrderResultType.AttackUnit;
-                }
-                else    // SEA UNIT ATTACKING
-                {
-                    // Sea units cannot attack bombers
-                    if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr))) return UnitMovementOrderResultType.CannotAttackAirUnit;
-                    // Submarines can attack only sea units (check if enemy unit is not on ocean, remember that land units can be on ocean (transporting))
-                    else if (_activeUnit.SubmarineAdvantagesDisadvantages && Map.TileC2(unitsOnTargetSquare.First().X, unitsOnTargetSquare.First().Y).Type != TerrainType.Ocean) return UnitMovementOrderResultType.CannotMoveOrAttack;
-                    else return UnitMovementOrderResultType.AttackUnit;
+                    case UnitGAS.Ground when unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr)):
+                        return UnitMovementOrderResultType.CannotAttackAirUnit;
+                    case UnitGAS.Ground:
+                        return UnitMovementOrderResultType.AttackUnit;
+                    // AIR UNIT ATTACKING
+                    case UnitGAS.Air:
+                        // Air units cannot attack airborne bombers unless their "Can attack air units" flag is set
+                        return unitsOnTargetSquare.Any(unit =>
+                                   (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr)) &&
+                               !_activeUnit.CanAttackAirUnits
+                            ? UnitMovementOrderResultType.CannotAttackAirUnit
+                            : UnitMovementOrderResultType.AttackUnit;
+                    case UnitGAS.Special:
+                    default:
+                        // Special units can attack anything and be attacked by anything
+                        return UnitMovementOrderResultType.AttackUnit;
+                        break;
+                    // SEA UNIT ATTACKING
+                    case UnitGAS.Sea:
+                    {
+                        // Sea units cannot attack bombers
+                        if (unitsOnTargetSquare.Any(unit => (unit.Type == UnitType.Bomber) || (unit.Type == UnitType.StlthBmbr))) return UnitMovementOrderResultType.CannotAttackAirUnit;
+                        // Submarines can attack only sea units (check if enemy unit is not on ocean, remember that land units can be on ocean (transporting))
+                        return _activeUnit.SubmarineAdvantagesDisadvantages &&
+                               Map.TileC2(unitsOnTargetSquare.First().X, unitsOnTargetSquare.First().Y).Type !=
+                               TerrainType.Ocean
+                            ? UnitMovementOrderResultType.CannotMoveOrAttack
+                            : UnitMovementOrderResultType.AttackUnit;
+                    }
                 }
             }
             // Movement
-            else
-            {
-                return UnitMovementOrderResultType.Movement;
-            }
+            return UnitMovementOrderResultType.Movement;
         }
 
         public void UpdateActiveUnit()

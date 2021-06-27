@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.Units;
 using Civ2engine.Improvements;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -367,5 +369,15 @@ namespace Civ2engine
         private int _currentMap = 0;
 
         public Map CurrentMap => _maps[_currentMap];
+
+        public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit)
+        {
+            OnUnitEvent?.Invoke(this,new UnitEventArgs(eventType, movedUnit));
+        }
+
+        public void TriggerMapEvent(MapEventType eventType, List<Tile> neighbours)
+        {
+            OnMapEvent?.Invoke(this,new MapEventArgs(eventType));
+        }
     }
 }

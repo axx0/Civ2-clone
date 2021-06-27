@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
-using Civ2engine.Units;
 using Civ2engine.Events;
 using ExtensionMethods;
 
@@ -48,19 +47,6 @@ namespace Civ2engine
             ChooseNextUnit();
 
             OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
-        }
-
-        public void DeleteUnit(Unit unit)
-        {
-            if (_activeUnit == unit)
-            {
-                Game.AllUnits.Remove(unit);
-                ChooseNextUnit();
-            }
-            else
-            {
-                Game.AllUnits.Remove(unit);
-            }
         }
 
         //Make visible (potential) hidden tiles when active unit has completed movement

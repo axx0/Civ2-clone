@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 
@@ -136,6 +137,7 @@ namespace Civ2engine.Units
         public int Xreal => (X - Y % 2) / 2;
         public int Y { get; set; }
         public int[] XY => new int[] { X, Y };
+        
         public int MovementCounter { get; set; }
         public int Xpx => X * Map.Xpx;
         public int Ypx => Y * Map.Ypx;
@@ -351,17 +353,11 @@ namespace Civ2engine.Units
         public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
         public bool IsInStack => Game.AllUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
         public bool IsLastInStack => Game.AllUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
-        public bool IsInShip
-        {
-            get
-            {
-                var ship = Game.UnitsHere(X, Y).Where(u => u.Domain == UnitGAS.Sea).First();
-                var unitsOnShip = Game.UnitsOnShip(ship);
-                return unitsOnShip.Contains(this);
-            }
-        }
+        
+        public Unit InShip { get; set; }
 
         public string AttackSound => TypeDefinition.AttackSound;
         public City CityWithThisUnit => Game.GetCities.FirstOrDefault(c => c.X == X && c.Y == Y);
+        public List<Unit> CarriedUnits { get; } = new();
     }
 }
