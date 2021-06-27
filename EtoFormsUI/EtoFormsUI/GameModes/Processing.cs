@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Civ2engine;
 using Civ2engine.UnitActions;
@@ -7,6 +8,6 @@ namespace EtoFormsUI.GameModes
 {
     public class Processing : IGameMode
     {
-        public IDictionary<Keys, IGameAction> Actions { get; set; } = new Dictionary<Keys, IGameAction>();
+        public IDictionary<Keys, Action> Actions { get; set; } = new Dictionary<Keys, Action>();
     }
 }

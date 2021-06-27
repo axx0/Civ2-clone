@@ -370,14 +370,19 @@ namespace Civ2engine
 
         public Map CurrentMap => _maps[_currentMap];
 
-        public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit)
+        public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit, BlockedReason blockedReason = BlockedReason.NotBlocked)
         {
-            OnUnitEvent?.Invoke(this,new UnitEventArgs(eventType, movedUnit));
+            OnUnitEvent?.Invoke(this,new UnitEventArgs(eventType, movedUnit, blockedReason));
         }
 
+        public void TriggerUnitEvent(UnitEventArgs args)
+        {
+            OnUnitEvent?.Invoke(this,args);
+        }
         public void TriggerMapEvent(MapEventType eventType, List<Tile> neighbours)
         {
             OnMapEvent?.Invoke(this,new MapEventArgs(eventType));
         }
+
     }
 }

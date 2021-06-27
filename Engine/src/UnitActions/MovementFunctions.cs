@@ -1,13 +1,119 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 namespace Civ2engine.UnitActions.Move
 {
-    internal static class MovementFunctions
+    public static class MovementFunctions
     {
+        public static void TryMoveNorth()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[1] > 1)
+            {
+                MoveC2(0, -2);
+            }
+        }
+
+        public static void TryMoveNorthEast()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[1] == 0)
+            {
+                return;
+            }
+            if (Game.Instance.CurrentMap.ActiveXY[0] < Game.Instance.CurrentMap.XDim*2-2)
+            {
+                MoveC2(1, -1);
+            }else if (!Game.Instance.Options.FlatEarth)
+            {
+                MoveC2(-Game.Instance.CurrentMap.XDim*2 +2 , -1);
+            }
+        }
+
+        public static void TryMoveEast()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[0] < Game.Instance.CurrentMap.XDim *2 -2)
+            {
+                MoveC2(2, 0);
+            }else if (!Game.Instance.Options.FlatEarth)
+            {
+                MoveC2(-Game.Instance.CurrentMap.XDim*2 +2 , 0);
+            }
+        }
+        
+        public static void TryMoveSouthEast()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[1] >= Game.Instance.CurrentMap.YDim - 1)
+            {
+                return;
+            }
+
+            if (Game.Instance.CurrentMap.ActiveXY[0] < Game.Instance.CurrentMap.XDim * 2 - 1)
+            {
+                MoveC2(1, 1);
+            }
+            else if (!Game.Instance.Options.FlatEarth)
+            {
+                MoveC2(-Game.Instance.CurrentMap.XDim * 2 + 2, 1);
+            }
+        }
+        
+        public static void TryMoveSouth()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[1] < Game.Instance.CurrentMap.YDim-2)
+            {
+                MoveC2(0, 2);
+            }
+        }
+
+        public static void TryMoveSouthWest()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[1] >= Game.Instance.CurrentMap.YDim -1)
+            {
+                return;
+            }
+            
+            if (Game.Instance.CurrentMap.ActiveXY[0] > 0)
+            {
+                MoveC2(-1, 1);
+            }
+            else if(!Game.Instance.Options.FlatEarth)
+            {
+                MoveC2(Game.Instance.CurrentMap.XDim*2-2, 1);
+            }
+        }
+
+        public static void TryMoveWest()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[0] > 0)
+            {
+                MoveC2(-2, 0);
+            }
+            else if(!Game.Instance.Options.FlatEarth)
+            {
+                MoveC2(Game.Instance.CurrentMap.XDim*2-2, 0);
+            }
+        }
+
+        public static void TryMoveNorthWest()
+        {
+            if (Game.Instance.CurrentMap.ActiveXY[1] == 0)
+            {
+                return;
+            }
+            if (Game.Instance.CurrentMap.ActiveXY[0] > 0)
+            {
+                MoveC2(-1, -1);
+            }
+            else if(!Game.Instance.Options.FlatEarth)
+            {
+                MoveC2(Game.Instance.CurrentMap.XDim*2-1, -1);
+            }
+        }
+
         public static void MoveC2(int deltaX, int deltaY)
         {
             var game = Game.Instance;
@@ -20,9 +126,49 @@ namespace Civ2engine.UnitActions.Move
             var destX = unit.X + deltaX;
             var destY = unit.Y + deltaY;
 
-            if (game.AllUnits.Any(u => u.X == destX && u.Y == destY && u.Owner != unit.Owner))
+            var unitsOnTarget = game.AllUnits.Where(u => u.X == destX && u.Y == destY).ToList();
+            if (unitsOnTarget.Count > 0 && unitsOnTarget[0].Owner != unit.Owner)
             {
+                if (unit.AttackBase == 0)
+                {
+                    game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZeroAttackStrength);
+                    return;
+                }         
                 
+                
+                var tileTo = game.CurrentMap.TileC2(destX, destY);
+                var city = game.GetCities.FirstOrDefault(c => c.X == tileTo.X && c.Y == tileTo.Y);
+                if (city != null)
+                {
+                    //Anything can attack or defend a city
+                    Attack(game, unit, tileTo, unitsOnTarget, city);
+                    return;
+                }
+
+                if (tileTo.Type == TerrainType.Ocean)
+                {
+                    if (unit.Domain == UnitGAS.Ground)
+                    {
+                        // Ground units cannot attack into the sea
+                        return;
+                    }
+                }
+                else
+                {
+                    if (unit.SubmarineAdvantagesDisadvantages)
+                    {
+                        //Submarines can't attack land
+                        return;
+                    }
+                }
+
+                if (!unit.CanAttackAirUnits && unitsOnTarget.Any(u => u.Domain == UnitGAS.Air))
+                {
+                    game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.CannotAttackAirUnits);
+                    return;
+                }
+                
+                Attack(game, unit, tileTo, unitsOnTarget, null);
             }
             else
             {
@@ -35,13 +181,110 @@ namespace Civ2engine.UnitActions.Move
             }
         }
 
+        private static void Attack(Game game, Unit attacker, Tile tile, List<Unit> unitsOnTargetSquare, City cityOnTargetSquare)
+        {           
+
+            // Primary defender is the unit with largest defense factor
+            var defender = unitsOnTargetSquare[0];
+            var defenseFactor = defender.DefenseFactor(attacker, cityOnTargetSquare);
+            for (var i = 1; i < unitsOnTargetSquare.Count; i++)
+            {
+                var altDefenseFactor = unitsOnTargetSquare[i].DefenseFactor(attacker, cityOnTargetSquare);
+                if (altDefenseFactor > defenseFactor)
+                {
+                    defender = unitsOnTargetSquare[i];
+                    defenseFactor = altDefenseFactor;
+                }
+            }
+
+            // Calculate odds of attacker winning combat (a round of battle)
+            double a = attacker.AttackFactor(defender);
+
+            //Calculate the firepower of the attacker and defender
+            var fpA = attacker.FirepowerBase;
+            var fpD = defender.FirepowerBase;
+
+            if (attacker.Domain == UnitGAS.Sea && defender.Domain == UnitGAS.Ground)
+            {
+                // When a sea unit attacks a land unit, both units have their firepower reduced to 1
+                fpA = 1;
+                fpD = 1;
+            }else if (attacker.Domain != UnitGAS.Sea && defender.Domain == UnitGAS.Sea &&
+                      tile.Type != TerrainType.Ocean)
+            {
+                // Cought in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
+                fpA *= 2;
+                fpD = 1;
+            }else if (attacker.Domain == UnitGAS.Air && defender.Domain == UnitGAS.Air && defender.FuelRange == 0)
+            {
+                // Helicopters attacked by fighters have firepower reduced to 1
+                fpD = 1;
+            }
+            
+            var probAttackerWins = defenseFactor >= a ? (a * 8 - 1) / (2 * defenseFactor * 8) : 1 - (defenseFactor * 8 + 1) / (2 * a * 8);
+
+            // Battle -> Loop through combat rounds until a unit loses its HP
+            var random = new Random();
+            var combatRoundsAttackerWins = new List<bool>();  // Register combat outcomes
+            var attackerHitpoints = new List<int>();  // Register attacker hitpoints in each round
+            var defenderHitpoints = new List<int>();  // Register defender hitpoints in each round
+            do
+            {
+                var rand = random.Next(0, 1000) / 1000.0;
+                var attackerWinsRound = probAttackerWins > rand;
+                attackerHitpoints.Add(attacker.HitPoints);
+                defenderHitpoints.Add(defender.HitPoints);
+                if (attackerWinsRound)
+                {
+                    defender.HitPointsLost += fpA;
+                    combatRoundsAttackerWins.Add(true);
+                }
+                else 
+                { 
+                    attacker.HitPointsLost += fpD;
+                    combatRoundsAttackerWins.Add(false);
+                }
+            } while (attacker.HitPoints > 0 && defender.HitPoints > 0);
+
+            var attackerWinsBattle = defender.HitPoints <= 0;
+
+            if (attackerWinsBattle)
+            {
+                attacker.MovePointsLost += game.Rules.Cosmic.MovementMultiplier;
+                // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
+                if (cityOnTargetSquare != null || tile.Fortress || tile.Airbase)
+                {
+                    defender.Dead = true;
+                    //_casualties.Add(defender);
+                    //_units.Remove(defender);
+                }
+                else
+                {
+                    foreach (var unit in unitsOnTargetSquare)
+                    {
+                        unit.Dead = true;
+                        //_casualties.Add(unit);
+                        //_units.Remove(unit);
+                    }
+                }
+            }
+            else
+            {
+                attacker.Dead = true;
+                //_casualties.Add(attacker);
+                //_units.Remove(attacker);
+            }
+
+            game.TriggerUnitEvent(new UnitEventArgs(UnitEventType.Attack, attacker, defender, combatRoundsAttackerWins, attackerHitpoints, defenderHitpoints));
+        }
+
         private static void Moveto(Game game, Unit unit, int destX, int destY, bool idDiagonal)
         {  
             var tileFrom = game.CurrentMap.TileC2(unit.X, unit.Y);
             var tileTo = game.CurrentMap.TileC2(destX, destY);
             if (!unit.IgnoreZonesOfControl && !IsFriendlyTile(game,tileTo, unit) && IsNextToEnemy(game,unit,tileFrom) && IsNextToEnemy(game, unit, tileTo))
             {
-                game.TriggerUnitEvent(UnitEventType.StatusUpdate, unit);
+                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZOC);
                 return;
             }
 

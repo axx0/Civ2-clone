@@ -62,7 +62,7 @@ namespace EtoFormsUI
                     this.PlaySound("MOVPIECE.WAV");
                     break;
                 case UnitEventType.Attack:
-                    PlaySound(string.IsNullOrWhiteSpace(e.Attacker.AttackSound) ?  "SWORDFGT.WAV" : e.Attacker.AttackSound);
+                    PlaySound(string.IsNullOrWhiteSpace(e.Unit.AttackSound) ?  "SWORDFGT.WAV" : e.Unit.AttackSound);
                     break;
             }
         }

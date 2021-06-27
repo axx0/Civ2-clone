@@ -35,6 +35,9 @@ namespace Civ2engine.Units
 
         public int DefenseFactor(IUnit attackingUnit, City cityHere)
         {
+            //Carried units cannot be the defender
+            if (InShip != null) return 0;
+            
             // Base defense factor from RULES
             double DF = (double)DefenseBase;
 
