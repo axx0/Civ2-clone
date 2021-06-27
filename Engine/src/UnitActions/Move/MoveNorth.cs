@@ -6,7 +6,7 @@ namespace Civ2engine.UnitActions.Move
         {
             if (Game.Instance.CurrentMap.ActiveXY[1] > 1)
             {
-                MovementFunctions.MoveC2(0, -2, false);
+                MovementFunctions.MoveC2(0, -2);
             }
         }
     }

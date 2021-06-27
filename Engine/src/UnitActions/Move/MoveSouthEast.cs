@@ -11,10 +11,10 @@ namespace Civ2engine.UnitActions.Move
 
             if (Game.Instance.CurrentMap.ActiveXY[0] < Game.Instance.CurrentMap.XDim*2-1)
             {
-                MovementFunctions.MoveC2(1, 1, true);
+                MovementFunctions.MoveC2(1, 1);
             }else if (!Game.Instance.Options.FlatEarth)
             {
-                MovementFunctions.MoveC2(-Game.Instance.CurrentMap.XDim*2 +2 , 1, true);
+                MovementFunctions.MoveC2(-Game.Instance.CurrentMap.XDim*2 +2 , 1);
             }
         }
     }

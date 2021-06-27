@@ -8,7 +8,7 @@ namespace Civ2engine.UnitActions.Move
 {
     internal static class MovementFunctions
     {
-        public static void MoveC2(int deltaX, int deltaY, bool isDiagonal)
+        public static void MoveC2(int deltaX, int deltaY)
         {
             var game = Game.Instance;
             var unit = game.ActiveUnit;
@@ -26,7 +26,7 @@ namespace Civ2engine.UnitActions.Move
             }
             else
             {
-                Moveto(game, unit, destX, destY, isDiagonal);
+                Moveto(game, unit, destX, destY, deltaX != 0 && deltaY != 0);
             }
 
             if (unit.Domain == UnitGAS.Air && unit.MovePoints == 0)
@@ -110,7 +110,7 @@ namespace Civ2engine.UnitActions.Move
                         moveCost = cosmicRules.AlpineMovement;
                     }
 
-                    if (isDiagonal && cosmicRules.RiverMovement < moveCost && tileFrom.River &&
+                    if (cosmicRules.RiverMovement < moveCost && isDiagonal && tileFrom.River &&
                         tileTo.River) //For rivers only for diagonal movement
                     {
                         moveCost = cosmicRules.RiverMovement;
