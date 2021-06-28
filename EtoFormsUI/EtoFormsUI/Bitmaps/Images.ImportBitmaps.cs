@@ -65,7 +65,7 @@ namespace EtoFormsUI
                 {
                     PeopleL[col, row] = pplIcons.Clone(new Rectangle((27 * col) + 2 + col, (30 * row) + 6 + row, 27, 30));
 
-                    PeopleLshadow[col, row] = CreateNonIndexedImage(PeopleL[col, row]); //convert GIF to non-indexed picture
+                    PeopleLshadow[col, row] = new Bitmap(PeopleL[col, row].Width, PeopleL[col, row].Height, PixelFormat.Format32bppRgba);
 
                     // If color is non-pink, replace it with black to get shadow (otherwise make transparent)
                     for (int x = 0; x < 27; x++)
@@ -253,10 +253,10 @@ namespace EtoFormsUI
         {
             var newBmp = new Bitmap(src.Width, src.Height, PixelFormat.Format32bppRgba);
 
-            //using (Graphics gfx = Graphics.FromImage(newBmp))
-            //{
-            //    gfx.DrawImage(src, 0, 0);
-            //}
+            using (var g = new Graphics(newBmp))
+            {
+                g.DrawImage(src, 0, 0);
+            }
 
             return newBmp;
         }

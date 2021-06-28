@@ -191,20 +191,20 @@ namespace Civ2engine
                 // .... TO-DO ....
             }
             #endregion
-            #region Tech & money
+            #region Advances & money
             //=========================
-            //TECH & MONEY
+            //ADVANCES & MONEY
             //=========================
             data.RulerGender = new int[8];
             data.CivMoney = new int[8];
             data.CivNumber = new int[8];
             data.CivResearchProgress = new int[8];
-            data.CivResearchingTech = new int[8];
+            data.CivResearchingAdvance = new int[8];
             data.CivSciRate = new int[8];
             data.CivTaxRate = new int[8];
             data.CivGovernment = new int[8];
             data.CivReputation = new int[8];
-            data.CivTechs = new bool[89];
+            data.CivAdvances = new bool[89];
             // starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
             for (int i = 0; i < 8; i++) // for each civ
             {
@@ -224,8 +224,8 @@ namespace Civ2engine
                 intVal2 = bytes[2278 + 1428 * i + 9];    // 10th byte in tribe block
                 data.CivResearchProgress[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
-                // Tech currently being researched
-                data.CivResearchingTech[i] = bytes[2278 + 1428 * i + 10]; // 11th byte in tribe block (FF(hex) = no goal)
+                // Advance currently being researched
+                data.CivResearchingAdvance[i] = bytes[2278 + 1428 * i + 10]; // 11th byte in tribe block (FF(hex) = no goal)
 
                 // Science rate (%/10)
                 data.CivSciRate[i] = bytes[2278 + 1428 * i + 19]; // 20th byte in tribe block
@@ -260,7 +260,7 @@ namespace Civ2engine
                 string civTechs12 = Convert.ToString(bytes[2278 + 1428 * i + 99], 2).PadLeft(8, '0');
                 string civTechs13 = Convert.ToString(bytes[2278 + 1428 * i + 100], 2).PadLeft(8, '0');   //101st byte
                 civTechs13 = civTechs13.Remove(civTechs13.Length - 4); //remove last 4 bits, they are not important
-                // Put all techs into one large string, where bit0=1st tech, bit1=2nd tech, ..., bit99=100th tech
+                // Put all advamces into one large string, where bit0=1st advamce, bit1=2nd advance, ..., bit99=100th advance
                 // First reverse bit order in all strings
                 civTechs1 = Reverse(civTechs1);
                 civTechs2 = Reverse(civTechs2);
@@ -277,9 +277,9 @@ namespace Civ2engine
                 civTechs13 = Reverse(civTechs13);
                 // Merge all strings into a large string
                 string civTechs_ = String.Concat(civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
-                // true = tech researched, false = not researched
+                // true = advance researched, false = not researched
                 for (int no = 0; no < 89; no++)
-                    data.CivTechs[no] = civTechs_[no] == '1';
+                    data.CivAdvances[no] = civTechs_[no] == '1';
             }
             #endregion
             #region Map
@@ -534,7 +534,7 @@ namespace Civ2engine
             data.CityYloc = new int[data.NumberOfCities];
             data.CityCanBuildCoastal = new bool[data.NumberOfCities];
             data.CityAutobuildMilitaryRule = new bool[data.NumberOfCities];
-            data.CityStolenTech = new bool[data.NumberOfCities];
+            data.CityStolenAdvance = new bool[data.NumberOfCities];
             data.CityImprovementSold = new bool[data.NumberOfCities];
             data.CityWeLoveKingDay = new bool[data.NumberOfCities];
             data.CityCivilDisorder = new bool[data.NumberOfCities];
@@ -578,7 +578,7 @@ namespace Civ2engine
 
                 data.CityCanBuildCoastal[i] = GetBit(bytes[ofsetC + multipl * i + 4], 0);    // Can build coastal improvements
                 data.CityAutobuildMilitaryRule[i] = GetBit(bytes[ofsetC + multipl * i + 4], 3);    // Auto build under military rule
-                data.CityStolenTech[i] = GetBit(bytes[ofsetC + multipl * i + 4], 4);         // Stolen tech
+                data.CityStolenAdvance[i] = GetBit(bytes[ofsetC + multipl * i + 4], 4);         // Stolen advance
                 data.CityImprovementSold[i] = GetBit(bytes[ofsetC + multipl * i + 4], 5);    // Improvement sold
                 data.CityWeLoveKingDay[i] = GetBit(bytes[ofsetC + multipl * i + 4], 6);    // We love king day
                 data.CityCivilDisorder[i] = GetBit(bytes[ofsetC + multipl * i + 4], 7);    // Civil disorder

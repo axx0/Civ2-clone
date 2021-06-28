@@ -594,7 +594,7 @@ namespace EtoFormsUI.Initialization
                 Government = GovernmentType.Despotism,
                 Id = id,
                 Money = 0,
-                Techs = new bool[config.Rules.Advances.Length],
+                Advances = new bool[config.Rules.Advances.Length],
                 CityStyle = (CityStyleType) tribe.CityStyle,
                 LeaderGender =gender ,
                 LeaderName = gender == 0 ? tribe.NameMale : tribe.NameFemale,
