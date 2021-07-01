@@ -16,22 +16,22 @@ namespace Civ2engine
         private readonly GameVersionType _gameVersion;
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
-        
+        public FastRandom Random { get; set; } = new();
         public List<Unit> AllUnits { get; } = new();
 
         public List<Unit> GetCasualties => AllUnits.Where(u => u.Dead).ToList();
         public List<Unit> ActiveUnits => AllUnits.Where(u => !u.Dead).ToList();
         public List<City> GetCities { get; } = new();
 
-        public List<Civilization> GetCivs { get; } = new();
+        public List<Civilization> AllCivilizations { get; } = new();
 
-        public List<Civilization> GetActiveCivs => GetCivs.Where(c => c.Alive).ToList();
+        public List<Civilization> GetActiveCivs => AllCivilizations.Where(c => c.Alive).ToList();
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
         
         private int _turnNumber;
-        public int TurnNumber => _turnNumber;
+        
         private int _gameYear;
         public int GetGameYear
         {
@@ -222,7 +222,7 @@ namespace Civ2engine
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
-                Owner = GetCivs[civId],
+                Owner = AllCivilizations[civId],
                 PrevXY = new int[] { prevX, prevY },
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
@@ -251,9 +251,9 @@ namespace Civ2engine
                 CanBuildShips = canBuildShips,
                 Objectivex3 = objectivex3,
                 Objectivex1 = objectivex1,
-                Owner = GetCivs[owner],
+                Owner = AllCivilizations[owner],
                 Size = size,
-                WhoBuiltIt = GetCivs[whoBuiltIt],
+                WhoBuiltIt = AllCivilizations[whoBuiltIt],
                 FoodInStorage = foodInStorage,
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,
@@ -347,7 +347,7 @@ namespace Civ2engine
                 Government = (GovernmentType)government
             };
 
-            GetCivs.Add(civ);
+            AllCivilizations.Add(civ);
         }
 
         // Singleton instance of a game

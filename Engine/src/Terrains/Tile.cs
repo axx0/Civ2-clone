@@ -6,7 +6,7 @@
 using Civ2engine.Enums;
         namespace Civ2engine.Terrains
 {
-    public class Tile : BaseInstance, ITerrain
+    public class Tile : BaseInstance, ITerrain, IMapItem
     {
         public int X { get; }
         public int Y { get; }

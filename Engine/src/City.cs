@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace Civ2engine
 {
-    public class City : BaseInstance
+    public class City : BaseInstance, IMapItem
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -23,7 +23,7 @@ namespace Civ2engine
         public bool Objectivex3 { get; set; }
         public bool Objectivex1 { get; set; }
         public Civilization Owner { get; set; }
-        public int OwnerId => Game.GetCivs.IndexOf(Owner);
+        public int OwnerId => Game.AllCivilizations.IndexOf(Owner);
         public int Size { get; set; }
         public Civilization WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
@@ -70,7 +70,7 @@ namespace Civ2engine
             bool[] costShields = new bool[SupportedUnits.Count];
             // First determine how many units have 0 costs due to different goverernment types
             int noCost = 0;
-            switch (Game.GetCivs[OwnerId].Government)
+            switch (Game.AllCivilizations[OwnerId].Government)
             {
                 case GovernmentType.Anarchy:
                 case GovernmentType.Despotism:
@@ -196,9 +196,9 @@ namespace Civ2engine
             }
         }
 
-        public int Tax => Trade * Game.GetCivs[OwnerId].TaxRate / 100;
+        public int Tax => Trade * Game.AllCivilizations[OwnerId].TaxRate / 100;
         public int Lux => Trade - Science - Tax;
-        public int Science => Trade * Game.GetCivs[OwnerId].ScienceRate / 100;
+        public int Science => Trade * Game.AllCivilizations[OwnerId].ScienceRate / 100;
 
         // PRODUCTION
         private int[] _shieldDistribution;

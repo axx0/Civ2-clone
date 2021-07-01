@@ -81,7 +81,7 @@ namespace Civ2engine
             _activeUnit = gameData.SelectedUnitIndex == -1
                 ? null
                 : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex); // null means all units have ended turn
-            _playerCiv = GetCivs[gameData.PlayersCivIndex];
+            _playerCiv = AllCivilizations[gameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
             
             _maps = new[] {new Map()};
@@ -186,12 +186,12 @@ namespace Civ2engine
         }
 
         /// <summary>
-        /// Compute the square euclidian distance between to tiles
+        /// Compute the square euclidean distance between to tiles
         /// </summary>
         /// <param name="startTile"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
-        private static double DistanceTo(Tile startTile, Tile tile)
+        private static double DistanceTo(IMapItem startTile, IMapItem tile)
         {
              return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
@@ -200,13 +200,11 @@ namespace Civ2engine
         {
             _options = options;
             _maps = maps;
-            GetCivs.AddRange(civilizations);
+            AllCivilizations.AddRange(civilizations);
             AllUnits.AddRange(units);
             _rules = configRules;
-            _activeUnit = units[0];
-            _activeCiv = civilizations[1];
-            CurrentMap.ActiveXY = _activeUnit.XY;
-            CurrentMap.StartingClickedXY = _activeUnit.XY;
+            _turnNumber = -1;
+            StartNextTurn();    
         }
 
     }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using ExtensionMethods;
+using Civ2engine.Terrains;
+using Civ2engine.UnitActions.Move;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
@@ -11,153 +13,126 @@ namespace Civ2engine
     {
         public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
+        private void StartNextTurn()
+        {
+            _turnNumber++;
+            ProcessBarbarians();
+
+            ChoseNextCiv();
+        }
+        
+        private void ProcessBarbarians()
+        {
+            if(_turnNumber < 16) return;
+            
+            _activeCiv = AllCivilizations[0];
+            TurnBeginning();
+            
+            //Pick a random tile if valid for barbarians raise horde
+            
+            //Move all barbarians
+            var barbarianGroups = AllUnits.Where(u => u.Owner == _activeCiv && u.Dead == false)
+                .GroupBy(u => CurrentMap.TileC2(u.X, u.Y));
+            foreach (var barbarianGroup in barbarianGroups)
+            {
+                var tile = barbarianGroup.Key;
+                var barbarians = barbarianGroup.ToList();
+                var target = GetCities.OrderBy(c => DistanceTo(tile, c)).FirstOrDefault();
+                if(target == null) continue;
+                
+                MoveTowards(tile, barbarians, target);
+            }
+        }
+
+        private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
+        {
+            var destination = MovementFunctions.GetPossibleMoves(this, tile, units[0])
+                .OrderBy(t => DistanceTo(t, target)).FirstOrDefault();
+            if (destination == null) return;
+            
+            units.ForEach(b => MovementFunctions.UnitMoved(this, b,  destination, tile));
+            if (units.Any(b => b.MovePoints > 0))
+            {
+                MoveTowards(destination, units.Where(b=>b.MovePoints > 0).ToList(), target);
+            }
+        }
+
         public void ChoseNextCiv()
         {
-            // Make a list of active civs
-            var civIds = new List<int>();
-            foreach (var civ in GetActiveCivs) civIds.Add(civ.Id);
-
-            // Increase game turn
-            if (_activeCiv.Id == civIds.Last()) _turnNumber++;
-
-            // Chose next civ
-            for (int id = 0; id < civIds.Count; id++)
+            if (_activeCiv == AllCivilizations[^1])
             {
-                if (civIds[id] == _activeCiv.Id) 
+                StartNextTurn();
+            }
+            else
+            {
+                _activeCiv = AllCivilizations[_activeCiv.Id + 1];
+
+                if (_activeCiv.Alive)
                 {
-                    if (civIds[id] == civIds.Last()) _activeCiv = GetActiveCivs[0];
-                    else _activeCiv = GetActiveCivs[id + 1];
-                    break;
+                    
+
+                    TurnBeginning();
+                    
+                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
+
+
+                    if (_activeCiv != _playerCiv)
+                    {
+                        AITurn();
+                    }
+                    else
+                    {
+                        // Choose next unit
+                        ChooseNextUnit();
+                    }
+
+                }
+                else if(!Options.DontRestartIfEliminated)
+                {
+                    //Look to restart if possible
                 }
             }
+        }
 
+        private void AITurn()
+        {
+            foreach (var unit in AllUnits.Where(u=>u.Owner == _activeCiv && !u.Dead))
+            {
+                var currentTile = CurrentMap.TileC2(unit.X, unit.Y);
+                while (unit.MovePoints > 0)
+                {
+                    var possibleMoves = MovementFunctions.GetPossibleMoves(this, currentTile, unit).ToList();
+                    if (possibleMoves.Count == 0)
+                    {
+                        unit.SkipTurn();
+                    }
+                    else
+                    {
+                        var destination = Random.ChooseFrom(possibleMoves);
+                        if (MovementFunctions.UnitMoved(this, unit, destination, currentTile))
+                        {
+                            currentTile = destination;
+                        }
+                    }
+                }
+            }
+            ChoseNextCiv();
+        }
+
+        private void TurnBeginning()
+        {
             // Reset turns of all units
             foreach (var unit in ActiveUnits.Where(n => n.Owner == _activeCiv))
             {
                 unit.MovePointsLost = 0;
 
                 // Increase counters
-                if (unit.Order == OrderType.BuildIrrigation || (unit.Order == OrderType.BuildRoad) || (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
+                if (unit.Order == OrderType.BuildIrrigation || (unit.Order == OrderType.BuildRoad) ||
+                    (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
             }
 
             // Update all cities
             CitiesTurn();
-
-            // Choose next unit
-            ChooseNextUnit();
-
-            OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
         }
-
-        //Make visible (potential) hidden tiles when active unit has completed movement
-        public void UpdateWorldMapAfterUnitHasMoved()
-        {
-            //Offsets of tiles around active unit
-            List<int[]> offsets = new List<int[]>
-            {
-                new int[] {0, -2},
-                new int[] {1, -1},
-                new int[] {2, 0},
-                new int[] {1, 1},
-                new int[] {0, 2},
-                new int[] {-1, 1},
-                new int[] {-2, 0},
-                new int[] {-1, -1}
-            };
-
-            //For each offset make the tile visible if it isn't yet
-            foreach (int[] offset in offsets)
-            {
-                int[] coords = _activeUnit.XY.Civ2xy();
-                coords[0] += offset[0];
-                coords[1] += offset[1];
-                Map.Tile[coords[0], coords[1]].Visibility[_activeCiv.Id] = true;
-            }
-
-            //Update the map image
-            //Draw.RedrawMap(new int[] { Game.ActiveUnit.X, Game.ActiveUnit.Y });
-        }
-
-        //public static void GiveOrder(OrderType order)
-        //{
-        //    switch (order)
-        //    {
-        //        //case OrderType.MoveSW:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(-1, 1)));
-        //        //    break;
-        //        //case OrderType.MoveS:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(0, 2)));
-        //        //    break;
-        //        //case OrderType.MoveSE:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(1, 1)));
-        //        //    break;
-        //        //case OrderType.MoveW:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(-2, 0)));
-        //        //    break;
-        //        //case OrderType.MoveE:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(2, 0)));
-        //        //    break;
-        //        //case OrderType.MoveNW:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(-1, -1)));
-        //        //    break;
-        //        //case OrderType.MoveN:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(0, -2)));
-        //        //    break;
-        //        //case OrderType.MoveNE:
-        //        //    OnMoveUnitCommand?.Invoke(null, new MoveUnitCommandEventArgs(Game.Instance.ActiveUnit.Move(1, -1)));
-        //        //    break;
-        //        case OrderType.BuildIrrigation: 
-        //            Game.Instance.ActiveUnit.BuildIrrigation();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.BuildMine: 
-        //            Game.Instance.ActiveUnit.BuildMines();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.GoTo:
-        //            //TODO: goto key pressed event
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.Fortify: 
-        //            Game.Instance.ActiveUnit.Fortify();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.Sleep: 
-        //            Game.Instance.ActiveUnit.Sleep();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.GoHome:
-        //            //TODO: gohome key pressed event
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.SkipTurn: 
-        //            Game.Instance.ActiveUnit.SkipTurn();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.BuildCity: 
-        //            Game.Instance.ActiveUnit.BuildCity();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.BuildRoad: 
-        //            Game.Instance.ActiveUnit.BuildRoad();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.Transform: 
-        //            Game.Instance.ActiveUnit.Transform();
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.Automate:
-        //            //TODO: automate key pressed event
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        case OrderType.ActivateUnit:
-        //            //TODO: activate unit key pressed event
-        //            UpdateUnit(Game.Instance.ActiveUnit);
-        //            break;
-        //        default: break;
-        //    }
-        //}
-
-
     }
 }
