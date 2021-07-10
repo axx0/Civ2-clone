@@ -37,28 +37,7 @@ namespace Civ2engine
         public int Xpx => 4 * (_zoom + 8);    // Length of 1 map square in X
         public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
         public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
-        private int[] _activeXY;
-        public int[] ActiveXY   // Coords of either active unit or view piece
-        {
-            get
-            {
-                if (!ViewPieceMode )
-                {
-                    _activeXY = new [] { Game.ActiveUnit.X, Game.ActiveUnit.Y };
-                }
-                return _activeXY;
-            }
-            set => _activeXY = value;
-        }
-        private bool _viewPieceMode;
-        public bool ViewPieceMode 
-        {
-            get => Game.ActiveUnit == null || !Game.GetActiveCiv.AnyUnitsAwaitingOrders || _viewPieceMode;
-            set => _viewPieceMode = value;
-        }
-
-        public Tile ActiveTile => TileC2(ActiveXY[0], ActiveXY[1]);
-
+        
         /// <summary>
         /// Generate first instance of terrain tiles by importing game data.
         /// </summary>

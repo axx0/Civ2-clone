@@ -209,7 +209,7 @@ namespace Civ2engine
         }
 
         // Choose next unit for orders. If all units ended turn, update cities.
-        private void ChooseNextUnit()
+        public void ChooseNextUnit()
         {
             
             Unit nextUnit = null;

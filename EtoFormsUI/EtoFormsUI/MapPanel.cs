@@ -7,7 +7,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.Units;
+using EtoFormsUI.Animations;
 
 namespace EtoFormsUI
 {
@@ -34,6 +34,10 @@ namespace EtoFormsUI
 
         private int _topOffset = 0;
 
+        private readonly Queue<IAnimation> AnimationQueue = new();
+
+        public IAnimation CurrentAnimation;
+
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         private Bitmap map;
@@ -51,7 +55,7 @@ namespace EtoFormsUI
             MainPanel.Paint += (sender, e) => Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} Map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
 
             Game.OnUnitEvent += UnitEventHappened;
-            Game.OnPlayerEvent += PlayerEventHappened;
+            // Game.OnPlayerEvent += PlayerEventHappened;
             MinimapPanel.OnMapEvent += MapEventHappened;
             StatusPanel.OnMapEvent += MapEventHappened;
             Game.OnMapEvent += MapEventHappened;
@@ -86,6 +90,7 @@ namespace EtoFormsUI
             // Starting animation
             animationTimer = new UITimer(); // Timer for waiting unit/ viewing piece
             animationTimer.Elapsed += OnAnimationElapsedEvent;
+            animationTimer.Start();
             animType = AnimationType.Waiting;
 
             // Center the map view and draw map
@@ -105,30 +110,79 @@ namespace EtoFormsUI
             {
                 e.Graphics.DrawImage(map, mapSrc1, mapDest);
                 updateMap = false;
-                StartAnimation(animType);
             }
             // Draw animation
             else
             {
-                switch (animType)
-                {
-                    case AnimationType.Waiting:
-                        {
-                            e.Graphics.DrawImage(animationFrames[animationCount % 2], ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx + mapDest.Y);
-                            break;
-                        }
-                    case AnimationType.UnitMoving:
-                        {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.PrevXYpx[0] - MapStartPx.X - (2 * Map.Xpx), Game.ActiveUnit.PrevXYpx[1] - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
-                            break;
-                        }
-                    case AnimationType.Attack:
-                        {
-                            e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.Xpx - MapStartPx.X - (2 * Map.Xpx), Game.ActiveUnit.Ypx - MapStartPx.Y - (3 * Map.Ypx) + mapDest.Y);
-                            break;
-                        }
-                }
+                if(CurrentAnimation == null) return;
+                e.Graphics.DrawImage(CurrentAnimation.CurrentFrame,  CurrentAnimation.GetXDrawOffset(Map.Xpx, mapStartXY[0]), CurrentAnimation.GetYDrawOffset(Map.Ypx, mapStartXY[1]) + mapDest.Y );
+                // switch (animType)
+                // {
+                //     case AnimationType.Waiting:
+                //         {
+                //             e.Graphics.DrawImage(animationFrames[animationCount % 2], (new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).X, (new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).Y - Map.Ypx + mapDest.Y);
+                //             break;
+                //         }
+                //     case AnimationType.UnitMoving:
+                //         {
+                //             e.Graphics.DrawImage(animationFrames[animationCount], Game.ActiveUnit.PrevXYpx[0] - (new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1])).X - (2 * Map.Xpx), Game.ActiveUnit.PrevXYpx[1] - (new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1])).Y - (3 * Map.Ypx) + mapDest.Y);
+                //             break;
+                //         }
+                //     case AnimationType.Attack:
+                //         {
+                       //      e.Graphics.DrawImage(animationFrames[animationCount], (Game.ActiveUnit.X * Map.Xpx) - (new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1])).X - (2 * Map.Xpx), (Game.ActiveUnit.Y * Map.Ypx) - (new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1])).Y - (3 * Map.Ypx) + mapDest.Y);
+                //             break;
+                //         }
+                // }
             }
+        }
+
+        public void ShowCityWindow(City city)
+        {
+            if (cityWindow != null)
+            {
+                CityWindowLocation = cityWindow.Location;
+                cityWindow.Close();
+            }
+                    
+            cityWindow = new CityWindow(main, this, city, CityWindowZoom);
+            cityWindow.Show();
+        }
+
+        public bool ActivateUnits(int[] clickedXy)
+        {
+            var unitsHere = Game.Instance.AllUnits.Where(u =>
+                    !u.Dead && u.Owner == Game.Instance.GetActiveCiv && u.X == clickedXy[0] &&
+                    u.Y == clickedXy[1])
+                .ToList();
+            
+            if (unitsHere.Count == 0) return true;
+
+            var unit = unitsHere[0];
+            if (unitsHere.Count > 1)
+            {
+                // Multiple units on this square => open unit selection dialog
+
+                var selectUnitDialog = new SelectUnitDialog(main, unitsHere);
+                selectUnitDialog.ShowModal(main);
+
+                if (selectUnitDialog.SelectedIndex < 0)
+                {
+                    return false;
+                }
+
+                unit = unitsHere[selectUnitDialog.SelectedIndex];
+            }
+
+            
+            if (!unit.TurnEnded)
+            {
+                Game.ActiveUnit = unit;
+            }
+
+            unit.Order = OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated
+            main.CurrentGameMode = main.Moving;
+            return true;
         }
 
         private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
@@ -145,82 +199,87 @@ namespace EtoFormsUI
 
             // TODO: Make sure that edge black tiles are also ignored!
 
-            if (e.Buttons == MouseButtons.Primary)  // Left button
+            if (main.CurrentGameMode.MapClicked(clickedXY, this, main, e.Buttons))
             {
-                var unitsHere = Game.UnitsHere(clickedXY[0], clickedXY[1]);
-
-                // City clicked
-                if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
-                {
-                    // If in view piece mode move the viewing piece there
-                    if (Map.ViewPieceMode)
-                    {
-                        Map.ActiveXY = clickedXY;
-                        animType = AnimationType.Waiting;
-                        UpdateMap();
-                    }
-
-                    // If city window is already open, close it before opening new instance
-                    if (cityWindow != null)
-                    {
-                        CityWindowLocation = cityWindow.Location;
-                        cityWindow.Close();
-                    }
-                    
-                    cityWindow = new CityWindow(main, this, Game.CityHere(clickedXY[0], clickedXY[1]), CityWindowZoom);
-                    cityWindow.Show();
-                }
-                // Unit clicked
-                else if (unitsHere.Count > 0 && unitsHere.Last().Owner == Game.GetActiveCiv)
-                {
-                    // Single unit on square
-                    if (unitsHere.Count == 1)
-                    {
-                        var unit = unitsHere[0];
-                        if (!unit.TurnEnded)
-                        {
-                            Game.ActiveUnit = unit;
-                        }
-
-                        unit.Order = OrderType.NoOrders;   // Always clear order when clicked, no matter if the unit is activated
-                        Map.ViewPieceMode = false;
-                        MapViewChange(clickedXY);
-                    }
-                    // Multiple units on this square => open unit selection dialog
-                    else
-                    {
-                        var selectUnitDialog = new SelectUnitDialog(main, unitsHere);
-                        selectUnitDialog.ShowModal(main);
-
-                        if (selectUnitDialog.SelectedIndex >= 0)
-                        {
-                            Game.ActiveUnit = unitsHere[selectUnitDialog.SelectedIndex];
-                            Map.ViewPieceMode = false;
-                            MapViewChange(clickedXY);
-                        }
-                    }
-                }
-                // Something else clicked
-                else
-                {
-                    if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
-                    MapViewChange(clickedXY);
-                }
-            }
-            else    // Right click
-            {
-                Map.ViewPieceMode = true;
-                Map.ActiveXY = clickedXY;
                 MapViewChange(clickedXY);
-                //StartAnimation(AnimationType.Waiting);
             }
+
+            // if (e.Buttons == MouseButtons.Primary)  // Left button
+            // {
+            //     var unitsHere = Game.UnitsHere(clickedXY[0], clickedXY[1]);
+            //
+            //     // City clicked
+            //     if (Game.AnyCitiesPresentHere(clickedXY[0], clickedXY[1]))
+            //     {
+            //         // If in view piece mode move the viewing piece there
+            //         // if (Map.ViewPieceMode)
+            //         // {
+            //         //     Map.ActiveXY = clickedXY;
+            //         //     animType = AnimationType.Waiting;
+            //         //     UpdateMap();
+            //         // }
+            //
+            //         // If city window is already open, close it before opening new instance
+            //         if (cityWindow != null)
+            //         {
+            //             CityWindowLocation = cityWindow.Location;
+            //             cityWindow.Close();
+            //         }
+            //         
+            //         cityWindow = new CityWindow(main, this, Game.CityHere(clickedXY[0], clickedXY[1]), CityWindowZoom);
+            //         cityWindow.Show();
+            //     }
+            //     // Unit clicked
+            //     else if (unitsHere.Count > 0 && unitsHere[0].Owner == Game.GetActiveCiv)
+            //     {
+            //         // Single unit on square
+            //         if (unitsHere.Count == 1)
+            //         {
+            //             var unit = unitsHere[0];
+            //             if (!unit.TurnEnded)
+            //             {
+            //                 Game.ActiveUnit = unit;
+            //             }
+            //
+            //             unit.Order = OrderType.NoOrders;   // Always clear order when clicked, no matter if the unit is activated
+            //             Map.ViewPieceMode = false;
+            //             MapViewChange(clickedXY);
+            //         }
+            //         // Multiple units on this square => open unit selection dialog
+            //         else
+            //         {
+            //             var selectUnitDialog = new SelectUnitDialog(main, unitsHere);
+            //             selectUnitDialog.ShowModal(main);
+            //
+            //             if (selectUnitDialog.SelectedIndex >= 0)
+            //             {
+            //                 Game.ActiveUnit = unitsHere[selectUnitDialog.SelectedIndex];
+            //                 Map.ViewPieceMode = false;
+            //                 MapViewChange(clickedXY);
+            //             }
+            //         }
+            //     }
+            //     // Something else clicked
+            //     else
+            //     {
+            //         if (Map.ViewPieceMode) Map.ActiveXY = clickedXY;
+            //         MapViewChange(clickedXY);
+            //     }
+            // }
+            // else    // Right click
+            // {
+            //     Map.ViewPieceMode = true;
+            //     Map.ActiveXY = clickedXY;
+            //     MapViewChange(clickedXY);
+            //     //StartAnimation(AnimationType.Waiting);
+            // }
         }
 
-        private void MapViewChange(int[] newCenterCoords)
+        internal void MapViewChange(int[] newCenterCoords)
         {
             if (map != null) map.Dispose();
             SetCoordsAtMapViewChange(newCenterCoords);
-            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
+            map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed, main.CurrentGameMode != main.Moving);
             UpdateMap();
             OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, mapStartXY, mapDrawSq));
         }
@@ -229,7 +288,7 @@ namespace EtoFormsUI
         {
             updateMap = true;
             if (map != null) map.Dispose();
-            map = Draw.MapPart(Map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed);
+            map = Draw.MapPart(Map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed,main.CurrentGameMode != main.Moving);
             drawPanel.Invalidate();
         }
 
@@ -272,11 +331,11 @@ namespace EtoFormsUI
                         UpdateMap();
                         break;
                     }
-                case MapEventType.ViewPieceMoved:
-                    {
-                        StartAnimation(AnimationType.Waiting);
-                        break;
-                    }
+                // case MapEventType.ViewPieceMoved:
+                //     {
+                //         StartAnimation(AnimationType.Waiting);
+                //         break;
+                //     }
                 case MapEventType.ToggleBetweenCurrentEntireMapView:
                     {
                         drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
@@ -291,7 +350,7 @@ namespace EtoFormsUI
                     }
                 case MapEventType.CenterView:
                     {
-                        MapViewChange(Map.ActiveXY);
+                        MapViewChange(main.CurrentGameMode.ActiveXY);
                         //drawPanel.Invalidate();
                         break;
                     }
@@ -302,12 +361,12 @@ namespace EtoFormsUI
                         //drawPanel.Invalidate();
                         break;
                     }
-                case MapEventType.WaitAtEndOfTurn:
-                    {
-                        Map.ViewPieceMode = true;
-                        StartAnimation(AnimationType.Waiting);
-                        break;
-                    }
+                // case MapEventType.WaitAtEndOfTurn:
+                // {
+                //     main.CurrentGameMode = main.ViewPiece;
+                //         StartAnimation(AnimationType.Waiting);
+                //         break;
+                //     }
                 case MapEventType.UpdateMap:
                     {
                         UpdateMap();
@@ -317,20 +376,21 @@ namespace EtoFormsUI
             }
         }
 
+/*
         private void PlayerEventHappened(object sender, PlayerEventArgs e)
         {
             switch (e.EventType)
             {
                 case PlayerEventType.NewTurn:
-                    {
-                        if (Game.ActiveUnit != null) Map.ViewPieceMode = false;
-                        animationTimer.Stop();
-                        animationCount = 0;
-                        animationTimer.Start();
-                        break;
-                    }
+                {
+                    animationTimer.Stop();
+                    animationCount = 0;
+                    animationTimer.Start();
+                    break;
+                }
             }
         }
+*/
 
         private void UnitEventHappened(object sender, UnitEventArgs e)
         {
@@ -339,27 +399,29 @@ namespace EtoFormsUI
                 // Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
                     {
-                        animType = AnimationType.UnitMoving;
-                        if (IsActiveSquareOutsideMapView) 
-                        { 
-                            MapViewChange(Map.ActiveXY);
-                        }
-                        StartAnimation(animType);
+                        AnimationQueue.Enqueue(new MoveAnimation(e.Unit));
+                        // animType = AnimationType.UnitMoving;
+                        // if (IsActiveSquareOutsideMapView) 
+                        // { 
+                        //     MapViewChange(Map.ActiveXY);
+                        // }
+                        // StartAnimation(animType);
                         break;
                     }
                 case UnitEventType.Attack:
                     {
-                        animationFrames = GetAnimationFrames.UnitAttack(e);
-                        StartAnimation(AnimationType.Attack);
+                        AnimationQueue.Enqueue(new AttackAnimation(e));
+                        // animationFrames = GetAnimationFrames.UnitAttack(e);
+                        // StartAnimation(AnimationType.Attack);
                         break;
                     }
-                case UnitEventType.StatusUpdate:
-                    {
-                        animType = AnimationType.Waiting;
-                        if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
-                        UpdateMap();
-                        break;
-                    }
+                // case UnitEventType.StatusUpdate:
+                //     {
+                //         animType = AnimationType.Waiting;
+                //         if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
+                //         UpdateMap();
+                //         break;
+                //     }
             }
         }
 
@@ -374,78 +436,98 @@ namespace EtoFormsUI
         //}
 
         #region Animation
-        private void StartAnimation(AnimationType anim)
-        {
-            switch (anim)
-            {
-                case AnimationType.Waiting:
-                    animType = AnimationType.Waiting;
-                    animationTimer.Stop();
-                    animationFrames = GetAnimationFrames.Waiting(Map.ActiveXY);
-                    animationCount = 0;
-                    animationTimer.Interval = 0.2;    // sec
-                    animationTimer.Start();
-                    break;
-                case AnimationType.UnitMoving:
-                    animType = AnimationType.UnitMoving;
-                    animationFrames = GetAnimationFrames.UnitMoving(Game.ActiveUnit);
-                    animationTimer.Stop();
-                    animationCount = 0;
-                    animationTimer.Interval = 0.02;    // sec
-                    animationTimer.Start();
-                    break;
-                case AnimationType.Attack:
-                    animType = AnimationType.Attack;
-                    animationTimer.Stop();
-                    animationCount = 0;
-                    animationTimer.Interval = 0.07;    // sec
-                    animationTimer.Start();
-                    break;
-            }
-        }
+        // private void StartAnimation(AnimationType anim)
+        // {
+        //     switch (anim)
+        //     {
+        //         case AnimationType.Waiting:
+        //             animType = AnimationType.Waiting;
+        //             animationTimer.Stop();
+        //             animationFrames = GetAnimationFrames.Waiting(Map.ActiveXY);
+        //             animationCount = 0;
+        //             animationTimer.Interval = 0.2;    // sec
+        //             animationTimer.Start();
+        //             break;
+        //         case AnimationType.UnitMoving:
+        //             animType = AnimationType.UnitMoving;
+        //             animationFrames = GetAnimationFrames.UnitMoving(Game.ActiveUnit);
+        //             animationTimer.Stop();
+        //             animationCount = 0;
+        //             animationTimer.Interval = 0.02;    // sec
+        //             animationTimer.Start();
+        //             break;
+        //         case AnimationType.Attack:
+        //             animType = AnimationType.Attack;
+        //             animationTimer.Stop();
+        //             animationCount = 0;
+        //             animationTimer.Interval = 0.07;    // sec
+        //             animationTimer.Start();
+        //             break;
+        //     }
+        // }
 
         private void OnAnimationElapsedEvent(object sender, EventArgs e)
         {
-            switch (animType)
+            if (CurrentAnimation == null || CurrentAnimation.Finished())
             {
-                case AnimationType.Waiting:
-                    {
-                        // At new unit turn initially re-draw the whole map
-                        //if (animationCount == 0) drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
-                        //else drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
-                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
-                        break;
-                    }
-                case AnimationType.UnitMoving:
-                    {
-                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Map.Xpx, 7 * Map.Ypx));
-                        if (animationCount == 7)  // Unit has completed movement
-                        {
-                            animationTimer.Stop();
-                            Game.UpdateActiveUnit();
-                        }
-                        break;
-                    }
-                case AnimationType.Attack:
-                    {
-                        drawPanel.Update(new Rectangle(ActiveOffsetPx.X, ActiveOffsetPx.Y, 6 * Map.Xpx, 7 * Map.Ypx));
-                        if (animationCount == animationFrames.Count - 1)
-                        {
-                            animationTimer.Stop();
-                            Game.UpdateActiveUnit();
-                        }
-                        break;
-                    }
+                CurrentAnimation = AnimationQueue.Count > 0 ? AnimationQueue.Dequeue() : main.CurrentGameMode.GetDefaultAnimation(Game,CurrentAnimation);
+                if (CurrentAnimation != null)
+                {
+                    animationTimer.Interval = CurrentAnimation.Interval;
+                }
             }
-
-            animationCount++;
+            
+            if(CurrentAnimation == null) return;
+            if (IsActiveSquareOutsideMapView(CurrentAnimation.XY))
+            {
+                MapViewChange(CurrentAnimation.XY);
+            }
+            else
+            {
+                drawPanel.Update(new Rectangle(Map.Xpx * (CurrentAnimation.XY[0] - mapStartXY[0]),
+                    Map.Ypx * (CurrentAnimation.XY[1] - mapStartXY[1]) - CurrentAnimation.YAdjustment,
+                    CurrentAnimation.Width * Map.Xpx, CurrentAnimation.Height * Map.Ypx));
+            }
+            // switch (animType)
+            // {
+            //     case AnimationType.Waiting:
+            //         {
+            //             // At new unit turn initially re-draw the whole map
+            //             //if (animationCount == 0) drawPanel.Update(new Rectangle(0, 0, drawPanel.Width, drawPanel.Height));
+            //             //else drawPanel.Update(new Rectangle((new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).X, (new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
+            //             drawPanel.Update(new Rectangle((new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).X, (new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).Y - Map.Ypx, 2 * Map.Xpx, 3 * Map.Ypx));
+            //             break;
+            //         }
+            //     case AnimationType.UnitMoving:
+            //         {
+            //             drawPanel.Update(new Rectangle((new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).X, (new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).Y, 6 * Map.Xpx, 7 * Map.Ypx));
+            //             if (animationCount == 7)  // Unit has completed movement
+            //             {
+            //                 animationTimer.Stop();
+            //                 Game.UpdateActiveUnit();
+            //             }
+            //             break;
+            //         }
+            //     case AnimationType.Attack:
+            //         {
+            //             drawPanel.Update(new Rectangle((new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).X, (new Point(Map.Xpx * ( Map.ActiveXY[0] - mapStartXY[0]), Map.Ypx * ( Map.ActiveXY[1] - mapStartXY[1] ))).Y, 6 * Map.Xpx, 7 * Map.Ypx));
+            //             if (animationCount == animationFrames.Count - 1)
+            //             {
+            //                 animationTimer.Stop();
+            //                 Game.UpdateActiveUnit();
+            //             }
+            //             break;
+            //         }
+            // }
+            //
+            // animationCount++;
         }
         #endregion
 
-        private bool IsActiveSquareOutsideMapView => Map.ActiveXY[0] >= mapStartXY[0] + PanelSq[0] - 2 ||
-                                                     Map.ActiveXY[0] <= mapStartXY[0] ||
-                                                     Map.ActiveXY[1] >= mapStartXY[1] + PanelSq[1] - 2 ||
-                                                     Map.ActiveXY[1] <= mapStartXY[1];
+        private bool IsActiveSquareOutsideMapView(int[] activeXy) => activeXy[0] >= mapStartXY[0] + PanelSq[0] - 2 ||
+                                                                     activeXy[0] <= mapStartXY[0] ||
+                                                                     activeXy[1] >= mapStartXY[1] + PanelSq[1] - 2 ||
+                                                                     activeXy[1] <= mapStartXY[1];
 
         // Function which sets various variables for drawing map on grid
         private void SetCoordsAtMapViewChange(int[] proposedCentralCoords)
@@ -561,10 +643,7 @@ namespace EtoFormsUI
         }
 
         private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Map.Ypx) };   // No of squares of panel and map
-        private int[] ActiveOffsetXY => new int[] { Map.ActiveXY[0] - mapStartXY[0], Map.ActiveXY[1] - mapStartXY[1] };
-        private Point ActiveOffsetPx => new Point(Map.Xpx * ActiveOffsetXY[0], Map.Ypx * ActiveOffsetXY[1]);
-        private Point MapStartPx => new Point(Map.Xpx * mapStartXY[0], Map.Ypx * mapStartXY[1]);
-
+       
         // Determine XY civ2 coords from x-y pixel location on panel
         private int[] PxToCoords(int x, int y, int zoom)
         {

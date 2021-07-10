@@ -12,7 +12,8 @@ namespace Civ2engine.UnitActions
                 
                 if (!game.ActiveUnit.TypeDefinition.CanBuildCities) return;
 
-                if (!game.CurrentMap.ActiveTile.Terrain.CanHaveCity) return;
+                var tile = game.CurrentMap.TileC2(game.ActiveUnit.X, game.ActiveUnit.Y);
+                if (!tile.Terrain.CanHaveCity) return;
                 
                 var confirmed = confirmCityBuild("Dummy Name");
                 if (confirmed.Build)

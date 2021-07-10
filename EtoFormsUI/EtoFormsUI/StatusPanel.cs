@@ -170,21 +170,22 @@ namespace EtoFormsUI
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
             var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
-            var _unitsOnThisTile = Game.UnitsHere(Map.ActiveXY[0], Map.ActiveXY[1]);
+            var activeXY = main.CurrentGameMode.ActiveXY;
+            var _unitsOnThisTile = Game.UnitsHere(activeXY[0], activeXY[1]);
 
             // View piece mode
-            if (Map.ViewPieceMode)
+            if (main.CurrentGameMode == main.ViewPiece)
             {
                 Draw.Text(e.Graphics, "Viewing Pieces", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Draw location & tile type on active square
-                if (Map.IsValidTileC2(Map.ActiveXY[0], Map.ActiveXY[1]))
+                if (Map.IsValidTileC2(activeXY[0], activeXY[1]))
                 {
                     Draw.Text(e.Graphics,
-                        $"Loc: ({Map.ActiveXY[0]}, {Map.ActiveXY[1]}) {Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Island}",
+                        $"Loc: ({activeXY[0]}, {activeXY[1]}) {Map.Tile[(activeXY[0] - activeXY[1] % 2) / 2, activeXY[1]].Island}",
                         _font, _frontColor, new Point(5, 27), false, false, _backColor, 1, 1);
                     Draw.Text(e.Graphics,
-                        $"({Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Type})", _font,
+                        $"({Map.Tile[(activeXY[0] - activeXY[1] % 2) / 2, activeXY[1]].Type})", _font,
                         _frontColor, new Point(5, 45), false, false, _backColor, 1, 1);
                 }
                 //int count;
@@ -236,7 +237,7 @@ namespace EtoFormsUI
                 var _column = 83;
                 Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 _column += 18;
-                var activeTile = Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]);
+                var activeTile = Map.TileC2(activeXY[0], activeXY[1]);
                 Draw.Text(e.Graphics, $"({activeTile.Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 
                 // If road/railroad/irrigation/farmland/mine present
@@ -316,16 +317,20 @@ namespace EtoFormsUI
 
         private void Panel_Click(object sender, MouseEventArgs e)
         {
-            if (WaitingAtEndOfTurn)
+            if (main.CurrentGameMode.PanelClick(Game, main))
             {
-                End_WaitAtEndOfTurn();
-            }
-            else
-            {
-                Map.ViewPieceMode = !Map.ViewPieceMode;
                 unitPanel.Invalidate();
-                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
             }
+            // if (WaitingAtEndOfTurn)
+            // {
+            //     End_WaitAtEndOfTurn();
+            // }
+            // else
+            // {
+            //     Map.ViewPieceMode = !Map.ViewPieceMode;
+            //     unitPanel.Invalidate();
+            //     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
+            // }
         }
 
         private void MapEventHappened(object sender, MapEventArgs e)
@@ -364,11 +369,11 @@ namespace EtoFormsUI
             switch (e.EventType)
             {
                 // Unit movement animation event was raised
-                //case UnitEventType.MoveCommand:
-                //    {
-                //        unitPanel.Invalidate();
-                //        break;
-                //    }
+                case UnitEventType.MoveCommand:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
                 case UnitEventType.StatusUpdate:
                     {
                         unitPanel.Invalidate();

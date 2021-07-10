@@ -16,11 +16,22 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
         private Map Map => Game.CurrentMap;
-        public IGameMode CurrentGameMode { get; set; }
+
+        public IGameMode CurrentGameMode
+        {
+            get => _currentGameMode;
+            set
+            {
+                if (value.Init(_currentGameMode, Game.Instance))
+                {
+                    _currentGameMode = value;
+                }
+            }
+        }
 
         private Processing Processing = new();
-        private MovingPieces Moving;
-        private ViewPiece View;
+        internal MovingPieces Moving;
+        internal ViewPiece ViewPiece;
 
         private readonly PixelLayout layout;
         private MapPanel mapPanel;
@@ -29,6 +40,7 @@ namespace EtoFormsUI
         
         internal Dictionary<string, PopupBox> popupBoxList;
         public Sound Sounds;
+        private IGameMode _currentGameMode;
         public static event EventHandler<PopupboxEventArgs> OnPopupboxEvent;
         public static event EventHandler<MapEventArgs> OnMapEvent;
         
@@ -220,7 +232,7 @@ namespace EtoFormsUI
         
         private void SetupGameModes()
         {
-            View = new ViewPiece();
+            ViewPiece = new ViewPiece();
             Moving = new MovingPieces(this);
             CurrentGameMode = Moving;
         }

@@ -20,22 +20,6 @@ namespace EtoFormsUI
                         if (statusPanel.WaitingAtEndOfTurn) statusPanel.End_WaitAtEndOfTurn();
                         break;
                     }
-                case Keys.Space:
-                    {
-                        if (!Map.ViewPieceMode)
-                        {
-                            Game.IssueUnitOrder(OrderType.SkipTurn);
-                        }
-                        break;
-                    }
-                case Keys.S:
-                    {
-                        if (!Map.ViewPieceMode)
-                        {
-                            Game.IssueUnitOrder(OrderType.Sleep);
-                        }
-                        break;
-                    }
             }
         }
     }

@@ -48,8 +48,7 @@ namespace Civ2engine.Units
         int Y { get; set; }
         int Xreal { get; }
         int[] XY { get; }
-        int Xpx { get; }
-        int Ypx { get; }
+
         int MovementCounter { get; set; }
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }

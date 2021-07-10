@@ -11,7 +11,7 @@ namespace Civ2engine.Events
         public List<bool> CombatRoundsAttackerWins;
         public List<int> AttackerHitpoints;
         public List<int> DefenderHitpoints;
-        public readonly IUnit Unit;
+        public readonly Unit Unit;
         public IUnit Defender;
 
         public BlockedReason Reason { get; set; }
@@ -28,7 +28,7 @@ namespace Civ2engine.Events
             Reason = reason;
         }
 
-        public UnitEventArgs(UnitEventType eventType, IUnit unit, IUnit defender, List<bool> combatRoundsAttackerWins, List<int> attackerHitpoints, List<int> defenderHitpoints)
+        public UnitEventArgs(UnitEventType eventType, Unit unit, IUnit defender, List<bool> combatRoundsAttackerWins, List<int> attackerHitpoints, List<int> defenderHitpoints)
         {
             EventType = eventType;
             Unit = unit;
