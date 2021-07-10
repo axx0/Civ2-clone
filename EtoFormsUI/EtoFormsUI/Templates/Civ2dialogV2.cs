@@ -31,6 +31,7 @@ namespace EtoFormsUI
         private readonly int _optionRows;
         private readonly Drawable _surface;
         private readonly Bitmap[] _icons;
+        private readonly Bitmap _image;
 
         /// <summary>
         /// Show a popup box (dialog).
@@ -42,8 +43,10 @@ namespace EtoFormsUI
         /// <param name="textBoxes">Definitions for any text input on the dialog</param>
         /// <param name="optionsCols">The number of columns to break options into</param>
         /// <param name="icons">Icons to show next to options</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null)
+        /// <param name="image">Image shown</param>
+        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null)
         {
+            _image = image;
             _icons = icons ?? Array.Empty<Bitmap>();
             _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
             if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
@@ -70,7 +73,7 @@ namespace EtoFormsUI
             _optionRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns) ;
             var textRows = popupBox.Text?.Count ?? 0;
             var iconRows = _icons.Sum(i => i.Height);
-            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + (_optionRows - _icons.Length) * 32 + textRows * 30 + iconRows);
+            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + Math.Max((_optionRows - _icons.Length) * 32 + textRows * 30 + iconRows, _image == null ? 0 : _image.Height));
             Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + _paddingTop + _paddingBtm);
             
             // Center the dialog on screen by default
@@ -402,8 +405,13 @@ namespace EtoFormsUI
             // Title
             Draw.Text(e.Graphics, _popupTitle, new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(Width / 2, _paddingTop / 2), true, true, Colors.Black, 1, 1);
 
-            var yOffset = 0;
+            // Image
+            if (_image != null)
+                e.Graphics.DrawImage(_image, new Point(11 + 2, _paddingTop + 2));
 
+            var xOffset = _image == null ? 0 : _image.Width;
+            var yOffset = 0;
+            
             // Centered text
            
             if (_text != null)
@@ -413,7 +421,7 @@ namespace EtoFormsUI
                     var centered = _textStyles != null && (int) _textStyles?.Count > i && _textStyles[i] == TextStyles.Centered;
                     Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
                         Color.FromArgb(51, 51, 51), 
-                        new Point(centered ? Width / 2 : 10, _paddingTop + 5 + yOffset),
+                        new Point(centered ? xOffset + Width / 2 : xOffset + 10, _paddingTop + 5 + yOffset),
                         centered, false,
                         Color.FromArgb(191, 191, 191), 1, 1);
 
@@ -425,7 +433,7 @@ namespace EtoFormsUI
             if (_options != null)
             {
                 var initialY = yOffset;
-                var widthOffset = 21;
+                var widthOffset = xOffset + 21;
                 var column = 1;
                 
                 using var pen = new Pen(Color.FromArgb(64, 64, 64));
@@ -497,8 +505,10 @@ namespace EtoFormsUI
         /// Determine max width of a popup box.
         /// </summary>
         private int MaxWidth(PopupBox popupBox, List<TextBoxDefinition> textBoxDefinitions)
-        { 
-            // 1) Input from Game.txt
+        {
+            var imageWidth = _image == null ? 0 : _image.Width;
+            
+            // 1) Width from Game.txt
             int width = (int)(popupBox.Width * 1.5);
 
             // 2) Max length of strings
@@ -520,7 +530,7 @@ namespace EtoFormsUI
                         .Where(n => n < popupBox.Options.Count).Select(n => (int) (new FormattedText
                             {Text = popupBox.Options[n], Font = new Font("Times new roman", 18)}.Measure().Width))
                         .Sum();
-                    var widthCandidate = textWidthCandidate + (_icons.Length > index ? _icons[index].Width : 40 * _optionsColumns); // Count in width of radio button
+                    var widthCandidate = textWidthCandidate + imageWidth + (_icons.Length > index ? _icons[index].Width : 40 * _optionsColumns); // Count in width of radio button
                     if (widthCandidate > width) width = widthCandidate;
                 }
             }
@@ -539,12 +549,12 @@ namespace EtoFormsUI
                     {
                         minTextBox = textWidthCandidate;
                     }
-                    var widthCandidate = textWidthCandidate + 50;   // Count in width of text box
-                    if (widthCandidate > width) width = widthCandidate;
+                    var widthCandidate = textWidthCandidate + imageWidth + 50;   // Count in width of text box
+                    if (widthCandidate > width) width = widthCandidate + imageWidth;
                 }else if ((_textStyles?.Count ?? 0 )> i && _textStyles[i] == TextStyles.Centered)
                 {
-                    var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
-                    if (textWidthCandidate > width) width = textWidthCandidate;              
+                    var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width) + imageWidth;
+                    if (textWidthCandidate > width) width = textWidthCandidate + imageWidth; 
                 }
             }
 
