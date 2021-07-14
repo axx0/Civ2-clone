@@ -2,14 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.Units
 {
     public class Unit : BaseInstance, IUnit
     {
+        private Tile _currentLocation;
+        private bool _dead;
+
         // From RULES.TXT
         public string Name => TypeDefinition.Name;
-        public bool Dead { get; set; }
+
+        public bool Dead
+        {
+            get => _dead;
+            set
+            {
+                if (value)
+                {
+                    CurrentLocation = null;
+                }
+                _dead = value;
+            }
+        }
+
         public int UntilTech => TypeDefinition.Until;
         public UnitGAS Domain => TypeDefinition.Domain;
         public int MaxMovePoints => TypeDefinition.Move;
@@ -142,130 +159,9 @@ namespace Civ2engine.Units
         public int[] XY => new int[] { X, Y };
         
         public int MovementCounter { get; set; }
-        public int Xpx => X * Map.Xpx;
-        public int Ypx => Y * Map.Ypx;
+
         public int[] PrevXY { get; set; }   // XY position of unit before it moved
         public int[] PrevXYpx => new int[] { PrevXY[0] * Map.Xpx, PrevXY[1] * Map.Ypx };
-
-        public bool Move(OrderType movementDirection)
-        {
-            // Determine coordinates of movement
-            int Xto = 0;
-            int Yto = 0;
-            switch (movementDirection)
-            {
-                case OrderType.MoveSW:
-                    Xto = X - 1;
-                    Yto = Y + 1;
-                    break;
-                case OrderType.MoveS:
-                    Xto = X + 0;
-                    Yto = Y + 2;
-                    break;
-                case OrderType.MoveSE:
-                    Xto = X + 1;
-                    Yto = Y + 1;
-                    break;
-                case OrderType.MoveE:
-                    Xto = X + 2;
-                    Yto = Y + 0;
-                    break;
-                case OrderType.MoveNE:
-                    Xto = X + 1;
-                    Yto = Y - 1;
-                    break;
-                case OrderType.MoveN:
-                    Xto = X + 0;
-                    Yto = Y - 2;
-                    break;
-                case OrderType.MoveNW:
-                    Xto = X - 1;
-                    Yto = Y - 1;
-                    break;
-                case OrderType.MoveW:
-                    Xto = X - 2;
-                    Yto = Y + 0;
-                    break;
-            }
-            
-            // Cannot move beyond map edge
-            if (Xto < 0 || Xto >= 2 * Map.XDim || Yto < 0 || Yto >= Map.YDim)
-            {
-                //TODO: display a message that a unit cannot move beyond map edges
-                return false;
-            }
-
-            var tileTo = Map.TileC2(Xto, Yto);
-            var isCity = tileTo.IsCityPresent;
-            bool unitMoved = isCity;
-            var moveCost = Game.Rules.Cosmic.MovementMultiplier;
-            switch (Domain)
-            {
-                case UnitGAS.Ground:
-                {
-                        if (tileTo.Type == TerrainType.Ocean) break;
-
-
-                        var tileFrom = Map.TileC2(X, Y);
-                        if (isCity || tileTo.Railroad)
-                        {
-                            if (tileFrom.Railroad)
-                            {
-                                moveCost = Game.Rules.Cosmic.RailroadMovement;
-                            }else if (tileFrom.Road)
-                            {
-                                moveCost = Game.Rules.Cosmic.RoadMovement;
-                            }
-                        }else if (tileTo.Road && (tileFrom.Road || tileFrom.IsCityPresent || tileFrom.Railroad))
-                        {
-                            moveCost = Game.Rules.Cosmic.RoadMovement;
-                        }
-                        else
-                        {
-                            moveCost *= tileTo.MoveCost;
-                        }
-                        
-                        // If alpine movement could be less use that
-                        if (Game.Rules.Cosmic.AlpineMovement < moveCost && Alpine)
-                        {
-                            moveCost = Game.Rules.Cosmic.AlpineMovement;
-                        }
-                        
-                        if (Game.Rules.Cosmic.RiverMovement < moveCost && tileFrom.River && tileTo.River && (movementDirection is OrderType.MoveSW or OrderType.MoveSE or OrderType.MoveNE or OrderType.MoveNW))    //For rivers only for diagonal movement
-                        {
-                            moveCost = Game.Rules.Cosmic.RiverMovement;
-                        }
-
-                        unitMoved = true;
-                        break;
-                    }
-                case UnitGAS.Sea:
-                    {
-                        if (tileTo.Type != TerrainType.Ocean) break;
-                        unitMoved = true;
-                        break;
-                    }
-                case UnitGAS.Air:
-                    {
-                        unitMoved = true;
-                        break;
-                    }
-            }
-
-            // If unit moved, update its X-Y coords
-            if (unitMoved)
-            {
-                MovePointsLost += moveCost;
-                // Set previous coords
-                PrevXY = new int[] { X, Y };
-
-                // Set new coords
-                X = Xto;
-                Y = Yto;
-            }
-
-            return unitMoved;
-        }
 
 
         public bool TurnEnded => MovePoints <= 0 ||
@@ -353,14 +249,29 @@ namespace Civ2engine.Units
             }
         }
 
-        public bool IsInCity => Game.GetCities.Any(city => city.X == X && city.Y == Y);
-        public bool IsInStack => Game.AllUnits.Where(u => u.X == X && u.Y == Y).Count() > 1;
-        public bool IsLastInStack => Game.AllUnits.Where(u => u.X == X && u.Y == Y).Last() == this;
+        public bool IsInCity => CurrentLocation is {CityHere: { }};
+        public bool IsInStack => CurrentLocation != null && CurrentLocation.UnitsHere.Count > 1;
+        public bool IsLastInStack => CurrentLocation != null && CurrentLocation.UnitsHere.Last() == this;
         
         public Unit InShip { get; set; }
 
         public string AttackSound => TypeDefinition.AttackSound;
-        public City CityWithThisUnit => Game.GetCities.FirstOrDefault(c => c.X == X && c.Y == Y);
+        public City CityWithThisUnit => CurrentLocation != null ? CurrentLocation.CityHere: null;
         public List<Unit> CarriedUnits { get; } = new();
+
+        public Tile CurrentLocation
+        {
+            get => _currentLocation;
+            set
+            {
+                if(_currentLocation == value) return;
+                _currentLocation?.UnitsHere.RemoveAll(u=> u== this);
+                if (value != null && !value.UnitsHere.Contains(this))
+                {
+                    value.UnitsHere.Add(this);
+                }
+                _currentLocation = value;
+            }
+        }
     }
 }

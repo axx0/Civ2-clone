@@ -130,11 +130,8 @@ namespace EtoFormsUI
 
         public bool ActivateUnits(int[] clickedXy)
         {
-            var unitsHere = Game.Instance.AllUnits.Where(u =>
-                    !u.Dead && u.Owner == Game.Instance.GetActiveCiv && u.X == clickedXy[0] &&
-                    u.Y == clickedXy[1])
-                .ToList();
-            
+            var tile = Map.TileC2(clickedXy[0], clickedXy[1]);
+            var unitsHere = tile.UnitsHere;
             if (unitsHere.Count == 0) return true;
 
             var unit = unitsHere[0];

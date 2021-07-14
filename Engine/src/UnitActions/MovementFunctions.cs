@@ -148,8 +148,8 @@ namespace Civ2engine.UnitActions.Move
             var destX = unit.X + deltaX;
             var destY = unit.Y + deltaY;
 
-            var unitsOnTarget = game.AllUnits.Where(u => u.X == destX && u.Y == destY).ToList();
-            if (unitsOnTarget.Count > 0 && unitsOnTarget[0].Owner != unit.Owner)
+            var tileTo = game.CurrentMap.TileC2(destX, destY);
+            if (tileTo.UnitsHere.Count > 0 && tileTo.UnitsHere[0].Owner != unit.Owner)
             {
                 if (unit.AttackBase == 0)
                 {
@@ -158,12 +158,11 @@ namespace Civ2engine.UnitActions.Move
                 }         
                 
                 
-                var tileTo = game.CurrentMap.TileC2(destX, destY);
-                var city = game.GetCities.FirstOrDefault(c => c.X == tileTo.X && c.Y == tileTo.Y);
+                var city = tileTo.CityHere;
                 if (city != null)
                 {
                     //Anything can attack or defend a city
-                    Attack(game, unit, tileTo, unitsOnTarget, city);
+                    Attack(game, unit, tileTo, tileTo.UnitsHere, city);
                     return;
                 }
 
@@ -184,13 +183,13 @@ namespace Civ2engine.UnitActions.Move
                     }
                 }
 
-                if (!unit.CanAttackAirUnits && unitsOnTarget.Any(u => u.Domain == UnitGAS.Air))
+                if (!unit.CanAttackAirUnits && tileTo.UnitsHere.Any(u => u.Domain == UnitGAS.Air))
                 {
                     game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.CannotAttackAirUnits);
                     return;
                 }
                 
-                Attack(game, unit, tileTo, unitsOnTarget, null);
+                Attack(game, unit, tileTo, tileTo.UnitsHere, null);
             }
             else
             {
@@ -334,8 +333,8 @@ namespace Civ2engine.UnitActions.Move
                     if (tileTo.Type == TerrainType.Ocean)
                     {
                         //Check if we can board a ship there
-                        var availableShip = game.AllUnits.FirstOrDefault(u =>
-                            u.Owner == unit.Owner && u.X == tileTo.X && u.Y == tileTo.Y && u.ShipHold > u.CarriedUnits.Count);
+                        var availableShip = tileTo.UnitsHere.FirstOrDefault(u =>
+                            u.Owner == unit.Owner && u.ShipHold > u.CarriedUnits.Count);
                         if (availableShip != null)
                         {
                             availableShip.CarriedUnits.Add(unit);
@@ -407,8 +406,8 @@ namespace Civ2engine.UnitActions.Move
                     {
                         if (tileFrom.Terrain.Type == TerrainType.Ocean)
                         {
-                            foreach (var unaccountedUnit in game.AllUnits
-                                .Where(u => u.X == unit.X && u.Y == unit.Y && u.InShip == null &&
+                            foreach (var unaccountedUnit in tileFrom.UnitsHere
+                                .Where(u => u.InShip == null &&
                                             u.Domain == UnitGAS.Ground)
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
@@ -419,8 +418,8 @@ namespace Civ2engine.UnitActions.Move
                         }
                         else if (tileFrom.IsCityPresent)
                         {
-                            foreach (var unaccountedUnit in game.AllUnits
-                                .Where(u => u.X == unit.X && u.Y == unit.Y && u.InShip == null &&
+                            foreach (var unaccountedUnit in tileFrom.UnitsHere
+                                .Where(u => u.InShip == null &&
                                             u.Domain == UnitGAS.Ground && u.Order == OrderType.Sleep)
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
@@ -447,8 +446,8 @@ namespace Civ2engine.UnitActions.Move
                     }
                     else
                     {
-                        var carrier = game.AllUnits.FirstOrDefault(u =>
-                            u.X == tileTo.X && u.Y == tileTo.Y && u.CanCarryAirUnits && u.CarriedUnits.Count < 20);
+                        var carrier = tileTo.UnitsHere.FirstOrDefault(u =>
+                            u.CanCarryAirUnits && u.CarriedUnits.Count < 20);
                         if (carrier != null)
                         {
                             moveCost = unit.MovePoints;
@@ -477,6 +476,7 @@ namespace Civ2engine.UnitActions.Move
                 // Set new coords
                 unit.X = tileTo.X;
                 unit.Y = tileTo.Y;
+                unit.CurrentLocation = tileTo;
                 if (unit.CarriedUnits.Count > 0)
                 {
                     unit.CarriedUnits.ForEach(u =>
@@ -484,6 +484,7 @@ namespace Civ2engine.UnitActions.Move
                         u.PrevXY = unit.PrevXY;
                         u.X = unit.X;
                         u.Y = unit.Y;
+                        u.CurrentLocation = tileTo;
                     });
                     if (isCity) //If we're docking activate units carried
                     {
@@ -504,27 +505,26 @@ namespace Civ2engine.UnitActions.Move
 
         private static bool IsFriendlyTile(Game game, Tile tileTo, Unit unit)
         {
-            return game.GetCities.Any(c => c.X == tileTo.X && c.Y == tileTo.Y && c.Owner == unit.Owner) ||
-                   game.AllUnits.Any(c => c.X == tileTo.X && c.Y == tileTo.Y && c.Owner == unit.Owner);
+            return tileTo.UnitsHere.Any(u => u.Owner == unit.Owner) ||
+                   (tileTo.CityHere != null && tileTo.CityHere.Owner == unit.Owner);
         }
 
         private static bool IsNextToEnemy(Game game, Unit unit, Tile tileFrom)
         {
-            return game.CurrentMap.Neighbours(tileFrom).Any(t =>
-                game.AllUnits.Any(u => u.X == t.X && u.Y == t.Y && u.Owner != unit.Owner && u.InShip == null && u.Domain == unit.Domain));
+            return game.CurrentMap.Neighbours(tileFrom).Any(t => t.UnitsHere.Any(u => u.Owner != unit.Owner && u.InShip == null && u.Domain == unit.Domain));
         }
 
         public static IEnumerable<Tile> GetPossibleMoves(Game game, Tile tile, Unit unit)
         {
             var neighbours = unit.Domain == UnitGAS.Ground
-                ? game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean)
+                ? game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold))
                 : game.CurrentMap.Neighbours(tile);
             if (unit.IgnoreZonesOfControl || !IsNextToEnemy(game, unit, tile))
             {
                 return neighbours;
             }
             return neighbours
-                .Where(n => game.AllUnits.Any(c => c.X == n.X && c.Y == n.Y) || !IsNextToEnemy(game, unit, n));
+                .Where(n => n.UnitsHere.Count > 0 || !IsNextToEnemy(game, unit, n));
         }
     }
 }

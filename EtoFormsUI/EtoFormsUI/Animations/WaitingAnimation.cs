@@ -62,19 +62,18 @@ namespace EtoFormsUI.GameModes
                         // Tiles
                         Draw.Tile(g, x, y, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + map.Ypx));
 
-                        var city = game.CityHere(x, y);
-                        if (city == null)
+                        var tile = map.TileC2(x, y);
+                        if (tile.CityHere == null)
                         {
                             // Units
-                            var unitsHere = game.UnitsHere(x, y);
+                            var unitsHere = tile.UnitsHere;
                             if (unitsHere.Count > 0)
                             {
                                 // If this is not tile with active unit or viewing piece, draw last unit on stack
                                 if (unit == null || x != unitX || y != unitY)
                                 {
                                     Draw.Unit(g,
-                                        unitsHere.OrderByDescending(u => u.InShip != null ? int.MinValue : u.AttackBase)
-                                            .First(), unitsHere.Count > 1, map.Zoom,
+                                        tile.GetTopUnit(), unitsHere.Count > 1, map.Zoom,
                                         new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                                 }
                             }
@@ -82,7 +81,7 @@ namespace EtoFormsUI.GameModes
                         else
                         {
                             // City
-                            Draw.City(g, city, true, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                            Draw.City(g, tile.CityHere, true, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                         }
 
                         // Draw active unit if it's not moving
@@ -119,7 +118,7 @@ namespace EtoFormsUI.GameModes
                         if (x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim)
                             continue; // Make sure you're not drawing tiles outside map bounds
 
-                        var city = game.CityHere(x, y);
+                        var city = map.TileC2(x, y).CityHere;
                         if (city != null) Draw.CityName(g, city, map.Zoom, new[] {coordsOffsets[0], coordsOffsets[1] + 1});
                     }
                     

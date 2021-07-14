@@ -69,10 +69,12 @@ namespace Civ2engine
                 y = city.Y + offsets[i, 1];
 
                 // TODO: block tiles already occupied by workers from other cities
+                if(!Map.IsValidTileC2(x,y)) continue;
+                var tile = Map.TileC2(x, y);
                 if (i != 0 && // Home city is here
-                    Map.IsTileVisibleC2(x, y, city.Owner.Id) &&   // Tile must be visible
-                    !Game.UnitsHere(x, y).Any(u => u.Owner != city.Owner && u.Type != UnitType.Settlers && u.Type != UnitType.Engineers && u.Type != UnitType.Spy && u.Type != UnitType.Diplomat && u.Type != UnitType.Explorer) &&    // Tile mustn't have enemy unit (certain units allowed)
-                    Game.CityHere(x, y) == null &&  // Tile mustn't be occupied by other city
+                    tile.Visibility[city.Owner.Id] &&   // Tile must be visible
+                    !tile.UnitsHere.Any(u => u.Owner != city.Owner && u.AttackBase > 0) &&    // Tile mustn't have enemy unit (certain units allowed)
+                    tile.CityHere == null &&  // Tile mustn't be occupied by other city
                     !city.DistributionWorkers[i])   // Tile mustn't already have workers
                 {
                     tileOffsetWhereWorkersCanBeAddedDict.Add(new int[] { offsets[i, 0], offsets[i, 1] }, Map.TileC2(x, y).Food + Map.TileC2(x, y).Shields + Map.TileC2(x, y).Trade);

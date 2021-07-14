@@ -359,21 +359,36 @@ namespace EtoFormsUI
                         using var blankPic = MapImages.Terrains[Map.MapIndex].Blank.Resize(zoom);
                         g.DrawImage(blankPic, dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3), dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3));
                         // Then draw tiles if they are visible
-                        if (Map.IsValidTileC2(newX, newY)&& Map.IsTileVisibleC2(newX, newY, city.Owner.Id))
+                        if (!Map.IsValidTileC2(newX, newY)) continue;
+                        var tile = Map.TileC2(newX, newY);
+                        if (tile.Visibility[city.Owner.Id])
                         {
                             using var mapPic = Images.MapTileGraphicC2(newX, newY).Resize(zoom);
-                            g.DrawImage(mapPic, dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3), dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3));
-                        }
-                        // TODO: implement dithering on edges or depending on where invisible tiles are
-                        // Draw cities
-                        cityHere = Game.CityHere(newX, newY);
-                        if (cityHere != null) Draw.City(g, cityHere, false, zoom, new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3), dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
-                        // Draw units
-                        unitsHere = Game.UnitsHere(newX, newY).FindAll(unit => (unit.Owner != Game.GetActiveCiv) && (unit.Type != UnitType.Settlers));
-                        if (unitsHere.Count > 0 && cityHere == null) Draw.Unit(g, unitsHere.Last(), unitsHere.Last().IsInStack, zoom, new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3), dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
+                            g.DrawImage(mapPic, dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
+                                dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3));
 
-                        //// TODO: make sure you're not drawing beyond map edges
-                        ////if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
+                            // TODO: implement dithering on edges or depending on where invisible tiles are
+                            // Draw cities
+
+                            if (tile.CityHere != null)
+                            {
+                                Draw.City(g, tile.CityHere, false, zoom,
+                                    new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
+                                        dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
+                            } else if (tile.UnitsHere.Count > 0)
+                            {
+                                var unit = tile.GetTopUnit();
+
+                                if (unit != null && unit.AttackBase > 0)
+                                {
+                                    Draw.Unit(g, unit, tile.UnitsHere.Count > 1, zoom,
+                                        new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
+                                            dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
+                                }
+                            }
+                            //// TODO: make sure you're not drawing beyond map edges
+                            ////if (newX >= 0 && newX < 2 * Data.MapXdim && newY >= 0 && newY < Data.MapYdim) image = TerrainBitmap((newX - (newY % 2)) / 2, newY);
+                        }
                     }
                 }
             }

@@ -45,8 +45,9 @@ namespace EtoFormsUI
                     var yC2 = startY + row;
                     if (xC2 < 0 || yC2 < 0 || xC2 >= 2 * Map.XDim || yC2 >= Map.YDim) continue;
 
+                    var tile = Map.TileC2(xC2, yC2);
                     // Draw only if the tile is visible for each civ
-                    if (!Map.IsTileVisibleC2(xC2, yC2, civ) && !mapRevealed) continue;
+                    if (!mapRevealed && !tile.Visibility[civ]) continue;
 
                     // Tiles
                     Draw.Tile(g, xC2, yC2, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * row));
@@ -71,7 +72,7 @@ namespace EtoFormsUI
                     }
 
                     // Units
-                    var unitsHere = Game.UnitsHere(xC2, yC2);
+                    var unitsHere = tile.UnitsHere;
                     if (unitsHere.Count > 0 && (showActiveUnit || unitsHere.All(u=>u != activeUnit)))
                     {
                         IUnit unit = unitsHere.Last();
@@ -83,7 +84,7 @@ namespace EtoFormsUI
                     }
 
                     // Cities
-                    City city = Game.CityHere(xC2, yC2);
+                    var city = tile.CityHere;
                     if (city != null)
                     {
                         Draw.City(g, city, true, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));

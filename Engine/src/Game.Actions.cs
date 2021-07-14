@@ -31,8 +31,8 @@ namespace Civ2engine
             //Pick a random tile if valid for barbarians raise horde
             
             //Move all barbarians
-            var barbarianGroups = AllUnits.Where(u => u.Owner == _activeCiv && u.Dead == false)
-                .GroupBy(u => CurrentMap.TileC2(u.X, u.Y));
+            var barbarianGroups = _activeCiv.Units.Where(u => u.Dead == false)
+                .GroupBy(u =>u.CurrentLocation);
             foreach (var barbarianGroup in barbarianGroups)
             {
                 var tile = barbarianGroup.Key;
@@ -96,7 +96,7 @@ namespace Civ2engine
 
         private void AITurn()
         {
-            foreach (var unit in AllUnits.Where(u=>u.Owner == _activeCiv && !u.Dead))
+            foreach (var unit in _activeCiv.Units.Where(u => !u.Dead))
             {
                 var currentTile = CurrentMap.TileC2(unit.X, unit.Y);
                 while (unit.MovePoints > 0)
@@ -122,7 +122,7 @@ namespace Civ2engine
         private void TurnBeginning()
         {
             // Reset turns of all units
-            foreach (var unit in ActiveUnits.Where(n => n.Owner == _activeCiv))
+            foreach (var unit in GetActiveCiv.Units.Where(n => !n.Dead))
             {
                 unit.MovePointsLost = 0;
 

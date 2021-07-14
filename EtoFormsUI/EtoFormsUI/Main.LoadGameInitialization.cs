@@ -18,13 +18,8 @@ namespace EtoFormsUI
             // Read SAV file & RULES.txt
             GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);
 
-            // Make an instance of a new game & map
+            // Make an instance of a new game
             Game.Create(rules, gameData);
-            Map.PopulateTilesFromGameData(gameData, rules);
-            Map.MapRevealed = gameData.MapRevealed;
-            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
-            Map.Zoom = gameData.Zoom;
-            Map.StartingClickedXY = gameData.ClickedXY;
             //ViewPiece.ActiveXY = gameData.ActiveCursorXY;
             return true;
         }

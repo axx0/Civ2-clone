@@ -67,7 +67,6 @@ namespace Civ2engine.Units
         void BuildRoad();
         void BuildMines();
         void BuildIrrigation();
-        bool Move(OrderType movementDirection);
         void SkipTurn();
         void Fortify();
         void Transform();

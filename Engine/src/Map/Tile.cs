@@ -1,17 +1,20 @@
 
         using System;
+        using System.Collections.Generic;
         using System.Drawing;
         using System.Drawing.Text;
         using System.Linq;
 using Civ2engine.Enums;
+        using Civ2engine.Units;
+
         namespace Civ2engine.Terrains
 {
-    public class Tile : BaseInstance, ITerrain, IMapItem
+    public class Tile : ITerrain, IMapItem
     {
         public int X { get; }
         public int Y { get; }
 
-        public int odd { get; }
+        public int Odd { get; }
         public Terrain Terrain { get; internal set; }
 
         public TerrainType Type => Terrain.Type;
@@ -24,10 +27,9 @@ using Civ2engine.Enums;
         {
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
-            //
             X = x;
             Y = y;
-            odd = y % 2;
+            Odd = y % 2;
             Terrain = terrain;
 
             HasShield = HasSheild();
@@ -96,8 +98,8 @@ using Civ2engine.Enums;
 
         public bool Resource { get; set; }
         public bool River { get; set; }
-        public bool IsUnitPresent => Game.AllUnits.Any(u => u.X == X && u.Y == Y);
-        public bool IsCityPresent => Game.GetCities.Any(c => c.X == X && c.Y == Y);
+        public bool IsUnitPresent => UnitsHere.Count > 0;
+        public bool IsCityPresent => CityHere != null;
         public bool Irrigation { get; set; }
         public bool Mining { get; set; }
         public bool Road { get; set; }
@@ -111,5 +113,18 @@ using Civ2engine.Enums;
         public Bitmap Graphic { get; set; }
         public decimal Fertility { get; set; }
         public bool[] Visibility { get; set; }
+
+        public List<Unit> UnitsHere { get; } = new();
+        
+        public City CityHere { get; set; }
+
+        public IUnit GetTopUnit(Func<Unit, bool> pred = null)
+        {
+            var units = pred != null ? UnitsHere.Where(pred) : UnitsHere;
+            return (Terrain.Type == TerrainType.Ocean
+                    ? units.OrderByDescending(u => u.Domain == UnitGAS.Sea ? 1 : 0)
+                    : units.OrderByDescending(u => u.Domain == UnitGAS.Sea ? 0 : 1))
+                .ThenBy(u => u.AttackBase).First();
+        }
     }
 }

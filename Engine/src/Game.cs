@@ -17,10 +17,6 @@ namespace Civ2engine
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         public FastRandom Random { get; set; } = new();
-        public List<Unit> AllUnits { get; } = new();
-
-        public List<Unit> GetCasualties => AllUnits.Where(u => u.Dead).ToList();
-        public List<Unit> ActiveUnits => AllUnits.Where(u => !u.Dead).ToList();
         public List<City> GetCities { get; } = new();
 
         public List<Civilization> AllCivilizations { get; } = new();
@@ -87,25 +83,6 @@ namespace Civ2engine
         public Civilization GetActiveCiv => _activeCiv;
 
         // Helper functions
-        public City CityHere(int x, int y) => GetCities.Find(city => city.X == x && city.Y == y);
-        public List<Unit> UnitsHere(int x, int y) => AllUnits.FindAll(unit => unit.X == x && unit.Y == y).AsEnumerable().Reverse().ToList();
-        public bool AnyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y);
-        public bool EnemyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
-        public bool AnyCitiesPresentHere(int x, int y) => GetCities.Any(city => city.X == x && city.Y == y);
-
-        /// <summary>
-        /// Determine all units inside a ship.
-        /// </summary>
-        /// <param name="ship">Ship.</param>
-        /// <returns>A list of all units in a ship.</returns>
-        public List<Unit> UnitsOnShip(IUnit ship)
-        {
-            var unitsHere = Game.UnitsHere(ship.XY[0], ship.XY[1]);
-            unitsHere.RemoveAll(u => u.Domain != UnitGAS.Ground);  // Remove all naval/air units
-            var unitsInShip = unitsHere.Take(ship.ShipHold).ToList();
-
-            return unitsInShip;
-        }
 
         //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
         //                                  bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
@@ -205,15 +182,19 @@ namespace Civ2engine
         //    TerrainTile[x, y] = tile;
         //}
 
-        public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
+        public Unit CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
                                     int movePointsLost, int hitPointsLost, int prevX, int prevY, CommodityType caravanCommodity, OrderType orders,
                                     int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
+            var validTile = CurrentMap.IsValidTileC2(x, y);
+
+            var civilization = AllCivilizations[civId];
             Unit unit = new Unit
             {
-                Id = AllUnits.Count,
+                Id = civilization.Units.Count,
                 TypeDefinition = Rules.UnitTypes[(int)type],
-                Dead = dead || y < 0 || x < 0,
+                Dead = dead || !validTile,
+                CurrentLocation = validTile ? CurrentMap.TileC2(x,y) : null,
                 Type = type,
                 X = x,
                 Y = y,
@@ -222,7 +203,7 @@ namespace Civ2engine
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
-                Owner = AllCivilizations[civId],
+                Owner = civilization,
                 PrevXY = new int[] { prevX, prevY },
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
@@ -233,12 +214,14 @@ namespace Civ2engine
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            AllUnits.Add(unit);
+            civilization.Units.Add(unit);
+            return unit;
         }
 
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
         {
-            City city = new City
+            var tile = CurrentMap.TileC2(x, y);
+            var city = new City
             {
                 X = x,
                 Y = y,
@@ -272,8 +255,11 @@ namespace Civ2engine
                 //TotalFoodProduction = totalFoodProduction,    // No need to import this, it's calculated
                 //TotalShieldProduction = totalShieldProduction,    // No need to import this, it's calculated
                 HappyCitizens = happyCitizens,
-                UnhappyCitizens = unhappyCitizens
+                UnhappyCitizens = unhappyCitizens,
+                Location = tile
             };
+
+            tile.CityHere = city;
 
             for (int improvNo = 0; improvNo < 34; improvNo++)
                 if (improvements[improvNo]) city.AddImprovement(Rules.Improvements[improvNo+1]);
@@ -329,7 +315,7 @@ namespace Civ2engine
             if (id != 0 && id != whichHumanPlayerIsUsed) style = tribe.CityStyle;
 
             var gov = Rules.Governments[government];
-            Civilization civ = new Civilization
+            var civ = new Civilization
             {
                 Id = id,
                 Alive = alive,

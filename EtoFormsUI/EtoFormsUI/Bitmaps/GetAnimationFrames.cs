@@ -49,10 +49,11 @@ namespace EtoFormsUI
                         
                         // Tiles
                         Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] + Map.Ypx));
+                        var tile = Map.TileC2(x, y);
 
                         // Units
-                        var unitsHere = Game.UnitsHere(x, y);
-                        if (unitsHere.Count > 0 && Game.CityHere(x, y) == null)
+                        var unitsHere =tile.UnitsHere;
+                        if (unitsHere.Count > 0 && tile.CityHere == null)
                         {
                             IUnit unit;
                             // If this is not tile with active unit or viewing piece, draw last unit on stack
@@ -65,7 +66,7 @@ namespace EtoFormsUI
                         }
 
                         // City
-                        City city = Game.CityHere(x, y);
+                        City city = tile.CityHere;
                         if (city != null) Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
                         // Draw active unit if it's not moving
@@ -98,9 +99,9 @@ namespace EtoFormsUI
                         y = activeXY[1] + coordsOffsets[1];
 
                         if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
-                        
-                        City city = Game.CityHere(x, y);
-                        if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0], coordsOffsets[1] + 1 });
+
+                        var tile = Map.TileC2(x, y);
+                        if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, Map.Zoom, new int[] { coordsOffsets[0], coordsOffsets[1] + 1 });
                     }
 
                     // View piece (is drawn on top of everything)
@@ -198,31 +199,26 @@ namespace EtoFormsUI
                     }
 
                     // Units
-                    var unitsHere = Game.UnitsHere(x, y);
-
-                    // If unit is ship, remove units that are in it
-                    var unitsonship = Game.UnitsOnShip(activeUnit);
-                    unitsHere.RemoveAll(u => unitsonship.Contains(u));
-
-                    // If active unit is in this list-- > remove it
-                    if (unitsHere.Contains(activeUnit)) unitsHere.Remove(activeUnit);
-
-                    if (unitsHere.Count > 0)
+                    var tile = Map.TileC2(x, y);
+                    if (tile.CityHere == null)
                     {
-                        IUnit unit;
-                        unit = unitsHere.Last();
-                        if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Where(u => u.Domain == UnitGAS.Sea).Last();
-                        if (!unit.IsInCity)
+                        // If unit is ship, remove units that are in it & remove active unit
+                        //var unitsHere = tile.UnitsHere.Where(u => u.InShip == null && u != activeUnit).ToList();
+
+
+                        if (tile.UnitsHere.Count > 0 && tile.UnitsHere.Any(u=> u!= activeUnit))
                         {
-                            Draw.Unit(g, unit, Game.UnitsHere(x, y).Count > 1, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                            var unit = tile.GetTopUnit(u=>u != activeUnit);
+
+                            Draw.Unit(g, unit, unit.IsInStack, Map.Zoom,
+                                new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+
                         }
                     }
-
-                    // Cities
-                    City city = Game.CityHere(x, y);
-                    if (city != null)
+                    else
                     {
-                        Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                        // Cities
+                        Draw.City(g, tile.CityHere, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
                 }
 
@@ -245,9 +241,9 @@ namespace EtoFormsUI
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
 
                     if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
-                    
-                    City city = Game.CityHere(x, y);
-                    if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
+
+                    var tile = Map.TileC2(x, y);
+                    if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                 }
             }
 
@@ -260,7 +256,7 @@ namespace EtoFormsUI
                 using (var g = new Graphics(_bitmapWithMovingUnit))
                 {
                     // Draw active unit on top of everything (except if it's city, then don't draw the unit in last frame)
-                    if (!(frame == noFramesForOneMove - 1 && Game.CityHere(activeUnit.X, activeUnit.Y) != null))
+                    if (!(frame == noFramesForOneMove - 1 && activeUnit.CurrentLocation.CityHere != null))
                     {
                         int[] unitDrawOffset = new int[] { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
                         unitDrawOffset[0] *= Map.Xpx / noFramesForOneMove * (frame + 1);
@@ -330,10 +326,11 @@ namespace EtoFormsUI
                     coordsOffsetsPx = new int[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
                     if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
-
+                    
                     // Tiles
+                    var tile = Map.TileC2(x, y);
                     int civId = Map.WhichCivsMapShown;
-                    if (Map.IsTileVisibleC2(x, y, civId) || Map.MapRevealed)
+                    if (Map.MapRevealed || tile.Visibility[civId])
                     {
                         Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
@@ -366,22 +363,15 @@ namespace EtoFormsUI
                     {
                         Draw.Unit(g, e.Defender, e.Defender.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
-                    else    // Other units
+                    else if (tile.CityHere == null && tile.UnitsHere.Count > 0) // Other units
                     {
-                        var units = Game.UnitsHere(x, y);
-                        if (units.Count > 0) 
-                        {
-                            var unit = units.Last();
-                            if (!unit.IsInCity)
-                            {
-                                Draw.Unit(g, unit, unit.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
-                            }
-                        } 
+                        var unit = tile.GetTopUnit();
+                        Draw.Unit(g, unit, unit.IsInStack, Map.Zoom,
+                            new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                     }
 
                     // Cities
-                    City city = Game.CityHere(x, y);
-                    if (city != null) Draw.City(g, city, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                    if (tile.CityHere != null) Draw.City(g, tile.CityHere, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
                 }
 
                 // City names
@@ -404,8 +394,8 @@ namespace EtoFormsUI
 
                     if(x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
                     
-                    City city = Game.CityHere(x, y);
-                    if (city != null) Draw.CityName(g, city, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
+                    var tile = Map.TileC2(x,y);
+                    if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, Map.Zoom, new int[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                 }
             }
 

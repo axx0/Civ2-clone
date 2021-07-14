@@ -1,14 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.WebSockets;
-using Civ2engine.Enums;
 using Civ2engine.Terrains;
-using ExtensionMethods;
 
 namespace Civ2engine
 {
-    public class Map : BaseInstance
+    public class Map
     {
         public int MapIndex { get; } = 0;
         public int XDim { get; internal set; }
@@ -25,8 +21,7 @@ namespace Civ2engine
             return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;
         }
         public Tile TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
-        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns Visibility for civ2-style coords (you can index beyond E/W borders for drawing round world)
-        public bool TileHasEnemyUnit(int xC2, int yC2, UnitType unitType) => (Game.UnitsHere(xC2, yC2).Count == 1) && (Game.UnitsHere(xC2, yC2)[0].Type == unitType);
+        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns V
 
         private int _zoom;
         public int Zoom     // -7 (min) ... 8 (max), 0=std.
@@ -52,12 +47,12 @@ namespace Civ2engine
             LocatorYdim = data.MapLocatorYdim;
 
             Tile = new Tile[XDim, YDim];
-            for (int col = 0; col < XDim; col++)
+            for (var col = 0; col < XDim; col++)
             {
-                for (int row = 0; row < YDim; row++)
+                for (var row = 0; row < YDim; row++)
                 {
                     var terrain = data.MapTerrainType[col, row];
-                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], Map.ResourceSeed)
+                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], ResourceSeed)
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
@@ -80,29 +75,29 @@ namespace Civ2engine
 
         public IEnumerable<Tile> CityRadius(Tile tile)
         {
-            var coords = new [] { (tile.X - tile.odd) / 2, tile.Y };
+            var coords = new [] { (tile.X - tile.Odd) / 2, tile.Y };
             var offsets = new List<int[]>
             {
-                new[] {0 + tile.odd, -1},
-                new[] {0 + tile.odd, 1},
-                new[] {1 + tile.odd, -1},
+                new[] {0 + tile.Odd, -1},
+                new[] {0 + tile.Odd, 1},
+                new[] {1 + tile.Odd, -1},
                 new[] {1, 0},
-                new[] {1 + tile.odd, 1},
+                new[] {1 + tile.Odd, 1},
                 new[] {1, 2},
                 new[] {1, -2},
                 new[] {0, -2},
-                new[] {0 + tile.odd, -3},
+                new[] {0 + tile.Odd, -3},
                 new[] {0, 2},
-                new[] {0 + tile.odd, 3},
+                new[] {0 + tile.Odd, 3},
                 new[] {-1, 2},
-                new[] {-1 + tile.odd, 1},
+                new[] {-1 + tile.Odd, 1},
                 new[] {-1, 0},
-                new[] {-1 + tile.odd, -1},
-                new[] {-2 + tile.odd, -1},
-                new[] {-2 + tile.odd, 1},
+                new[] {-1 + tile.Odd, -1},
+                new[] {-2 + tile.Odd, -1},
+                new[] {-2 + tile.Odd, 1},
                 new[] {-1, -2},
-                new[] {-1 + tile.odd, -3},
-                new[] {-1 + tile.odd, 3}
+                new[] {-1 + tile.Odd, -3},
+                new[] {-1 + tile.Odd, 3}
             };
             
             yield return tile;

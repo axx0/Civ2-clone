@@ -59,9 +59,9 @@ namespace Civ2engine
         public Improvement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
         public void AddImprovement(Improvement improvement) => _improvements.Add(improvement);
         public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
-        public List<Unit> UnitsInCity => Game.AllUnits.Where(unit => unit.X == X && unit.Y == Y).ToList();
-        public List<Unit> SupportedUnits => Game.AllUnits.Where(unit => unit.HomeCity == this).ToList();
-        public bool AnyUnitsPresent() => Game.AllUnits.Any(unit => unit.X == this.X && unit.Y == this.Y);
+        public List<Unit> UnitsInCity => Location.UnitsHere;
+        public List<Unit> SupportedUnits => Owner.Units.Where(unit => unit.HomeCity == this).ToList();
+        public bool AnyUnitsPresent() => Location.UnitsHere.Count > 0;
 
         // Determine which units, supported by this city, cost shields
         public bool[] SupportedUnitsWhichCostShields()
@@ -151,25 +151,28 @@ namespace Civ2engine
         {
             get
             {
-                int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.AllUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  // Increase max food for settlers & engineers with this home city
                 int _foodFromWorkers = 0;
                 for (int i = 0; i < 21; i++) _foodFromWorkers += FoodDistribution[i] * (DistributionWorkers[i] ? 1 : 0);
-                _food = Math.Min(_foodFromWorkers, maxFood);
+                _food = Math.Min(_foodFromWorkers, FoodConsumption);
                 return _food;
             }
         }
+
+        private int FoodConsumption =>
+            Size * Game.Rules.Cosmic.FoodEatenPerTurn +
+            SupportedUnits.Count(u => u.TypeDefinition.IsSettler || u.TypeDefinition.IsEngineer) *
+            (Owner.Government <= GovernmentType.Monarchy
+                ? Game.Rules.Cosmic.SettlersEatTillMonarchy
+                : Game.Rules.Cosmic.SettlersEatFromCommunism); 
 
         private int _surplusHunger;
         public int SurplusHunger
         {
             get
             {
-                int maxFood = 2 * Size;
-                foreach (IUnit unit in Game.AllUnits.Where(u => (u.Type == UnitType.Settlers || u.Type == UnitType.Engineers) && u.HomeCity == this)) maxFood++;  // Increase max food for settlers & enineers with this home city
                 int _foodFromWorkers = 0;
                 for (int i = 0; i < 21; i++) _foodFromWorkers += FoodDistribution[i] * (DistributionWorkers[i] ? 1 : 0);
-                _surplusHunger = _foodFromWorkers - maxFood;
+                _surplusHunger = _foodFromWorkers - FoodConsumption;
                 return _surplusHunger;
             }
         }
@@ -251,7 +254,7 @@ namespace Civ2engine
                 _people = new PeopleType[Size];
                 // Unhappy
                 int additUnhappy = Size - 6;    // Without units & improvements present, 6 people are content
-                additUnhappy -= Math.Min(Game.AllUnits.Count(unit => unit.X == X && unit.Y == Y), 3);  // Each new unit in city -> 1 less unhappy (up to 3 max)
+                additUnhappy -= Math.Min(Location.UnitsHere.Count, 3);  // Each new unit in city -> 1 less unhappy (up to 3 max)
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Temple)) additUnhappy -= 2;
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Colosseum)) additUnhappy -= 3;
                 if (Improvements.Any(impr => impr.Type == ImprovementType.Cathedral)) additUnhappy -= 3;
@@ -340,5 +343,7 @@ namespace Civ2engine
                 return _isNextToOcean;
             }
         }
+
+        public Tile Location { get; set; }
     }
 }
