@@ -516,9 +516,12 @@ namespace Civ2engine.UnitActions.Move
 
         public static IEnumerable<Tile> GetPossibleMoves(Game game, Tile tile, Unit unit)
         {
-            var neighbours = unit.Domain == UnitGAS.Ground
-                ? game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold))
-                : game.CurrentMap.Neighbours(tile);
+            var neighbours = unit.Domain switch
+            {
+                UnitGAS.Ground => game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold)),
+                UnitGAS.Sea => game.CurrentMap.Neighbours(tile).Where(t=> t.CityHere != null || t.Terrain.Type == TerrainType.Ocean || (t.UnitsHere.Count > 0 && t.UnitsHere[0].Owner != unit.Owner)),
+                _ => game.CurrentMap.Neighbours(tile)
+            };
             if (unit.IgnoreZonesOfControl || !IsNextToEnemy(game, unit, tile))
             {
                 return neighbours;
