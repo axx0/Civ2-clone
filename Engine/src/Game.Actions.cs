@@ -99,9 +99,55 @@ namespace Civ2engine
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead))
             {
                 var currentTile = CurrentMap.TileC2(unit.X, unit.Y);
+                switch (unit.AIrole)
+                {
+                    case AIroleType.Attack:
+                        break;
+                    case AIroleType.Defend:
+                        if (currentTile.CityHere != null)
+                        {
+                            if (currentTile.UnitsHere.Count(u => u != unit && u.AIrole == AIroleType.Defend) <
+                                2 + currentTile.CityHere.Size / 3)
+                            {
+                                if (unit.Order == OrderType.Fortify || unit.Order == OrderType.Fortified)
+                                {
+                                    unit.Order = OrderType.Fortified;
+                                }
+                                else
+                                {
+                                    unit.Order = OrderType.Fortify;
+                                }
+                                unit.MovePointsLost = unit.MovePoints;
+                            }
+                        }
+                        else
+                        {
+                            
+                        }
+                        break;
+                    case AIroleType.NavalSuperiority:
+                        break;
+                    case AIroleType.AirSuperiority:
+                        break;
+                    case AIroleType.SeaTransport:
+                        break;
+                    case AIroleType.Settle:
+                        break;
+                    case AIroleType.Diplomacy:
+                        break;
+                    case AIroleType.Trade:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
                 while (unit.MovePoints > 0)
                 {
                     var possibleMoves = MovementFunctions.GetPossibleMoves(this, currentTile, unit).ToList();
+                    if (unit.AttackBase == 0)
+                    {
+                        possibleMoves = possibleMoves
+                            .Where(m => m.UnitsHere.Count == 0 || m.UnitsHere[0].Owner == unit.Owner).ToList();
+                    }
                     if (possibleMoves.Count == 0)
                     {
                         unit.SkipTurn();
@@ -109,7 +155,11 @@ namespace Civ2engine
                     else
                     {
                         var destination = Random.ChooseFrom(possibleMoves);
-                        if (MovementFunctions.UnitMoved(this, unit, destination, currentTile))
+                        if (destination.UnitsHere.Count > 0 && destination.UnitsHere[0].Owner != unit.Owner)
+                        {
+                            MovementFunctions.AttackAtTile(unit, this, destination);
+                        }
+                        else if (MovementFunctions.UnitMoved(this, unit, destination, currentTile))
                         {
                             currentTile = destination;
                         }

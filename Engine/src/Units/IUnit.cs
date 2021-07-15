@@ -14,7 +14,7 @@ namespace Civ2engine.Units
         int FuelRange { get; }
         int AttackBase { get; }
         int DefenseBase { get; }
-        int AttackFactor(IUnit defendingUnit);
+        double AttackFactor(IUnit defendingUnit);
         int DefenseFactor(IUnit attackingUnit, City cityDefended);
         int FirepowerBase { get; }
         int Cost { get; }

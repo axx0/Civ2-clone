@@ -151,45 +151,7 @@ namespace Civ2engine.UnitActions.Move
             var tileTo = game.CurrentMap.TileC2(destX, destY);
             if (tileTo.UnitsHere.Count > 0 && tileTo.UnitsHere[0].Owner != unit.Owner)
             {
-                if (unit.AttackBase == 0)
-                {
-                    game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZeroAttackStrength);
-                    return;
-                }         
-                
-                
-                var city = tileTo.CityHere;
-                if (city != null)
-                {
-                    //Anything can attack or defend a city
-                    Attack(game, unit, tileTo, tileTo.UnitsHere, city);
-                    return;
-                }
-
-                if (tileTo.Type == TerrainType.Ocean)
-                {
-                    if (unit.Domain == UnitGAS.Ground)
-                    {
-                        // Ground units cannot attack into the sea
-                        return;
-                    }
-                }
-                else
-                {
-                    if (unit.SubmarineAdvantagesDisadvantages)
-                    {
-                        //Submarines can't attack land
-                        return;
-                    }
-                }
-
-                if (!unit.CanAttackAirUnits && tileTo.UnitsHere.Any(u => u.Domain == UnitGAS.Air))
-                {
-                    game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.CannotAttackAirUnits);
-                    return;
-                }
-                
-                Attack(game, unit, tileTo, tileTo.UnitsHere, null);
+                if (!AttackAtTile(unit, game, tileTo)) return;
             }
             else
             {
@@ -202,24 +164,72 @@ namespace Civ2engine.UnitActions.Move
             }
         }
 
-        private static void Attack(Game game, Unit attacker, Tile tile, List<Unit> unitsOnTargetSquare, City cityOnTargetSquare)
+        internal static bool AttackAtTile(Unit unit, Game game, Tile tileTo)
+        {
+            if (unit.AttackBase == 0)
+            {
+                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZeroAttackStrength);
+                return false;
+            }
+
+
+            if (tileTo.CityHere != null)
+            {
+                //Anything can attack or defend a city
+                Attack(game, unit, tileTo);
+                return true;
+            }
+
+            if (tileTo.Type == TerrainType.Ocean)
+            {
+                if (unit.Domain == UnitGAS.Ground)
+                {
+                    // Ground units cannot attack into the sea
+                    return false;
+                }
+            }
+            else
+            {
+                if (unit.SubmarineAdvantagesDisadvantages)
+                {
+                    //Submarines can't attack land
+                    return false;
+                }
+            }
+
+            if (!unit.CanAttackAirUnits && tileTo.UnitsHere.Any(u => u.Domain == UnitGAS.Air))
+            {
+                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.CannotAttackAirUnits);
+                return false;
+            }
+
+            Attack(game, unit, tileTo);
+            return true;
+        }
+
+        internal static void Attack(Game game, Unit attacker, Tile tile)
         {           
 
             // Primary defender is the unit with largest defense factor
-            var defender = unitsOnTargetSquare[0];
-            var defenseFactor = defender.DefenseFactor(attacker, cityOnTargetSquare);
-            for (var i = 1; i < unitsOnTargetSquare.Count; i++)
+            var defender = tile.UnitsHere[0];
+            var defenseFactor = defender.DefenseFactor(attacker, tile.CityHere);
+            for (var i = 1; i < tile.UnitsHere.Count; i++)
             {
-                var altDefenseFactor = unitsOnTargetSquare[i].DefenseFactor(attacker, cityOnTargetSquare);
+                var altDefenseFactor = tile.UnitsHere[i].DefenseFactor(attacker, tile.CityHere);
                 if (altDefenseFactor > defenseFactor)
                 {
-                    defender = unitsOnTargetSquare[i];
+                    defender = tile.UnitsHere[i];
                     defenseFactor = altDefenseFactor;
                 }
             }
 
             // Calculate odds of attacker winning combat (a round of battle)
-            double a = attacker.AttackFactor(defender);
+            var attackFactor = attacker.AttackFactor(defender);
+            if (attacker.MovePoints < game.Rules.Cosmic.MovementMultiplier)
+            {
+                //if attacker has less than one move point left attack at reduced strength
+                attackFactor = attackFactor * attacker.MovePoints / game.Rules.Cosmic.MovementMultiplier;
+            }
 
             //Calculate the firepower of the attacker and defender
             var fpA = attacker.FirepowerBase;
@@ -233,7 +243,7 @@ namespace Civ2engine.UnitActions.Move
             }else if (attacker.Domain != UnitGAS.Sea && defender.Domain == UnitGAS.Sea &&
                       tile.Type != TerrainType.Ocean)
             {
-                // Cought in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
+                // Caught in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
                 fpA *= 2;
                 fpD = 1;
             }else if (attacker.Domain == UnitGAS.Air && defender.Domain == UnitGAS.Air && defender.FuelRange == 0)
@@ -242,7 +252,7 @@ namespace Civ2engine.UnitActions.Move
                 fpD = 1;
             }
             
-            var probAttackerWins = defenseFactor >= a ? (a * 8 - 1) / (2 * defenseFactor * 8) : 1 - (defenseFactor * 8 + 1) / (2 * a * 8);
+            var probAttackerWins = defenseFactor >= attackFactor ? (attackFactor * 8 - 1) / (2 * defenseFactor * 8) : 1 - (defenseFactor * 8 + 1) / (2 * attackFactor * 8);
 
             // Battle -> Loop through combat rounds until a unit loses its HP
             var random = new Random();
@@ -273,7 +283,7 @@ namespace Civ2engine.UnitActions.Move
             {
                 attacker.MovePointsLost += game.Rules.Cosmic.MovementMultiplier;
                 // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
-                if (cityOnTargetSquare != null || tile.Fortress || tile.Airbase)
+                if (tile.CityHere != null || tile.Fortress || tile.Airbase)
                 {
                     defender.Dead = true;
                     //_casualties.Add(defender);
@@ -281,7 +291,9 @@ namespace Civ2engine.UnitActions.Move
                 }
                 else
                 {
-                    foreach (var unit in unitsOnTargetSquare)
+                    var deadUnits = tile.UnitsHere.ToList();
+                    tile.UnitsHere.Clear();
+                    foreach (var unit in deadUnits)
                     {
                         unit.Dead = true;
                         //_casualties.Add(unit);

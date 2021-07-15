@@ -36,18 +36,18 @@ namespace Civ2engine.Units
         
         public UnitDefinition TypeDefinition { get; set; }
 
-        public int AttackFactor(IUnit defendingUnit)
+        public double AttackFactor(IUnit defendingUnit)
         {
             // Base attack factor from RULES
-            double AF = (double)AttackBase;
+            double af = AttackBase;
 
             // Bonus for veteran units
-            if (Veteran) AF *= 1.5;
+            if (Veteran) af *= 1.5;
 
             // Partisan bonus agains non-combat units
-            if (Type == UnitType.Partisans && defendingUnit.AttackBase == 0) AF *= 8;
+            if (Type == UnitType.Partisans && defendingUnit.AttackBase == 0) af *= 8;
 
-            return (int)AF;
+            return af;
         }
 
         public int DefenseFactor(IUnit attackingUnit, City cityHere)
