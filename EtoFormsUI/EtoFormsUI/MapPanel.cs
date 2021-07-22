@@ -91,7 +91,7 @@ namespace EtoFormsUI
             animationTimer.Start();
 
             // Center the map view and draw map
-            MapViewChange(Map.StartingClickedXY);
+            MapViewChange(Map.StartingClickedXY ?? Game.GetPlayerCiv.Units[0].XY);
         }
 
         // Draw map here

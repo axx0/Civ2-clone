@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Events;
@@ -15,22 +16,41 @@ namespace Civ2engine
         {
             Unit nextUnit = null;
             var units = _activeCiv.Units;
-            int unitIndex;
-            for (unitIndex = _activeUnit.Id + 1; unitIndex < units.Count && nextUnit == null; unitIndex++)
+            if (_activeUnit != null)
             {
-                if (!units[unitIndex].Dead && units[unitIndex].Owner == _activeCiv && units[unitIndex].AwaitingOrders)
+                //Look for units on this square or neighbours of this square
+                var activeTile = _activeUnit.Dead
+                    ? _maps[_currentMap].TileC2(_activeUnit.X, _activeUnit.Y)
+                    : _activeUnit.CurrentLocation;
+                nextUnit = activeTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ?? _maps[_currentMap]
+                    .Neighbours(activeTile)
+                    .SelectMany(t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
+                    .FirstOrDefault();
+            }
+
+            if (nextUnit == null)
+            {
+                int unitIndex;
+                var startIndex = _activeUnit?.Id ?? 0;
+                for (unitIndex = startIndex; unitIndex < units.Count && nextUnit == null; unitIndex++)
                 {
-                    nextUnit = units[unitIndex];
+                    if (!units[unitIndex].Dead && units[unitIndex].Owner == _activeCiv &&
+                        units[unitIndex].AwaitingOrders)
+                    {
+                        nextUnit = units[unitIndex];
+                    }
+                }
+
+                for (unitIndex = 0; nextUnit == null && unitIndex < startIndex; unitIndex++)
+                {
+                    if (!units[unitIndex].Dead && units[unitIndex].Owner == _activeCiv &&
+                        units[unitIndex].AwaitingOrders)
+                    {
+                        nextUnit = units[unitIndex];
+                    }
                 }
             }
 
-            for (unitIndex = 0; nextUnit == null && unitIndex < _activeUnit.Id; unitIndex++)
-            {
-                if (!units[unitIndex].Dead && units[unitIndex].Owner == _activeCiv && units[unitIndex].AwaitingOrders)
-                {
-                    nextUnit = units[unitIndex];
-                }
-            }
             // End turn if no units awaiting orders
             if (nextUnit == null)
             {

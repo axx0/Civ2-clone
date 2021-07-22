@@ -117,10 +117,17 @@ namespace Civ2engine
                 Y = c.StartLocation.Y,
                 TypeDefinition = settlerType
             }).ToList();
+            units.ForEach(u=>
+            {
+                u.Owner.Units.Add(u);
+                u.CurrentLocation = maps[0].TileC2(u.X, u.Y);
+            });
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
             
+            
             _instance = new Game(maps, config.Rules, civilizations, units, new Options(config)) {_playerCiv = config.PlayerCiv};
+            _instance.StartNextTurn();
         }
 
         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
@@ -212,7 +219,6 @@ namespace Civ2engine
             
             _rules = configRules;
             _turnNumber = -1;
-            StartNextTurn();    
         }
 
     }

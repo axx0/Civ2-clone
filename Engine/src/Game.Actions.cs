@@ -23,9 +23,10 @@ namespace Civ2engine
         
         private void ProcessBarbarians()
         {
+            _activeCiv = AllCivilizations[0];
+            
             if(_turnNumber < 16) return;
             
-            _activeCiv = AllCivilizations[0];
             TurnBeginning();
             
             //Pick a random tile if valid for barbarians raise horde
