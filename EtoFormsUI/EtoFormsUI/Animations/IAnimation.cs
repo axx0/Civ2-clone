@@ -14,5 +14,6 @@ namespace EtoFormsUI.Animations
         int[] XY { get; }
         float GetXDrawOffset(int mapXpx, int startX);
         int GetYDrawOffset(int mapYpx, int startY);
+        void Initialize();
     }
 }

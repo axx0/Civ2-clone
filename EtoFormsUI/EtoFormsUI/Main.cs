@@ -224,7 +224,7 @@ namespace EtoFormsUI
             };
 
             // Make a sound player
-            Sounds = new Sound(Settings.Civ2Path);
+            Sounds = new Sound();
         }
 
         private void MenuCommandSelected(object sender, EventArgs e)

@@ -21,6 +21,8 @@ namespace EtoFormsUI.Animations
         public abstract float GetXDrawOffset(int mapXpx, int i);
         public abstract int GetYDrawOffset(int mapYpx, int startY);
 
+        public abstract void Initialize();
+
         private int _currentFrame;
 
         public bool Finished()

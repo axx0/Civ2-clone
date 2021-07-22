@@ -7,8 +7,12 @@ namespace EtoFormsUI
 {
     internal class MoveAnimation : BaseAnimation
     {
-        public MoveAnimation(Unit unit) : base(GetAnimationFrames.UnitMoving(unit).ToArray(), 6, 7, 0.02, unit.PrevXY)
+        private readonly Sound _sound;
+
+        public MoveAnimation(Unit unit, Sound sound) 
+            : base(GetAnimationFrames.UnitMoving(unit).ToArray(), 6, 7, 0.02, unit.PrevXY)
         {
+            _sound = sound;
         }
 
         public override float GetXDrawOffset(int mapXpx, int startX)
@@ -19,6 +23,11 @@ namespace EtoFormsUI
         public override int GetYDrawOffset(int mapYpx, int startY)
         {
             return mapYpx * (XY[1] - startY - 3);
+        }
+
+        public override void Initialize()
+        {
+            _sound.PlaySound(GameSounds.Move);
         }
     }
 }

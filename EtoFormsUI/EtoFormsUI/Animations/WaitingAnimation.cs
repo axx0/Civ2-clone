@@ -145,5 +145,9 @@ namespace EtoFormsUI.GameModes
         {
             return mapYpx * (XY[1] - startY - 1);
         }
+
+        public override void Initialize()
+        {
+        }
     }
 }

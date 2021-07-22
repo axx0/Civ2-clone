@@ -579,6 +579,8 @@ namespace EtoFormsUI.Initialization
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.popupBoxList = config.PopUps;
+            
+            mainForm.Sounds.LoadSounds(config.RuleSet.Paths);
             mainForm.Playgame();
             config.Started = true;
         }

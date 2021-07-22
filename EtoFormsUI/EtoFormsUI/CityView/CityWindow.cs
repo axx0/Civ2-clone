@@ -55,7 +55,7 @@ namespace EtoFormsUI
             infoButton.Click += (sender, e) =>
             {
                 whatToDraw = WhatToDraw.Info;
-                main.Sounds.PlaySound("MOVPIECE.WAV");
+                main.Sounds.PlaySound(GameSounds.Move);
                 Invalidate();
             };
             Layout.Add(infoButton, 11 + 459.ZoomScale(_cityZoom * 4), _paddingTop + 364.ZoomScale(_cityZoom * 4));
@@ -65,7 +65,7 @@ namespace EtoFormsUI
             mapButton.Click += (sender, e) =>
             {
                 whatToDraw = WhatToDraw.SupportMap;
-                main.Sounds.PlaySound("MOVPIECE.WAV");
+                main.Sounds.PlaySound(GameSounds.Move);
                 Invalidate();
             };
             Layout.Add(mapButton, infoButton.Location.X + 58.ZoomScale(_cityZoom * 4), infoButton.Location.Y);
@@ -80,7 +80,7 @@ namespace EtoFormsUI
             happyButton.Click += (sender, e) =>
             {
                 whatToDraw = WhatToDraw.HappinessAnalysis;
-                main.Sounds.PlaySound("MOVPIECE.WAV");
+                main.Sounds.PlaySound(GameSounds.Move);
                 Invalidate();
             };
             Layout.Add(happyButton, infoButton.Location.X, infoButton.Location.Y + 25.ZoomScale(_cityZoom * 4));

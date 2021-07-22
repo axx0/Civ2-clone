@@ -38,6 +38,7 @@ namespace EtoFormsUI
                 savName = Path.GetFileName(ofd.FileName);
                 if (initializer(ruleSet, savName))
                 {
+                    Sounds.LoadSounds(ruleSet.Paths);
                     Playgame();
                     return;
                 }
@@ -49,7 +50,7 @@ namespace EtoFormsUI
         public void Playgame()
         {
             Sounds.Stop();
-            Sounds.PlaySound("MENUOK.WAV");
+            Sounds.PlaySound(GameSounds.MenuOk);
 
             var playerCiv = Game.GetPlayerCiv;
             OnPopupboxEvent?.Invoke(null,
@@ -182,7 +183,7 @@ namespace EtoFormsUI
                         var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings);
                         popupbox.ShowModal(Parent);
                         StartGame();
-                        Sounds.PlaySound("MENUOK.WAV");
+                        Sounds.PlaySound(GameSounds.MenuOk);
                         break;
                     }
                 default: break;

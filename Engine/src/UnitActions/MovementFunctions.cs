@@ -207,7 +207,7 @@ namespace Civ2engine.UnitActions.Move
             return true;
         }
 
-        internal static void Attack(Game game, Unit attacker, Tile tile)
+        private static void Attack(Game game, Unit attacker, Tile tile)
         {           
 
             // Primary defender is the unit with largest defense factor

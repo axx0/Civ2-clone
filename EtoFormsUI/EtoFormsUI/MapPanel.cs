@@ -266,12 +266,12 @@ namespace EtoFormsUI
                 // Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
                     {
-                        AnimationQueue.Enqueue(new MoveAnimation(e.Unit));
+                        AnimationQueue.Enqueue(new MoveAnimation(e.Unit, main.Sounds));
                         break;
                     }
                 case UnitEventType.Attack:
                     {
-                        AnimationQueue.Enqueue(new AttackAnimation(e));
+                        AnimationQueue.Enqueue(new AttackAnimation(e, main.Sounds));
                         // animationFrames = GetAnimationFrames.UnitAttack(e);
                         // StartAnimation(AnimationType.Attack);
                         break;
@@ -296,6 +296,7 @@ namespace EtoFormsUI
                 CurrentAnimation = AnimationQueue.Count > 0 ? AnimationQueue.Dequeue() : main.CurrentGameMode.GetDefaultAnimation(Game,CurrentAnimation);
                 if (CurrentAnimation != null)
                 {
+                    CurrentAnimation.Initialize();
                     animationTimer.Interval = CurrentAnimation.Interval;
                 }
             }
