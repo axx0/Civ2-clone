@@ -246,4 +246,8 @@ namespace Civ2engine
         public Tile Location { get; init; }
         public List<Tile> WorkedTiles { get; } = new();
     }
+
+    public class Commodity
+    {
+    }
 }
