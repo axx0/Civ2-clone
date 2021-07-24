@@ -11,6 +11,7 @@ using Civ2engine.Enums;
 {
     public class Tile : ITerrain, IMapItem
     {
+        private City _workedBy;
         public int X { get; }
         public int Y { get; }
 
@@ -61,9 +62,83 @@ using Civ2engine.Enums;
 
         public int MoveCost => Terrain.MoveCost;
         public int Defense => (River ? Terrain.Defense + 1 : Terrain.Defense) / 2;
-        public int Food => Irrigation ? Terrain.Food + Terrain.IrrigationBonus : Terrain.Food;
-        public int Shields => Mining ? Terrain.Shields + Terrain.MiningBonus : Terrain.Shields;
-        public int Trade => River ? Terrain.Trade + 1 : Terrain.Trade;
+        
+        public int GetFood(bool lowOrganisation, bool hasSupermarket)
+        {
+            decimal food = Terrain.Food;
+            var hasCity = CityHere != null;
+            if (Irrigation || hasCity)
+            {
+                food += Terrain.IrrigationBonus;
+            }
+
+            if (hasCity && food < 2)
+            {
+                food += 1;
+            }
+
+            if (hasSupermarket && (Farmland || hasCity))
+            {
+                food *= 1.5m;
+            }
+
+            if (lowOrganisation && food >= 3)
+            {
+                food -= 1;
+            }
+
+            return (int)food;
+        }
+        
+        public int GetTrade(int organizationLevel, bool hasSuperhighways)
+        {
+            decimal trade = Terrain.Trade;
+
+            var hasRoad = Road || Railroad || CityHere != null;
+            if (hasRoad || River)
+            {
+                trade += Terrain.RoadBonus;
+            }
+
+            if (organizationLevel > 1 && trade > 0)
+            {
+                trade += 1;
+            }
+
+            if (hasSuperhighways && hasRoad)
+            {
+                trade *= 1.5m;
+            }
+            
+            if (organizationLevel == 0 && trade >= 3)
+            {
+                trade -= 1;
+            }
+
+            return (int)trade;
+        }
+
+        public int GetShields(bool lowOrganization)
+        {
+            decimal shields = Terrain.Shields;
+            if (Mining)
+            {
+                shields += Terrain.MiningBonus;
+            }
+
+            if (Railroad)
+            {
+                shields *= 1.5m;
+            }
+
+            if (lowOrganization && shields >= 3)
+            {
+                shields -= 1;
+            }
+
+            return (int) shields;
+        }
+
         public bool CanBeIrrigated => Terrain.CanIrrigate != -2 && (!Irrigation ||!Farmland);  // yes meaning the result can be irrigation or transform. of terrain
         
         /// <summary>
@@ -82,8 +157,7 @@ using Civ2engine.Enums;
         /// Otherwise the result is the type of terrain which is formed.
         /// </summary>
         public TerrainType MiningResult => Terrain.CanMine < 0 ? Type : (TerrainType) Terrain.CanMine;
-        public int MiningBonus { get; set; }
-        public int TurnsToMine { get; set; }
+
         public GovernmentType MinGovrnLevelAItoPerformMining { get; set; }     // Be careful, 0=never!
         public bool CanBeTransformed => Terrain.Transform != -2 ; // usually only ocean can't be transformed
 
@@ -117,6 +191,24 @@ using Civ2engine.Enums;
         public List<Unit> UnitsHere { get; } = new();
         
         public City CityHere { get; set; }
+
+        public City WorkedBy
+        {
+            get => _workedBy;
+            set
+            {
+                if (value != _workedBy)
+                {
+                    _workedBy?.WorkedTiles.Remove(this);
+                    _workedBy = CityHere ?? value; //If there is a city here then that's to only city that can work this tile 
+                }
+
+                if (_workedBy?.WorkedTiles.Contains(this) == false)
+                {
+                    _workedBy.WorkedTiles.Add(this);
+                }
+            }
+        }
 
         public IUnit GetTopUnit(Func<Unit, bool> pred = null)
         {

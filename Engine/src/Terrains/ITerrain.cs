@@ -15,17 +15,13 @@ namespace Civ2engine.Terrains
         string Name { get; }
         int MoveCost { get; }
         int Defense { get; }
-        int Food { get; }
-        int Shields { get; }
-        int Trade { get; }
         bool CanBeIrrigated { get; }
         TerrainType IrrigationResult { get; }
 
         GovernmentType MinGovrnLevelAItoPerformIrrigation { get; }
         bool CanBeMined { get; }
         TerrainType MiningResult { get; }
-        int MiningBonus { get; }
-        int TurnsToMine { get; }
+
         GovernmentType MinGovrnLevelAItoPerformMining { get; }
         bool CanBeTransformed { get; }
         TerrainType TransformResult { get; }

@@ -12,7 +12,7 @@ namespace Civ2engine
         public static event EventHandler<UnitEventArgs> OnUnitEvent;
 
         // Choose next unit for orders. If all units ended turn, update cities.
-        public void ChooseNextUnit()
+        public void ChooseNextUnit(bool startOfTurn = false)
         {
             Unit nextUnit = null;
             var units = _activeCiv.Units;
@@ -52,7 +52,7 @@ namespace Civ2engine
             }
 
             // End turn if no units awaiting orders
-            if (nextUnit == null)
+            if (nextUnit == null && !startOfTurn)
             {
                 if (Options.AlwaysWaitAtEndOfTurn && _activeCiv == _playerCiv)
                 {

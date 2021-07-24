@@ -342,7 +342,6 @@ namespace EtoFormsUI
             // First draw squares around city
             int newX, newY;
             City cityHere;
-            List<Unit> unitsHere;
             for (int y_ = -3; y_ <= 3; y_++)
             {
                 for (int x_ = -3; x_ <= 3; x_++)
@@ -394,38 +393,76 @@ namespace EtoFormsUI
             }
 
             // Then draw food/shield/trade icons around the city (21 squares around city)
-            int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city (0,0)
-            int[] cityFood = city.FoodDistribution;
-            int[] cityShld = city.ShieldDistribution;
-            int[] cityTrad = city.TradeDistribution;
-            for (int i = 0; i < 21; i++)
-                if (city.DistributionWorkers[i])
+//            int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city (0,0)
+            
+            var organization = city.OrganizationLevel;
+            var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
+            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
+            
+            foreach (var tile in city.WorkedTiles)
+            {
+                var food = tile.GetFood(organization == 0, hasSupermarket);
+                var shields = tile.GetShields(organization == 0);
+                var trade = tile.GetTrade(organization, hasSuperhighways);
+                var spacing = (food + shields+trade) switch
                 {
-                    // First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
-                    int spacing;
-                    switch (cityFood[i] + cityShld[i] + cityTrad[i])
-                    {
-                        case 1:
-                        case 2: spacing = 11; break;
-                        case 3: spacing = 10; break;
-                        case 4: spacing = 7; break;
-                        case 5: spacing = 5; break;
-                        case 6: spacing = 4; break;
-                        case 7:
-                        case 8: spacing = 3; break;
-                        case 9: spacing = 2; break;
-                        case 10: spacing = 1; break;
-                        default: spacing = 1; break;
-                    }
-                    spacing = (int)((float)spacing * (2.0 + (float)cityZoom) / 2.0);    // Make spacing zoom dependent
-
-                    // First draw food, then shields, then trade icons
-                    int x_offset = 4 * (8 + zoom) - ((cityFood[i] + cityShld[i] + cityTrad[i] - 1) * spacing + 15) / 2;
-                    int y_offset = 9;
-                    for (int j = 0; j < cityFood[i]; j++) g.DrawImage(Images.CityFoodSmall.Resize(4 * cityZoom), dest.X + offsetX + x_offset + (3 + offsets[i, 0]) * 4 * (8 + zoom) + j * spacing, dest.Y + offsetY + y_offset + (3 + offsets[i, 1]) * 2 * (8 + zoom));
-                    for (int j = 0; j < cityShld[i]; j++) g.DrawImage(Images.CitySupportSmall.Resize(4 * cityZoom), dest.X + offsetX + x_offset + (3 + offsets[i, 0]) * 4 * (8 + zoom) + (cityFood[i] + j) * spacing, dest.Y + offsetY + y_offset + (3 + offsets[i, 1]) * 2 * (8 + zoom));
-                    for (int j = 0; j < cityTrad[i]; j++) g.DrawImage(Images.CityTradeSmall.Resize(4 * cityZoom), dest.X + offsetX + x_offset + (3 + offsets[i, 0]) * 4 * (8 + zoom) + (cityFood[i] + cityShld[i] + j) * spacing, dest.Y + offsetY + y_offset + (3 + offsets[i, 1]) * 2 * (8 + zoom));
-                }
+                    1 => 11,
+                    2 => 11,
+                    3 => 10,
+                    4 => 7,
+                    5 => 5,
+                    6 => 4,
+                    7 => 3,
+                    8 => 3,
+                    9 => 2,
+                    10 => 1,
+                    _ => 1
+                };
+                
+                spacing = (int)((float)spacing * (2.0 + (float)cityZoom) / 2.0);    // Make spacing zoom dependent
+                
+                int x_offset = 4 * (8 + zoom) - ((food + shields + trade - 1) * spacing + 15) / 2;
+                const int yConstant = 9;
+                var combinedXOffsets = dest.X + offsetX + x_offset + (3 + tile.X - city.Location.X) * 4 * (8 + zoom);
+                var combinedYOffsets = dest.Y + offsetY + yConstant + (3 + tile.Y - city.Location.Y) * 2 * (8 + zoom);
+                    
+                    
+                // First draw food, then shields, then trade icons
+                for (int j = 0; j < food; j++) g.DrawImage(Images.CityFoodSmall.Resize(4 * cityZoom),  combinedXOffsets+ j * spacing, combinedYOffsets);
+                for (int j = 0; j < shields; j++) g.DrawImage(Images.CitySupportSmall.Resize(4 * cityZoom), combinedXOffsets + (food + j) * spacing, combinedYOffsets);
+                for (int j = 0; j < trade; j++) g.DrawImage(Images.CityTradeSmall.Resize(4 * cityZoom), combinedXOffsets + (food+ shields + j) * spacing, combinedYOffsets);
+            }
+            
+            // int[] cityFood = city.FoodDistribution;
+            // int[] cityShld = city.ShieldDistribution;
+            // int[] cityTrad = city.TradeDistribution;
+            // for (int i = 0; i < 21; i++)
+            //     if (city.DistributionWorkers[i])
+            //     {
+            //         // First count all icons on this square to determine the spacing between icons (10 = no spacing, 15 = no spacing @ 50% scaled)
+            //         int spacing = (cityFood[i] + cityShld[i] + cityTrad[i]) switch
+            //         {
+            //             1 => 11,
+            //             2 => 11,
+            //             3 => 10,
+            //             4 => 7,
+            //             5 => 5,
+            //             6 => 4,
+            //             7 => 3,
+            //             8 => 3,
+            //             9 => 2,
+            //             10 => 1,
+            //             _ => 1
+            //         };
+            //         spacing = (int)((float)spacing * (2.0 + (float)cityZoom) / 2.0);    // Make spacing zoom dependent
+            //
+            //         // First draw food, then shields, then trade icons
+            //         int x_offset = 4 * (8 + zoom) - ((cityFood[i] + cityShld[i] + cityTrad[i] - 1) * spacing + 15) / 2;
+            //         int y_offset = 9;
+            //         for (int j = 0; j < cityFood[i]; j++) g.DrawImage(Images.CityFoodSmall.Resize(4 * cityZoom), dest.X + offsetX + x_offset + (3 + offsets[i, 0]) * 4 * (8 + zoom) + j * spacing, dest.Y + offsetY + y_offset + (3 + offsets[i, 1]) * 2 * (8 + zoom));
+            //         for (int j = 0; j < cityShld[i]; j++) g.DrawImage(Images.CitySupportSmall.Resize(4 * cityZoom), dest.X + offsetX + x_offset + (3 + offsets[i, 0]) * 4 * (8 + zoom) + (cityFood[i] + j) * spacing, dest.Y + offsetY + y_offset + (3 + offsets[i, 1]) * 2 * (8 + zoom));
+            //         for (int j = 0; j < cityTrad[i]; j++) g.DrawImage(Images.CityTradeSmall.Resize(4 * cityZoom), dest.X + offsetX + x_offset + (3 + offsets[i, 0]) * 4 * (8 + zoom) + (cityFood[i] + cityShld[i] + j) * spacing, dest.Y + offsetY + y_offset + (3 + offsets[i, 1]) * 2 * (8 + zoom));
+            //     }
 
         }
     }

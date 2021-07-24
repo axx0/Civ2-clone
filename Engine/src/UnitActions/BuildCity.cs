@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using Civ2engine.Enums;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.UnitActions
 {
@@ -9,16 +12,35 @@ namespace Civ2engine.UnitActions
             return () =>
             {
                 var game = Game.Instance;
-                
-                if (!game.ActiveUnit.TypeDefinition.CanBuildCities) return;
+                var unit = game.ActiveUnit;
+                if (!unit.TypeDefinition.CanBuildCities) return;
 
-                var tile = game.CurrentMap.TileC2(game.ActiveUnit.X, game.ActiveUnit.Y);
+                var tile = unit.CurrentLocation;
                 if (!tile.Terrain.CanHaveCity) return;
                 
                 var confirmed = confirmCityBuild("Dummy Name");
                 if (confirmed.Build)
                 {
+                    tile.CityHere = new City
+                    {
+                        Location = tile,
+                        Name = confirmed.Name,
+                        X = tile.X,
+                        Y = tile.Y,
+                        Owner = unit.Owner,
+                        Size = 1,
+                    };
+                    game.GetCities.Add(tile.CityHere);
+                    unit.Owner.Cities.Add(tile.CityHere);
+                    
+                    game.AutoAddDistributionWorkers(tile.CityHere);
 
+                    unit.Dead = true;
+                    unit.MovePointsLost = unit.MovePoints;
+                    
+                    game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile>{ tile });
+                    
+                    game.ChooseNextUnit();
                 }
             };
         }

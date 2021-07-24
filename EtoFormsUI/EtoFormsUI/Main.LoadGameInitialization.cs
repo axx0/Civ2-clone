@@ -67,7 +67,7 @@ namespace EtoFormsUI
 
                 if (Game.GetActiveCiv == Game.GetPlayerCiv)
                 {
-                    CurrentGameMode = Game.ActiveUnit != null ? Moving : ViewPiece;
+                    CurrentGameMode = Game.GetActiveCiv.AnyUnitsAwaitingOrders ? Moving : ViewPiece;
                 }
                 else
                 {

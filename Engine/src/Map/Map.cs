@@ -73,47 +73,79 @@ namespace Civ2engine
             }
         }
 
-        public IEnumerable<Tile> CityRadius(Tile tile)
+        public IEnumerable<Tile> CityRadius(Tile tile, bool nullForInvalid = false)
         {
             var coords = new [] { (tile.X - tile.Odd) / 2, tile.Y };
+            var odd = tile.Odd;
             var offsets = new List<int[]>
-            {
-                new[] {0 + tile.Odd, -1},
-                new[] {0 + tile.Odd, 1},
-                new[] {1 + tile.Odd, -1},
-                new[] {1, 0},
-                new[] {1 + tile.Odd, 1},
-                new[] {1, 2},
-                new[] {1, -2},
-                new[] {0, -2},
-                new[] {0 + tile.Odd, -3},
-                new[] {0, 2},
-                new[] {0 + tile.Odd, 3},
-                new[] {-1, 2},
-                new[] {-1 + tile.Odd, 1},
-                new[] {-1, 0},
-                new[] {-1 + tile.Odd, -1},
-                new[] {-2 + tile.Odd, -1},
-                new[] {-2 + tile.Odd, 1},
-                new[] {-1, -2},
-                new[] {-1 + tile.Odd, -3},
-                new[] {-1 + tile.Odd, 3}
-            };
-            
+                // {
+                //     new[] {0 + tile.Odd, -1},
+                //     new[] {0 + tile.Odd, 1},
+                //     new[] {1 + tile.Odd, -1},
+                //     new[] {1, 0},
+                //     new[] {1 + tile.Odd, 1},
+                //     new[] {1, 2},
+                //     new[] {1, -2},
+                //     new[] {0, -2},
+                //     new[] {0 + tile.Odd, -3},
+                //     new[] {0, 2},
+                //     new[] {0 + tile.Odd, 3},
+                //     new[] {-1, 2},
+                //     new[] {-1 + tile.Odd, 1},
+                //     new[] {-1, 0},
+                //     new[] {-1 + tile.Odd, -1},
+                //     new[] {-2 + tile.Odd, -1},
+                //     new[] {-2 + tile.Odd, 1},
+                //     new[] {-1, -2},
+                //     new[] {-1 + tile.Odd, -3},
+                //     new[] {-1 + tile.Odd, 3}
+                // };
+                {
+                    new[] {odd, -1},
+                    new[] {1, 0},
+                    new[] {odd, 1},
+                    new[] {0, 2},
+                    new[] {-1+odd, 1},
+                    new[] {-1, 0},
+                    new[] {-1+odd, -1},
+                    new[] {0, -2},
+                    new[] {1, -2},
+                    new[] {1, 2},
+                    new[] {-1, 2},
+                    new[] {-1, -2},
+                    new[] {odd, -3},
+                    new[] {1+odd, -1},
+                    new[] {1+odd, 1},
+                    new[] {0+odd, 3},
+                    new[] {-1+odd, 3},
+                    new[] {-2+odd, 1},
+                    new[] {-2 + odd, -1},
+                    new[] {-1+odd, -3}
+                };
+
             yield return tile;
             foreach (var offset in offsets)
             {
                 var x = coords[0] + offset[0];
                 var y = coords[1] + offset[1];
-                if(x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
-                yield return Tile[x,y];
+                if (x < 0 || x >= XDim || y < 0 || y >= YDim)
+                {
+                    if (nullForInvalid)
+                    {
+                        yield return null;
+                    }
+                }
+                else
+                {
+                    yield return Tile[x, y];
+                }
             }
         }
 
 
         public IEnumerable<Tile> DirectNeighbours(Tile candidate)
         {
-            var evenOdd = candidate.Y % 2;
+            var evenOdd = candidate.Odd;
             var coords = new [] { (candidate.X - evenOdd) / 2, candidate.Y };
             var offsets = new List<int[]>
             {
@@ -133,18 +165,18 @@ namespace Civ2engine
         
         public IEnumerable<Tile> Neighbours(Tile candidate)
         {
-            var evenOdd = candidate.Y % 2;
-            var coords = new [] { (candidate.X - evenOdd) / 2, candidate.Y };
+            var odd = candidate.Odd;
+            var coords = new [] { (candidate.X - odd) / 2, candidate.Y };
             var offsets = new List<int[]>
             {
-                new []{ 1, 0},
-                new []{ -1, 0},
-                new []{ 0, -2},
-                new []{ 0, 2},
-                new[] {0 + evenOdd, -1},
-                new[] {0 + evenOdd, 1},
-                new[] {-1 + evenOdd, 1},
-                new[] {-1 + evenOdd, -1}
+                new[] {odd, -1},
+                new[] {1, 0},
+                new[] {odd, 1},
+                new[] {0, 2},
+                new[] {-1+odd, 1},
+                new[] {-1, 0},
+                new[] {-1+odd, -1},
+                new[] {0, -2},
             };
             foreach (var offset in offsets)
             {

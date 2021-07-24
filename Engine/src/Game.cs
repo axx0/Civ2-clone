@@ -4,7 +4,6 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.Units;
-using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 
 namespace Civ2engine
@@ -241,7 +240,6 @@ namespace Civ2engine
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,
                 Name = name,
-                DistributionWorkers = distributionWorkers,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction,
                 ActiveTradeRoutes = activeTradeRoutes,
@@ -258,6 +256,13 @@ namespace Civ2engine
                 UnhappyCitizens = unhappyCitizens,
                 Location = tile
             };
+            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
+            {
+                if (first != null && second)
+                {
+                    first.WorkedBy = city;
+                }
+            }
 
             tile.CityHere = city;
 
@@ -365,9 +370,11 @@ namespace Civ2engine
         {
             OnUnitEvent?.Invoke(this,args);
         }
-        public void TriggerMapEvent(MapEventType eventType, List<Tile> neighbours)
+
+        public void TriggerMapEvent(MapEventType eventType, List<Tile> tilesChanged)
         {
-            OnMapEvent?.Invoke(this,new MapEventArgs(eventType));
+            OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
+                {TilesChanged = tilesChanged});
         }
 
     }

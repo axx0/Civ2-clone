@@ -41,61 +41,24 @@ namespace Civ2engine
             }
         }
 
-        public void BuildCity(string cityName)
+        public void AutoAddDistributionWorkers(City city)
         {
-            int x = _activeUnit.X;
-            int y = _activeUnit.Y;
-            bool[] improvements = new bool[34];
-            bool[] wonders = new bool[28];
-            for (int i = 0; i < 34; i++) improvements[i] = false;
-            for (int i = 0; i < 28; i++) wonders[i] = false;
-            //Game.CreateCity(x, y, false, false, false, false, false, false, false, false, false, Game.Instance.ActiveUnit.Civ, 1, Game.Instance.ActiveUnit.Civ, 0, 0, 0, cityName, 0, 0, 0, 0, improvements, 0, 0, 0, 0, 0, 0, 0, 0, 0, wonders);
-
-        }
-
-        private void AutoAddDistributionWorkers(City city)
-        {
-            int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city square (0,0)
-
             // First determine how many workers are to be added
-            int workersToBeAdded = city.Size + 1 - city.DistributionWorkers.Count(c => c);
+            int workersToBeAdded = city.Size + 1 - city.WorkedTiles.Count;
+
+            var organization = city.OrganizationLevel;
+            var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
+            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
 
             // Make a list of tiles where you can add workers
-            Dictionary<int[], int> tileOffsetWhereWorkersCanBeAddedDict = new Dictionary<int[], int>();
-            int x, y;
-            for (int i = 0; i < 21; i++)
-            {
-                x = city.X + offsets[i, 0];
-                y = city.Y + offsets[i, 1];
+            var tilesToAddWorkersTo = Map.CityRadius(city.Location).Where(t =>
+                    t.WorkedBy == null && t.Visibility[city.OwnerId] &&
+                    !t.UnitsHere.Any(u => u.Owner != city.Owner && u.AttackBase > 0) && t.CityHere == null)
+                .OrderByDescending(t =>
+                    t.GetFood(organization == 0, hasSupermarket) + t.GetShields(organization == 0) +
+                    t.GetTrade(organization, hasSuperhighways)).Take(workersToBeAdded).ToList();
 
-                // TODO: block tiles already occupied by workers from other cities
-                if(!Map.IsValidTileC2(x,y)) continue;
-                var tile = Map.TileC2(x, y);
-                if (i != 0 && // Home city is here
-                    tile.Visibility[city.Owner.Id] &&   // Tile must be visible
-                    !tile.UnitsHere.Any(u => u.Owner != city.Owner && u.AttackBase > 0) &&    // Tile mustn't have enemy unit (certain units allowed)
-                    tile.CityHere == null &&  // Tile mustn't be occupied by other city
-                    !city.DistributionWorkers[i])   // Tile mustn't already have workers
-                {
-                    tileOffsetWhereWorkersCanBeAddedDict.Add(new int[] { offsets[i, 0], offsets[i, 1] }, Map.TileC2(x, y).Food + Map.TileC2(x, y).Shields + Map.TileC2(x, y).Trade);
-                }
-            }
-
-            // Sort tiles where workers will be added according to (food+shields+trade) in descending order
-            List<KeyValuePair<int[], int>> tileOffsetWhereWorkersCanBeAdded = tileOffsetWhereWorkersCanBeAddedDict.ToList();
-            tileOffsetWhereWorkersCanBeAdded.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
-            foreach (var offset in tileOffsetWhereWorkersCanBeAdded)
-            {
-                if (workersToBeAdded > 0)
-                {
-                    for (int i = 0; i < 21; i++)
-                    {
-                        if (offsets[i, 0] == offset.Key[0] && offsets[i, 1] == offset.Key[1]) city.DistributionWorkers[i] = true;
-                    }
-                    workersToBeAdded -= 1;
-                }
-                else break;
-            }
+            tilesToAddWorkersTo.ForEach(t => t.WorkedBy = city);
         }
     }
 }

@@ -24,6 +24,8 @@ namespace Civ2engine.Terrains
 
         public int MiningBonus { get; set; }
         public int TurnsToMine { get; set; }
+        
+        public int RoadBonus { get; set; }
         public GovernmentType MinGovrnLevelAItoPerformMining { get; set; }     // Be careful, 0=never!
         public bool CanBeTransformed => Transform != -2 ; // usually only ocean can't be transformed
 

@@ -16,6 +16,15 @@ namespace EtoFormsUI.GameModes
             {
                 this.ActiveXY = previous.ActiveXY;
             }
+
+            if (ActiveXY == null)
+            {
+                var firstCity = game.GetActiveCiv.Cities.FirstOrDefault();
+                if (firstCity != null)
+                {
+                    ActiveXY = new[] {firstCity.X, firstCity.Y};
+                }
+            }
             return true;
         }
 
@@ -50,7 +59,7 @@ namespace EtoFormsUI.GameModes
 
         public bool PanelClick(Game game, Main main)
         {
-            if (game.ActiveUnit != null)
+            if (game.ActiveUnit is {Dead: false})
             {
                 main.CurrentGameMode = main.Moving;
             }

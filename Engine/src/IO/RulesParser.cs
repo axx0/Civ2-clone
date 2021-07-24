@@ -257,6 +257,7 @@ namespace Civ2engine.IO
                     MinGovrnLevelAItoPerformMining = (GovernmentType) int.Parse(line[13]),
                     Transform = mappings[line[14]],
                     Impassable = line[15] == "yes",
+                    RoadBonus = type <= (int)TerrainType.Grassland ? 1:0, 
                     Specials = new[]
                     {
                         MakeSpecial(bonus[type]), MakeSpecial(bonus[type + terrains.Count])

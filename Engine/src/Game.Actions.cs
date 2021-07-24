@@ -70,8 +70,6 @@ namespace Civ2engine
 
                 if (_activeCiv.Alive)
                 {
-                    
-
                     TurnBeginning();
                     
                     OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
@@ -84,7 +82,7 @@ namespace Civ2engine
                     else
                     {
                         // Choose next unit
-                        ChooseNextUnit();
+                        ChooseNextUnit(true);
                     }
 
                 }
