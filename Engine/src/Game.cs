@@ -243,8 +243,8 @@ namespace Civ2engine
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction,
                 ActiveTradeRoutes = activeTradeRoutes,
-                CommoditySupplied = commoditySupplied,
-                CommodityDemanded = commodityDemanded,
+                CommoditySupplied = commoditySupplied.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
+                CommodityDemanded = commodityDemanded.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
                 CommodityInRoute = commodityInRoute,
                 TradeRoutePartnerCity = tradeRoutePartnerCity,
                 //Science = science,    //what does this mean???
@@ -256,7 +256,7 @@ namespace Civ2engine
                 UnhappyCitizens = unhappyCitizens,
                 Location = tile
             };
-            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
+            foreach (var (first, second) in _maps[_currentMap].CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
             {
                 if (first != null && second)
                 {
