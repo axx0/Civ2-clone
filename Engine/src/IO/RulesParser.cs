@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
@@ -39,23 +40,35 @@ namespace Civ2engine.IO
         public static Rules ParseRules(Ruleset ruleset)
         {
             var rules = new Rules();
-            var filePath = Utils.GetFilePath("RULES.txt", ruleset.Paths);
+            _rulesetPaths = ruleset.Paths;
+            var filePath = Utils.GetFilePath("RULES.txt", _rulesetPaths);
             TextFileParser.ParseFile(filePath, new RulesParser {Rules = rules});
             return rules;
         }
 
+        private readonly Dictionary<string, string> _soundPaths = new();
+        
         private void ProcessAttackSounds(string[] values)
         {
             var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
-            for (var i = 0; i < limit ; i++)
+            for (var i = 0; i < limit; i++)
             {
                 var soundFile = values[i].Split(';', 2, StringSplitOptions.TrimEntries)[0];
-                if (!string.IsNullOrWhiteSpace(soundFile) && soundFile != "<none>")
+                if (string.IsNullOrWhiteSpace(soundFile) || soundFile == "<none>") continue;
+
+                if (!_soundPaths.ContainsKey(soundFile))
                 {
-                    // TODO: Check if file actually exists?
-                    Rules.UnitTypes[i].AttackSound = soundFile;
+                    LocateSoundFile(soundFile);
                 }
+
+                Rules.UnitTypes[i].AttackSound = _soundPaths[soundFile];
             }
+        }
+
+        private void LocateSoundFile(string soundFile)
+        {
+            _soundPaths.Add(soundFile, Utils.GetFilePath(soundFile,
+                _rulesetPaths.SelectMany(p => new[] {p + Path.DirectorySeparatorChar + "Sound", p})));
         }
 
         private void SecondaryMaps(string[] values)
@@ -244,6 +257,7 @@ namespace Civ2engine.IO
                     MinGovrnLevelAItoPerformMining = (GovernmentType) int.Parse(line[13]),
                     Transform = mappings[line[14]],
                     Impassable = line[15] == "yes",
+                    RoadBonus = type <= (int)TerrainType.Grassland ? 1:0, 
                     Specials = new[]
                     {
                         MakeSpecial(bonus[type]), MakeSpecial(bonus[type + terrains.Count])
@@ -252,13 +266,19 @@ namespace Civ2engine.IO
             }).ToArray());
         }
 
-        private readonly Tuple<int, string>[] _defaultAttackSounds = {
-            Tuple.Create((int)UnitType.Catapult, "CATAPULT.WAV"),
-            Tuple.Create((int)UnitType.Elephant, "ELEPHANT.WAV")
-        }; 
+
+        private static string[] _rulesetPaths;
 
         private void ProcessUnits(string[] values)
         {
+            LocateSoundFile("CATAPULT.WAV");
+            LocateSoundFile("ELEPHANT.WAV");
+            
+            var defaultAttackSounds = new[] {
+                Tuple.Create((int)UnitType.Catapult, _soundPaths["CATAPULT.WAV"]),
+                Tuple.Create((int)UnitType.Elephant, _soundPaths["ELEPHANT.WAV"])
+            };
+            
             Rules.UnitTypes = values.Select((line, type) =>
             {
                 var text = line.Split(',', StringSplitOptions.TrimEntries);
@@ -279,7 +299,7 @@ namespace Civ2engine.IO
                     AIrole = int.Parse(text[11]),
                     Prereq = Rules.AdvanceMappings[text[12]],
                     Flags = text[13],
-                    AttackSound = _defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
+                    AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
                 unit.IsSettler = unit.AIrole == 5;
                 

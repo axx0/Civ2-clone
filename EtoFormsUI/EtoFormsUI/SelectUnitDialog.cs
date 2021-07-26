@@ -14,7 +14,7 @@ namespace EtoFormsUI
         private readonly RadioButtonList radioBtnList;
         private readonly Drawable innerPanel;
 
-        public SelectUnitDialog(Main parent, List<IUnit> units) : base(parent, 514 + 2 * 11, 46 * Math.Min(units.Count, 9) + 38 + 46, 38, 46, "Select Unit To Activate")
+        public SelectUnitDialog(Main parent, List<Unit> units) : base(parent, 514 + 2 * 11, 46 * Math.Min(units.Count, 9) + 38 + 46, 38, 46, "Select Unit To Activate")
         {
             var shownUnits = units.Take(9).ToList();
 

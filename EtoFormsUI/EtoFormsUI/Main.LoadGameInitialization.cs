@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
+﻿using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.IO;
 using Eto.Drawing;
 using Eto.Forms;
-using Civ2engine;
-using Civ2engine.Events;
-using Civ2engine.IO;
 using EtoFormsUI.ImageLoader;
 using EtoFormsUI.Initialization;
 
@@ -23,14 +18,9 @@ namespace EtoFormsUI
             // Read SAV file & RULES.txt
             GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);
 
-            // Make an instance of a new game & map
+            // Make an instance of a new game
             Game.Create(rules, gameData);
-            Map.PopulateTilesFromGameData(gameData, rules);
-            Map.MapRevealed = gameData.MapRevealed;
-            Map.WhichCivsMapShown = gameData.WhichCivsMapShown;
-            Map.Zoom = gameData.Zoom;
-            Map.StartingClickedXY = gameData.ClickedXY;
-            Map.ActiveXY = gameData.ActiveCursorXY;
+            //ViewPiece.ActiveXY = gameData.ActiveCursorXY;
             return true;
         }
 
@@ -46,6 +36,8 @@ namespace EtoFormsUI
 
         public void StartGame()
         {
+            SetupGameModes();
+            
             // Generate map tile graphics
             Images.MapTileGraphic = new Bitmap[Map.XDim, Map.YDim];
             for (var col = 0; col < Map.XDim; col++)
@@ -56,7 +48,7 @@ namespace EtoFormsUI
                 }
             }
             
-            foreach (MenuItem item in this.Menu.Items) item.Enabled = true;
+            foreach (MenuItem item in Menu.Items) item.Enabled = true;
 
             minimapPanel = new MinimapPanel(this, 262, 149);
             layout.Add(minimapPanel, ClientSize.Width - 262, 0);
@@ -68,6 +60,20 @@ namespace EtoFormsUI
             layout.Add(statusPanel, ClientSize.Width - 262, 148);
 
             Content = layout;
+
+            Game.OnPlayerEvent += (sender, e) =>
+            {
+                if (e.EventType != PlayerEventType.NewTurn) return;
+
+                if (Game.GetActiveCiv == Game.GetPlayerCiv)
+                {
+                    CurrentGameMode = Game.GetActiveCiv.AnyUnitsAwaitingOrders ? Moving : ViewPiece;
+                }
+                else
+                {
+                    CurrentGameMode = Processing;
+                }
+            };
 
             BringToFront();
         }

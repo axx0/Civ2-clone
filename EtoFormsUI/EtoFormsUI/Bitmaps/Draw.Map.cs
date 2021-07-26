@@ -20,7 +20,7 @@ namespace EtoFormsUI
         /// <param name="flatEarth">Flat earth map?</param>
         /// <param name="mapRevealed">Is map revealed?</param>
         /// <returns></returns>
-        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth, bool mapRevealed)
+        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth, bool mapRevealed, bool showActiveUnit)
         {
             // Define a bitmap for drawing
             var mapPic = new Bitmap(Map.Xpx * (2 * width + 1), Map.Ypx * (height + 1), PixelFormat.Format32bppRgba);
@@ -28,6 +28,9 @@ namespace EtoFormsUI
             // Draw map
             var cityList = new List<City>(); // Make a list of cities on visible map + their locations so you can draw city names
             using var g = new Graphics(mapPic);
+
+            var activeUnit = Game.ActiveUnit;
+            
             // Draw
             for (int _row = -2; _row < height + 2; _row++)
             {
@@ -38,13 +41,16 @@ namespace EtoFormsUI
                     int row = _row;
 
                     // Don't draw beyond borders
-                    if (startX + col < 0 || startY + row < 0 || startX + col >= 2 * Map.XDim || startY + row >= Map.YDim) continue;
+                    var xC2 = startX + col;
+                    var yC2 = startY + row;
+                    if (xC2 < 0 || yC2 < 0 || xC2 >= 2 * Map.XDim || yC2 >= Map.YDim) continue;
 
+                    var tile = Map.TileC2(xC2, yC2);
                     // Draw only if the tile is visible for each civ
-                    if (!Map.IsTileVisibleC2(startX + col, startY + row, civ) && !mapRevealed) continue;
+                    if (!mapRevealed && !tile.Visibility[civ]) continue;
 
                     // Tiles
-                    Draw.Tile(g, startX + col, startY + row, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * row));
+                    Draw.Tile(g, xC2, yC2, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * row));
 
                     // Implement dithering in all 4 directions where non-visible tiles are
                     if (!mapRevealed)
@@ -54,8 +60,8 @@ namespace EtoFormsUI
                         {
                             for (int tileY = 0; tileY < 2; tileY++)
                             {
-                                int colNew = startX + col + offset[tileX];
-                                int rowNew = startY + row + offset[tileY];
+                                int colNew = xC2 + offset[tileX];
+                                int rowNew = yC2 + offset[tileY];
                                 if (colNew >= 0 && colNew < 2 * Map.XDim && rowNew >= 0 && rowNew < Map.YDim)   // Don't observe outside map limits
                                 {
                                     if (!Map.IsTileVisibleC2(colNew, rowNew, civ))   // Surrounding tile is not visible -> dither
@@ -66,11 +72,11 @@ namespace EtoFormsUI
                     }
 
                     // Units
-                    List<IUnit> unitsHere = Game.UnitsHere(startX + col, startY + row);
-                    if (unitsHere.Count > 0)
+                    var unitsHere = tile.UnitsHere;
+                    if (unitsHere.Count > 0 && (showActiveUnit || unitsHere.All(u=>u != activeUnit)))
                     {
                         IUnit unit = unitsHere.Last();
-                        if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Where(u => u.Domain == UnitGAS.Sea).Last();   // Show naval unit
+                        if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Last(u => u.Domain == UnitGAS.Sea);   // Show naval unit
                         if (!unit.IsInCity)
                         {
                             Draw.Unit(g, unit, unitsHere.Count > 1, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
@@ -78,7 +84,7 @@ namespace EtoFormsUI
                     }
 
                     // Cities
-                    City city = Game.CityHere(startX + col, startY + row);
+                    var city = tile.CityHere;
                     if (city != null)
                     {
                         Draw.City(g, city, true, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));

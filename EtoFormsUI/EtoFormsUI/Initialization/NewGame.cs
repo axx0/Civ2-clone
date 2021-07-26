@@ -52,11 +52,7 @@ namespace EtoFormsUI.Initialization
             Labels.UpdateLabels(ruleset);
             CityLoader.LoadCities(ruleset);
             var config = new GameInitializationConfig {RuleSet = ruleset};
-            config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
-            {
-                boxes[box.Name] = box;
-                return boxes;
-            });
+            config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
             try
             {
                 PopupBox CorrectedPopup(string popupId)
@@ -131,12 +127,8 @@ namespace EtoFormsUI.Initialization
             {
                 Labels.UpdateLabels(config.RuleSet);
                 CityLoader.LoadCities(config.RuleSet);
-                
-                config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root).Aggregate( new Dictionary<string, PopupBox>(), (boxes, box) =>
-                {
-                    boxes[box.Name] = box;
-                    return boxes;
-                });
+
+                config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
 
                 
                 GetWorldSize(mainForm, config);
@@ -586,6 +578,9 @@ namespace EtoFormsUI.Initialization
             Game.NewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList());
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
+            mainForm.popupBoxList = config.PopUps;
+            
+            mainForm.Sounds.LoadSounds(config.RuleSet.Paths);
             mainForm.Playgame();
             config.Started = true;
         }

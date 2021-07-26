@@ -55,7 +55,7 @@ namespace EtoFormsUI
             infoButton.Click += (sender, e) =>
             {
                 whatToDraw = WhatToDraw.Info;
-                main.Sounds.PlaySound("MOVPIECE.WAV");
+                main.Sounds.PlaySound(GameSounds.Move);
                 Invalidate();
             };
             Layout.Add(infoButton, 11 + 459.ZoomScale(_cityZoom * 4), _paddingTop + 364.ZoomScale(_cityZoom * 4));
@@ -65,7 +65,7 @@ namespace EtoFormsUI
             mapButton.Click += (sender, e) =>
             {
                 whatToDraw = WhatToDraw.SupportMap;
-                main.Sounds.PlaySound("MOVPIECE.WAV");
+                main.Sounds.PlaySound(GameSounds.Move);
                 Invalidate();
             };
             Layout.Add(mapButton, infoButton.Location.X + 58.ZoomScale(_cityZoom * 4), infoButton.Location.Y);
@@ -80,7 +80,7 @@ namespace EtoFormsUI
             happyButton.Click += (sender, e) =>
             {
                 whatToDraw = WhatToDraw.HappinessAnalysis;
-                main.Sounds.PlaySound("MOVPIECE.WAV");
+                main.Sounds.PlaySound(GameSounds.Move);
                 Invalidate();
             };
             Layout.Add(happyButton, infoButton.Location.X, infoButton.Location.Y + 25.ZoomScale(_cityZoom * 4));
@@ -309,17 +309,34 @@ namespace EtoFormsUI
                             col = count % 5;
                             row = count / 5;
                             Draw.Unit(e.Graphics, unit, false, zoom, new Point(11 + (197 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (216 + 41 * row).ZoomScale(4 * _cityZoom)));
-                            if (unit.HomeCity == null)
-                                Draw.Text(e.Graphics, "NON", font, Colors.Black, new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true, Color.FromArgb(135, 135, 135), 1, 1);
-                            else
-                                Draw.Text(e.Graphics, unit.HomeCity.Name.Substring(0, 3), font, Colors.Black, new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom), _paddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true, Color.FromArgb(135, 135, 135), 1, 1);  // TODO: doesn't work for <3 characters in city name
+                            Draw.Text(e.Graphics, unit.HomeCity == null ? "NON" : unit.HomeCity.Name.Substring(0, 3),
+                                font, Colors.Black,
+                                new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom),
+                                    _paddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true,
+                                Color.FromArgb(135, 135, 135), 1, 1);
                             count++;
                         }
 
                         // TRADE TEXT
-                        Draw.Text(e.Graphics, $"Supplies: {_thisCity.CommoditySupplied[0]}, {_thisCity.CommoditySupplied[2]}, {_thisCity.CommoditySupplied[2]}", font, Color.FromArgb(227, 83, 15), new Point(11 + 203.ZoomScale(4 * _cityZoom), _paddingTop + 351.ZoomScale(4 * _cityZoom)), false, false, Color.FromArgb(67, 67, 67), 1, 1);
-                        Draw.Text(e.Graphics, $"Demands: {_thisCity.CommodityDemanded[0]}, {_thisCity.CommodityDemanded[2]}, {_thisCity.CommodityDemanded[2]}", font, Color.FromArgb(227, 83, 15), new Point(11 + 203.ZoomScale(4 * _cityZoom), _paddingTop + 364.ZoomScale(4 * _cityZoom)), false, false, Color.FromArgb(67, 67, 67), 1, 1);
-                        Draw.Text(e.Graphics, $"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1", font, Color.FromArgb(227, 83, 15), new Point(11 + 203.ZoomScale(4 * _cityZoom), _paddingTop + 379.ZoomScale(4 * _cityZoom)), false, false, Color.FromArgb(67, 67, 67), 1, 1);
+                        Draw.Text(e.Graphics,
+                            $"Supplies: {string.Join(", ", _thisCity.CommoditySupplied?.Select(c => Game.Rules.CaravanCommoditie[(int) c]) ?? Array.Empty<string>())}",
+                            font, Color.FromArgb(227, 83, 15),
+                            new Point(11 + 203.ZoomScale(4 * _cityZoom), _paddingTop + 351.ZoomScale(4 * _cityZoom)),
+                            false, false, Color.FromArgb(67, 67, 67), 1, 1);
+                        Draw.Text(e.Graphics,
+                            $"Demands: {string.Join(", ", _thisCity.CommodityDemanded?.Select(c => Game.Rules.CaravanCommoditie[(int) c]) ?? Array.Empty<string>())}",
+                            font, Color.FromArgb(227, 83, 15),
+                            new Point(11 + 203.ZoomScale(4 * _cityZoom), _paddingTop + 364.ZoomScale(4 * _cityZoom)),
+                            false, false, Color.FromArgb(67, 67, 67), 1, 1);
+                        if (_thisCity.TradeRoutePartnerCity != null)
+                        {
+                            Draw.Text(e.Graphics,
+                                $"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
+                                font, Color.FromArgb(227, 83, 15),
+                                new Point(11 + 203.ZoomScale(4 * _cityZoom),
+                                    _paddingTop + 379.ZoomScale(4 * _cityZoom)), false, false,
+                                Color.FromArgb(67, 67, 67), 1, 1);
+                        }
 
                         break;
                     }

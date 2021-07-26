@@ -2,6 +2,7 @@ using Eto.Drawing;
 using System.IO;
 using System.Diagnostics;
 using Civ2engine;
+using Civ2engine.Terrains;
 using EtoFormsUI.ImageLoader;
 using EtoFormsUIExtensionMethods;
 
@@ -30,6 +31,12 @@ namespace EtoFormsUI
             ImportDLLimages();
             ImportWallpapersFromIconsFile();
             //ImportCiv2Icon();
+        }
+
+        public static void RedrawTile(Tile tile)
+        {
+            var col = (tile.X - tile.Odd) / 2;
+            Images.MapTileGraphic[col, tile.Y] = Draw.MakeTileGraphic(tile, col, tile.Y, Game.Instance.Options.FlatEarth, MapImages.Terrains[Game.Instance.CurrentMap.MapIndex]);
         }
 
         public static Bitmap MapTileGraphicC2(int xC2, int yC2) => MapTileGraphic[(((xC2 + 2 * Game.Instance.CurrentMap.XDim) % (2 * Game.Instance.CurrentMap.XDim)) - yC2 % 2) / 2, yC2];  // Return tile graphics for civ2-coords input

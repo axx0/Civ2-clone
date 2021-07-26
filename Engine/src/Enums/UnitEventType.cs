@@ -5,6 +5,7 @@
         MoveCommand = 0,
         StatusUpdate = 1,
         NewUnitActivated = 2,
-        Attack
+        Attack = 3,
+        MovementBlocked = 4
     }
 }

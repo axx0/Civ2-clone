@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
@@ -19,7 +21,7 @@ namespace Civ2engine
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
         public GovernmentType Government { get; set; }
-        public bool AnyUnitsAwaitingOrders => Game.AllUnits.Any(unit => unit.Owner == this && unit.AwaitingOrders);
+        public bool AnyUnitsAwaitingOrders => Units.Any(unit => unit.AwaitingOrders);
 
         private int _luxRate;
         public int LuxRate
@@ -35,20 +37,12 @@ namespace Civ2engine
             }
         }
 
-        private int _population;
-        public int Population
-        {
-            get
-            {
-                _population = 0;
-                foreach (City city in Game.GetCities.Where(n => n.Owner == this))
-                {
-                    _population += city.Population;
-                }
-                return _population;
-            }
-        }
+        public int Population => Cities.Sum(c => c.Population);
 
         public string[] Titles { get; set; }
+
+        public List<Unit> Units { get; } = new();
+
+        public List<City> Cities { get; } = new();
     }
 }

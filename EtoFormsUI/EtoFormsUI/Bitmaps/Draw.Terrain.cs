@@ -23,8 +23,9 @@ namespace EtoFormsUI
 
             // First convert regular coords to civ2-style
             int col = 2 * arrayCol + row % 2; // you don't change row
-            int Xdim = 2 * Map.XDim;
-            int Ydim = Map.YDim;
+            var map = Map;
+            int Xdim = 2 * map.XDim;
+            int Ydim = map.YDim;
 
             // Define a bitmap for drawing
             var _tilePic = new Bitmap(64, 32, PixelFormat.Format32bppRgba);
@@ -40,31 +41,31 @@ namespace EtoFormsUI
                 if (flatEarth)
                 {
                     // Determine type of NW tile
-                    if (col != 0 && row != 0) ApplyDither(g,Map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
+                    if (col != 0 && row != 0) ApplyDither(g,map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
                     // Determine type of NE tile
-                    if (col != Xdim - 1 && (row != 0)) ApplyDither(g, Map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
+                    if (col != Xdim - 1 && (row != 0)) ApplyDither(g, map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
                     // Determine type of SW tile
-                    if (col != 0 && (row != Ydim - 1)) ApplyDither(g, Map.TileC2(col - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
+                    if (col != 0 && (row != Ydim - 1)) ApplyDither(g, map.TileC2(col - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
                     // Determine type of SE tile
-                    if (col != Xdim - 1 && (row != Ydim - 1)) ApplyDither(g,Map.TileC2(col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
+                    if (col != Xdim - 1 && (row != Ydim - 1)) ApplyDither(g,map.TileC2(col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
                 }
                 else // Round earth
                 {
                     if (row != 0)
                     {
-                        ApplyDither(g, Map.TileC2((col == 0 ? Xdim : col) - 1, row - 1).Type, tile.Type,
+                        ApplyDither(g, map.TileC2((col == 0 ? Xdim : col) - 1, row - 1).Type, tile.Type,
                             terrainSet.DitherMaps[0], 0, 0);
 
-                        ApplyDither(g, Map.TileC2(col == Xdim - 1 ? 0 : col + 1, row - 1).Type, tile.Type,
+                        ApplyDither(g, map.TileC2(col == Xdim - 1 ? 0 : col + 1, row - 1).Type, tile.Type,
                             terrainSet.DitherMaps[1], 32, 0);
                     }
 
                     if (row != Ydim - 1)
                     {
-                        ApplyDither(g, Map.TileC2((col == 0 ? Xdim : col) - 1, row + 1).Type, tile.Type,
+                        ApplyDither(g, map.TileC2((col == 0 ? Xdim : col) - 1, row + 1).Type, tile.Type,
                             terrainSet.DitherMaps[2], 0, 16);
 
-                        ApplyDither(g, Map.TileC2(col == Xdim - 1 ? 0 : col + 1, row + 1).Type, tile.Type,
+                        ApplyDither(g, map.TileC2(col == Xdim - 1 ? 0 : col + 1, row + 1).Type, tile.Type,
                             terrainSet.DitherMaps[3], 32, 16);
                     }
                 }
@@ -122,22 +123,22 @@ namespace EtoFormsUI
                     // If river is next to ocean, draw river mouth on this tile.
                     if (col + 1 < Xdim && row - 1 >= 0) // NE there is no edge of map
                     {
-                        if (land[1] && Map.TileC2(col + 1, row - 1).River) g.DrawImage(terrainSet.RiverMouth[0], 0, 0);
+                        if (land[1] && map.TileC2(col + 1, row - 1).River) g.DrawImage(terrainSet.RiverMouth[0], 0, 0);
                     }
 
                     if (col + 1 < Xdim && row + 1 < Ydim) // SE there is no edge of map
                     {
-                        if (land[3] && Map.TileC2(col + 1, row + 1).River) g.DrawImage(terrainSet.RiverMouth[1], 0, 0);
+                        if (land[3] && map.TileC2(col + 1, row + 1).River) g.DrawImage(terrainSet.RiverMouth[1], 0, 0);
                     }
 
                     if (col - 1 >= 0 && row + 1 < Ydim) // SW there is no edge of map
                     {
-                        if (land[5] && Map.TileC2(col - 1, row + 1).River) g.DrawImage(terrainSet.RiverMouth[2], 0, 0);
+                        if (land[5] && map.TileC2(col - 1, row + 1).River) g.DrawImage(terrainSet.RiverMouth[2], 0, 0);
                     }
 
                     if (col - 1 >= 0 && row - 1 >= 0) // NW there is no edge of map
                     {
-                        if (land[7] && Map.TileC2(col - 1, row - 1).River) g.DrawImage(terrainSet.RiverMouth[3], 0, 0);
+                        if (land[7] && map.TileC2(col - 1, row - 1).River) g.DrawImage(terrainSet.RiverMouth[3], 0, 0);
                     }
 
                     break;

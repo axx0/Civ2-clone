@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using Civ2engine.Enums;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.Events
 {
     public class MapEventArgs : EventArgs
     {
         public MapEventType EventType { get; }
+        public List<Tile> TilesChanged { get; set; }
 
         public int[] CentrXY, MapStartXY, MapDrawSq;
 

@@ -19,7 +19,7 @@ namespace Civ2engine
         public int BaseTimeEngineersTransform { get; private set; } = 20;
         public int MonarchyPaysSupport { get; private set; } = 3;
         public int CommunismPaysSupport { get; private set; } = 3;
-        public int FundamentalismPaysSupport { get; private set; } = 8;
+        public int FundamentalismPaysSupport { get; private set; } = 10;
         public int CommunismEquivalentPalaceDistance { get; private set; } = 0;
         public int FundamentalismScienceLost { get; private set; } = 50;
         public int ShieldPenaltyTypeChange { get; private set; } = 50;

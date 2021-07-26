@@ -12,12 +12,20 @@ namespace Civ2engine
     {
         public static void Create(Rules rules, GameData gameData)
         {
-            _instance = new Game(rules, gameData);
+            var map = new Map();
+            map.PopulateTilesFromGameData(gameData, rules);
+            map.MapRevealed = gameData.MapRevealed;
+            map.WhichCivsMapShown = gameData.WhichCivsMapShown;
+            map.Zoom = gameData.Zoom;
+            map.StartingClickedXY = gameData.ClickedXY;
+            
+            _instance = new Game(rules, gameData, map);
         }
 
-        public Game(Rules rules, GameData gameData)
+        public Game(Rules rules, GameData gameData, Map map)
         {
             _rules = rules;
+            _maps = new[] {map};
 
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
@@ -67,24 +75,24 @@ namespace Civ2engine
             // Create units
             for (int i = 0; i < gameData.NumberOfUnits; i++)
             {
-                CreateUnit(gameData.UnitType[i], gameData.UnitXloc[i], gameData.UnitYloc[i],
+                var unit = CreateUnit(gameData.UnitType[i], gameData.UnitXloc[i], gameData.UnitYloc[i],
                     gameData.UnitDead[i], gameData.UnitFirstMove[i], gameData.UnitGreyStarShield[i],
                     gameData.UnitVeteran[i], gameData.UnitCiv[i], gameData.UnitMovePointsLost[i],
                     gameData.UnitHitPointsLost[i], gameData.UnitPrevXloc[i], gameData.UnitPrevYloc[i],
                     gameData.UnitCaravanCommodity[i], gameData.UnitOrders[i], gameData.UnitHomeCity[i],
                     gameData.UnitGotoX[i], gameData.UnitGotoY[i], gameData.UnitLinkOtherUnitsOnTop[i],
                     gameData.UnitLinkOtherUnitsUnder[i]);
+                if (i == gameData.SelectedUnitIndex)
+                {
+                    _activeUnit = unit;
+                }
             }
 
             //_activeXY = SAVgameData.ActiveCursorXY; // Active unit or view piece coords (if it's active unit, you really don't need this)
 
-            _activeUnit = gameData.SelectedUnitIndex == -1
-                ? null
-                : AllUnits.Find(unit => unit.Id == gameData.SelectedUnitIndex); // null means all units have ended turn
-            _playerCiv = GetCivs[gameData.PlayersCivIndex];
+            _playerCiv = AllCivilizations[gameData.PlayersCivIndex];
             _activeCiv = _playerCiv;
             
-            _maps = new[] {new Map()};
         }
 
         public static void NewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
@@ -109,10 +117,17 @@ namespace Civ2engine
                 Y = c.StartLocation.Y,
                 TypeDefinition = settlerType
             }).ToList();
+            units.ForEach(u=>
+            {
+                u.Owner.Units.Add(u);
+                u.CurrentLocation = maps[0].TileC2(u.X, u.Y);
+            });
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
             
+            
             _instance = new Game(maps, config.Rules, civilizations, units, new Options(config)) {_playerCiv = config.PlayerCiv};
+            _instance.StartNextTurn();
         }
 
         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
@@ -186,12 +201,12 @@ namespace Civ2engine
         }
 
         /// <summary>
-        /// Compute the square euclidian distance between to tiles
+        /// Compute the square euclidean distance between to tiles
         /// </summary>
         /// <param name="startTile"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
-        private static double DistanceTo(Tile startTile, Tile tile)
+        private static double DistanceTo(IMapItem startTile, IMapItem tile)
         {
              return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
@@ -200,13 +215,10 @@ namespace Civ2engine
         {
             _options = options;
             _maps = maps;
-            GetCivs.AddRange(civilizations);
-            AllUnits.AddRange(units);
+            AllCivilizations.AddRange(civilizations);
+            
             _rules = configRules;
-            _activeUnit = units[0];
-            _activeCiv = civilizations[1];
-            CurrentMap.ActiveXY = _activeUnit.XY;
-            CurrentMap.StartingClickedXY = _activeUnit.XY;
+            _turnNumber = -1;
         }
 
     }

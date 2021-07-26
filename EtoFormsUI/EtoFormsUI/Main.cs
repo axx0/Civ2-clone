@@ -6,8 +6,10 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using System.Diagnostics;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
+using EtoFormsUI.GameModes;
 
 namespace EtoFormsUI
 {
@@ -15,12 +17,31 @@ namespace EtoFormsUI
     {
         private Game Game => Game.Instance;
         private Map Map => Game.CurrentMap;
+
+        public IGameMode CurrentGameMode
+        {
+            get => _currentGameMode;
+            set
+            {
+                if (value.Init(_currentGameMode, Game.Instance))
+                {
+                    _currentGameMode = value;
+                }
+            }
+        }
+
+        private Processing Processing = new();
+        internal MovingPieces Moving;
+        internal ViewPiece ViewPiece;
+
         private readonly PixelLayout layout;
         private MapPanel mapPanel;
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
-        private List<PopupBox> popupBoxList;
+        
+        internal Dictionary<string, PopupBox> popupBoxList;
         public Sound Sounds;
+        private IGameMode _currentGameMode;
         public static event EventHandler<PopupboxEventArgs> OnPopupboxEvent;
         public static event EventHandler<MapEventArgs> OnMapEvent;
         
@@ -96,7 +117,6 @@ namespace EtoFormsUI
             var GoHomeToNearestCityCommand = new Command { MenuText = "Go Home To Nearest City", Shortcut = Keys.H };
             var FortifyCommand = new Command { MenuText = "Fortify", Shortcut = Keys.F };
             var SleepCommand = new Command { MenuText = "Sleep", Shortcut = Keys.S };
-            SleepCommand.Executed += (sender, e) => Game.IssueUnitOrder(OrderType.Sleep);
             var DisbandCommand = new Command { MenuText = "Disband", Shortcut = Keys.Shift | Keys.D };
             var ActivateUnitCommand = new Command { MenuText = "Activate Unit", Shortcut = Keys.A };
             var WaitCommand = new Command { MenuText = "Wait", Shortcut = Keys.W };
@@ -169,6 +189,23 @@ namespace EtoFormsUI
             var GameConceptsCommand = new Command { MenuText = "Game Concepts" };
             var AboutCommand = new Command { MenuText = "About Civilization II" };
 
+            var ordersMenu = new ButtonMenuItem
+            {
+                Text = "&Orders",
+                Items =
+                {
+                    BuildRoadCommand, BuildIrrigationCommand, BuildMinesCommand, new SeparatorMenuItem(),
+                    CleanPollutionCommand, PillageCommand, new SeparatorMenuItem(), UnloadCommand, GoToCommand,
+                    ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand, FortifyCommand, SleepCommand,
+                    new SeparatorMenuItem(), DisbandCommand, ActivateUnitCommand, WaitCommand, SkipTurnCommand,
+                    new SeparatorMenuItem(), EndPlayerTurn
+                }
+            };
+            foreach (Command menuItem in ordersMenu.Items.Select(i=>i.Command).Where(c=>c!= null))
+            {
+                menuItem.Executed += MenuCommandSelected;
+            }
+
             Menu = new MenuBar
             {
                 Items =
@@ -177,7 +214,7 @@ namespace EtoFormsUI
                     new ButtonMenuItem { Text = "&Game", Items = { GameOptionsCommand, GraphicOptionsCommand, CityReportOptionsCommand, MultiplayerOptionsCommand, GameProfileCommand, new SeparatorMenuItem(), PickMusicCommand, new SeparatorMenuItem(), SaveGameCommand, LoadGameCommand, JoinGameCommand, new SeparatorMenuItem(), SetPasswordCommand, ChangeTimerCommand, new SeparatorMenuItem(), RetireCommand, QuitCommand } },
                     new ButtonMenuItem { Text = "&Kingdom", Items = { TaxRateCommand, new SeparatorMenuItem(), ViewThroneRoomCommand, FindCityCommand, new SeparatorMenuItem(), RevolutionCommand } },
                     new ButtonMenuItem { Text = "&View", Items = { MovePiecesCommand, ViewPiecesCommand, new SeparatorMenuItem(), ZoomInCommand, ZoomOutCommand, new SeparatorMenuItem(), MaxZoomInCommand, StandardZoomCommand, MediumZoomOutCommand, MaxZoomOutCommand, new SeparatorMenuItem(), ShowMapGridCommand, ArrangeWindowsCommand, ShowHiddenTerrainCommand, CenterViewCommand } },
-                    new ButtonMenuItem { Text = "&Orders", Items = { BuildRoadCommand, BuildIrrigationCommand, BuildMinesCommand, new SeparatorMenuItem(), CleanPollutionCommand, PillageCommand, new SeparatorMenuItem(), UnloadCommand, GoToCommand, ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand, FortifyCommand, SleepCommand, new SeparatorMenuItem(), DisbandCommand, ActivateUnitCommand, WaitCommand, SkipTurnCommand, new SeparatorMenuItem(), EndPlayerTurn } },
+                    ordersMenu,
                     new ButtonMenuItem { Text = "&Advisors", Items = { ChatWithKingsCommand, ConsultHighCouncilCommand, new SeparatorMenuItem(), CityStatusCommand, DefenseMinisterCommand, ForeignMinisterCommand, new SeparatorMenuItem(), AttitudeAdvisorCommand, TradeAdvisorCommand, ScienceAdvisorCommand, new SeparatorMenuItem(), CasualtyTimelineCommand } },
                     new ButtonMenuItem { Text = "&World", Items = { WondersCommand, Top5citiesCommand, CivScoreCommand, new SeparatorMenuItem(), DemographicsCommand, SpaceshipsCommand } },
                     new ButtonMenuItem { Text = "&Cheat", Items = { ToggleCheatModeCommand, new SeparatorMenuItem(), CreateUnitCommand, RevealMapCommand, SetHumanPlayerCommand, new SeparatorMenuItem(), SetGameYearCommand, KillCivilizationCommand, new SeparatorMenuItem(), TechnologyAdvanceCommand, EditTechsCommand, ForceGovernmentCommand, ChangeTerrainCursorCommand, DestroyUnitsCursorCommand, ChangeMoneyCommand, new SeparatorMenuItem(), EditUnitCommand, EditCityCommand, EditKingCommand, new SeparatorMenuItem(), ScenarioParamsCommand, SaveAsScenCommand } },
@@ -187,7 +224,16 @@ namespace EtoFormsUI
             };
 
             // Make a sound player
-            Sounds = new Sound(Settings.Civ2Path);
+            Sounds = new Sound();
+        }
+
+        private void MenuCommandSelected(object sender, EventArgs e)
+        {
+            if (sender is not Command command || CurrentGameMode == null) return;
+            if (CurrentGameMode.Actions.ContainsKey(command.Shortcut))
+            {
+                CurrentGameMode.Actions[command.Shortcut]();
+            }
         }
 
         private void FormLoadEvent(object sender, EventArgs e)
@@ -208,6 +254,13 @@ namespace EtoFormsUI
 
             // Load popup boxes info (Game.txt)
             popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        }
+        
+        private void SetupGameModes()
+        {
+            ViewPiece = new ViewPiece();
+            Moving = new MovingPieces(this);
+            CurrentGameMode = Moving;
         }
     }
 }

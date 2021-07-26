@@ -22,7 +22,10 @@ namespace EtoFormsUI
         private bool eotWhite; // End of turn text color is white?
         private readonly UITimer timer;
 
-        public bool WaitingAtEndOfTurn => Game.GetPlayerCiv == Game.GetActiveCiv && !Game.GetActiveCiv.AnyUnitsAwaitingOrders && Game.Options.AlwaysWaitAtEndOfTurn;
+        public bool WaitingAtEndOfTurn =>
+            Game.GetPlayerCiv == Game.GetActiveCiv && 
+            !Game.GetActiveCiv.AnyUnitsAwaitingOrders &&
+            Game.Options.AlwaysWaitAtEndOfTurn;
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
@@ -167,21 +170,24 @@ namespace EtoFormsUI
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
             var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
-            List<IUnit> _unitsOnThisTile = Game.UnitsHere(Map.ActiveXY[0], Map.ActiveXY[1]);
+            var activeXY = main.CurrentGameMode.ActiveXY;
+            var activeTile = Map.IsValidTileC2(activeXY[0], activeXY[1])
+                ? Game.CurrentMap.TileC2(activeXY[0], activeXY[1])
+                : null;
 
             // View piece mode
-            if (Map.ViewPieceMode)
+            if (main.CurrentGameMode == main.ViewPiece)
             {
                 Draw.Text(e.Graphics, "Viewing Pieces", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Draw location & tile type on active square
-                if (Map.IsValidTileC2(Map.ActiveXY[0], Map.ActiveXY[1]))
+                if (activeTile != null)
                 {
                     Draw.Text(e.Graphics,
-                        $"Loc: ({Map.ActiveXY[0]}, {Map.ActiveXY[1]}) {Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Island}",
+                        $"Loc: ({activeXY[0]}, {activeXY[1]}) {activeTile.Island}",
                         _font, _frontColor, new Point(5, 27), false, false, _backColor, 1, 1);
                     Draw.Text(e.Graphics,
-                        $"({Map.Tile[(Map.ActiveXY[0] - Map.ActiveXY[1] % 2) / 2, Map.ActiveXY[1]].Type})", _font,
+                        $"({activeTile.Type})", _font,
                         _frontColor, new Point(5, 45), false, false, _backColor, 1, 1);
                 }
                 //int count;
@@ -205,12 +211,12 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, "Moving Units", _font, Colors.White, new Point(119, 10), true, true, Colors.Black, 1, 0);
 
                 // Show active unit info
-                Draw.Unit(e.Graphics, Game.GetActiveUnit, false, 1, new Point(7, 27));
+                Draw.Unit(e.Graphics, Game.ActiveUnit, false, 1, new Point(7, 27));
                 
                 // Show move points correctly
                 var commonMultiplier = Game.Rules.Cosmic.MovementMultiplier;
-                var remainingFullPoints = Game.GetActiveUnit.MovePoints / commonMultiplier;
-                var fractionalMove = Game.GetActiveUnit.MovePoints % commonMultiplier;
+                var remainingFullPoints = Game.ActiveUnit.MovePoints / commonMultiplier;
+                var fractionalMove = Game.ActiveUnit.MovePoints % commonMultiplier;
                 
                 string moveText;
                 if (fractionalMove > 0)
@@ -227,76 +233,92 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, moveText, _font, _frontColor, new Point(79, 25), false, false, _backColor, 1, 1);
                 
                 // Show other unit info
-                var _cityName = (Game.GetActiveUnit.HomeCity == null) ? "NONE" : Game.GetActiveUnit.HomeCity.Name;
+                var _cityName = (Game.ActiveUnit.HomeCity == null) ? "NONE" : Game.ActiveUnit.HomeCity.Name;
                 Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(79, 43), false, false, _backColor, 1, 1);
                 Draw.Text(e.Graphics, Game.GetActiveCiv.Adjective, _font, _frontColor, new Point(79, 61), false, false, _backColor, 1, 1);
                 var _column = 83;
-                Draw.Text(e.Graphics, Game.GetActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
+                Draw.Text(e.Graphics, Game.ActiveUnit.Name, _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
                 _column += 18;
-                var activeTile = Map.TileC2(Map.ActiveXY[0], Map.ActiveXY[1]);
-                Draw.Text(e.Graphics, $"({activeTile.Type})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
-                
-                // If road/railroad/irrigation/farmland/mine present
-                string improvementText = null;
-                if (activeTile.Railroad) improvementText = "Railroad";
-                else if (activeTile.Road) improvementText = "Road";
-                
-                if (activeTile.Mining) improvementText = improvementText!= null ? $"{improvementText}, Mining" : "Mining";
-                else if (activeTile.Farmland) improvementText = improvementText!= null ? $"{improvementText}, Farmland" : "Farmland";
-                else if(activeTile.Irrigation) improvementText = improvementText!= null ? $"{improvementText}, Irrigation" : "Irrigation";
-                
-                if (!string.IsNullOrEmpty(improvementText))
-                {
-                    _column += 18;
-                    Draw.Text(e.Graphics, $"({improvementText})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
-                }
-                
-                // If airbase/fortress present
-                if (activeTile.Airbase || activeTile.Fortress)
-                {
-                    _column += 18;
-                    string _airbaseText = null;
-                    if (activeTile.Fortress) _airbaseText = "Fortress";
-                    if (activeTile.Airbase) _airbaseText = "Airbase";
-                    Draw.Text(e.Graphics, $"({_airbaseText})", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
-                }
-                // If pollution present
-                if (activeTile.Pollution)
-                {
-                    _column += 18;
-                    Draw.Text(e.Graphics, "(Pollution)", _font, _frontColor, new Point(5, _column), false, false, _backColor, 1, 1);
-                }
-                _column += 5;
 
-                // Show info for other units on the tile
-                int drawCount = 0;
-                foreach (IUnit unit in _unitsOnThisTile.Where(u => u != Game.GetActiveUnit))
+                if (activeTile != null)
                 {
-                    // First check if there is vertical space still left for drawing in panel
-                    if (_column + 69 > unitPanel.Height) break;
+                    Draw.Text(e.Graphics, $"({activeTile.Type})", _font, _frontColor, new Point(5, _column), false,
+                        false, _backColor, 1, 1);
 
-                    // Draw unit
-                    Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
-                    // Show other unit info
-                    _column += 20;
-                    _cityName = (unit.HomeCity == null) ? "NONE" : unit.HomeCity.Name;
-                    Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
-                    _column += 18;
-                    Draw.Text(e.Graphics, Order2string(unit.Order), _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
-                    _column += 18;
-                    Draw.Text(e.Graphics, unit.Name, _font, _frontColor, new Point(80, _column), false, false, _backColor, 1, 1);
+                    // If road/railroad/irrigation/farmland/mine present
+                    string improvementText = null;
+                    if (activeTile.Railroad) improvementText = "Railroad";
+                    else if (activeTile.Road) improvementText = "Road";
 
-                    //System.Diagnostics.Debug.WriteLine($"{unit.Name} drawn");
+                    if (activeTile.Mining)
+                        improvementText = improvementText != null ? $"{improvementText}, Mining" : "Mining";
+                    else if (activeTile.Farmland)
+                        improvementText = improvementText != null ? $"{improvementText}, Farmland" : "Farmland";
+                    else if (activeTile.Irrigation)
+                        improvementText = improvementText != null ? $"{improvementText}, Irrigation" : "Irrigation";
 
-                    drawCount++;
-                }
+                    if (!string.IsNullOrEmpty(improvementText))
+                    {
+                        _column += 18;
+                        Draw.Text(e.Graphics, $"({improvementText})", _font, _frontColor, new Point(5, _column), false,
+                            false, _backColor, 1, 1);
+                    }
 
-                // If not all units were drawn print a message
-                if (_unitsOnThisTile.Count - 1 != drawCount)    // -1 because you must not count in active unit
-                {
-                    _column += 22;
-                    moveText = _unitsOnThisTile.Count - 1 - drawCount == 1 ? "Unit" : "Units";
-                    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count - 1 - drawCount} More {moveText})", _font, _frontColor, new Point(9, _column), false, false, _backColor, 1, 1);
+                    // If airbase/fortress present
+                    if (activeTile.Airbase || activeTile.Fortress)
+                    {
+                        _column += 18;
+                        string _airbaseText = null;
+                        if (activeTile.Fortress) _airbaseText = "Fortress";
+                        if (activeTile.Airbase) _airbaseText = "Airbase";
+                        Draw.Text(e.Graphics, $"({_airbaseText})", _font, _frontColor, new Point(5, _column), false,
+                            false, _backColor, 1, 1);
+                    }
+
+                    // If pollution present
+                    if (activeTile.Pollution)
+                    {
+                        _column += 18;
+                        Draw.Text(e.Graphics, "(Pollution)", _font, _frontColor, new Point(5, _column), false, false,
+                            _backColor, 1, 1);
+                    }
+
+                    _column += 5;
+
+                    // Show info for other units on the tile
+                    int drawCount = 0;
+                    foreach (IUnit unit in activeTile.UnitsHere.Where(u => u != Game.ActiveUnit))
+                    {
+                        // First check if there is vertical space still left for drawing in panel
+                        if (_column + 69 > unitPanel.Height) break;
+
+                        // Draw unit
+                        Draw.Unit(e.Graphics, unit, false, 1, new Point(7, _column + 27));
+                        // Show other unit info
+                        _column += 20;
+                        _cityName = (unit.HomeCity == null) ? "NONE" : unit.HomeCity.Name;
+                        Draw.Text(e.Graphics, _cityName, _font, _frontColor, new Point(80, _column), false, false,
+                            _backColor, 1, 1);
+                        _column += 18;
+                        Draw.Text(e.Graphics, Order2string(unit.Order), _font, _frontColor, new Point(80, _column),
+                            false, false, _backColor, 1, 1);
+                        _column += 18;
+                        Draw.Text(e.Graphics, unit.Name, _font, _frontColor, new Point(80, _column), false, false,
+                            _backColor, 1, 1);
+
+                        //System.Diagnostics.Debug.WriteLine($"{unit.Name} drawn");
+
+                        drawCount++;
+                    }
+
+                    // If not all units were drawn print a message
+                    if (activeTile.UnitsHere.Count - 1 != drawCount) // -1 because you must not count in active unit
+                    {
+                        _column += 22;
+                        moveText = activeTile.UnitsHere.Count - 1 - drawCount == 1 ? "Unit" : "Units";
+                        Draw.Text(e.Graphics, $"({activeTile.UnitsHere.Count - 1 - drawCount} More {moveText})", _font,
+                            _frontColor, new Point(9, _column), false, false, _backColor, 1, 1);
+                    }
                 }
             }
 
@@ -313,16 +335,20 @@ namespace EtoFormsUI
 
         private void Panel_Click(object sender, MouseEventArgs e)
         {
-            if (WaitingAtEndOfTurn)
+            if (main.CurrentGameMode.PanelClick(Game, main))
             {
-                End_WaitAtEndOfTurn();
-            }
-            else
-            {
-                Map.ViewPieceMode = !Map.ViewPieceMode;
                 unitPanel.Invalidate();
-                OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
             }
+            // if (WaitingAtEndOfTurn)
+            // {
+            //     End_WaitAtEndOfTurn();
+            // }
+            // else
+            // {
+            //     Map.ViewPieceMode = !Map.ViewPieceMode;
+            //     unitPanel.Invalidate();
+            //     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.SwitchViewMovePiece));
+            // }
         }
 
         private void MapEventHappened(object sender, MapEventArgs e)
@@ -361,11 +387,11 @@ namespace EtoFormsUI
             switch (e.EventType)
             {
                 // Unit movement animation event was raised
-                //case UnitEventType.MoveCommand:
-                //    {
-                //        unitPanel.Invalidate();
-                //        break;
-                //    }
+                case UnitEventType.MoveCommand:
+                    {
+                        unitPanel.Invalidate();
+                        break;
+                    }
                 case UnitEventType.StatusUpdate:
                     {
                         unitPanel.Invalidate();

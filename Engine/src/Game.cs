@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.Units;
-using Civ2engine.Improvements;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -14,22 +15,18 @@ namespace Civ2engine
         private readonly GameVersionType _gameVersion;
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
-        
-        public List<IUnit> AllUnits { get; } = new();
-
-        public List<IUnit> GetCasualties => AllUnits.Where(u => u.Dead).ToList();
-        public List<IUnit> GetActiveUnits => AllUnits.Where(u => !u.Dead).ToList();
+        public FastRandom Random { get; set; } = new();
         public List<City> GetCities { get; } = new();
 
-        public List<Civilization> GetCivs { get; } = new();
+        public List<Civilization> AllCivilizations { get; } = new();
 
-        public List<Civilization> GetActiveCivs => GetCivs.Where(c => c.Alive).ToList();
+        public List<Civilization> GetActiveCivs => AllCivilizations.Where(c => c.Alive).ToList();
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
         
         private int _turnNumber;
-        public int TurnNumber => _turnNumber;
+        
         private int _gameYear;
         public int GetGameYear
         {
@@ -56,12 +53,26 @@ namespace Civ2engine
         public int NumberOfUnits { get; set; }
         public int NumberOfCities { get; set; }
 
-        private IUnit _activeUnit;
-        public IUnit GetActiveUnit => _activeUnit;
-        public void SetActiveUnit(IUnit unit) 
-        { 
-            if (!unit.TurnEnded)
-                _activeUnit = unit; 
+        private Unit _activeUnit;
+        public Unit ActiveUnit
+        {
+            get
+            {
+                return _activeUnit;
+            }
+            set
+            {
+                if (!value.TurnEnded)
+                {
+                    _activeUnit = value;
+                }
+                else
+                {
+#if DEBUG
+                    throw new NotSupportedException("Tried to set ended unit to active");
+#endif
+                }
+            }
         }
 
         private Civilization _playerCiv;
@@ -71,25 +82,6 @@ namespace Civ2engine
         public Civilization GetActiveCiv => _activeCiv;
 
         // Helper functions
-        public City CityHere(int x, int y) => GetCities.Find(city => city.X == x && city.Y == y);
-        public List<IUnit> UnitsHere(int x, int y) => AllUnits.FindAll(unit => unit.X == x && unit.Y == y).AsEnumerable().Reverse().ToList();
-        public bool AnyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y);
-        public bool EnemyUnitsPresentHere(int x, int y) => AllUnits.Any(unit => unit.X == x && unit.Y == y && unit.Owner != _activeUnit.Owner);
-        public bool AnyCitiesPresentHere(int x, int y) => GetCities.Any(city => city.X == x && city.Y == y);
-
-        /// <summary>
-        /// Determine all units inside a ship.
-        /// </summary>
-        /// <param name="ship">Ship.</param>
-        /// <returns>A list of all units in a ship.</returns>
-        public List<IUnit> UnitsOnShip(IUnit ship)
-        {
-            var unitsHere = Game.UnitsHere(ship.XY[0], ship.XY[1]);
-            unitsHere.RemoveAll(u => u.Domain != UnitGAS.Ground);  // Remove all naval/air units
-            var unitsInShip = unitsHere.Take(ship.ShipHold).ToList();
-
-            return unitsInShip;
-        }
 
         //public static void CreateTerrain (int x, int y, TerrainType type, int specialtype, bool resource, bool river, int island, bool unit_present, bool city_present, bool irrigation, 
         //                                  bool mining, bool road, bool railroad, bool fortress, bool pollution, bool farmland, bool airbase, bool[] visibility, string hexvalue)
@@ -189,15 +181,19 @@ namespace Civ2engine
         //    TerrainTile[x, y] = tile;
         //}
 
-        public void CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
+        public Unit CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
                                     int movePointsLost, int hitPointsLost, int prevX, int prevY, CommodityType caravanCommodity, OrderType orders,
                                     int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
-            IUnit unit = new Unit
+            var validTile = CurrentMap.IsValidTileC2(x, y);
+
+            var civilization = AllCivilizations[civId];
+            Unit unit = new Unit
             {
-                Id = AllUnits.Count,
+                Id = civilization.Units.Count,
                 TypeDefinition = Rules.UnitTypes[(int)type],
-                Dead = dead || y < 0 || x < 0,
+                Dead = dead || !validTile,
+                CurrentLocation = validTile ? CurrentMap.TileC2(x,y) : null,
                 Type = type,
                 X = x,
                 Y = y,
@@ -206,7 +202,7 @@ namespace Civ2engine
                 FirstMove = firstMove,
                 GreyStarShield = greyStarShield,
                 Veteran = veteran,
-                Owner = GetCivs[civId],
+                Owner = civilization,
                 PrevXY = new int[] { prevX, prevY },
                 CaravanCommodity = caravanCommodity,
                 Order = orders,
@@ -217,12 +213,14 @@ namespace Civ2engine
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            AllUnits.Add(unit);
+            civilization.Units.Add(unit);
+            return unit;
         }
 
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
         {
-            City city = new City
+            var tile = CurrentMap.TileC2(x, y);
+            var city = new City
             {
                 X = x,
                 Y = y,
@@ -235,19 +233,18 @@ namespace Civ2engine
                 CanBuildShips = canBuildShips,
                 Objectivex3 = objectivex3,
                 Objectivex1 = objectivex1,
-                Owner = GetCivs[owner],
+                Owner = AllCivilizations[owner],
                 Size = size,
-                WhoBuiltIt = GetCivs[whoBuiltIt],
+                WhoBuiltIt = AllCivilizations[whoBuiltIt],
                 FoodInStorage = foodInStorage,
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,
                 Name = name,
-                DistributionWorkers = distributionWorkers,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction,
                 ActiveTradeRoutes = activeTradeRoutes,
-                CommoditySupplied = commoditySupplied,
-                CommodityDemanded = commodityDemanded,
+                CommoditySupplied = commoditySupplied.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
+                CommodityDemanded = commodityDemanded.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
                 CommodityInRoute = commodityInRoute,
                 TradeRoutePartnerCity = tradeRoutePartnerCity,
                 //Science = science,    //what does this mean???
@@ -256,8 +253,18 @@ namespace Civ2engine
                 //TotalFoodProduction = totalFoodProduction,    // No need to import this, it's calculated
                 //TotalShieldProduction = totalShieldProduction,    // No need to import this, it's calculated
                 HappyCitizens = happyCitizens,
-                UnhappyCitizens = unhappyCitizens
+                UnhappyCitizens = unhappyCitizens,
+                Location = tile
             };
+            foreach (var (first, second) in _maps[_currentMap].CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
+            {
+                if (first != null && second)
+                {
+                    first.WorkedBy = city;
+                }
+            }
+
+            tile.CityHere = city;
 
             for (int improvNo = 0; improvNo < 34; improvNo++)
                 if (improvements[improvNo]) city.AddImprovement(Rules.Improvements[improvNo+1]);
@@ -313,7 +320,7 @@ namespace Civ2engine
             if (id != 0 && id != whichHumanPlayerIsUsed) style = tribe.CityStyle;
 
             var gov = Rules.Governments[government];
-            Civilization civ = new Civilization
+            var civ = new Civilization
             {
                 Id = id,
                 Alive = alive,
@@ -331,7 +338,7 @@ namespace Civ2engine
                 Government = (GovernmentType)government
             };
 
-            GetCivs.Add(civ);
+            AllCivilizations.Add(civ);
         }
 
         // Singleton instance of a game
@@ -353,5 +360,22 @@ namespace Civ2engine
         private int _currentMap = 0;
 
         public Map CurrentMap => _maps[_currentMap];
+
+        public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit, BlockedReason blockedReason = BlockedReason.NotBlocked)
+        {
+            OnUnitEvent?.Invoke(this,new UnitEventArgs(eventType, movedUnit, blockedReason));
+        }
+
+        public void TriggerUnitEvent(UnitEventArgs args)
+        {
+            OnUnitEvent?.Invoke(this,args);
+        }
+
+        public void TriggerMapEvent(MapEventType eventType, List<Tile> tilesChanged)
+        {
+            OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
+                {TilesChanged = tilesChanged});
+        }
+
     }
 }

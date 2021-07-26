@@ -14,7 +14,7 @@ namespace Civ2engine.Units
         int FuelRange { get; }
         int AttackBase { get; }
         int DefenseBase { get; }
-        int AttackFactor(IUnit defendingUnit);
+        double AttackFactor(IUnit defendingUnit);
         int DefenseFactor(IUnit attackingUnit, City cityDefended);
         int FirepowerBase { get; }
         int Cost { get; }
@@ -48,8 +48,7 @@ namespace Civ2engine.Units
         int Y { get; set; }
         int Xreal { get; }
         int[] XY { get; }
-        int Xpx { get; }
-        int Ypx { get; }
+
         int MovementCounter { get; set; }
         bool FirstMove { get; set; }
         bool GreyStarShield { get; set; }
@@ -68,7 +67,6 @@ namespace Civ2engine.Units
         void BuildRoad();
         void BuildMines();
         void BuildIrrigation();
-        bool Move(OrderType movementDirection);
         void SkipTurn();
         void Fortify();
         void Transform();
@@ -78,7 +76,6 @@ namespace Civ2engine.Units
         bool IsInCity { get; }
         bool IsInStack { get; }
         bool IsLastInStack { get; }
-        bool IsInShip { get; }
         string AttackSound { get; }
     }
 }

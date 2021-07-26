@@ -1,51 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Civ2engine;
 using Civ2engine.Events;
 using Civ2engine.Enums;
+using Civ2engine.Units;
 using LibVLCSharp.Shared;
 
 namespace EtoFormsUI
 {
     public class Sound
     {
-        private readonly LibVLC libVLC;
-        private readonly LibVLC libVLCLoop;
+        private readonly LibVLC _libVlc;
         private readonly MediaPlayer player;
         private readonly MediaPlayer playerLoop;
 
-        private readonly string location;
+        private Dictionary<GameSounds, string> _soundPaths;
 
-        public Sound(string loc)
+        public Sound()
         {
-            location = loc;
-            Game.OnUnitEvent += UnitEventHappened;
-            Main.OnPopupboxEvent += PopupboxEventHappened;
+            Core.Initialize();
 
-            LibVLCSharp.Shared.Core.Initialize();
+            _libVlc = new LibVLC();
+            player = new MediaPlayer(_libVlc);
 
-            libVLC = new LibVLC();
-            player = new MediaPlayer(libVLC);
-
-            libVLCLoop = new LibVLC("--input-repeat=65535"); // See https://github.com/ZeBobo5/Vlc.DotNet/issues/96
-            playerLoop = new MediaPlayer(libVLCLoop);
+            var libVlcLoop = new LibVLC("--input-repeat=65535");
+            playerLoop = new MediaPlayer(libVlcLoop);
+            LoadSounds(Settings.SearchPaths);
         }
 
-        public void PlaySound(string soundName)
+        public void PlaySound(GameSounds gameSound, string soundPath = null)
         {
-            string path = location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + soundName;
-            player.Play(new Media(libVLC, new Uri(path)));
+            Play(string.IsNullOrWhiteSpace(soundPath) ? _soundPaths[gameSound] : soundPath, player);
         }
-
-        public void PlayLoop(string soundName)
+        
+        private void Play(string soundPath, MediaPlayer player)
         {
-            string path = location + Path.DirectorySeparatorChar + "Sound" + Path.DirectorySeparatorChar + soundName;
-            playerLoop.Play(new Media(libVLC, new Uri(path)));
+            player.Play(new Media(_libVlc, new Uri(soundPath)));
         }
 
         public void PlayMenuLoop()
         {
-            this.PlayLoop("MENULOOP.WAV");
+            Play(_soundPaths[GameSounds.MenuLoop], playerLoop);
         }
 
         public void Stop()
@@ -54,28 +51,16 @@ namespace EtoFormsUI
             playerLoop.Stop();
         }
 
-        private void UnitEventHappened(object sender, UnitEventArgs e)
+        public void LoadSounds(IEnumerable<string> paths)
         {
-            switch (e.EventType)
+            var filePaths = paths.SelectMany(p => new[] {p + Path.DirectorySeparatorChar + "Sound", p}).ToList();
+            _soundPaths = new Dictionary<GameSounds, string>
             {
-                case UnitEventType.MoveCommand:
-                    this.PlaySound("MOVPIECE.WAV");
-                    break;
-                case UnitEventType.Attack:
-                    PlaySound(string.IsNullOrWhiteSpace(e.Attacker.AttackSound) ?  "SWORDFGT.WAV" : e.Attacker.AttackSound);
-                    break;
-            }
-        }
-
-        private void PopupboxEventHappened(object sender, PopupboxEventArgs e)
-        {
-            //switch (e.BoxName)
-            //{
-            //    case "LOADOK":
-            //        Stop();
-            //        this.PlaySound("MENUOK.WAV");
-            //        break;
-            //}
+                {GameSounds.Move, Utils.GetFilePath("MOVPIECE.WAV", filePaths)},
+                {GameSounds.Attack, Utils.GetFilePath("SWORDFGT.WAV", filePaths)},
+                {GameSounds.MenuOk, Utils.GetFilePath("MENUOK.WAV", filePaths)},
+                {GameSounds.MenuLoop, Utils.GetFilePath("MENULOOP.WAV", filePaths)}
+            };
         }
     }
 }
