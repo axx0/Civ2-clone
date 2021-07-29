@@ -32,7 +32,7 @@ namespace Civ2engine
 
             _options = new Options(gameData.OptionsArray);
 
-            _turnNumber = gameData.TurnNumber;
+            TurnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
             _difficultyLevel = gameData.DifficultyLevel;
             _barbarianActivity = gameData.BarbarianActivity;
@@ -218,7 +218,7 @@ namespace Civ2engine
             AllCivilizations.AddRange(civilizations);
             
             _rules = configRules;
-            _turnNumber = -1;
+            TurnNumber = -1;
         }
 
     }

@@ -252,7 +252,7 @@ namespace EtoFormsUI
                     }
                 case MapEventType.UpdateMap:
                     {
-                        e.TilesChanged.ForEach(Images.RedrawTile) ;
+                        e.TilesChanged?.ForEach(Images.RedrawTile) ;
                         UpdateMap();
                         break;
                     }

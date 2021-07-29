@@ -64,7 +64,7 @@ namespace EtoFormsUI.GameModes
             Actions = new Dictionary<Keys, Action>
             {
                 {
-                    Keys.B, BuildCity.CreateCityBuild((name) =>
+                    Keys.B, CityActions.CreateCityBuild((name) =>
                     {
                         var cityNameDialog = new Civ2dialogV2(main, main.popupBoxList["NAMECITY"],
                             textBoxes: new List<TextBoxDefinition>

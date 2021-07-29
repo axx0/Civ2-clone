@@ -446,11 +446,12 @@ namespace Civ2engine.IO
                 Rules.AdvanceMappings.Add(parts[1].Split(" ", 2, StringSplitOptions.TrimEntries )[0], i);
             }
 
-            Rules.Advances = techs.Select(line =>
+            Rules.Advances = techs.Select((line, index) =>
             {
                 var text = line.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                 return new Advance
                 {
+                    Index = index,
                     Name = text[0],
                     AIvalue = int.Parse(text[1]),
                     Modifier = int.Parse(text[2]),

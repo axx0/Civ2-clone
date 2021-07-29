@@ -18,27 +18,32 @@ namespace Civ2engine
         public FastRandom Random { get; set; } = new();
         public List<City> GetCities { get; } = new();
 
+        public History History
+        {
+            get { return _history ??= new History(this); }
+        }
+
         public List<Civilization> AllCivilizations { get; } = new();
 
         public List<Civilization> GetActiveCivs => AllCivilizations.Where(c => c.Alive).ToList();
         public Options Options => _options;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
-        
-        private int _turnNumber;
-        
+
+        public int TurnNumber { get; private set; }
+
         private int _gameYear;
         public int GetGameYear
         {
             get
             {
-                _gameYear = _turnNumber switch
+                _gameYear = TurnNumber switch
                 {
-                    < 250 => -4000 + (_turnNumber - 1) * 20,
-                    >= 250 and < 300 => 1000 + (_turnNumber - 1 - 250) * 10,
-                    >= 300 and < 350 => 1500 + (_turnNumber - 1 - 300) * 5,
-                    >= 350 and < 400 => 1750 + (_turnNumber - 1 - 350) * 2,
-                    _ => 1850 + (_turnNumber - 1 - 400)
+                    < 250 => -4000 + (TurnNumber - 1) * 20,
+                    >= 250 and < 300 => 1000 + (TurnNumber - 1 - 250) * 10,
+                    >= 300 and < 350 => 1500 + (TurnNumber - 1 - 300) * 5,
+                    >= 350 and < 400 => 1750 + (TurnNumber - 1 - 350) * 2,
+                    _ => 1850 + (TurnNumber - 1 - 400)
                 };
                 return _gameYear;
             }
@@ -358,6 +363,7 @@ namespace Civ2engine
         }
 
         private int _currentMap = 0;
+        private History _history;
 
         public Map CurrentMap => _maps[_currentMap];
 
