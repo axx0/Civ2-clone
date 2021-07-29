@@ -4,6 +4,7 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.Terrains;
+using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
 
@@ -15,7 +16,7 @@ namespace Civ2engine
 
         private void StartNextTurn()
         {
-            _turnNumber++;
+            TurnNumber++;
             ProcessBarbarians();
 
             ChoseNextCiv();
@@ -25,7 +26,7 @@ namespace Civ2engine
         {
             _activeCiv = AllCivilizations[0];
             
-            if(_turnNumber < 16) return;
+            if(TurnNumber < 16) return;
             
             TurnBeginning();
             
@@ -131,6 +132,12 @@ namespace Civ2engine
                     case AIroleType.SeaTransport:
                         break;
                     case AIroleType.Settle:
+                        var cityTile = CurrentMap.CityRadius(unit.CurrentLocation)
+                            .FirstOrDefault(t => t.CityHere != null);
+                        if (cityTile == null)
+                        {
+                            CityActions.AIBuildCity(unit, this);
+                        }
                         break;
                     case AIroleType.Diplomacy:
                         break;
