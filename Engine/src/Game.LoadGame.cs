@@ -125,8 +125,8 @@ namespace Civ2engine
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
             
-            
-            _instance = new Game(maps, config.Rules, civilizations, units, new Options(config)) {_playerCiv = config.PlayerCiv};
+            _instance = new Game(maps, config.Rules, civilizations, new Options(config)) {_playerCiv = config.PlayerCiv};
+            _instance.CityNames = NameLoader.LoadCityNames(config.RuleSet.Paths);
             _instance.StartNextTurn();
         }
 
@@ -211,14 +211,14 @@ namespace Civ2engine
              return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
 
-        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, List<Unit> units, Options options)
+        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options)
         {
             _options = options;
             _maps = maps;
             AllCivilizations.AddRange(civilizations);
             
             _rules = configRules;
-            TurnNumber = -1;
+            TurnNumber = 0;
         }
 
     }
