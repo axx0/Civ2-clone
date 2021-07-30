@@ -366,6 +366,7 @@ namespace Civ2engine
         private History _history;
 
         public Map CurrentMap => _maps[_currentMap];
+        internal Dictionary<string,List<string>> CityNames { get; set; }
 
         public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit, BlockedReason blockedReason = BlockedReason.NotBlocked)
         {

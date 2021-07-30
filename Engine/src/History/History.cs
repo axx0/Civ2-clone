@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Civ2engine.Advances;
 
@@ -26,6 +27,11 @@ namespace Civ2engine
         public void CityBuilt(City city)
         {
             Events.Add(new CityBuiltEvent(city,_game));
+        }
+
+        public int TotalCitiesBuilt(int civId)
+        {
+            return Events.Count(e => e.Civ == civId && e.EventType == HistoryEventType.CityBuilt);
         }
     }
 
