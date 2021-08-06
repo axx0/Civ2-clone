@@ -8,6 +8,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.IO;
+using Civ2engine.NewGame;
 using Civ2engine.Units;
 using Eto.Drawing;
 using Eto.Forms;
@@ -511,7 +512,7 @@ namespace EtoFormsUI.Initialization
    
             var civilizations = new List<Civilization>
             {
-                new () {Adjective = Labels.Items[17], LeaderName = Labels.Items[18], Alive = true, Id = 0},
+                new () {Adjective = Labels.Items[17], LeaderName = Labels.Items[18], Alive = true, Id = 0, PlayerType = PlayerType.Barbarians},
                 config.PlayerCiv
             };
             if (config.SelectComputerOpponents)
@@ -575,7 +576,7 @@ namespace EtoFormsUI.Initialization
 
             var maps = config.MapTask.Result;
             
-            Game.NewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList());
+            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList());
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.popupBoxList = config.PopUps;
@@ -605,7 +606,8 @@ namespace EtoFormsUI.Initialization
                 ScienceRate = 60,
                 TaxRate = 40,
                 TribeName = tribe.Plural,
-                Titles = titles
+                Titles = titles,
+                PlayerType = human ? PlayerType.Local : PlayerType.AI 
             };
         }
 

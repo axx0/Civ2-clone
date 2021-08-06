@@ -39,7 +39,7 @@ namespace Civ2engine
             {
                 var tile = barbarianGroup.Key;
                 var barbarians = barbarianGroup.ToList();
-                var target = GetCities.OrderBy(c => DistanceTo(tile, c)).FirstOrDefault();
+                var target = GetCities.OrderBy(c => Utilities.DistanceTo(tile, c)).FirstOrDefault();
                 if(target == null) continue;
                 
                 MoveTowards(tile, barbarians, target);
@@ -49,7 +49,7 @@ namespace Civ2engine
         private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
         {
             var destination = MovementFunctions.GetPossibleMoves(this, tile, units[0])
-                .OrderBy(t => DistanceTo(t, target)).FirstOrDefault();
+                .OrderBy(t => Utilities.DistanceTo(t, target)).FirstOrDefault();
             if (destination == null) return;
             
             units.ForEach(b => MovementFunctions.UnitMoved(this, b,  destination, tile));
@@ -76,7 +76,7 @@ namespace Civ2engine
                     OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
 
 
-                    if (_activeCiv != _playerCiv)
+                    if (_activeCiv.PlayerType == PlayerType.AI)
                     {
                         AITurn();
                     }
