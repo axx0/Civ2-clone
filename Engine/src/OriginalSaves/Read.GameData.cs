@@ -8,7 +8,7 @@ using Civ2engine.Enums;
 namespace Civ2engine
 {
     // Read game data from SAV and RULES.txt
-    public partial class Read
+    public class Read
     {
         // READ SAV GAME
         public static GameData ReadSAVFile(string savPath, string savName)

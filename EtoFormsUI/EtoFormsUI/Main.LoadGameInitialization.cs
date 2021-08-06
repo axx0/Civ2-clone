@@ -16,10 +16,8 @@ namespace EtoFormsUI
             CityLoader.LoadCities(ruleset);
             Images.LoadGraphicsAssetsFromFiles(ruleset, rules);
             // Read SAV file & RULES.txt
-            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);
 
-            // Make an instance of a new game
-            Game.Create(rules, gameData);
+            ClassicSaveLoader.LoadSave(ruleset, saveFileName, rules);
             //ViewPiece.ActiveXY = gameData.ActiveCursorXY;
             return true;
         }
