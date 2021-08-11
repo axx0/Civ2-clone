@@ -45,6 +45,13 @@ namespace Civ2engine
             _activeUnit = objects.ActiveUnit;
 
             _activeCiv = GetPlayerCiv;
+            for (var index = 0; index < _maps.Length; index++)
+            {
+                var map = _maps[index];
+                map.NormalizeIslands();
+                map.CalculateFertility(Rules.Terrains[index]);
+                GetCities.ForEach(c => map.AdjustFertilityForCity(c.Location));
+            }
         }
     }
 }

@@ -61,6 +61,11 @@ namespace Civ2engine.UnitActions
             unit.Dead = true;
             unit.MovePointsLost = unit.MovePoints;
 
+            if (tile.Fertility != -2)
+            {
+                game.CurrentMap.AdjustFertilityForCity(tile);
+            }
+
             game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> {tile});
 
             game.ChooseNextUnit();

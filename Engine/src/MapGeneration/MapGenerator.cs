@@ -43,13 +43,11 @@ namespace Civ2engine
                             var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
                             {
                                 River = terra > 100,
-                                Fertility = -1,
                                 Visibility = new bool[config.NumberOfCivs + 1]
                             };
                             if (tile.Type != TerrainType.Ocean)
                             {
                                 land.Add(tile);
-                                tile.Fertility = 0;
                             }
 
                             mainMap.Tile[x, y] = tile;
@@ -73,6 +71,8 @@ namespace Civ2engine
                             }
                         }
                     }
+                    
+                    mainMap.NormalizeIslands();
                 }
                 else
                 {
@@ -88,7 +88,6 @@ namespace Civ2engine
                             var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed)
                             {
                                 Island = -1,
-                                Fertility = -1,
                                 Visibility = new bool[config.NumberOfCivs + 1]
                             };
                             remainingTiles.Add(tile);
@@ -113,6 +112,10 @@ namespace Civ2engine
 
                     var continents = 0;
 
+                    var oceans = new List<Tile>();
+
+                    var islands = new List<IslandDetails>();
+
                     while (landUsed < landRequired && remainingTiles.Count > 0)
                     {
                         var candidate = config.Random.ChooseFrom<Tile>(remainingTiles);
@@ -120,10 +123,10 @@ namespace Civ2engine
                         land.Add(candidate);
 
                         var edgeSet = new HashSet<Tile>();
-                        candidate.Island = continents++;
                         candidate.Terrain = grassland;
-                        var islandTiles = new List<Tile> {candidate};
-
+                        var island = new IslandDetails {Tiles = {candidate}};
+                        islands.Add(island);
+                        
                         var size = config.Random.Next(minIslandSize, maxIslandSize);
 
                         foreach (var tile in mainMap.DirectNeighbours(candidate))
@@ -134,10 +137,10 @@ namespace Civ2engine
                             tile.Island = 0;
                         }
 
-                        while (islandTiles.Count < size && edgeSet.Count > 0)
+                        while (island.Tiles.Count < size && edgeSet.Count > 0)
                         {
                             var choice = config.Random.ChooseFrom(edgeSet);
-                            islandTiles.Add(choice);
+                            island.Tiles.Add(choice);
                             land.Add(choice);
 
                             choice.Island = candidate.Island;
@@ -151,57 +154,40 @@ namespace Civ2engine
                             }
                         }
 
-                        foreach (var neighbour in edgeSet.SelectMany(tile =>
-                            mainMap.DirectNeighbours(tile).Where(n =>
-                                n.Island == -1 && mainMap.Neighbours(n).Any(t => t.Type != TerrainType.Ocean))))
+                        if (edgeSet.Count > 0)
                         {
-                            remainingTiles.Remove(neighbour);
-                            neighbour.Island = 0;
+                            oceans.AddRange(edgeSet);
+
+                            foreach (var neighbour in edgeSet.SelectMany(tile =>
+                                mainMap.DirectNeighbours(tile).Where(n =>
+                                    n.Island == -1 && mainMap.Neighbours(n).Any(t => t.Type != TerrainType.Ocean))))
+                            {
+                                remainingTiles.Remove(neighbour);
+                                neighbour.Island = 0;
+                                oceans.Add(neighbour);
+                            }
                         }
 
-                        landUsed += islandTiles.Count;
+                        landUsed += island.Tiles.Count;
                     }
-                }
-
-                var fertilityValues = terrains[0].Select(GetFertilityValue).ToArray();
-                foreach (var tile in land)
-                {
-                    var coastal = mainMap.Neighbours(tile).Any(t => t.Terrain.Type == TerrainType.Ocean);
-                    tile.Fertility = mainMap.CityRadius(tile).Sum(
-                            nTile =>
-                            {
-                                var value = fertilityValues[(int) nTile.Terrain.Type][nTile.special +1];
-                                if (tile.River)
-                                {
-                                    value += 1;
-                                }
-                                if (coastal || nTile.Type != TerrainType.Ocean)
-                                {
-                                    return value;
-                                }
-
-                                return -value;
-                            }) * (tile.Terrain.CanIrrigate == -1 ? tile.Terrain.Food +1 : tile.Terrain.Food);
                     
-                    if (tile.Fertility < 0)
-                    {
-                        tile.Fertility = 0;
-                    }
+                    oceans.AddRange(remainingTiles);
+
+                    mainMap.Islands = islands;
+                    mainMap.RenumberIslands();
+                    mainMap.RenumberOceans(oceans);
                 }
+
+                mainMap.CalculateFertility(terrains[0], land);
 
                 maps[0] = mainMap;
                 return maps;
             });
         }
 
-        private static decimal[] GetFertilityValue(Terrain terrain)
-        {
-            var baseValue = terrain.Food * 1.5m + terrain.Shields + terrain.Trade * 0.5m;
-            var specials = terrain.Specials.Select(s => s.Food * 1.5m + s.Shields + s.Trade * 0.5m);
-            var result = new List<decimal> {baseValue};
-            result.AddRange(specials);
-            return result.ToArray();
-        }
+       
+
+
     }
 }
 
