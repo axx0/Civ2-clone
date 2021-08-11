@@ -98,7 +98,7 @@ namespace Civ2engine
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead))
             {
-                var currentTile = CurrentMap.TileC2(unit.X, unit.Y);
+                var currentTile = unit.CurrentLocation;
                 switch (unit.AIrole)
                 {
                     case AIroleType.Attack:
@@ -132,12 +132,34 @@ namespace Civ2engine
                     case AIroleType.SeaTransport:
                         break;
                     case AIroleType.Settle:
-                        var cityTile = CurrentMap.CityRadius(unit.CurrentLocation)
-                            .FirstOrDefault(t => t.CityHere != null);
-                        if (cityTile == null)
+                        if (currentTile.Fertility == -2)
                         {
                             CityActions.AIBuildCity(unit, this);
                         }
+                        var cityTile = CurrentMap.CityRadius(currentTile)
+                            .FirstOrDefault(t => t.CityHere != null);
+                        if (cityTile == null)
+                        {
+                            var moreFertile = MovementFunctions.GetPossibleMoves(this, currentTile, unit)
+                                .Where(n => n.Fertility > currentTile.Fertility).OrderByDescending(n => n.Fertility)
+                                .FirstOrDefault();
+                            if (moreFertile == null)
+                            {
+                                CityActions.AIBuildCity(unit, this);
+                            }
+                            else
+                            {
+                                if (MovementFunctions.UnitMoved(this, unit, moreFertile, currentTile))
+                                {
+                                    currentTile = moreFertile;
+                                    if (unit.MovePoints > 0)
+                                    {
+                                        CityActions.AIBuildCity(unit, this);
+                                    }
+                                }
+                            }
+                        }
+
                         break;
                     case AIroleType.Diplomacy:
                         break;

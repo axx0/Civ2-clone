@@ -45,7 +45,8 @@ namespace Civ2engine.NewGame
 
             Game.StartNew(maps, config, civilizations);
         }
-         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
+
+        private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)
         {
             var index = Array.FindIndex(config.Rules.Leaders, l => l.Adjective == civilization.Adjective);
             if (index > -1 && index < config.StartPositions.Length)

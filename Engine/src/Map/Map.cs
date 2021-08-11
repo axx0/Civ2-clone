@@ -32,7 +32,8 @@ namespace Civ2engine
         public int Xpx => 4 * (_zoom + 8);    // Length of 1 map square in X
         public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
         public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
-        
+        public List<IslandDetails> Islands { get; set; }
+
         /// <summary>
         /// Generate first instance of terrain tiles by importing game data.
         /// </summary>
@@ -78,29 +79,7 @@ namespace Civ2engine
             var coords = new [] { (tile.X - tile.Odd) / 2, tile.Y };
             var odd = tile.Odd;
             var offsets = new List<int[]>
-                // {
-                //     new[] {0 + tile.Odd, -1},
-                //     new[] {0 + tile.Odd, 1},
-                //     new[] {1 + tile.Odd, -1},
-                //     new[] {1, 0},
-                //     new[] {1 + tile.Odd, 1},
-                //     new[] {1, 2},
-                //     new[] {1, -2},
-                //     new[] {0, -2},
-                //     new[] {0 + tile.Odd, -3},
-                //     new[] {0, 2},
-                //     new[] {0 + tile.Odd, 3},
-                //     new[] {-1, 2},
-                //     new[] {-1 + tile.Odd, 1},
-                //     new[] {-1, 0},
-                //     new[] {-1 + tile.Odd, -1},
-                //     new[] {-2 + tile.Odd, -1},
-                //     new[] {-2 + tile.Odd, 1},
-                //     new[] {-1, -2},
-                //     new[] {-1 + tile.Odd, -3},
-                //     new[] {-1 + tile.Odd, 3}
-                // };
-                {
+            {
                     new[] {odd, -1},
                     new[] {1, 0},
                     new[] {odd, 1},
@@ -189,20 +168,14 @@ namespace Civ2engine
 
         public void SetAsStartingLocation(Tile tile, int ownerId)
         {
-            tile.Fertility = -2;
             tile.Visibility[ownerId] = true;
-            var tiles = new HashSet<Tile>();
-            foreach (var neighbour in Neighbours(tile))
-            {
-                neighbour.Fertility /= 2;
-            }
-
+            
             foreach (var radiusTile in CityRadius(tile))
             {
                 radiusTile.Visibility[ownerId] = true;
-                if(radiusTile.Fertility <= 0) continue;
-                radiusTile.Fertility /= 2;
             }
+            
+            this.AdjustFertilityForCity(tile);
         }
     }
 }

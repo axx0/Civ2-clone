@@ -509,6 +509,11 @@ namespace Civ2engine.UnitActions.Move
                     }
                 }
 
+                if (unit.Order != OrderType.GoTo)
+                {
+                    unit.Order = OrderType.NoOrders;
+                }
+
                 game.TriggerUnitEvent(UnitEventType.MoveCommand, unit);
             }
 

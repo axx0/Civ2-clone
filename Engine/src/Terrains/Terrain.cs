@@ -5,7 +5,7 @@ using Civ2engine.Enums;
 
 namespace Civ2engine.Terrains
 {
-    public class Terrain 
+    public class Terrain : ITerrain
     {
         public TerrainType Type { get; set; }
 
