@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Civ2engine;
+using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Eto.Forms;
 using EtoFormsUI.Animations;
@@ -11,12 +12,12 @@ namespace EtoFormsUI.GameModes
     {
         public bool Init(IGameMode previous, Game game)
         {
-            ActiveXY = previous.ActiveXY;
+            ActiveTile = previous.ActiveTile;
             return true;
         }
 
         public IDictionary<Keys, Action> Actions { get; set; } = new Dictionary<Keys, Action>();
-        public bool MapClicked(int[] clickedXy, MapPanel mapPanel, Main buttons, MouseButtons eButtons)
+        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main buttons, MouseButtons eButtons)
         {
             return true;
         }
@@ -31,6 +32,6 @@ namespace EtoFormsUI.GameModes
             return null;
         }
 
-        public int[] ActiveXY { get; set; }
+        public Tile ActiveTile { get; set; }
     }
 }

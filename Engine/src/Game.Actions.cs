@@ -96,7 +96,7 @@ namespace Civ2engine
 
         private void AITurn()
         {
-            foreach (var unit in _activeCiv.Units.Where(u => !u.Dead))
+            foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
             {
                 var currentTile = unit.CurrentLocation;
                 switch (unit.AIrole)
@@ -185,6 +185,7 @@ namespace Civ2engine
                         var destination = Random.ChooseFrom(possibleMoves);
                         if (destination.UnitsHere.Count > 0 && destination.UnitsHere[0].Owner != unit.Owner)
                         {
+                            unit.Order = OrderType.NoOrders;
                             MovementFunctions.AttackAtTile(unit, this, destination);
                         }
                         else if (MovementFunctions.UnitMoved(this, unit, destination, currentTile))

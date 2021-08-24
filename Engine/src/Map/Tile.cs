@@ -236,7 +236,7 @@ using Civ2engine.Enums;
             }
         }
 
-        public IUnit GetTopUnit(Func<Unit, bool> pred = null)
+        public Unit GetTopUnit(Func<Unit, bool> pred = null)
         {
             var units = pred != null ? UnitsHere.Where(pred) : UnitsHere;
             return (Terrain.Type == TerrainType.Ocean

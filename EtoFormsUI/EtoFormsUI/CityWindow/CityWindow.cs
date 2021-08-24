@@ -295,7 +295,7 @@ namespace EtoFormsUI
             int count = 0;
             int row, col;
             int zoom = 4 * _cityZoom - 3;
-            foreach (IUnit unit in _thisCity.SupportedUnits)
+            foreach (var unit in _thisCity.SupportedUnits)
             {
                 col = count % 4;
                 row = count / 4;
@@ -315,7 +315,7 @@ namespace EtoFormsUI
                         count = 0;
                         zoom = 4 * _cityZoom - 2;
                         font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
-                        foreach (IUnit unit in _thisCity.UnitsInCity)
+                        foreach (var unit in _thisCity.UnitsInCity)
                         {
                             col = count % 5;
                             row = count / 5;
@@ -371,7 +371,7 @@ namespace EtoFormsUI
                             }
                         }
                         // Mark supported units (omit those in the city)
-                        foreach(IUnit unit in _thisCity.SupportedUnits.Where(u => u.X != _thisCity.X && u.Y != _thisCity.Y))
+                        foreach(Unit unit in _thisCity.SupportedUnits.Where(u => u.X != _thisCity.X && u.Y != _thisCity.Y))
                             e.Graphics.FillRectangle(Color.FromArgb(159, 159, 159), _drawingOffsetX + sqW * unit.Xreal, _drawingOffsetY + sqH * unit.Y, sqH, sqH);
                         // Text
                         Draw.Text(e.Graphics, "Support Map", font, Color.FromArgb(223, 187, 63), new Point(310 * (2 + _cityZoom) / 2 + 11, 226 * (2 + _cityZoom) / 2 + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);

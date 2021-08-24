@@ -170,10 +170,8 @@ namespace EtoFormsUI
             using var _font = new Font("Times new roman", 12, FontStyle.Bold);
             var _frontColor = Color.FromArgb(51, 51, 51);
             var _backColor = Color.FromArgb(191, 191, 191);
-            var activeXY = main.CurrentGameMode.ActiveXY;
-            var activeTile = Map.IsValidTileC2(activeXY[0], activeXY[1])
-                ? Game.CurrentMap.TileC2(activeXY[0], activeXY[1])
-                : null;
+            
+            var activeTile = main.CurrentGameMode.ActiveTile;
 
             // View piece mode
             if (main.CurrentGameMode == main.ViewPiece)
@@ -184,7 +182,7 @@ namespace EtoFormsUI
                 if (activeTile != null)
                 {
                     Draw.Text(e.Graphics,
-                        $"Loc: ({activeXY[0]}, {activeXY[1]}) {activeTile.Island}",
+                        $"Loc: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}",
                         _font, _frontColor, new Point(5, 27), false, false, _backColor, 1, 1);
                     Draw.Text(e.Graphics,
                         $"({activeTile.Type})", _font,
@@ -287,7 +285,7 @@ namespace EtoFormsUI
 
                     // Show info for other units on the tile
                     int drawCount = 0;
-                    foreach (IUnit unit in activeTile.UnitsHere.Where(u => u != Game.ActiveUnit))
+                    foreach (var unit in activeTile.UnitsHere.Where(u => u != Game.ActiveUnit))
                     {
                         // First check if there is vertical space still left for drawing in panel
                         if (_column + 69 > unitPanel.Height) break;

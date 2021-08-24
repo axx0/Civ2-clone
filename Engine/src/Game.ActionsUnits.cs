@@ -67,8 +67,10 @@ namespace Civ2engine
             else
             {
                 _activeUnit = nextUnit;
-                
-                OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.StatusUpdate));
+                if (_activeUnit != null)
+                {
+                    OnUnitEvent?.Invoke(null, new ActivationEventArgs(_activeUnit));
+                }
             }
         }
     }
