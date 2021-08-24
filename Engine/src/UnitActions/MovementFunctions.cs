@@ -263,8 +263,8 @@ namespace Civ2engine.UnitActions.Move
             {
                 var rand = random.Next(0, 1000) / 1000.0;
                 var attackerWinsRound = probAttackerWins > rand;
-                attackerHitpoints.Add(attacker.HitPoints);
-                defenderHitpoints.Add(defender.HitPoints);
+                attackerHitpoints.Add(attacker.RemainingHitpoints);
+                defenderHitpoints.Add(defender.RemainingHitpoints);
                 if (attackerWinsRound)
                 {
                     defender.HitPointsLost += fpA;
@@ -275,10 +275,12 @@ namespace Civ2engine.UnitActions.Move
                     attacker.HitPointsLost += fpD;
                     combatRoundsAttackerWins.Add(false);
                 }
-            } while (attacker.HitPoints > 0 && defender.HitPoints > 0);
+            } while (attacker.RemainingHitpoints > 0 && defender.RemainingHitpoints > 0);
 
-            var attackerWinsBattle = defender.HitPoints <= 0;
+            var attackerWinsBattle = defender.RemainingHitpoints <= 0;
 
+            game.TriggerUnitEvent(new CombatEventArgs(UnitEventType.Attack, attacker, defender, combatRoundsAttackerWins, attackerHitpoints, defenderHitpoints));
+            
             if (attackerWinsBattle)
             {
                 attacker.MovePointsLost += game.Rules.Cosmic.MovementMultiplier;
@@ -308,7 +310,6 @@ namespace Civ2engine.UnitActions.Move
                 //_units.Remove(attacker);
             }
 
-            game.TriggerUnitEvent(new UnitEventArgs(UnitEventType.Attack, attacker, defender, combatRoundsAttackerWins, attackerHitpoints, defenderHitpoints));
         }
 
         private static void Moveto(Game game, Unit unit, int destX, int destY)
@@ -483,7 +484,7 @@ namespace Civ2engine.UnitActions.Move
             {
                 unit.MovePointsLost += moveCost;
                 // Set previous coords
-                unit.PrevXY = new[] {unit.X, unit.Y};
+                unit.PrevXY = new[] { unit.X, unit.Y };
 
                 // Set new coords
                 unit.X = tileTo.X;
@@ -514,7 +515,7 @@ namespace Civ2engine.UnitActions.Move
                     unit.Order = OrderType.NoOrders;
                 }
 
-                game.TriggerUnitEvent(UnitEventType.MoveCommand, unit);
+                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
 
             return unitMoved;

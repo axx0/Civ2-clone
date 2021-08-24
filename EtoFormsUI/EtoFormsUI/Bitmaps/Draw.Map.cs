@@ -73,9 +73,9 @@ namespace EtoFormsUI
 
                     // Units
                     var unitsHere = tile.UnitsHere;
-                    if (unitsHere.Count > 0 && (showActiveUnit || unitsHere.All(u=>u != activeUnit)))
+                    if (unitsHere.Count > 0 && (showActiveUnit || unitsHere.All(u=>u != activeUnit)) && Map.IsCurrentlyVisible(tile))
                     {
-                        IUnit unit = unitsHere.Last();
+                        Unit unit = unitsHere.Last();
                         if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Last(u => u.Domain == UnitGAS.Sea);   // Show naval unit
                         if (!unit.IsInCity)
                         {

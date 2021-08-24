@@ -110,7 +110,7 @@ namespace EtoFormsUI
 
         public static void Unit(Graphics g, IUnit unit, bool isStacked, int zoom, Point dest)
         {
-            UnitShield(g, unit.Type, unit.Owner.Id, unit.Order, isStacked, unit.HitPoints, unit.HitpointsBase, zoom, dest);
+            UnitShield(g, unit.Type, unit.Owner.Id, unit.Order, isStacked, unit.RemainingHitpoints, unit.HitpointsBase, zoom, dest);
             UnitSprite(g, unit.Type, unit.Order == OrderType.Sleep, unit.Order == OrderType.Fortified, zoom, dest);
         }
     }

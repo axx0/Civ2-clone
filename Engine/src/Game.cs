@@ -107,7 +107,7 @@ namespace Civ2engine
 
         public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit, BlockedReason blockedReason = BlockedReason.NotBlocked)
         {
-            OnUnitEvent?.Invoke(this,new UnitEventArgs(eventType, movedUnit, blockedReason));
+            OnUnitEvent?.Invoke(this,new MovementBlockedEventArgs(eventType, movedUnit, blockedReason));
         }
 
         public void TriggerUnitEvent(UnitEventArgs args)

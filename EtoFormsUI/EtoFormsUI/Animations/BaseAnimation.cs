@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Civ2engine.Terrains;
 using Eto.Drawing;
 
 namespace EtoFormsUI.Animations
@@ -7,17 +8,16 @@ namespace EtoFormsUI.Animations
     {
         private readonly Bitmap[] _frames;
 
-        protected BaseAnimation(Bitmap[] frames, int width, int height, double interval, int[] locationXy, int yAdjustment = 0)
+        protected BaseAnimation(Bitmap[] frames, int width, int height, double interval, Tile location, int yAdjustment = 0)
         {
             _frames = frames;
             Width = width;
             Height = height;
             Interval = interval;
+            Location = location;
             YAdjustment = yAdjustment;
-            XY = locationXy;
         }
 
-        public int[] XY { get; }
         public abstract float GetXDrawOffset(int mapXpx, int i);
         public abstract int GetYDrawOffset(int mapYpx, int startY);
 
@@ -35,6 +35,7 @@ namespace EtoFormsUI.Animations
 
         public int Height { get; }
         public double Interval { get; }
+        public Tile Location { get; }
 
         public Image CurrentFrame => _frames[_currentFrame];
         public int YAdjustment { get; }

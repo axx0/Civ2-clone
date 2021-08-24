@@ -13,7 +13,7 @@ namespace Civ2engine
         public LoadedGameObjects(Rules rules, GameData gameData)
         {
             Rules = rules;
-            var map = new Map
+            var map = new Map(gameData.OptionsArray[3])
             {
                 MapRevealed = gameData.MapRevealed,
                 WhichCivsMapShown = gameData.WhichCivsMapShown,

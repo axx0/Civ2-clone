@@ -21,7 +21,7 @@ namespace Civ2engine.Units
             {
                 if (value)
                 {
-                    CurrentLocation = null;
+                    _currentLocation?.UnitsHere.Remove(this);
                 }
                 _dead = value;
             }
@@ -36,7 +36,7 @@ namespace Civ2engine.Units
         
         public UnitDefinition TypeDefinition { get; set; }
 
-        public double AttackFactor(IUnit defendingUnit)
+        public double AttackFactor(Unit defendingUnit)
         {
             // Base attack factor from RULES
             double af = AttackBase;
@@ -50,7 +50,7 @@ namespace Civ2engine.Units
             return af;
         }
 
-        public int DefenseFactor(IUnit attackingUnit, City cityHere)
+        public int DefenseFactor(Unit attackingUnit, City cityHere)
         {
             //Carried units cannot be the defender
             if (InShip != null) return 0;
@@ -138,7 +138,7 @@ namespace Civ2engine.Units
 
         public int MovePointsLost { get; set; }
         public int HitpointsBase => TypeDefinition.Hitp;
-        public int HitPoints => HitpointsBase - HitPointsLost;
+        public int RemainingHitpoints => HitpointsBase - HitPointsLost;
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
         public OrderType Order { get; set; }
@@ -264,6 +264,7 @@ namespace Civ2engine.Units
             get => _currentLocation;
             set
             {
+                if(_dead) return; //dead units can't move
                 if(_currentLocation == value) return;
                 _currentLocation?.UnitsHere.RemoveAll(u=> u== this);
                 if (value != null && !value.UnitsHere.Contains(this))
