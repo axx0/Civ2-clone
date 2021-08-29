@@ -20,10 +20,13 @@ namespace Civ2engine
         public bool[] Advances { get; set; }
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
+
         public GovernmentType Government { get; set; }
+
         public bool AnyUnitsAwaitingOrders => Units.Any(unit => unit.AwaitingOrders);
 
         private int _luxRate;
+
         public int LuxRate
         {
             get
@@ -46,6 +49,8 @@ namespace Civ2engine
         public List<City> Cities { get; } = new();
         
         public PlayerType PlayerType { get; set; }
+
+        public City Capital { get; set; }
     }
 
     public enum PlayerType

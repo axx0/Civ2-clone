@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Civ2engine.Enums;
 using Civ2engine.IO;
 
 namespace Civ2engine
@@ -45,12 +47,27 @@ namespace Civ2engine
             _activeUnit = objects.ActiveUnit;
 
             _activeCiv = GetPlayerCiv;
+            AllCities.AddRange(objects.Cities);
+            
             for (var index = 0; index < _maps.Length; index++)
             {
                 var map = _maps[index];
                 map.NormalizeIslands();
                 map.CalculateFertility(Rules.Terrains[index]);
-                GetCities.ForEach(c => map.AdjustFertilityForCity(c.Location));
+                AllCities.ForEach(c =>
+                {
+                    map.AdjustFertilityForCity(c.Location);
+                });
+            }
+            foreach (var capital in AllCities.Where(c=> c.ImprovementExists(ImprovementType.Palace)))
+            {
+                capital.Owner.Capital = capital;
+            }
+
+            foreach (var city in AllCities)
+            {
+                city.SetUnitSupport(Rules.Cosmic);
+                city.CalculateOutput(city.Owner.Capital, city.Owner.Government, this);
             }
         }
     }

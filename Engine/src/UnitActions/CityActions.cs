@@ -51,7 +51,7 @@ namespace Civ2engine.UnitActions
                 Owner = unit.Owner,
                 Size = 1,
             };
-            game.GetCities.Add(tile.CityHere);
+            game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);
 
             game.History.CityBuilt(tile.CityHere);

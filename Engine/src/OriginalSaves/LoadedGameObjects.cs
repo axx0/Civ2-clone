@@ -125,13 +125,14 @@ namespace Civ2engine
         
         public City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech,
             bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3,
-            bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade,
+            bool objectivex1, int ownerIndex, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade,
             string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
             int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded,
             CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons,
             int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
         {
             var tile = Map.TileC2(x, y);
+            var owner = Civilizations[ownerIndex];
             var city = new City
             {
                 X = x,
@@ -145,7 +146,7 @@ namespace Civ2engine
                 CanBuildShips = canBuildShips,
                 Objectivex3 = objectivex3,
                 Objectivex1 = objectivex1,
-                Owner = Civilizations[owner],
+                Owner = owner,
                 Size = size,
                 WhoBuiltIt = Civilizations[whoBuiltIt],
                 FoodInStorage = foodInStorage,
@@ -168,6 +169,9 @@ namespace Civ2engine
                 UnhappyCitizens = unhappyCitizens,
                 Location = tile
             };
+            
+            owner.Cities.Add(city);
+            
             foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
             {
                 if (first != null && second)

@@ -17,6 +17,7 @@ namespace Civ2engine
         private void StartNextTurn()
         {
             TurnNumber++;
+            
             ProcessBarbarians();
 
             ChoseNextCiv();
@@ -39,7 +40,7 @@ namespace Civ2engine
             {
                 var tile = barbarianGroup.Key;
                 var barbarians = barbarianGroup.ToList();
-                var target = GetCities.OrderBy(c => Utilities.DistanceTo(tile, c)).FirstOrDefault();
+                var target = AllCities.OrderBy(c => Utilities.DistanceTo(tile, c)).FirstOrDefault();
                 if(target == null) continue;
                 
                 MoveTowards(tile, barbarians, target);
@@ -204,10 +205,6 @@ namespace Civ2engine
             foreach (var unit in GetActiveCiv.Units.Where(n => !n.Dead))
             {
                 unit.MovePointsLost = 0;
-
-                // Increase counters
-                if (unit.Order == OrderType.BuildIrrigation || (unit.Order == OrderType.BuildRoad) ||
-                    (unit.Order == OrderType.BuildMine)) unit.Counter += 1;
             }
 
             // Update all cities
