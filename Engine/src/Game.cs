@@ -16,7 +16,7 @@ namespace Civ2engine
         private readonly DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         public FastRandom Random { get; set; } = new();
-        public List<City> GetCities { get; } = new();
+        public List<City> AllCities { get; } = new();
 
         public History History
         {

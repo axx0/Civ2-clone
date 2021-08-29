@@ -25,8 +25,9 @@ namespace Civ2engine
         public Tile[,] Tile { get; set; }
         public bool IsValidTileC2(int xC2, int yC2)
         {
-            var x = (((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2);
-            return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;
+            var maxX = 2 * XDim;
+            var x = (((xC2 + maxX) % maxX) - yC2 % 2);
+            return -1 < x && x < maxX && -1 < yC2 && yC2 < YDim;
         }
         public Tile TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns V
@@ -41,6 +42,7 @@ namespace Civ2engine
         public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
         public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
         public List<IslandDetails> Islands { get; set; }
+        public double ScaleFactor => XDim * YDim / 4000d;
 
         /// <summary>
         /// Generate first instance of terrain tiles by importing game data.

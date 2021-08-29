@@ -53,7 +53,7 @@ namespace EtoFormsUI
                     }
 
             // Draw cities
-            foreach (City city in Game.GetCities)
+            foreach (City city in Game.AllCities)
             {
                 if (Map.WhichCivsMapShown == 8 || Map.IsTileVisibleC2(city.X, city.Y, Map.WhichCivsMapShown))
                 {

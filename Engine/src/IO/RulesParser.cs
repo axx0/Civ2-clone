@@ -296,12 +296,12 @@ namespace Civ2engine.IO
                     Firepwr = int.Parse(text[8].Replace("f", string.Empty)),
                     Cost = int.Parse(text[9]),
                     Hold = int.Parse(text[10]),
-                    AIrole = int.Parse(text[11]),
+                    AIrole = (AIroleType)int.Parse(text[11]),
                     Prereq = Rules.AdvanceMappings[text[12]],
                     Flags = text[13],
                     AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
-                unit.IsSettler = unit.AIrole == 5;
+                unit.IsSettler = unit.AIrole == AIroleType.Settle;
                 
                 if (!unit.IsSettler) return unit;
                 

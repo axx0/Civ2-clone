@@ -197,56 +197,9 @@ namespace Civ2engine.Units
             }
         }
 
-        public void BuildMines()
-        {
-            if (TypeDefinition.IsSettler && Map.Tile[X,Y].CanBeMined)
-            {
-                Order = OrderType.BuildMine;
-                Counter = 0;    //reset counter
-            }
-            else
-            {
-                //Warning!
-            }
-        }
-
-        public void Transform()
-        {
-            if (TypeDefinition.IsEngineer)
-            {
-                Order = OrderType.Transform;
-            }
-        }
-
         public void Sleep()
         {
             Order = OrderType.Sleep;
-        }
-
-        public void BuildRoad()
-        {
-            if (TypeDefinition.IsSettler && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
-            {
-                Order = OrderType.BuildRoad;
-                Counter = 0;    //reset counter
-            }
-            else
-            {
-                //Warning!
-            }
-        }
-
-        public void BuildCity()
-        {
-            if (TypeDefinition.IsSettler && (Map.Tile[X, Y].Type != TerrainType.Ocean))
-            {
-                //First invoke city name panel. If cancel is pressed, do nothing.
-                //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
-            }
-            else
-            {
-                //Warning!
-            }
         }
 
         public bool IsInCity => CurrentLocation is {CityHere: { }};
@@ -274,5 +227,12 @@ namespace Civ2engine.Units
                 _currentLocation = value;
             }
         }
+
+        public bool FreeSupport(bool isFundamental)
+        {
+            return AIrole is AIroleType.Diplomacy or AIroleType.Trade || (isFundamental && FreeSupportForFundamentalism);
+        }
+
+        public bool NeedsSupport { get; set; } = true;
     }
 }

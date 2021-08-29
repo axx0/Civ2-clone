@@ -14,14 +14,16 @@ namespace Civ2engine
         // Update stats of all cities
         private void CitiesTurn()
         {
-            foreach (City city in GetCities.Where(a => a.Owner == _activeCiv))
+            foreach (var city in _activeCiv.Cities)
             {
                 // Change food in storage
                 city.FoodInStorage += city.SurplusHunger;
 
                 // Change shield production
                 city.ShieldsProgress += city.Production;
-
+                
+                
+                
                 // Change city size
                 if (city.FoodInStorage > city.MaxFoodInStorage)
                 {
@@ -32,13 +34,32 @@ namespace Civ2engine
                     if (city.ImprovementExists(ImprovementType.Granary)) city.FoodInStorage += city.MaxFoodInStorage / 2;
 
                     AutoAddDistributionWorkers(city);    // Automatically add a workers on a tile
+                    city.CalculateOutput(city.Owner.Capital, city.Owner.Government, this);
                 }
                 else if (city.FoodInStorage < 0)
                 {
                     city.FoodInStorage = 0;
                     city.Size -= 1;
+                    AutoRemoveWorkersDistribution(city);
+                    city.CalculateOutput(city.Owner.Capital, city.Owner.Government, this);
                 }
             }
+        }
+
+        private void AutoRemoveWorkersDistribution(City city)
+        {
+            //TODO: remove scuentists & taxmen first
+            var tiles = city.WorkedTiles.Where(t => t != city.Location);
+            
+            var organization = city.OrganizationLevel;
+            var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
+            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
+
+            var unworked = tiles.OrderBy(t =>
+                t.GetFood(organization == 0, hasSupermarket) + t.GetShields(organization == 0) +
+                t.GetTrade(organization, hasSuperhighways)).First();
+
+            city.WorkedTiles.Remove(unworked);
         }
 
         public void AutoAddDistributionWorkers(City city)

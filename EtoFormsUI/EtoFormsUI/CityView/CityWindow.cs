@@ -331,7 +331,7 @@ namespace EtoFormsUI
                         if (_thisCity.TradeRoutePartnerCity != null)
                         {
                             Draw.Text(e.Graphics,
-                                $"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
+                                $"{Game.AllCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
                                 font, Color.FromArgb(227, 83, 15),
                                 new Point(11 + 203.ZoomScale(4 * _cityZoom),
                                     _paddingTop + 379.ZoomScale(4 * _cityZoom)), false, false,
@@ -439,7 +439,7 @@ namespace EtoFormsUI
 
         private void NextCityButton_Click(object sender, EventArgs e)
         {
-            _thisCity = Game.GetCities[1];  // TODO: search only in your civ's cities
+            _thisCity = Game.AllCities[1];  // TODO: search only in your civ's cities
             Invalidate();
             //DrawPanel.Invalidate();
         }
