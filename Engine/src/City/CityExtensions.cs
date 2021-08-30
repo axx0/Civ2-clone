@@ -68,7 +68,7 @@ namespace Civ2engine
                                        ? game.Rules.Cosmic.SettlersEatTillMonarchy
                                        : game.Rules.Cosmic.SettlersEatFromCommunism);
             city.FoodProduction = totalFood;
-            city.SurplusHunger = totalFood = city.FoodConsumption;
+            city.SurplusHunger = totalFood - city.FoodConsumption;
         }
 
         public static void SetUnitSupport(this City city, CosmicRules constants)
