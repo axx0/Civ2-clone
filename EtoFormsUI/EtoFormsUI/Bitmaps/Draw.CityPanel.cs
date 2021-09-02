@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
-using Civ2engine.Units;
+using Civ2engine.Production;
+using Eto.Drawing;
 using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI
@@ -98,8 +96,8 @@ namespace EtoFormsUI
 
             // FOOD
             // Text
-            Draw.Text(g, $"Food: {city.Food}", _font, Color.FromArgb(87, 171, 39), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 61 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Surplus: {city.SurplusHunger}", _font, Color.FromArgb(63, 139, 31), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 61 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            Text(g, $"Food: {city.Food}", _font, Color.FromArgb(87, 171, 39), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 61 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
+            Text(g, $"Surplus: {city.SurplusHunger}", _font, Color.FromArgb(63, 139, 31), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 61 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
             // Number of food+surplus/hunger icons determines spacing between icons
             int spacing;
             switch (city.Food + Math.Abs(city.SurplusHunger))
@@ -133,8 +131,8 @@ namespace EtoFormsUI
 
             // TRADE
             // Text
-            Draw.Text(g, $"Trade: {city.Trade}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            Text(g, $"Trade: {city.Trade}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
+            Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
             // Spacing between icons
             switch (city.Trade + city.Corruption)
             {
@@ -162,9 +160,9 @@ namespace EtoFormsUI
 
             // TAX+LUX+SCI
             // Text
-            Draw.Text(g, $"50% Tax: {city.Tax}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"0% Lux: {city.Lux}", _font, Colors.White, new Point(dest.X + 285 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);    // TODO: Make text center aligned
-            Draw.Text(g, $"50% Sci: {city.Science}", _font, Color.FromArgb(63, 187, 199), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            Text(g, $"50% Tax: {city.Tax}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
+            Text(g, $"0% Lux: {city.Lux}", _font, Colors.White, new Point(dest.X + 285 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);    // TODO: Make text center aligned
+            Text(g, $"50% Sci: {city.Science}", _font, Color.FromArgb(63, 187, 199), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
             // Spacing between icons
             switch (city.Tax + city.Lux + city.Science)
             {
@@ -193,8 +191,8 @@ namespace EtoFormsUI
 
             // SUPPORT+PRODUCTION
             // Text
-            Draw.Text(g, $"Support: {city.Support}", _font, Color.FromArgb(63, 79, 167), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Production: {city.Production}", _font, Color.FromArgb(7, 11, 103), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            Text(g, $"Support: {city.Support}", _font, Color.FromArgb(63, 79, 167), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
+            Text(g, $"Production: {city.Production}", _font, Color.FromArgb(7, 11, 103), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
             // Spacing between icons
             switch (city.Support + city.Production)
             {
@@ -282,22 +280,21 @@ namespace EtoFormsUI
             // zoom: Units=-1(norm), Improvements=0(norm)
             var fontSize = cityZoom == -1 ? 4 : (cityZoom == 0 ? 9 : 13);
             using var font = new Font("Arial", fontSize, FontStyle.Bold);
-            var maxUnitIndex = Game.Rules.UnitTypes.Length;
-            int cost;
+            
+            var cost = city.OrderInProduction.Cost;
             // Units
-            if (city.ItemInProduction < maxUnitIndex)
+            switch (city.OrderInProduction.Type)
             {
-                Draw.UnitSprite(g, (UnitType)city.ItemInProduction, false, false, 4 * cityZoom - 1, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 163 * (2 + cityZoom) / 2));
-                cost = Game.Rules.UnitTypes[city.ItemInProduction].Cost;
-
-            }
-            // Improvements
-            else
-            {
-                var improvementIndex = city.ItemInProduction - Game.Rules.UnitTypes.Length + 1;
-                Draw.Text(g, Game.Rules.Improvements[improvementIndex].Name, font, Color.FromArgb(63, 79, 167), new Point(dest.X + 534 * (2 + cityZoom) / 2, dest.Y + 175 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
-                Draw.CityImprovement(g, (ImprovementType)(improvementIndex), 4 * cityZoom, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 183 * (2 + cityZoom) / 2));
-                cost = Game.Rules.Improvements[improvementIndex].Cost;
+                case ItemType.Unit:
+                    UnitSprite(g, city.OrderInProduction.ImageIndex, false, false, 4 * cityZoom - 1, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 163 * (2 + cityZoom) / 2));
+                    break;
+                case ItemType.Building:
+                    var index = city.OrderInProduction.ImageIndex;
+                Text(g, Game.Rules.Improvements[index].Name, font, Color.FromArgb(63, 79, 167), new Point(dest.X + 534 * (2 + cityZoom) / 2, dest.Y + 175 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
+                CityImprovement(g, (ImprovementType)(index), 4 * cityZoom, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 183 * (2 + cityZoom) / 2));
+                    break;
+                default:
+                    throw new NotSupportedException("Unknown production type");
             }
 
             // Draw rectangle around icons
@@ -371,7 +368,7 @@ namespace EtoFormsUI
 
                             if (tile.CityHere != null)
                             {
-                                Draw.City(g, tile.CityHere, false, zoom,
+                                City(g, tile.CityHere, false, zoom,
                                     new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
                                         dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
                             } else if (tile.UnitsHere.Count > 0)
@@ -380,7 +377,7 @@ namespace EtoFormsUI
 
                                 if (unit != null && unit.AttackBase > 0)
                                 {
-                                    Draw.Unit(g, unit, tile.UnitsHere.Count > 1, zoom,
+                                    Unit(g, unit, tile.UnitsHere.Count > 1, zoom,
                                         new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
                                             dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
                                 }

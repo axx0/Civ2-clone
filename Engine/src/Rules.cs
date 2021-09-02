@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.Production;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 
@@ -45,5 +47,17 @@ namespace Civ2engine
         public Order[] Orders { get; internal set; }
 
         public MapParams[] Maps { get; internal set; } = {new() {Type = MapType.Standard}};
+
+        private ProductionOrder[] _items;
+
+        public ProductionOrder[] ProductionItems
+        {
+            get
+            {
+                return _items ??= UnitTypes.Select((u, index) => new UnitProductionOrder(u, index))
+                    .Cast<ProductionOrder>()
+                    .Concat(Improvements.Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
+            }
+        }
     }
 }

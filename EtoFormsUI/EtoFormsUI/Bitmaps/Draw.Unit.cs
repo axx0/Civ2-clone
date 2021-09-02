@@ -10,7 +10,12 @@ namespace EtoFormsUI
     {
         public static void UnitSprite(Graphics g, UnitType type, bool isSleeping, bool isFortified, int zoom, Point dest)
         {
-            using var _unitPic = MapImages.Units[(int)type].Bitmap.Resize(zoom);
+            UnitSprite(g,(int)type,isSleeping,isFortified, zoom,dest);
+        }
+
+        public static void UnitSprite(Graphics g, int type, bool isSleeping, bool isFortified, int zoom, Point dest)
+        {
+            using var _unitPic = MapImages.Units[type].Bitmap.Resize(zoom);
             if (!isSleeping)
             {
                 g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height));

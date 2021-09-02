@@ -7,6 +7,7 @@ using Civ2engine.Improvements;
 using Civ2engine.Units;
 using Civ2engine.Terrains;
 using System.Diagnostics;
+using Civ2engine.Production;
 
 namespace Civ2engine
 {
@@ -32,7 +33,7 @@ namespace Civ2engine
         public int NetTrade { get; set; }
         public string Name { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
-        public int ItemInProduction { get; set; }
+        public ProductionOrder OrderInProduction { get; set; }
         public int ActiveTradeRoutes { get; set; }
         public CommodityType[] CommoditySupplied { get; set; }
         public CommodityType[] CommodityDemanded { get; set; }
