@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Production;
 using Civ2engine.Units;
 
 namespace Civ2engine
@@ -58,7 +59,7 @@ namespace Civ2engine
                     gameData.CityCommodityInRoute[i], gameData.CityTradeRoutePartnerCity[i],
                     gameData.CityScience[i], gameData.CityTax[i], gameData.CityNoOfTradeIcons[i],
                     gameData.CityTotalFoodProduction[i], gameData.CityTotalShieldProduction[i],
-                    gameData.CityHappyCitizens[i], gameData.CityUnhappyCitizens[i]));
+                    gameData.CityHappyCitizens[i], gameData.CityUnhappyCitizens[i], rules.ProductionItems));
             }
 
             Cities = cities;
@@ -129,7 +130,7 @@ namespace Civ2engine
             string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
             int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded,
             CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons,
-            int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
+            int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens, ProductionOrder[] productionItems)
         {
             var tile = Map.TileC2(x, y);
             var owner = Civilizations[ownerIndex];
@@ -154,7 +155,7 @@ namespace Civ2engine
                 NetTrade = netTrade,
                 Name = name,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
-                ItemInProduction = itemInProduction,
+                OrderInProduction = productionItems[itemInProduction],
                 ActiveTradeRoutes = activeTradeRoutes,
                 CommoditySupplied = commoditySupplied.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
                 CommodityDemanded = commodityDemanded.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
