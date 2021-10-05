@@ -281,15 +281,15 @@ namespace EtoFormsUI
             var fontSize = cityZoom == -1 ? 4 : (cityZoom == 0 ? 9 : 13);
             using var font = new Font("Arial", fontSize, FontStyle.Bold);
             
-            var cost = city.OrderInProduction.Cost;
+            var cost = city.ItemInProduction.Cost;
             // Units
-            switch (city.OrderInProduction.Type)
+            switch (city.ItemInProduction.Type)
             {
                 case ItemType.Unit:
-                    UnitSprite(g, city.OrderInProduction.ImageIndex, false, false, 4 * cityZoom - 1, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 163 * (2 + cityZoom) / 2));
+                    UnitSprite(g, city.ItemInProduction.ImageIndex, false, false, 4 * cityZoom - 1, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 163 * (2 + cityZoom) / 2));
                     break;
                 case ItemType.Building:
-                    var index = city.OrderInProduction.ImageIndex;
+                    var index = city.ItemInProduction.ImageIndex;
                 Text(g, Game.Rules.Improvements[index].Name, font, Color.FromArgb(63, 79, 167), new Point(dest.X + 534 * (2 + cityZoom) / 2, dest.Y + 175 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
                 CityImprovement(g, (ImprovementType)(index), 4 * cityZoom, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 183 * (2 + cityZoom) / 2));
                     break;

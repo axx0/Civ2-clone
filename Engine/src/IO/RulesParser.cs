@@ -402,7 +402,7 @@ namespace Civ2engine.IO
             }
         }
         
-        int individualMoveMultiplier(int multiplier, int commonMultiplier)
+        private static int IndividualMoveMultiplier(int multiplier, int commonMultiplier)
         {
             return multiplier > 0 ? commonMultiplier / multiplier : 0;
         }
@@ -414,13 +414,13 @@ namespace Civ2engine.IO
 
             var commonMultiplier = multipliers.Aggregate(1, Utils.LowestCommonMultiple);
 
-            Rules.Cosmic.RoadMovement = individualMoveMultiplier(multipliers[0], commonMultiplier);
-            Rules.Cosmic.RiverMovement = individualMoveMultiplier(multipliers[1], commonMultiplier);
+            Rules.Cosmic.RoadMovement = IndividualMoveMultiplier(multipliers[0], commonMultiplier);
+            Rules.Cosmic.RiverMovement = IndividualMoveMultiplier(multipliers[1], commonMultiplier);
             Rules.Cosmic.AlpineMovement = multipliers.Count > 2
-                ? individualMoveMultiplier(multipliers[2], commonMultiplier)
+                ? IndividualMoveMultiplier(multipliers[2], commonMultiplier)
                 : Rules.Cosmic.RoadMovement;
             Rules.Cosmic.RailroadMovement =
-                multipliers.Count > 3 ? individualMoveMultiplier(multipliers[3], commonMultiplier) : 0;
+                multipliers.Count > 3 ? IndividualMoveMultiplier(multipliers[3], commonMultiplier) : 0;
 
             if (Rules.Cosmic.MovementMultiplier == commonMultiplier) return;
 

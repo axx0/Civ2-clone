@@ -104,6 +104,9 @@ namespace Civ2engine
         public Map CurrentMap => _maps[_currentMap];
         internal Dictionary<string,List<string>> CityNames { get; set; }
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
+        public AIPlayer AI { get; }
+        
+        public IDictionary<PlayerType, IPlayer> Players { get; }
 
         public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit, BlockedReason blockedReason = BlockedReason.NotBlocked)
         {

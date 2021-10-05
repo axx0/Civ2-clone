@@ -155,7 +155,7 @@ namespace Civ2engine
                 NetTrade = netTrade,
                 Name = name,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
-                OrderInProduction = productionItems[itemInProduction],
+                ItemInProduction = productionItems[itemInProduction],
                 ActiveTradeRoutes = activeTradeRoutes,
                 CommoditySupplied = commoditySupplied.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
                 CommodityDemanded = commodityDemanded.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
@@ -183,8 +183,8 @@ namespace Civ2engine
 
             tile.CityHere = city;
 
-            for (int improvNo = 0; improvNo < 34; improvNo++)
-                if (improvements[improvNo]) city.AddImprovement(Rules.Improvements[improvNo+1]);
+            for (var improvementNo = 0; improvementNo < 34; improvementNo++)
+                if (improvements[improvementNo]) city.AddImprovement(Rules.Improvements[improvementNo+1]);
 
 
             return city;
@@ -197,7 +197,7 @@ namespace Civ2engine
             var validTile = Map.IsValidTileC2(x, y);
 
             var civilization = Civilizations[civId];
-            Unit unit = new Unit
+            var unit = new Unit
             {
                 Id = civilization.Units.Count,
                 TypeDefinition = Rules.UnitTypes[(int)type],
