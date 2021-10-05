@@ -1,6 +1,5 @@
-using System.Collections.Generic;
 using System.Linq;
-using Civ2engine.Enums;
+using Civ2engine.Production;
 
 namespace Civ2engine.Advances
 {
@@ -10,8 +9,18 @@ namespace Civ2engine.Advances
         
         public static void SetupTech(this Game game)
         {
-            var totalCivs = game.AllCivilizations.Count;
-            _researched = game.Rules.Advances.OrderBy(a=>a.Index).Select(a=> new AdvanceResearch(totalCivs)).ToArray();
+            _researched = game.Rules.Advances.OrderBy(a=>a.Index).Select(a=> new AdvanceResearch()).ToArray();
+            foreach (var civilization in game.AllCivilizations)
+            {
+                for (var index = 0; index < civilization.Advances.Length; index++)
+                {
+                    if (civilization.Advances[index])
+                    {
+                        _researched[index].DiscoveredBy = civilization.Id;
+                    }
+                }
+            }
+            ProductionPossibilities.InitializeProductionLists(game.AllCivilizations, game.Rules.ProductionItems);
         }
         
         public static bool HasAdvanceBeenDiscovered(this Game game, int advanceIndex, int byCiv = -1)
@@ -19,7 +28,7 @@ namespace Civ2engine.Advances
             var research = _researched[advanceIndex];
             if (byCiv > -1)
             {
-                return research.Discovered && research.Civs[byCiv];
+                return research.Discovered && game.AllCivilizations[byCiv].Advances[advanceIndex];
             }
 
             return research.Discovered;
@@ -28,7 +37,7 @@ namespace Civ2engine.Advances
         public static void GiveAdvance(this Game game, int advanceIndex, int targetCiv)
         {
             var research = _researched[advanceIndex];
-            if(research.Civs[targetCiv]) return;
+            if(game.AllCivilizations[targetCiv].Advances[advanceIndex]) return;
             
             //TODO: here we'd look for a lua script to check for effeccts
             
@@ -40,25 +49,20 @@ namespace Civ2engine.Advances
                 game.History.AdvanceDiscovered(advanceIndex, targetCiv);
             }
 
-            research.Civs[targetCiv] = true;
+            game.AllCivilizations[targetCiv].Advances[advanceIndex] = true;
+            ProductionPossibilities.AddItems(targetCiv,
+                game.Rules.ProductionItems.Where(i => i.RequiredTech == advanceIndex && i.CanBuild(targetCiv)));
+            ProductionPossibilities.RemoveItems(targetCiv, game.Rules.ProductionItems.Where(o => o.ExpiresTech == advanceIndex));
         }
 
         public static int TotalAdvances(this Game game, int targetCiv)
         {
-            return _researched.Count(r => r.Civs[targetCiv]);
+            return game.AllCivilizations[targetCiv].Advances.Count(a => a);
         }
-    }
 
-    internal class AdvanceResearch
-    {
-        public AdvanceResearch(int totalCivs)
+        public static int CalculateScienceCost(Civilization civ)
         {
-            Civs = new bool[totalCivs];
+            throw new System.NotImplementedException();
         }
-
-        public bool Discovered => DiscoveredBy != -1;
-        public bool[] Civs { get; }
-
-        public int DiscoveredBy { get; set; } = -1;
     }
 }

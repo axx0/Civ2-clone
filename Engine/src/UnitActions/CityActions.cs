@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
@@ -50,6 +51,7 @@ namespace Civ2engine.UnitActions
                 Y = tile.Y,
                 Owner = unit.Owner,
                 Size = 1,
+                ItemInProduction = game.Rules.ProductionItems.First()
             };
             game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);

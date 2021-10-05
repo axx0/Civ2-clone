@@ -10,7 +10,8 @@ namespace Civ2engine.NewGame
 {
     public class NewGameInitialisation
     {
-        public static void StartNewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
+        public static void StartNewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations,
+            IPlayer localPlayer)
         {
             var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
 
@@ -43,7 +44,7 @@ namespace Civ2engine.NewGame
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
 
-            Game.StartNew(maps, config, civilizations);
+            Game.StartNew(maps, config, civilizations, localPlayer);
         }
 
         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)

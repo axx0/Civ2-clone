@@ -29,7 +29,7 @@ namespace Civ2engine
             
             if(TurnNumber < 16) return;
             
-            TurnBeginning();
+            TurnBeginning(AI);
             
             //Pick a random tile if valid for barbarians raise horde
             
@@ -72,7 +72,7 @@ namespace Civ2engine
 
                 if (_activeCiv.Alive)
                 {
-                    TurnBeginning();
+                    TurnBeginning(Players[_activeCiv.PlayerType]);
                     
                     OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
 
@@ -199,7 +199,7 @@ namespace Civ2engine
             ChoseNextCiv();
         }
 
-        private void TurnBeginning()
+        private void TurnBeginning(IPlayer player)
         {
             // Reset turns of all units
             foreach (var unit in GetActiveCiv.Units.Where(n => !n.Dead))
@@ -208,7 +208,7 @@ namespace Civ2engine
             }
 
             // Update all cities
-            CitiesTurn();
+            CitiesTurn(player);
         }
     }
 }

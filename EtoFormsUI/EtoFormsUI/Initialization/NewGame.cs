@@ -576,7 +576,7 @@ namespace EtoFormsUI.Initialization
 
             var maps = config.MapTask.Result;
             
-            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList());
+            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), new LocalPlayer());
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.popupBoxList = config.PopUps;
@@ -617,6 +617,4 @@ namespace EtoFormsUI.Initialization
             return config.Gender == 0 ? govt.TitleMale : govt.TitleFemale;
         }
     }
-
-
 }

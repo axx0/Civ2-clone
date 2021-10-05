@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
 
 namespace Civ2engine
 {
@@ -122,5 +123,21 @@ namespace Civ2engine
             }
             return distance;
         }
+
+        public static bool SellImprovement(this City city, Improvement improvement)
+        {
+            if (city.ImprovementSold)
+            {
+                return false;
+            }
+            //TODO: Remove effects
+
+            city._improvements.Remove(improvement.Type);
+            city.ImprovementSold = true;
+            return true;
+        }
+        
+        public static void AddImprovement(this City city,Improvement improvement) => city._improvements.Add(improvement.Type,improvement);
+        public static bool ImprovementExists(this City city, ImprovementType improvement) => city._improvements.ContainsKey(improvement);
     }
 }

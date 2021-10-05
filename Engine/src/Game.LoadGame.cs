@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
 
@@ -8,36 +9,46 @@ namespace Civ2engine
 {
     public partial class Game
     {
-        public static void Create(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
+        public static void Create(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset,
+            IPlayer localPlayer)
         {
-            _instance = new Game(rules, gameData, objects, ruleset.Paths);
+            _instance = new Game(rules, gameData, objects, ruleset.Paths, localPlayer);
         }
 
-        public static void StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations)
+        public static void StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations,
+            IPlayer localPlayer)
         {
-            _instance = new Game(maps, config.Rules, civilizations, new Options(config), config.RuleSet.Paths);
+            _instance = new Game(maps, config.Rules, civilizations, new Options(config), config.RuleSet.Paths, (DifficultyType)config.DifficultlyLevel, localPlayer);
             _instance.StartNextTurn();
         }
-        
-        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options, string[] gamePaths)
+
+        private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
+            string[] gamePaths, DifficultyType difficulty, IPlayer localPlayer)
         {
             _options = options;
             _maps = maps;
             AllCivilizations.AddRange(civilizations);
-            
+
             CityNames = NameLoader.LoadCityNames(gamePaths);
             _rules = configRules;
+            _difficultyLevel = difficulty;
             TurnNumber = 0;
+
+            AI = new AIPlayer(difficulty);
+            Players = new Dictionary<PlayerType, IPlayer> { { PlayerType.AI, AI }, { PlayerType.Local, localPlayer } };
+
+        this.SetupTech();
         }
 
-        private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths )
+        private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths,
+            IPlayer localPlayer) 
+            : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths, gameData.DifficultyLevel, localPlayer)
         {
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
             TurnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
-            _difficultyLevel = gameData.DifficultyLevel;
             _barbarianActivity = gameData.BarbarianActivity;
             PollutionAmount = gameData.PollutionAmount;
             

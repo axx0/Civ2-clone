@@ -17,7 +17,7 @@ namespace EtoFormsUI
             Images.LoadGraphicsAssetsFromFiles(ruleset, rules);
             // Read SAV file & RULES.txt
 
-            ClassicSaveLoader.LoadSave(ruleset, saveFileName, rules);
+            ClassicSaveLoader.LoadSave(ruleset, saveFileName, rules, new LocalPlayer());
             //ViewPiece.ActiveXY = gameData.ActiveCursorXY;
             return true;
         }

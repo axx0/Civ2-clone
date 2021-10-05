@@ -25,15 +25,14 @@ namespace Civ2engine
         public bool Objectivex3 { get; set; }
         public bool Objectivex1 { get; set; }
         public Civilization Owner { get; set; }
-        public int OwnerId => Game.AllCivilizations.IndexOf(Owner);
+        public int OwnerId => Owner.Id;
         public int Size { get; set; }
         public Civilization WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
-        public int MaxFoodInStorage => 10 * (Size + 1);
         public int NetTrade { get; set; }
         public string Name { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
-        public ProductionOrder OrderInProduction { get; set; }
+        public ProductionOrder ItemInProduction { get; set; }
         public int ActiveTradeRoutes { get; set; }
         public CommodityType[] CommoditySupplied { get; set; }
         public CommodityType[] CommodityDemanded { get; set; }
@@ -56,36 +55,11 @@ namespace Civ2engine
             }
         }
 
-        private readonly List<Improvement> _improvements = new List<Improvement>();
-        public Improvement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
-        public void AddImprovement(Improvement improvement) => _improvements.Add(improvement);
-        public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
+        internal readonly SortedList<ImprovementType,Improvement> _improvements = new();
+        public IReadOnlyList<Improvement> Improvements => _improvements.Values.ToArray();
         public List<Unit> UnitsInCity => Location.UnitsHere;
         public List<Unit> SupportedUnits => Owner.Units.Where(unit => unit.HomeCity == this).ToList();
         public bool AnyUnitsPresent() => Location.UnitsHere.Count > 0;
-
-        // Determine which units, supported by this city, cost shields
-        // public bool[] SupportedUnitsWhichCostShields()
-        // {
-        //     var isFundamental = Owner.Government == GovernmentType.Fundamentalism;
-        //     List<Unit> supportedUnits = SupportedUnits;
-        //     var payingSupportFor = new bool[supportedUnits.Count];
-        //     // First determine how many units have 0 costs due to different goverernment types
-        //     var supportCost = SupportCost();
-        //     // Now determine units that require upkeep
-        //     for (var i = supportedUnits.Count - 1; i >= 0 && supportCost > 0; i--)
-        //     {
-        //         if (!supportedUnits[i].FreeSupport(isFundamental)) // Some units never require upkeep
-        //         {
-        //             payingSupportFor[i] = true;
-        //             supportCost--;
-        //         }
-        //     }
-        //
-        //     return payingSupportFor;
-        // }
-
-
 
         public int FoodProduction { get; set; }
 

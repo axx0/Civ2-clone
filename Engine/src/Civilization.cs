@@ -16,6 +16,8 @@ namespace Civ2engine
         public string TribeName { get; set; }
         public string Adjective { get; set; }
         public int Money { get; set; }
+        
+        public int Science { get; set; }
         public int ReseachingAdvance { get; set; }
         public bool[] Advances { get; set; }
         public int ScienceRate { get; set; }

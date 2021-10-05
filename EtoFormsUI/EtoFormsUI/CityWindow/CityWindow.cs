@@ -393,7 +393,7 @@ namespace EtoFormsUI
             font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
             for (int i = 0; i < 9; i++)
             {
-                if ((i + starting) >= _thisCity.Improvements.Length) break;  // Break if no of improvements+wonders
+                if ((i + starting) >= _thisCity.Improvements.Count) break;  // Break if no of improvements+wonders
 
                 // Draw improvements
                 zoom = 2 * _cityZoom - 4;
