@@ -112,7 +112,7 @@ namespace EtoFormsUI
         private static void ExtractCvDLL()
         {
             // Read all bytes in dll
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Cv.dll");
+            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "cv.dll");
 
             // (310) Tiles with improvements in city view
             var extractedGIF = CreateNonIndexedImage(ExtractBitmapFromDLL(bytes, "1E6E0", "24C0F"));

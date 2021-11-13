@@ -8,7 +8,10 @@ namespace EtoFormsUI.WinForms
         [STAThread]
         public static void Main(string[] args)
         {
-            new Application(Eto.Platforms.WinForms).Run(new Main());
+            var platform = new Eto.WinForms.Platform();
+            platform.Add<CustomEtoButton.IHandler>(() => new CustomEtoButtonHandler());
+
+            new Application(platform).Run(new Main());
         }
     }
 }

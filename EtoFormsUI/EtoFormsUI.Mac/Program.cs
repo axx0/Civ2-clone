@@ -8,7 +8,10 @@ namespace EtoFormsUI.Mac
         [STAThread]
         public static void Main(string[] args)
         {
-            new Application(Eto.Platforms.Mac64).Run(new Main());
+            var platform = new Eto.Mac.Platform();
+            platform.Add<CustomEtoButton.IHandler>(() => new CustomEtoButtonHandler());
+
+            new Application(platform).Run(new Main());
         }
     }
 }

@@ -8,7 +8,10 @@ namespace EtoFormsUI.Gtk
         [STAThread]
         public static void Main(string[] args)
         {
-            new Application(Eto.Platforms.Gtk).Run(new Main());
+            var platform = new Eto.GtkSharp.Platform();
+            platform.Add<CustomEtoButton.IHandler>(() => new CustomEtoButtonHandler());
+            
+            new Application(platform).Run(new Main());
         }
     }
 }
