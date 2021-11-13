@@ -38,6 +38,7 @@ namespace EtoFormsUI
 
             // Determine the offset of minimap from panel edges
             offset = new int[] { (drawPanel.Width - 2 * Map.XDim) / 2, (drawPanel.Height - Map.YDim) / 2 };
+            mapDrawSq = mapStartXY = new int[] { 0, 0 };
         }
 
 

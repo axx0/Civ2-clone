@@ -135,7 +135,7 @@ namespace EtoFormsUI
 
         public static void IconsBitmapsImportFromFile(string path)
         {
-            var icons = LoadBitmapFrom(path, "ICONS.GIF");
+            var icons = LoadBitmapFrom("ICONS.GIF", path);
 
             // Initialize objects
             Improvements = new Bitmap[67];
