@@ -15,8 +15,7 @@ namespace EtoFormsUI
         private Game Game => Game.Instance;
         private Map Map => Game.CurrentMap;
         private readonly MapPanel _parent;
-        private readonly ImageButton closeIcon, zoomInIcon, zoomOutIcon;
-        private readonly Civ2button infoButton, mapButton, renameButton, happyButton, viewButton, exitButton, buyButton, changeButton;
+        private readonly Civ2button closeIcon, zoomInIcon, zoomOutIcon, infoButton, mapButton, renameButton, happyButton, viewButton, exitButton, buyButton, changeButton;
         private City _thisCity;
         private int _cityZoom;
         private WhatToDraw whatToDraw = WhatToDraw.Info;
@@ -129,7 +128,7 @@ namespace EtoFormsUI
             //_prevCityButton.Click += PrevCityButton_Click;
             //_prevCityButton.Paint += PrevCityButton_Paint;
 
-            closeIcon = new ImageButton { Image = Images.CityExit, Size = new Size(16, 16) };
+            closeIcon = new Civ2button("", 16, 16, null, Images.CityExit);
             closeIcon.MouseDown += (sender, e) =>
             {
                 parent.CityWindowZoom = _cityZoom;
@@ -139,7 +138,7 @@ namespace EtoFormsUI
             };
             Layout.Add(closeIcon, 11, 7);
 
-            zoomOutIcon = new ImageButton { Image = Images.CityZoomOUT, Size = new Size(16, 16) };
+            zoomOutIcon = new Civ2button("", 16, 16, null, Images.CityZoomOUT);
             zoomOutIcon.MouseDown += (sender, e) =>
             {
                 if (_cityZoom > -1)
@@ -151,7 +150,7 @@ namespace EtoFormsUI
             };
             Layout.Add(zoomOutIcon, 11 + 16 + 2, 7);
 
-            zoomInIcon = new ImageButton { Image = Images.CityZoomIN, Size = new Size(16, 16) };
+            zoomInIcon = new Civ2button("", 16, 16, null, Images.CityZoomIN);
             zoomInIcon.MouseDown += (sender, e) =>
             {
                 if (_cityZoom < 1)
@@ -183,9 +182,9 @@ namespace EtoFormsUI
             var closeButtonImg = Images.CityExit.Resize(zoom);
             var zoomOutButtonImg = Images.CityZoomOUT.Resize(zoom);
             var zoomInButtonImg = Images.CityZoomIN.Resize(zoom);
-            closeIcon.Image = closeButtonImg;
-            zoomOutIcon.Image = zoomOutButtonImg;
-            zoomInIcon.Image = zoomInButtonImg;
+            closeIcon.BackgroundImage = closeButtonImg;
+            zoomOutIcon.BackgroundImage = zoomOutButtonImg;
+            zoomInIcon.BackgroundImage = zoomInButtonImg;
             closeIcon.Size = new Size(closeButtonImg.Width, closeButtonImg.Height);
             zoomOutIcon.Size = new Size(zoomOutButtonImg.Width, zoomOutButtonImg.Height);
             zoomInIcon.Size = new Size(zoomInButtonImg.Width, zoomInButtonImg.Height);

@@ -11,6 +11,7 @@ namespace EtoFormsUI.WinForms
             this.Control.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Control.FlatAppearance.BorderSize = 0;
             this.Control.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(100, 100, 100);
+            this.Control.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
         }
 
         static readonly object Image_Key = new object();
