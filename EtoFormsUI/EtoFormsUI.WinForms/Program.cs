@@ -10,6 +10,7 @@ namespace EtoFormsUI.WinForms
         {
             var platform = new Eto.WinForms.Platform();
             platform.Add<CustomEtoButton.IHandler>(() => new CustomEtoButtonHandler());
+            platform.Add<VScrollBar.IHandler>(() => new VScrollBarHandler());
 
             new Application(platform).Run(new Main());
         }

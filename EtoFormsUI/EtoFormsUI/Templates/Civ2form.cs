@@ -10,17 +10,40 @@ namespace EtoFormsUI
         protected PixelLayout Layout;
         protected int _paddingTop, _paddingBtm;
         private readonly string _title;
+        private bool dragging = false;
+        private PointF dragCursorPoint, dragFormPoint, dif;
 
         public Civ2form(int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
         {
             WindowStyle = WindowStyle.None;
-            MovableByWindowBackground = true;
             ShowInTaskbar = false;
-            
+
             Size = new Size(width, height);
             _paddingTop = paddingTopInnerPanel;
             _paddingBtm = paddingBtmInnerPanel;
             _title = title;
+
+            // Drag window
+            this.MouseDown += (sender, e) =>
+            {
+                if (e.Location.Y < 25)  // Enable dragging only on top of window
+                {
+                    dragging = true;
+                    dragCursorPoint = this.Location + e.Location;
+                    dragFormPoint = this.Location;
+                }
+            };
+
+            this.MouseMove += (sender, e) =>
+            {
+                if (dragging)
+                {
+                    dif = this.Location + e.Location - dragCursorPoint;
+                    this.Location = (Point)(dragFormPoint + dif);
+                }
+            };
+
+            this.MouseUp += (sender, _) => dragging = false;
 
             Layout = new PixelLayout() { Size = Size };
 
