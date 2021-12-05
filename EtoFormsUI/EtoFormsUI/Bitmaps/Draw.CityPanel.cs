@@ -98,8 +98,9 @@ namespace EtoFormsUI
 
             // FOOD
             // Text
-            Draw.Text(g, $"Food: {city.Food}", _font, Color.FromArgb(87, 171, 39), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 61 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Surplus: {city.SurplusHunger}", _font, Color.FromArgb(63, 139, 31), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 61 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            var _txtFrame = new Rectangle(dest.X + 204 * (2 + cityZoom) / 2, dest.Y + 60 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
+            Draw.Text(g, $"Food: {city.Food}", _font, Color.FromArgb(87, 171, 39), _txtFrame, FormattedTextAlignment.Left, Colors.Black, 1, 1);
+            Draw.Text(g, $"Surplus: {city.SurplusHunger}", _font, Color.FromArgb(63, 139, 31), _txtFrame, FormattedTextAlignment.Right, Colors.Black, 1, 1);
             // Number of food+surplus/hunger icons determines spacing between icons
             int spacing;
             switch (city.Food + Math.Abs(city.SurplusHunger))
@@ -133,8 +134,9 @@ namespace EtoFormsUI
 
             // TRADE
             // Text
-            Draw.Text(g, $"Trade: {city.Trade}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            _txtFrame = new Rectangle(dest.X + 204 * (2 + cityZoom) / 2, dest.Y + 101 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
+            Draw.Text(g, $"Trade: {city.Trade}", _font, Color.FromArgb(239, 159, 7), _txtFrame, FormattedTextAlignment.Left, Colors.Black, 1, 1);
+            Draw.Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), _txtFrame, FormattedTextAlignment.Right, Colors.Black, 1, 1);
             // Spacing between icons
             switch (city.Trade + city.Corruption)
             {
@@ -162,9 +164,10 @@ namespace EtoFormsUI
 
             // TAX+LUX+SCI
             // Text
-            Draw.Text(g, $"50% Tax: {city.Tax}", _font, Color.FromArgb(239, 159, 7), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"0% Lux: {city.Lux}", _font, Colors.White, new Point(dest.X + 285 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);    // TODO: Make text center aligned
-            Draw.Text(g, $"50% Sci: {city.Science}", _font, Color.FromArgb(63, 187, 199), new Point(dest.X + 370 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            _txtFrame = new Rectangle(dest.X + 204 * (2 + cityZoom) / 2, dest.Y + 156 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
+            Draw.Text(g, $"50% Tax: {city.Tax}", _font, Color.FromArgb(239, 159, 7), _txtFrame, FormattedTextAlignment.Left, Colors.Black, 1, 1);
+            Draw.Text(g, $"0% Lux: {city.Lux}", _font, Colors.White, _txtFrame, FormattedTextAlignment.Center, Colors.Black, 1, 1);
+            Draw.Text(g, $"50% Sci: {city.Science}", _font, Color.FromArgb(63, 187, 199), _txtFrame, FormattedTextAlignment.Right, Colors.Black, 1, 1);
             // Spacing between icons
             switch (city.Tax + city.Lux + city.Science)
             {
@@ -193,8 +196,9 @@ namespace EtoFormsUI
 
             // SUPPORT+PRODUCTION
             // Text
-            Draw.Text(g, $"Support: {city.Support}", _font, Color.FromArgb(63, 79, 167), new Point(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);
-            Draw.Text(g, $"Production: {city.Production}", _font, Color.FromArgb(7, 11, 103), new Point(dest.X + 350 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2), false, false, Colors.Black, 1, 1);  // TODO: Make text right aligned
+            _txtFrame = new Rectangle(dest.X + 204 * (2 + cityZoom) / 2, dest.Y + 196 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
+            Draw.Text(g, $"Support: {city.Support}", _font, Color.FromArgb(63, 79, 167), _txtFrame, FormattedTextAlignment.Left, Colors.Black, 1, 1);
+            Draw.Text(g, $"Production: {city.Production}", _font, Color.FromArgb(7, 11, 103), _txtFrame, FormattedTextAlignment.Right, Colors.Black, 1, 1);
             // Spacing between icons
             switch (city.Support + city.Production)
             {
