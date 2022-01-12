@@ -7,6 +7,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.Terrains;
 using EtoFormsUI.Animations;
 
 namespace EtoFormsUI
@@ -128,9 +129,8 @@ namespace EtoFormsUI
             cityWindow.Show();
         }
 
-        public bool ActivateUnits(int[] clickedXy)
+        public bool ActivateUnits(Tile tile)
         {
-            var tile = Map.TileC2(clickedXy[0], clickedXy[1]);
             var unitsHere = tile.UnitsHere;
             if (unitsHere.Count == 0) return true;
 
@@ -172,15 +172,27 @@ namespace EtoFormsUI
             
             Debug.WriteLine($"clickedXY={clickedXY[0]},{clickedXY[1]}");
 
-
-            // TODO: Make sure that edge black tiles are also ignored!
-
-            if (main.CurrentGameMode.MapClicked(clickedXY, this, main, e.Buttons))
+            if (Game.Instance.CurrentMap.IsValidTileC2(clickedXY[0], clickedXY[1]))
             {
-                MapViewChange(clickedXY);
+                // TODO: Make sure that edge black tiles are also ignored!
+                var tile = Game.Instance.CurrentMap.TileC2(clickedXY[0], clickedXY[1]);
+                if (main.CurrentGameMode.MapClicked(tile, this, main, e.Buttons))
+                {
+                    MapViewChange(clickedXY);
+                }
             }
         }
 
+        /// <summary>
+        /// This is currently a shim method as the refactoring progresses 
+        /// </summary>
+        /// <param name="centralItem"></param>
+        private void MapViewChange(Tile centralItem)
+        {
+            var xy = new int[] { centralItem.X, centralItem.Y };
+            MapViewChange(xy);
+        }
+        
         internal void MapViewChange(int[] newCenterCoords)
         {
             if (map != null) map.Dispose();
@@ -238,11 +250,11 @@ namespace EtoFormsUI
                         break;
                     }
                 case MapEventType.CenterView:
-                    {
-                        MapViewChange(main.CurrentGameMode.ActiveXY);
-                        //drawPanel.Invalidate();
-                        break;
-                    }
+                {
+                    MapViewChange(main.CurrentGameMode.ActiveTile);
+                    //drawPanel.Invalidate();
+                    break;
+                }
                 case MapEventType.ToggleGrid:
                     {
                         MapViewChange(CentrXY);
@@ -252,7 +264,7 @@ namespace EtoFormsUI
                     }
                 case MapEventType.UpdateMap:
                     {
-                        e.TilesChanged.ForEach(Images.RedrawTile) ;
+                        e.TilesChanged?.ForEach(Images.RedrawTile) ;
                         UpdateMap();
                         break;
                     }
@@ -262,21 +274,34 @@ namespace EtoFormsUI
 
         private void UnitEventHappened(object sender, UnitEventArgs e)
         {
+            if (!e.Location.Any(Game.CurrentMap.IsCurrentlyVisible))
+            {
+                return;
+            }
             switch (e.EventType)
             {
                 // Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
+                {
+                    if (e is MovementEventArgs mo)
                     {
-                        AnimationQueue.Enqueue(new MoveAnimation(e.Unit, main.Sounds));
-                        break;
+                        AnimationQueue.Enqueue(new MoveAnimation(mo, main.Sounds));
                     }
+
+                    break;
+                }
                 case UnitEventType.Attack:
+                {
+                    if (e is CombatEventArgs combatEventArgs)
                     {
-                        AnimationQueue.Enqueue(new AttackAnimation(e, main.Sounds));
-                        // animationFrames = GetAnimationFrames.UnitAttack(e);
-                        // StartAnimation(AnimationType.Attack);
-                        break;
+                        AnimationQueue.Enqueue(new AttackAnimation(combatEventArgs, main.Sounds));
                     }
+
+
+                    // animationFrames = GetAnimationFrames.UnitAttack(e);
+                    // StartAnimation(AnimationType.Attack);
+                    break;
+                }
                 // case UnitEventType.StatusUpdate:
                 //     {
                 //         animType = AnimationType.Waiting;
@@ -303,23 +328,23 @@ namespace EtoFormsUI
             }
             
             if(CurrentAnimation == null) return;
-            if (IsActiveSquareOutsideMapView(CurrentAnimation.XY))
+            if (IsActiveSquareOutsideMapView(CurrentAnimation.Location))
             {
-                MapViewChange(CurrentAnimation.XY);
+                MapViewChange(CurrentAnimation.Location);
             }
             else
             {
-                drawPanel.Update(new Rectangle(Map.Xpx * (CurrentAnimation.XY[0] - mapStartXY[0]),
-                    Map.Ypx * (CurrentAnimation.XY[1] - mapStartXY[1]) - CurrentAnimation.YAdjustment,
+                drawPanel.Update(new Rectangle(Map.Xpx * (CurrentAnimation.Location.X - mapStartXY[0]),
+                    Map.Ypx * (CurrentAnimation.Location.Y - mapStartXY[1]) - CurrentAnimation.YAdjustment,
                     CurrentAnimation.Width * Map.Xpx, CurrentAnimation.Height * Map.Ypx));
             }
         }
         #endregion
 
-        private bool IsActiveSquareOutsideMapView(int[] activeXy) => activeXy[0] >= mapStartXY[0] + PanelSq[0] - 2 ||
-                                                                     activeXy[0] <= mapStartXY[0] ||
-                                                                     activeXy[1] >= mapStartXY[1] + PanelSq[1] - 2 ||
-                                                                     activeXy[1] <= mapStartXY[1];
+        private bool IsActiveSquareOutsideMapView(IMapItem mapItem) => mapItem.X >= mapStartXY[0] + PanelSq[0] - 2 ||
+                                                                        mapItem.X <= mapStartXY[0] ||
+                                                                        mapItem.Y >= mapStartXY[1] + PanelSq[1] - 2 ||
+                                                                        mapItem.Y <= mapStartXY[1];
 
         // Function which sets various variables for drawing map on grid
         private void SetCoordsAtMapViewChange(int[] proposedCentralCoords)

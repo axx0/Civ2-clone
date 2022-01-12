@@ -1,6 +1,6 @@
 namespace Civ2engine.Terrains
 {
-    public class Special
+    public class Special : ITerrain
     {
         public string Name { get; set; }
         public int MoveCost { get; set; }

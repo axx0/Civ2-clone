@@ -16,14 +16,19 @@ namespace Civ2engine
         public string TribeName { get; set; }
         public string Adjective { get; set; }
         public int Money { get; set; }
-        public int ReseachingAdvance { get; set; }
+        
+        public int Science { get; set; }
+        public int ReseachingAdvance { get; set; } = -1;
         public bool[] Advances { get; set; }
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
+
         public GovernmentType Government { get; set; }
+
         public bool AnyUnitsAwaitingOrders => Units.Any(unit => unit.AwaitingOrders);
 
         private int _luxRate;
+
         public int LuxRate
         {
             get
@@ -44,5 +49,19 @@ namespace Civ2engine
         public List<Unit> Units { get; } = new();
 
         public List<City> Cities { get; } = new();
+        
+        public PlayerType PlayerType { get; set; }
+
+        public City Capital { get; set; }
+        public int PowerRating { get; set; }
+        public int PowerRank { get; set; }
+    }
+
+    public enum PlayerType
+    {
+        AI,
+        Local,
+        Remote,
+        Barbarians
     }
 }

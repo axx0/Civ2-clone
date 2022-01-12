@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
 using Eto.Forms;
@@ -23,11 +24,11 @@ namespace EtoFormsUI.GameModes
         }
 
         public IDictionary<Keys, Action> Actions { get; set; }
-        public bool MapClicked(int[] clickedXy, MapPanel mapPanel, Main main, MouseButtons eButtons)
+        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, MouseButtons eButtons)
         {
             if (eButtons == MouseButtons.Primary)
             {
-                var city = Game.Instance.GetCities.FirstOrDefault(c => c.X == clickedXy[0] && c.Y == clickedXy[1]);
+                var city = clickedXy.CityHere;
                 if (city == null)
                 {
                     return mapPanel.ActivateUnits(clickedXy);
@@ -37,7 +38,7 @@ namespace EtoFormsUI.GameModes
             else
             {
                 main.CurrentGameMode = main.ViewPiece;              
-                main.ViewPiece.ActiveXY = clickedXy;
+                main.ViewPiece.ActiveTile = clickedXy;
             }
 
             return true;
@@ -51,20 +52,20 @@ namespace EtoFormsUI.GameModes
 
         public IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation)
         {
-            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.XY);
-            if (animation.Unit != game.ActiveUnit) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.XY);
+            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
+            if (animation.Unit != game.ActiveUnit) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
             animation.Reset();
             return animation;
         }
 
-        public int[] ActiveXY => _game.ActiveUnit.XY;
+        public Tile ActiveTile => _game.ActiveUnit.CurrentLocation;
 
         public MovingPieces(Main main)
         {
             Actions = new Dictionary<Keys, Action>
             {
                 {
-                    Keys.B, BuildCity.CreateCityBuild((name) =>
+                    Keys.B, CityActions.CreateCityBuild((name) =>
                     {
                         var cityNameDialog = new Civ2dialogV2(main, main.popupBoxList["NAMECITY"],
                             textBoxes: new List<TextBoxDefinition>

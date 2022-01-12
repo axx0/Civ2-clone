@@ -5,77 +5,13 @@ namespace Civ2engine.Units
 {
     public interface IUnit
     {
-        //From RULES.TXT
-        string Name { get; }
-        bool Dead { get; set; }
-        int UntilTech { get; }
-        UnitGAS Domain { get; }
-        int MaxMovePoints { get; }
-        int FuelRange { get; }
-        int AttackBase { get; }
-        int DefenseBase { get; }
-        double AttackFactor(IUnit defendingUnit);
-        int DefenseFactor(IUnit attackingUnit, City cityDefended);
-        int FirepowerBase { get; }
-        int Cost { get; }
-        int ShipHold { get; }
-        AIroleType AIrole { get; }
-        bool TwoSpaceVisibility { get; }
-        bool IgnoreZonesOfControl { get; }
-        bool CanMakeAmphibiousAssaults { get; }
-        bool SubmarineAdvantagesDisadvantages { get; }
-        bool CanAttackAirUnits { get; }
-        bool ShipMustStayNearLand { get; }
-        bool NegatesCityWalls { get; }
-        bool CanCarryAirUnits { get; }
-        bool CanMakeParadrops { get; }
-        bool Alpine { get; }
-        bool X2onDefenseVersusHorse { get; }
-        bool FreeSupportForFundamentalism { get; }
-        bool DestroyedAfterAttacking { get; }
-        bool X2onDefenseVersusAir { get; }
-        bool UnitCanSpotSubmarines { get; }
-
-        int Id { get; set; }
-        int MovePoints { get; }
-        int MovePointsLost { get; set; }
         int HitpointsBase { get; }
-        int HitPoints { get; }
-        int HitPointsLost { get; set; }
+        int RemainingHitpoints { get; }
         UnitType Type { get; set; }
         OrderType Order { get; set; }
-        int X { get; set; }
-        int Y { get; set; }
-        int Xreal { get; }
-        int[] XY { get; }
 
-        int MovementCounter { get; set; }
-        bool FirstMove { get; set; }
-        bool GreyStarShield { get; set; }
-        bool Veteran { get; set; }
         Civilization Owner { get; set; }
-        CommodityType CaravanCommodity { get; set; }
-        City HomeCity { get; set; }
-        int GoToX { get; set; }
-        int GoToY { get; set; }
-        int LinkOtherUnitsOnTop { get; set; }
-        int LinkOtherUnitsUnder { get; set; }
-        int Counter { get; set; }
-        int[] PrevXY { get; set; }
-        int[] PrevXYpx { get; }
-        void BuildCity();
-        void BuildRoad();
-        void BuildMines();
-        void BuildIrrigation();
-        void SkipTurn();
-        void Fortify();
-        void Transform();
-        void Sleep();
-        bool TurnEnded { get; }
-        bool AwaitingOrders { get; }
-        bool IsInCity { get; }
+
         bool IsInStack { get; }
-        bool IsLastInStack { get; }
-        string AttackSound { get; }
     }
 }

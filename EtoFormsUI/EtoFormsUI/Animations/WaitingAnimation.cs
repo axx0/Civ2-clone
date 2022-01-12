@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Eto.Drawing;
 using EtoFormsUI.Animations;
@@ -9,12 +10,12 @@ namespace EtoFormsUI.GameModes
 {
     public class WaitingAnimation : BaseAnimation
     {
-        public WaitingAnimation(Game game, Unit unit, int[] activeXY) : base(BuildAnimations(game, unit,activeXY),2,3, 0.2, activeXY ,game.CurrentMap.Ypx)
+        public WaitingAnimation(Game game, Unit unit, Tile activeTile) : base(BuildAnimations(game, unit, activeTile),2,3, 0.2, activeTile ,game.CurrentMap.Ypx)
         {
             Unit = game.ActiveUnit;
         }
 
-        private static Bitmap[] BuildAnimations(Game game, Unit unit, int[] activeXY)
+        private static Bitmap[] BuildAnimations(Game game, Unit unit, Tile activeTile)
         {
             var animationFrames = new List<Bitmap>();
 
@@ -33,8 +34,8 @@ namespace EtoFormsUI.GameModes
             // Get 2 frames (one with and other without the active unit/moving piece)
 
             var map = game.CurrentMap;
-            var unitX = activeXY[0];
-            var unitY = activeXY[1];
+            var unitX = activeTile.X;
+            var unitY = activeTile.Y;
             for (var frame = 0; frame < 2; frame++)
             {
                 var bitmap = new Bitmap(2 * map.Xpx, 3 * map.Ypx, PixelFormat.Format32bppRgba);
@@ -138,12 +139,12 @@ namespace EtoFormsUI.GameModes
         public Unit Unit { get; }
         public override float GetXDrawOffset(int mapXpx, int startX)
         {
-            return mapXpx * (XY[0] - startX);
+            return mapXpx * (Location.X - startX);
         }
 
         public override int GetYDrawOffset(int mapYpx, int startY)
         {
-            return mapYpx * (XY[1] - startY - 1);
+            return mapYpx * (Location.Y - startY - 1);
         }
 
         public override void Initialize()

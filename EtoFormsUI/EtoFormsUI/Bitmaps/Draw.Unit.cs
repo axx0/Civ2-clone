@@ -10,7 +10,12 @@ namespace EtoFormsUI
     {
         public static void UnitSprite(Graphics g, UnitType type, bool isSleeping, bool isFortified, int zoom, Point dest)
         {
-            using var _unitPic = MapImages.Units[(int)type].Bitmap.Resize(zoom);
+            UnitSprite(g,(int)type,isSleeping,isFortified, zoom,dest);
+        }
+
+        public static void UnitSprite(Graphics g, int type, bool isSleeping, bool isFortified, int zoom, Point dest)
+        {
+            using var _unitPic = MapImages.Units[type].Bitmap.Resize(zoom);
             if (!isSleeping)
             {
                 g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height));
@@ -110,7 +115,7 @@ namespace EtoFormsUI
 
         public static void Unit(Graphics g, IUnit unit, bool isStacked, int zoom, Point dest)
         {
-            UnitShield(g, unit.Type, unit.Owner.Id, unit.Order, isStacked, unit.HitPoints, unit.HitpointsBase, zoom, dest);
+            UnitShield(g, unit.Type, unit.Owner.Id, unit.Order, isStacked, unit.RemainingHitpoints, unit.HitpointsBase, zoom, dest);
             UnitSprite(g, unit.Type, unit.Order == OrderType.Sleep, unit.Order == OrderType.Fortified, zoom, dest);
         }
     }

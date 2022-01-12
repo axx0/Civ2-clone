@@ -1,3 +1,4 @@
+using Civ2engine.Terrains;
 using Eto.Drawing;
 
 namespace EtoFormsUI.Animations
@@ -11,7 +12,7 @@ namespace EtoFormsUI.Animations
         double Interval { get; }
         Image CurrentFrame { get; }
         int YAdjustment { get; }
-        int[] XY { get; }
+        Tile Location { get; }
         float GetXDrawOffset(int mapXpx, int startX);
         int GetYDrawOffset(int mapYpx, int startY);
         void Initialize();

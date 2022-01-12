@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Civ2engine.Terrains;
 using Eto.Forms;
 using EtoFormsUI;
 using EtoFormsUI.Animations;
@@ -10,10 +11,10 @@ namespace Civ2engine
     {
         bool Init(IGameMode previous, Game game);
         IDictionary<Keys, Action> Actions { get; set; }
-        bool MapClicked(int[] clickedXy, MapPanel mapPanel, Main buttons, MouseButtons eButtons);
+        bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main buttons, MouseButtons eButtons);
         bool PanelClick(Game game, Main main);
         IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation);
         
-        int[] ActiveXY { get; }
+        Tile ActiveTile { get; }
     }
 }
