@@ -43,7 +43,7 @@ namespace Civ2engine.UnitActions
 
         private static void BuildCity(Tile tile, Unit unit, Game game, string name)
         {
-            tile.CityHere = new City
+            var city = new City
             {
                 Location = tile,
                 Name = name,
@@ -51,14 +51,21 @@ namespace Civ2engine.UnitActions
                 Y = tile.Y,
                 Owner = unit.Owner,
                 Size = 1,
-                ItemInProduction = game.Rules.ProductionItems.First()
+                ItemInProduction = game.Rules.ProductionItems.OrderBy(i=>i.Cost).First()
             };
+            
+            tile.CityHere = city;
             game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);
-
+            if (unit.Owner.Cities.Count == 1)
+            {
+                city.AddImprovement(game.Rules.Improvements.First(i=> i.Id == (int)ImprovementType.Palace));
+                city.Owner.Capital = city;
+            }
             game.History.CityBuilt(tile.CityHere);
 
-            game.AutoAddDistributionWorkers(tile.CityHere);
+            game.AutoAddDistributionWorkers(city);
+            city.CalculateOutput(city.Owner.Capital,city.Owner.Government, game);
 
             unit.Dead = true;
             unit.MovePointsLost = unit.MovePoints;

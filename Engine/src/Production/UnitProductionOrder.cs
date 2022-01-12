@@ -24,7 +24,8 @@ namespace Civ2engine.Production
                 Y = city.Y,
                 HomeCity = city,
                 CurrentLocation = city.Location,
-                Owner = city.Owner
+                Owner = city.Owner,
+                TypeDefinition = _unitDefinition
             };
             unit.Owner.Units.Add(unit);
 

@@ -44,7 +44,7 @@ namespace EtoFormsUI
         /// <param name="optionsCols">The number of columns to break options into</param>
         /// <param name="icons">Icons to show next to options</param>
         /// <param name="image">Image shown</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, List<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null)
+        public Civ2dialogV2(Main parent, PopupBox popupBox, IList<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null)
         {
             _image = image;
             _icons = icons ?? Array.Empty<Bitmap>();
@@ -569,12 +569,12 @@ namespace EtoFormsUI
         /// </summary>
         /// <param name="text">Text where replacement takes place.</param>
         /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
-        private static string ReplaceString(string text, List<string> replacementStrings)
+        private static string ReplaceString(string text, IList<string> replacementStrings)
         {
             return Replace(Replace(text, replacementStrings, "%STRING"), replacementStrings, "%NUMBER");
         }
 
-        private static string Replace(string text, List<string> replacementStrings, string replacementKey)
+        private static string Replace(string text, IList<string> replacementStrings, string replacementKey)
         {
             var index = text.IndexOf(replacementKey, StringComparison.Ordinal);
             while (index != -1)

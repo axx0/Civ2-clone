@@ -18,7 +18,7 @@ namespace Civ2engine
         public int Money { get; set; }
         
         public int Science { get; set; }
-        public int ReseachingAdvance { get; set; }
+        public int ReseachingAdvance { get; set; } = -1;
         public bool[] Advances { get; set; }
         public int ScienceRate { get; set; }
         public int TaxRate { get; set; }
@@ -53,6 +53,8 @@ namespace Civ2engine
         public PlayerType PlayerType { get; set; }
 
         public City Capital { get; set; }
+        public int PowerRating { get; set; }
+        public int PowerRank { get; set; }
     }
 
     public enum PlayerType

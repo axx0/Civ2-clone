@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.Statistics;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
@@ -17,6 +18,11 @@ namespace Civ2engine
         private void StartNextTurn()
         {
             TurnNumber++;
+
+            if (TurnNumber % 2 == 0)
+            {
+                Power.CalculatePowerRatings(this);
+            }
             
             ProcessBarbarians();
 
