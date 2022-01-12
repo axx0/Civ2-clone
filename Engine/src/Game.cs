@@ -102,6 +102,8 @@ namespace Civ2engine
         private History _history;
 
         public Map CurrentMap => _maps[_currentMap];
+
+        public int TotalMapArea => _maps.Select(m => m.Tile.GetLength(0) * m.Tile.GetLength(1)).Sum();
         internal Dictionary<string,List<string>> CityNames { get; set; }
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
         public AIPlayer AI { get; }

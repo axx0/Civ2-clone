@@ -48,7 +48,7 @@ namespace EtoFormsUI.Initialization
             }
         }
 
-        internal static bool StartPremade(Main mainForm, Ruleset ruleset, string mapFileName)
+        internal static bool StartPreMade(Main mainForm, Ruleset ruleset, string mapFileName)
         {
             Labels.UpdateLabels(ruleset);
             CityLoader.LoadCities(ruleset);
@@ -512,29 +512,31 @@ namespace EtoFormsUI.Initialization
    
             var civilizations = new List<Civilization>
             {
-                new () {Adjective = Labels.Items[17], LeaderName = Labels.Items[18], Alive = true, Id = 0, PlayerType = PlayerType.Barbarians},
+                new () {Adjective = Labels.Items[17], LeaderName = Labels.Items[18], Alive = true, Id = 0, PlayerType = PlayerType.Barbarians, Advances =new bool[config.Rules.Advances.Length]},
                 config.PlayerCiv
             };
             if (config.SelectComputerOpponents)
-            {  
+            {
                 var opponentPop = config.PopUps["OPPONENT"];
                 var opponentNumber = 1;
-                for (var i = 1; civilizations.Count <= config.NumberOfCivs ; i++, opponentNumber++)
+                for (var i = 1; civilizations.Count <= config.NumberOfCivs; i++, opponentNumber++)
                 {
                     if (i == config.PlayerCiv.Id)
                     {
                         opponentNumber--;
                         continue;
                     }
-                    
+
                     var tribes = groupedTribes.Contains(i)
                         ? groupedTribes[i].ToList()
                         : config.Rules.Leaders
                             .Where(leader => civilizations.All(civ => civ.Adjective != leader.Adjective)).ToList();
-                    
+
                     opponentPop.Options =
-                        new[] {opponentPop.Options[0]}.Concat(tribes.Select(leader => $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
-                    var oppDia = new Civ2dialogV2(mainForm, opponentPop, new List<string>() {(opponentNumber ).ToString()},optionsCols: tribes.Count / 5);
+                        new[] { opponentPop.Options[0] }.Concat(tribes.Select(leader =>
+                            $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
+                    var oppDia = new Civ2dialogV2(mainForm, opponentPop,
+                        new List<string>() { (opponentNumber).ToString() }, optionsCols: tribes.Count / 5);
                     oppDia.ShowModal(mainForm);
 
                     if (oppDia.SelectedIndex == int.MinValue)
@@ -542,11 +544,12 @@ namespace EtoFormsUI.Initialization
                         SelectCityStyle(mainForm, config);
                         return;
                     }
+
                     civilizations.Add(MakeCivilization(config,
-                            tribes[
-                                oppDia.SelectedIndex == 0
-                                    ? config.Random.Next(tribes.Count)
-                                    : oppDia.SelectedIndex - 1], false, i));
+                        tribes[
+                            oppDia.SelectedIndex == 0
+                                ? config.Random.Next(tribes.Count)
+                                : oppDia.SelectedIndex - 1], false, i));
                 }
             }
             else
@@ -576,7 +579,7 @@ namespace EtoFormsUI.Initialization
 
             var maps = config.MapTask.Result;
             
-            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), new LocalPlayer());
+            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), new LocalPlayer(mainForm));
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.popupBoxList = config.PopUps;

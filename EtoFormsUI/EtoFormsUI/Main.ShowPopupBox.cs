@@ -189,5 +189,11 @@ namespace EtoFormsUI
                 default: break;
             }
         }
+
+        public void ShowCityDialog(string dialog, IList<string> replaceStrings)
+        {
+            var popupbox = new Civ2dialogV2(this, popupBoxList[dialog], replaceStrings);
+            popupbox.ShowModal(Parent);
+        }
     }
 }

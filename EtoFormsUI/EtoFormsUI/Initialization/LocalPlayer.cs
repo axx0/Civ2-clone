@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Civ2engine;
 using Civ2engine.Improvements;
 using Civ2engine.Production;
@@ -15,22 +16,22 @@ namespace EtoFormsUI
         }
         public void CivilDisorder(City city)
         {
-            var dialog = _main.ShowCityDialog( city);
+            _main.ShowCityDialog("DISORDER", new [] { city.Name });
         }
 
         public void OrderRestored(City city)
         {
-            throw new NotImplementedException();
+            _main.ShowCityDialog("RESTORED", new [] { city.Name });
         }
 
         public void WeLoveTheKingStarted(City city)
         {
-            throw new NotImplementedException();
+            _main.ShowCityDialog("WELOVEKING", new [] { city.Name, city.Owner.LeaderTitle });
         }
 
         public void WeLoveTheKingCanceled(City city)
         {
-            throw new NotImplementedException();
+            _main.ShowCityDialog("WEDONTLOVEKING", new [] { city.Name, city.Owner.LeaderTitle });
         }
 
         public void CantMaintain(City city, Improvement cityImprovement)
@@ -38,7 +39,7 @@ namespace EtoFormsUI
             throw new NotImplementedException();
         }
 
-        public void SelectNewAdvance(Game game, Civilization activeCiv)
+        public void SelectNewAdvance(Game game, Civilization activeCiv, IList<int> researchPossibilities)
         {
             throw new NotImplementedException();
         }
@@ -50,7 +51,7 @@ namespace EtoFormsUI
 
         public void CityProductionComplete(City city)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

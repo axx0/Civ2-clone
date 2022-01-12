@@ -17,7 +17,7 @@ namespace Civ2engine
         // Update stats of all cities
         private void CitiesTurn(IPlayer player)
         {
-            var currentScienceCost = AdvanceFunctions.CalculateScienceCost(_activeCiv);
+            var currentScienceCost = AdvanceFunctions.CalculateScienceCost(this, _activeCiv);
 
             var foodRows = Rules.Cosmic.RowsFoodBox;
             var shieldRows = Rules.Cosmic.RowsShieldBox;
@@ -108,6 +108,8 @@ namespace Civ2engine
                     
                     city.ItemInProduction = newItem;
                 }
+
+                city.ShieldsProgress += shields;
                 
                 
                 if (city.ShieldsProgress >= city.ItemInProduction.Cost * shieldRows)
@@ -140,12 +142,16 @@ namespace Civ2engine
                 if (science > 0)
                 {
                     _activeCiv.Science += science;
+                    if (_activeCiv.ReseachingAdvance == -1)
+                    {
+                        var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(this, _activeCiv);
+                        player.SelectNewAdvance(this, _activeCiv, researchPossibilities);
+                        currentScienceCost = AdvanceFunctions.CalculateScienceCost(this, _activeCiv);
+                    }
                     if (currentScienceCost <= _activeCiv.Science)
                     {
                         this.GiveAdvance(_activeCiv.ReseachingAdvance, _activeCiv.Id);
                         _activeCiv.Science -= currentScienceCost;
-                        player.SelectNewAdvance(this, _activeCiv);
-                        currentScienceCost = AdvanceFunctions.CalculateScienceCost(_activeCiv);
                     }
                 }
             }

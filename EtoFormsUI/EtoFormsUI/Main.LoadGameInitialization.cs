@@ -17,7 +17,7 @@ namespace EtoFormsUI
             Images.LoadGraphicsAssetsFromFiles(ruleset, rules);
             // Read SAV file & RULES.txt
 
-            ClassicSaveLoader.LoadSave(ruleset, saveFileName, rules, new LocalPlayer());
+            ClassicSaveLoader.LoadSave(ruleset, saveFileName, rules, new LocalPlayer(this));
             //ViewPiece.ActiveXY = gameData.ActiveCursorXY;
             return true;
         }
@@ -29,7 +29,7 @@ namespace EtoFormsUI
         
         public bool StartPremadeInit(Ruleset ruleset, string mapFileName)
         {
-            return NewGame.StartPremade(this, ruleset, mapFileName);
+            return NewGame.StartPreMade(this, ruleset, mapFileName);
         }
 
         public void StartGame()
