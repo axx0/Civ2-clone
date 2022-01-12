@@ -388,7 +388,7 @@ namespace EtoFormsUI
             }
 
             // CITY IMPROVEMENTS LIST
-            _improvementsBar.Maximum = _thisCity.Improvements.Length + 8;
+            _improvementsBar.Maximum = _thisCity.Improvements.Count + 8;
             int starting = _improvementsBar.Value;   // Starting improvement to draw (changes with slider)
             font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
             for (int i = 0; i < 9; i++)
