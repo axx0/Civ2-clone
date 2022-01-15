@@ -31,6 +31,10 @@ namespace EtoFormsUI
             { "peoplePic1",         (0x84E90, 0x129CE) },
             { "peoplePic2",         (0x97860, 0x139A0) },
             { "templePic",          (0xAB200, 0xB839) },
+            { "islandPic",          (0xDA49C, 0x8980) },
+            { "desertPic",          (0xD0140, 0xA35A) },
+            { "snowPic",            (0xE2E1C, 0xA925) },
+            { "canyonPic",          (0xC51B8, 0xAF88) },
         };
 
         //  Manually read GIFs from DLLs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)

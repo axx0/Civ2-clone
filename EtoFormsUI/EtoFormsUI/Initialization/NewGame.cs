@@ -19,7 +19,8 @@ namespace EtoFormsUI.Initialization
 {
     public static class NewGame
     {
-        static PicturePanel stPeterburgPanel, mingGeneralPanel, anicientPersonsPanel, barbariansPanel, galleyPanel, peoplePanel1, peoplePanel2, templePanel;
+        static PicturePanel stPeterburgPanel, mingGeneralPanel, anicientPersonsPanel, barbariansPanel, galleyPanel, peoplePanel1, 
+            peoplePanel2, templePanel, islandPanel, desertPanel, snowPanel, canyonPanel;
         static byte[] bytes;
 
         private static Ruleset SelectGameToStart(Main main)
@@ -114,6 +115,8 @@ namespace EtoFormsUI.Initialization
         private static int CustomWorldDialog(Main mainForm, PopupBox configPopUp, GameInitializationConfig config)
         {
             var dialog = new Civ2dialog(mainForm, configPopUp);
+            dialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.5 - dialog.Width / 2),
+                                        (int)(Screen.PrimaryScreen.Bounds.Height - dialog.Height - 75));
 
             dialog.ShowModal(mainForm);
 
@@ -144,46 +147,65 @@ namespace EtoFormsUI.Initialization
                     config.PropLand = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.PropLand == int.MinValue)
                     {
+                        stPeterburgPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
-                    
+
+                    stPeterburgPanel.Dispose();
+                    islandPanel = new PicturePanel(Images.ExtractBitmap(bytes, "islandPic"));
+                    mainForm.layout.Add(islandPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - islandPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMFORM"];
 
                     config.Landform = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Landform == int.MinValue)
                     {
+                        islandPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
-                    
+
+                    islandPanel.Dispose();
+                    desertPanel = new PicturePanel(Images.ExtractBitmap(bytes, "desertPic"));
+                    mainForm.layout.Add(desertPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - desertPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMCLIMATE"];
                     config.Climate = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Climate == int.MinValue)
                     {
+                        desertPanel.Dispose();
                         mainForm.MainMenu();
                         return;
-                    }                    
-                    
+                    }
+
+                    desertPanel.Dispose();
+                    snowPanel = new PicturePanel(Images.ExtractBitmap(bytes, "snowPic"));
+                    mainForm.layout.Add(snowPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - snowPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMTEMP"];
 
                     config.Temperature = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Temperature == int.MinValue)
                     {
+                        snowPanel.Dispose();
                         mainForm.MainMenu();
                         return;
-                    }                    
+                    }
+
+                    snowPanel.Dispose();
+                    canyonPanel = new PicturePanel(Images.ExtractBitmap(bytes, "canyonPic"));
+                    mainForm.layout.Add(canyonPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - canyonPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMAGE"];
 
                     config.Age = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Age == int.MinValue)
                     {
+                        canyonPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
+                    canyonPanel.Dispose();
                 }
 
-                stPeterburgPanel.Dispose();
+                if (!stPeterburgPanel.IsDisposed) stPeterburgPanel.Dispose();
                 SelectDifficultly(mainForm, config);
             }
         }
