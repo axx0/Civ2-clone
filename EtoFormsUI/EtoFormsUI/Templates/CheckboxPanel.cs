@@ -3,7 +3,7 @@ using Eto.Drawing;
 
 namespace EtoFormsUI
 {
-    public class CheckboxPanel : Civ2dialog
+    public class CheckboxPanel : Civ2customDialog
     {
         protected Civ2button[] Button;
         protected CheckBox[] CheckBox;

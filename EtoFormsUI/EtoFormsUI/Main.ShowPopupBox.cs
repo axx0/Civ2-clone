@@ -128,7 +128,7 @@ namespace EtoFormsUI
                         var checkboxOptions = new List<bool> { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn,
                             Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp,
                             Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
+                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.SoundEffects = popupbox.CheckboxReturnStates[0];
                         Game.Options.Music = popupbox.CheckboxReturnStates[1];
@@ -147,7 +147,7 @@ namespace EtoFormsUI
                     {
                         var checkboxOptions = new List<bool> { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds, 
                             Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
+                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.ThroneRoomGraphics = popupbox.CheckboxReturnStates[0];
                         Game.Options.DiplomacyScreenGraphics = popupbox.CheckboxReturnStates[1];
@@ -163,7 +163,7 @@ namespace EtoFormsUI
                             Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored,
                             Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs,
                             Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction };
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
+                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.WarnWhenCityGrowthHalted = popupbox.CheckboxReturnStates[0];
                         Game.Options.ShowCityImprovementsBuilt = popupbox.CheckboxReturnStates[1];
@@ -180,7 +180,7 @@ namespace EtoFormsUI
                     }
                 case "LOADOK":
                     {
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings);
+                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings);
                         popupbox.ShowModal(Parent);
                         StartGame();
                         Sounds.PlaySound(GameSounds.MenuOk);
@@ -192,7 +192,7 @@ namespace EtoFormsUI
 
         public void ShowCityDialog(string dialog, IList<string> replaceStrings)
         {
-            var popupbox = new Civ2dialogV2(this, popupBoxList[dialog], replaceStrings);
+            var popupbox = new Civ2dialog(this, popupBoxList[dialog], replaceStrings);
             popupbox.ShowModal(Parent);
         }
     }

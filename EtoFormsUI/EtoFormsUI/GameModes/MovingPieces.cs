@@ -73,7 +73,7 @@ namespace EtoFormsUI.GameModes
                             box.Text = box.Options;
                             box.Options = null; 
                         }
-                        var cityNameDialog = new Civ2dialogV2(main, main.popupBoxList["NAMECITY"],
+                        var cityNameDialog = new Civ2dialog(main, main.popupBoxList["NAMECITY"],
                             textBoxes: new List<TextBoxDefinition>
                             {
                                 new()

@@ -26,7 +26,7 @@ namespace EtoFormsUI.Initialization
             switch (rulesFiles.Count)
             {
                 case 0:
-                    var warningDialog = new Civ2dialogV2(main, new PopupBox()
+                    var warningDialog = new Civ2dialog(main, new PopupBox()
                     {
                         Title = "No game to start",
                         Text = new List<string>
@@ -38,7 +38,7 @@ namespace EtoFormsUI.Initialization
                 case 1:
                     return rulesFiles[0];
                 default:
-                    var popupBox = new Civ2dialogV2(main,
+                    var popupBox = new Civ2dialog(main,
                         new PopupBox
                         {
                             Title = "Select game version", Options = rulesFiles.Select(f => f.Name).ToList(),
@@ -72,7 +72,7 @@ namespace EtoFormsUI.Initialization
 
                 if (mapData.ResourceSeed > 1)
                 {
-                    var resourceSeedDialog = new Civ2dialogV2(mainForm, CorrectedPopup("USESEED"));
+                    var resourceSeedDialog = new Civ2dialog(mainForm, CorrectedPopup("USESEED"));
                     resourceSeedDialog.ShowModal(mainForm);
 
                     if (resourceSeedDialog.SelectedIndex == 1)
@@ -84,7 +84,7 @@ namespace EtoFormsUI.Initialization
                 if (mapData.StartPositions.Any(p=>p.First != -1 && p.Second != -1))
                 {
                     
-                    var startPositions = new Civ2dialogV2(mainForm, CorrectedPopup("USESTARTLOC"));
+                    var startPositions = new Civ2dialog(mainForm, CorrectedPopup("USESTARTLOC"));
                     startPositions.ShowModal(mainForm);
 
                     if (startPositions.SelectedIndex == 1)
@@ -99,7 +99,7 @@ namespace EtoFormsUI.Initialization
             }
             catch
             {
-                var failedToLoad = new Civ2dialogV2(mainForm, config.PopUps["FAILEDTOLOAD"]);
+                var failedToLoad = new Civ2dialog(mainForm, config.PopUps["FAILEDTOLOAD"]);
                 failedToLoad.ShowModal(mainForm);
                 return false;
             }
@@ -111,7 +111,7 @@ namespace EtoFormsUI.Initialization
 
         private static int CustomWorldDialog(Main mainForm, PopupBox configPopUp, GameInitializationConfig config)
         {
-            var dialog = new Civ2dialogV2(mainForm, configPopUp);
+            var dialog = new Civ2dialog(mainForm, configPopUp);
 
             dialog.ShowModal(mainForm);
 
@@ -193,7 +193,7 @@ namespace EtoFormsUI.Initialization
 
             while (true)
             {
-                var worldSizeDialog = new Civ2dialogV2(mainForm, config.PopUps["SIZEOFMAP"]);
+                var worldSizeDialog = new Civ2dialog(mainForm, config.PopUps["SIZEOFMAP"]);
                 worldSizeDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.5 - worldSizeDialog.Width / 2),
                                                      (int)(Screen.PrimaryScreen.Bounds.Height - worldSizeDialog.Height - 75));
 
@@ -216,7 +216,7 @@ namespace EtoFormsUI.Initialization
 
                 var customsizePopup = config.PopUps["CUSTOMSIZE"];
                 if (!customsizePopup.Button.Contains(Labels.Cancel)) customsizePopup.Button.Add(Labels.Cancel);
-                var customSizeDialog = new Civ2dialogV2(mainForm, customsizePopup,
+                var customSizeDialog = new Civ2dialog(mainForm, customsizePopup,
                     textBoxes: new List<TextBoxDefinition>
                     {
                     new()
@@ -253,7 +253,7 @@ namespace EtoFormsUI.Initialization
             mingGeneralPanel = new PicturePanel(Images.MingGeneralPic);
             mainForm.layout.Add(mingGeneralPanel, new Point((int)Screen.PrimaryScreen.Bounds.Width - 156 - mingGeneralPanel.Width, 76));
 
-            var difficultyDialog = new Civ2dialogV2(mainForm, config.PopUps["DIFFICULTY"]);
+            var difficultyDialog = new Civ2dialog(mainForm, config.PopUps["DIFFICULTY"]);
             difficultyDialog.Location = new Point(160, (int)(Screen.PrimaryScreen.Bounds.Height - difficultyDialog.Height - 72));
             difficultyDialog.ShowModal(mainForm);
             if (difficultyDialog.SelectedIndex == int.MinValue)
@@ -284,7 +284,7 @@ namespace EtoFormsUI.Initialization
                 enemiesPopup.Options = Enumerable.Range(0, possibleCivs - 2)
                     .Select(v => $"{(possibleCivs - v)} {suffix}").ToArray();
             }
-            var numberOfCivsDialog = new Civ2dialogV2(mainForm, enemiesPopup);
+            var numberOfCivsDialog = new Civ2dialog(mainForm, enemiesPopup);
 
             numberOfCivsDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - numberOfCivsDialog.Width - 156),
                                                     (int)(Screen.PrimaryScreen.Bounds.Height - numberOfCivsDialog.Height - 75));
@@ -310,7 +310,7 @@ namespace EtoFormsUI.Initialization
             barbariansPanel = new PicturePanel(Images.BarbariansPic);
             mainForm.layout.Add(barbariansPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width - barbariansPanel.Width - 81), 76));
 
-            var barbarityDialog = new Civ2dialogV2(mainForm, config.PopUps["BARBARITY"]);
+            var barbarityDialog = new Civ2dialog(mainForm, config.PopUps["BARBARITY"]);
             barbarityDialog.Location = new Point(161, (int)(Screen.PrimaryScreen.Bounds.Height - barbarityDialog.Height - 75));
             barbarityDialog.ShowModal(mainForm);
 
@@ -336,7 +336,7 @@ namespace EtoFormsUI.Initialization
                 galleyPic = new PicturePanel(Images.GalleyWreckPic);
                 mainForm.layout.Add(galleyPic, new Point(161, 76));
 
-                var rulesDialog = new Civ2dialogV2(mainForm, config.PopUps["RULES"]);
+                var rulesDialog = new Civ2dialog(mainForm, config.PopUps["RULES"]);
                 rulesDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - rulesDialog.Width - 156), 
                                                  (int)(Screen.PrimaryScreen.Bounds.Height - rulesDialog.Height - 72));
                 rulesDialog.ShowModal(mainForm);
@@ -354,7 +354,7 @@ namespace EtoFormsUI.Initialization
                 {
                     mainForm.layout.Move(galleyPic, new Point((int)(Screen.PrimaryScreen.Bounds.Width - galleyPic.Width - 155), 76));
 
-                    var customRulesDialog = new Civ2dialogV2(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] { config.SimplifiedCombat, config.FlatWorld, config.SelectComputerOpponents,config.AcceleratedStartup > 0, config.Bloodlust, config.DontRestartEliminatedPlayers});
+                    var customRulesDialog = new Civ2dialog(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] { config.SimplifiedCombat, config.FlatWorld, config.SelectComputerOpponents,config.AcceleratedStartup > 0, config.Bloodlust, config.DontRestartEliminatedPlayers});
                     customRulesDialog.Location = new Point(161, (int)(Screen.PrimaryScreen.Bounds.Height - customRulesDialog.Height - 72));
                     customRulesDialog.ShowModal(mainForm);
 
@@ -367,7 +367,7 @@ namespace EtoFormsUI.Initialization
                         config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
                         if (customRulesDialog.CheckboxReturnStates[3])
                         {
-                            var startYearDialog = new Civ2dialogV2(mainForm, config.PopUps["ACCELERATED"], new List<string> {"4000", "3000", "2000"});
+                            var startYearDialog = new Civ2dialog(mainForm, config.PopUps["ACCELERATED"], new List<string> {"4000", "3000", "2000"});
                             startYearDialog.ShowModal(mainForm);
 
                             if (startYearDialog.SelectedIndex == int.MinValue)
@@ -393,7 +393,7 @@ namespace EtoFormsUI.Initialization
             peoplePic1 = new PicturePanel(Images.PeoplePic1);
             mainForm.layout.Add(peoplePic1, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePic1.Width / 2), 76));
 
-            var genderDialog = new Civ2dialogV2(mainForm, config.PopUps["GENDER"]);
+            var genderDialog = new Civ2dialog(mainForm, config.PopUps["GENDER"]);
             genderDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - genderDialog.Width / 2), 
                                               (int)(Screen.PrimaryScreen.Bounds.Height - genderDialog.Height - 72));
             genderDialog.ShowModal(mainForm);
@@ -420,7 +420,7 @@ namespace EtoFormsUI.Initialization
                 popup.Button.Add(Labels.Cancel);
             }
             popup.Options = config.Rules.Leaders.Select(l => l.Plural).ToList();
-            var tribeDialog = new Civ2dialogV2(mainForm, popup, optionsCols: 3);
+            var tribeDialog = new Civ2dialog(mainForm, popup, optionsCols: 3);
             tribeDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - tribeDialog.Width / 2),
                                              (int)(Screen.PrimaryScreen.Bounds.Height - tribeDialog.Height - 72));
             tribeDialog.ShowModal(mainForm);
@@ -446,7 +446,7 @@ namespace EtoFormsUI.Initialization
 
                 while (true)
                 {
-                    var customTribe = new Civ2dialogV2(mainForm, tribePopup,
+                    var customTribe = new Civ2dialog(mainForm, tribePopup,
                         textBoxes: new List<TextBoxDefinition>
                         {
                             new()
@@ -490,7 +490,7 @@ namespace EtoFormsUI.Initialization
                         {
                             titlesPop.Button.Add(Labels.Cancel);
                         }
-                        var customTitles = new Civ2dialogV2(mainForm, titlesPop, textBoxes: config.PlayerCiv.Titles.Select(
+                        var customTitles = new Civ2dialog(mainForm, titlesPop, textBoxes: config.PlayerCiv.Titles.Select(
                             (s, i) => new TextBoxDefinition
                             {
                                 index = i,
@@ -521,7 +521,7 @@ namespace EtoFormsUI.Initialization
                     namePopup.Options = null;
                 }
 
-                var nameDialog = new Civ2dialogV2(mainForm, namePopup, textBoxes: new List<TextBoxDefinition>
+                var nameDialog = new Civ2dialog(mainForm, namePopup, textBoxes: new List<TextBoxDefinition>
                 {
                     new()
                     {
@@ -560,7 +560,7 @@ namespace EtoFormsUI.Initialization
                 citiesPopup.Button.Add(Labels.Cancel);
             }
 
-            var citiesDialog = new Civ2dialogV2(mainForm, citiesPopup,
+            var citiesDialog = new Civ2dialog(mainForm, citiesPopup,
                 icons: new[]
                 {
                     MapImages.Cities[7].Bitmap, MapImages.Cities[15].Bitmap, MapImages.Cities[23].Bitmap,
@@ -610,7 +610,7 @@ namespace EtoFormsUI.Initialization
                     opponentPop.Options =
                         new[] { opponentPop.Options[0] }.Concat(tribes.Select(leader =>
                             $"{leader.Plural} ({(leader.Female ? leader.NameFemale : leader.NameMale)})")).ToList();
-                    var oppDia = new Civ2dialogV2(mainForm, opponentPop,
+                    var oppDia = new Civ2dialog(mainForm, opponentPop,
                         replaceNumbers: new List<int>() { opponentNumber }, optionsCols: tribes.Count / 5);
                     oppDia.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - oppDia.Width / 2),
                                                 (int)(Screen.PrimaryScreen.Bounds.Height - oppDia.Height - 72));

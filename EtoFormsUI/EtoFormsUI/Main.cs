@@ -53,73 +53,6 @@ namespace EtoFormsUI
                 Sounds.PlayMenuLoop();
             };
             this.Shown += (_, _) => MainMenu();
-            //this.Shown += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MAINMENU"));
-            //this.Shown += (sender, e) =>
-            //{
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["LOADNOTSAVE"]);
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["YOURNUKES1"], new List<string>() { "Receptive Celtic" });
-                //var popupbox = new Civ2dialogV2(this, popupBoxList["LOADOK"], new List<string>() { "Emperor", "Xerxes", "Persians", "3120 B.C.", "Chieftain" });
-                //var popupbox = new Civ2dialogV2(this, popupBoxList["GREETINGS02"], new List<string>() { "Receptive Celtic", "Boadicea", "President", "Celts" });
-                //var popupbox = new Civ2dialogV2(this, popupBoxList["MULTIPLEWIN"], replaceNumbers: new List<int>() { 2 });
-                //var box = popupBoxList["RESEARCHTHESE"];
-                //box.Text.Add(" Alphabet, Bronze Working, Horseback Riding, Masonry, Mysticism, Pottery or Warrior Code.");
-                //box.LineStyles.Add(TextStyles.Left);
-                //var popupbox = new Civ2dialogV2(this, box);
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["HIDDENTERRAIN"]);
-                //var box1 = popupBoxList["GREETINGS11"];
-                //var box2 = popupBoxList["NUCLEARWEAPONS"];
-                //foreach (var item in box2.Text) box1.Text.Add(item);
-                //foreach (var item in box2.LineStyles) box1.LineStyles.Add(item);
-                //var popupbox = new Civ2dialogV2(this, box1, new List<string>() { "Enraged Greek", "Hippolyta", "Consul", "Greeks" });
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["NOTORIOUSBIG"], new List<string>() { "Neutral Greek", "Sioux" });
-                //var box = popupBoxList["MAINMENU"];
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["ACCELERATED"], replaceNumbers: new List<int>() { 4000, 3600, 3200 });
-                //var box = popupBoxList["OPPONENT"];
-                //box.Options.Add("Americans (Abe Lincoln)");
-                //box.Options.Add("Chinese (Mao Tse Tung)");
-                //box.Options.Add("Persians (Xerxes)");
-                //var popupBox = new Civ2dialogV2(this, box, replaceNumbers: new List<int>() { 1 });
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["UNITEDIT"], replaceStrings: new List<string>() { "American", "Mech. Inf. (Veteran) (Kiev)" });
-                //var popupBox = new Civ2dialogV2(this, popupBoxList["ADVANCED"], checkboxOptionState: new List<bool>() { false, true, false, false, false, false });
-                //popupBox.ShowModal(this);
-
-                //var citiesPopup = popupBoxList["CUSTOMCITY"];
-                //citiesPopup.Options ??= Labels.Items[247..251];
-
-                //if (citiesPopup.Button.IndexOf(Labels.Cancel) == -1)
-                //{
-                //    citiesPopup.Button.Add(Labels.Cancel);
-                //}
-
-                //var citiesDialog = new Civ2dialogV2(this, citiesPopup,
-                //    icons: new[]
-                //    {
-                //    new Bitmap(new Size(64, 48), PixelFormat.Format24bppRgb),
-                //    new Bitmap(new Size(64, 48), PixelFormat.Format24bppRgb),
-                //    new Bitmap(new Size(64, 48), PixelFormat.Format24bppRgb),
-                //    new Bitmap(new Size(64, 48), PixelFormat.Format24bppRgb),
-                //    })
-                //{ SelectedIndex = 0 };
-                //citiesDialog.ShowModal(this);
-
-            //    var box = popupBoxList["CUSTOMSIZE"];
-            //    var boxTxt1 = box.Text[3];
-            //    var boxTxt2 = box.Text[4];
-            //    box.Text = box.Text.Take(2).ToList();
-            //    var customSize = new Civ2dialogV2(this, box,
-            //                textBoxes: new List<TextBoxDefinition>
-            //                {
-            //                    new()
-            //                    {
-            //                        index = 3, Name = "Width", Text = boxTxt1, MinValue = 20, InitialValue = "55", Width = 75
-            //                    },
-            //                    new()
-            //                    {
-            //                        index = 4, Name = "Height", Text = boxTxt2, MinValue = 20, InitialValue = "60", Width = 75
-            //                    }
-            //                });
-            //    customSize.ShowModal(this);
-            //};
             this.KeyDown += KeyPressedEvent;
             Main.OnPopupboxEvent += PopupboxEvent;
             LoadInitialAssets();
@@ -306,12 +239,6 @@ namespace EtoFormsUI
                 CurrentGameMode.Actions[command.Shortcut]();
             }
         }
-
-        //private void FormLoadEvent(object sender, EventArgs e)
-        //{
-        //    ShowIntroScreen();
-        //    Sounds.PlayMenuLoop();
-        //}
 
         // Load assets at start of Civ2 program
         private void LoadInitialAssets()
