@@ -1,6 +1,8 @@
-﻿using Eto.Forms;
+﻿using System.IO;
+using Eto.Forms;
 using Eto.Drawing;
 using EtoFormsUI.Initialization;
+using Civ2engine;
 
 namespace EtoFormsUI
 {
@@ -10,19 +12,18 @@ namespace EtoFormsUI
 
         public void MainMenu()
         {
-            // Sinai pic
-            sinaiPanel = new PicturePanel(Images.SinaiPic);
-            layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));
+            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Intro.dll");  // For loading images from intro.dll
 
-            var popupBox = new Civ2dialog(this, popupBoxList["MAINMENU"])
-            {
-                Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.745),
-                    (int)(Screen.PrimaryScreen.Bounds.Height * 0.570))
-            };
-            popupBox.ShowModal(this);
+            sinaiPanel = new PicturePanel(Images.ExtractBitmap(bytes, "sinaiPic"));
+            layout.Add(sinaiPanel, new Point(160, 76));
+
+            var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
+            mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),
+                                                (int)(Screen.PrimaryScreen.Bounds.Height - mainMenuDialog.Height - 72));
+            mainMenuDialog.ShowModal(this);
 
             sinaiPanel.Dispose();
-            switch (popupBox.SelectedIndex)
+            switch (mainMenuDialog.SelectedIndex)
             {
                 //New Game
                 case 0:
