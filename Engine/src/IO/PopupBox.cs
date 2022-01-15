@@ -9,8 +9,8 @@ namespace Civ2engine
         public int Width { get; set; }
         public string Title { get; set; }
         public int Default { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int? X { get; set; }
+        public int? Y { get; set; }
         public IList<string> Button { get; set; }
         public IList<string> Options { get; set; }
         public bool Checkbox { get; set; }
@@ -22,7 +22,7 @@ namespace Civ2engine
     public enum TextStyles
     {
         Centered,
-        Left,
-        Smaller
+        LeftOwnLine,
+        Left
     }
 }

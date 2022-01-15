@@ -4,6 +4,7 @@ using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
+using System.Diagnostics;
 
 namespace EtoFormsUI
 {
@@ -14,24 +15,22 @@ namespace EtoFormsUI
         public List<bool> CheckboxReturnStates;
         public IDictionary<string, string> TextValues = new Dictionary<string, string>();
 
-        
         private readonly int _paddingTop, _paddingBtm;
+        private readonly FormattedText _fTitle;
+        private readonly IList<FormattedText> _fTexts;
+        private readonly FormattedText[] _formattedOptionsTexts, _formattedTextboxTexts;
         private readonly CheckBox[] _checkBox;
-        private readonly FormattedText[] _formattedOptionsTexts;
-
-        private readonly IList<string> _options;
-        private readonly IList<string> _text;
-        private readonly string _popupTitle;
+        private readonly IList<string> _options, _text;
 
         private readonly bool _hasCheckBoxes;
-        private readonly IList<TextStyles> _textStyles;
 
-        private int _textBoxAlignment;
-        private readonly int _optionsColumns;
-        private readonly int _optionRows;
+        private bool dragging = false;
+        private PointF dragCursorPoint, dragFormPoint, dif;
+        private readonly int _optionsColumns, _optionsRows;
         private readonly Drawable _surface;
         private readonly Bitmap[] _icons;
         private readonly Bitmap _image;
+        private readonly Size _innerSize;
 
         /// <summary>
         /// Show a popup box (dialog).
@@ -39,62 +38,118 @@ namespace EtoFormsUI
         /// <param name="parent">Main window.</param>
         /// <param name="popupBox">Popupbox object read from Game.txt. Determines properties of a popup box.</param>
         /// <param name="replaceStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
+        /// <param name="replaceNumbers">A list of numbers to replace %NUMBER0, %NUMBER1, %NUMBER2, etc.</param>
         /// <param name="checkboxOptionState">A list of boolean values representing states of checkbox options.</param>
         /// <param name="textBoxes">Definitions for any text input on the dialog</param>
         /// <param name="optionsCols">The number of columns to break options into</param>
         /// <param name="icons">Icons to show next to options</param>
         /// <param name="image">Image shown</param>
-        public Civ2dialogV2(Main parent, PopupBox popupBox, IList<string> replaceStrings = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null)
+        public Civ2dialogV2(Main parent, PopupBox popupBox, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null)
         {
-            _image = image;
-            _icons = icons ?? Array.Empty<Bitmap>();
-            _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
-            if (checkboxOptionState != null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
-
             foreach (var item in parent.Menu.Items) item.Enabled = false;
 
             _paddingTop = 38;
             _paddingBtm = 46;
 
             WindowStyle = WindowStyle.None;
-            MovableByWindowBackground = true;
 
-            // Replace %STRING in texts
-            _popupTitle = ReplaceString(popupBox.Title, replaceStrings);
-            if (popupBox.Text != null)
+            // Drag window
+            this.MouseDown += (_, e) =>
             {
-                _text = popupBox.Text.Select(t => ReplaceString(t, replaceStrings)).ToList();
-                _textStyles = popupBox.LineStyles;
-            }
+                if (e.Location.Y < _paddingTop)  // Enable dragging only on top of window
+                {
+                    dragging = true;
+                    dragCursorPoint = this.Location + e.Location;
+                    dragFormPoint = this.Location;
+                }
+            };
 
-            _hasCheckBoxes = popupBox.Checkbox;
+            this.MouseMove += (_, e) =>
+            {
+                if (dragging)
+                {
+                    dif = this.Location + e.Location - dragCursorPoint;
+                    this.Location = (Point)(dragFormPoint + dif);
+                }
+            };
 
-            // Determine size of inner panel
-            _optionRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns) ;
-            var textRows = popupBox.Text?.Count ?? 0;
-            var iconRows = _icons.Sum(i => i.Height);
-            var innerSize = new Size(2 * 2 + MaxWidth(popupBox, textBoxes), 2 * 2 + Math.Max((_optionRows - _icons.Length) * 32 + textRows * 30 + iconRows, _image == null ? 0 : _image.Height));
-            Size = new Size(innerSize.Width + 2 * 11, innerSize.Height + _paddingTop + _paddingBtm);
-            
-            // Center the dialog on screen by default
-            Location = new Point(parent.Width / 2 - Width / 2, parent.Height / 2 - Height / 2);
+            this.MouseUp += (_, _) => dragging = false;
 
             var layout = new PixelLayout() { Size = new Size(Width, Height) };
 
-            // Options (if they exist) <- either checkbox or radio btn.
-            if (popupBox.Options != null)
+            if (popupBox.Text is not null)
             {
-                _options = popupBox.Options.Select(o=>ReplaceString(o, replaceStrings)).ToList();
+                _text = popupBox.Text.ToList();
+            }
+            _image = image;
+            _icons = icons ?? Array.Empty<Bitmap>();
+            _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
+            if (checkboxOptionState is not null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
+
+            // Fill text into textboxes & then remove it from popubox Text
+            if (textBoxes is not null)
+            {
+                for (int i = 0; i < textBoxes.Count; i++) textBoxes[i].Text = _text[textBoxes[i].index];
+                _text = _text.Take(textBoxes[0].index - 1).ToList();
+            }
+
+            // Format title & adjust inner panel width to fit the title
+            _fTitle = GetFormattedTitle(popupBox.Title, replaceStrings, replaceNumbers);
+            _innerSize.Width = (int)_fTitle.Measure().Width - 2 * 11;
+
+            // Determine size of text and based on that determine inner panel size
+            if (_text is not null)
+            {
+                _fTexts = GetFormattedTexts(_text, popupBox.LineStyles, replaceStrings, replaceNumbers);
+                _innerSize.Width = Math.Max(_innerSize.Width, GetInnerPanelWidthFromText(_fTexts, popupBox));
+                foreach (var fText in _fTexts)
+                    fText.MaximumWidth = _innerSize.Width;  // Adjust text width to inner panel width
+                foreach (var fText in _fTexts)
+                    _innerSize.Height += (int)Math.Round(fText.Measure().Height / 28.0) * 28;
+            }
+
+            // Correction of inner panel size for options
+            _optionsRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
+            var iconsHeight = _icons.Length == 0 ? 0 : _icons.Sum(i => i.Height) + 4 * (_icons.Length - 1);
+            _innerSize = new Size(Math.Max(_innerSize.Width, GetInnerPanelWidthFromOptions(popupBox, _optionsRows, _optionsColumns, _icons, textBoxes)), 
+                Math.Max((_optionsRows - _icons.Length) * 32 + iconsHeight, _innerSize.Height));
+
+            // Correction of inner panel size for image
+            _innerSize = new Size(Math.Max(_innerSize.Width, _image?.Width ?? 0), Math.Max(_innerSize.Height, _image?.Height ?? 0));
+
+            // Correction of inner panel size for textbox
+            _innerSize = new Size(_innerSize.Width, _innerSize.Height + (30 * textBoxes?.Count ?? 0));
+
+            Size = new Size(_innerSize.Width + 2 * 2 + 2 * 11, _innerSize.Height + 2 * 2 + _paddingTop + _paddingBtm);
+
+            // Dialog location on screen (center by default)
+            int locX, locY;
+            if (popupBox.X is not null && popupBox.X < 0)
+                locX = (int)(popupBox.X.HasValue ? popupBox.X + (int)Screen.WorkingArea.Width - Width : parent.Width / 2 - Width / 2);
+            else
+                locX = (int)(popupBox.X.HasValue ? popupBox.X : parent.Width / 2 - Width / 2);
+            if (popupBox.Y is not null && popupBox.Y < 0)
+                locY = (int)(popupBox.Y.HasValue ? popupBox.Y + (int)Screen.WorkingArea.Height - Height : parent.Height / 2 - Height / 2);
+            else
+                locY = (int)(popupBox.Y.HasValue ? popupBox.Y : parent.Height / 2 - Height / 2);
+            Location = new Point(locX, locY);
+
+            // Options (if they exist) <- either checkbox or radio btn.
+            _hasCheckBoxes = popupBox.Checkbox;
+            if (popupBox.Options is not null)
+            {
                 // Texts
+                _options = popupBox.Options.Select(o => Replace(o, replaceStrings, replaceNumbers)).ToList();
                 _formattedOptionsTexts = _options.Select(option => new FormattedText
-                    {
-                        Font = new Font("Times New Roman", 18),
-                        ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)), Text = option
-                    }
+                {
+                    Font = new Font("Times New Roman", 18),
+                    ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)),
+                    Text = option
+                }
                 ).ToArray();
 
                 // Checkboxes
-                if (popupBox.Checkbox)
+                if (_hasCheckBoxes)
                 {
                     _checkBox = new CheckBox[_options.Count];
                     for (var row = 0; row < _options.Count; row++)
@@ -117,7 +172,73 @@ namespace EtoFormsUI
             // Drawable surface
             _surface = new Drawable() { Size = new Size(Width, Height), CanFocus = false };
             _surface.Paint += Surface_Paint;
+            layout.Size = Size;
             layout.Add(_surface, 0, 0);
+
+            // Insert textboxes
+            if (textBoxes is not null)
+            {
+                // Texts next to textbox
+                _formattedTextboxTexts = textBoxes.Select(box => new FormattedText
+                {
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    ForegroundBrush = new SolidBrush(Color.FromArgb(51, 51, 51)),
+                    Text = box.Text
+                }
+                ).ToArray();
+                var maxWidth = (int)_formattedTextboxTexts.Max(box => box.Measure().Width);
+
+                var i = 0;
+                foreach (var textBox in textBoxes)
+                {
+                    TextValues[textBox.Name] = textBox.InitialValue;
+                    var box = new TextBox
+                    {
+                        Font = new Font("Times new roman", 12),
+                        Text = textBox.InitialValue,
+                        //Width = _innerSize.Width - 20 - _textBoxAlignment,
+                        Width = textBox.Width,
+                        Height = 30
+                    };
+
+                    if (textBox.MinValue.HasValue)
+                    {
+                        box.TextChanged += (_, _) =>
+                        {
+                            var cleaned = new string(box.Text.Where(char.IsNumber).ToArray());
+                            if (cleaned.Length == 0)
+                            {
+                                box.Text = textBox.InitialValue;
+                            }
+                            else if (!int.TryParse(cleaned, out var result) || !(result >= textBox.MinValue))
+                            {
+                                box.Text = textBox.MinValue.ToString();
+                            }
+                            else if (box.Text.Length > cleaned.Length)
+                            {
+                                box.Text = cleaned;
+                            }
+
+                            TextValues[textBox.Name] = box.Text;
+                        };
+                    }
+                    else
+                    {
+                        box.TextChanged += (_, _) =>
+                        {
+                            if (string.IsNullOrWhiteSpace(box.Text) && textBox.InitialValue.Length > 0)
+                            {
+                                box.Text = textBox.InitialValue;
+                            }
+
+                            TextValues[textBox.Name] = box.Text;
+                        };
+                    }
+
+                    layout.Add(box, 13 + maxWidth + 10, _paddingTop + 4 + _innerSize.Height - 30 * textBoxes.Count() + 30 * i);
+                    i++;
+                }
+            }
 
             // Buttons
             var buttonTitles = popupBox.Button;
@@ -127,21 +248,21 @@ namespace EtoFormsUI
             {
                 var text = buttonTitles[i];
                 buttons[i] = new Civ2button(text, buttonWidth, 36, new Font("Times new roman", 11));
-                layout.Add(buttons[i], 9 + buttonWidth * i + 3 * i, Height - 46);
-                buttons[i].Click += (sender, _) => SelectedButton = ((Civ2button) sender)?.Text;
+                layout.Add(buttons[i], 9 + buttonWidth * i + 3 * i, Height - 42);
+                buttons[i].Click += (sender, _) => SelectedButton = ((Civ2button)sender)?.Text;
 
                 switch (text)
                 {
                     // Define abort button so that is also called with Esc
                     case "Cancel":
                         AbortButton = buttons[i];
-                        AbortButton.Click += (sender, e) =>
+                        AbortButton.Click += (_, _) =>
                         {
                             foreach (MenuItem item in parent.Menu.Items) item.Enabled = true;
                             SelectedIndex = int.MinValue;
-                            if (popupBox.Name == "MAINMENU") 
-                            { 
-                                Application.Instance.Quit(); 
+                            if (popupBox.Name == "MAINMENU")
+                            {
+                                Application.Instance.Quit();
                             }
                             else
                             {
@@ -151,37 +272,38 @@ namespace EtoFormsUI
                         break;
                     // Define default button so that it is also called with return key
                     case "OK":
-                    {
-                        foreach (var item in parent.Menu.Items) item.Enabled = true;
-
-                        DefaultButton = buttons[i];
-                        DefaultButton.Click += (_, _) =>
-                        {
-                            if (popupBox.Checkbox)
-                            {
-                                for (var row = 0; row < _options.Count; row++)
-                                {
-                                    CheckboxReturnStates[row] = _checkBox[row].Checked == true;
-                                }
-                            }
-
-                            Close(); 
-                        };
-                        break;
-                    }
-                    default:
-                    {
-                        buttons[i].Click += (sender, args) =>
                         {
                             foreach (var item in parent.Menu.Items) item.Enabled = true;
-                            SelectedButton = text;
-                            Close();
-                        };
-                        break;
-                    }
+
+                            DefaultButton = buttons[i];
+                            DefaultButton.Click += (_, _) =>
+                            {
+                                if (_hasCheckBoxes)
+                                {
+                                    for (var row = 0; row < _options.Count; row++)
+                                    {
+                                        CheckboxReturnStates[row] = _checkBox[row].Checked == true;
+                                    }
+                                }
+
+                                Close();
+                            };
+                            break;
+                        }
+                    default:
+                        {
+                            buttons[i].Click += (sender, args) =>
+                            {
+                                foreach (var item in parent.Menu.Items) item.Enabled = true;
+                                SelectedButton = text;
+                                Close();
+                            };
+                            break;
+                        }
                 }
             };
-            if (_options != null && !popupBox.Checkbox)
+
+            if (_options is not null && !_hasCheckBoxes)
             {
                 KeyUp += (sender, args) =>
                 {
@@ -192,11 +314,11 @@ namespace EtoFormsUI
                     {
                         if (args.Key is Keys.Right)
                         {
-                            newIndex += _optionRows;
+                            newIndex += _optionsRows;
                         }
                         else
                         {
-                            newIndex -= _optionRows;
+                            newIndex -= _optionsRows;
                         }
                         if (newIndex < 0)
                         {
@@ -223,7 +345,7 @@ namespace EtoFormsUI
 
 
                     SelectedIndex = newIndex;
-                    buttons.FirstOrDefault(n=>n.Text == "OK")?.Focus();
+                    buttons.FirstOrDefault(n => n.Text == "OK")?.Focus();
                     _surface.Invalidate();
                     args.Handled = true;
                 };
@@ -233,7 +355,7 @@ namespace EtoFormsUI
             _surface.MouseDown += (_, e) =>
             {
                 // Select radio button if clicked
-                if (_options == null) return;
+                if (_options is null) return;
 
                 var yOffset = _text?.Count * 30 ?? 0;
 
@@ -255,7 +377,7 @@ namespace EtoFormsUI
                 else
                 {
                     var rowHeight = _icons.Length > 0 ? _icons[0].Height : 32;
-                    for (var row = 0; row < _optionRows; row++)
+                    for (var row = 0; row < _optionsRows; row++)
                     {
                         if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + rowHeight * row && e.Location.Y < _paddingTop + yOffset + 5 + rowHeight * (row + 1))
                         {
@@ -263,7 +385,7 @@ namespace EtoFormsUI
                             if (_optionsColumns > 1)
                             {
                                 var which = Width / _optionsColumns;
-                                selectedIndex +=  ((int)e.Location.X / which) * _optionRows;
+                                selectedIndex += ((int)e.Location.X / which) * _optionsRows;
                             }
 
                             if (selectedIndex < 0) selectedIndex = 0;
@@ -274,56 +396,100 @@ namespace EtoFormsUI
                     }
                 }
             };
-            
-            
-            if (textBoxes != null)
+
+
+
+            Content = layout;
+        }
+
+        private FormattedText GetFormattedTitle(string title, IList<string> replaceStrings, IList<int> replaceNumbers)
+        {
+            var fTitle = new FormattedText
             {
-                foreach (var textBox in textBoxes)
+                Text = Replace(title, replaceStrings, replaceNumbers),
+                Font = new Font("Times new roman", 18, FontStyle.Bold),
+                Alignment = FormattedTextAlignment.Center
+            };
+            return fTitle;
+        }
+
+        private static List<FormattedText> GetFormattedTexts(IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
+        {
+            // Group left-aligned texts
+            int j = 0;
+            while (j < texts.Count - 1)
+            {
+                j++;
+                if (styles[j - 1] == TextStyles.Left && styles[j] == TextStyles.Left)
                 {
-                    TextValues[textBox.Name] = textBox.InitialValue;
-                    var box = new TextBox
-                    {
-                        Text = textBox.InitialValue,
-                        Width = innerSize.Width - 20 - _textBoxAlignment,
-                    };
-                    if (textBox.MinValue.HasValue)
-                    {
-                        box.TextChanged += (_, _) =>
-                        {
-                            var cleaned = new string(box.Text.Where(char.IsNumber).ToArray());
-                            if (cleaned.Length == 0)
-                            {
-                                box.Text = textBox.InitialValue;
-                            }else if (!int.TryParse(cleaned, out var result) || !(result >= textBox.MinValue))
-                            {
-                                box.Text = textBox.MinValue.ToString();
-                            }
-                            else if(box.Text.Length > cleaned.Length)
-                            {
-                                box.Text = cleaned;
-                            }
-
-                            TextValues[textBox.Name] = box.Text;
-                        };
-                    }
-                    else
-                    {
-                        box.TextChanged += (_, _) =>
-                        {
-                            if(string.IsNullOrWhiteSpace(box.Text) && textBox.InitialValue.Length > 0)
-                            {
-                                box.Text = textBox.InitialValue;
-                            }
-
-                            TextValues[textBox.Name] = box.Text;
-                        };
-                    }
-
-                    layout.Add(box, _textBoxAlignment + 10, 45 + 30 * textBox.index);
+                    texts[j] = texts[j - 1] + " " + texts[j];
+                    texts.RemoveAt(j - 1);
+                    styles.RemoveAt(j - 1);
+                    j = 0;
                 }
             }
 
-            Content = layout;
+            // Replace %STRING, %NUMBER
+            texts = texts.Select(t => Replace(t, replaceStrings, replaceNumbers)).ToList();
+            texts = texts.Select(t => t.Replace("_", " ")).ToList();
+
+            // Format texts
+            var formattedTexts = new List<FormattedText>();
+            int i = 0;
+            foreach (var text in texts)
+            {
+                formattedTexts.Add(new FormattedText
+                {
+                    Text = (text == "" && styles[i] == TextStyles.LeftOwnLine) ? " " : text,    // Add space if ^ is the only character
+                    Font = new Font("Times New Roman", 18),
+                    Alignment = styles[i] == TextStyles.Centered ? FormattedTextAlignment.Center : FormattedTextAlignment.Left
+                });
+
+                i++;
+            }
+            return formattedTexts;
+        }
+
+        private static int GetInnerPanelWidthFromText(IList<FormattedText> fTexts, PopupBox popupbox)
+        {
+            var centredTextMaxWidth = 0.0;
+            if (fTexts.Where(t => t.Alignment == FormattedTextAlignment.Center).Any())
+                centredTextMaxWidth = (from text in fTexts
+                                       where text.Alignment == FormattedTextAlignment.Center
+                                       orderby text.Measure().Width descending
+                                       select text).ToList().FirstOrDefault().Measure().Width;
+
+            if (popupbox.Width != 0)
+                return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupbox.Width * 1.5));
+            else
+                return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 660.0));    // 660=440*1.5
+        }
+
+
+        /// <summary>
+        /// Determine max width of a popup box from options.
+        /// </summary>
+        private static int GetInnerPanelWidthFromOptions(PopupBox popupBox, int optionsRows, int optionsColumns, Bitmap[] icons, List<TextBoxDefinition> textBoxDefinitions)
+        {
+            int width = 0;
+            if (optionsRows > 0)
+            {
+                for (var index = 0; index < optionsRows; index++)
+                {
+                    var textWidthCandidate = Enumerable.Range(0, optionsColumns).Select(n => n * optionsRows + index)
+                        .Where(n => n < popupBox.Options.Count).Select(n => (int)new FormattedText
+                        { Text = popupBox.Options[n], Font = new Font("Times new roman", 18) }.Measure().Width)
+                        .Sum();
+                    //var widthCandidate = textWidthCandidate + imageWidth + (_icons.Length > index ? _icons[index].Width : 40 * optionsColumns); // Count in width of radio button
+                    var widthCandidate = textWidthCandidate + (icons.Length > index ? icons[index].Width : 40 * optionsColumns); // Count in width of radio button
+                    if (widthCandidate > width) width = widthCandidate;
+                }
+            }
+
+            if (popupBox.Width != 0)
+                return (int)Math.Ceiling(Math.Max(width, popupBox.Width * 1.5));
+            else
+                return (int)Math.Ceiling(Math.Max(width, 660.0));    // 660=440*1.5
         }
 
         private static int GetOptionsRows(int? optionsCount, int optionsCols)
@@ -336,7 +502,7 @@ namespace EtoFormsUI
             }
             return optionsCount.Value / optionsCols + 1;
         }
-        
+
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.AntiAlias = false;
@@ -379,7 +545,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(pen6, 4, 4, Width - 6, 4);   // 5th layer of border
             e.Graphics.DrawLine(pen6, 4, 4, 4, Height - 6);
             e.Graphics.DrawLine(pen7, Width - 5, 4, Width - 5, Height - 5);
-            e.Graphics.DrawLine(pen7, 4, Height - 5, Width - 5, Height - 5);
+            //e.Graphics.DrawLine(pen7, 4, Height - 5, Width - 5, Height - 5);
 
             // Inner border
             e.Graphics.DrawLine(pen7, 9, _paddingTop - 1, 9 + (Width - 18 - 1), _paddingTop - 1);   // 1st layer of border
@@ -403,39 +569,41 @@ namespace EtoFormsUI
             }
 
             // Title
-            Draw.Text(e.Graphics, _popupTitle, new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(Width / 2, _paddingTop / 2), true, true, Colors.Black, 1, 1);
+            for (int i = 0; i < 2; i++) // Draw front + shadow
+            {
+                _fTitle.ForegroundBrush = (i == 0) ? new SolidBrush(Colors.Black) : new SolidBrush(Color.FromArgb(135, 135, 135));
+                _fTitle.MaximumWidth = _innerSize.Width + 2 * 2 + 2 * 11;
+                e.Graphics.DrawText(_fTitle, new Point(1 - i, (int)(_paddingTop / 2 - _fTitle.Measure().Height / 2) + 1 - i));
+            }
 
             // Image
-            if (_image != null)
-                e.Graphics.DrawImage(_image, new Point(11 + 2, _paddingTop + 2));
+            if (_image is not null) e.Graphics.DrawImage(_image, new Point(11 + 2, _paddingTop + 2));
 
             var xOffset = _image == null ? 0 : _image.Width;
             var yOffset = 0;
-            
-            // Centered text
-           
-            if (_text != null)
-            {
-                for (var i = 0; i < _text.Count; i++)
-                {
-                    var centered = _textStyles != null && (int) _textStyles?.Count > i && _textStyles[i] == TextStyles.Centered;
-                    Draw.Text(e.Graphics, _text[i], new Font("Times new roman", 18),
-                        Color.FromArgb(51, 51, 51), 
-                        new Point(centered ? xOffset + Width / 2 : xOffset + 10, _paddingTop + 5 + yOffset),
-                        centered, false,
-                        Color.FromArgb(191, 191, 191), 1, 1);
 
-                    yOffset += 30;
+            // Text
+            if (_fTexts is not null)
+            {
+                var h = 0;
+                foreach (var fText in _fTexts)
+                {
+                    for (int i = 0; i < 2; i++) // Draw front + shadow
+                    {
+                        fText.ForegroundBrush = (i == 0) ? new SolidBrush(Color.FromArgb(191, 191, 191)) : new SolidBrush(Color.FromArgb(51, 51, 51));
+                        e.Graphics.DrawText(fText, new Point(11 + 2 + 1 - i, _paddingTop + 2 + 1 - i + h));
+                    }
+                    h += (int)fText.Measure().Height;
                 }
             }
 
             // Options (if they exist) <- either checkbox or radio btn.
-            if (_options != null)
+            if (_options is not null)
             {
                 var initialY = yOffset;
                 var widthOffset = xOffset + 21;
                 var column = 1;
-                
+
                 using var pen = new Pen(Color.FromArgb(64, 64, 64));
                 for (var rowCount = 0; rowCount < _options.Count; rowCount++)
                 {
@@ -443,51 +611,57 @@ namespace EtoFormsUI
                     if (_hasCheckBoxes)
                     {
                         Draw.Checkbox(e.Graphics, _checkBox[rowCount].Checked == true,
-                            new Point(widthOffset, _paddingTop + 9 + yOffset));
+                            new Point(widthOffset - 2, _paddingTop + 4 + yOffset));
 
-                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
+                        e.Graphics.DrawText(_formattedOptionsTexts[rowCount], new Point(widthOffset + 24, _paddingTop + 2 + yOffset));
 
                         if (_checkBox[rowCount].HasFocus)
                             e.Graphics.DrawRectangle(pen,
-                                new Rectangle(45, _paddingTop + 5 + yOffset,
-                                    (int) _formattedOptionsTexts[rowCount].Measure().Width, 26));
+                                new Rectangle(45, _paddingTop + 2 + yOffset,
+                                    (int)_formattedOptionsTexts[rowCount].Measure().Width, 26));
                     }
-                    // Draw radio buttons
+                    // Draw radio buttons/icons
                     else
                     {
+                        // Draw icons
                         if (rowCount < _icons.Length)
                         {
-                            e.Graphics.DrawImage(_icons[rowCount], new Point(widthOffset , _paddingTop + 5 + yOffset));
-                            e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
-                                new Point(_icons[rowCount].Width + 25, _paddingTop + 5 + yOffset + _icons[rowCount].Height / 2 -18));
+                            e.Graphics.DrawImage(_icons[rowCount], new Point(13, _paddingTop + 2 + yOffset));
+                            
+                            for (int i = 0; i < 2; i++) // Draw front + shadow text
+                            {
+                                _formattedOptionsTexts[rowCount].ForegroundBrush = (i == 0) ? new SolidBrush(Color.FromArgb(191, 191, 191)) : new SolidBrush(Color.FromArgb(51, 51, 51));
+                                e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
+                                    new Point(_icons[rowCount].Width + 15 + 1 - i, _paddingTop + 12 + yOffset + 1 - i));
+                            }
                             if (SelectedIndex == rowCount)
                             {
-                                e.Graphics.DrawRectangle(pen,
-                                    new Rectangle(widthOffset, _paddingTop + yOffset,
-                                        _icons[rowCount].Width, _icons[rowCount].Height -5));
+                                e.Graphics.DrawRectangle(new Pen(Color.FromArgb(223, 223, 223)),
+                                    new Rectangle(12, _paddingTop + 1 + yOffset,
+                                        _icons[rowCount].Width, _icons[rowCount].Height));
                             }
 
-                            yOffset += _icons[rowCount].Height - 32;
+                            yOffset += _icons[rowCount].Height + 4 - 32;
                         }
+                        // Draw radio buttons
                         else
                         {
-
                             Draw.RadioBtn(e.Graphics, SelectedIndex == rowCount,
                                 new Point(widthOffset, _paddingTop + 9 + yOffset));
 
                             e.Graphics.DrawText(_formattedOptionsTexts[rowCount],
-                                new Point(widthOffset + 20, _paddingTop + 5 + yOffset));
+                                new Point(widthOffset + 26, _paddingTop + 5 + yOffset));
 
                             if (SelectedIndex == rowCount)
                                 e.Graphics.DrawRectangle(pen,
-                                    new Rectangle(widthOffset + 20, _paddingTop + 5 + yOffset,
+                                    new Rectangle(widthOffset + 24, _paddingTop + 5 + yOffset,
                                         column == _optionsColumns
                                             ? Width / _optionsColumns - 45 - 14
                                             : Width / _optionsColumns - 25, 26));
                         }
                     }
 
-                    if (rowCount % _optionRows == _optionRows -1)
+                    if (rowCount % _optionsRows == _optionsRows - 1)
                     {
                         widthOffset += Width / _optionsColumns;
                         yOffset = initialY;
@@ -499,89 +673,40 @@ namespace EtoFormsUI
                     }
                 }
             }
+
+            // Textboxes text
+            if (_formattedTextboxTexts is not null)
+            {
+                for (int i = 0; i < _formattedTextboxTexts.Length; i++)
+                {
+                    e.Graphics.DrawText(_formattedTextboxTexts[i],
+                        new Point(13, _paddingTop + 9 + _innerSize.Height - 30 * _formattedTextboxTexts.Length + i * 30));
+                }
+            }
         }
 
         /// <summary>
-        /// Determine max width of a popup box.
-        /// </summary>
-        private int MaxWidth(PopupBox popupBox, List<TextBoxDefinition> textBoxDefinitions)
-        {
-            var imageWidth = _image == null ? 0 : _image.Width;
-            
-            // 1) Width from Game.txt
-            int width = (int)(popupBox.Width * 1.5);
-
-            // 2) Max length of strings
-            // First title
-            var titleText = new FormattedText { Text = popupBox.Title, Font = new Font("Times new roman", 17, FontStyle.Bold) };
-            int titleWidth = (int)titleText.Measure().Width;
-            if (titleWidth > width)
-            {
-                width = titleWidth;
-            }
-            
-            // Then options strings
-            var rows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
-            if (rows > 0)
-            {
-                for (var index = 0; index < rows; index++)
-                {
-                    var textWidthCandidate = Enumerable.Range(0, _optionsColumns).Select(n => n * rows + index)
-                        .Where(n => n < popupBox.Options.Count).Select(n => (int) (new FormattedText
-                            {Text = popupBox.Options[n], Font = new Font("Times new roman", 18)}.Measure().Width))
-                        .Sum();
-                    var widthCandidate = textWidthCandidate + imageWidth + (_icons.Length > index ? _icons[index].Width : 40 * _optionsColumns); // Count in width of radio button
-                    if (widthCandidate > width) width = widthCandidate;
-                }
-            }
-
-            int minTextBox = 0;
-            
-            // Then other text
-            for (int i = 0; i < _text?.Count  ; i++)
-            {
-                var box = textBoxDefinitions?.FirstOrDefault(b => b.index == i);
-                var text = _text[i];
-                if (box != null)
-                {
-                    var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width);
-                    if (textWidthCandidate > minTextBox)
-                    {
-                        minTextBox = textWidthCandidate;
-                    }
-                    var widthCandidate = textWidthCandidate + imageWidth + 50;   // Count in width of text box
-                    if (widthCandidate > width) width = widthCandidate + imageWidth;
-                }else if ((_textStyles?.Count ?? 0 )> i && _textStyles[i] == TextStyles.Centered)
-                {
-                    var textWidthCandidate = (int)(new FormattedText { Text = text, Font = new Font("Times new roman", 18) }.Measure().Width) + imageWidth;
-                    if (textWidthCandidate > width) width = textWidthCandidate + imageWidth; 
-                }
-            }
-
-            _textBoxAlignment = minTextBox;
-
-            return width;
-        }
-
-
-        /// <summary>
-        /// Find occurences of %STRING in text and replace it with other strings.
+        /// Find occurences of %STRING and %NUMBER in text and replace it with other strings/numbers.
         /// </summary>
         /// <param name="text">Text where replacement takes place.</param>
         /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
-        private static string ReplaceString(string text, IList<string> replacementStrings)
+        /// <param name="replacementNumbers">A list of integers to replace %NUMBER0, %NUMBER1, %NUMBER2, etc.</param>
+        private static string Replace(string text, IList<string> replacementStrings, IList<int> replacementNumbers)
         {
-            return Replace(Replace(text, replacementStrings, "%STRING"), replacementStrings, "%NUMBER");
-        }
-
-        private static string Replace(string text, IList<string> replacementStrings, string replacementKey)
-        {
-            var index = text.IndexOf(replacementKey, StringComparison.Ordinal);
+            var index = text.IndexOf("%STRING", StringComparison.Ordinal);
             while (index != -1)
             {
                 var numericChar = text[index + 7];
-                text = text.Replace(replacementKey + numericChar, replacementStrings[(int) char.GetNumericValue(numericChar)]);
-                index = text.IndexOf(replacementKey, StringComparison.Ordinal);
+                text = text.Replace("%STRING" + numericChar, replacementStrings[(int)char.GetNumericValue(numericChar)]);
+                index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            }
+
+            index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
+            while (index != -1)
+            {
+                var numericChar = text[index + 7];
+                text = text.Replace("%NUMBER" + numericChar, replacementNumbers[(int)char.GetNumericValue(numericChar)].ToString());
+                index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
             }
 
             return text;

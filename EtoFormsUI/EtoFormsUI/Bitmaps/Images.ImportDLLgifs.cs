@@ -16,7 +16,7 @@ namespace EtoFormsUI
                              CityBuiltAncientWallpaper, CityBuiltModernWallpaper, MainScreenSymbol;
 
         // From Intro.dll
-        public static Bitmap SinaiPic;
+        public static Bitmap SinaiPic, StPeterburgPic, MingGeneralPic, AncientPersonsPic, BarbariansPic, GalleyWreckPic, PeoplePic1, PeoplePic2, TemplePic;
 
         // From cv.dll
         public static Bitmap[] CityViewLand, CityViewOcean, CityViewRiver, CityViewTiles, CityViewImprovements;
@@ -102,8 +102,15 @@ namespace EtoFormsUI
             // Read all bytes in dll
             byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Intro.dll");
 
-            // (901) City status wallpaper
             SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
+            StPeterburgPic = ExtractBitmapFromDLL(bytes, "285A8", "15D04");
+            MingGeneralPic = ExtractBitmapFromDLL(bytes, "3E2AC", "1D183");
+            AncientPersonsPic = ExtractBitmapFromDLL(bytes, "5B430", "15D04");
+            BarbariansPic = ExtractBitmapFromDLL(bytes, "71134", "13D5B");
+            GalleyWreckPic = ExtractBitmapFromDLL(bytes, "B6A3C", "E77A");
+            PeoplePic1 = ExtractBitmapFromDLL(bytes, "84E90", "129CE");
+            PeoplePic2 = ExtractBitmapFromDLL(bytes, "97860", "139A0");
+            TemplePic = ExtractBitmapFromDLL(bytes, "AB200", "B839");
         }
 
         /// <summary>

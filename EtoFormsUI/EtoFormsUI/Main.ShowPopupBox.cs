@@ -67,68 +67,68 @@ namespace EtoFormsUI
         {
             switch (e.BoxName)
             {
-                case "MAINMENU":
-                    {
-                        // Sinai pic
-                        sinaiPanel = new PicturePanel(Images.SinaiPic);
-                        layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));
+                //case "MAINMENU":
+                //    {
+                //        // Sinai pic
+                //        sinaiPanel = new PicturePanel(Images.SinaiPic);
+                //        layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));
                         
-                        var popupBox = new Civ2dialogV2(this, popupBoxList[e.BoxName])
-                        {
-                            Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
-                                (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
-                        };
-                        popupBox.ShowModal(Parent);
+                //        var popupBox = new Civ2dialogV2(this, popupBoxList[e.BoxName])
+                //        {
+                //            Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
+                //                (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
+                //        };
+                //        popupBox.ShowModal(Parent);
                         
-                        switch (popupBox.SelectedIndex)
-                        {
-                            //New Game
-                            case 0:
-                            {
-                                NewGame.Start(this, false);
-                                break;
-                            }
-                            // Start premade
-                            case 1:
-                            {
-                                LocateStartingFiles("Select Map To Load",
-                                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
-                                break;
-                            }
+                //        switch (popupBox.SelectedIndex)
+                //        {
+                //            //New Game
+                //            case 0:
+                //            {
+                //                NewGame.Start(this, false);
+                //                break;
+                //            }
+                //            // Start premade
+                //            case 1:
+                //            {
+                //                LocateStartingFiles("Select Map To Load",
+                //                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
+                //                break;
+                //            }
 
-                            //Customise World
-                            case 2:
-                            {
-                                NewGame.Start(this, true);
-                                break;
-                            }
-                            // Load scenario
-                            case 3:
-                            {
-                                LocateStartingFiles("Select Scenario To Load",
-                                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
+                //            //Customise World
+                //            case 2:
+                //            {
+                //                NewGame.Start(this, true);
+                //                break;
+                //            }
+                //            // Load scenario
+                //            case 3:
+                //            {
+                //                LocateStartingFiles("Select Scenario To Load",
+                //                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
                             
 
-                                break;
-                            }
-                            // Load game
-                            case 4:
-                            {
-                                LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
-                                    LoadGameInitialization
-                                );
+                //                break;
+                //            }
+                //            // Load game
+                //            case 4:
+                //            {
+                //                LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
+                //                    LoadGameInitialization
+                //                );
 
-                                break;
-                            }
-                        }
-                        break;
-                    }
+                //                break;
+                //            }
+                //        }
+                //        break;
+                //    }
                 case "GAMEOPTIONS":
                     {
                         var checkboxOptions = new List<bool> { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn,
                             Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp,
                             Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptions);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.SoundEffects = popupbox.CheckboxReturnStates[0];
                         Game.Options.Music = popupbox.CheckboxReturnStates[1];
@@ -147,7 +147,7 @@ namespace EtoFormsUI
                     {
                         var checkboxOptions = new List<bool> { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds, 
                             Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptions);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.ThroneRoomGraphics = popupbox.CheckboxReturnStates[0];
                         Game.Options.DiplomacyScreenGraphics = popupbox.CheckboxReturnStates[1];
@@ -163,7 +163,7 @@ namespace EtoFormsUI
                             Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored,
                             Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs,
                             Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction };
-                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptions);
+                        var popupbox = new Civ2dialogV2(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
                         popupbox.ShowModal(Parent);
                         Game.Options.WarnWhenCityGrowthHalted = popupbox.CheckboxReturnStates[0];
                         Game.Options.ShowCityImprovementsBuilt = popupbox.CheckboxReturnStates[1];

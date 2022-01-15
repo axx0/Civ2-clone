@@ -67,6 +67,12 @@ namespace EtoFormsUI.GameModes
                 {
                     Keys.B, CityActions.CreateCityBuild((name) =>
                     {
+                        var box = main.popupBoxList["NAMECITY"];
+                        if (box.Options is not null)
+                        {
+                            box.Text = box.Options;
+                            box.Options = null; 
+                        }
                         var cityNameDialog = new Civ2dialogV2(main, main.popupBoxList["NAMECITY"],
                             textBoxes: new List<TextBoxDefinition>
                             {
@@ -74,7 +80,8 @@ namespace EtoFormsUI.GameModes
                                 {
                                     index = 0,
                                     InitialValue = name,
-                                    Name = "CityName"
+                                    Name = "CityName",
+                                    Width = 225
                                 }
                             });
                         cityNameDialog.ShowModal(main);

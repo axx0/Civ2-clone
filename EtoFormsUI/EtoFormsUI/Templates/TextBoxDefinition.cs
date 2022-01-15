@@ -15,8 +15,18 @@ namespace EtoFormsUI
         public string InitialValue { get; set; }
 
         /// <summary>
+        /// Text to the left of textbox
+        /// </summary>
+        public string Text { get; set; }
+
+        /// <summary>
         /// Minimum numeric value
         /// </summary>
         public int? MinValue { get; set; }
+
+        /// <summary>
+        /// Width of textbox (note: approximate it as there is no logic to how this is set in the original)
+        /// </summary>
+        public int Width { get; set; } = 345;
     }
 }
