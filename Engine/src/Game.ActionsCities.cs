@@ -21,32 +21,6 @@ namespace Civ2engine
 
                 // Change shield production
                 city.ShieldsProgress += city.Production;
-                var maxUnitIndex = Game.Rules.UnitTypes.Length;
-                int cost;
-                // Units
-                if (city.ItemInProduction < maxUnitIndex)
-                {
-                    var unitType = Game.Rules.UnitTypes[city.ItemInProduction];
-                    cost = unitType.Cost * 10;
-                    if (city.ShieldsProgress >= cost)
-                    {
-                        city.ShieldsProgress = 0;
-                        Game.CreateUnit(unitType.Type, city.X, city.Y, false, true, false, false, city.Owner.Id, 0, 0, city.X, city.Y, CommodityType.Hides, OrderType.NoOrders, city, city.X, city.Y, 0, 0);
-                    }
-
-                }
-                // Improvements
-                else
-                {
-                    var improvementIndex = city.ItemInProduction - Game.Rules.UnitTypes.Length + 1;
-                    var improvement = Game.Rules.Improvements[improvementIndex];
-                    cost = improvement.Cost * 10;
-                    if (city.ShieldsProgress >= cost)
-                    {
-                        city.ShieldsProgress = 0;
-                        city.AddImprovement(improvement);
-                    }
-                }
 
                 // Change city size
                 if (city.FoodInStorage > city.MaxFoodInStorage)

@@ -217,42 +217,6 @@ namespace Civ2engine
             return unit;
         }
 
-        public Unit CreateUnit(UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
-                                    int movePointsLost, int hitPointsLost, int prevX, int prevY, CommodityType caravanCommodity, OrderType orders,
-                                    City homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
-        {
-            var validTile = CurrentMap.IsValidTileC2(x, y);
-
-            var civilization = AllCivilizations[civId];
-            Unit unit = new Unit
-            {
-                Id = civilization.Units.Count,
-                TypeDefinition = Rules.UnitTypes[(int)type],
-                Dead = dead || !validTile,
-                CurrentLocation = validTile ? CurrentMap.TileC2(x, y) : null,
-                Type = type,
-                X = x,
-                Y = y,
-                MovePointsLost = movePointsLost,
-                HitPointsLost = hitPointsLost,
-                FirstMove = firstMove,
-                GreyStarShield = greyStarShield,
-                Veteran = veteran,
-                Owner = civilization,
-                PrevXY = new int[] { prevX, prevY },
-                CaravanCommodity = caravanCommodity,
-                Order = orders,
-                HomeCity = homeCity,
-                GoToX = goToX,
-                GoToY = goToY,
-                LinkOtherUnitsOnTop = linkOtherUnitsOnTop,
-                LinkOtherUnitsUnder = linkOtherUnitsUnder
-            };
-
-            civilization.Units.Add(unit);
-            return unit;
-        }
-
         public void CreateCity (int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech, bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3, bool objectivex1, int owner, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction, int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded, CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons, int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens)
         {
             var tile = CurrentMap.TileC2(x, y);
