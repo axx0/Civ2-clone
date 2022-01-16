@@ -3,7 +3,7 @@ using Eto.Drawing;
 
 namespace EtoFormsUI
 {
-    public class RadiobuttonPanel : Civ2dialog
+    public class RadiobuttonPanel : Civ2customDialog
     {
         protected Civ2button[] Button;
         protected RadioButtonList RadioBtnList;

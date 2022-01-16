@@ -14,5 +14,6 @@ namespace Civ2engine.Advances
         public KnowledgeType KnowledgeCategory { get; internal set; }
         
         public int AdvanceGroup { get; internal set; }
+        public int Index { get; internal set; }
     }
 }

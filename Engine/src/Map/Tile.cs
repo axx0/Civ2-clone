@@ -9,18 +9,39 @@ using Civ2engine.Enums;
 
         namespace Civ2engine.Terrains
 {
-    public class Tile : ITerrain, IMapItem
+    public class Tile : IMapItem
     {
         private City _workedBy;
+        private Terrain _terrain;
         public int X { get; }
         public int Y { get; }
 
         public int Odd { get; }
-        public Terrain Terrain { get; internal set; }
+
+        public Terrain Terrain
+        {
+            get => _terrain;
+            internal set
+            {
+                if (_terrain == value) return;
+                
+                if(Special != -1 && Special < value.Specials.Length)
+                {
+                    EffectiveTerrain = value.Specials[Special];
+                }
+                else
+                {
+                    EffectiveTerrain = value;
+                }
+                _terrain = value;
+            }
+        }
+        
+        internal ITerrain EffectiveTerrain { get; private set; }
 
         public TerrainType Type => Terrain.Type;
 
-        public int special { get; } = -1;
+        public int Special { get; } = -1;
 
 
         // Get special resource type based on map seed & tile location
@@ -41,7 +62,7 @@ using Civ2engine.Enums;
             if ((a & 3) + 4 * (b & 3) != (c & 15)) return;
 
             var d = 1 << ((seed >> 4) & 3);
-            special = (d & a) == (d & b) ? 1 : 0;
+            Special = (d & a) == (d & b) ? 1 : 0;
         }
 
         public bool HasShield { get; }
@@ -57,15 +78,14 @@ using Civ2engine.Enums;
         }
 
         // From RULES.TXT
-        public string Name => Terrain.Name;
+        public string Name => EffectiveTerrain.Name;
 
-
-        public int MoveCost => Terrain.MoveCost;
-        public int Defense => (River ? Terrain.Defense + 1 : Terrain.Defense) / 2;
+        public int MoveCost => EffectiveTerrain.MoveCost;
+        public int Defense => (River ? EffectiveTerrain.Defense + 1 : EffectiveTerrain.Defense) / 2;
         
         public int GetFood(bool lowOrganisation, bool hasSupermarket)
         {
-            decimal food = Terrain.Food;
+            decimal food = EffectiveTerrain.Food;
             var hasCity = CityHere != null;
             if (Irrigation || hasCity)
             {
@@ -92,7 +112,7 @@ using Civ2engine.Enums;
         
         public int GetTrade(int organizationLevel, bool hasSuperhighways)
         {
-            decimal trade = Terrain.Trade;
+            decimal trade = EffectiveTerrain.Trade;
 
             var hasRoad = Road || Railroad || CityHere != null;
             if (hasRoad || River)
@@ -120,7 +140,13 @@ using Civ2engine.Enums;
 
         public int GetShields(bool lowOrganization)
         {
-            decimal shields = Terrain.Shields;
+            decimal shields = EffectiveTerrain.Shields;
+
+            if (HasShield && Type == TerrainType.Grassland)
+            {
+                shields += 1;
+            }
+            
             if (Mining)
             {
                 shields += Terrain.MiningBonus;
@@ -185,7 +211,7 @@ using Civ2engine.Enums;
         public int Island { get; set; }
         public string Hexvalue { get; set; }
         public Bitmap Graphic { get; set; }
-        public decimal Fertility { get; set; }
+        public decimal Fertility { get; set; } = -1;
         public bool[] Visibility { get; set; }
 
         public List<Unit> UnitsHere { get; } = new();
@@ -210,7 +236,7 @@ using Civ2engine.Enums;
             }
         }
 
-        public IUnit GetTopUnit(Func<Unit, bool> pred = null)
+        public Unit GetTopUnit(Func<Unit, bool> pred = null)
         {
             var units = pred != null ? UnitsHere.Where(pred) : UnitsHere;
             return (Terrain.Type == TerrainType.Ocean

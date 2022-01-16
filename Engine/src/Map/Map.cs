@@ -1,11 +1,19 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Terrains;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
     public class Map
     {
+        private readonly bool _flat;
+
+        public Map(bool flat)
+        {
+            _flat = flat;
+        }
         public int MapIndex { get; } = 0;
         public int XDim { get; internal set; }
         public int YDim { get; internal set; }
@@ -17,8 +25,9 @@ namespace Civ2engine
         public Tile[,] Tile { get; set; }
         public bool IsValidTileC2(int xC2, int yC2)
         {
-            var x = (((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2);
-            return -1 < x && x < XDim && -1 < yC2 && yC2 < YDim;
+            var maxX = 2 * XDim;
+            var x = (((xC2 + maxX) % maxX) - yC2 % 2);
+            return -1 < x && x < maxX && -1 < yC2 && yC2 < YDim;
         }
         public Tile TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns V
@@ -32,7 +41,9 @@ namespace Civ2engine
         public int Xpx => 4 * (_zoom + 8);    // Length of 1 map square in X
         public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
         public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
-        
+        public List<IslandDetails> Islands { get; set; }
+        public double ScaleFactor => XDim * YDim / 4000d;
+
         /// <summary>
         /// Generate first instance of terrain tiles by importing game data.
         /// </summary>
@@ -75,78 +86,39 @@ namespace Civ2engine
 
         public IEnumerable<Tile> CityRadius(Tile tile, bool nullForInvalid = false)
         {
-            var coords = new [] { (tile.X - tile.Odd) / 2, tile.Y };
             var odd = tile.Odd;
             var offsets = new List<int[]>
-                // {
-                //     new[] {0 + tile.Odd, -1},
-                //     new[] {0 + tile.Odd, 1},
-                //     new[] {1 + tile.Odd, -1},
-                //     new[] {1, 0},
-                //     new[] {1 + tile.Odd, 1},
-                //     new[] {1, 2},
-                //     new[] {1, -2},
-                //     new[] {0, -2},
-                //     new[] {0 + tile.Odd, -3},
-                //     new[] {0, 2},
-                //     new[] {0 + tile.Odd, 3},
-                //     new[] {-1, 2},
-                //     new[] {-1 + tile.Odd, 1},
-                //     new[] {-1, 0},
-                //     new[] {-1 + tile.Odd, -1},
-                //     new[] {-2 + tile.Odd, -1},
-                //     new[] {-2 + tile.Odd, 1},
-                //     new[] {-1, -2},
-                //     new[] {-1 + tile.Odd, -3},
-                //     new[] {-1 + tile.Odd, 3}
-                // };
-                {
-                    new[] {odd, -1},
-                    new[] {1, 0},
-                    new[] {odd, 1},
-                    new[] {0, 2},
-                    new[] {-1+odd, 1},
-                    new[] {-1, 0},
-                    new[] {-1+odd, -1},
-                    new[] {0, -2},
-                    new[] {1, -2},
-                    new[] {1, 2},
-                    new[] {-1, 2},
-                    new[] {-1, -2},
-                    new[] {odd, -3},
-                    new[] {1+odd, -1},
-                    new[] {1+odd, 1},
-                    new[] {0+odd, 3},
-                    new[] {-1+odd, 3},
-                    new[] {-2+odd, 1},
-                    new[] {-2 + odd, -1},
-                    new[] {-1+odd, -3}
-                };
-
-            yield return tile;
-            foreach (var offset in offsets)
             {
-                var x = coords[0] + offset[0];
-                var y = coords[1] + offset[1];
-                if (x < 0 || x >= XDim || y < 0 || y >= YDim)
-                {
-                    if (nullForInvalid)
-                    {
-                        yield return null;
-                    }
-                }
-                else
-                {
-                    yield return Tile[x, y];
-                }
-            }
+                new[] { 0, 0 },
+                new[] { odd, -1 },
+                new[] { 1, 0 },
+                new[] { odd, 1 },
+                new[] { 0, 2 },
+                new[] { -1 + odd, 1 },
+                new[] { -1, 0 },
+                new[] { -1 + odd, -1 },
+                new[] { 0, -2 },
+                new[] { 1, -2 },
+                new[] { 1, 2 },
+                new[] { -1, 2 },
+                new[] { -1, -2 },
+                new[] { odd, -3 },
+                new[] { 1 + odd, -1 },
+                new[] { 1 + odd, 1 },
+                new[] { 0 + odd, 3 },
+                new[] { -1 + odd, 3 },
+                new[] { -2 + odd, 1 },
+                new[] { -2 + odd, -1 },
+                new[] { -1 + odd, -3 }
+            };
+
+            return TilesAround(tile, offsets, nullForInvalid);
         }
 
 
         public IEnumerable<Tile> DirectNeighbours(Tile candidate)
         {
             var evenOdd = candidate.Odd;
-            var coords = new [] { (candidate.X - evenOdd) / 2, candidate.Y };
             var offsets = new List<int[]>
             {
                 new[] {0 + evenOdd, -1},
@@ -154,19 +126,12 @@ namespace Civ2engine
                 new[] {-1 + evenOdd, 1},
                 new[] {-1 + evenOdd, -1}
             };
-            foreach (var offset in offsets)
-            {
-                var x = coords[0] + offset[0];
-                var y = coords[1] + offset[1];
-                if (x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
-                yield return Tile[x, y];
-            }
+            return TilesAround(candidate, offsets);
         }
-        
+
         public IEnumerable<Tile> Neighbours(Tile candidate)
         {
             var odd = candidate.Odd;
-            var coords = new [] { (candidate.X - odd) / 2, candidate.Y };
             var offsets = new List<int[]>
             {
                 new[] {odd, -1},
@@ -178,31 +143,68 @@ namespace Civ2engine
                 new[] {-1+odd, -1},
                 new[] {0, -2},
             };
+            return TilesAround(candidate, offsets);
+        }
+
+        private IEnumerable<Tile> TilesAround(Tile centre, IEnumerable<int[]> offsets, bool nullForInvalid = false)
+        {
+            var coords = new [] { (centre.X - centre.Odd) / 2, centre.Y };
             foreach (var offset in offsets)
             {
                 var x = coords[0] + offset[0];
                 var y = coords[1] + offset[1];
-                if (x < 0 || x >= XDim || y < 0 || y >= YDim) continue;
+
+                if (y < 0 || y >= YDim)
+                {
+                    if (nullForInvalid)
+                    {
+                        yield return null;
+                    }
+                    continue;
+                }
+                if (x < 0 || x >= XDim)
+                {
+                    if (_flat)
+                    {
+                        if (nullForInvalid)
+                        {
+                            yield return null;
+                        }
+
+                        continue;
+                    }
+
+                    if (x < 0)
+                    {
+                        x += XDim;
+                    }
+                    else
+                    {
+                        x -= XDim;
+                    }
+                }
                 yield return Tile[x, y];
             }
         }
 
         public void SetAsStartingLocation(Tile tile, int ownerId)
         {
-            tile.Fertility = -2;
             tile.Visibility[ownerId] = true;
-            var tiles = new HashSet<Tile>();
-            foreach (var neighbour in Neighbours(tile))
-            {
-                neighbour.Fertility /= 2;
-            }
-
+            
             foreach (var radiusTile in CityRadius(tile))
             {
                 radiusTile.Visibility[ownerId] = true;
-                if(radiusTile.Fertility <= 0) continue;
-                radiusTile.Fertility /= 2;
             }
+            
+            this.AdjustFertilityForCity(tile);
+        }
+
+        public bool IsCurrentlyVisible(Tile tile)
+        {
+            return MapRevealed || tile.UnitsHere.Any(u=> u.Owner.Id == WhichCivsMapShown) ||
+                   Neighbours(tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == WhichCivsMapShown)) ||
+                   CityRadius(tile)
+                       .Any(t => t.CityHere != null && t.CityHere.Owner.Id == WhichCivsMapShown);
         }
     }
 }

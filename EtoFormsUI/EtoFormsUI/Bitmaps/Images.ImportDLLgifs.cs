@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Collections.Generic;
 using Civ2engine;
 using EtoFormsUIExtensionMethods;
 using Eto.Drawing;
@@ -15,17 +16,31 @@ namespace EtoFormsUI
                              CivilDisorderAncientWallpaper, CivilDisorderModernWallpaper, WeLoveKingAncientWallpaper, WeLoveKingModernWallpaper,
                              CityBuiltAncientWallpaper, CityBuiltModernWallpaper, MainScreenSymbol;
 
-        // From Intro.dll
-        public static Bitmap SinaiPic;
-
         // From cv.dll
         public static Bitmap[] CityViewLand, CityViewOcean, CityViewRiver, CityViewTiles, CityViewImprovements;
+
+        // offset/length pairs for images from DLLs
+        public static readonly Dictionary<string, (int, int)> DllPics = new()
+        {
+            { "sinaiPic",           (0x1E630, 0x9F78) },
+            { "stPeterburgPic",     (0x285A8, 0x15D04) },
+            { "mingGeneralPic",     (0x3E2AC, 0x1D183) },
+            { "ancientPersonsPic",  (0x5B430, 0x15D04) },
+            { "barbariansPic",      (0x71134, 0x13D5B) },
+            { "galleyWreckPic",     (0xB6A3C, 0xE77A) },
+            { "peoplePic1",         (0x84E90, 0x129CE) },
+            { "peoplePic2",         (0x97860, 0x139A0) },
+            { "templePic",          (0xAB200, 0xB839) },
+            { "islandPic",          (0xDA49C, 0x8980) },
+            { "desertPic",          (0xD0140, 0xA35A) },
+            { "snowPic",            (0xE2E1C, 0xA925) },
+            { "canyonPic",          (0xC51B8, 0xAF88) },
+        };
 
         //  Manually read GIFs from DLLs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)
         public static void ImportDLLimages()
         {
             ExtractTilesDLL();
-            ExtractIntroDLL();
             ExtractCvDLL();
         }
 
@@ -92,18 +107,6 @@ namespace EtoFormsUI
             CityBuiltModernWallpaper = ExtractBitmapFromDLL(bytes, "E34A4", "4A42");
             // (90) Main screen
             MainScreenSymbol = ExtractBitmapFromDLL(bytes, "F7454", "1389D");
-        }
-
-        /// <summary>
-        /// Extract bitmaps from Intro.dll
-        /// </summary>
-        private static void ExtractIntroDLL()
-        {
-            // Read all bytes in dll
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Intro.dll");
-
-            // (901) City status wallpaper
-            SinaiPic = ExtractBitmapFromDLL(bytes, "1E630", "9F78");
         }
 
         /// <summary>
@@ -244,13 +247,13 @@ namespace EtoFormsUI
             CityViewLand[2] = ExtractBitmapFromDLL(bytes, "364D40", "483D5");   // Asphalt road
             CityViewLand[3] = ExtractBitmapFromDLL(bytes, "3AD118", "48FFE");   // Highway
 
-            
+
         }
 
         /// <summary>
         /// Extract GIF image from DLL bytes
         /// </summary>
-        private static Bitmap ExtractBitmapFromDLL(byte[] byteArray, string GIFbyteOffset, string GIFbyteLength)
+        public static Bitmap ExtractBitmapFromDLL(byte[] byteArray, string GIFbyteOffset, string GIFbyteLength)
         {
             Bitmap returnImage;
 
@@ -261,12 +264,25 @@ namespace EtoFormsUI
             Array.Copy(byteArray, Convert.ToInt32(GIFbyteOffset, 16), newBytesRange, 0, Convert.ToInt32(GIFbyteLength, 16));
 
             // Convert GIF bytes into a bitmap
-            using (MemoryStream ms = new MemoryStream(newBytesRange))
+            using (var ms = new MemoryStream(newBytesRange))
             {
                 returnImage = new Bitmap(ms);
             }
 
             return returnImage;
+        }
+
+        public static Bitmap ExtractBitmap(byte[] byteArray, string name)
+        {
+            // Make empty byte array to hold GIF bytes
+            byte[] newBytesRange = new byte[DllPics[name].Item2];
+
+            // Copy GIF bytes in DLL byte array into empty array
+            Array.Copy(byteArray, DllPics[name].Item1, newBytesRange, 0, DllPics[name].Item2);
+
+            // Convert GIF bytes into a bitmap
+            using var ms = new MemoryStream(newBytesRange);
+            return new Bitmap(ms);
         }
     }
 }

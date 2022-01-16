@@ -21,7 +21,7 @@ namespace Civ2engine.Units
             {
                 if (value)
                 {
-                    CurrentLocation = null;
+                    _currentLocation?.UnitsHere.Remove(this);
                 }
                 _dead = value;
             }
@@ -36,7 +36,7 @@ namespace Civ2engine.Units
         
         public UnitDefinition TypeDefinition { get; set; }
 
-        public double AttackFactor(IUnit defendingUnit)
+        public double AttackFactor(Unit defendingUnit)
         {
             // Base attack factor from RULES
             double af = AttackBase;
@@ -50,7 +50,7 @@ namespace Civ2engine.Units
             return af;
         }
 
-        public int DefenseFactor(IUnit attackingUnit, City cityHere)
+        public int DefenseFactor(Unit attackingUnit, City cityHere)
         {
             //Carried units cannot be the defender
             if (InShip != null) return 0;
@@ -138,7 +138,7 @@ namespace Civ2engine.Units
 
         public int MovePointsLost { get; set; }
         public int HitpointsBase => TypeDefinition.Hitp;
-        public int HitPoints => HitpointsBase - HitPointsLost;
+        public int RemainingHitpoints => HitpointsBase - HitPointsLost;
         public int HitPointsLost { get; set; }
         public UnitType Type { get; set; }
         public OrderType Order { get; set; }
@@ -197,56 +197,9 @@ namespace Civ2engine.Units
             }
         }
 
-        public void BuildMines()
-        {
-            if (TypeDefinition.IsSettler && Map.Tile[X,Y].CanBeMined)
-            {
-                Order = OrderType.BuildMine;
-                Counter = 0;    //reset counter
-            }
-            else
-            {
-                //Warning!
-            }
-        }
-
-        public void Transform()
-        {
-            if (TypeDefinition.IsEngineer)
-            {
-                Order = OrderType.Transform;
-            }
-        }
-
         public void Sleep()
         {
             Order = OrderType.Sleep;
-        }
-
-        public void BuildRoad()
-        {
-            if (TypeDefinition.IsSettler && ((Map.Tile[X, Y].Road == false) || (Map.Tile[X, Y].Railroad == false)))
-            {
-                Order = OrderType.BuildRoad;
-                Counter = 0;    //reset counter
-            }
-            else
-            {
-                //Warning!
-            }
-        }
-
-        public void BuildCity()
-        {
-            if (TypeDefinition.IsSettler && (Map.Tile[X, Y].Type != TerrainType.Ocean))
-            {
-                //First invoke city name panel. If cancel is pressed, do nothing.
-                //Application.OpenForms.OfType<MapForm>().First().ShowCityNamePanel();
-            }
-            else
-            {
-                //Warning!
-            }
         }
 
         public bool IsInCity => CurrentLocation is {CityHere: { }};
@@ -264,6 +217,7 @@ namespace Civ2engine.Units
             get => _currentLocation;
             set
             {
+                if(_dead) return; //dead units can't move
                 if(_currentLocation == value) return;
                 _currentLocation?.UnitsHere.RemoveAll(u=> u== this);
                 if (value != null && !value.UnitsHere.Contains(this))
@@ -273,5 +227,12 @@ namespace Civ2engine.Units
                 _currentLocation = value;
             }
         }
+
+        public bool FreeSupport(bool isFundamental)
+        {
+            return AIrole is AIroleType.Diplomacy or AIroleType.Trade || (isFundamental && FreeSupportForFundamentalism);
+        }
+
+        public bool NeedsSupport { get; set; } = true;
     }
 }

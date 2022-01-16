@@ -7,27 +7,28 @@ namespace EtoFormsUI.Animations
     public class AttackAnimation : BaseAnimation
     {
         private readonly Sound _sounds;
-        private readonly Unit _unit;
+        private readonly string _combatSound;
 
-        public AttackAnimation(UnitEventArgs unitEventArgs, Sound sounds) : base(GetAnimationFrames.UnitAttack(unitEventArgs).ToArray(),6,7, 0.07, unitEventArgs.Unit.XY)
+        public AttackAnimation(CombatEventArgs unitEventArgs, Sound sounds) : base(
+            GetAnimationFrames.UnitAttack(unitEventArgs).ToArray(), 6, 7, 0.07, unitEventArgs.Location[0])
         {
             _sounds = sounds;
-            _unit = unitEventArgs.Unit;
+            _combatSound = unitEventArgs.Sound;
         }
 
         public override float GetXDrawOffset(int mapXpx, int startX)
         {
-            return mapXpx * (XY[0]  -  startX - 2);
+            return mapXpx * (Location.X  -  startX - 2);
         }
 
         public override int GetYDrawOffset(int mapYpx, int startY)
         {
-            return mapYpx * (XY[1] - startY - 3);
+            return mapYpx * (Location.Y - startY - 3);
         }
 
         public override void Initialize()
         {
-            _sounds.PlaySound(GameSounds.Attack, _unit.AttackSound);
+            _sounds.PlaySound(GameSounds.Attack, _combatSound);
         }
     }
 }

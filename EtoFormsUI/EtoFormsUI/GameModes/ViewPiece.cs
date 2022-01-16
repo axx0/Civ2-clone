@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
+using Civ2engine.Terrains;
 using Eto.Forms;
 using EtoFormsUI.Animations;
 
@@ -14,15 +15,15 @@ namespace EtoFormsUI.GameModes
         {
             if (previous is MovingPieces)
             {
-                this.ActiveXY = previous.ActiveXY;
+                this.ActiveTile = previous.ActiveTile;
             }
 
-            if (ActiveXY == null)
+            if (ActiveTile == null)
             {
                 var firstCity = game.GetActiveCiv.Cities.FirstOrDefault();
                 if (firstCity != null)
                 {
-                    ActiveXY = new[] {firstCity.X, firstCity.Y};
+                    ActiveTile = firstCity.Location;
                 }
             }
             return true;
@@ -33,19 +34,17 @@ namespace EtoFormsUI.GameModes
             {Keys.Enter, Game.Instance.ChoseNextCiv}
         };
 
-        public bool MapClicked(int[] clickedXy, MapPanel mapPanel, Main main, MouseButtons eButtons)
+        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, MouseButtons eButtons)
         {
             
-            ActiveXY = clickedXy;
+            ActiveTile = clickedXy;
 
             if (eButtons == MouseButtons.Primary)
             {
 
-                var city = Game.Instance.GetCities.FirstOrDefault(c =>
-                    c.X == clickedXy[0] && c.Y == clickedXy[1]);
-                if (city != null)
+                if (ActiveTile.CityHere != null)
                 {
-                    mapPanel.ShowCityWindow(city);
+                    mapPanel.ShowCityWindow(ActiveTile.CityHere);
                 }
                 else
                 {
@@ -72,12 +71,12 @@ namespace EtoFormsUI.GameModes
 
         public IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation)
         {
-            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, null, ActiveXY);
-            if (animation.Unit != null) return new WaitingAnimation(game, null, ActiveXY);
+            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, null, ActiveTile);
+            if (animation.Unit != null) return new WaitingAnimation(game, null, ActiveTile);
             animation.Reset();
             return animation;
         }
 
-        public int[] ActiveXY { get; set; }
+        public Tile ActiveTile { get; set; }
     }
 }

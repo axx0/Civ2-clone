@@ -85,7 +85,7 @@ namespace Civ2engine
                         }
                         else if (line.StartsWith("^"))
                         {
-                            (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Smaller);
+                            (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.LeftOwnLine);
                             (popupBox.Text ??= new List<string>()).Add(line[1..]);
                         }
                         else

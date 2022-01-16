@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
@@ -6,6 +7,7 @@ using Civ2engine.Improvements;
 using Civ2engine.Units;
 using Civ2engine.Terrains;
 using System.Diagnostics;
+using Civ2engine.Production;
 
 namespace Civ2engine
 {
@@ -23,15 +25,14 @@ namespace Civ2engine
         public bool Objectivex3 { get; set; }
         public bool Objectivex1 { get; set; }
         public Civilization Owner { get; set; }
-        public int OwnerId => Game.AllCivilizations.IndexOf(Owner);
+        public int OwnerId => Owner.Id;
         public int Size { get; set; }
         public Civilization WhoBuiltIt { get; set; }
         public int FoodInStorage { get; set; }
-        public int MaxFoodInStorage => 10 * (Size + 1);
         public int NetTrade { get; set; }
         public string Name { get; set; }
         public int NoOfSpecialistsx4 { get; set; }
-        public int ItemInProduction { get; set; }
+        public ProductionOrder ItemInProduction { get; set; }
         public int ActiveTradeRoutes { get; set; }
         public CommodityType[] CommoditySupplied { get; set; }
         public CommodityType[] CommodityDemanded { get; set; }
@@ -54,78 +55,19 @@ namespace Civ2engine
             }
         }
 
-        private readonly List<Improvement> _improvements = new List<Improvement>();
-        public Improvement[] Improvements => _improvements.OrderBy(i => i.Id).ToArray();
-        public void AddImprovement(Improvement improvement) => _improvements.Add(improvement);
-        public bool ImprovementExists(ImprovementType improvement) => _improvements.Exists(i => i.Type == improvement);
+        internal readonly SortedList<ImprovementType,Improvement> _improvements = new();
+        public IReadOnlyList<Improvement> Improvements => _improvements.Values.ToArray();
         public List<Unit> UnitsInCity => Location.UnitsHere;
         public List<Unit> SupportedUnits => Owner.Units.Where(unit => unit.HomeCity == this).ToList();
         public bool AnyUnitsPresent() => Location.UnitsHere.Count > 0;
 
-        // Determine which units, supported by this city, cost shields
-        public bool[] SupportedUnitsWhichCostShields()
-        {
-            List<Unit> supportedUnits = SupportedUnits;
-            bool[] costShields = new bool[SupportedUnits.Count];
-            // First determine how many units have 0 costs due to different goverernment types
-            var noCost = Game.AllCivilizations[OwnerId].Government switch
-            {
-                GovernmentType.Anarchy =>
-                    Math.Min(supportedUnits.Count, Size) // Only units above city size cost 1 shield
-                ,
-                GovernmentType.Despotism =>
-                    Math.Min(supportedUnits.Count, Size) // Only units above city size cost 1 shield
-                ,
-                GovernmentType.Communism => Math.Min(supportedUnits.Count, Game.Rules.Cosmic.CommunismPaysSupport) // First 3 units have no shield cost
-                ,
-                GovernmentType.Monarchy => Math.Min(supportedUnits.Count, Game.Rules.Cosmic.MonarchyPaysSupport) // First 3 units have no shield cost
-                ,
-                GovernmentType.Fundamentalism =>
-                    Math.Min(supportedUnits.Count, Game.Rules.Cosmic.FundamentalismPaysSupport) // First 10 units have no shield cost
-                ,
-                GovernmentType.Republic => 0 // Each unit costs 1 shield per turn
-                ,
-                GovernmentType.Democracy => 0 // Each unit costs 1 shield per turn
-                ,
-                _ => 0
-            };
-            // Now determine bools of units that require upkeep
-            for (int i = 0; i < supportedUnits.Count; i++)
-            {
-                if (supportedUnits[i].Type is UnitType.Diplomat or UnitType.Caravan or UnitType.Fanatics or UnitType.Spy or UnitType.Freight) // Some units never require upkeep
-                {
-                    costShields[i] = false;
-                }
-                else
-                {
-                    costShields[i] = noCost <= 0;
-                    noCost--;
-                }
-            }
-
-            return costShields;
-        }
-
-        public int FoodProduction
-        {
-            get
-            {
-                var hasSupermarket = ImprovementExists(ImprovementType.Supermarket);
-                return WorkedTiles.Select(t => t.GetFood(OrganizationLevel == 0, hasSupermarket)).Sum();
-                
-            }
-        }
+        public int FoodProduction { get; set; }
 
         public int Food => Math.Min(FoodProduction, FoodConsumption);
 
-        private int FoodConsumption =>
-            Size * Game.Rules.Cosmic.FoodEatenPerTurn +
-            SupportedUnits.Count(u => u.TypeDefinition.IsSettler || u.TypeDefinition.IsEngineer) *
-            (Owner.Government <= GovernmentType.Monarchy
-                ? Game.Rules.Cosmic.SettlersEatTillMonarchy
-                : Game.Rules.Cosmic.SettlersEatFromCommunism); 
-
-        public int SurplusHunger => FoodProduction - FoodConsumption;
+        public int FoodConsumption { get; set; }
+            
+        public int SurplusHunger { get; set; }
 
         public int OrganizationLevel
         {
@@ -146,54 +88,24 @@ namespace Civ2engine
             }
         }
 
-        private int _trade;
-        public int Trade
-        {
-            get
-            {
-                var hasSuperhighways = ImprovementExists(ImprovementType.Superhighways);
-                return WorkedTiles.Select(t => t.GetTrade(OrganizationLevel, hasSuperhighways)).Sum();
-            }
-        }
+        public int Trade { get; set; }
+        public int Corruption { get; set; }
 
-        private int _corruption;
-        public int Corruption
-        {
-            get
-            {
-                _corruption = 0;
-                if (!Improvements.Any(impr => impr.Type == ImprovementType.Palace)) _corruption++;  // If not capital
-                return _corruption;
-            }
-        }
-
-        public int Tax => Trade * Owner.TaxRate / 100;
-        public int Lux => Trade - Science - Tax;
+        /// <summary>
+        /// Adjusted formula as it should always round excess into tax
+        /// </summary>
+        public int Tax => Trade - Science - Lux;
+        public int Lux => Trade * Owner.LuxRate / 100;
         public int Science => Trade * Owner.ScienceRate / 100;
 
         // PRODUCTION
-        public int TotalShieldProduction
-        {
-            get
-            {
-                var lowOrganisation = Owner.Government <= GovernmentType.Despotism;
-                return WorkedTiles.Select(t => t.GetShields(lowOrganisation)).Sum();
-            }
-        }
-
-        public int Production => TotalShieldProduction - Support;
-        public int Support => SupportedUnitsWhichCostShields().Count(c => c);   // Count true occurances
+        public int TotalProduction { get; set; }
+        public int Production { get; set; }
         public int ShieldsProgress { get; set; }
-
-        private int _waste;
-        public int Waste
-        {
-            get
-            {
-                _waste = 1;
-                return _waste;
-            }
-        }
+        
+        public int Support { get; set; }
+        public int Waste { get; set; }
+        
 
         private PeopleType[] _people;
         public PeopleType[] People

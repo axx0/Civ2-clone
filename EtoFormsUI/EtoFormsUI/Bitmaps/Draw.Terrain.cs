@@ -17,7 +17,7 @@ namespace EtoFormsUI
             g.DrawImage(_tilePic, dest);
         }
 
-        public static Bitmap MakeTileGraphic(ITerrain tile, int arrayCol, int row, bool flatEarth, TerrainSet terrainSet)
+        public static Bitmap MakeTileGraphic(Tile tile, int arrayCol, int row, bool flatEarth, TerrainSet terrainSet)
         {
             // EVERYTHING HERE IS IN CIV2-COORDS AND NOT IN REGULAR COORDS!!!
 
@@ -189,10 +189,10 @@ namespace EtoFormsUI
                 {
                     g.DrawImage(terrainSet.GrasslandShield, 0, 0);
                 }
-            }else if (tile.special != -1)
+            }else if (tile.Special != -1)
             {
                 // Draw special resources if they exist
-                g.DrawImage(terrainSet.Specials[tile.special][(int) tile.Type], 0, 0);
+                g.DrawImage(terrainSet.Specials[tile.Special][(int) tile.Type], 0, 0);
             }
 
 

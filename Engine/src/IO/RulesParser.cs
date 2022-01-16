@@ -296,12 +296,12 @@ namespace Civ2engine.IO
                     Firepwr = int.Parse(text[8].Replace("f", string.Empty)),
                     Cost = int.Parse(text[9]),
                     Hold = int.Parse(text[10]),
-                    AIrole = int.Parse(text[11]),
+                    AIrole = (AIroleType)int.Parse(text[11]),
                     Prereq = Rules.AdvanceMappings[text[12]],
                     Flags = text[13],
                     AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
-                unit.IsSettler = unit.AIrole == 5;
+                unit.IsSettler = unit.AIrole == AIroleType.Settle;
                 
                 if (!unit.IsSettler) return unit;
                 
@@ -402,7 +402,7 @@ namespace Civ2engine.IO
             }
         }
         
-        int individualMoveMultiplier(int multiplier, int commonMultiplier)
+        private static int IndividualMoveMultiplier(int multiplier, int commonMultiplier)
         {
             return multiplier > 0 ? commonMultiplier / multiplier : 0;
         }
@@ -414,13 +414,13 @@ namespace Civ2engine.IO
 
             var commonMultiplier = multipliers.Aggregate(1, Utils.LowestCommonMultiple);
 
-            Rules.Cosmic.RoadMovement = individualMoveMultiplier(multipliers[0], commonMultiplier);
-            Rules.Cosmic.RiverMovement = individualMoveMultiplier(multipliers[1], commonMultiplier);
+            Rules.Cosmic.RoadMovement = IndividualMoveMultiplier(multipliers[0], commonMultiplier);
+            Rules.Cosmic.RiverMovement = IndividualMoveMultiplier(multipliers[1], commonMultiplier);
             Rules.Cosmic.AlpineMovement = multipliers.Count > 2
-                ? individualMoveMultiplier(multipliers[2], commonMultiplier)
+                ? IndividualMoveMultiplier(multipliers[2], commonMultiplier)
                 : Rules.Cosmic.RoadMovement;
             Rules.Cosmic.RailroadMovement =
-                multipliers.Count > 3 ? individualMoveMultiplier(multipliers[3], commonMultiplier) : 0;
+                multipliers.Count > 3 ? IndividualMoveMultiplier(multipliers[3], commonMultiplier) : 0;
 
             if (Rules.Cosmic.MovementMultiplier == commonMultiplier) return;
 
@@ -446,11 +446,12 @@ namespace Civ2engine.IO
                 Rules.AdvanceMappings.Add(parts[1].Split(" ", 2, StringSplitOptions.TrimEntries )[0], i);
             }
 
-            Rules.Advances = techs.Select(line =>
+            Rules.Advances = techs.Select((line, index) =>
             {
                 var text = line.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                 return new Advance
                 {
+                    Index = index,
                     Name = text[0],
                     AIvalue = int.Parse(text[1]),
                     Modifier = int.Parse(text[2]),

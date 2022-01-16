@@ -8,7 +8,7 @@ using Civ2engine.Enums;
 
 namespace EtoFormsUI
 {
-    public class SelectUnitDialog : Civ2dialog
+    public class SelectUnitDialog : Civ2customDialog
     {
         public int SelectedIndex;
         private readonly RadioButtonList radioBtnList;

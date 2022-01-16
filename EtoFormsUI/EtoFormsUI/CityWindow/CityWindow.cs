@@ -295,7 +295,7 @@ namespace EtoFormsUI
             int count = 0;
             int row, col;
             int zoom = 4 * _cityZoom - 3;
-            foreach (IUnit unit in _thisCity.SupportedUnits)
+            foreach (var unit in _thisCity.SupportedUnits)
             {
                 col = count % 4;
                 row = count / 4;
@@ -315,7 +315,7 @@ namespace EtoFormsUI
                         count = 0;
                         zoom = 4 * _cityZoom - 2;
                         font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
-                        foreach (IUnit unit in _thisCity.UnitsInCity)
+                        foreach (var unit in _thisCity.UnitsInCity)
                         {
                             col = count % 5;
                             row = count / 5;
@@ -342,7 +342,7 @@ namespace EtoFormsUI
                         if (_thisCity.TradeRoutePartnerCity != null)
                         {
                             Draw.Text(e.Graphics,
-                                $"{Game.GetCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
+                                $"{Game.AllCities[_thisCity.TradeRoutePartnerCity[0]].Name} {_thisCity.CommodityInRoute[0]}: +1",
                                 font, Color.FromArgb(227, 83, 15),
                                 new Point(11 + 203.ZoomScale(4 * _cityZoom),
                                     PaddingTop + 379.ZoomScale(4 * _cityZoom)), false, false,
@@ -371,7 +371,7 @@ namespace EtoFormsUI
                             }
                         }
                         // Mark supported units (omit those in the city)
-                        foreach(IUnit unit in _thisCity.SupportedUnits.Where(u => u.X != _thisCity.X && u.Y != _thisCity.Y))
+                        foreach(Unit unit in _thisCity.SupportedUnits.Where(u => u.X != _thisCity.X && u.Y != _thisCity.Y))
                             e.Graphics.FillRectangle(Color.FromArgb(159, 159, 159), _drawingOffsetX + sqW * unit.Xreal, _drawingOffsetY + sqH * unit.Y, sqH, sqH);
                         // Text
                         Draw.Text(e.Graphics, "Support Map", font, Color.FromArgb(223, 187, 63), new Point(310 * (2 + _cityZoom) / 2 + 11, 226 * (2 + _cityZoom) / 2 + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
@@ -388,12 +388,12 @@ namespace EtoFormsUI
             }
 
             // CITY IMPROVEMENTS LIST
-            _improvementsBar.Maximum = _thisCity.Improvements.Length + 8;
+            _improvementsBar.Maximum = _thisCity.Improvements.Count + 8;
             int starting = _improvementsBar.Value;   // Starting improvement to draw (changes with slider)
             font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
             for (int i = 0; i < 9; i++)
             {
-                if ((i + starting) >= _thisCity.Improvements.Length) break;  // Break if no of improvements+wonders
+                if ((i + starting) >= _thisCity.Improvements.Count) break;  // Break if no of improvements+wonders
 
                 // Draw improvements
                 zoom = 2 * _cityZoom - 4;
@@ -444,7 +444,7 @@ namespace EtoFormsUI
 
         private void NextCityButton_Click(object sender, EventArgs e)
         {
-            _thisCity = Game.GetCities[1];  // TODO: search only in your civ's cities
+            _thisCity = Game.AllCities[1];  // TODO: search only in your civ's cities
             Invalidate();
             //DrawPanel.Invalidate();
         }

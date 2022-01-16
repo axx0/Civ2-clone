@@ -1,6 +1,6 @@
 namespace Civ2engine
 {
-    internal interface IMapItem
+    public interface IMapItem
     {
         int X { get; }
         int Y { get; }

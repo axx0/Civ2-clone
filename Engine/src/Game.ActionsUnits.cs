@@ -54,7 +54,7 @@ namespace Civ2engine
             // End turn if no units awaiting orders
             if (nextUnit == null && !startOfTurn)
             {
-                if (Options.AlwaysWaitAtEndOfTurn && _activeCiv == _playerCiv)
+                if (Options.AlwaysWaitAtEndOfTurn && _activeCiv.PlayerType != PlayerType.AI)
                 {
                     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.WaitAtEndOfTurn));
                 }
@@ -67,8 +67,10 @@ namespace Civ2engine
             else
             {
                 _activeUnit = nextUnit;
-                
-                OnUnitEvent?.Invoke(null, new UnitEventArgs(UnitEventType.StatusUpdate));
+                if (_activeUnit != null)
+                {
+                    OnUnitEvent?.Invoke(null, new ActivationEventArgs(_activeUnit));
+                }
             }
         }
     }
