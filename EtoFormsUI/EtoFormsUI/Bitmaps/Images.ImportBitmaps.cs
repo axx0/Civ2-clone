@@ -87,10 +87,10 @@ namespace EtoFormsUI
                                 transparent.A = 0;
                                 PeopleLshadow[col, row].SetPixel(x, y, transparent);
                             }
-                                
+
                         }
                     }
-                    PeopleL[col, row].ReplaceColors(transparentPink, Colors.Transparent);
+                    PeopleL[col, row].SetTransparent(new Color[] { transparentPink });
                 }
             }
 
@@ -178,47 +178,44 @@ namespace EtoFormsUI
             }
 
             SellIcon = icons.Clone(new Rectangle(16, 320, 14, 14));
-            SellIcon.ReplaceColors(transparentLightPink, Colors.Transparent);
+            SellIcon.SetTransparent(new Color[] { transparentLightPink });
 
             ViewPiece = icons.Clone(new Rectangle(199, 256, 64, 32));
-            ViewPiece.ReplaceColors(transparentLightPink, Colors.Transparent);
-            ViewPiece.ReplaceColors(transparentPink, Colors.Transparent);
+            ViewPiece.SetTransparent(new Color[] { transparentLightPink, transparentPink });
 
             GridLines = icons.Clone(new Rectangle(183, 430, 64, 32));
-            GridLines.ReplaceColors(transparentLightPink, Colors.Transparent);
-            GridLines.ReplaceColors(transparentPink, Colors.Transparent);
+            GridLines.SetTransparent(new Color[] { transparentLightPink, transparentPink });
 
             GridLinesVisible = icons.Clone(new Rectangle(248, 430, 64, 32));
-            GridLinesVisible.ReplaceColors(transparentLightPink, Colors.Transparent);
-            GridLinesVisible.ReplaceColors(transparentPink, Colors.Transparent);
+            GridLinesVisible.SetTransparent(new Color[] { transparentLightPink, transparentPink });
 
             // Big icons in city resources
             CityHungerBig = icons.Clone(new Rectangle(1, 290, 14, 14));
-            CityHungerBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityHungerBig.SetTransparent(new Color[] { transparentLightPink });
             CityShortageBig = icons.Clone(new Rectangle(16, 290, 14, 14));
-            CityShortageBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityShortageBig.SetTransparent(new Color[] { transparentLightPink });
             CityCorruptBig = icons.Clone(new Rectangle(31, 290, 14, 14));
-            CityCorruptBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityCorruptBig.SetTransparent(new Color[] { transparentLightPink });
             CityFoodBig = icons.Clone(new Rectangle(1, 305, 14, 14));
-            CityFoodBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityFoodBig.SetTransparent(new Color[] { transparentLightPink });
             CitySupportBig = icons.Clone(new Rectangle(16, 305, 14, 14));
-            CitySupportBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CitySupportBig.SetTransparent(new Color[] { transparentLightPink });
             CityTradeBig = icons.Clone(new Rectangle(31, 305, 14, 14));
-            CityTradeBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityTradeBig.SetTransparent(new Color[] { transparentLightPink });
             CityLuxBig = icons.Clone(new Rectangle(1, 320, 14, 14));
-            CityLuxBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityLuxBig.SetTransparent(new Color[] { transparentLightPink });
             CityTaxBig = icons.Clone(new Rectangle(16, 320, 14, 14));
-            CityTaxBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityTaxBig.SetTransparent(new Color[] { transparentLightPink });
             CitySciBig = icons.Clone(new Rectangle(31, 320, 14, 14));
-            CitySciBig.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CitySciBig.SetTransparent(new Color[] { transparentLightPink });
 
             // Small icons in city resources
             CityFoodSmall = icons.Clone(new Rectangle(49, 334, 10, 10));
-            CityFoodSmall.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityFoodSmall.SetTransparent(new Color[] { transparentLightPink });
             CitySupportSmall = icons.Clone(new Rectangle(60, 334, 10, 10));
-            CitySupportSmall.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CitySupportSmall.SetTransparent(new Color[] { transparentLightPink });
             CityTradeSmall = icons.Clone(new Rectangle(71, 334, 10, 10));
-            CityTradeSmall.ReplaceColors(transparentLightPink, Colors.Transparent);
+            CityTradeSmall.SetTransparent(new Color[] { transparentLightPink });
 
             // Wallpaper icons
             //PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
@@ -226,9 +223,9 @@ namespace EtoFormsUI
 
             // Icon for next/previous city (black arrow)
             NextCity = icons.Clone(new Rectangle(227, 389, 18, 24));
-            NextCity.ReplaceColors(transparentLightPink, Colors.Transparent);
+            NextCity.SetTransparent(new Color[] { transparentLightPink });
             PrevCity = icons.Clone(new Rectangle(246, 389, 18, 24));
-            PrevCity.ReplaceColors(transparentLightPink, Colors.Transparent);
+            PrevCity.SetTransparent(new Color[] { transparentLightPink });
             //NextCityLarge = ModifyImage.Resize(NextCity, 27, 36);    //50% larger
             NextCityLarge = NextCity;
             //PrevCityLarge = ModifyImage.Resize(PrevCity, 27, 36);    //50% larger
@@ -244,7 +241,7 @@ namespace EtoFormsUI
             for (int i = 0; i < 8; i++)
             {
                 BattleAnim[i] = icons.Clone(new Rectangle(1  + 33 * i, 356, 32, 32));
-                BattleAnim[i].ReplaceColors(transparentLightPink, Colors.Transparent);
+                BattleAnim[i].SetTransparent(new Color[] { transparentLightPink });
             }
 
             icons.Dispose();

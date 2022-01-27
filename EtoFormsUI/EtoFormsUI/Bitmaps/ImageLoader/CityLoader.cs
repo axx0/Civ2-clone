@@ -71,9 +71,8 @@ namespace EtoFormsUI.ImageLoader
                 width = i;
                 break;
             }
-            
-            citiesImage.ReplaceColors(firstTransparent, Colors.Transparent);
-            citiesImage.ReplaceColors(secondTransparent, Colors.Transparent);
+
+            citiesImage.SetTransparent(new Color[] { firstTransparent, secondTransparent });
 
             for (var i = firstRow; i < citiesImage.Height - firstRow; i++)
             {

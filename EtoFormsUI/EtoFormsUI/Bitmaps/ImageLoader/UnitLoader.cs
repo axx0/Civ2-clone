@@ -53,8 +53,7 @@ namespace EtoFormsUI.ImageLoader
 
             MakeSheilds(unitsImage, width, borderColour, transparentGray);
 
-            unitsImage.ReplaceColors(transparentGray, Colors.Transparent);
-            unitsImage.ReplaceColors(transparentPink, Colors.Transparent);
+            unitsImage.SetTransparent(new Color[] { transparentGray, transparentPink });
 
             for (var row = 0; row < unitsImage.Height - height; row += height)
             {
@@ -122,7 +121,7 @@ namespace EtoFormsUI.ImageLoader
 
             var unitShield = unitsImage.Clone(new Rectangle(lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1,
                 1, shieldWidth - 1, shieldHeight - 1));
-            unitShield.ReplaceColors(transparentGray, Colors.Transparent);
+            unitShield.SetTransparent(new Color[] { transparentGray });
             var firstColour = unitShield.GetPixel(3, 3);
 
             Bitmap MakeShield(Color colour)

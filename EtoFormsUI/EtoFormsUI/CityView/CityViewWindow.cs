@@ -37,13 +37,13 @@ namespace EtoFormsUI
             baseTile = Images.ExtractBitmap(bytes, background);
             improvementsTiles = Images.ExtractBitmap(bytes, "cityviewImprovements");
             improvementsTiles = Images.CreateNonIndexedImage(improvementsTiles);
-            improvementsTiles.SetAlphaZero(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
+            improvementsTiles.SetTransparent(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
             wondersTiles = Images.ExtractBitmap(bytes, "cityviewWonders");
             wondersTiles = Images.CreateNonIndexedImage(wondersTiles);
-            wondersTiles.SetAlphaZero(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
+            wondersTiles.SetTransparent(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
             alternTiles = Images.ExtractBitmap(bytes, "cityviewAlternative");
             alternTiles = Images.CreateNonIndexedImage(alternTiles);
-            alternTiles.SetAlphaZero(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
+            alternTiles.SetTransparent(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
 
             // Define improvements in order in which they are drawn (left to right, in consequtive rows)
             improvements = new ()

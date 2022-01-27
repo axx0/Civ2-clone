@@ -35,10 +35,8 @@ namespace EtoFormsUI.ImageLoader
             var transparentPink = Color.FromArgb(255, 0, 255); // Define transparent back color (pink)
             var transparentCyan = Color.FromArgb(0, 255, 255); // Define transparent back color (cyan)
 
-            tileData.ReplaceColors(transparentGray, Colors.Transparent);
-            tileData.ReplaceColors(transparentPink, Colors.Transparent);
-            overlayData.ReplaceColors(transparentGray, Colors.Transparent);
-            overlayData.ReplaceColors(transparentPink, Colors.Transparent);
+            tileData.SetTransparent(new Color[] { transparentGray, transparentPink });
+            overlayData.SetTransparent(new Color[] { transparentGray, transparentPink });
 
             terrain.BaseTiles = Enumerable.Range(0, 11)
                 .Select(i => tileData.Clone(new Rectangle(1, 1 + (33 * i), 64, 32))).ToArray();
