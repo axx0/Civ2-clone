@@ -10,6 +10,7 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using EtoFormsUI.GameModes;
+using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI
 {
@@ -42,7 +43,6 @@ namespace EtoFormsUI
         internal Dictionary<string, PopupBox> popupBoxList;
         public Sound Sounds;
         private IGameMode _currentGameMode;
-        public static event EventHandler<PopupboxEventArgs> OnPopupboxEvent;
         public static event EventHandler<MapEventArgs> OnMapEvent;
         
         public Main()
@@ -54,7 +54,6 @@ namespace EtoFormsUI
             };
             this.Shown += (_, _) => MainMenu();
             this.KeyDown += KeyPressedEvent;
-            Main.OnPopupboxEvent += PopupboxEvent;
             LoadInitialAssets();
 
             Title = "Civilization II Multiplayer Gold";
@@ -66,17 +65,58 @@ namespace EtoFormsUI
             }
 
             layout = new PixelLayout();
+
             var image = new ImageView { Image = Images.MainScreenSymbol };
             layout.Add(image, (int)Screen.PrimaryScreen.Bounds.Width / 2 - Images.MainScreenSymbol.Width / 2, 
                               (int)Screen.PrimaryScreen.Bounds.Height / 2 - Images.MainScreenSymbol.Height / 2);
 
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
-            GameOptionsCommand.Executed += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("GAMEOPTIONS", new List<string> { "Patch xxx" }));    // TODO: Get patch version
+            GameOptionsCommand.Executed += (_, _) =>
+            {
+                var optionsDialog = new Civ2dialog(this, popupBoxList["GAMEOPTIONS"], new List<string> { "Patch xxx" }, checkboxOptionState: new List<bool> { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn, Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp, Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen });
+                optionsDialog.ShowModal(this);
+                Game.Options.SoundEffects = optionsDialog.CheckboxReturnStates[0];
+                Game.Options.Music = optionsDialog.CheckboxReturnStates[1];
+                Game.Options.AlwaysWaitAtEndOfTurn = optionsDialog.CheckboxReturnStates[2];
+                Game.Options.AutosaveEachTurn = optionsDialog.CheckboxReturnStates[3];
+                Game.Options.ShowEnemyMoves = optionsDialog.CheckboxReturnStates[4];
+                Game.Options.NoPauseAfterEnemyMoves = optionsDialog.CheckboxReturnStates[5];
+                Game.Options.FastPieceSlide = optionsDialog.CheckboxReturnStates[6];
+                Game.Options.InstantAdvice = optionsDialog.CheckboxReturnStates[7];
+                Game.Options.TutorialHelp = optionsDialog.CheckboxReturnStates[8];
+                Game.Options.MoveUnitsWithoutMouse = optionsDialog.CheckboxReturnStates[9];
+                Game.Options.EnterClosestCityScreen = optionsDialog.CheckboxReturnStates[10];
+            };
             var GraphicOptionsCommand = new Command { MenuText = "Graphic Options", Shortcut = Keys.Control | Keys.P };
-            GraphicOptionsCommand.Executed += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("GRAPHICOPTIONS"));
+            GraphicOptionsCommand.Executed += (_, _) =>
+            {
+                var optionsDialog = new Civ2dialog(this, popupBoxList["GRAPHICOPTIONS"], checkboxOptionState: new List<bool> { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds, Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies });
+                optionsDialog.ShowModal(this);
+                Game.Options.ThroneRoomGraphics = optionsDialog.CheckboxReturnStates[0];
+                Game.Options.DiplomacyScreenGraphics = optionsDialog.CheckboxReturnStates[1];
+                Game.Options.AnimatedHeralds = optionsDialog.CheckboxReturnStates[2];
+                Game.Options.CivilopediaForAdvances = optionsDialog.CheckboxReturnStates[3];
+                Game.Options.HighCouncil = optionsDialog.CheckboxReturnStates[4];
+                Game.Options.WonderMovies = optionsDialog.CheckboxReturnStates[5];
+            };
             var CityReportOptionsCommand = new Command { MenuText = "City Report Options", Shortcut = Keys.Control | Keys.E };
-            CityReportOptionsCommand.Executed += (sender, e) => OnPopupboxEvent?.Invoke(null, new PopupboxEventArgs("MESSAGEOPTIONS"));
+            CityReportOptionsCommand.Executed += (_, _) =>
+            {
+                var optionsDialog = new Civ2dialog(this, popupBoxList["MESSAGEOPTIONS"], checkboxOptionState: new List<bool> { Game.Options.WarnWhenCityGrowthHalted, Game.Options.ShowCityImprovementsBuilt, Game.Options.ShowNonCombatUnitsBuilt, Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored, Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs, Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction });
+                optionsDialog.ShowModal(this);
+                Game.Options.WarnWhenCityGrowthHalted = optionsDialog.CheckboxReturnStates[0];
+                Game.Options.ShowCityImprovementsBuilt = optionsDialog.CheckboxReturnStates[1];
+                Game.Options.ShowNonCombatUnitsBuilt = optionsDialog.CheckboxReturnStates[2];
+                Game.Options.ShowInvalidBuildInstructions = optionsDialog.CheckboxReturnStates[3];
+                Game.Options.AnnounceCitiesInDisorder = optionsDialog.CheckboxReturnStates[4];
+                Game.Options.AnnounceOrderRestored = optionsDialog.CheckboxReturnStates[5];
+                Game.Options.AnnounceWeLoveKingDay = optionsDialog.CheckboxReturnStates[6];
+                Game.Options.WarnWhenFoodDangerouslyLow = optionsDialog.CheckboxReturnStates[7];
+                Game.Options.WarnWhenPollutionOccurs = optionsDialog.CheckboxReturnStates[8];
+                Game.Options.WarnChangProductWillCostShields = optionsDialog.CheckboxReturnStates[9];
+                Game.Options.ZoomToCityNotDefaultAction = optionsDialog.CheckboxReturnStates[10];
+            };
             var MultiplayerOptionsCommand = new Command { MenuText = "Multiplayer Options", Shortcut = Keys.Control | Keys.Y, Enabled = false };
             var GameProfileCommand = new Command { MenuText = "Game Profile", Enabled = false };
             var PickMusicCommand = new Command { MenuText = "Pick Music" };

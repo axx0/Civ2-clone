@@ -16,10 +16,7 @@ namespace EtoFormsUI
                              CivilDisorderAncientWallpaper, CivilDisorderModernWallpaper, WeLoveKingAncientWallpaper, WeLoveKingModernWallpaper,
                              CityBuiltAncientWallpaper, CityBuiltModernWallpaper, MainScreenSymbol;
 
-        // From cv.dll
-        public static Bitmap[] CityViewLand, CityViewOcean, CityViewRiver, CityViewTiles, CityViewImprovements;
-
-        // offset/length pairs for images from DLLs
+        // Offset/length pairs for images from DLLs
         public static readonly Dictionary<string, (int, int)> DllPics = new()
         {
             { "sinaiPic",           (0x1E630, 0x9F78) },
@@ -35,13 +32,29 @@ namespace EtoFormsUI
             { "desertPic",          (0xD0140, 0xA35A) },
             { "snowPic",            (0xE2E1C, 0xA925) },
             { "canyonPic",          (0xC51B8, 0xAF88) },
+
+            { "cityviewImprovements", (0x1E6E0, 0x24C0F) },
+            { "cityviewWonders", (0x432F0, 0x35C79) },
+            { "cityviewAlternative", (0x78F6C, 0x242E4) },
+            { "cityviewBaseoceanempty", (0x9D250, 0x45423) },
+            { "cityviewBaseoceanroad", (0xE2674, 0x46642) },
+            { "cityviewBaseoceanasphaltroad", (0x128CB8, 0x44E6A) },
+            { "cityviewBaseoceanhighway", (0x16DB24, 0x44B23) },
+            { "cityviewBaseriverempty", (0x1B2648, 0x47B68) },
+            { "cityviewBaseriverroad", (0x1FA1B0, 0x48F7A) },
+            { "cityviewBaseriverasphaltroad", (0x24312C, 0x472FA) },
+            { "cityviewBaseriverhighway", (0x28A428, 0x473B0) },
+            { "cityviewBasecontinentempty", (0x2D17D8, 0x48D0A) },
+            { "cityviewBasecontinentroad", (0x31A4E4, 0x4A859) },
+            { "cityviewBasecontinentasphaltroad", (0x364D40, 0x483D5) },
+            { "cityviewBasecontinenthighway", (0x3AD118, 0x48FFE) },
         };
 
         //  Manually read GIFs from DLLs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)
         public static void ImportDLLimages()
         {
             ExtractTilesDLL();
-            ExtractCvDLL();
+            //ExtractCvDLL();
         }
 
         /// <summary>
@@ -110,149 +123,12 @@ namespace EtoFormsUI
         }
 
         /// <summary>
-        /// Extract bitmaps from Cv.dll
+        /// Extract bitmap from DLL file
         /// </summary>
-        private static void ExtractCvDLL()
-        {
-            // Read all bytes in dll
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "cv.dll");
-
-            // (310) Tiles with improvements in city view
-            var extractedGIF = CreateNonIndexedImage(ExtractBitmapFromDLL(bytes, "1E6E0", "24C0F"));
-            extractedGIF.ReplaceColors(Color.FromArgb(135, 135, 135), Colors.Transparent);
-            extractedGIF.ReplaceColors(Color.FromArgb(255, 0, 255), Colors.Transparent);
-            CityViewImprovements = new Bitmap[65];
-            CityViewImprovements[0] = extractedGIF.Clone(new Rectangle(1, 1, 123, 82));    // Aqueduct
-            CityViewImprovements[1] = extractedGIF.Clone(new Rectangle(125, 1, 123, 82));    // Courthouse
-            CityViewImprovements[2] = extractedGIF.Clone(new Rectangle(249, 1, 123, 82));    // Factory
-            CityViewImprovements[3] = extractedGIF.Clone(new Rectangle(373, 1, 123, 82));    // Granary
-            CityViewImprovements[4] = extractedGIF.Clone(new Rectangle(497, 1, 123, 82));    // Library
-            CityViewImprovements[5] = extractedGIF.Clone(new Rectangle(1, 84, 123, 82));    // Manufacturing Plant
-            CityViewImprovements[6] = extractedGIF.Clone(new Rectangle(125, 84, 123, 82));    // Marketplace
-            CityViewImprovements[7] = extractedGIF.Clone(new Rectangle(249, 84, 123, 82));    // Nuclear plant
-            CityViewImprovements[8] = extractedGIF.Clone(new Rectangle(373, 84, 123, 82));    // Research lab
-            CityViewImprovements[9] = extractedGIF.Clone(new Rectangle(497, 84, 123, 82));    // Supermarket
-            CityViewImprovements[10] = extractedGIF.Clone(new Rectangle(1, 167, 123, 82));    // Airport
-            CityViewImprovements[11] = extractedGIF.Clone(new Rectangle(125, 167, 123, 82));    // Bank
-            CityViewImprovements[12] = extractedGIF.Clone(new Rectangle(249, 167, 123, 82));    // Colosseum
-            CityViewImprovements[13] = extractedGIF.Clone(new Rectangle(373, 167, 123, 82));    // University
-            CityViewImprovements[14] = extractedGIF.Clone(new Rectangle(497, 167, 123, 82));    // SDI defense
-            CityViewImprovements[15] = extractedGIF.Clone(new Rectangle(1, 250, 123, 82));    // Coastal fortress
-            CityViewImprovements[16] = extractedGIF.Clone(new Rectangle(125, 250, 123, 82));    // SAM Missile Battery
-            CityViewImprovements[17] = extractedGIF.Clone(new Rectangle(249, 250, 123, 82));    // Barracks
-            CityViewImprovements[18] = extractedGIF.Clone(new Rectangle(373, 250, 123, 82));    // Cathedral
-            CityViewImprovements[19] = extractedGIF.Clone(new Rectangle(497, 250, 123, 82));    // Sewer system
-            CityViewImprovements[20] = extractedGIF.Clone(new Rectangle(1, 333, 123, 82));    // Temple
-            CityViewImprovements[21] = extractedGIF.Clone(new Rectangle(125, 333, 123, 82));    // Power plant
-            CityViewImprovements[22] = extractedGIF.Clone(new Rectangle(249, 333, 123, 82));    // Hydro plant
-            CityViewImprovements[23] = extractedGIF.Clone(new Rectangle(373, 333, 123, 82));    // Palace
-            CityViewImprovements[24] = extractedGIF.Clone(new Rectangle(497, 333, 123, 82));    // ???
-            CityViewImprovements[25] = extractedGIF.Clone(new Rectangle(1, 416, 123, 82));    // Recycling center
-            CityViewImprovements[26] = extractedGIF.Clone(new Rectangle(125, 416, 123, 82));    // Stock exchange (???)
-            CityViewImprovements[27] = extractedGIF.Clone(new Rectangle(249, 416, 357, 78));    // City walls
-            CityViewImprovements[28] = extractedGIF.Clone(new Rectangle(1, 499, 220, 100));    // Harbor
-            CityViewImprovements[29] = extractedGIF.Clone(new Rectangle(222, 499, 367, 118));    // Port facility
-            CityViewImprovements[30] = extractedGIF.Clone(new Rectangle(590, 499, 105, 105));    // Offshore platform
-            CityViewImprovements[31] = extractedGIF.Clone(new Rectangle(1, 618, 123, 82));    // Solar plant
-            CityViewImprovements[32] = extractedGIF.Clone(new Rectangle(125, 618, 123, 82));    // Mass transit
-
-            // (305) Tiles with wonders in city view
-            extractedGIF = CreateNonIndexedImage(ExtractBitmapFromDLL(bytes, "432F0", "35C79"));
-            extractedGIF.ReplaceColors(Color.FromArgb(135, 135, 135), Colors.Transparent);
-            extractedGIF.ReplaceColors(Color.FromArgb(255, 0, 255), Colors.Transparent);
-            CityViewImprovements[33] = extractedGIF.Clone(new Rectangle(1, 1, 158, 114));    // Appolo program
-            CityViewImprovements[34] = extractedGIF.Clone(new Rectangle(160, 1, 158, 114));    // Women's suffrage
-            CityViewImprovements[35] = extractedGIF.Clone(new Rectangle(319, 1, 158, 114));    // Hoover dam
-            CityViewImprovements[36] = extractedGIF.Clone(new Rectangle(478, 1, 158, 114));    // Great library
-            CityViewImprovements[37] = extractedGIF.Clone(new Rectangle(1, 116, 158, 114));    // Hanging gardens
-            CityViewImprovements[38] = extractedGIF.Clone(new Rectangle(160, 116, 158, 114));    // Manhattan project
-            CityViewImprovements[39] = extractedGIF.Clone(new Rectangle(319, 116, 158, 114));    // Michelangelo's chapel
-            CityViewImprovements[40] = extractedGIF.Clone(new Rectangle(478, 116, 158, 114));    // Oracle
-            CityViewImprovements[41] = extractedGIF.Clone(new Rectangle(1, 231, 158, 114));    // Shakespeare's theatre
-            CityViewImprovements[42] = extractedGIF.Clone(new Rectangle(160, 231, 158, 114));    // United nations
-            CityViewImprovements[43] = extractedGIF.Clone(new Rectangle(319, 231, 158, 114));    // SETI program
-            CityViewImprovements[44] = extractedGIF.Clone(new Rectangle(478, 231, 158, 114));    // Copernicus observ.
-            CityViewImprovements[45] = extractedGIF.Clone(new Rectangle(1, 346, 158, 114));    // Darwin's voyage
-            CityViewImprovements[46] = extractedGIF.Clone(new Rectangle(160, 346, 158, 114));    // Isaac Newton's college
-            CityViewImprovements[47] = extractedGIF.Clone(new Rectangle(319, 346, 158, 114));    // JS Bach's cathedral
-            CityViewImprovements[48] = extractedGIF.Clone(new Rectangle(478, 346, 158, 114));    // Magellan's voyage
-            CityViewImprovements[49] = extractedGIF.Clone(new Rectangle(1, 461, 158, 114));    // Leonardo's workshop
-            CityViewImprovements[50] = extractedGIF.Clone(new Rectangle(160, 461, 158, 114));    // Sun Tzu's war academy
-            CityViewImprovements[51] = extractedGIF.Clone(new Rectangle(319, 461, 158, 114));    // Marco Polo's embassy
-            CityViewImprovements[52] = extractedGIF.Clone(new Rectangle(478, 461, 158, 114));    // King Richard's crusade
-            CityViewImprovements[53] = extractedGIF.Clone(new Rectangle(1, 576, 158, 114));    // Pyramids
-            CityViewImprovements[54] = extractedGIF.Clone(new Rectangle(160, 576, 158, 114));    // Adam Smith's trading co
-            CityViewImprovements[55] = extractedGIF.Clone(new Rectangle(319, 576, 158, 114));    // Eiffel tower
-            CityViewImprovements[56] = extractedGIF.Clone(new Rectangle(478, 576, 158, 114));    // Cure for cancer
-            CityViewImprovements[57] = extractedGIF.Clone(new Rectangle(1, 691, 304, 160));    // Great wall v1
-            CityViewImprovements[58] = extractedGIF.Clone(new Rectangle(306, 691, 304, 160));    // Great wall v2
-            CityViewImprovements[59] = extractedGIF.Clone(new Rectangle(1, 852, 125, 253));    // Statue of liberty v1
-            CityViewImprovements[60] = extractedGIF.Clone(new Rectangle(127, 852, 125, 253));    // Statue of liberty v2
-            CityViewImprovements[61] = extractedGIF.Clone(new Rectangle(253, 852, 76, 133));    // Lighthouse v1
-            CityViewImprovements[62] = extractedGIF.Clone(new Rectangle(330, 852, 76, 133));    // Lighthouse v2
-            CityViewImprovements[63] = extractedGIF.Clone(new Rectangle(407, 852, 94, 160));    // Colossus v1
-            CityViewImprovements[64] = extractedGIF.Clone(new Rectangle(502, 852, 94, 160));    // Colossus v2
-
-            // (310) Normal tiles in city view
-            extractedGIF = CreateNonIndexedImage(ExtractBitmapFromDLL(bytes, "78F6C", "242E4"));
-            extractedGIF.ReplaceColors(Color.FromArgb(135, 135, 135), Colors.Transparent); // Replace gray
-            extractedGIF.ReplaceColors(Color.FromArgb(255, 0, 255), Colors.Transparent);   // Replace pink
-            CityViewTiles = new Bitmap[27];
-            CityViewTiles[0] = extractedGIF.Clone(new Rectangle(1, 1, 158, 114));
-            CityViewTiles[1] = extractedGIF.Clone(new Rectangle(160, 1, 158, 114));
-            CityViewTiles[2] = extractedGIF.Clone(new Rectangle(319, 1, 158, 114));
-            CityViewTiles[3] = extractedGIF.Clone(new Rectangle(478, 1, 158, 114));
-            CityViewTiles[4] = extractedGIF.Clone(new Rectangle(1, 116, 158, 114));
-            CityViewTiles[5] = extractedGIF.Clone(new Rectangle(160, 116, 158, 114));
-            CityViewTiles[6] = extractedGIF.Clone(new Rectangle(319, 116, 158, 114));
-            CityViewTiles[7] = extractedGIF.Clone(new Rectangle(478, 116, 158, 114));
-            CityViewTiles[8] = extractedGIF.Clone(new Rectangle(1, 231, 158, 114));
-            CityViewTiles[9] = extractedGIF.Clone(new Rectangle(160, 231, 158, 114));
-            CityViewTiles[10] = extractedGIF.Clone(new Rectangle(319, 231, 158, 114));
-            CityViewTiles[11] = extractedGIF.Clone(new Rectangle(478, 231, 158, 114));
-            CityViewTiles[12] = extractedGIF.Clone(new Rectangle(1, 346, 123, 82));
-            CityViewTiles[13] = extractedGIF.Clone(new Rectangle(125, 346, 123, 82));
-            CityViewTiles[14] = extractedGIF.Clone(new Rectangle(249, 346, 123, 82));
-            CityViewTiles[15] = extractedGIF.Clone(new Rectangle(373, 346, 123, 82));
-            CityViewTiles[16] = extractedGIF.Clone(new Rectangle(497, 346, 123, 82));
-            CityViewTiles[17] = extractedGIF.Clone(new Rectangle(1, 429, 123, 82));
-            CityViewTiles[18] = extractedGIF.Clone(new Rectangle(125, 429, 123, 82));
-            CityViewTiles[19] = extractedGIF.Clone(new Rectangle(249, 429, 123, 82));
-            CityViewTiles[20] = extractedGIF.Clone(new Rectangle(373, 429, 123, 82));
-            CityViewTiles[21] = extractedGIF.Clone(new Rectangle(497, 429, 123, 82));
-            CityViewTiles[22] = extractedGIF.Clone(new Rectangle(1, 512, 123, 82));
-            CityViewTiles[23] = extractedGIF.Clone(new Rectangle(125, 512, 123, 82));
-            CityViewTiles[24] = extractedGIF.Clone(new Rectangle(249, 512, 123, 82));
-            CityViewTiles[25] = extractedGIF.Clone(new Rectangle(373, 512, 123, 82));
-            CityViewTiles[26] = extractedGIF.Clone(new Rectangle(497, 512, 123, 82));
-
-            extractedGIF.Dispose();
-
-            // (340) Empty city view (ocean)
-            CityViewOcean = new Bitmap[4];
-            CityViewOcean[0] = ExtractBitmapFromDLL(bytes, "9D250", "45423");   // No road
-            CityViewOcean[1] = ExtractBitmapFromDLL(bytes, "E2674", "46642");   // Dirt road
-            CityViewOcean[2] = ExtractBitmapFromDLL(bytes, "128CB8", "44E6A");  // Asphalt road
-            CityViewOcean[3] = ExtractBitmapFromDLL(bytes, "16DB24", "44B23");  // Highway
-            // (345) Empty city view (river)
-            CityViewRiver = new Bitmap[4];
-            CityViewRiver[0] = ExtractBitmapFromDLL(bytes, "1B2648", "47B68");  // No road
-            CityViewRiver[1] = ExtractBitmapFromDLL(bytes, "1FA1B0", "48F7A");  // Dirt road
-            CityViewRiver[2] = ExtractBitmapFromDLL(bytes, "24312C", "472FA");  // Asphalt road
-            CityViewRiver[3] = ExtractBitmapFromDLL(bytes, "28A428", "473B0");  // Highway
-            // (350) Empty city view (land)
-            CityViewLand = new Bitmap[4];
-            CityViewLand[0] = ExtractBitmapFromDLL(bytes, "2D17D8", "48D0A");   // No road
-            CityViewLand[1] = ExtractBitmapFromDLL(bytes, "31A4E4", "4A859");   // Dirt road
-            CityViewLand[2] = ExtractBitmapFromDLL(bytes, "364D40", "483D5");   // Asphalt road
-            CityViewLand[3] = ExtractBitmapFromDLL(bytes, "3AD118", "48FFE");   // Highway
-
-
-        }
-
-        /// <summary>
-        /// Extract GIF image from DLL bytes
-        /// </summary>
+        /// <param name="byteArray">Byte array of DLL</param>
+        /// <param name="GIFbyteOffset">Hex offset of image in DLL</param>
+        /// <param name="GIFbyteLength">Hex length of image in DLL</param>
+        /// <returns>Extracted Bitmap image</returns>
         public static Bitmap ExtractBitmapFromDLL(byte[] byteArray, string GIFbyteOffset, string GIFbyteLength)
         {
             Bitmap returnImage;
@@ -279,7 +155,7 @@ namespace EtoFormsUI
 
             // Copy GIF bytes in DLL byte array into empty array
             Array.Copy(byteArray, DllPics[name].Item1, newBytesRange, 0, DllPics[name].Item2);
-
+            
             // Convert GIF bytes into a bitmap
             using var ms = new MemoryStream(newBytesRange);
             return new Bitmap(ms);

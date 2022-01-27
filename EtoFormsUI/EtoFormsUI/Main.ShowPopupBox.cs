@@ -24,7 +24,7 @@ namespace EtoFormsUI
             };
 
             var result = ofd.ShowDialog(this.ParentWindow);
-            sinaiPanel.Dispose();
+            //sinaiPanel.Dispose();
             sinaiPanel = null;
             if (result == DialogResult.Ok)
             {
@@ -53,141 +53,16 @@ namespace EtoFormsUI
             Sounds.PlaySound(GameSounds.MenuOk);
 
             var playerCiv = Game.GetPlayerCiv;
-            OnPopupboxEvent?.Invoke(null,
-                new PopupboxEventArgs("LOADOK",
-                    new List<string>
+
+            var dialog = new Civ2dialog(this, popupBoxList["LOADOK"], new List<string>
                     {
                         playerCiv.LeaderTitle, playerCiv.LeaderName,
                         playerCiv.TribeName, Game.GetGameYearString,
                         Game.DifficultyLevel.ToString()
-                    }));
-        }
-
-        private void PopupboxEvent(object sender, PopupboxEventArgs e)
-        {
-            switch (e.BoxName)
-            {
-                //case "MAINMENU":
-                //    {
-                //        // Sinai pic
-                //        sinaiPanel = new PicturePanel(Images.SinaiPic);
-                //        layout.Add(sinaiPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.08333), (int)(Screen.PrimaryScreen.Bounds.Height * 0.0933)));
-                        
-                //        var popupBox = new Civ2dialogV2(this, popupBoxList[e.BoxName])
-                //        {
-                //            Location = new Point((int) (Screen.PrimaryScreen.Bounds.Width * 0.745),
-                //                (int) (Screen.PrimaryScreen.Bounds.Height * 0.570))
-                //        };
-                //        popupBox.ShowModal(Parent);
-                        
-                //        switch (popupBox.SelectedIndex)
-                //        {
-                //            //New Game
-                //            case 0:
-                //            {
-                //                NewGame.Start(this, false);
-                //                break;
-                //            }
-                //            // Start premade
-                //            case 1:
-                //            {
-                //                LocateStartingFiles("Select Map To Load",
-                //                    new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
-                //                break;
-                //            }
-
-                //            //Customise World
-                //            case 2:
-                //            {
-                //                NewGame.Start(this, true);
-                //                break;
-                //            }
-                //            // Load scenario
-                //            case 3:
-                //            {
-                //                LocateStartingFiles("Select Scenario To Load",
-                //                    new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
-                            
-
-                //                break;
-                //            }
-                //            // Load game
-                //            case 4:
-                //            {
-                //                LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
-                //                    LoadGameInitialization
-                //                );
-
-                //                break;
-                //            }
-                //        }
-                //        break;
-                //    }
-                case "GAMEOPTIONS":
-                    {
-                        var checkboxOptions = new List<bool> { Game.Options.SoundEffects, Game.Options.Music, Game.Options.AlwaysWaitAtEndOfTurn, Game.Options.AutosaveEachTurn,
-                            Game.Options.ShowEnemyMoves, Game.Options.NoPauseAfterEnemyMoves, Game.Options.FastPieceSlide, Game.Options.InstantAdvice, Game.Options.TutorialHelp,
-                            Game.Options.MoveUnitsWithoutMouse, Game.Options.EnterClosestCityScreen };
-                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
-                        popupbox.ShowModal(Parent);
-                        Game.Options.SoundEffects = popupbox.CheckboxReturnStates[0];
-                        Game.Options.Music = popupbox.CheckboxReturnStates[1];
-                        Game.Options.AlwaysWaitAtEndOfTurn = popupbox.CheckboxReturnStates[2];
-                        Game.Options.AutosaveEachTurn = popupbox.CheckboxReturnStates[3];
-                        Game.Options.ShowEnemyMoves = popupbox.CheckboxReturnStates[4];
-                        Game.Options.NoPauseAfterEnemyMoves = popupbox.CheckboxReturnStates[5];
-                        Game.Options.FastPieceSlide = popupbox.CheckboxReturnStates[6];
-                        Game.Options.InstantAdvice = popupbox.CheckboxReturnStates[7];
-                        Game.Options.TutorialHelp = popupbox.CheckboxReturnStates[8];
-                        Game.Options.MoveUnitsWithoutMouse = popupbox.CheckboxReturnStates[9];
-                        Game.Options.EnterClosestCityScreen = popupbox.CheckboxReturnStates[10];
-                        break;
-                    }
-                case "GRAPHICOPTIONS":
-                    {
-                        var checkboxOptions = new List<bool> { Game.Options.ThroneRoomGraphics, Game.Options.DiplomacyScreenGraphics, Game.Options.AnimatedHeralds, 
-                            Game.Options.CivilopediaForAdvances, Game.Options.HighCouncil, Game.Options.WonderMovies };
-                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
-                        popupbox.ShowModal(Parent);
-                        Game.Options.ThroneRoomGraphics = popupbox.CheckboxReturnStates[0];
-                        Game.Options.DiplomacyScreenGraphics = popupbox.CheckboxReturnStates[1];
-                        Game.Options.AnimatedHeralds = popupbox.CheckboxReturnStates[2];
-                        Game.Options.CivilopediaForAdvances = popupbox.CheckboxReturnStates[3];
-                        Game.Options.HighCouncil = popupbox.CheckboxReturnStates[4];
-                        Game.Options.WonderMovies = popupbox.CheckboxReturnStates[5];
-                        break;
-                    }
-                case "MESSAGEOPTIONS":
-                    {
-                        var checkboxOptions = new List<bool> { Game.Options.WarnWhenCityGrowthHalted, Game.Options.ShowCityImprovementsBuilt, Game.Options.ShowNonCombatUnitsBuilt,
-                            Game.Options.ShowInvalidBuildInstructions, Game.Options.AnnounceCitiesInDisorder, Game.Options.AnnounceOrderRestored,
-                            Game.Options.AnnounceWeLoveKingDay, Game.Options.WarnWhenFoodDangerouslyLow, Game.Options.WarnWhenPollutionOccurs,
-                            Game.Options.WarnChangProductWillCostShields, Game.Options.ZoomToCityNotDefaultAction };
-                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings, checkboxOptionState: checkboxOptions);
-                        popupbox.ShowModal(Parent);
-                        Game.Options.WarnWhenCityGrowthHalted = popupbox.CheckboxReturnStates[0];
-                        Game.Options.ShowCityImprovementsBuilt = popupbox.CheckboxReturnStates[1];
-                        Game.Options.ShowNonCombatUnitsBuilt = popupbox.CheckboxReturnStates[2];
-                        Game.Options.ShowInvalidBuildInstructions = popupbox.CheckboxReturnStates[3];
-                        Game.Options.AnnounceCitiesInDisorder = popupbox.CheckboxReturnStates[4];
-                        Game.Options.AnnounceOrderRestored = popupbox.CheckboxReturnStates[5];
-                        Game.Options.AnnounceWeLoveKingDay = popupbox.CheckboxReturnStates[6];
-                        Game.Options.WarnWhenFoodDangerouslyLow = popupbox.CheckboxReturnStates[7];
-                        Game.Options.WarnWhenPollutionOccurs = popupbox.CheckboxReturnStates[8];
-                        Game.Options.WarnChangProductWillCostShields = popupbox.CheckboxReturnStates[9];
-                        Game.Options.ZoomToCityNotDefaultAction = popupbox.CheckboxReturnStates[10];
-                        break;
-                    }
-                case "LOADOK":
-                    {
-                        var popupbox = new Civ2dialog(this, popupBoxList[e.BoxName], e.ReplaceStrings);
-                        popupbox.ShowModal(Parent);
-                        StartGame();
-                        Sounds.PlaySound(GameSounds.MenuOk);
-                        break;
-                    }
-                default: break;
-            }
+                    });
+            dialog.ShowModal(this);
+            StartGame();
+            Sounds.PlaySound(GameSounds.MenuOk);
         }
 
         public void ShowCityDialog(string dialog, IList<string> replaceStrings)

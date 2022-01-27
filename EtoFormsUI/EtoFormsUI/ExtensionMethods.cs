@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Eto.Drawing;
 
 namespace EtoFormsUIExtensionMethods
@@ -83,6 +84,17 @@ namespace EtoFormsUIExtensionMethods
             }
         }
 
+        public static void MakeColorsTransparent(this Bitmap orig, List<Color> colors)
+        {
+            using var bd = orig.Lock();
+            var px = bd.GetPixels().ToList();
+            for (int i = 0; i < px.Count; i++)
+                foreach (var color in colors)
+                    if (px[i] == color)
+                        px[i] = new Color(color.R, color.G, color.B, 0);
+            bd.SetPixels(px);
+        }
+
         // Convert image to grayscale
         public static void ToGrayscale(this Bitmap orig)
         {
@@ -102,6 +114,32 @@ namespace EtoFormsUIExtensionMethods
         public static int ZoomScale(this int i, int zoom)
         {
             return (int)((8.0 + (float)zoom) / 8.0 * i);
+        }
+
+        /// <summary>
+        /// Set transparency of colors in bitmap
+        /// </summary>
+        /// <param name="bmp">Bitmap</param>
+        /// <param name="colors">Colors to make transparent</param>
+        unsafe public static void SetAlphaZero(this Bitmap bmp, Color[] colors)
+        {
+            using var bmpData = bmp.Lock();
+            byte* scan0 = (byte*)bmpData.Data;
+            var bitsPP = bmpData.BitsPerPixel;
+            var height = bmp.Height;
+            var width = bmp.Width;
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    byte* data = scan0 + i * bmpData.ScanWidth + j * bitsPP / 8;
+                    for (int c = 0; c < colors.Length; c++)
+                    {
+                        if (data[0] == colors[c].Rb && data[1] == colors[c].Gb && data[2] == colors[c].Bb)
+                            data[3] = 0x00;
+                    }
+                }
+            }
         }
     }
 }

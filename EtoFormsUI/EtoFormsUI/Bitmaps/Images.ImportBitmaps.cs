@@ -256,14 +256,17 @@ namespace EtoFormsUI
             CityWallpaper = cityWallpaper.CropImage(new Rectangle(0, 0, 636, 421));
         }
 
-        private static Bitmap CreateNonIndexedImage(Image src)  //Converting GIFs to non-indexed images (required for SetPixel method)
+        /// <summary>
+        /// Convert indexed to non-indexed images (required for making transparent pixels, etc.)
+        /// </summary>
+        /// <param name="src">Source indexed image</param>
+        /// <returns>Non-indexed image</returns>
+        public static Bitmap CreateNonIndexedImage(Image src)
         {
             var newBmp = new Bitmap(src.Width, src.Height, PixelFormat.Format32bppRgba);
 
-            using (var g = new Graphics(newBmp))
-            {
-                g.DrawImage(src, 0, 0);
-            }
+            using var g = new Graphics(newBmp);
+            g.DrawImage(src, 0, 0);
 
             return newBmp;
         }
