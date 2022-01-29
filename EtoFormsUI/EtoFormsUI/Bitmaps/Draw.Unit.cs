@@ -22,7 +22,6 @@ namespace EtoFormsUI
             }
             else     // Sentry
             {
-                //using var _attr = ModifyImage.ConvertToGray();
                 _unitPic.ToGrayscale();
                 g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height));
             }

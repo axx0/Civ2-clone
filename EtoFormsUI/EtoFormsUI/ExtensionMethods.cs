@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Eto.Drawing;
+﻿using Eto.Drawing;
 
 namespace EtoFormsUIExtensionMethods
 {
@@ -69,40 +66,64 @@ namespace EtoFormsUIExtensionMethods
             return bmpImage.Clone(cropArea);
         }
 
-        // Make transparent
-        public static void ReplaceColors(this Bitmap orig, Color origColor, Color replacementColor)
-        {
-            for (int col = 0; col < orig.Width; col++)
-            {
-                for (int row = 0; row < orig.Height; row++)
-                {
-                    if (orig.GetPixel(col, row) == origColor)
-                    {
-                        orig.SetPixel(col, row, replacementColor);
-                    }
-                }
-            }
-        }
-
-        // Convert image to grayscale
-        public static void ToGrayscale(this Bitmap orig)
-        {
-            for (int col = 0; col < orig.Width; col++)
-            {
-                for (int row = 0; row < orig.Height; row++)
-                {
-                    if (orig.GetPixel(col, row) != Colors.Transparent)
-                    {
-                        orig.SetPixel(col, row, Colors.Gray);
-                    }
-                }
-            }
-        }
-
         // Return position of "i" relative to zoom
         public static int ZoomScale(this int i, int zoom)
         {
             return (int)((8.0 + (float)zoom) / 8.0 * i);
+        }
+
+        /// <summary>
+        /// Replace colors in bitmap
+        /// </summary>
+        /// <param name="bmp">Bitmap</param>
+        /// <param name="origColor">Color to be replaced</param>
+        /// <param name="replacementColor">Replacement color</param>
+        unsafe public static void ReplaceColors(this Bitmap bmp, Color origColor, Color replacementColor)
+        {
+            using var bmpData = bmp.Lock();
+            byte* scan0 = (byte*)bmpData.Data;
+            var bitsPP = bmpData.BitsPerPixel;
+            var height = bmp.Height;
+            var width = bmp.Width;
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    byte* data = scan0 + i * bmpData.ScanWidth + j * bitsPP / 8;
+                    if (data[2] == origColor.Rb && data[1] == origColor.Gb && data[0] == origColor.Bb)
+                    {
+                        data[0] = (byte)replacementColor.Bb; // B
+                        data[1] = (byte)replacementColor.Gb; // G
+                        data[2] = (byte)replacementColor.Rb; // R
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Convert bitmap to grayscale
+        /// </summary>
+        /// <param name="bmp">Bitmap</param>
+        unsafe public static void ToGrayscale(this Bitmap bmp)
+        {
+            using var bmpData = bmp.Lock();
+            byte* scan0 = (byte*)bmpData.Data;
+            var bitsPP = bmpData.BitsPerPixel;
+            var height = bmp.Height;
+            var width = bmp.Width;
+            for (int i = 0; i < height; ++i)
+            {
+                for (int j = 0; j < width; ++j)
+                {
+                    byte* data = scan0 + i * bmpData.ScanWidth + j * bitsPP / 8;
+                    if (!(data[3] == Colors.Transparent.Ab && data[2] == Colors.Transparent.Rb && data[1] == Colors.Transparent.Gb && data[0] == Colors.Transparent.Bb))
+                    {
+                        data[0] = (byte)Colors.Gray.Bb; // B
+                        data[1] = (byte)Colors.Gray.Gb; // G
+                        data[2] = (byte)Colors.Gray.Rb; // R
+                    }
+                }
+            }
         }
 
         /// <summary>
