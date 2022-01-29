@@ -22,7 +22,7 @@ namespace EtoFormsUI
             }
             else     // Sentry
             {
-                _unitPic.ToGrayscale();
+                _unitPic.ToSingleColor(Colors.Gray);
                 g.DrawImage(_unitPic, new Rectangle(dest.X, dest.Y, _unitPic.Width, _unitPic.Height));
             }
 

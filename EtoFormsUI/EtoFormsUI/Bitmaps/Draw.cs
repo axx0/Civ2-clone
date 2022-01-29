@@ -11,13 +11,13 @@ namespace EtoFormsUI
 
         public static void ViewPiece(Graphics g, int zoom, Point dest)
         {
-            using var piecePic = Images.ViewPiece.Resize(zoom);
+            using var piecePic = MapImages.ViewPiece.Resize(zoom);
             g.DrawImage(piecePic, dest);
         }
 
         public static void Grid(Graphics g, int zoom, Point dest)
         {
-            using var gridPic = Images.GridLines.Resize(zoom);
+            using var gridPic = MapImages.GridLines.Resize(zoom);
             g.DrawImage(gridPic, dest);
         }
 
@@ -29,7 +29,7 @@ namespace EtoFormsUI
 
         public static void BattleAnim(Graphics g, int frame, int zoom, Point dest)
         {
-            using var battlePic = Images.BattleAnim[frame].Resize(zoom);
+            using var battlePic = MapImages.BattleAnim[frame].Resize(zoom);
             g.DrawImage(battlePic, dest);
         }
 

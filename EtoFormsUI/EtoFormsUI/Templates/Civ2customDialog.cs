@@ -38,12 +38,12 @@ namespace EtoFormsUI
             e.Graphics.AntiAlias = false;
 
             // Paint outer wallpaper
-            var imgSize = Images.PanelOuterWallpaper.Size;
+            var imgSize = MapImages.PanelOuterWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
             {
                 for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
                 {
-                    e.Graphics.DrawImage(Images.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
+                    e.Graphics.DrawImage(MapImages.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
                 }
             }
 
@@ -88,14 +88,14 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
 
             // Paint inner wallpaper
-            imgSize = Images.PanelInnerWallpaper.Size;
+            imgSize = MapImages.PanelInnerWallpaper.Size;
             Rectangle rectS;
             for (int row = 0; row < (this.Height - _paddingTop - _paddingBtm) / imgSize.Height + 1; row++)
             {
                 for (int col = 0; col < (this.Width - 2 * 11) / imgSize.Width + 1; col++)
                 {
                     rectS = new Rectangle(0, 0, Math.Min(this.Width - 2 * 11 - col * imgSize.Width, imgSize.Width), Math.Min(this.Height - _paddingBtm - _paddingTop - row * imgSize.Height, imgSize.Height));
-                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, rectS, new Point(col * imgSize.Width + 11, row * imgSize.Height + _paddingTop));
+                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, rectS, new Point(col * imgSize.Width + 11, row * imgSize.Height + _paddingTop));
                 }
             }
 

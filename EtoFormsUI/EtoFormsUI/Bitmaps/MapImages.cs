@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
 using Eto.Drawing;
@@ -20,5 +19,11 @@ namespace EtoFormsUI
         public static Bitmap[] ShieldBack { get; set; }
         public static Bitmap ShieldShadow { get; set; }
         public static TerrainSet[] Terrains { get; set; }
+        public static Bitmap ViewPiece { get; set; }
+        public static Bitmap GridLines { get; set; }
+        public static Bitmap GridLinesVisible { get; set; }
+        public static Bitmap[] BattleAnim { get; set; }
+        public static Bitmap PanelOuterWallpaper { get; set; }
+        public static Bitmap PanelInnerWallpaper { get; set; }
     }
 }

@@ -145,7 +145,7 @@ namespace EtoFormsUI
             //_prevCityButton.Click += PrevCityButton_Click;
             //_prevCityButton.Paint += PrevCityButton_Paint;
 
-            closeIcon = new Civ2button("", 16, 16, null, Images.CityExit);
+            closeIcon = new Civ2button("", 16, 16, null, CityImages.Exit);
             closeIcon.MouseDown += (sender, e) =>
             {
                 parent.CityWindowZoom = _cityZoom;
@@ -155,7 +155,7 @@ namespace EtoFormsUI
             };
             Layout.Add(closeIcon, 11, 7);
 
-            zoomOutIcon = new Civ2button("", 16, 16, null, Images.CityZoomOUT);
+            zoomOutIcon = new Civ2button("", 16, 16, null, CityImages.ZoomOUT);
             zoomOutIcon.MouseDown += (sender, e) =>
             {
                 if (_cityZoom > -1)
@@ -167,7 +167,7 @@ namespace EtoFormsUI
             };
             Layout.Add(zoomOutIcon, 11 + 16 + 2, 7);
 
-            zoomInIcon = new Civ2button("", 16, 16, null, Images.CityZoomIN);
+            zoomInIcon = new Civ2button("", 16, 16, null, CityImages.ZoomIN);
             zoomInIcon.MouseDown += (sender, e) =>
             {
                 if (_cityZoom < 1)
@@ -195,9 +195,9 @@ namespace EtoFormsUI
             int zoom = _cityZoom;
             if (_cityZoom == -1) zoom = -2;
             if (_cityZoom == 1) zoom = 4;
-            closeIcon.BackgroundImage = Images.CityExit.Resize(zoom);
-            zoomOutIcon.BackgroundImage = Images.CityZoomOUT.Resize(zoom);
-            zoomInIcon.BackgroundImage = Images.CityZoomIN.Resize(zoom);
+            closeIcon.BackgroundImage = CityImages.Exit.Resize(zoom);
+            zoomOutIcon.BackgroundImage = CityImages.ZoomOUT.Resize(zoom);
+            zoomInIcon.BackgroundImage = CityImages.ZoomIN.Resize(zoom);
             closeIcon.Size = closeIcon.BackgroundImage.Size;
             zoomOutIcon.Size = zoomOutIcon.BackgroundImage.Size;
             zoomInIcon.Size = zoomInIcon.BackgroundImage.Size;
@@ -266,7 +266,7 @@ namespace EtoFormsUI
             Draw.Text(e.Graphics, text, font, Color.FromArgb(135, 135, 135), new Point(Width / 2, PaddingTop / 2), true, true, Colors.Black, 1, 0);
 
             // WALLPAPER
-            e.Graphics.DrawImage(Images.CityWallpaper.Resize(_cityZoom * 4), 11, PaddingTop);
+            e.Graphics.DrawImage(CityImages.Wallpaper.Resize(_cityZoom * 4), 11, PaddingTop);
 
             // TEXTS
             fontSize = _cityZoom == -1 ? 4 : (_cityZoom == 0 ? 9 : 13);
@@ -402,7 +402,7 @@ namespace EtoFormsUI
                 zoom = 2 * _cityZoom - 1;
                 if ((int)_thisCity.Improvements[i + starting].Type < 39) // Wonders don't have a sell icon
                 {
-                    using var iconPic = Images.SellIcon.Resize(zoom);
+                    using var iconPic = CityImages.SellIcon.Resize(zoom);
                     e.Graphics.DrawImage(iconPic, new Point(11 + 155.ZoomScale(4 * _cityZoom), PaddingTop + (306 + 12 * i).ZoomScale(4 * _cityZoom)));
                 }
                 // Improvements text
@@ -465,7 +465,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen2, 29, 2, 29, 33);
             e.Graphics.DrawLine(_pen2, 30, 1, 30, 33);
             // Draw the arrow icon
-            e.Graphics.DrawImage(Images.NextCityLarge, 2, 1);
+            e.Graphics.DrawImage(CityImages.NextCity.Resize(1.5, 1.5), 2, 1);
         }
 
         private void PrevCityButton_Paint(object sender, PaintEventArgs e)
@@ -482,7 +482,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen2, 29, 2, 29, 33);
             e.Graphics.DrawLine(_pen2, 30, 1, 30, 33);
             // Draw the arrow icon
-            e.Graphics.DrawImage(Images.PrevCityLarge, 2, 1);
+            e.Graphics.DrawImage(CityImages.PrevCity.Resize(1.5, 1.5), 2, 1);
         }
 
         private enum WhatToDraw

@@ -67,7 +67,7 @@ namespace EtoFormsUI
             {
                 for (int col = 0; col <= city.Size; col++)
                 {
-                    g.DrawImage(Images.CityFoodBig.Resize(zoom), starting_x + wheat_spacing * col, dest.Y + (18 + wheatH * row) * (2 + cityZoom) / 2);
+                    g.DrawImage(CityImages.FoodBig.Resize(zoom), starting_x + wheat_spacing * col, dest.Y + (18 + wheatH * row) * (2 + cityZoom) / 2);
                     count++;
 
                     if (count >= city.FoodInStorage) break;
@@ -123,11 +123,11 @@ namespace EtoFormsUI
             //g.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(city.SurplusHunger) + 21 - spacing + 3), 
             //    0, spacing * Math.Abs(city.SurplusHunger) + 21 - spacing + 6, 23); // Background square for surplus/hunger
             // Icons
-            for (int i = 0; i < city.Food; i++) g.DrawImage(Images.CityFoodBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 76 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Food; i++) g.DrawImage(CityImages.FoodBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 76 * (2 + cityZoom) / 2);
             for (int i = 0; i < Math.Abs(city.SurplusHunger); i++)
             {
-                if (city.SurplusHunger < 0) g.DrawImage(Images.CityHungerBig.Resize(zoom), dest.X + (431 - (spacing * Math.Abs(city.SurplusHunger) + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 76 * (2 + cityZoom) / 2); // Hunger
-                else g.DrawImage(Images.CityFoodBig.Resize(zoom), dest.X + (431 - (spacing * Math.Abs(city.SurplusHunger) + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 76 * (2 + cityZoom) / 2); // Surplus
+                if (city.SurplusHunger < 0) g.DrawImage(CityImages.HungerBig.Resize(zoom), dest.X + (431 - (spacing * Math.Abs(city.SurplusHunger) + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 76 * (2 + cityZoom) / 2); // Hunger
+                else g.DrawImage(CityImages.FoodBig.Resize(zoom), dest.X + (431 - (spacing * Math.Abs(city.SurplusHunger) + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 76 * (2 + cityZoom) / 2); // Surplus
             }
 
             // TRADE
@@ -157,8 +157,8 @@ namespace EtoFormsUI
             //g.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
             //g.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
             // Icons
-            for (int i = 0; i < city.Trade; i++) g.DrawImage(Images.CityTradeBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 117 * (2 + cityZoom) / 2);
-            for (int i = 0; i < city.Corruption; i++) g.DrawImage(Images.CityCorruptBig.Resize(zoom), dest.X + (431 - (spacing * city.Corruption + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 117 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Trade; i++) g.DrawImage(CityImages.TradeBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 117 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Corruption; i++) g.DrawImage(CityImages.CorruptBig.Resize(zoom), dest.X + (431 - (spacing * city.Corruption + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 117 * (2 + cityZoom) / 2);
 
             // TAX+LUX+SCI
             // Text
@@ -188,9 +188,9 @@ namespace EtoFormsUI
             //g.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
             //g.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
             // Icons
-            for (int i = 0; i < city.Tax; i++) g.DrawImage(Images.CityTaxBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 141 * (2 + cityZoom) / 2);
-            for (int i = 0; i < city.Lux; i++) g.DrawImage(Images.CityLuxBig.Resize(zoom), dest.X + 290 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 141 * (2 + cityZoom) / 2);
-            for (int i = 0; i < city.Science; i++) g.DrawImage(Images.CitySciBig.Resize(zoom), dest.X + (431 - (spacing * city.Science + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 141 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Tax; i++) g.DrawImage(CityImages.TaxBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 141 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Lux; i++) g.DrawImage(CityImages.LuxBig.Resize(zoom), dest.X + 290 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 141 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Science; i++) g.DrawImage(CityImages.SciBig.Resize(zoom), dest.X + (431 - (spacing * city.Science + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 141 * (2 + cityZoom) / 2);
 
             // SUPPORT+PRODUCTION
             // Text
@@ -219,8 +219,8 @@ namespace EtoFormsUI
             //g.FillRectangle(new SolidBrush(Color.FromArgb(71, 147, 31)), 0, 0, spacing * foodIcons + 21 - spacing + 6, 23); //background square for food
             //g.FillRectangle(new SolidBrush(Color.FromArgb(55, 123, 23)), x_size - (spacing * Math.Abs(surplusIcons) + 21 - spacing + 3), 0, spacing * Math.Abs(surplusIcons) + 21 - spacing + 6, 23); //background square for surplus/hunger
             // Icons
-            for (int i = 0; i < city.Support; i++) g.DrawImage(Images.CitySupportBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 181 * (2 + cityZoom) / 2);
-            for (int i = 0; i < city.Production; i++) g.DrawImage(Images.CitySupportBig.Resize(zoom), dest.X + (431 - (spacing * city.Production + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 181 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Support; i++) g.DrawImage(CityImages.SupportBig.Resize(zoom), dest.X + 206 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 181 * (2 + cityZoom) / 2);
+            for (int i = 0; i < city.Production; i++) g.DrawImage(CityImages.SupportBig.Resize(zoom), dest.X + (431 - (spacing * city.Production + 14 - spacing) + i * spacing) * (2 + cityZoom) / 2, dest.Y + 181 * (2 + cityZoom) / 2);
         }
 
         // Draw faces in City Panel
@@ -271,9 +271,9 @@ namespace EtoFormsUI
                     drawIndex++;  // Change men/woman appearance
                 }
                 //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
-                using var plpShPic = Images.PeopleLshadow[drawIndex, 0].Resize(zoom);
+                using var plpShPic = CityImages.PeopleShadowLarge[drawIndex, 0].Resize(zoom);
                 g.DrawImage(plpShPic, dest.X + 5 * (2 + cityZoom) / 2 + i * spacing + 1, dest.Y + 9 * (2 + cityZoom) / 2 + 1);   // Shadow
-                using var plpPic = Images.PeopleL[drawIndex, 0].Resize(zoom);
+                using var plpPic = CityImages.PeopleLarge[drawIndex, 0].Resize(zoom);
                 g.DrawImage(plpPic, dest.X + 5 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 9 * (2 + cityZoom) / 2 + 0);
             }
         }
@@ -319,7 +319,7 @@ namespace EtoFormsUI
                 {
                     dx = Convert.ToInt32(2 + col * (182 - 14 - 4) / ((float)Math.Max(cost, 10) - 1)) ; // Horizontal separation between icons
                     dy = 14;    // Vertical separation of icons (space between icons in y-directions is always 0)
-                    g.DrawImage(Images.CitySupportBig, (450 + dx) * (2 + cityZoom) / 2, (240 + dy * row) * (2 + cityZoom) / 2);
+                    g.DrawImage(CityImages.SupportBig, (450 + dx) * (2 + cityZoom) / 2, (240 + dy * row) * (2 + cityZoom) / 2);
 
                     count++;
                     if (count >= city.ShieldsProgress) break;
@@ -429,9 +429,9 @@ namespace EtoFormsUI
                     
                     
                 // First draw food, then shields, then trade icons
-                for (int j = 0; j < food; j++) g.DrawImage(Images.CityFoodSmall.Resize(4 * cityZoom),  combinedXOffsets+ j * spacing, combinedYOffsets);
-                for (int j = 0; j < shields; j++) g.DrawImage(Images.CitySupportSmall.Resize(4 * cityZoom), combinedXOffsets + (food + j) * spacing, combinedYOffsets);
-                for (int j = 0; j < trade; j++) g.DrawImage(Images.CityTradeSmall.Resize(4 * cityZoom), combinedXOffsets + (food+ shields + j) * spacing, combinedYOffsets);
+                for (int j = 0; j < food; j++) g.DrawImage(CityImages.FoodSmall.Resize(4 * cityZoom),  combinedXOffsets+ j * spacing, combinedYOffsets);
+                for (int j = 0; j < shields; j++) g.DrawImage(CityImages.SupportSmall.Resize(4 * cityZoom), combinedXOffsets + (food + j) * spacing, combinedYOffsets);
+                for (int j = 0; j < trade; j++) g.DrawImage(CityImages.TradeSmall.Resize(4 * cityZoom), combinedXOffsets + (food+ shields + j) * spacing, combinedYOffsets);
             }
             
             // int[] cityFood = city.FoodDistribution;

@@ -71,12 +71,12 @@ namespace EtoFormsUI
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = Images.PanelOuterWallpaper.Size;
+            var imgSize = MapImages.PanelOuterWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
             {
                 for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
                 {
-                    e.Graphics.DrawImage(Images.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
+                    e.Graphics.DrawImage(MapImages.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
                 }
             }
             // Paint title
@@ -133,12 +133,12 @@ namespace EtoFormsUI
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = Images.PanelInnerWallpaper.Size;
+            var imgSize = MapImages.PanelInnerWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
             {
                 for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
                 {
-                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
+                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
                 }
             }
             using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
@@ -150,12 +150,12 @@ namespace EtoFormsUI
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = Images.PanelInnerWallpaper.Size;
+            var imgSize = MapImages.PanelInnerWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
             {
                 for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
                 {
-                    e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
+                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
                 }
             }
 

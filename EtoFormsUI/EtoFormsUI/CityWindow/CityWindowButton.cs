@@ -8,7 +8,7 @@ namespace EtoFormsUI
         public CityWindowButton(string text, int zoom) : base("Buy", 20, 20, new Font("Arial", 10))
         {
             Text = text;
-            BackgroundImage = Images.CityExit.Resize(zoom);
+            BackgroundImage = CityImages.Exit.Resize(zoom);
         }
     }
 }

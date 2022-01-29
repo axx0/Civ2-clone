@@ -33,12 +33,12 @@ namespace EtoFormsUI
                 e.Graphics.AntiAlias = false;
 
                 // Background
-                var imgSize = Images.PanelInnerWallpaper.Size;
+                var imgSize = MapImages.PanelInnerWallpaper.Size;
                 for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
                 {
                     for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
                     {
-                        e.Graphics.DrawImage(Images.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
+                        e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
                     }
                 }
 

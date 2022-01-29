@@ -101,10 +101,11 @@ namespace EtoFormsUIExtensionMethods
         }
 
         /// <summary>
-        /// Convert bitmap to grayscale
+        /// Convert bitmap to single color
         /// </summary>
         /// <param name="bmp">Bitmap</param>
-        unsafe public static void ToGrayscale(this Bitmap bmp)
+        /// <param name="targetColor">Target color</param>
+        unsafe public static void ToSingleColor(this Bitmap bmp, Color targetColor)
         {
             using var bmpData = bmp.Lock();
             byte* scan0 = (byte*)bmpData.Data;
@@ -118,9 +119,9 @@ namespace EtoFormsUIExtensionMethods
                     byte* data = scan0 + i * bmpData.ScanWidth + j * bitsPP / 8;
                     if (!(data[3] == Colors.Transparent.Ab && data[2] == Colors.Transparent.Rb && data[1] == Colors.Transparent.Gb && data[0] == Colors.Transparent.Bb))
                     {
-                        data[0] = (byte)Colors.Gray.Bb; // B
-                        data[1] = (byte)Colors.Gray.Gb; // G
-                        data[2] = (byte)Colors.Gray.Rb; // R
+                        data[0] = (byte)targetColor.Bb; // B
+                        data[1] = (byte)targetColor.Gb; // G
+                        data[2] = (byte)targetColor.Rb; // R
                     }
                 }
             }

@@ -170,7 +170,7 @@ namespace EtoFormsUI
 
         public static void CityImprovement(Graphics g, ImprovementType type, int zoom, Point dest)
         {
-            using var improvPic = Images.Improvements[(int)type].Resize(zoom);
+            using var improvPic = CityImages.Improvements[(int)type].Resize(zoom);
             g.DrawImage(improvPic, dest);
         }
 
