@@ -234,6 +234,11 @@ namespace EtoFormsUI
             var ScenarioParamsCommand = new Command { MenuText = "Scenario Parameters", Shortcut = Keys.Control | Keys.Shift | Keys.P, Enabled = false };
             var SaveAsScenCommand = new Command { MenuText = "Save As Scenario", Shortcut = Keys.Control | Keys.Shift | Keys.S, Enabled = false };
             var OpenLuaConsoleCommand = new Command { MenuText = "Open Lua Console", Shortcut = Keys.Control | Keys.Shift | Keys.F3, Enabled = false };
+            OpenLuaConsoleCommand.Executed += (sender, args) =>
+            {
+                var luaConsole = new LuaConsoleDialog(this);
+                luaConsole.ShowModal();
+            };
             
             _cheatCommands = new List<Command>
             {
