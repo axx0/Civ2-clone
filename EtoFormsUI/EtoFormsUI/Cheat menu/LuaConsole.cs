@@ -7,16 +7,16 @@ namespace EtoFormsUI
     {
         public LuaConsoleDialog(Main parent) : base(parent, parent.Width / 3, parent.Height / 3, title: "Lua Console")
         {
-            DefaultButton = new Civ2button("Run Script", 126, 36, new Font("Times new roman", 11)) { Enabled = false };
-            AbortButton = new Civ2button("Close", 126, 36, new Font("Times new roman", 11));
+            DefaultButton = new Civ2button("Run Script", 126, 30, new Font("Times new roman", 11)) { Enabled = false };
+            AbortButton = new Civ2button("Close", 126, 30, new Font("Times new roman", 11));
             var commandBox = new TextBox
             {
                 Font = new Font("Times new roman", 12),
                 Width = Width - 24 - DefaultButton.Width - AbortButton.Width,
-                Height = 36
+                Height = 30
             };
-            var buttonRowY = Height - 42;
-            Layout.Add(commandBox, 9, buttonRowY);
+            var buttonRowY = Height - 40;
+            Layout.Add(commandBox, 9, buttonRowY + 2);
             Layout.Add(DefaultButton, 11 + commandBox.Width, buttonRowY);
             Layout.Add(AbortButton, 13 + DefaultButton.Width + commandBox.Width, buttonRowY);
 
