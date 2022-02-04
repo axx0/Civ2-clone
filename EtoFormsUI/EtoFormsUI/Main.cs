@@ -43,6 +43,7 @@ namespace EtoFormsUI
         internal Dictionary<string, PopupBox> popupBoxList;
         public Sound Sounds;
         private IGameMode _currentGameMode;
+        private List<Command> _cheatCommands;
         public static event EventHandler<MapEventArgs> OnMapEvent;
         
         public Main()
@@ -188,7 +189,27 @@ namespace EtoFormsUI
 
             // Cheat menu commands
             var ToggleCheatModeCommand = new Command { MenuText = "Toggle Cheat Mode", Shortcut = Keys.Control | Keys.K };
-            var CreateUnitCommand = new Command { MenuText = "Toggle Cheat Mode", Shortcut = Keys.Shift | Keys.F1 };
+            ToggleCheatModeCommand.Executed += (s, e) =>
+            {
+                if (!Game.Options.CheatPenaltyWarning)
+                {
+                    var dialog = new Civ2dialog(this, popupBoxList["REALLYCHEAT"]);
+
+                    dialog.ShowModal(this);
+
+                    if (dialog.SelectedButton != "Yes")
+                    {
+                        return;
+                    }
+
+                    Game.Options.CheatPenaltyWarning = true;
+                }
+
+                Game.Options.CheatMenu = !Game.Options.CheatMenu;
+                _cheatCommands.ForEach(c=>c.Enabled = Game.Options.CheatMenu);
+            };
+            
+            var CreateUnitCommand = new Command { MenuText = "Create Unit", Shortcut = Keys.Shift | Keys.F1 };
             var RevealMapCommand = new Command { MenuText = "Reveal Map", Shortcut = Keys.Shift | Keys.F2 };
             RevealMapCommand.Executed += (sender, e) =>
             {
@@ -198,21 +219,40 @@ namespace EtoFormsUI
                 popupbox.ShowModal(Parent);
                 OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.UpdateMap));
             };
-            var SetHumanPlayerCommand = new Command { MenuText = "Set Human Player", Shortcut = Keys.Shift | Keys.F3 };
-            var SetGameYearCommand = new Command { MenuText = "Set Game Year", Shortcut = Keys.Shift | Keys.F4 };
-            var KillCivilizationCommand = new Command { MenuText = "Kill Civilization", Shortcut = Keys.Shift | Keys.F5 };
-            var TechnologyAdvanceCommand = new Command { MenuText = "Technology Advance", Shortcut = Keys.Shift | Keys.F6 };
-            var EditTechsCommand = new Command { MenuText = "Edit Technologies", Shortcut = Keys.Control | Keys.Shift | Keys.F6 };
-            var ForceGovernmentCommand = new Command { MenuText = "Force Government", Shortcut = Keys.Shift | Keys.F7 };
-            var ChangeTerrainCursorCommand = new Command { MenuText = "Change Terrain at Cursor", Shortcut = Keys.Shift | Keys.F8 };
-            var DestroyUnitsCursorCommand = new Command { MenuText = "Destroy All Units At Cursor", Shortcut = Keys.Control | Keys.Shift | Keys.D };
-            var ChangeMoneyCommand = new Command { MenuText = "Change Money", Shortcut = Keys.Shift | Keys.F9 };
-            var EditUnitCommand = new Command { MenuText = "Edit Unit", Shortcut = Keys.Control | Keys.Shift | Keys.U };
-            var EditCityCommand = new Command { MenuText = "Edit City", Shortcut = Keys.Control | Keys.Shift | Keys.C };
-            var EditKingCommand = new Command { MenuText = "Edit King", Shortcut = Keys.Control | Keys.Shift | Keys.K };
-            var ScenarioParamsCommand = new Command { MenuText = "Scenario Parameters", Shortcut = Keys.Control | Keys.Shift | Keys.P };
-            var SaveAsScenCommand = new Command { MenuText = "Save As Scenario", Shortcut = Keys.Control | Keys.Shift | Keys.S };
-
+            var SetHumanPlayerCommand = new Command { MenuText = "Set Human Player", Shortcut = Keys.Shift | Keys.F3, Enabled = false};
+            var SetGameYearCommand = new Command { MenuText = "Set Game Year", Shortcut = Keys.Shift | Keys.F4, Enabled = false };
+            var KillCivilizationCommand = new Command { MenuText = "Kill Civilization", Shortcut = Keys.Shift | Keys.F5, Enabled = false };
+            var TechnologyAdvanceCommand = new Command { MenuText = "Technology Advance", Shortcut = Keys.Shift | Keys.F6, Enabled = false };
+            var EditTechsCommand = new Command { MenuText = "Edit Technologies", Shortcut = Keys.Control | Keys.Shift | Keys.F6, Enabled = false };
+            var ForceGovernmentCommand = new Command { MenuText = "Force Government", Shortcut = Keys.Shift | Keys.F7, Enabled = false };
+            var ChangeTerrainCursorCommand = new Command { MenuText = "Change Terrain at Cursor", Shortcut = Keys.Shift | Keys.F8, Enabled = false };
+            var DestroyUnitsCursorCommand = new Command { MenuText = "Destroy All Units At Cursor", Shortcut = Keys.Control | Keys.Shift | Keys.D, Enabled = false };
+            var ChangeMoneyCommand = new Command { MenuText = "Change Money", Shortcut = Keys.Shift | Keys.F9, Enabled = false };
+            var EditUnitCommand = new Command { MenuText = "Edit Unit", Shortcut = Keys.Control | Keys.Shift | Keys.U, Enabled = false };
+            var EditCityCommand = new Command { MenuText = "Edit City", Shortcut = Keys.Control | Keys.Shift | Keys.C, Enabled = false };
+            var EditKingCommand = new Command { MenuText = "Edit King", Shortcut = Keys.Control | Keys.Shift | Keys.K, Enabled = false };
+            var ScenarioParamsCommand = new Command { MenuText = "Scenario Parameters", Shortcut = Keys.Control | Keys.Shift | Keys.P, Enabled = false };
+            var SaveAsScenCommand = new Command { MenuText = "Save As Scenario", Shortcut = Keys.Control | Keys.Shift | Keys.S, Enabled = false };
+            
+            _cheatCommands = new List<Command>
+            {
+                CreateUnitCommand,
+                RevealMapCommand,
+                SetHumanPlayerCommand,
+                SetGameYearCommand,
+                KillCivilizationCommand,
+                TechnologyAdvanceCommand,
+                EditTechsCommand,
+                ForceGovernmentCommand,
+                ChangeTerrainCursorCommand,
+                DestroyUnitsCursorCommand,
+                ChangeMoneyCommand,
+                EditUnitCommand,
+                EditCityCommand,
+                EditKingCommand,
+                ScenarioParamsCommand,
+                SaveAsScenCommand
+            };
             // Editor menu commands
             var ToggleScenFlagCommand = new Command { MenuText = "Toggle Scenario Flag", Shortcut = Keys.Control | Keys.F };
             var AdvancesEditorCommand = new Command { MenuText = "Advances Editor", Shortcut = Keys.Control | Keys.Shift | Keys.D1 };

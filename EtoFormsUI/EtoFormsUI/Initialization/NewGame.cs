@@ -467,6 +467,7 @@ namespace EtoFormsUI.Initialization
                 if (tribePopup.Text == null)
                 {
                     tribePopup.Text = tribePopup.Options;
+                    tribePopup.LineStyles = Enumerable.Repeat(TextStyles.Left, tribePopup.Text.Count).ToList();
                     tribePopup.Options = null;
                 }
 

@@ -72,7 +72,7 @@ namespace EtoFormsUI
                     CurrentGameMode = Processing;
                 }
             };
-
+            _cheatCommands.ForEach(c=>c.Enabled = Game.Options.CheatMenu);
             BringToFront();
         }
     }
