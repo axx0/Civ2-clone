@@ -22,6 +22,52 @@ namespace Civ2engine
         public void ProcessSection(string section, List<string> contents)
         {
             var popupBox = new PopupBox {Name = section, Checkbox = false};
+            Action<string> contentHandler;
+            var addOkay = true;
+
+            void TextHandler(string line)
+            {
+                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0)
+                {
+                    contentHandler = (line) =>
+                    {
+                        if (string.IsNullOrWhiteSpace(line)) return;
+                        addOkay = false;
+                        (popupBox.Button ??= new List<string>()).Add(line);
+                    };
+                    return;
+                }
+                
+                if (line.StartsWith("^^"))
+                {
+                    (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Centered);
+                    (popupBox.Text ??= new List<string>()).Add(line[2..]);
+                }
+                else if (line.StartsWith("^"))
+                {
+                    (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.LeftOwnLine);
+                    (popupBox.Text ??= new List<string>()).Add(line[1..]);
+                }
+                else
+                {
+                    (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Left);
+                    (popupBox.Text ??= new List<string>()).Add(line);
+                }
+            }
+
+            contentHandler = TextHandler;
+
+            var optionsHandler = new Action<string>((line) =>
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    contentHandler = TextHandler;
+                }
+                else
+                {
+                    (popupBox.Options ??= new List<string>()).Add(line);
+                }
+            });
             var optionsStart = false;
             foreach (var line in contents)
             {
@@ -52,7 +98,7 @@ namespace Civ2engine
                             popupBox.Y = int.Parse(parts[1]);
                             break;
                         case "options":
-                            optionsStart = true;
+                            contentHandler = optionsHandler;
                             break;
                         case "checkbox":
                             popupBox.Checkbox = true;
@@ -65,45 +111,19 @@ namespace Civ2engine
 
                 else
                 {
-                    if (optionsStart)
-                    {
-                        if (string.IsNullOrWhiteSpace(line))
-                        {
-                            optionsStart = false;
-                        }
-                        else
-                        {
-                            (popupBox.Options ??= new List<string>()).Add(line);
-                        }
-                    }
-                    else
-                    {
-                        if (line.StartsWith("^^"))
-                        {
-                            (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Centered);
-                            (popupBox.Text ??= new List<string>()).Add(line[2..]);
-                        }
-                        else if (line.StartsWith("^"))
-                        {
-                            (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.LeftOwnLine);
-                            (popupBox.Text ??= new List<string>()).Add(line[1..]);
-                        }
-                        else
-                        {
-                            (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Left);
-                            (popupBox.Text ??= new List<string>()).Add(line);
-                        }
-
-                    }
+                    contentHandler(line);
                 }
             }
 
-            popupBox.Button ??= new List<string>();
-            popupBox.Button.Add("OK");
-            // Add cancel buttons if @options exist
-            if (popupBox.Options != null)
+            if (addOkay)
             {
-                popupBox.Button.Add("Cancel");
+                popupBox.Button ??= new List<string>();
+                popupBox.Button.Add("OK");
+                // Add cancel buttons if @options exist
+                if (popupBox.Options != null)
+                {
+                    popupBox.Button.Add("Cancel");
+                }
             }
 
             Boxes[popupBox.Name] = popupBox;
