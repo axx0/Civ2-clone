@@ -17,6 +17,25 @@ namespace Civ2engine
         public IList<string> Text { get; set; }
         
         public IList<TextStyles> LineStyles { get;set;}
+
+        public void AddText(string line)
+        {
+            if (line.StartsWith("^^"))
+            {
+                (LineStyles ??= new List<TextStyles>()).Add(TextStyles.Centered);
+                (Text ??= new List<string>()).Add(line[2..]);
+            }
+            else if (line.StartsWith("^"))
+            {
+                (LineStyles ??= new List<TextStyles>()).Add(TextStyles.LeftOwnLine);
+                (Text ??= new List<string>()).Add(line[1..]);
+            }
+            else
+            {
+                (LineStyles ??= new List<TextStyles>()).Add(TextStyles.Left);
+                (Text ??= new List<string>()).Add(line);
+            }
+        }
     }
 
     public enum TextStyles

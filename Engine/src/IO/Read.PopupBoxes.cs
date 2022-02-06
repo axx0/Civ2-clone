@@ -37,22 +37,8 @@ namespace Civ2engine
                     };
                     return;
                 }
-                
-                if (line.StartsWith("^^"))
-                {
-                    (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Centered);
-                    (popupBox.Text ??= new List<string>()).Add(line[2..]);
-                }
-                else if (line.StartsWith("^"))
-                {
-                    (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.LeftOwnLine);
-                    (popupBox.Text ??= new List<string>()).Add(line[1..]);
-                }
-                else
-                {
-                    (popupBox.LineStyles ??= new List<TextStyles>()).Add(TextStyles.Left);
-                    (popupBox.Text ??= new List<string>()).Add(line);
-                }
+
+                popupBox.AddText(line);
             }
 
             contentHandler = TextHandler;
