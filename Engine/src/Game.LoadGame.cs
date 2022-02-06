@@ -27,7 +27,7 @@ namespace Civ2engine
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
             string[] gamePaths, DifficultyType difficulty, IPlayer localPlayer)
         {
-            Script = new ScriptEngine();
+            Script = new ScriptEngine(localPlayer.UI);
             _options = options;
             _maps = maps;
             AllCivilizations.AddRange(civilizations);

@@ -16,5 +16,11 @@ namespace Civ2engine
         void CantProduce(City city, ProductionOrder newItem);
         
         void CityProductionComplete(City city);
+        IInterfaceCommands UI { get; }
+    }
+
+    public interface IInterfaceCommands
+    {
+        void ShowDialog(PopupBox popupBox);
     }
 }

@@ -13,6 +13,7 @@ namespace EtoFormsUI
         public LocalPlayer(Main main)
         {
             _main = main;
+            UI = new UserInterfaceCommands(main);
         }
         public void CivilDisorder(City city)
         {
@@ -53,5 +54,7 @@ namespace EtoFormsUI
         {
             
         }
+
+        public IInterfaceCommands UI { get; } 
     }
 }

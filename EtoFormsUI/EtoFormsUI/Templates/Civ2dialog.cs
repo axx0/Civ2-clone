@@ -110,8 +110,11 @@ namespace EtoFormsUI
             }
 
             // Format title & adjust inner panel width to fit the title
-            _fTitle = GetFormattedTitle(popupBox.Title, replaceStrings, replaceNumbers);
-            _innerSize.Width = (int)_fTitle.Measure().Width - 2 * 11;
+            if (!string.IsNullOrWhiteSpace(popupBox.Title))
+            {
+                _fTitle = GetFormattedTitle(popupBox.Title, replaceStrings, replaceNumbers);
+                _innerSize.Width = (int)_fTitle.Measure().Width - 2 * 11;
+            }
 
             // Determine size of text and based on that determine inner panel size
             _textHeight = 0;
@@ -652,11 +655,16 @@ namespace EtoFormsUI
             }
 
             // Title
-            for (int i = 0; i < 2; i++) // Draw front + shadow
+            if (_fTitle is not null)
             {
-                _fTitle.ForegroundBrush = (i == 0) ? new SolidBrush(Colors.Black) : new SolidBrush(Color.FromArgb(135, 135, 135));
-                _fTitle.MaximumWidth = _innerSize.Width + 2 * 2 + 2 * 11;
-                e.Graphics.DrawText(_fTitle, new Point(1 - i, (int)(_paddingTop / 2 - _fTitle.Measure().Height / 2) + 1 - i));
+                for (int i = 0; i < 2; i++) // Draw front + shadow
+                {
+                    _fTitle.ForegroundBrush =
+                        (i == 0) ? new SolidBrush(Colors.Black) : new SolidBrush(Color.FromArgb(135, 135, 135));
+                    _fTitle.MaximumWidth = _innerSize.Width + 2 * 2 + 2 * 11;
+                    e.Graphics.DrawText(_fTitle,
+                        new Point(1 - i, (int)(_paddingTop / 2 - _fTitle.Measure().Height / 2) + 1 - i));
+                }
             }
 
             // Image
