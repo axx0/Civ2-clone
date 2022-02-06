@@ -46,5 +46,7 @@ namespace Civ2engine
         {
             
         }
+
+        public IInterfaceCommands UI { get; } = null;
     }
 }
