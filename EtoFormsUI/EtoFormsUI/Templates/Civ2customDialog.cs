@@ -11,7 +11,7 @@ namespace EtoFormsUI
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
 
-        public Civ2customDialog(Main parent, int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
+        public Civ2customDialog(Main parent, int width, int height, int paddingTopInnerPanel =38, int paddingBtmInnerPanel =46, string title = null)
         {
             foreach (MenuItem item in parent.Menu.Items) item.Enabled = false;
 

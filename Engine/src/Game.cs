@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.Scripting;
 using Civ2engine.Units;
 using Civ2engine.Terrains;
 
@@ -100,6 +101,7 @@ namespace Civ2engine
 
         private int _currentMap = 0;
         private History _history;
+        public ScriptEngine Script { get; }
 
         public Map CurrentMap => _maps[_currentMap];
 

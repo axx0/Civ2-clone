@@ -4,6 +4,8 @@ using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
+using Civ2engine.Scripting;
+using Neo.IronLua;
 
 namespace Civ2engine
 {
@@ -25,6 +27,7 @@ namespace Civ2engine
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
             string[] gamePaths, DifficultyType difficulty, IPlayer localPlayer)
         {
+            Script = new ScriptEngine();
             _options = options;
             _maps = maps;
             AllCivilizations.AddRange(civilizations);
