@@ -18,26 +18,9 @@ namespace Civ2engine.Scripting
             _log = new StringBuilder();
             _log.AppendLine(_environment.Version);
             dg.print = new Action<string>(s => _log.AppendLine(s));
-            dg.civ = new LuaTable();
-            dg.civ.ui = BuildUiCommands(uInterfaceCommands, _log);
+            dg.civ = new CivScripts(uInterfaceCommands, _log);
         }
 
-        private static LuaTable BuildUiCommands(IInterfaceCommands uInterfaceCommands, StringBuilder log)
-        {
-            dynamic ui = new LuaTable();
-            ui.text = new Action<string>((text)  =>
-            {
-                var pop = new PopupBox
-                {
-                    Button = new [] { "OK" },
-                    Text = new [] { text },
-                    LineStyles = new [] { TextStyles.Left }
-                };
-                uInterfaceCommands.ShowDialog(pop);
-            });
-            ui.createDialog = new Func<Dialog>(() => new Dialog(uInterfaceCommands, log));
-            return ui;
-        }
 
         public string Log => _log.ToString();
 
