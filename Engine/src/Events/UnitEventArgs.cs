@@ -20,9 +20,16 @@ namespace Civ2engine.Events
 
     public class ActivationEventArgs : UnitEventArgs
     {
-        public ActivationEventArgs(Unit unit) : base(UnitEventType.NewUnitActivated, new[] { unit.CurrentLocation })
+        public bool UserInitiated { get; }
+        public bool Reactivation { get; }
+
+        public ActivationEventArgs(Unit unit, bool userInitiated, bool reactivation) : base(UnitEventType.NewUnitActivated, new[] { unit.CurrentLocation })
         {
-            
+            UserInitiated = userInitiated;
+            Reactivation = reactivation;
+            Unit = unit;
         }
+
+        public Unit Unit { get; }  
     }
 }

@@ -8,8 +8,8 @@ namespace Civ2engine
 {
     public partial class Game : BaseInstance
     {
-        public static event EventHandler<MapEventArgs> OnMapEvent;
-        public static event EventHandler<UnitEventArgs> OnUnitEvent;
+        public event EventHandler<MapEventArgs> OnMapEvent;
+        public event EventHandler<UnitEventArgs> OnUnitEvent;
 
         // Choose next unit for orders. If all units ended turn, update cities.
         public void ChooseNextUnit(bool startOfTurn = false)
@@ -69,7 +69,7 @@ namespace Civ2engine
                 _activeUnit = nextUnit;
                 if (_activeUnit != null)
                 {
-                    OnUnitEvent?.Invoke(null, new ActivationEventArgs(_activeUnit));
+                    TriggerUnitEvent(new ActivationEventArgs(_activeUnit, false, false));
                 }
             }
         }
