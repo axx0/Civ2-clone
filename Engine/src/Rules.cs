@@ -56,7 +56,7 @@ namespace Civ2engine
             {
                 return _items ??= UnitTypes.Select((u, index) => new UnitProductionOrder(u, index))
                     .Cast<ProductionOrder>()
-                    .Concat(Improvements.Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
+                    .Concat(Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
             }
         }
     }
