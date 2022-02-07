@@ -45,6 +45,7 @@ namespace Civ2engine.Scripting
         {
             try
             {
+                _log.AppendLine("> " + script);
                 _environment.DoChunk(script, "immediate.lua");
             }
             catch (Exception e)
