@@ -56,7 +56,7 @@ namespace Civ2engine
         public int PollutionAmount { get; set; }
         public int GlobalTempRiseOccured { get; set; }
         public int NoOfTurnsOfPeace { get; set; }
-
+        
         private Unit _activeUnit;
         public Unit ActiveUnit
         {
@@ -69,6 +69,7 @@ namespace Civ2engine
                 if (!value.TurnEnded)
                 {
                     _activeUnit = value;
+                    TriggerUnitEvent( new ActivationEventArgs(_activeUnit, true, false));
                 }
                 else
                 {
@@ -127,6 +128,6 @@ namespace Civ2engine
             OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
                 {TilesChanged = tilesChanged});
         }
-
+        
     }
 }

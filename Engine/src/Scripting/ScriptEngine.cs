@@ -10,7 +10,7 @@ namespace Civ2engine.Scripting
         private readonly LuaGlobal _environment;
         private StringBuilder _log { get; }
 
-        public ScriptEngine(IInterfaceCommands uInterfaceCommands)
+        public ScriptEngine(IInterfaceCommands uInterfaceCommands, Game game)
         {
             _lua = new Lua();
             _environment = _lua.CreateEnvironment();
@@ -18,7 +18,7 @@ namespace Civ2engine.Scripting
             _log = new StringBuilder();
             _log.AppendLine(_environment.Version);
             dg.print = new Action<string>(s => _log.AppendLine(s));
-            dg.civ = new CivScripts(uInterfaceCommands, _log);
+            dg.civ = new CivScripts(uInterfaceCommands, _log, game);
         }
 
 
