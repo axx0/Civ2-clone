@@ -1,21 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using Civ2engine;
-using EtoFormsUIExtensionMethods;
 using Eto.Drawing;
 
 namespace EtoFormsUI
 {
     public static partial class Images
     {
-        // From Tiles.dll
-        public static Bitmap CityStatusWallpaper, DefenseMinWallpaper, ForeignMinWallpaper, AttitudeAdvWallpaper, TradeAdvWallpaper,
-                             ScienceAdvWallpaper, WondersOfWorldWallpaper, Top5citiesWallpaper, DemographicsWallpaper, CivScoreWallpaper,
-                             TaxRateSmallWallpaper, TaxRateWallpaper, CityConqueredAncientWallpaper, CityConqueredModernWallpaper,
-                             CivilDisorderAncientWallpaper, CivilDisorderModernWallpaper, WeLoveKingAncientWallpaper, WeLoveKingModernWallpaper,
-                             CityBuiltAncientWallpaper, CityBuiltModernWallpaper, MainScreenSymbol;
-
         // Offset/length pairs for images from DLLs
         public static readonly Dictionary<string, (int, int)> DllPics = new()
         {
@@ -48,105 +39,28 @@ namespace EtoFormsUI
             { "cityviewBasecontinentroad", (0x31A4E4, 0x4A859) },
             { "cityviewBasecontinentasphaltroad", (0x364D40, 0x483D5) },
             { "cityviewBasecontinenthighway", (0x3AD118, 0x48FFE) },
+
+            { "cityStatusWallpaper", (0x1E8B0, 0x13A3F) },
+            { "defenseMinWallpaper", (0x322F0, 0xDE6D) },
+            { "foreignMinWallpaper", (0x40160, 0xC9DB) },
+            { "attitudeAdvWallpaper", (0x4CB3C, 0xCDFA) },
+            { "tradeAdvWallpaper", (0x59938, 0xD878) },
+            { "scienceAdvWallpaper", (0x671B0, 0xCFD2) },
+            { "wondersOfWorldWallpaper", (0x74184, 0x77E6) },
+            { "top5citiesWallpaper", (0x7B96C, 0xB9E0) },
+            { "demographicsWallpaper", (0x8734C, 0x12ACC) },
+            { "civScoreWallpaper", (0x99E18, 0xB823) },
+            { "taxRateWallpaper", (0xAB2E8, 0xB271) },
+            { "cityConqueredAncientWallpaper", (0xB655C, 0x7DBE) },
+            { "cityConqueredModernWallpaper", (0xBE31C, 0x446F) },
+            { "civilDisorderAncientWallpaper", (0xC278C, 0x6C05) },
+            { "civilDisorderModernWallpaper", (0xC9394, 0x5A6B) },
+            { "weLoveKingAncientWallpaper", (0xCEE00, 0x76B0) },
+            { "weLoveKingModernWallpaper", (0xD64B0, 0x88F2) },
+            { "cityBuiltAncientWallpaper", (0xDEDA4, 0x46FF) },
+            { "cityBuiltModernWallpaper", (0xE34A4, 0x4A42) },
+            { "introScreenSymbol", (0xF7454, 0x1389D) },
         };
-
-        //  Manually read GIFs from DLLs based on their known address offsets and byte lenghts (obtained from Resource Hacker program)
-        public static void ImportDLLimages()
-        {
-            ExtractTilesDLL();
-            //ExtractCvDLL();
-        }
-
-        /// <summary>
-        /// Extract bitmaps from Tiles.dll
-        /// </summary>
-        private static void ExtractTilesDLL()
-        {
-            // Read all bytes in dll
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Tiles.dll");
-
-            // Extract GIF from bytes using known offsets and lengths of GIFS from DLL
-            // (50) City status wallpaper
-            var extractedGIF = ExtractBitmapFromDLL(bytes, "1E8B0", "13A3F");
-            CityStatusWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (51) Defense minister wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "322F0", "DE6D");
-            DefenseMinWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (52) Foreign minister wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "40160", "C9DB");
-            ForeignMinWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (53) Attitude advisor wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "4CB3C", "CDFA");
-            AttitudeAdvWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (54) Trade advisor wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "59938", "D878");
-            TradeAdvWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (55) Science advisor wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "671B0", "CFD2");
-            ScienceAdvWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (56) Wonders of world wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "74184", "77E6");
-            WondersOfWorldWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (57) Top5cities wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "7B96C", "B9E0");
-            Top5citiesWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (58) Demographics wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "8734C", "12ACC");
-            DemographicsWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (59) Civ score wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "99E18", "B823");
-            CivScoreWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (65) Tax rate wallpaper (small)
-            //extractedGIF = ExtractBitmapFromDLL(bytes, "A563C", "5CAC");
-            //TaxRateSmallWallpaper = ModifyImage.CropImage(extractedGIF, new Rectangle(0, 0, 400, 256));
-            // (66) Tax rate wallpaper (large)
-            extractedGIF = ExtractBitmapFromDLL(bytes, "AB2E8", "B271");
-            TaxRateWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
-            // (70) City conquered (ancient)
-            CityConqueredAncientWallpaper = ExtractBitmapFromDLL(bytes, "B655C", "7DBE");
-            // (71) City conquered (modern)
-            CityConqueredModernWallpaper = ExtractBitmapFromDLL(bytes, "BE31C", "446F");
-            // (72) Civil disorder (ancient)
-            CivilDisorderAncientWallpaper = ExtractBitmapFromDLL(bytes, "C278C", "6C05");
-            // (73) Civil disorder (modern)
-            CivilDisorderModernWallpaper = ExtractBitmapFromDLL(bytes, "C9394", "5A6B");
-            // (74) We love king day (ancient)
-            WeLoveKingAncientWallpaper = ExtractBitmapFromDLL(bytes, "CEE00", "76B0");
-            // (75) We love king day (modern)
-            WeLoveKingModernWallpaper = ExtractBitmapFromDLL(bytes, "D64B0", "88F2");
-            // (76) City built (ancient)
-            CityBuiltAncientWallpaper = ExtractBitmapFromDLL(bytes, "DEDA4", "46FF");
-            // (77) City built (modern)
-            CityBuiltModernWallpaper = ExtractBitmapFromDLL(bytes, "E34A4", "4A42");
-            // (90) Main screen
-            MainScreenSymbol = ExtractBitmapFromDLL(bytes, "F7454", "1389D");
-        }
-
-        /// <summary>
-        /// Extract bitmap from DLL file
-        /// </summary>
-        /// <param name="byteArray">Byte array of DLL</param>
-        /// <param name="GIFbyteOffset">Hex offset of image in DLL</param>
-        /// <param name="GIFbyteLength">Hex length of image in DLL</param>
-        /// <returns>Extracted Bitmap image</returns>
-        public static Bitmap ExtractBitmapFromDLL(byte[] byteArray, string GIFbyteOffset, string GIFbyteLength)
-        {
-            Bitmap returnImage;
-
-            // Make empty byte array to hold GIF bytes
-            byte[] newBytesRange = new byte[Convert.ToInt32(GIFbyteLength, 16)];
-
-            // Copy GIF bytes in DLL byte array into empty array
-            Array.Copy(byteArray, Convert.ToInt32(GIFbyteOffset, 16), newBytesRange, 0, Convert.ToInt32(GIFbyteLength, 16));
-
-            // Convert GIF bytes into a bitmap
-            using (var ms = new MemoryStream(newBytesRange))
-            {
-                returnImage = new Bitmap(ms);
-            }
-
-            return returnImage;
-        }
 
         public static Bitmap ExtractBitmap(byte[] byteArray, string name)
         {

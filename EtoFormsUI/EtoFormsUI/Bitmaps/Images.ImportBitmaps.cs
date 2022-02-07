@@ -23,7 +23,8 @@ namespace EtoFormsUI
 
         public static void LoadGraphicsAssetsAtIntroScreen()
         {
-            ImportDLLimages();
+            DLLs.Tiles = File.ReadAllBytes(Settings.Civ2Path + "Tiles.dll");
+            DLLs.Intro = File.ReadAllBytes(Settings.Civ2Path + "Intro.dll");
             ImportWallpapersFromIconsFile();
             //ImportCiv2Icon();
         }

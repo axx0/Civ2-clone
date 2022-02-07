@@ -67,9 +67,9 @@ namespace EtoFormsUI
 
             layout = new PixelLayout();
 
-            var image = new ImageView { Image = Images.MainScreenSymbol };
-            layout.Add(image, (int)Screen.PrimaryScreen.Bounds.Width / 2 - Images.MainScreenSymbol.Width / 2, 
-                              (int)Screen.PrimaryScreen.Bounds.Height / 2 - Images.MainScreenSymbol.Height / 2);
+            var imgV = new ImageView { Image = Images.ExtractBitmap(DLLs.Tiles, "introScreenSymbol") };
+            layout.Add(imgV, (int)Screen.PrimaryScreen.Bounds.Width / 2 - imgV.Image.Width / 2, 
+                              (int)Screen.PrimaryScreen.Bounds.Height / 2 - imgV.Image.Height / 2);
 
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
