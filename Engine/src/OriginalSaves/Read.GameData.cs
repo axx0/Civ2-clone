@@ -204,40 +204,40 @@ namespace Civ2engine
             data.CivTaxRate = new int[8];
             data.CivGovernment = new int[8];
             data.CivReputation = new int[8];
-            data.CivAdvances = new bool[89];
+            data.CivAdvances = new bool[8][];
             // starting offset = 8E6(hex) = 2278(10), each block has 1427(10) bytes
-            for (int i = 0; i < 8; i++) // for each civ
+            for (int civId = 0; civId < 8; civId++) // for each civ
             {
                 // Gender (0=male, 2=female)
-                data.RulerGender[i] = bytes[2278 + 1428 * i + 1]; // 2nd byte in tribe block
+                data.RulerGender[civId] = bytes[2278 + 1428 * civId + 1]; // 2nd byte in tribe block
 
                 // Money
-                intVal1 = bytes[2278 + 1428 * i + 2];    // 3rd byte in tribe block
-                intVal2 = bytes[2278 + 1428 * i + 3];    // 4th byte in tribe block
-                data.CivMoney[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                intVal1 = bytes[2278 + 1428 * civId + 2];    // 3rd byte in tribe block
+                intVal2 = bytes[2278 + 1428 * civId + 3];    // 4th byte in tribe block
+                data.CivMoney[civId] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Tribe number as per @Leaders table in RULES.TXT
-                data.CivNumber[i] = bytes[2278 + 1428 * i + 6];    // 7th byte in tribe block
+                data.CivNumber[civId] = bytes[2278 + 1428 * civId + 6];    // 7th byte in tribe block
 
                 // Research progress
-                intVal1 = bytes[2278 + 1428 * i + 8];    // 9th byte in tribe block
-                intVal2 = bytes[2278 + 1428 * i + 9];    // 10th byte in tribe block
-                data.CivResearchProgress[i] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
+                intVal1 = bytes[2278 + 1428 * civId + 8];    // 9th byte in tribe block
+                intVal2 = bytes[2278 + 1428 * civId + 9];    // 10th byte in tribe block
+                data.CivResearchProgress[civId] = short.Parse(string.Concat(intVal2.ToString("X"), intVal1.ToString("X")), System.Globalization.NumberStyles.HexNumber);
 
                 // Advance currently being researched
-                data.CivResearchingAdvance[i] = bytes[2278 + 1428 * i + 10]; // 11th byte in tribe block (FF(hex) = no goal)
+                data.CivResearchingAdvance[civId] = bytes[2278 + 1428 * civId + 10]; // 11th byte in tribe block (FF(hex) = no goal)
 
                 // Science rate (%/10)
-                data.CivSciRate[i] = bytes[2278 + 1428 * i + 19]; // 20th byte in tribe block
+                data.CivSciRate[civId] = bytes[2278 + 1428 * civId + 19]; // 20th byte in tribe block
 
                 // Tax rate (%/10)
-                data.CivTaxRate[i] = bytes[2278 + 1428 * i + 20]; // 21st byte in tribe block
+                data.CivTaxRate[civId] = bytes[2278 + 1428 * civId + 20]; // 21st byte in tribe block
 
                 // Government
-                data.CivGovernment[i] = bytes[2278 + 1428 * i + 21]; // 22nd byte in tribe block (0=anarchy, ...)
+                data.CivGovernment[civId] = bytes[2278 + 1428 * civId + 21]; // 22nd byte in tribe block (0=anarchy, ...)
 
                 // Reputation
-                data.CivReputation[i] = bytes[2278 + 1428 * i + 30]; // 31st byte in tribe block
+                data.CivReputation[civId] = bytes[2278 + 1428 * civId + 30]; // 31st byte in tribe block
 
                 // Treaties
                 // ..... TO-DO .....
@@ -246,19 +246,19 @@ namespace Civ2engine
                 // ..... TO-DO .....
 
                 // Technologies
-                string civTechs1 = Convert.ToString(bytes[2278 + 1428 * i + 88], 2).PadLeft(8, '0');    //89th byte
-                string civTechs2 = Convert.ToString(bytes[2278 + 1428 * i + 89], 2).PadLeft(8, '0');
-                string civTechs3 = Convert.ToString(bytes[2278 + 1428 * i + 90], 2).PadLeft(8, '0');
-                string civTechs4 = Convert.ToString(bytes[2278 + 1428 * i + 91], 2).PadLeft(8, '0');
-                string civTechs5 = Convert.ToString(bytes[2278 + 1428 * i + 92], 2).PadLeft(8, '0');
-                string civTechs6 = Convert.ToString(bytes[2278 + 1428 * i + 93], 2).PadLeft(8, '0');
-                string civTechs7 = Convert.ToString(bytes[2278 + 1428 * i + 94], 2).PadLeft(8, '0');
-                string civTechs8 = Convert.ToString(bytes[2278 + 1428 * i + 95], 2).PadLeft(8, '0');
-                string civTechs9 = Convert.ToString(bytes[2278 + 1428 * i + 96], 2).PadLeft(8, '0');
-                string civTechs10 = Convert.ToString(bytes[2278 + 1428 * i + 97], 2).PadLeft(8, '0');
-                string civTechs11 = Convert.ToString(bytes[2278 + 1428 * i + 98], 2).PadLeft(8, '0');
-                string civTechs12 = Convert.ToString(bytes[2278 + 1428 * i + 99], 2).PadLeft(8, '0');
-                string civTechs13 = Convert.ToString(bytes[2278 + 1428 * i + 100], 2).PadLeft(8, '0');   //101st byte
+                string civTechs1 = Convert.ToString(bytes[2278 + 1428 * civId + 88], 2).PadLeft(8, '0');    //89th byte
+                string civTechs2 = Convert.ToString(bytes[2278 + 1428 * civId + 89], 2).PadLeft(8, '0');
+                string civTechs3 = Convert.ToString(bytes[2278 + 1428 * civId + 90], 2).PadLeft(8, '0');
+                string civTechs4 = Convert.ToString(bytes[2278 + 1428 * civId + 91], 2).PadLeft(8, '0');
+                string civTechs5 = Convert.ToString(bytes[2278 + 1428 * civId + 92], 2).PadLeft(8, '0');
+                string civTechs6 = Convert.ToString(bytes[2278 + 1428 * civId + 93], 2).PadLeft(8, '0');
+                string civTechs7 = Convert.ToString(bytes[2278 + 1428 * civId + 94], 2).PadLeft(8, '0');
+                string civTechs8 = Convert.ToString(bytes[2278 + 1428 * civId + 95], 2).PadLeft(8, '0');
+                string civTechs9 = Convert.ToString(bytes[2278 + 1428 * civId + 96], 2).PadLeft(8, '0');
+                string civTechs10 = Convert.ToString(bytes[2278 + 1428 * civId + 97], 2).PadLeft(8, '0');
+                string civTechs11 = Convert.ToString(bytes[2278 + 1428 * civId + 98], 2).PadLeft(8, '0');
+                string civTechs12 = Convert.ToString(bytes[2278 + 1428 * civId + 99], 2).PadLeft(8, '0');
+                string civTechs13 = Convert.ToString(bytes[2278 + 1428 * civId + 100], 2).PadLeft(8, '0');   //101st byte
                 civTechs13 = civTechs13.Remove(civTechs13.Length - 4); //remove last 4 bits, they are not important
                 // Put all advamces into one large string, where bit0=1st advamce, bit1=2nd advance, ..., bit99=100th advance
                 // First reverse bit order in all strings
@@ -278,8 +278,10 @@ namespace Civ2engine
                 // Merge all strings into a large string
                 string civTechs_ = String.Concat(civTechs1, civTechs2, civTechs3, civTechs4, civTechs5, civTechs6, civTechs7, civTechs8, civTechs9, civTechs10, civTechs11, civTechs12, civTechs13);
                 // true = advance researched, false = not researched
-                for (int no = 0; no < 89; no++)
-                    data.CivAdvances[no] = civTechs_[no] == '1';
+                var techResearched = new bool[89];
+                for (int techId = 0; techId < 89; techId++)
+                    techResearched[techId] = civTechs_[techId] == '1';
+                data.CivAdvances[civId] = techResearched;
             }
             #endregion
             #region Map

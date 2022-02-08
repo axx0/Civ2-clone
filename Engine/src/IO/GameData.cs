@@ -49,7 +49,7 @@ namespace Civ2engine
         public int[] CivTaxRate { get; set; }
         public int[] CivGovernment { get; set; }
         public int[] CivReputation { get; set; }
-        public bool[] CivAdvances { get; set; }
+        public bool[][] CivAdvances { get; set; }
 
         // Map data
         public int MapXdim { get; set; }
