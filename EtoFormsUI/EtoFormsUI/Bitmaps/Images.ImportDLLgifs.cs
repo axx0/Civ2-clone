@@ -63,63 +63,63 @@ namespace EtoFormsUI
         private static void ExtractTilesDLL()
         {
             // Read all bytes in dll
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Tiles.dll");
+            var tilesDll = File.ReadAllBytes(Utils.GetFilePath( "Tiles.dll", Settings.SearchPaths));
 
             // Extract GIF from bytes using known offsets and lengths of GIFS from DLL
             // (50) City status wallpaper
-            var extractedGIF = ExtractBitmapFromDLL(bytes, "1E8B0", "13A3F");
+            var extractedGIF = ExtractBitmapFromDLL(tilesDll, "1E8B0", "13A3F");
             CityStatusWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (51) Defense minister wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "322F0", "DE6D");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "322F0", "DE6D");
             DefenseMinWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (52) Foreign minister wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "40160", "C9DB");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "40160", "C9DB");
             ForeignMinWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (53) Attitude advisor wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "4CB3C", "CDFA");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "4CB3C", "CDFA");
             AttitudeAdvWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (54) Trade advisor wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "59938", "D878");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "59938", "D878");
             TradeAdvWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (55) Science advisor wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "671B0", "CFD2");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "671B0", "CFD2");
             ScienceAdvWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (56) Wonders of world wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "74184", "77E6");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "74184", "77E6");
             WondersOfWorldWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (57) Top5cities wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "7B96C", "B9E0");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "7B96C", "B9E0");
             Top5citiesWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (58) Demographics wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "8734C", "12ACC");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "8734C", "12ACC");
             DemographicsWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (59) Civ score wallpaper
-            extractedGIF = ExtractBitmapFromDLL(bytes, "99E18", "B823");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "99E18", "B823");
             CivScoreWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (65) Tax rate wallpaper (small)
             //extractedGIF = ExtractBitmapFromDLL(bytes, "A563C", "5CAC");
             //TaxRateSmallWallpaper = ModifyImage.CropImage(extractedGIF, new Rectangle(0, 0, 400, 256));
             // (66) Tax rate wallpaper (large)
-            extractedGIF = ExtractBitmapFromDLL(bytes, "AB2E8", "B271");
+            extractedGIF = ExtractBitmapFromDLL(tilesDll, "AB2E8", "B271");
             TaxRateWallpaper = extractedGIF.CropImage(new Rectangle(0, 0, 600, 400));
             // (70) City conquered (ancient)
-            CityConqueredAncientWallpaper = ExtractBitmapFromDLL(bytes, "B655C", "7DBE");
+            CityConqueredAncientWallpaper = ExtractBitmapFromDLL(tilesDll, "B655C", "7DBE");
             // (71) City conquered (modern)
-            CityConqueredModernWallpaper = ExtractBitmapFromDLL(bytes, "BE31C", "446F");
+            CityConqueredModernWallpaper = ExtractBitmapFromDLL(tilesDll, "BE31C", "446F");
             // (72) Civil disorder (ancient)
-            CivilDisorderAncientWallpaper = ExtractBitmapFromDLL(bytes, "C278C", "6C05");
+            CivilDisorderAncientWallpaper = ExtractBitmapFromDLL(tilesDll, "C278C", "6C05");
             // (73) Civil disorder (modern)
-            CivilDisorderModernWallpaper = ExtractBitmapFromDLL(bytes, "C9394", "5A6B");
+            CivilDisorderModernWallpaper = ExtractBitmapFromDLL(tilesDll, "C9394", "5A6B");
             // (74) We love king day (ancient)
-            WeLoveKingAncientWallpaper = ExtractBitmapFromDLL(bytes, "CEE00", "76B0");
+            WeLoveKingAncientWallpaper = ExtractBitmapFromDLL(tilesDll, "CEE00", "76B0");
             // (75) We love king day (modern)
-            WeLoveKingModernWallpaper = ExtractBitmapFromDLL(bytes, "D64B0", "88F2");
+            WeLoveKingModernWallpaper = ExtractBitmapFromDLL(tilesDll, "D64B0", "88F2");
             // (76) City built (ancient)
-            CityBuiltAncientWallpaper = ExtractBitmapFromDLL(bytes, "DEDA4", "46FF");
+            CityBuiltAncientWallpaper = ExtractBitmapFromDLL(tilesDll, "DEDA4", "46FF");
             // (77) City built (modern)
-            CityBuiltModernWallpaper = ExtractBitmapFromDLL(bytes, "E34A4", "4A42");
+            CityBuiltModernWallpaper = ExtractBitmapFromDLL(tilesDll, "E34A4", "4A42");
             // (90) Main screen
-            MainScreenSymbol = ExtractBitmapFromDLL(bytes, "F7454", "1389D");
+            MainScreenSymbol = ExtractBitmapFromDLL(tilesDll, "F7454", "1389D");
         }
 
         /// <summary>

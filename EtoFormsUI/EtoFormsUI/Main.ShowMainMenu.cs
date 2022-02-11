@@ -12,7 +12,7 @@ namespace EtoFormsUI
 
         public void MainMenu()
         {
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "Intro.dll");  // For loading images from intro.dll
+            var bytes = File.ReadAllBytes( Settings.Civ2Path + Path.DirectorySeparatorChar + "Intro.dll");  // For loading images from intro.dll
 
             sinaiPanel = new PicturePanel(Images.ExtractBitmap(bytes, "sinaiPic"));
             layout.Add(sinaiPanel, new Point(160, 76));

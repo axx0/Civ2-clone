@@ -9,10 +9,10 @@ namespace EtoFormsUI.ImageLoader
     public static class CityLoader
     {
         
-        public static void LoadCities(Ruleset path)
+        public static void LoadCities(Ruleset ruleset)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-            using var citiesImage = Common.LoadBitmapFrom("CITIES", path);
+            using var citiesImage = Common.LoadBitmapFrom("CITIES", ruleset.Paths);
 
             // Initialize objects
             var cities = new List<CityImage>();

@@ -11,9 +11,9 @@ namespace EtoFormsUI.ImageLoader
     {
         private static readonly Color _shadowColour = Color.FromArgb(51, 51, 51);
 
-        public static void LoadUnits(Ruleset path)
+        public static void LoadUnits(Ruleset ruleset)
         {
-            using var unitsImage = Common.LoadBitmapFrom("UNITS", path);
+            using var unitsImage = Common.LoadBitmapFrom("UNITS", ruleset.Paths);
 
             // Initialize objects
             var units = new List<UnitImage>();

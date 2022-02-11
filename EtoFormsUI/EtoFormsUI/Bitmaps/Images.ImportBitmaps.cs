@@ -1,6 +1,4 @@
 using Eto.Drawing;
-using System.IO;
-using System.Diagnostics;
 using Civ2engine;
 using Civ2engine.Terrains;
 using EtoFormsUI.ImageLoader;
@@ -51,7 +49,7 @@ namespace EtoFormsUI
 
         public static void LoadIcons(Ruleset path)
         {
-            using var iconsImage = Common.LoadBitmapFrom("ICONS", path);
+            using var iconsImage = Common.LoadBitmapFrom("ICONS", path.Paths);
 
             var transparentLightPink = Color.FromArgb(255, 159, 163);
             var transparentPink = Color.FromArgb(255, 0, 255);
@@ -151,9 +149,9 @@ namespace EtoFormsUI
             MapImages.BattleAnim = battleAnim;
         }
 
-        public static void LoadPeopleIcons(Ruleset path)
+        public static void LoadPeopleIcons(Ruleset ruleset)
         {
-            using var iconsImage = Common.LoadBitmapFrom("PEOPLE", path);
+            using var iconsImage = Common.LoadBitmapFrom("PEOPLE", ruleset.Paths);
 
             var peopleL = new Bitmap[11, 4];
             var peopleLshadow = new Bitmap[11, 4];
@@ -176,44 +174,18 @@ namespace EtoFormsUI
             CityImages.PeopleShadowLarge = peopleLshadow;
         }
 
-        public static void LoadCityWallpaper(Ruleset path)
+        public static void LoadCityWallpaper(Ruleset ruleset)
         {
-            var wallpaper = Common.LoadBitmapFrom("CITY", path);
+            var wallpaper = Common.LoadBitmapFrom("CITY", ruleset.Paths);
             CityImages.Wallpaper = wallpaper.CropImage(new Rectangle(0, 0, 636, 421));
         }
 
         // Import wallpapers for intro screen
         public static void ImportWallpapersFromIconsFile()
         {
-            using var icons = LoadBitmapFrom("ICONS.GIF");
+            using var icons = Common.LoadBitmapFrom("ICONS", Settings.SearchPaths);
             MapImages.PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
             MapImages.PanelInnerWallpaper = icons.Clone(new Rectangle(298, 190, 32, 32));
-        }
-
-        /// <summary>
-        //  Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
-        /// </summary>
-        /// <param name="name">the filename to load</param>
-        /// <param name="path">the local directory to load from</param>
-        /// <returns></returns>
-        private static Bitmap LoadBitmapFrom(string name, string path = null)
-        {
-            if (!string.IsNullOrWhiteSpace(path))
-            {
-                string FilePath_local = path + Path.DirectorySeparatorChar + name;
-                if (File.Exists(FilePath_local))
-                {
-                    return new Bitmap(FilePath_local);
-                }
-            }
-
-            string FilePath_root = Settings.Civ2Path + name;
-            if (File.Exists(FilePath_root))
-            {
-                return new Bitmap(FilePath_root);
-            }
-            Debug.WriteLine(name + " not found!");
-            return new Bitmap(640, 480, PixelFormat.Format32bppRgba);
         }
 
         /// <summary>
