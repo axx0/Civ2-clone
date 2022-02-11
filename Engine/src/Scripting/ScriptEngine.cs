@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using Neo.IronLua;
 
@@ -8,10 +11,13 @@ namespace Civ2engine.Scripting
     {
         private readonly Lua _lua;
         private readonly LuaGlobal _environment;
+        private readonly List<string> _scriptPaths;
         private StringBuilder _log { get; }
 
-        public ScriptEngine(IInterfaceCommands uInterfaceCommands, Game game)
+        public ScriptEngine(IInterfaceCommands uInterfaceCommands, Game game, string[] paths)
         {
+            _scriptPaths = paths.ToList();
+            _scriptPaths.Add(Environment.CurrentDirectory + Path.DirectorySeparatorChar + "Scripts"); 
             _lua = new Lua();
             _environment = _lua.CreateEnvironment();
             dynamic dg = _environment;
@@ -40,6 +46,26 @@ namespace Civ2engine.Scripting
         public void Dispose()
         {
             _lua?.Dispose();
+        }
+
+        public void RunScript(string scriptFileName)
+        {
+            var filePath = Utils.GetFilePath(scriptFileName, _scriptPaths);
+            if (filePath == null)
+            {
+                _log.AppendLine($"Failed to locate script file: {scriptFileName}");
+                return;
+            }
+
+            try
+            {
+                _environment.DoChunk(filePath);
+            }
+            catch (Exception e)
+            {
+                _log.AppendLine($"Exception running script {scriptFileName}");
+                _log.AppendLine(e.Message);
+            }
         }
     }
 }

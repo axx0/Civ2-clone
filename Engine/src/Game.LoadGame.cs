@@ -5,6 +5,7 @@ using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.Scripting;
+using Civ2engine.Statistics;
 using Neo.IronLua;
 
 namespace Civ2engine
@@ -27,20 +28,25 @@ namespace Civ2engine
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
             string[] gamePaths, DifficultyType difficulty, IPlayer localPlayer)
         {
-            Script = new ScriptEngine(localPlayer.UI, this);
+            Script = new ScriptEngine(localPlayer.UI, this, gamePaths);
             _options = options;
             _maps = maps;
+            _rules = configRules;
+            TurnNumber = 0;
+            _difficultyLevel = difficulty;
             AllCivilizations.AddRange(civilizations);
 
             CityNames = NameLoader.LoadCityNames(gamePaths);
-            _rules = configRules;
-            _difficultyLevel = difficulty;
-            TurnNumber = 0;
 
             AI = new AIPlayer(difficulty);
             Players = new Dictionary<PlayerType, IPlayer> { { PlayerType.AI, AI }, { PlayerType.Local, localPlayer } };
 
+            Script.RunScript("advances.lua");
+            Script.RunScript("improvements.lua");
+            
             this.SetupTech();
+            
+            Power.CalculatePowerRatings(this);
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths,
