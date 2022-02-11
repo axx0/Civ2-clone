@@ -20,7 +20,7 @@ namespace EtoFormsUI
         public CityViewWindow(City city)
         {
             _city = city;
-            byte[] bytes = File.ReadAllBytes(Settings.Civ2Path + "cv.dll");
+            byte[] cvDLL = File.ReadAllBytes(Settings.Civ2Path + "cv.dll");
 
             // TODO: also determine if road/ashphalt/highway exists
             // Invention+Phylosophy (=Renaissance) then it has dirt roads
@@ -34,14 +34,14 @@ namespace EtoFormsUI
                 background = "cityviewBasecontinentempty";
 
             // Get tiles
-            baseTile = Images.ExtractBitmap(bytes, background);
-            improvementsTiles = Images.ExtractBitmap(bytes, "cityviewImprovements");
+            baseTile = Images.ExtractBitmap(cvDLL, background);
+            improvementsTiles = Images.ExtractBitmap(cvDLL, "cityviewImprovements");
             improvementsTiles = Images.CreateNonIndexedImage(improvementsTiles);
             improvementsTiles.SetTransparent(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
-            wondersTiles = Images.ExtractBitmap(bytes, "cityviewWonders");
+            wondersTiles = Images.ExtractBitmap(cvDLL, "cityviewWonders");
             wondersTiles = Images.CreateNonIndexedImage(wondersTiles);
             wondersTiles.SetTransparent(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
-            alternTiles = Images.ExtractBitmap(bytes, "cityviewAlternative");
+            alternTiles = Images.ExtractBitmap(cvDLL, "cityviewAlternative");
             alternTiles = Images.CreateNonIndexedImage(alternTiles);
             alternTiles.SetTransparent(new Color[] { Color.FromArgb(255, 0, 255), Color.FromArgb(135, 135, 135) });
 

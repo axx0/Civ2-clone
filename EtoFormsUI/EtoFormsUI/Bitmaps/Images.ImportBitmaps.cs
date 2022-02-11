@@ -1,3 +1,4 @@
+﻿using System.IO;
 using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Terrains;
@@ -21,8 +22,6 @@ namespace EtoFormsUI
 
         public static void LoadGraphicsAssetsAtIntroScreen()
         {
-            DLLs.Tiles = File.ReadAllBytes(Settings.Civ2Path + "Tiles.dll");
-            DLLs.Intro = File.ReadAllBytes(Settings.Civ2Path + "Intro.dll");
             ImportWallpapersFromIconsFile();
             //ImportCiv2Icon();
         }

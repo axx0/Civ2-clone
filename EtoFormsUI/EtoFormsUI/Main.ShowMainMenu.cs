@@ -12,9 +12,7 @@ namespace EtoFormsUI
 
         public void MainMenu()
         {
-            var bytes = File.ReadAllBytes( Settings.Civ2Path + Path.DirectorySeparatorChar + "Intro.dll");  // For loading images from intro.dll
-
-            sinaiPanel = new PicturePanel(Images.ExtractBitmap(bytes, "sinaiPic"));
+            sinaiPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "sinaiPic"));
             layout.Add(sinaiPanel, new Point(160, 76));
 
             var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
