@@ -89,7 +89,7 @@ namespace Civ2engine
 
         public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
             int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,
-            int government, int reputation, bool[] advances)
+            int government, int reputation, bool[][] advances)
         {
             var tribe = Rules.Leaders[tribeNumber];
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
@@ -117,7 +117,7 @@ namespace Civ2engine
                 Adjective = adjective,
                 Money = money,
                 ReseachingAdvance = researchingAdvance,
-                Advances = advances,
+                Advances = advances[id],
                 ScienceRate = sciRate * 10,
                 TaxRate = taxRate * 10,
                 Government = (GovernmentType)government

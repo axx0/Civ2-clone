@@ -40,7 +40,7 @@ namespace Civ2engine
             AI = new AIPlayer(difficulty);
             Players = new Dictionary<PlayerType, IPlayer> { { PlayerType.AI, AI }, { PlayerType.Local, localPlayer } };
 
-        this.SetupTech();
+            this.SetupTech();
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths,
