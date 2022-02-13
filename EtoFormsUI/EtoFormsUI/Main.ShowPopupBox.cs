@@ -33,7 +33,7 @@ namespace EtoFormsUI
                 var ruleSet = new Ruleset
                 {
                     FolderPath = savDirectory,
-                    Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.Civ2Path
+                    Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0]
                 };
                 savName = Path.GetFileName(ofd.FileName);
                 if (initializer(ruleSet, savName))

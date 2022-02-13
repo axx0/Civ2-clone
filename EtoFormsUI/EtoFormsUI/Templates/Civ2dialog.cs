@@ -98,7 +98,7 @@ namespace EtoFormsUI
             _innerSize.Width = (int)_fTitle.Measure().Width - 2 * 11;
 
             // Determine size of text and based on that determine inner panel size
-            if (_text is not null)
+            if (_text?.Count > 0)
             {
                 _fTexts = GetFormattedTexts(_text, popupBox.LineStyles.ToList(), replaceStrings, replaceNumbers);
                 _innerSize.Width = Math.Max(_innerSize.Width, GetInnerPanelWidthFromText(_fTexts, popupBox));

@@ -28,11 +28,12 @@ namespace Civ2engine
         {
             if (searchPaths != null)
             {
-                foreach (var path in searchPaths)
+                if (extensions.Length > 0)
                 {
-                    var searchPath = path + Path.DirectorySeparatorChar + filename;
-                    if (extensions.Length > 0)
+                    foreach (var path in searchPaths)
                     {
+                        var searchPath = path + Path.DirectorySeparatorChar + filename;
+
                         foreach (var extension in extensions)
                         {
                             var filePath = searchPath + "." + extension;
@@ -40,17 +41,24 @@ namespace Civ2engine
                             {
                                 return filePath;
                             }
-
                         }
                     }
-                    else if (File.Exists(searchPath))
+                }
+                else
+                {
+                    foreach (var path in searchPaths)
                     {
-                        return searchPath;
+                        var searchPath = path + Path.DirectorySeparatorChar + filename;
+
+                        if (File.Exists(searchPath))
+                        {
+                            return searchPath;
+                        }
                     }
                 }
             }
 
-            var rootPath = Settings.Civ2Path + filename;
+            var rootPath = Settings.Civ2Path + Path.DirectorySeparatorChar + filename;
 
             if (File.Exists(rootPath))
             {

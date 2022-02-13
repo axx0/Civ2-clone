@@ -4,18 +4,17 @@ namespace Civ2engine
 {
     public class Ruleset
     {
-        public string Name { get; set; }
+        public string Name { get; init; }
         
-        public string FolderPath { get; set; }
+        public string FolderPath { get; init; }
         
-        public string Root { get; set; }
+        public string Root { get; init; }
 
+        private string[] _paths = null;
+        
         public string[] Paths
         {
-            get
-            {
-                return Root == FolderPath ? new[] { FolderPath } : new[] {FolderPath, Root};
-            }
+            get { return _paths ??= (Root == FolderPath ? new[] { FolderPath } : new[] { FolderPath, Root }); }
         }
     }
 }

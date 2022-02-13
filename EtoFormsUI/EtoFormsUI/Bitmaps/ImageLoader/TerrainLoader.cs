@@ -23,8 +23,8 @@ namespace EtoFormsUI.ImageLoader
 
         private static TerrainSet LoadTerrain(Ruleset ruleset, int index)
         {
-            using var tileData = Common.LoadBitmapFrom($"Terrain{((index * 2) + 1)}", ruleset);
-            using var overlayData = Common.LoadBitmapFrom($"Terrain{((index * 2) + 2)}", ruleset);
+            using var tileData = Common.LoadBitmapFrom($"Terrain{((index * 2) + 1)}", ruleset.Paths);
+            using var overlayData = Common.LoadBitmapFrom($"Terrain{((index * 2) + 2)}", ruleset.Paths);
 
             // Initialize objects
             var terrain = new TerrainSet();

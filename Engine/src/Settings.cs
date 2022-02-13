@@ -25,22 +25,24 @@ namespace Civ2engine
             // Load settings from App.config
             try
             {
-                // Read from config file
-                Civ2Path = config.GetSection(nameof(Civ2Path)).Value;
-                if (!Directory.Exists(Civ2Path))
-                {
-                    Debug.WriteLine("Civ2 directory doesn't exist!");
-                    Environment.Exit(ERROR_INVALID_NAME);
-                }
-
                 SearchPaths = config.GetSection(nameof(SearchPaths))
                     .GetChildren()
-                    .Select(c => c.Value)
+                    .Select(c => c.Value.TrimEnd(Path.DirectorySeparatorChar))
                     .Where(Directory.Exists).ToArray();
 
-                if (!SearchPaths.Contains(Civ2Path))
+                // Read from config file
+                Civ2Path = config.GetSection(nameof(Civ2Path)).Value.TrimEnd(Path.DirectorySeparatorChar);
+                if (!Directory.Exists(Civ2Path))
                 {
-                    SearchPaths = new[] {Civ2Path}.Concat(SearchPaths).ToArray();
+                    if (SearchPaths.Length == 0)
+                    {
+                        Debug.WriteLine("Civ2 directory doesn't exist!");
+                        Environment.Exit(ERROR_INVALID_NAME);
+                    }
+                    Civ2Path = SearchPaths[0];
+                }else if (!SearchPaths.Contains(Civ2Path))
+                {
+                    SearchPaths = new[] { Civ2Path }.Concat(SearchPaths).ToArray();
                 }
             }
             catch

@@ -152,7 +152,9 @@ namespace EtoFormsUI.Initialization
                     }
 
                     stPeterburgPanel.Dispose();
+
                     islandPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "islandPic"));
+
                     mainForm.layout.Add(islandPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - islandPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMFORM"];
 
@@ -165,7 +167,9 @@ namespace EtoFormsUI.Initialization
                     }
 
                     islandPanel.Dispose();
+
                     desertPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "desertPic"));
+
                     mainForm.layout.Add(desertPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - desertPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMCLIMATE"];
                     config.Climate = CustomWorldDialog(mainForm, configPopUp, config);
@@ -177,7 +181,9 @@ namespace EtoFormsUI.Initialization
                     }
 
                     desertPanel.Dispose();
+
                     snowPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "snowPic"));
+
                     mainForm.layout.Add(snowPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - snowPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMTEMP"];
 
@@ -190,7 +196,9 @@ namespace EtoFormsUI.Initialization
                     }
 
                     snowPanel.Dispose();
+
                     canyonPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "canyonPic"));
+
                     mainForm.layout.Add(canyonPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - canyonPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMAGE"];
 
@@ -212,6 +220,7 @@ namespace EtoFormsUI.Initialization
         private static void GetWorldSize(Main mainForm, GameInitializationConfig config)
         {
             stPeterburgPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "stPeterburgPic"));
+
             mainForm.layout.Add(stPeterburgPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - stPeterburgPanel.Width / 2), 120));
 
             while (true)
@@ -237,9 +246,9 @@ namespace EtoFormsUI.Initialization
 
                 if (worldSizeDialog.SelectedButton != "Custom") return;
 
-                var customsizePopup = config.PopUps["CUSTOMSIZE"];
-                if (!customsizePopup.Button.Contains(Labels.Cancel)) customsizePopup.Button.Add(Labels.Cancel);
-                var customSizeDialog = new Civ2dialog(mainForm, customsizePopup,
+                var customSizePopup = config.PopUps["CUSTOMSIZE"];
+                if (!customSizePopup.Button.Contains(Labels.Cancel)) customSizePopup.Button.Add(Labels.Cancel);
+                var customSizeDialog = new Civ2dialog(mainForm, customSizePopup,
                     textBoxes: new List<TextBoxDefinition>
                     {
                     new()
@@ -274,6 +283,7 @@ namespace EtoFormsUI.Initialization
             config.Rules = RulesParser.ParseRules(config.RuleSet);
 
             mingGeneralPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "mingGeneralPic"));
+
             mainForm.layout.Add(mingGeneralPanel, new Point((int)Screen.PrimaryScreen.Bounds.Width - 156 - mingGeneralPanel.Width, 76));
 
             var difficultyDialog = new Civ2dialog(mainForm, config.PopUps["DIFFICULTY"]);
@@ -295,6 +305,7 @@ namespace EtoFormsUI.Initialization
         private static void SelectNumberOfCivs(Main mainForm, GameInitializationConfig config)
         {
             anicientPersonsPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "ancientPersonsPic"));
+
             mainForm.layout.Add(anicientPersonsPanel, new Point(160, 76));
 
             var enemiesPopup = config.PopUps["ENEMIES"];
@@ -331,6 +342,7 @@ namespace EtoFormsUI.Initialization
         private static void SelectBarbarity(Main mainForm, GameInitializationConfig config)
         {
             barbariansPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "barbariansPic"));
+
             mainForm.layout.Add(barbariansPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width - barbariansPanel.Width - 81), 76));
 
             var barbarityDialog = new Civ2dialog(mainForm, config.PopUps["BARBARITY"]);
@@ -357,6 +369,7 @@ namespace EtoFormsUI.Initialization
             while (true)
             {
                 galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyWreckPic"));
+
                 mainForm.layout.Add(galleyPanel, new Point(161, 76));
 
                 var rulesDialog = new Civ2dialog(mainForm, config.PopUps["RULES"]);
@@ -414,6 +427,7 @@ namespace EtoFormsUI.Initialization
         private static void SelectGender(Main mainForm, GameInitializationConfig config)
         {
             peoplePanel1 = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "peoplePic1"));
+
             mainForm.layout.Add(peoplePanel1, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePanel1.Width / 2), 76));
 
             var genderDialog = new Civ2dialog(mainForm, config.PopUps["GENDER"]);
@@ -435,6 +449,7 @@ namespace EtoFormsUI.Initialization
         private static void SelectTribe(Main mainForm, GameInitializationConfig config)
         {
             peoplePanel2 = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "peoplePic2"));
+
             mainForm.layout.Add(peoplePanel2, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePanel2.Width / 2), 76));
 
             var popup = config.PopUps["TRIBE"];
@@ -574,6 +589,7 @@ namespace EtoFormsUI.Initialization
         private static void SelectCityStyle(Main mainForm, GameInitializationConfig config)
         {
             templePanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "templePic"));
+
             mainForm.layout.Add(templePanel, new Point(160, 76));
 
             var citiesPopup = config.PopUps["CUSTOMCITY"];
@@ -614,6 +630,7 @@ namespace EtoFormsUI.Initialization
             if (config.SelectComputerOpponents)
             {
                 galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyPic"));
+
                 mainForm.layout.Add(galleyPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - galleyPanel.Width / 2), 75));
 
                 var opponentPop = config.PopUps["OPPONENT"];
