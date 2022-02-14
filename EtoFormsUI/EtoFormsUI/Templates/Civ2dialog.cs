@@ -20,14 +20,18 @@ namespace EtoFormsUI
         private readonly IList<FormattedText> _fTexts;
         private readonly FormattedText[] _formattedOptionsTexts, _formattedTextboxTexts;
         private readonly CheckBox[] _checkBox;
+        private readonly ListboxDefinition _listbox;
         private readonly IList<string> _options, _text;
+        private readonly VScrollBar _listboxBar;
 
         private readonly bool _hasCheckBoxes;
 
         private bool dragging = false;
         private PointF dragCursorPoint, dragFormPoint, dif;
         private readonly int _optionsColumns, _optionsRows;
-        private readonly Drawable _surface;
+        private readonly Drawable _surface, _listboxSurface;
+        private readonly int _listboxShownLines, _listboxHeight;
+        private int _listboxShownLine0;
         private readonly Bitmap[] _icons;
         private readonly Bitmap _image;
         private readonly Size _innerSize;
@@ -44,7 +48,8 @@ namespace EtoFormsUI
         /// <param name="optionsCols">The number of columns to break options into</param>
         /// <param name="icons">Icons to show next to options</param>
         /// <param name="image">Image shown</param>
-        public Civ2dialog(Main parent, PopupBox popupBox, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null)
+        /// <param name="listbox">Listbox shown</param>
+        public Civ2dialog(Main parent, PopupBox popupBox, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, IList<bool> checkboxOptionState = null, List<TextBoxDefinition> textBoxes = null, int optionsCols = 1, Bitmap[] icons = null, Bitmap image = null, ListboxDefinition listbox = null)
         {
             foreach (var item in parent.Menu.Items) item.Enabled = false;
 
@@ -81,6 +86,7 @@ namespace EtoFormsUI
             {
                 _text = popupBox.Text.ToList();
             }
+            _listbox = listbox;
             _image = image;
             _icons = icons ?? Array.Empty<Bitmap>();
             _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
@@ -120,6 +126,9 @@ namespace EtoFormsUI
             // Correction of inner panel size for textbox
             _innerSize = new Size(_innerSize.Width, _innerSize.Height + (30 * textBoxes?.Count ?? 0));
 
+            _listboxShownLines = popupBox.ListboxLines;
+            _listboxHeight = _listboxShownLines * 23 + 2;
+            _innerSize.Height += _listboxHeight;
             Size = new Size(_innerSize.Width + 2 * 2 + 2 * 11, _innerSize.Height + 2 * 2 + _paddingTop + _paddingBtm);
 
             // Dialog location on screen (center by default)
@@ -174,6 +183,25 @@ namespace EtoFormsUI
             _surface.Paint += Surface_Paint;
             layout.Size = Size;
             layout.Add(_surface, 0, 0);
+
+            if (popupBox.Listbox)
+            {
+                _listboxSurface = new Drawable() { Size = new Size(_surface.Width - 2 * 13, _listboxHeight), BackgroundColor = Color.FromArgb(207, 207, 207) };
+                _listboxSurface.Paint += ListboxSurface_Paint;
+                layout.Add(_listboxSurface, 13, _paddingTop + _innerSize.Height - _listboxHeight + 2);
+
+                if (_listbox.LeftText.Count > popupBox.ListboxLines)
+                {
+                    _listboxBar = new VScrollBar() { Height = _listboxSurface.Height, Value = 0, Maximum = _listbox.LeftText.Count };
+                    _listboxBar.ValueChanged += (_, _) =>
+                    {
+                        _listboxShownLine0 = _listboxBar.Value;
+                        _listboxSurface.Invalidate();
+                    };
+                    layout.Add(_listboxBar, 13 + _listboxSurface.Width - 10, _paddingTop + _innerSize.Height - _listboxHeight + 2);
+                }
+                _listboxShownLine0 = _listboxBar is null ? 0 : _listboxBar.Value;
+            }
 
             // Insert textboxes
             if (textBoxes is not null)
@@ -342,11 +370,42 @@ namespace EtoFormsUI
                         }
                     }
 
-
-
                     SelectedIndex = newIndex;
                     buttons.FirstOrDefault(n => n.Text == "OK")?.Focus();
                     _surface.Invalidate();
+                    args.Handled = true;
+                };
+            }
+
+            if (_listbox is not null)
+            {
+                KeyDown += (sender, args) =>
+                {
+                    if (args.Key is not (Keys.Up or Keys.Down or Keys.Left or Keys.Right)) return;
+
+                    var newIndex = SelectedIndex;
+                    newIndex += (args.Key is Keys.Down or Keys.Right ? 1 : -1);
+                    if (newIndex < 0)
+                    {
+                        newIndex = listbox.LeftText.Count - 1;
+                    }
+                    else if (newIndex >= listbox.LeftText.Count)
+                    {
+                        newIndex = 0;
+                    }
+
+                    SelectedIndex = newIndex;
+                    if (SelectedIndex < _listboxShownLine0)
+                    {
+                        _listboxShownLine0 = SelectedIndex;
+                        _listboxBar.Value = SelectedIndex;
+                    }
+                    else if (SelectedIndex > _listboxShownLine0 + _listboxShownLines - 1)
+                    {
+                        _listboxShownLine0 = SelectedIndex - _listboxShownLines + 1;
+                        _listboxBar.Value = _listboxShownLine0;
+                    }
+                    _listboxSurface.Invalidate();
                     args.Handled = true;
                 };
             }
@@ -396,8 +455,6 @@ namespace EtoFormsUI
                     }
                 }
             };
-
-
 
             Content = layout;
         }
@@ -683,6 +740,37 @@ namespace EtoFormsUI
                         new Point(13, _paddingTop + 9 + _innerSize.Height - 30 * _formattedTextboxTexts.Length + i * 30));
                 }
             }
+        }
+
+        private void ListboxSurface_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.AntiAlias = false;
+
+            e.Graphics.DrawRectangle(Color.FromArgb(67, 67, 67), new Rectangle(0, 0, _listboxSurface.Width - 1, _listboxSurface.Height - 1));
+
+            var rowmax = _listboxBar is null ? Math.Min(_listboxShownLines, _listbox.LeftText.Count) : Math.Min(_listboxShownLines, _listbox.LeftText.Count - _listboxShownLine0);
+            var offsetX = _listbox.Icon.Any() ? 76 : 1;
+            for (int row = 0; row < rowmax; row++)
+            {
+                if (_listboxShownLine0 + row == SelectedIndex)
+                {
+                    e.Graphics.FillRectangle(Color.FromArgb(107, 107, 107), offsetX + 1, 2 + 23 * row, _listboxSurface.Width - offsetX - 3, 21);
+                    e.Graphics.DrawLine(Color.FromArgb(223, 223, 223), offsetX, 1 + 23 * row, offsetX, 1 + 23 * row + 21);
+                    e.Graphics.DrawLine(Color.FromArgb(223, 223, 223), offsetX, 1 + 23 * row, _listboxSurface.Width - 3, 1 + 23 * row);
+                    e.Graphics.DrawLine(Color.FromArgb(67, 67, 67), _listboxSurface.Width - 2, 1 + 23 * row, _listboxSurface.Width - 2, 1 + 23 * row + 21);
+                    e.Graphics.DrawLine(Color.FromArgb(67, 67, 67), offsetX, 23 * (row + 1), _listboxSurface.Width - 2, 23 * (row + 1));
+                    Draw.Text(e.Graphics, _listbox.LeftText[SelectedIndex], new Font("Times new Roman", 15, FontStyle.Bold), Colors.White, new Point(offsetX + 2, row * 23), false, false, Colors.Black, 1, 1);
+                }
+                else
+                {
+                    Draw.Text(e.Graphics, _listbox.LeftText[_listboxShownLine0 + row], new Font("Times new Roman", 15), Colors.Black, new Point(offsetX + 2, row * 23 + 2), false, false);
+                }
+
+                if (_listbox.Icon.Any())
+                {
+                    e.Graphics.DrawImage(_listbox.Icon[row], 1 + (_listboxShownLine0 + row) % 2 * 38, 2 + 23 * row);
+                }
+            }                
         }
 
         /// <summary>

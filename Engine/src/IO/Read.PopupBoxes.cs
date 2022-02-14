@@ -103,6 +103,10 @@ namespace Civ2engine
                         case "checkbox":
                             popupBox.Checkbox = true;
                             break;
+                        case "listbox":
+                            popupBox.Listbox = true;
+                            popupBox.ListboxLines = parts.Length > 1 ? int.Parse(parts[1]) : 16;
+                            break;
                         case "button":
                             (popupBox.Button ??= new List<string>()).Add(parts[1]);
                             break;
