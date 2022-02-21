@@ -10,10 +10,10 @@ namespace EtoFormsUI.Mac
         {
         }
 
-        // TODO: add this property
         public Image BackgroundImage 
         {
-            get;set;
+            get => Widget.Image;
+            set => Widget.Image = value;
         }
     }
 }
