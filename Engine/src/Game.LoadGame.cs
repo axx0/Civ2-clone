@@ -57,8 +57,11 @@ namespace Civ2engine
             
             GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
             NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;
-            
-            _activeUnit = objects.ActiveUnit;
+
+            if (!objects.ActiveUnit.Dead)
+            {
+                _activeUnit = objects.ActiveUnit;
+            }
 
             _activeCiv = GetPlayerCiv;
             AllCities.AddRange(objects.Cities);
