@@ -49,12 +49,19 @@ namespace EtoFormsUIExtensionMethods
 
             var destImage = new Bitmap(width, height, PixelFormat.Format32bppRgba);
 
-            using (var g = new Graphics(destImage))
-            {
-                g.AntiAlias = false;
-                g.ImageInterpolation = ImageInterpolation.None;
-                g.DrawImage(image, 0, 0, width, height);
-            }
+            using var g = new Graphics(destImage) { AntiAlias = false, ImageInterpolation = ImageInterpolation.None };
+            g.DrawImage(image, 0, 0, width, height);
+
+            return destImage;
+        }
+
+        // Resize to new coords
+        public static Bitmap Resize(this Bitmap image, int width, int height)
+        {
+            var destImage = new Bitmap(width, height, PixelFormat.Format32bppRgba);
+
+            using var g = new Graphics(destImage) { AntiAlias = false, ImageInterpolation = ImageInterpolation.None };
+            g.DrawImage(image, 0, 0, width, height);
 
             return destImage;
         }

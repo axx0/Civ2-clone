@@ -11,43 +11,44 @@ namespace EtoFormsUI
     {
         public static void CityFoodStorage(Graphics g, City city, int cityZoom, Point dest)
         {
+            g.AntiAlias = false;
+
+            var panelSize = new Size(195 * (2 + cityZoom) / 2, 163 * (2 + cityZoom) / 2);
+            var panelPos = new Point(437 * (2 + cityZoom) / 2, 0);
+
             // Get normal zoom from city zoom (-1/0/1)
             int zoom = cityZoom * 4;
 
             // Icons
-            int wheatW = 14 * (2 + cityZoom) / 2;   // Width
-            int wheatH = 14 * (2 + cityZoom) / 2;   // Height
-
-            // First determine spacing between wheat icons
-            // NOTE: not 100% accurate, spacing also tends to switch between two numbers
-            int wheat_spacing;
-            switch (city.Size)
+            int wheatW = 14 * (2 + cityZoom) / 2;
+            int wheatH = 14 * (2 + cityZoom) / 2;
+            var wheat_spacing = city.Size switch
             {
-                case int n when (n <= 9): wheat_spacing = 17; break;  // norm=17, big=26
-                case int n when (n == 10): wheat_spacing = 16; break;  // norm=16, big=24
-                case int n when (n == 11): wheat_spacing = 13; break;  // norm=13, big=20
-                case int n when (n == 12): wheat_spacing = 12; break;  // norm=12, big=18
-                case int n when (n == 13): wheat_spacing = 11; break;  // norm=11, big=17
-                case int n when (n == 14): wheat_spacing = 10; break;  // norm=10, big=15
-                case int n when (n == 15 || n == 16): wheat_spacing = 9; break;  // norm=9, big=14
-                case int n when (n == 17): wheat_spacing = 8; break;  // norm=8, big=12
-                case int n when (n >= 18 && n <= 20): wheat_spacing = 7; break;  // norm=7, big=11
-                case int n when (n == 21 || n == 22): wheat_spacing = 6; break;  // norm=6, big=9
-                case int n when (n >= 23 && n <= 26): wheat_spacing = 5; break;  // norm=5, big=8
-                case int n when (n >= 27 && n <= 33): wheat_spacing = 4; break;  // norm=4, big=6
-                case int n when (n >= 34 && n <= 40): wheat_spacing = 3; break;  // norm=3, big=5
-                case int n when (n >= 41 && n <= 80): wheat_spacing = 2; break;  // norm=2, big=3
-                case int n when (n >= 81): wheat_spacing = 1; break;  // norm=1, big=2
-                default: wheat_spacing = 17; break;
-            }
-            wheat_spacing = (int)(wheat_spacing * (1 + ((float)zoom / 8.0)));   // Make spacing city zoom dependent
+                int n when (n <= 9) => 17,
+                int n when (n == 10) => 16,
+                int n when (n == 11) => 13,
+                int n when (n == 12) => 12,
+                int n when (n == 13) => 11,
+                int n when (n == 14) => 10,
+                int n when (n == 15 || n == 16) => 9,
+                int n when (n == 17) => 8,
+                int n when (n >= 18 && n <= 20) => 7,
+                int n when (n == 21 || n == 22) => 6,
+                int n when (n >= 23 && n <= 26) => 5,
+                int n when (n >= 27 && n <= 33) => 4,
+                int n when (n >= 34 && n <= 40) => 3,
+                int n when (n >= 41 && n <= 80) => 2,
+                int n when (n >= 81) => 1,
+                _ => 17,
+            };
+            wheat_spacing = wheat_spacing.ZoomScale(zoom);
 
             // Draw rectangle around wheat icons     
             using var _pen1 = new Pen(Color.FromArgb(75, 155, 35));
             using var _pen2 = new Pen(Color.FromArgb(0, 51, 0));
             // 1st horizontal line
-            int line_width = (city.Size * wheat_spacing + wheatW + 7) * (2 + cityZoom) / 2;
-            int starting_x = dest.X + 532 * (2 + cityZoom) / 2 - line_width / 2;
+            int line_width = city.Size * wheat_spacing + wheatW + 7 * (2 + cityZoom) / 2;
+            int starting_x = dest.X + panelPos.X + panelSize.Width / 2 - line_width / 2;
             int starting_y = dest.Y + 15 * (2 + cityZoom) / 2;
             g.DrawLine(_pen1, starting_x, starting_y, starting_x + line_width, starting_y);
             // 2nd horizontal line
@@ -67,7 +68,7 @@ namespace EtoFormsUI
             {
                 for (int col = 0; col <= city.Size; col++)
                 {
-                    g.DrawImage(CityImages.FoodBig.Resize(zoom), starting_x + wheat_spacing * col, dest.Y + (18 + wheatH * row) * (2 + cityZoom) / 2);
+                    g.DrawImage(CityImages.FoodBig.Resize(zoom), starting_x + wheat_spacing * col, dest.Y +  15 * (2 + cityZoom) / 2 + 3 + wheatH * row);
                     count++;
 
                     if (count >= city.FoodInStorage) break;
@@ -96,7 +97,7 @@ namespace EtoFormsUI
 
             // FOOD
             // Text
-            var _txtFrame = new Rectangle(dest.X + 204 * (2 + cityZoom) / 2, dest.Y + 60 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
+            var _txtFrame = new Rectangle(dest.X + 203.ZoomScale(4 * cityZoom), dest.Y + 61.ZoomScale(4 * cityZoom), 228.ZoomScale(4 * cityZoom), 12.ZoomScale(4 * cityZoom));
             Draw.Text(g, $"Food: {city.Food}", _font, Color.FromArgb(87, 171, 39), _txtFrame, FormattedTextAlignment.Left, Colors.Black, 1, 1);
             Draw.Text(g, $"Surplus: {city.SurplusHunger}", _font, Color.FromArgb(63, 139, 31), _txtFrame, FormattedTextAlignment.Right, Colors.Black, 1, 1);
             // Number of food+surplus/hunger icons determines spacing between icons
@@ -132,7 +133,7 @@ namespace EtoFormsUI
 
             // TRADE
             // Text
-            _txtFrame = new Rectangle(dest.X + 204 * (2 + cityZoom) / 2, dest.Y + 101 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
+            _txtFrame = new Rectangle(dest.X + 203 * (2 + cityZoom) / 2, dest.Y + 102 * (2 + cityZoom) / 2, 228 * (2 + cityZoom) / 2, 12 * (2 + cityZoom) / 2);
             Draw.Text(g, $"Trade: {city.Trade}", _font, Color.FromArgb(239, 159, 7), _txtFrame, FormattedTextAlignment.Left, Colors.Black, 1, 1);
             Draw.Text(g, $"Corruption: {city.Corruption}", _font, Color.FromArgb(227, 83, 15), _txtFrame, FormattedTextAlignment.Right, Colors.Black, 1, 1);
             // Spacing between icons
@@ -228,37 +229,34 @@ namespace EtoFormsUI
         {
             // Get normal zoom from city zoom (-1/0/1)
             int zoom = cityZoom * 4;
-
-            // Determine spacing between icons
-            int spacing;
-            switch (city.Size)
+            var spacing = city.Size switch
             {
-                case int n when (n <= 15): spacing = 28; break; // This spacing is for normal zoom (=0)
-                case int n when (n == 16): spacing = 26; break;
-                case int n when (n == 17): spacing = 24; break;
-                case int n when (n == 18): spacing = 23; break;
-                case int n when (n == 19): spacing = 21; break;
-                case int n when (n == 20): spacing = 20; break;
-                case int n when (n == 21): spacing = 19; break;
-                case int n when (n == 22): spacing = 18; break;
-                case int n when (n == 23 || n == 24): spacing = 17; break;
-                case int n when (n == 25): spacing = 16; break;
-                case int n when (n == 26 || n == 27): spacing = 15; break;
-                case int n when (n == 28 || n == 29): spacing = 14; break;
-                case int n when (n == 30 || n == 31): spacing = 13; break;
-                case int n when (n == 32 || n == 33): spacing = 12; break;
-                case int n when (n >= 34 && n <= 36): spacing = 11; break;
-                case int n when (n >= 37 && n <= 41): spacing = 10; break;
-                case int n when (n == 42 || n == 43): spacing = 14; break;
-                case int n when (n >= 44 && n <= 50): spacing = 8; break;
-                case int n when (n >= 51 && n <= 57): spacing = 7; break;
-                case int n when (n >= 58 && n <= 66): spacing = 6; break;
-                case int n when (n >= 67 && n <= 79): spacing = 5; break;
-                case int n when (n >= 80 && n <= 99): spacing = 4; break;
-                case int n when (n >= 100): spacing = 3; break;
-                default: spacing = 20; break;
-            }
-            spacing = (int)(spacing * (1 + ((float)zoom / 8.0)));   // Make spacing city zoom dependent
+                int n when (n <= 15) => 28,
+                int n when (n == 16) => 26,
+                int n when (n == 17) => 24,
+                int n when (n == 18) => 23,
+                int n when (n == 19) => 21,
+                int n when (n == 20) => 20,
+                int n when (n == 21) => 19,
+                int n when (n == 22) => 18,
+                int n when (n == 23 || n == 24) => 17,
+                int n when (n == 25) => 16,
+                int n when (n == 26 || n == 27) => 15,
+                int n when (n == 28 || n == 29) => 14,
+                int n when (n == 30 || n == 31) => 13,
+                int n when (n == 32 || n == 33) => 12,
+                int n when (n >= 34 && n <= 36) => 11,
+                int n when (n >= 37 && n <= 41) => 10,
+                int n when (n == 42 || n == 43) => 14,
+                int n when (n >= 44 && n <= 50) => 8,
+                int n when (n >= 51 && n <= 57) => 7,
+                int n when (n >= 58 && n <= 66) => 6,
+                int n when (n >= 67 && n <= 79) => 5,
+                int n when (n >= 80 && n <= 99) => 4,
+                int n when (n >= 100) => 3,
+                _ => 20,
+            };
+            spacing = spacing.ZoomScale(zoom);
 
             // Draw icons
             PeopleType[] peoples = city.People;
@@ -270,7 +268,6 @@ namespace EtoFormsUI
                 {
                     drawIndex++;  // Change men/woman appearance
                 }
-                //graphics.DrawImage(Images.PeopleL[drawIndex, 0], i * spacing + 1, 1);   // Shadow
                 using var plpShPic = CityImages.PeopleShadowLarge[drawIndex, 0].Resize(zoom);
                 g.DrawImage(plpShPic, dest.X + 5 * (2 + cityZoom) / 2 + i * spacing + 1, dest.Y + 9 * (2 + cityZoom) / 2 + 1);   // Shadow
                 using var plpPic = CityImages.PeopleLarge[drawIndex, 0].Resize(zoom);
@@ -280,6 +277,9 @@ namespace EtoFormsUI
 
         public static void CityProduction(Graphics g, City city, int cityZoom, Point dest)
         {
+            var panelSize = new Size(195 * (2 + cityZoom) / 2, 191 * (2 + cityZoom) / 2);
+            var panelPos = new Point(437 * (2 + cityZoom) / 2, 165 * (2 + cityZoom) / 2);
+
             // Show item currently in production (ProductionItem=0...61 are units, 62...127 are improvements)
             // zoom: Units=-1(norm), Improvements=0(norm)
             var fontSize = cityZoom == -1 ? 4 : (cityZoom == 0 ? 9 : 13);
@@ -290,12 +290,13 @@ namespace EtoFormsUI
             switch (city.ItemInProduction.Type)
             {
                 case ItemType.Unit:
-                    UnitSprite(g, city.ItemInProduction.ImageIndex, false, false, 4 * cityZoom - 1, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 163 * (2 + cityZoom) / 2));
+                    int unitZoom = cityZoom == -1 ? -5 : (cityZoom == 0 ? -1 : 1);
+                    UnitSprite(g, city.ItemInProduction.ImageIndex, false, false, unitZoom, new Point(dest.X + panelPos.X + 72 * (2 + cityZoom) / 2, dest.Y + panelPos.Y + 3 * (2 + cityZoom) / 2));
                     break;
                 case ItemType.Building:
                     var index = city.ItemInProduction.ImageIndex;
-                Text(g, Game.Rules.Improvements[index].Name, font, Color.FromArgb(63, 79, 167), new Point(dest.X + 534 * (2 + cityZoom) / 2, dest.Y + 175 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
-                CityImprovement(g, (ImprovementType)(index), 4 * cityZoom, new Point(dest.X + 516 * (2 + cityZoom) / 2, dest.Y + 183 * (2 + cityZoom) / 2));
+                    Text(g, Game.Rules.Improvements[index].Name, font, Color.FromArgb(63, 79, 167), new Point(dest.X + panelPos.X + 97 * (2 + cityZoom) / 2, dest.Y + panelPos.Y + 8 * (2 + cityZoom) / 2), true, true, Colors.Black, 1, 1);
+                    CityImprovement(g, (ImprovementType)index, 4 * cityZoom, new Point(dest.X + panelPos.X + 79 * (2 + cityZoom) / 2, dest.Y + panelPos.Y + 18 * (2 + cityZoom) / 2));
                     break;
                 default:
                     throw new NotSupportedException("Unknown production type");
@@ -319,7 +320,7 @@ namespace EtoFormsUI
                 {
                     dx = Convert.ToInt32(2 + col * (182 - 14 - 4) / ((float)Math.Max(cost, 10) - 1)) ; // Horizontal separation between icons
                     dy = 14;    // Vertical separation of icons (space between icons in y-directions is always 0)
-                    g.DrawImage(CityImages.SupportBig, (450 + dx) * (2 + cityZoom) / 2, (240 + dy * row) * (2 + cityZoom) / 2);
+                    g.DrawImage(CityImages.SupportBig.Resize(4 * cityZoom), dest.X + panelPos.X + (6 + dx) * (2 + cityZoom) / 2, dest.Y + panelPos.Y + (45 + dy * row) * (2 + cityZoom) / 2);
 
                     count++;
                     if (count >= city.ShieldsProgress) break;

@@ -36,8 +36,8 @@ namespace EtoFormsUI
         // Draw text in frame
         public static void Text(Graphics g, string text, Font font, Color frontColor, Rectangle frame, FormattedTextAlignment horizAlignment, Color? shadowColor = null, int shadowOffsetX = 0, int shadowOffsetY = 0)
         {
-            if (shadowOffsetX != 0 || shadowOffsetY != 0) g.DrawText(font, new SolidBrush(shadowColor ?? Colors.Black), frame, text, FormattedTextWrapMode.None, horizAlignment, FormattedTextTrimming.None);
-            g.DrawText(font, new SolidBrush(frontColor), new Rectangle(frame.X + 1, frame.Y + 1, frame.Width, frame.Height), text, FormattedTextWrapMode.None, horizAlignment, FormattedTextTrimming.None);
+            if (shadowOffsetX != 0 || shadowOffsetY != 0) g.DrawText(font, new SolidBrush(shadowColor ?? Colors.Black), new Rectangle(frame.X + 1, frame.Y + 1, frame.Width, frame.Height), text, FormattedTextWrapMode.None, horizAlignment, FormattedTextTrimming.None);
+            g.DrawText(font, new SolidBrush(frontColor), frame, text, FormattedTextWrapMode.None, horizAlignment, FormattedTextTrimming.None);
         }
     }
 }

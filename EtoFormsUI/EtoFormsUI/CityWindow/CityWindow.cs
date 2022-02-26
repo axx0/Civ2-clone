@@ -4,10 +4,12 @@ using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Units;
+using Civ2engine.Production;
 using Civ2engine.Improvements;
 using Civ2engine.Enums;
 using EtoFormsUIExtensionMethods;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace EtoFormsUI
 {
@@ -17,14 +19,14 @@ namespace EtoFormsUI
         private Map Map => Game.CurrentMap;
         private readonly MapPanel _parent;
         private readonly Civ2button closeIcon, zoomInIcon, zoomOutIcon, infoButton, mapButton, renameButton, happyButton, viewButton, exitButton, buyButton, changeButton;
-        private Point BuyButtonLoc => new Point(11 + 442.ZoomScale(_cityZoom * 4), PaddingTop + 181.ZoomScale(_cityZoom * 4));
-        private Point ChangeButtonLoc => new Point(11 + 557.ZoomScale(_cityZoom * 4), PaddingTop + 181.ZoomScale(_cityZoom * 4));
-        private Point InfoButtonLoc => new Point(11 + 459.ZoomScale(_cityZoom * 4), PaddingTop + 364.ZoomScale(_cityZoom * 4));
-        private Point MapButtonLoc => new Point(InfoButtonLoc.X + 58.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y);
-        private Point RenameButtonLoc => new Point(InfoButtonLoc.X + 116.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y);
-        private Point HappyButtonLoc => new Point(InfoButtonLoc.X, InfoButtonLoc.Y + 25.ZoomScale(_cityZoom * 4));
-        private Point ViewButtonLoc => new Point(InfoButtonLoc.X + 58.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y + 25.ZoomScale(_cityZoom * 4));
-        private Point ExitButtonLoc => new Point(InfoButtonLoc.X + 116.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y + 25.ZoomScale(_cityZoom * 4));
+        private Point BuyButtonLoc => new(11 + 442.ZoomScale(_cityZoom * 4), PaddingTop + 181.ZoomScale(_cityZoom * 4));
+        private Point ChangeButtonLoc => new(11 + 557.ZoomScale(_cityZoom * 4), PaddingTop + 181.ZoomScale(_cityZoom * 4));
+        private Point InfoButtonLoc => new(11 + 459.ZoomScale(_cityZoom * 4), PaddingTop + 364.ZoomScale(_cityZoom * 4));
+        private Point MapButtonLoc => new(InfoButtonLoc.X + 58.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y);
+        private Point RenameButtonLoc => new(InfoButtonLoc.X + 116.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y);
+        private Point HappyButtonLoc => new(InfoButtonLoc.X, InfoButtonLoc.Y + 25.ZoomScale(_cityZoom * 4));
+        private Point ViewButtonLoc => new(InfoButtonLoc.X + 58.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y + 25.ZoomScale(_cityZoom * 4));
+        private Point ExitButtonLoc => new(InfoButtonLoc.X + 116.ZoomScale(_cityZoom * 4), InfoButtonLoc.Y + 25.ZoomScale(_cityZoom * 4));
         private int BuyButtonWidth => 68.ZoomScale(_cityZoom * 4);
         private int InfoButtonWidth => 57.ZoomScale(_cityZoom * 4);
         private int ButtonHeight => 24.ZoomScale(_cityZoom * 4);
@@ -32,10 +34,11 @@ namespace EtoFormsUI
         private int _cityZoom;
         private WhatToDraw whatToDraw = WhatToDraw.Info;
         private VScrollBar _improvementsBar;
-        private Point ImprovementsBarLoc => new Point(_cityZoom == -1 ? 89 : (_cityZoom == 0 ? 185 : 281), _cityZoom == -1 ? 167 : (_cityZoom == 0 ? 318 : 475));
+        private Point ImprovementsBarLoc => new(_cityZoom == -1 ? 89 : (_cityZoom == 0 ? 185 : 281), _cityZoom == -1 ? 167 : (_cityZoom == 0 ? 318 : 475));
         private int ImprovementsBarHeight => _cityZoom == -1 ? 63 : (_cityZoom == 0 ? 129 : 194);
-        private int PaddingTop => _cityZoom == -1 ? 21 : (_cityZoom == 0 ? 27 : 39);
+        private int PaddingTop => 11 + 16.ZoomScale(Zoom) + Zoom;
         private int ButtonFontSize => 9.ZoomScale(_cityZoom * 4);
+        private int Zoom => _cityZoom == -1 ? -2 : (_cityZoom == 0 ? 0 : 4);
 
         public CityWindow(Main main, MapPanel parent, City city, int cityZoom) : base(636 * (2 + cityZoom) / 2 + 2 * 11, 421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39)), cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39), 11, "")
         {
@@ -145,18 +148,18 @@ namespace EtoFormsUI
             //_prevCityButton.Click += PrevCityButton_Click;
             //_prevCityButton.Paint += PrevCityButton_Paint;
 
-            closeIcon = new Civ2button("", 16, 16, null, CityImages.Exit);
-            closeIcon.MouseDown += (sender, e) =>
+            closeIcon = new Civ2button("", 16.ZoomScale(Zoom), 16.ZoomScale(Zoom), null, CityImages.Exit);
+            closeIcon.MouseDown += (_, _) =>
             {
                 parent.CityWindowZoom = _cityZoom;
                 parent.CityWindowLocation = this.Location;
                 this.Visible = false;
                 this.Close();
             };
-            Layout.Add(closeIcon, 11, 7);
+            Layout.Add(closeIcon, 11, 7 + Zoom / 2);
 
-            zoomOutIcon = new Civ2button("", 16, 16, null, CityImages.ZoomOUT);
-            zoomOutIcon.MouseDown += (sender, e) =>
+            zoomOutIcon = new Civ2button("", 16.ZoomScale(Zoom), 16.ZoomScale(Zoom), null, CityImages.ZoomOUT);
+            zoomOutIcon.MouseDown += (_, _) =>
             {
                 if (_cityZoom > -1)
                 {
@@ -165,10 +168,10 @@ namespace EtoFormsUI
                     RedrawWindowAndControls();
                 }
             };
-            Layout.Add(zoomOutIcon, 11 + 16 + 2, 7);
+            Layout.Add(zoomOutIcon, 11 + 16.ZoomScale(Zoom) + 2, 7 + Zoom / 2);
 
-            zoomInIcon = new Civ2button("", 16, 16, null, CityImages.ZoomIN);
-            zoomInIcon.MouseDown += (sender, e) =>
+            zoomInIcon = new Civ2button("", 16.ZoomScale(Zoom), 16.ZoomScale(Zoom), null, CityImages.ZoomIN);
+            zoomInIcon.MouseDown += (_, _) =>
             {
                 if (_cityZoom < 1)
                 {
@@ -177,7 +180,7 @@ namespace EtoFormsUI
                     RedrawWindowAndControls();
                 }
             };
-            Layout.Add(zoomInIcon, 11 + 2 * 16 + 2 * 2, 7);
+            Layout.Add(zoomInIcon, 11 + 2 * 16.ZoomScale(Zoom) + 2 * 2, 7 + Zoom / 2);
 
             Content = Layout;
         }
@@ -190,22 +193,18 @@ namespace EtoFormsUI
             Layout.Size = Size;
             Surface.Size = Size;
             Location = new Point(center.X - this.Width / 2, center.Y - this.Height / 2);
+            _paddingTop = PaddingTop;
 
             // New size of close/zoom icons
-            int zoom = _cityZoom;
-            if (_cityZoom == -1) zoom = -2;
-            if (_cityZoom == 1) zoom = 4;
-            closeIcon.BackgroundImage = CityImages.Exit.Resize(zoom);
-            zoomOutIcon.BackgroundImage = CityImages.ZoomOUT.Resize(zoom);
-            zoomInIcon.BackgroundImage = CityImages.ZoomIN.Resize(zoom);
+            closeIcon.BackgroundImage = CityImages.Exit.Resize(Zoom);
+            zoomOutIcon.BackgroundImage = CityImages.ZoomOUT.Resize(Zoom);
+            zoomInIcon.BackgroundImage = CityImages.ZoomIN.Resize(Zoom);
             closeIcon.Size = closeIcon.BackgroundImage.Size;
             zoomOutIcon.Size = zoomOutIcon.BackgroundImage.Size;
             zoomInIcon.Size = zoomInIcon.BackgroundImage.Size;
-            int paddtop = 7 + _cityZoom;
-            if (_cityZoom == 1) paddtop++;
-            Layout.Move(closeIcon, 11, paddtop);
-            Layout.Move(zoomOutIcon, 11 + closeIcon.Width + 2, paddtop);
-            Layout.Move(zoomInIcon, 11 + closeIcon.Width + zoomOutIcon.Width + 2 * 2, paddtop);
+            Layout.Move(closeIcon, 11, 7 + Zoom / 2);
+            Layout.Move(zoomOutIcon, 11 + closeIcon.Width + 2, 7 + Zoom / 2);
+            Layout.Move(zoomInIcon, 11 + closeIcon.Width + zoomOutIcon.Width + 2 * 2, 7 + Zoom / 2);
 
             // New size of buttons
             infoButton.Size = new Size(InfoButtonWidth, ButtonHeight);
@@ -271,10 +270,11 @@ namespace EtoFormsUI
             // TEXTS
             fontSize = _cityZoom == -1 ? 4 : (_cityZoom == 0 ? 9 : 13);
             font = new Font("Arial", fontSize, FontStyle.Bold);
-            Draw.Text(e.Graphics, "Citizens", font, Color.FromArgb(223, 187, 63), new Point(101 * (2 + _cityZoom) / 2 + 11, 53 * (2 + _cityZoom) / 2 + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
-            Draw.Text(e.Graphics, "City Resources", font, Color.FromArgb(223, 187, 63), new Point(317 * (2 + _cityZoom) / 2 + 11, 52 * (2 + _cityZoom) / 2 + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
-            Draw.Text(e.Graphics, "Food Storage", font, Color.FromArgb(75, 155, 35), new Point(535 * (2 + _cityZoom) / 2 + 11, 7 * (2 + _cityZoom) / 2 + PaddingTop), true, true, Colors.Black, 1, 1);
-            Draw.Text(e.Graphics, "City Improvements", font, Color.FromArgb(223, 187, 63), new Point(96 * (2 + _cityZoom) / 2 + 11, 296 * (2 + _cityZoom) / 2 + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, "Citizens", font, Color.FromArgb(223, 187, 63), new Point(101.ZoomScale(4 * _cityZoom) + 11, 53.ZoomScale(4 * _cityZoom) + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, "City Resources", font, Color.FromArgb(223, 187, 63), new Point(317.ZoomScale(4 * _cityZoom) + 11, 52.ZoomScale(4 * _cityZoom) + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, "Food Storage", font, Color.FromArgb(75, 155, 35), new Point(535.ZoomScale(4 * _cityZoom) + 11, 7.ZoomScale(4 * _cityZoom) + PaddingTop), true, true, Colors.Black, 1, 1);
+            Draw.Text(e.Graphics, "City Improvements", font, Color.FromArgb(223, 187, 63), new Point(96.ZoomScale(4 * _cityZoom) + 11, 296.ZoomScale(4 * _cityZoom) + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
+            Draw.Text(e.Graphics, "Resource Map", font, Color.FromArgb(223, 187, 63), new Point(101.ZoomScale(4 * _cityZoom) + 11, 195.ZoomScale(4 * _cityZoom) + PaddingTop), true, true, Color.FromArgb(67, 67, 67), 1, 1);
 
             // CITIZEN FACES
             Draw.CityCitizens(e.Graphics, _thisCity, _cityZoom, new Point(11, PaddingTop));
@@ -292,40 +292,76 @@ namespace EtoFormsUI
             Draw.CityProduction(e.Graphics, _thisCity, _cityZoom, new Point(11, PaddingTop));
 
             // UNITS FROM CITY
-            int count = 0;
-            int row, col;
-            int zoom = 4 * _cityZoom - 3;
-            foreach (var unit in _thisCity.SupportedUnits)
+            var supUnitPanelPos = new Point(3.ZoomScale(4 * _cityZoom), 212.ZoomScale(4 * _cityZoom));
+            if (_thisCity.SupportedUnits.Count < 5)
             {
-                col = count % 4;
-                row = count / 4;
+                fontSize = _cityZoom == -1 ? 4 : (_cityZoom == 0 ? 9 : 13);
+                font = new Font("Arial", fontSize, FontStyle.Bold);
+                Draw.Text(e.Graphics, "Units Supported", font, Color.FromArgb(223, 187, 63),
+                    new Point(11 + supUnitPanelPos.X + (189 / 2).ZoomScale(4 * _cityZoom), PaddingTop + supUnitPanelPos.Y + 12.ZoomScale(4 * _cityZoom)),
+                    true, true, Color.FromArgb(67, 67, 67), 1, 1);
+            }
+            int offsetX, offsetY;
+            for (int i = 0; i < 8; i++)
+            {
+                if (_thisCity.SupportedUnits.Count < i + 1) break;
 
-                Draw.Unit(e.Graphics, unit, false, zoom, new Point(11 + (7 + 40 * col).ZoomScale(4 * _cityZoom), PaddingTop + (216 + 32 * row).ZoomScale(4 * _cityZoom)));
-                count++;
+                offsetX = 11 + supUnitPanelPos.X + (8 + (40 + 3) * (i % 4)).ZoomScale(4 * _cityZoom);
+                offsetY = PaddingTop + supUnitPanelPos.Y + (8 + 32 * (i / 4)).ZoomScale(4 * _cityZoom);
 
-                if (count >= 8) break;
+                if (_thisCity.SupportedUnits.Count <= 4)
+                {
+                    offsetY = PaddingTop + supUnitPanelPos.Y + 24.ZoomScale(4 * _cityZoom);
+                }
+
+                Draw.Unit(e.Graphics, _thisCity.SupportedUnits[i], false, 3 * _cityZoom - 3, new Point(offsetX, offsetY));
             }
 
             // UNITS IN CITY / SUPPORT MAP / HAPPINESS
+            var unitPanelPos = new Point(193.ZoomScale(4 * _cityZoom), 212.ZoomScale(4 * _cityZoom));
             switch (whatToDraw)
             {
                 case WhatToDraw.Info:
                     {
-                        // UNITS IN CITY
-                        count = 0;
-                        zoom = 4 * _cityZoom - 2;
-                        font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
-                        foreach (var unit in _thisCity.UnitsInCity)
+                        if (_thisCity.UnitsInCity.Count < 6)
                         {
-                            col = count % 5;
-                            row = count / 5;
-                            Draw.Unit(e.Graphics, unit, false, zoom, new Point(11 + (197 + 48 * col).ZoomScale(4 * _cityZoom), PaddingTop + (216 + 41 * row).ZoomScale(4 * _cityZoom)));
-                            Draw.Text(e.Graphics, unit.HomeCity == null ? "NON" : unit.HomeCity.Name.Substring(0, 3),
-                                font, Colors.Black,
-                                new Point(11 + (221 + 48 * col).ZoomScale(4 * _cityZoom),
-                                    PaddingTop + (252 + 41 * row).ZoomScale(4 * _cityZoom)), true, true,
-                                Color.FromArgb(135, 135, 135), 1, 1);
-                            count++;
+                            fontSize = _cityZoom == -1 ? 4 : (_cityZoom == 0 ? 9 : 13);
+                            font = new Font("Arial", fontSize, FontStyle.Bold);
+                            Draw.Text(e.Graphics, "Units Present", font, Color.FromArgb(223, 187, 63), 
+                                new Point(11 + unitPanelPos.X + (242 / 2).ZoomScale(4 * _cityZoom), PaddingTop + unitPanelPos.Y + 12.ZoomScale(4 * _cityZoom)), 
+                                true, true, Color.FromArgb(67, 67, 67), 1, 1);
+                        }
+
+                        // UNITS IN CITY
+                        font = new Font("Arial", 9.ZoomScale(4 * _cityZoom), FontStyle.Bold);
+                        for (int i = 0; i < 18; i++)
+                        {
+                            if (_thisCity.UnitsInCity.Count < i + 1) break;
+
+                            if (i < 10)
+                            {
+                                offsetX = 11 + unitPanelPos.X + (1 + 48 * (i % 5)).ZoomScale(4 * _cityZoom);
+                                offsetY = PaddingTop + unitPanelPos.Y + (3 + 39 * (i / 5)).ZoomScale(4 * _cityZoom);
+                            }
+                            else
+                            {
+                                offsetX = 11 + unitPanelPos.X + (25 + 48 * ((i - 10) % 4)).ZoomScale(4 * _cityZoom);
+                                offsetY = PaddingTop + unitPanelPos.Y + (22 + 39 * ((i - 10) / 4)).ZoomScale(4 * _cityZoom);
+                            }
+
+                            if (_thisCity.UnitsInCity.Count <= 5)
+                            {
+                                offsetY = PaddingTop + unitPanelPos.Y + 22.ZoomScale(4 * _cityZoom);
+                            }
+
+                            Draw.Unit(e.Graphics, _thisCity.UnitsInCity[i], false, 3 * _cityZoom - 2, new Point(offsetX, offsetY));
+                            if (i < 10)
+                            {
+                                Draw.Text(e.Graphics, _thisCity.UnitsInCity[i].HomeCity == null ? "NON" : _thisCity.UnitsInCity[i].HomeCity.Name[..3],
+                                    font, Colors.Black,
+                                    new Point(offsetX + 24.ZoomScale(4 * _cityZoom), offsetY + 36.ZoomScale(4 * _cityZoom)), true, false,
+                                    Color.FromArgb(135, 135, 135), 1, 1);
+                            }
                         }
 
                         // TRADE TEXT
@@ -396,17 +432,17 @@ namespace EtoFormsUI
                 if ((i + starting) >= _thisCity.Improvements.Count) break;  // Break if no of improvements+wonders
 
                 // Draw improvements
-                zoom = 2 * _cityZoom - 4;
-                Draw.CityImprovement(e.Graphics, _thisCity.Improvements[i + starting].Type, zoom, new Point(11 + 8.ZoomScale(4 * _cityZoom), PaddingTop + (307 + 12 * i).ZoomScale(4 * _cityZoom)));
+                Draw.CityImprovement(e.Graphics, _thisCity.Improvements[i + starting].Type, 2 * _cityZoom - 4, 
+                    new Point(11 + 8.ZoomScale(4 * _cityZoom), PaddingTop + (307 + 12 * i).ZoomScale(4 * _cityZoom)));
                 // Sell icons
-                zoom = 2 * _cityZoom - 1;
                 if ((int)_thisCity.Improvements[i + starting].Type < 39) // Wonders don't have a sell icon
                 {
-                    using var iconPic = CityImages.SellIcon.Resize(zoom);
-                    e.Graphics.DrawImage(iconPic, new Point(11 + 155.ZoomScale(4 * _cityZoom), PaddingTop + (306 + 12 * i).ZoomScale(4 * _cityZoom)));
+                    e.Graphics.DrawImage(CityImages.SellIcon.Resize(3 * _cityZoom - 1), 
+                        new Point(11 + 156.ZoomScale(4 * _cityZoom), PaddingTop + (306 + 12 * i).ZoomScale(4 * _cityZoom)));
                 }
                 // Improvements text
-                Draw.Text(e.Graphics, _thisCity.Improvements[i + starting].Name, font, Colors.White, new Point(11 + 32.ZoomScale(4 * _cityZoom), PaddingTop + (308 + 12 * i).ZoomScale(4 * _cityZoom)), false, false, Colors.Black, 1, 0);
+                Draw.Text(e.Graphics, _thisCity.Improvements[i + starting].Name, font, Colors.White, 
+                    new Point(11 + 30.ZoomScale(4 * _cityZoom), PaddingTop + (305 + 12 * i).ZoomScale(4 * _cityZoom)), false, false, Colors.Black, 1, 0);
             }
         }
 
