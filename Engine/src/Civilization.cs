@@ -10,6 +10,32 @@ namespace Civ2engine
         public int Id { get; set; }
         public bool Alive { get; set; }
         public CityStyleType CityStyle { get; set; }
+
+        private EpochType _epoch;
+        public EpochType Epoch
+        {
+            get
+            {
+                _epoch = EpochType.Ancient;
+
+                if (Advances[(int)AdvanceType.Invention] && Advances[(int)AdvanceType.Philosophy])
+                {
+                    _epoch = EpochType.Renaissance;
+                }
+
+                if (Advances[(int)AdvanceType.Industrializ])
+                {
+                    _epoch = EpochType.Industrial;
+                }
+
+                if (Advances[(int)AdvanceType.Automobile] && Advances[(int)AdvanceType.Electronics])
+                {
+                    _epoch = EpochType.Modern;
+                }
+
+                return _epoch;
+            }
+        }
         public string LeaderName { get; set; }
         public int LeaderGender { get; set; }
         public string LeaderTitle { get; set; }

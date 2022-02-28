@@ -12,11 +12,11 @@ namespace EtoFormsUI
         public static void City(Graphics g, City city, bool isCitySizeWindow, int zoom, Point dest)
         {
             // Determine city style
-            // For everything not modern or industrial => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
+            // ANCIENT OR RENAISSANCE EPOCH => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
             // If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
             var style = city.Owner.CityStyle;
             int sizeStyle;
-            if (style != CityStyleType.Industrial && style != CityStyleType.Modern)
+            if (city.Owner.Epoch == EpochType.Ancient || city.Owner.Epoch == EpochType.Renaissance)
             {
                 sizeStyle = city.Size switch
                 {
@@ -27,9 +27,9 @@ namespace EtoFormsUI
                 };
 
             }
-            // If city is industrial => 4 city size styles (0=sizes 1...4, 1=sizes 5...7, 2=sizes 8...10, 3=sizes >= 11)
+            // INDUSTRIAL EPOCH => 4 city size styles (0=sizes 1...4, 1=sizes 5...7, 2=sizes 8...10, 3=sizes >= 11)
             // If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...7, 3=sizes >= 8)
-            else if (style == CityStyleType.Industrial)
+            else if (city.Owner.Epoch == EpochType.Industrial)
             {
                 sizeStyle = city.Size switch
                 {
@@ -39,7 +39,7 @@ namespace EtoFormsUI
                     _ => 3
                 };
             }
-            // If city is modern => 4 city size styles (0=sizes 1...4, 1=sizes 5...10, 2=sizes 11...18, 3=sizes >= 19)
+            // MODERN EPOCH => 4 city size styles (0=sizes 1...4, 1=sizes 5...10, 2=sizes 11...18, 3=sizes >= 19)
             // If city is capital => 3 size styles (1=sizes 1...4, 2=sizes 5...10, 3=sizes >= 11)
             else
             {
@@ -57,7 +57,19 @@ namespace EtoFormsUI
                 sizeStyle++;
             }
 
-            var cityIndex = (int) style * 8 + sizeStyle;
+            int cityIndex;
+            if (city.Owner.Epoch == EpochType.Industrial)
+            {
+                cityIndex = 4 * 8 + sizeStyle;
+            }
+            else if (city.Owner.Epoch == EpochType.Modern)
+            {
+                cityIndex = 5 * 8 + sizeStyle;
+            }
+            else
+            {
+                cityIndex = (int)style * 8 + sizeStyle;
+            }
             if(city.ImprovementExists(ImprovementType.CityWalls))
             {
                 cityIndex += 4;
