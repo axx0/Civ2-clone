@@ -26,7 +26,7 @@ namespace EtoFormsUI
 
         private readonly bool _hasCheckBoxes;
 
-        private bool dragging = false;
+        private bool dragging;
         private PointF dragCursorPoint, dragFormPoint, dif;
         private readonly int _optionsColumns, _optionsRows;
         private readonly Drawable _surface, _listboxSurface;
@@ -35,6 +35,7 @@ namespace EtoFormsUI
         private readonly Bitmap[] _icons;
         private readonly Bitmap _image;
         private readonly Size _innerSize;
+        private readonly int _textHeight;
 
         /// <summary>
         /// Show a popup box (dialog).
@@ -95,8 +96,17 @@ namespace EtoFormsUI
             // Fill text into textboxes & then remove it from popubox Text
             if (textBoxes is not null)
             {
-                for (int i = 0; i < textBoxes.Count; i++) textBoxes[i].Text = _text[textBoxes[i].index];
-                _text = _text.Take(textBoxes[0].index - 1).ToList();
+                if (popupBox.Options?.Count > 0)
+                {
+                    SetTextBoxText(textBoxes, popupBox.Options);
+                    popupBox.Options = null;
+                }
+                else
+                {
+                    SetTextBoxText(textBoxes, _text);
+                    _text = _text.Take(textBoxes[0].index - 1).ToList();
+                }
+
             }
 
             // Format title & adjust inner panel width to fit the title
@@ -104,21 +114,29 @@ namespace EtoFormsUI
             _innerSize.Width = (int)_fTitle.Measure().Width - 2 * 11;
 
             // Determine size of text and based on that determine inner panel size
+            _textHeight = 0;
             if (_text?.Count > 0)
             {
                 _fTexts = GetFormattedTexts(_text, popupBox.LineStyles.ToList(), replaceStrings, replaceNumbers);
                 _innerSize.Width = Math.Max(_innerSize.Width, GetInnerPanelWidthFromText(_fTexts, popupBox));
                 foreach (var fText in _fTexts)
-                    fText.MaximumWidth = _innerSize.Width;  // Adjust text width to inner panel width
+                {
+                    fText.MaximumWidth = _innerSize.Width; // Adjust text width to inner panel width
+                }
+
+                var totalHeight = _fTexts.Sum(fText => fText.Measure().Height / 28.0) * 28;
+                _textHeight = (int)Math.Round(totalHeight);
                 foreach (var fText in _fTexts)
+                {
                     _innerSize.Height += (int)Math.Round(fText.Measure().Height / 28.0) * 28;
+                }
             }
 
             // Correction of inner panel size for options
             _optionsRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
             var iconsHeight = _icons.Length == 0 ? 0 : _icons.Sum(i => i.Height) + 4 * (_icons.Length - 1);
             _innerSize = new Size(Math.Max(_innerSize.Width, GetInnerPanelWidthFromOptions(popupBox, _optionsRows, _optionsColumns, _icons, textBoxes)), 
-                Math.Max((_optionsRows - _icons.Length) * 32 + iconsHeight, _innerSize.Height));
+                (_optionsRows - _icons.Length) * 32 + iconsHeight + _textHeight);
 
             // Correction of inner panel size for image
             _innerSize = new Size(Math.Max(_innerSize.Width, _image?.Width ?? 0), Math.Max(_innerSize.Height, _image?.Height ?? 0));
@@ -416,7 +434,7 @@ namespace EtoFormsUI
                 // Select radio button if clicked
                 if (_options is null) return;
 
-                var yOffset = _text?.Count * 30 ?? 0;
+                var yOffset = _textHeight;
 
                 // Update checkbox
                 if (_hasCheckBoxes)
@@ -438,7 +456,9 @@ namespace EtoFormsUI
                     var rowHeight = _icons.Length > 0 ? _icons[0].Height : 32;
                     for (var row = 0; row < _optionsRows; row++)
                     {
-                        if (e.Location.X > 14 && e.Location.X < Width - 14 && e.Location.Y > _paddingTop + yOffset + 5 + rowHeight * row && e.Location.Y < _paddingTop + yOffset + 5 + rowHeight * (row + 1))
+                        if (e.Location.X > 14 && e.Location.X < Width - 14 &&
+                            e.Location.Y > _paddingTop + yOffset + 5 + rowHeight * row &&
+                            e.Location.Y < _paddingTop + yOffset + 5 + rowHeight * (row + 1))
                         {
                             var selectedIndex = row;
                             if (_optionsColumns > 1)
@@ -459,6 +479,12 @@ namespace EtoFormsUI
             Content = layout;
         }
 
+        private void SetTextBoxText(List<TextBoxDefinition> textBoxes, IList<string> text)
+        {
+            foreach (var textBox in textBoxes)
+                textBox.Text = text[textBox.index];
+        }
+    
         private FormattedText GetFormattedTitle(string title, IList<string> replaceStrings, IList<int> replaceNumbers)
         {
             var fTitle = new FormattedText
@@ -637,7 +663,7 @@ namespace EtoFormsUI
             if (_image is not null) e.Graphics.DrawImage(_image, new Point(11 + 2, _paddingTop + 2));
 
             var xOffset = _image == null ? 0 : _image.Width;
-            var yOffset = 0;
+            var yOffset = _textHeight;
 
             // Text
             if (_fTexts is not null)

@@ -27,13 +27,12 @@ namespace Civ2engine
 
             void TextHandler(string line)
             {
-                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0)
+                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0 && popupBox.Options == null)
                 {
                     contentHandler = (line) =>
                     {
                         if (string.IsNullOrWhiteSpace(line)) return;
-                        addOkay = false;
-                        (popupBox.Button ??= new List<string>()).Add(line);
+                        (popupBox.Options ??= new List<string>()).Add(line);
                     };
                     return;
                 }
@@ -73,7 +72,7 @@ namespace Civ2engine
             {
                 if (line.StartsWith("@"))
                 {
-                    var parts = line.Split(new[] {'@', '='}, 2,
+                    var parts = line.Split(new[] { '@', '=' }, 2,
                         StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 0)
                     {
@@ -119,16 +118,14 @@ namespace Civ2engine
                 }
             }
 
-            if (addOkay)
+            popupBox.Button ??= new List<string>();
+            popupBox.Button.Add("OK");
+            // Add cancel buttons if @options exist
+            if (popupBox.Options != null)
             {
-                popupBox.Button ??= new List<string>();
-                popupBox.Button.Add("OK");
-                // Add cancel buttons if @options exist
-                if (popupBox.Options != null)
-                {
-                    popupBox.Button.Add("Cancel");
-                }
+                popupBox.Button.Add("Cancel");
             }
+
 
             Boxes[popupBox.Name] = popupBox;
 

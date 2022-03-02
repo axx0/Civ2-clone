@@ -253,11 +253,11 @@ namespace EtoFormsUI.Initialization
                     {
                     new()
                     {
-                        index = 3, Name = "Width", MinValue = 20, InitialValue = config.WorldSize[0].ToString(), Width = 75
+                        index = 0, Name = "Width", MinValue = 20, InitialValue = config.WorldSize[0].ToString(), Width = 75
                     },
                     new()
                     {
-                        index = 4, Name = "Height", MinValue = 20, InitialValue = config.WorldSize[1].ToString(), Width = 75
+                        index = 1, Name = "Height", MinValue = 20, InitialValue = config.WorldSize[1].ToString(), Width = 75
                     }
                     });
                 customSizeDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width * 0.5 - customSizeDialog.Width / 2),
@@ -403,7 +403,7 @@ namespace EtoFormsUI.Initialization
                         config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
                         if (customRulesDialog.CheckboxReturnStates[3])
                         {
-                            var startYearDialog = new Civ2dialog(mainForm, config.PopUps["ACCELERATED"], new List<string> {"4000", "3000", "2000"});
+                            var startYearDialog = new Civ2dialog(mainForm, config.PopUps["ACCELERATED"],  replaceNumbers: new [] {4000, 3000, 2000});
                             startYearDialog.ShowModal(mainForm);
 
                             if (startYearDialog.SelectedIndex == int.MinValue)
@@ -629,9 +629,9 @@ namespace EtoFormsUI.Initialization
             };
             if (config.SelectComputerOpponents)
             {
-                galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyPic"));
+                //galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyPic"));
 
-                mainForm.layout.Add(galleyPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - galleyPanel.Width / 2), 75));
+                //mainForm.layout.Add(galleyPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - galleyPanel.Width / 2), 75));
 
                 var opponentPop = config.PopUps["OPPONENT"];
                 var opponentNumber = 1;
