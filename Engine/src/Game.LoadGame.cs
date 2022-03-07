@@ -41,8 +41,8 @@ namespace Civ2engine
             AI = new AIPlayer(difficulty);
             Players = new Dictionary<PlayerType, IPlayer> { { PlayerType.AI, AI }, { PlayerType.Local, localPlayer } };
 
-            Script.RunScript("advances.lua");
             Script.RunScript("improvements.lua");
+            Script.RunScript("advances.lua");
             
             this.SetupTech();
             
