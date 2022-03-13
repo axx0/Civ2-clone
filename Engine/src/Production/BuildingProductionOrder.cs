@@ -1,3 +1,4 @@
+using System.Linq;
 using Civ2engine.Improvements;
 
 namespace Civ2engine.Production
@@ -13,6 +14,13 @@ namespace Civ2engine.Production
 
         public override void CompleteProduction(City city, Rules rules)
         {
+            if (_imp.Effects.ContainsKey(ImprovementEffect.Unique))
+            {
+                foreach (var previousCity in city.Owner.Cities.Where(c=> c.ImprovementExists(_imp.Type)))
+                {
+                    previousCity.SellImprovement(_imp);
+                }
+            }
             city.AddImprovement(_imp);
         }
 

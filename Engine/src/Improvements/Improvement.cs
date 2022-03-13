@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Civ2engine.Enums;
 
 namespace Civ2engine.Improvements
@@ -16,5 +17,7 @@ namespace Civ2engine.Improvements
         public int Prerequisite { get; set; }
 
         public int ExpiresAt { get; set; } = -1;
+        
+        public Dictionary<ImprovementEffect,int> Effects { get; } = new ();
     }
 }

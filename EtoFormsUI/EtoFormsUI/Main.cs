@@ -198,7 +198,7 @@ namespace EtoFormsUI
 
                     dialog.ShowModal(this);
 
-                    if (dialog.SelectedButton != "Yes")
+                    if (dialog.SelectedButton != "OK" || dialog.SelectedIndex != 1)
                     {
                         return;
                     }

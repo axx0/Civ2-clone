@@ -4,3 +4,4 @@
 --- DateTime: 2022-03-06 10:20 PM
 ---
 
+civ.getImprovement(1).Effects.Add(civ.core.Effects.Unique, 1);
