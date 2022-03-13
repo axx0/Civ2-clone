@@ -30,7 +30,6 @@ namespace Civ2engine.Advances
             _MapSizeAdjustment = game.TotalMapArea / 1000;
             
             ProductionPossibilities.InitializeProductionLists(game.AllCivilizations, game.Rules.ProductionItems);
-            Power.CalculatePowerRatings(game);
         }
         
         public static bool HasAdvanceBeenDiscovered(this Game game, int advanceIndex, int byCiv = -1)

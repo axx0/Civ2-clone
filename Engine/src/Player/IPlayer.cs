@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Civ2engine.Improvements;
 using Civ2engine.Production;
@@ -16,5 +17,11 @@ namespace Civ2engine
         void CantProduce(City city, ProductionOrder newItem);
         
         void CityProductionComplete(City city);
+        IInterfaceCommands UI { get; }
+    }
+
+    public interface IInterfaceCommands
+    {
+        Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool> checkBoxOptionStates = null);
     }
 }
