@@ -7,7 +7,7 @@ namespace Civ2engine
 {
     public static class CityExtensions
     {
-        public static void CalculateOutput(this City city, City capital, GovernmentType government, Game game)
+        public static void CalculateOutput(this City city, GovernmentType government, Game game)
         {
             var lowOrganisation = government <= GovernmentType.Despotism;
             var orgLevel = city.OrganizationLevel;
@@ -28,7 +28,8 @@ namespace Civ2engine
 
             city.Support = city.SupportedUnits.Count(u => u.NeedsSupport);
             
-            var distance = ComputeDistanceFactor(city, capital, government, game);
+            
+            var distance = ComputeDistanceFactor(city, government, game);
             if (distance == 0)
             {
                 city.Waste = 0;
@@ -105,7 +106,7 @@ namespace Civ2engine
             };
         }
 
-        private static double ComputeDistanceFactor(City city, City capital, GovernmentType government, Game game)
+        private static double ComputeDistanceFactor(City city, GovernmentType government, Game game)
         {
             double distance;
             if (government == GovernmentType.Communism)
@@ -114,8 +115,20 @@ namespace Civ2engine
             }
             else
             {
-                if (city == capital || government is GovernmentType.Democracy or GovernmentType.Fundamentalism) return 0;
-                distance = capital == null ? int.MaxValue : Utilities.DistanceTo(capital, city.Location);
+                if (government is GovernmentType.Democracy or GovernmentType.Fundamentalism 
+                    || city.ImprovementExists(ImprovementEffect.Capital))
+                {
+                    return 0;
+                }
+
+                distance =
+                    city.Owner.Cities.Where(c => c.ImprovementExists(ImprovementEffect.Capital))
+                        .Select(c => Utilities.DistanceTo(c, city.Location, game.Options.FlatEarth)).OrderBy(v => v).FirstOrDefault();
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (distance == default)
+                {
+                    distance = game.MaxDistance;
+                }
                 if (government < GovernmentType.Monarchy)
                 {
                     distance += (int)game.DifficultyLevel;
@@ -139,5 +152,7 @@ namespace Civ2engine
         
         public static void AddImprovement(this City city,Improvement improvement) => city._improvements.Add(improvement.Type,improvement);
         public static bool ImprovementExists(this City city, ImprovementType improvement) => city._improvements.ContainsKey(improvement);
+        
+        private static bool ImprovementExists(this City city, ImprovementEffect improvement) => city._improvements.Values.Any(i => i.Effects.ContainsKey(improvement));
     }
 }

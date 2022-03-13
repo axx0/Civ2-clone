@@ -128,6 +128,28 @@ namespace Civ2engine
             OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
                 {TilesChanged = tilesChanged});
         }
-        
+
+        private double? _maxDistance;
+        public double MaxDistance
+        {
+            get
+            {
+                return _maxDistance ??= ComputeMaxDistance();
+            }
+        }
+
+        private double ComputeMaxDistance()
+        {
+            var xLength = _maps[0].Tile.GetLength(0);
+            var yLength = _maps[0].Tile.GetLength(1);
+
+            if (_options.FlatEarth)
+            {
+                return Utilities.DistanceTo(_maps[0].Tile[0, 0], _maps[0].Tile[xLength - 1, yLength - 1], true);
+            }
+
+            return Utilities.DistanceTo(_maps[0].Tile[0, 0], _maps[0].Tile[(int)xLength / 2, yLength - 1],
+                false);
+        }
     }
 }

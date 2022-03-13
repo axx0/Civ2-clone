@@ -46,7 +46,7 @@ namespace Civ2engine
             {
                 var tile = barbarianGroup.Key;
                 var barbarians = barbarianGroup.ToList();
-                var target = AllCities.OrderBy(c => Utilities.DistanceTo(tile, c)).FirstOrDefault();
+                var target = AllCities.OrderBy(c => Utilities.DistanceTo(tile, c, _options.FlatEarth)).FirstOrDefault();
                 if(target == null) continue;
                 
                 MoveTowards(tile, barbarians, target);
@@ -56,7 +56,7 @@ namespace Civ2engine
         private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
         {
             var destination = MovementFunctions.GetPossibleMoves(this, tile, units[0])
-                .OrderBy(t => Utilities.DistanceTo(t, target)).FirstOrDefault();
+                .OrderBy(t => Utilities.DistanceTo(t, target, _options.FlatEarth)).FirstOrDefault();
             if (destination == null) return;
             
             units.ForEach(b => MovementFunctions.UnitMoved(this, b,  destination, tile));

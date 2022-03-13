@@ -104,10 +104,10 @@ namespace Civ2engine.NewGame
             }
 
             
-            var minDist = Utilities.DistanceTo(config.StartTiles[0], tile);
+            var minDist = Utilities.DistanceTo(config.StartTiles[0], tile, config.FlatWorld);
             for (int i = 1; i < config.StartTiles.Count; i++)
             {
-                var dist = Utilities.DistanceTo(config.StartTiles[i], tile);
+                var dist = Utilities.DistanceTo(config.StartTiles[i], tile, config.FlatWorld);
                 if (dist < minDist)
                 {
                     minDist = dist;

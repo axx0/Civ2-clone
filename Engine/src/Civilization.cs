@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Units;
 
@@ -77,10 +78,11 @@ namespace Civ2engine
         public List<City> Cities { get; } = new();
         
         public PlayerType PlayerType { get; set; }
-
-        public City Capital { get; set; }
         public int PowerRating { get; set; }
         public int PowerRank { get; set; }
+        public int NormalColour { get; set; }
+        
+        public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; }
     }
 
     public enum PlayerType

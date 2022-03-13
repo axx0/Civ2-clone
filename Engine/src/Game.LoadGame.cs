@@ -82,15 +82,11 @@ namespace Civ2engine
                     map.AdjustFertilityForCity(c.Location);
                 });
             }
-            foreach (var capital in AllCities.Where(c=> c.ImprovementExists(ImprovementType.Palace)))
-            {
-                capital.Owner.Capital = capital;
-            }
 
             foreach (var city in AllCities)
             {
                 city.SetUnitSupport(Rules.Cosmic);
-                city.CalculateOutput(city.Owner.Capital, city.Owner.Government, this);
+                city.CalculateOutput(city.Owner.Government, this);
             }
         }
     }

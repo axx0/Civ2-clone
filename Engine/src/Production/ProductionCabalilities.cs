@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Improvements;
 
 namespace Civ2engine.Production
 {
@@ -36,6 +37,12 @@ namespace Civ2engine.Production
             return _availableProducts[city.OwnerId]
                 .Where(p => p.RequiredTech == city.ItemInProduction.ExpiresTech && p.Type == city.ItemInProduction.Type)
                 .OrderBy(p => p.Cost).FirstOrDefault();
+        }
+
+        public static Improvement FindByEffect(int targetCiv, ImprovementEffect effect)
+        {
+            return _availableProducts[targetCiv].OfType<BuildingProductionOrder>()
+                .Where(p => p.Improvement.Effects.ContainsKey(effect)).Select(o => o.Improvement).FirstOrDefault();
         }
     }
 }

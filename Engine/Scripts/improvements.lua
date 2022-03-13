@@ -3,5 +3,49 @@
 --- Created by R-105.
 --- DateTime: 2022-03-06 10:20 PM
 ---
+--Nothing
+--Palace
+local palace = civ.getImprovement(1)
+palace.Effects.Add(civ.core.Effects.Unique, 1);
+palace.Effects.Add(civ.core.Effects.Capital, 0);
 
-civ.getImprovement(1).Effects.Add(civ.core.Effects.Unique, 1);
+--Barracks
+civ.getImprovement(2).Effects.Add(civ.core.Effects.Veteran, civ.core.UnitDomain.Land)
+
+--Granary
+civ.getImprovement(3).Effects.Add(civ.core.Effects.FoodStorage, 50)
+
+--Temple,                   4,  1,    Cer,
+civ.getImprovement(4).Effects.Add(civ.core.Effects.ContentFace, 2)
+--MarketPlace,              8,  1,    Cur,
+--Library,                  8,  1,    Wri,
+--Courthouse,               8,  1,    CoL,
+--City Walls,               8,  0,    Mas,
+--Aqueduct,                 8,  2,    Cst,
+--Bank,                     12, 3,    Ban,
+--Cathedral,                12, 3,    MT,
+--University,               16, 3,    Uni,
+--Mass Transit,             16, 4,    MP,
+--Colosseum,                10, 4,    Cst,
+--Factory,                  20, 4,    Ind,
+--Manufacturing Plant,      32, 6,    Rob,
+--SDI Defense,              20, 4,    Las,
+--Recycling Center,         20, 2,    Rec,
+--Power Plant,              16, 4,    Ref,
+--Hydro Plant,              24, 4,    E2,
+--Nuclear Plant,            16, 2,    NP,
+--Stock Exchange,           16, 4,    Eco,
+--Sewer System,             12, 2,    San,
+--Supermarket,               8, 3,    Rfg,
+--Superhighways,            20, 5,    Aut,
+--Research Lab,             16, 3,    Cmp,
+--SAM Missile Battery,      10, 2,    Roc,
+--Coastal Fortress,          8, 1,    Met,
+--Solar Plant,              32, 4,    Env,
+--Harbor,                   6,  1,    Sea,
+--Offshore Platform,        16, 3,    Min,
+--Airport,                  16, 3,    Rad,
+civ.getImprovement(32).Effects.Add(civ.core.Effects.Veteran, civ.core.UnitDomain.Air)
+--Police Station,           6,  2,    Cmn,
+--Port Facility,            8,  3,    Amp,
+civ.getImprovement(34).Effects.Add(civ.core.Effects.Veteran, civ.core.UnitDomain.Sea)

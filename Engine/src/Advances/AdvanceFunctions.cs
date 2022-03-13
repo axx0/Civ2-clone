@@ -43,12 +43,13 @@ namespace Civ2engine.Advances
             return research.Discovered;
         }
 
-        public static void GiveAdvance(this Game game, int advanceIndex, int targetCiv)
+        public static void GiveAdvance(this Game game, int advanceIndex, Civilization civilization)
         {
             var research = _researched[advanceIndex];
-            var civilization = game.AllCivilizations[targetCiv];
             if(civilization.Advances[advanceIndex]) return;
-            
+            if(civilization.AllowedAdvanceGroups[game.Rules.Advances[advanceIndex].AdvanceGroup] == AdvanceGroupAccess.Prohibited) return;
+
+            var targetCiv = civilization.Id;
             //TODO: here we'd look for a lua script to check for effeccts
             
             //TODO: check for default effect
@@ -61,12 +62,12 @@ namespace Civ2engine.Advances
 
             if (civilization.ReseachingAdvance == advanceIndex)
             {
-                civilization.ReseachingAdvance = -1;
+                civilization.ReseachingAdvance = AdvancesConstants.No;
             }
 
             civilization.Advances[advanceIndex] = true;
             ProductionPossibilities.AddItems(targetCiv,
-                game.Rules.ProductionItems.Where(i => i.RequiredTech == advanceIndex && i.CanBuild(targetCiv)));
+                game.Rules.ProductionItems.Where(i => i.RequiredTech == advanceIndex && i.CanBuild(civilization)));
             ProductionPossibilities.RemoveItems(targetCiv, game.Rules.ProductionItems.Where(o => o.ExpiresTech == advanceIndex));
         }
 
@@ -83,7 +84,7 @@ namespace Civ2engine.Advances
         /// <returns></returns>
         public static int CalculateScienceCost(Game game, Civilization civ)
         {
-            if (civ.ReseachingAdvance == -1) return -1;
+            if (civ.ReseachingAdvance < 0) return -1;
             var techParadigm = game.Rules.Cosmic.TechParadigm;
             var ourAdvances = TotalAdvances(game, civ.Id);
             var keyCivAdvances = TotalAdvances(game, civ.PowerRank);
@@ -99,9 +100,24 @@ namespace Civ2engine.Advances
 
         }
 
+        public static bool HasTech(Civilization civ, int tech)
+        {
+            if (tech < 0)
+            {
+                return tech == AdvancesConstants.Nil;
+            }
+
+            return civ.Advances[tech];
+        }
+
         public static IList<int> CalculateAvailableResearch(Game game, Civilization activeCiv)
         {
-            throw new System.NotImplementedException();
+            var allAvailable = game.Rules.Advances.Where(a =>
+                activeCiv.AllowedAdvanceGroups[a.AdvanceGroup] == AdvanceGroupAccess.CanResearch &&
+                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq1)).ToList();
+            
+            //TODO: cull list based on difficulty
+            return allAvailable.Select(a=>a.Index).ToList();
         }
     }
 }

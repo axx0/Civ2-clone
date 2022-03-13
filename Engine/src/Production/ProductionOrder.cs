@@ -24,9 +24,19 @@ namespace Civ2engine.Production
 
         public abstract void CompleteProduction(City city, Rules rules);
 
-        public bool CanBuild(int targetCiv)
+        public bool CanBuild(Civilization targetCiv)
         {
-            return _buildList == null || _buildList.Length < targetCiv || _buildList[targetCiv];
+            if (_buildList == null)
+            {
+                return true;
+            }
+
+            if (_buildList.Length > targetCiv.NormalColour)
+            {
+                return _buildList[targetCiv.NormalColour];
+            }
+
+            return _buildList.Length <= targetCiv.Id || _buildList[targetCiv.Id];
         }
 
         public abstract bool IsValidBuild(City city);
