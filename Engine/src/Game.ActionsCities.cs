@@ -7,7 +7,9 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using ExtensionMethods;
 using System.Diagnostics;
+using System.Net.WebSockets;
 using Civ2engine.Advances;
+using Civ2engine.Improvements;
 using Civ2engine.Production;
 
 namespace Civ2engine
@@ -41,7 +43,7 @@ namespace Civ2engine
                     city.FoodInStorage = 0;
                     city.Size -= 1;
                     AutoRemoveWorkersDistribution(city);
-                    city.CalculateOutput(city.Owner.Capital, city.Owner.Government, this);
+                    city.CalculateOutput(city.Owner.Government, this);
                 }
                 else
                 {
@@ -52,11 +54,26 @@ namespace Civ2engine
 
                         city.Size += 1;
 
-                        if (city.ImprovementExists(ImprovementType.Granary))
-                            city.FoodInStorage += maxFood / 2;
+                        var storageBuildings = city.Improvements
+                            .Where(i => i.Effects.ContainsKey(ImprovementEffect.FoodStorage)).Select(b=> b.Effects[ImprovementEffect.FoodStorage]).ToList();
+
+
+                        if (storageBuildings.Count > 0)
+                        {
+                            var totalStorage = storageBuildings.Sum();
+                            if (totalStorage is > 100 or < 0)
+                            {
+                                totalStorage = storageBuildings.Where(v=> v is >= 0 and <= 100).Max();
+                            }
+
+                            if (totalStorage != 0)
+                            {
+                                city.FoodInStorage += maxFood * totalStorage / 100;
+                            }
+                        }
 
                         AutoAddDistributionWorkers(city); // Automatically add a workers on a tile
-                        city.CalculateOutput(city.Owner.Capital, city.Owner.Government, this);
+                        city.CalculateOutput(city.Owner.Government, this);
                     }
                 }
 
@@ -74,7 +91,8 @@ namespace Civ2engine
                         city.CivilDisorder = true;
                         continue;
                     }
-                    else if (city.CivilDisorder)
+
+                    if (city.CivilDisorder)
                     {
                         city.CivilDisorder = false;
                         player.OrderRestored(city);
@@ -150,7 +168,7 @@ namespace Civ2engine
                     }
                     if (currentScienceCost <= _activeCiv.Science)
                     {
-                        this.GiveAdvance(_activeCiv.ReseachingAdvance, _activeCiv.Id);
+                        this.GiveAdvance(_activeCiv.ReseachingAdvance, _activeCiv);
                         _activeCiv.Science -= currentScienceCost;
                     }
                 }

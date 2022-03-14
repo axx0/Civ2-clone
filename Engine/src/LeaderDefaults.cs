@@ -1,3 +1,5 @@
+using Civ2engine.Advances;
+
 namespace Civ2engine
 {
     public class LeaderDefaults
@@ -14,5 +16,7 @@ namespace Civ2engine
         public int Civilize { get; set; }
 
         public LeaderTitle[] Titles { get; set; }
+        
+        public AdvanceGroupAccess[] AdvanceGroups { get; set; }
     }
 }

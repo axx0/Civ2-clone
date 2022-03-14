@@ -2,7 +2,7 @@ using System;
 
 namespace Civ2engine
 {
-    public class Utilities
+    public static class Utilities
     {
         /// <summary>
         /// Compute the square euclidean distance between to tiles
@@ -10,9 +10,9 @@ namespace Civ2engine
         /// <param name="startTile"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
-        internal static double DistanceTo(IMapItem startTile, IMapItem tile)
+        internal static double DistanceTo(IMapItem startTile, IMapItem tile, bool flatWorld)
         {
-            return Math.Pow(startTile.X - tile.X,2) + Math.Pow(startTile.Y - tile.Y, 2);
+            return Math.Pow(startTile.X - tile.X, 2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
     }
 }

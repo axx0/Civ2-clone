@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
+using Civ2engine.Production;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 
@@ -59,13 +62,21 @@ namespace Civ2engine.UnitActions
             unit.Owner.Cities.Add(tile.CityHere);
             if (unit.Owner.Cities.Count == 1)
             {
-                city.AddImprovement(game.Rules.Improvements.First(i=> i.Id == (int)ImprovementType.Palace));
-                city.Owner.Capital = city;
+                var capitalImprovement = ProductionPossibilities.FindByEffect(city.Owner.Id, ImprovementEffect.Capital)
+                                         ?? game.Rules.Improvements.Where(i =>
+                                             i.Effects.ContainsKey(ImprovementEffect.Capital) &&
+                                             city.Owner.AllowedAdvanceGroups[
+                                                 game.Rules.Advances[i.Prerequisite].AdvanceGroup] !=
+                                             AdvanceGroupAccess.Prohibited).OrderBy(i => i.Cost).FirstOrDefault();
+                if (capitalImprovement != null)
+                {
+                    city.AddImprovement(capitalImprovement);
+                }
             }
             game.History.CityBuilt(tile.CityHere);
 
             game.AutoAddDistributionWorkers(city);
-            city.CalculateOutput(city.Owner.Capital,city.Owner.Government, game);
+            city.CalculateOutput(city.Owner.Government, game);
 
             unit.Dead = true;
             unit.MovePointsLost = unit.MovePoints;

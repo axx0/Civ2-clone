@@ -357,7 +357,7 @@ namespace EtoFormsUI
                             Draw.Unit(e.Graphics, _thisCity.UnitsInCity[i], false, 3 * _cityZoom - 2, new Point(offsetX, offsetY));
                             if (i < 10)
                             {
-                                Draw.Text(e.Graphics, _thisCity.UnitsInCity[i].HomeCity == null ? "NON" : _thisCity.UnitsInCity[i].HomeCity.Name[..3],
+                                Draw.Text(e.Graphics, ShortCityName(_thisCity.UnitsInCity[i].HomeCity),
                                     font, Colors.Black,
                                     new Point(offsetX + 24.ZoomScale(4 * _cityZoom), offsetY + 36.ZoomScale(4 * _cityZoom)), true, false,
                                     Color.FromArgb(135, 135, 135), 1, 1);
@@ -444,6 +444,16 @@ namespace EtoFormsUI
                 Draw.Text(e.Graphics, _thisCity.Improvements[i + starting].Name, font, Colors.White, 
                     new Point(11 + 30.ZoomScale(4 * _cityZoom), PaddingTop + (305 + 12 * i).ZoomScale(4 * _cityZoom)), false, false, Colors.Black, 1, 0);
             }
+        }
+
+        /// <summary>
+        /// Fixes a crash with city names shorter than 3 characters
+        /// </summary>
+        /// <param name="city"></param>
+        /// <returns></returns>
+        private static string ShortCityName(City city)
+        {
+            return city == null ? "NON" : city.Name.Length < 3 ? city.Name : city.Name[..3];
         }
 
         private void BuyButton_Click(object sender, EventArgs e)

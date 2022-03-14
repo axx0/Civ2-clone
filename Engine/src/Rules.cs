@@ -25,8 +25,8 @@ namespace Civ2engine
 
         public readonly Dictionary<string, int> AdvanceMappings = new()
         {
-            {"nil", -1},
-            {"no", -2}
+            {"nil", AdvancesConstants.Nil},
+            {"no", AdvancesConstants.No}
         };
 
         // Trading commodities

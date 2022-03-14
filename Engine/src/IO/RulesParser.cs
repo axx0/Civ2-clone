@@ -30,13 +30,29 @@ namespace Civ2engine.IO
             _sectionHandlers.Add("ORDERS", ProcessOrders);
             _sectionHandlers.Add("CARAVAN", ProcessGoods);
             _sectionHandlers.Add("CIVILIZE2", ProcessAdvanceGroups);
+            _sectionHandlers.Add("LEADERS2", ProcessTechGroupAssignments);
             _sectionHandlers.Add("DIFFICULTY", strings => Rules.Difficulty = strings.ToArray() );
             _sectionHandlers.Add("ATTITUDES", strings => Rules.Attitude = strings.ToArray());
             _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
             _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
             _sectionHandlers.Add("SECONDARY_MAPS", SecondaryMaps);
         }
-        
+
+        private void ProcessTechGroupAssignments(string[] values)
+        {
+            for (var i = 0; i < values.Length; i++)
+            {
+                if (Rules.Leaders.Length <= i)
+                {
+                    return;
+                }
+                var allowances = values[i].Split(" ", 2)[0];
+
+                Rules.Leaders[i].AdvanceGroups =
+                    allowances.Select(c => (AdvanceGroupAccess)int.Parse(c.ToString())).ToArray();
+            }
+        }
+
         public static Rules ParseRules(Ruleset ruleset)
         {
             var rules = new Rules();

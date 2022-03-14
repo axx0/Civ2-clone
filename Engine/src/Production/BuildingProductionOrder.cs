@@ -5,28 +5,28 @@ namespace Civ2engine.Production
 {
     public class BuildingProductionOrder : ProductionOrder
     {
-        private readonly Improvement _imp;
-
         public BuildingProductionOrder(Improvement imp, int i) : base(imp.Cost, ItemType.Building, i+1, imp.Prerequisite)
         {
-            _imp = imp;
+            Improvement = imp;
         }
+
+        public Improvement Improvement { get; }
 
         public override void CompleteProduction(City city, Rules rules)
         {
-            if (_imp.Effects.ContainsKey(ImprovementEffect.Unique))
+            if (Improvement.Effects.ContainsKey(ImprovementEffect.Unique))
             {
-                foreach (var previousCity in city.Owner.Cities.Where(c=> c.ImprovementExists(_imp.Type)))
+                foreach (var previousCity in city.Owner.Cities.Where(c=> c.ImprovementExists(Improvement.Type)))
                 {
-                    previousCity.SellImprovement(_imp);
+                    previousCity.SellImprovement(Improvement);
                 }
             }
-            city.AddImprovement(_imp);
+            city.AddImprovement(Improvement);
         }
 
         public override bool IsValidBuild(City city)
         {
-            if (!city.ImprovementExists(_imp.Type))
+            if (!city.ImprovementExists(Improvement.Type))
             {
                 //TODO: Ocean improvements
                 

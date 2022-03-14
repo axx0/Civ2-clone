@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
 using Civ2engine.Units;
 
 namespace Civ2engine.Production
@@ -17,6 +18,10 @@ namespace Civ2engine.Production
 
         public override void CompleteProduction(City city, Rules rules)
         {
+            var veteran = city.Improvements.Any(i =>
+                i.Effects.ContainsKey(ImprovementEffect.Veteran) &&
+                i.Effects[ImprovementEffect.Veteran] == (int)_unitDefinition.Domain);
+            
             var unit = new Unit
             {
                 Id = city.Owner.Units.Max(u => u.Id) + 1,
@@ -25,7 +30,8 @@ namespace Civ2engine.Production
                 HomeCity = city,
                 CurrentLocation = city.Location,
                 Owner = city.Owner,
-                TypeDefinition = _unitDefinition
+                TypeDefinition = _unitDefinition,
+                Veteran = veteran
             };
             unit.Owner.Units.Add(unit);
 

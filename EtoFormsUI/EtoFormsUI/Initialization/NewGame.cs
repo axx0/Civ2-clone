@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Civ2engine;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.IO;
@@ -728,7 +729,9 @@ namespace EtoFormsUI.Initialization
                 TaxRate = 40,
                 TribeName = tribe.Plural,
                 Titles = titles,
-                PlayerType = human ? PlayerType.Local : PlayerType.AI 
+                PlayerType = human ? PlayerType.Local : PlayerType.AI,
+                NormalColour = tribe.Color,
+                AllowedAdvanceGroups = tribe.AdvanceGroups ?? new [] { AdvanceGroupAccess.CanResearch }
             };
         }
 
