@@ -44,5 +44,10 @@ namespace Civ2engine.Production
             return _availableProducts[targetCiv].OfType<BuildingProductionOrder>()
                 .Where(p => p.Improvement.Effects.ContainsKey(effect)).Select(o => o.Improvement).FirstOrDefault();
         }
+
+        public static IList<ProductionOrder> GetAllowedProductionOrders(City thisCity)
+        {
+            return _availableProducts[thisCity.OwnerId].Where(i => i.IsValidBuild(thisCity)).ToList();
+        }
     }
 }

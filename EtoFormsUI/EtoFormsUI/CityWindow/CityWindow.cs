@@ -31,6 +31,7 @@ namespace EtoFormsUI
         private int InfoButtonWidth => 57.ZoomScale(_cityZoom * 4);
         private int ButtonHeight => 24.ZoomScale(_cityZoom * 4);
         private City _thisCity;
+        private readonly Main _main;
         private int _cityZoom;
         private WhatToDraw whatToDraw = WhatToDraw.Info;
         private VScrollBar _improvementsBar;
@@ -42,6 +43,7 @@ namespace EtoFormsUI
 
         public CityWindow(Main main, MapPanel parent, City city, int cityZoom) : base(636 * (2 + cityZoom) / 2 + 2 * 11, 421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39)), cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39), 11, "")
         {
+            _main = main;
             _cityZoom = cityZoom;
             _parent = parent;
             _thisCity = city;
@@ -470,12 +472,23 @@ namespace EtoFormsUI
         // Panel that returns a chosen value (what it has chosen to produce)
         private void ChangeButton_Click(object sender, EventArgs e)
         {
-            //var _cityChangePanel = new CityChangePanel(this, _thisCity);
-            //_main.Controls.Add(_cityChangePanel);
-            //_cityChangePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityChangePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityChangePanel.Height / 2));
-            //_cityChangePanel.Show();
-            //_cityChangePanel.BringToFront();
-            //this.Enabled = false;   // Freze this panel while rename panel is shown
+            var canProduce = ProductionPossibilities.GetAllowedProductionOrders(_thisCity);
+            var dialog = new Civ2dialog(_main, _main.popupBoxList["PRODUCTION"],
+                new List<string> { _thisCity.Name },
+                listbox: new ListboxDefinition { LeftText = canProduce.Select(p => p.GetDescription()).ToList() });
+            
+            dialog.ShowModal(this);
+            if (dialog.SelectedButton == "OK")
+            {
+                _thisCity.ItemInProduction = canProduce[dialog.SelectedIndex];
+                this.Invalidate();
+            }
+            // var _cityChangePanel = new CityChangePanel(this, _thisCity);
+            // _main.Controls.Add(_cityChangePanel);
+            // _cityChangePanel.Location = new Point(this.Location.X + (this.Width / 2) - (_cityChangePanel.Width / 2), this.Location.Y + (this.Height / 2) - (_cityChangePanel.Height / 2));
+            // _cityChangePanel.Show();
+            // _cityChangePanel.BringToFront();
+            // this.Enabled = false;   // Freze this panel while rename panel is shown
         }
 
         private void RenameButton_Click(object sender, EventArgs e)

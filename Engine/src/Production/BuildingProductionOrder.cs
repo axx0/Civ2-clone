@@ -34,5 +34,10 @@ namespace Civ2engine.Production
             }
             return false;
         }
+
+        public override string GetDescription()
+        {
+            return Improvement.Name;
+        }
     }
 }

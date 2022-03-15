@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Civ2engine.Terrains;
+using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI;
 using EtoFormsUI.Animations;
@@ -16,5 +17,6 @@ namespace Civ2engine
         IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation);
         
         Tile ActiveTile { get; }
+        void DrawStatusPanel(Graphics eGraphics, PanelStyle panelStyle, int unitPanelHeight);
     }
 }

@@ -151,5 +151,11 @@ namespace Civ2engine
             return Utilities.DistanceTo(_maps[0].Tile[0, 0], _maps[0].Tile[(int)xLength / 2, yLength - 1],
                 false);
         }
+        
+        public string Order2string(OrderType unitOrder)
+        {
+            var order = Rules.Orders.FirstOrDefault(t => t.Type == unitOrder);
+            return order != null ? order.Name : string.Empty;
+        }
     }
 }

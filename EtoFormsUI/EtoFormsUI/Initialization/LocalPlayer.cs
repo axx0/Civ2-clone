@@ -48,7 +48,7 @@ namespace EtoFormsUI
             var dialog = new Civ2dialog(_main, popup, new List<string> { "wise men" },
                 listbox: new ListboxDefinition { LeftText = researchPossibilities.Select(a => a.Name).ToList() });
             dialog.ShowModal();
-            activeCiv.ReseachingAdvance = researchPossibilities[0].Index;
+            activeCiv.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
         }
 
         public void CantProduce(City city, ProductionOrder newItem)

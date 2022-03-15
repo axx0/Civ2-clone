@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Civ2engine;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
+using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.Animations;
 
@@ -33,5 +34,8 @@ namespace EtoFormsUI.GameModes
         }
 
         public Tile ActiveTile { get; set; }
+        public void DrawStatusPanel(Graphics eGraphics, PanelStyle panelStyle, int unitPanelHeight)
+        {
+        }
     }
 }

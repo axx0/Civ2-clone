@@ -46,5 +46,10 @@ namespace Civ2engine.Production
         {
             return _unitDefinition.Domain != UnitGAS.Sea || city.IsNextToOcean;
         }
+
+        public override string GetDescription()
+        {
+            return _unitDefinition.Name;
+        }
     }
 }

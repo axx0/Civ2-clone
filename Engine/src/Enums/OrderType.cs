@@ -26,6 +26,9 @@
         BuildCity = 22,
         Automate = 23,
         ActivateUnit = 24,
+        BuildTransport1 = 25,
+        BuildTransport2 = 26,
+        BuildTransport3 = 27,
         NoOrders = 255
     }
 }
