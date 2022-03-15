@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine;
+using Civ2engine.Advances;
 using Civ2engine.Improvements;
 using Civ2engine.Production;
 
@@ -40,9 +42,13 @@ namespace EtoFormsUI
             throw new NotImplementedException();
         }
 
-        public void SelectNewAdvance(Game game, Civilization activeCiv, IList<int> researchPossibilities)
+        public void SelectNewAdvance(Game game, Civilization activeCiv, List<Advance> researchPossibilities)
         {
-            throw new NotImplementedException();
+            var popup = _main.popupBoxList["RESEARCH"];
+            var dialog = new Civ2dialog(_main, popup, new List<string> { "wise men" },
+                listbox: new ListboxDefinition { LeftText = researchPossibilities.Select(a => a.Name).ToList() });
+            dialog.ShowModal();
+            activeCiv.ReseachingAdvance = researchPossibilities[0].Index;
         }
 
         public void CantProduce(City city, ProductionOrder newItem)

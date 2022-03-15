@@ -140,7 +140,9 @@ namespace Civ2engine.Units
         public int HitpointsBase => TypeDefinition.Hitp;
         public int RemainingHitpoints => HitpointsBase - HitPointsLost;
         public int HitPointsLost { get; set; }
-        public UnitType Type { get; set; }
+
+        public UnitType Type => TypeDefinition.Type;
+
         public OrderType Order { get; set; }
         public bool FirstMove { get; set; }
         public bool GreyStarShield { get; set; }

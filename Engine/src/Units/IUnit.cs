@@ -7,7 +7,7 @@ namespace Civ2engine.Units
     {
         int HitpointsBase { get; }
         int RemainingHitpoints { get; }
-        UnitType Type { get; set; }
+        UnitType Type { get; }
         OrderType Order { get; set; }
 
         Civilization Owner { get; set; }

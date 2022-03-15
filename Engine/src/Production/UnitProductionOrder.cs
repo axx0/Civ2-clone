@@ -31,7 +31,8 @@ namespace Civ2engine.Production
                 CurrentLocation = city.Location,
                 Owner = city.Owner,
                 TypeDefinition = _unitDefinition,
-                Veteran = veteran
+                Veteran = veteran,
+                Order = OrderType.NoOrders
             };
             unit.Owner.Units.Add(unit);
 

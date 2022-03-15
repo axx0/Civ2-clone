@@ -15,7 +15,7 @@ namespace Civ2engine
         public void ChooseNextUnit(bool startOfTurn = false)
         {
             Unit nextUnit = null;
-            var units = _activeCiv.Units;
+            var units = _activeCiv.Units.Where(u=> !u.Dead).ToList();
             if (_activeUnit != null)
             {
                 //Look for units on this square or neighbours of this square
@@ -30,25 +30,7 @@ namespace Civ2engine
 
             if (nextUnit == null)
             {
-                int unitIndex;
-                var startIndex = _activeUnit?.Id ?? 0;
-                for (unitIndex = startIndex; unitIndex < units.Count && nextUnit == null; unitIndex++)
-                {
-                    if (!units[unitIndex].Dead && units[unitIndex].Owner == _activeCiv &&
-                        units[unitIndex].AwaitingOrders)
-                    {
-                        nextUnit = units[unitIndex];
-                    }
-                }
-
-                for (unitIndex = 0; nextUnit == null && unitIndex < startIndex; unitIndex++)
-                {
-                    if (!units[unitIndex].Dead && units[unitIndex].Owner == _activeCiv &&
-                        units[unitIndex].AwaitingOrders)
-                    {
-                        nextUnit = units[unitIndex];
-                    }
-                }
+                nextUnit = units.FirstOrDefault(u => u.AwaitingOrders);
             }
 
             // End turn if no units awaiting orders
