@@ -783,7 +783,8 @@ namespace EtoFormsUI
             e.Graphics.DrawRectangle(Color.FromArgb(67, 67, 67), new Rectangle(0, 0, _listboxSurface.Width - 1, _listboxSurface.Height - 1));
 
             var rowmax = _listboxBar is null ? Math.Min(_listboxShownLines, _listbox.LeftText.Count) : Math.Min(_listboxShownLines, _listbox.LeftText.Count - _listboxShownLine0);
-            var offsetX = _listbox.Icon.Any() ? 76 : 1;
+            var hasIcons = _listbox.Icons is { Count: > 0 };
+            var offsetX = hasIcons ? 76 : 1;
             for (int row = 0; row < rowmax; row++)
             {
                 if (_listboxShownLine0 + row == SelectedIndex)
@@ -800,9 +801,9 @@ namespace EtoFormsUI
                     Draw.Text(e.Graphics, _listbox.LeftText[_listboxShownLine0 + row], new Font("Times new Roman", 15), Colors.Black, new Point(offsetX + 2, row * 23 + 2), false, false);
                 }
 
-                if (_listbox.Icon.Any())
+                if (hasIcons)
                 {
-                    e.Graphics.DrawImage(_listbox.Icon[row], 1 + (_listboxShownLine0 + row) % 2 * 38, 2 + 23 * row);
+                    e.Graphics.DrawImage(_listbox.Icons[row], 1 + (_listboxShownLine0 + row) % 2 * 38, 2 + 23 * row);
                 }
             }                
         }

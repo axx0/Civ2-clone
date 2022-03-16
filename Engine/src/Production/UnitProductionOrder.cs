@@ -31,7 +31,8 @@ namespace Civ2engine.Production
                 CurrentLocation = city.Location,
                 Owner = city.Owner,
                 TypeDefinition = _unitDefinition,
-                Veteran = veteran
+                Veteran = veteran,
+                Order = OrderType.NoOrders
             };
             unit.Owner.Units.Add(unit);
 
@@ -44,6 +45,11 @@ namespace Civ2engine.Production
         public override bool IsValidBuild(City city)
         {
             return _unitDefinition.Domain != UnitGAS.Sea || city.IsNextToOcean;
+        }
+
+        public override string GetDescription()
+        {
+            return _unitDefinition.Name;
         }
     }
 }

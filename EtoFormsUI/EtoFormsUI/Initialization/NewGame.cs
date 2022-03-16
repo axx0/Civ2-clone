@@ -45,11 +45,22 @@ namespace EtoFormsUI.Initialization
                         new PopupBox
                         {
                             Title = "Select game version", Options = rulesFiles.Select(f => f.Name).ToList(),
-                            Button = new List<string> {"OK",Labels.Cancel}
+                            Button = new List<string> {"Quick Start", "OK",Labels.Cancel}
                         });
                     popupBox.ShowModal(main);
 
-                    return popupBox.SelectedIndex == int.MinValue ? null : rulesFiles[popupBox.SelectedIndex];
+                    if (popupBox.SelectedIndex == int.MinValue)
+                    {
+                        return null;
+                    }
+
+                    var ruleset = rulesFiles[popupBox.SelectedIndex];
+                    if (popupBox.SelectedButton == "Quick Start")
+                    {
+                        ruleset.QuickStart = true;
+                    }
+
+                    return ruleset;
             }
         }
 
@@ -213,13 +224,18 @@ namespace EtoFormsUI.Initialization
                     canyonPanel.Dispose();
                 }
 
-                if (!stPeterburgPanel.IsDisposed) stPeterburgPanel.Dispose();
+                if (stPeterburgPanel is { IsDisposed: false }) stPeterburgPanel.Dispose();
                 SelectDifficultly(mainForm, config);
             }
         }
 
         private static void GetWorldSize(Main mainForm, GameInitializationConfig config)
         {
+            if (config.RuleSet.QuickStart)
+            {
+                config.WorldSize = new[] { 50, 80 };
+                return;
+            }
             stPeterburgPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "stPeterburgPic"));
 
             mainForm.layout.Add(stPeterburgPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - stPeterburgPanel.Width / 2), 120));
@@ -282,7 +298,7 @@ namespace EtoFormsUI.Initialization
         private static void SelectDifficultly(Main mainForm, GameInitializationConfig config)
         {
             config.Rules = RulesParser.ParseRules(config.RuleSet);
-
+            
             mingGeneralPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "mingGeneralPic"));
 
             mainForm.layout.Add(mingGeneralPanel, new Point((int)Screen.PrimaryScreen.Bounds.Width - 156 - mingGeneralPanel.Width, 76));
@@ -305,12 +321,18 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectNumberOfCivs(Main mainForm, GameInitializationConfig config)
         {
+            var possibleCivs = MapImages.PlayerColours.Length - 1;
+            if (config.RuleSet.QuickStart)
+            {
+                config.NumberOfCivs = possibleCivs;
+                SelectBarbarity(mainForm,config);
+                return;
+            }
             anicientPersonsPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "ancientPersonsPic"));
 
             mainForm.layout.Add(anicientPersonsPanel, new Point(160, 76));
 
             var enemiesPopup = config.PopUps["ENEMIES"];
-            var possibleCivs = MapImages.PlayerColours.Length - 1;
 
             if (enemiesPopup.Options.Count + 2 != possibleCivs)
             {
@@ -342,6 +364,12 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectBarbarity(Main mainForm, GameInitializationConfig config)
         {
+            if (config.RuleSet.QuickStart)
+            {
+                config.BarbarianActivity = config.Random.Next(5);
+                SelectCustomizeRules(mainForm, config);
+                return;
+            }
             barbariansPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "barbariansPic"));
 
             mainForm.layout.Add(barbariansPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width - barbariansPanel.Width - 81), 76));
@@ -369,57 +397,70 @@ namespace EtoFormsUI.Initialization
         {
             while (true)
             {
-                galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyWreckPic"));
-
-                mainForm.layout.Add(galleyPanel, new Point(161, 76));
-
-                var rulesDialog = new Civ2dialog(mainForm, config.PopUps["RULES"]);
-                rulesDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - rulesDialog.Width - 156), 
-                                                 (int)(Screen.PrimaryScreen.Bounds.Height - rulesDialog.Height - 72));
-                rulesDialog.ShowModal(mainForm);
-
-                if (rulesDialog.SelectedIndex == int.MinValue)
+                if (!config.RuleSet.QuickStart)
                 {
-                    galleyPanel.Dispose();
-                    mainForm.MainMenu();
-                    return;
-                }
+                    galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyWreckPic"));
 
-                var customizeRules = rulesDialog.SelectedIndex == 1;
+                    mainForm.layout.Add(galleyPanel, new Point(161, 76));
 
-                if (customizeRules)
-                {
-                    mainForm.layout.Move(galleyPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width - galleyPanel.Width - 155), 76));
+                    var rulesDialog = new Civ2dialog(mainForm, config.PopUps["RULES"]);
+                    rulesDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - rulesDialog.Width - 156),
+                        (int)(Screen.PrimaryScreen.Bounds.Height - rulesDialog.Height - 72));
+                    rulesDialog.ShowModal(mainForm);
 
-                    var customRulesDialog = new Civ2dialog(mainForm, config.PopUps["ADVANCED"], checkboxOptionState: new[] { config.SimplifiedCombat, config.FlatWorld, config.SelectComputerOpponents,config.AcceleratedStartup > 0, config.Bloodlust, config.DontRestartEliminatedPlayers});
-                    customRulesDialog.Location = new Point(161, (int)(Screen.PrimaryScreen.Bounds.Height - customRulesDialog.Height - 72));
-                    customRulesDialog.ShowModal(mainForm);
-
-                    if (customRulesDialog.SelectedIndex != int.MinValue)
+                    if (rulesDialog.SelectedIndex == int.MinValue)
                     {
-                        config.SimplifiedCombat = customRulesDialog.CheckboxReturnStates[0];
-                        config.FlatWorld = customRulesDialog.CheckboxReturnStates[1];
-                        config.SelectComputerOpponents = customRulesDialog.CheckboxReturnStates[2];
-                        config.Bloodlust = customRulesDialog.CheckboxReturnStates[4];
-                        config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
-                        if (customRulesDialog.CheckboxReturnStates[3])
-                        {
-                            var startYearDialog = new Civ2dialog(mainForm, config.PopUps["ACCELERATED"],  replaceNumbers: new [] {4000, 3000, 2000});
-                            startYearDialog.ShowModal(mainForm);
+                        galleyPanel.Dispose();
+                        mainForm.MainMenu();
+                        return;
+                    }
 
-                            if (startYearDialog.SelectedIndex == int.MinValue)
+                    var customizeRules = rulesDialog.SelectedIndex == 1;
+
+                    if (customizeRules)
+                    {
+                        mainForm.layout.Move(galleyPanel,
+                            new Point((int)(Screen.PrimaryScreen.Bounds.Width - galleyPanel.Width - 155), 76));
+
+                        var customRulesDialog = new Civ2dialog(mainForm, config.PopUps["ADVANCED"],
+                            checkboxOptionState: new[]
                             {
-                                continue;
-                            }
+                                config.SimplifiedCombat, config.FlatWorld, config.SelectComputerOpponents,
+                                config.AcceleratedStartup > 0, config.Bloodlust, config.DontRestartEliminatedPlayers
+                            });
+                        customRulesDialog.Location = new Point(161,
+                            (int)(Screen.PrimaryScreen.Bounds.Height - customRulesDialog.Height - 72));
+                        customRulesDialog.ShowModal(mainForm);
 
-                            config.AcceleratedStartup = startYearDialog.SelectedIndex;
+                        if (customRulesDialog.SelectedIndex != int.MinValue)
+                        {
+                            config.SimplifiedCombat = customRulesDialog.CheckboxReturnStates[0];
+                            config.FlatWorld = customRulesDialog.CheckboxReturnStates[1];
+                            config.SelectComputerOpponents = customRulesDialog.CheckboxReturnStates[2];
+                            config.Bloodlust = customRulesDialog.CheckboxReturnStates[4];
+                            config.DontRestartEliminatedPlayers = customRulesDialog.CheckboxReturnStates[5];
+                            if (customRulesDialog.CheckboxReturnStates[3])
+                            {
+                                var startYearDialog = new Civ2dialog(mainForm, config.PopUps["ACCELERATED"],
+                                    replaceNumbers: new[] { 4000, 3000, 2000 });
+                                startYearDialog.ShowModal(mainForm);
+
+                                if (startYearDialog.SelectedIndex == int.MinValue)
+                                {
+                                    continue;
+                                }
+
+                                config.AcceleratedStartup = startYearDialog.SelectedIndex;
+                            }
                         }
                     }
-                }
 
+
+                    galleyPanel.Dispose();
+                }
+                    
                 config.MapTask = MapGenerator.GenerateMap(config);
 
-                galleyPanel.Dispose();
                 SelectGender(mainForm, config);
                 break;
             }
@@ -449,19 +490,29 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectTribe(Main mainForm, GameInitializationConfig config)
         {
+            if (config.RuleSet.QuickStart)
+            {
+                var randomTribe = config.Random.ChooseFrom(config.Rules.Leaders);
+                config.PlayerCiv = MakeCivilization(config, randomTribe, true, randomTribe.Color);
+                
+                CompleteConfig(mainForm, config);
+                return;
+            }
             peoplePanel2 = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "peoplePic2"));
 
-            mainForm.layout.Add(peoplePanel2, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePanel2.Width / 2), 76));
+            mainForm.layout.Add(peoplePanel2,
+                new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePanel2.Width / 2), 76));
 
             var popup = config.PopUps["TRIBE"];
             if (!popup.Button.Contains(Labels.Cancel))
             {
                 popup.Button.Add(Labels.Cancel);
             }
+
             popup.Options = config.Rules.Leaders.Select(l => l.Plural).ToList();
             var tribeDialog = new Civ2dialog(mainForm, popup, optionsCols: 3);
             tribeDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - tribeDialog.Width / 2),
-                                             (int)(Screen.PrimaryScreen.Bounds.Height - tribeDialog.Height - 72));
+                (int)(Screen.PrimaryScreen.Bounds.Height - tribeDialog.Height - 72));
             tribeDialog.ShowModal(mainForm);
 
             if (tribeDialog.SelectedIndex == int.MinValue)
@@ -472,8 +523,10 @@ namespace EtoFormsUI.Initialization
             }
 
             var tribe = config.Rules.Leaders[tribeDialog.SelectedIndex];
+
+
             config.PlayerCiv = MakeCivilization(config, tribe, true, tribe.Color);
-            
+
             if (tribeDialog.SelectedButton == Labels.Custom)
             {
                 var tribePopup = config.PopUps["CUSTOMTRIBE"];
@@ -508,8 +561,9 @@ namespace EtoFormsUI.Initialization
                                 Name = "Adjective"
                             }
                         });
-                    customTribe.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - customTribe.Width / 2),
-                                                     (int)(Screen.PrimaryScreen.Bounds.Height - customTribe.Height - 72));
+                    customTribe.Location = new Point(
+                        (int)(Screen.PrimaryScreen.Bounds.Width / 2 - customTribe.Width / 2),
+                        (int)(Screen.PrimaryScreen.Bounds.Height - customTribe.Height - 72));
                     customTribe.ShowModal(mainForm);
                     if (customTribe.SelectedIndex == int.MinValue)
                     {
@@ -525,24 +579,28 @@ namespace EtoFormsUI.Initialization
                     {
                         var titlesPop = config.PopUps["CUSTOMTRIBE2"];
                         titlesPop.Text = config.Rules.Governments.Select(g => g.Name + ": ").ToList();
-                        
+
                         if (!titlesPop.Button.Contains(Labels.Cancel))
                         {
                             titlesPop.Button.Add(Labels.Cancel);
                         }
-                        var customTitles = new Civ2dialog(mainForm, titlesPop, textBoxes: config.PlayerCiv.Titles.Select(
-                            (s, i) => new TextBoxDefinition
-                            {
-                                index = i,
-                                Name = config.Rules.Governments[i].Name,
-                                InitialValue = s,
-                            }).ToList());
-                        customTitles.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - customTitles.Width / 2),
-                                                          (int)(Screen.PrimaryScreen.Bounds.Height - customTitles.Height - 72));
+
+                        var customTitles = new Civ2dialog(mainForm, titlesPop, textBoxes: config.PlayerCiv.Titles
+                            .Select(
+                                (s, i) => new TextBoxDefinition
+                                {
+                                    index = i,
+                                    Name = config.Rules.Governments[i].Name,
+                                    InitialValue = s,
+                                }).ToList());
+                        customTitles.Location = new Point(
+                            (int)(Screen.PrimaryScreen.Bounds.Width / 2 - customTitles.Width / 2),
+                            (int)(Screen.PrimaryScreen.Bounds.Height - customTitles.Height - 72));
                         customTitles.ShowModal(mainForm);
                         if (customTitles.SelectedButton == Labels.Ok)
                         {
-                            config.PlayerCiv.Titles = config.Rules.Governments.Select(g => customTitles.TextValues[g.Name])
+                            config.PlayerCiv.Titles = config.Rules.Governments
+                                .Select(g => customTitles.TextValues[g.Name])
                                 .ToArray();
                         }
                     }
@@ -571,7 +629,7 @@ namespace EtoFormsUI.Initialization
                     }
                 });
                 nameDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - nameDialog.Width / 2),
-                                                (int)(Screen.PrimaryScreen.Bounds.Height - nameDialog.Height - 72));
+                    (int)(Screen.PrimaryScreen.Bounds.Height - nameDialog.Height - 72));
                 nameDialog.ShowModal(mainForm);
                 if (nameDialog.SelectedButton == Labels.Cancel)
                 {
@@ -582,8 +640,8 @@ namespace EtoFormsUI.Initialization
 
                 config.PlayerCiv.LeaderName = nameDialog.TextValues["LeaderName"];
             }
-
             peoplePanel2.Dispose();
+            
             SelectCityStyle(mainForm, config);
         }
 
@@ -604,11 +662,13 @@ namespace EtoFormsUI.Initialization
             var citiesDialog = new Civ2dialog(mainForm, citiesPopup,
                 icons: new[]
                 {
-                    MapImages.Cities[7].Bitmap, MapImages.Cities[15].Bitmap, MapImages.Cities[23].Bitmap,
+                    MapImages.Cities[7].Bitmap,
+                    MapImages.Cities[15].Bitmap,
+                    MapImages.Cities[23].Bitmap,
                     MapImages.Cities[31].Bitmap
-                }) {SelectedIndex = (int) config.PlayerCiv.CityStyle};
+                }) { SelectedIndex = (int)config.PlayerCiv.CityStyle };
             citiesDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - citiesDialog.Width - 156),
-                                              (int)(Screen.PrimaryScreen.Bounds.Height - citiesDialog.Height - 72));
+                (int)(Screen.PrimaryScreen.Bounds.Height - citiesDialog.Height - 72));
             citiesDialog.ShowModal(mainForm);
             if (citiesDialog.SelectedIndex == int.MinValue)
             {
@@ -616,9 +676,15 @@ namespace EtoFormsUI.Initialization
                 SelectGender(mainForm, config);
                 return;
             }
+
             templePanel.Dispose();
 
-            config.PlayerCiv.CityStyle = (CityStyleType) citiesDialog.SelectedIndex;
+            config.PlayerCiv.CityStyle = (CityStyleType)citiesDialog.SelectedIndex;
+
+            CompleteConfig(mainForm, config);
+        }
+        private static void CompleteConfig(Main mainForm, GameInitializationConfig config)
+        {
             var groupedTribes = config.Rules.Leaders
                 .ToLookup(g => g.Color);
 

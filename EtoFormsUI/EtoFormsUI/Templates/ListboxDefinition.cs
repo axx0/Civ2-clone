@@ -18,6 +18,6 @@ namespace EtoFormsUI
         /// <summary>
         /// List of icons left of text
         /// </summary>
-        public List<Bitmap> Icon { get; set; }
+        public List<Bitmap> Icons { get; set; }
     }
 }

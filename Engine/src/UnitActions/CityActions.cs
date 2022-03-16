@@ -56,7 +56,7 @@ namespace Civ2engine.UnitActions
                 Size = 1,
                 ItemInProduction = game.Rules.ProductionItems.OrderBy(i=>i.Cost).First()
             };
-            
+            tile.WorkedBy = city;
             tile.CityHere = city;
             game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);

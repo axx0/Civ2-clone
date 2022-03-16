@@ -110,14 +110,14 @@ namespace Civ2engine.Advances
             return civ.Advances[tech];
         }
 
-        public static IList<int> CalculateAvailableResearch(Game game, Civilization activeCiv)
+        public static List<Advance> CalculateAvailableResearch(Game game, Civilization activeCiv)
         {
             var allAvailable = game.Rules.Advances.Where(a =>
                 activeCiv.AllowedAdvanceGroups[a.AdvanceGroup] == AdvanceGroupAccess.CanResearch &&
-                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq1)).ToList();
+                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq1) && !activeCiv.Advances[a.Index]).ToList();
             
             //TODO: cull list based on difficulty
-            return allAvailable.Select(a=>a.Index).ToList();
+            return allAvailable.ToList();
         }
     }
 }

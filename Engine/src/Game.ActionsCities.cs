@@ -160,13 +160,12 @@ namespace Civ2engine
                 if (science > 0)
                 {
                     _activeCiv.Science += science;
-                    if (_activeCiv.ReseachingAdvance == -1)
+                    if (_activeCiv.ReseachingAdvance < 0)
                     {
                         var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(this, _activeCiv);
                         player.SelectNewAdvance(this, _activeCiv, researchPossibilities);
                         currentScienceCost = AdvanceFunctions.CalculateScienceCost(this, _activeCiv);
-                    }
-                    if (currentScienceCost <= _activeCiv.Science)
+                    }else if (currentScienceCost <= _activeCiv.Science)
                     {
                         this.GiveAdvance(_activeCiv.ReseachingAdvance, _activeCiv);
                         _activeCiv.Science -= currentScienceCost;

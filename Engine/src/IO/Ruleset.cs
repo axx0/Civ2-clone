@@ -16,5 +16,7 @@ namespace Civ2engine
         {
             get { return _paths ??= (Root == FolderPath ? new[] { FolderPath } : new[] { FolderPath, Root }); }
         }
+
+        public bool QuickStart { get; set; }
     }
 }

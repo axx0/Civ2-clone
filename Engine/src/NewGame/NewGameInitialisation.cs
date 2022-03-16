@@ -30,7 +30,6 @@ namespace Civ2engine.NewGame
                     Id = id,
                     Order = OrderType.NoOrders,
                     Owner = c.Civ,
-                    Type = UnitType.Settlers,
                     Veteran = false,
                     X = c.StartLocation.X,
                     Y = c.StartLocation.Y,

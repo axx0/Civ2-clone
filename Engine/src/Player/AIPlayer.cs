@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
 using Civ2engine.Production;
@@ -34,8 +36,9 @@ namespace Civ2engine
         {
         }
 
-        public void SelectNewAdvance(Game game, Civilization activeCiv, IList<int> researchPossibilities)
+        public void SelectNewAdvance(Game game, Civilization activeCiv, List<Advance> researchPossibilities)
         {
+            activeCiv.ReseachingAdvance = game.Random.ChooseFrom(researchPossibilities).Index;
         }
 
         public void CantProduce(City city, ProductionOrder newItem)

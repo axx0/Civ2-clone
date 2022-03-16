@@ -163,6 +163,12 @@ namespace Civ2engine.IO
             }
         }
 
+        private IList<OrderType> _orders = new[]
+        {
+            OrderType.Fortify, OrderType.Fortified, OrderType.Sleep, OrderType.BuildFortress, OrderType.BuildRoad,
+            OrderType.BuildIrrigation, OrderType.BuildMine, OrderType.Transform, OrderType.CleanPollution,
+            OrderType.BuildTransport1, OrderType.BuildTransport2, OrderType.BuildTransport3, OrderType.GoTo
+        };
         private void ProcessOrders(string[] values)
         {
             Rules.Orders = values.Select((line, id) =>
@@ -172,9 +178,11 @@ namespace Civ2engine.IO
                 {
                     Id = id,
                     Name = parts[0],
-                    Key = parts[1]
+                    Key = parts[1],
+                    Type = _orders[id]
                 };
             }).ToArray();
+            Rules.Orders[Rules.Orders.Length - 1].Type = OrderType.GoTo;
         }
 
         private void ProcessGoods(string[] values)
