@@ -16,12 +16,17 @@ namespace Civ2engine.Production
             _unitDefinition = unitDefinition;
         }
 
-        public override void CompleteProduction(City city, Rules rules)
+        public override bool CompleteProduction(City city, Rules rules)
         {
+            if (_unitDefinition.AIrole == AIroleType.Settle && city.Size == 1)
+            {
+                return false;
+            }
+
             var veteran = city.Improvements.Any(i =>
                 i.Effects.ContainsKey(ImprovementEffect.Veteran) &&
                 i.Effects[ImprovementEffect.Veteran] == (int)_unitDefinition.Domain);
-            
+
             var unit = new Unit
             {
                 Id = city.Owner.Units.Max(u => u.Id) + 1,
@@ -36,10 +41,17 @@ namespace Civ2engine.Production
             };
             unit.Owner.Units.Add(unit);
 
+            if (_unitDefinition.AIrole == AIroleType.Settle)
+            {
+                city.Size -= 1;
+            }
+
             if (!unit.FreeSupport(unit.Owner.Government == GovernmentType.Fundamentalism))
             {
                 city.SetUnitSupport(rules.Cosmic);
             }
+
+            return true;
         }
 
         public override bool IsValidBuild(City city)

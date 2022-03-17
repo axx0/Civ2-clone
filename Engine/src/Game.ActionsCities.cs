@@ -133,10 +133,11 @@ namespace Civ2engine
                 
                 if (city.ShieldsProgress >= city.ItemInProduction.Cost * shieldRows)
                 {
-                    city.ItemInProduction.CompleteProduction(city, Rules);
-                    city.ShieldsProgress = 0;
-
-                    player.CityProductionComplete(city);
+                    if (city.ItemInProduction.CompleteProduction(city, Rules))
+                    {
+                        city.ShieldsProgress = 0;
+                        player.CityProductionComplete(city);
+                    }
                 }
 
                 _activeCiv.Money += tax;

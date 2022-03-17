@@ -22,7 +22,7 @@ namespace Civ2engine.Production
         public int ImageIndex { get; }
         public int RequiredTech { get; }
 
-        public abstract void CompleteProduction(City city, Rules rules);
+        public abstract bool CompleteProduction(City city, Rules rules);
 
         public bool CanBuild(Civilization targetCiv)
         {
