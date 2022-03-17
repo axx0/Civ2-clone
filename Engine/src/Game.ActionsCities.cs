@@ -11,6 +11,7 @@ using System.Net.WebSockets;
 using Civ2engine.Advances;
 using Civ2engine.Improvements;
 using Civ2engine.Production;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -198,16 +199,48 @@ namespace Civ2engine
             var organization = city.OrganizationLevel;
             var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
             var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
-
+            var lowOrganization = organization == 0;
+            
             // Make a list of tiles where you can add workers
-            var tilesToAddWorkersTo = Map.CityRadius(city.Location).Where(t =>
-                    t.WorkedBy == null && t.Visibility[city.OwnerId] &&
-                    !t.UnitsHere.Any(u => u.Owner != city.Owner && u.AttackBase > 0) && t.CityHere == null)
-                .OrderByDescending(t =>
-                    t.GetFood(organization == 0, hasSupermarket) + t.GetShields(organization == 0) +
-                    t.GetTrade(organization, hasSuperhighways)).Take(workersToBeAdded).ToList();
+            var tilesToAddWorkersTo = new List<Tile>();
+            
+            var tileValue = new List<double>();
+            foreach (var tile in Map.CityRadius(city.Location).Where(t =>
+                         t.WorkedBy == null && t.Visibility[city.OwnerId] &&
+                         !t.UnitsHere.Any<Unit>(u => u.Owner != city.Owner && u.AttackBase > 0) && t.CityHere == null))
+            {
+                var food = tile.GetFood(lowOrganization, hasSupermarket) * 1.5 ;
+                var shields = tile.GetShields(lowOrganization);
+                var trade = tile.GetTrade(organization, hasSuperhighways) * 0.5;
 
-            tilesToAddWorkersTo.ForEach(t => t.WorkedBy = city);
+                var total = food + shields + trade;
+                var insertionIndex = tilesToAddWorkersTo.Count;
+                for (; insertionIndex > 0; insertionIndex--)
+                {
+                    if (tileValue[insertionIndex-1] >= total)
+                    {
+                        break;
+                    }
+                }
+
+                if (insertionIndex == tilesToAddWorkersTo.Count)
+                {
+                    if (insertionIndex >= workersToBeAdded) continue;
+                    
+                    tilesToAddWorkersTo.Add(tile);
+                    tileValue.Add(total);
+                }
+                else
+                {
+                    tilesToAddWorkersTo.Insert(insertionIndex, tile);
+                    tileValue.Insert(insertionIndex, total);
+                }
+            }
+
+            foreach (var tile in tilesToAddWorkersTo.Take(workersToBeAdded))
+            {
+                tile.WorkedBy = city;
+            }
         }
     }
 }

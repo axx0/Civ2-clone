@@ -24,19 +24,23 @@ using Civ2engine.Enums;
             internal set
             {
                 if (_terrain == value) return;
-                
-                if(Special != -1 && Special < value.Specials.Length)
-                {
-                    EffectiveTerrain = value.Specials[Special];
-                }
-                else
-                {
-                    EffectiveTerrain = value;
-                }
                 _terrain = value;
+                SetEffectiveTerrain();
             }
         }
-        
+
+        private void SetEffectiveTerrain()
+        {
+            if (Special != -1 && Special < _terrain.Specials.Length)
+            {
+                EffectiveTerrain = _terrain.Specials[Special];
+            }
+            else
+            {
+                EffectiveTerrain = _terrain;
+            }
+        }
+
         internal ITerrain EffectiveTerrain { get; private set; }
 
         public TerrainType Type => Terrain.Type;
@@ -63,6 +67,7 @@ using Civ2engine.Enums;
 
             var d = 1 << ((seed >> 4) & 3);
             Special = (d & a) == (d & b) ? 1 : 0;
+            SetEffectiveTerrain();
         }
 
         public bool HasShield { get; }
