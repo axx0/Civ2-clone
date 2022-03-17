@@ -10,6 +10,11 @@ namespace Civ2engine
 
         public static string[] Items { get; set; }
 
+        public static string For(LabelIndex index)
+        {
+            return Items[(int)index];
+        }
+
         private static string _currentPath;
         
         public static void UpdateLabels(Ruleset rules)

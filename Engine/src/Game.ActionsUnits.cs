@@ -55,5 +55,10 @@ namespace Civ2engine
                 }
             }
         }
+
+        public void IssueOrder(Order order)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
