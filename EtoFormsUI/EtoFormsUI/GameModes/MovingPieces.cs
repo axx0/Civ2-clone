@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
@@ -236,8 +238,39 @@ namespace EtoFormsUI.GameModes
                 {Keys.Up, MovementFunctions.TryMoveNorth}, {Keys.Down, MovementFunctions.TryMoveSouth},
                 {Keys.Left, MovementFunctions.TryMoveWest}, {Keys.Right, MovementFunctions.TryMoveEast},
 
-                {Keys.Space, () => _game.ActiveUnit.SkipTurn()},
-                {Keys.S, () => _game.ActiveUnit.Sleep()}
+                {Keys.Space, () =>
+                    {
+                        _game.ActiveUnit.SkipTurn();
+                        _game.ChooseNextUnit();
+                    }
+                },
+                {Keys.S, () =>
+                    {
+                        _game.ActiveUnit.Sleep();
+                        _game.ChooseNextUnit();
+                    }
+                },
+                {Keys.F, () =>
+                    {
+                        if (_game.ActiveUnit.AIrole != AIroleType.Settle)
+                        {
+                            _game.ActiveUnit.Order = OrderType.Fortify;
+                        }
+                        else
+                        {
+                            if (_game.ActiveUnit.BuildFortress())
+                            {
+                                _game.CheckConstruction(_game.ActiveUnit.CurrentLocation, OrderType.BuildFortress);   
+                                _game.ChooseNextUnit();
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                        _game.ChooseNextUnit();
+                    }
+                }
             };
         }
     }

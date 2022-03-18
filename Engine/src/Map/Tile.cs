@@ -1,10 +1,12 @@
 
         using System;
         using System.Collections.Generic;
+        using System.Diagnostics;
         using System.Drawing;
         using System.Drawing.Text;
         using System.Linq;
-using Civ2engine.Enums;
+        using System.Threading;
+        using Civ2engine.Enums;
         using Civ2engine.Units;
 
         namespace Civ2engine.Terrains
@@ -87,7 +89,7 @@ using Civ2engine.Enums;
 
         public int MoveCost => EffectiveTerrain.MoveCost;
         public int Defense => (River ? EffectiveTerrain.Defense + 1 : EffectiveTerrain.Defense) / 2;
-        
+
         public int GetFood(bool lowOrganisation, bool hasSupermarket)
         {
             decimal food = EffectiveTerrain.Food;
@@ -114,7 +116,7 @@ using Civ2engine.Enums;
 
             return (int)food;
         }
-        
+
         public int GetTrade(int organizationLevel, bool hasSuperhighways)
         {
             decimal trade = EffectiveTerrain.Trade;
@@ -134,7 +136,7 @@ using Civ2engine.Enums;
             {
                 trade *= 1.5m;
             }
-            
+
             if (organizationLevel == 0 && trade >= 3)
             {
                 trade -= 1;
@@ -151,7 +153,7 @@ using Civ2engine.Enums;
             {
                 shields += 1;
             }
-            
+
             if (Mining)
             {
                 shields += Terrain.MiningBonus;
@@ -167,36 +169,40 @@ using Civ2engine.Enums;
                 shields -= 1;
             }
 
-            return (int) shields;
+            return (int)shields;
         }
 
-        public bool CanBeIrrigated => Terrain.CanIrrigate != -2 && (!Irrigation ||!Farmland);  // yes meaning the result can be irrigation or transform. of terrain
-        
+        public bool CanBeIrrigated =>
+            Terrain.CanIrrigate != -2 &&
+            (!Irrigation || !Farmland); // yes meaning the result can be irrigation or transform. of terrain
+
         /// <summary>
         /// If result == type of terrain before irrigation, this means that it's regular irrigation.
         /// (If it can actually be irrigated is determined by CanBeIrrigated.)
         /// Otherwise the result is the type of terrain which is formed.
         /// </summary>
-        public TerrainType IrrigationResult => Terrain.CanIrrigate < 0 ? Type : (TerrainType) Terrain.CanIrrigate;
+        public TerrainType IrrigationResult => Terrain.CanIrrigate < 0 ? Type : (TerrainType)Terrain.CanIrrigate;
 
-        public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; }   // Be careful, 0=never!
-        public bool CanBeMined => Terrain.CanMine != -2 && (!Mining);  // yes meaning the result can be mining or transform. of terrain
-        
+        public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; } // Be careful, 0=never!
+
+        public bool CanBeMined =>
+            Terrain.CanMine != -2 && (!Mining); // yes meaning the result can be mining or transform. of terrain
+
         /// <summary>
         /// If result == type of terrain before mining, this means that it's regular mine.
         /// (If it can actually be mined is determined by CanBeMined.)
         /// Otherwise the result is the type of terrain which is formed.
         /// </summary>
-        public TerrainType MiningResult => Terrain.CanMine < 0 ? Type : (TerrainType) Terrain.CanMine;
+        public TerrainType MiningResult => Terrain.CanMine < 0 ? Type : (TerrainType)Terrain.CanMine;
 
-        public GovernmentType MinGovrnLevelAItoPerformMining { get; set; }     // Be careful, 0=never!
-        public bool CanBeTransformed => Terrain.Transform != -2 ; // usually only ocean can't be transformed
+        public GovernmentType MinGovrnLevelAItoPerformMining { get; set; } // Be careful, 0=never!
+        public bool CanBeTransformed => Terrain.Transform != -2; // usually only ocean can't be transformed
 
         /// <summary>
         ///  If result == type of terrain before transformation, it means it can't be transformed.
         /// Otherwise the result is the type of terrain which is transformed.
         /// </summary>
-        public TerrainType TransformResult => Terrain.Transform < 0 ? Type : (TerrainType) Terrain.Transform;
+        public TerrainType TransformResult => Terrain.Transform < 0 ? Type : (TerrainType)Terrain.Transform;
 
 
         // TODO: put special resources logic into here
@@ -220,7 +226,7 @@ using Civ2engine.Enums;
         public bool[] Visibility { get; set; }
 
         public List<Unit> UnitsHere { get; } = new();
-        
+
         public City CityHere { get; set; }
 
         public City WorkedBy
@@ -231,7 +237,8 @@ using Civ2engine.Enums;
                 if (value != _workedBy)
                 {
                     _workedBy?.WorkedTiles.Remove(this);
-                    _workedBy = CityHere ?? value; //If there is a city here then that's to only city that can work this tile 
+                    _workedBy = CityHere ??
+                                value; //If there is a city here then that's to only city that can work this tile 
                 }
 
                 if (_workedBy?.WorkedTiles.Contains(this) == false)
@@ -248,6 +255,79 @@ using Civ2engine.Enums;
                     ? units.OrderByDescending(u => u.Domain == UnitGAS.Sea ? 1 : 0)
                     : units.OrderByDescending(u => u.Domain == UnitGAS.Sea ? 0 : 1))
                 .ThenBy(u => u.AttackBase).First();
+        }
+
+        public void CompleteConstruction(OrderType order, Rules rules)
+        {
+            switch (order)
+            {
+                case OrderType.BuildFortress:
+                    Fortress = true;
+                    break;
+                case OrderType.BuildRoad: 
+                    if (Road)
+                    {
+                        Railroad = true;
+                    }
+                    else
+                    {
+                        Road = true;
+                    }
+                    break;
+                case OrderType.BuildIrrigation:
+                    if (Terrain.CanIrrigate >= 0)
+                    {
+                        Terrain = rules.Terrains[0][Terrain.CanIrrigate];
+                        ClearImprovements();
+                    }
+                    else
+                    {
+                        if (Irrigation)
+                        {
+                            Farmland = true;
+                        }
+                        else
+                        {
+                            Irrigation = true;
+                        }
+                    }
+
+                    break;
+                case OrderType.BuildMine:
+                    if (Terrain.CanMine >= 0)
+                    {
+                        Terrain = rules.Terrains[0][Terrain.CanMine];
+                        ClearImprovements();
+                    }
+                    else
+                    {
+                        Mining = true;
+                    }
+                    break;
+                case OrderType.Transform:
+                    Terrain = rules.Terrains[0][Terrain.Transform];   
+                    ClearImprovements();  
+                    break;
+                case OrderType.CleanPollution:
+                    Pollution = false;
+                    break;
+                case OrderType.BuildAirbase:
+                    Airbase = true;
+                    break;
+                case OrderType.BuildTransport1:
+                    break;
+                case OrderType.BuildTransport2:
+                    break;
+                case OrderType.BuildTransport3:
+                    break;
+            }
+        }
+
+        private void ClearImprovements()
+        {
+            Irrigation = false;
+            Mining = false;
+            Farmland = false;
         }
     }
 }
