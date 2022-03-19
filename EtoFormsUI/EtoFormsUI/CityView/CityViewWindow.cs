@@ -20,18 +20,46 @@ namespace EtoFormsUI
         public CityViewWindow(City city)
         {
             _city = city;
-            byte[] cvDLL = File.ReadAllBytes(Settings.Civ2Path + "cv.dll");
+            byte[] cvDLL = File.ReadAllBytes(Utils.GetFilePath("cv.dll"));
 
-            // TODO: also determine if road/ashphalt/highway exists
-            // Invention+Phylosophy (=Renaissance) then it has dirt roads
-            // if highways exist --> highway roads
             string background;
-            if (_city.IsNextToOcean)
-                background = "cityviewBaseoceanempty";
-            else if (_city.IsNextToRiver)
-                background = "cityviewBaseriverempty";
-            else
-                background = "cityviewBasecontinentempty";
+            if (_city.Owner.Epoch == EpochType.Ancient || _city.Owner.Epoch == EpochType.Industrial)
+            {
+                if (_city.IsNextToOcean)
+                    background = "cityviewBaseoceanempty";
+                else if (_city.IsNextToRiver)
+                    background = "cityviewBaseriverempty";
+                else
+                    background = "cityviewBasecontinentempty";
+            }
+            else if (_city.Owner.Epoch == EpochType.Renaissance)
+            {
+                if (_city.IsNextToOcean)
+                    background = "cityviewBaseoceanroad";
+                else if (_city.IsNextToRiver)
+                    background = "cityviewBaseriverroad";
+                else
+                    background = "cityviewBasecontinentroad";
+            }
+            else    // Modern epoch
+            {
+                if (_city.IsNextToOcean)
+                    background = "cityviewBaseoceanasphaltroad";
+                else if (_city.IsNextToRiver)
+                    background = "cityviewBaseriverasphaltroad";
+                else
+                    background = "cityviewBasecontinentasphaltroad";
+            }
+
+            if (_city.ImprovementExists(ImprovementType.Superhighways))
+            {
+                if (_city.IsNextToOcean)
+                    background = "cityviewBaseoceanhighway";
+                else if (_city.IsNextToRiver)
+                    background = "cityviewBaseriverhighway";
+                else
+                    background = "cityviewBasecontinenthighway";
+            }
 
             // Get tiles
             baseTile = Images.ExtractBitmap(cvDLL, background);
