@@ -11,6 +11,8 @@ namespace EtoFormsUI
         // Draw an image of city
         public static void City(Graphics g, City city, bool isCitySizeWindow, int zoom, Point dest)
         {
+            g.AntiAlias = false;
+
             // Determine city style
             // ANCIENT OR RENAISSANCE EPOCH => 4 city size styles (0=sizes 1...3, 1=sizes 4...5, 2=sizes 6...7, 3=sizes >= 8)
             // If city is capital => 3 size styles (1=sizes 1...3, 2=sizes 4...5, 3=sizes >= 6)
@@ -78,42 +80,43 @@ namespace EtoFormsUI
             var cityImage = MapImages.Cities[cityIndex];
 
             // Depending on the presence of a wall, get images of city and locations of size window & flag
-            var cityPic = cityImage.Bitmap; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWall[(int)style, sizeStyle] : Images.City[(int)style, sizeStyle];
-            var sizeWinLoc = cityImage.SizeLoc; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallSizeWindowLoc[(int)style, sizeStyle] : Images.CitySizeWindowLoc[(int)style, sizeStyle];
-            var flagLoc = cityImage.FlagLoc; // city.ImprovementExists(ImprovementType.CityWalls) ? Images.CityWallFlagLoc[(int)style, sizeStyle] : Images.CityFlagLoc[(int)style, sizeStyle];
+            var cityPic = cityImage.Bitmap;
+            var sizeWinLoc = cityImage.SizeLoc;
+            var flagLoc = cityImage.FlagLoc;
 
             // Draw city
-            using var _cityPic = cityPic.Resize(zoom);
-            g.DrawImage(_cityPic, new Point(dest.X, dest.Y));
+            g.DrawImage(cityPic.Resize(zoom), new Point(dest.X, dest.Y));
 
             // Draw city size window
             if (isCitySizeWindow)
             {
-                // Rectangle
-                using var _pen = new Pen(Colors.Black);
-                g.DrawRectangle(_pen,
-                    dest.X + sizeWinLoc.X.ZoomScale(zoom) - 1,
-                    dest.Y + sizeWinLoc.Y.ZoomScale(zoom) - 1,
-                    9.ZoomScale(zoom),
-                    13.ZoomScale(zoom));
-
-                // Fill rectangle
-                using var _brush1 = new SolidBrush(MapImages.PlayerColours[city.OwnerId].LightColour);
-                g.FillRectangle(_brush1,
-                    dest.X + sizeWinLoc.X.ZoomScale(zoom),
-                    dest.Y + sizeWinLoc.Y.ZoomScale(zoom),
-                    8.ZoomScale(zoom),
-                    12.ZoomScale(zoom));
-
                 // Size text
                 var formattedText = new FormattedText()
                 {
                     Font = new Font("Times New Roman", 10.ZoomScale(zoom), FontStyle.Bold),
                     ForegroundBrush = new SolidBrush(Colors.Black),
-                    Text = city.Size.ToString()
+                    Text = city.Size.ToString(),
+                    Alignment = FormattedTextAlignment.Center
                 };
                 var textSize = formattedText.Measure();
-                g.DrawText(formattedText, new Point(dest.X + (sizeWinLoc.X + 4).ZoomScale(zoom) - (int)textSize.Width / 2, dest.Y + (sizeWinLoc.Y + 6).ZoomScale(zoom) - (int)textSize.Height / 2));
+                var textW = (int)textSize.Width;
+                var textH = (int)textSize.Height;
+
+                // Rectangle
+                g.DrawRectangle(new Pen(Colors.Black),
+                    dest.X + sizeWinLoc.X.ZoomScale(zoom) - 1,
+                    dest.Y + sizeWinLoc.Y.ZoomScale(zoom) - 1,
+                    textW - 1,
+                    textH - 1);
+
+                // Fill rectangle
+                g.FillRectangle(new SolidBrush(MapImages.PlayerColours[city.OwnerId].LightColour),
+                    dest.X + sizeWinLoc.X.ZoomScale(zoom),
+                    dest.Y + sizeWinLoc.Y.ZoomScale(zoom),
+                    textW - 2,
+                    textH - 2);
+
+                g.DrawText(formattedText, new Point(dest.X + sizeWinLoc.X.ZoomScale(zoom) - 1, dest.Y + sizeWinLoc.Y.ZoomScale(zoom) - 1));
             }
 
             // Draw city flag if units are present in the city

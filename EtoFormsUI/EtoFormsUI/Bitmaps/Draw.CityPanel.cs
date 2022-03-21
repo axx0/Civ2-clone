@@ -268,9 +268,9 @@ namespace EtoFormsUI
                 {
                     drawIndex++;  // Change men/woman appearance
                 }
-                using var plpShPic = CityImages.PeopleShadowLarge[drawIndex, 0].Resize(zoom);
+                using var plpShPic = CityImages.PeopleShadowLarge[drawIndex, (int)city.Owner.Epoch].Resize(zoom);
                 g.DrawImage(plpShPic, dest.X + 5 * (2 + cityZoom) / 2 + i * spacing + 1, dest.Y + 9 * (2 + cityZoom) / 2 + 1);   // Shadow
-                using var plpPic = CityImages.PeopleLarge[drawIndex, 0].Resize(zoom);
+                using var plpPic = CityImages.PeopleLarge[drawIndex, (int)city.Owner.Epoch].Resize(zoom);
                 g.DrawImage(plpPic, dest.X + 5 * (2 + cityZoom) / 2 + i * spacing, dest.Y + 9 * (2 + cityZoom) / 2 + 0);
             }
         }
