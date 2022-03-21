@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
@@ -236,5 +235,21 @@ namespace Civ2engine.Units
         }
 
         public bool NeedsSupport { get; set; } = true;
+
+        public bool BuildFortress()
+        {
+            if (CurrentLocation.IsCityPresent || CurrentLocation.Fortress || CurrentLocation.Type == TerrainType.Ocean ) return false;
+
+            Order = OrderType.BuildFortress;
+
+            ProcessOrder();
+            return true;
+        }
+
+        public void ProcessOrder()
+        {
+            Counter += TypeDefinition.WorkRate;
+            MovePointsLost = MovePoints;
+        }
     }
 }

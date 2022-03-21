@@ -3,6 +3,7 @@ using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -42,6 +43,11 @@ namespace Civ2engine
                 }
                 else
                 {
+                    foreach (var unit in _activeCiv.Units.Where(u=>u.MovePoints > 0))
+                    {
+                        unit.ProcessOrder();
+                        CheckConstruction(unit.CurrentLocation, unit.Order);
+                    }
                     ChoseNextCiv();
                 }
             }
@@ -52,6 +58,42 @@ namespace Civ2engine
                 if (_activeUnit != null)
                 {
                     TriggerUnitEvent(new ActivationEventArgs(_activeUnit, false, false));
+                }
+            }
+        }
+
+        public void CheckConstruction(Tile tile, OrderType order)
+        {
+            var units = tile.UnitsHere.Where(u => u.Order == order).ToList();
+            if (units.Count > 0)
+            {
+                var progress = units.Sum(u => u.Counter);
+
+                int timeToComplete;
+                switch (order)
+                {
+                    case OrderType.Transform:
+                        timeToComplete = Rules.Cosmic.BaseTimeEngineersTransform;
+                        break;
+                    case OrderType.BuildIrrigation:
+                        timeToComplete = tile.Terrain.TurnsToIrrigate;
+                        break;
+                    case OrderType.BuildMine:
+                        timeToComplete = tile.Terrain.TurnsToMine;
+                        break;
+                    default:
+                        timeToComplete = tile.EffectiveTerrain.MoveCost * 2;
+                        break;
+                }
+
+                if (progress >= timeToComplete)
+                {
+                    tile.CompleteConstruction(order, Rules);
+                    units.ForEach(u=>
+                    {
+                        u.Counter = 0;
+                        u.Order = OrderType.NoOrders;
+                    });
                 }
             }
         }

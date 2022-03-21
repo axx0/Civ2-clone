@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
@@ -56,6 +58,7 @@ namespace EtoFormsUI.GameModes
             if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
             if (animation.Unit != game.ActiveUnit) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
             animation.Reset();
+            
             return animation;
         }
 
@@ -65,46 +68,47 @@ namespace EtoFormsUI.GameModes
         {
             var activeTile = ActiveTile;
 
-            Draw.Text(eGraphics, "Moving Units", style.Font, Colors.White, new Point(119, 10), true, true, Colors.Black,
+            Draw.Text(eGraphics, Labels.For(LabelIndex.MovingUnits), style.Font, Colors.White, new Point(119, 10), true, true, Colors.Black,
                 1, 0);
 
             // Show active unit info
-            Draw.Unit(eGraphics, _game.ActiveUnit, false, 1, new Point(7, 27));
+            var activeUnit = _game.ActiveUnit;
+            Draw.Unit(eGraphics, activeUnit, false, 1, new Point(7, 27));
 
             // Show move points correctly
             var commonMultiplier = _game.Rules.Cosmic.MovementMultiplier;
-            var remainingFullPoints = _game.ActiveUnit.MovePoints / commonMultiplier;
-            var fractionalMove = _game.ActiveUnit.MovePoints % commonMultiplier;
+            var remainingFullPoints = activeUnit.MovePoints / commonMultiplier;
+            var fractionalMove = activeUnit.MovePoints % commonMultiplier;
 
             string moveText;
             if (fractionalMove > 0)
             {
                 var gcf = Utils.GreatestCommonFactor(fractionalMove, commonMultiplier);
                 moveText =
-                    $"Moves: {(remainingFullPoints > 0 ? remainingFullPoints : "")} {fractionalMove / gcf}/{commonMultiplier / gcf}";
+                    $"{Labels.For(LabelIndex.Moves)}: {(remainingFullPoints > 0 ? remainingFullPoints : "")} {fractionalMove / gcf}/{commonMultiplier / gcf}";
             }
             else
             {
-                moveText = $"Moves: {remainingFullPoints}";
+                moveText = $"{Labels.For(LabelIndex.Moves)}: {remainingFullPoints}";
             }
 
             Draw.Text(eGraphics, moveText, style.Font, style.FrontColor, new Point(79, 25), false, false,
                 style.BackColor, 1, 1);
 
             // Show other unit info
-            var _cityName = (_game.ActiveUnit.HomeCity == null) ? "NONE" : _game.ActiveUnit.HomeCity.Name;
-            Draw.Text(eGraphics, _cityName, style.Font, style.FrontColor, new Point(79, 43), false, false,
+            var cityName = (activeUnit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : activeUnit.HomeCity.Name;
+            Draw.Text(eGraphics, cityName, style.Font, style.FrontColor, new Point(79, 43), false, false,
                 style.BackColor, 1, 1);
             Draw.Text(eGraphics, _game.GetActiveCiv.Adjective, style.Font, style.FrontColor, new Point(79, 61), false,
                 false, style.BackColor, 1, 1);
-            var _column = 83;
-            Draw.Text(eGraphics, _game.ActiveUnit.Name, style.Font, style.FrontColor, new Point(5, _column), false,
+            var column = 83;
+            Draw.Text(eGraphics, activeUnit.Veteran ? $"{activeUnit.Name} ({Labels.For(LabelIndex.Veteran)})" :activeUnit.Name, style.Font, style.FrontColor, new Point(5, column), false,
                 false, style.BackColor, 1, 1);
-            _column += 18;
+            column += 18;
 
             if (activeTile != null)
             {
-                Draw.Text(eGraphics, $"({activeTile.Type})", style.Font, style.FrontColor, new Point(5, _column),
+                Draw.Text(eGraphics, $"({activeTile.Name})", style.Font, style.FrontColor, new Point(5, column),
                     false,
                     false, style.BackColor, 1, 1);
 
@@ -122,20 +126,20 @@ namespace EtoFormsUI.GameModes
 
                 if (!string.IsNullOrEmpty(improvementText))
                 {
-                    _column += 18;
+                    column += 18;
                     Draw.Text(eGraphics, $"({improvementText})", style.Font, style.FrontColor,
-                        new Point(5, _column), false,
+                        new Point(5, column), false,
                         false, style.BackColor, 1, 1);
                 }
 
                 // If airbase/fortress present
                 if (activeTile.Airbase || activeTile.Fortress)
                 {
-                    _column += 18;
+                    column += 18;
                     string airbaseText = null;
                     if (activeTile.Fortress) airbaseText = "Fortress";
                     if (activeTile.Airbase) airbaseText = "Airbase";
-                    Draw.Text(eGraphics, $"({airbaseText})", style.Font, style.FrontColor, new Point(5, _column),
+                    Draw.Text(eGraphics, $"({airbaseText})", style.Font, style.FrontColor, new Point(5, column),
                         false,
                         false, style.BackColor, 1, 1);
                 }
@@ -143,35 +147,35 @@ namespace EtoFormsUI.GameModes
                 // If pollution present
                 if (activeTile.Pollution)
                 {
-                    _column += 18;
-                    Draw.Text(eGraphics, "(Pollution)", style.Font, style.FrontColor, new Point(5, _column), false,
+                    column += 18;
+                    Draw.Text(eGraphics, "(Pollution)", style.Font, style.FrontColor, new Point(5, column), false,
                         false,
                         style.BackColor, 1, 1);
                 }
 
-                _column += 5;
+                column += 5;
 
                 // Show info for other units on the tile
                 int drawCount = 0;
-                foreach (var unit in activeTile.UnitsHere.Where(u => u != _game.ActiveUnit))
+                foreach (var unit in activeTile.UnitsHere.Where(u => u != activeUnit))
                 {
                     // First check if there is vertical space still left for drawing in panel
-                    if (_column + 69 > unitPanelHeight) break;
+                    if (column + 69 > unitPanelHeight) break;
 
                     // Draw unit
-                    Draw.Unit(eGraphics, unit, false, 1, new Point(7, _column + 27));
+                    Draw.Unit(eGraphics, unit, false, 1, new Point(7, column + 27));
                     // Show other unit info
-                    _column += 20;
-                    _cityName = (unit.HomeCity == null) ? "NONE" : unit.HomeCity.Name;
-                    Draw.Text(eGraphics, _cityName, style.Font, style.FrontColor, new Point(80, _column), false,
+                    column += 20;
+                    cityName = (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name;
+                    Draw.Text(eGraphics, cityName, style.Font, style.FrontColor, new Point(80, column), false,
                         false,
                         style.BackColor, 1, 1);
-                    _column += 18;
+                    column += 18;
                     Draw.Text(eGraphics,  _game.Order2string(unit.Order), style.Font, style.FrontColor,
-                        new Point(80, _column),
+                        new Point(80, column),
                         false, false, style.BackColor, 1, 1);
-                    _column += 18;
-                    Draw.Text(eGraphics, unit.Name, style.Font, style.FrontColor, new Point(80, _column), false,
+                    column += 18;
+                    Draw.Text(eGraphics, unit.Veteran ? $"{unit.Name} ({Labels.For(LabelIndex.Veteran)})" : unit.Name, style.Font, style.FrontColor, new Point(80, column), false,
                         false,
                         style.BackColor, 1, 1);
 
@@ -183,11 +187,11 @@ namespace EtoFormsUI.GameModes
                 // If not all units were drawn print a message
                 if (activeTile.UnitsHere.Count - 1 != drawCount) // -1 because you must not count in active unit
                 {
-                    _column += 22;
+                    column += 22;
                     moveText = activeTile.UnitsHere.Count - 1 - drawCount == 1 ? "Unit" : "Units";
                     Draw.Text(eGraphics, $"({activeTile.UnitsHere.Count - 1 - drawCount} More {moveText})",
                         style.Font,
-                        style.FrontColor, new Point(9, _column), false, false, style.BackColor, 1, 1);
+                        style.FrontColor, new Point(9, column), false, false, style.BackColor, 1, 1);
                 }
             }
         }
@@ -234,9 +238,39 @@ namespace EtoFormsUI.GameModes
                 {Keys.Up, MovementFunctions.TryMoveNorth}, {Keys.Down, MovementFunctions.TryMoveSouth},
                 {Keys.Left, MovementFunctions.TryMoveWest}, {Keys.Right, MovementFunctions.TryMoveEast},
 
-                {Keys.Space, () => _game.ActiveUnit.SkipTurn()},
-                {Keys.S, () => _game.ActiveUnit.Sleep()}
-
+                {Keys.Space, () =>
+                    {
+                        _game.ActiveUnit.SkipTurn();
+                        _game.ChooseNextUnit();
+                    }
+                },
+                {Keys.S, () =>
+                    {
+                        _game.ActiveUnit.Sleep();
+                        _game.ChooseNextUnit();
+                    }
+                },
+                {Keys.F, () =>
+                    {
+                        if (_game.ActiveUnit.AIrole != AIroleType.Settle)
+                        {
+                            _game.ActiveUnit.Order = OrderType.Fortify;
+                        }
+                        else
+                        {
+                            if (_game.ActiveUnit.BuildFortress())
+                            {
+                                _game.CheckConstruction(_game.ActiveUnit.CurrentLocation, OrderType.BuildFortress);   
+                                _game.ChooseNextUnit();
+                            }
+                            else
+                            {
+                                return;
+                            }
+                        }
+                        _game.ChooseNextUnit();
+                    }
+                }
             };
         }
     }

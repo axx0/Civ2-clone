@@ -26,6 +26,11 @@ namespace EtoFormsUI.GameModes
                 {
                     ActiveTile = firstCity.Location;
                 }
+                else
+                {
+                    ActiveTile = game.GetActiveCiv.Units.Where(u => !u.Dead && u.CurrentLocation != null)
+                        .Select(u => u.CurrentLocation).FirstOrDefault();
+                }
             }
             return true;
         }

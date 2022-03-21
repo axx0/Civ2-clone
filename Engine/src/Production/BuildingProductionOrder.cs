@@ -12,16 +12,20 @@ namespace Civ2engine.Production
 
         public Improvement Improvement { get; }
 
-        public override void CompleteProduction(City city, Rules rules)
+        public override bool CompleteProduction(City city, Rules rules)
         {
+            if (!IsValidBuild(city)) return false;
             if (Improvement.Effects.ContainsKey(ImprovementEffect.Unique))
             {
-                foreach (var previousCity in city.Owner.Cities.Where(c=> c.ImprovementExists(Improvement.Type)))
+                foreach (var previousCity in city.Owner.Cities.Where(c => c.ImprovementExists(Improvement.Type)))
                 {
                     previousCity.SellImprovement(Improvement);
                 }
             }
+
             city.AddImprovement(Improvement);
+            return true;
+
         }
 
         public override bool IsValidBuild(City city)
