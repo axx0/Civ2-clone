@@ -1,15 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using Civ2engine.Enums;
+using Civ2engine.Terrains;
+using Civ2engine.Units;
 
-        using System;
-        using System.Collections.Generic;
-        using System.Diagnostics;
-        using System.Drawing;
-        using System.Drawing.Text;
-        using System.Linq;
-        using System.Threading;
-        using Civ2engine.Enums;
-        using Civ2engine.Units;
-
-        namespace Civ2engine.Terrains
+namespace Civ2engine.MapObjects
 {
     public class Tile : IMapItem
     {
@@ -31,6 +28,8 @@
             }
         }
 
+        public Map Map { get; }
+
         private void SetEffectiveTerrain()
         {
             if (Special != -1 && Special < _terrain.Specials.Length)
@@ -51,7 +50,7 @@
 
 
         // Get special resource type based on map seed & tile location
-        public Tile(int x, int y, Terrain terrain, int seed)
+        public Tile(int x, int y, Terrain terrain, int seed, Map map)
         {
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
@@ -59,6 +58,7 @@
             Y = y;
             Odd = y % 2;
             Terrain = terrain;
+            Map = map;
 
             HasShield = HasSheild();
 

@@ -4,6 +4,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 
 namespace EtoFormsUI
 {

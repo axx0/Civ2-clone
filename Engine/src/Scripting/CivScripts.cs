@@ -1,10 +1,9 @@
 using System;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks.Sources;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Scripting.UI;
-using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 // ReSharper disable UnusedMember.Global

@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
-using Civ2engine.Terrains;
+using Civ2engine.MapObjects;
 
 namespace Civ2engine
 {
@@ -41,7 +40,7 @@ namespace Civ2engine
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             var terra = config.TerrainData[index++];
-                            var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed)
+                            var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed, mainMap)
                             {
                                 River = terra > 100,
                                 Visibility = new bool[config.NumberOfCivs + 1]
@@ -86,7 +85,7 @@ namespace Civ2engine
                         var defaultTerrain = config.FlatWorld || (y > 0 && y < yMax) ? ocean : arctic;
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
-                            var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed)
+                            var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed, mainMap)
                             {
                                 Island = -1,
                                 Visibility = new bool[config.NumberOfCivs + 1]

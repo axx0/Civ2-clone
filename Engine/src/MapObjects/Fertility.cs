@@ -3,7 +3,7 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 
-namespace Civ2engine
+namespace Civ2engine.MapObjects
 {
     public static class Fertility
     {

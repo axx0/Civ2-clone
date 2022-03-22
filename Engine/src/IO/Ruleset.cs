@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace Civ2engine
 {
     public class Ruleset

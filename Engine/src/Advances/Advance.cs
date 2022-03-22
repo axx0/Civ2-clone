@@ -1,5 +1,4 @@
-﻿using System;
-using Civ2engine.Enums;
+﻿using Civ2engine.Enums;
 
 namespace Civ2engine.Advances
 {

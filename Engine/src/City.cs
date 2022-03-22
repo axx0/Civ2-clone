@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
 using Civ2engine.Units;
-using Civ2engine.Terrains;
-using System.Diagnostics;
+using Civ2engine.MapObjects;
 using Civ2engine.Production;
 
 namespace Civ2engine
 {
-    public class City : BaseInstance, IMapItem
+    public class City : IMapItem
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -151,15 +149,11 @@ namespace Civ2engine
             }
         }
 
-        public bool IsNextToRiver => Map.Neighbours(Location).Any(t => t.River);
+        public bool IsNextToRiver => Location.River || Location.Neighbours().Any(t => t.River);
 
-        public bool IsNextToOcean => Map.Neighbours(Location).Any(t => t.Type == TerrainType.Ocean);
+        public bool IsNextToOcean =>  Location.Neighbours().Any(t => t.Type == TerrainType.Ocean);
         
         public Tile Location { get; init; }
         public List<Tile> WorkedTiles { get; } = new();
-    }
-
-    public class Commodity
-    {
     }
 }

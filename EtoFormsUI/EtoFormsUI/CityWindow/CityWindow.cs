@@ -10,6 +10,7 @@ using Civ2engine.Enums;
 using EtoFormsUIExtensionMethods;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Civ2engine.MapObjects;
 
 namespace EtoFormsUI
 {

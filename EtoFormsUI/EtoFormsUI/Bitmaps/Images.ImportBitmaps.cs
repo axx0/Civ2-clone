@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using Eto.Drawing;
 using Civ2engine;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using EtoFormsUI.ImageLoader;
 using EtoFormsUIExtensionMethods;

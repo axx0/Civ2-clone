@@ -3,17 +3,20 @@ using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Eto.Drawing;
 
 namespace EtoFormsUI
 {
-    public class GetAnimationFrames : BaseInstance
+    public class GetAnimationFrames
     {
         // Get animation frames for moving unit
         public static List<Bitmap> UnitMoving(Unit activeUnit)
         {
             List<Bitmap> animationFrames = new List<Bitmap>();
+
+            var Map = activeUnit.CurrentLocation.Map;
 
             // Get coords of central tile & which squares are to be drawn
             int[] activeUnitPrevXY = activeUnit.PrevXY;
@@ -169,6 +172,7 @@ namespace EtoFormsUI
         {
             var animationFrames = new List<Bitmap>();
 
+            var map = e.Defender.Location.Map;
             // Which squares are to be drawn
             var coordsOffsetsToBeDrawn = new List<int[]>
             {
@@ -214,30 +218,30 @@ namespace EtoFormsUI
             
             // First draw main bitmap with everything except the moving unit
             int[] coordsOffsetsPx;
-            var mainBitmap = new Bitmap(6 * Map.Xpx, 7 * Map.Ypx, PixelFormat.Format32bppRgba);
+            var mainBitmap = new Bitmap(6 * map.Xpx, 7 * map.Ypx, PixelFormat.Format32bppRgba);
 
             using (var g = new Graphics(mainBitmap))
             {
-                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 6 * Map.Xpx, 7 * Map.Ypx));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
+                g.FillRectangle(Brushes.Black, new Rectangle(0, 0, 6 * map.Xpx, 7 * map.Ypx));    // Fill bitmap with black (necessary for correct drawing if image is on upper map edge)
 
                 foreach (int[] coordsOffsets in coordsOffsetsToBeDrawn)
                 {
                     // Change coords of central offset
                     int x = attackerX + coordsOffsets[0];
                     int y = attackerY + coordsOffsets[1];
-                    coordsOffsetsPx = new[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
+                    coordsOffsetsPx = new[] { (coordsOffsets[0] + 2) * map.Xpx, (coordsOffsets[1] + 3) * map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
                     
                     // Tiles
-                    var tile = Map.TileC2(x, y);
-                    int civId = Map.WhichCivsMapShown;
-                    if (Map.MapRevealed || tile.Visibility[civId])
+                    var tile = map.TileC2(x, y);
+                    int civId = map.WhichCivsMapShown;
+                    if (map.MapRevealed || tile.Visibility[civId])
                     {
-                        Draw.Tile(g, x, y, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
+                        Draw.Tile(g, x, y, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
 
                         // Implement dithering in all 4 directions if necessary
-                        if (!Map.MapRevealed)
+                        if (!map.MapRevealed)
                         {
                             for (int tileX = 0; tileX < 2; tileX++)
                             {
@@ -246,9 +250,9 @@ namespace EtoFormsUI
                                     int[] offset = { -1, 1 };
                                     var xNew = x + offset[tileX];
                                     var yNew = y + offset[tileY];
-                                    if (xNew >= 0 && xNew < 2 * Map.XDim && yNew >= 0 && yNew < Map.YDim)   // Don't observe outside map limits
-                                        if (!Map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
-                                            Draw.Dither(g, tileX, tileY, Map.Zoom, new Point(coordsOffsetsPx[0] + Map.Xpx * tileX, coordsOffsetsPx[1] + Map.Ypx * tileY));
+                                    if (xNew >= 0 && xNew < 2 * map.XDim && yNew >= 0 && yNew < map.YDim)   // Don't observe outside map limits
+                                        if (!map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
+                                            Draw.Dither(g, tileX, tileY, map.Zoom, new Point(coordsOffsetsPx[0] + map.Xpx * tileX, coordsOffsetsPx[1] + map.Ypx * tileY));
                                 }
                             }
                         }
@@ -259,21 +263,21 @@ namespace EtoFormsUI
                     // TODO: this won't draw correctly if unit is in city
                     if (x == attackerX && y == attackerY)
                     {
-                        Draw.Unit(g, e.Attacker, e.Attacker.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                        Draw.Unit(g, e.Attacker, e.Attacker.IsInStack, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - map.Ypx));
                     }
                     else if (x == defenderX && y == defenderY)
                     {
-                        Draw.Unit(g, e.Defender, e.Defender.IsInStack, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                        Draw.Unit(g, e.Defender, e.Defender.IsInStack, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - map.Ypx));
                     }
                     else if (tile.CityHere == null && tile.UnitsHere.Count > 0) // Other units
                     {
                         var unit = tile.GetTopUnit();
-                        Draw.Unit(g, unit, unit.IsInStack, Map.Zoom,
-                            new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                        Draw.Unit(g, unit, unit.IsInStack, map.Zoom,
+                            new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - map.Ypx));
                     }
 
                     // Cities
-                    if (tile.CityHere != null) Draw.City(g, tile.CityHere, true, Map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - Map.Ypx));
+                    if (tile.CityHere != null) Draw.City(g, tile.CityHere, true, map.Zoom, new Point(coordsOffsetsPx[0], coordsOffsetsPx[1] - map.Ypx));
                 }
 
                 // City names
@@ -294,10 +298,10 @@ namespace EtoFormsUI
                     int x = attackerX + coordsOffsets[0];
                     int y = attackerY + coordsOffsets[1];
 
-                    if(x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    if(x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
                     
-                    var tile = Map.TileC2(x,y);
-                    if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, Map.Zoom, new[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
+                    var tile = map.TileC2(x,y);
+                    if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, map.Zoom, new[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
                 }
             }
 
@@ -321,30 +325,30 @@ namespace EtoFormsUI
                             if (x == attackerX && y == attackerY)
                             {
                                 Draw.UnitShield(g, e.Attacker.Type, e.Attacker.Owner.Id, e.Attacker.Order, e.Attacker.IsInStack,
-                                    e.Attacker.Hitpoints[explosion * 5], e.Attacker.HitpointsBase, Map.Zoom,
-                                    new Point(2 * Map.Xpx, 2 * Map.Ypx));
-                                Draw.UnitSprite(g, e.Attacker.Type, false, false, Map.Zoom,
-                                    new Point(2 * Map.Xpx, 2 * Map.Ypx));
+                                    e.Attacker.Hitpoints[explosion * 5], e.Attacker.HitpointsBase, map.Zoom,
+                                    new Point(2 * map.Xpx, 2 * map.Ypx));
+                                Draw.UnitSprite(g, e.Attacker.Type, false, false, map.Zoom,
+                                    new Point(2 * map.Xpx, 2 * map.Ypx));
                             }
                             else if (x == defenderX && y == defenderY)
                             {
                                 Draw.UnitShield(g, e.Defender.Type, e.Defender.Owner.Id, e.Defender.Order,
                                     e.Defender.IsInStack, e.Defender.Hitpoints[explosion * 5], e.Defender.HitpointsBase,
-                                    Map.Zoom,
-                                    new Point((2 + coordsOffsets[0]) * Map.Xpx, (2 + coordsOffsets[1]) * Map.Ypx));
+                                    map.Zoom,
+                                    new Point((2 + coordsOffsets[0]) * map.Xpx, (2 + coordsOffsets[1]) * map.Ypx));
                                 Draw.UnitSprite(g, e.Defender.Type, e.Defender.Order == OrderType.Sleep,
-                                    e.Defender.Order == OrderType.Fortified, Map.Zoom,
-                                    new Point((2 + coordsOffsets[0]) * Map.Xpx, (2 + coordsOffsets[1]) * Map.Ypx));
+                                    e.Defender.Order == OrderType.Fortified, map.Zoom,
+                                    new Point((2 + coordsOffsets[0]) * map.Xpx, (2 + coordsOffsets[1]) * map.Ypx));
                             }
                         }
 
                         // Draw explosion on defender
                         point = e.CombatRoundsAttackerWins[explosion]
-                            ? new Point((int) (Map.Xpx * (2.5 + defenderX - attackerX)),
-                                Map.Ypx * (3 + (defenderY - attackerY)))
-                            : new Point((int) (Map.Xpx * 2.5), Map.Ypx * 3);
+                            ? new Point((int) (map.Xpx * (2.5 + defenderX - attackerX)),
+                                map.Ypx * (3 + (defenderY - attackerY)))
+                            : new Point((int) (map.Xpx * 2.5), map.Ypx * 3);
 
-                        Draw.BattleAnim(g, frame, Map.Zoom, point);
+                        Draw.BattleAnim(g, frame, map.Zoom, point);
                     }
 
                     animationFrames.Add(bitmapWithExplosions);

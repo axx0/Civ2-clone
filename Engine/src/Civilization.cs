@@ -6,7 +6,7 @@ using Civ2engine.Units;
 
 namespace Civ2engine
 {
-    public class Civilization : BaseInstance
+    public class Civilization
     {
         public int Id { get; set; }
         public bool Alive { get; set; }

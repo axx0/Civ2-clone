@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Civ2engine
 {
     public static class ClassicSaveLoader

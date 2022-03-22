@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Civ2engine.Terrains;
-using Civ2engine.Units;
 
-namespace Civ2engine
+namespace Civ2engine.MapObjects
 {
     public class Map
     {
@@ -63,7 +61,7 @@ namespace Civ2engine
                 for (var row = 0; row < YDim; row++)
                 {
                     var terrain = data.MapTerrainType[col, row];
-                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], ResourceSeed)
+                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], ResourceSeed, this)
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],

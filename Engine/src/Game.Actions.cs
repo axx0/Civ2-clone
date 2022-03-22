@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using Civ2engine.Statistics;
-using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
 
 namespace Civ2engine
 {
-    public partial class Game : BaseInstance
+    public partial class Game
     {
         public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
@@ -80,7 +80,7 @@ namespace Civ2engine
                 {
                     TurnBeginning(Players[_activeCiv.PlayerType]);
                     
-                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
+                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
 
 
                     if (_activeCiv.PlayerType == PlayerType.AI)

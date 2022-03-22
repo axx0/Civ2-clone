@@ -1,4 +1,3 @@
-using System;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
 // ReSharper disable UnusedMember.Global

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Eto.Drawing;
 using Eto.Forms;

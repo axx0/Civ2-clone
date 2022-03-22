@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Eto.Drawing;

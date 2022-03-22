@@ -3,11 +3,11 @@ using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.Terrains;
+using Civ2engine.MapObjects;
 
 namespace Civ2engine
 {
-    public partial class Game : BaseInstance
+    public partial class Game
     {
         public event EventHandler<MapEventArgs> OnMapEvent;
         public event EventHandler<UnitEventArgs> OnUnitEvent;

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Civ2engine.Production;
-using Civ2engine.Statistics;
 
 namespace Civ2engine.Advances
 {

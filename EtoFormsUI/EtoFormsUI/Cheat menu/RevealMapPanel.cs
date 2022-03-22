@@ -1,4 +1,5 @@
 ﻿using Civ2engine;
+using Civ2engine.MapObjects;
 using Eto.Forms;
 
 namespace EtoFormsUI

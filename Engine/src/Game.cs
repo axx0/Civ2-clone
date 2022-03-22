@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using Civ2engine.Scripting;
 using Civ2engine.Units;
-using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
-    public partial class Game : BaseInstance
+    public partial class Game
     {
         private readonly Options _options;
         private readonly Rules _rules;

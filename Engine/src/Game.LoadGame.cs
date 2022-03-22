@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
+using Civ2engine.MapObjects;
 using Civ2engine.Scripting;
 using Civ2engine.Statistics;
-using Neo.IronLua;
 
 namespace Civ2engine
 {

@@ -4,6 +4,7 @@ using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;

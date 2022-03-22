@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 
 namespace Civ2engine
 {

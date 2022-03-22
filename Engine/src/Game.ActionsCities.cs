@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
-using Civ2engine.Events;
-using ExtensionMethods;
-using System.Diagnostics;
-using System.Net.WebSockets;
 using Civ2engine.Advances;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Production;
-using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
-    public partial class Game : BaseInstance
+    public partial class Game
     {
         // Update stats of all cities
         private void CitiesTurn(IPlayer player)
@@ -206,7 +200,7 @@ namespace Civ2engine
             var tilesToAddWorkersTo = new List<Tile>();
             
             var tileValue = new List<double>();
-            foreach (var tile in Map.CityRadius(city.Location).Where(t =>
+            foreach (var tile in city.Location.CityRadius().Where(t =>
                          t.WorkedBy == null && t.Visibility[city.OwnerId] &&
                          !t.UnitsHere.Any<Unit>(u => u.Owner != city.Owner && u.AttackBase > 0) && t.CityHere == null))
             {

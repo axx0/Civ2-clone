@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.Terrains;
+using Civ2engine.MapObjects;
 using Civ2engine.Units;
 
 namespace Civ2engine.UnitActions.Move
@@ -212,10 +212,10 @@ namespace Civ2engine.UnitActions.Move
 
             // Primary defender is the unit with largest defense factor
             var defender = tile.UnitsHere[0];
-            var defenseFactor = defender.DefenseFactor(attacker, tile.CityHere);
+            var defenseFactor = defender.DefenseFactor(attacker, tile);
             for (var i = 1; i < tile.UnitsHere.Count; i++)
             {
-                var altDefenseFactor = tile.UnitsHere[i].DefenseFactor(attacker, tile.CityHere);
+                var altDefenseFactor = tile.UnitsHere[i].DefenseFactor(attacker, tile);
                 if (altDefenseFactor > defenseFactor)
                 {
                     defender = tile.UnitsHere[i];

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using Civ2engine.Enums;
+﻿using Civ2engine.Enums;
 
 namespace Civ2engine.Terrains
 {
