@@ -90,7 +90,7 @@ namespace Civ2engine
                     else
                     {
                         // Choose next unit
-                        ChooseNextUnit(true);
+                        ChooseNextUnit();
                     }
 
                 }

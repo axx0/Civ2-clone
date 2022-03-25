@@ -13,7 +13,7 @@ namespace Civ2engine
         public event EventHandler<UnitEventArgs> OnUnitEvent;
 
         // Choose next unit for orders. If all units ended turn, update cities.
-        public void ChooseNextUnit(bool startOfTurn = false)
+        public void ChooseNextUnit()
         {
             Unit nextUnit = null;
             var units = _activeCiv.Units.Where(u=> !u.Dead).ToList();
@@ -29,15 +29,13 @@ namespace Civ2engine
                     .FirstOrDefault();
             }
 
-            if (nextUnit == null)
-            {
-                nextUnit = units.FirstOrDefault(u => u.AwaitingOrders);
-            }
+            nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders);
 
             // End turn if no units awaiting orders
-            if (nextUnit == null && !startOfTurn)
+            if (nextUnit == null)
             {
-                if (Options.AlwaysWaitAtEndOfTurn && _activeCiv.PlayerType != PlayerType.AI)
+                var anyUnitsMoved = units.Any(u => u.MovePointsLost > 0);
+                if ((!anyUnitsMoved || Options.AlwaysWaitAtEndOfTurn) && _activeCiv.PlayerType != PlayerType.AI)
                 {
                     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.WaitAtEndOfTurn));
                 }
