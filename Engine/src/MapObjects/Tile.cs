@@ -147,12 +147,12 @@ namespace Civ2engine.MapObjects
 
         public int GetShields(bool lowOrganization)
         {
-            decimal shields = EffectiveTerrain.Shields;
-
-            if (HasShield && Type == TerrainType.Grassland)
+            if (Type == TerrainType.Grassland && !HasShield)
             {
-                shields += 1;
+                return 0;
             }
+
+            decimal shields = EffectiveTerrain.Shields;
 
             if (Mining)
             {

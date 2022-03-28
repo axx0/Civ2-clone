@@ -53,12 +53,26 @@ namespace EtoFormsUI
 
         public void CantProduce(City city, ProductionOrder newItem)
         {
-            throw new NotImplementedException();
+            ShowCityDialog(city, "BADBUILD");
         }
 
         public void CityProductionComplete(City city)
         {
-            
+            ShowCityDialog(city, "BUILT");
+        }
+
+        private void ShowCityDialog(City city, string dialogName)
+        {
+            var popup = _main.popupBoxList[dialogName];
+            popup.Options ??= new List<string> { Labels.For(LabelIndex.ZoomtoCity), Labels.For(LabelIndex.Continue) };
+            var dialog = new Civ2dialog(_main, popup,
+                new List<string>
+                    { city.Name, city.ItemInProduction.GetDescription(), city.Owner.Adjective, Labels.For(LabelIndex.builds) });
+            dialog.ShowModal();
+            if (dialog.SelectedIndex == 0)
+            {
+                _main.mapPanel.ShowCityWindow(city);
+            }
         }
 
         public IInterfaceCommands UI { get; } 

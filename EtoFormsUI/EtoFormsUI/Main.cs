@@ -37,7 +37,7 @@ namespace EtoFormsUI
         internal ViewPiece ViewPiece;
 
         public PixelLayout layout;
-        private MapPanel mapPanel;
+        internal MapPanel mapPanel;
         private MinimapPanel minimapPanel;
         private StatusPanel statusPanel;
         
