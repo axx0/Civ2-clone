@@ -18,7 +18,7 @@ namespace Civ2engine
 
                 var width = area[0];
                 var height = area[1];
-                var mainMap = new Map(config.FlatWorld)
+                var mainMap = new Map(config.FlatWorld, 0)
                 {
                     
                     XDim = width,

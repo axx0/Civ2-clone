@@ -2,6 +2,8 @@
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Civ2engine.Production;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.Units
 {
@@ -185,19 +187,6 @@ namespace Civ2engine.Units
             Order = OrderType.Fortify;
         }
 
-        public void BuildIrrigation()
-        {
-            if (TypeDefinition.IsSettler && CurrentLocation.CanBeIrrigated)
-            {
-                Order = OrderType.BuildIrrigation;
-                Counter = 0;    //reset counter
-            }
-            else
-            {
-                //Warning!
-            }
-        }
-
         public void Sleep()
         {
             Order = OrderType.Sleep;
@@ -236,20 +225,20 @@ namespace Civ2engine.Units
 
         public bool NeedsSupport { get; set; } = true;
 
-        public bool BuildFortress()
-        {
-            if (CurrentLocation.IsCityPresent || CurrentLocation.Fortress || CurrentLocation.Type == TerrainType.Ocean ) return false;
-
-            Order = OrderType.BuildFortress;
-
-            ProcessOrder();
-            return true;
-        }
-
         public void ProcessOrder()
         {
             Counter += TypeDefinition.WorkRate;
             MovePointsLost = MovePoints;
         }
+
+        public void Build(TerrainImprovement improvement)
+        {
+            Building = improvement.Id;
+            ProcessOrder();
+            // This is a cludge but it will work for now
+            Order = (OrderType)improvement.Id;
+        }
+
+        public int Building { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
@@ -11,89 +12,115 @@ namespace Civ2engine
     {
         public event EventHandler<MapEventArgs> OnMapEvent;
         public event EventHandler<UnitEventArgs> OnUnitEvent;
+        internal event EventHandler<CivEventArgs> OnCivEvent;
+
+        private OrderType[] _doNothingOrders = new[] { OrderType.Fortified, OrderType.Sleep };
 
         // Choose next unit for orders. If all units ended turn, update cities.
         public void ChooseNextUnit()
         {
-            Unit nextUnit = null;
-            var units = _activeCiv.Units.Where(u=> !u.Dead).ToList();
-            if (_activeUnit != null)
-            {
-                //Look for units on this square or neighbours of this square
-                var activeTile = _activeUnit.Dead
-                    ? _maps[_currentMap].TileC2(_activeUnit.X, _activeUnit.Y)
-                    : _activeUnit.CurrentLocation;
-                nextUnit = activeTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ?? _maps[_currentMap]
-                    .Neighbours(activeTile)
+            var units = _activeCiv.Units.Where(u => !u.Dead).ToList();
+       
+            //Look for units on this square or neighbours of this square
+            var nextUnit = ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ?? CurrentMap
+                    .Neighbours(ActiveTile)
                     .SelectMany(t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
                     .FirstOrDefault();
-            }
-
+            
             nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders);
 
+            ActiveUnit = nextUnit;
+            
             // End turn if no units awaiting orders
             if (nextUnit == null)
             {
                 var anyUnitsMoved = units.Any(u => u.MovePointsLost > 0);
                 if ((!anyUnitsMoved || Options.AlwaysWaitAtEndOfTurn) && _activeCiv.PlayerType != PlayerType.AI)
                 {
-                    OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.WaitAtEndOfTurn));
+                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.WaitingAtEndOfTurn, _activeCiv.Id));
                 }
                 else
                 {
-                    foreach (var unit in _activeCiv.Units.Where(u=>u.MovePoints > 0))
+                    if (ProcessEndOfTurn())
                     {
-                        unit.ProcessOrder();
-                        CheckConstruction(unit.CurrentLocation, unit.Order);
+                        ChoseNextCiv();
+                        return;
                     }
-                    ChoseNextCiv();
                 }
             }
-            // Choose next unit
-            else
-            {
-                _activeUnit = nextUnit;
-                if (_activeUnit != null)
-                {
-                    TriggerUnitEvent(new ActivationEventArgs(_activeUnit, false, false));
-                }
-            }
+            //
+            //
+            // if (_activeUnit != null)
+            // {
+            //     TriggerUnitEvent(new ActivationEventArgs(_activeUnit, false, false));
+            // }
         }
 
-        public void CheckConstruction(Tile tile, OrderType order)
+        public bool ProcessEndOfTurn()
         {
-            var units = tile.UnitsHere.Where(u => u.Order == order).ToList();
-            if (units.Count > 0)
+            foreach (var unit in _activeCiv.Units.Where(u =>
+                         u.MovePoints > 0 && !_doNothingOrders.Contains(u.Order)))
             {
-                var progress = units.Sum(u => u.Counter);
-
-                int timeToComplete;
-                switch (order)
+                if (unit.Order == OrderType.Fortify)
                 {
-                    case OrderType.Transform:
-                        timeToComplete = Rules.Cosmic.BaseTimeEngineersTransform;
-                        break;
-                    case OrderType.BuildIrrigation:
-                        timeToComplete = tile.Terrain.TurnsToIrrigate;
-                        break;
-                    case OrderType.BuildMine:
-                        timeToComplete = tile.Terrain.TurnsToMine;
-                        break;
-                    default:
-                        timeToComplete = tile.EffectiveTerrain.MoveCost * 2;
-                        break;
+                    unit.Order = OrderType.Fortified;
+                    unit.MovePointsLost = unit.MovePoints;
                 }
-
-                if (progress >= timeToComplete)
+                else
                 {
-                    tile.CompleteConstruction(order, Rules);
-                    units.ForEach(u=>
+                    unit.ProcessOrder();
+                    var improvement = TerrainImprovements.FirstOrDefault(i => i.Id == unit.Building);
+                    if(improvement != null)
                     {
-                        u.Counter = 0;
-                        u.Order = OrderType.NoOrders;
-                    });
+                        ActiveUnit = CheckConstruction(unit.CurrentLocation, improvement)
+                            .FirstOrDefault(u => u.MovePoints > 0);
+                        if (ActiveUnit != null)
+                        {
+                            return false;
+                        }
+                    }
                 }
             }
+
+            return ActiveUnit == null;
+        }
+
+        public List<Unit> CheckConstruction(Tile tile, TerrainImprovement improvement)
+        {
+            var units = tile.UnitsHere.Where(u => u.Building == improvement.Id).ToList();
+            if (units.Count <= 0) return units;
+
+            var progress = units.Sum(u => u.Counter);
+
+            var existingImprovement = tile.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+
+            var levelToBuild = existingImprovement == null ? 0 : existingImprovement.Level + 1;
+
+            var terrain = improvement.AllowedTerrains[tile.Z].FirstOrDefault(t => t.TerrainType == (int)tile.Type);
+            if (terrain == null)
+            {
+                throw new NotSupportedException("Somthing is very wrong");
+            }
+
+
+            if (progress < terrain.BuildTime)
+            {
+                return new List<Unit>();
+            }
+
+            tile.CompleteConstruction(improvement, terrain, levelToBuild, Rules.Terrains[tile.Z]);
+            units.ForEach(u =>
+            {
+                u.Counter = 0;
+                u.Order = OrderType.NoOrders;
+                u.Building = 0;
+            });
+
+            var tiles = new List<Tile> { tile };
+            tiles.AddRange(tile.Map.Neighbours(tile));
+            TriggerMapEvent(MapEventType.UpdateMap, tiles);
+
+            return units;
         }
     }
 }

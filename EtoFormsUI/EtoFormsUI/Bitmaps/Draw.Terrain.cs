@@ -4,6 +4,7 @@ using Eto.Drawing;
 using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using EtoFormsUIExtensionMethods;
@@ -25,7 +26,7 @@ namespace EtoFormsUI
             // First convert regular coords to civ2-style
             int col = 2 * arrayCol + row % 2; // you don't change row
             var map = Map;
-            int Xdim = 2 * map.XDim;
+            int Xdim = map.XDimMax;
             int Ydim = map.YDim;
 
             // Define a bitmap for drawing
@@ -197,53 +198,101 @@ namespace EtoFormsUI
             }
 
 
-            // Roads (cites also act as road tiles)
-            if (tile.Road || tile.IsCityPresent)
-            {
-                bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
+            var improvements = tile.Improvements.Select(construct => new
+                { construct, Improvement = Game.TerrainImprovements.FirstOrDefault(i => i.Id == construct.Improvement) }).Where(ci=>ci.Improvement != null)
+                .OrderBy(ci=>ci.Improvement.Layer).ToList();
 
-                // Draw roads
-                if (isRoadAround[0]) g.DrawImage(terrainSet.Road[8], 0, 0);  // to N
-                if (isRoadAround[1]) g.DrawImage(terrainSet.Road[1], 0, 0);  // to NE
-                if (isRoadAround[2]) g.DrawImage(terrainSet.Road[2], 0, 0);  // to E
-                if (isRoadAround[3]) g.DrawImage(terrainSet.Road[3], 0, 0);  // to SE
-                if (isRoadAround[4]) g.DrawImage(terrainSet.Road[4], 0, 0);  // to S
-                if (isRoadAround[5]) g.DrawImage(terrainSet.Road[5], 0, 0);  // to SW
-                if (isRoadAround[6]) g.DrawImage(terrainSet.Road[6], 0, 0);  // to W
-                if (isRoadAround[7]) g.DrawImage(terrainSet.Road[7], 0, 0);  // to NW
-                if (isRoadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false }))
+            foreach (var improvement in improvements)
+            {
+                var graphics = terrainSet.ImprovementsMap[improvement.construct.Improvement];
+
+                if (improvement.Improvement.HasMultiTile)
                 {
-                    g.DrawImage(terrainSet.Road[0], 0, 0); // No road around
+                    bool hasNeighbours = false;
+
+                    foreach (var neighbour in tile.Map.Neighbours(tile))
+                    {
+                        var neighboringImprovement =
+                            neighbour.Improvements.FirstOrDefault(i =>
+                                i.Improvement == improvement.construct.Improvement);
+                        if (neighboringImprovement != null)
+                        {
+                            var index = GetCoordsFromDifference(neighbour.X-tile.X  , neighbour.Y - tile.Y );
+                            if (index != -1)
+                            {
+                                if (neighboringImprovement.Level < improvement.construct.Level)
+                                {
+                                    g.DrawImage(graphics.Levels[neighboringImprovement.Level, index],0,0);
+                                }
+                                else
+                                {
+                                    hasNeighbours = true;
+                                    
+                                    g.DrawImage(graphics.Levels[improvement.construct.Level, index],0,0);
+                                }
+                            }
+                        }
+                    }
+
+                    if (!hasNeighbours)
+                    {
+                        g.DrawImage(graphics.Levels[improvement.construct.Level, 0],0,0);
+                    }
+                }
+                else
+                {
+                    g.DrawImage(graphics.Levels[improvement.construct.Level, 0],0,0);
                 }
             }
-
-            // TODO: make railroad drawing logic
-            // Railroads (cites also act as railroad tiles)
-            //if (Map.TileC2(i, j).Railroad || Map.TileC2(i, j).CityPresent)
-            //{
-            //    bool[] isRailroadAround = IsRailroadAround(i, j);
+            
+            
+            // Roads (cites also act as road tiles)
+            // if (tile.Road || tile.IsCityPresent)
+            // {
+            //     bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
             //
-            //    // Draw railroads
-            //    if (isRailroadAround[0]) g.DrawImage(terrainSet.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to N
-            //    if (isRailroadAround[1]) g.DrawImage(terrainSet.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NE
-            //    if (isRailroadAround[2]) g.DrawImage(terrainSet.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to E
-            //    if (isRailroadAround[3]) g.DrawImage(terrainSet.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SE
-            //    if (isRailroadAround[4]) g.DrawImage(terrainSet.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to S
-            //    if (isRailroadAround[5]) g.DrawImage(terrainSet.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SW
-            //    if (isRailroadAround[6]) g.DrawImage(terrainSet.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to W
-            //    if (isRailroadAround[7]) g.DrawImage(terrainSet.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NW
-            //    if (isRailroadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false })) 
-            //      g.DrawImage(terrainSet.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // No railroad around
-            //}
-
-            // Irrigation
-            if (tile.Irrigation) g.DrawImage(terrainSet.Irrigation, 0, 0);
-
-            // Farmland
-            if (tile.Farmland) g.DrawImage(terrainSet.Farmland, 0, 0);
-
-            // Mining
-            if (tile.Mining && !tile.Farmland) g.DrawImage(terrainSet.Mining, 0, 0);
+            //     // Draw roads
+            //     if (isRoadAround[0]) g.DrawImage(terrainSet.Road[8], 0, 0);  // to N
+            //     if (isRoadAround[1]) g.DrawImage(terrainSet.Road[1], 0, 0);  // to NE
+            //     if (isRoadAround[2]) g.DrawImage(terrainSet.Road[2], 0, 0);  // to E
+            //     if (isRoadAround[3]) g.DrawImage(terrainSet.Road[3], 0, 0);  // to SE
+            //     if (isRoadAround[4]) g.DrawImage(terrainSet.Road[4], 0, 0);  // to S
+            //     if (isRoadAround[5]) g.DrawImage(terrainSet.Road[5], 0, 0);  // to SW
+            //     if (isRoadAround[6]) g.DrawImage(terrainSet.Road[6], 0, 0);  // to W
+            //     if (isRoadAround[7]) g.DrawImage(terrainSet.Road[7], 0, 0);  // to NW
+            //     if (isRoadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false }))
+            //     {
+            //         g.DrawImage(terrainSet.Road[0], 0, 0); // No road around
+            //     }
+            // }
+            //
+            // // TODO: make railroad drawing logic
+            // // Railroads (cites also act as railroad tiles)
+            // //if (Map.TileC2(i, j).Railroad || Map.TileC2(i, j).CityPresent)
+            // //{
+            // //    bool[] isRailroadAround = IsRailroadAround(i, j);
+            // //
+            // //    // Draw railroads
+            // //    if (isRailroadAround[0]) g.DrawImage(terrainSet.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to N
+            // //    if (isRailroadAround[1]) g.DrawImage(terrainSet.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NE
+            // //    if (isRailroadAround[2]) g.DrawImage(terrainSet.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to E
+            // //    if (isRailroadAround[3]) g.DrawImage(terrainSet.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SE
+            // //    if (isRailroadAround[4]) g.DrawImage(terrainSet.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to S
+            // //    if (isRailroadAround[5]) g.DrawImage(terrainSet.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SW
+            // //    if (isRailroadAround[6]) g.DrawImage(terrainSet.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to W
+            // //    if (isRailroadAround[7]) g.DrawImage(terrainSet.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NW
+            // //    if (isRailroadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false })) 
+            // //      g.DrawImage(terrainSet.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // No railroad around
+            // //}
+            //
+            // // Irrigation
+            // if (tile.Irrigation) g.DrawImage(terrainSet.Irrigation, 0, 0);
+            //
+            // // Farmland
+            // if (tile.Farmland) g.DrawImage(terrainSet.Farmland, 0, 0);
+            //
+            // // Mining
+            // if (tile.Mining && !tile.Farmland) g.DrawImage(terrainSet.Mining, 0, 0);
 
             // Pollution
             if (tile.Pollution) g.DrawImage(terrainSet.Pollution, 0, 0);
@@ -255,6 +304,22 @@ namespace EtoFormsUI
             else if (tile.Airbase) g.DrawImage(MapImages.Specials[tile.IsUnitPresent ? 3 : 2], 0, 0);
 
             return _tilePic;
+        }
+
+        private static int GetCoordsFromDifference(int deltaX, int deltaY)
+        {
+            return deltaX switch
+            {
+                1 when deltaY == -1 => 1,
+                2 when deltaY == 0 => 2,
+                1 when deltaY == 1 => 3,
+                0 when deltaY == 2 => 4,
+                -1 when deltaY == 1 => 5,
+                -2 when deltaY == 0 => 6,
+                -1 when deltaY == -1 => 7,
+                0 when deltaY == -2 => 8,
+                _ => -1
+            };
         }
 
         private static void ApplyDither(Graphics g, TerrainType neighbourType, TerrainType tileType, IReadOnlyList<Bitmap> ditherMap, int offsetX, int offsetY)    
@@ -273,7 +338,7 @@ namespace EtoFormsUI
             bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
             var indicies = new int[] {0, 0, 0, 0};
 
-            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if land is present next to ocean
@@ -420,7 +485,7 @@ namespace EtoFormsUI
             var index = 0;
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if terrain is present
@@ -490,7 +555,7 @@ namespace EtoFormsUI
             var river = 0;
 
             // Rewrite indexes in Civ2-style
-            var xDim = 2 * Map.XDim; // X=50 in marked as X=100 in Civ2
+            var xDim = Map.XDimMax; // X=50 in marked as X=100 in Civ2
             var yDim = Map.YDim; // no need for such correction for Y
 
             // Observe in all directions if river is present
@@ -562,7 +627,7 @@ namespace EtoFormsUI
             bool[] isRoadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if road or city is present next to tile
@@ -706,7 +771,7 @@ namespace EtoFormsUI
             bool[] isRailroadAround = new bool[8] { false, false, false, false, false, false, false, false };
 
             // Rewrite indexes in Civ2-style
-            int Xdim = 2 * Map.XDim;    // X=50 in markted as X=100 in Civ2
+            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
             int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if railroad or city is present next to tile

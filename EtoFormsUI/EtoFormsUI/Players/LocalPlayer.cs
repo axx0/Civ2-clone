@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
 using Civ2engine.Advances;
+using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Civ2engine.Units;
 
 namespace EtoFormsUI
 {
@@ -17,6 +20,51 @@ namespace EtoFormsUI
             _main = main;
             UI = new UserInterfaceCommands(main);
         }
+
+        public Tile ActiveTile
+        {
+            get => _activeTile;
+            set
+            {
+                if (_activeTile != value)
+                {
+                    _activeTile = value;
+                    _main.Orders.ForEach(o=> o.Update(_activeTile, _activeUnit));
+                }
+            }
+        }
+
+        private Unit _activeUnit;
+        private Civilization _civ;
+        private Tile _activeTile;
+
+        public Unit ActiveUnit
+        {
+            get
+            {
+                return _activeUnit;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _activeUnit = null;
+                }else if (!value.TurnEnded && !value.Dead)
+                {
+                    _activeTile = value.CurrentLocation;
+                    _activeUnit = value;
+                    _main.Orders.ForEach(o=> o.Update(_activeTile, _activeUnit));
+                }
+                else
+                {
+#if DEBUG
+                    throw new NotSupportedException("Tried to set ended unit to active");
+#endif
+                }
+                
+            }
+        }
+
         public void CivilDisorder(City city)
         {
             _main.ShowCityDialog("DISORDER", new [] { city.Name });
@@ -42,13 +90,13 @@ namespace EtoFormsUI
             throw new NotImplementedException();
         }
 
-        public void SelectNewAdvance(Game game, Civilization activeCiv, List<Advance> researchPossibilities)
+        public void SelectNewAdvance(Game game, List<Advance> researchPossibilities)
         {
             var popup = _main.popupBoxList["RESEARCH"];
             var dialog = new Civ2dialog(_main, popup, new List<string> { "wise men" },
                 listbox: new ListboxDefinition { LeftText = researchPossibilities.Select(a => a.Name).ToList() });
             dialog.ShowModal();
-            activeCiv.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
+            _civ.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
         }
 
         public void CantProduce(City city, ProductionOrder newItem)
@@ -64,7 +112,7 @@ namespace EtoFormsUI
         private void ShowCityDialog(City city, string dialogName)
         {
             var popup = _main.popupBoxList[dialogName];
-            popup.Options ??= new List<string> { Labels.For(LabelIndex.ZoomtoCity), Labels.For(LabelIndex.Continue) };
+            popup.Options ??= new List<string> { Labels.For(LabelIndex.ZoomToCity), Labels.For(LabelIndex.Continue) };
             var dialog = new Civ2dialog(_main, popup,
                 new List<string>
                     { city.Name, city.ItemInProduction.GetDescription(), city.Owner.Adjective, Labels.For(LabelIndex.builds) });
@@ -75,6 +123,13 @@ namespace EtoFormsUI
             }
         }
 
-        public IInterfaceCommands UI { get; } 
+        public IInterfaceCommands UI { get; }
+        public IPlayer SetCiv(Civilization civilization)
+        {
+            _civ = civilization;
+            ActiveTile = civilization.Units.FirstOrDefault(u => u.Order == OrderType.NoOrders)?.CurrentLocation ??
+                         civilization.Cities.FirstOrDefault()?.Location;
+            return this;
+        }
     }
 }

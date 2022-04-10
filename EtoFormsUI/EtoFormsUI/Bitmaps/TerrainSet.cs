@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Eto.Drawing;
+using EtoFormsUI.ImageLoader;
 
 namespace EtoFormsUI
 {
@@ -14,13 +16,10 @@ namespace EtoFormsUI
         public Bitmap[] Mountains { get; set; }
         public Bitmap[] Hills { get; set; }
         public Bitmap[,] Coast { get; set; }
-        public Bitmap[] Road { get; set; }
-        public Bitmap[] Railroad { get; set; }
-        public Bitmap Irrigation { get; set; }
-        public Bitmap Farmland { get; set; }
-        public Bitmap Mining { get; set; }
         public Bitmap Pollution { get; set; }
         public Bitmap GrasslandShield { get; set; }
         public Bitmap[] DitherMask { get; set; }
+        
+        public Dictionary<int, ImprovementGraphic> ImprovementsMap { get; set; }
     }
 }

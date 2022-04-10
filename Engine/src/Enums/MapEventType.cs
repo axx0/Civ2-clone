@@ -8,7 +8,6 @@
         ZoomChanged = 4,
         CenterView = 5,
         ToggleGrid = 6,
-        WaitAtEndOfTurn = 7,
         UpdateMap = 8
     }
 }

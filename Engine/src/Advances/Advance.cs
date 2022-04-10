@@ -1,4 +1,5 @@
-﻿using Civ2engine.Enums;
+﻿using System.Collections.Generic;
+using Civ2engine.Enums;
 
 namespace Civ2engine.Advances
 {
@@ -14,5 +15,6 @@ namespace Civ2engine.Advances
         
         public int AdvanceGroup { get; internal set; }
         public int Index { get; internal set; }
+        public List<ConstructionAbility> ImprovementsEnabled { get; } = new();
     }
 }

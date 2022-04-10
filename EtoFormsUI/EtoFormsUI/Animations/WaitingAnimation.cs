@@ -55,7 +55,7 @@ namespace EtoFormsUI.GameModes
                         y = unitY + coordsOffsets[1];
                         coordsOffsetsPx = new[] {coordsOffsets[0] * map.Xpx, coordsOffsets[1] * map.Ypx};
 
-                        if (x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim ||
+                        if (x < 0 || y < 0 || x >= map.XDimMax || y >= map.YDim ||
                             !map.IsTileVisibleC2(x, y, map.WhichCivsMapShown))
                         {
                             continue; // Make sure you're not drawing tiles outside map bounds
@@ -117,7 +117,7 @@ namespace EtoFormsUI.GameModes
                         x = unitX + coordsOffsets[0];
                         y = unitY + coordsOffsets[1];
 
-                        if (x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim)
+                        if (x < 0 || y < 0 || x >= map.XDimMax || y >= map.YDim)
                             continue; // Make sure you're not drawing tiles outside map bounds
 
                         var city = map.TileC2(x, y).CityHere;

@@ -69,7 +69,7 @@ namespace EtoFormsUI
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
                     coordsOffsetsPx = new[] { (coordsOffsets[0] + 2) * Map.Xpx, (coordsOffsets[1] + 3) * Map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= Map.XDimMax || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
 
                     // Tiles
                     int civId = Map.WhichCivsMapShown;
@@ -87,7 +87,7 @@ namespace EtoFormsUI
                                     int[] offset = { -1, 1 };
                                     int xNew = x + offset[tileX];
                                     int yNew = y + offset[tileY];
-                                    if (xNew >= 0 && xNew < 2 * Map.XDim && yNew >= 0 && yNew < Map.YDim)   // Don't observe outside map limits
+                                    if (xNew >= 0 && xNew < Map.XDimMax && yNew >= 0 && yNew < Map.YDim)   // Don't observe outside map limits
                                         if (!Map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
                                             Draw.Dither(g, tileX, tileY, Map.Zoom, new Point(coordsOffsetsPx[0] + Map.Xpx * tileX, coordsOffsetsPx[1] + Map.Ypx * tileY));
                                 }
@@ -137,7 +137,7 @@ namespace EtoFormsUI
                     int x = activeUnitPrevXY[0] + coordsOffsets[0];
                     int y = activeUnitPrevXY[1] + coordsOffsets[1];
 
-                    if (x < 0 || y < 0 || x >= 2 * Map.XDim || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= Map.XDimMax || y >= Map.YDim) continue;   // Make sure you're not drawing tiles outside map bounds
 
                     var tile = Map.TileC2(x, y);
                     if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, Map.Zoom, new[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });
@@ -231,7 +231,7 @@ namespace EtoFormsUI
                     int y = attackerY + coordsOffsets[1];
                     coordsOffsetsPx = new[] { (coordsOffsets[0] + 2) * map.Xpx, (coordsOffsets[1] + 3) * map.Ypx };
 
-                    if (x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    if (x < 0 || y < 0 || x >= map.XDimMax || y >= map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
                     
                     // Tiles
                     var tile = map.TileC2(x, y);
@@ -250,7 +250,7 @@ namespace EtoFormsUI
                                     int[] offset = { -1, 1 };
                                     var xNew = x + offset[tileX];
                                     var yNew = y + offset[tileY];
-                                    if (xNew >= 0 && xNew < 2 * map.XDim && yNew >= 0 && yNew < map.YDim)   // Don't observe outside map limits
+                                    if (xNew >= 0 && xNew < map.XDimMax && yNew >= 0 && yNew < map.YDim)   // Don't observe outside map limits
                                         if (!map.IsTileVisibleC2(xNew, yNew, civId))   // Surrounding tile is not visible -> dither
                                             Draw.Dither(g, tileX, tileY, map.Zoom, new Point(coordsOffsetsPx[0] + map.Xpx * tileX, coordsOffsetsPx[1] + map.Ypx * tileY));
                                 }
@@ -298,7 +298,7 @@ namespace EtoFormsUI
                     int x = attackerX + coordsOffsets[0];
                     int y = attackerY + coordsOffsets[1];
 
-                    if(x < 0 || y < 0 || x >= 2 * map.XDim || y >= map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
+                    if(x < 0 || y < 0 || x >= map.XDimMax || y >= map.YDim) continue;    // Make sure you're not drawing tiles outside map bounds
                     
                     var tile = map.TileC2(x,y);
                     if (tile.CityHere != null) Draw.CityName(g, tile.CityHere, map.Zoom, new[] { coordsOffsets[0] + 2, coordsOffsets[1] + 3 });

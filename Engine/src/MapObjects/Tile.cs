@@ -14,6 +14,8 @@ namespace Civ2engine.MapObjects
         private Terrain _terrain;
         public int X { get; }
         public int Y { get; }
+        
+        public int Z { get;}
 
         public int Odd { get; }
 
@@ -56,6 +58,7 @@ namespace Civ2engine.MapObjects
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
             X = x;
             Y = y;
+            Z = map.MapIndex;
             Odd = y % 2;
             Terrain = terrain;
             Map = map;
@@ -90,23 +93,26 @@ namespace Civ2engine.MapObjects
         public int MoveCost => EffectiveTerrain.MoveCost;
         public int Defense => (River ? EffectiveTerrain.Defense + 1 : EffectiveTerrain.Defense) / 2;
 
-        public int GetFood(bool lowOrganisation, bool hasSupermarket)
+        public int GetFood(bool lowOrganisation)
         {
             decimal food = EffectiveTerrain.Food;
-            var hasCity = CityHere != null;
-            if (Irrigation || hasCity)
-            {
-                food += Terrain.IrrigationBonus;
-            }
 
-            if (hasCity && food < 2)
+            var foodEffects = EffectsList.Where(e => e.Target == ImprovementConstants.Food).ToList();
+
+            food += foodEffects.Where(e => e.Action == ImprovementActions.Add).Sum(e => e.Value);
+
+            if (CityHere != null && food < 2)
             {
                 food += 1;
             }
-
-            if (hasSupermarket && (Farmland || hasCity))
+            if (food > 0)
             {
-                food *= 1.5m;
+                var multiplier = foodEffects.Where(e => e.Action == ImprovementActions.Multiply)
+                    .Sum(e => e.Value);
+                if (multiplier != 0)
+                {
+                    food += food * (multiplier / 100m);
+                }
             }
 
             if (lowOrganisation && food >= 3)
@@ -117,24 +123,31 @@ namespace Civ2engine.MapObjects
             return (int)food;
         }
 
-        public int GetTrade(int organizationLevel, bool hasSuperhighways)
+        public int GetTrade(int organizationLevel)
         {
             decimal trade = EffectiveTerrain.Trade;
 
-            var hasRoad = Road || Railroad || CityHere != null;
-            if (hasRoad || River)
+            if (River)
             {
                 trade += Terrain.RoadBonus;
             }
 
+            var tradeEffects = EffectsList.Where(e => e.Target == ImprovementConstants.Trade).ToList();
+
+            trade += tradeEffects.Where(e => e.Action == ImprovementActions.Add).Sum(e => e.Value);
             if (organizationLevel > 1 && trade > 0)
             {
                 trade += 1;
             }
 
-            if (hasSuperhighways && hasRoad)
+            if (trade > 0)
             {
-                trade *= 1.5m;
+                var multiplier = tradeEffects.Where(e => e.Action == ImprovementActions.Multiply)
+                    .Sum(e => e.Value);
+                if (multiplier != 0)
+                {
+                    trade += trade * (multiplier / 100m);
+                }
             }
 
             if (organizationLevel == 0 && trade >= 3)
@@ -147,21 +160,22 @@ namespace Civ2engine.MapObjects
 
         public int GetShields(bool lowOrganization)
         {
-            if (Type == TerrainType.Grassland && !HasShield)
-            {
-                return 0;
-            }
+            decimal shields = Type == TerrainType.Grassland && !HasShield ? 0 :  EffectiveTerrain.Shields;
 
-            decimal shields = EffectiveTerrain.Shields;
+            var productionEffects = EffectsList.Where(e => e.Target == ImprovementConstants.Shields).ToList();
 
-            if (Mining)
+            if (productionEffects.Count > 0)
             {
-                shields += Terrain.MiningBonus;
-            }
-
-            if (Railroad)
-            {
-                shields *= 1.5m;
+                shields += productionEffects.Where(e => e.Action == ImprovementActions.Add).Sum(e => e.Value);
+                if (shields > 0)
+                {
+                    var multiplier = productionEffects.Where(e => e.Action == ImprovementActions.Multiply)
+                        .Sum(e => e.Value);
+                    if (multiplier != 0)
+                    {
+                        shields += shields * (multiplier / 100m);
+                    }
+                }
             }
 
             if (lowOrganization && shields >= 3)
@@ -171,41 +185,6 @@ namespace Civ2engine.MapObjects
 
             return (int)shields;
         }
-
-        public bool CanBeIrrigated =>
-            Terrain.CanIrrigate != -2 &&
-            (!Irrigation || !Farmland); // yes meaning the result can be irrigation or transform. of terrain
-
-        /// <summary>
-        /// If result == type of terrain before irrigation, this means that it's regular irrigation.
-        /// (If it can actually be irrigated is determined by CanBeIrrigated.)
-        /// Otherwise the result is the type of terrain which is formed.
-        /// </summary>
-        public TerrainType IrrigationResult => Terrain.CanIrrigate < 0 ? Type : (TerrainType)Terrain.CanIrrigate;
-
-        public GovernmentType MinGovrnLevelAItoPerformIrrigation { get; set; } // Be careful, 0=never!
-
-        public bool CanBeMined =>
-            Terrain.CanMine != -2 && (!Mining); // yes meaning the result can be mining or transform. of terrain
-
-        /// <summary>
-        /// If result == type of terrain before mining, this means that it's regular mine.
-        /// (If it can actually be mined is determined by CanBeMined.)
-        /// Otherwise the result is the type of terrain which is formed.
-        /// </summary>
-        public TerrainType MiningResult => Terrain.CanMine < 0 ? Type : (TerrainType)Terrain.CanMine;
-
-        public GovernmentType MinGovrnLevelAItoPerformMining { get; set; } // Be careful, 0=never!
-        public bool CanBeTransformed => Terrain.Transform != -2; // usually only ocean can't be transformed
-
-        /// <summary>
-        ///  If result == type of terrain before transformation, it means it can't be transformed.
-        /// Otherwise the result is the type of terrain which is transformed.
-        /// </summary>
-        public TerrainType TransformResult => Terrain.Transform < 0 ? Type : (TerrainType)Terrain.Transform;
-
-
-        // TODO: put special resources logic into here
 
         public bool Resource { get; set; }
         public bool River { get; set; }
@@ -248,6 +227,10 @@ namespace Civ2engine.MapObjects
             }
         }
 
+        public List<ConstructedImprovement> Improvements { get; init; } = new();
+
+        public List<ActiveEffect> EffectsList { get; } = new();
+
         public Unit GetTopUnit(Func<Unit, bool> pred = null)
         {
             var units = pred != null ? UnitsHere.Where(pred) : UnitsHere;
@@ -257,77 +240,58 @@ namespace Civ2engine.MapObjects
                 .ThenBy(u => u.AttackBase).First();
         }
 
-        public void CompleteConstruction(OrderType order, Rules rules)
+        public void CompleteConstruction(TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,
+            Terrain[] terrains)
         {
-            switch (order)
+            if (improvement.ExclusiveGroup > 0)
             {
-                case OrderType.BuildFortress:
-                    Fortress = true;
-                    break;
-                case OrderType.BuildRoad: 
-                    if (Road)
-                    {
-                        Railroad = true;
-                    }
-                    else
-                    {
-                        Road = true;
-                    }
-                    break;
-                case OrderType.BuildIrrigation:
-                    if (Terrain.CanIrrigate >= 0)
-                    {
-                        Terrain = rules.Terrains[0][Terrain.CanIrrigate];
-                        ClearImprovements();
-                    }
-                    else
-                    {
-                        if (Irrigation)
-                        {
-                            Farmland = true;
-                        }
-                        else
-                        {
-                            Irrigation = true;
-                        }
-                    }
+                var previous = Improvements
+                    .Where(i => i.Improvement != improvement.Id && i.Group == improvement.ExclusiveGroup).ToList();
 
-                    break;
-                case OrderType.BuildMine:
-                    if (Terrain.CanMine >= 0)
-                    {
-                        Terrain = rules.Terrains[0][Terrain.CanMine];
-                        ClearImprovements();
-                    }
-                    else
-                    {
-                        Mining = true;
-                    }
-                    break;
-                case OrderType.Transform:
-                    Terrain = rules.Terrains[0][Terrain.Transform];   
-                    ClearImprovements();  
-                    break;
-                case OrderType.CleanPollution:
-                    Pollution = false;
-                    break;
-                case OrderType.BuildAirbase:
-                    Airbase = true;
-                    break;
-                case OrderType.BuildTransport1:
-                    break;
-                case OrderType.BuildTransport2:
-                    break;
-                case OrderType.BuildTransport3:
-                    break;
+
+                previous.ForEach(i => Improvements.Remove(i));
+
             }
-        }
 
-        private void ClearImprovements()
-        {
-            Irrigation = false;
-            Mining = false;
-            Farmland = false;
+            var transformEffect = terrain.Effects.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
+            if (transformEffect != null)
+            {
+                Terrain = terrains[transformEffect.Value];
+                return;
+            }
+
+            if (levelToBuild > 0)
+            {
+                var imp = Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+                if (imp != null)
+                {
+                    imp.Level = levelToBuild;
+                    if (improvement.Levels[levelToBuild].Effects?.Count > 0)
+                    {
+                        EffectsList.AddRange(improvement.Levels[levelToBuild].Effects.Select(e => new ActiveEffect
+                            { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id }));
+                    }
+
+                    return;
+                }
+            }
+            if (improvement.Levels[levelToBuild].Effects?.Count > 0)
+            {
+                EffectsList.AddRange(improvement.Levels[levelToBuild].Effects.Select(e => new ActiveEffect
+                    { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id }));
+            }
+            Improvements.Add(new ConstructedImprovement
+                { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
+            EffectsList.AddRange(terrain.Effects.Select(e => new ActiveEffect
+                { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id }));
         }
+    }
+
+    public class ActiveEffect
+    {
+        public int Target { get; set; }
+        public int Action { get; set; }
+        public int Value { get; set; }
+        public int Source { get; set; }
     }
 }

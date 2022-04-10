@@ -35,7 +35,7 @@ namespace Civ2engine
             
             if(TurnNumber < 16) return;
             
-            TurnBeginning(AI);
+            TurnBeginning(Players[0]);
             
             //Pick a random tile if valid for barbarians raise horde
             
@@ -78,14 +78,14 @@ namespace Civ2engine
 
                 if (_activeCiv.Alive)
                 {
-                    TurnBeginning(Players[_activeCiv.PlayerType]);
+                    TurnBeginning(Players[_activeCiv.Id]);
                     
                     OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
 
 
                     if (_activeCiv.PlayerType == PlayerType.AI)
                     {
-                        AITurn();
+                        AiTurn();
                     }
                     else
                     {
@@ -101,7 +101,7 @@ namespace Civ2engine
             }
         }
 
-        private void AITurn()
+        private void AiTurn()
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
             {

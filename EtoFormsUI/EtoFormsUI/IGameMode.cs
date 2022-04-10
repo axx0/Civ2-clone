@@ -11,13 +11,22 @@ namespace Civ2engine
 {
     public interface IGameMode
     {
-        bool Init(IGameMode previous, Game game);
-        IDictionary<Keys, Action> Actions { get; set; }
-        bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main buttons, MouseButtons eButtons);
+        bool Activate(IGameMode previous);
+        
+        /// <summary>
+        ///  A tile was clicked how sould this game mode respond
+        /// </summary>
+        /// <param name="clickedXy">The tile clicked</param>
+        /// <param name="mapPanel"></param>
+        /// <param name="main">The app main form</param>
+        /// <param name="eButtons">The buttons clicked ion this event</param>
+        /// <returns>True if the map should centre on the clicked location</returns>
+        bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main mainForm, MouseButtons eButtons);
         bool PanelClick(Game game, Main main);
         IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation);
         
-        Tile ActiveTile { get; }
         void DrawStatusPanel(Graphics eGraphics, PanelStyle panelStyle, int unitPanelHeight);
+        void HandleKeyPress(Main main, KeyEventArgs keyEventArgs);
+        void HandleCommand(Command command);
     }
 }

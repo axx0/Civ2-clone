@@ -12,9 +12,8 @@ namespace EtoFormsUI.GameModes
 {
     public class Processing : IGameMode
     {
-        public bool Init(IGameMode previous, Game game)
+        public bool Activate(IGameMode previous)
         {
-            ActiveTile = previous.ActiveTile;
             return true;
         }
 
@@ -34,9 +33,18 @@ namespace EtoFormsUI.GameModes
             return null;
         }
 
-        public Tile ActiveTile { get; set; }
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle panelStyle, int unitPanelHeight)
         {
+        }
+
+        public void HandleKeyPress(Main eventArgs, KeyEventArgs keyEventArgs)
+        {
+            // Cannot press keys while processing
+        }
+
+        public void HandleCommand(Command command)
+        {
+            
         }
     }
 }

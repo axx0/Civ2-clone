@@ -28,12 +28,12 @@ namespace Civ2engine.UnitActions.Move
             {
                 return;
             }
-            if (game.ActiveUnit.X < game.CurrentMap.XDim*2-2)
+            if (game.ActiveUnit.X < game.CurrentMap.XDimMax-2)
             {
                 MoveC2(1, -1);
             }else if (!game.Options.FlatEarth)
             {
-                MoveC2(-game.CurrentMap.XDim*2 +2 , -1);
+                MoveC2(-game.CurrentMap.XDimMax +2 , -1);
             }
 
             CheckForUnitTurnEnded(game);
@@ -50,12 +50,12 @@ namespace Civ2engine.UnitActions.Move
         public static void TryMoveEast()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.X < instance.CurrentMap.XDim *2 -2)
+            if (instance.ActiveUnit.X < instance.CurrentMap.XDimMax -2)
             {
                 MoveC2(2, 0);
             }else if (!instance.Options.FlatEarth)
             {
-                MoveC2(-instance.CurrentMap.XDim*2 +2 , 0);
+                MoveC2(-instance.CurrentMap.XDimMax +2 , 0);
             }
             CheckForUnitTurnEnded(instance);
         }
@@ -65,13 +65,13 @@ namespace Civ2engine.UnitActions.Move
             var instance = Game.Instance;
             if (instance.ActiveUnit.Y < instance.CurrentMap.YDim - 1)
             {
-                if (instance.ActiveUnit.X < instance.CurrentMap.XDim * 2 - 1)
+                if (instance.ActiveUnit.X < instance.CurrentMap.XDimMax - 1)
                 {
                     MoveC2(1, 1);
                 }
                 else if (!instance.Options.FlatEarth)
                 {
-                    MoveC2(-instance.CurrentMap.XDim * 2 + 2, 1);
+                    MoveC2(-instance.CurrentMap.XDimMax + 2, 1);
                 }
 
             }
@@ -99,7 +99,7 @@ namespace Civ2engine.UnitActions.Move
                 }
                 else if (!instance.Options.FlatEarth)
                 {
-                    MoveC2(instance.CurrentMap.XDim * 2 - 2, 1);
+                    MoveC2(instance.CurrentMap.XDimMax - 2, 1);
                 }
             }
             CheckForUnitTurnEnded(instance);
@@ -114,7 +114,7 @@ namespace Civ2engine.UnitActions.Move
             }
             else if(!instance.Options.FlatEarth)
             {
-                MoveC2(instance.CurrentMap.XDim*2-2, 0);
+                MoveC2(instance.CurrentMap.XDimMax-2, 0);
             }
             CheckForUnitTurnEnded(instance);
         }
@@ -130,7 +130,7 @@ namespace Civ2engine.UnitActions.Move
                 }
                 else if (!instance.Options.FlatEarth)
                 {
-                    MoveC2(instance.CurrentMap.XDim * 2 - 1, -1);
+                    MoveC2(instance.CurrentMap.XDimMax - 1, -1);
                 }
             }
             CheckForUnitTurnEnded(instance);
@@ -324,12 +324,15 @@ namespace Civ2engine.UnitActions.Move
 
             if (UnitMoved(game, unit, tileTo, tileFrom))
             {
+                game.ActiveTile = tileTo;
                 var neighbours = game.CurrentMap.Neighbours(tileTo).Where(n => !n.Visibility[unit.Owner.Id]).ToList();
                 if (neighbours.Count > 0)
                 {
                     neighbours.ForEach(n => n.Visibility[unit.Owner.Id] = true);
                     game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
                 }
+                
+                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
         }
 
@@ -514,8 +517,6 @@ namespace Civ2engine.UnitActions.Move
                 {
                     unit.Order = OrderType.NoOrders;
                 }
-
-                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
 
             return unitMoved;

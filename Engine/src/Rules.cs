@@ -58,5 +58,7 @@ namespace Civ2engine
                     .Concat(Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
             }
         }
+
+        public List<TerrainImprovement> TerrainImprovements { get; } = new List<TerrainImprovement>();
     }
 }

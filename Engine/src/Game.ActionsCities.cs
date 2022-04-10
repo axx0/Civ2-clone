@@ -159,7 +159,7 @@ namespace Civ2engine
                     if (_activeCiv.ReseachingAdvance < 0)
                     {
                         var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(this, _activeCiv);
-                        player.SelectNewAdvance(this, _activeCiv, researchPossibilities);
+                        player.SelectNewAdvance(this, researchPossibilities);
                         currentScienceCost = AdvanceFunctions.CalculateScienceCost(this, _activeCiv);
                     }else if (currentScienceCost <= _activeCiv.Science)
                     {
@@ -176,12 +176,12 @@ namespace Civ2engine
             var tiles = city.WorkedTiles.Where(t => t != city.Location);
             
             var organization = city.OrganizationLevel;
-            var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
-            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
+            // var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
+            // var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
 
             var unworked = tiles.OrderBy(t =>
-                t.GetFood(organization == 0, hasSupermarket) + t.GetShields(organization == 0) +
-                t.GetTrade(organization, hasSuperhighways)).First();
+                t.GetFood(organization == 0) + t.GetShields(organization == 0) +
+                t.GetTrade(organization)).First();
 
             city.WorkedTiles.Remove(unworked);
         }
@@ -192,8 +192,8 @@ namespace Civ2engine
             int workersToBeAdded = city.Size + 1 - city.WorkedTiles.Count;
 
             var organization = city.OrganizationLevel;
-            var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
-            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
+            // var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
+            // var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
             var lowOrganization = organization == 0;
             
             // Make a list of tiles where you can add workers
@@ -204,9 +204,9 @@ namespace Civ2engine
                          t.WorkedBy == null && t.Visibility[city.OwnerId] &&
                          !t.UnitsHere.Any<Unit>(u => u.Owner != city.Owner && u.AttackBase > 0) && t.CityHere == null))
             {
-                var food = tile.GetFood(lowOrganization, hasSupermarket) * 1.5 ;
+                var food = tile.GetFood(lowOrganization) * 1.5 ;
                 var shields = tile.GetShields(lowOrganization);
-                var trade = tile.GetTrade(organization, hasSuperhighways) * 0.5;
+                var trade = tile.GetTrade(organization) * 0.5;
 
                 var total = food + shields + trade;
                 var insertionIndex = tilesToAddWorkersTo.Count;

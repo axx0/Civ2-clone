@@ -763,8 +763,9 @@ namespace EtoFormsUI.Initialization
             }
 
             var maps = config.MapTask.Result;
-            
-            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), new LocalPlayer(mainForm));
+
+            mainForm.CurrentPlayer = new LocalPlayer(mainForm);
+            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), mainForm.CurrentPlayer);
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.popupBoxList = config.PopUps;

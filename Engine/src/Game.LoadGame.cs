@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Scripting;
 using Civ2engine.Statistics;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -32,16 +35,37 @@ namespace Civ2engine
             _rules = configRules;
             TurnNumber = 0;
             _difficultyLevel = difficulty;
+            
             AllCivilizations.AddRange(civilizations);
 
             CityNames = NameLoader.LoadCityNames(gamePaths);
 
-            AI = new AIPlayer(difficulty);
-            Players = new Dictionary<PlayerType, IPlayer> { { PlayerType.AI, AI }, { PlayerType.Local, localPlayer } };
+            Players = civilizations.Select(c =>
+            {
+                var player = c.PlayerType switch
+                {
+                    PlayerType.AI => new AIPlayer(_difficultyLevel),
+                    PlayerType.Local => localPlayer,
+                    PlayerType.Remote => throw new NotSupportedException("Network play not implemented"),
+                    PlayerType.Barbarians =>
+                        //TODO: create seperate barbarian player 
+                        new AIPlayer(_difficultyLevel),
+                    _ => throw new ArgumentOutOfRangeException(nameof(c.PlayerType), c.PlayerType, null)
+                };
+                return player.SetCiv(c);
+            }).ToArray();
+
+            TerrainImprovements = TerrainImprovementFunctions.GetStandardImprovements(Rules); 
 
             Script.RunScript("improvements.lua");
             Script.RunScript("advances.lua");
+
+            AllCivilizations.ForEach((civ) =>
+            {
+                OnCivEvent?.Invoke(this, new CivEventArgs(CivEventType.Created, civ));
+            });
             
+
             this.SetupTech();
             
             Power.CalculatePowerRatings(this);
@@ -64,7 +88,16 @@ namespace Civ2engine
 
             if (!objects.ActiveUnit.Dead)
             {
-                _activeUnit = objects.ActiveUnit;
+                localPlayer.ActiveUnit = objects.ActiveUnit;
+            }
+            else
+            {
+                var playerCiv = GetPlayerCiv;
+                localPlayer.ActiveUnit = playerCiv.Units.FirstOrDefault(u => u.AwaitingOrders);
+                if (localPlayer.ActiveUnit == null)
+                {
+                    localPlayer.ActiveTile = playerCiv.Cities[0].Location;
+                }
             }
 
             _activeCiv = GetPlayerCiv;

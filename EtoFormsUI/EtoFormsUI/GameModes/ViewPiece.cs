@@ -13,53 +13,93 @@ namespace EtoFormsUI.GameModes
 {
     public class ViewPiece : IGameMode
     {
-        public bool Init(IGameMode previous,Game game)
-        {
-            if (previous is MovingPieces)
-            {
-                this.ActiveTile = previous.ActiveTile;
-            }
+        private readonly Game _game;
+        private readonly Main _main;
 
-            if (ActiveTile == null)
+        public ViewPiece(Game game, Main main)
+        {
+            _game = game;
+            _main = main;
+            Actions = new Dictionary<Keys, Action>
             {
-                var firstCity = game.GetActiveCiv.Cities.FirstOrDefault();
-                if (firstCity != null)
                 {
-                    ActiveTile = firstCity.Location;
+                    Keys.Enter, () =>
+                    {
+                        if (_game.ActiveTile.CityHere != null)
+                        {
+                            main.mapPanel.ShowCityWindow(_game.ActiveTile.CityHere);
+                        }
+                        else if (_game.ActiveTile.UnitsHere.Any(U => U.MovePoints > 0))
+                        {
+                            main.mapPanel.ActivateUnits(_game.ActiveTile);
+                        }
+                        else if (main.StatusPanel.WaitingAtEndOfTurn)
+                        {
+                            main.StatusPanel.End_WaitAtEndOfTurn();
+                        }
+                    }
+                },
+
+                { Keys.Keypad7, () => SetActive(-1, -1) }, { Keys.Keypad8, () => SetActive(0, -2) },
+                { Keys.Keypad9, () => SetActive(1, -1) },
+                { Keys.Keypad1, () => SetActive(1, 1) }, { Keys.Keypad2, () => SetActive(0, 2) },
+                { Keys.Keypad3, () => SetActive(-1, 1) },
+                { Keys.Keypad4, () => SetActive(-2, 0) }, { Keys.Keypad6, () => SetActive(2, 0) },
+
+                { Keys.Up, () => SetActive(0, -2) }, { Keys.Down, () => SetActive(0, 2) },
+                { Keys.Left, () => SetActive(-2, 0) }, { Keys.Right, () => SetActive(2, 0) },
+            };
+        }
+
+        private void SetActive(int deltaX, int deltaY)
+        {
+            var activeTile = _game.ActiveTile;
+            var newX = activeTile.X + deltaX;
+            var newY = activeTile.Y + deltaY;
+            if (_game.CurrentMap.IsValidTileC2(newX, newY))
+            {
+                _game.ActiveTile = _game.CurrentMap.TileC2(newX, newY);
+            }
+            else if (!_game.Options.FlatEarth && newY >= -1 && newY < _game.CurrentMap.YDim)
+            {
+                if (newX < 0)
+                {
+                    newX += _game.CurrentMap.XDimMax;
                 }
                 else
                 {
-                    ActiveTile = game.GetActiveCiv.Units.Where(u => !u.Dead && u.CurrentLocation != null)
-                        .Select(u => u.CurrentLocation).FirstOrDefault();
+                    newX -= _game.CurrentMap.XDimMax;
+                }
+
+                if (_game.CurrentMap.IsValidTileC2(newX, newY))
+                {
+                    _game.ActiveTile = _game.CurrentMap.TileC2(newX, newY);
                 }
             }
+        }
+
+        public bool Activate(IGameMode previous)
+        {
             return true;
         }
 
-        public IDictionary<Keys, Action> Actions { get; set; } = new Dictionary<Keys, Action>
-        {
-            {Keys.Enter, Game.Instance.ChoseNextCiv}
-        };
+        public Dictionary<Keys, Action> Actions { get; } 
 
         public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, MouseButtons eButtons)
         {
-            
-            ActiveTile = clickedXy;
-
             if (eButtons == MouseButtons.Primary)
             {
-
-                if (ActiveTile.CityHere != null)
+                if (clickedXy.CityHere != null)
                 {
-                    mapPanel.ShowCityWindow(ActiveTile.CityHere);
+                    mapPanel.ShowCityWindow(clickedXy.CityHere);
                 }
                 else
                 {
-                    mapPanel.ActivateUnits(clickedXy);
+                    return mapPanel.ActivateUnits(clickedXy);
                 }
 
             }
-
+            _game.ActiveTile = clickedXy;
             return true;
         }
 
@@ -71,20 +111,18 @@ namespace EtoFormsUI.GameModes
             }
             else
             {
-                game.ChoseNextCiv();
+                game.ChooseNextUnit();
             }
             return true;
         }
 
         public IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation)
         {
-            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, null, ActiveTile);
-            if (animation.Unit != null) return new WaitingAnimation(game, null, ActiveTile);
+            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, null, _game.ActiveTile);
+            if (animation.Unit != null || animation.Location != _game.ActiveTile) return new WaitingAnimation(game, null, _game.ActiveTile);
             animation.Reset();
             return animation;
         }
-
-        public Tile ActiveTile { get; set; }
 
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle style, int unitPanelHeight)
         {
@@ -92,13 +130,13 @@ namespace EtoFormsUI.GameModes
                 Colors.Black, 1, 0);
 
             // Draw location & tile type on active square
-            if (ActiveTile != null)
+            if (_game.ActiveTile != null)
             {
                 Draw.Text(eGraphics,
-                    $"Loc: ({ActiveTile.X}, {ActiveTile.Y}) {ActiveTile.Island}",
+                    $"Loc: ({_game.ActiveTile.X}, {_game.ActiveTile.Y}) {_game.ActiveTile.Island}",
                     style.Font, style.FrontColor, new Point(5, 27), false, false, style.BackColor, 1, 1);
                 Draw.Text(eGraphics,
-                    $"({ActiveTile.Type})", style.Font,
+                    $"({_game.ActiveTile.Type})", style.Font,
                     style.FrontColor, new Point(5, 45), false, false, style.BackColor, 1, 1);
             }
             //int count;
@@ -115,6 +153,19 @@ namespace EtoFormsUI.GameModes
             //    string _moreUnits = (_unitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
             //    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
             //}
+        }
+
+        public void HandleKeyPress(Main eventArgs, KeyEventArgs e)
+        {
+            if (Actions.ContainsKey(e.Key))
+            {
+                Actions[e.Key]();
+            }
+        }
+
+        public void HandleCommand(Command command)
+        {
+            
         }
     }
 }

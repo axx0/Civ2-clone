@@ -1,13 +1,18 @@
 using System.Collections.Generic;
+using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Civ2engine.Units;
 
 namespace Civ2engine
 {
     public class AIPlayer : IPlayer
     {
+        private Civilization Civilization { get; set; }
+        
         private readonly DifficultyType _level;
 
         public AIPlayer(DifficultyType level)
@@ -18,6 +23,9 @@ namespace Civ2engine
         public void WeLoveTheKingCanceled(City city)
         {
         }
+
+        public Tile ActiveTile { get; set; }
+        public Unit ActiveUnit { get; set; }
 
         public void CivilDisorder(City city)
         {
@@ -35,9 +43,9 @@ namespace Civ2engine
         {
         }
 
-        public void SelectNewAdvance(Game game, Civilization activeCiv, List<Advance> researchPossibilities)
+        public void SelectNewAdvance(Game game, List<Advance> researchPossibilities)
         {
-            activeCiv.ReseachingAdvance = game.Random.ChooseFrom(researchPossibilities).Index;
+            Civilization.ReseachingAdvance = game.Random.ChooseFrom(researchPossibilities).Index;
         }
 
         public void CantProduce(City city, ProductionOrder newItem)
@@ -50,5 +58,12 @@ namespace Civ2engine
         }
 
         public IInterfaceCommands UI { get; } = null;
+        public IPlayer SetCiv(Civilization civilization)
+        {
+            this.Civilization = civilization;
+            ActiveTile = civilization.Units.FirstOrDefault()?.CurrentLocation ??
+                         civilization.Cities.FirstOrDefault()?.Location; 
+            return this;
+        }
     }
 }

@@ -3,6 +3,7 @@
     public enum PlayerEventType
     {
         NewTurn = 0,
-        TurnEnded = 1
+        TurnEnded = 1,
+        WaitingAtEndOfTurn = 2,
     }
 }

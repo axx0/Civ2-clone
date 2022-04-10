@@ -3,6 +3,7 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 namespace Civ2engine
@@ -15,18 +16,22 @@ namespace Civ2engine
         public LoadedGameObjects(Rules rules, GameData gameData)
         {
             Rules = rules;
-            var map = new Map(gameData.OptionsArray[3])
+            Map = new Map(gameData.OptionsArray[3], 0)
             {
                 MapRevealed = gameData.MapRevealed,
                 WhichCivsMapShown = gameData.WhichCivsMapShown,
                 Zoom = gameData.Zoom,
-                StartingClickedXY = gameData.ClickedXY
+                StartingClickedXY = gameData.ClickedXY,
+                XDim = gameData.MapXdim,
+                YDim = gameData.MapYdim,
+                ResourceSeed = gameData.MapResourceSeed,
+                LocatorXdim = gameData.MapLocatorXdim,
+                LocatorYdim = gameData.MapLocatorYdim
             };
 
-            map.PopulateTilesFromGameData(gameData, Rules);
-            this.Map = map;
+            Map.Tile = PopulateTilesFromGameData(gameData, Rules,Map);
             
-                         // Create all 8 civs (tribes)
+            // Create all 8 civs (tribes)
             var civs = new List<Civilization>();
             for (var i = 0; i < 8; i++)
             {
@@ -80,6 +85,81 @@ namespace Civ2engine
                     ActiveUnit = unit;
                 }
             }
+        }
+
+        /// <summary>
+        /// Generate first instance of terrain tiles by importing game data.
+        /// </summary>
+        /// <param name="data">Game data.</param>
+        /// <param name="rules">Game rules.</param>
+        /// <param name="map">The map these tiles are for</param>
+        private static Tile[,] PopulateTilesFromGameData(GameData data, Rules rules, Map map)
+        {
+            var tile = new Tile[map.XDim, map.YDim];
+            for (var col = 0; col < map.XDim; col++)
+            {
+                for (var row = 0; row < map.YDim; row++)
+                {
+                    var terrain = data.MapTerrainType[col, row];
+                    List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][(int) terrain], map.ResourceSeed, map)
+                    {
+                        River = data.MapRiverPresent[col, row],
+                        Resource = data.MapResourcePresent[col, row],
+                        //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself
+                        //CityPresent = data.MapCityPresent[col, row],  // you can find this out yourself
+                       
+                        Pollution = data.MapPollutionPresent[col, row],
+                        Island = data.MapIslandNo[col, row],
+                        Visibility = data.MapVisibilityCivs[col,row],
+                        Improvements = improvements 
+                    };
+                }
+            }
+
+            return tile;
+        }
+
+        private static List<ConstructedImprovement> GetImprovementsFrom(GameData data, int col, int row)
+        {
+            var improvements = new List<ConstructedImprovement>();
+
+            if (data.MapFarmlandPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Irrigation, Group = ImprovementTypes.ProductionGroup, Level = 1 });
+            }
+            else if (data.MapIrrigationPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Irrigation, Group = ImprovementTypes.ProductionGroup, Level = 0 });
+            }else if (data.MapMiningPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Mining, Group = ImprovementTypes.ProductionGroup, Level = 0 });
+            }
+
+            if (data.MapRailroadPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement { Improvement = ImprovementTypes.Road, Level = 1 });
+            }
+            else if (data.MapRoadPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement { Improvement = ImprovementTypes.Road, Level = 0 });
+            }
+            
+            if (data.MapFortressPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Fortress, Group = ImprovementTypes.DefenceGroup, Level = 0 });
+            }
+            else if (data.MapAirbasePresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Airbase, Group = ImprovementTypes.DefenceGroup, Level = 0 });
+            }
+
+            return improvements;
         }
 
         public List<City> Cities { get; set; }

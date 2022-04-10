@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.MapObjects
 {
@@ -8,29 +9,46 @@ namespace Civ2engine.MapObjects
     {
         private readonly bool _flat;
 
-        public Map(bool flat)
+        public Map(bool flat, int index)
         {
             _flat = flat;
+            MapIndex = index;
         }
         public int MapIndex { get; } = 0;
-        public int XDim { get; internal set; }
+
+        public int XDim
+        {
+            get => _xDim;
+            internal set
+            {
+                _xDim = value;
+                XDimMax = value * 2;
+            }
+        }
+
+        public int XDimMax { get; private set; }
         public int YDim { get; internal set; }
         public int ResourceSeed { get; internal set; }
-        public int LocatorXdim { get; private set; }
-        public int LocatorYdim { get; private set; }
+        public int LocatorXdim { get; internal set; }
+        public int LocatorYdim { get; internal set; }
         public bool MapRevealed { get; set; }
         public int WhichCivsMapShown { get; set; }
         public Tile[,] Tile { get; set; }
         public bool IsValidTileC2(int xC2, int yC2)
         {
-            var maxX = 2 * XDim;
+            var maxX = XDimMax;
             var x = (((xC2 + maxX) % maxX) - yC2 % 2);
             return -1 < x && x < maxX && -1 < yC2 && yC2 < YDim;
         }
-        public Tile TileC2(int xC2, int yC2) => Tile[(((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2) / 2, yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
-        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( ((xC2 + 2 * XDim) % (2 * XDim)) - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns V
+        public Tile TileC2(int xC2, int yC2) =>
+            Tile
+            [((xC2 + XDimMax) % XDimMax - yC2 % 2) / 2,
+                yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
+        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( (xC2 + XDimMax) % XDimMax - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns V
 
         private int _zoom;
+        private int _xDim;
+
         public int Zoom     // -7 (min) ... 8 (max), 0=std.
         {
             get => _zoom;
@@ -41,47 +59,7 @@ namespace Civ2engine.MapObjects
         public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
         public List<IslandDetails> Islands { get; set; }
         public double ScaleFactor => XDim * YDim / 4000d;
-
-        /// <summary>
-        /// Generate first instance of terrain tiles by importing game data.
-        /// </summary>
-        /// <param name="data">Game data.</param>
-        /// <param name="rules">Game rules.</param>
-        public void PopulateTilesFromGameData(GameData data, Rules rules)
-        {
-            XDim = data.MapXdim;
-            YDim = data.MapYdim;
-            ResourceSeed = data.MapResourceSeed;
-            LocatorXdim = data.MapLocatorXdim;
-            LocatorYdim = data.MapLocatorYdim;
-
-            Tile = new Tile[XDim, YDim];
-            for (var col = 0; col < XDim; col++)
-            {
-                for (var row = 0; row < YDim; row++)
-                {
-                    var terrain = data.MapTerrainType[col, row];
-                    Tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[MapIndex][(int) terrain], ResourceSeed, this)
-                    {
-                        River = data.MapRiverPresent[col, row],
-                        Resource = data.MapResourcePresent[col, row],
-                        //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself
-                        //CityPresent = data.MapCityPresent[col, row],  // you can find this out yourself
-                        Irrigation = data.MapIrrigationPresent[col, row],
-                        Mining = data.MapMiningPresent[col, row],
-                        Road = data.MapRoadPresent[col, row],
-                        Railroad = data.MapRailroadPresent[col, row],
-                        Fortress = data.MapFortressPresent[col, row],
-                        Pollution = data.MapPollutionPresent[col, row],
-                        Farmland = data.MapFarmlandPresent[col, row],
-                        Airbase = data.MapAirbasePresent[col, row],
-                        Island = data.MapIslandNo[col, row],
-                        Visibility = data.MapVisibilityCivs[col,row]
-                    };
-                }
-            }
-        }
-
+        
         public IEnumerable<Tile> CityRadius(Tile tile, bool nullForInvalid = false)
         {
             var odd = tile.Odd;

@@ -12,8 +12,8 @@ namespace Civ2engine
         {
             var lowOrganisation = government <= GovernmentType.Despotism;
             var orgLevel = city.OrganizationLevel;
-            var hasSuperMarket = city.ImprovementExists(ImprovementType.Supermarket);
-            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
+            // var hasSuperMarket = city.ImprovementExists(ImprovementType.Supermarket);
+            // var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
             
             var totalFood = 0;
             var totalSheilds = 0;
@@ -21,9 +21,9 @@ namespace Civ2engine
             
             city.WorkedTiles.ForEach(t =>
             {
-                totalFood += t.GetFood(lowOrganisation, hasSuperMarket);
+                totalFood += t.GetFood(lowOrganisation);
                 totalSheilds += t.GetShields(lowOrganisation);
-                totalTrade += t.GetTrade(orgLevel, hasSuperhighways);
+                totalTrade += t.GetTrade(orgLevel);
             });
             
 

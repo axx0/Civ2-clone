@@ -16,13 +16,12 @@ namespace EtoFormsUI.GameModes
 {
     public class MovingPieces : IGameMode
     {
-        private Game _game; 
-        public bool Init(IGameMode previous, Game game)
+        private readonly Game _game; 
+        public bool Activate(IGameMode previous)
         {
-            _game = game;
-            if (game.ActiveUnit is not {MovePoints: > 0})
+            if (_game.ActiveUnit is not {MovePoints: > 0})
             {
-                game.ChooseNextUnit();
+                _game.ChooseNextUnit();
             }
             return true;
         }
@@ -42,7 +41,7 @@ namespace EtoFormsUI.GameModes
             else
             {
                 main.CurrentGameMode = main.ViewPiece;              
-                main.ViewPiece.ActiveTile = clickedXy;
+                Game.Instance.ActiveTile = clickedXy;
             }
 
             return true;
@@ -67,7 +66,7 @@ namespace EtoFormsUI.GameModes
 
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle style, int unitPanelHeight)
         {
-            var activeTile = ActiveTile;
+            var activeTile = _game.ActiveTile;
 
             Draw.Text(eGraphics, Labels.For(LabelIndex.MovingUnits), style.Font, Colors.White, new Point(119, 10), true, true, Colors.Black,
                 1, 0);
@@ -114,18 +113,14 @@ namespace EtoFormsUI.GameModes
                     false, style.BackColor, 1, 1);
 
                 // If road/railroad/irrigation/farmland/mine present
-                string improvementText = null;
-                if (activeTile.Railroad) improvementText = "Railroad";
-                else if (activeTile.Road) improvementText = "Road";
+                var improvements = activeTile.Improvements.Select(c => new
+                    { Imp = _game.TerrainImprovements.First(i => i.Id == c.Improvement), Const = c }).ToList();
 
-                if (activeTile.Mining)
-                    improvementText = improvementText != null ? $"{improvementText}, Mining" : "Mining";
-                else if (activeTile.Farmland)
-                    improvementText = improvementText != null ? $"{improvementText}, Farmland" : "Farmland";
-                else if (activeTile.Irrigation)
-                    improvementText = improvementText != null ? $"{improvementText}, Irrigation" : "Irrigation";
-
-                if (!string.IsNullOrEmpty(improvementText))
+                var improvementText = string.Join(", ",
+                    improvements.Where(i => i.Imp.ExclusiveGroup != ImprovementTypes.DefenceGroup)
+                        .Select(i => i.Imp.Levels[i.Const.Level].Name));
+                
+                if (!string.IsNullOrWhiteSpace(improvementText))
                 {
                     column += 18;
                     Draw.Text(eGraphics, $"({improvementText})", style.Font, style.FrontColor,
@@ -134,12 +129,12 @@ namespace EtoFormsUI.GameModes
                 }
 
                 // If airbase/fortress present
-                if (activeTile.Airbase || activeTile.Fortress)
+                if (improvements.Any(i=>i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup))
                 {
                     column += 18;
-                    string airbaseText = null;
-                    if (activeTile.Fortress) airbaseText = "Fortress";
-                    if (activeTile.Airbase) airbaseText = "Airbase";
+                    var airbaseText = string.Join(", ",
+                        improvements.Where(i => i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup)
+                            .Select(i => i.Imp.Levels[i.Const.Level].Name));
                     Draw.Text(eGraphics, $"({airbaseText})", style.Font, style.FrontColor, new Point(5, column),
                         false,
                         false, style.BackColor, 1, 1);
@@ -197,11 +192,39 @@ namespace EtoFormsUI.GameModes
             }
         }
 
-        public MovingPieces(Main main)
+        public void HandleKeyPress(Main main, KeyEventArgs e)
         {
+            var order = main.Orders.FirstOrDefault(o=>o.ActivationCommand == (e.Key | e.Modifiers));
+            if (order != null)
+            {
+                order.ExecuteCommand();
+            }
+            else
+            {
+                if (!Actions.ContainsKey(e.Key)) return;
+                Actions[e.Key]();
+            }
+        }
+
+        public void HandleCommand(Command command)
+        {          
+            if (!Actions.ContainsKey(command.Shortcut)) return;
+            Actions[command.Shortcut]();
+        }
+
+
+
+        public MovingPieces(Main main, Game game)
+        {
+            _game = game;
             Actions = new Dictionary<Keys, Action>
             {
                 {
+                    Keys.Enter, () =>
+                    {
+                        if (main.StatusPanel.WaitingAtEndOfTurn) main.StatusPanel.End_WaitAtEndOfTurn();
+                    }
+                },{
                     Keys.B, CityActions.CreateCityBuild((name) =>
                     {
                         var box = main.popupBoxList["NAMECITY"];
@@ -256,18 +279,6 @@ namespace EtoFormsUI.GameModes
                         if (_game.ActiveUnit.AIrole != AIroleType.Settle)
                         {
                             _game.ActiveUnit.Order = OrderType.Fortify;
-                        }
-                        else
-                        {
-                            if (_game.ActiveUnit.BuildFortress())
-                            {
-                                _game.CheckConstruction(_game.ActiveUnit.CurrentLocation, OrderType.BuildFortress);   
-                                _game.ChooseNextUnit();
-                            }
-                            else
-                            {
-                                return;
-                            }
                         }
                         _game.ChooseNextUnit();
                     }

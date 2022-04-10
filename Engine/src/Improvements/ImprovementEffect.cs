@@ -9,6 +9,5 @@ namespace Civ2engine.Improvements
         Veteran = 4,
         ContentFace = 5,
         HappyFace = 6,
-        
     }
 }

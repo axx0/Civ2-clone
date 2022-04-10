@@ -83,6 +83,8 @@ namespace Civ2engine
         public int NormalColour { get; set; }
         
         public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; }
+
+        public List<ConstructionAbility> Abilities { get; } = new();
     }
 
     public enum PlayerType
