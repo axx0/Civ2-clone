@@ -25,9 +25,6 @@ namespace Civ2engine.Scripting
         
         public UnitDomainMap UnitDomain { get; } = new();
 
-
-        public AbilityMap Ability { get; } = new ();
-
         public void onCivInit(Func<Civilization, object> action)
         {
             _game.OnCivEvent += (sender, args) =>
@@ -48,18 +45,7 @@ namespace Civ2engine.Scripting
 
         public Rules rules => _game.Rules;
     }
-
-    public class AbilityMap
-    {
-        public ConstructionAbility BuildRoad = ConstructionAbility.Road;
-        public ConstructionAbility BuildRailroad = ConstructionAbility.Railroad;
-        public ConstructionAbility BuildIrrigation = ConstructionAbility.Irrigation;
-        public ConstructionAbility BuildFarmland = ConstructionAbility.Farmland;
-        public ConstructionAbility BuildFortress = ConstructionAbility.Fortress;
-        public ConstructionAbility BuildAirbase = ConstructionAbility.Airbase;
-        public ConstructionAbility BuildMine = ConstructionAbility.Mine;
-    }
-
+    
     public class UnitDomainMap
     {
         public int Land = (int)UnitGAS.Ground;

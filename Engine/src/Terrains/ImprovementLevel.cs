@@ -24,9 +24,12 @@ namespace Civ2engine
         /// </summary>
         public string BuildLabel { get; set; }
         
+        /// <summary>
+        /// Extra multiplier if this level is harder or easier to build
+        /// </summary>
+        public int BuildCostMultiplier { get; set; }
         
         public List<TerrainImprovementAction> Effects { get; set; }
-        
         
     }
 }

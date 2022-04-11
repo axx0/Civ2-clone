@@ -190,17 +190,13 @@ namespace Civ2engine.MapObjects
         public bool River { get; set; }
         public bool IsUnitPresent => UnitsHere.Count > 0;
         public bool IsCityPresent => CityHere != null;
-        public bool Irrigation { get; set; }
-        public bool Mining { get; set; }
+
         public bool Road { get; set; }
         public bool Railroad { get; set; }
         public bool Fortress { get; set; }
         public bool Pollution { get; set; }
-        public bool Farmland { get; set; }
         public bool Airbase { get; set; }
         public int Island { get; set; }
-        public string Hexvalue { get; set; }
-        public Bitmap Graphic { get; set; }
         public decimal Fertility { get; set; } = -1;
         public bool[] Visibility { get; set; }
 
@@ -240,58 +236,6 @@ namespace Civ2engine.MapObjects
                 .ThenBy(u => u.AttackBase).First();
         }
 
-        public void CompleteConstruction(TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,
-            Terrain[] terrains)
-        {
-            if (improvement.ExclusiveGroup > 0)
-            {
-                var previous = Improvements
-                    .Where(i => i.Improvement != improvement.Id && i.Group == improvement.ExclusiveGroup).ToList();
-
-
-                previous.ForEach(i => Improvements.Remove(i));
-
-            }
-
-            var transformEffect = terrain.Effects.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
-            if (transformEffect != null)
-            {
-                Terrain = terrains[transformEffect.Value];
-                return;
-            }
-
-            if (levelToBuild > 0)
-            {
-                var imp = Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
-                if (imp != null)
-                {
-                    imp.Level = levelToBuild;
-                    if (improvement.Levels[levelToBuild].Effects?.Count > 0)
-                    {
-                        EffectsList.AddRange(improvement.Levels[levelToBuild].Effects.Select(e => new ActiveEffect
-                            { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id }));
-                    }
-
-                    return;
-                }
-            }
-            if (improvement.Levels[levelToBuild].Effects?.Count > 0)
-            {
-                EffectsList.AddRange(improvement.Levels[levelToBuild].Effects.Select(e => new ActiveEffect
-                    { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id }));
-            }
-            Improvements.Add(new ConstructedImprovement
-                { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
-            EffectsList.AddRange(terrain.Effects.Select(e => new ActiveEffect
-                { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id }));
-        }
-    }
-
-    public class ActiveEffect
-    {
-        public int Target { get; set; }
-        public int Action { get; set; }
-        public int Value { get; set; }
-        public int Source { get; set; }
+        
     }
 }

@@ -5,6 +5,7 @@ using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
+using Civ2engine.Terrains;
 
 namespace Civ2engine
 {
@@ -20,17 +21,17 @@ namespace Civ2engine
         public void ChooseNextUnit()
         {
             var units = _activeCiv.Units.Where(u => !u.Dead).ToList();
-       
+
             //Look for units on this square or neighbours of this square
             var nextUnit = ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ?? CurrentMap
-                    .Neighbours(ActiveTile)
-                    .SelectMany(t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
-                    .FirstOrDefault();
-            
+                .Neighbours(ActiveTile)
+                .SelectMany(t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
+                .FirstOrDefault();
+
             nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders);
 
             ActiveUnit = nextUnit;
-            
+
             // End turn if no units awaiting orders
             if (nextUnit == null)
             {
@@ -70,7 +71,7 @@ namespace Civ2engine
                 {
                     unit.ProcessOrder();
                     var improvement = TerrainImprovements.FirstOrDefault(i => i.Id == unit.Building);
-                    if(improvement != null)
+                    if (improvement != null)
                     {
                         ActiveUnit = CheckConstruction(unit.CurrentLocation, improvement)
                             .FirstOrDefault(u => u.MovePoints > 0);
@@ -89,26 +90,69 @@ namespace Civ2engine
         {
             var units = tile.UnitsHere.Where(u => u.Building == improvement.Id).ToList();
             if (units.Count <= 0) return units;
-
-            var progress = units.Sum(u => u.Counter);
-
-            var existingImprovement = tile.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
-
-            var levelToBuild = existingImprovement == null ? 0 : existingImprovement.Level + 1;
-
+            
             var terrain = improvement.AllowedTerrains[tile.Z].FirstOrDefault(t => t.TerrainType == (int)tile.Type);
-            if (terrain == null)
+            var existingImprovement = tile.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+            
+            if (terrain == null || (improvement.Negative && existingImprovement == null) ||
+                (existingImprovement?.Level == improvement.Levels.Count - 1))
             {
-                throw new NotSupportedException("Somthing is very wrong");
+                //If improvement has become invalid for terrain then return the units to the user
+                units.ForEach(u =>
+                {
+                    u.Counter = 0;
+                    u.Order = OrderType.NoOrders;
+                    u.Building = 0;
+                });
+                return units;
             }
 
+            int levelToBuild;
+            if (existingImprovement != null)
+            {
+                if (!improvement.Negative)
+                {
+                    levelToBuild = existingImprovement.Level;
+                }
+                else
+                {
+                    levelToBuild = existingImprovement.Level + 1;
+                }
+            }
+            else
+            {
+                levelToBuild = 0;
+            }
 
-            if (progress < terrain.BuildTime)
+            var progress = units.Sum(u => u.Counter);
+            var cost = terrain.BuildTime;
+            if (tile.River)
+            {
+                var river = improvement.AllowedTerrains[tile.Z]
+                    .FirstOrDefault(t => t.TerrainType == TerrainConstants.River);
+                if (river != null)
+                {
+                    cost += river.BuildTime;
+                }
+            }
+            if (improvement.Levels[levelToBuild].BuildCostMultiplier != 0)
+            {
+                cost += cost * improvement.Levels[levelToBuild].BuildCostMultiplier / 100;
+            }
+            if (progress < cost)
             {
                 return new List<Unit>();
             }
 
-            tile.CompleteConstruction(improvement, terrain, levelToBuild, Rules.Terrains[tile.Z]);
+            if (improvement.Negative)
+            {
+                tile.RemoveImprovement(improvement, levelToBuild);
+            }
+            else
+            {
+                tile.CompleteConstruction(improvement, terrain, levelToBuild, Rules.Terrains[tile.Z]);
+            }
+
             units.ForEach(u =>
             {
                 u.Counter = 0;

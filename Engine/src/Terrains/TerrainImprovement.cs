@@ -60,5 +60,10 @@ namespace Civ2engine
         /// True if this improvement has graphics that change base on it's presence in neighbouring tiles
         /// </summary>
         public bool HasMultiTile { get; set; }
+
+        /// <summary>
+        /// True if this improvement is a bad thing that settlers remove rather than add. ie. Pollution
+        /// </summary>
+        public bool Negative { get; set; }
     }
 }

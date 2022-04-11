@@ -30,13 +30,19 @@ namespace Civ2engine.Terrains
             {
                 return new ImprovementBuildAssessment(false, errorPopup: "CANTDO");
             }
-            
+
             var alreadyBuilt = location.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+           
+            
             if (alreadyBuilt != null)
             {
+                if (improvement.Negative)
+                {
+                    return new ImprovementBuildAssessment(true,
+                        commandTitle: improvement.Levels[alreadyBuilt.Level].BuildLabel);
+                }
                 if (alreadyBuilt.Level >= improvement.Levels.Count)
                 {
-
                     return new ImprovementBuildAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
                 }
 
@@ -49,7 +55,12 @@ namespace Civ2engine.Terrains
 
                 return new ImprovementBuildAssessment(true, LabelFrom(nextLevel));
             }
-            
+
+            if (improvement.Negative)
+            {
+                return new ImprovementBuildAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
+            }
+
             var allowedTerrain = improvement.AllowedTerrains[location.Z]
                 .FirstOrDefault(t => t.TerrainType == (int)location.Type);
             if (allowedTerrain == null)
@@ -77,7 +88,7 @@ namespace Civ2engine.Terrains
                 return new ImprovementBuildAssessment(false, errorPopup: allowedTerrain.MissingRequiredTechMessage);
             }
 
-            var transform = allowedTerrain.Effects.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
+            var transform = allowedTerrain.Effects?.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
             if (transform != null)
             {
                 return new ImprovementBuildAssessment(true,transform.Text);
@@ -114,7 +125,7 @@ namespace Civ2engine.Terrains
                             Name = Labels.For(LabelIndex.Farmland),
                             RequiredTech = (int)AdvanceType.Refrigerat,
                             BuildLabel = Labels.For(LabelIndex.ImproveFarmland),
-                            MissingRequiredTechMessage = "RAILROADS"
+                            MissingRequiredTechMessage = "FARMLAND"
                         }
                     },
                     AllCitys = true,
@@ -176,7 +187,7 @@ namespace Civ2engine.Terrains
                             Name = Labels.For(LabelIndex.Road),
                             RequiredTech = AdvancesConstants.Nil,
                             BuildLabel = Labels.For(LabelIndex.BuildRoad),
-                            Effects = new List<TerrainImprovementAction>()
+                            Effects = new List<TerrainImprovementAction>
                             {
                                 new()
                                 {
@@ -190,8 +201,9 @@ namespace Civ2engine.Terrains
                         {
                             Name = Labels.For(LabelIndex.Railroads),
                             RequiredTech = (int)AdvanceType.Railroad,
+                            MissingRequiredTechMessage = "RAILROADS",
                             BuildLabel = Labels.For(LabelIndex.BuildRRTrack),
-                            Effects = new List<TerrainImprovementAction>()
+                            Effects = new List<TerrainImprovementAction>
                             {
                                 new()
                                 {
@@ -199,7 +211,8 @@ namespace Civ2engine.Terrains
                                     Action = ImprovementActions.Set,
                                     Value = rules.Cosmic.RailroadMovement,
                                 }
-                            }
+                            },
+                            BuildCostMultiplier = 50
                         }
                     },
                     AllCitys = true,
@@ -213,13 +226,54 @@ namespace Civ2engine.Terrains
                             {
                                 new AllowedTerrain
                                 {
-                                    TerrainType = TerrainConstants.River, RequiredTech = (int)AdvanceType.BridgeBuild, MissingRequiredTechMessage = "BRIDGES",
+                                    TerrainType = TerrainConstants.River, RequiredTech = (int)AdvanceType.BridgeBuild, MissingRequiredTechMessage = "BRIDGES", BuildTime = 1
                                 }
                             }).ToList()
                     ).ToList(),
                     MaxLevelReachedMessage = "ALREADYROAD",
                     Layer = 5,
                     HasMultiTile = true
+                },
+                new ()
+                {
+                    Id = ImprovementTypes.Pollution,
+                    Layer = 10,
+                    Shortcut = "P",
+                    Name = Labels.For(LabelIndex.Pollution),
+                    MaxLevelReachedMessage = "NOPOLLUTION",
+                    Levels = new List<ImprovementLevel>
+                    {
+                        new()
+                        {
+                            Name = Labels.For(LabelIndex.Pollution),
+                            BuildLabel = Labels.For(LabelIndex.Clear) + " " + Labels.For(LabelIndex.Pollution),
+                            RequiredTech = AdvancesConstants.Nil,
+                            Effects = new List<TerrainImprovementAction>
+                            {
+                                new ()
+                                {
+                                    Target = ImprovementConstants.Food,
+                                    Action = ImprovementActions.Multiply,
+                                    Value = -50
+                                },new ()
+                                {
+                                    Target = ImprovementConstants.Trade,
+                                    Action = ImprovementActions.Multiply,
+                                    Value = -50
+                                },new ()
+                                {
+                                    Target = ImprovementConstants.Shields,
+                                    Action = ImprovementActions.Multiply,
+                                    Value = -50
+                                }
+                            }
+                        }
+                    },
+                    Negative = true,
+                    AllowedTerrains =  rules.Terrains.Select(terrains => terrains
+                        .Where(t => t.Type != TerrainType.Ocean && !t.Impassable)
+                        .Select(t => new AllowedTerrain
+                            { BuildTime = t.MoveCost * 2, TerrainType = (int)t.Type }).ToList()).ToList()
                 }
             };
         }
@@ -318,20 +372,6 @@ namespace Civ2engine.Terrains
             }
 
             return true;
-        }
-    }
-
-    public class ImprovementBuildAssessment
-    {
-        public bool CanBuild { get; }
-        public string CommandTitle { get; }
-        public string ErrorPopup { get; }
-
-        public ImprovementBuildAssessment(bool canBuild, string commandTitle = "", string errorPopup = "CANTIMPROVE")
-        {
-            CanBuild = canBuild;
-            CommandTitle = commandTitle;
-            ErrorPopup = string.IsNullOrWhiteSpace(errorPopup) ? "CANTIMPROVE" : errorPopup;
         }
     }
 }

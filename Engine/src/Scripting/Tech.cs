@@ -115,8 +115,5 @@ namespace Civ2engine.Scripting
         /// Returns whether or not any tribe has researched the tech.
         /// </summary>
         public bool researched => AdvanceFunctions.HasAdvanceBeenDiscovered(_advance.Index);
-
-
-        public IList<ConstructionAbility> AllowBuilding => _advance.ImprovementsEnabled;
     }
 }

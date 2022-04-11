@@ -9,6 +9,7 @@ namespace Civ2engine.Terrains
         public static int Mining = 7;
         public static int Road = 5;
         public static int Fortress = 4;
+        public static int Pollution = 9;
         public static int Airbase = 10;
 
         public static int ProductionGroup = 2;
