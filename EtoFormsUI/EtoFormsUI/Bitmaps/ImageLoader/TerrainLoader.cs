@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Eto.Drawing;
 using EtoFormsUIExtensionMethods;
@@ -144,7 +145,20 @@ namespace EtoFormsUI.ImageLoader
             terrain.ImprovementsMap[ImprovementTypes.Mining] = new ImprovementGraphic
                 { Levels = new[,] { { tileData.Clone(new Rectangle(456, 166, 64, 32)) } } };
             
-            terrain.Pollution = tileData.Clone(new Rectangle(456, 199, 64, 32));
+            terrain.ImprovementsMap[ImprovementTypes.Pollution]= new ImprovementGraphic
+                { Levels = new[,] { { tileData.Clone(new Rectangle(456, 199, 64, 32)) } } };
+            
+            terrain.ImprovementsMap[ImprovementTypes.Fortress] =new ImprovementGraphic
+            { Levels = new[,] { { MapImages.Specials[1] }}};
+
+            // Airbase
+            terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
+            {
+                Levels = new[,] { { MapImages.Specials[2] } },
+                UnitLevels = new[,] {  { MapImages.Specials[3] } }
+            };
+            
+            
             terrain.GrasslandShield = tileData.Clone(new Rectangle(456, 232, 64, 32));
 
             return terrain;
@@ -175,5 +189,6 @@ namespace EtoFormsUI.ImageLoader
     public class ImprovementGraphic
     {
         public Bitmap[,] Levels { get; set; }
+        public Bitmap[,] UnitLevels { get; set; }
     }
 }   

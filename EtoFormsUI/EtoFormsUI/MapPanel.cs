@@ -154,7 +154,7 @@ namespace EtoFormsUI
             
             if (!unit.TurnEnded)
             {
-                Game.ActiveUnit = unit;
+                main.CurrentPlayer.ActiveUnit = unit;
             }
 
             unit.Order = OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated

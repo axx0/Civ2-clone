@@ -109,7 +109,7 @@ namespace Civ2engine
                         //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself
                         //CityPresent = data.MapCityPresent[col, row],  // you can find this out yourself
                        
-                        Pollution = data.MapPollutionPresent[col, row],
+                        
                         Island = data.MapIslandNo[col, row],
                         Visibility = data.MapVisibilityCivs[col,row],
                         Improvements = improvements 
@@ -157,6 +157,14 @@ namespace Civ2engine
             {
                 improvements.Add(new ConstructedImprovement
                     { Improvement = ImprovementTypes.Airbase, Group = ImprovementTypes.DefenceGroup, Level = 0 });
+            }
+
+            if (data.MapPollutionPresent[col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                {
+                    Improvement = ImprovementTypes.Pollution, Level = 0
+                });
             }
 
             return improvements;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
@@ -190,12 +191,6 @@ namespace Civ2engine.MapObjects
         public bool River { get; set; }
         public bool IsUnitPresent => UnitsHere.Count > 0;
         public bool IsCityPresent => CityHere != null;
-
-        public bool Road { get; set; }
-        public bool Railroad { get; set; }
-        public bool Fortress { get; set; }
-        public bool Pollution { get; set; }
-        public bool Airbase { get; set; }
         public int Island { get; set; }
         public decimal Fertility { get; set; } = -1;
         public bool[] Visibility { get; set; }
@@ -236,6 +231,9 @@ namespace Civ2engine.MapObjects
                 .ThenBy(u => u.AttackBase).First();
         }
 
-        
+        public bool HasAirbase()
+        {
+            return EffectsList.Any(e => e.Target == ImprovementConstants.Airbase);
+        }
     }
 }

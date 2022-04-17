@@ -15,6 +15,7 @@ using Civ2engine.Units;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
+using Menu = Eto.Forms.Menu;
 
 namespace EtoFormsUI.Initialization
 {

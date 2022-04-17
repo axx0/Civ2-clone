@@ -31,5 +31,6 @@ namespace Civ2engine
     public interface IInterfaceCommands
     {
         Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool> checkBoxOptionStates = null);
+        void SavePopup(string key, PopupBox popup);
     }
 }

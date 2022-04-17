@@ -10,6 +10,7 @@ using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
 using Civ2engine.MapObjects;
+using EtoFormsUI.Cheat_menu;
 using EtoFormsUI.GameModes;
 using EtoFormsUI.Initialization;
 using EtoFormsUIExtensionMethods;
@@ -27,7 +28,7 @@ namespace EtoFormsUI
             get => _currentGameMode;
             set
             {
-                if (value.Activate(_currentGameMode))
+                if (value.Activate(_currentGameMode, CurrentPlayer))
                 {
                     _currentGameMode = value;
                 }
@@ -52,6 +53,7 @@ namespace EtoFormsUI
         private ButtonMenuItem _ordersMenu;
         
         private IGameMode _currentGameMode;
+        private Command _openLuaConsoleCommand;
         public static event EventHandler<MapEventArgs> OnMapEvent;
         
         public Main()
@@ -226,10 +228,10 @@ namespace EtoFormsUI
             var EditKingCommand = new Command { MenuText = "Edit King", Shortcut = Keys.Control | Keys.Shift | Keys.K, Enabled = false };
             var ScenarioParamsCommand = new Command { MenuText = "Scenario Parameters", Shortcut = Keys.Control | Keys.Shift | Keys.P, Enabled = false };
             var SaveAsScenCommand = new Command { MenuText = "Save As Scenario", Shortcut = Keys.Control | Keys.Shift | Keys.S, Enabled = false };
-            var OpenLuaConsoleCommand = new Command { MenuText = "Open Lua Console", Shortcut = Keys.Control | Keys.Shift | Keys.F3, Enabled = false };
-            OpenLuaConsoleCommand.Executed += (sender, args) =>
+            _openLuaConsoleCommand = new Command { MenuText = "Open Lua Console", Shortcut = Keys.Control | Keys.Shift | Keys.F3, Enabled = true };
+            _openLuaConsoleCommand.Executed += (sender, args) =>
             {
-                var luaConsole = new LuaConsoleDialog(this);
+                var luaConsole = new LuaConsoleDialog(this, Game.Options.CheatMenu);
                 luaConsole.ShowModal();
             };
             
@@ -251,7 +253,7 @@ namespace EtoFormsUI
                 EditKingCommand,
                 ScenarioParamsCommand,
                 SaveAsScenCommand,
-                OpenLuaConsoleCommand
+                _openLuaConsoleCommand
             };
             // Editor menu commands
             var ToggleScenFlagCommand = new Command { MenuText = "Toggle Scenario Flag", Shortcut = Keys.Control | Keys.F };
@@ -290,7 +292,7 @@ namespace EtoFormsUI
                     _ordersMenu,
                     new ButtonMenuItem { Text = "&Advisors", Items = { ChatWithKingsCommand, ConsultHighCouncilCommand, new SeparatorMenuItem(), CityStatusCommand, DefenseMinisterCommand, ForeignMinisterCommand, new SeparatorMenuItem(), AttitudeAdvisorCommand, TradeAdvisorCommand, ScienceAdvisorCommand, new SeparatorMenuItem(), CasualtyTimelineCommand } },
                     new ButtonMenuItem { Text = "&World", Items = { WondersCommand, Top5citiesCommand, CivScoreCommand, new SeparatorMenuItem(), DemographicsCommand, SpaceshipsCommand } },
-                    new ButtonMenuItem { Text = "&Cheat", Items = { ToggleCheatModeCommand, new SeparatorMenuItem(), CreateUnitCommand, RevealMapCommand, SetHumanPlayerCommand, new SeparatorMenuItem(), SetGameYearCommand, KillCivilizationCommand, new SeparatorMenuItem(), TechnologyAdvanceCommand, EditTechsCommand, ForceGovernmentCommand, ChangeTerrainCursorCommand, DestroyUnitsCursorCommand, ChangeMoneyCommand, new SeparatorMenuItem(), EditUnitCommand, EditCityCommand, EditKingCommand, new SeparatorMenuItem(), ScenarioParamsCommand, SaveAsScenCommand, new SeparatorMenuItem(), OpenLuaConsoleCommand } },
+                    new ButtonMenuItem { Text = "&Cheat", Items = { ToggleCheatModeCommand, new SeparatorMenuItem(), CreateUnitCommand, RevealMapCommand, SetHumanPlayerCommand, new SeparatorMenuItem(), SetGameYearCommand, KillCivilizationCommand, new SeparatorMenuItem(), TechnologyAdvanceCommand, EditTechsCommand, ForceGovernmentCommand, ChangeTerrainCursorCommand, DestroyUnitsCursorCommand, ChangeMoneyCommand, new SeparatorMenuItem(), EditUnitCommand, EditCityCommand, EditKingCommand, new SeparatorMenuItem(), ScenarioParamsCommand, SaveAsScenCommand, new SeparatorMenuItem(), _openLuaConsoleCommand } },
                     new ButtonMenuItem { Text = "&Editor", Items = { ToggleScenFlagCommand, new SeparatorMenuItem(), AdvancesEditorCommand, CitiesEditorCommand, EffectsEditorCommand, ImprovEditorCommand, TerrainEditorCommand, TribeEditorCommand, UnitsEditorCommand, EventsEditorCommand } },
                     new ButtonMenuItem { Text = "&Civilopedia", Items = { CivAdvancesFlagCommand, CityImprovFlagCommand, WondersWorldCommand, MilitaryUnitsCommand, new SeparatorMenuItem(), GovernmentsCommand, TerrainTypesCommand, new SeparatorMenuItem(), GameConceptsCommand, new SeparatorMenuItem(), AboutCommand } },
                 },
@@ -323,7 +325,7 @@ namespace EtoFormsUI
         {
             ViewPiece = new ViewPiece(game, this);
             Moving = new MovingPieces(this, game);
-            CurrentGameMode = Moving;
+            CurrentGameMode = game.ActiveUnit != null ? Moving : ViewPiece;
         }
     }
 }

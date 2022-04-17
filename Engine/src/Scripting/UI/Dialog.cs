@@ -85,11 +85,21 @@ namespace Civ2engine.Scripting
 
         public int show()
         {
-            _popup.Button ??= new List<string> { "Ok" };
+            _popup.Button ??= new List<string> { Labels.Ok };
             var (selectedButton, selectedIndex, checkBoxes) = _uInterfaceCommands.ShowDialog(_popup, _checkBoxOptionStates);
             _checkResults = checkBoxes;
             _selectedButton = selectedButton;
             return _optionValues != null && _optionValues.Count > selectedIndex ? _optionValues[selectedIndex] : selectedIndex;
+        }
+
+        /// <summary>
+        /// Save the created dialog as a popup that can be shown in other places such as terrain improvement Errors
+        /// </summary>
+        /// <param name="key"></param>
+        public void saveAsPopup(string key)
+        {
+            _popup.Button ??= new List<string> { Labels.Ok };
+            _uInterfaceCommands.SavePopup(key, _popup);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Civ2engine
         ///     Irrigation -> Farmland
         ///     Road -> Railroad
         /// </summary>
-        public List<ImprovementLevel> Levels { get; set; } = new();
+        public IList<ImprovementLevel> Levels { get; set; }
 
         /// <summary>
         /// True if all cities are considered to have this improvement (once 

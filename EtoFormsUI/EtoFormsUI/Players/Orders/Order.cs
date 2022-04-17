@@ -29,7 +29,7 @@ namespace EtoFormsUI.Players.Orders
 
         public void ExecuteCommand()
         {
-            if (Enabled)
+            if (Status == OrderStatus.Active)
             {
                 Execute((LocalPlayer)_mainForm.CurrentPlayer);
             }
@@ -45,21 +45,21 @@ namespace EtoFormsUI.Players.Orders
         public Keys ActivationCommand { get; }
         
         public int Group { get; }
-        
-        public bool Enabled { get; private set; }
 
-        public PopupBox ErrorPopup { get; set; }
+        public OrderStatus Status { get; set; }
+
+        private PopupBox ErrorPopup { get; set; }
         
         public abstract Order Update(Tile activeTile, Unit activeUnit);
 
 
         protected abstract void Execute(LocalPlayer player);
         
-        protected void SetCommandState(bool enabled = false, string menuText = null, string errorPopupKeyword = null)
+        protected void SetCommandState(OrderStatus status = OrderStatus.Disabled, string menuText = null, string errorPopupKeyword = null)
         {
             Command.MenuText = string.IsNullOrWhiteSpace(menuText) ? _defaultLabel : menuText;
-            Command.Enabled = enabled;
-            Enabled = enabled;
+            Command.Enabled = status == OrderStatus.Active;
+            Status = status;
             ErrorPopup = !string.IsNullOrWhiteSpace(errorPopupKeyword) && _mainForm.popupBoxList.ContainsKey(errorPopupKeyword)
                 ? _mainForm.popupBoxList[errorPopupKeyword]
                 : _mainForm.popupBoxList["CANTDO"];

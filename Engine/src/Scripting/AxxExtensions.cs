@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
@@ -44,6 +45,8 @@ namespace Civ2engine.Scripting
         }
 
         public Rules rules => _game.Rules;
+
+        public IList<TerrainImprovement> TerrainImprovements => _game.TerrainImprovements;
     }
     
     public class UnitDomainMap

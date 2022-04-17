@@ -1,14 +1,14 @@
 namespace Civ2engine.Terrains
 {
-    public class ImprovementBuildAssessment
+    public class UnitActionAssessment
     {
-        public bool CanBuild { get; }
+        public bool Enabled { get; }
         public string CommandTitle { get; }
         public string ErrorPopup { get; }
 
-        public ImprovementBuildAssessment(bool canBuild, string commandTitle = "", string errorPopup = "CANTIMPROVE")
+        public UnitActionAssessment(bool enabled, string commandTitle = "", string errorPopup = "CANTIMPROVE")
         {
-            CanBuild = canBuild;
+            Enabled = enabled;
             CommandTitle = commandTitle;
             ErrorPopup = string.IsNullOrWhiteSpace(errorPopup) ? "CANTIMPROVE" : errorPopup;
         }

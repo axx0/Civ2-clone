@@ -118,8 +118,11 @@ namespace Civ2engine
                     var newItem = ProductionPossibilities.AutoNext(city);
 
                     player.CantProduce(city, newItem);
-                    
-                    city.ItemInProduction = newItem;
+
+                    if (newItem != null)
+                    {
+                        city.ItemInProduction = newItem;
+                    }
                 }
 
                 city.ShieldsProgress += shields;

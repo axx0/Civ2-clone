@@ -85,7 +85,7 @@ namespace EtoFormsUIExtensionMethods
         /// <param name="bmp">Bitmap</param>
         /// <param name="origColor">Color to be replaced</param>
         /// <param name="replacementColor">Replacement color</param>
-        unsafe public static void ReplaceColors(this Bitmap bmp, Color origColor, Color replacementColor)
+        public static unsafe void ReplaceColors(this Bitmap bmp, Color origColor, Color replacementColor)
         {
             using var bmpData = bmp.Lock();
             byte* scan0 = (byte*)bmpData.Data;

@@ -75,7 +75,13 @@ namespace EtoFormsUI
                     CurrentGameMode = Processing;
                 }
             };
-            _cheatCommands.ForEach(c=>c.Enabled = Game.Options.CheatMenu);
+            _cheatCommands.ForEach(c =>
+            {
+                if (c != _openLuaConsoleCommand)
+                {
+                    c.Enabled = Game.Options.CheatMenu;
+                }
+            });
 
             SetupOrders(Game.Instance);
             
@@ -88,7 +94,7 @@ namespace EtoFormsUI
         {
             var improvements = instance.TerrainImprovements;
 
-            Orders = improvements.Select(i => new ImprovementOrder(i, this, instance).Update(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit)).ToList();
+            Orders = improvements.Select(i =>  new ImprovementOrder(i, this, instance).Update(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit)).ToList();
             
 
             var groupedOrders = Orders.GroupBy(o => o.Group);

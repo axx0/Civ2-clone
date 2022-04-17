@@ -51,23 +51,23 @@ namespace Civ2engine.Units
             return af;
         }
 
-        public int DefenseFactor(Unit attackingUnit, Tile tile)
+        public int DefenseFactor(Unit attackingUnit, Tile tile, int groundDefMultiplier)
         {
             //Carried units cannot be the defender
             if (InShip != null) return 0;
             
             // Base defense factor from RULES
-            double DF = (double)DefenseBase;
+            decimal DF = DefenseBase;
 
             // Bonus for veteran units
-            if (Veteran) DF *= 1.5;
+            if (Veteran) DF *= 1.5m;
 
             // City walls bonus (applies only to land units)
             if (tile.CityHere != null && tile.CityHere.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !attackingUnit.NegatesCityWalls) DF *= 3;
             // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
-            else if (tile.Fortress && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF *= 2;
+            else if (groundDefMultiplier != 0 && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF += DF * groundDefMultiplier / 100;
             // Fortified bonus
-            else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5;
+            else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5m;
 
             // Helicopters are vulnerable to anti air
             if (Domain == UnitGAS.Air && FuelRange == 0 && attackingUnit.CanAttackAirUnits)
@@ -174,7 +174,7 @@ namespace Civ2engine.Units
                                          .BuildFortress or OrderType.BuildMine;
     
 
-        public bool AwaitingOrders => !TurnEnded && (Order is OrderType.NoOrders or OrderType.GoTo);
+        public bool AwaitingOrders => !TurnEnded && !Dead && (Order is OrderType.NoOrders or OrderType.GoTo);
 
         public void SkipTurn()
         {

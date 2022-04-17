@@ -78,7 +78,7 @@ namespace EtoFormsUI.GameModes
             }
         }
 
-        public bool Activate(IGameMode previous)
+        public bool Activate(IGameMode previous, IPlayer currentPlayer)
         {
             return true;
         }

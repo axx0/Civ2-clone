@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
@@ -11,19 +12,31 @@ using Civ2engine.UnitActions.Move;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.Animations;
+using Graphics = Eto.Drawing.Graphics;
+using Order = EtoFormsUI.Players.Orders.Order;
+using Point = Eto.Drawing.Point;
 
 namespace EtoFormsUI.GameModes
 {
     public class MovingPieces : IGameMode
     {
-        private readonly Game _game; 
-        public bool Activate(IGameMode previous)
+        private readonly Game _game;
+        private LocalPlayer _player;
+
+        public bool Activate(IGameMode previous, IPlayer currentPlayer)
         {
-            if (_game.ActiveUnit is not {MovePoints: > 0})
+            if (currentPlayer is not LocalPlayer player)
+            {
+                return false;
+            }
+
+            _player = player;
+            
+            if (player.ActiveUnit is not {MovePoints: > 0})
             {
                 _game.ChooseNextUnit();
             }
-            return true;
+            return player.ActiveUnit != null;
         }
 
         public IDictionary<Keys, Action> Actions { get; set; }
@@ -62,11 +75,9 @@ namespace EtoFormsUI.GameModes
             return animation;
         }
 
-        public Tile ActiveTile => _game.ActiveUnit.CurrentLocation;
-
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle style, int unitPanelHeight)
         {
-            var activeTile = _game.ActiveTile;
+            var activeTile = _player.ActiveTile;
 
             Draw.Text(eGraphics, Labels.For(LabelIndex.MovingUnits), style.Font, Colors.White, new Point(119, 10), true, true, Colors.Black,
                 1, 0);
@@ -117,7 +128,7 @@ namespace EtoFormsUI.GameModes
                     { Imp = _game.TerrainImprovements.First(i => i.Id == c.Improvement), Const = c }).ToList();
 
                 var improvementText = string.Join(", ",
-                    improvements.Where(i => i.Imp.ExclusiveGroup != ImprovementTypes.DefenceGroup)
+                    improvements.Where(i => i.Imp.ExclusiveGroup != ImprovementTypes.DefenceGroup && !i.Imp.Negative)
                         .Select(i => i.Imp.Levels[i.Const.Level].Name));
                 
                 if (!string.IsNullOrWhiteSpace(improvementText))
@@ -141,10 +152,13 @@ namespace EtoFormsUI.GameModes
                 }
 
                 // If pollution present
-                if (activeTile.Pollution)
+                var pollutionText = string.Join(", ",
+                    improvements.Where(i => i.Imp.Negative)
+                        .Select(i => i.Imp.Levels[i.Const.Level].Name));
+                if (!string.IsNullOrWhiteSpace(pollutionText))
                 {
                     column += 18;
-                    Draw.Text(eGraphics, "(Pollution)", style.Font, style.FrontColor, new Point(5, column), false,
+                    Draw.Text(eGraphics, $"({pollutionText})", style.Font, style.FrontColor, new Point(5, column), false,
                         false,
                         style.BackColor, 1, 1);
                 }
@@ -194,7 +208,8 @@ namespace EtoFormsUI.GameModes
 
         public void HandleKeyPress(Main main, KeyEventArgs e)
         {
-            var order = main.Orders.FirstOrDefault(o=>o.ActivationCommand == (e.Key | e.Modifiers));
+            var key = e.Key | e.Modifiers;
+            var order = main.Orders.FirstOrDefault(o=> o.ActivationCommand == key);
             if (order != null)
             {
                 order.ExecuteCommand();

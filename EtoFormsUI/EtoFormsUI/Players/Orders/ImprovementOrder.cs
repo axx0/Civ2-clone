@@ -57,19 +57,19 @@ namespace EtoFormsUI.Players.Orders
         {
             if (activeUnit == null)
             {
-                SetCommandState();
+                SetCommandState(OrderStatus.Illegal);
                 return this;
             }
 
             if (activeUnit.AIrole != AIroleType.Settle)
             {
-                SetCommandState(errorPopupKeyword: "ONLYSETTLERS");
+                SetCommandState(OrderStatus.Illegal, errorPopupKeyword: "ONLYSETTLERS");
                 return this;
             }
 
             var canBeBuilt = TerrainImprovementFunctions.CanImprovementBeBuiltHere(activeTile, _improvement, activeUnit.Owner);
 
-            SetCommandState(canBeBuilt.CanBuild, canBeBuilt.CommandTitle, canBeBuilt.ErrorPopup);
+            SetCommandState(canBeBuilt.Enabled ? OrderStatus.Active : OrderStatus.Disabled, canBeBuilt.CommandTitle, canBeBuilt.ErrorPopup);
             return this;
         }
 

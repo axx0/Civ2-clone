@@ -57,6 +57,10 @@ namespace Civ2engine
 
             TerrainImprovements = TerrainImprovementFunctions.GetStandardImprovements(Rules); 
 
+            Script.RunScript("tile_improvements.lua");
+            
+            
+            
             Script.RunScript("improvements.lua");
             Script.RunScript("advances.lua");
 
@@ -86,7 +90,7 @@ namespace Civ2engine
             GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
             NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;
 
-            if (!objects.ActiveUnit.Dead)
+            if (objects.ActiveUnit is { Dead: false })
             {
                 localPlayer.ActiveUnit = objects.ActiveUnit;
             }

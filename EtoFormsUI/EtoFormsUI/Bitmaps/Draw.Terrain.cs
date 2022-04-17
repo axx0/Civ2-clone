@@ -241,7 +241,14 @@ namespace EtoFormsUI
                 }
                 else
                 {
-                    g.DrawImage(graphics.Levels[improvement.construct.Level, 0],0,0);
+                    if (tile.IsUnitPresent && graphics.UnitLevels != null)
+                    {
+                        g.DrawImage(graphics.UnitLevels[improvement.construct.Level, 0], 0, 0);
+                    }
+                    else
+                    {
+                        g.DrawImage(graphics.Levels[improvement.construct.Level, 0], 0, 0);
+                    }
                 }
             }
             
@@ -295,13 +302,10 @@ namespace EtoFormsUI
             // if (tile.Mining && !tile.Farmland) g.DrawImage(terrainSet.Mining, 0, 0);
 
             // Pollution
-            if (tile.Pollution) g.DrawImage(terrainSet.Pollution, 0, 0);
+            //if (tile.Pollution) g.DrawImage(terrainSet.Pollution, 0, 0);
 
             // Fortress
-            if (tile.Fortress) g.DrawImage(MapImages.Specials[1], 0, 0);
 
-            // Airbase
-            else if (tile.Airbase) g.DrawImage(MapImages.Specials[tile.IsUnitPresent ? 3 : 2], 0, 0);
 
             return _tilePic;
         }
@@ -619,294 +623,6 @@ namespace EtoFormsUI
                 }
             }
             return river;
-        }
-
-        private static bool[] IsRoadAround(int col, int row, bool flatEarth)
-        {
-            // In start we presume all surrounding tiles do not have roads. Index=0 is NE, follows in clockwise direction.
-            bool[] isRoadAround = new bool[8] { false, false, false, false, false, false, false, false };
-
-            // Rewrite indexes in Civ2-style
-            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.YDim;        // no need for such correction for Y
-
-            // Observe in all directions if road or city is present next to tile
-            // N:
-            if (row - 2 < 0)
-            {
-                isRoadAround[0] = false;   // if N tile is out of map limits
-            }
-            else if (Map.TileC2(col, row - 2).Road || Map.TileC2(col, row - 2).IsCityPresent)
-            {
-                isRoadAround[0] = true;
-            }
-            // NE:
-            if (row == 0)
-            {
-                isRoadAround[1] = false;  // NE is beyond limits
-            }
-            else if (col == Xdim - 1)    // you are on eastern edge of map
-            {
-                if (flatEarth)
-                {
-                    isRoadAround[1] = false;
-                }
-                else if (Map.TileC2(0, row - 1).Road || Map.TileC2(0, row - 1).IsCityPresent)
-                {
-                    isRoadAround[1] = true;  // tile on mirror side of map
-                }
-            }
-            else if (Map.TileC2(col + 1, row - 1).Road || Map.TileC2(col + 1, row - 1).IsCityPresent)
-            {
-                isRoadAround[1] = true;
-            }
-            // E:
-            if (col + 2 >= Xdim) // you are on right edge of map
-            {
-                if (flatEarth)
-                {
-                    isRoadAround[2] = false;
-                }
-                else if (Map.TileC2(Xdim - col, row).Road || Map.TileC2(Xdim - col, row).IsCityPresent)
-                {
-                    isRoadAround[2] = true;
-                }
-            }
-            else if (Map.TileC2(col + 2, row).Road || Map.TileC2(col + 2, row).IsCityPresent)
-            {
-                isRoadAround[2] = true;
-            }
-            // SE:
-            if (row == Ydim - 1)
-            {
-                isRoadAround[3] = false;  // SE is beyond limits
-            }
-            else if (col + 1 == Xdim)    // you are on eastern edge of map
-            {
-                if (flatEarth)
-                {
-                    isRoadAround[3] = false;
-                }
-                else if (Map.TileC2(0, row + 1).Road || Map.TileC2(0, row + 1).IsCityPresent)
-                {
-                    isRoadAround[3] = true;  // tile on mirror side of map
-                }
-            }
-            else if (Map.TileC2(col + 1, row + 1).Road || Map.TileC2(col + 1, row + 1).IsCityPresent)
-            {
-                isRoadAround[3] = true;
-            }
-            // S:
-            if (row + 2 >= Ydim)
-            {
-                isRoadAround[4] = false;   // S is beyond map limits
-            }
-            else if (Map.TileC2(col, row + 2).Road || Map.TileC2(col, row + 2).IsCityPresent)
-            {
-                isRoadAround[4] = true;
-            }
-            // SW:
-            if (row == Ydim - 1)
-            {
-                isRoadAround[5] = false; // SW is beyond limits
-            }
-            else if (col == 0)    // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isRoadAround[5] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row + 1).Road || Map.TileC2(Xdim - 1, row + 1).IsCityPresent)
-                {
-                    isRoadAround[5] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row + 1).Road || Map.TileC2(col - 1, row + 1).IsCityPresent)
-            {
-                isRoadAround[5] = true;
-            }
-            // W:
-            if (col - 2 < 0) // you are on left edge of map
-            {
-                if (flatEarth)
-                {
-                    isRoadAround[6] = false;
-                }
-                else if (Map.TileC2(Xdim - 2 + col, row).Road || Map.TileC2(Xdim - 2 + col, row).IsCityPresent)
-                {
-                    isRoadAround[6] = true;
-                }
-            }
-            else if (Map.TileC2(col - 2, row).Road || Map.TileC2(col - 2, row).IsCityPresent)
-            {
-                isRoadAround[6] = true;
-            }
-            // NW:
-            if (row == 0)
-            {
-                isRoadAround[7] = false;  // NW is beyond limits
-            }
-            else if (col == 0) // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isRoadAround[7] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row - 1).Road || Map.TileC2(Xdim - 1, row - 1).IsCityPresent)
-                {
-                    isRoadAround[7] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row - 1).Road || Map.TileC2(col - 1, row - 1).IsCityPresent)
-            {
-                isRoadAround[7] = true;
-            }
-
-            return isRoadAround;
-        }
-
-        private static bool[] IsRailroadAround(int col, int row, bool flatEarth)
-        {
-            // In start we presume all surrounding tiles do not have railroads. Index=0 is NE, follows in clockwise direction.
-            bool[] isRailroadAround = new bool[8] { false, false, false, false, false, false, false, false };
-
-            // Rewrite indexes in Civ2-style
-            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
-            int Ydim = Map.YDim;        // no need for such correction for Y
-
-            // Observe in all directions if railroad or city is present next to tile
-            // N:
-            if (row - 2 < 0)
-            {
-                isRailroadAround[0] = false;   // if N tile is out of map limits
-            }
-            else if (Map.TileC2(col, row - 2).Railroad || Map.TileC2(col, row - 2).IsCityPresent)
-            {
-                isRailroadAround[0] = true;
-            }
-            // NE:
-            if (row == 0)
-            {
-                isRailroadAround[1] = false;  // NE is beyond limits
-            }
-            else if (col == Xdim - 1)    // you are on eastern edge of map
-            {
-                if (flatEarth)
-                {
-                    isRailroadAround[1] = false;
-                }
-                else if (Map.TileC2(0, row - 1).Railroad || Map.TileC2(0, row - 1).IsCityPresent)
-                {
-                    isRailroadAround[1] = true;  // tile on mirror side of map
-                }
-            }
-            else if (Map.TileC2(col + 1, row - 1).Railroad || Map.TileC2(col + 1, row - 1).IsCityPresent)
-            {
-                isRailroadAround[1] = true;
-            }
-            // E:
-            if (col + 2 >= Xdim) // you are on right edge of map
-            {
-                if (flatEarth)
-                {
-                    isRailroadAround[2] = false;
-                }
-                else if (Map.TileC2(Xdim - col, row).Railroad || Map.TileC2(Xdim - col, row).IsCityPresent)
-                {
-                    isRailroadAround[2] = true;
-                }
-            }
-            else if (Map.TileC2(col + 2, row).Railroad || Map.TileC2(col + 2, row).IsCityPresent)
-            {
-                isRailroadAround[2] = true;
-            }
-            // SE:
-            if (row == Ydim - 1)
-            {
-                isRailroadAround[3] = false;  // SE is beyond limits
-            }
-            else if (col + 1 == Xdim)    // you are on eastern edge of map
-            {
-                if (flatEarth)
-                {
-                    isRailroadAround[3] = false;
-                }
-                else if (Map.TileC2(0, row + 1).Railroad || Map.TileC2(0, row + 1).IsCityPresent)
-                {
-                    isRailroadAround[3] = true;  // tile on mirror side of map
-                }
-            }
-            else if (Map.TileC2(col + 1, row + 1).Railroad || Map.TileC2(col + 1, row + 1).IsCityPresent)
-            {
-                isRailroadAround[3] = true;
-            }
-            // S:
-            if (row + 2 >= Ydim)
-            {
-                isRailroadAround[4] = false;   // S is beyond map limits
-            }
-            else if (Map.TileC2(col, row + 2).Railroad || Map.TileC2(col, row + 2).IsCityPresent)
-            {
-                isRailroadAround[4] = true;
-            }
-            // SW:
-            if (row == Ydim - 1)
-            {
-                isRailroadAround[5] = false; // SW is beyond limits
-            }
-            else if (col == 0)    // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isRailroadAround[5] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row + 1).Railroad || Map.TileC2(Xdim - 1, row + 1).IsCityPresent)
-                {
-                    isRailroadAround[5] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row + 1).Railroad || Map.TileC2(col - 1, row + 1).IsCityPresent)
-            {
-                isRailroadAround[5] = true;
-            }
-            // W:
-            if (col - 2 < 0) // you are on left edge of map
-            {
-                if (flatEarth)
-                {
-                    isRailroadAround[6] = false;
-                }
-                else if (Map.TileC2(Xdim - 2 + col, row).Railroad || Map.TileC2(Xdim - 2 + col, row).IsCityPresent)
-                {
-                    isRailroadAround[6] = true;
-                }
-            }
-            else if (Map.TileC2(col - 2, row).Railroad || Map.TileC2(col - 2, row).IsCityPresent)
-            {
-                isRailroadAround[6] = true;
-            }
-            // NW:
-            if (row == 0)
-            {
-                isRailroadAround[7] = false;  // NW is beyond limits
-            }
-            else if (col == 0) // you are on western edge of map
-            {
-                if (flatEarth)
-                {
-                    isRailroadAround[7] = false;
-                }
-                else if (Map.TileC2(Xdim - 1, row - 1).Railroad || Map.TileC2(Xdim - 1, row - 1).IsCityPresent)
-                {
-                    isRailroadAround[7] = true;
-                }
-            }
-            else if (Map.TileC2(col - 1, row - 1).Railroad || Map.TileC2(col - 1, row - 1).IsCityPresent)
-            {
-                isRailroadAround[7] = true;
-            }
-
-            return isRailroadAround;
         }
     }
 }

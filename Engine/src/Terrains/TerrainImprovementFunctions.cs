@@ -23,12 +23,12 @@ namespace Civ2engine.Terrains
             return Labels.For(labelIndex);
         }
         
-        public static ImprovementBuildAssessment CanImprovementBeBuiltHere(Tile location,
+        public static UnitActionAssessment CanImprovementBeBuiltHere(Tile location,
             TerrainImprovement improvement, Civilization civilization)
         {
             if (location.CityHere != null)
             {
-                return new ImprovementBuildAssessment(false, errorPopup: "CANTDO");
+                return new UnitActionAssessment(false, errorPopup: "CANTDO");
             }
 
             var alreadyBuilt = location.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
@@ -38,34 +38,41 @@ namespace Civ2engine.Terrains
             {
                 if (improvement.Negative)
                 {
-                    return new ImprovementBuildAssessment(true,
+                    return new UnitActionAssessment(true,
                         commandTitle: improvement.Levels[alreadyBuilt.Level].BuildLabel);
                 }
                 if (alreadyBuilt.Level >= improvement.Levels.Count)
                 {
-                    return new ImprovementBuildAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
+                    return new UnitActionAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
                 }
 
                 var nextLevel = improvement.Levels[alreadyBuilt.Level + 1];
                 if (nextLevel.RequiredTech != AdvancesConstants.Nil &&
                     !AdvanceFunctions.HasTech(civilization, nextLevel.RequiredTech))
                 {
-                    return new ImprovementBuildAssessment(false, nextLevel.BuildLabel, errorPopup: nextLevel.MissingRequiredTechMessage);
+                    return new UnitActionAssessment(false, nextLevel.BuildLabel, errorPopup: nextLevel.MissingRequiredTechMessage);
                 }
 
-                return new ImprovementBuildAssessment(true, LabelFrom(nextLevel));
+                return new UnitActionAssessment(true, LabelFrom(nextLevel));
             }
 
             if (improvement.Negative)
             {
-                return new ImprovementBuildAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
+                return new UnitActionAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
+            }
+
+            if (improvement.Levels[0].RequiredTech != AdvancesConstants.Nil &&
+                !AdvanceFunctions.HasTech(civilization, improvement.Levels[0].RequiredTech))
+            {
+                return new UnitActionAssessment(false,
+                    errorPopup: improvement.Levels[0].MissingRequiredTechMessage);
             }
 
             var allowedTerrain = improvement.AllowedTerrains[location.Z]
                 .FirstOrDefault(t => t.TerrainType == (int)location.Type);
             if (allowedTerrain == null)
             {
-                return new ImprovementBuildAssessment(false, errorPopup: "CANTIMPROVE");
+                return new UnitActionAssessment(false, errorPopup: "CANTIMPROVE");
             }
 
             if (location.River)
@@ -77,7 +84,7 @@ namespace Civ2engine.Terrains
                     if (riverAllowance.RequiredTech != AdvancesConstants.Nil &&
                         !AdvanceFunctions.HasTech(civilization, riverAllowance.RequiredTech))
                     {
-                        return new ImprovementBuildAssessment(false, errorPopup: riverAllowance.MissingRequiredTechMessage);
+                        return new UnitActionAssessment(false, errorPopup: riverAllowance.MissingRequiredTechMessage);
                     }
                 }
             }
@@ -85,23 +92,23 @@ namespace Civ2engine.Terrains
             if (allowedTerrain.RequiredTech != AdvancesConstants.Nil &&
                 !AdvanceFunctions.HasTech(civilization, allowedTerrain.RequiredTech))
             {
-                return new ImprovementBuildAssessment(false, errorPopup: allowedTerrain.MissingRequiredTechMessage);
+                return new UnitActionAssessment(false, errorPopup: allowedTerrain.MissingRequiredTechMessage);
             }
 
             var transform = allowedTerrain.Effects?.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
             if (transform != null)
             {
-                return new ImprovementBuildAssessment(true,transform.Text);
+                return new UnitActionAssessment(true,transform.Text);
             }
 
             if (improvement.AdjacencyRules is { Count: > 0 })
             {
                 if (NoAdjacentValid(location,improvement))
                 {
-                    return new ImprovementBuildAssessment(false, errorPopup: improvement.NoAdjacencyMessage);
+                    return new UnitActionAssessment(false, errorPopup: improvement.NoAdjacencyMessage);
                 }
             }
-            return new ImprovementBuildAssessment(true);
+            return new UnitActionAssessment(true);
         }
         
         public static IList<TerrainImprovement> GetStandardImprovements(Rules rules)
@@ -274,6 +281,78 @@ namespace Civ2engine.Terrains
                         .Where(t => t.Type != TerrainType.Ocean && !t.Impassable)
                         .Select(t => new AllowedTerrain
                             { BuildTime = t.MoveCost * 2, TerrainType = (int)t.Type }).ToList()).ToList()
+                },
+                new()
+                {
+                    Id = ImprovementTypes.Fortress,
+                    Layer = 15,
+                    Levels = new ImprovementLevel[]
+                    {
+                        new()
+                        {
+                            Name = Labels.For(LabelIndex.Fortress),
+                            Effects = new List<TerrainImprovementAction>
+                            {
+                                new()
+                                {
+                                    Target = ImprovementConstants.GroundDefence,
+                                    Action = ImprovementActions.Multiply,
+                                    Value = 100
+                                },
+                                new()
+                                {
+                                    Target = ImprovementConstants.NoStackElimination
+                                }
+                            },
+                            RequiredTech = (int)AdvanceType.Construct,
+                            MissingRequiredTechMessage = "CONSTRUCTION"
+                        }
+                    },
+                    Name = Labels.For(LabelIndex.Fortress),
+                    Shortcut = "F",
+                    AllowedTerrains = rules.Terrains.Select(terrains => terrains
+                        .Where(t => t.Type != TerrainType.Ocean && !t.Impassable)
+                        .Select(t => new AllowedTerrain
+                            { BuildTime = t.MoveCost * 2, TerrainType = (int)t.Type }).ToList()).ToList(),
+                    ExclusiveGroup = ImprovementTypes.DefenceGroup,
+                    MaxLevelReachedMessage = "ALREADYFORT"
+                },
+                new()
+                {
+                    Id = ImprovementTypes.Airbase,
+                    Layer = 20,
+                    Name = Labels.For(LabelIndex.Airbase),
+                    Levels = new ImprovementLevel[]
+                    {
+                        new()
+                        {
+                            Name = Labels.For(LabelIndex.Airbase),
+                            Effects = new List<TerrainImprovementAction>
+                            {
+                                new()
+                                {
+                                    Target = ImprovementConstants.Airbase,
+                                },
+                                new()
+                                {
+                                    Target = ImprovementConstants.NoStackElimination
+                                },
+                                new()
+                                {
+                                    Target = ImprovementConstants.PreventPollutionInSquare
+                                }
+                            },
+                            RequiredTech = (int)AdvanceType.Radio,
+                            MissingRequiredTechMessage = "RADIO"
+                        }
+                    },
+                    Shortcut = "E",
+                    AllowedTerrains = rules.Terrains.Select(terrains => terrains
+                        .Where(t => t.Type != TerrainType.Ocean && !t.Impassable)
+                        .Select(t => new AllowedTerrain
+                            { BuildTime = t.MoveCost * 3, TerrainType = (int)t.Type }).ToList()).ToList(),
+                    ExclusiveGroup = ImprovementTypes.DefenceGroup,
+                    MaxLevelReachedMessage = "ALREADYAIR"
                 }
             };
         }

@@ -40,7 +40,7 @@ namespace Civ2engine.MapObjects
                 });
             }
 
-            var transformEffect = terrain.Effects.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
+            var transformEffect = terrain.Effects?.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
             if (transformEffect != null)
             {
                 tile.Terrain = terrains[transformEffect.Value];

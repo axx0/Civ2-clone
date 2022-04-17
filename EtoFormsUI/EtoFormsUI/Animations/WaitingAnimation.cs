@@ -127,7 +127,7 @@ namespace EtoFormsUI.GameModes
                     // View piece (is drawn on top of everything)
                     if (unit == null)
                     {
-                        if (frame == 1) Draw.ViewPiece(g, map.Zoom, new Point(0, map.Ypx));
+                        if (frame == 0) Draw.ViewPiece(g, map.Zoom, new Point(0, map.Ypx));
                     }
                 }
 
