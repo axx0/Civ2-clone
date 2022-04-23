@@ -4,6 +4,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using System.Diagnostics;
 
 namespace EtoFormsUI
 {
@@ -46,7 +47,7 @@ namespace EtoFormsUI
         {
             // Draw map
             for (var row = 0; row < Map.YDim; row++)
-                for (var col = 0; col < Map.XDim; col++)
+                for (var col = 0; col < Map.XDim / 2; col++)
                     if (Map.WhichCivsMapShown == 8 || Map.Tile[col, row].Visibility[Map.WhichCivsMapShown])
                     {
                         var drawColor = (Map.Tile[col, row].Type == TerrainType.Ocean) ? Color.FromArgb(0, 0, 95) : Color.FromArgb(55, 123, 23);
