@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Production;
@@ -172,8 +173,8 @@ namespace Civ2engine
             };
             
             owner.Cities.Add(city);
-            
-            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
+
+            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers))
             {
                 if (first != null && second)
                 {

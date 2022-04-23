@@ -1,15 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Text;
+using System.Linq;
+using Civ2engine.Enums;
+using Civ2engine.Units;
 
-        using System;
-        using System.Collections.Generic;
-        using System.Diagnostics;
-        using System.Drawing;
-        using System.Drawing.Text;
-        using System.Linq;
-        using System.Threading;
-        using Civ2engine.Enums;
-        using Civ2engine.Units;
-
-        namespace Civ2engine.Terrains
+namespace Civ2engine.Terrains
 {
     public class Tile : IMapItem
     {

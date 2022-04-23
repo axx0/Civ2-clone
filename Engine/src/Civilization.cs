@@ -74,6 +74,7 @@ namespace Civ2engine
         public string[] Titles { get; set; }
 
         public List<Unit> Units { get; } = new();
+        public UnitType[] CasualtiesPerUnitType { get; set; }
 
         public List<City> Cities { get; } = new();
         

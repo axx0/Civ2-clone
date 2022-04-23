@@ -51,7 +51,7 @@ namespace Civ2engine
         /// <param name="rules">Game rules.</param>
         public void PopulateTilesFromGameData(GameData data, Rules rules)
         {
-            XDim = data.MapXdim;
+            XDim = data.MapXdim / 2;
             YDim = data.MapYdim;
             ResourceSeed = data.MapResourceSeed;
             LocatorXdim = data.MapLocatorXdim;
@@ -89,27 +89,27 @@ namespace Civ2engine
             var odd = tile.Odd;
             var offsets = new List<int[]>
             {
-                new[] { 0, 0 },
-                new[] { odd, -1 },
-                new[] { 1, 0 },
-                new[] { odd, 1 },
-                new[] { 0, 2 },
-                new[] { -1 + odd, 1 },
-                new[] { -1, 0 },
-                new[] { -1 + odd, -1 },
                 new[] { 0, -2 },
-                new[] { 1, -2 },
-                new[] { 1, 2 },
-                new[] { -1, 2 },
-                new[] { -1, -2 },
-                new[] { odd, -3 },
-                new[] { 1 + odd, -1 },
+                new[] { -1 + odd, -1 },
+                new[] { -1, 0 },
+                new[] { -1 + odd, 1 },
+                new[] { 0, 2 },
+                new[] { odd, 1 },
+                new[] { 1, 0 },
+                new[] { odd, -1 },
+                new[] { odd, 3 },
                 new[] { 1 + odd, 1 },
-                new[] { 0 + odd, 3 },
-                new[] { -1 + odd, 3 },
-                new[] { -2 + odd, 1 },
+                new[] { 1 + odd, -1 },
+                new[] { odd, -3 },
+                new[] { -1, -2 },
+                new[] { -1, 2 },
+                new[] { 1, 2 },
+                new[] { 1, -2 },
+                new[] { 0, 0 },
+                new[] { -1 + odd, -3 },
                 new[] { -2 + odd, -1 },
-                new[] { -1 + odd, -3 }
+                new[] { -2 + odd, 1 },
+                new[] { -1 + odd, 3 },
             };
 
             return TilesAround(tile, offsets, nullForInvalid);
