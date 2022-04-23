@@ -10,14 +10,36 @@ namespace EtoFormsUI
         protected PixelLayout Layout;
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
+        private bool dragging;
+        private PointF dragCursorPoint, dragFormPoint, dif;
 
         public Civ2customDialog(Main parent, int width, int height, int paddingTopInnerPanel =38, int paddingBtmInnerPanel =46, string title = null)
         {
             foreach (MenuItem item in parent.Menu.Items) item.Enabled = false;
-
             WindowStyle = WindowStyle.None;
-            MovableByWindowBackground = true;
-            
+
+            // Drag window
+            this.MouseDown += (_, e) =>
+            {
+                if (e.Location.Y < _paddingTop)  // Enable dragging only on top of window
+                {
+                    dragging = true;
+                    dragCursorPoint = this.Location + e.Location;
+                    dragFormPoint = this.Location;
+                }
+            };
+
+            this.MouseMove += (_, e) =>
+            {
+                if (dragging)
+                {
+                    dif = this.Location + e.Location - dragCursorPoint;
+                    this.Location = (Point)(dragFormPoint + dif);
+                }
+            };
+
+            this.MouseUp += (_, _) => dragging = false;
+
             Size = new Size(width, height);
             _paddingTop = paddingTopInnerPanel;
             _paddingBtm = paddingBtmInnerPanel;
