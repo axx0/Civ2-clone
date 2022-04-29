@@ -42,7 +42,7 @@ namespace EtoFormsUI
 
         public void PlayMenuLoop()
         {
-            Play(_soundPaths[GameSounds.MenuLoop], playerLoop);
+            //Play(_soundPaths[GameSounds.MenuLoop], playerLoop);
         }
 
         public void Stop()

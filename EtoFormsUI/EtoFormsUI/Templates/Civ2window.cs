@@ -1,27 +1,47 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
+using System.Diagnostics;
 
 namespace EtoFormsUI
 {
-    public abstract class Civ2window : Window
+    public abstract class Civ2window : Form
     {
         protected Drawable Surface;
         protected PixelLayout Layout;
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
+        private bool dragging;
+        private PointF dragCursorPoint, dragFormPoint, dif;
 
         public Civ2window(Main parent, int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
         {
-            foreach (MenuItem item in parent.Menu.Items) item.Enabled = false;
-
-            WindowStyle = WindowStyle.None;
-            MovableByWindowBackground = true;
-            
             Size = new Size(width, height);
             _paddingTop = paddingTopInnerPanel;
             _paddingBtm = paddingBtmInnerPanel;
             _title = title;
+            
+            // Drag window
+            this.MouseDown += (_, e) =>
+            {
+                if (e.Location.Y < _paddingTop)  // Enable dragging only on top of window
+                {
+                    dragging = true;
+                    dragCursorPoint = this.Location + e.Location;
+                    dragFormPoint = this.Location;
+                }
+            };
+
+            this.MouseMove += (_, e) =>
+            {
+                if (dragging)
+                {
+                    dif = this.Location + e.Location - dragCursorPoint;
+                    this.Location = (Point)(dragFormPoint + dif);
+                }
+            };
+
+            this.MouseUp += (_, _) => dragging = false;
 
             Layout = new PixelLayout() { Size = new Size(width, height) };
 
@@ -32,9 +52,10 @@ namespace EtoFormsUI
             Layout.Add(Surface, 0, 0);
         }
 
-
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
+            e.Graphics.AntiAlias = false;
+
             // Paint outer wallpaper
             var imgSize = MapImages.PanelOuterWallpaper.Size;
             for (int row = 0; row < this.Height / imgSize.Height + 1; row++)

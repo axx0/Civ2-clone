@@ -142,7 +142,12 @@ namespace EtoFormsUI
             QuitCommand.Executed += (sender, e) => Application.Instance.Quit();
 
             // Kingdom menu commands
-            var TaxRateCommand = new Command { MenuText = "Tax Rate", Shortcut = Keys.Shift | Keys.T };
+            var TaxRateCommand = new Command { MenuText = "Tax Rate", Shortcut = Keys.Shift & Keys.T };
+            TaxRateCommand.Executed += (_, _) =>
+            {
+                var taxWin = new TaxRateWindow(this);
+                taxWin.ShowModal();
+            };
             var ViewThroneRoomCommand = new Command { MenuText = "View Throne Room", Shortcut = Keys.Shift | Keys.H };
             var FindCityCommand = new Command { MenuText = "Find City", Shortcut = Keys.Shift | Keys.C };
             var RevolutionCommand = new Command { MenuText = "REVOLUTION", Shortcut = Keys.Shift | Keys.R };
@@ -168,10 +173,34 @@ namespace EtoFormsUI
             var ChatWithKingsCommand = new Command { MenuText = "Chat With Kings", Shortcut = Keys.Control | Keys.C };
             var ConsultHighCouncilCommand = new Command { MenuText = "Consult High Council" };
             var CityStatusCommand = new Command { MenuText = "City Status", Shortcut = Keys.F1 };
+            CityStatusCommand.Executed += (_, _) =>
+            {
+                var win = new CityStatusWindow();
+                win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
+                win.Show();
+            };
             var DefenseMinisterCommand = new Command { MenuText = "Defense Minister", Shortcut = Keys.F2 };
+            DefenseMinisterCommand.Executed += (_, _) =>
+            {
+                var win = new DefenseMinisterWindow();
+                win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
+                win.Show();
+            };
             var ForeignMinisterCommand = new Command { MenuText = "Foreign Minister", Shortcut = Keys.F3 };
             var AttitudeAdvisorCommand = new Command { MenuText = "Attitude Advisor", Shortcut = Keys.F4 };
+            AttitudeAdvisorCommand.Executed += (_, _) =>
+            {
+                var win = new AttitudeAdvisorWindow();
+                win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
+                win.Show();
+            };
             var TradeAdvisorCommand = new Command { MenuText = "Trade Advisor", Shortcut = Keys.F5 };
+            TradeAdvisorCommand.Executed += (_, _) =>
+            {
+                var win = new TradeAdvisorWindow();
+                win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
+                win.Show();
+            }; 
             var ScienceAdvisorCommand = new Command { MenuText = "Science Advisor", Shortcut = Keys.F6 };
             var CasualtyTimelineCommand = new Command { MenuText = "Casualty Timeline", Shortcut = Keys.Control | Keys.D };
 

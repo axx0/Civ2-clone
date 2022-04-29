@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Tile = Civ2engine.MapObjects.Tile;
 
 namespace Civ2engine
 {
@@ -22,7 +24,7 @@ namespace Civ2engine
                 WhichCivsMapShown = gameData.WhichCivsMapShown,
                 Zoom = gameData.Zoom,
                 StartingClickedXY = gameData.ClickedXY,
-                XDim = gameData.MapXdim,
+                XDim = gameData.MapXdim / 2,
                 YDim = gameData.MapYdim,
                 ResourceSeed = gameData.MapResourceSeed,
                 LocatorXdim = gameData.MapLocatorXdim,
@@ -261,8 +263,8 @@ namespace Civ2engine
             };
             
             owner.Cities.Add(city);
-            
-            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers.Reverse()))
+
+            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers))
             {
                 if (first != null && second)
                 {
