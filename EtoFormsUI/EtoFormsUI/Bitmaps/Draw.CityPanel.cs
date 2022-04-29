@@ -333,17 +333,13 @@ namespace EtoFormsUI
         public static void CityResourcesMap(Graphics g, City city, int cityZoom, Point dest)
         {
             // Get normal zoom from city zoom (-1/0/1)
-            int zoom;
-            if (cityZoom == 0) zoom = -2;
-            else if (cityZoom == 1) zoom = 1;
-            else zoom = -5;
+            int zoom = cityZoom * 3 - 2;
 
             int offsetX = 5 * (2 + cityZoom) / 2;
             int offsetY = 84 * (2 + cityZoom) / 2;
 
             // First draw squares around city
             int newX, newY;
-            City cityHere;
             for (int y_ = -3; y_ <= 3; y_++)
             {
                 for (int x_ = -3; x_ <= 3; x_++)
@@ -359,24 +355,26 @@ namespace EtoFormsUI
                         // First draw blank tiles
                         using var blankPic = MapImages.Terrains[Map.MapIndex].Blank.Resize(zoom);
                         g.DrawImage(blankPic, dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3), dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3));
+
                         // Then draw tiles if they are visible
                         if (!Map.IsValidTileC2(newX, newY)) continue;
                         var tile = Map.TileC2(newX, newY);
                         if (tile.Visibility[city.Owner.Id])
                         {
-                            using var mapPic = Images.MapTileGraphicC2(newX, newY).Resize(zoom);
-                            g.DrawImage(mapPic, dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
+                            g.DrawImage(Images.MapTileGraphicC2(newX, newY).Resize(zoom), 
+                                dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
                                 dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3));
 
                             // TODO: implement dithering on edges or depending on where invisible tiles are
+                            
                             // Draw cities
-
                             if (tile.CityHere != null)
                             {
                                 City(g, tile.CityHere, false, zoom,
                                     new Point(dest.X + offsetX + 4 * (8 + zoom) * (x_ + 3),
                                         dest.Y + offsetY + 2 * (8 + zoom) * (y_ + 3) - 2 * (8 + zoom)));
-                            } else if (tile.UnitsHere.Count > 0)
+                            } 
+                            else if (tile.UnitsHere.Count > 0)
                             {
                                 var unit = tile.GetTopUnit();
 
