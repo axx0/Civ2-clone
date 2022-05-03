@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
-using Civ2engine.IO;
-using Civ2engine.Terrains;
+using Civ2engine.MapObjects;
 using Civ2engine.Units;
 
 namespace Civ2engine.NewGame

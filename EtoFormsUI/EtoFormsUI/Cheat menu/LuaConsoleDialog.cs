@@ -3,11 +3,11 @@ using Civ2engine.Scripting;
 using Eto.Drawing;
 using Eto.Forms;
 
-namespace EtoFormsUI
+namespace EtoFormsUI.Cheat_menu
 {
     public class LuaConsoleDialog : Civ2customDialog
     {
-        public LuaConsoleDialog(Main parent) : base(parent, parent.Width / 3, parent.Height / 3, title: "Lua Console")
+        public LuaConsoleDialog(Main parent, bool enableRunCommand) : base(parent, parent.Width / 3, parent.Height / 3, title: "Lua Console")
         {
             var script = Game.Instance.Script;
             DefaultButton = new Civ2button("Run Script", 126, 30, new Font("Times new roman", 11)) { Enabled = false };
@@ -36,7 +36,8 @@ namespace EtoFormsUI
                 Content = contentLabel
             };
             Layout.Add(scrollArea, 11,38);
-            
+
+            commandBox.Enabled = enableRunCommand;
             commandBox.TextChanged += (sender, args) =>
             {
                 DefaultButton.Enabled = !string.IsNullOrWhiteSpace(commandBox.Text);
@@ -47,7 +48,8 @@ namespace EtoFormsUI
                 if (args.Key != Keys.Enter || string.IsNullOrWhiteSpace(commandBox.Text)) return;
                 ExecuteImmediate(script, commandBox, contentLabel, scrollArea);
             };
-            
+
+            DefaultButton.Enabled = enableRunCommand;
             DefaultButton.Click += (sender, e) =>
             {
                 ExecuteImmediate(script, commandBox, contentLabel, scrollArea);

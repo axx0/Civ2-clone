@@ -1,6 +1,6 @@
 using System;
 
-namespace Civ2engine
+namespace Civ2engine.MapObjects
 {
     public static class Utilities
     {

@@ -7,6 +7,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using EtoFormsUI.Animations;
 
@@ -153,7 +154,7 @@ namespace EtoFormsUI
             
             if (!unit.TurnEnded)
             {
-                Game.ActiveUnit = unit;
+                main.CurrentPlayer.ActiveUnit = unit;
             }
 
             unit.Order = OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated
@@ -251,7 +252,7 @@ namespace EtoFormsUI
                     }
                 case MapEventType.CenterView:
                 {
-                    MapViewChange(main.CurrentGameMode.ActiveTile);
+                    MapViewChange(Game.ActiveTile);
                     //drawPanel.Invalidate();
                     break;
                 }
@@ -358,7 +359,7 @@ namespace EtoFormsUI
             mapSrc1 = mapSrc2 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
             mapDest = new Point(0, 0);  // XY coords of where map should be drawn on panel (in px)
 
-            int fullMapWidth = Map.Xpx * (2 * Map.XDim + 1);
+            int fullMapWidth = Map.Xpx * (Map.XDimMax + 1);
             int fullMapHeight = Map.Ypx * (Map.YDim + 1);
 
             // No of squares of panel and map
@@ -393,9 +394,9 @@ namespace EtoFormsUI
                     if (mapStartXY[1] % 2 != 0) mapStartXY[1]--;
                 }
             }
-            else if (mapStartXY[0] + mapDrawSq[0] >= 2 * Map.XDim)
+            else if (mapStartXY[0] + mapDrawSq[0] >= Map.XDimMax)
             {
-                mapStartXY[0] = 2 * Map.XDim - mapDrawSq[0];
+                mapStartXY[0] = Map.XDimMax - mapDrawSq[0];
                 if (mapStartXY[1] <= 0)
                 {
                     mapStartXY[1] = 0;
@@ -429,7 +430,7 @@ namespace EtoFormsUI
             }
 
             // Determine drawing rectangles
-            if (panelSq[0] > 2 * Map.XDim + 1)
+            if (panelSq[0] > Map.XDimMax + 1)
             {
                 mapSrc1.Width = fullMapWidth;
                 mapDest.X = (drawPanel.Width - fullMapWidth) / 2;

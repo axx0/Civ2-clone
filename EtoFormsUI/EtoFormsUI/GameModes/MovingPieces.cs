@@ -1,29 +1,42 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.Animations;
+using Graphics = Eto.Drawing.Graphics;
+using Order = EtoFormsUI.Players.Orders.Order;
+using Point = Eto.Drawing.Point;
 
 namespace EtoFormsUI.GameModes
 {
     public class MovingPieces : IGameMode
     {
-        private Game _game; 
-        public bool Init(IGameMode previous, Game game)
+        private readonly Game _game;
+        private LocalPlayer _player;
+
+        public bool Activate(IGameMode previous, IPlayer currentPlayer)
         {
-            _game = game;
-            if (game.ActiveUnit is not {MovePoints: > 0})
+            if (currentPlayer is not LocalPlayer player)
             {
-                game.ChooseNextUnit();
+                return false;
             }
-            return true;
+
+            _player = player;
+            
+            if (player.ActiveUnit is not {MovePoints: > 0})
+            {
+                _game.ChooseNextUnit();
+            }
+            return player.ActiveUnit != null;
         }
 
         public IDictionary<Keys, Action> Actions { get; set; }
@@ -41,7 +54,7 @@ namespace EtoFormsUI.GameModes
             else
             {
                 main.CurrentGameMode = main.ViewPiece;              
-                main.ViewPiece.ActiveTile = clickedXy;
+                Game.Instance.ActiveTile = clickedXy;
             }
 
             return true;
@@ -62,11 +75,9 @@ namespace EtoFormsUI.GameModes
             return animation;
         }
 
-        public Tile ActiveTile => _game.ActiveUnit.CurrentLocation;
-
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle style, int unitPanelHeight)
         {
-            var activeTile = ActiveTile;
+            var activeTile = _player.ActiveTile;
 
             Draw.Text(eGraphics, Labels.For(LabelIndex.MovingUnits), style.Font, Colors.White, new Point(119, 10), true, true, Colors.Black,
                 1, 0);
@@ -113,18 +124,14 @@ namespace EtoFormsUI.GameModes
                     false, style.BackColor, 1, 1);
 
                 // If road/railroad/irrigation/farmland/mine present
-                string improvementText = null;
-                if (activeTile.Railroad) improvementText = "Railroad";
-                else if (activeTile.Road) improvementText = "Road";
+                var improvements = activeTile.Improvements.Select(c => new
+                    { Imp = _game.TerrainImprovements[c.Improvement], Const = c }).ToList();
 
-                if (activeTile.Mining)
-                    improvementText = improvementText != null ? $"{improvementText}, Mining" : "Mining";
-                else if (activeTile.Farmland)
-                    improvementText = improvementText != null ? $"{improvementText}, Farmland" : "Farmland";
-                else if (activeTile.Irrigation)
-                    improvementText = improvementText != null ? $"{improvementText}, Irrigation" : "Irrigation";
-
-                if (!string.IsNullOrEmpty(improvementText))
+                var improvementText = string.Join(", ",
+                    improvements.Where(i => i.Imp.ExclusiveGroup != ImprovementTypes.DefenceGroup && !i.Imp.Negative)
+                        .Select(i => i.Imp.Levels[i.Const.Level].Name));
+                
+                if (!string.IsNullOrWhiteSpace(improvementText))
                 {
                     column += 18;
                     Draw.Text(eGraphics, $"({improvementText})", style.Font, style.FrontColor,
@@ -133,22 +140,25 @@ namespace EtoFormsUI.GameModes
                 }
 
                 // If airbase/fortress present
-                if (activeTile.Airbase || activeTile.Fortress)
+                if (improvements.Any(i=>i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup))
                 {
                     column += 18;
-                    string airbaseText = null;
-                    if (activeTile.Fortress) airbaseText = "Fortress";
-                    if (activeTile.Airbase) airbaseText = "Airbase";
+                    var airbaseText = string.Join(", ",
+                        improvements.Where(i => i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup)
+                            .Select(i => i.Imp.Levels[i.Const.Level].Name));
                     Draw.Text(eGraphics, $"({airbaseText})", style.Font, style.FrontColor, new Point(5, column),
                         false,
                         false, style.BackColor, 1, 1);
                 }
 
                 // If pollution present
-                if (activeTile.Pollution)
+                var pollutionText = string.Join(", ",
+                    improvements.Where(i => i.Imp.Negative)
+                        .Select(i => i.Imp.Levels[i.Const.Level].Name));
+                if (!string.IsNullOrWhiteSpace(pollutionText))
                 {
                     column += 18;
-                    Draw.Text(eGraphics, "(Pollution)", style.Font, style.FrontColor, new Point(5, column), false,
+                    Draw.Text(eGraphics, $"({pollutionText})", style.Font, style.FrontColor, new Point(5, column), false,
                         false,
                         style.BackColor, 1, 1);
                 }
@@ -196,37 +206,33 @@ namespace EtoFormsUI.GameModes
             }
         }
 
-        public MovingPieces(Main main)
+        public void HandleKeyPress(Main main, KeyEventArgs e)
         {
+            var key = e.Key | e.Modifiers;
+            var order = main.Orders.OrderByDescending(o=>o.Status).FirstOrDefault(o=> o.ActivationCommand == key);
+            if (order != null)
+            {
+                order.ExecuteCommand();
+            }
+            else
+            {
+                if (!Actions.ContainsKey(e.Key)) return;
+                Actions[e.Key]();
+            }
+        }
+
+
+
+        public MovingPieces(Main main, Game game)
+        {
+            _game = game;
             Actions = new Dictionary<Keys, Action>
             {
                 {
-                    Keys.B, CityActions.CreateCityBuild((name) =>
+                    Keys.Enter, () =>
                     {
-                        var box = main.popupBoxList["NAMECITY"];
-                        if (box.Options is not null)
-                        {
-                            box.Text = box.Options;
-                            box.Options = null; 
-                        }
-                        var cityNameDialog = new Civ2dialog(main, main.popupBoxList["NAMECITY"],
-                            textBoxes: new List<TextBoxDefinition>
-                            {
-                                new()
-                                {
-                                    index = 0,
-                                    InitialValue = name,
-                                    Name = "CityName",
-                                    Width = 225
-                                }
-                            });
-                        cityNameDialog.ShowModal(main);
-                        return new BuildCityConfirmResult
-                        {
-                            Build = cityNameDialog.SelectedIndex != int.MinValue,
-                            Name = cityNameDialog.TextValues["CityName"]
-                        };
-                    })
+                        if (main.StatusPanel.WaitingAtEndOfTurn) main.StatusPanel.End_WaitAtEndOfTurn();
+                    }
                 },
 
                 {Keys.Keypad7, MovementFunctions.TryMoveNorthWest}, {Keys.Keypad8, MovementFunctions.TryMoveNorth},
@@ -250,27 +256,6 @@ namespace EtoFormsUI.GameModes
                         _game.ChooseNextUnit();
                     }
                 },
-                {Keys.F, () =>
-                    {
-                        if (_game.ActiveUnit.AIrole != AIroleType.Settle)
-                        {
-                            _game.ActiveUnit.Order = OrderType.Fortify;
-                        }
-                        else
-                        {
-                            if (_game.ActiveUnit.BuildFortress())
-                            {
-                                _game.CheckConstruction(_game.ActiveUnit.CurrentLocation, OrderType.BuildFortress);   
-                                _game.ChooseNextUnit();
-                            }
-                            else
-                            {
-                                return;
-                            }
-                        }
-                        _game.ChooseNextUnit();
-                    }
-                }
             };
         }
     }

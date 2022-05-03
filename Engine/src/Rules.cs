@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
@@ -59,5 +58,7 @@ namespace Civ2engine
                     .Concat(Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
             }
         }
+
+        public List<TerrainImprovement> TerrainImprovements { get; } = new List<TerrainImprovement>();
     }
 }

@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using Civ2engine.Statistics;
-using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
 
 namespace Civ2engine
 {
-    public partial class Game : BaseInstance
+    public partial class Game
     {
         public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
@@ -35,7 +35,7 @@ namespace Civ2engine
             
             if(TurnNumber < 16) return;
             
-            TurnBeginning(AI);
+            TurnBeginning(Players[0]);
             
             //Pick a random tile if valid for barbarians raise horde
             
@@ -78,19 +78,19 @@ namespace Civ2engine
 
                 if (_activeCiv.Alive)
                 {
-                    TurnBeginning(Players[_activeCiv.PlayerType]);
+                    TurnBeginning(Players[_activeCiv.Id]);
                     
-                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn));
+                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
 
 
                     if (_activeCiv.PlayerType == PlayerType.AI)
                     {
-                        AITurn();
+                        AiTurn();
                     }
                     else
                     {
                         // Choose next unit
-                        ChooseNextUnit(true);
+                        ChooseNextUnit();
                     }
 
                 }
@@ -101,7 +101,7 @@ namespace Civ2engine
             }
         }
 
-        private void AITurn()
+        private void AiTurn()
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
             {

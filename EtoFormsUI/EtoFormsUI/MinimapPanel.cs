@@ -4,6 +4,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using System.Diagnostics;
 
 namespace EtoFormsUI
@@ -74,7 +75,7 @@ namespace EtoFormsUI
                 int clickedX = (int)e.Location.X;
                 int clickedY = (int)e.Location.Y;
                 // Determine if you clicked within the drawn minimap
-                if (clickedX >= offset[0] && clickedX < offset[0] + 2 * Map.XDim && clickedY >= offset[1] && clickedY < offset[1] + Map.YDim)
+                if (clickedX >= offset[0] && clickedX < offset[0] + Map.XDimMax && clickedY >= offset[1] && clickedY < offset[1] + Map.YDim)
                 {
                     OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, new int[] { clickedX - offset[0], clickedY - offset[1] }));
                 }

@@ -2,6 +2,8 @@
 {
     public enum PlayerEventType
     {
-        NewTurn = 0
+        NewTurn = 0,
+        TurnEnded = 1,
+        WaitingAtEndOfTurn = 2,
     }
 }

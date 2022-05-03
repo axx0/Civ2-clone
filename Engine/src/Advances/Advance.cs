@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Civ2engine.Enums;
 
 namespace Civ2engine.Advances

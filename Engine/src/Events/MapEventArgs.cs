@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using Civ2engine.Enums;
-using Civ2engine.Terrains;
+using Civ2engine.MapObjects;
 
 namespace Civ2engine.Events
 {

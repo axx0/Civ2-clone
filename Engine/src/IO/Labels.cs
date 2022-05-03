@@ -14,6 +14,21 @@ namespace Civ2engine
         {
             return Items[(int)index];
         }
+        
+        public static string For(LabelIndex index, params string[] strings)
+        {
+            var label = Items[(int)index];
+            for (int i = 0; i < strings.Length; i++)
+            {
+                var rep = "%STRING" + i;
+                if (label.Contains(rep))
+                {
+                    label = label.Replace(rep, strings[i]);
+                }
+            }
+
+            return label.Split("|")[0];
+        }
 
         private static string _currentPath;
         

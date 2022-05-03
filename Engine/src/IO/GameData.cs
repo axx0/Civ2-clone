@@ -1,6 +1,4 @@
 ﻿using Civ2engine.Enums;
-using System.Collections.Generic;
-using Civ2engine.Units;
 
 namespace Civ2engine
 {

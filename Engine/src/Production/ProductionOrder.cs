@@ -1,5 +1,3 @@
-using Civ2engine.Enums;
-
 namespace Civ2engine.Production
 {
     public abstract class ProductionOrder

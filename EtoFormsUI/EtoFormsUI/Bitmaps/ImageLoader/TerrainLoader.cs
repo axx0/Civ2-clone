@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
+using Civ2engine.Improvements;
+using Civ2engine.Terrains;
 using Eto.Drawing;
 using EtoFormsUIExtensionMethods;
 
@@ -115,18 +117,48 @@ namespace EtoFormsUI.ImageLoader
             }
 
             // Road & railroad
-            terrain.Road = new Bitmap[9];
-            terrain.Railroad = new Bitmap[9];
+            terrain.ImprovementsMap = new Dictionary<int, ImprovementGraphic>();
+
+            var roadGraphics = new ImprovementGraphic
+            {
+                Levels = new Bitmap[2,9]
+            };
+        
+
+            terrain.ImprovementsMap.Add(ImprovementTypes.Road, roadGraphics);
+            
             for (var i = 0; i < 9; i++)
             {
-                terrain.Road[i] = tileData.Clone(new Rectangle(i + 1 + (i * 64), 364, 64, 32));
-                terrain.Railroad[i] = tileData.Clone(new Rectangle(i + 1 + (i * 64), 397, 64, 32));
+                roadGraphics.Levels[0,i] = tileData.Clone(new Rectangle(i + 1 + (i * 64), 364, 64, 32));
+                roadGraphics.Levels[1,i] = tileData.Clone(new Rectangle(i + 1 + (i * 64), 397, 64, 32));
             }
 
-            terrain.Irrigation = tileData.Clone(new Rectangle(456, 100, 64, 32));
-            terrain.Farmland = tileData.Clone(new Rectangle(456, 133, 64, 32));
-            terrain.Mining = tileData.Clone(new Rectangle(456, 166, 64, 32));
-            terrain.Pollution = tileData.Clone(new Rectangle(456, 199, 64, 32));
+            terrain.ImprovementsMap.Add(ImprovementTypes.Irrigation, new ImprovementGraphic
+            {
+                Levels = new[,]
+                {
+                    { tileData.Clone(new Rectangle(456, 100, 64, 32)) },
+                    { tileData.Clone(new Rectangle(456, 133, 64, 32)) }
+                }
+            });
+            
+            terrain.ImprovementsMap[ImprovementTypes.Mining] = new ImprovementGraphic
+                { Levels = new[,] { { tileData.Clone(new Rectangle(456, 166, 64, 32)) } } };
+            
+            terrain.ImprovementsMap[ImprovementTypes.Pollution]= new ImprovementGraphic
+                { Levels = new[,] { { tileData.Clone(new Rectangle(456, 199, 64, 32)) } } };
+            
+            terrain.ImprovementsMap[ImprovementTypes.Fortress] =new ImprovementGraphic
+            { Levels = new[,] { { MapImages.Specials[1] }}};
+
+            // Airbase
+            terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
+            {
+                Levels = new[,] { { MapImages.Specials[2] } },
+                UnitLevels = new[,] {  { MapImages.Specials[3] } }
+            };
+            
+            
             terrain.GrasslandShield = tileData.Clone(new Rectangle(456, 232, 64, 32));
 
             return terrain;
@@ -153,4 +185,10 @@ namespace EtoFormsUI.ImageLoader
             return ditherMaps;
         }
     }
-}
+
+    public class ImprovementGraphic
+    {
+        public Bitmap[,] Levels { get; set; }
+        public Bitmap[,] UnitLevels { get; set; }
+    }
+}   

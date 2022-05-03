@@ -15,6 +15,7 @@ using Civ2engine.Units;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
+using Menu = Eto.Forms.Menu;
 
 namespace EtoFormsUI.Initialization
 {
@@ -67,6 +68,7 @@ namespace EtoFormsUI.Initialization
         internal static bool StartPreMade(Main mainForm, Ruleset ruleset, string mapFileName)
         {
             Labels.UpdateLabels(ruleset);
+            MenuLoader.LoadMenus(ruleset);
             CityLoader.LoadCities(ruleset);
             var config = new GameInitializationConfig {RuleSet = ruleset};
             config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
@@ -145,6 +147,7 @@ namespace EtoFormsUI.Initialization
             else
             {
                 Labels.UpdateLabels(config.RuleSet);
+                MenuLoader.LoadMenus(config.RuleSet);
                 CityLoader.LoadCities(config.RuleSet);
 
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
@@ -763,8 +766,9 @@ namespace EtoFormsUI.Initialization
             }
 
             var maps = config.MapTask.Result;
-            
-            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), new LocalPlayer(mainForm));
+
+            mainForm.CurrentPlayer = new LocalPlayer(mainForm);
+            NewGameInitialisation.StartNewGame(config, maps, civilizations.OrderBy(c=>c.Id).ToList(), mainForm.CurrentPlayer);
             
             Images.LoadGraphicsAssetsFromFiles(config.RuleSet, config.Rules);
             mainForm.popupBoxList = config.PopUps;

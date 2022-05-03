@@ -21,10 +21,7 @@ namespace EtoFormsUI
         private bool eotWhite; // End of turn text color is white?
         private readonly UITimer timer;
 
-        public bool WaitingAtEndOfTurn =>
-            Game.GetPlayerCiv == Game.GetActiveCiv &&
-            !Game.GetActiveCiv.AnyUnitsAwaitingOrders &&
-            Game.Options.AlwaysWaitAtEndOfTurn;
+        public bool WaitingAtEndOfTurn { get; set; }
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
@@ -222,11 +219,6 @@ namespace EtoFormsUI
                     unitPanel.Invalidate();
                     break;
                 }
-                case MapEventType.WaitAtEndOfTurn:
-                {
-                    timer.Start();
-                    break;
-                }
                 default: break;
             }
         }
@@ -240,7 +232,12 @@ namespace EtoFormsUI
                     unitPanel.Invalidate();
                     break;
                 }
-                default: break;
+                case PlayerEventType.WaitingAtEndOfTurn:
+                {
+                    WaitingAtEndOfTurn = true;
+                    timer.Start();
+                    break;
+                }
             }
         }
 
@@ -250,15 +247,7 @@ namespace EtoFormsUI
             {
                 // Unit movement animation event was raised
                 case UnitEventType.MoveCommand:
-                {
-                    unitPanel.Invalidate();
-                    break;
-                }
                 case UnitEventType.StatusUpdate:
-                {
-                    unitPanel.Invalidate();
-                    break;
-                }
                 case UnitEventType.NewUnitActivated:
                 {
                     unitPanel.Invalidate();
@@ -272,7 +261,11 @@ namespace EtoFormsUI
         public void End_WaitAtEndOfTurn()
         {
             timer.Stop();
-            Game.ChoseNextCiv();
+            WaitingAtEndOfTurn = false;
+            if (Game.ProcessEndOfTurn())
+            {
+                Game.ChoseNextCiv();
+            }
         }
     }
 }

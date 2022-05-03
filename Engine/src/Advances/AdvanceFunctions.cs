@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using Civ2engine.Production;
-using Civ2engine.Statistics;
 
 namespace Civ2engine.Advances
 {
@@ -34,13 +32,14 @@ namespace Civ2engine.Advances
         
         public static bool HasAdvanceBeenDiscovered(this Game game, int advanceIndex, int byCiv = -1)
         {
+            return HasAdvanceBeenDiscovered(advanceIndex) &&
+                   (byCiv == -1 || game.AllCivilizations[byCiv].Advances[advanceIndex]);
+        }
+        
+        public static bool HasAdvanceBeenDiscovered(int advanceIndex)
+        {
             var research = _researched[advanceIndex];
-            if (byCiv > -1)
-            {
-                return research.Discovered && game.AllCivilizations[byCiv].Advances[advanceIndex];
-            }
-
-            return research.Discovered;
+            return _researched[advanceIndex].Discovered;
         }
 
         public static void GiveAdvance(this Game game, int advanceIndex, Civilization civilization)

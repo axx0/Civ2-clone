@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Civ2engine.Terrains;
+using Civ2engine.MapObjects;
 
 namespace Civ2engine
 {

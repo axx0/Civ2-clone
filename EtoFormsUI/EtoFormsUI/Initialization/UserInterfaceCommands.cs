@@ -19,5 +19,10 @@ namespace EtoFormsUI
             popup.ShowModal(_main);
             return Tuple.Create(popup.SelectedButton, popup.SelectedIndex, popup.CheckboxReturnStates);
         }
+
+        public void SavePopup(string key, PopupBox popup)
+        {
+            _main.popupBoxList.Add(key, popup);
+        }
     }
 }

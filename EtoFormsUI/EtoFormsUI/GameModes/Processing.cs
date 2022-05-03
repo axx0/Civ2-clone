@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Civ2engine;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
 using Eto.Drawing;
@@ -11,9 +12,8 @@ namespace EtoFormsUI.GameModes
 {
     public class Processing : IGameMode
     {
-        public bool Init(IGameMode previous, Game game)
+        public bool Activate(IGameMode previous, IPlayer currentPlayer)
         {
-            ActiveTile = previous.ActiveTile;
             return true;
         }
 
@@ -33,9 +33,18 @@ namespace EtoFormsUI.GameModes
             return null;
         }
 
-        public Tile ActiveTile { get; set; }
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle panelStyle, int unitPanelHeight)
         {
+        }
+
+        public void HandleKeyPress(Main eventArgs, KeyEventArgs keyEventArgs)
+        {
+            // Cannot press keys while processing
+        }
+
+        public void HandleCommand(Command command)
+        {
+            
         }
     }
 }

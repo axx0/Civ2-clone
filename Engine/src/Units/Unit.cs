@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
+using Civ2engine.MapObjects;
+using Civ2engine.Production;
 using Civ2engine.Terrains;
 
 namespace Civ2engine.Units
 {
-    public class Unit : BaseInstance, IUnit
+    public class Unit: IUnit
     {
         private Tile _currentLocation;
         private bool _dead;
@@ -49,23 +51,23 @@ namespace Civ2engine.Units
             return af;
         }
 
-        public int DefenseFactor(Unit attackingUnit, City cityHere)
+        public int DefenseFactor(Unit attackingUnit, Tile tile, int groundDefMultiplier)
         {
             //Carried units cannot be the defender
             if (InShip != null) return 0;
             
             // Base defense factor from RULES
-            double DF = (double)DefenseBase;
+            decimal DF = DefenseBase;
 
             // Bonus for veteran units
-            if (Veteran) DF *= 1.5;
+            if (Veteran) DF *= 1.5m;
 
             // City walls bonus (applies only to land units)
-            if (cityHere != null && cityHere.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !attackingUnit.NegatesCityWalls) DF *= 3;
+            if (tile.CityHere != null && tile.CityHere.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !attackingUnit.NegatesCityWalls) DF *= 3;
             // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
-            else if (Map.TileC2(X, Y).Fortress && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF *= 2;
+            else if (groundDefMultiplier != 0 && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF += DF * groundDefMultiplier / 100;
             // Fortified bonus
-            else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5;
+            else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5m;
 
             // Helicopters are vulnerable to anti air
             if (Domain == UnitGAS.Air && FuelRange == 0 && attackingUnit.CanAttackAirUnits)
@@ -73,7 +75,7 @@ namespace Civ2engine.Units
                 DF /= 2;
             }
 
-            if (cityHere != null)
+            if (tile.CityHere != null)
             {
                 if (Domain == UnitGAS.Air && FuelRange == 1 && attackingUnit.Domain == UnitGAS.Air)
                 {
@@ -90,21 +92,21 @@ namespace Civ2engine.Units
                 else
                 {
                     // Effect of SAM batteries (only when attacked from air)
-                    if (cityHere.ImprovementExists(ImprovementType.SAMbattery) &&
+                    if (tile.CityHere.ImprovementExists(ImprovementType.SAMbattery) &&
                         attackingUnit.Domain == UnitGAS.Air) DF *= 2;
                 }
 
                 // Effect of SDI
-                if (cityHere.ImprovementExists(ImprovementType.SDIdefense) &&
+                if (tile.CityHere.ImprovementExists(ImprovementType.SDIdefense) &&
                     attackingUnit.Type == UnitType.CruiseMsl) DF *= 2;
 
                 // Effect of coastal fortress
-                if (cityHere.ImprovementExists(ImprovementType.CoastalFort) &&
+                if (tile.CityHere.ImprovementExists(ImprovementType.CoastalFort) &&
                     attackingUnit.Domain == UnitGAS.Sea) DF *= 2;
             }
 
             // Effect of terrain
-            DF *= Map.TileC2(X, Y).Defense;
+            DF *= tile.Defense;
 
             return (int)DF;
         }
@@ -162,7 +164,7 @@ namespace Civ2engine.Units
         public int MovementCounter { get; set; }
 
         public int[] PrevXY { get; set; }   // XY position of unit before it moved
-        public int[] PrevXYpx => new int[] { PrevXY[0] * Map.Xpx, PrevXY[1] * Map.Ypx };
+        public int[] PrevXYpx => new int[] { PrevXY[0] * CurrentLocation.Map.Xpx, PrevXY[1] * CurrentLocation.Map.Ypx };
 
 
         public bool TurnEnded => MovePoints <= 0 ||
@@ -172,7 +174,7 @@ namespace Civ2engine.Units
                                          .BuildFortress or OrderType.BuildMine;
     
 
-        public bool AwaitingOrders => !TurnEnded && (Order is OrderType.NoOrders or OrderType.GoTo);
+        public bool AwaitingOrders => !TurnEnded && !Dead && (Order is OrderType.NoOrders or OrderType.GoTo);
 
         public void SkipTurn()
         {
@@ -183,19 +185,6 @@ namespace Civ2engine.Units
         public void Fortify()
         {
             Order = OrderType.Fortify;
-        }
-
-        public void BuildIrrigation()
-        {
-            if (TypeDefinition.IsSettler && Map.Tile[X, Y].CanBeIrrigated)
-            {
-                Order = OrderType.BuildIrrigation;
-                Counter = 0;    //reset counter
-            }
-            else
-            {
-                //Warning!
-            }
         }
 
         public void Sleep()
@@ -236,20 +225,20 @@ namespace Civ2engine.Units
 
         public bool NeedsSupport { get; set; } = true;
 
-        public bool BuildFortress()
-        {
-            if (CurrentLocation.IsCityPresent || CurrentLocation.Fortress || CurrentLocation.Type == TerrainType.Ocean ) return false;
-
-            Order = OrderType.BuildFortress;
-
-            ProcessOrder();
-            return true;
-        }
-
         public void ProcessOrder()
         {
             Counter += TypeDefinition.WorkRate;
             MovePointsLost = MovePoints;
         }
+
+        public void Build(TerrainImprovement improvement)
+        {
+            Building = improvement.Id;
+            ProcessOrder();
+            // This is a cludge but it will work for now
+            Order = (OrderType)improvement.Id;
+        }
+
+        public int Building { get; set; }
     }
 }

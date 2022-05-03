@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
+using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 
@@ -28,12 +29,12 @@ namespace Civ2engine.UnitActions.Move
             {
                 return;
             }
-            if (game.ActiveUnit.X < game.CurrentMap.XDim*2-2)
+            if (game.ActiveUnit.X < game.CurrentMap.XDimMax-2)
             {
                 MoveC2(1, -1);
             }else if (!game.Options.FlatEarth)
             {
-                MoveC2(-game.CurrentMap.XDim*2 +2 , -1);
+                MoveC2(-game.CurrentMap.XDimMax +2 , -1);
             }
 
             CheckForUnitTurnEnded(game);
@@ -50,12 +51,12 @@ namespace Civ2engine.UnitActions.Move
         public static void TryMoveEast()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.X < instance.CurrentMap.XDim *2 -2)
+            if (instance.ActiveUnit.X < instance.CurrentMap.XDimMax -2)
             {
                 MoveC2(2, 0);
             }else if (!instance.Options.FlatEarth)
             {
-                MoveC2(-instance.CurrentMap.XDim*2 +2 , 0);
+                MoveC2(-instance.CurrentMap.XDimMax +2 , 0);
             }
             CheckForUnitTurnEnded(instance);
         }
@@ -65,13 +66,13 @@ namespace Civ2engine.UnitActions.Move
             var instance = Game.Instance;
             if (instance.ActiveUnit.Y < instance.CurrentMap.YDim - 1)
             {
-                if (instance.ActiveUnit.X < instance.CurrentMap.XDim * 2 - 1)
+                if (instance.ActiveUnit.X < instance.CurrentMap.XDimMax - 1)
                 {
                     MoveC2(1, 1);
                 }
                 else if (!instance.Options.FlatEarth)
                 {
-                    MoveC2(-instance.CurrentMap.XDim * 2 + 2, 1);
+                    MoveC2(-instance.CurrentMap.XDimMax + 2, 1);
                 }
 
             }
@@ -99,7 +100,7 @@ namespace Civ2engine.UnitActions.Move
                 }
                 else if (!instance.Options.FlatEarth)
                 {
-                    MoveC2(instance.CurrentMap.XDim * 2 - 2, 1);
+                    MoveC2(instance.CurrentMap.XDimMax - 2, 1);
                 }
             }
             CheckForUnitTurnEnded(instance);
@@ -114,7 +115,7 @@ namespace Civ2engine.UnitActions.Move
             }
             else if(!instance.Options.FlatEarth)
             {
-                MoveC2(instance.CurrentMap.XDim*2-2, 0);
+                MoveC2(instance.CurrentMap.XDimMax-2, 0);
             }
             CheckForUnitTurnEnded(instance);
         }
@@ -130,7 +131,7 @@ namespace Civ2engine.UnitActions.Move
                 }
                 else if (!instance.Options.FlatEarth)
                 {
-                    MoveC2(instance.CurrentMap.XDim * 2 - 1, -1);
+                    MoveC2(instance.CurrentMap.XDimMax - 1, -1);
                 }
             }
             CheckForUnitTurnEnded(instance);
@@ -212,10 +213,11 @@ namespace Civ2engine.UnitActions.Move
 
             // Primary defender is the unit with largest defense factor
             var defender = tile.UnitsHere[0];
-            var defenseFactor = defender.DefenseFactor(attacker, tile.CityHere);
+            var groundDefenceFactor = tile.EffectsList.Where(e => e.Target == ImprovementConstants.GroundDefence).Sum(e=>e.Value);
+            var defenseFactor = defender.DefenseFactor(attacker, tile, groundDefenceFactor);
             for (var i = 1; i < tile.UnitsHere.Count; i++)
             {
-                var altDefenseFactor = tile.UnitsHere[i].DefenseFactor(attacker, tile.CityHere);
+                var altDefenseFactor = tile.UnitsHere[i].DefenseFactor(attacker, tile, groundDefenceFactor);
                 if (altDefenseFactor > defenseFactor)
                 {
                     defender = tile.UnitsHere[i];
@@ -285,7 +287,7 @@ namespace Civ2engine.UnitActions.Move
             {
                 attacker.MovePointsLost += game.Rules.Cosmic.MovementMultiplier;
                 // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
-                if (tile.CityHere != null || tile.Fortress || tile.Airbase)
+                if (tile.CityHere != null || tile.EffectsList.Any(e=>e.Target == ImprovementConstants.NoStackElimination))
                 {
                     defender.Dead = true;
                     //_casualties.Add(defender);
@@ -324,12 +326,15 @@ namespace Civ2engine.UnitActions.Move
 
             if (UnitMoved(game, unit, tileTo, tileFrom))
             {
+                game.ActiveTile = tileTo;
                 var neighbours = game.CurrentMap.Neighbours(tileTo).Where(n => !n.Visibility[unit.Owner.Id]).ToList();
                 if (neighbours.Count > 0)
                 {
                     neighbours.ForEach(n => n.Visibility[unit.Owner.Id] = true);
                     game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
                 }
+                
+                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
         }
 
@@ -360,25 +365,29 @@ namespace Civ2engine.UnitActions.Move
                         break;
                     }
 
+                    moveCost *= tileTo.MoveCost;
+                    foreach (var movementEffect in tileFrom.EffectsList.Where(e =>
+                                 e.Target == ImprovementConstants.Movement)
+                            )
+                    {
+                        var matchingEffect = tileTo.EffectsList.FirstOrDefault(e =>
+                            e.Source == movementEffect.Source && e.Target == ImprovementConstants.Movement);
+                        if (matchingEffect == null) continue;
 
-                    if (isCity || tileTo.Railroad)
-                    {
-                        if (tileFrom.Railroad)
+                        if (matchingEffect.Level < movementEffect.Level)
                         {
-                            moveCost = cosmicRules.RailroadMovement;
+                            if (matchingEffect.Value < moveCost)
+                            {
+                                moveCost = matchingEffect.Value;
+                            }
                         }
-                        else if (tileFrom.Road)
+                        else
                         {
-                            moveCost = cosmicRules.RoadMovement;
+                            if (movementEffect.Value < moveCost)
+                            {
+                                moveCost = movementEffect.Value;
+                            }
                         }
-                    }
-                    else if (tileTo.Road && (tileFrom.Road || tileFrom.IsCityPresent || tileFrom.Railroad))
-                    {
-                        moveCost = cosmicRules.RoadMovement;
-                    }
-                    else
-                    {
-                        moveCost *= tileTo.MoveCost;
                     }
 
                     // If alpine movement could be less use that
@@ -453,7 +462,7 @@ namespace Civ2engine.UnitActions.Move
                         unit.InShip = null;
                     }
 
-                    if (tileTo.Airbase || tileTo.IsCityPresent)
+                    if (tileTo.EffectsList.Any(e=>e.Target == ImprovementConstants.Airbase) || tileTo.IsCityPresent)
                     {
                         moveCost = unit.MovePoints;
                     }
@@ -514,8 +523,6 @@ namespace Civ2engine.UnitActions.Move
                 {
                     unit.Order = OrderType.NoOrders;
                 }
-
-                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
 
             return unitMoved;

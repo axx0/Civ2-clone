@@ -1,10 +1,9 @@
 using System;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks.Sources;
 using Civ2engine.Improvements;
+using Civ2engine.MapObjects;
 using Civ2engine.Scripting.UI;
-using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 // ReSharper disable UnusedMember.Global
@@ -22,7 +21,7 @@ namespace Civ2engine.Scripting
             _game = game;
             ui = new UIScripts(uInterfaceCommands, log);
             scen = new ScenarioHooks(game);
-            core = new AxxExtensions(game);
+            core = new AxxExtensions(game, log);
         }
         
         public AxxExtensions core { get; }
@@ -45,6 +44,11 @@ namespace Civ2engine.Scripting
         public Improvement getImprovement(int index)
         {
             return _game.Rules.Improvements[index];
+        }
+
+        public Tech getTech(int index)
+        {
+            return new Tech(_game.Rules.Advances,index);
         }
     }
 }

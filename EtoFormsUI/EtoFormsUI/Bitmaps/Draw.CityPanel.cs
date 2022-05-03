@@ -396,14 +396,15 @@ namespace EtoFormsUI
 //            int[,] offsets = new int[21, 2] { { 0, 0 }, { -1, -3 }, { -3, -1 }, { -3, 1 }, { -1, 3 }, { 1, 3 }, { 3, 1 }, { 3, -1 }, { 1, -3 }, { -2, -2 }, { -2, 2 }, { 2, 2 }, { 2, -2 }, { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }, { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 } };    // Offset of squares from city (0,0)
             
             var organization = city.OrganizationLevel;
-            var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
-            var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
+            //
+            // var hasSupermarket = city.ImprovementExists(ImprovementType.Supermarket);
+            // var hasSuperhighways = city.ImprovementExists(ImprovementType.Superhighways);
             
             foreach (var tile in city.WorkedTiles)
             {
-                var food = tile.GetFood(organization == 0, hasSupermarket);
+                var food = tile.GetFood(organization == 0);
                 var shields = tile.GetShields(organization == 0);
-                var trade = tile.GetTrade(organization, hasSuperhighways);
+                var trade = tile.GetTrade(organization);
                 var spacing = (food + shields+trade) switch
                 {
                     1 => 11,

@@ -1,6 +1,7 @@
 ﻿using EtoFormsUIExtensionMethods;
 using Eto.Drawing;
 using Civ2engine;
+using Civ2engine.MapObjects;
 
 namespace EtoFormsUI
 {

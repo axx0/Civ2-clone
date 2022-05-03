@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
