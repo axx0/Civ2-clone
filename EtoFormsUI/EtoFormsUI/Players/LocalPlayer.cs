@@ -35,7 +35,7 @@ namespace EtoFormsUI
         }
 
         private Unit _activeUnit;
-        private Civilization _civ;
+        public Civilization Civ { get; private set; }
         private Tile _activeTile;
 
         public Unit ActiveUnit
@@ -96,7 +96,7 @@ namespace EtoFormsUI
             var dialog = new Civ2dialog(_main, popup, new List<string> { "wise men" },
                 listbox: new ListboxDefinition { LeftText = researchPossibilities.Select(a => a.Name).ToList() });
             dialog.ShowModal();
-            _civ.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
+            Civ.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
         }
 
         public void CantProduce(City city, ProductionOrder newItem)
@@ -124,9 +124,11 @@ namespace EtoFormsUI
         }
 
         public IInterfaceCommands UI { get; }
+        public List<Unit> WaitingList { get; } = new ();
+
         public IPlayer SetCiv(Civilization civilization)
         {
-            _civ = civilization;
+            Civ = civilization;
             ActiveTile = civilization.Units.FirstOrDefault(u => u.Order == OrderType.NoOrders)?.CurrentLocation ??
                          civilization.Cities.FirstOrDefault()?.Location;
             return this;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
@@ -18,6 +19,8 @@ namespace EtoFormsUI
         {
             var rules = RulesParser.ParseRules(ruleset);
             CityLoader.LoadCities(ruleset);
+            
+            MenuLoader.LoadMenus(ruleset);
             // Read SAV file & RULES.txt
             CurrentPlayer = new LocalPlayer(this);
 
@@ -92,12 +95,23 @@ namespace EtoFormsUI
         
         private void SetupOrders(Game instance)
         {
-            var improvements = instance.TerrainImprovements;
+            var improvements = instance.TerrainImprovements.Values;
 
-            Orders = improvements.Select(i =>  new ImprovementOrder(i, this, instance).Update(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit)).ToList();
+            var orderText = MenuLoader.For("ORDERS");
+
+            Orders = improvements.Select(i =>
+                new ImprovementOrder(i, this, instance, orderText.FirstOrDefault(mi => string.Equals(mi.Shortcut, i.Shortcut, StringComparison.InvariantCultureIgnoreCase)))).Cast<Order>()
+                   .ToList();
             
+            Orders.Add(new BuildCity(this, orderText.First(mi=> mi.Shortcut == "b").MenuText, instance));
+            Orders.Add(new PillageOrder(this, orderText.First(mi=>mi.Shortcut == "Shift+P").MenuText,instance));
+            Orders.Add(new FortifyOrder(this, orderText.Last(mi => mi.Shortcut == "f").MenuText, instance));
+            Orders.Add(new SkipOrder(this, orderText.First(mi => mi.Shortcut == "SPACE").MenuText, instance));
+            Orders.Add(new WaitOrder(this, orderText.First(mi => mi.Shortcut == "w").MenuText, instance));
+            Orders.Add(new UnloadOrder(this, orderText.First(mi => mi.Shortcut == "u").MenuText));
+            Orders.Add(new SleepOrder(this, orderText.First(mi => mi.Shortcut == "s").MenuText, instance));
 
-            var groupedOrders = Orders.GroupBy(o => o.Group);
+            var groupedOrders = Orders.Select(o=>o.Update(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit)).GroupBy(o => o.Group);
 
             foreach (var groupedOrder in groupedOrders)
             {
@@ -105,34 +119,56 @@ namespace EtoFormsUI
                 {
                     _ordersMenu.Items.Add(new SeparatorMenuItem());
                 }
-                _ordersMenu.Items.AddRange(groupedOrder.Select(o=>o.Command));
+                _ordersMenu.Items.AddRange(groupedOrder.OrderBy(o=>o.ActivationCommand).Select(o=>o.Command));
             }
             
+            // &Orders
+            //     &Build New City|b
+            // Build &Road|r
+            // Build &Irrigation|i
+            // Build &Mines|m
+            // Transform to ...|o
+            // Build &Airbase|e
+            // Build &Fortress|f
+            // Automate Settler|k
+            // Clean Up &Pollution|p
+            //     &Pillage|Shift+P
+            //     &Unload|u
+            //     &Go To|g
+            //     &Paradrop|p
+            // Air&lift|l
+            //     &Set &Home City|h
+            //     &Fortify|f
+            //     &Sleep|s
+            //     &Disband|Shift+D
+            //     &Activate Unit|a
+            //     &Wait|w
+            // S&kip Turn|SPACE
+            // End Player Tur&n|Ctrl+N
             
             // var BuildRoadCommand = new Command { MenuText = "Build Road", Shortcut = Keys.R };
             // var BuildIrrigationCommand = new Command { MenuText = "Build Irrigation", Shortcut = Keys.I };
             // var BuildMinesCommand = new Command { MenuText = "Build Mines", Shortcut = Keys.M };
-            var CleanPollutionCommand = new Command { MenuText = "Clean Up Pollution", Shortcut = Keys.P };
-            var PillageCommand = new Command { MenuText = "Pillage", Shortcut = Keys.Shift | Keys.P };
-            var UnloadCommand = new Command { MenuText = "Unload", Shortcut = Keys.U };
+            //var CleanPollutionCommand = new Command { MenuText = "Clean Up Pollution", Shortcut = Keys.P };
+            //var PillageCommand = new Command { MenuText = "Pillage", Shortcut = Keys.Shift | Keys.P };
+            //var UnloadCommand = new Command { MenuText = "Unload", Shortcut = Keys.U };
             var GoToCommand = new Command { MenuText = "Go To", Shortcut = Keys.G };
             var ParadropCommand = new Command { MenuText = "Paradrop", Shortcut = Keys.P };
             var AirliftCommand = new Command { MenuText = "Airlift", Shortcut = Keys.L };
             var GoHomeToNearestCityCommand = new Command { MenuText = "Go Home To Nearest City", Shortcut = Keys.H };
-            var FortifyCommand = new Command { MenuText = "Fortify", Shortcut = Keys.F };
-            var SleepCommand = new Command { MenuText = "Sleep", Shortcut = Keys.S };
+            //var FortifyCommand = new Command { MenuText = "Fortify", Shortcut = Keys.F };
+            //var SleepCommand = new Command { MenuText = "Sleep", Shortcut = Keys.S };
             var DisbandCommand = new Command { MenuText = "Disband", Shortcut = Keys.Shift | Keys.D };
             var ActivateUnitCommand = new Command { MenuText = "Activate Unit", Shortcut = Keys.A };
-            var WaitCommand = new Command { MenuText = "Wait", Shortcut = Keys.W };
-            var SkipTurnCommand = new Command { MenuText = "Skip Turn", Shortcut = Keys.Space };
+           // var WaitCommand = new Command { MenuText = "Wait", Shortcut = Keys.W };
+            //var SkipTurnCommand = new Command { MenuText = "Skip Turn", Shortcut = Keys.Space };
             var EndPlayerTurn = new Command { MenuText = "End Player Turn", Shortcut = Keys.Control | Keys.N };
 
             _ordersMenu.Items.AddRange( new MenuItem[]
-            {
-                new SeparatorMenuItem(),
-                CleanPollutionCommand, PillageCommand, new SeparatorMenuItem(), UnloadCommand, GoToCommand,
-                ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand, FortifyCommand, SleepCommand,
-                new SeparatorMenuItem(), DisbandCommand, ActivateUnitCommand, WaitCommand, SkipTurnCommand,
+            { 
+                new SeparatorMenuItem(), GoToCommand,
+                ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand,
+                new SeparatorMenuItem(), DisbandCommand, ActivateUnitCommand,
                 new SeparatorMenuItem(), EndPlayerTurn
             });
         }

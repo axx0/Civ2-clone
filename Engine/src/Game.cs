@@ -142,7 +142,7 @@ namespace Civ2engine
             get { return _maxDistance ??= ComputeMaxDistance(); }
         }
 
-        public IList<TerrainImprovement> TerrainImprovements { get; set; }
+        public IDictionary<int,TerrainImprovement> TerrainImprovements { get; set; }
 
         private double ComputeMaxDistance()
         {
@@ -162,6 +162,44 @@ namespace Civ2engine
         {
             var order = Rules.Orders.FirstOrDefault(t => t.Type == unitOrder);
             return order != null ? order.Name : string.Empty;
+        }
+
+        public void SetImprovementsForCity(City city)
+        {
+            city.Location.Improvements.Clear();
+            BuildImprovementsList(city.Location.Improvements, city.Owner);
+        }
+        
+        public void SetImprovementsForCities(Civilization civilization)
+        {
+            var improvements = new List<ConstructedImprovement>();
+            BuildImprovementsList(improvements, civilization);
+            foreach (var city in civilization.Cities)
+            {
+                city.Location.Improvements.Clear();
+                city.Location.Improvements.AddRange(improvements.Select(i=> new ConstructedImprovement(i)));
+            }
+        }
+
+        private void BuildImprovementsList(List<ConstructedImprovement> improvements, Civilization owner)
+        {
+            foreach (var improvement in TerrainImprovements.Values.Where(i => i.AllCitys))
+            {
+                int level = -1;
+                for (var i = 0; i < improvement.Levels.Count; i++)
+                {
+                    if (AdvanceFunctions.HasTech(owner, improvement.Levels[i].RequiredTech))
+                    {
+                        level = i;
+                    }
+                }
+
+                if (level != -1)
+                {
+                    improvements.Add(new ConstructedImprovement
+                        { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = level });
+                }
+            }
         }
     }
 }

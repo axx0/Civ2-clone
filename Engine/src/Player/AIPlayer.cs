@@ -27,6 +27,8 @@ namespace Civ2engine
         public Tile ActiveTile { get; set; }
         public Unit ActiveUnit { get; set; }
 
+        public List<Unit> WaitingList { get; }
+
         public void CivilDisorder(City city)
         {
         }

@@ -1,4 +1,6 @@
+using Civ2engine;
 using Civ2engine.Enums;
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
@@ -8,8 +10,11 @@ namespace EtoFormsUI.Players.Orders
 {
     public class FortifyOrder : Order
     {
-        public FortifyOrder(Main mainForm, string defaultLabel, int @group) : base(mainForm, Keys.F, defaultLabel, @group)
+        private readonly Game _game;
+
+        public FortifyOrder(Main mainForm, string defaultLabel, Game game) : base(mainForm, Keys.F, defaultLabel, 2)
         {
+            _game = game;
         }
 
         public override Order Update(Tile activeTile, Unit activeUnit)
@@ -33,7 +38,9 @@ namespace EtoFormsUI.Players.Orders
 
         protected override void Execute(LocalPlayer player)
         {
-            throw new System.NotImplementedException();
+            player.ActiveUnit.Order = OrderType.Fortify;
+            player.ActiveUnit.MovePointsLost = player.ActiveUnit.MaxMovePoints;
+            _game.ChooseNextUnit();
         }
     }
 }

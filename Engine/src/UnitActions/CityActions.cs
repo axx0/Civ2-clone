@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
@@ -12,26 +11,7 @@ namespace Civ2engine.UnitActions
 {
     public static class CityActions 
     {
-        public static Action CreateCityBuild(Func<string, BuildCityConfirmResult> confirmCityBuild)
-        {
-            return () =>
-            {
-                var game = Game.Instance;
-                var unit = game.ActiveUnit;
-                if (!unit.TypeDefinition.CanBuildCities) return;
-
-                var tile = unit.CurrentLocation;
-                if (!tile.Terrain.CanHaveCity) return;
-                
-                var confirmed = confirmCityBuild(GetCityName(unit.Owner, game));
-                if (confirmed.Build)
-                {
-                    BuildCity(tile, unit, game, confirmed.Name);
-                }
-            };
-        }
-
-        private static string GetCityName(Civilization civ , Game game)
+        public static string GetCityName(Civilization civ , Game game)
         {
             var cityCount = game.History.TotalCitiesBuilt(civ.Id);
             var names = game.CityNames;
@@ -44,7 +24,7 @@ namespace Civ2engine.UnitActions
             return "Dummy Name";
         }
 
-        private static void BuildCity(Tile tile, Unit unit, Game game, string name)
+        public static void BuildCity(Tile tile, Unit unit, Game game, string name)
         {
             var city = new City
             {
@@ -60,6 +40,9 @@ namespace Civ2engine.UnitActions
             tile.CityHere = city;
             game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);
+
+            game.SetImprovementsForCity(city);
+            
             if (unit.Owner.Cities.Count == 1)
             {
                 var capitalImprovement = ProductionPossibilities.FindByEffect(city.Owner.Id, ImprovementEffect.Capital)
@@ -75,7 +58,7 @@ namespace Civ2engine.UnitActions
             }
             game.History.CityBuilt(tile.CityHere);
 
-            game.AutoAddDistributionWorkers(city);
+            city.AutoAddDistributionWorkers();
             city.CalculateOutput(city.Owner.Government, game);
 
             unit.Dead = true;

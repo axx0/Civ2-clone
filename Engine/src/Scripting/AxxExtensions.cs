@@ -46,7 +46,7 @@ namespace Civ2engine.Scripting
 
         public Rules rules => _game.Rules;
 
-        public IList<TerrainImprovement> TerrainImprovements => _game.TerrainImprovements;
+        public IDictionary<int, TerrainImprovement> TerrainImprovements => _game.TerrainImprovements;
     }
     
     public class UnitDomainMap

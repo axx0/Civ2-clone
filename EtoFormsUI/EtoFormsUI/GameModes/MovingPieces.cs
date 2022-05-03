@@ -125,7 +125,7 @@ namespace EtoFormsUI.GameModes
 
                 // If road/railroad/irrigation/farmland/mine present
                 var improvements = activeTile.Improvements.Select(c => new
-                    { Imp = _game.TerrainImprovements.First(i => i.Id == c.Improvement), Const = c }).ToList();
+                    { Imp = _game.TerrainImprovements[c.Improvement], Const = c }).ToList();
 
                 var improvementText = string.Join(", ",
                     improvements.Where(i => i.Imp.ExclusiveGroup != ImprovementTypes.DefenceGroup && !i.Imp.Negative)
@@ -209,7 +209,7 @@ namespace EtoFormsUI.GameModes
         public void HandleKeyPress(Main main, KeyEventArgs e)
         {
             var key = e.Key | e.Modifiers;
-            var order = main.Orders.FirstOrDefault(o=> o.ActivationCommand == key);
+            var order = main.Orders.OrderByDescending(o=>o.Status).FirstOrDefault(o=> o.ActivationCommand == key);
             if (order != null)
             {
                 order.ExecuteCommand();
@@ -219,12 +219,6 @@ namespace EtoFormsUI.GameModes
                 if (!Actions.ContainsKey(e.Key)) return;
                 Actions[e.Key]();
             }
-        }
-
-        public void HandleCommand(Command command)
-        {          
-            if (!Actions.ContainsKey(command.Shortcut)) return;
-            Actions[command.Shortcut]();
         }
 
 
@@ -239,33 +233,6 @@ namespace EtoFormsUI.GameModes
                     {
                         if (main.StatusPanel.WaitingAtEndOfTurn) main.StatusPanel.End_WaitAtEndOfTurn();
                     }
-                },{
-                    Keys.B, CityActions.CreateCityBuild((name) =>
-                    {
-                        var box = main.popupBoxList["NAMECITY"];
-                        if (box.Options is not null)
-                        {
-                            box.Text = box.Options;
-                            box.Options = null; 
-                        }
-                        var cityNameDialog = new Civ2dialog(main, main.popupBoxList["NAMECITY"],
-                            textBoxes: new List<TextBoxDefinition>
-                            {
-                                new()
-                                {
-                                    index = 0,
-                                    InitialValue = name,
-                                    Name = "CityName",
-                                    Width = 225
-                                }
-                            });
-                        cityNameDialog.ShowModal(main);
-                        return new BuildCityConfirmResult
-                        {
-                            Build = cityNameDialog.SelectedIndex != int.MinValue,
-                            Name = cityNameDialog.TextValues["CityName"]
-                        };
-                    })
                 },
 
                 {Keys.Keypad7, MovementFunctions.TryMoveNorthWest}, {Keys.Keypad8, MovementFunctions.TryMoveNorth},
@@ -289,15 +256,6 @@ namespace EtoFormsUI.GameModes
                         _game.ChooseNextUnit();
                     }
                 },
-                {Keys.F, () =>
-                    {
-                        if (_game.ActiveUnit.AIrole != AIroleType.Settle)
-                        {
-                            _game.ActiveUnit.Order = OrderType.Fortify;
-                        }
-                        _game.ChooseNextUnit();
-                    }
-                }
             };
         }
     }

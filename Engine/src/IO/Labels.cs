@@ -27,7 +27,7 @@ namespace Civ2engine
                 }
             }
 
-            return label;
+            return label.Split("|")[0];
         }
 
         private static string _currentPath;

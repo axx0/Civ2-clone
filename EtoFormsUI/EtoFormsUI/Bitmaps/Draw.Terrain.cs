@@ -198,15 +198,16 @@ namespace EtoFormsUI
             }
 
 
-            var improvements = tile.Improvements.Select(construct => new
-                { construct, Improvement = Game.TerrainImprovements.FirstOrDefault(i => i.Id == construct.Improvement) }).Where(ci=>ci.Improvement != null)
-                .OrderBy(ci=>ci.Improvement.Layer).ToList();
+            var improvements = tile.Improvements
+                .Where(ci => Game.TerrainImprovements.ContainsKey(ci.Improvement))
+                .OrderBy(ci => Game.TerrainImprovements[ci.Improvement].Layer).ToList();
 
-            foreach (var improvement in improvements)
+            foreach (var construct in improvements)
             {
-                var graphics = terrainSet.ImprovementsMap[improvement.construct.Improvement];
+                var improvement = Game.TerrainImprovements[construct.Improvement];
+                var graphics = terrainSet.ImprovementsMap[construct.Improvement];
 
-                if (improvement.Improvement.HasMultiTile)
+                if (improvement.HasMultiTile)
                 {
                     bool hasNeighbours = false;
 
@@ -214,21 +215,20 @@ namespace EtoFormsUI
                     {
                         var neighboringImprovement =
                             neighbour.Improvements.FirstOrDefault(i =>
-                                i.Improvement == improvement.construct.Improvement);
+                                i.Improvement == construct.Improvement);
                         if (neighboringImprovement != null)
                         {
                             var index = GetCoordsFromDifference(neighbour.X-tile.X  , neighbour.Y - tile.Y );
                             if (index != -1)
                             {
-                                if (neighboringImprovement.Level < improvement.construct.Level)
+                                if (neighboringImprovement.Level < construct.Level)
                                 {
                                     g.DrawImage(graphics.Levels[neighboringImprovement.Level, index],0,0);
                                 }
                                 else
                                 {
                                     hasNeighbours = true;
-                                    
-                                    g.DrawImage(graphics.Levels[improvement.construct.Level, index],0,0);
+                                    g.DrawImage(graphics.Levels[construct.Level, index],0,0);
                                 }
                             }
                         }
@@ -236,18 +236,18 @@ namespace EtoFormsUI
 
                     if (!hasNeighbours)
                     {
-                        g.DrawImage(graphics.Levels[improvement.construct.Level, 0],0,0);
+                        g.DrawImage(graphics.Levels[construct.Level, 0],0,0);
                     }
                 }
                 else
                 {
                     if (tile.IsUnitPresent && graphics.UnitLevels != null)
                     {
-                        g.DrawImage(graphics.UnitLevels[improvement.construct.Level, 0], 0, 0);
+                        g.DrawImage(graphics.UnitLevels[construct.Level, 0], 0, 0);
                     }
                     else
                     {
-                        g.DrawImage(graphics.Levels[improvement.construct.Level, 0], 0, 0);
+                        g.DrawImage(graphics.Levels[construct.Level, 0], 0, 0);
                     }
                 }
             }

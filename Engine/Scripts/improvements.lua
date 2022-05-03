@@ -22,6 +22,7 @@ civ.getImprovement(4).Effects.Add(civ.core.Effects.ContentFace, 2)
 --Courthouse,               8,  1,    CoL,
 --City Walls,               8,  0,    Mas,
 --Aqueduct,                 8,  2,    Cst,
+
 --Bank,                     12, 3,    Ban,
 --Cathedral,                12, 3,    MT,
 --University,               16, 3,    Uni,

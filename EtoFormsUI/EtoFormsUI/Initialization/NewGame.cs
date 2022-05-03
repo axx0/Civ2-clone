@@ -68,6 +68,7 @@ namespace EtoFormsUI.Initialization
         internal static bool StartPreMade(Main mainForm, Ruleset ruleset, string mapFileName)
         {
             Labels.UpdateLabels(ruleset);
+            MenuLoader.LoadMenus(ruleset);
             CityLoader.LoadCities(ruleset);
             var config = new GameInitializationConfig {RuleSet = ruleset};
             config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
@@ -146,6 +147,7 @@ namespace EtoFormsUI.Initialization
             else
             {
                 Labels.UpdateLabels(config.RuleSet);
+                MenuLoader.LoadMenus(config.RuleSet);
                 CityLoader.LoadCities(config.RuleSet);
 
                 config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);

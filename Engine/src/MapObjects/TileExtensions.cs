@@ -21,7 +21,6 @@ namespace Civ2engine.MapObjects
             {
                 built.Level = levelToRemove - 1;
             }
-
         }
 
         public static void CompleteConstruction(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,

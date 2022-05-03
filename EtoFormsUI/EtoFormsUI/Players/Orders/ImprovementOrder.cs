@@ -4,6 +4,7 @@ using System.Linq;
 using Civ2engine;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
@@ -16,9 +17,10 @@ namespace EtoFormsUI.Players.Orders
         private readonly TerrainImprovement _improvement;
         private readonly Game _game;
 
-        public ImprovementOrder(TerrainImprovement improvement, Main main, Game game) : base(main,
+        public ImprovementOrder(TerrainImprovement improvement, Main main, Game game, MenuElement menuElement) : base(main,
             ParseShortCut(improvement.Shortcut),
-            TerrainImprovementFunctions.LabelFrom(improvement.Levels[0]), 0)
+            menuElement?.MenuText ??
+            TerrainImprovementFunctions.LabelFrom(improvement.Levels[0]), improvement.MenuGroup)
         {
             _improvement = improvement;
             _game = game;

@@ -20,7 +20,7 @@ namespace Civ2engine
         /// <summary>
         /// True if all cities are considered to have this improvement (once 
         /// </summary>
-        public bool AllCitys { get; set; } = true;
+        public bool AllCitys { get; set; }
 
         /// <summary>
         /// List of list to accomodate multiple maps first list is map second is terrains for map
@@ -65,5 +65,10 @@ namespace Civ2engine
         /// True if this improvement is a bad thing that settlers remove rather than add. ie. Pollution
         /// </summary>
         public bool Negative { get; set; }
+
+        /// <summary>
+        /// Where this improvement build order should appear in the menu
+        /// </summary>
+        public int MenuGroup { get; set; }
     }
 }

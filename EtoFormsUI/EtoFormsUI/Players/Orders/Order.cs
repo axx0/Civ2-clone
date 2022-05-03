@@ -8,7 +8,7 @@ namespace EtoFormsUI.Players.Orders
 {
     public abstract class Order
     {
-        private readonly Main _mainForm;
+        protected readonly Main _mainForm;
         
         private readonly string _defaultLabel;
 

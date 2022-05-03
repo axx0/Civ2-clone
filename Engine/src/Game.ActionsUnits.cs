@@ -22,13 +22,11 @@ namespace Civ2engine
         {
             var units = _activeCiv.Units.Where(u => !u.Dead).ToList();
 
+            var player = Players[_activeCiv.Id];
+            
             //Look for units on this square or neighbours of this square
-            var nextUnit = ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ?? CurrentMap
-                .Neighbours(ActiveTile)
-                .SelectMany(t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
-                .FirstOrDefault();
-
-            nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders);
+            
+            var nextUnit = NextUnit(player, units);
 
             ActiveUnit = nextUnit;
 
@@ -49,12 +47,42 @@ namespace Civ2engine
                     }
                 }
             }
-            //
-            //
-            // if (_activeUnit != null)
-            // {
-            //     TriggerUnitEvent(new ActivationEventArgs(_activeUnit, false, false));
-            // }
+        }
+
+        private Unit NextUnit(IPlayer player, List<Unit> units)
+        {
+            Unit nextUnit;
+            if (player.WaitingList is { Count: > 0 })
+            {
+                nextUnit =
+                    ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u)) ??
+                    CurrentMap
+                        .Neighbours(ActiveTile)
+                        .SelectMany(
+                            t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders && !player.WaitingList.Contains(u)))
+                        .FirstOrDefault();
+
+                nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u));
+                if (nextUnit == null && player.WaitingList.Count > 0)
+                {
+                    nextUnit = player.WaitingList[0];
+                    player.WaitingList.Clear();
+                }
+            }
+            else
+            {
+                nextUnit =
+                    ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ??
+                    CurrentMap
+                        .Neighbours(ActiveTile)
+                        .SelectMany(
+                            t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
+                        .FirstOrDefault();
+
+                nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders);
+            }
+
+            return nextUnit;
         }
 
         public bool ProcessEndOfTurn()
@@ -70,10 +98,10 @@ namespace Civ2engine
                 else
                 {
                     unit.ProcessOrder();
-                    var improvement = TerrainImprovements.FirstOrDefault(i => i.Id == unit.Building);
-                    if (improvement != null)
+                    
+                    if (TerrainImprovements.ContainsKey(unit.Building))
                     {
-                        ActiveUnit = CheckConstruction(unit.CurrentLocation, improvement)
+                        ActiveUnit = CheckConstruction(unit.CurrentLocation, TerrainImprovements[unit.Building])
                             .FirstOrDefault(u => u.MovePoints > 0);
                         if (ActiveUnit != null)
                         {

@@ -111,7 +111,7 @@ namespace Civ2engine.Terrains
             return new UnitActionAssessment(true);
         }
         
-        public static IList<TerrainImprovement> GetStandardImprovements(Rules rules)
+        public static Dictionary<int, TerrainImprovement> GetStandardImprovements(Rules rules)
         {
             return new List<TerrainImprovement>
             {
@@ -248,6 +248,7 @@ namespace Civ2engine.Terrains
                     Shortcut = "P",
                     Name = Labels.For(LabelIndex.Pollution),
                     MaxLevelReachedMessage = "NOPOLLUTION",
+                    MenuGroup = 1,
                     Levels = new List<ImprovementLevel>
                     {
                         new()
@@ -354,7 +355,7 @@ namespace Civ2engine.Terrains
                     ExclusiveGroup = ImprovementTypes.DefenceGroup,
                     MaxLevelReachedMessage = "ALREADYAIR"
                 }
-            };
+            }.ToDictionary(k=>k.Id);
         }
 
         private static List<TerrainImprovementAction> GetStandardMiningEffects(Terrain terrain, Terrain[] terrains)
@@ -374,7 +375,7 @@ namespace Civ2engine.Terrains
             {
                 new()
                 {
-                    Target = ImprovementConstants.Transform, Value = terrain.CanMine, Text = Labels.For(LabelIndex.ChangetoSTRING0i, terrains[terrain.CanMine].Name)
+                    Target = ImprovementConstants.Transform, Value = terrain.CanMine, Text = Labels.For(LabelIndex.ChangetoSTRING0m, terrains[terrain.CanMine].Name)
                 }
             };
         }

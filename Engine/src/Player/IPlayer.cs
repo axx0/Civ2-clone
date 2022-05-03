@@ -14,6 +14,8 @@ namespace Civ2engine
         
         Unit ActiveUnit { get; set; }
         
+        List<Unit> WaitingList { get; }
+
         void CivilDisorder(City city);
         void OrderRestored(City city);
         void WeLoveTheKingStarted(City city);

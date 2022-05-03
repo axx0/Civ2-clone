@@ -118,6 +118,11 @@ namespace Civ2engine
                 });
             }
 
+            foreach (var civilization in AllCivilizations)
+            {
+                SetImprovementsForCities(civilization);
+            }
+
             foreach (var city in AllCities)
             {
                 city.SetUnitSupport(Rules.Cosmic);

@@ -3,13 +3,13 @@ using System.Linq;
 
 namespace Civ2engine.IO
 {
-    public class Menu : IFileHandler
+    public class MenuLoader : IFileHandler
     {
         public static void LoadMenus(Ruleset ruleset)
         {
             _elements = new Dictionary<string, List<MenuElement>>();
             var filePath = Utils.GetFilePath("Menu.txt", ruleset.Paths);
-            TextFileParser.ParseFile(filePath, new Menu ());
+            TextFileParser.ParseFile(filePath, new MenuLoader ());
         }
 
         private static IDictionary<string, List<MenuElement>> _elements; 
