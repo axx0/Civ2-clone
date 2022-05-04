@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Enums;
+using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.Advances
 {
@@ -72,11 +75,27 @@ namespace Civ2engine.Advances
                     if (levelData.RequiredTech == advanceIndex)
                     {
                         game.Players[civilization.Id].NotifyImprovementEnabled(improvement, level);
-                        
 
                         if (improvement.AllCitys)
                         {
-                            
+                            var locations = civilization.Cities.Select(c => c.Location).ToList();
+                            locations.ForEach(loc =>
+                            {
+                                var existing =
+                                    loc.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+                                if (existing == null)
+                                {
+                                    loc.Improvements.Add(new ConstructedImprovement
+                                    {
+                                        Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = level
+                                    });
+                                }
+                                else
+                                {
+                                    existing.Level = level;
+                                }
+                            });
+                            game.TriggerMapEvent(MapEventType.UpdateMap, improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );
                         }
                     }
                 }
