@@ -64,6 +64,25 @@ namespace Civ2engine.Advances
                 civilization.ReseachingAdvance = AdvancesConstants.No;
             }
 
+            foreach (var improvement in game.TerrainImprovements.Values)
+            {
+                for (var level = 0; level < improvement.Levels.Count; level++)
+                {
+                    var levelData = improvement.Levels[level];
+                    if (levelData.RequiredTech == advanceIndex)
+                    {
+                        game.Players[civilization.Id].NotifyImprovementEnabled(improvement, level);
+                        
+
+                        if (improvement.AllCitys)
+                        {
+                            
+                        }
+                    }
+                }
+
+            }
+
             civilization.Advances[advanceIndex] = true;
             ProductionPossibilities.AddItems(targetCiv,
                 game.Rules.ProductionItems.Where(i => i.RequiredTech == advanceIndex && i.CanBuild(civilization)));

@@ -133,5 +133,14 @@ namespace EtoFormsUI
                          civilization.Cities.FirstOrDefault()?.Location;
             return this;
         }
+
+        public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
+        {
+            var dialogKey = improvement.Levels[level].EnabledMessage;
+            if (!string.IsNullOrWhiteSpace(dialogKey))
+            {
+                UI.ShowDialog(dialogKey);
+            }
+        }
     }
 }

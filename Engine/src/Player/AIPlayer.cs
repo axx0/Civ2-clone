@@ -67,5 +67,10 @@ namespace Civ2engine
                          civilization.Cities.FirstOrDefault()?.Location; 
             return this;
         }
+
+        public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
+        {
+            
+        }
     }
 }

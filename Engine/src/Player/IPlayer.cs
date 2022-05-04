@@ -28,10 +28,12 @@ namespace Civ2engine
         void CityProductionComplete(City city);
         IInterfaceCommands UI { get; }
         IPlayer SetCiv(Civilization civilization);
+        void NotifyImprovementEnabled(TerrainImprovement improvement, int level);
     }   
 
     public interface IInterfaceCommands
     {
+        void ShowDialog(string dialogKey);
         Tuple<string, int, List<bool>> ShowDialog(PopupBox popupBox, List<bool> checkBoxOptionStates = null);
         void SavePopup(string key, PopupBox popup);
     }
