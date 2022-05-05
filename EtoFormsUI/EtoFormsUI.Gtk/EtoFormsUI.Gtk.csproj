@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Engine\Civ2engine.csproj"/>
-    <ProjectReference Include="..\EtoFormsUI\EtoFormsUI.csproj"/>
+    <ProjectReference Include="..\..\Engine\Civ2engine.csproj" />
+    <ProjectReference Include="..\EtoFormsUI\EtoFormsUI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Gtk" Version="2.5.11"/>
+    <PackageReference Include="Eto.Platform.Gtk" Version="2.5.11" />
   </ItemGroup>
 </Project>
