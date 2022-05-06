@@ -123,6 +123,26 @@ namespace Civ2engine
                 SetImprovementsForCities(civilization);
             }
 
+            foreach (var map in _maps)
+            {
+                foreach (var tile in map.Tile)
+                {
+                    if (tile is { CityHere: null, Improvements.Count: > 0 })
+                    {
+                        foreach (var construct in tile.Improvements.Where(c=>TerrainImprovements.ContainsKey(c.Improvement)))
+                        {
+                            var improvement = TerrainImprovements[construct.Improvement];
+                            var terrain = improvement.AllowedTerrains[tile.Z]
+                                .FirstOrDefault(t => t.TerrainType == (int)tile.Type);
+                            if (terrain is not null)
+                            {
+                                tile.BuildEffects(improvement, terrain, construct.Level);
+                            }
+                        }
+                    }
+                }
+            }
+
             foreach (var city in AllCities)
             {
                 city.SetUnitSupport(Rules.Cosmic);

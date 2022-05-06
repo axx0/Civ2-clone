@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
@@ -52,9 +53,6 @@ namespace Civ2engine.Advances
             if(civilization.AllowedAdvanceGroups[game.Rules.Advances[advanceIndex].AdvanceGroup] == AdvanceGroupAccess.Prohibited) return;
 
             var targetCiv = civilization.Id;
-            //TODO: here we'd look for a lua script to check for effeccts
-            
-            //TODO: check for default effect
 
             if (!research.Discovered)
             {
@@ -71,35 +69,28 @@ namespace Civ2engine.Advances
             {
                 for (var level = 0; level < improvement.Levels.Count; level++)
                 {
-                    var levelData = improvement.Levels[level];
-                    if (levelData.RequiredTech == advanceIndex)
-                    {
-                        game.Players[civilization.Id].NotifyImprovementEnabled(improvement, level);
+                    if (improvement.Levels[level].RequiredTech != advanceIndex) continue;
+                    
+                    game.Players[civilization.Id].NotifyImprovementEnabled(improvement, level);
 
-                        if (improvement.AllCitys)
+                    if (!improvement.AllCitys) continue;
+                    var locations = civilization.Cities
+                        .Select(c => c.Location)
+                        .Select(tile => new
                         {
-                            var locations = civilization.Cities.Select(c => c.Location).ToList();
-                            locations.ForEach(loc =>
-                            {
-                                var existing =
-                                    loc.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
-                                if (existing == null)
-                                {
-                                    loc.Improvements.Add(new ConstructedImprovement
-                                    {
-                                        Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = level
-                                    });
-                                }
-                                else
-                                {
-                                    existing.Level = level;
-                                }
-                            });
-                            game.TriggerMapEvent(MapEventType.UpdateMap, improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );
-                        }
-                    }
+                            tile,
+                            terrain = improvement.AllowedTerrains[tile.Z]
+                                .FirstOrDefault(t => t.TerrainType == (int)tile.Type)
+                        })
+                        .Where(t => t.terrain is not null)
+                        .Select(loc =>
+                        {
+                            loc.tile.AddImprovement(improvement, loc.terrain, level,
+                                game.Rules.Terrains[loc.tile.Z]);
+                            return loc.tile;
+                        }).ToList();
+                    game.TriggerMapEvent(MapEventType.UpdateMap, improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );
                 }
-
             }
 
             civilization.Advances[advanceIndex] = true;

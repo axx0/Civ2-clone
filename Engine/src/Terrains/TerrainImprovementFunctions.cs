@@ -438,7 +438,7 @@ namespace Civ2engine.Terrains
                     }
                     case TerrainConstants.Existing:
                     {
-                        if (activeTile.Map.Neighbours(activeTile).Any(t => t.Improvements.Any(i=>i.Improvement == improvement.Id)))
+                        if (activeTile.Map.Neighbours(activeTile).Any(t => t.CityHere is null && t.Improvements.Any(i=>i.Improvement == improvement.Id)))
                         {
                             return false;
                         }

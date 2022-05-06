@@ -6,7 +6,6 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Scripting;
-using Civ2engine.Terrains;
 using Civ2engine.Units;
 
 namespace Civ2engine
@@ -166,38 +165,41 @@ namespace Civ2engine
 
         public void SetImprovementsForCity(City city)
         {
-            city.Location.Improvements.Clear();
-            BuildImprovementsList(city.Location.Improvements, city.Owner);
+            SetImprovementsForCities(city.Owner, city);
         }
         
-        public void SetImprovementsForCities(Civilization civilization)
+        public void SetImprovementsForCities(Civilization civilization, params City[] cities)
         {
-            var improvements = new List<ConstructedImprovement>();
-            BuildImprovementsList(improvements, civilization);
-            foreach (var city in civilization.Cities)
-            {
-                city.Location.Improvements.Clear();
-                city.Location.Improvements.AddRange(improvements.Select(i=> new ConstructedImprovement(i)));
-            }
-        }
-
-        private void BuildImprovementsList(List<ConstructedImprovement> improvements, Civilization owner)
-        {
-            foreach (var improvement in TerrainImprovements.Values.Where(i => i.AllCitys))
-            {
-                int level = -1;
-                for (var i = 0; i < improvement.Levels.Count; i++)
+            var citiesToSet = cities.Length == 0 ? civilization.Cities : (IList<City>)cities;
+            var improvements = TerrainImprovements.Values
+                .Where(t => t.AllCitys)
+                .Select(improvement =>
                 {
-                    if (AdvanceFunctions.HasTech(owner, improvement.Levels[i].RequiredTech))
+                    var level = -1;
+                    for (var i = 0; i < improvement.Levels.Count; i++)
                     {
-                        level = i;
+                        if (AdvanceFunctions.HasTech(civilization, improvement.Levels[i].RequiredTech))
+                        {
+                            level = i;
+                        }
                     }
-                }
-
-                if (level != -1)
+                    return new { improvement, level };
+                }).Where(ti => ti.level != -1)
+                .ToList();
+            
+            
+            foreach (var tile in citiesToSet.Select(c=>c.Location))
+            {
+                tile.Improvements.Clear();
+                tile.EffectsList.Clear();
+                foreach (var can in improvements)
                 {
-                    improvements.Add(new ConstructedImprovement
-                        { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = level });
+                    var terrain = can.improvement.AllowedTerrains[tile.Z]
+                        .FirstOrDefault(t => t.TerrainType == (int)tile.Type);
+                    if (terrain is not null)
+                    {
+                        tile.AddImprovement(can.improvement, terrain, can.level, Rules.Terrains[tile.Z]);
+                    }
                 }
             }
         }

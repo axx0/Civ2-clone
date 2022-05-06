@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Eto.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
@@ -218,17 +219,17 @@ namespace EtoFormsUI
                                 i.Improvement == construct.Improvement);
                         if (neighboringImprovement != null)
                         {
-                            var index = GetCoordsFromDifference(neighbour.X-tile.X  , neighbour.Y - tile.Y );
+                            var index = GetCoordsFromDifference(neighbour.X - tile.X, neighbour.Y - tile.Y);
                             if (index != -1)
                             {
                                 if (neighboringImprovement.Level < construct.Level)
                                 {
-                                    g.DrawImage(graphics.Levels[neighboringImprovement.Level, index],0,0);
+                                    g.DrawImage(graphics.Levels[neighboringImprovement.Level, index], 0, 0);
                                 }
                                 else
                                 {
                                     hasNeighbours = true;
-                                    g.DrawImage(graphics.Levels[construct.Level, index],0,0);
+                                    g.DrawImage(graphics.Levels[construct.Level, index], 0, 0);
                                 }
                             }
                         }
@@ -236,7 +237,17 @@ namespace EtoFormsUI
 
                     if (!hasNeighbours)
                     {
-                        g.DrawImage(graphics.Levels[construct.Level, 0],0,0);
+                        if (tile.CityHere is null)
+                        {
+                            g.DrawImage(graphics.Levels[construct.Level, 0], 0, 0);
+                        }
+                    }
+                }
+                else if (tile.CityHere is not null)
+                {
+                    if (tile.Map.DirectNeighbours(tile).Any(t => t.Improvements.Any(i => i.Improvement == construct.Improvement)))
+                    {
+                        g.DrawImage(graphics.Levels[construct.Level, 0], 0, 0);
                     }
                 }
                 else
@@ -251,61 +262,6 @@ namespace EtoFormsUI
                     }
                 }
             }
-            
-            
-            // Roads (cites also act as road tiles)
-            // if (tile.Road || tile.IsCityPresent)
-            // {
-            //     bool[] isRoadAround = IsRoadAround(col, row, flatEarth);
-            //
-            //     // Draw roads
-            //     if (isRoadAround[0]) g.DrawImage(terrainSet.Road[8], 0, 0);  // to N
-            //     if (isRoadAround[1]) g.DrawImage(terrainSet.Road[1], 0, 0);  // to NE
-            //     if (isRoadAround[2]) g.DrawImage(terrainSet.Road[2], 0, 0);  // to E
-            //     if (isRoadAround[3]) g.DrawImage(terrainSet.Road[3], 0, 0);  // to SE
-            //     if (isRoadAround[4]) g.DrawImage(terrainSet.Road[4], 0, 0);  // to S
-            //     if (isRoadAround[5]) g.DrawImage(terrainSet.Road[5], 0, 0);  // to SW
-            //     if (isRoadAround[6]) g.DrawImage(terrainSet.Road[6], 0, 0);  // to W
-            //     if (isRoadAround[7]) g.DrawImage(terrainSet.Road[7], 0, 0);  // to NW
-            //     if (isRoadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false }))
-            //     {
-            //         g.DrawImage(terrainSet.Road[0], 0, 0); // No road around
-            //     }
-            // }
-            //
-            // // TODO: make railroad drawing logic
-            // // Railroads (cites also act as railroad tiles)
-            // //if (Map.TileC2(i, j).Railroad || Map.TileC2(i, j).CityPresent)
-            // //{
-            // //    bool[] isRailroadAround = IsRailroadAround(i, j);
-            // //
-            // //    // Draw railroads
-            // //    if (isRailroadAround[0]) g.DrawImage(terrainSet.Railroad[8], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to N
-            // //    if (isRailroadAround[1]) g.DrawImage(terrainSet.Railroad[1], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NE
-            // //    if (isRailroadAround[2]) g.DrawImage(terrainSet.Railroad[2], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to E
-            // //    if (isRailroadAround[3]) g.DrawImage(terrainSet.Railroad[3], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SE
-            // //    if (isRailroadAround[4]) g.DrawImage(terrainSet.Railroad[4], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to S
-            // //    if (isRailroadAround[5]) g.DrawImage(terrainSet.Railroad[5], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to SW
-            // //    if (isRailroadAround[6]) g.DrawImage(terrainSet.Railroad[6], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to W
-            // //    if (isRailroadAround[7]) g.DrawImage(terrainSet.Railroad[7], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // to NW
-            // //    if (isRailroadAround.SequenceEqual(new bool[8] { false, false, false, false, false, false, false, false })) 
-            // //      g.DrawImage(terrainSet.Railroad[0], 64 * i + 32 * (j % 2) + 1, 16 * j + 1);  // No railroad around
-            // //}
-            //
-            // // Irrigation
-            // if (tile.Irrigation) g.DrawImage(terrainSet.Irrigation, 0, 0);
-            //
-            // // Farmland
-            // if (tile.Farmland) g.DrawImage(terrainSet.Farmland, 0, 0);
-            //
-            // // Mining
-            // if (tile.Mining && !tile.Farmland) g.DrawImage(terrainSet.Mining, 0, 0);
-
-            // Pollution
-            //if (tile.Pollution) g.DrawImage(terrainSet.Pollution, 0, 0);
-
-            // Fortress
-
 
             return _tilePic;
         }
