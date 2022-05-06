@@ -178,7 +178,7 @@ namespace Civ2engine
             }
             else
             {
-                tile.CompleteConstruction(improvement, terrain, levelToBuild, Rules.Terrains[tile.Z]);
+                tile.AddImprovement(improvement, terrain, levelToBuild, Rules.Terrains[tile.Z]);
             }
 
             units.ForEach(u =>

@@ -132,6 +132,7 @@ namespace Civ2engine.Terrains
                             Name = Labels.For(LabelIndex.Farmland),
                             RequiredTech = (int)AdvanceType.Refrigerat,
                             BuildLabel = Labels.For(LabelIndex.ImproveFarmland),
+                            EnabledMessage = "NEWFARMLAND",
                             MissingRequiredTechMessage = "FARMLAND"
                         }
                     },
@@ -209,6 +210,7 @@ namespace Civ2engine.Terrains
                             Name = Labels.For(LabelIndex.Railroads),
                             RequiredTech = (int)AdvanceType.Railroad,
                             MissingRequiredTechMessage = "RAILROADS",
+                            EnabledMessage = "NEWRAILROAD",
                             BuildLabel = Labels.For(LabelIndex.BuildRRTrack),
                             Effects = new List<TerrainImprovementAction>
                             {
@@ -306,7 +308,8 @@ namespace Civ2engine.Terrains
                                 }
                             },
                             RequiredTech = (int)AdvanceType.Construct,
-                            MissingRequiredTechMessage = "CONSTRUCTION"
+                            MissingRequiredTechMessage = "CONSTRUCTION",
+                            EnabledMessage = "NEWFORTRESS"
                         }
                     },
                     Name = Labels.For(LabelIndex.Fortress),
@@ -344,7 +347,8 @@ namespace Civ2engine.Terrains
                                 }
                             },
                             RequiredTech = (int)AdvanceType.Radio,
-                            MissingRequiredTechMessage = "RADIO"
+                            MissingRequiredTechMessage = "RADIO",
+                            EnabledMessage = "NEWAIRLIFT"
                         }
                     },
                     Shortcut = "E",
@@ -434,7 +438,7 @@ namespace Civ2engine.Terrains
                     }
                     case TerrainConstants.Existing:
                     {
-                        if (activeTile.Map.Neighbours(activeTile).Any(t => t.Improvements.Any(i=>i.Improvement == improvement.Id)))
+                        if (activeTile.Map.Neighbours(activeTile).Any(t => t.CityHere is null && t.Improvements.Any(i=>i.Improvement == improvement.Id)))
                         {
                             return false;
                         }

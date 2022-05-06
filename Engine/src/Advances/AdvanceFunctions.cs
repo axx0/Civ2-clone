@@ -1,6 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Enums;
+using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Civ2engine.Terrains;
 
 namespace Civ2engine.Advances
 {
@@ -49,9 +53,6 @@ namespace Civ2engine.Advances
             if(civilization.AllowedAdvanceGroups[game.Rules.Advances[advanceIndex].AdvanceGroup] == AdvanceGroupAccess.Prohibited) return;
 
             var targetCiv = civilization.Id;
-            //TODO: here we'd look for a lua script to check for effeccts
-            
-            //TODO: check for default effect
 
             if (!research.Discovered)
             {
@@ -62,6 +63,34 @@ namespace Civ2engine.Advances
             if (civilization.ReseachingAdvance == advanceIndex)
             {
                 civilization.ReseachingAdvance = AdvancesConstants.No;
+            }
+
+            foreach (var improvement in game.TerrainImprovements.Values)
+            {
+                for (var level = 0; level < improvement.Levels.Count; level++)
+                {
+                    if (improvement.Levels[level].RequiredTech != advanceIndex) continue;
+                    
+                    game.Players[civilization.Id].NotifyImprovementEnabled(improvement, level);
+
+                    if (!improvement.AllCitys) continue;
+                    var locations = civilization.Cities
+                        .Select(c => c.Location)
+                        .Select(tile => new
+                        {
+                            tile,
+                            terrain = improvement.AllowedTerrains[tile.Z]
+                                .FirstOrDefault(t => t.TerrainType == (int)tile.Type)
+                        })
+                        .Where(t => t.terrain is not null)
+                        .Select(loc =>
+                        {
+                            loc.tile.AddImprovement(improvement, loc.terrain, level,
+                                game.Rules.Terrains[loc.tile.Z]);
+                            return loc.tile;
+                        }).ToList();
+                    game.TriggerMapEvent(MapEventType.UpdateMap, improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );
+                }
             }
 
             civilization.Advances[advanceIndex] = true;

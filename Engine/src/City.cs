@@ -42,18 +42,19 @@ namespace Civ2engine
         public int UnhappyCitizens { get; set; }
 
         private int _population;
+
         public int Population
         {
             get
             {
-                 _population = 0;
+                _population = 0;
                 for (int i = 1; i <= Size; i++)
                     _population += i * 10000;
                 return _population;
             }
         }
 
-        internal readonly SortedList<ImprovementType,Improvement> _improvements = new();
+        internal readonly SortedList<ImprovementType, Improvement> _improvements = new();
         public IReadOnlyList<Improvement> Improvements => _improvements.Values.ToArray();
         public List<Unit> UnitsInCity => Location.UnitsHere;
         public List<Unit> SupportedUnits => Owner.Units.Where(unit => unit.HomeCity == this).ToList();
@@ -64,7 +65,7 @@ namespace Civ2engine
         public int Food => Math.Min(FoodProduction, FoodConsumption);
 
         public int FoodConsumption { get; set; }
-            
+
         public int SurplusHunger { get; set; }
 
         public int OrganizationLevel
@@ -92,9 +93,23 @@ namespace Civ2engine
         /// <summary>
         /// Adjusted formula as it should always round excess into tax
         /// </summary>
-        public int Tax => Trade - Science - Lux;
-        public int Lux => Trade * Owner.LuxRate / 100;
-        public int Science => Trade * Owner.ScienceRate / 100;
+        public int Tax => (int)((Trade - BaseScience - BaseLux) * GetMultiplier(ImprovementEffect.TaxMultiplier));
+
+        private int BaseLux => Trade * Owner.LuxRate / 100;
+
+        public int Lux =>
+            (int)(BaseLux * GetMultiplier(ImprovementEffect.LuxMultiplier));
+
+        public int BaseScience => Trade * Owner.ScienceRate / 100;
+
+        public int Science => (int)(BaseScience * GetMultiplier(ImprovementEffect.ScienceMultiplier));
+        private decimal GetMultiplier(ImprovementEffect effect)
+        {
+            return (100 + Improvements
+                .Where(i => i.Effects.ContainsKey(effect))
+                .Select(b => b.Effects[effect]).Sum()) / 100m;
+        }
+
 
         // PRODUCTION
         public int TotalProduction { get; set; }

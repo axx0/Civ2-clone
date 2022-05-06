@@ -23,7 +23,7 @@ namespace Civ2engine.MapObjects
             }
         }
 
-        public static void CompleteConstruction(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,
+        public static void AddImprovement(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,
             Terrain[] terrains)
         {
             var Improvements = tile.Improvements;
@@ -46,37 +46,35 @@ namespace Civ2engine.MapObjects
                 return;
             }
 
-            if (levelToBuild > 0)
-            {
-                var imp = Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
-                if (imp != null)
-                {
-                    imp.Level = levelToBuild;
-                    if (improvement.Levels[levelToBuild].Effects?.Count > 0)
-                    {
-                        tile.EffectsList.AddRange(improvement.Levels[levelToBuild].Effects.Select(e => new ActiveEffect
-                            { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id, Level = levelToBuild }));
-                    }
+            BuildEffects(tile, improvement, terrain, levelToBuild);
 
-                    return;
-                }
-            }
-            if (improvement.Levels[levelToBuild].Effects?.Count > 0)
+            var existing = Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+            if (existing is not null)
             {
-                tile.EffectsList.AddRange(improvement.Levels[levelToBuild].Effects.Select(e => new ActiveEffect
-                    { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id, Level = 0 }));
+                existing.Level = levelToBuild;
             }
+            else
+            {
+                Improvements.Add(new ConstructedImprovement
+                    { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
+            }
+        }
+
+        public static void BuildEffects(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild)
+        {
+            tile.EffectsList.RemoveAll(e => e.Source == improvement.Id);
+
+            tile.EffectsList.AddRange(improvement.Levels
+                .Take(levelToBuild + 1)
+                .SelectMany((levelData, levelNo) =>
+                    levelData.Effects?.Select(e => new ActiveEffect(e, improvement.Id, levelNo)) ?? Enumerable.Empty<ActiveEffect>()));
 
             if (terrain.Effects is { Count: > 0 })
             {
-                tile.EffectsList.AddRange(terrain.Effects.Select(e => new ActiveEffect
-                    { Target = e.Target, Action = e.Action, Value = e.Value, Source = improvement.Id, Level = 0}));
+                tile.EffectsList.AddRange(terrain.Effects.Select(e => new ActiveEffect(e, improvement.Id)));
             }
-
-            Improvements.Add(new ConstructedImprovement
-                { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
         }
-        
+
         public static IEnumerable<Tile> CityRadius(this Tile tile, bool nullForInvalid = false)
         {
             return tile.Map.CityRadius(tile, nullForInvalid);

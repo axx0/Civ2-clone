@@ -20,6 +20,11 @@ namespace Civ2engine
         public string MissingRequiredTechMessage { get; set; }
         
         /// <summary>
+        /// Message to show when required tech is gained
+        /// </summary>
+        public string EnabledMessage { get; set; }
+        
+        /// <summary>
         /// The label for building this
         /// </summary>
         public string BuildLabel { get; set; }
@@ -30,6 +35,5 @@ namespace Civ2engine
         public int BuildCostMultiplier { get; set; }
         
         public List<TerrainImprovementAction> Effects { get; set; }
-        
     }
 }
