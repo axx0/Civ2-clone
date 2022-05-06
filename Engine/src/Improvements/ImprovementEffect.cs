@@ -9,5 +9,8 @@ namespace Civ2engine.Improvements
         Veteran = 4,
         ContentFace = 5,
         HappyFace = 6,
+        TaxMultiplier = 7,
+        LuxMultiplier = 8,
+        ScienceMultiplier = 9
     }
 }

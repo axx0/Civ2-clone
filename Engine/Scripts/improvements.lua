@@ -18,14 +18,20 @@ civ.getImprovement(3).Effects.Add(civ.core.Effects.FoodStorage, 50)
 --Temple,                   4,  1,    Cer,
 civ.getImprovement(4).Effects.Add(civ.core.Effects.ContentFace, 2)
 --MarketPlace,              8,  1,    Cur,
+civ.getImprovement(5).Effects.Add(civ.core.Effects.TaxMultiplier, 50)
+civ.getImprovement(5).Effects.Add(civ.core.Effects.LuxMultiplier, 50)
 --Library,                  8,  1,    Wri,
+civ.getImprovement(6).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 --Courthouse,               8,  1,    CoL,
 --City Walls,               8,  0,    Mas,
 --Aqueduct,                 8,  2,    Cst,
 
 --Bank,                     12, 3,    Ban,
+civ.getImprovement(10).Effects.Add(civ.core.Effects.TaxMultiplier, 50)
+civ.getImprovement(10).Effects.Add(civ.core.Effects.LuxMultiplier, 50)
 --Cathedral,                12, 3,    MT,
 --University,               16, 3,    Uni,
+civ.getImprovement(12).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 --Mass Transit,             16, 4,    MP,
 --Colosseum,                10, 4,    Cst,
 --Factory,                  20, 4,    Ind,
@@ -36,10 +42,13 @@ civ.getImprovement(4).Effects.Add(civ.core.Effects.ContentFace, 2)
 --Hydro Plant,              24, 4,    E2,
 --Nuclear Plant,            16, 2,    NP,
 --Stock Exchange,           16, 4,    Eco,
+civ.getImprovement(22).Effects.Add(civ.core.Effects.TaxMultiplier, 50)
+civ.getImprovement(22).Effects.Add(civ.core.Effects.LuxMultiplier, 50)
 --Sewer System,             12, 2,    San,
 --Supermarket,               8, 3,    Rfg,
 --Superhighways,            20, 5,    Aut,
 --Research Lab,             16, 3,    Cmp,
+civ.getImprovement(26).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 --SAM Missile Battery,      10, 2,    Roc,
 --Coastal Fortress,          8, 1,    Met,
 --Solar Plant,              32, 4,    Env,

@@ -65,5 +65,9 @@ namespace Civ2engine.Scripting
         public ImprovementEffect Veteran = ImprovementEffect.Veteran;
         public ImprovementEffect ContentFace = ImprovementEffect.ContentFace;
         public ImprovementEffect HappyFace = ImprovementEffect.HappyFace;
+        public ImprovementEffect TaxMultiplier = ImprovementEffect.TaxMultiplier;
+        public ImprovementEffect LuxMultiplier = ImprovementEffect.LuxMultiplier;
+        public ImprovementEffect ScienceMultiplier = ImprovementEffect.ScienceMultiplier;
+        
     }
 }
