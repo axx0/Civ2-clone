@@ -10,6 +10,8 @@ namespace EtoFormsUI.Animations
         int Width { get; }
         int Height { get; }
         
+        bool Recycled { get; }
+        
         double Interval { get; }
         Image CurrentFrame { get; }
         int YAdjustment { get; }

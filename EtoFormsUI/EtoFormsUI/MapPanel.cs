@@ -331,7 +331,10 @@ namespace EtoFormsUI
             if(CurrentAnimation == null) return;
             if (IsActiveSquareOutsideMapView(CurrentAnimation.Location))
             {
-                MapViewChange(CurrentAnimation.Location);
+                if (!CurrentAnimation.Recycled)
+                {
+                    MapViewChange(CurrentAnimation.Location);
+                }
             }
             else
             {
