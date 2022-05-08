@@ -41,7 +41,7 @@ namespace Civ2engine.Terrains
                     return new UnitActionAssessment(true,
                         commandTitle: improvement.Levels[alreadyBuilt.Level].BuildLabel);
                 }
-                if (alreadyBuilt.Level >= improvement.Levels.Count)
+                if (alreadyBuilt.Level + 1 >= improvement.Levels.Count)
                 {
                     return new UnitActionAssessment(false, errorPopup: improvement.MaxLevelReachedMessage);
                 }
