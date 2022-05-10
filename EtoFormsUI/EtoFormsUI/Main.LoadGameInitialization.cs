@@ -4,6 +4,8 @@ using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.IO;
+using Civ2engine.MapObjects;
+using Civ2engine.Units;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.ImageLoader;
@@ -90,28 +92,11 @@ namespace EtoFormsUI
             
             BringToFront();
         }
-        
-        
-        
-        private void SetupOrders(Game instance)
+
+        public void UpdateOrders(Tile activeTile, Unit activeUnit)
         {
-            var improvements = instance.TerrainImprovements.Values;
-
-            var orderText = MenuLoader.For("ORDERS");
-
-            Orders = improvements.Select(i =>
-                new ImprovementOrder(i, this, instance, orderText.FirstOrDefault(mi => string.Equals(mi.Shortcut, i.Shortcut, StringComparison.InvariantCultureIgnoreCase)))).Cast<Order>()
-                   .ToList();
-            
-            Orders.Add(new BuildCity(this, orderText.First(mi=> mi.Shortcut == "b").MenuText, instance));
-            Orders.Add(new PillageOrder(this, orderText.First(mi=>mi.Shortcut == "Shift+P").MenuText,instance));
-            Orders.Add(new FortifyOrder(this, orderText.Last(mi => mi.Shortcut == "f").MenuText, instance));
-            Orders.Add(new SkipOrder(this, orderText.First(mi => mi.Shortcut == "SPACE").MenuText, instance));
-            Orders.Add(new WaitOrder(this, orderText.First(mi => mi.Shortcut == "w").MenuText, instance));
-            Orders.Add(new UnloadOrder(this, orderText.First(mi => mi.Shortcut == "u").MenuText));
-            Orders.Add(new SleepOrder(this, orderText.First(mi => mi.Shortcut == "s").MenuText, instance));
-
-            var groupedOrders = Orders.Select(o=>o.Update(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit)).GroupBy(o => o.Group);
+            _ordersMenu.Items.Clear();           
+            var groupedOrders = Orders.Select(o=>o.Update(activeTile, activeUnit)).GroupBy(o => o.Group);
 
             foreach (var groupedOrder in groupedOrders)
             {
@@ -171,6 +156,28 @@ namespace EtoFormsUI
                 new SeparatorMenuItem(), DisbandCommand, ActivateUnitCommand,
                 new SeparatorMenuItem(), EndPlayerTurn
             });
+        }
+        
+        private void SetupOrders(Game instance)
+        {
+            var improvements = instance.TerrainImprovements.Values;
+
+            var orderText = MenuLoader.For("ORDERS");
+
+            Orders = improvements.Select(i =>
+                new ImprovementOrder(i, this, instance, orderText.FirstOrDefault(mi => string.Equals(mi.Shortcut, i.Shortcut, StringComparison.InvariantCultureIgnoreCase)))).Cast<Order>()
+                   .ToList();
+            
+            Orders.Add(new BuildCity(this, orderText.First(mi=> mi.Shortcut == "b").MenuText, instance));
+            Orders.Add(new PillageOrder(this, orderText.First(mi=>mi.Shortcut == "Shift+P").MenuText,instance));
+            Orders.Add(new FortifyOrder(this, orderText.Last(mi => mi.Shortcut == "f").MenuText, instance));
+            Orders.Add(new SkipOrder(this, orderText.First(mi => mi.Shortcut == "SPACE").MenuText, instance));
+            Orders.Add(new WaitOrder(this, orderText.First(mi => mi.Shortcut == "w").MenuText, instance));
+            Orders.Add(new UnloadOrder(this, orderText.First(mi => mi.Shortcut == "u").MenuText));
+            Orders.Add(new SleepOrder(this, orderText.First(mi => mi.Shortcut == "s").MenuText, instance));
+            Orders.Add(new GotoOrder(this, orderText.First(mi => mi.Shortcut == "g").MenuText, instance));
+
+            UpdateOrders(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit);
         }
     }
 }

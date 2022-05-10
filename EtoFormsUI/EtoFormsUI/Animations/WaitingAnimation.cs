@@ -33,6 +33,7 @@ namespace EtoFormsUI.GameModes
             };
 
             // Get 2 frames (one with and other without the active unit/moving piece)
+            var unitFrame = activeTile.IsCityPresent ? 0 : 1;
 
             var map = game.CurrentMap;
             var unitX = activeTile.X;
@@ -89,8 +90,8 @@ namespace EtoFormsUI.GameModes
                         // Draw active unit if it's not moving
                         if (x != unitX || y != unitY || unit == null) continue;
                         
-                        // Draw unit only for 1st frame
-                        if (frame == 0)
+                        // Draw unit only in appropriate frame
+                        if (frame == unitFrame)
                             Draw.Unit(g, game.ActiveUnit, game.ActiveUnit.IsInStack, map.Zoom,
                                 new Point(coordsOffsetsPx[0], coordsOffsetsPx[1]));
                     }
@@ -127,7 +128,7 @@ namespace EtoFormsUI.GameModes
                     // View piece (is drawn on top of everything)
                     if (unit == null)
                     {
-                        if (frame == 0) Draw.ViewPiece(g, map.Zoom, new Point(0, map.Ypx));
+                        if (frame == 1) Draw.ViewPiece(g, map.Zoom, new Point(0, map.Ypx));
                     }
                 }
 

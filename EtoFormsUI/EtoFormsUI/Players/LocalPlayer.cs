@@ -29,7 +29,7 @@ namespace EtoFormsUI
                 if (_activeTile != value)
                 {
                     _activeTile = value;
-                    _main.Orders.ForEach(o=> o.Update(_activeTile, _activeUnit));
+                    _main.UpdateOrders(_activeTile, _activeUnit);
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace EtoFormsUI
                 {
                     _activeTile = value.CurrentLocation;
                     _activeUnit = value;
-                    _main.Orders.ForEach(o=> o.Update(_activeTile, _activeUnit));
+                    _main.UpdateOrders(_activeTile, _activeUnit);
                 }
                 else
                 {

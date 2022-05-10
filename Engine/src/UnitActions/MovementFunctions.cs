@@ -318,7 +318,7 @@ namespace Civ2engine.UnitActions.Move
         {  
             var tileFrom = game.CurrentMap.TileC2(unit.X, unit.Y);
             var tileTo = game.CurrentMap.TileC2(destX, destY);
-            if (!unit.IgnoreZonesOfControl && !IsFriendlyTile(game,tileTo, unit) && IsNextToEnemy(game,unit,tileFrom) && IsNextToEnemy(game, unit, tileTo))
+            if (!unit.IgnoreZonesOfControl && !IsFriendlyTile(tileTo, unit.Owner) && IsNextToEnemy(tileFrom, unit.Owner, unit.Domain) && IsNextToEnemy(tileTo, unit.Owner, unit.Domain))
             {
                 game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZOC);
                 return;
@@ -366,39 +366,12 @@ namespace Civ2engine.UnitActions.Move
                     }
 
                     moveCost *= tileTo.MoveCost;
-                    foreach (var movementEffect in tileFrom.EffectsList.Where(e =>
-                                 e.Target == ImprovementConstants.Movement)
-                            )
-                    {
-                        var matchingEffect = tileTo.EffectsList.FirstOrDefault(e =>
-                            e.Source == movementEffect.Source && e.Target == ImprovementConstants.Movement);
-                        if (matchingEffect == null) continue;
-
-                        if (matchingEffect.Level < movementEffect.Level)
-                        {
-                            if (matchingEffect.Value < moveCost)
-                            {
-                                moveCost = matchingEffect.Value;
-                            }
-                        }
-                        else
-                        {
-                            if (movementEffect.Value < moveCost)
-                            {
-                                moveCost = movementEffect.Value;
-                            }
-                        }
-                    }
+                    moveCost = MoveCost(tileTo, tileFrom, moveCost, cosmicRules);
 
                     // If alpine movement could be less use that
                     if (cosmicRules.AlpineMovement < moveCost && unit.Alpine)
                     {
                         moveCost = cosmicRules.AlpineMovement;
-                    }
-
-                    if (cosmicRules.RiverMovement < moveCost && tileFrom.River && tileTo.River && Math.Abs(tileTo.X - tileFrom.X) == 1 && Math.Abs(tileTo.Y - tileFrom.Y) == 1) //For rivers only for diagonal movement
-                    {
-                        moveCost = cosmicRules.RiverMovement;
                     }
 
                     unitMoved = true;
@@ -528,15 +501,51 @@ namespace Civ2engine.UnitActions.Move
             return unitMoved;
         }
 
-        private static bool IsFriendlyTile(Game game, Tile tileTo, Unit unit)
+        internal static int MoveCost(Tile tileTo, Tile tileFrom, int moveCost, CosmicRules cosmicRules)
         {
-            return tileTo.UnitsHere.Any(u => u.Owner == unit.Owner) ||
-                   (tileTo.CityHere != null && tileTo.CityHere.Owner == unit.Owner);
+            foreach (var movementEffect in tileFrom.EffectsList.Where(e =>
+                         e.Target == ImprovementConstants.Movement)
+                    )
+            {
+                var matchingEffect = tileTo.EffectsList.FirstOrDefault(e =>
+                    e.Source == movementEffect.Source && e.Target == ImprovementConstants.Movement);
+                if (matchingEffect == null) continue;
+
+                if (matchingEffect.Level < movementEffect.Level)
+                {
+                    if (matchingEffect.Value < moveCost)
+                    {
+                        moveCost = matchingEffect.Value;
+                    }
+                }
+                else
+                {
+                    if (movementEffect.Value < moveCost)
+                    {
+                        moveCost = movementEffect.Value;
+                    }
+                }
+            }
+
+            if (cosmicRules.RiverMovement < moveCost && tileFrom.River && tileTo.River &&
+                Math.Abs(tileTo.X - tileFrom.X) == 1 &&
+                Math.Abs(tileTo.Y - tileFrom.Y) == 1) //For rivers only for diagonal movement
+            {
+                moveCost = cosmicRules.RiverMovement;
+            }
+
+            return moveCost;
         }
 
-        private static bool IsNextToEnemy(Game game, Unit unit, Tile tileFrom)
+        internal static bool IsFriendlyTile(Tile tileTo, Civilization unitOwner)
         {
-            return game.CurrentMap.Neighbours(tileFrom).Any(t => t.UnitsHere.Any(u => u.Owner != unit.Owner && u.InShip == null && u.Domain == unit.Domain));
+            return tileTo.UnitsHere.Any(u => u.Owner == unitOwner) ||
+                   (tileTo.CityHere != null && tileTo.CityHere.Owner == unitOwner);
+        }
+
+        internal static bool IsNextToEnemy(Tile tile, Civilization civ, UnitGAS domain)
+        {
+            return tile.Neighbours().Any(t => t.UnitsHere.Any(u => u.Owner != civ && u.InShip == null && u.Domain == domain));
         }
 
         public static IEnumerable<Tile> GetPossibleMoves(Game game, Tile tile, Unit unit)
@@ -547,12 +556,33 @@ namespace Civ2engine.UnitActions.Move
                 UnitGAS.Sea => game.CurrentMap.Neighbours(tile).Where(t=> t.CityHere != null || t.Terrain.Type == TerrainType.Ocean || (t.UnitsHere.Count > 0 && t.UnitsHere[0].Owner != unit.Owner)),
                 _ => game.CurrentMap.Neighbours(tile)
             };
-            if (unit.IgnoreZonesOfControl || !IsNextToEnemy(game, unit, tile))
+            if (unit.IgnoreZonesOfControl || !IsNextToEnemy(tile, unit.Owner, unit.Domain))
             {
                 return neighbours;
             }
             return neighbours
-                .Where(n => n.UnitsHere.Count > 0 || !IsNextToEnemy(game, unit, n));
+                .Where(n => n.UnitsHere.Count > 0 || !IsNextToEnemy(n, unit.Owner, unit.Domain));
+        }
+
+        public static IList<int> GetIslandsFor(Unit unit)
+        {
+            if (unit.Domain == UnitGAS.Sea)
+            {
+                return unit.CurrentLocation.Type == TerrainType.Ocean
+                    ? new List<int> { unit.CurrentLocation.Island }
+                    : unit.CurrentLocation.Neighbours().Where(t => t.Type == TerrainType.Ocean).Select(t => t.Island)
+                        .Distinct().ToList();
+                
+                
+            }
+
+            if (unit.CurrentLocation.Type == TerrainType.Ocean)
+            {
+                return unit.CurrentLocation.Neighbours().Where(n => n.Type != TerrainType.Ocean)
+                    .Select(n => n.Island).Distinct().ToList();
+            }
+
+            return new[] { unit.CurrentLocation.Island };
         }
     }
 }

@@ -41,8 +41,10 @@ namespace EtoFormsUI.Animations
         public Image CurrentFrame => _frames[_currentFrame];
         public int YAdjustment { get; }
 
+        public bool Recycled  { get; private set; }
         public void Reset()
         {
+            Recycled = true;
             _currentFrame = 0;
         }
     }

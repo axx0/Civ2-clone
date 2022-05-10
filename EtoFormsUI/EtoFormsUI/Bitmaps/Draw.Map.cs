@@ -3,7 +3,9 @@ using System.Linq;
 using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.Enums;
+using Civ2engine.MapObjects;
 using Civ2engine.Units;
+using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI
 {
@@ -19,8 +21,12 @@ namespace EtoFormsUI
         /// <param name="height">Height of map shown.</param>
         /// <param name="flatEarth">Flat earth map?</param>
         /// <param name="mapRevealed">Is map revealed?</param>
+        /// <param name="showActiveUnit"></param>
+        /// <param name="highlightList"></param>
+        /// <param name="pathDebug"></param>
         /// <returns></returns>
-        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth, bool mapRevealed, bool showActiveUnit)
+        public static Bitmap MapPart(int civ, int startX, int startY, int width, int height, bool flatEarth,
+            bool mapRevealed, bool showActiveUnit, IList<Tile> highlightList, Dictionary<Tile, Route> pathDebug)
         {
             // Define a bitmap for drawing
             var mapPic = new Bitmap(Map.Xpx * (2 * width + 1), Map.Ypx * (height + 1), PixelFormat.Format32bppRgba);
@@ -90,6 +96,17 @@ namespace EtoFormsUI
                         Draw.City(g, city, true, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 1)));
                         // Add city drawn on map & its position to list for drawing city names
                         cityList.Add(city);
+                    }
+
+                    if (highlightList != null && highlightList.Contains(tile))
+                    {
+                        Draw.ViewPiece(g, Map.Zoom, new Point(Map.Xpx * col, Map.Ypx * (row - 0)));
+                    }
+
+                    if (pathDebug != null && pathDebug.ContainsKey(tile))
+                    {
+                        g.DrawText(new Font("Times New Roman", 10.ZoomScale(Map.Zoom), FontStyle.Bold),Colors.Black, new Point(Map.Xpx * col + Map.Xpx , Map.Ypx * row),
+                            $"{pathDebug[tile].Steps}:{pathDebug[tile].Cost}");
                     }
                 }
             }
