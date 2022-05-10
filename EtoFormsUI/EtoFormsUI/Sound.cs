@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Civ2engine;
-using Civ2engine.Events;
-using Civ2engine.Enums;
-using Civ2engine.Units;
 using LibVLCSharp.Shared;
 
 namespace EtoFormsUI

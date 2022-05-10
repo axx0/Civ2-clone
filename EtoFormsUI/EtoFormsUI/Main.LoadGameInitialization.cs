@@ -175,6 +175,7 @@ namespace EtoFormsUI
             Orders.Add(new WaitOrder(this, orderText.First(mi => mi.Shortcut == "w").MenuText, instance));
             Orders.Add(new UnloadOrder(this, orderText.First(mi => mi.Shortcut == "u").MenuText));
             Orders.Add(new SleepOrder(this, orderText.First(mi => mi.Shortcut == "s").MenuText, instance));
+            Orders.Add(new GotoOrder(this, orderText.First(mi => mi.Shortcut == "g").MenuText, instance));
 
             UpdateOrders(CurrentPlayer.ActiveTile, CurrentPlayer.ActiveUnit);
         }

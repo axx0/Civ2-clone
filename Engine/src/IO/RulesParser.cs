@@ -7,6 +7,7 @@ using Civ2engine.Enums;
 using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Path = System.IO.Path;
 
 namespace Civ2engine.IO
 {

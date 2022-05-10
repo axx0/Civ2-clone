@@ -17,8 +17,9 @@ namespace EtoFormsUI.GameModes
             return true;
         }
 
-        public IDictionary<Keys, Action> Actions { get; set; } = new Dictionary<Keys, Action>();
-        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main buttons, MouseButtons eButtons)
+        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, bool interval,
+            MouseEventArgs mouseEventArgs,
+            int[] mouseDownTile)
         {
             return true;
         }

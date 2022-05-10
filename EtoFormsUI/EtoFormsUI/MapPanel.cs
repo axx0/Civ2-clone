@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Timers;
 using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
@@ -9,6 +10,7 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using Civ2engine.Units;
 using EtoFormsUI.Animations;
 
 namespace EtoFormsUI
@@ -24,8 +26,8 @@ namespace EtoFormsUI
         public Drawable drawPanel;
 
         private int[] CentrXY, centrOffset;
-        private Rectangle mapSrc1, mapSrc2;
-        private int[] mapStartXY, activeOffsetXY, mapDrawSq, clickedXY;
+        private Rectangle mapSrc1;
+        private int[] mapStartXY, activeOffsetXY, mapDrawSq;
         private Point mapDest;
         private bool updateMap;
         private CityWindow cityWindow;
@@ -41,6 +43,9 @@ namespace EtoFormsUI
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
         private Bitmap map;
+        private bool _longHold = false;
+        private int[] _mouseDownTile;
+        private readonly Timer _clickTimer;
 
         public MapPanel(Main parent, int width, int height) : base(width, height, 38, 10)
         {
@@ -48,7 +53,8 @@ namespace EtoFormsUI
             
             drawPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
             drawPanel.Paint += DrawPanel_Paint;
-            drawPanel.MouseUp += DrawPanel_MouseClick;
+            drawPanel.MouseDown += DrawPanel_MouseDowm;
+            drawPanel.MouseUp += DrawPanel_MouseUp;
             MainPanelLayout.Add(drawPanel, 11, 38);
             MainPanel.Content = MainPanelLayout;
 
@@ -60,6 +66,9 @@ namespace EtoFormsUI
             StatusPanel.OnMapEvent += MapEventHappened;
             Game.OnMapEvent += MapEventHappened;
             Main.OnMapEvent += MapEventHappened;
+
+            _clickTimer = new Timer{ AutoReset = false, Interval = 500};
+            _clickTimer.Elapsed += MouseHeldTime_Elapsed;
 
             //var ZoomINButton = new NoSelectButton
             //{
@@ -162,12 +171,45 @@ namespace EtoFormsUI
             return true;
         }
 
-        private void DrawPanel_MouseClick(object sender, MouseEventArgs e)
+        private void DrawPanel_MouseDowm(object sender, MouseEventArgs e)
         {
             // If clicked location is beyond map limits --> exit method
             if (e.Location.X < mapDest.X || e.Location.X > mapDest.X + mapSrc1.Width || e.Location.Y < mapDest.Y || e.Location.Y > mapDest.Y + mapSrc1.Height) return;
+
+            _clickTimer.Start();
+            var clickedXy = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Map.Zoom);
+            clickedXy[0] += mapStartXY[0];
+            clickedXy[1] += mapStartXY[1];
+            
+            Debug.WriteLine($"clickedXY={clickedXy[0]},{clickedXy[1]}");
+
+            if (Game.Instance.CurrentMap.IsValidTileC2(clickedXy[0], clickedXy[1]))
+            {
+                _mouseDownTile = clickedXy;
+            }
+        }
+        
+        
+        private void MouseHeldTime_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            _longHold = true;
+            //TODO: Change the cursor to GOTO if in CurrentGameMode == Moving
+        }
+
+        private void DrawPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            _clickTimer.Stop();
+            // If clicked location is beyond map limits --> exit method
+            if (e.Location.X < mapDest.X || e.Location.X > mapDest.X + mapSrc1.Width || e.Location.Y < mapDest.Y || e.Location.Y > mapDest.Y + mapSrc1.Height)
+            {
+                _mouseDownTile = null;
+                _longHold = false;
+                return;
+            }
             // Else you clicked within the map
-            clickedXY = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Map.Zoom);
+
+            
+            var clickedXY = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Map.Zoom);
             clickedXY[0] += mapStartXY[0];
             clickedXY[1] += mapStartXY[1];
             
@@ -177,11 +219,13 @@ namespace EtoFormsUI
             {
                 // TODO: Make sure that edge black tiles are also ignored!
                 var tile = Game.Instance.CurrentMap.TileC2(clickedXY[0], clickedXY[1]);
-                if (main.CurrentGameMode.MapClicked(tile, this, main, e.Buttons))
+                if (main.CurrentGameMode.MapClicked(tile, this, main, _longHold, e, _mouseDownTile))
                 {
                     MapViewChange(clickedXY);
                 }
             }
+
+            _longHold = false;
         }
 
         /// <summary>
@@ -206,8 +250,9 @@ namespace EtoFormsUI
         public void UpdateMap()
         {
             updateMap = true;
-            if (map != null) map.Dispose();
-            map = Draw.MapPart(Map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed, main.CurrentGameMode != main.Moving);
+            map?.Dispose();
+            
+            map = Draw.MapPart(Map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed, main.CurrentGameMode != main.Moving, PathTiles, PathDebug);
             drawPanel.Invalidate();
         }
 
@@ -359,7 +404,7 @@ namespace EtoFormsUI
             mapStartXY = new int[] { 0, 0 };   // Starting square for drawn map pic
             mapDrawSq = new int[] { 0, 0 }; // Squares to be drawn on map pic
             // For drawing map on panel
-            mapSrc1 = mapSrc2 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
+            mapSrc1 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
             mapDest = new Point(0, 0);  // XY coords of where map should be drawn on panel (in px)
 
             int fullMapWidth = Map.Xpx * (Map.XDimMax + 1);
@@ -464,7 +509,9 @@ namespace EtoFormsUI
         }
 
         private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Map.Ypx) };   // No of squares of panel and map
-       
+        public IList<Tile> PathTiles { get; set; }
+        public Dictionary<Tile, Route> PathDebug { get; set; }
+
         // Determine XY civ2 coords from x-y pixel location on panel
         private int[] PxToCoords(int x, int y, int zoom)
         {

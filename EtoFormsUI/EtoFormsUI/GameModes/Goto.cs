@@ -1,98 +1,55 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Civ2engine;
-using Civ2engine.Enums;
-using Civ2engine.Improvements;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
-using Civ2engine.UnitActions;
-using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
 using Eto.Drawing;
 using Eto.Forms;
 using EtoFormsUI.Animations;
-using Graphics = Eto.Drawing.Graphics;
-using Order = EtoFormsUI.Players.Orders.Order;
-using Point = Eto.Drawing.Point;
 
-namespace EtoFormsUI.GameModes
+namespace EtoFormsUI.GameModes;
+
+/// <summary>
+/// This class allows a visyalization of the goto pathing, which would be an interesting feature and helps with debugging
+/// </summary>
+public class Goto : IGameMode
 {
-    public class MovingPieces : IGameMode
+    private readonly Game _game;
+    private Unit _unit;
+
+    public Goto(Game game)
     {
-        private readonly Game _game;
-        private LocalPlayer _player;
-
-        public bool Activate(IGameMode previous, IPlayer currentPlayer)
+        _game = game;
+    }
+    public bool Activate(IGameMode previous, IPlayer currentPlayer)
+    {
+        if (currentPlayer.ActiveUnit != null)
         {
-            if (currentPlayer is not LocalPlayer player)
-            {
-                return false;
-            }
-
-            _player = player;
-            
-            if (player.ActiveUnit is not {MovePoints: > 0})
-            {
-                _game.ChooseNextUnit();
-            }
-            return player.ActiveUnit != null;
+            _unit = currentPlayer.ActiveUnit;
         }
 
-        public IDictionary<Keys, Action> Actions { get; set; }
+        return _unit != null;
+    }
 
-        private TimeSpan _gotoThreshold = new TimeSpan(1000);
+    public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, bool interval, MouseEventArgs mouseEventArgs,
+        int[] mouseDownTile)
+    {
+        var path = Path.CalculatePathBetween(_game, _unit.CurrentLocation, clickedXy, _unit.Domain, _unit.MaxMovePoints,
+            _unit.Owner, _unit.Alpine, _unit.IgnoreZonesOfControl);
+        mapPanel.PathTiles = path?.Tiles;
+        mapPanel.PathDebug = path?.RouteDebugData;
+        return true;
+    }
 
-        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, bool longClick, MouseEventArgs e,
-            int[] mouseDownTile)
-        {
-            if (e.Buttons == MouseButtons.Primary)
-            {
-                if (longClick && (e.Modifiers & Keys.Control) != Keys.Control)
-                {
-                    var unit = _player.ActiveUnit;
-                    var path = Path.CalculatePathBetween(_game, _player.ActiveTile, clickedXy, unit.Domain, unit.MaxMovePoints,
-                        unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
-                    if (path != null)
-                    {
-                        unit.GoToX = clickedXy.X;
-                        unit.GoToY = clickedXy.Y;
-                        unit.Order = OrderType.GoTo;
-                        path.Follow(_game, unit);
-                        if (!unit.AwaitingOrders)
-                        {
-                            _game.ChooseNextUnit();
-                        }
-                        return false;
-                    }
-                }
-                var city = clickedXy.CityHere;
-                if (city == null)
-                {
-                    return mapPanel.ActivateUnits(clickedXy);
-                }
+    public bool PanelClick(Game game, Main main)
+    {
+        return true;
+    }
 
-                mapPanel.ShowCityWindow(city);
-            }
-            else
-            {
-                main.CurrentGameMode = main.ViewPiece;
-                Game.Instance.ActiveTile = clickedXy;
-            }
-
-            return true;
-        }
-
-        public bool PanelClick(Game game, Main main)
-        {
-            main.CurrentGameMode = main.ViewPiece;
-            return true;
-        }
-
-        public IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation)
-        {
-            if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
+    public IAnimation GetDefaultAnimation(Game game, IAnimation currentAnimation)
+    {
+         if (currentAnimation is not WaitingAnimation animation) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
             if (animation.Unit != game.ActiveUnit) return new WaitingAnimation(game, game.ActiveUnit, game.ActiveUnit.CurrentLocation);
             animation.Reset();
             
@@ -101,7 +58,7 @@ namespace EtoFormsUI.GameModes
 
         public void DrawStatusPanel(Graphics eGraphics, PanelStyle style, int unitPanelHeight)
         {
-            var activeTile = _player.ActiveTile;
+            var activeTile = _unit.CurrentLocation;
 
             Draw.Text(eGraphics, Labels.For(LabelIndex.MovingUnits), style.Font, Colors.White, new Point(119, 10), true, true, Colors.Black,
                 1, 0);
@@ -228,59 +185,13 @@ namespace EtoFormsUI.GameModes
                         style.FrontColor, new Point(9, column), false, false, style.BackColor, 1, 1);
                 }
             }
-        }
+    }
 
-        public void HandleKeyPress(Main main, KeyEventArgs e)
+    public void HandleKeyPress(Main main, KeyEventArgs keyEventArgs)
+    {
+        if (keyEventArgs.Key == Keys.Escape)
         {
-            var key = e.Key | e.Modifiers;
-            var order = main.Orders.OrderByDescending(o=>o.Status).FirstOrDefault(o=> o.ActivationCommand == key);
-            if (order != null)
-            {
-                order.ExecuteCommand();
-            }
-            else
-            {
-                if (!Actions.ContainsKey(e.Key)) return;
-                Actions[e.Key]();
-            }
-        }
-
-
-
-        public MovingPieces(Main main, Game game)
-        {
-            _game = game;
-            Actions = new Dictionary<Keys, Action>
-            {
-                {
-                    Keys.Enter, () =>
-                    {
-                        if (main.StatusPanel.WaitingAtEndOfTurn) main.StatusPanel.End_WaitAtEndOfTurn();
-                    }
-                },
-
-                {Keys.Keypad7, MovementFunctions.TryMoveNorthWest}, {Keys.Keypad8, MovementFunctions.TryMoveNorth},
-                {Keys.Keypad9, MovementFunctions.TryMoveNorthEast},
-                {Keys.Keypad1, MovementFunctions.TryMoveSouthWest}, {Keys.Keypad2, MovementFunctions.TryMoveSouth},
-                {Keys.Keypad3, MovementFunctions.TryMoveSouthEast},
-                {Keys.Keypad4, MovementFunctions.TryMoveWest}, {Keys.Keypad6, MovementFunctions.TryMoveEast},
-
-                {Keys.Up, MovementFunctions.TryMoveNorth}, {Keys.Down, MovementFunctions.TryMoveSouth},
-                {Keys.Left, MovementFunctions.TryMoveWest}, {Keys.Right, MovementFunctions.TryMoveEast},
-
-                {Keys.Space, () =>
-                    {
-                        _game.ActiveUnit.SkipTurn();
-                        _game.ChooseNextUnit();
-                    }
-                },
-                {Keys.S, () =>
-                    {
-                        _game.ActiveUnit.Sleep();
-                        _game.ChooseNextUnit();
-                    }
-                },
-            };
+            main.CurrentGameMode = main.Moving;
         }
     }
 }

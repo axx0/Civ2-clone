@@ -84,10 +84,10 @@ namespace EtoFormsUI.GameModes
         }
 
         public Dictionary<Keys, Action> Actions { get; } 
-
-        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, MouseButtons eButtons)
+        public bool MapClicked(Tile clickedXy, MapPanel mapPanel, Main main, bool interval, MouseEventArgs e,
+            int[] mouseDownTile)
         {
-            if (eButtons == MouseButtons.Primary)
+            if (e.Buttons == MouseButtons.Primary)
             {
                 if (clickedXy.CityHere != null)
                 {

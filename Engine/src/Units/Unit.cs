@@ -174,7 +174,7 @@ namespace Civ2engine.Units
                                          .BuildFortress or OrderType.BuildMine;
     
 
-        public bool AwaitingOrders => !TurnEnded && !Dead && (Order is OrderType.NoOrders or OrderType.GoTo);
+        public bool AwaitingOrders => !TurnEnded && !Dead && (Order is OrderType.NoOrders);
 
         public void SkipTurn()
         {

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
@@ -211,7 +212,8 @@ namespace Civ2engine
                 Advances = advances[id],
                 ScienceRate = sciRate * 10,
                 TaxRate = taxRate * 10,
-                Government = (GovernmentType)government
+                Government = (GovernmentType)government,
+                AllowedAdvanceGroups = new [] { AdvanceGroupAccess.CanResearch } // Default for MPG < TOT will need to read from file
             };
         }
         

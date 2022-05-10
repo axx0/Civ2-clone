@@ -15,7 +15,7 @@ namespace Civ2engine
         public event EventHandler<UnitEventArgs> OnUnitEvent;
         internal event EventHandler<CivEventArgs> OnCivEvent;
 
-        private OrderType[] _doNothingOrders = new[] { OrderType.Fortified, OrderType.Sleep };
+        private readonly OrderType[] _doNothingOrders = new[] { OrderType.Fortified, OrderType.Sleep };
 
         // Choose next unit for orders. If all units ended turn, update cities.
         public void ChooseNextUnit()
@@ -90,23 +90,42 @@ namespace Civ2engine
             foreach (var unit in _activeCiv.Units.Where(u =>
                          u.MovePoints > 0 && !_doNothingOrders.Contains(u.Order)))
             {
-                if (unit.Order == OrderType.Fortify)
+                switch (unit.Order)
                 {
-                    unit.Order = OrderType.Fortified;
-                    unit.MovePointsLost = unit.MovePoints;
-                }
-                else
-                {
-                    unit.ProcessOrder();
-                    
-                    if (TerrainImprovements.ContainsKey(unit.Building))
-                    {
-                        ActiveUnit = CheckConstruction(unit.CurrentLocation, TerrainImprovements[unit.Building])
-                            .FirstOrDefault(u => u.MovePoints > 0);
-                        if (ActiveUnit != null)
+                    case OrderType.Fortify:
+                        unit.Order = OrderType.Fortified;
+                        unit.MovePointsLost = unit.MovePoints;
+                        break;
+                    case OrderType.GoTo:
+                        if (unit.CurrentLocation.Map.IsValidTileC2(unit.GoToX, unit.GoToY))
                         {
+                            var tile = unit.CurrentLocation.Map.TileC2(unit.GoToX, unit.GoToY);
+                            var path = Path.CalculatePathBetween(this, unit.CurrentLocation, tile, unit.Domain,
+                                unit.MaxMovePoints, unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
+                            path?.Follow(this, unit);
+                        }
+
+                        if (unit.MovePoints >= 0)
+                        {
+                            ActiveUnit = unit;
                             return false;
                         }
+                        break;
+                    default:
+                    {
+                        unit.ProcessOrder();
+                    
+                        if (TerrainImprovements.ContainsKey(unit.Building))
+                        {
+                            ActiveUnit = CheckConstruction(unit.CurrentLocation, TerrainImprovements[unit.Building])
+                                .FirstOrDefault(u => u.MovePoints > 0);
+                            if (ActiveUnit != null)
+                            {
+                                return false;
+                            }
+                        }
+
+                        break;
                     }
                 }
             }
