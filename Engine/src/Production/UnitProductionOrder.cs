@@ -23,8 +23,8 @@ namespace Civ2engine.Production
             }
 
             var veteran = city.Improvements.Any(i =>
-                i.Effects.ContainsKey(ImprovementEffect.Veteran) &&
-                i.Effects[ImprovementEffect.Veteran] == (int)_unitDefinition.Domain);
+                i.Effects.ContainsKey(Effects.Veteran) &&
+                i.Effects[Effects.Veteran] == (int)_unitDefinition.Domain);
 
             var unit = new Unit
             {

@@ -9,7 +9,6 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Civ2engine.Terrains;
 using Civ2engine.Units;
 using EtoFormsUI.Animations;
 
@@ -18,7 +17,6 @@ namespace EtoFormsUI
     public class MapPanel : Civ2panel
     {
         private Game Game => Game.Instance;
-        private Map Map => Game.CurrentMap;
         
         private Main main;
         private readonly UITimer animationTimer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
@@ -42,7 +40,7 @@ namespace EtoFormsUI
 
         public static event EventHandler<MapEventArgs> OnMapEvent;
 
-        private Bitmap map;
+        private Bitmap mapImage;
         private bool _longHold = false;
         private int[] _mouseDownTile;
         private readonly Timer _clickTimer;
@@ -102,7 +100,7 @@ namespace EtoFormsUI
             animationTimer.Start();
 
             // Center the map view and draw map
-            MapViewChange(Map.StartingClickedXY ?? Game.GetPlayerCiv.Units[0].XY);
+            MapViewChange(Game.CurrentMap.StartingClickedXY ?? Game.GetPlayerCiv.Units[0].XY);
         }
 
         // Draw map here
@@ -116,14 +114,15 @@ namespace EtoFormsUI
             // Update whole map
             if (updateMap)
             {
-                e.Graphics.DrawImage(map, mapSrc1, mapDest);
+                e.Graphics.DrawImage(mapImage, mapSrc1, mapDest);
                 updateMap = false;
             }
             // Draw animation
             else
             {
                 if(CurrentAnimation == null) return;
-                e.Graphics.DrawImage(CurrentAnimation.CurrentFrame,  CurrentAnimation.GetXDrawOffset(Map.Xpx, mapStartXY[0]), CurrentAnimation.GetYDrawOffset(Map.Ypx, mapStartXY[1]) + mapDest.Y );
+                var map = Game.CurrentMap;
+                e.Graphics.DrawImage(CurrentAnimation.CurrentFrame,  CurrentAnimation.GetXDrawOffset(map.Xpx, mapStartXY[0]), CurrentAnimation.GetYDrawOffset(map.Ypx, mapStartXY[1]) + mapDest.Y );
             }
         }
 
@@ -177,7 +176,7 @@ namespace EtoFormsUI
             if (e.Location.X < mapDest.X || e.Location.X > mapDest.X + mapSrc1.Width || e.Location.Y < mapDest.Y || e.Location.Y > mapDest.Y + mapSrc1.Height) return;
 
             _clickTimer.Start();
-            var clickedXy = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Map.Zoom);
+            var clickedXy = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Game.CurrentMap.Zoom);
             clickedXy[0] += mapStartXY[0];
             clickedXy[1] += mapStartXY[1];
             
@@ -209,7 +208,7 @@ namespace EtoFormsUI
             // Else you clicked within the map
 
             
-            var clickedXY = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Map.Zoom);
+            var clickedXY = PxToCoords((int)e.Location.X - mapDest.X, (int)e.Location.Y - mapDest.Y, Game.CurrentMap.Zoom);
             clickedXY[0] += mapStartXY[0];
             clickedXY[1] += mapStartXY[1];
             
@@ -250,27 +249,29 @@ namespace EtoFormsUI
         public void UpdateMap()
         {
             updateMap = true;
-            map?.Dispose();
-            
-            map = Draw.MapPart(Map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed, main.CurrentGameMode != main.Moving, PathTiles, PathDebug);
+            mapImage?.Dispose();
+            var map = Game.CurrentMap;
+            mapImage = Draw.MapPart(map.WhichCivsMapShown, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, map.MapRevealed, main.CurrentGameMode != main.Moving, PathTiles, PathDebug);
             drawPanel.Invalidate();
         }
 
         #region Zoom events
         public void ZoomINclicked(Object sender, EventArgs e)
         {
-            if (Map.Zoom != 8)
+            var map = Game.CurrentMap;
+            if (map.Zoom != 8)
             {
-                Map.Zoom++;
+                map.Zoom++;
                 MapViewChange(CentrXY);
             }
         }
 
         public void ZoomOUTclicked(Object sender, EventArgs e)
         {
-            if (Map.Zoom != 8)
+            var map = Game.CurrentMap;
+            if (map.Zoom != 8)
             {
-                Map.Zoom--;
+                map.Zoom--;
                 MapViewChange(CentrXY);
             }
         }
@@ -383,21 +384,28 @@ namespace EtoFormsUI
             }
             else
             {
-                drawPanel.Update(new Rectangle(Map.Xpx * (CurrentAnimation.Location.X - mapStartXY[0]),
-                    Map.Ypx * (CurrentAnimation.Location.Y - mapStartXY[1]) - CurrentAnimation.YAdjustment,
-                    CurrentAnimation.Width * Map.Xpx, CurrentAnimation.Height * Map.Ypx));
+                var map = CurrentAnimation.Location.Map;
+                drawPanel.Update(new Rectangle(map.Xpx * (CurrentAnimation.Location.X - mapStartXY[0]),
+                    map.Ypx * (CurrentAnimation.Location.Y - mapStartXY[1]) - CurrentAnimation.YAdjustment,
+                    CurrentAnimation.Width * map.Xpx, CurrentAnimation.Height * map.Ypx));
             }
         }
         #endregion
 
-        private bool IsActiveSquareOutsideMapView(IMapItem mapItem) => mapItem.X >= mapStartXY[0] + PanelSq[0] - 2 ||
-                                                                        mapItem.X <= mapStartXY[0] ||
-                                                                        mapItem.Y >= mapStartXY[1] + PanelSq[1] - 2 ||
-                                                                        mapItem.Y <= mapStartXY[1];
+        private bool IsActiveSquareOutsideMapView(Tile tile)
+        {
+            var panelSquare = GetPanelSquare(tile.Map);
+            return tile.X >= mapStartXY[0] + panelSquare[0] - 2 ||
+                   tile.X <= mapStartXY[0] ||
+                   tile.Y >= mapStartXY[1] + panelSquare[1] - 2 ||
+                   tile.Y <= mapStartXY[1];
+        }
 
         // Function which sets various variables for drawing map on grid
         private void SetCoordsAtMapViewChange(int[] proposedCentralCoords)
         {
+            
+            var map = Game.CurrentMap;
             CentrXY = proposedCentralCoords;
 
             // For making an image of map part
@@ -407,19 +415,19 @@ namespace EtoFormsUI
             mapSrc1 = new Rectangle(0, 0, 0, 0);  // Rectangle part of map pic to be drawn
             mapDest = new Point(0, 0);  // XY coords of where map should be drawn on panel (in px)
 
-            int fullMapWidth = Map.Xpx * (Map.XDimMax + 1);
-            int fullMapHeight = Map.Ypx * (Map.YDim + 1);
+            int fullMapWidth = map.Xpx * (map.XDimMax + 1);
+            int fullMapHeight = map.Ypx * (map.YDim + 1);
 
             // No of squares of panel and map
             //int[] panelSq = { (int)Math.Ceiling((double)drawPanel.Width / Game.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Game.Ypx) };
-            int[] panelSq = PanelSq;
-            centrOffset = new int[] { panelSq[0] / 2, panelSq[1] / 2 };
+            var panelSq = GetPanelSquare(map);
+            centrOffset = new[] { panelSq[0] / 2, panelSq[1] / 2 };
             if (centrOffset[0] % 2 != 1 && centrOffset[1] % 2 == 1) centrOffset[1]--;
             if (centrOffset[0] % 2 == 1 && centrOffset[1] % 2 != 1) centrOffset[0]--;
 
             // Number of drawn squares in both directions (in line with how game works). It's always multiple of 2 squares.
-            mapDrawSq[0] = 2 * (int)Math.Floor((double)Math.Min(fullMapWidth, drawPanel.Width) / (2 * Map.Xpx));
-            mapDrawSq[1] = 2 * (int)Math.Floor((double)Math.Min(fullMapHeight, drawPanel.Height) / (2 * Map.Ypx));
+            mapDrawSq[0] = 2 * (int)Math.Floor((double)Math.Min(fullMapWidth, drawPanel.Width) / (2 * map.Xpx));
+            mapDrawSq[1] = 2 * (int)Math.Floor((double)Math.Min(fullMapHeight, drawPanel.Height) / (2 * map.Ypx));
 
             // Initial calculation of map starting coords
             mapStartXY[0] = proposedCentralCoords[0] - centrOffset[0];
@@ -433,25 +441,25 @@ namespace EtoFormsUI
                 {
                     mapStartXY[1] = 0;
                 }
-                else if (mapStartXY[1] + mapDrawSq[1] >= Map.YDim)
+                else if (mapStartXY[1] + mapDrawSq[1] >= map.YDim)
                 {
-                    mapStartXY[1] = Map.YDim - mapDrawSq[1];
+                    mapStartXY[1] = map.YDim - mapDrawSq[1];
                 }
                 else
                 {
                     if (mapStartXY[1] % 2 != 0) mapStartXY[1]--;
                 }
             }
-            else if (mapStartXY[0] + mapDrawSq[0] >= Map.XDimMax)
+            else if (mapStartXY[0] + mapDrawSq[0] >= map.XDimMax)
             {
-                mapStartXY[0] = Map.XDimMax - mapDrawSq[0];
+                mapStartXY[0] = map.XDimMax - mapDrawSq[0];
                 if (mapStartXY[1] <= 0)
                 {
                     mapStartXY[1] = 0;
                 }
-                else if (mapStartXY[1] + mapDrawSq[1] >= Map.YDim)
+                else if (mapStartXY[1] + mapDrawSq[1] >= map.YDim)
                 {
-                    mapStartXY[1] = Map.YDim - mapDrawSq[1];
+                    mapStartXY[1] = map.YDim - mapDrawSq[1];
                 }
                 else
                 {
@@ -465,9 +473,9 @@ namespace EtoFormsUI
                     mapStartXY[1] = 0;
                     if (mapStartXY[0] % 2 != 0) mapStartXY[0]--;
                 }
-                else if (mapStartXY[1] + mapDrawSq[1] >= Map.YDim)
+                else if (mapStartXY[1] + mapDrawSq[1] >= map.YDim)
                 {
-                    mapStartXY[1] = Map.YDim - mapDrawSq[1];
+                    mapStartXY[1] = map.YDim - mapDrawSq[1];
                     if (mapStartXY[0] % 2 != 0) mapStartXY[0]--;
                 }
                 else
@@ -478,7 +486,7 @@ namespace EtoFormsUI
             }
 
             // Determine drawing rectangles
-            if (panelSq[0] > Map.XDimMax + 1)
+            if (panelSq[0] > map.XDimMax + 1)
             {
                 mapSrc1.Width = fullMapWidth;
                 mapDest.X = (drawPanel.Width - fullMapWidth) / 2;
@@ -489,7 +497,7 @@ namespace EtoFormsUI
                 mapDest.X = 0;
             }
 
-            if (panelSq[1] > Map.YDim + 1)
+            if (panelSq[1] > map.YDim + 1)
             {
                 mapSrc1.Height = fullMapHeight;
                 mapDest.Y = (drawPanel.Height - fullMapHeight) / 2;
@@ -508,7 +516,14 @@ namespace EtoFormsUI
             Debug.WriteLine("");
         }
 
-        private int[] PanelSq => new int[] { (int)Math.Ceiling((double)drawPanel.Width / Map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / Map.Ypx) };   // No of squares of panel and map
+        /// <summary>
+        /// No of squares of panel and map
+        /// </summary>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        private int[] GetPanelSquare(Map map) => new[]
+            { (int)Math.Ceiling((double)drawPanel.Width / map.Xpx), (int)Math.Ceiling((double)drawPanel.Height / map.Ypx) };
+
         public IList<Tile> PathTiles { get; set; }
         public Dictionary<Tile, Route> PathDebug { get; set; }
 

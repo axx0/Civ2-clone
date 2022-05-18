@@ -43,7 +43,7 @@ namespace Civ2engine.Advances
         public static bool HasAdvanceBeenDiscovered(int advanceIndex)
         {
             var research = _researched[advanceIndex];
-            return _researched[advanceIndex].Discovered;
+            return research.Discovered;
         }
 
         public static void GiveAdvance(this Game game, int advanceIndex, Civilization civilization)
@@ -63,6 +63,11 @@ namespace Civ2engine.Advances
             if (civilization.ReseachingAdvance == advanceIndex)
             {
                 civilization.ReseachingAdvance = AdvancesConstants.No;
+            }
+
+            foreach (var effect in game.Rules.Advances[advanceIndex].Effects)
+            {
+                civilization.GlobalEffects[effect.Key] += effect.Value;
             }
 
             foreach (var improvement in game.TerrainImprovements.Values)

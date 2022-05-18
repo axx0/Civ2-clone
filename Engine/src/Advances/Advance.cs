@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
 
 namespace Civ2engine.Advances
 {
@@ -15,5 +16,6 @@ namespace Civ2engine.Advances
         
         public int AdvanceGroup { get; internal set; }
         public int Index { get; internal set; }
+        public Dictionary<Effects, int> Effects { get; } = new();
     }
 }

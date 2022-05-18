@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global
@@ -115,5 +116,22 @@ namespace Civ2engine.Scripting
         /// Returns whether or not any tribe has researched the tech.
         /// </summary>
         public bool researched => AdvanceFunctions.HasAdvanceBeenDiscovered(_advance.Index);
+
+        /// <summary>
+        /// Add an effect for this tech to apply globally to civ, values are added to existing value
+        /// </summary>
+        /// <param name="effect">The Effect to apply</param>
+        /// <param name="value">the value</param>
+        public void AddEffect(Effects effect, int value)
+        {
+            if (_advance.Effects.ContainsKey(effect))
+            {
+                _advance.Effects[effect] += value;
+            }
+            else
+            {
+                _advance.Effects[effect] = value;
+            }
+        }
     }
 }

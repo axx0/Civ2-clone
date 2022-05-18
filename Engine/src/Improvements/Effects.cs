@@ -1,6 +1,6 @@
 namespace Civ2engine.Improvements
 {
-    public enum ImprovementEffect
+    public enum Effects
     {
         Unknown = 0,
         Unique = 1,
@@ -11,6 +11,11 @@ namespace Civ2engine.Improvements
         HappyFace = 6,
         TaxMultiplier = 7,
         LuxMultiplier = 8,
-        ScienceMultiplier = 9
+        ScienceMultiplier = 9,
+        
+        EliminateIndustrialPollution = 20,
+        IndustrialPollutionModifier = 21,
+        EliminatePopulationPollution = 22,
+        PopulationPollutionModifier = 23
     }
 }
