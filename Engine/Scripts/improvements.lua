@@ -33,6 +33,7 @@ civ.getImprovement(10).Effects.Add(civ.core.Effects.LuxMultiplier, 50)
 --University,               16, 3,    Uni,
 civ.getImprovement(12).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 --Mass Transit,             16, 4,    MP,
+civ.getImprovement(13).Effects.Add(civ.core.Effects.EliminatePopulationPollution, 1)
 --Colosseum,                10, 4,    Cst,
 --Factory,                  20, 4,    Ind,
 --Manufacturing Plant,      32, 6,    Rob,
@@ -52,6 +53,8 @@ civ.getImprovement(26).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 --SAM Missile Battery,      10, 2,    Roc,
 --Coastal Fortress,          8, 1,    Met,
 --Solar Plant,              32, 4,    Env,
+civ.getImprovement(29).Effects.Add(civ.core.Effects.PopulationPollutionModifier, -1)
+civ.getImprovement(29).Effects.Add(civ.core.Effects.EliminateIndustrialPollution, 1)
 --Harbor,                   6,  1,    Sea,
 --Offshore Platform,        16, 3,    Min,
 --Airport,                  16, 3,    Rad,

@@ -93,17 +93,17 @@ namespace Civ2engine
         /// <summary>
         /// Adjusted formula as it should always round excess into tax
         /// </summary>
-        public int Tax => (int)((Trade - BaseScience - BaseLux) * GetMultiplier(ImprovementEffect.TaxMultiplier));
+        public int Tax => (int)((Trade - BaseScience - BaseLux) * GetMultiplier(Effects.TaxMultiplier));
 
         private int BaseLux => Trade * Owner.LuxRate / 100;
 
         public int Lux =>
-            (int)(BaseLux * GetMultiplier(ImprovementEffect.LuxMultiplier));
+            (int)(BaseLux * GetMultiplier(Effects.LuxMultiplier));
 
         public int BaseScience => Trade * Owner.ScienceRate / 100;
 
-        public int Science => (int)(BaseScience * GetMultiplier(ImprovementEffect.ScienceMultiplier));
-        private decimal GetMultiplier(ImprovementEffect effect)
+        public int Science => (int)(BaseScience * GetMultiplier(Effects.ScienceMultiplier));
+        private decimal GetMultiplier(Effects effect)
         {
             return (100 + Improvements
                 .Where(i => i.Effects.ContainsKey(effect))
@@ -170,5 +170,6 @@ namespace Civ2engine
         
         public Tile Location { get; init; }
         public List<Tile> WorkedTiles { get; } = new();
+        public int Pollution { get; set; }
     }
 }

@@ -59,15 +59,19 @@ namespace Civ2engine.Scripting
 
     public class EffectsMap
     {
-        public ImprovementEffect Unique = ImprovementEffect.Unique;
-        public ImprovementEffect Capital = ImprovementEffect.Capital;
-        public ImprovementEffect FoodStorage = ImprovementEffect.FoodStorage;
-        public ImprovementEffect Veteran = ImprovementEffect.Veteran;
-        public ImprovementEffect ContentFace = ImprovementEffect.ContentFace;
-        public ImprovementEffect HappyFace = ImprovementEffect.HappyFace;
-        public ImprovementEffect TaxMultiplier = ImprovementEffect.TaxMultiplier;
-        public ImprovementEffect LuxMultiplier = ImprovementEffect.LuxMultiplier;
-        public ImprovementEffect ScienceMultiplier = ImprovementEffect.ScienceMultiplier;
+        public Effects Unique = Effects.Unique;
+        public Effects Capital = Effects.Capital;
+        public Effects FoodStorage = Effects.FoodStorage;
+        public Effects Veteran = Effects.Veteran;
+        public Effects ContentFace = Effects.ContentFace;
+        public Effects HappyFace = Effects.HappyFace;
+        public Effects TaxMultiplier = Effects.TaxMultiplier;
+        public Effects LuxMultiplier = Effects.LuxMultiplier;
+        public Effects ScienceMultiplier = Effects.ScienceMultiplier;
         
+        public Effects EliminateIndustrialPollution = Effects.EliminateIndustrialPollution;
+        public Effects IndustrialPollutionModifier = Effects.IndustrialPollutionModifier;
+        public Effects EliminatePopulationPollution = Effects.EliminatePopulationPollution;
+        public Effects PopulationPollutionModifier = Effects.PopulationPollutionModifier;
     }
 }

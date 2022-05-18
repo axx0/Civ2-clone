@@ -2,6 +2,7 @@
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
+using Civ2engine.Improvements;
 using Civ2engine.Units;
 
 namespace Civ2engine
@@ -84,6 +85,7 @@ namespace Civ2engine
         public int NormalColour { get; set; }
         
         public AdvanceGroupAccess[] AllowedAdvanceGroups { get; set; }
+        public Dictionary<Effects, int> GlobalEffects { get; } = new();
     }
 
     public enum PlayerType

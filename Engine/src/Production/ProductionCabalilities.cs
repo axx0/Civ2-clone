@@ -39,7 +39,7 @@ namespace Civ2engine.Production
                 .OrderBy(p => p.Cost).FirstOrDefault();
         }
 
-        public static Improvement FindByEffect(int targetCiv, ImprovementEffect effect)
+        public static Improvement FindByEffect(int targetCiv, Effects effect)
         {
             return _availableProducts[targetCiv].OfType<BuildingProductionOrder>()
                 .Where(p => p.Improvement.Effects.ContainsKey(effect)).Select(o => o.Improvement).FirstOrDefault();

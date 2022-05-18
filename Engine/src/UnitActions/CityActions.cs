@@ -45,9 +45,9 @@ namespace Civ2engine.UnitActions
             
             if (unit.Owner.Cities.Count == 1)
             {
-                var capitalImprovement = ProductionPossibilities.FindByEffect(city.Owner.Id, ImprovementEffect.Capital)
+                var capitalImprovement = ProductionPossibilities.FindByEffect(city.Owner.Id, Effects.Capital)
                                          ?? game.Rules.Improvements.Where(i =>
-                                             i.Effects.ContainsKey(ImprovementEffect.Capital) &&
+                                             i.Effects.ContainsKey(Effects.Capital) &&
                                              city.Owner.AllowedAdvanceGroups[
                                                  game.Rules.Advances[i.Prerequisite].AdvanceGroup] !=
                                              AdvanceGroupAccess.Prohibited).OrderBy(i => i.Cost).FirstOrDefault();
