@@ -23,8 +23,6 @@ namespace EtoFormsUI
 
         public bool WaitingAtEndOfTurn { get; set; }
 
-        public static event EventHandler<MapEventArgs> OnMapEvent;
-
         public StatusPanel(Main parent, int width, int height)
         {
             main = parent;
@@ -52,7 +50,6 @@ namespace EtoFormsUI
             mainPanel.Content = MainPanelLayout;
             Content = mainPanel;
 
-            MapPanel.OnMapEvent += MapEventHappened;
             Game.OnMapEvent += MapEventHappened;
             //Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;

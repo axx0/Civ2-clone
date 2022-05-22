@@ -54,7 +54,7 @@ namespace EtoFormsUI
         
         private IGameMode _currentGameMode;
         private Command _openLuaConsoleCommand;
-        public static event EventHandler<MapEventArgs> OnMapEvent;
+        public event EventHandler<MapEventArgs> OnMapEvent;
         
         public Main()
         {
@@ -355,6 +355,11 @@ namespace EtoFormsUI
             ViewPiece = new ViewPiece(game, this);
             Moving = new MovingPieces(this, game);
             CurrentGameMode = game.ActiveUnit != null ? Moving : ViewPiece;
+        }
+
+        public void TriggerMapEvent(MapEventArgs args)
+        {
+            OnMapEvent?.Invoke(this, args);
         }
     }
 }

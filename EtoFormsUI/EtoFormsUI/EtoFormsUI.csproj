@@ -13,7 +13,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.5.11" />
+    <PackageReference Include="Eto.Forms" Version="2.7.0" />
     <PackageReference Include="System.Windows.Extensions" Version="6.0.0-preview.1.21102.12" />
     <PackageReference Include="LibVLCSharp" Version="3.4.9" />
   </ItemGroup>

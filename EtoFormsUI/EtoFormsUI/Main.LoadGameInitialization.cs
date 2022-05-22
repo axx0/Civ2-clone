@@ -58,10 +58,10 @@ namespace EtoFormsUI
             
             foreach (MenuItem item in Menu.Items) item.Enabled = true;
 
-            minimapPanel = new MinimapPanel(this, 262, 149);
+            minimapPanel = new MinimapPanel(this, 262, 149, Game.Instance);
             layout.Add(minimapPanel, ClientSize.Width - 262, 0);
 
-            mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height);
+            mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height, minimapPanel.Update);
             layout.Add(mapPanel, 0, 0);
 
             StatusPanel = new StatusPanel(this, 262, ClientSize.Height - 148);

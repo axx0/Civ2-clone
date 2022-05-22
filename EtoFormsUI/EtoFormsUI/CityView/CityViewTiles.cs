@@ -31,7 +31,7 @@ namespace EtoFormsUI
 
         public CityViewTiles(int id, ImprovementType type, Bitmap sourceBmp, Rectangle sourceRect, Point drawOffset, int altTileId)
         {
-            id = id;
+            Id = id;
             Type = type;
             SourceBmp = sourceBmp;
             SourceRect = sourceRect;
