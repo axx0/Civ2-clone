@@ -23,7 +23,7 @@ namespace EtoFormsUI
         private readonly UITimer animationTimer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
         public Drawable drawPanel;
 
-        private int[] CentrXY, centrOffset;
+        public int[] CentrXY, centrOffset;
         private Rectangle mapSrc1;
         private int[] mapStartXY,  mapDrawSq;
         private Point mapDest;
@@ -47,7 +47,8 @@ namespace EtoFormsUI
             main = parent;
             _updateMiniMap = updateMiniMap;
 
-            drawPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
+            drawPanel = new Drawable() {  Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
+            
             drawPanel.Paint += DrawPanel_Paint;
             drawPanel.MouseDown += DrawPanel_MouseDowm;
             drawPanel.MouseUp += DrawPanel_MouseUp;
@@ -87,7 +88,12 @@ namespace EtoFormsUI
 
             // City window
             CityWindowZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
-            CityWindowLocation = new Point((this.Width / 2) - (636 / 2 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 / 2 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom == -1 ? 21 : (CityWindowZoom == 0 ? 27 : 39))));
+            CityWindowLocation = new Point((this.Width / 2) - (636 / 2 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 / 2 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom switch
+            {
+                -1 => 21,
+                0 => 27,
+                _ => 39
+            })));
 
             // Starting animation
             animationTimer = new UITimer(); // Timer for waiting unit/ viewing piece
@@ -96,6 +102,18 @@ namespace EtoFormsUI
 
             // Center the map view and draw map
             MapViewChange(Game.CurrentMap.StartingClickedXY ?? Game.GetPlayerCiv.Units[0].XY);
+            
+            SizeChanged += OnSizeChanged;
+        }
+
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            var drawWidth = MainPanel.Width - 2 * 11;
+                var drawHeight = MainPanel.Height - 38 - 10;
+            if (drawWidth > 0 && drawHeight > 0)
+            {
+                drawPanel.Size = new Size(drawWidth, drawHeight);
+            }
         }
 
         // Draw map here

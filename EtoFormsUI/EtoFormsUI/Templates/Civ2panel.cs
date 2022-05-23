@@ -1,4 +1,5 @@
-﻿using Eto.Forms;
+﻿using System;
+using Eto.Forms;
 using Eto.Drawing;
 
 namespace EtoFormsUI
@@ -33,6 +34,15 @@ namespace EtoFormsUI
 
             InnerPanelLayout = new PixelLayout();
             InnerPanelLayout.Size = new Size(width, height);
+            
+            SizeChanged += OnSizeChanged;
+        }
+
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            MainPanel.Size = Size;
+            MainPanelLayout.Size = new Size(MainPanel.Width, MainPanel.Height);
+            InnerPanel.Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - _paddingTop - _paddingBtm);
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
