@@ -17,6 +17,10 @@ namespace EtoFormsUI
 {
     public partial class Main : Form
     {
+        private int _mapPanelWidth;
+        private const int MiniMapHeight = 148;
+        private const int MiniMapWidth = 262;
+
         public bool LoadGameInitialization(Ruleset ruleset, string saveFileName)
         {
             var rules = RulesParser.ParseRules(ruleset);
@@ -58,14 +62,15 @@ namespace EtoFormsUI
             
             foreach (MenuItem item in Menu.Items) item.Enabled = true;
 
-            minimapPanel = new MinimapPanel(this, 262, 149);
-            layout.Add(minimapPanel, ClientSize.Width - 262, 0);
+            minimapPanel = new MinimapPanel(this, MiniMapWidth, MiniMapHeight, Game.Instance);
+            _mapPanelWidth = ClientSize.Width - MiniMapWidth;
+            layout.Add(minimapPanel, _mapPanelWidth, 0);
 
-            mapPanel = new MapPanel(this, ClientSize.Width - 262, ClientSize.Height);
+            mapPanel = new MapPanel(this, _mapPanelWidth, ClientSize.Height, minimapPanel.Update);
             layout.Add(mapPanel, 0, 0);
 
-            StatusPanel = new StatusPanel(this, 262, ClientSize.Height - 148);
-            layout.Add(StatusPanel, ClientSize.Width - 262, 148);
+            StatusPanel = new StatusPanel(this, MiniMapWidth, ClientSize.Height - MiniMapHeight);
+            layout.Add(StatusPanel, _mapPanelWidth, MiniMapHeight);
 
             Content = layout;
 
@@ -90,7 +95,23 @@ namespace EtoFormsUI
 
             SetupOrders(Game.Instance);
             
+            SizeChanged += OnSizeChanged;
+            
             BringToFront();
+        }
+
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            var newMapWidth = ClientSize.Width - MiniMapWidth;
+            if (newMapWidth > 0 && newMapWidth != _mapPanelWidth)
+            {
+                layout.Move(minimapPanel, newMapWidth, 0);
+                StatusPanel.Height = ClientSize.Height - MiniMapHeight;
+                layout.Move(StatusPanel, newMapWidth, MiniMapHeight);
+                mapPanel.Size = new Size { Height = ClientSize.Height, Width = newMapWidth };
+                mapPanel.MapViewChange(mapPanel.CentrXY);
+                _mapPanelWidth = newMapWidth;
+            }
         }
 
         public void UpdateOrders(Tile activeTile, Unit activeUnit)

@@ -19,37 +19,36 @@ namespace EtoFormsUI
         private Game Game => Game.Instance;
         
         private Main main;
+        private readonly Action<int[], int[]> _updateMiniMap;
         private readonly UITimer animationTimer;   // Timer for blinking (unit or viewing piece), moving unit, etc.
-        private AnimationType animType;
         public Drawable drawPanel;
 
-        private int[] CentrXY, centrOffset;
+        public int[] CentrXY, centrOffset;
         private Rectangle mapSrc1;
-        private int[] mapStartXY, activeOffsetXY, mapDrawSq;
+        private int[] mapStartXY,  mapDrawSq;
         private Point mapDest;
         private bool updateMap;
         private CityWindow cityWindow;
         public Point CityWindowLocation;
         public int CityWindowZoom;
 
-        private int _topOffset = 0;
-
-        private readonly Queue<IAnimation> AnimationQueue = new();
+        private readonly Queue<IAnimation> _animationQueue = new();
 
         public IAnimation CurrentAnimation;
 
-        public static event EventHandler<MapEventArgs> OnMapEvent;
-
         private Bitmap mapImage;
-        private bool _longHold = false;
+        private bool _longHold;
         private int[] _mouseDownTile;
         private readonly Timer _clickTimer;
 
-        public MapPanel(Main parent, int width, int height) : base(width, height, 38, 10)
+        public MapPanel(Main parent, int width, int height, Action<int[], int[]> updateMiniMap) : base(width, height,
+            38, 10)
         {
             main = parent;
+            _updateMiniMap = updateMiniMap;
+
+            drawPanel = new Drawable() {  Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
             
-            drawPanel = new Drawable() { Size = new Size(MainPanel.Width - 2 * 11, MainPanel.Height - 38 - 10), BackgroundColor = Colors.Black };
             drawPanel.Paint += DrawPanel_Paint;
             drawPanel.MouseDown += DrawPanel_MouseDowm;
             drawPanel.MouseUp += DrawPanel_MouseUp;
@@ -59,11 +58,8 @@ namespace EtoFormsUI
             MainPanel.Paint += (sender, e) => Draw.Text(e.Graphics, $"{Game.GetActiveCiv.Adjective} Map", new Font("Times new roman", 17, FontStyle.Bold), Color.FromArgb(135, 135, 135), new Point(MainPanel.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
 
             Game.OnUnitEvent += UnitEventHappened;
-            // Game.OnPlayerEvent += PlayerEventHappened;
-            MinimapPanel.OnMapEvent += MapEventHappened;
-            StatusPanel.OnMapEvent += MapEventHappened;
             Game.OnMapEvent += MapEventHappened;
-            Main.OnMapEvent += MapEventHappened;
+            parent.OnMapEvent += MapEventHappened;
 
             _clickTimer = new Timer{ AutoReset = false, Interval = 500};
             _clickTimer.Elapsed += MouseHeldTime_Elapsed;
@@ -92,7 +88,12 @@ namespace EtoFormsUI
 
             // City window
             CityWindowZoom = 0;   // TODO: Save city zoom level (-1/0/1) option somewhere in game options/settings
-            CityWindowLocation = new Point((this.Width / 2) - (636 / 2 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 / 2 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom == -1 ? 21 : (CityWindowZoom == 0 ? 27 : 39))));
+            CityWindowLocation = new Point((this.Width / 2) - (636 / 2 * (2 + CityWindowZoom) / 2 + 2 * 11), (this.Height / 2) - (421 / 2 * (2 + CityWindowZoom) / 2 + 11 + (CityWindowZoom switch
+            {
+                -1 => 21,
+                0 => 27,
+                _ => 39
+            })));
 
             // Starting animation
             animationTimer = new UITimer(); // Timer for waiting unit/ viewing piece
@@ -101,6 +102,18 @@ namespace EtoFormsUI
 
             // Center the map view and draw map
             MapViewChange(Game.CurrentMap.StartingClickedXY ?? Game.GetPlayerCiv.Units[0].XY);
+            
+            SizeChanged += OnSizeChanged;
+        }
+
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            var drawWidth = MainPanel.Width - 2 * 11;
+                var drawHeight = MainPanel.Height - 38 - 10;
+            if (drawWidth > 0 && drawHeight > 0)
+            {
+                drawPanel.Size = new Size(drawWidth, drawHeight);
+            }
         }
 
         // Draw map here
@@ -243,7 +256,7 @@ namespace EtoFormsUI
             SetCoordsAtMapViewChange(newCenterCoords);
             //map = Draw.MapPart(Game.GetActiveCiv.Id, mapStartXY[0], mapStartXY[1], mapDrawSq[0], mapDrawSq[1], Game.Options.FlatEarth, Map.MapRevealed, main.CurrentGameMode != main.Moving);
             UpdateMap();
-            //OnMapEvent?.Invoke(null, new MapEventArgs(MapEventType.MapViewChanged, mapStartXY, mapDrawSq));
+            _updateMiniMap(mapStartXY, mapDrawSq);
         }
 
         public void UpdateMap()
@@ -332,7 +345,7 @@ namespace EtoFormsUI
                 {
                     if (e is MovementEventArgs mo)
                     {
-                        AnimationQueue.Enqueue(new MoveAnimation(mo, main.Sounds));
+                        _animationQueue.Enqueue(new MoveAnimation(mo, main.Sounds));
                     }
 
                     break;
@@ -341,7 +354,7 @@ namespace EtoFormsUI
                 {
                     if (e is CombatEventArgs combatEventArgs)
                     {
-                        AnimationQueue.Enqueue(new AttackAnimation(combatEventArgs, main.Sounds));
+                        _animationQueue.Enqueue(new AttackAnimation(combatEventArgs, main.Sounds));
                     }
 
 
@@ -366,7 +379,7 @@ namespace EtoFormsUI
         {
             if (CurrentAnimation == null || CurrentAnimation.Finished())
             {
-                CurrentAnimation = AnimationQueue.Count > 0 ? AnimationQueue.Dequeue() : main.CurrentGameMode.GetDefaultAnimation(Game,CurrentAnimation);
+                CurrentAnimation = _animationQueue.Count > 0 ? _animationQueue.Dequeue() : main.CurrentGameMode.GetDefaultAnimation(Game,CurrentAnimation);
                 if (CurrentAnimation != null)
                 {
                     CurrentAnimation.Initialize();

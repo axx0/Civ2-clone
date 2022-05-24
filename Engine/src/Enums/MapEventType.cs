@@ -3,7 +3,6 @@
     public enum MapEventType
     {
         MapViewChanged = 1,
-        ViewPieceMoved = 2,
         ToggleBetweenCurrentEntireMapView = 3,
         ZoomChanged = 4,
         CenterView = 5,

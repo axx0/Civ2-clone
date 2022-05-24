@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Windows" Version="2.6.0" />
+    <PackageReference Include="Eto.Platform.Windows" Version="2.7.0" />
     <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.12" />
   </ItemGroup>
   

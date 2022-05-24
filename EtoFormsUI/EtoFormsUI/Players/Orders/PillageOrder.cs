@@ -11,12 +11,10 @@ namespace EtoFormsUI.Players.Orders
 {
     public class PillageOrder : Order
     {
-        private readonly Main _mainForm;
         private readonly Game _game;
 
         public PillageOrder(Main mainForm, string defaultLabel, Game game) : base(mainForm, Keys.Shift | Keys.P, defaultLabel, 1)
         {
-            _mainForm = mainForm;
             _game = game;
         }
 

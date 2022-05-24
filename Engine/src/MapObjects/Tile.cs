@@ -235,5 +235,10 @@ namespace Civ2engine.MapObjects
         {
             return EffectsList.Any(e => e.Target == ImprovementConstants.Airbase);
         }
+
+        public bool IsVisible(int civId)
+        {
+            return civId < Visibility.Length && Visibility[civId];
+        }
     }
 }

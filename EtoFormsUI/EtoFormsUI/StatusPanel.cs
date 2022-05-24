@@ -20,10 +20,9 @@ namespace EtoFormsUI
         private readonly Drawable mainPanel, statsPanel, unitPanel;
         private bool eotWhite; // End of turn text color is white?
         private readonly UITimer timer;
+        private readonly PixelLayout MainPanelLayout;
 
         public bool WaitingAtEndOfTurn { get; set; }
-
-        public static event EventHandler<MapEventArgs> OnMapEvent;
 
         public StatusPanel(Main parent, int width, int height)
         {
@@ -35,7 +34,7 @@ namespace EtoFormsUI
             mainPanel = new Drawable() { Size = new Size(width, height) };
             mainPanel.Paint += MainPanel_Paint;
 
-            var MainPanelLayout = new PixelLayout() { Size = new Size(mainPanel.Width, mainPanel.Height) };
+            MainPanelLayout = new PixelLayout() { Size = new Size(mainPanel.Width, mainPanel.Height) };
 
             // Stats panel
             statsPanel = new Drawable() { Size = new Size(240, 60) };
@@ -52,7 +51,6 @@ namespace EtoFormsUI
             mainPanel.Content = MainPanelLayout;
             Content = mainPanel;
 
-            MapPanel.OnMapEvent += MapEventHappened;
             Game.OnMapEvent += MapEventHappened;
             //Main.OnMapEvent += MapEventHappened;
             //Game.OnWaitAtTurnEnd += InitiateWaitAtTurnEnd;
@@ -62,6 +60,18 @@ namespace EtoFormsUI
             // Timer for "end of turn" message
             timer = new UITimer() { Interval = 0.5 };
             timer.Elapsed += (sender, e) => unitPanel.Invalidate();
+            
+            SizeChanged += OnSizeChanged;
+        }
+
+        private void OnSizeChanged(object sender, EventArgs e)
+        {
+            mainPanel.Size = Size;
+            MainPanelLayout.Size = Size = new Size(mainPanel.Width, mainPanel.Height);
+            if (this.Height > 117)
+            {
+                unitPanel.Height = this.Height - 117;
+            }
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
