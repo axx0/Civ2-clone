@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine;
 using Eto.Drawing;
+using EtoFormsUI.Bitmaps.ImageLoader;
 using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI.ImageLoader

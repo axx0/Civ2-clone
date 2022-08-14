@@ -33,14 +33,8 @@ namespace EtoFormsUI
                 e.Graphics.AntiAlias = false;
 
                 // Background
-                var imgSize = MapImages.PanelInnerWallpaper.Size;
-                for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
-                {
-                    for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
-                    {
-                        e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-                    }
-                }
+                parent.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
+              
 
                 // Draw units, unit outline, text
                 for (int row = 0; row < shownUnits.Count; row++)

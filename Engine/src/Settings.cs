@@ -2,52 +2,92 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 
 namespace Civ2engine
 {
-    public static class Settings
+    public class Settings
     {
+        private const string SettingsFileName = "appsettings.json";
+
         // Game settings from App.config
         public static string Civ2Path { get; private set; }
         
         public static string[] SearchPaths { get; private set; }
 
-        public static void LoadConfigSettings()
+        public static bool LoadConfigSettings()
         {
-            const int ERROR_INVALID_NAME = 123;
+            var settingsFilePath = Path.Combine(BasePath, SettingsFileName);
 
-            var config = new ConfigurationBuilder()
-            .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-            .AddJsonFile("appsettings.json").Build();
+            LoadSettings(settingsFilePath);
 
-            // Load settings from App.config
-            try
+            return string.IsNullOrWhiteSpace(Civ2Path);
+        }
+
+        public static string BasePath => AppDomain.CurrentDomain.BaseDirectory;
+
+        private static void LoadSettings(string settingsFilePath)
+        {
+            if (!File.Exists(settingsFilePath)) return;
+
+            var contents = File.ReadAllText(settingsFilePath, Encoding.UTF8);
+
+            var settingsDoc = JsonDocument.Parse(contents);
+
+            var root = settingsDoc.RootElement;
+
+            if (root.TryGetProperty(nameof(Civ2Path), out var civ2PathElement))
             {
-                SearchPaths = config.GetSection(nameof(SearchPaths))
-                    .GetChildren()
-                    .Select(c => c.Value.TrimEnd(Path.DirectorySeparatorChar))
-                    .Where(Directory.Exists).ToArray();
-
-                // Read from config file
-                Civ2Path = config.GetSection(nameof(Civ2Path)).Value.TrimEnd(Path.DirectorySeparatorChar);
-                if (!Directory.Exists(Civ2Path))
+                var civ2Path = civ2PathElement.GetString();
+                if (IsValidRoot(civ2Path))
                 {
-                    if (SearchPaths.Length == 0)
-                    {
-                        Debug.WriteLine("Civ2 directory doesn't exist!");
-                        Environment.Exit(ERROR_INVALID_NAME);
-                    }
-                    Civ2Path = SearchPaths[0];
-                }else if (!SearchPaths.Contains(Civ2Path))
-                {
-                    SearchPaths = new[] { Civ2Path }.Concat(SearchPaths).ToArray();
+                    Civ2Path = civ2Path;
                 }
             }
-            catch
+
+            if (root.TryGetProperty(nameof(SearchPaths), out var searchPathsElement))
             {
-                Debug.WriteLine("Error reading app settings");
+                var searchPaths = searchPathsElement.EnumerateArray().Select(e => e.GetString()).Where(IsValidRoot)
+                    .ToArray();
+                if (!string.IsNullOrWhiteSpace(Civ2Path))
+                {
+                    SearchPaths = !searchPaths.Contains(Civ2Path) ? new[] { Civ2Path }.Concat(searchPaths).ToArray() : searchPaths;
+                }
+                else if(searchPaths.Length > 0)
+                {
+                    Civ2Path = searchPaths[0];
+                    SearchPaths = searchPaths;
+                }
+            }else if (!string.IsNullOrWhiteSpace(Civ2Path))
+            {
+                SearchPaths = new[] { Civ2Path };
             }
+        }
+
+        private static bool IsValidRoot(string? civ2Path)
+        {
+            return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) &&
+                   File.Exists(Path.Combine(civ2Path, RulesFile));
+        }
+
+        private const string RulesFile = "rules.txt";
+
+        public static bool AddPath(string path)
+        {
+            var dir = Path.GetDirectoryName(path);
+            if (!IsValidRoot(dir)) return false;
+            if (string.IsNullOrWhiteSpace(Civ2Path))
+            {
+                Civ2Path = dir;
+                SearchPaths = new[] { dir };
+            }
+            else
+            {
+                SearchPaths = SearchPaths.Append(dir).ToArray();
+            }
+            return true;
         }
     }
 }

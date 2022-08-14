@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -8,12 +9,14 @@ namespace EtoFormsUI
     {
         protected Drawable MainPanel, InnerPanel;
         protected PixelLayout MainPanelLayout, InnerPanelLayout;
+        private readonly InterfaceStyle _look;
         private readonly int _paddingTop, _paddingBtm;
         private readonly string _title;
 
-        public Civ2panel(int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
+        public Civ2panel(InterfaceStyle look, int width, int height, int paddingTopInnerPanel, int paddingBtmInnerPanel, string title = null)
         {
             Size = new Size(width, height);
+            _look = look;
             _paddingTop = paddingTopInnerPanel;
             _paddingBtm = paddingBtmInnerPanel;
             _title = title;
@@ -48,14 +51,7 @@ namespace EtoFormsUI
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = MapImages.PanelOuterWallpaper.Size;
-            for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(MapImages.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
+            _look.DrawOuterWallpaper(e.Graphics,Height,Width);
 
             // Paint panel borders
             // Outer border
@@ -107,14 +103,7 @@ namespace EtoFormsUI
         private void InnerPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint inner wallpaper
-            var imgSize = MapImages.PanelInnerWallpaper.Size;
-            for (int row = 0; row < InnerPanel.Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < InnerPanel.Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
+            _look.DrawInnerWallpaper(e.Graphics, InnerPanel.Height, InnerPanel.Width);
         }
     }
 }

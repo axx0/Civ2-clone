@@ -5,6 +5,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine;
 using System.Diagnostics;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -58,6 +59,7 @@ namespace EtoFormsUI
             _paddingBtm = 46;
 
             WindowStyle = WindowStyle.None;
+            Interface = parent.InterfaceStyle;
 
             // Drag window
             this.MouseDown += (_, e) =>
@@ -482,6 +484,8 @@ namespace EtoFormsUI
             Content = layout;
         }
 
+        public InterfaceStyle Interface { get; set; }
+
         private void SetTextBoxText(List<TextBoxDefinition> textBoxes, IList<string> text)
         {
             foreach (var textBox in textBoxes)
@@ -594,14 +598,7 @@ namespace EtoFormsUI
             e.Graphics.AntiAlias = false;
 
             // Paint outer wallpaper
-            var imgSize = MapImages.PanelOuterWallpaper.Size;
-            for (int row = 0; row < Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(MapImages.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
+            Interface.DrawOuterWallpaper(e.Graphics,Height,Width);
 
             // Paint panel borders
             // Outer border
@@ -644,15 +641,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
 
             // Paint inner wallpaper
-            imgSize = MapImages.PanelInnerWallpaper.Size;
-            for (var row = 0; row < (Height - _paddingTop - _paddingBtm) / imgSize.Height + 1; row++)
-            {
-                for (var col = 0; col < (Width - 2 * 11) / imgSize.Width + 1; col++)
-                {
-                    var rectS = new Rectangle(0, 0, Math.Min(Width - 2 * 11 - col * imgSize.Width, imgSize.Width), Math.Min(Height - _paddingBtm - _paddingTop - row * imgSize.Height, imgSize.Height));
-                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, rectS, new Point(col * imgSize.Width + 11, row * imgSize.Height + _paddingTop));
-                }
-            }
+            Interface.DrawInnerWallpaper(e.Graphics,Height,Width,_paddingTop,_paddingBtm,11);
 
             // Title
             if (_fTitle is not null)

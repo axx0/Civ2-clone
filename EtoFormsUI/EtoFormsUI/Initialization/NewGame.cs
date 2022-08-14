@@ -21,9 +21,6 @@ namespace EtoFormsUI.Initialization
 {
     public static class NewGame
     {
-        static PicturePanel stPeterburgPanel, mingGeneralPanel, anicientPersonsPanel, barbariansPanel, galleyPanel, peoplePanel1, 
-            peoplePanel2, templePanel, islandPanel, desertPanel, snowPanel, canyonPanel;
-
         private static Ruleset SelectGameToStart(Main main)
         {
             var rulesFiles = Helpers.LocateRules(Settings.SearchPaths);
@@ -161,14 +158,11 @@ namespace EtoFormsUI.Initialization
                     config.PropLand = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.PropLand == int.MinValue)
                     {
-                        stPeterburgPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
 
-                    stPeterburgPanel.Dispose();
-
-                    islandPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "islandPic"));
+                    using var islandPanel = new PicturePanel( mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "islandPic"));
 
                     mainForm.layout.Add(islandPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - islandPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMFORM"];
@@ -176,14 +170,12 @@ namespace EtoFormsUI.Initialization
                     config.Landform = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Landform == int.MinValue)
                     {
-                        islandPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
 
-                    islandPanel.Dispose();
 
-                    desertPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "desertPic"));
+                    using var desertPanel = new PicturePanel(mainForm.InterfaceStyle, Images.ExtractBitmap(DLLs.Intro, "desertPic"));
 
                     mainForm.layout.Add(desertPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - desertPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMCLIMATE"];
@@ -197,7 +189,7 @@ namespace EtoFormsUI.Initialization
 
                     desertPanel.Dispose();
 
-                    snowPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "snowPic"));
+                    using var snowPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "snowPic"));
 
                     mainForm.layout.Add(snowPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - snowPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMTEMP"];
@@ -205,14 +197,12 @@ namespace EtoFormsUI.Initialization
                     config.Temperature = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Temperature == int.MinValue)
                     {
-                        snowPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
 
-                    snowPanel.Dispose();
 
-                    canyonPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "canyonPic"));
+                    using var canyonPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "canyonPic"));
 
                     mainForm.layout.Add(canyonPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - canyonPanel.Width / 2), 76));
                     configPopUp = config.PopUps["CUSTOMAGE"];
@@ -220,14 +210,11 @@ namespace EtoFormsUI.Initialization
                     config.Age = CustomWorldDialog(mainForm, configPopUp, config);
                     if (config.Age == int.MinValue)
                     {
-                        canyonPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
-                    canyonPanel.Dispose();
                 }
 
-                if (stPeterburgPanel is { IsDisposed: false }) stPeterburgPanel.Dispose();
                 SelectDifficultly(mainForm, config);
             }
         }
@@ -239,7 +226,7 @@ namespace EtoFormsUI.Initialization
                 config.WorldSize = new[] { 50, 80 };
                 return;
             }
-            stPeterburgPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "stPeterburgPic"));
+            using var stPeterburgPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "stPeterburgPic"));
 
             mainForm.layout.Add(stPeterburgPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - stPeterburgPanel.Width / 2), 120));
 
@@ -302,7 +289,7 @@ namespace EtoFormsUI.Initialization
         {
             config.Rules = RulesParser.ParseRules(config.RuleSet);
             
-            mingGeneralPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "mingGeneralPic"));
+            using var mingGeneralPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "mingGeneralPic"));
 
             mainForm.layout.Add(mingGeneralPanel, new Point((int)Screen.PrimaryScreen.Bounds.Width - 156 - mingGeneralPanel.Width, 76));
 
@@ -331,7 +318,7 @@ namespace EtoFormsUI.Initialization
                 SelectBarbarity(mainForm,config);
                 return;
             }
-            anicientPersonsPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "ancientPersonsPic"));
+            using var anicientPersonsPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "ancientPersonsPic"));
 
             mainForm.layout.Add(anicientPersonsPanel, new Point(160, 76));
 
@@ -352,7 +339,6 @@ namespace EtoFormsUI.Initialization
 
             if (numberOfCivsDialog.SelectedIndex == int.MinValue)
             {
-                anicientPersonsPanel.Dispose();
                 SelectDifficultly(mainForm, config);
                 return;
             }
@@ -361,7 +347,6 @@ namespace EtoFormsUI.Initialization
                 ? config.Random.Next(possibleCivs -2)
                 : numberOfCivsDialog.SelectedIndex);
 
-            anicientPersonsPanel.Dispose();
             SelectBarbarity(mainForm, config);
         }
 
@@ -373,7 +358,7 @@ namespace EtoFormsUI.Initialization
                 SelectCustomizeRules(mainForm, config);
                 return;
             }
-            barbariansPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "barbariansPic"));
+            using var barbariansPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "barbariansPic"));
 
             mainForm.layout.Add(barbariansPanel, new Point((int)(Screen.PrimaryScreen.Bounds.Width - barbariansPanel.Width - 81), 76));
 
@@ -402,7 +387,7 @@ namespace EtoFormsUI.Initialization
             {
                 if (!config.RuleSet.QuickStart)
                 {
-                    galleyPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "galleyWreckPic"));
+                    using var galleyPanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "galleyWreckPic"));
 
                     mainForm.layout.Add(galleyPanel, new Point(161, 76));
 
@@ -413,7 +398,6 @@ namespace EtoFormsUI.Initialization
 
                     if (rulesDialog.SelectedIndex == int.MinValue)
                     {
-                        galleyPanel.Dispose();
                         mainForm.MainMenu();
                         return;
                     }
@@ -471,7 +455,7 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectGender(Main mainForm, GameInitializationConfig config)
         {
-            peoplePanel1 = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "peoplePic1"));
+            using var peoplePanel1 = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "peoplePic1"));
 
             mainForm.layout.Add(peoplePanel1, new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePanel1.Width / 2), 76));
 
@@ -481,13 +465,11 @@ namespace EtoFormsUI.Initialization
             genderDialog.ShowModal(mainForm);
             if (genderDialog.SelectedIndex == int.MinValue)
             {
-                peoplePanel1.Dispose();
                 SelectDifficultly(mainForm, config);
                 return;
             }
             config.Gender = genderDialog.SelectedIndex;
 
-            peoplePanel1.Dispose();
             SelectTribe(mainForm, config);
         }
 
@@ -501,7 +483,7 @@ namespace EtoFormsUI.Initialization
                 CompleteConfig(mainForm, config);
                 return;
             }
-            peoplePanel2 = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "peoplePic2"));
+            using var peoplePanel2 = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "peoplePic2"));
 
             mainForm.layout.Add(peoplePanel2,
                 new Point((int)(Screen.PrimaryScreen.Bounds.Width / 2 - peoplePanel2.Width / 2), 76));
@@ -650,7 +632,7 @@ namespace EtoFormsUI.Initialization
 
         private static void SelectCityStyle(Main mainForm, GameInitializationConfig config)
         {
-            templePanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "templePic"));
+            using var templePanel = new PicturePanel(mainForm.InterfaceStyle,Images.ExtractBitmap(DLLs.Intro, "templePic"));
 
             mainForm.layout.Add(templePanel, new Point(160, 76));
 
@@ -739,7 +721,6 @@ namespace EtoFormsUI.Initialization
                                 ? config.Random.Next(tribes.Count)
                                 : oppDia.SelectedIndex - 1], false, i));
                 }
-                galleyPanel.Dispose();
             }
             else
             {

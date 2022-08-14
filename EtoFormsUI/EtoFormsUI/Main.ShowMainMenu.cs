@@ -8,19 +8,18 @@ namespace EtoFormsUI
 {
     public partial class Main : Form
     {
-        private PicturePanel sinaiPanel;
-
         public void MainMenu()
         {
-            sinaiPanel = new PicturePanel(Images.ExtractBitmap(DLLs.Intro, "sinaiPic"));
-            layout.Add(sinaiPanel, new Point(160, 76));
+            InterfaceStyle.ShowMainMenuDecoration(layout);
+
 
             var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
             mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),
                                                 (int)(Screen.PrimaryScreen.Bounds.Height - mainMenuDialog.Height - 72));
             mainMenuDialog.ShowModal(this);
 
-            sinaiPanel.Dispose();
+            InterfaceStyle.ClearMainMenuDecoration();
+            
             switch (mainMenuDialog.SelectedIndex)
             {
                 //New Game

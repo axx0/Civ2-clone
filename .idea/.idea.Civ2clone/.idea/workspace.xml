@@ -12,26 +12,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6355a1f4-7981-42fc-9a24-6e0baecee4c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/HScrollBarHandler.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/CityStatusWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/DefenseMinisterWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/TradeAdvisorWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Kingdom menu/TaxRateWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/HScrollBar.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/CustomEtoButtonHandler.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Civilization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Civilization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/GameData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Map.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.GameData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Settings.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Sound.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Sound.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2customDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2customDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2window.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2window.cs" afterDir="false" />
     </list>
     <list id="31b0ad03-acbf-47fd-a211-e6f519f5c6e7" name="Local changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,48 +33,10 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f226a457e74544c4a28ebc6a01dee32085e00/ef/1b960221/ButtonHandler`2.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/OriginalSaves/LoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/14/f10fcc77/Widget.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bdba4afdedc44b0e96e9ff1dcb1f45a6578600/1b/b2a24ac3/NSCellImagePosition.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Civilization.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/ad/50f2d107/ButtonImagePosition.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/bf/3eff30bf/BitmapData.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/d3/dfda274d/Bitmap.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/Program.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/CityView/CityViewWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/IO/GameData.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/41/ff8574a9/TextControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/HScrollBarHandler.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/04/d079ea2e/Button.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/8fc6c91693ac427c898d4a06d9c49d01b3200/25/7e02fe34/CommonControl.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/CustomEtoButtonHandler.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/reuben/RiderProjects/Civ2-clone/Engine/src/Map/Tile.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/HScrollBarHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/VScrollBarHandler.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a8504cb460876164777519c35fcb3727db21f893ae97c31b615f6bb72b2b060/FileStream.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f226a457e74544c4a28ebc6a01dee32085e00/6d/c858888c/ButtonHandler.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -141,23 +88,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="DebuggerViewTab_PTCS_FirstProportionKey" value="0.48270315" />
-    <property name="DebuggerViewTab_PTCS_LastProportionKey" value="0.0" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="XThreadsFramesViewSplitterKey" value="0.49565217" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.smartKeys_rider" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RunManager" selected=".NET Project.EtoFormsUI.Mac">
     <configuration name="EtoFormsUI.Gtk" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -178,9 +120,9 @@
       </method>
     </configuration>
     <configuration name="EtoFormsUI.Mac" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net5.0/EtoFormsUI.Mac.app/Contents/MacOS/EtoFormsUI.Mac" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net6.0/EtoFormsUI.Mac.app/Contents/MacOS/EtoFormsUI.Mac" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net5.0" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net6.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -190,7 +132,7 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net5.0" />
+      <option name="PROJECT_TFM" value="net6.0" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -252,6 +194,8 @@
       <workItem from="1620206764861" duration="9348000" />
       <workItem from="1620250925518" duration="3236000" />
       <workItem from="1620282025347" duration="45535000" />
+      <workItem from="1658140378809" duration="6851000" />
+      <workItem from="1658804027111" duration="2130000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>

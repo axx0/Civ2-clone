@@ -77,78 +77,64 @@ namespace EtoFormsUI
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = MapImages.PanelOuterWallpaper.Size;
-            for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(MapImages.PanelOuterWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
+            main.InterfaceStyle.DrawOuterWallpaper(e.Graphics,Height,Width);
 
             // Paint title
             Draw.Text(e.Graphics, "Status", new Font("Times new roman", 17, FontStyle.Bold),
                 Color.FromArgb(135, 135, 135), new Point(this.Width / 2, 38 / 2), true, true, Colors.Black, 1, 1);
             // Paint panel borders
             // Outer border
-            using var _pen1 = new Pen(Color.FromArgb(227, 227, 227));
-            using var _pen2 = new Pen(Color.FromArgb(105, 105, 105));
-            using var _pen3 = new Pen(Color.FromArgb(255, 255, 255));
-            using var _pen4 = new Pen(Color.FromArgb(160, 160, 160));
-            using var _pen5 = new Pen(Color.FromArgb(240, 240, 240));
-            using var _pen6 = new Pen(Color.FromArgb(223, 223, 223));
-            using var _pen7 = new Pen(Color.FromArgb(67, 67, 67));
-            e.Graphics.DrawLine(_pen1, 0, 0, this.Width - 2, 0); // 1st layer of border
-            e.Graphics.DrawLine(_pen1, 0, 0, 0, this.Height - 2);
-            e.Graphics.DrawLine(_pen2, this.Width - 1, 0, this.Width - 1, this.Height - 1);
-            e.Graphics.DrawLine(_pen2, 0, this.Height - 1, this.Width - 1, this.Height - 1);
-            e.Graphics.DrawLine(_pen3, 1, 1, this.Width - 3, 1); // 2nd layer of border
-            e.Graphics.DrawLine(_pen3, 1, 1, 1, this.Height - 3);
-            e.Graphics.DrawLine(_pen4, this.Width - 2, 1, this.Width - 2, this.Height - 2);
-            e.Graphics.DrawLine(_pen4, 1, this.Height - 2, this.Width - 2, this.Height - 2);
-            e.Graphics.DrawLine(_pen5, 2, 2, this.Width - 4, 2); // 3rd layer of border
-            e.Graphics.DrawLine(_pen5, 2, 2, 2, this.Height - 4);
-            e.Graphics.DrawLine(_pen5, this.Width - 3, 2, this.Width - 3, this.Height - 3);
-            e.Graphics.DrawLine(_pen5, 2, this.Height - 3, this.Width - 3, this.Height - 3);
-            e.Graphics.DrawLine(_pen6, 3, 3, this.Width - 5, 3); // 4th layer of border
-            e.Graphics.DrawLine(_pen6, 3, 3, 3, this.Height - 5);
-            e.Graphics.DrawLine(_pen7, this.Width - 4, 3, this.Width - 4, this.Height - 4);
-            e.Graphics.DrawLine(_pen7, 3, this.Height - 4, this.Width - 4, this.Height - 4);
-            e.Graphics.DrawLine(_pen6, 4, 4, this.Width - 6, 4); // 5th layer of border
-            e.Graphics.DrawLine(_pen6, 4, 4, 4, this.Height - 6);
-            e.Graphics.DrawLine(_pen7, this.Width - 5, 4, this.Width - 5, this.Height - 5);
-            e.Graphics.DrawLine(_pen7, 4, this.Height - 5, this.Width - 5, this.Height - 5);
+            using var pen1 = new Pen(Color.FromArgb(227, 227, 227));
+            using var pen2 = new Pen(Color.FromArgb(105, 105, 105));
+            using var pen3 = new Pen(Color.FromArgb(255, 255, 255));
+            using var pen4 = new Pen(Color.FromArgb(160, 160, 160));
+            using var pen5 = new Pen(Color.FromArgb(240, 240, 240));
+            using var pen6 = new Pen(Color.FromArgb(223, 223, 223));
+            using var pen7 = new Pen(Color.FromArgb(67, 67, 67));
+            e.Graphics.DrawLine(pen1, 0, 0, this.Width - 2, 0); // 1st layer of border
+            e.Graphics.DrawLine(pen1, 0, 0, 0, this.Height - 2);
+            e.Graphics.DrawLine(pen2, this.Width - 1, 0, this.Width - 1, this.Height - 1);
+            e.Graphics.DrawLine(pen2, 0, this.Height - 1, this.Width - 1, this.Height - 1);
+            e.Graphics.DrawLine(pen3, 1, 1, this.Width - 3, 1); // 2nd layer of border
+            e.Graphics.DrawLine(pen3, 1, 1, 1, this.Height - 3);
+            e.Graphics.DrawLine(pen4, this.Width - 2, 1, this.Width - 2, this.Height - 2);
+            e.Graphics.DrawLine(pen4, 1, this.Height - 2, this.Width - 2, this.Height - 2);
+            e.Graphics.DrawLine(pen5, 2, 2, this.Width - 4, 2); // 3rd layer of border
+            e.Graphics.DrawLine(pen5, 2, 2, 2, this.Height - 4);
+            e.Graphics.DrawLine(pen5, this.Width - 3, 2, this.Width - 3, this.Height - 3);
+            e.Graphics.DrawLine(pen5, 2, this.Height - 3, this.Width - 3, this.Height - 3);
+            e.Graphics.DrawLine(pen6, 3, 3, this.Width - 5, 3); // 4th layer of border
+            e.Graphics.DrawLine(pen6, 3, 3, 3, this.Height - 5);
+            e.Graphics.DrawLine(pen7, this.Width - 4, 3, this.Width - 4, this.Height - 4);
+            e.Graphics.DrawLine(pen7, 3, this.Height - 4, this.Width - 4, this.Height - 4);
+            e.Graphics.DrawLine(pen6, 4, 4, this.Width - 6, 4); // 5th layer of border
+            e.Graphics.DrawLine(pen6, 4, 4, 4, this.Height - 6);
+            e.Graphics.DrawLine(pen7, this.Width - 5, 4, this.Width - 5, this.Height - 5);
+            e.Graphics.DrawLine(pen7, 4, this.Height - 5, this.Width - 5, this.Height - 5);
             // Draw line borders of stats panel
-            e.Graphics.DrawLine(_pen7, 9, 36, 252, 36); // 1st layer of border
-            e.Graphics.DrawLine(_pen7, 9, 36, 9, 98);
-            e.Graphics.DrawLine(_pen6, 9, 99, 252, 99);
-            e.Graphics.DrawLine(_pen6, 252, 36, 252, 99);
-            e.Graphics.DrawLine(_pen7, 10, 37, 250, 37); // 2nd layer of border
-            e.Graphics.DrawLine(_pen7, 10, 38, 10, 97);
-            e.Graphics.DrawLine(_pen6, 10, 98, 251, 98);
-            e.Graphics.DrawLine(_pen6, 251, 37, 251, 98);
+            e.Graphics.DrawLine(pen7, 9, 36, 252, 36); // 1st layer of border
+            e.Graphics.DrawLine(pen7, 9, 36, 9, 98);
+            e.Graphics.DrawLine(pen6, 9, 99, 252, 99);
+            e.Graphics.DrawLine(pen6, 252, 36, 252, 99);
+            e.Graphics.DrawLine(pen7, 10, 37, 250, 37); // 2nd layer of border
+            e.Graphics.DrawLine(pen7, 10, 38, 10, 97);
+            e.Graphics.DrawLine(pen6, 10, 98, 251, 98);
+            e.Graphics.DrawLine(pen6, 251, 37, 251, 98);
             // Draw line borders of unit panel
-            e.Graphics.DrawLine(_pen7, 9, 104, 252, 104); // 1st layer of border
-            e.Graphics.DrawLine(_pen7, 9, 104, 9, 106 + unitPanel.Height);
-            e.Graphics.DrawLine(_pen6, 9, 107 + unitPanel.Height, 252, 107 + unitPanel.Height);
-            e.Graphics.DrawLine(_pen6, 252, 104, 252, 105 + unitPanel.Height);
-            e.Graphics.DrawLine(_pen7, 9, 105, 250, 105); // 2nd layer of border
-            e.Graphics.DrawLine(_pen7, 10, 104, 10, 105 + unitPanel.Height);
-            e.Graphics.DrawLine(_pen6, 10, 106 + unitPanel.Height, 252, 106 + unitPanel.Height);
-            e.Graphics.DrawLine(_pen6, 251, 105, 251, 105 + unitPanel.Height);
+            e.Graphics.DrawLine(pen7, 9, 104, 252, 104); // 1st layer of border
+            e.Graphics.DrawLine(pen7, 9, 104, 9, 106 + unitPanel.Height);
+            e.Graphics.DrawLine(pen6, 9, 107 + unitPanel.Height, 252, 107 + unitPanel.Height);
+            e.Graphics.DrawLine(pen6, 252, 104, 252, 105 + unitPanel.Height);
+            e.Graphics.DrawLine(pen7, 9, 105, 250, 105); // 2nd layer of border
+            e.Graphics.DrawLine(pen7, 10, 104, 10, 105 + unitPanel.Height);
+            e.Graphics.DrawLine(pen6, 10, 106 + unitPanel.Height, 252, 106 + unitPanel.Height);
+            e.Graphics.DrawLine(pen6, 251, 105, 251, 105 + unitPanel.Height);
         }
 
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = MapImages.PanelInnerWallpaper.Size;
-            for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
+            main.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
 
             using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
             Draw.Text(e.Graphics,
@@ -164,14 +150,7 @@ namespace EtoFormsUI
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            var imgSize = MapImages.PanelInnerWallpaper.Size;
-            for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
-            {
-                for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
-                {
-                    e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-                }
-            }
+            main.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
 
             // AI turn civ indicator
             if (Game.GetActiveCiv != Game.GetPlayerCiv)

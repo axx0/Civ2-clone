@@ -4,16 +4,12 @@ using Eto.Forms;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.IO;
 using System.Linq;
 using Civ2engine.MapObjects;
 using EtoFormsUI.Cheat_menu;
 using EtoFormsUI.GameModes;
-using EtoFormsUI.Initialization;
-using EtoFormsUIExtensionMethods;
+using EtoFormsUI.Menu;
 using Order = EtoFormsUI.Players.Orders.Order;
 
 namespace EtoFormsUI
@@ -67,7 +63,7 @@ namespace EtoFormsUI
             this.KeyDown += KeyPressedEvent;
             LoadInitialAssets();
 
-            Title = "Civilization II Multiplayer Gold";
+            Title = InterfaceStyle.Title;
             BackgroundColor = Color.FromArgb(143, 123, 99);
             WindowState = WindowState.Maximized;
             var iconPath = Utils.GetFilePath("civ2.ico", Settings.SearchPaths);
@@ -78,9 +74,8 @@ namespace EtoFormsUI
 
             layout = new PixelLayout();
 
-            var imgV = new ImageView { Image = Images.ExtractBitmap(DLLs.Tiles, "introScreenSymbol") };
-            layout.Add(imgV, (int)Screen.PrimaryScreen.Bounds.Width / 2 - imgV.Image.Width / 2, 
-                              (int)Screen.PrimaryScreen.Bounds.Height / 2 - imgV.Image.Height / 2);
+            InterfaceStyle.DrawIntroScreen(layout);
+
 
             // Game menu commands
             var GameOptionsCommand = new Command { MenuText = "Game Options", Shortcut = Keys.Control | Keys.O };
@@ -175,14 +170,14 @@ namespace EtoFormsUI
             var CityStatusCommand = new Command { MenuText = "City Status", Shortcut = Keys.F1 };
             CityStatusCommand.Executed += (_, _) =>
             {
-                var win = new CityStatusWindow();
+                var win = new CityStatusWindow(this);
                 win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
                 win.Show();
             };
             var DefenseMinisterCommand = new Command { MenuText = "Defense Minister", Shortcut = Keys.F2 };
             DefenseMinisterCommand.Executed += (_, _) =>
             {
-                var win = new DefenseMinisterWindow();
+                var win = new DefenseMinisterWindow(this);
                 win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
                 win.Show();
             };
@@ -190,14 +185,14 @@ namespace EtoFormsUI
             var AttitudeAdvisorCommand = new Command { MenuText = "Attitude Advisor", Shortcut = Keys.F4 };
             AttitudeAdvisorCommand.Executed += (_, _) =>
             {
-                var win = new AttitudeAdvisorWindow();
+                var win = new AttitudeAdvisorWindow(this);
                 win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
                 win.Show();
             };
             var TradeAdvisorCommand = new Command { MenuText = "Trade Advisor", Shortcut = Keys.F5 };
             TradeAdvisorCommand.Executed += (_, _) =>
             {
-                var win = new TradeAdvisorWindow();
+                var win = new TradeAdvisorWindow(this);
                 win.Location = new Point((ClientSize.Width / 2) - (win.Width / 2), (ClientSize.Height / 2) - (win.Height / 2));
                 win.Show();
             }; 
@@ -339,17 +334,65 @@ namespace EtoFormsUI
         // Load assets at start of Civ2 program
         private void LoadInitialAssets()
         {
-            Settings.LoadConfigSettings();
+            if (Settings.LoadConfigSettings())
+            {
+                if (!PromptForCivDirectory())
+                {
+                    Environment.Exit(0);
+                }
+            }
+
+            InterfaceStyle = global::EtoFormsUI.Menu.InterfaceStyle.GetMenuImageSet(Settings.Civ2Path);
+
+            if (InterfaceStyle == null)
+            {
+                Environment.Exit(0);
+            }
 
             // Load images
-            Images.LoadGraphicsAssetsAtIntroScreen();
             
             Labels.UpdateLabels(null);
 
             // Load popup boxes info (Game.txt)
             popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
         }
+
+        public InterfaceStyle InterfaceStyle { get; set; }
         
+        private static bool PromptForCivDirectory()
+        {
+            var directoryFound = false;
+            var browseButton = new Button { Text = "Browse for Directory" };
+
+            var closeButton = new Button { Text = "Close" };
+            var dialog = new Dialog
+            {
+                Padding = 10,
+                Title = "Civ directory not found",
+                Content = new Label { Text = "No civ directory specified. Click " },
+                NegativeButtons = { closeButton },
+                PositiveButtons = { browseButton }
+            };
+            browseButton.Command = new Command((_, _) =>
+            {                    
+                var fileDialog = new OpenFileDialog
+                {
+                    CheckFileExists = true,
+                    Filters = { new FileFilter("Rules.txt") }
+                };
+                var result = fileDialog.ShowDialog(dialog);
+                
+                if (result == DialogResult.Ok && Settings.AddPath(fileDialog.FileName))
+                {
+                    directoryFound = true;
+                }
+                dialog.Close();
+            });
+            closeButton.Command = new Command((_, _) => { dialog.Close(); });
+            dialog.ShowModal();
+            return directoryFound;
+        }
+
         private void SetupGameModes(Game game)
         {
             ViewPiece = new ViewPiece(game, this);

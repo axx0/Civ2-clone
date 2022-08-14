@@ -1,5 +1,6 @@
 ﻿using Eto.Forms;
 using Eto.Drawing;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -7,7 +8,7 @@ namespace EtoFormsUI
     {
         private readonly Image _image;
 
-        public PicturePanel(Image image) : base(image.Width + 2 * 11, image.Height + 2 * 11, 11, 11)
+        public PicturePanel(InterfaceStyle look, Image image) : base(look, image.Width + 2 * 11, image.Height + 2 * 11, 11, 11)
         {
             _image = image;
 

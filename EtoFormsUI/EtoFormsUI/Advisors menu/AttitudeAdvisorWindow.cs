@@ -16,7 +16,7 @@ namespace EtoFormsUI
         private readonly VScrollBar bar;
         private int barVal0;
 
-        public AttitudeAdvisorWindow() : base(622, 421, 11, 11)
+        public AttitudeAdvisorWindow(Main main) : base(main.InterfaceStyle,622, 421, 11, 11)
         {
             if (Game.GetActiveCiv.Cities.Count > 9)
             {

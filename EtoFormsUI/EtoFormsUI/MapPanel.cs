@@ -41,7 +41,7 @@ namespace EtoFormsUI
         private int[] _mouseDownTile;
         private readonly Timer _clickTimer;
 
-        public MapPanel(Main parent, int width, int height, Action<int[], int[]> updateMiniMap) : base(width, height,
+        public MapPanel(Main parent, int width, int height, Action<int[], int[]> updateMiniMap) : base(parent.InterfaceStyle,width, height,
             38, 10)
         {
             main = parent;
