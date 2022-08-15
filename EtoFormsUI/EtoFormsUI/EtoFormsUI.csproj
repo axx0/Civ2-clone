@@ -19,7 +19,6 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\CivAxx\Model\Model.csproj" />
     <ProjectReference Include="..\..\Engine\Core.csproj" />
   </ItemGroup>
   

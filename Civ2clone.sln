@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Civ2engine", "Engine\Civ2engine.csproj", "{FC6FEB4D-7ECF-4D5F-A1F7-9A5D26671FC5}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI", "EtoFormsUI\EtoFormsUI\EtoFormsUI.csproj", "{24718BAD-B4D0-43E9-ABFA-1176D54FF8AD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI.Gtk", "EtoFormsUI\EtoFormsUI.Gtk\EtoFormsUI.Gtk.csproj", "{6C20CF55-AD04-4930-9532-E575A9811815}"
@@ -16,15 +14,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI.WinForms", "EtoF
 		{FC6FEB4D-7ECF-4D5F-A1F7-9A5D26671FC5} = {FC6FEB4D-7ECF-4D5F-A1F7-9A5D26671FC5}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Engine\Core.csproj", "{319D14F5-6E32-4F87-BCFB-F1DB19A8E493}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FC6FEB4D-7ECF-4D5F-A1F7-9A5D26671FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC6FEB4D-7ECF-4D5F-A1F7-9A5D26671FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC6FEB4D-7ECF-4D5F-A1F7-9A5D26671FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24718BAD-B4D0-43E9-ABFA-1176D54FF8AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{24718BAD-B4D0-43E9-ABFA-1176D54FF8AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24718BAD-B4D0-43E9-ABFA-1176D54FF8AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +37,10 @@ Global
 		{DC212B6C-55C2-414E-BC14-07ED56C6D646}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC212B6C-55C2-414E-BC14-07ED56C6D646}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC212B6C-55C2-414E-BC14-07ED56C6D646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{319D14F5-6E32-4F87-BCFB-F1DB19A8E493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{319D14F5-6E32-4F87-BCFB-F1DB19A8E493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{319D14F5-6E32-4F87-BCFB-F1DB19A8E493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{319D14F5-6E32-4F87-BCFB-F1DB19A8E493}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
