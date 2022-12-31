@@ -43,7 +43,6 @@ namespace EtoFormsUI
                 }
             }
 
-            MainMenu();
         }
 
         public void Playgame()

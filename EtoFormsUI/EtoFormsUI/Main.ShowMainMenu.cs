@@ -1,66 +1,112 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Eto.Forms;
 using Eto.Drawing;
-using EtoFormsUI.Initialization;
 using Civ2engine;
+using Model;
+using DialogResult = Model.DialogResult;
 
 namespace EtoFormsUI
 {
-    public partial class Main : Form
+    public partial class Main 
     {
         public void MainMenu()
         {
-            InterfaceStyle.ShowMainMenuDecoration(layout);
+            var action = ActiveInterface.GetInitialAction();
+            var picturePanels = new List<PicturePanel>();
 
-
-            var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
-            mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),
-                                                (int)(Screen.PrimaryScreen.Bounds.Height - mainMenuDialog.Height - 72));
-            mainMenuDialog.ShowModal(this);
-
-            InterfaceStyle.ClearMainMenuDecoration();
-            
-            switch (mainMenuDialog.SelectedIndex)
+            try
             {
-                //New Game
-                case 0:
+                do
+                {
+                    if (action.FileInfo != null)
                     {
-                        NewGame.Start(this, false);
-                        break;
-                    }
+                        var file = action.FileInfo;
+                        var ofd = new OpenFileDialog()
+                        {
+                            Directory = new Uri(Settings.Civ2Path),
+                            Title = file.Title
+                        };
 
-                // Start premade
-                case 1:
-                    {
-                        LocateStartingFiles("Select Map To Load",
-                            new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
-                        break;
-                    }
+                        var fialDialogResult = ofd.ShowDialog(this);
 
-                //Customise World
-                case 2:
-                    {
-                        NewGame.Start(this, true);
-                        break;
+                        action = this.ActiveInterface.ProcessFile(ofd.Filenames,
+                            fialDialogResult == Eto.Forms.DialogResult.Ok);
                     }
+                    else if (action.MenuElement != null)
+                    {
+                        var menu = action.MenuElement;
 
-                // Load scenario
-                case 3:
-                    {
-                        LocateStartingFiles("Select Scenario To Load",
-                            new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
-                        break;
-                    }
+                        picturePanels = UpdatePicturePanels(picturePanels, menu);
 
-                // Load game
-                case 4:
-                    {
-                        LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
-                            LoadGameInitialization
-                        );
-                        break;
+
+                        var dialog = new Civ2dialog(this, menu.Dialog);
+                        dialog.Location = new Point(
+                            (int)(Screen.PrimaryScreen.Bounds.Width) - dialog.Width - menu.DialogPos.X,
+                            (int)(Screen.PrimaryScreen.Bounds.Height) - dialog.Height - menu.DialogPos.Y);
+
+                        dialog.ShowModal(this);
+
+                        var dialogResult =
+                            new DialogResult(dialog.SelectedButton, dialog.SelectedIndex, dialog.CheckboxReturnStates);
+
+                        action = this.ActiveInterface.ProcessDialog(menu.Dialog.Name, dialogResult);
                     }
+                    else
+                    {
+                        action = null;
+                    }
+                } while (action != null);
             }
+            finally
+            {
+                foreach (var panel in picturePanels)
+                {
+                    if (panel != null)
+                    {
+                        layout.Remove(panel);
+                        panel.Dispose();
+                    }
+                }
+            }
+        }
+
+        private List<PicturePanel> UpdatePicturePanels(List<PicturePanel> picturePanels, MenuElements menu)
+        {
+            var existingPanels = picturePanels.ToList();
+            var newPanels = new List<PicturePanel>();
+            foreach (var d in menu.Decorations)
+            {
+                var key = d.Image.Key;
+                var existing = existingPanels.FirstOrDefault(p => p.Key == key);
+                if (existing != null)
+                {
+                    existingPanels.Remove(existing);
+                    newPanels.Add(existing);
+                    if (existing.Location.X != d.Location.X || existing.Location.Y != d.Location.Y)
+                    {
+                        layout.Remove(existing);
+                        layout.Add(existing, d.Location.X, d.Location.Y);
+                    }
+                }
+                else
+                {
+                    var panel = new PicturePanel(ActiveInterface.Look, Images.ExtractBitmap(d.Image),
+                        d.Image.Key);
+                    layout.Add(panel, d.Location.X, d.Location.Y);
+                    newPanels.Add(panel);
+                }
+            }
+
+            foreach (var existingPanel in existingPanels)
+            {
+                layout.Remove(existingPanel);
+                existingPanel.Dispose();
+            }
+
+            picturePanels = newPanels;
+            return picturePanels;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace EtoFormsUI
         private int barVal0;
         private readonly List<(ImprovementType, int, int)> improvCosts = new();
 
-        public TradeAdvisorWindow(Main main) : base(main.InterfaceStyle,622, 421, 11, 11)
+        public TradeAdvisorWindow(Main main) : base(main.ActiveInterface.Look,622, 421, 11, 11)
         {
             // Get costs of improvements
             var sortedTypes = Game.Rules.Improvements.Select(c => c.Type).ToList();

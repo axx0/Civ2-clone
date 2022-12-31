@@ -42,7 +42,7 @@ namespace EtoFormsUI
         private int ButtonFontSize => 9.ZoomScale(_cityZoom * 4);
         private int Zoom => _cityZoom == -1 ? -2 : (_cityZoom == 0 ? 0 : 4);
 
-        public CityWindow(Main main, MapPanel parent, City city, int cityZoom) : base(main.InterfaceStyle,636 * (2 + cityZoom) / 2 + 2 * 11, 421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39)), cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39), 11, "")
+        public CityWindow(Main main, MapPanel parent, City city, int cityZoom) : base(main.ActiveInterface.Look,636 * (2 + cityZoom) / 2 + 2 * 11, 421 * (2 + cityZoom) / 2 + 11 + (cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39)), cityZoom == -1 ? 21 : (cityZoom == 0 ? 27 : 39), 11, "")
         {
             _main = main;
             _cityZoom = cityZoom;

@@ -5,6 +5,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using Civ2engine.Units;
 using Civ2engine.Enums;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -33,7 +34,7 @@ namespace EtoFormsUI
                 e.Graphics.AntiAlias = false;
 
                 // Background
-                parent.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
+                InterfaceUtils.DrawInnerWallpaper( e.Graphics, Height, Width);
               
 
                 // Draw units, unit outline, text

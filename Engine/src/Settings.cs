@@ -76,16 +76,21 @@ namespace Civ2engine
 
         public static bool AddPath(string path)
         {
-            var dir = Path.GetDirectoryName(path);
-            if (!IsValidRoot(dir)) return false;
+            if (!IsValidRoot(path))
+            {
+                var dir = Path.GetDirectoryName(path);
+                if (!IsValidRoot(dir)) return false;
+                path = dir;
+            }
+
             if (string.IsNullOrWhiteSpace(Civ2Path))
             {
-                Civ2Path = dir;
-                SearchPaths = new[] { dir };
+                Civ2Path = path;
+                SearchPaths = new[] { path };
             }
             else
             {
-                SearchPaths = SearchPaths.Append(dir).ToArray();
+                SearchPaths = SearchPaths.Append(path).ToArray();
             }
             return true;
         }

@@ -18,7 +18,7 @@ namespace EtoFormsUI
         private readonly List<UnitDefinition> unitStatDefs, unitCasDefs;
         private bool showCasualties;
 
-        public DefenseMinisterWindow(Main main) : base(main.InterfaceStyle,622, 421, 11, 11)
+        public DefenseMinisterWindow(Main main) : base(main.ActiveInterface.Look,622, 421, 11, 11)
         {
             showCasualties = false;
 

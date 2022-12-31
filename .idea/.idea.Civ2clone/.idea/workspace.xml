@@ -6,17 +6,73 @@
     <projectFile>EtoFormsUI/EtoFormsUI.Mac/EtoFormsUI.Mac.csproj</projectFile>
     <projectFile>EtoFormsUI/EtoFormsUI.WinForms/EtoFormsUI.WinForms.csproj</projectFile>
     <projectFile>EtoFormsUI/Civ2-axx/Civ2-axx.csproj</projectFile>
+    <projectFile>EtoFormsUI/CivAxx.Mac/CivAxx.Mac.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6355a1f4-7981-42fc-9a24-6e0baecee4c5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/CustomEtoButtonHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ/Dialogs/ICivDialogHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ/Dialogs/MainMenu.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ/Dialogs/NewGame/SelectGameVersion.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ/Dialogs/NewGame/WorldSizeHandler.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ/Rules/Initialization.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Civ/Rules/Locator.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Menu/InterfaceUtils.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/DialogResult.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/EventType.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Images/BinaryStorage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Images/BitmapStorage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Images/IDecoration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Images/IImageSource.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Images/ImageStorage.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/InterfaceActions/IInterfaceAction.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/InterfaceActions/MenuAction.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/InterfaceStyle.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/MenuElements.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2clone.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx.sln" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/CivAxx.Mac.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/CustomEtoButtonHandler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/Icon.icns" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/Info.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Mac/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Wpf/CivAxx.Wpf.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx.Wpf/Program.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx/CivAxx.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CivAxx/CivAxx/CivAxx/MainForm.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Settings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/CityStatusWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/CityStatusWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/DefenseMinisterWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/DefenseMinisterWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/TradeAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/TradeAdvisorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Images.ImportDLLgifs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Images.ImportDLLgifs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/CityWindow/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/CityWindow/CityWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/EtoFormsUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/EtoFormsUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/NewGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/NewGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.LoadGameInitialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.LoadGameInitialization.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Sound.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Sound.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Menu/Civ2GoldMenu.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Menu/InterfaceStyle.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Menu/TestOfTimeMenu.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MinimapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/SelectUnitDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/SelectUnitDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/StatusPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/CheckboxPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/CheckboxPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2customDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2customDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2form.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2form.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2panel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2panel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2window.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/PicturePanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/PicturePanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/RadioButtonPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/RadioButtonPanel.cs" afterDir="false" />
     </list>
     <list id="31b0ad03-acbf-47fd-a211-e6f519f5c6e7" name="Local changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,10 +89,46 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/25/63dba24c/Image.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/4b/a6690568/Widget.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/60/7ec3b9ac/Button.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/91/662108d0/Control.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/9d/fa12f75d/SelectFolderDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/a3/5401e8ac/FileDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/a4/519d6309/Dialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/ab/9d6dd0a7/Container.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/ad/7521bb79/Bitmap.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/b2/aee4f048/PixelLayout.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/cd/19bac0b4/Command.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/ff/cc5cfa68/PropertyStore.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6850960112754a049b3d44e7da15f3a658a400/55/a4b5e2ac/NSRunLoop.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bce069ad2c8a41178737de27ff47c75437800/19/29736aee/Core.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed68f9830c9d44e5884b4e1f5a071cd18b800/3a/3cd218dd/MacFileDialog`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed68f9830c9d44e5884b4e1f5a071cd18b800/4c/01d7f76e/MacModal.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed68f9830c9d44e5884b4e1f5a071cd18b800/9c/1230168c/DialogHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed68f9830c9d44e5884b4e1f5a071cd18b800/b5/976c8d5a/ModalEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ed68f9830c9d44e5884b4e1f5a071cd18b800/df/11937607/ButtonHandler`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1774eb4a4b8983b4c9f69624f3883a4c617b7e95e8f384c4bf7cda1ecc09f86/RuntimeType.ActivatorCache.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2ff32d9e6a8ae52479379f35545f9a152fde5adb58a20dc4526c1c59bafe3/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3429b3784848044d01e1e8654c697723b796daea4b618aaaa38d9df439be81/Path.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/a4cb9591c21230d9be732f46914bf44e165d819809330102617bef23157b/ToCollection.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/caccb9a16b7398be8d7bb6172f25e9c31e7d93eca254e79c3c6ff3ce733da8c/Dictionary.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f11969dfffc816d6743c592d9acb179abc37be72cccf81fb9167cbd9b5586df3/Rectangle.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/CustomEtoButtonHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/HScrollBarHandler.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/VScrollBarHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Advisors menu/CityStatusWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/CityWindow/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Menu/InterfaceStyle.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Menu/InterfaceStyle.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Templates/CheckboxPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Templates/Civ2form.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Templates/Civ2panel.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -83,24 +175,46 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
   <component name="ProjectId" id="1s5LfMErJMB9LIXuqxoyRcfCxmS" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.55723906",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RunManager" selected=".NET Project.EtoFormsUI.Mac">
+}]]></component>
+  <component name="RunManager" selected=".NET Project.CivAxx.Mac">
+    <configuration name="CivAxx.Mac" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/EtoFormsUI/CivAxx.Mac/CivAxx.Mac.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" />
+      </method>
+    </configuration>
     <configuration name="EtoFormsUI.Gtk" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -174,6 +288,7 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue=".NET Project.CivAxx.Mac" />
       <item itemvalue=".NET Project.EtoFormsUI.Gtk" />
       <item itemvalue=".NET Project.EtoFormsUI.Mac" />
       <item itemvalue=".NET Project.EtoFormsUI.WinForms" />
@@ -196,6 +311,11 @@
       <workItem from="1620282025347" duration="45535000" />
       <workItem from="1658140378809" duration="6851000" />
       <workItem from="1658804027111" duration="2130000" />
+      <workItem from="1668918412693" duration="2837000" />
+      <workItem from="1669020022834" duration="37033000" />
+      <workItem from="1670221558754" duration="7725000" />
+      <workItem from="1670579694498" duration="6097000" />
+      <workItem from="1671039856683" duration="39008000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -269,6 +389,97 @@
           <line>95</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\IO\RulesParser.cs" initialLine="62" containingFunctionPresentation="method 'ProcessLeaders'" />
           <option name="timeStamp" value="59" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs</url>
+          <line>16</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" initialLine="60" containingFunctionPresentation="method 'LoadInterfaces'">
+            <startOffsets>
+              <option value="310" />
+            </startOffsets>
+            <endOffsets>
+              <option value="356" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="61" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs</url>
+          <line>37</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" initialLine="81" containingFunctionPresentation="method 'LoadInterfaces'">
+            <startOffsets>
+              <option value="1222" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1252" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="62" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs</url>
+          <line>348</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" initialLine="346" containingFunctionPresentation="method 'LoadInitialAssets'">
+            <startOffsets>
+              <option value="23316" />
+            </startOffsets>
+            <endOffsets>
+              <option value="23368" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs</url>
+          <line>400</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" initialLine="392" containingFunctionPresentation="method 'PromptForCivDirectory'">
+            <startOffsets>
+              <option value="25137" />
+            </startOffsets>
+            <endOffsets>
+              <option value="25156" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="65" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs</url>
+          <line>401</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" initialLine="393" containingFunctionPresentation="method 'PromptForCivDirectory'">
+            <startOffsets>
+              <option value="25169" />
+            </startOffsets>
+            <endOffsets>
+              <option value="25191" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="66" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Images.ImportDLLgifs.cs</url>
+          <line>70</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Images.ImportDLLgifs.cs" initialLine="70" containingFunctionPresentation="method 'ExtractBitmap'">
+            <startOffsets>
+              <option value="3427" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3501" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="71" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs</url>
+          <line>15</line>
+          <properties documentPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" initialLine="15" containingFunctionPresentation="method 'MainMenu'">
+            <startOffsets>
+              <option value="289" />
+            </startOffsets>
+            <endOffsets>
+              <option value="337" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="76" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

@@ -1,5 +1,6 @@
 ﻿using Eto.Forms;
 using Eto.Drawing;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -38,7 +39,7 @@ namespace EtoFormsUI
             innerPanel.Paint += (_, e) =>
             {
                 // Background
-                parent.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
+                InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width);
 
                 // Draw radio btn, text, text outline
                 for (int row = 0; row < checkboxNames.Length; row++)

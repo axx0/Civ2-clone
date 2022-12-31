@@ -9,6 +9,7 @@ using Civ2engine.Events;
 using Civ2engine.Enums;
 using Civ2engine.Units;
 using System.Diagnostics;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -77,7 +78,7 @@ namespace EtoFormsUI
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            main.InterfaceStyle.DrawOuterWallpaper(e.Graphics,Height,Width);
+            InterfaceUtils.DrawOuterWallpaper(e.Graphics,Height, Width);
 
             // Paint title
             Draw.Text(e.Graphics, "Status", new Font("Times new roman", 17, FontStyle.Bold),
@@ -134,7 +135,7 @@ namespace EtoFormsUI
         private void StatsPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            main.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
+            InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width);
 
             using var _font = new Font("Times New Roman", 12, FontStyle.Bold);
             Draw.Text(e.Graphics,
@@ -150,7 +151,7 @@ namespace EtoFormsUI
         private void UnitPanel_Paint(object sender, PaintEventArgs e)
         {
             // Paint wallpaper
-            main.InterfaceStyle.DrawInnerWallpaper(e.Graphics, Height, Width);
+            InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width);
 
             // AI turn civ indicator
             if (Game.GetActiveCiv != Game.GetPlayerCiv)

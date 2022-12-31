@@ -19,8 +19,10 @@
   </ItemGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\CivAxx\Model\Model.csproj" />
+    <ProjectReference Include="..\..\Civ2\Civ2.csproj" />
     <ProjectReference Include="..\..\Engine\Core.csproj" />
+    <ProjectReference Include="..\..\Model\Model.csproj" />
+    <ProjectReference Include="..\..\TOT\TOT.csproj" />
   </ItemGroup>
   
 </Project>

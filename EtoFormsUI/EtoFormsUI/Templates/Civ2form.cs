@@ -2,6 +2,7 @@
 using Eto.Forms;
 using Eto.Drawing;
 using EtoFormsUI.Menu;
+using Model;
 
 namespace EtoFormsUI
 {
@@ -61,7 +62,7 @@ namespace EtoFormsUI
         private void Surface_Paint(object sender, PaintEventArgs e)
         {
             // Paint outer wallpaper
-            _look.DrawOuterWallpaper(e.Graphics,Height,Width);
+            InterfaceUtils.DrawOuterWallpaper(e.Graphics,Height, Width);
 
             // Paint panel borders
             // Outer border
@@ -104,7 +105,8 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
 
             // Paint inner wallpaper
-            _look.DrawInnerWallpaper(e.Graphics,Height,Width,_paddingTop, _paddingBtm,11);
+            
+            InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width,_paddingTop, _paddingBtm,11);
 
             // Paint title (if it exists)
             if (_title != null)

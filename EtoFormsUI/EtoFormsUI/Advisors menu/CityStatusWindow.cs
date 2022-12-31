@@ -13,7 +13,7 @@ namespace EtoFormsUI
         private readonly VScrollBar bar;
         private int barVal0;
 
-        public CityStatusWindow(Main main) : base(main.InterfaceStyle, 622, 421, 11, 11)
+        public CityStatusWindow(Main main) : base(main.ActiveInterface.Look, 622, 421, 11, 11)
         {
             if (Game.GetActiveCiv.Cities.Count > 12)
             {

@@ -6,6 +6,7 @@ using Eto.Drawing;
 using Civ2engine;
 using System.Diagnostics;
 using EtoFormsUI.Menu;
+using Model;
 
 namespace EtoFormsUI
 {
@@ -59,7 +60,7 @@ namespace EtoFormsUI
             _paddingBtm = 46;
 
             WindowStyle = WindowStyle.None;
-            Interface = parent.InterfaceStyle;
+            Interface = parent.ActiveInterface.Look;
 
             // Drag window
             this.MouseDown += (_, e) =>
@@ -598,7 +599,7 @@ namespace EtoFormsUI
             e.Graphics.AntiAlias = false;
 
             // Paint outer wallpaper
-            Interface.DrawOuterWallpaper(e.Graphics,Height,Width);
+            InterfaceUtils.DrawOuterWallpaper(e.Graphics,Height, Width);
 
             // Paint panel borders
             // Outer border
@@ -641,7 +642,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
 
             // Paint inner wallpaper
-            Interface.DrawInnerWallpaper(e.Graphics,Height,Width,_paddingTop,_paddingBtm,11);
+            InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width,_paddingTop,_paddingBtm,11);
 
             // Title
             if (_fTitle is not null)

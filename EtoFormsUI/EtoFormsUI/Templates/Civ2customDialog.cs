@@ -1,6 +1,7 @@
 ﻿using System;
 using Eto.Forms;
 using Eto.Drawing;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -63,7 +64,7 @@ namespace EtoFormsUI
             e.Graphics.AntiAlias = false;
 
             // Paint outer wallpaper
-            _parent.InterfaceStyle.DrawOuterWallpaper(e.Graphics,Height,Width);
+            InterfaceUtils.DrawOuterWallpaper(e.Graphics,Height, Width);
 
             // Paint panel borders
             // Outer border
@@ -106,7 +107,7 @@ namespace EtoFormsUI
             e.Graphics.DrawLine(_pen6, 9, Height - _paddingBtm + 1, Width - 9 - 1, Height - _paddingBtm + 1);
 
             // Paint inner wallpaper
-            _parent.InterfaceStyle.DrawInnerWallpaper(e.Graphics,Height,Width,_paddingTop, _paddingBtm, 11);
+            InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width,_paddingTop, _paddingBtm, 11);
 
 
             // Paint title (if it exists)

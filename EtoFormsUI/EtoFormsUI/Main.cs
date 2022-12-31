@@ -10,6 +10,8 @@ using Civ2engine.MapObjects;
 using EtoFormsUI.Cheat_menu;
 using EtoFormsUI.GameModes;
 using EtoFormsUI.Menu;
+using Model;
+using DialogResult = Eto.Forms.DialogResult;
 using Order = EtoFormsUI.Players.Orders.Order;
 
 namespace EtoFormsUI
@@ -63,7 +65,7 @@ namespace EtoFormsUI
             this.KeyDown += KeyPressedEvent;
             LoadInitialAssets();
 
-            Title = InterfaceStyle.Title;
+            Title = ActiveInterface.Title;
             BackgroundColor = Color.FromArgb(143, 123, 99);
             WindowState = WindowState.Maximized;
             var iconPath = Utils.GetFilePath("civ2.ico", Settings.SearchPaths);
@@ -74,7 +76,9 @@ namespace EtoFormsUI
 
             layout = new PixelLayout();
 
-            InterfaceStyle.DrawIntroScreen(layout);
+            var imgV = new ImageView { Image = Images.ExtractBitmap(DLLs.Tiles, "introScreenSymbol") };
+            layout.Add(imgV, (int)Screen.PrimaryScreen.Bounds.Width / 2 - imgV.Image.Width / 2, 
+                (int)Screen.PrimaryScreen.Bounds.Height / 2 - imgV.Image.Height / 2);
 
 
             // Game menu commands
@@ -342,14 +346,20 @@ namespace EtoFormsUI
                 }
             }
 
-            InterfaceStyle = global::EtoFormsUI.Menu.InterfaceStyle.GetMenuImageSet(Settings.Civ2Path);
+            Interfaces = Initialization.Helpers.LoadInterfaces();
 
-            if (InterfaceStyle == null)
+            ActiveInterface = Initialization.Helpers.GetInterface(Settings.Civ2Path, Interfaces);
+            
+            if (ActiveInterface == null)
             {
                 Environment.Exit(0);
             }
 
+            ActiveInterface.Initialize();
+
+
             // Load images
+            InterfaceUtils.ImportWallpapersFromIconsFile(Settings.Civ2Path);
             
             Labels.UpdateLabels(null);
 
@@ -357,8 +367,10 @@ namespace EtoFormsUI
             popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
         }
 
-        public InterfaceStyle InterfaceStyle { get; set; }
-        
+        public IUserInterface ActiveInterface { get; set; }
+
+        public IList<IUserInterface> Interfaces { get; set; }
+
         private static bool PromptForCivDirectory()
         {
             var directoryFound = false;
@@ -374,15 +386,12 @@ namespace EtoFormsUI
                 PositiveButtons = { browseButton }
             };
             browseButton.Command = new Command((_, _) =>
-            {                    
-                var fileDialog = new OpenFileDialog
-                {
-                    CheckFileExists = true,
-                    Filters = { new FileFilter("Rules.txt") }
-                };
+            {
+                var fileDialog = new SelectFolderDialog();
+
                 var result = fileDialog.ShowDialog(dialog);
                 
-                if (result == DialogResult.Ok && Settings.AddPath(fileDialog.FileName))
+                if (result == DialogResult.Ok && Settings.AddPath(fileDialog.Directory))
                 {
                     directoryFound = true;
                 }
