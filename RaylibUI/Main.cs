@@ -12,7 +12,7 @@ namespace RaylibUI
         Texture2D tile;
         int selected_radio;
         bool isSAVselected = false;
-        private string savName = "Deity.sav";
+        private string savName = "re_b239.sav";
 
         private Game Game => Game.Instance;
         private Map map;

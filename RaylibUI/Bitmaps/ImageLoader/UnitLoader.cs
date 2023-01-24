@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using Civ2engine;
 using Raylib_cs;
 using System.Numerics;
