@@ -10,7 +10,7 @@ namespace Civ2engine
         public Ruleset RuleSet { get; set; }
         
         public Dictionary<string,PopupBox> PopUps { get; set; }
-        public int[] WorldSize { get; set; }
+        public int[] WorldSize { get; set; } = { 50, 80 };
         public int DifficultlyLevel { get; set; }
         public int NumberOfCivs { get; set; }
         public int BarbarianActivity { get; set; }
@@ -35,5 +35,6 @@ namespace Civ2engine
         public int Climate { get; set; } = 1;
         public int Temperature { get; set; } = 1;
         public int Age { get; set; } = 1;
+        public bool CustomizeWorld { get; set; }
     }
 }

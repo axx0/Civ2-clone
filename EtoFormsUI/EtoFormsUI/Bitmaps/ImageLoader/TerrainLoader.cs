@@ -4,6 +4,7 @@ using Civ2engine;
 using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Eto.Drawing;
+using EtoFormsUI.Bitmaps.ImageLoader;
 using EtoFormsUIExtensionMethods;
 
 namespace EtoFormsUI.ImageLoader

@@ -3,6 +3,7 @@ using Eto.Drawing;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using EtoFormsUI.Bitmaps.ImageLoader;
 using EtoFormsUI.ImageLoader;
 using EtoFormsUIExtensionMethods;
 
@@ -20,13 +21,6 @@ namespace EtoFormsUI
             LoadPeopleIcons(ruleset);
             LoadCityWallpaper(ruleset);
         }
-
-        public static void LoadGraphicsAssetsAtIntroScreen()
-        {
-            ImportWallpapersFromIconsFile();
-            //ImportCiv2Icon();
-        }
-
         public static void RedrawTile(Tile tile)
         {
             var col = (tile.X - tile.Odd) / 2;
@@ -180,15 +174,7 @@ namespace EtoFormsUI
             var wallpaper = Common.LoadBitmapFrom("CITY", ruleset.Paths);
             CityImages.Wallpaper = wallpaper.CropImage(new Rectangle(0, 0, 636, 421));
         }
-
-        // Import wallpapers for intro screen
-        public static void ImportWallpapersFromIconsFile()
-        {
-            using var icons = Common.LoadBitmapFrom("ICONS", Settings.SearchPaths);
-            MapImages.PanelOuterWallpaper = icons.Clone(new Rectangle(199, 322, 64, 32));
-            MapImages.PanelInnerWallpaper = icons.Clone(new Rectangle(298, 190, 32, 32));
-        }
-
+        
         /// <summary>
         /// Convert indexed to non-indexed images (required for making transparent pixels, etc.)
         /// </summary>

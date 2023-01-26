@@ -4,6 +4,8 @@ using ImGuiNET;
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.MapObjects;
+using Model;
+using RaylibUI.Initialization;
 
 namespace RaylibUI
 {
@@ -17,8 +19,13 @@ namespace RaylibUI
         private Game Game => Game.Instance;
         private Map map;
 
+        private bool hasCivDir;
+        private IScreen _activeScreen;
+
         public Main()
         {
+            hasCivDir = Settings.LoadConfigSettings();
+            
             //========= RAYLIB WINDOW SETTINGS
             Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE);
             //Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE);
@@ -34,26 +41,40 @@ namespace RaylibUI
             style.Colors[(int)ImGuiCol.MenuBarBg] = new Vector4(1, 1, 1, 1);
 
             //============ LOAD REQUIRED SAV GAME DATA
-            LoadGame(savName);
+            if (hasCivDir)
+            {           
+                Labels.UpdateLabels(null); 
+                Interfaces = Initialization.Helpers.LoadInterfaces();
+
+                ActiveInterface = Initialization.Helpers.GetInterface(Settings.Civ2Path, Interfaces);
+                _activeScreen = new MainMenu(ActiveInterface,ShutdownApp);
+            }
+            else
+            {
+                _activeScreen = new GameFileLocatorScreen();
+            }
+            //LoadGame(savName);
 
             //============ LOAD SOUNDS
-            //var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "MENUOK.WAV");
-            //Raylib.PlaySound(sound);
+            // var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "MENUOK.WAV");
+            // Raylib.PlaySound(sound);
 
             while (!Raylib.WindowShouldClose())
             {
-                MousePressedAction();
-                KeyboardAction();
+                // MousePressedAction();
+                // KeyboardAction();
 
                 Raylib.BeginDrawing();
 
                 // Draw map & stuff
-                DrawStuff();
+                //DrawStuff();
+                Raylib.ClearBackground(Color.WHITE);
 
                 // IMGUI STUFF
                 rlImGui.Begin();
                 DrawMenuBar();
                 ImGui.ShowDemoWindow();
+                _activeScreen.Draw();
                 //ShowRadioIntroMenu();
                 rlImGui.End();
 
@@ -64,6 +85,10 @@ namespace RaylibUI
 
             ShutdownApp();
         }
+
+        public IUserInterface ActiveInterface { get; }
+
+        public IList<IUserInterface> Interfaces { get; }
 
         private void DrawMenuBar()
         {
@@ -99,9 +124,9 @@ namespace RaylibUI
             }
         }
 
-        private unsafe void ShowRadioIntroMenu()
+        private void ShowRadioIntroMenu()
         {
-            fixed (int* ptr = &selected_radio) { };
+            
 
             if (!isSAVselected)
             {

@@ -17,24 +17,31 @@ namespace EtoFormsUI
 
         public Sound()
         {
-            Core.Initialize();
+            try
+            {
+                Core.Initialize();
 
-            _libVlc = new LibVLC();
-            player = new MediaPlayer(_libVlc);
+                _libVlc = new LibVLC();
+                player = new MediaPlayer(_libVlc);
 
-            var libVlcLoop = new LibVLC("--input-repeat=65535");
-            playerLoop = new MediaPlayer(libVlcLoop);
-            LoadSounds(Settings.SearchPaths);
+                var libVlcLoop = new LibVLC("--input-repeat=65535");
+                playerLoop = new MediaPlayer(libVlcLoop);
+                LoadSounds(Settings.SearchPaths);
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
 
         public void PlaySound(GameSounds gameSound, string soundPath = null)
         {
-            Play(string.IsNullOrWhiteSpace(soundPath) ? _soundPaths[gameSound] : soundPath, player);
+            Play(string.IsNullOrWhiteSpace(soundPath) ? _soundPaths[gameSound] : soundPath);
         }
         
-        private void Play(string soundPath, MediaPlayer player)
+        private void Play(string soundPath)
         {
-            player.Play(new Media(_libVlc, new Uri(soundPath)));
+            player?.Play(new Media(_libVlc, new Uri(soundPath)));
         }
 
         public void PlayMenuLoop()
