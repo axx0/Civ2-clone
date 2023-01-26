@@ -1,30 +1,21 @@
-using System.Drawing;
 using Civ.Rules;
 using Civ2engine;
 using Model;
 
 namespace Civ.Dialogs.NewGame;
 
-public class WorldSizeHandler : ICivDialogHandler
+public class WorldSizeHandler : BaseDialogHandler
 {
     public const string Title = "SIZEOFMAP";
-    public string Name => Title;
-    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup)
+
+    public WorldSizeHandler() : base(Title, 0, 75)
     {
-        Dialog = new MenuElements
-        {
-            Dialog = popup[Title],
-            DialogPos = new Point(0, 75)
-        };
-        return this;
     }
 
-    public MenuElements Dialog { get; set; }
-
-    public IInterfaceAction HandleDialogResult(DialogResult result,
+    public override IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers)
     {
-        if (result.SelectedIndex == int.MinValue)
+        if (result.SelectedButton == Labels.Cancel)
         {
             return civDialogHandlers[MainMenu.Title].Show();
         }
@@ -36,16 +27,12 @@ public class WorldSizeHandler : ICivDialogHandler
             _ => new[] { 40, 50 }
         };
 
-        if (result.SelectedButton != "Custom")
+        if (result.SelectedButton == "Custom")
         {
-            //TODO: custom ise world 
+            return civDialogHandlers[CustomWorldSize.Title].Show();
         }
 
-        return civDialogHandlers[MainMenu.Title].Show();
-    }
-
-    public IInterfaceAction Show()
-    {
-        return new MenuAction(Dialog);
+        return civDialogHandlers[
+            Initialization.ConfigObject.CustomizeWorld ? CustomisePercentageLand.Title : Difficulty.Title].Show();
     }
 }

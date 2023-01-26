@@ -7,17 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI", "EtoFormsUI\Et
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI.Gtk", "EtoFormsUI\EtoFormsUI.Gtk\EtoFormsUI.Gtk.csproj", "{6C20CF55-AD04-4930-9532-E575A9811815}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI.Mac", "EtoFormsUI\EtoFormsUI.Mac\EtoFormsUI.Mac.csproj", "{4F3C9EF5-6C1C-4F6E-9827-DACC59C5A1D3}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtoFormsUI.WinForms", "..\..\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI.WinForms\EtoFormsUI.WinForms.csproj", "{B6C3F2BF-053E-4625-A90B-BE6A97A2C050}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaylibUI", "RaylibUI\RaylibUI.csproj", "{091F1A96-298E-4657-B14B-74D477EC4CF6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Engine\Core.csproj", "{319D14F5-6E32-4F87-BCFB-F1DB19A8E493}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Engine\Core.csproj", "{10F0F0B1-DA37-4A79-8081-30AC1B806E21}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CivAxx.Mac", "EtoFormsUI\CivAxx.Mac\CivAxx.Mac.csproj", "{D018DFE2-91BE-45E6-A3F7-9B822AA9341B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civ", "Civ\Civ.csproj", "{C1C3D7F0-7D12-4C5B-A8E0-F80C3EB1F655}"
 EndProject
@@ -26,6 +16,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civ2", "Civ2\Civ2.csproj", "{E9BE038E-8261-42D5-8801-BDCD1139080A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TOT", "TOT\TOT.csproj", "{7DB48D41-7603-4F4A-9F06-B961649AB7E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Engine\Core.csproj", "{51609735-D47F-4A91-B4B4-EEED8879A3A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,18 +32,14 @@ Global
 		{6C20CF55-AD04-4930-9532-E575A9811815}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C20CF55-AD04-4930-9532-E575A9811815}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C20CF55-AD04-4930-9532-E575A9811815}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4F3C9EF5-6C1C-4F6E-9827-DACC59C5A1D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4F3C9EF5-6C1C-4F6E-9827-DACC59C5A1D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4F3C9EF5-6C1C-4F6E-9827-DACC59C5A1D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4F3C9EF5-6C1C-4F6E-9827-DACC59C5A1D3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6C3F2BF-053E-4625-A90B-BE6A97A2C050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6C3F2BF-053E-4625-A90B-BE6A97A2C050}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6C3F2BF-053E-4625-A90B-BE6A97A2C050}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6C3F2BF-053E-4625-A90B-BE6A97A2C050}.Release|Any CPU.Build.0 = Release|Any CPU
 		{091F1A96-298E-4657-B14B-74D477EC4CF6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{091F1A96-298E-4657-B14B-74D477EC4CF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{091F1A96-298E-4657-B14B-74D477EC4CF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{091F1A96-298E-4657-B14B-74D477EC4CF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51609735-D47F-4A91-B4B4-EEED8879A3A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51609735-D47F-4A91-B4B4-EEED8879A3A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51609735-D47F-4A91-B4B4-EEED8879A3A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51609735-D47F-4A91-B4B4-EEED8879A3A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

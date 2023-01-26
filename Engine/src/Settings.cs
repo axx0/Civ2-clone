@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Xml.Linq;
 using Microsoft.Extensions.Configuration;
 
 namespace Civ2engine
@@ -23,7 +24,7 @@ namespace Civ2engine
 
             LoadSettings(settingsFilePath);
 
-            return string.IsNullOrWhiteSpace(Civ2Path);
+            return !string.IsNullOrWhiteSpace(Civ2Path);
         }
 
         public static string BasePath => AppDomain.CurrentDomain.BaseDirectory;
@@ -92,7 +93,23 @@ namespace Civ2engine
             {
                 SearchPaths = SearchPaths.Append(path).ToArray();
             }
+            Save();
             return true;
+        }
+
+        public static void Save()
+        {
+            using var writer = new Utf8JsonWriter(File.OpenWrite(SettingsFileName));
+            writer.WriteStartObject();
+            writer.WriteString(nameof(Civ2Path),Civ2Path);
+            writer.WriteStartArray(nameof(SearchPaths));
+            foreach (var searchPath in SearchPaths)
+            {
+                writer.WriteStringValue(searchPath);
+            }
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+            writer.Flush();
         }
     }
 }

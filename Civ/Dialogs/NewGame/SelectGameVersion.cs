@@ -5,25 +5,26 @@ using Model;
 namespace Civ.Dialogs.NewGame;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public class SelectGameVersionHandler : ICivDialogHandler
+public class SelectGameVersionHandler : BaseDialogHandler
 {
     internal static string Title = "AXX-Select-Game";
-    public string Name => Title;
-    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+
+    public SelectGameVersionHandler() : base(Title) {}
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {
         popups[Name] = new PopupBox
         {
+            Name = Title,
             Title = "Select game version", Options = Initialization.RuleSets.Select(f => f.Name).ToList(),
-            Button = new List<string> {"Quick Start", "OK",Labels.Cancel}
+            Button = new List<string> {"Quick Start", "OK", Labels.Cancel}
         };
-        return this;
+        return base.UpdatePopupData(popups);
     }
 
-    public MenuElements Dialog { get; }
-    public IInterfaceAction HandleDialogResult(DialogResult result,
+    public override IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers)
     {                    
-        if (result.SelectedIndex == int.MinValue)
+        if (result.SelectedButton == Labels.Cancel)
         {
             return civDialogHandlers[MainMenu.Title].Show();
         }
@@ -36,10 +37,5 @@ public class SelectGameVersionHandler : ICivDialogHandler
         }
 
         return civDialogHandlers[WorldSizeHandler.Title].Show();
-    }
-
-    public IInterfaceAction Show()
-    {
-        return new MenuAction(Dialog);
     }
 }

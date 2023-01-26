@@ -1,41 +1,35 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
 using Civ.Dialogs.NewGame;
 using Civ.Rules;
-using Civ2engine;
 using Model;
 
 namespace Civ.Dialogs;
 
-public class MainMenu : ICivDialogHandler
+public class MainMenu : BaseDialogHandler
 {
     internal const string Title = "MAINMENU";
-    public string Name => Title;
-    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
-    {
-        Dialog = new MenuElements
-        {
-            Dialog = popups[Name],
-            DialogPos = new Point(156, 72)
-        };
-        return this;
-    }
+    public MainMenu() : base(Title, 156, 72){}
 
-    public MenuElements Dialog { get; private set; }
-
-    public IInterfaceAction HandleDialogResult(DialogResult result,
+    public override IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers)
 
     {
+        if (result.SelectedButton == Dialog.Dialog.Button[1])
+        {
+            return ExitAction.Exit;
+        }
         switch (result.SelectedIndex)
         {
             case 0:
-                Initialization.ConfigObject.CustomizeWorld = false;
+            case 2:
+                Initialization.ConfigObject.CustomizeWorld = result.SelectedIndex == 2;
                 return Initialization.RuleSets.Count > 1
                     ? civDialogHandlers[SelectGameVersionHandler.Title].Show()
                     : civDialogHandlers[WorldSizeHandler.Title].Show();
-            case 1:
-                return new FileAction(new OpenFileInfo{ Filters = })
+            
+            
+            // case 1:
+            //     return new FileAction(new OpenFileInfo{ Filters = })
         }
         /*var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
                    mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),
@@ -86,9 +80,4 @@ public class MainMenu : ICivDialogHandler
         
         return new MenuAction(Dialog);
     }
-
-    public IInterfaceAction Show()
-         {
-             return new MenuAction(Dialog);
-         }
 }

@@ -10,8 +10,6 @@ namespace EtoFormsUI.Initialization
 {
     public static class Helpers
     {
-        
-
         public static IList<IUserInterface> LoadInterfaces()
         {
             var implementors = new List<IUserInterface>();

@@ -3,5 +3,6 @@ namespace Model;
 public enum EventType
 {
     Dialog,
-    OpenFile
+    OpenFile,
+    Exit
 }
