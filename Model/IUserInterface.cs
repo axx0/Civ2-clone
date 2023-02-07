@@ -1,4 +1,6 @@
-﻿namespace Model;
+﻿using Model.Images;
+
+namespace Model;
 
 public interface IUserInterface
 {
@@ -9,4 +11,6 @@ public interface IUserInterface
     IInterfaceAction ProcessDialog(string dialogName, DialogResult dialogResult);
     IInterfaceAction ProcessFile(IEnumerable<string> filenames, bool ok);
     IInterfaceAction GetInitialAction();
+    
+    IImageSource? BackgroundImage { get; }
 }

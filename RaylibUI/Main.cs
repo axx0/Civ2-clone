@@ -44,9 +44,9 @@ namespace RaylibUI
             if (hasCivDir)
             {           
                 Labels.UpdateLabels(null); 
-                Interfaces = Initialization.Helpers.LoadInterfaces();
+                Interfaces = Helpers.LoadInterfaces();
 
-                ActiveInterface = Initialization.Helpers.GetInterface(Settings.Civ2Path, Interfaces);
+                ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
                 _activeScreen = new MainMenu(ActiveInterface,ShutdownApp);
             }
             else

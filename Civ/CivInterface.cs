@@ -54,5 +54,7 @@ public abstract class CivInterface : IUserInterface
         return DialogHandlers["MAINMENU"].Show();
     }
 
+    public virtual IImageSource? BackgroundImage => null;
+
     public Dictionary<string,PopupBox> Dialogs { get; set; }
 }

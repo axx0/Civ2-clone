@@ -1,8 +1,11 @@
 ﻿using System.IO;
+using System.Net.Mime;
+using System.Text;
 using Raylib_cs;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using Model.Images;
 using RaylibUI.ImageLoader;
 
 namespace RaylibUI
@@ -197,5 +200,74 @@ namespace RaylibUI
 
         //    return newBmp;
         //}
+
+        private static Dictionary<string, Image> ImageCache = new();
+
+        private const string tempPath = "temp"; 
+        public static Image ExtractBitmap(IImageSource imageSource)
+        {
+            if (!Directory.Exists(tempPath))
+            {
+                Directory.CreateDirectory(tempPath);
+            }
+
+            if (ImageCache.ContainsKey(imageSource.Key)) return ImageCache[imageSource.Key];
+            
+            switch (imageSource)
+            {
+                case BinaryStorage binarySource:
+                    ImageCache[imageSource.Key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, imageSource.Key);
+                    break;
+                // case BitmapStorage bitmapStorage:
+                // {
+                //     var sourceKey = $"{bitmapStorage.Filename}-Source";
+                //     if (!ImageCache.ContainsKey(sourceKey))
+                //     {
+                //         ImageCache[sourceKey] = Common.LoadBitmapFrom(bitmapStorage.Filename);
+                //     }
+                //
+                //     var rect = bitmapStorage.Location;
+                //     ImageCache[bitmapStorage.Key] = ImageCache[sourceKey]
+                //         .Clone(new Rectangle(rect.X, rect.Y, rect.Width, rect.Height));
+                //     break;
+                // }
+                // default:
+                    throw new NotImplementedException("Other image sources not currently implemented");
+            }
+
+            return ImageCache[imageSource.Key];
+        }
+        
+        public static Image ExtractBitmap(string filename, int start, int length, string key)
+        {
+            if (!Files.ContainsKey(filename))
+            {
+                Files[filename] = File.ReadAllBytes(Utils.GetFilePath(filename));
+            }
+
+            return ExtractBitmap(Files[filename], start, length, key);
+        }
+
+        public static Dictionary<string, byte[]> Files { get; } = new();
+
+        static byte[] extn = Encoding.ASCII.GetBytes("Gif\0");
+
+        private static Image ExtractBitmap(byte[] byteArray, int start, int length, string key)
+        {
+            // Make empty byte array to hold GIF bytes
+            byte[] newBytesRange = new byte[length];
+
+            // Copy GIF bytes in DLL byte array into empty array
+            Array.Copy(byteArray, start, newBytesRange, 0, length);
+            var fileName = Path.Combine(tempPath, key + ".gif");
+            using (var file = File.Create(fileName))
+            {
+                file.Write(newBytesRange);
+                file.Flush();
+            }
+
+            return Raylib.LoadImage(fileName);
+
+        }
     }
 }
