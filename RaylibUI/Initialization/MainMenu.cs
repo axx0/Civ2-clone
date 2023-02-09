@@ -17,6 +17,9 @@ public class MainMenu : IScreen
         _activeInterface = activeInterface;
         _shutdownApp = shutdownApp;
 
+        ImageUtils.SetInner(_activeInterface.Look.Inner);
+        ImageUtils.SetOuter(_activeInterface.Look.Outer);
+
         _currentAction = activeInterface.GetInitialAction();
         MakeMenuElements(_currentAction);
     }
@@ -44,11 +47,11 @@ public class MainMenu : IScreen
             {
                 existingPanels.Remove(existing);
                 newPanels.Add(existing);
-                existing.Location = new Vector2(d.Location.X, d.Location.Y);
+                existing.Location = d.Location;
             }
             else
             {
-                var panel = new ImagePanel(d.Image.Key,Images.ExtractBitmap(d.Image),new Vector2(d.Location.X, d.Location.Y));
+                var panel = new ImagePanel(d.Image.Key,d.Image,d.Location);
                 newPanels.Add(panel);
             }
         }
@@ -57,6 +60,7 @@ public class MainMenu : IScreen
 
     private void HandleButtonClick(string button, int selectedIndex, IDictionary<string ,string>? textBoxValues)
     {
+        if (_currentAction.MenuElement == null) return;
         var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, TextValues: textBoxValues));
         if (act.ActionType == EventType.Exit)
         {
@@ -79,5 +83,18 @@ public class MainMenu : IScreen
         {
             dialog.Draw();
         }
+    }
+
+    public ScreenBackground? GetBackground()
+    {
+        var backGroundImage = _activeInterface.BackgroundImage;
+        if (backGroundImage != null)
+        {
+            var img = Images.ExtractBitmap(backGroundImage);
+            var colour = Raylib.GetImageColor(img, 0, 0);
+            return new ScreenBackground(colour, TextureCache.GetImage(backGroundImage));
+        }
+
+        return null;
     }
 }

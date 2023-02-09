@@ -56,8 +56,9 @@ namespace RaylibUI
             //LoadGame(savName);
 
             //============ LOAD SOUNDS
-            // var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "MENUOK.WAV");
-            // Raylib.PlaySound(sound);
+            var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "MENUOK.WAV");
+            Raylib.PlaySound(sound);
+            var background = _activeScreen.GetBackground();
 
             while (!Raylib.WindowShouldClose())
             {
@@ -65,10 +66,20 @@ namespace RaylibUI
                 // KeyboardAction();
 
                 Raylib.BeginDrawing();
+                int screenWidth = Raylib.GetScreenWidth();
+                int screenHeight = Raylib.GetScreenHeight();
 
                 // Draw map & stuff
                 //DrawStuff();
-                Raylib.ClearBackground(Color.WHITE);
+                if (background == null)
+                {
+                    Raylib.ClearBackground(Color.WHITE);
+                }
+                else
+                {
+                    Raylib.ClearBackground(background.background);
+                    Raylib.DrawTexture(background.CentreImage, (screenWidth- background.CentreImage.width)/2, (screenHeight-background.CentreImage.height)/2, Color.WHITE);
+                }
 
                 // IMGUI STUFF
                 rlImGui.Begin();
@@ -121,53 +132,6 @@ namespace RaylibUI
                     ImGui.EndMenu();
                 }
                 ImGui.EndMenuBar();
-            }
-        }
-
-        private void ShowRadioIntroMenu()
-        {
-            
-
-            if (!isSAVselected)
-            {
-                if (ImGui.Begin("Radio btn"))
-                {
-                    if (ImGui.BeginTable("Table", 1))
-                    {
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("Start a New Game", ref selected_radio, 0)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("Start on Premade World", ref selected_radio, 1)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("Customize World", ref selected_radio, 2)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("Begin Scenario", ref selected_radio, 3)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("Load a Game", ref selected_radio, 4)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("Multiplayer Game", ref selected_radio, 5)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("View Hall of Fame", ref selected_radio, 6)) { }
-                        ImGui.TableNextColumn();
-                        if (ImGui.RadioButton("View Credits", ref selected_radio, 7)) { }
-
-                        ImGui.EndTable();
-                    }
-
-                    ImGui.Text($"selected={selected_radio}");
-
-                    if (ImGui.Button("OK") && selected_radio == 4)
-                    {
-                        isSAVselected = true;
-                    }
-                    if (ImGui.Button("Cancel")) 
-                    {
-                        ShutdownApp();
-                    }
-
-
-                    ImGui.End();
-                }
             }
         }
 

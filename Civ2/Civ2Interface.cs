@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Civ;
+﻿using Civ;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;

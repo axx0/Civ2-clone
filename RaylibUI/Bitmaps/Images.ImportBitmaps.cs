@@ -218,20 +218,21 @@ namespace RaylibUI
                 case BinaryStorage binarySource:
                     ImageCache[imageSource.Key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, imageSource.Key);
                     break;
-                // case BitmapStorage bitmapStorage:
-                // {
-                //     var sourceKey = $"{bitmapStorage.Filename}-Source";
-                //     if (!ImageCache.ContainsKey(sourceKey))
-                //     {
-                //         ImageCache[sourceKey] = Common.LoadBitmapFrom(bitmapStorage.Filename);
-                //     }
-                //
-                //     var rect = bitmapStorage.Location;
-                //     ImageCache[bitmapStorage.Key] = ImageCache[sourceKey]
-                //         .Clone(new Rectangle(rect.X, rect.Y, rect.Width, rect.Height));
-                //     break;
-                // }
-                // default:
+                case BitmapStorage bitmapStorage:
+                {
+                    
+                    var sourceKey = $"{bitmapStorage.Filename}-Source";
+                    if (!ImageCache.ContainsKey(sourceKey))
+                    {
+                        var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, "bmp", "gif");
+                        ImageCache[sourceKey] = Raylib.LoadImage(path);
+                    }
+
+                    var rect = bitmapStorage.Location;
+                    ImageCache[bitmapStorage.Key] = Raylib.ImageFromImage(ImageCache[sourceKey], rect);
+                    break;
+                }
+                default:
                     throw new NotImplementedException("Other image sources not currently implemented");
             }
 

@@ -1,3 +1,5 @@
+using Raylib_cs;
+
 namespace RaylibUI;
 
 /// <summary>
@@ -8,5 +10,10 @@ public class GameFileLocatorScreen : IScreen
     public void Draw()
     {
             
+    }
+
+    public ScreenBackground? GetBackground()
+    {
+        return null;
     }
 }

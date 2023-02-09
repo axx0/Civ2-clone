@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Engine\Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Raylib-cs" Version="4.2.0.1" />
+    </ItemGroup>
+
 </Project>

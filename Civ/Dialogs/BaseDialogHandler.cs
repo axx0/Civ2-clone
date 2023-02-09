@@ -1,6 +1,6 @@
-using System.Drawing;
 using Civ2engine;
 using Model;
+using Model.Images;
 
 namespace Civ.Dialogs;
 
