@@ -49,6 +49,9 @@ public class ImageUtils
         Raylib.ImageDrawLine(ref image,9, paddingTop - 2, 9, height - paddingBtm,pen7);
         Raylib.ImageDrawLine(ref image,width - 10, paddingTop - 2, width - 10, height - paddingBtm,pen6);
         Raylib.ImageDrawLine(ref image,9, height - paddingBtm + 1, width - 9 - 1, height - paddingBtm + 1,pen6);
+        
+        
+        //DrawTiledImage(InnerWalpaper, ref image, height, width);
     }
 
     public static void DrawTiledImage(Image source,ref Image destination, int height, int width)

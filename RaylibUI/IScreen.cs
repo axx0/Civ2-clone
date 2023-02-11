@@ -4,8 +4,8 @@ namespace RaylibUI;
 
 public interface IScreen
 {
-    void Draw();
     ScreenBackground GetBackground();
+    void Draw(int screenWidth, int screenHeight);
 }
 
 public record ScreenBackground(Color background, Texture2D CentreImage);

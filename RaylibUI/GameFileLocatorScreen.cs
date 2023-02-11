@@ -7,7 +7,7 @@ namespace RaylibUI;
 /// </summary>
 public class GameFileLocatorScreen : IScreen
 {
-    public void Draw()
+    public void Draw(int width,int height)
     {
             
     }

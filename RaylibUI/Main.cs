@@ -39,6 +39,7 @@ namespace RaylibUI
             var style = ImGui.GetStyle();
             style.Colors[(int)ImGuiCol.Text] = new Vector4(0, 0, 0, 1);
             style.Colors[(int)ImGuiCol.MenuBarBg] = new Vector4(1, 1, 1, 1);
+            var shouldClose = false;
 
             //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
@@ -47,7 +48,7 @@ namespace RaylibUI
                 Interfaces = Helpers.LoadInterfaces();
 
                 ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
-                _activeScreen = new MainMenu(ActiveInterface,ShutdownApp);
+                _activeScreen = new MainMenu(ActiveInterface,() => shouldClose= true);
             }
             else
             {
@@ -60,7 +61,7 @@ namespace RaylibUI
             Raylib.PlaySound(sound);
             var background = _activeScreen.GetBackground();
 
-            while (!Raylib.WindowShouldClose())
+            while (!Raylib.WindowShouldClose() && !shouldClose)
             {
                 // MousePressedAction();
                 // KeyboardAction();
@@ -85,7 +86,7 @@ namespace RaylibUI
                 rlImGui.Begin();
                 DrawMenuBar();
                 ImGui.ShowDemoWindow();
-                _activeScreen.Draw();
+                _activeScreen.Draw(screenWidth, screenHeight);
                 //ShowRadioIntroMenu();
                 rlImGui.End();
 

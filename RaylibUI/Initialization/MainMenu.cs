@@ -73,8 +73,9 @@ public class MainMenu : IScreen
         }
     }
 
-    public void Draw()
+    public void Draw(int width, int height)
     {
+        
         foreach (var panel in _imagePanels)
         {
             panel.Draw();
