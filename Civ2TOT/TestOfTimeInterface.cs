@@ -7,7 +7,7 @@ namespace TOT;
 /// This class is dynamically instantiated when ToT files are detected
 /// </summary>
 [UsedImplicitly]
-public class TestOfTimeInterface : CivInterface
+public class TestOfTimeInterface : Civ2Interface
 {
     public override string Title => "Test of Time";
 }

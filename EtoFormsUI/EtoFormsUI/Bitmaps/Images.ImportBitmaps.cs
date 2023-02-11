@@ -38,7 +38,7 @@ namespace EtoFormsUI
         //    }
         //    catch
         //    {
-        //        Debug.WriteLine("Civ2.exe not found!");
+        //        Debug.WriteLine("Civ2Gold.exe not found!");
         //    }
         //}
 

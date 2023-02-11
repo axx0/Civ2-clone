@@ -1,26 +1,63 @@
-﻿using Civ;
-using JetBrains.Annotations;
+﻿using Civ.Dialogs;
+using Civ2engine;
 using Model;
 using Model.Images;
+using Raylib_cs;
 
-namespace Civ2;
+namespace Civ;
 
-[UsedImplicitly]
-public class Civ2Interface : CivInterface
+public abstract class Civ2Interface : IUserInterface
 {
-    public override string Title => "Civilization II Multiplayer Gold";
-
-    public override void Initialize()
+    public bool CanDisplay(string? title)
     {
-        base.Initialize();
-        
-        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(SinaiPic,new Point(160,76)));
+        return title == Title;
     }
 
-    private static readonly IImageSource SinaiPic = new BinaryStorage
-        { FileName = "Intro.dll", DataStart = 0x1E630, Length = 0x9F78 };
+    public InterfaceStyle Look { get; } = new()
+    {
+        Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
+        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32))
+    };
 
-    public override IImageSource BackgroundImage => new BinaryStorage
-        { FileName = "Tiles.dll", DataStart = 0xF7454, Length = 0x1389D };
+    public abstract string Title { get; }
 
+    public virtual void Initialize()
+    {
+        Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+
+        var handlerInterface = typeof(ICivDialogHandler);
+        DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => t != handlerInterface && handlerInterface.IsAssignableFrom(t) && !t.IsAbstract)
+            .Select(Activator.CreateInstance)
+            .OfType<ICivDialogHandler>()
+            .Select(h => h.UpdatePopupData(Dialogs))
+            .ToDictionary(k => k.Name);
+    }
+
+    protected Dictionary<string, ICivDialogHandler> DialogHandlers { get; private set; }
+
+    public IInterfaceAction ProcessDialog(string dialogName, DialogResult dialogResult)
+    {
+        if (!DialogHandlers.ContainsKey(dialogName))
+        {
+            throw new NotImplementedException(dialogName);
+        }
+
+        return DialogHandlers[dialogName].HandleDialogResult(dialogResult, DialogHandlers);
+    }
+
+    public IInterfaceAction ProcessFile(IEnumerable<string> filenames, bool ok)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IInterfaceAction GetInitialAction()
+    {
+        return DialogHandlers["MAINMENU"].Show();
+    }
+
+    public virtual IImageSource? BackgroundImage => null;
+
+    public Dictionary<string, PopupBox> Dialogs { get; set; }
 }

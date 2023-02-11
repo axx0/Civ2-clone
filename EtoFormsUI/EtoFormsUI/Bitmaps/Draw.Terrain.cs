@@ -298,7 +298,7 @@ namespace EtoFormsUI
             bool[] land = new bool[8] { false, false, false, false, false, false, false, false };
             var indicies = new int[] {0, 0, 0, 0};
 
-            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
+            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2Gold
             int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if land is present next to ocean
@@ -444,8 +444,8 @@ namespace EtoFormsUI
             // In start we presume all surrounding tiles are not of same type (=false). Index=0 is NE, follows in clockwise direction.
             var index = 0;
 
-            // Rewrite indexes in Civ2-style
-            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2
+            // Rewrite indexes in Civ2Gold-style
+            int Xdim = Map.XDimMax;    // X=50 in markted as X=100 in Civ2Gold
             int Ydim = Map.YDim;        // no need for such correction for Y
 
             // Observe in all directions if terrain is present
@@ -514,8 +514,8 @@ namespace EtoFormsUI
             // In start we presume all surrounding tiles are not rivers (river=true, no river=false). Index=0 is NE, follows in clockwise direction.
             var river = 0;
 
-            // Rewrite indexes in Civ2-style
-            var xDim = Map.XDimMax; // X=50 in marked as X=100 in Civ2
+            // Rewrite indexes in Civ2Gold-style
+            var xDim = Map.XDimMax; // X=50 in marked as X=100 in Civ2Gold
             var yDim = Map.YDim; // no need for such correction for Y
 
             // Observe in all directions if river is present

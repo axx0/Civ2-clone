@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Civ2\Civ2.csproj" />
+    <ProjectReference Include="..\Civ2Gold\Civ2Gold.csproj" />
     <ProjectReference Include="..\Engine\Core.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>

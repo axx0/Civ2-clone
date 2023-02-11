@@ -7,13 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Civ\Civ.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="JetBrains.Annotations">
-        <HintPath>..\..\..\.nuget\packages\jetbrains.annotations\2022.3.1\lib\netstandard2.0\JetBrains.Annotations.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\Civ2\Civ2.csproj" />
     </ItemGroup>
 
     <ItemGroup>
