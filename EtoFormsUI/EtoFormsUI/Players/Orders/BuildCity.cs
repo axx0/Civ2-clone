@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Eto.Forms;
+using Model.Interface;
 
 namespace EtoFormsUI.Players.Orders
 {

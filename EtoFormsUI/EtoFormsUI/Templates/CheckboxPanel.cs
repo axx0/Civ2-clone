@@ -1,5 +1,6 @@
 ﻿using Eto.Forms;
 using Eto.Drawing;
+using EtoFormsUI.Menu;
 
 namespace EtoFormsUI
 {
@@ -38,14 +39,7 @@ namespace EtoFormsUI
             innerPanel.Paint += (sender, e) =>
             {
                 // Background
-                var imgSize = MapImages.PanelInnerWallpaper.Size;
-                for (int row = 0; row < this.Height / imgSize.Height + 1; row++)
-                {
-                    for (int col = 0; col < this.Width / imgSize.Width + 1; col++)
-                    {
-                        e.Graphics.DrawImage(MapImages.PanelInnerWallpaper, col * imgSize.Width, row * imgSize.Height);
-                    }
-                }
+                InterfaceUtils.DrawInnerWallpaper(e.Graphics,Height, Width);
 
                 // Draw checkbox, text, text outline
                 for (int row = 0; row < checkboxNames.Length; row++)

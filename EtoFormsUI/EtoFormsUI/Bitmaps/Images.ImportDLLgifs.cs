@@ -1,7 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using Civ2engine;
 using Eto.Drawing;
+using EtoFormsUI.Bitmaps.ImageLoader;
+using Model;
+using Model.Images;
 
 namespace EtoFormsUI
 {
@@ -64,11 +68,58 @@ namespace EtoFormsUI
 
         public static Bitmap ExtractBitmap(byte[] byteArray, string name)
         {
+            return ExtractBitmap(byteArray, DllPics[name].Item1, DllPics[name].Item2);
+        }
+
+        private static readonly IDictionary<string, byte[]> Files = new Dictionary<string, byte[]>();
+
+        private static readonly IDictionary<string, Bitmap> ImageCache = new Dictionary<string, Bitmap>();
+        public static Bitmap ExtractBitmap(IImageSource imageSource)
+        {
+            if (ImageCache.ContainsKey(imageSource.Key)) return ImageCache[imageSource.Key];
+            
+            switch (imageSource)
+            {
+                case BinaryStorage binarySource:
+                    ImageCache[imageSource.Key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length);
+                    break;
+                case BitmapStorage bitmapStorage:
+                {
+                    var sourceKey = $"{bitmapStorage.Filename}-Source";
+                    if (!ImageCache.ContainsKey(sourceKey))
+                    {
+                        ImageCache[sourceKey] = Common.LoadBitmapFrom(bitmapStorage.Filename);
+                    }
+
+                    var rect = bitmapStorage.Location;
+                    ImageCache[bitmapStorage.Key] = ImageCache[sourceKey]
+                        .Clone(new Rectangle(rect.X, rect.Y, rect.Width, rect.Height));
+                    break;
+                }
+                default:
+                    throw new NotImplementedException("Other image sources not currently implemented");
+            }
+
+            return ImageCache[imageSource.Key];
+        }
+
+        public static Bitmap ExtractBitmap(string filename, int start, int length)
+        {
+            if (!Files.ContainsKey(filename))
+            {
+                Files[filename] = File.ReadAllBytes(Utils.GetFilePath(filename));
+            }
+
+            return ExtractBitmap(Files[filename], start, length);
+        }
+
+        private static Bitmap ExtractBitmap(byte[] byteArray, int start, int length)
+        {
             // Make empty byte array to hold GIF bytes
-            byte[] newBytesRange = new byte[DllPics[name].Item2];
+            byte[] newBytesRange = new byte[length];
 
             // Copy GIF bytes in DLL byte array into empty array
-            Array.Copy(byteArray, DllPics[name].Item1, newBytesRange, 0, DllPics[name].Item2);
+            Array.Copy(byteArray, start, newBytesRange, 0, length);
             
             // Convert GIF bytes into a bitmap
             using var ms = new MemoryStream(newBytesRange);

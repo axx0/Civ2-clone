@@ -15,12 +15,7 @@ namespace RaylibUI
         public IPlayer CurrentPlayer { get; set; }
         private string savDirectory;
         private Unit activeUnit;
-
-        private void LoadGame(string savName)
-        {
-            Settings.LoadConfigSettings();
-            LocateStartingFiles(savName, LoadGameInitialization);
-        }
+        
 
         private void LocateStartingFiles(string savName, Func<Ruleset, string, bool> initializer)
         {

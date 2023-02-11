@@ -18,7 +18,7 @@ namespace EtoFormsUI
         private static readonly Color OceanColor = Color.FromArgb(0, 0, 95);
         private static readonly Color LandColor = Color.FromArgb(55, 123, 23);
 
-        public MinimapPanel(Main parent, int width, int height, Game game) : base(width, height, 38, 10, "World")
+        public MinimapPanel(Main parent, int width, int height, Game game) : base(parent.ActiveInterface.Look, width, height, 38, 10, "World")
         {
             _game = game;
             _main = parent;

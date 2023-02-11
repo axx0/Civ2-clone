@@ -23,7 +23,5 @@ namespace EtoFormsUI
         public static Bitmap GridLines { get; set; }
         public static Bitmap GridLinesVisible { get; set; }
         public static Bitmap[] BattleAnim { get; set; }
-        public static Bitmap PanelOuterWallpaper { get; set; }
-        public static Bitmap PanelInnerWallpaper { get; set; }
     }
 }

@@ -24,8 +24,7 @@ namespace EtoFormsUI
             };
 
             var result = ofd.ShowDialog(this.ParentWindow);
-            //sinaiPanel.Dispose();
-            sinaiPanel = null;
+
             if (result == DialogResult.Ok)
             {
                 // Get SAV name & directory name from result
@@ -44,7 +43,6 @@ namespace EtoFormsUI
                 }
             }
 
-            MainMenu();
         }
 
         public void Playgame()
