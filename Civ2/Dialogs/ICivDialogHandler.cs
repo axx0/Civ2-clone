@@ -1,7 +1,7 @@
 using Civ2engine;
 using Model;
 
-namespace Civ.Dialogs;
+namespace Civ2.Dialogs;
 
 public interface ICivDialogHandler
 {

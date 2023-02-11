@@ -1,10 +1,10 @@
-﻿using Civ.Dialogs;
+﻿using Civ2.Dialogs;
 using Civ2engine;
 using Model;
 using Model.Images;
 using Raylib_cs;
 
-namespace Civ;
+namespace Civ2;
 
 public abstract class Civ2Interface : IUserInterface
 {

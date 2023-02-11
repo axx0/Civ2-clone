@@ -1,4 +1,4 @@
-﻿using Civ;
+﻿using Civ2;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;

@@ -1,9 +1,10 @@
-using Civ.Rules;
+using Civ2.Dialogs.NewGame.CustomWorldDialogs;
+using Civ2.Rules;
 using Civ2engine;
 using Model;
 using Model.Interface;
 
-namespace Civ.Dialogs.NewGame;
+namespace Civ2.Dialogs.NewGame;
 
 public class CustomWorldSize : BaseDialogHandler
 {

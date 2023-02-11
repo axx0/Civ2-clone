@@ -1,9 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
-using Civ.Dialogs.NewGame;
-using Civ.Rules;
+using Civ2.Dialogs.NewGame;
+using Civ2.Rules;
 using Model;
 
-namespace Civ.Dialogs;
+namespace Civ2.Dialogs;
 
 public class MainMenu : BaseDialogHandler
 {

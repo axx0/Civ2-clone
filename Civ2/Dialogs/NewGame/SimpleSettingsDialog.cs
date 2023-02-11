@@ -1,7 +1,7 @@
 using Civ2engine;
 using Model;
 
-namespace Civ.Dialogs.NewGame;
+namespace Civ2.Dialogs.NewGame;
 
 public abstract class SimpleSettingsDialog : BaseDialogHandler
 {

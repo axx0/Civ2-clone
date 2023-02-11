@@ -1,8 +1,7 @@
 using Civ2engine;
 using Model;
-using Model.Images;
 
-namespace Civ.Dialogs;
+namespace Civ2.Dialogs;
 
 public abstract class BaseDialogHandler : ICivDialogHandler
 {

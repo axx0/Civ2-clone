@@ -1,8 +1,8 @@
-using Civ.Rules;
+using Civ2.Rules;
 using Civ2engine;
 using Model;
 
-namespace Civ.Dialogs.NewGame;
+namespace Civ2.Dialogs.NewGame;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class SelectGameVersionHandler : BaseDialogHandler

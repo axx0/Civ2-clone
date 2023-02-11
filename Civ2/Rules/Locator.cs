@@ -1,6 +1,6 @@
 using Civ2engine;
 
-namespace Civ.Rules;
+namespace Civ2.Rules;
 
 public static class Locator
 {
