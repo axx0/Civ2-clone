@@ -6,6 +6,7 @@ using Civ2engine;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
+using RaylibControls;
 
 namespace RaylibUI
 {
@@ -61,6 +62,19 @@ namespace RaylibUI
             Raylib.PlaySound(sound);
             var background = _activeScreen.GetBackground();
 
+            // Load some tile graphics
+            int _frames = 0;
+            var terrainGif = Raylib.LoadImageAnim(@"C:\\Program Files (x86)\\Civ2\\ICONS.GIF", out _frames);
+            var tileImg1 = Raylib.ImageFromImage(terrainGif, new Rectangle(199, 322, 64, 32));
+            var tileImg2 = Raylib.ImageFromImage(terrainGif, new Rectangle(298, 190, 32, 32));
+            UI.tileTextureOuter = Raylib.LoadTextureFromImage(tileImg1);
+            UI.tileTextureInner = Raylib.LoadTextureFromImage(tileImg2);
+            Raylib.UnloadImage(terrainGif);
+            Raylib.UnloadImage(tileImg1);
+            Raylib.UnloadImage(tileImg2);
+
+            UI.dialogPos = new Vector2(200, 200);  // initial dialog position
+
             while (!Raylib.WindowShouldClose() && !shouldClose)
             {
                 // MousePressedAction();
@@ -85,12 +99,14 @@ namespace RaylibUI
                 // IMGUI STUFF
                 rlImGui.Begin();
                 DrawMenuBar();
-                ImGui.ShowDemoWindow();
+                //ImGui.ShowDemoWindow();
                 _activeScreen.Draw(screenWidth, screenHeight);
                 //ShowRadioIntroMenu();
                 rlImGui.End();
 
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, 25, 20, Raylib_cs.Color.BLACK);
+
+                UI.Dialog(new Vector2(332, 344), "Civilization II");
 
                 Raylib.EndDrawing();
             }
