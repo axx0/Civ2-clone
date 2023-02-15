@@ -7,6 +7,7 @@ using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
 using RaylibControls;
+using RaylibUI.Controls;
 
 namespace RaylibUI
 {
@@ -22,6 +23,7 @@ namespace RaylibUI
 
         private bool hasCivDir;
         private IScreen _activeScreen;
+
 
         public Main()
         {
@@ -74,6 +76,7 @@ namespace RaylibUI
             Raylib.UnloadImage(tileImg2);
 
             UI.dialogPos = new Vector2(200, 200);  // initial dialog position
+            UI.menuBar = new MenuBar();
 
             while (!Raylib.WindowShouldClose() && !shouldClose)
             {
@@ -88,7 +91,7 @@ namespace RaylibUI
                 //DrawStuff();
                 if (background == null)
                 {
-                    Raylib.ClearBackground(Color.WHITE);
+                    Raylib.ClearBackground(new Color(143, 123, 99, 255));
                 }
                 else
                 {
@@ -97,15 +100,15 @@ namespace RaylibUI
                 }
 
                 // IMGUI STUFF
-                rlImGui.Begin();
-                DrawMenuBar();
+                //rlImGui.Begin();
                 //ImGui.ShowDemoWindow();
                 _activeScreen.Draw(screenWidth, screenHeight);
                 //ShowRadioIntroMenu();
-                rlImGui.End();
+                //rlImGui.End();
 
-                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, 25, 20, Raylib_cs.Color.BLACK);
+                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
 
+                UI.MenuBar();
                 UI.Dialog(new Vector2(332, 344), "Civilization II");
 
                 Raylib.EndDrawing();
@@ -117,40 +120,6 @@ namespace RaylibUI
         public IUserInterface ActiveInterface { get; }
 
         public IList<IUserInterface> Interfaces { get; }
-
-        private void DrawMenuBar()
-        {
-            if (ImGui.BeginMainMenuBar())
-            {
-                if (ImGui.BeginMenu("Game"))
-                {
-                    if (ImGui.MenuItem("Game Options", "Ctrl+O")) { }
-                    if (ImGui.MenuItem("Graphic Options", "Ctrl+P")) { }
-                    if (ImGui.MenuItem("City Report Options", "Ctrl+E")) { }
-                    if (ImGui.MenuItem("Multiplayer Options", "Ctrl+Y", false, false)) { }
-                    if (ImGui.MenuItem("Game Profile", false)) { }
-                    ImGui.Separator();
-                    if (ImGui.MenuItem("Pick Music")) { }
-                    ImGui.Separator();
-                    if (ImGui.MenuItem("Save Game", "Ctrl+S")) { }
-                    if (ImGui.MenuItem("Load Game", "Ctrl+L")) { }
-                    ImGui.EndMenu();
-                }
-                if (ImGui.BeginMenu("Kingdom"))
-                {
-                    ImGui.EndMenu();
-                }
-                if (ImGui.BeginMenu("View"))
-                {
-                    ImGui.EndMenu();
-                }
-                if (ImGui.BeginMenu("Orders"))
-                {
-                    ImGui.EndMenu();
-                }
-                ImGui.EndMenuBar();
-            }
-        }
 
         void ShutdownApp()
         {
