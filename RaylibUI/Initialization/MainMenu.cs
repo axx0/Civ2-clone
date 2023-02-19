@@ -19,6 +19,8 @@ public class MainMenu : IScreen
 
         ImageUtils.SetInner(_activeInterface.Look.Inner);
         ImageUtils.SetOuter(_activeInterface.Look.Outer);
+        ImageUtils.SetInnerTexture();
+        ImageUtils.SetOuterTexture();
 
         _currentAction = activeInterface.GetInitialAction();
         MakeMenuElements(_currentAction);
@@ -31,7 +33,7 @@ public class MainMenu : IScreen
         if (action.MenuElement != null)
         {
             UpdateDecorations(action.MenuElement);
-            _dialogs.Add(new Dialog(action.MenuElement.Dialog, new []{ HandleButtonClick}, action.MenuElement.TextBoxes));
+            _dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, action.MenuElement.TextBoxes));
         }
     }
     
