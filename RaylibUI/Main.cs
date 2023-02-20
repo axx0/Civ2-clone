@@ -8,16 +8,12 @@ using Model;
 using RaylibUI.Initialization;
 using RaylibControls;
 using RaylibUI.Controls;
-using ImGuiNET;
 using JetBrains.Annotations;
 
 namespace RaylibUI
 {
     public partial class Main
     {
-        Texture2D tile;
-        int selected_radio;
-        bool isSAVselected = false;
         private string savName = "re_b239.sav";
 
         private Game Game => Game.Instance;
@@ -30,11 +26,11 @@ namespace RaylibUI
         public Main()
         {
             hasCivDir = Settings.LoadConfigSettings();
-            
+
             //========= RAYLIB WINDOW SETTINGS
             Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE);
             //Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE);
-            Raylib.InitWindow(1280, 800, "raylib - imgui - civ2");
+            Raylib.InitWindow(1280, 800, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
             Raylib.InitAudioDevice();
 

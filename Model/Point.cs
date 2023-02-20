@@ -1,3 +1,3 @@
 namespace Model;
 
-public record Point(int X, int Y);
+public record Point(double X, double Y);

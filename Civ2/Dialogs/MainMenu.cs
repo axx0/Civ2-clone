@@ -7,7 +7,7 @@ namespace Civ2.Dialogs;
 public class MainMenu : BaseDialogHandler
 {
     internal const string Title = "MAINMENU";
-    public MainMenu() : base(Title, 156, 72){}
+    public MainMenu() : base(Title, -0.08, -0.07) { }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers)

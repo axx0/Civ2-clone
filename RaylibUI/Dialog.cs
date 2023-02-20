@@ -25,10 +25,9 @@ public class Dialog
     private readonly Button[] _buttons;
     private int _dialogPosX, _dialogPosY;
 
-    public Dialog(PopupBox popupBox, Point dialogPos, Action<string, int, IDictionary<string, string>?>[] buttonHandlers,List<TextBoxDefinition>? textBoxes = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
+    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IDictionary<string, string>?>[] buttonHandlers,List<TextBoxDefinition>? textBoxes = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
     {
-        _dialogPosX = dialogPos.X;
-        _dialogPosY = dialogPos.Y;
+
         _padding = new Padding(11, 11, 38, 46);
         _title = popupBox.Title;
         _buttonHandlers = buttonHandlers;
@@ -113,6 +112,32 @@ public class Dialog
             _buttons[i] = new Button(_btnWidth, 36, _buttonTexts[i]);
         }
 
+        // Initial dialog position on screen
+        if (relatDialogPos.X < 0) // offset from right
+        {
+            _dialogPosX = (int)((1 + relatDialogPos.X) * Raylib.GetScreenWidth()) - _size.width;
+        }
+        else if (relatDialogPos.X > 0)
+        {
+            _dialogPosX = (int)(relatDialogPos.X * Raylib.GetScreenWidth());
+        }
+        else // =0 (center on screen)
+        {
+            _dialogPosX = (int)(Raylib.GetScreenWidth() * 0.5 - _size.width * 0.5);
+        }
+
+        if (relatDialogPos.Y < 0) // offset from bottom
+        {
+            _dialogPosY = (int)((1 + relatDialogPos.Y) * Raylib.GetScreenHeight()) - _size.height;
+        }
+        else if (relatDialogPos.Y > 0)
+        {
+            _dialogPosY = (int)(relatDialogPos.Y * Raylib.GetScreenHeight());
+        }
+        else // =0 (center on screen)
+        {
+            _dialogPosY = (int)(Raylib.GetScreenHeight() * 0.5 - _size.height * 0.5);
+        }
     }
 
     private void SetTextBoxText(List<TextBoxDefinition> textBoxes, IList<string> text)
