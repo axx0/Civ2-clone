@@ -1,6 +1,5 @@
 ﻿using Raylib_cs;
-using RaylibControls;
-using System.Runtime.CompilerServices;
+using System.Numerics;
 
 namespace RaylibUI.Controls
 {
@@ -81,6 +80,130 @@ namespace RaylibUI.Controls
             foreach (var item in Items)
             {
                 item.IsEnabled = true;
+            }
+        }
+
+        public void Draw()
+        {
+            Vector2 mousePos = Raylib.GetMousePosition();
+
+            // Determine if mouse is over items
+            bool[] mouseOverBarItems = new bool[Items.Count];
+            bool[][] mouseOverStipItems = new bool[Items.Count][];
+            for (int i = 0; i < Items.Count; i++)
+            {
+                mouseOverBarItems[i] = Raylib.CheckCollisionPointRec(mousePos, Items[i].Bounds);
+
+                bool[] rowArray = new bool[Items[i].Items.Length];
+                for (int j = 0; j < Items[i].Items.Length; j++)
+                {
+                    rowArray[j] = Raylib.CheckCollisionPointRec(mousePos, Items[i].Items[j].Bounds);
+                }
+                mouseOverStipItems[i] = rowArray;
+            }
+
+            for (int i = 0; i < Items.Count; i++)
+            {
+                if (mouseOverBarItems[i])
+                {
+                    if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+                    {
+                        if (Items[i].IsActivated)
+                        {
+                            foreach (var item in Items)
+                                item.IsActivated = false;
+                        }
+                        else
+                        {
+                            Items[i].IsActivated = true;
+
+                            // Deactivate all other items
+                            for (int j = 0; j < Items.Count; j++)
+                            {
+                                if (j != i)
+                                {
+                                    Items[j].IsActivated = false;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Activate item of any other is already activated
+                        for (int j = 0; j < Items.Count; j++)
+                        {
+                            if (Items[j].IsActivated && j != i)
+                            {
+                                Items[j].IsActivated = false;
+                                Items[i].IsActivated = true;
+                            }
+                        }
+                    }
+                }
+                // TODO: item in strip menu is clicked
+                //...
+                // outside clicked
+                else if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+                {
+                    // Make sure no item is clicked
+                    bool clickedOutside = true;
+                    for (int j = 0; j < mouseOverBarItems.Length; j++)
+                    {
+                        if (mouseOverBarItems[j])
+                        {
+                            clickedOutside = false;
+                        }
+                    }
+
+                    if (clickedOutside)
+                    {
+                        for (int j = 0; j < Items.Count; j++)
+                            Items[j].IsActivated = false;
+                    }
+                }
+            }
+
+            // Draw
+            Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), 15, Color.WHITE);
+            for (int col = 0; col < Items.Count; col++)
+            {
+                if (Items[col].IsActivated)
+                {
+                    Raylib.DrawRectangleRec(Items[col].Bounds, new Color(204, 232, 255, 255));
+                    Raylib.DrawRectangleLinesEx(Items[col].Bounds, 1.0f, new Color(153, 209, 255, 255));
+
+                    // Draw strip
+                    Raylib.DrawRectangleRec(new Rectangle(Items[col].Bounds.x, Items[col].Bounds.height, 230, Items[col].Items.Length * 22), new Color(242, 242, 242, 255));
+                    Raylib.DrawRectangleLinesEx(new Rectangle(Items[col].Bounds.x, Items[col].Bounds.height, 230, Items[col].Items.Length * 22), 1.0f, new Color(204, 204, 204, 255));
+                    for (int row = 0; row < Items[col].Items.Length; row++)
+                    {
+                        if (mouseOverStipItems[col][row])
+                        {
+                            var rect = Items[col].Items[row].Bounds;
+                            rect.x += 2;
+                            rect.y += 2;
+                            rect.width -= 4;
+                            rect.height -= 4;
+
+                            var color = Items[col].Items[row].IsEnabled ? new Color(145, 201, 247, 255) : new Color(230, 230, 230, 255);
+
+                            Raylib.DrawRectangleRec(rect, color);
+                        }
+
+                        var textColor = Items[col].Items[row].IsEnabled ? Color.BLACK : Color.GRAY;
+
+                        Raylib.DrawText(Items[col].Items[row].Text, (int)Items[col].Bounds.x + 5, (int)Items[col].Bounds.height + 22 * row + 5, 14, textColor);
+                        Raylib.DrawText(Items[col].Items[row].KeyShortcut, (int)Items[col].Bounds.x + 160, (int)Items[col].Bounds.height + 22 * row + 5, 14, textColor);
+                    }
+                }
+                // Hover
+                else if (mouseOverBarItems[col])
+                {
+                    Raylib.DrawRectangleRec(Items[col].Bounds, new Color(229, 243, 255, 255));
+                    Raylib.DrawRectangleLinesEx(Items[col].Bounds, 1.0f, new Color(204, 232, 255, 255));
+                }
+
+                Raylib.DrawText(Items[col].Text, (int)Items[col].Bounds.x + 5, 0, 14, Color.BLACK);
             }
         }
     }

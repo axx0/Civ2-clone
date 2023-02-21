@@ -1,12 +1,10 @@
 ﻿using Raylib_cs;
 using rlImGui_cs;
-using ImGuiNET;
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
-using RaylibControls;
 using RaylibUI.Controls;
 using JetBrains.Annotations;
 
@@ -62,7 +60,7 @@ namespace RaylibUI
             Raylib.PlaySound(sound);
             var background = _activeScreen.GetBackground();
 
-            UI.menuBar = new MenuBar();
+            var menuBar = new MenuBar();
 
             while (!Raylib.WindowShouldClose() && !shouldClose)
             {
@@ -89,7 +87,7 @@ namespace RaylibUI
 
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
 
-                UI.MenuBar();
+                menuBar.Draw();
 
                 Raylib.EndDrawing();
             }
