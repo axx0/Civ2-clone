@@ -33,7 +33,7 @@ public class MainMenu : IScreen
         if (action.MenuElement != null)
         {
             UpdateDecorations(action.MenuElement);
-            _dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, action.MenuElement.TextBoxes));
+            _dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, textBoxDefs: action.MenuElement.TextBoxes));
         }
     }
     

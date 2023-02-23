@@ -29,4 +29,9 @@ namespace Model.Interface;
         /// Width of textbox (note: approximate it as there is no logic to how this is set in the original)
         /// </summary>
         public int Width { get; set; } = 345;
+
+        /// <summary>
+        /// Max number of characters you can enter
+        /// </summary>
+        public int CharLimit { get; set; } = 15;
     }

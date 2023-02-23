@@ -27,10 +27,10 @@ public static class CtrlHelpers
                 combinedWord = combinedWord + " " + words[i];
             }
 
-            combinedTextSize = Raylib.MeasureText(combinedWord, fontSize);
+            combinedTextSize = (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), combinedWord, fontSize, 1.0f).X;
             if (i != words.Length - 1)
             {
-                combinedTextSizeNext = Raylib.MeasureText(combinedWord + " " + words[i + 1], fontSize);
+                combinedTextSizeNext = (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), combinedWord + " " + words[i + 1], fontSize, 1.0f).X;
             }
             else    // Last word
             {
@@ -54,7 +54,7 @@ public static class CtrlHelpers
         int[] wrapped_lines_length = new int[wrapped_lines.Count];
         for (int i = 0; i < wrapped_lines.Count; i++)
         {
-            wrapped_lines_length[i] = Raylib.MeasureText(wrapped_lines[i], fontSize);
+            wrapped_lines_length[i] = (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), wrapped_lines[i], fontSize, 1.0f).X;
         }
 
         return wrapped_lines;
