@@ -15,7 +15,6 @@ public static class TextureCache
             var copy = Raylib.ImageFromImage(original, origRect);
             Raylib.ImageResizeCanvas(ref copy, copy.width + 22, copy.height + 22, 11, 11, Color.WHITE);
             ImageUtils.PaintPanelBorders(ref copy, copy.width, copy.height, 11,11);
-            Raylib.ImageDraw(ref copy, original, origRect, new Rectangle(11,11,origRect.width, origRect.height),Color.WHITE);
             Textures[name] = Raylib.LoadTextureFromImage(copy);
         }
 

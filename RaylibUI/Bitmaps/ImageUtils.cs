@@ -1,3 +1,4 @@
+using System.Security.AccessControl;
 using Model.Images;
 using Raylib_cs;
 
@@ -8,7 +9,7 @@ public class ImageUtils
 
     public static void PaintPanelBorders(ref Image image, int width, int height, int paddingTop, int paddingBtm)
     {
-        DrawTiledImage(OuterWallpaper, ref image, height, width);
+        DrawBorderImage(OuterWallpaper, ref image, height, width, paddingTop, paddingBtm);
         // Paint panel borders
         // Outer border
         var pen1 = new Color(227, 227, 227, 255);
@@ -52,6 +53,53 @@ public class ImageUtils
         
         
         //DrawTiledImage(InnerWalpaper, ref image, height, width);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source">The source image to tile onto the border</param>
+    /// <param name="destination">the Image we're rendering too</param>
+    /// <param name="height">final image height</param>
+    /// <param name="width">final image width</param>
+    /// <param name="topWidth">width of top border</param>
+    /// <param name="footerWidth">width of the footer</param>
+    public static void DrawBorderImage(Image source,ref Image destination, int height, int width, int topWidth, int footerWidth)
+    {  
+        int rows = height / source.height + 1;
+        var columns = width / source.width + 1;
+        var headerSourceRec = new Rectangle { height = topWidth, width = source.width };
+        for (int col = 0; col < columns; col++)
+        {
+            Raylib.ImageDraw(ref destination, source, headerSourceRec,
+                new Rectangle(col * source.width, 0, source.width, topWidth),
+                Color.WHITE);
+        }
+        var leftSide = new Rectangle { height = source.height, width = 11 };
+
+        var rightEdge = width - 11;
+        var rightOffset = width % source.width;
+        var rightSide = new Rectangle { x = rightOffset, height = source.height, width = 11 };
+        
+        for (int row = 0; row < rows; row++)
+        {
+            Raylib.ImageDraw(ref destination, source, leftSide,
+                new Rectangle(0, row * source.height, 11, source.height),
+                Color.WHITE);
+            Raylib.ImageDraw(ref destination, source, rightSide,
+                new Rectangle(rightEdge, row * source.height, 11, source.height),
+                Color.WHITE);
+        }
+
+        var bottomEdge = height - footerWidth;
+        var bottomOffset = height % source.height;
+        var bottomSource = new Rectangle { y = bottomOffset, height = footerWidth, width = source.width };
+        for (int col = 0; col < columns; col++)
+        {
+            Raylib.ImageDraw(ref destination, source, bottomSource,
+                new Rectangle(col * source.width, bottomEdge, source.width, footerWidth),
+                Color.WHITE);
+        }
     }
 
     public static void DrawTiledImage(Image source,ref Image destination, int height, int width)
