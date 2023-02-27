@@ -1,7 +1,7 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI;
 
 public class FormattedText
 {
@@ -30,7 +30,26 @@ public class FormattedText
         int height = 0;
         for (int row = 0; row < WrappedText.Count; row++)
         {
-            Raylib.DrawTextEx(Font, WrappedText[row], new Vector2(x, y + height), FontSize, 1.0f, Color);
+            int xDraw = x, yDraw = y;
+            if (HorizontalAlignment == HorizontalAlignment.Center)
+            {
+                xDraw = x - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X / 2;
+            }
+            else if (HorizontalAlignment == HorizontalAlignment.Right)
+            {
+                xDraw = x - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X;
+            }
+
+            if (VerticalAlignment == VerticalAlignment.Center)
+            {
+                yDraw = y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y / 2;
+            }
+            else if (VerticalAlignment == VerticalAlignment.Bottom)
+            {
+                yDraw = y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
+            }
+
+            Raylib.DrawTextEx(Font, WrappedText[row], new Vector2(xDraw, yDraw + height), FontSize, 1.0f, Color);
             height += (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
         }
     }
