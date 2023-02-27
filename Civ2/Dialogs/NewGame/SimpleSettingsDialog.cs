@@ -7,7 +7,7 @@ public abstract class SimpleSettingsDialog : BaseDialogHandler
 {
     private readonly string _next;
 
-    protected SimpleSettingsDialog(string name, string next) : base(name)
+    protected SimpleSettingsDialog(string name, string next) : base(name, 0, -0.03)
     {
         _next = next;
     }

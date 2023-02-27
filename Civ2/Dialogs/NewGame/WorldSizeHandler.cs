@@ -9,7 +9,7 @@ public class WorldSizeHandler : BaseDialogHandler
 {
     public const string Title = "SIZEOFMAP";
 
-    public WorldSizeHandler() : base(Title, 0, 75)
+    public WorldSizeHandler() : base(Title, 0, -0.03)
     {
     }
 

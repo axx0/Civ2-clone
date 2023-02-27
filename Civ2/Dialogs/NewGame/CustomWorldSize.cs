@@ -9,7 +9,7 @@ namespace Civ2.Dialogs.NewGame;
 public class CustomWorldSize : BaseDialogHandler
 {
     public static string Title = "CUSTOMSIZE"; 
-    public CustomWorldSize() : base(Title)
+    public CustomWorldSize() : base(Title, 0, -0.03)
     {
     }
 
@@ -24,12 +24,12 @@ public class CustomWorldSize : BaseDialogHandler
         {
             new()
             {
-                index = 0, Name = "Width", MinValue = 20,
+                index = 0, Name = "Width", MinValue = 20, CharLimit = 5,
                 InitialValue = Initialization.ConfigObject.WorldSize[0].ToString(), Width = 75
             },
             new()
             {
-                index = 1, Name = "Height", MinValue = 20,
+                index = 1, Name = "Height", MinValue = 20, CharLimit = 5,
                 InitialValue = Initialization.ConfigObject.WorldSize[1].ToString(), Width = 75
             }
         };
