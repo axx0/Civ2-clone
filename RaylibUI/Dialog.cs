@@ -2,7 +2,6 @@ using Civ2engine;
 using Model;
 using Model.Interface;
 using Raylib_cs;
-using RaylibUI.Controls;
 using System.Numerics;
 
 namespace RaylibUI;
@@ -28,6 +27,7 @@ public class Dialog
     private readonly Image _image;
     private readonly Button[] _buttons;
     private int _dialogPosX, _dialogPosY;
+    private bool dragging = false;
 
     public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IDictionary<string, string>?>[] buttonHandlers, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
     {
@@ -187,6 +187,16 @@ public class Dialog
 
         // Drag/move dialog
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, w, _padding.T)))
+        {
+            dragging = true;
+        }
+
+        if (dragging && Raylib.IsMouseButtonUp(MouseButton.MOUSE_BUTTON_LEFT))
+        {
+            dragging = false;
+        }
+
+        if (dragging)
         {
             delta = Raylib.GetMouseDelta();
             _dialogPosX += (int)delta.X;
