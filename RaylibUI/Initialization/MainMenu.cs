@@ -1,6 +1,7 @@
 using System.Numerics;
 using Model;
 using Raylib_cs;
+using RaylibUI.Controls;
 
 namespace RaylibUI.Initialization;
 
@@ -8,7 +9,7 @@ public class MainMenu : IScreen
 {
     private readonly IUserInterface _activeInterface;
     private readonly Action _shutdownApp;
-    private readonly List<Dialog> _dialogs = new();
+    //private readonly List<IForm> _dialogs = new();
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
 
@@ -28,12 +29,19 @@ public class MainMenu : IScreen
 
     private void MakeMenuElements(IInterfaceAction action)
     {
-        _dialogs.Clear();
+        //_dialogs.Clear();
+        FormManager.Clear();
         
         if (action.MenuElement != null)
         {
             UpdateDecorations(action.MenuElement);
-            _dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, textBoxDefs: action.MenuElement.TextBoxes));
+
+            FormManager.Add(new Panel(200, 100, new Size(500, 500), "test 1"));
+            FormManager.Add(new Panel(300, 200, new Size(100, 100), "test 2"));
+            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, textBoxDefs: action.MenuElement.TextBoxes));
+            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, textBoxDefs: action.MenuElement.TextBoxes));
+            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, textBoxDefs: action.MenuElement.TextBoxes));
+            //_dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, textBoxDefs: action.MenuElement.TextBoxes));
         }
     }
     
@@ -82,10 +90,12 @@ public class MainMenu : IScreen
         {
             panel.Draw();
         }
-        foreach (var dialog in _dialogs.ToList())
-        {
-            dialog.Draw();
-        }
+
+        FormManager.DrawForms();
+        //foreach (var dialog in _dialogs.ToList())
+        //{
+        //    dialog.Draw();
+        //}
     }
 
     public ScreenBackground? GetBackground()

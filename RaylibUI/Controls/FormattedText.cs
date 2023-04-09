@@ -1,9 +1,9 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI;
+namespace RaylibUI.Controls;
 
-public class FormattedText
+public class FormattedText : Control
 {
     public string Text { get; set; }
     public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Left;

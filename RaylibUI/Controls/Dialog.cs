@@ -4,20 +4,17 @@ using Model.Interface;
 using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI;
+namespace RaylibUI.Controls;
 
-public class Dialog
+public class Dialog : Form, IForm
 {
     private int _selectedRadio = 0;
     //public IDictionary<string, string> TextboxValues = new Dictionary<string, string>();
 
-    private readonly Action<string, int, IDictionary<string,string>?>[] _buttonHandlers;
+    private readonly Action<string, int, IDictionary<string, string>?>[] _buttonHandlers;
     private readonly IList<string> _text;
-    private readonly string _title;
     private readonly IList<FormattedText> _fTexts;
-    private readonly FormattedText _fTitle;
-    private readonly Size _size, _innerSize;
-    private readonly Padding _padding;
+    private readonly Size _innerSize;
     private readonly IList<string> _options;
     private readonly List<Textbox> _textBoxes;
     private readonly FormattedText[] _formattedTextboxTexts;
@@ -26,14 +23,10 @@ public class Dialog
     private readonly Image[] _icons;
     private readonly Image _image;
     private readonly Button[] _buttons;
-    private int _dialogPosX, _dialogPosY;
-    private bool dragging = false;
 
     public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IDictionary<string, string>?>[] buttonHandlers, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
     {
-
-        _padding = new Padding(11, 11, 38, 46);
-        _title = popupBox.Title;
+        Padding = new Padding(11, 11, 38, 46);
         _buttonHandlers = buttonHandlers;
         _text = popupBox.Text?.ToList() ?? new List<string>();
         //_listbox = listbox;
@@ -82,6 +75,7 @@ public class Dialog
 
                 i++;
             }
+            _textBoxes.ForEach(tbox => Controls.Add(tbox));
         }
         else
         {
@@ -91,10 +85,15 @@ public class Dialog
         _buttonTexts = popupBox.Button;
 
         // Format title & adjust dialog width to fit the title
-        if (!string.IsNullOrWhiteSpace(_title))
+        if (!string.IsNullOrWhiteSpace(popupBox.Title))
         {
-            _fTitle = GetFormattedTitle(popupBox.Title, replaceStrings, replaceNumbers);
-            _innerSize.width = _fTitle.MeasureWidth() - _padding.L - _padding.R;
+            Title = new FormattedText
+            {
+                Text = Replace(popupBox.Title, replaceStrings, replaceNumbers),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _innerSize.width = Title.MeasureWidth() - Padding.L - Padding.R;
         }
 
         // Determine size of text and based on that determine dialog size (TODO)
@@ -119,7 +118,7 @@ public class Dialog
         // Correction of inner panel size for options
         _optionsRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
         var iconsHeight = _icons.Length == 0 ? 0 : _icons.Sum(i => i.height) + 4 * (_icons.Length - 1);
-        _innerSize = new Size(Math.Max(_size.width, GetInnerPanelWidthFromOptions(popupBox, _optionsRows, _optionsColumns, _icons, textBoxDefs)),
+        _innerSize = new Size(Math.Max(Size.width, GetInnerPanelWidthFromOptions(popupBox, _optionsRows, _optionsColumns, _icons, textBoxDefs)),
             (_optionsRows - _icons.Length) * 32 + iconsHeight + _textHeight);
 
         // Correction of inner panel size for image
@@ -131,41 +130,47 @@ public class Dialog
         //_listboxShownLines = popupBox.ListboxLines;
         //_listboxHeight = _listboxShownLines * 23 + 2;
         //_innerSize.Height += _listboxHeight;
-        _size = new Size(_innerSize.width + 2 * 2 + _padding.L + _padding.R, _innerSize.height + 2 * 2 + _padding.T + _padding.B);
+        Size = new Size(_innerSize.width + 2 * 2 + Padding.L + Padding.R, _innerSize.height + 2 * 2 + Padding.T + Padding.B);
 
         // Create buttons
         _buttons = new Button[_buttonTexts.Count];
-        _btnWidth = (_size.width - _padding.L - _padding.R - 3 * (_buttons.Length - 1)) / _buttons.Length;
+        _btnWidth = (Size.width - Padding.L - Padding.R - 3 * (_buttons.Length - 1)) / _buttons.Length;
         for (int i = 0; i < _buttons.Length; i++)
         {
-            _buttons[i] = new Button(_btnWidth, 36, _buttonTexts[i]);
+            _buttons[i] = new Button
+            {
+                Width = _btnWidth,
+                Height = 36,
+                Text = _buttonTexts[i]
+            };
+            Controls.Add(_buttons[i]);
         }
 
         // Initial dialog position on screen
         if (relatDialogPos.X < 0) // offset from right
         {
-            _dialogPosX = (int)((1 + relatDialogPos.X) * Raylib.GetScreenWidth()) - _size.width;
+            _formPosX = (int)((1 + relatDialogPos.X) * Raylib.GetScreenWidth()) - Size.width;
         }
         else if (relatDialogPos.X > 0)
         {
-            _dialogPosX = (int)(relatDialogPos.X * Raylib.GetScreenWidth());
+            _formPosX = (int)(relatDialogPos.X * Raylib.GetScreenWidth());
         }
         else // =0 (center on screen)
         {
-            _dialogPosX = (int)(Raylib.GetScreenWidth() * 0.5 - _size.width * 0.5);
+            _formPosX = (int)(Raylib.GetScreenWidth() * 0.5 - Size.width * 0.5);
         }
 
         if (relatDialogPos.Y < 0) // offset from bottom
         {
-            _dialogPosY = (int)((1 + relatDialogPos.Y) * Raylib.GetScreenHeight()) - _size.height;
+            _formPosY = (int)((1 + relatDialogPos.Y) * Raylib.GetScreenHeight()) - Size.height;
         }
         else if (relatDialogPos.Y > 0)
         {
-            _dialogPosY = (int)(relatDialogPos.Y * Raylib.GetScreenHeight());
+            _formPosY = (int)(relatDialogPos.Y * Raylib.GetScreenHeight());
         }
         else // =0 (center on screen)
         {
-            _dialogPosY = (int)(Raylib.GetScreenHeight() * 0.5 - _size.height * 0.5);
+            _formPosY = (int)(Raylib.GetScreenHeight() * 0.5 - Size.height * 0.5);
         }
     }
 
@@ -177,46 +182,18 @@ public class Dialog
 
     public void Draw()
     {
-        int x = _dialogPosX;
-        int y = _dialogPosY;
-        int w = _size.width;
-        int h = _size.height;
+        base.Draw();
 
         Vector2 mousePos = Raylib.GetMousePosition();
-        Vector2 delta;
-
-        // Drag/move dialog
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, w, _padding.T)))
-        {
-            dragging = true;
-        }
-
-        if (dragging && Raylib.IsMouseButtonUp(MouseButton.MOUSE_BUTTON_LEFT))
-        {
-            dragging = false;
-        }
-
-        if (dragging)
-        {
-            delta = Raylib.GetMouseDelta();
-            _dialogPosX += (int)delta.X;
-            _dialogPosY += (int)delta.Y;
-        }
-
-        ImageUtils.PaintDialogBase(x, y, w, h, _padding);
-
-        // Draw title text
-        var textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), _title, 20, 1.0f);
-        Raylib.DrawTextEx(Raylib.GetFontDefault(), _title, new Vector2(x + w / 2 - (int)textSize.X / 2, y + _padding.T / 2 - (int)textSize.Y / 2), 20, 1.0f, Color.BLACK);
 
         // Draw body text
         if (_fTexts is not null)
         {
-            h = 0;
+            Size = new Size(Size.width, 0);
             foreach (var fText in _fTexts)
             {
-                fText.Draw(x + _padding.L + 2, y + _padding.T + 2 + h);
-                h += fText.MeasureHeight();
+                fText.Draw(_formPosX + Padding.L + 2, _formPosY + Padding.T + 2 + Size.height);
+                Size = new Size(Size.width, Size.height + fText.MeasureHeight());
             }
         }
 
@@ -224,19 +201,19 @@ public class Dialog
         if (_options is not null)
         {
             // Detect mouse click on option
-            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x + _padding.L + 8, y + _padding.T + 5, w - _padding.L - _padding.R - 8, 32 * _options.Count)))
+            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(_formPosX + Padding.L + 8, _formPosY + Padding.T + 5, Size.width - Padding.L - Padding.R - 8, 32 * _options.Count)) && Focused)
             {
-                _selectedRadio = ((int)mousePos.Y - y - _padding.T - 5) / 32;
+                _selectedRadio = ((int)mousePos.Y - _formPosY - Padding.T - 5) / 32;
             }
 
             for (int i = 0; i < _options.Count; i++)
             {
-                ImageUtils.PaintRadioButton(x + _padding.L + 10, y + _padding.T + 9 + 32 * i, _selectedRadio == i);
-                Raylib.DrawText(_options[i], x + _padding.L + 40, y + _padding.T + 10 + 32 * i, 20, Color.BLACK);
+                ImageUtils.PaintRadioButton(_formPosX + Padding.L + 10, _formPosY + Padding.T + 9 + 32 * i, _selectedRadio == i);
+                Raylib.DrawText(_options[i], _formPosX + Padding.L + 40, _formPosY + Padding.T + 10 + 32 * i, 20, Color.BLACK);
 
                 if (_selectedRadio == i)
                 {
-                    Raylib.DrawRectangleLines(x + _padding.L + 34, y + _padding.T + 5 + 32 * i, w - _padding.L - _padding.R - 34 - 2, 26, new Color(64, 64, 64, 255));
+                    Raylib.DrawRectangleLines(_formPosX + Padding.L + 34, _formPosY + Padding.T + 5 + 32 * i, Size.width - Padding.L - Padding.R - 34 - 2, 26, new Color(64, 64, 64, 255));
                 }
             }
         }
@@ -246,9 +223,9 @@ public class Dialog
         {
             for (int i = 0; i < _textBoxes.Count; i++)
             {
-                _formattedTextboxTexts[i].Draw(x + _padding.L, y + _padding.T + _fTexts.Sum(t => t.MeasureHeight()) + 14 + 40 * i);
-                if (_textBoxes[i].Draw(x + _padding.L + _formattedTextboxTexts.Max(box => box.MeasureWidth()) + 4,
-                y + _padding.T + 2 + _fTexts.Sum(w => w.MeasureHeight()) + 2 + 40 * i))
+                _formattedTextboxTexts[i].Draw(_formPosX + Padding.L, _formPosY + Padding.T + _fTexts.Sum(t => t.MeasureHeight()) + 14 + 40 * i);
+                if (_textBoxes[i].Draw(_formPosX + Padding.L + _formattedTextboxTexts.Max(box => box.MeasureWidth()) + 4,
+                _formPosY + Padding.T + 2 + _fTexts.Sum(w => w.MeasureHeight()) + 2 + 40 * i))
                     _textBoxes[i].EditMode = !_textBoxes[i].EditMode;
             }
         }
@@ -257,7 +234,8 @@ public class Dialog
         int selectedButton = -1;
         for (int i = 0; i < _buttons.Length; i++)
         {
-            if (_buttons[i].Draw(x + _padding.L + _btnWidth * i + 3 * i - 2, y + _size.height - _padding.B + 4))
+            _buttons[i].Draw(_formPosX + Padding.L + _btnWidth * i + 3 * i - 2, _formPosY + Size.height - Padding.B + 4);
+            if (_buttons[i].Pressed)
             {
                 selectedButton = i;
             }
@@ -270,17 +248,7 @@ public class Dialog
         }
     }
 
-    private static FormattedText GetFormattedTitle(string title, IList<string> replaceStrings, IList<int> replaceNumbers)
-    {
-        var fTitle = new FormattedText
-        {
-            Text = Replace(title, replaceStrings, replaceNumbers),
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-        return fTitle;
-    }
-
-    private IDictionary<string,string>? FormatTextBoxReturn()
+    private IDictionary<string, string>? FormatTextBoxReturn()
     {
         //return _textBoxes?.Select((k, i) => new { k.Name, Value = TextBoxValues[i] })
         //    .ToDictionary(k => k.Name, v => v.Value);        
@@ -350,7 +318,7 @@ public class Dialog
         {
             formattedTexts.Add(new FormattedText
             {
-                Text = (text == "" && styles[i] == TextStyles.LeftOwnLine) ? " " : text,    // Add space if ^ is the only character
+                Text = text == "" && styles[i] == TextStyles.LeftOwnLine ? " " : text,    // Add space if ^ is the only character
                 //Font = new Font("Times New Roman", 18),
                 HorizontalAlignment = styles[i] == TextStyles.Centered ? HorizontalAlignment.Center : HorizontalAlignment.Left
             });
@@ -400,17 +368,5 @@ public class Dialog
         }
 
         return text;
-    }
-
-    private struct Size
-    {
-        public int width;
-        public int height;
-
-        public Size(int width, int height)
-        {
-            this.width = width;
-            this.height = height;
-        }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using Raylib_cs;
 
-namespace RaylibUI;
+namespace RaylibUI.Controls;
 
 public class MenuBarItem
 {
-    public string Text;
-    public MenuStripItem[] Items;
-    public bool IsEnabled = true;
-    public bool IsActivated = false;
-    public Rectangle Bounds;
+    public string Text { get; set; }
+    public MenuStripItem[] Items { get; set; }
+    public bool Enabled { get; set; } = true;
+    public bool Activated { get; set; } = false;
+    public Rectangle Bounds { get; set; }
 }

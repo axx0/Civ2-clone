@@ -1,9 +1,9 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI;
+namespace RaylibUI.Controls;
 
-public class Textbox
+public class Textbox : Control
 {
     public string Name { get; set; }
     public int Width { get; set; } = 50;
@@ -30,7 +30,7 @@ public class Textbox
         Rectangle cursor = new Rectangle(x + 5 + textWidth + 2, y + 5, 4, 20);
         Rectangle clickBounds = new Rectangle(x, y, Width, Height);
 
-        if (EditMode)
+        if (EditMode && Enabled)
         {
             int keyCount = Text.Length;
             int pressedKey = Raylib.GetCharPressed();
@@ -52,12 +52,12 @@ public class Textbox
         Raylib.DrawText(Text, x + 5, y + 5, FontSize, Color.BLACK);
 
         // Cursor
-        if (EditMode)
+        if (EditMode && Enabled)
         {
             Raylib.DrawRectangleRec(cursor, Color.BLACK);
         }
 
-        if (EditMode)
+        if (EditMode && Enabled)
         {
             if (!Raylib.CheckCollisionPointRec(mousePoint, clickBounds) && Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT)) pressed = true;
         }

@@ -4,6 +4,7 @@ using Civ2engine;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
+using RaylibUI.Controls;
 using JetBrains.Annotations;
 
 namespace RaylibUI
@@ -58,15 +59,8 @@ namespace RaylibUI
             Raylib.PlaySound(sound);
             var background = _activeScreen.GetBackground();
 
-            var menuBar = new MenuBar();
-            var panel1 = new Panel 
-            { 
-                Width = 500, Height = 500, X = 200, Y = 100,
-                Title = new FormattedText 
-                {
-                    Text = "Roman Map", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
-                } 
-            };
+            //var menuBar = new MenuBar();
+            FormManager.Initialize();
 
             while (!Raylib.WindowShouldClose() && !shouldClose)
             {
@@ -93,9 +87,7 @@ namespace RaylibUI
 
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
 
-                menuBar.Draw();
-
-                panel1.Draw();
+                //menuBar.Draw();
 
                 Raylib.EndDrawing();
             }

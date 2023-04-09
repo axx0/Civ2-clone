@@ -1,45 +1,35 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI;
+namespace RaylibUI.Controls;
 
-public class Button
+public class Button : Control
 {
-    private readonly int _width, _height;
-    private readonly string _text;
+    public string Text { get; set; }
+    public int Width { get; set; }
+    public int Height { get; set; }
+    private bool _pressed;
+    public bool Pressed => _pressed;
 
-    public Button(int width, int height, string text)
+    public void Draw(int x, int y)
     {
-        _width = width;
-        _height = height;
-        _text = text;
-    }
-
-    // Return true when button pressed
-    public bool Draw(int x, int y)
-    {
-        bool pressed = false;
+        _pressed = false;
         Vector2 mousePos = Raylib.GetMousePosition();
 
-        int w = _width;
-        int h = _height;
+        Raylib.DrawRectangleLinesEx(new Rectangle(x, y, Width, Height), 1.0f, new Color(100, 100, 100, 255));
+        Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, Width - 2, Height - 2), Color.WHITE);
+        Raylib.DrawRectangleRec(new Rectangle(x + 3, y + 3, Width - 6, Height - 6), new Color(192, 192, 192, 255));
+        Raylib.DrawLine(x + 2, y + Height - 2, x + Width - 2, y + Height - 2, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(x + 3, y + Height - 3, x + Width - 2, y + Height - 3, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(x + Width - 1, y + 2, x + Width - 1, y + Height - 1, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(x + Width - 2, y + 3, x + Width - 2, y + Height - 1, new Color(128, 128, 128, 255));
 
-        Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.WHITE);
-        Raylib.DrawRectangleRec(new Rectangle(x + 3, y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
-        Raylib.DrawLine(x + 2, y + h - 2, x + w - 2, y + h - 2, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + 3, y + h - 3, x + w - 2, y + h - 3, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + w - 1, y + 2, x + w - 1, y + h - 1, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + w - 2, y + 3, x + w - 2, y + h - 1, new Color(128, 128, 128, 255));
+        var textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), Text, 18, 1.0f);
+        Raylib.DrawText(Text, x + Width / 2 - (int)textSize.X / 2, y + Height / 2 - (int)textSize.Y / 2, 18, Color.BLACK);
 
-        var textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), _text, 18, 1.0f);
-        Raylib.DrawText(_text, x + w / 2 - (int)textSize.X / 2, y + h / 2 - (int)textSize.Y / 2, 18, Color.BLACK);
-
-        if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, w, h)))
+        if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, Width, Height)) && Enabled)
         {
-            pressed = true;
+            _pressed = true;
         }
-
-        return pressed;
     }
 }
