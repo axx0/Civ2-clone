@@ -1,7 +1,7 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.Forms;
 
 public class Panel : Form, IForm
 {

@@ -2,7 +2,7 @@
 using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.Forms;
 
 public abstract class Form : IForm
 {
@@ -16,7 +16,8 @@ public abstract class Form : IForm
     public FormattedText Title { get; set; }
     public bool Hover => Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Size.height));
     public bool Focused { get; set; }
-    public bool Pressed => Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Padding.T));
+    public bool Pressed => Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Size.height));
+    public bool PressedTop => Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Padding.T));
 
     private bool dragging = false;
     protected int _formPosX, _formPosY;
@@ -46,7 +47,7 @@ public abstract class Form : IForm
         Vector2 delta;
 
         // Drag/move form
-        if (Pressed && Enabled && Focused)
+        if (PressedTop && Enabled && Focused)
         {
             dragging = true;
         }
@@ -66,6 +67,6 @@ public abstract class Form : IForm
         ImageUtils.PaintDialogBase(_formPosX, _formPosY, Size.width, Size.height, Padding);
 
         // Draw title text
-        Title.Draw(_formPosX + Size.width / 2, _formPosY + Padding.T / 2);
+        Title?.Draw(_formPosX + Size.width / 2, _formPosY + Padding.T / 2);
     }
 }

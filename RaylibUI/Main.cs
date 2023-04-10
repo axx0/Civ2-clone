@@ -4,7 +4,7 @@ using Civ2engine;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
-using RaylibUI.Controls;
+using RaylibUI.Forms;
 using JetBrains.Annotations;
 
 namespace RaylibUI

@@ -1,6 +1,6 @@
 ﻿using Raylib_cs;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.Forms;
 
 public class MenuBarItem
 {

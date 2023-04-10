@@ -1,4 +1,4 @@
-﻿namespace RaylibUI.Controls;
+﻿namespace RaylibUI.Forms;
 
 public interface IForm
 {

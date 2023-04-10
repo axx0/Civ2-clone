@@ -1,6 +1,6 @@
 ﻿using Raylib_cs;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.Forms;
 
 public static class FormManager
 {
@@ -71,11 +71,5 @@ public static class FormManager
 
         Forms.ToList().ForEach(f => f.Draw());
         MenuBar.Draw();
-
-        for (int i = 0; i < Forms.Count; i++)
-        {
-            if (Forms[i].Hover)
-                Raylib.DrawText($"Hover form {i}", 10, 50 + 20 * i, 15, Color.BLACK);
-        }
     }
 }

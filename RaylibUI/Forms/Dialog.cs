@@ -4,18 +4,16 @@ using Model.Interface;
 using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.Forms;
 
 public class Dialog : Form, IForm
 {
-    private int _selectedRadio = 0;
     //public IDictionary<string, string> TextboxValues = new Dictionary<string, string>();
 
-    private readonly Action<string, int, IDictionary<string, string>?>[] _buttonHandlers;
+    private readonly Action<string, int, IList<bool>, IDictionary<string, string>?>[] _buttonHandlers;
     private readonly IList<string> _text;
     private readonly IList<FormattedText> _fTexts;
     private readonly Size _innerSize;
-    private readonly IList<string> _options;
     private readonly List<Textbox> _textBoxes;
     private readonly FormattedText[] _formattedTextboxTexts;
     private readonly IList<string> _buttonTexts;
@@ -23,8 +21,10 @@ public class Dialog : Form, IForm
     private readonly Image[] _icons;
     private readonly Image _image;
     private readonly Button[] _buttons;
+    private readonly RadioButtonList _options;
+    private readonly CheckBoxList _checkboxes;
 
-    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IDictionary<string, string>?>[] buttonHandlers, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
+    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IList<bool>, IDictionary<string, string>?>[] buttonHandlers, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, IList<bool> checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
     {
         Padding = new Padding(11, 11, 38, 46);
         _buttonHandlers = buttonHandlers;
@@ -33,7 +33,9 @@ public class Dialog : Form, IForm
         _image = image;
         _icons = icons ?? Array.Empty<Image>();
         _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
-        //if (checkboxOptionState is not null) CheckboxReturnStates = new List<bool>(checkboxOptionState); // Initialize return checkbox states
+
+        // TEMP !!!
+        //checkboxStates = new List<bool>() { true, false, true, false, true, false };
 
         // Define textboxes
         if (textBoxDefs is not null)
@@ -79,7 +81,19 @@ public class Dialog : Form, IForm
         }
         else
         {
-            _options = popupBox.Options;
+            if (popupBox.Options is not null)
+            {
+                if (popupBox.Checkbox)
+                {
+                    _checkboxes = new() { Texts = popupBox.Options, Checked = checkboxStates };
+                    Controls.Add(_checkboxes);
+                }
+                else
+                {
+                    _options = new() { Texts = popupBox.Options };
+                    Controls.Add(_options);
+                }
+            }
         }
 
         _buttonTexts = popupBox.Button;
@@ -187,36 +201,13 @@ public class Dialog : Form, IForm
         Vector2 mousePos = Raylib.GetMousePosition();
 
         // Draw body text
-        if (_fTexts is not null)
-        {
-            Size = new Size(Size.width, 0);
-            foreach (var fText in _fTexts)
-            {
-                fText.Draw(_formPosX + Padding.L + 2, _formPosY + Padding.T + 2 + Size.height);
-                Size = new Size(Size.width, Size.height + fText.MeasureHeight());
-            }
-        }
+        _fTexts?.ToList().ForEach(t => t.Draw(_formPosX + Padding.L + 2, _formPosY + Padding.T + 2));
 
         // Draw options
-        if (_options is not null)
-        {
-            // Detect mouse click on option
-            if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(_formPosX + Padding.L + 8, _formPosY + Padding.T + 5, Size.width - Padding.L - Padding.R - 8, 32 * _options.Count)) && Focused)
-            {
-                _selectedRadio = ((int)mousePos.Y - _formPosY - Padding.T - 5) / 32;
-            }
+        _options?.Draw(_formPosX, _formPosY, Padding, Size);
 
-            for (int i = 0; i < _options.Count; i++)
-            {
-                ImageUtils.PaintRadioButton(_formPosX + Padding.L + 10, _formPosY + Padding.T + 9 + 32 * i, _selectedRadio == i);
-                Raylib.DrawText(_options[i], _formPosX + Padding.L + 40, _formPosY + Padding.T + 10 + 32 * i, 20, Color.BLACK);
-
-                if (_selectedRadio == i)
-                {
-                    Raylib.DrawRectangleLines(_formPosX + Padding.L + 34, _formPosY + Padding.T + 5 + 32 * i, Size.width - Padding.L - Padding.R - 34 - 2, 26, new Color(64, 64, 64, 255));
-                }
-            }
-        }
+        // Draw checkboxes
+        _checkboxes?.Draw(_formPosX, _formPosY, Padding, Size);
 
         // Draw textboxes
         if (_textBoxes is not null)
@@ -244,7 +235,7 @@ public class Dialog : Form, IForm
         if (selectedButton != -1)
         {
             _buttonHandlers[selectedButton >= _buttonHandlers.Length ? 0 : selectedButton](
-                _buttonTexts[selectedButton], _selectedRadio, FormatTextBoxReturn());
+                _buttonTexts[selectedButton], _options?.Selected ?? 0, _checkboxes?.Checked ?? null, FormatTextBoxReturn());
         }
     }
 

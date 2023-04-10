@@ -1,19 +1,15 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.Forms;
 
-public class VScrollBar
+public class VScrollBar : Control
 {
     bool _topArrowPressed = false;
     bool _btmArrowPressed = false;
     bool _barTopPressed = false;
     bool _barBtmPressed = false;
 
-    /// <summary>
-    /// Sets whether the control can respond to user interaction
-    /// </summary>
-    public bool Enabled { get; set; } = true;
     public int Height { get; set; }
     public int Width { get; set; } = 17;
 

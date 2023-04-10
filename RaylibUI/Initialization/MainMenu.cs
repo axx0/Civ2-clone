@@ -1,7 +1,7 @@
 using System.Numerics;
 using Model;
 using Raylib_cs;
-using RaylibUI.Controls;
+using RaylibUI.Forms;
 
 namespace RaylibUI.Initialization;
 
@@ -36,10 +36,6 @@ public class MainMenu : IScreen
         {
             UpdateDecorations(action.MenuElement);
 
-            FormManager.Add(new Panel(200, 100, new Size(500, 500), "test 1"));
-            FormManager.Add(new Panel(300, 200, new Size(100, 100), "test 2"));
-            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, textBoxDefs: action.MenuElement.TextBoxes));
-            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, textBoxDefs: action.MenuElement.TextBoxes));
             FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, textBoxDefs: action.MenuElement.TextBoxes));
             //_dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, textBoxDefs: action.MenuElement.TextBoxes));
         }
@@ -68,10 +64,10 @@ public class MainMenu : IScreen
         _imagePanels = newPanels;
     }
 
-    private void HandleButtonClick(string button, int selectedIndex, IDictionary<string ,string>? textBoxValues)
+    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates, IDictionary<string ,string>? textBoxValues)
     {
         if (_currentAction.MenuElement == null) return;
-        var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, TextValues: textBoxValues));
+        var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues));
         if (act.ActionType == EventType.Exit)
         {
             _shutdownApp();

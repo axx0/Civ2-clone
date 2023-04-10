@@ -2,7 +2,7 @@ using Model;
 using Model.Images;
 using Raylib_cs;
 
-namespace RaylibUI;
+namespace RaylibUI.Forms;
 
 public class ImagePanel
 {
