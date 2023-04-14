@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using Civ2engine;
+using Raylib_cs;
 using System.Numerics;
 
 namespace RaylibUI.Forms;
@@ -14,7 +15,23 @@ public class Button : Control
     public void Draw(int x, int y)
     {
         _pressed = false;
-        Vector2 mousePos = Raylib.GetMousePosition();
+
+        // Keys
+        if (Enabled && KeyPressed != 0 )
+        {
+            switch (KeyPressed)
+            {
+                case (int)KeyboardKey.KEY_ENTER or (int)KeyboardKey.KEY_KP_ENTER:
+                    if (Text == Labels.Ok)
+                        _pressed = true;
+                    break;
+                case (int)KeyboardKey.KEY_ESCAPE:
+                    if (Text == Labels.Cancel)
+                        _pressed = true;
+                    break;
+            }
+            KeyPressed = 0;
+        }
 
         Raylib.DrawRectangleLinesEx(new Rectangle(x, y, Width, Height), 1.0f, new Color(100, 100, 100, 255));
         Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, Width - 2, Height - 2), Color.WHITE);
@@ -27,6 +44,7 @@ public class Button : Control
         var textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), Text, 18, 1.0f);
         Raylib.DrawText(Text, x + Width / 2 - (int)textSize.X / 2, y + Height / 2 - (int)textSize.Y / 2, 18, Color.BLACK);
 
+        Vector2 mousePos = Raylib.GetMousePosition();
         if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, Width, Height)) && Enabled)
         {
             _pressed = true;

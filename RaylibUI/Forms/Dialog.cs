@@ -24,18 +24,24 @@ public class Dialog : Form, IForm
     private readonly RadioButtonList _options;
     private readonly CheckBoxList _checkboxes;
 
-    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IList<bool>, IDictionary<string, string>?>[] buttonHandlers, IList<string> replaceStrings = null, IList<int> replaceNumbers = null, IList<bool> checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[] icons = null, Image image = new Image())
+    private Texture2D texture;
+
+    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IList<bool>, IDictionary<string, string>?>[] buttonHandlers, IList<string>? replaceStrings = null, IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image())
     {
         Padding = new Padding(11, 11, 38, 46);
         _buttonHandlers = buttonHandlers;
         _text = popupBox.Text?.ToList() ?? new List<string>();
         //_listbox = listbox;
+
+        // TEST !!!!
         _image = image;
+        //int _frames = 0;
+        //_image = Raylib.LoadImageAnim(@"C://Program Files (x86)\Civ2\UNITS.GIF", out _frames);
+        //Raylib.ImageCrop(ref _image, new Rectangle(1, 1, 64, 48));
+        texture = Raylib.LoadTextureFromImage(_image);
+
         _icons = icons ?? Array.Empty<Image>();
         _optionsColumns = optionsCols < 1 ? 1 : optionsCols;
-
-        // TEMP !!!
-        //checkboxStates = new List<bool>() { true, false, true, false, true, false };
 
         // Define textboxes
         if (textBoxDefs is not null)
@@ -83,6 +89,11 @@ public class Dialog : Form, IForm
         {
             if (popupBox.Options is not null)
             {
+                for (int i = 0; i < popupBox.Options.Count; i++) 
+                {
+                    popupBox.Options[i] = Replace(popupBox.Options[i], replaceStrings, replaceNumbers);
+                }
+                
                 if (popupBox.Checkbox)
                 {
                     _checkboxes = new() { Texts = popupBox.Options, Checked = checkboxStates };
@@ -90,7 +101,7 @@ public class Dialog : Form, IForm
                 }
                 else
                 {
-                    _options = new() { Texts = popupBox.Options };
+                    _options = new(popupBox.Options, _optionsColumns);
                     Controls.Add(_options);
                 }
             }
@@ -136,10 +147,13 @@ public class Dialog : Form, IForm
             (_optionsRows - _icons.Length) * 32 + iconsHeight + _textHeight);
 
         // Correction of inner panel size for image
-        //_innerSize = new Size(Math.Max(_innerSize.width, _image.width ?? 0), Math.Max(_innerSize.height, _image.height ?? 0));
+        _innerSize = new Size(_innerSize.width + _image.width, Math.Max(_innerSize.height, _image.height));
 
         // Correction of inner panel size for textbox
-        _innerSize = new Size(_innerSize.width, _innerSize.height + (30 * textBoxDefs?.Count ?? 0));
+        if (popupBox.Options == null)
+        {
+            _innerSize = new Size(_innerSize.width, _innerSize.height + (32 * textBoxDefs?.Count ?? 0));
+        }
 
         //_listboxShownLines = popupBox.ListboxLines;
         //_listboxHeight = _listboxShownLines * 23 + 2;
@@ -186,6 +200,8 @@ public class Dialog : Form, IForm
         {
             _formPosY = (int)(Raylib.GetScreenHeight() * 0.5 - Size.height * 0.5);
         }
+
+        Raylib.UnloadImage(_image);
     }
 
     private void SetTextBoxText(List<TextBoxDefinition> textBoxes, IList<string> text)
@@ -200,26 +216,18 @@ public class Dialog : Form, IForm
 
         Vector2 mousePos = Raylib.GetMousePosition();
 
+        // Draw image
+        int x_offset = _formPosX + Padding.L + 2;
+        int y_offset = _formPosY + Padding.T + 2;
+        Raylib.DrawTexture(texture, x_offset, y_offset, Color.WHITE);
+        if (texture.width > 0)
+            x_offset += texture.width + 2;
+
         // Draw body text
-        _fTexts?.ToList().ForEach(t => t.Draw(_formPosX + Padding.L + 2, _formPosY + Padding.T + 2));
+        _fTexts?.ToList().ForEach(t => t.Draw(x_offset, y_offset));
+        var ok = _fTexts?.Sum(t => t.MeasureHeight());
+        y_offset += Math.Max(texture.height, _fTexts?.Sum(t => t.MeasureHeight()) ?? 0);
 
-        // Draw options
-        _options?.Draw(_formPosX, _formPosY, Padding, Size);
-
-        // Draw checkboxes
-        _checkboxes?.Draw(_formPosX, _formPosY, Padding, Size);
-
-        // Draw textboxes
-        if (_textBoxes is not null)
-        {
-            for (int i = 0; i < _textBoxes.Count; i++)
-            {
-                _formattedTextboxTexts[i].Draw(_formPosX + Padding.L, _formPosY + Padding.T + _fTexts.Sum(t => t.MeasureHeight()) + 14 + 40 * i);
-                if (_textBoxes[i].Draw(_formPosX + Padding.L + _formattedTextboxTexts.Max(box => box.MeasureWidth()) + 4,
-                _formPosY + Padding.T + 2 + _fTexts.Sum(w => w.MeasureHeight()) + 2 + 40 * i))
-                    _textBoxes[i].EditMode = !_textBoxes[i].EditMode;
-            }
-        }
 
         // Draw buttons
         int selectedButton = -1;
@@ -231,6 +239,25 @@ public class Dialog : Form, IForm
                 selectedButton = i;
             }
         }
+
+        // Draw options
+        _options?.Draw(x_offset, y_offset, _innerSize.width);
+
+        // Draw checkboxes
+        _checkboxes?.Draw(x_offset, y_offset, _innerSize);
+
+        // Draw textboxes
+        if (_textBoxes is not null)
+        {
+            for (int i = 0; i < _textBoxes.Count; i++)
+            {
+                _formattedTextboxTexts[i].Draw(x_offset, y_offset + 5 + 32 * i);
+                if (_textBoxes[i].Draw(x_offset + _formattedTextboxTexts.Max(box => box.MeasureWidth()) + 24,
+                  y_offset + 2 + 32 * i))
+                    _textBoxes[i].EditMode = !_textBoxes[i].EditMode;
+            }
+        }
+
 
         if (selectedButton != -1)
         {

@@ -2,9 +2,8 @@
 
 public abstract class Control : IControl
 {
-    protected List<IControl> Controls = new();
-
     public bool Enabled { get; set; } = true;
+    public int KeyPressed { get; set; }
 
     public Control() { }
 }

@@ -1,5 +1,4 @@
-﻿using Civ2engine.MapObjects;
-using Raylib_cs;
+﻿using Raylib_cs;
 using System.Numerics;
 
 namespace RaylibUI.Forms;
@@ -43,8 +42,12 @@ public abstract class Form : IForm
         X = _formPosX;
         Y = _formPosY;
 
-        Vector2 mousePos = Raylib.GetMousePosition();
-        Vector2 delta;
+        // Keys
+        var key = Raylib.GetKeyPressed();
+        if (key != 0 && Enabled && Focused)
+        {
+            Controls.ForEach(c => c.KeyPressed = key);
+        }
 
         // Drag/move form
         if (PressedTop && Enabled && Focused)
@@ -57,6 +60,7 @@ public abstract class Form : IForm
             dragging = false;
         }
 
+        Vector2 delta;
         if (dragging)
         {
             delta = Raylib.GetMouseDelta();
