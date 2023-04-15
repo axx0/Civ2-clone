@@ -33,6 +33,12 @@ public class CustomWorldSize : BaseDialogHandler
                 InitialValue = Initialization.ConfigObject.WorldSize[1].ToString(), Width = 75
             }
         };
+        if (res.Dialog.Dialog.Options is not null)
+        {
+            res.Dialog.TextBoxes[0].Description = res.Dialog.Dialog.Options[0];
+            res.Dialog.TextBoxes[1].Description = res.Dialog.Dialog.Options[1];
+            res.Dialog.Dialog.Options = null;
+        }
         return res;
     }
 

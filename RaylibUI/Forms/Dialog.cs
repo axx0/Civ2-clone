@@ -23,15 +23,15 @@ public class Dialog : Form, IForm
     private readonly Button[] _buttons;
     private readonly RadioButtonList _options;
     private readonly CheckBoxList _checkboxes;
+    private readonly ListBox _listbox;
 
     private Texture2D texture;
 
-    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IList<bool>, IDictionary<string, string>?>[] buttonHandlers, IList<string>? replaceStrings = null, IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image())
+    public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IList<bool>, IDictionary<string, string>?>[] buttonHandlers, IList<string>? replaceStrings = null, IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image(), ListBox? listbox = null)
     {
         Padding = new Padding(11, 11, 38, 46);
         _buttonHandlers = buttonHandlers;
         _text = popupBox.Text?.ToList() ?? new List<string>();
-        //_listbox = listbox;
 
         // TEST !!!!
         _image = image;
@@ -46,64 +46,46 @@ public class Dialog : Form, IForm
         // Define textboxes
         if (textBoxDefs is not null)
         {
-            // Fill text into textboxes & then remove it from popubox Text
-            if (popupBox.Options?.Count > 0)
-            {
-                SetTextBoxText(textBoxDefs, popupBox.Options);
-            }
-            else
-            {
-                SetTextBoxText(textBoxDefs, _text);
-                _text = _text.Take(textBoxDefs[0].index - 1).ToList();
-            }
-
             // Texts next to textbox
             _formattedTextboxTexts = textBoxDefs.Select(def => new FormattedText
             {
                 //Font = new Font("Arial", 10, FontStyle.Bold),
                 Color = new Color(51, 51, 51, 255),
-                Text = def.Text
-            }
-            ).ToArray();
-            var maxWidth = _formattedTextboxTexts.Max(box => box.MeasureWidth());
+                Text = def.Description
+            }).ToArray();
 
-            _textBoxes = new List<Textbox>();
-            var i = 0;
-            foreach (var boxDef in textBoxDefs)
+            _textBoxes = new();
+            foreach(var def in textBoxDefs)
             {
                 _textBoxes.Add(new Textbox
                 {
-                    Name = boxDef.Name,
+                    Name = def.Name,
                     //Font = new Font("Times new roman", 12),
-                    Text = boxDef.InitialValue,
-                    MinValue = boxDef.MinValue,
-                    Width = boxDef.Width,
-                    CharLimit = boxDef.CharLimit
+                    Value = def.InitialValue,
+                    MinValue = def.MinValue,
+                    Width = def.Width,
+                    CharLimit = def.CharLimit
                 });
-
-                i++;
             }
-            _textBoxes.ForEach(tbox => Controls.Add(tbox));
+            _textBoxes.ForEach(b => Controls.Add(b));
         }
-        else
+
+        if (popupBox.Options is not null)
         {
-            if (popupBox.Options is not null)
+            for (int i = 0; i < popupBox.Options.Count; i++) 
             {
-                for (int i = 0; i < popupBox.Options.Count; i++) 
-                {
-                    popupBox.Options[i] = Replace(popupBox.Options[i], replaceStrings, replaceNumbers);
-                }
+                popupBox.Options[i] = Replace(popupBox.Options[i], replaceStrings, replaceNumbers);
+            }
                 
-                if (popupBox.Checkbox)
-                {
-                    _checkboxes = new() { Texts = popupBox.Options, Checked = checkboxStates };
-                    Controls.Add(_checkboxes);
-                }
-                else
-                {
-                    _options = new(popupBox.Options, _optionsColumns);
-                    Controls.Add(_options);
-                }
+            if (popupBox.Checkbox)
+            {
+                _checkboxes = new() { Texts = popupBox.Options, Checked = checkboxStates };
+                Controls.Add(_checkboxes);
+            }
+            else
+            {
+                _options = new(popupBox.Options, _optionsColumns);
+                Controls.Add(_options);
             }
         }
 
@@ -143,17 +125,12 @@ public class Dialog : Form, IForm
         // Correction of inner panel size for options
         _optionsRows = GetOptionsRows(popupBox.Options?.Count, _optionsColumns);
         var iconsHeight = _icons.Length == 0 ? 0 : _icons.Sum(i => i.height) + 4 * (_icons.Length - 1);
-        _innerSize = new Size(Math.Max(Size.width, GetInnerPanelWidthFromOptions(popupBox, _optionsRows, _optionsColumns, _icons, textBoxDefs)),
+        _innerSize = new Size(Math.Max(Size.width, GetInnerPanelWidthFromOptions(popupBox, _optionsRows, _optionsColumns, _icons)),
             (_optionsRows - _icons.Length) * 32 + iconsHeight + _textHeight);
 
-        // Correction of inner panel size for image
+        // Correction of inner panel size for image and textbox
         _innerSize = new Size(_innerSize.width + _image.width, Math.Max(_innerSize.height, _image.height));
-
-        // Correction of inner panel size for textbox
-        if (popupBox.Options == null)
-        {
-            _innerSize = new Size(_innerSize.width, _innerSize.height + (32 * textBoxDefs?.Count ?? 0));
-        }
+        _innerSize = new Size(_innerSize.width, _innerSize.height + (32 * textBoxDefs?.Count ?? 0));
 
         //_listboxShownLines = popupBox.ListboxLines;
         //_listboxHeight = _listboxShownLines * 23 + 2;
@@ -202,12 +179,6 @@ public class Dialog : Form, IForm
         }
 
         Raylib.UnloadImage(_image);
-    }
-
-    private void SetTextBoxText(List<TextBoxDefinition> textBoxes, IList<string> text)
-    {
-        foreach (var textBox in textBoxes)
-            textBox.Text = text[textBox.index];
     }
 
     public void Draw()
@@ -268,9 +239,7 @@ public class Dialog : Form, IForm
 
     private IDictionary<string, string>? FormatTextBoxReturn()
     {
-        //return _textBoxes?.Select((k, i) => new { k.Name, Value = TextBoxValues[i] })
-        //    .ToDictionary(k => k.Name, v => v.Value);        
-        return _textBoxes?.Select(box => new { box.Name, Value = box.Text })
+        return _textBoxes?.Select(box => new { box.Name, Value = box.Value })
             .ToDictionary(k => k.Name, v => v.Value);
     }
 
@@ -288,7 +257,7 @@ public class Dialog : Form, IForm
     /// <summary>
     /// Determine max width of a popup box from options.
     /// </summary>
-    private static int GetInnerPanelWidthFromOptions(PopupBox popupBox, int optionsRows, int optionsColumns, Image[] icons, List<TextBoxDefinition> textBoxDefinitions)
+    private static int GetInnerPanelWidthFromOptions(PopupBox popupBox, int optionsRows, int optionsColumns, Image[] icons)
     {
         int width = 0;
         if (optionsRows > 0)
