@@ -1,6 +1,7 @@
 using System.Security.AccessControl;
 using Model.Images;
 using Raylib_cs;
+using RaylibUI.Forms;
 using System.Numerics;
 
 namespace RaylibUI;
@@ -223,6 +224,73 @@ public class ImageUtils
             Raylib.DrawRectangle(x + 5, y + 6, 8, 6, new Color(192, 192, 192, 255));
             Raylib.DrawRectangle(x + 7, y + 6, 4, 6, Color.BLACK);
             Raylib.DrawRectangle(x + 6, y + 7, 6, 4, Color.BLACK);
+        }
+    }
+
+    public static void PaintCheckbox(int x, int y, bool isChecked)
+    {
+        Raylib.DrawRectangle(x + 3, y + 2, 15, 17, Color.WHITE);
+        Raylib.DrawRectangle(x + 2, y + 3, 17, 15, Color.WHITE);
+        Raylib.DrawRectangle(x + 4, y + 3, 13, 15, new Color(128, 128, 128, 255));
+        Raylib.DrawRectangle(x + 3, y + 4, 15, 13, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(x + 4, y + 3, x + 16, y + 3, Color.BLACK);
+        Raylib.DrawLine(x + 3, y + 4, x + 3, y + 16, Color.BLACK);
+        Raylib.DrawLine(x + 3, y + 4, x + 4, y + 4, Color.BLACK);
+        Raylib.DrawLine(x + 4, y + 19, x + 18, y + 19, Color.BLACK);
+        Raylib.DrawLine(x + 18, y + 18, x + 19, y + 18, Color.BLACK);
+        Raylib.DrawLine(x + 19, y + 4, x + 19, y + 17, Color.BLACK);
+
+        if (isChecked)
+        {
+            Raylib.DrawLine(x + 21, y + 3, x + 25, y + 3, Color.BLACK);
+            Raylib.DrawLine(x + 20, y + 4, x + 23, y + 4, Color.BLACK);
+            Raylib.DrawLine(x + 19, y + 5, x + 21, y + 5, Color.BLACK);
+            Raylib.DrawLine(x + 18, y + 6, x + 20, y + 6, Color.BLACK);
+            Raylib.DrawLine(x + 17, y + 7, x + 19, y + 7, Color.BLACK);
+            Raylib.DrawLine(x + 16, y + 8, x + 18, y + 8, Color.BLACK);
+            Raylib.DrawLine(x + 15, y + 9, x + 17, y + 9, Color.BLACK);
+            Raylib.DrawLine(x + 5, y + 10, x + 6, y + 10, Color.BLACK);
+            Raylib.DrawLine(x + 14, y + 10, x + 16, y + 10, Color.BLACK);
+            Raylib.DrawLine(x + 6, y + 11, x + 7, y + 11, Color.BLACK);
+            Raylib.DrawLine(x + 14, y + 11, x + 16, y + 11, Color.BLACK);
+            Raylib.DrawLine(x + 7, y + 12, x + 8, y + 12, Color.BLACK);
+            Raylib.DrawLine(x + 13, y + 12, x + 15, y + 12, Color.BLACK);
+            Raylib.DrawLine(x + 8, y + 13, x + 14, y + 13, Color.BLACK);
+            Raylib.DrawLine(x + 12, y + 13, x + 15, y + 13, Color.BLACK);
+            Raylib.DrawLine(x + 12, y + 14, x + 14, y + 14, Color.BLACK);
+            Raylib.DrawLine(x + 9, y + 15, x + 12, y + 15, Color.BLACK);
+            Raylib.DrawLine(x + 10, y + 16, x + 12, y + 16, Color.BLACK);
+            Raylib.DrawLine(x + 11, y + 16, x + 11, y + 17, Color.BLACK);
+            Raylib.DrawLine(x + 20, y + 1, x + 22, y + 1, Color.WHITE);
+            Raylib.DrawLine(x + 19, y + 2, x + 20, y + 2, Color.WHITE);
+            Raylib.DrawLine(x + 20, y + 2, x + 22, y + 2, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 18, y + 3, x + 19, y + 3, Color.WHITE);
+            Raylib.DrawLine(x + 19, y + 3, x + 20, y + 3, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 17, y + 4, x + 18, y + 4, Color.WHITE);
+            Raylib.DrawLine(x + 18, y + 4, x + 19, y + 4, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 16, y + 5, x + 17, y + 5, Color.WHITE);
+            Raylib.DrawLine(x + 17, y + 5, x + 18, y + 5, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 15, y + 6, x + 16, y + 6, Color.WHITE);
+            Raylib.DrawLine(x + 16, y + 6, x + 17, y + 6, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 14, y + 7, x + 15, y + 7, Color.WHITE);
+            Raylib.DrawLine(x + 15, y + 7, x + 16, y + 7, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 4, y + 8, x + 5, y + 8, Color.WHITE);
+            Raylib.DrawLine(x + 5, y + 8, x + 5, y + 9, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 13, y + 8, x + 14, y + 8, Color.WHITE);
+            Raylib.DrawLine(x + 14, y + 8, x + 15, y + 8, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 6, y + 9, x + 6, y + 10, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 13, y + 9, x + 14, y + 9, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 7, y + 10, x + 7, y + 11, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 12, y + 10, x + 13, y + 10, Color.WHITE);
+            Raylib.DrawLine(x + 13, y + 10, x + 13, y + 11, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 8, y + 11, x + 8, y + 12, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 11, y + 11, x + 12, y + 11, Color.WHITE);
+            Raylib.DrawLine(x + 12, y + 11, x + 13, y + 11, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 9, y + 12, x + 9, y + 13, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 11, y + 12, x + 12, y + 12, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 9, y + 13, x + 11, y + 13, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 9, y + 14, x + 11, y + 14, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 10, y + 14, x + 10, y + 15, new Color(192, 192, 192, 255));
         }
     }
 

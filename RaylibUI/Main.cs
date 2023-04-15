@@ -4,6 +4,7 @@ using Civ2engine;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
+using RaylibUI.Forms;
 using JetBrains.Annotations;
 
 namespace RaylibUI
@@ -25,7 +26,6 @@ namespace RaylibUI
 
             //========= RAYLIB WINDOW SETTINGS
             Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE);
-            //Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_WINDOW_RESIZABLE);
             Raylib.InitWindow(1280, 800, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
             Raylib.InitAudioDevice();
@@ -37,6 +37,8 @@ namespace RaylibUI
             //style.Colors[(int)ImGuiCol.Text] = new Vector4(0, 0, 0, 1);
             //style.Colors[(int)ImGuiCol.MenuBarBg] = new Vector4(1, 1, 1, 1);
             var shouldClose = false;
+
+            Raylib.SetExitKey(KeyboardKey.KEY_F12);
 
             //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
@@ -58,15 +60,7 @@ namespace RaylibUI
             Raylib.PlaySound(sound);
             var background = _activeScreen.GetBackground();
 
-            var menuBar = new MenuBar();
-            var panel1 = new Panel 
-            { 
-                Width = 500, Height = 500, X = 200, Y = 100,
-                Title = new FormattedText 
-                {
-                    Text = "Roman Map", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
-                } 
-            };
+            FormManager.Initialize();
 
             while (!Raylib.WindowShouldClose() && !shouldClose)
             {
@@ -77,8 +71,6 @@ namespace RaylibUI
                 int screenWidth = Raylib.GetScreenWidth();
                 int screenHeight = Raylib.GetScreenHeight();
 
-                // Draw map & stuff
-                //DrawStuff();
                 if (background == null)
                 {
                     Raylib.ClearBackground(new Color(143, 123, 99, 255));
@@ -92,10 +84,6 @@ namespace RaylibUI
                 _activeScreen.Draw(screenWidth, screenHeight);
 
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
-
-                menuBar.Draw();
-
-                panel1.Draw();
 
                 Raylib.EndDrawing();
             }

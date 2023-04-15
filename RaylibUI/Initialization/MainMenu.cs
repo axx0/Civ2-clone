@@ -1,6 +1,7 @@
 using System.Numerics;
 using Model;
 using Raylib_cs;
+using RaylibUI.Forms;
 
 namespace RaylibUI.Initialization;
 
@@ -8,7 +9,7 @@ public class MainMenu : IScreen
 {
     private readonly IUserInterface _activeInterface;
     private readonly Action _shutdownApp;
-    private readonly List<Dialog> _dialogs = new();
+    //private readonly List<IForm> _dialogs = new();
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
 
@@ -28,12 +29,14 @@ public class MainMenu : IScreen
 
     private void MakeMenuElements(IInterfaceAction action)
     {
-        _dialogs.Clear();
+        //_dialogs.Clear();
+        FormManager.Clear();
         
         if (action.MenuElement != null)
         {
             UpdateDecorations(action.MenuElement);
-            _dialogs.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new []{ HandleButtonClick}, textBoxDefs: action.MenuElement.TextBoxes));
+
+            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, optionsCols: action.MenuElement.OptionsCols, replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
         }
     }
     
@@ -60,10 +63,10 @@ public class MainMenu : IScreen
         _imagePanels = newPanels;
     }
 
-    private void HandleButtonClick(string button, int selectedIndex, IDictionary<string ,string>? textBoxValues)
+    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates, IDictionary<string ,string>? textBoxValues)
     {
         if (_currentAction.MenuElement == null) return;
-        var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, TextValues: textBoxValues));
+        var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues));
         if (act.ActionType == EventType.Exit)
         {
             _shutdownApp();
@@ -82,10 +85,12 @@ public class MainMenu : IScreen
         {
             panel.Draw();
         }
-        foreach (var dialog in _dialogs.ToList())
-        {
-            dialog.Draw();
-        }
+
+        FormManager.DrawForms();
+        //foreach (var dialog in _dialogs.ToList())
+        //{
+        //    dialog.Draw();
+        //}
     }
 
     public ScreenBackground? GetBackground()
