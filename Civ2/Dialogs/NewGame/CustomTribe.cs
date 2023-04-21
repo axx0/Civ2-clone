@@ -21,20 +21,27 @@ public class CustomTribe : BaseDialogHandler
         {
             new()
             {
-                index = 0, Name = res.Dialog.Dialog.Options[0], CharLimit = 23,
+                index = 0, Name = "Leader", CharLimit = 23,
                 InitialValue = "Montezuma", Width = 300
             },
             new()
             {
-                index = 1, Name = res.Dialog.Dialog.Options[1], CharLimit = 23,
+                index = 1, Name = "Tribe", CharLimit = 23,
                 InitialValue = "Aztecs", Width = 300
             },
             new()
             {
-                index = 2, Name = res.Dialog.Dialog.Options[2], CharLimit = 23,
+                index = 2, Name = "Adjective", CharLimit = 23,
                 InitialValue = "Aztec", Width = 300
             }
         };
+        if (res.Dialog.Dialog.Options is not null)
+        {
+            res.Dialog.TextBoxes[0].Description = res.Dialog.Dialog.Options[0];
+            res.Dialog.TextBoxes[1].Description = res.Dialog.Dialog.Options[1];
+            res.Dialog.TextBoxes[2].Description = res.Dialog.Dialog.Options[2];
+            res.Dialog.Dialog.Options = null;
+        }
         return res;
     }
 
@@ -46,7 +53,9 @@ public class CustomTribe : BaseDialogHandler
             return civDialogHandlers[SelectGender.Title].Show();
         }
 
-        // TODO: update data
+        //Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Leader"];
+        //Initialization.ConfigObject.PlayerCiv.TribeName = result.TextValues["Tribe"];
+        //Initialization.ConfigObject.PlayerCiv.Adjective = result.TextValues["Adjective"];
 
         if (result.SelectedButton == "Titles")
         {
