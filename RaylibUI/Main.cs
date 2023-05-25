@@ -11,15 +11,15 @@ namespace RaylibUI
 {
     public partial class Main
     {
-        private string savName = "re_b239.sav";
+        private string savName = "he_a1770.sav";
 
         private Game Game => Game.Instance;
         private Map map;
 
         private bool hasCivDir;
         private IScreen _activeScreen;
-
-
+        internal Sound soundman;
+        private Sound.SoundData sndMenuLoop;
         public Main()
         {
             hasCivDir = Settings.LoadConfigSettings();
@@ -57,17 +57,31 @@ namespace RaylibUI
 
             //============ LOAD SOUNDS
             var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "DIVEBOMB.WAV");
-            Raylib.PlaySound(sound);
+            soundman = new Sound();
+     
+            //prep this for a loop( should split that function out between loops and non loops)
+            sndMenuLoop =  soundman.PlayCIV2DefaultSound("MENULOOP",true);
+
+            //play a sound
+            soundman.PlayCIV2DefaultSound("DIVEBOMB");
+
             var background = _activeScreen.GetBackground();
 
             FormManager.Initialize();
 
             while (!Raylib.WindowShouldClose() && !shouldClose)
             {
-                // MousePressedAction();
-                // KeyboardAction();
+                if (sndMenuLoop != null)
+                  sndMenuLoop.MusicUpdateCall();
 
-                Raylib.BeginDrawing();
+
+                //ToStop Music you would call
+               // sndMenuLoop.Stop();
+
+        // MousePressedAction();
+        // KeyboardAction();
+
+        Raylib.BeginDrawing();
                 int screenWidth = Raylib.GetScreenWidth();
                 int screenHeight = Raylib.GetScreenHeight();
 
@@ -86,6 +100,7 @@ namespace RaylibUI
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
 
                 Raylib.EndDrawing();
+
             }
 
             ShutdownApp();
@@ -97,6 +112,7 @@ namespace RaylibUI
 
         void ShutdownApp()
         {
+            soundman.Dispose();
             Raylib.CloseWindow();
             Raylib.CloseAudioDevice();
         }
