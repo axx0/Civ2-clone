@@ -8,19 +8,19 @@
             "windows": { 
                 "args": [
                 "build",
-                "${workspaceFolder}/EtoFormsUI/EtoFormsUI.WinForms/EtoFormsUI.WinForms.csproj"
+                "${workspaceFolder}/RaylibUI/RaylibUI.csproj"
                 ],
             },
             "linux": { 
                 "args": [
                 "build",
-                "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Gtk/EtoFormsUI.Gtk.csproj"
+                "${workspaceFolder}/RaylibUI/RaylibUI.csproj"
                 ],
             },
             "osx": { 
                 "args": [
                 "build",
-                "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Mac/EtoFormsUI.Mac.csproj"
+                "${workspaceFolder}/RaylibUI/RaylibUI.csproj"
                 ],
             },
             "group": "build",

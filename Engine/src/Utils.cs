@@ -22,6 +22,7 @@ namespace Civ2engine
             if (a == b || b < 1) return a;
             return (a / GreatestCommonFactor(a, b)) * b;
         }
+
         public static string GetFilePath(string filename, IEnumerable<string> searchPaths = null, params string[] extensions)
         {
             if (searchPaths != null)
@@ -30,14 +31,12 @@ namespace Civ2engine
                 {
                     foreach (var path in searchPaths)
                     {
-                        var searchPath = path + Path.DirectorySeparatorChar + filename;
-
                         foreach (var extension in extensions)
                         {
-                            var filePath = searchPath + "." + extension;
-                            if (File.Exists(filePath))
+                            var searchPath = FileExists(path, filename + "." + extension);
+                            if (searchPath is not null)
                             {
-                                return filePath;
+                                return searchPath;
                             }
                         }
                     }
@@ -46,9 +45,8 @@ namespace Civ2engine
                 {
                     foreach (var path in searchPaths)
                     {
-                        var searchPath = path + Path.DirectorySeparatorChar + filename;
-
-                        if (File.Exists(searchPath))
+                        var searchPath = FileExists(path, filename);
+                        if (searchPath is not null)
                         {
                             return searchPath;
                         }
@@ -56,14 +54,29 @@ namespace Civ2engine
                 }
             }
 
-            var rootPath = Settings.Civ2Path + Path.DirectorySeparatorChar + filename;
+            var rootPath = FileExists(Settings.Civ2Path, filename);
 
-            if (File.Exists(rootPath))
+            if (rootPath is not null)
             {
                 return rootPath;
             }
 
             Console.WriteLine(filename + " not found!");
+            return null;
+        }
+
+        // Check if file exists in directory (ignoring case). 
+        // If file is found, return file path with correct case.
+        public static string FileExists(string path, string file)
+        {
+            var d = new DirectoryInfo(path); //Assuming Test is your Folder
+            FileInfo[] Files = d.GetFiles(); //Getting Text files
+
+            foreach(FileInfo dirFile in Files )
+            {
+                if (String.Equals(dirFile.Name, file, StringComparison.OrdinalIgnoreCase))
+                    return path + Path.DirectorySeparatorChar + dirFile.Name;
+            }
             return null;
         }
     }

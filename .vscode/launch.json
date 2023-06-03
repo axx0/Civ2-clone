@@ -1,27 +1,28 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
-            "name": ".NET Core Launch WinForms",
+            "name": ".NET Core Launch Win",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.WinForms/bin/Debug/net5.0-windows/EtoFormsUI.WinForms.dll",
+            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net6.0/RaylibUI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.WinForms",
+            "cwd": "${workspaceFolder}/RaylibUI",
             "console": "internalConsole",
             "stopAtEntry": false
         },
         {
-            "name": ".NET Core Launch Gtk",
+            "name": ".NET Core Launch Linux",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Gtk/bin/Debug/net5.0/EtoFormsUI.Gtk",
+            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net6.0/RaylibUI",
             "args": [],
-            "cwd": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Gtk",
+            "cwd": "${workspaceFolder}/RaylibUI",
             "console": "internalConsole",
             "stopAtEntry": false
         },
@@ -31,9 +32,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net5.0/EtoFormsUI.Mac.app/Contents/MacOS/EtoFormsUI.Mac",
+            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net6.0/RaylibUI.Mac",
             "args": [],
-            "cwd": "${workspaceFolder}/EtoFormsUI/EtoFormsUI.Mac",
+            "cwd": "${workspaceFolder}/RaylibUI",
             "console": "internalConsole",
             "stopAtEntry": false
         }
