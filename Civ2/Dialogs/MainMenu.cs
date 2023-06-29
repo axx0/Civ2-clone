@@ -1,5 +1,6 @@
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
+using Civ2engine;
 using Model;
 
 namespace Civ2.Dialogs;
@@ -27,8 +28,12 @@ public class MainMenu : BaseDialogHandler
                     : civDialogHandlers[WorldSizeHandler.Title].Show();
             
             
-            // case 1:
-            //     return new FileAction(new OpenFileInfo{ Filters = })
+             case 1:
+                 return new FileAction(new OpenFileInfo
+                 {
+                     Title = Labels.For(LabelIndex.SelectMapToLoad),
+                     Filters = new List<FileFilter> { new (".mp") }
+                 });
         }
         /*var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
                    mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),

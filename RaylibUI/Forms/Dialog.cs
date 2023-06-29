@@ -74,7 +74,7 @@ public class Dialog : Form, IForm
         {
             for (int i = 0; i < popupBox.Options.Count; i++) 
             {
-                popupBox.Options[i] = Replace(popupBox.Options[i], replaceStrings, replaceNumbers);
+                popupBox.Options[i] = ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
             }
                 
             if (popupBox.Checkbox)
@@ -96,7 +96,7 @@ public class Dialog : Form, IForm
         {
             Title = new FormattedText
             {
-                Text = Replace(popupBox.Title, replaceStrings, replaceNumbers),
+                Text = ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
@@ -295,7 +295,7 @@ public class Dialog : Form, IForm
         }
 
         // Replace %STRING, %NUMBER
-        texts = texts.Select(t => Replace(t, replaceStrings, replaceNumbers)).ToList();
+        texts = texts.Select(t => ReplacePlaceholders(t, replaceStrings, replaceNumbers)).ToList();
         texts = texts.Select(t => t.Replace("_", " ")).ToList();
 
         // Format texts
@@ -336,7 +336,7 @@ public class Dialog : Form, IForm
     /// <param name="text">Text where replacement takes place.</param>
     /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
     /// <param name="replacementNumbers">A list of integers to replace %NUMBER0, %NUMBER1, %NUMBER2, etc.</param>
-    private static string Replace(string text, IList<string> replacementStrings, IList<int> replacementNumbers)
+    public static string ReplacePlaceholders(string text, IList<string> replacementStrings, IList<int> replacementNumbers)
     {
         var index = text.IndexOf("%STRING", StringComparison.Ordinal);
         while (index != -1)

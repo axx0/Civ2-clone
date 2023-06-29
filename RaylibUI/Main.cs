@@ -18,6 +18,9 @@ namespace RaylibUI
 
         private bool hasCivDir;
         private IScreen _activeScreen;
+        private bool _shouldClose;
+
+
         internal Sound soundman;
         private Sound.SoundData sndMenuLoop;
         public Main()
@@ -42,16 +45,16 @@ namespace RaylibUI
 
             //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
-            {           
-                Labels.UpdateLabels(null); 
-                Interfaces = Helpers.LoadInterfaces();
-
-                ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
-                _activeScreen = new MainMenu(ActiveInterface,() => shouldClose= true);
+            {
+                _activeScreen = SetupMainScreen();
             }
             else
             {
-                _activeScreen = new GameFileLocatorScreen();
+                _activeScreen = new GameFileLocatorScreen(() =>
+                {
+                    hasCivDir = true;
+                    _activeScreen = SetupMainScreen();
+                });
             }
             //LoadGame(savName);
 
@@ -65,11 +68,12 @@ namespace RaylibUI
             //play a sound
             soundman.PlayCIV2DefaultSound("DIVEBOMB");
 
-            var background = _activeScreen.GetBackground();
-
             FormManager.Initialize();
 
-            while (!Raylib.WindowShouldClose() && !shouldClose)
+            var counter = 0;
+            var pulse = false;
+
+            while (!Raylib.WindowShouldClose() && !_shouldClose)
             {
                 if (sndMenuLoop != null)
                   sndMenuLoop.MusicUpdateCall();
@@ -82,33 +86,36 @@ namespace RaylibUI
         // KeyboardAction();
 
         Raylib.BeginDrawing();
-                int screenWidth = Raylib.GetScreenWidth();
+                
                 int screenHeight = Raylib.GetScreenHeight();
 
-                if (background == null)
-                {
-                    Raylib.ClearBackground(new Color(143, 123, 99, 255));
-                }
-                else
-                {
-                    Raylib.ClearBackground(background.background);
-                    Raylib.DrawTexture(background.CentreImage, (screenWidth- background.CentreImage.width)/2, (screenHeight-background.CentreImage.height)/2, Color.WHITE);
-                }
-
-                _activeScreen.Draw(screenWidth, screenHeight);
+                _activeScreen.Draw(pulse);
 
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
 
                 Raylib.EndDrawing();
-
+                if (counter++ >= 30)
+                {
+                    pulse = !pulse;
+                    counter = 0;
+                }
             }
 
             ShutdownApp();
         }
 
-        public IUserInterface ActiveInterface { get; }
+        private MainMenu SetupMainScreen()
+        {                
+            Labels.UpdateLabels(null); 
+            Interfaces = Helpers.LoadInterfaces();
 
-        public IList<IUserInterface> Interfaces { get; }
+            ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
+            return new MainMenu(ActiveInterface,() => _shouldClose= true);
+        }
+
+        public IUserInterface ActiveInterface { get; set; }
+
+        public IList<IUserInterface> Interfaces { get; set; }
 
         void ShutdownApp()
         {

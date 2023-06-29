@@ -67,7 +67,7 @@ namespace Civ2engine
             }
         }
 
-        private static bool IsValidRoot(string? civ2Path)
+        public static bool IsValidRoot(string? civ2Path)
         {
             return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) &&
                    File.Exists(Path.Combine(civ2Path, RulesFile));

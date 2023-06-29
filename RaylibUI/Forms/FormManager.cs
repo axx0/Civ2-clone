@@ -27,7 +27,6 @@ public static class FormManager
         // If any dialog present --> disable all panel interactions
         if (Forms.OfType<Dialog>().Any())
         {
-            Forms.OfType<Panel>().ToList().ForEach(f => f.Disable());
             MenuBar.Disable();
 
             // Bring pressed dialog to front and focus on it

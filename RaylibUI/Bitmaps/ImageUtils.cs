@@ -8,6 +8,8 @@ namespace RaylibUI;
 
 public class ImageUtils
 {
+    private static Image _innerWallpaper;
+    private static Image _outerWallpaper;
 
     public static void PaintPanelBorders(ref Image image, int width, int height, int paddingTop, int paddingBtm)
     {
@@ -299,26 +301,71 @@ public class ImageUtils
         InnerWallpaper = Images.ExtractBitmap(inner);
     }
 
-    public static Image InnerWallpaper { get; set; }
+    public static Image InnerWallpaper
+    {
+        get => _innerWallpaper;
+        set
+        {
+            _innerWallpaper = value;
+            InnerWallpaperTexture = Raylib.LoadTextureFromImage(value);
+        }
+    }
 
     public static void SetOuter(IImageSource outer)
     {
-        
         OuterWallpaper = Images.ExtractBitmap(outer);
     }
 
-    public static Image OuterWallpaper { get; set; }
-
-    public static void SetInnerTexture()
+    public static Image OuterWallpaper
     {
-        InnerWallpaperTexture = Raylib.LoadTextureFromImage(InnerWallpaper);
+        get => _outerWallpaper;
+        set
+        {
+            _outerWallpaper = value;
+            OuterWallpaperTexture = Raylib.LoadTextureFromImage(value);
+        }
     }
 
-    public static void SetOuterTexture()
+    public static Texture2D InnerWallpaperTexture { get; private set; }
+    public static Texture2D OuterWallpaperTexture { get; private set; }
+
+    public static Texture2D[] GetOptionImages(bool checkbox)
     {
-        OuterWallpaperTexture = Raylib.LoadTextureFromImage(OuterWallpaper);
+        var image = Raylib.LoadImage("blank.png");
+        Raylib.ImageResize(ref image, 13, 13);
+        Raylib.ImageDrawCircle(ref image, 8, 8, 8, new Color(128, 128, 128, 255));
+        // Raylib.DrawCircleLines(8 +y + 8 + 1, 8.0f, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref image, 1, 4, 2, 3, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref image, 3, 2, 2, 2, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref image, 6, 1, 1, 1, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref image, 11, 15, 3, 2, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref image, 14, 13, 2, 2, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref image, 16, 11, 1, 1, Color.BLACK);
+        //Raylib.DrawCircleLines(8, 8, 8.0f, Color.WHITE);
+
+        var unselected = Raylib.ImageCopy(image);
+
+        Raylib.ImageDrawRectangle(ref image, 6, 4, 5, 9, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref image, 4, 6, 9, 5, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref image, 5, 11, 1, 1, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 4, 6, 1, 5, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 5, 5, 1, 2, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 6, 4, 1, 2, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 7, 4, 4, 1, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 11, 5, 1, 1, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 11, 11, 1, 1, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref image, 7, 13, 4, 1, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 11, 12, 1, 1, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 12, 11, 1, 1, Color.WHITE);
+        Raylib.ImageDrawRectangle(ref image, 13, 7, 1, 4, Color.WHITE);
+
+        Raylib.ImageDrawRectangle(ref unselected, 7, 4, 4, 10, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref unselected, 4, 7, 10, 4, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref unselected, 6, 5, 6, 8, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref unselected, 5, 6, 8, 6, new Color(192, 192, 192, 255));
+        Raylib.ImageDrawRectangle(ref unselected, 7, 6, 4, 6, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref unselected, 6, 7, 6, 4, Color.BLACK);
+        return new[] { Raylib.LoadTextureFromImage(unselected), Raylib.LoadTextureFromImage(image) };
     }
 
-    public static Texture2D InnerWallpaperTexture { get; set; }
-    public static Texture2D OuterWallpaperTexture { get; set; }
 }

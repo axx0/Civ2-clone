@@ -14,4 +14,9 @@ public struct Padding
         this.T = T;
         this.B = B;
     }
+
+    public Padding(int border)  
+    {
+        L = R = T = B = border;
+    }
 }

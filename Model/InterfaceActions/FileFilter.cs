@@ -2,7 +2,10 @@ namespace Model;
 
 public class FileFilter
 {
-    public string Name { get; }
-    
-    public string[] Extensions { get; }
+    private readonly string _extension;
+
+    public FileFilter(string extension)
+    {
+        _extension = extension;
+    }
 }

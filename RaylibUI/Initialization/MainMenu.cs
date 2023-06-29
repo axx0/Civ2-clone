@@ -5,13 +5,13 @@ using RaylibUI.Forms;
 
 namespace RaylibUI.Initialization;
 
-public class MainMenu : IScreen
+public class MainMenu : BaseScreen
 {
     private readonly IUserInterface _activeInterface;
     private readonly Action _shutdownApp;
-    //private readonly List<IForm> _dialogs = new();
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
+    private readonly ScreenBackground? _background;
 
     public MainMenu(IUserInterface activeInterface, Action shutdownApp)
     {
@@ -20,23 +20,28 @@ public class MainMenu : IScreen
 
         ImageUtils.SetInner(_activeInterface.Look.Inner);
         ImageUtils.SetOuter(_activeInterface.Look.Outer);
-        ImageUtils.SetInnerTexture();
-        ImageUtils.SetOuterTexture();
 
         _currentAction = activeInterface.GetInitialAction();
         MakeMenuElements(_currentAction);
+        _background = CreateBackgroundImage();
     }
 
     private void MakeMenuElements(IInterfaceAction action)
     {
-        //_dialogs.Clear();
         FormManager.Clear();
         
         if (action.MenuElement != null)
         {
             UpdateDecorations(action.MenuElement);
 
-            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, optionsCols: action.MenuElement.OptionsCols, replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
+            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick },
+                optionsCols: action.MenuElement.OptionsCols, 
+                replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
+        
+            ShowDialog(new CivDialog(action.MenuElement.Dialog, action.MenuElement.DialogPos,  HandleButtonClick,
+                optionsCols: action.MenuElement.OptionsCols, 
+                replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
+            
         }
     }
     
@@ -78,22 +83,31 @@ public class MainMenu : IScreen
         }
     }
 
-    public void Draw(int width, int height)
+    public override void Draw(bool pulse)
     {
-        
+        int screenWidth = Raylib.GetScreenWidth();
+        int screenHeight = Raylib.GetScreenHeight();
+
+        if (_background == null)
+        {
+            Raylib.ClearBackground(new Color(143, 123, 99, 255));
+        }
+        else
+        {
+            Raylib.ClearBackground(_background.background);
+            Raylib.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.width)/2, (screenHeight-_background.CentreImage.height)/2, Color.WHITE);
+        }
         foreach (var panel in _imagePanels)
         {
             panel.Draw();
         }
 
         FormManager.DrawForms();
-        //foreach (var dialog in _dialogs.ToList())
-        //{
-        //    dialog.Draw();
-        //}
+        
+        base.Draw(pulse);
     }
 
-    public ScreenBackground? GetBackground()
+    public ScreenBackground? CreateBackgroundImage()
     {
         var backGroundImage = _activeInterface.BackgroundImage;
         if (backGroundImage != null)
