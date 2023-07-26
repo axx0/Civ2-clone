@@ -278,7 +278,7 @@ public class Dialog : Form, IForm
             return (int)Math.Ceiling(Math.Max(width, 660.0));    // 660=440*1.5
     }
 
-    private static IList<FormattedText> GetFormattedTexts(IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
+    public static IList<FormattedText> GetFormattedTexts(IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
     {
         // Group left-aligned texts
         int j = 0;

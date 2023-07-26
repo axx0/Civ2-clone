@@ -10,27 +10,31 @@ public class BaseDialog : BaseLayoutController
 {
     private Size _size;
     private Vector2 _location;
+    private Texture2D? _backgroundImage;
     public Point Position { get; }
+
+    private HeaderLabel? _headerLabel;
+
+    private ControlGroup? _buttons;
     
     protected BaseDialog(string title, Point? position = null) 
     {
         Position = position ?? new Point(0,0);
         if (!string.IsNullOrWhiteSpace(title))
         {
-            Controls.Add(new HeaderLabel(this, title));
+            _headerLabel = new HeaderLabel(this, title);
+            Controls.Add(_headerLabel);
         }
-
-        _location = Location;
     }
 
-    public Vector2 Location { get; }
 
     public override void Resize(int width, int height)
     {
         var heights = new int[Controls.Count];
         var maxWidth = 0;
         var totalHeight = 0;
-        for (var index = 0; index < Controls.Count; index++)
+        int index;
+        for (index = 0; index < Controls.Count; index++)
         {
             var control = Controls[index];
             var size = control.GetPreferredSize(width, height);
@@ -57,22 +61,44 @@ public class BaseDialog : BaseLayoutController
         };
 
         int left = 11 + (int)_location.X;
-        int top = (int)_location.Y;
-        for (int index = 0; index < Controls.Count; index++)
+        int top = 11 + (int)_location.Y;
+        index = 0;
+        if (_headerLabel != null)
+        {
+            _headerLabel.Bounds = new Rectangle(_location.X, _location.Y, maxWidth + 22, heights[0] + 11);
+            top += heights[0];
+            index = 1;
+            _headerLabel.OnResize();
+        }
+
+        var mainControlsCount = _buttons == null ? Controls.Count : Controls.Count - 1;
+        for (; index < mainControlsCount; index++)
         {
             Controls[index].Bounds = new Rectangle(left, top, maxWidth, heights[index]);
             top += heights[index];
             Controls[index].OnResize();
         }
 
+        if (_buttons != null)
+        {
+            _buttons.Bounds = new Rectangle(left-1, top + 3, maxWidth +2, heights[^1]);
+            _buttons.OnResize();
+        }
+
         _size = new Size(maxWidth + 11 * 2, totalHeight + 22);
 
+        _backgroundImage = ImageUtils.PaintDialogBase( _size.Width, _size.Height,
+            new Padding(11, 11, 38, 11 + _buttons?.Height ?? 0));
+    }
+
+    protected void SetButtons(ControlGroup buttons)
+    {
+        _buttons = buttons;
     }
 
     public override void Draw(bool pulse)
     {
-        ImageUtils.PaintDialogBase((int)_location.X, (int)_location.Y, _size.Width, _size.Height,
-             new Padding(11, 11, 38, 46));
+        Raylib.DrawTexture(_backgroundImage.Value,(int)_location.X, (int)_location.Y, Color.WHITE);
         foreach (var control in Controls)
         {
             control.Draw(pulse);

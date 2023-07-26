@@ -92,14 +92,11 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         }
 
         _dialogs.Add(dialog);
+        dialog.Resize(_renderedWidth,_renderedHeight);
     }
 
     private readonly List<IControlLayout> _dialogs = new();
     
     private int _renderedWidth;
     private int _renderedHeight;
-
-    public IList<IControl> Controls { get; } = new List<IControl>();
-    public IControl? Focused { get; set; }
-    public IControl? Hovered { get; set; }
 }

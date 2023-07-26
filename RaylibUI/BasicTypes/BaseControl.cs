@@ -12,10 +12,13 @@ public abstract class BaseControl : IControl
     private bool _clickStart;
     private int _height;
     protected IControlLayout Controller { get; }
+    
+    public bool EventTransparent { get; }
 
-    protected BaseControl(IControlLayout controller)
+    protected BaseControl(IControlLayout controller, bool eventTransparent = false)
     {
         Controller = controller;
+        EventTransparent = eventTransparent;
     }
 
     public Vector2 Location
@@ -125,7 +128,7 @@ public abstract class BaseControl : IControl
 
     public virtual void Draw(bool pulse)
     {
-        Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
+        // Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
     }
     public abstract Size GetPreferredSize(int width, int height);
 }

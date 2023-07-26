@@ -16,7 +16,10 @@ public abstract class Civ2Interface : IUserInterface
     public InterfaceStyle Look { get; } = new()
     {
         Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
-        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32))
+        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
+        RadioButtons = new [] { new BitmapStorage("buttons.png", 0,0, 32), new BitmapStorage("buttons.png", 32,0, 32)},
+        
+        Font = "times-new-roman.ttf"
     };
 
     public abstract string Title { get; }

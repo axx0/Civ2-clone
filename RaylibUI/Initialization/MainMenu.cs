@@ -18,8 +18,7 @@ public class MainMenu : BaseScreen
         _activeInterface = activeInterface;
         _shutdownApp = shutdownApp;
 
-        ImageUtils.SetInner(_activeInterface.Look.Inner);
-        ImageUtils.SetOuter(_activeInterface.Look.Outer);
+        ImageUtils.SetLook(_activeInterface.Look);
 
         _currentAction = activeInterface.GetInitialAction();
         MakeMenuElements(_currentAction);

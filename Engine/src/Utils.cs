@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 
 namespace Civ2engine
 {
@@ -63,7 +64,24 @@ namespace Civ2engine
                 return rootPath;
             }
 
+            var appPath = Settings.BasePath  + filename;
+
+            if (File.Exists(appPath))
+            {
+                return appPath;
+            }
+            
+            foreach (var extension in extensions)
+            {
+                var filePath = appPath + "." + extension;
+                if (File.Exists(filePath))
+                {
+                    return filePath;
+                }
+            }
+
             Console.WriteLine(filename + " not found!");
+            
             return null;
         }
     }

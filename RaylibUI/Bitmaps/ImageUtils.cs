@@ -1,8 +1,15 @@
+using System.Drawing;
 using System.Security.AccessControl;
 using Model.Images;
 using Raylib_cs;
 using RaylibUI.Forms;
 using System.Numerics;
+using Civ2engine;
+using Model;
+using Color = Raylib_cs.Color;
+using Font = Raylib_cs.Font;
+using Image = Raylib_cs.Image;
+using Rectangle = Raylib_cs.Rectangle;
 
 namespace RaylibUI;
 
@@ -54,9 +61,7 @@ public class ImageUtils
         Raylib.ImageDrawLine(ref image,9, paddingTop - 2, 9, height - paddingBtm,pen7);
         Raylib.ImageDrawLine(ref image,width - 10, paddingTop - 2, width - 10, height - paddingBtm,pen6);
         Raylib.ImageDrawLine(ref image,9, height - paddingBtm + 1, width - 9 - 1, height - paddingBtm + 1,pen6);
-        
-        
-        //DrawTiledImage(InnerWalpaper, ref image, height, width);
+
     }
     
     /// <summary>
@@ -122,73 +127,70 @@ public class ImageUtils
     
     public static void DrawTiledImage(Image source,ref Image destination, int height, int width, int paddingTop, int paddingBtm, int paddingSide)
     {
-        var totalColumns = (width - 2 * paddingSide) / source.width + 1;
-        var totalRows = (height - paddingTop - paddingBtm) / source.height + 1;
+        var totalColumns = (width - 2 * paddingSide) / source.width;
+        var totalRows = (height - paddingTop - paddingBtm) / source.height;
+        
+        var rightEdge = paddingSide + (source.width * totalColumns);
+        var rightWidth = width - paddingSide - rightEdge;
+        var rightSrcRect = new Rectangle { height = source.height, width = rightWidth };
+
+        var srcRec = new Rectangle { height = source.height, width = source.width };
+        
         for (int row = 0; row < totalRows; row++)
         {
+            var rowPos = source.height * row + paddingTop;
+            for (int col = 0; col < totalColumns ; col++)
+            {
+                Raylib.ImageDraw(ref destination, source, srcRec,
+                    new Rectangle(col * source.width + paddingSide, rowPos, source.width, source.height),
+                    Color.WHITE);
+            }
+            Raylib.ImageDraw(ref destination, source, rightSrcRect,
+                new Rectangle(rightEdge, rowPos, rightWidth, source.height),
+                Color.WHITE);
+        }
+
+        var bottomEdge = paddingTop + totalRows * source.height;
+        var bottomWidth = height - paddingBtm - bottomEdge;
+        if (bottomWidth > 0)
+        {
+            var bottomSourceRect = new Rectangle { height = bottomWidth, width = source.width };
             for (int col = 0; col < totalColumns; col++)
             {
-                var rectS = new Rectangle(0, 0, Math.Min(width - 2 * paddingSide - col * source.width, source.width),
-                    Math.Min(height - paddingBtm - paddingTop - row * source.height, source.height));
-                Raylib.ImageDraw(ref destination, source, rectS, 
-                    new Rectangle(col* source.width, row* source.height, rectS.width, rectS.height), Color.WHITE);
+                Raylib.ImageDraw(ref destination, source, bottomSourceRect,
+                    new Rectangle(col * source.width + paddingSide, bottomEdge, source.width, bottomWidth),
+                    Color.WHITE);
             }
+            
+            Raylib.ImageDraw(ref destination, source, new Rectangle { height = bottomWidth, width = rightWidth},
+                new Rectangle(rightEdge, bottomEdge, rightWidth, bottomWidth),
+                Color.WHITE);
         }
+    }
+
+    private static Image NewImage(int width, int h)
+    {
+        var image = Raylib.LoadImage("blank.png");
+        
+        Raylib.ImageResize(ref image, width, h);
+        return image;
     }
 
     /// <summary>
     /// Paint base screen of a dialog
     /// </summary>
-    /// <param name="x"></param> X-location of dialog on game screen
-    /// <param name="y"></param> Y-location of dialog on game screen
     /// <param name="w"></param> Dialog width
     /// <param name="h"></param> Dialog height
-    public static void PaintDialogBase(int x, int y, int w, int h, Padding padding)
+    public static Texture2D? PaintDialogBase(int w, int h, Padding padding)
     {
         // Outer wallpaper
-        Raylib.DrawTextureTiled(OuterWallpaperTexture, new Rectangle(0, 0, OuterWallpaperTexture.width, OuterWallpaperTexture.height), new Rectangle(x, y, w, h), new Vector2(0, 0), 0.0f, 1.0f, Color.WHITE);
+        var image = NewImage(w, h);
+        PaintPanelBorders(ref image,w,h,padding.T, padding.B);
+        
+        DrawTiledImage(InnerWallpaper, ref image, h,w,padding.T, padding.B, padding.L);
 
-        // Outer border
-        var color1 = new Color(227, 227, 227, 255);
-        var color2 = new Color(105, 105, 105, 255);
-        var color3 = new Color(255, 255, 255, 255);
-        var color4 = new Color(160, 160, 160, 255);
-        var color5 = new Color(240, 240, 240, 255);
-        var color6 = new Color(223, 223, 223, 255);
-        var color7 = new Color(63, 63, 63, 255);
-        Raylib.DrawLine(x, y, x + w - 1, y, color1);    // 1st layer of border
-        Raylib.DrawLine(x + 1, y + 1, x + 1, y + h - 1, color1);
-        Raylib.DrawLine(x + w, y, x + w, y + h - 1, color2);
-        Raylib.DrawLine(x, y + h - 1, x + w, y + h - 1, color2);
-        Raylib.DrawLine(x + 1, y + 1, x + w - 2, y + 1, color3);    // 2nd layer of border
-        Raylib.DrawLine(x + 2, y + 1, x + 2, y + h - 2, color3);
-        Raylib.DrawLine(x + w - 1, y + 1, x + w - 1, y + h - 1, color4);
-        Raylib.DrawLine(x + 1, y + h - 2, x + w - 1, y + h - 2, color4);
-        Raylib.DrawLine(x + 2, y + 2, x + w - 3, y + 2, color5);    // 3rd layer of border
-        Raylib.DrawLine(x + 3, y + 2, x + 3, y + h - 3, color5);
-        Raylib.DrawLine(x + w - 2, y + 2, x + w - 2, y + h - 2, color5);
-        Raylib.DrawLine(x + 2, y + h - 3, x + w - 2, y + h - 3, color5);
-        Raylib.DrawLine(x + 3, y + 3, x + w - 4, y + 3, color6);    // 4th layer of border
-        Raylib.DrawLine(x + 4, y + 3, x + 4, y + h - 3, color6);
-        Raylib.DrawLine(x + w - 3, y + 3, x + w - 3, y + h - 3, color7);
-        Raylib.DrawLine(x + 4, y + h - 4, x + w - 4, y + h - 4, color7);
-        Raylib.DrawLine(x + 4, y + 4, x + w - 6, y + 4, color6);    // 5th layer of border
-        Raylib.DrawLine(x + 5, y + 4, x + 5, y + h - 4, color6);
-        Raylib.DrawLine(x + w - 4, y + 4, x + w - 4, y + h - 4, color7);
-
-        // Inner border
-        Raylib.DrawLine(x + padding.L - 2, y + padding.T - 2, x + w - padding.R + 1, y + padding.T - 2, color7);    // 1st layer of border
-        Raylib.DrawLine(x + padding.L - 1, y + padding.T - 1, x + padding.L - 1, y + h - padding.B + 1, color7);
-        Raylib.DrawLine(x + w - padding.R + 2, y + padding.T - 2, x + w - padding.R + 2, y + h - padding.B + 1, color6);
-        Raylib.DrawLine(x + padding.L - 2, y + h - padding.B + 1, x + w - padding.R + 2, y + h - padding.B + 1, color6);
-        Raylib.DrawLine(x + padding.L - 2, y + padding.T - 1, x + w - padding.R, y + padding.T - 1, color7);    // 2nd layer of border
-        Raylib.DrawLine(x + padding.L, y + padding.T - 1, x + padding.L, y + h - padding.B, color7);
-        Raylib.DrawLine(x + w - padding.R + 1, y + padding.T - 1, x + w - padding.R + 1, y + h - padding.B + 1, color6);
-        Raylib.DrawLine(x + padding.L - 1, y + h - padding.B, x + w - padding.R + 2, y + h - padding.B, color6);
-
-        // Inner wallpaper
-        Raylib.DrawTextureTiled(InnerWallpaperTexture, new Rectangle(0, 0, InnerWallpaperTexture.width, InnerWallpaperTexture.height), new Rectangle(x + padding.R, y + padding.T, w - padding.R - padding.L, h - padding.T - padding.B), new Vector2(0, 0), 0.0f, 1.0f, Color.WHITE);
-    }
+        return Raylib.LoadTextureFromImage(image);
+  }
 
     public static void PaintRadioButton(int x, int y, bool isSelected)
     {
@@ -331,41 +333,111 @@ public class ImageUtils
 
     public static Texture2D[] GetOptionImages(bool checkbox)
     {
-        var image = Raylib.LoadImage("blank.png");
-        Raylib.ImageResize(ref image, 13, 13);
-        Raylib.ImageDrawCircle(ref image, 8, 8, 8, new Color(128, 128, 128, 255));
-        // Raylib.DrawCircleLines(8 +y + 8 + 1, 8.0f, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref image, 1, 4, 2, 3, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref image, 3, 2, 2, 2, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref image, 6, 1, 1, 1, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref image, 11, 15, 3, 2, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref image, 14, 13, 2, 2, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref image, 16, 11, 1, 1, Color.BLACK);
-        //Raylib.DrawCircleLines(8, 8, 8.0f, Color.WHITE);
+        return Look.RadioButtons.Select(Images.ExtractBitmap).Select(Raylib.LoadTextureFromImage).ToArray();
+        // unsafe
+        // {
+        //     var image = NewImage(64, 64);
+        //     var x = 16;
+        //     var y = 14;
+        //     Raylib.ImageDrawCircle(ref image, x + 16, y + 16, 16, new Color(128, 128, 128, 255));
+        //     Raylib.ImageDrawCircleLines(&image, x + 18, y + 18, 16, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, x + 2, y + 8, 4, 6, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, x + 6, y + 4, 4, 4, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, x + 12, y + 2, 2, 2, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, x + 22, y + 30, 6, 4, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, x + 28, y + 26, 4, 4, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, x + 32, y + 22, 2, 2, Color.BLACK);
+        //     Raylib.ImageDrawCircleLines(&image, x + 16, y + 16, 16, Color.WHITE);
+        //
+        //     var unselected = Raylib.ImageCopy(image);
+        //     
+        //         Raylib.ImageDrawRectangle(ref image,x + 6, y + 4, 5, 9, new Color( 192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref image, x + 4, y + 6, 9, 5, new Color(192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref image, x + 5, y + 11, 1, 1, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 4, y + 6, 1, 5, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 5, y + 5, 1, 2, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 6, y + 4, 1, 2, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 7, y + 4, 4, 1, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 11, y + 5, 1, 1, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image,x + 11, y + 11, 1, 1, new Color( 192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref image, x + 7, y + 13, 4, 1, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 11, y + 12, 1, 1, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 12, y + 11, 1, 1, Color.WHITE);
+        //         Raylib.ImageDrawRectangle(ref image, x + 13, y + 7, 1, 4, Color.WHITE);
+        //
+        //         Raylib.ImageDrawRectangle(ref unselected, x + 7, y + 4, 4, 10, new Color( 192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref unselected,x + 4, y + 7, 10, 4, new Color( 192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref unselected,x + 6, y + 5, 6, 8, new Color(192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref unselected,x + 5, y + 6, 8, 6, new Color(192, 192, 192, 255));
+        //         Raylib.ImageDrawRectangle(ref unselected, x + 7, y + 6, 4, 6, Color.BLACK);
+        //         Raylib.ImageDrawRectangle(ref unselected, x + 6, y + 7, 6, 4, Color.BLACK);
+        //         return new[] { new TextureDetail(0.5f,Raylib.LoadTextureFromImage(unselected)), new TextureDetail(0.5f,Raylib.LoadTextureFromImage(image)) };
+        // }
 
-        var unselected = Raylib.ImageCopy(image);
+        // unsafe
+        // {
+        //     int y = 0;
+        //
+        //     var image = Raylib.LoadImage("blank.png");
+        //     Raylib.ImageResize(ref image, 38, 38);
+        //     Raylib.ImageDrawCircle(ref image, 18, 8, 8, new Color(128, 128, 128, 255));
+        //     Raylib.ImageDrawCircleLines(&image, 8, 8 + y + 8 + 1, 8, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, 1, 4, 2, 3, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, 3, 2, 2, 2, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, 6, 1, 1, 1, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, 11, 15, 3, 2, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, 14, 13, 2, 2, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref image, 16, 11, 1, 1, Color.BLACK);
+        //     //Raylib.DrawCircleLines(8, 8, 8.0f, Color.WHITE);
+        //
+        //     var unselected = Raylib.ImageCopy(image);
+        //
+        //     Raylib.ImageDrawRectangle(ref image, 6, 4, 5, 9, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref image, 4, 6, 9, 5, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref image, 5, 11, 1, 1, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 4, 6, 1, 5, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 5, 5, 1, 2, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 6, 4, 1, 2, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 7, 4, 4, 1, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 11, 5, 1, 1, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 11, 11, 1, 1, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref image, 7, 13, 4, 1, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 11, 12, 1, 1, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 12, 11, 1, 1, Color.WHITE);
+        //     Raylib.ImageDrawRectangle(ref image, 13, 7, 1, 4, Color.WHITE);
+        //
+        //     Raylib.ImageDrawRectangle(ref unselected, 7, 4, 4, 10, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref unselected, 4, 7, 10, 4, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref unselected, 6, 5, 6, 8, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref unselected, 5, 6, 8, 6, new Color(192, 192, 192, 255));
+        //     Raylib.ImageDrawRectangle(ref unselected, 7, 6, 4, 6, Color.BLACK);
+        //     Raylib.ImageDrawRectangle(ref unselected, 6, 7, 6, 4, Color.BLACK);
+        //
+        //
+        //     
+        // }
+    }
+    
+    
 
-        Raylib.ImageDrawRectangle(ref image, 6, 4, 5, 9, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref image, 4, 6, 9, 5, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref image, 5, 11, 1, 1, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 4, 6, 1, 5, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 5, 5, 1, 2, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 6, 4, 1, 2, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 7, 4, 4, 1, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 11, 5, 1, 1, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 11, 11, 1, 1, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref image, 7, 13, 4, 1, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 11, 12, 1, 1, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 12, 11, 1, 1, Color.WHITE);
-        Raylib.ImageDrawRectangle(ref image, 13, 7, 1, 4, Color.WHITE);
+    public static void SetLook(InterfaceStyle look)
+    {
+        ImageUtils.SetInner(look.Inner);
+        ImageUtils.SetOuter(look.Outer);
 
-        Raylib.ImageDrawRectangle(ref unselected, 7, 4, 4, 10, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref unselected, 4, 7, 10, 4, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref unselected, 6, 5, 6, 8, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref unselected, 5, 6, 8, 6, new Color(192, 192, 192, 255));
-        Raylib.ImageDrawRectangle(ref unselected, 7, 6, 4, 6, Color.BLACK);
-        Raylib.ImageDrawRectangle(ref unselected, 6, 7, 6, 4, Color.BLACK);
-        return new[] { Raylib.LoadTextureFromImage(unselected), Raylib.LoadTextureFromImage(image) };
+        Look = look;
+        var fontPath = Utils.GetFilePath(look.Font, Settings.SearchPaths);
+        Fonts.SetFont(Raylib.LoadFont(fontPath));
     }
 
+    private static InterfaceStyle Look;
+}
+
+public static class Fonts
+{
+    public static Font DefaultFont = Raylib.GetFontDefault();
+    public static void SetFont(Font font)
+    {
+        DefaultFont = font;
+    }
 }

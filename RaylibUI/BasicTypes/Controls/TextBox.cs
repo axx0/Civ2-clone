@@ -32,7 +32,7 @@ public class TextBox : BaseControl
     {
         _text = initialValue;
         _editPosition = _text.Length;
-        var size = Raylib.MeasureTextEx(Raylib.GetFontDefault(), _text, Styles.BaseFontSize, 1.0f);
+        var size = Raylib.MeasureTextEx(Fonts.DefaultFont, _text, Styles.BaseFontSize, 1.0f);
         _editWidth = (int)size.X;
         Height = (int)(size.Y + TextMargin * 2);
     }

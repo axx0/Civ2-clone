@@ -10,7 +10,7 @@ internal class OptionControl : LabelControl
     private readonly Texture2D[] _images;
     
 
-    public OptionControl(IControlLayout controller, string text, int index, Action<OptionControl> optionAction, bool isChecked, Texture2D[] images) : base(controller, text, images[0].width)
+    public OptionControl(IControlLayout controller, string text, int index, Action<OptionControl> optionAction, bool isChecked, Texture2D[] images) : base(controller, text, images[1].width)
     {
         Index = index;
         _action = optionAction;
@@ -28,7 +28,7 @@ internal class OptionControl : LabelControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_images[0], (int)Location.X,(int)Location.Y, Color.WHITE);
+        Raylib.DrawTexture(_images[Checked ? 0: 1], (int)Location.X,(int)Location.Y, Color.WHITE);
         base.Draw(pulse);
     }
 
@@ -36,5 +36,6 @@ internal class OptionControl : LabelControl
     {
         base.OnClick();
         _action(this);
+        Checked = true;
     }
 }   

@@ -15,7 +15,7 @@ public class Button : BaseControl
     {
         _text = text;
         _onClick = onClick;
-        textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), text, Styles.BaseFontSize, 1f);
+        textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, text, Styles.BaseFontSize, 1f);
         Height = (int)(textSize.Y + 10f);
     }
 
@@ -38,6 +38,7 @@ public class Button : BaseControl
         {
             Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.MAGENTA);
         }
+        base.Draw(pulse);
     }
 
     public override void OnMouseEnter()
@@ -55,7 +56,7 @@ public class Button : BaseControl
 
     public override Size GetPreferredSize(int width, int height)
     {
-        return new Size(50, 50);
+        return new Size(Math.Max((int)textSize.X + 10,160), 35);
     }
 
     public override void OnClick()

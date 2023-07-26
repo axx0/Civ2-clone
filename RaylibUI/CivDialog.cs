@@ -3,6 +3,7 @@ using Model;
 using Model.Interface;
 using Raylib_cs;
 using RaylibUI.Controls;
+using RaylibUI.Forms;
 using Button = RaylibUI.Controls.Button;
 
 namespace RaylibUI;
@@ -40,22 +41,59 @@ public class CivDialog : BaseDialog
         base(
             popupBox.Title, new Point(5, 5)) //actionMenuElement.DialogPos)
     {
+        if (popupBox.Text?.Count > 0)
+        {
+            var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
+            foreach (var text in ftext)
+            {
+                
+            }
+        }
+        
         _checkboxes = checkboxStates;
         if (popupBox.Options is not null)
         {
             for (int i = 0; i < popupBox.Options.Count; i++)
             {
                 popupBox.Options[i] =
-                    RaylibUI.Forms.Dialog.ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
+                    Forms.Dialog.ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
             }
 
-            var optionAction = popupBox.Checkbox ? (Action<OptionControl>)SetSelectedOption : TogggleCheckBox;
+            var optionAction = popupBox.Checkbox ? (Action<OptionControl>) TogggleCheckBox : SetSelectedOption;
             var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
-            for (int i = 0; i < popupBox.Options.Count; i++)
+            var optionControls = popupBox.Options.Select((o, i) =>
+                new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false, images)).ToList();
+
+            if (!popupBox.Checkbox)
             {
-                Controls.Add(new OptionControl(this, popupBox.Options[i], i, optionAction, checkboxStates?[i] ?? false,
-                    images));
+                optionControls[0].Checked = true;
+                SetSelectedOption(optionControls[0]);
+            }
+            if (optionsCols < 2)
+            {
+                optionControls.ForEach(Controls.Add);
+            }
+            else
+            {
+                var optionsCount = optionControls.Count;
+                var rows = optionsCount % optionsCols == 0
+                    ? optionsCount / optionsCols
+                    : optionsCount / optionsCols + 1;
+
+                for (var i = 0; i < rows; i++)
+                {
+                    var optionGroup = new ControlGroup(this);
+                    for (var j = 0; j < optionsCols; j++)
+                    {
+                        var optionIndex = i + j * rows;
+                        if (optionIndex < optionControls.Count)
+                        {
+                            optionGroup.AddChild(optionControls[optionIndex]);
+                        }
+                    }
+                    Controls.Add(optionGroup);
+                }
             }
         }
 
@@ -68,6 +106,7 @@ public class CivDialog : BaseDialog
         }
 
         Controls.Add(menuBar);
+        SetButtons(menuBar);
     }
 
     private IDictionary<string, string>? FormatTextBoxReturn()

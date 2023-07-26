@@ -26,6 +26,8 @@ public interface IControl
     void Draw(bool pulse);
     Size GetPreferredSize(int width, int height);
     void OnResize();
+    
+    bool EventTransparent { get; }
 }
 
 public record Size(int Width, int Height);

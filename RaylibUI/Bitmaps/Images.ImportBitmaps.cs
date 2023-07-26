@@ -211,7 +211,7 @@ namespace RaylibUI
                 Directory.CreateDirectory(tempPath);
             }
 
-            if (ImageCache.ContainsKey(imageSource.Key)) return ImageCache[imageSource.Key];
+            if (ImageCache.TryGetValue(imageSource.Key, out var bitmap)) return bitmap;
             
             switch (imageSource)
             {
@@ -224,7 +224,7 @@ namespace RaylibUI
                     var sourceKey = $"{bitmapStorage.Filename}-Source";
                     if (!ImageCache.ContainsKey(sourceKey))
                     {
-                        var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, "gif");
+                        var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
                         ImageCache[sourceKey] = Raylib.LoadImage(path);
                     }
 

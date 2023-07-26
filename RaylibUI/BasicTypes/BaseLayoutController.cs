@@ -61,9 +61,20 @@ public abstract class BaseLayoutController : IControlLayout
 
     protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)
     {
-        var control = controls.FirstOrDefault(matching);
-        if (control?.Children == null) return control;
+        IControl? selected = null;
+        var elements = controls;
+        while (elements != null)
+        {
+            var candidate = elements.FirstOrDefault(matching);
 
-        return FindControl(control.Children, matching) ?? control;
+            elements = candidate?.Children;
+            
+            if (candidate is { EventTransparent: false })
+            {
+                selected = candidate;
+            }
+        }
+
+        return selected;
     }
 }

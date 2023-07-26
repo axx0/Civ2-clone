@@ -15,19 +15,19 @@ public class LabelControl : BaseControl
         Offset = offset;
         _text = text;
         _alignment = alignment;
-        _textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), text, 20, 1.0f);
+        _textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, text, 20, 1.0f);
     }
 
     public override Size GetPreferredSize(int width, int height)
     {
-        return new Size((int)_textSize.X + Offset, 38);
+        return new Size((int)_textSize.X + Offset, 32);
     }
 
     public override void Draw(bool pulse)
     {
         var textPosition = new Vector2(Location.X + Offset + (_alignment == TextAlignment.Center ? Width / 2f - _textSize.X / 2f : 0),
             Location.Y + Height / 2f - _textSize.Y / 2f);
-        Raylib.DrawTextEx(Raylib.GetFontDefault(),_text ,textPosition, 20, 1.0f, Color.BLACK);
+        Raylib.DrawTextEx(Fonts.DefaultFont,_text ,textPosition, 20, 1.0f, Color.BLACK);
         base.Draw(pulse);
     }
 }
