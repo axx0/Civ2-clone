@@ -426,7 +426,7 @@ public class ImageUtils
         ImageUtils.SetOuter(look.Outer);
 
         Look = look;
-        var fontPath = Utils.GetFilePath(look.Font, Settings.SearchPaths);
+        var fontPath = Utils.GetFilePath(look.Font);
         Fonts.SetFont(Raylib.LoadFont(fontPath));
     }
 

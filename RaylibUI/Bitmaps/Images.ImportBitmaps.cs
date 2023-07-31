@@ -225,7 +225,7 @@ namespace RaylibUI
                     if (!ImageCache.ContainsKey(sourceKey))
                     {
                         var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
-                        ImageCache[sourceKey] = Raylib.LoadImage(path);
+                        ImageCache[sourceKey] = Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
                     }
 
                     var rect = bitmapStorage.Location;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using System.Linq;
 
 namespace Civ2engine
 {
@@ -23,78 +23,41 @@ namespace Civ2engine
             if (a == b || b < 1) return a;
             return (a / GreatestCommonFactor(a, b)) * b;
         }
-
         public static string GetFilePath(string filename, IEnumerable<string> searchPaths = null, params string[] extensions)
         {
-            if (searchPaths != null)
-            {
-                if (extensions.Length > 0)
-                {
-                    foreach (var path in searchPaths)
-                    {
-                        foreach (var extension in extensions)
-                        {
-                            var searchPath = FileExists(path, filename + "." + extension);
-                            if (searchPath is not null)
-                            {
-                                return searchPath;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var path in searchPaths)
-                    {
-                        var searchPath = FileExists(path, filename);
-                        if (searchPath is not null)
-                        {
-                            return searchPath;
-                        }
-                    }
-                }
-            }
-
-            var rootPath = FileExists(Settings.Civ2Path, filename);
-
-            if (rootPath is not null)
-            {
-                return rootPath;
-            }
-
-            var appPath = Settings.BasePath  + filename;
-
-            if (File.Exists(appPath))
-            {
-                return appPath;
-            }
+            var paths = searchPaths ?? Settings.SearchPaths;
             
-            foreach (var extension in extensions)
+            if (extensions.Length > 0)
             {
-                var filePath = appPath + "." + extension;
-                if (File.Exists(filePath))
+                var files = extensions.Select(e => filename + "." + e).ToArray();
+                foreach (var path in paths)
                 {
-                    return filePath;
+                    foreach (var file in files)
+                    {
+                        var filePath = Directory.EnumerateFiles(path, file,
+                            new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
+                        if (filePath != null)
+                        {
+                            return filePath;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var path in paths)
+                {
+                    var filePath = Directory.EnumerateFiles(path, filename,
+                        new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
+                    if (filePath != null)
+                    {
+                        return filePath;
+                    }
                 }
             }
 
             Console.WriteLine(filename + " not found!");
             
-            return null;
-        }
-
-        // Check if file exists in directory (ignoring case). 
-        // If file is found, return file path with correct case.
-        public static string FileExists(string path, string file)
-        {
-            var d = new DirectoryInfo(path); //Assuming Test is your Folder
-            FileInfo[] Files = d.GetFiles(); //Getting Text files
-
-            foreach(FileInfo dirFile in Files )
-            {
-                if (String.Equals(dirFile.Name, file, StringComparison.OrdinalIgnoreCase))
-                    return path + Path.DirectorySeparatorChar + dirFile.Name;
-            }
             return null;
         }
     }
