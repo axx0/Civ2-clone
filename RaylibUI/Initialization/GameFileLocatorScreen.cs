@@ -13,7 +13,7 @@ public class GameFileLocatorScreen : BaseScreen
     {
         ImageUtils.InnerWallpaper = Raylib.LoadImage("stripe.png");
         ImageUtils.OuterWallpaper = Raylib.LoadImage("SteelGrey.png");
-        ShowDialog(new FileDialog("Please select Civ 2 data folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), (string fileName) => Settings.IsValidRoot(fileName), (string fileName) =>
+        ShowDialog(new FileDialog("Please select Civ 2 data folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Settings.IsValidRoot, (fileName) =>
         {
             if (!Settings.AddPath(fileName)) return false;
             onSelect();

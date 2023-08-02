@@ -9,7 +9,6 @@ public interface IUserInterface
     string Title { get; }
     void Initialize();
     IInterfaceAction ProcessDialog(string dialogName, DialogResult dialogResult);
-    IInterfaceAction ProcessFile(IEnumerable<string> filenames, bool ok);
     IInterfaceAction GetInitialAction();
     
     IImageSource? BackgroundImage { get; }

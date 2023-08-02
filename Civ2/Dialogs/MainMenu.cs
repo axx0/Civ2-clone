@@ -33,7 +33,19 @@ public class MainMenu : BaseDialogHandler
                  {
                      Title = Labels.For(LabelIndex.SelectMapToLoad),
                      Filters = new List<FileFilter> { new (".mp") }
-                 });
+                 }, "LoadMap");
+            case 3:
+                return new FileAction(new OpenFileInfo
+                {
+                    Title = Labels.For(LabelIndex.SelectGameToLoad),
+                    Filters = new List<FileFilter> { new(".scn") }
+                }, "LoadScenario");             
+            case 4:
+                return new FileAction(new OpenFileInfo
+                {
+                    Title = Labels.For(LabelIndex.SelectGameToLoad),
+                    Filters = new List<FileFilter> { new(".sav") }
+                }, "LoadGame");
         }
         /*var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
                    mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),

@@ -1,4 +1,5 @@
 using System.Numerics;
+using Civ2engine;
 using Model;
 using Raylib_cs;
 using RaylibUI.Forms;
@@ -42,8 +43,34 @@ public class MainMenu : BaseScreen
                 replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
             
         }
+
+        if (action.FileInfo != null)
+        {
+            ShowDialog(new FileDialog(action.FileInfo.Title, Settings.Civ2Path, (fileName) =>
+            {
+                return action.FileInfo.Filters.Any(filter => filter.IsMatch(fileName));
+            }, HandleFileSelection));
+
+        }
     }
-    
+
+    private bool HandleFileSelection(string? fileName)
+    {
+        DialogResult res;
+        if (!string.IsNullOrWhiteSpace(fileName))
+        {
+            res = new DialogResult("Ok", 0,
+                TextValues: new Dictionary<string, string> { { "FileName", fileName } });
+        }
+        else
+        {
+            res = new DialogResult("Cancel", 1);
+        }
+
+        NextAct(_activeInterface.ProcessDialog(_currentAction.Name, res));
+        return true;
+    }
+
     private void UpdateDecorations(MenuElements menu)
     {
         var existingPanels = _imagePanels.ToList();
@@ -67,18 +94,27 @@ public class MainMenu : BaseScreen
         _imagePanels = newPanels;
     }
 
-    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates, IDictionary<string ,string>? textBoxValues)
+
+
+    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
+        IDictionary<string, string>? textBoxValues)
     {
         if (_currentAction.MenuElement == null) return;
-        var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues));
-        if (act.ActionType == EventType.Exit)
+        NextAct(_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name,
+            new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues)));
+
+    }
+
+    private void NextAct(IInterfaceAction newAction)
+    {
+        if (newAction.ActionType == EventType.Exit)
         {
             _shutdownApp();
         }
         else
         {
-            _currentAction = act;
-            MakeMenuElements(act);
+            _currentAction = newAction;
+            MakeMenuElements(newAction);
         }
     }
 

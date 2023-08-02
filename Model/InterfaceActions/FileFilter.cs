@@ -8,4 +8,9 @@ public class FileFilter
     {
         _extension = extension;
     }
+
+    public bool IsMatch(string fileName)
+    {
+        return fileName.EndsWith(_extension, StringComparison.InvariantCultureIgnoreCase);
+    }
 }

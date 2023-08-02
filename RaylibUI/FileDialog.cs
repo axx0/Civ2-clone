@@ -12,7 +12,7 @@ public class FileDialog : BaseDialog
     private string _currentDirectory;
     private readonly ListBox listBox;
     private readonly TextBox textBox;
-    private readonly Controls.Button okButton;
+    private readonly Button okButton;
 
     public FileDialog(string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
         Func<string, bool> onSelectionCallback) : base(title)
@@ -22,7 +22,7 @@ public class FileDialog : BaseDialog
         _currentDirectory = baseDirectory;
         listBox = new ListBox(this,columnWidth: 500);
         textBox = new TextBox(this, baseDirectory, 600, TestSelection);
-        okButton = new Controls.Button(this, "Ok", () =>
+        okButton = new Button(this, "Ok", () =>
         {
             if(_isValidSelectionCallback(textBox.Text))
             {
@@ -33,6 +33,7 @@ public class FileDialog : BaseDialog
         var menuBar = new ControlGroup(this);
         menuBar.AddChild(textBox);
         menuBar.AddChild(okButton);
+        menuBar.AddChild(new Button(this, "Cancel", () => onSelectionCallback(null)));
         Controls.Add(menuBar);
         BuildFileList();
     }

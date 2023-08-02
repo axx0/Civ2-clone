@@ -64,7 +64,7 @@ public static class FormManager
 
             // Last panel in the list is focused and drawn in front
             Forms.OfType<Panel>().ToList().ForEach(f => f.UnFocus());
-            Forms.OfType<Panel>().Last().Focus();
+            Forms.OfType<Panel>().LastOrDefault()?.Focus();
 
         }
 

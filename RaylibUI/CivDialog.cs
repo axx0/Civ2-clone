@@ -12,7 +12,7 @@ public class CivDialog : BaseDialog
 {
     private OptionControl _selectedOption = null;
 
-    private IList<bool>? _checkboxes;
+    private IList<bool>? _checkboxes = null;
 
     private IList<LabeledTextBox> _textBoxes;
 
@@ -34,7 +34,7 @@ public class CivDialog : BaseDialog
     }
 
     public CivDialog(PopupBox popupBox, Point relatDialogPos, 
-        Action<string, int, IList<bool>, 
+        Action<string, int, IList<bool>?, 
             IDictionary<string, string>?> handleButtonClick, 
         IList<string>? replaceStrings = null, 
         IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image(), Forms.ListBox? listbox = null) : 
@@ -101,7 +101,7 @@ public class CivDialog : BaseDialog
         foreach (var button in popupBox.Button)
         {
             menuBar.AddChild(new Button(this, button,
-                () => handleButtonClick(button, 0,null, //_options?.Selected ?? 0, _checkboxes?.Checked ?? null,
+                () => handleButtonClick(button, _selectedOption.Index, _checkboxes , 
                     FormatTextBoxReturn())));
         }
 
