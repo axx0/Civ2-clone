@@ -64,6 +64,17 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         if (control != null)
         {
             control.OnMouseMove(Raylib.GetMouseDelta());
+            if (control.Children != null)
+            {
+                var hoverChild = FindControl(control.Children,
+                    child => Raylib.CheckCollisionPointRec(mousePos, child.Bounds));
+                if (hoverChild != null)
+                {
+                    control.OnMouseLeave();
+                    layoutController.Hovered = hoverChild;
+                    hoverChild.OnMouseEnter();
+                }
+            }
             if (!Raylib.CheckCollisionPointRec(mousePos, control.Bounds))
             {
                 control.OnMouseLeave();

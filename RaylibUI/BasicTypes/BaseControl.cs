@@ -64,7 +64,7 @@ public abstract class BaseControl : IControl
     }
 
     public virtual bool CanFocus => false;
-    public virtual IList<IControl>? Children { get; } = null;
+    public virtual IList<IControl>? Children { get; protected set; } = null;
 
     public virtual bool OnKeyPressed(KeyboardKey key)
     {
@@ -128,7 +128,7 @@ public abstract class BaseControl : IControl
 
     public virtual void Draw(bool pulse)
     {
-        // Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
+        Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
     }
     public abstract Size GetPreferredSize(int width, int height);
 }

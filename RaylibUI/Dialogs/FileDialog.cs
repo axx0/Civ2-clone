@@ -1,12 +1,14 @@
 using System.Numerics;
 using Civ2engine;
 using Raylib_cs;
+using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 
 namespace RaylibUI;
 
 public class FileDialog : BaseDialog
 {
+    private const string ParentDirectory = "(Parent Directory)";
     private readonly Func<string, bool> _isValidSelectionCallback;
     private readonly Func<string, bool> _onSelectionCallback;
     private string _currentDirectory;
@@ -15,12 +17,13 @@ public class FileDialog : BaseDialog
     private readonly Button okButton;
 
     public FileDialog(string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
-        Func<string, bool> onSelectionCallback) : base(title)
+        Func<string?, bool> onSelectionCallback) : base(title)
     {
         _isValidSelectionCallback = isValidSelectionCallback;
         _onSelectionCallback = onSelectionCallback;
         _currentDirectory = baseDirectory;
-        listBox = new ListBox(this,columnWidth: 500);
+        listBox = new ListBox(this);
+        listBox.ItemSelected += ItemSelected;
         textBox = new TextBox(this, baseDirectory, 600, TestSelection);
         okButton = new Button(this, "Ok", () =>
         {
@@ -30,12 +33,40 @@ public class FileDialog : BaseDialog
             }
         });
         Controls.Add(listBox);
-        var menuBar = new ControlGroup(this);
+        var menuBar = new ControlGroup(this, flexElement: 0);
         menuBar.AddChild(textBox);
         menuBar.AddChild(okButton);
         menuBar.AddChild(new Button(this, "Cancel", () => onSelectionCallback(null)));
         Controls.Add(menuBar);
-        BuildFileList();
+        SetButtons(menuBar);
+        
+        BuildFileList(false);
+    }
+
+    private void ItemSelected(object sender, ListBoxSelectionEventArgs args)
+    {
+        var test = args.Text;
+        if (test == ParentDirectory)
+        {
+            var parent = Path.GetDirectoryName(_currentDirectory);
+            if (!string.IsNullOrWhiteSpace(parent))
+            {
+                _currentDirectory = parent;
+                BuildFileList(true);
+                return;
+            }
+        }
+
+        var canPath = Path.Combine(_currentDirectory, test);
+
+        if (Directory.Exists(canPath) && (!_isValidSelectionCallback(test) || test == textBox.Text))
+        {
+            _currentDirectory = canPath;
+            
+            BuildFileList(true);
+            return;
+        }
+        textBox.SetText(args.Text);
     }
 
     private void TestSelection(string dir)
@@ -43,7 +74,7 @@ public class FileDialog : BaseDialog
         if (Directory.Exists(dir))
         {
             _currentDirectory = dir;
-            BuildFileList();
+            BuildFileList(true);
         }
         else
         {
@@ -54,24 +85,19 @@ public class FileDialog : BaseDialog
         }
     }
 
-    private void BuildFileList()
+    private void BuildFileList(bool refresh)
     {
-        var list = new List<string> { "(Parent Directory)" };
+        var list = new List<string> { ParentDirectory };
         var valid = new List<bool>() { false };
         foreach (var directory in Directory.EnumerateDirectories(_currentDirectory))
         {
+            if (directory.StartsWith(".")) continue;
             list.Add(Path.GetFileName(directory));
             valid.Add(_isValidSelectionCallback(directory));
         }
 
-        foreach (var file in Directory.EnumerateFiles(_currentDirectory))
-        {
-            if (_isValidSelectionCallback(file))
-            {
-                list.Add(file);
-            }
-        }
+        list.AddRange(Directory.EnumerateFiles(_currentDirectory).Where(file => _isValidSelectionCallback(file)).Select(Path.GetFileName)!);
 
-        listBox.SetElements(list, valid);
+        listBox.SetElements(list, valid, refresh);
     }
 }

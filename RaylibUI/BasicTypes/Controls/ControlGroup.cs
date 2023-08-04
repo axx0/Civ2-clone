@@ -1,32 +1,35 @@
-using System.Runtime.CompilerServices;
 using Raylib_cs;
 
-namespace RaylibUI.Controls;
+namespace RaylibUI.BasicTypes.Controls;
 
 public class ControlGroup : BaseControl
 {
-    public override bool CanFocus => Children?.Any(c => c.CanFocus) ?? false;
+    public override bool CanFocus => false;
     
     private List<Size> _childSizes;
 
-    private int _spacing;
-    public override IList<IControl>? Children { get; } = new List<IControl>();
+    private readonly int _spacing;
+    private readonly int _flexElement;
+    private int _totalWidth;
 
-    public ControlGroup(IControlLayout controller, int spacing = 3) : base(controller, eventTransparent: true)
+    public ControlGroup(IControlLayout controller, int spacing = 3, int flexElement = -1) : base(controller, eventTransparent: true)
     {
         _spacing = spacing;
+        _flexElement = flexElement;
+        _totalWidth = -_spacing;
+        Children = new List<IControl>();
     }
 
     public override Size GetPreferredSize(int width, int height)
     {
         var childSizes = new List<Size>(Children.Count);
         var maxHeight = 0;
-        var totalWidth = -_spacing;
+        _totalWidth = -_spacing;
         foreach (var control in Children)
         {
             var size = control.GetPreferredSize(width, height);
             childSizes.Add(size);
-            totalWidth += size.Width + _spacing;
+            _totalWidth += size.Width + _spacing;
             if (size.Height > maxHeight)
             {
                 maxHeight = size.Height;
@@ -34,22 +37,29 @@ public class ControlGroup : BaseControl
         }
 
         _childSizes = childSizes;
-        return new Size(totalWidth, maxHeight);
+        
+        return new Size(_totalWidth, maxHeight);
     }
 
     public override void OnResize()
     {
         var offset = 0;
-        var controlWidth = ((Width + _spacing) / Children.Count) - _spacing;
-        var excess = _childSizes.Sum(s =>
+        var difference = _totalWidth - Width;
+        if (_flexElement != -1)
         {
-            if (s.Width > controlWidth)
+            for (int i = 0; i < Children.Count; i++)
             {
-                return s.Width - controlWidth;
+                var child = Children[i];
+                var size = _childSizes[i];
+                var width = i == _flexElement ? size.Width + difference : size.Width;
+                child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, size.Height);
+                offset += width + _spacing;
             }
 
-            return 0;
-        });
+            return;
+        }
+        var controlWidth = ((Width + _spacing) / Children.Count) - _spacing;
+        var excess = _childSizes.Sum(s => s.Width - controlWidth);
         if (excess > 0)
         {
             controlWidth = (Width - excess + _spacing) / Children.Count - _spacing;

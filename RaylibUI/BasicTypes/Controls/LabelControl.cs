@@ -6,21 +6,23 @@ namespace RaylibUI.BasicTypes.Controls;
 public class LabelControl : BaseControl
 {
     public int Offset { get; protected set; }
-    private readonly string _text;
+    protected readonly string _text;
     private readonly TextAlignment _alignment;
     private readonly Vector2 _textSize;
+    private readonly int _defaultHeight;
 
-    public LabelControl(IControlLayout controller, string text, int offset = 0, TextAlignment alignment = TextAlignment.Left) : base(controller)
+    public LabelControl(IControlLayout controller, string text, int offset = 0, TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32) : base(controller)
     {
         Offset = offset;
         _text = text;
+        _defaultHeight = defaultHeight;
         _alignment = alignment;
         _textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, text, 20, 1.0f);
     }
 
     public override Size GetPreferredSize(int width, int height)
     {
-        return new Size((int)_textSize.X + Offset, 32);
+        return new Size((int)_textSize.X + Offset, _defaultHeight);
     }
 
     public override void Draw(bool pulse)

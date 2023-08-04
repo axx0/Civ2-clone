@@ -1,6 +1,7 @@
 using System.Numerics;
 using Model;
 using Raylib_cs;
+using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Forms;
 
@@ -88,7 +89,7 @@ public class BaseDialog : BaseLayoutController
         _size = new Size(maxWidth + 11 * 2, totalHeight + 22);
 
         _backgroundImage = ImageUtils.PaintDialogBase( _size.Width, _size.Height,
-            new Padding(11, 11, 38, 11 + _buttons?.Height ?? 0));
+            new Padding(11, 11, _headerLabel?.Height ?? 11, 11 + _buttons?.Height ?? 0));
     }
 
     protected void SetButtons(ControlGroup buttons)
