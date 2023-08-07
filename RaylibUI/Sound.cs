@@ -304,14 +304,22 @@ namespace RaylibUI
 
       public bool ConvertAudioPcmU8ToPcmS16LE(string inputFilePath, string outputFilePath)
       {
-        using (var reader = new WaveFileReader(inputFilePath))
+        try
         {
-          var format = new WaveFormat(22050, 16, 2); // Desired output format: 22.05 kHz, 16-bit, Stereo (for raylib)
-
-          using (var conversionStream = new WaveFormatConversionStream(format, reader))
+          using (var reader = new WaveFileReader(inputFilePath))
           {
-            WaveFileWriter.CreateWaveFile(outputFilePath, conversionStream);
+            var format = new WaveFormat(22050, 16, 2); // Desired output format: 22.05 kHz, 16-bit, Stereo (for raylib)
+
+            using (var conversionStream = new WaveFormatConversionStream(format, reader))
+            {
+              WaveFileWriter.CreateWaveFile(outputFilePath, conversionStream);
+            }
           }
+        }
+        catch (DllNotFoundException ex)
+        {
+          //TODO: find alternative sound methods for OSX
+          return false;
         }
 
         return true;

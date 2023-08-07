@@ -71,7 +71,7 @@ namespace Civ2engine
         public static bool IsValidRoot(string? civ2Path)
         {
             return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) &&
-                   File.Exists(Path.Combine(civ2Path, RulesFile));
+                   Directory.GetFiles(civ2Path, RulesFile).Length > 0;
         }
 
         private const string RulesFile = "rules.txt";
