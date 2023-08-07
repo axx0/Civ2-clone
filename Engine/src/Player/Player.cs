@@ -9,15 +9,18 @@ using Civ2engine.Units;
 
 namespace Civ2engine
 {
-    public class AIPlayer : IPlayer
+    public class Player : IPlayer
     {
-        private Civilization Civilization { get; set; }
+        public Civilization Civilization { get; set; }
         
         private readonly DifficultyType _level;
 
-        public AIPlayer(DifficultyType level)
+        public Player(DifficultyType level, Civilization civilization)
         {
             _level = level;
+            Civilization = civilization;
+            ActiveTile = civilization.Units.FirstOrDefault()?.CurrentLocation ??
+                         civilization.Cities.FirstOrDefault()?.Location; 
         }
 
         public void WeLoveTheKingCanceled(City city)
@@ -60,13 +63,6 @@ namespace Civ2engine
         }
 
         public IInterfaceCommands UI { get; } = null;
-        public IPlayer SetCiv(Civilization civilization)
-        {
-            this.Civilization = civilization;
-            ActiveTile = civilization.Units.FirstOrDefault()?.CurrentLocation ??
-                         civilization.Cities.FirstOrDefault()?.Location; 
-            return this;
-        }
 
         public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
         {

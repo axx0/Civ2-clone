@@ -22,6 +22,11 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             ControlEvents(layoutController);
         }
 
+        foreach (var control in Controls)
+        {
+            control.Draw(pulse);
+        }
+
         foreach (var dialog in _dialogs)
         {
             dialog.Draw(pulse);
@@ -30,8 +35,6 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
 
     public override void Resize(int width, int height)
     {
-        //TODO: background?
-
         foreach (var control in Controls)
         {
             control.OnResize();

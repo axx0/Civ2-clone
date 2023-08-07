@@ -27,9 +27,10 @@ public class FileDialog : BaseDialog
         textBox = new TextBox(this, baseDirectory, 600, TestSelection);
         okButton = new Button(this, "Ok", () =>
         {
-            if(_isValidSelectionCallback(textBox.Text))
+            var path = Path.Combine(_currentDirectory, textBox.Text);
+            if(_isValidSelectionCallback(path))
             {
-                onSelectionCallback(textBox.Text);
+                onSelectionCallback(path);
             }
         });
         Controls.Add(listBox);
@@ -69,19 +70,17 @@ public class FileDialog : BaseDialog
         textBox.SetText(args.Text);
     }
 
-    private void TestSelection(string dir)
+    private void TestSelection(string file)
     {
-        if (Directory.Exists(dir))
+        var path = Path.Combine(_currentDirectory, file);
+        if (Directory.Exists(file) || Directory.Exists(path))
         {
-            _currentDirectory = dir;
+            _currentDirectory = Path.GetDirectoryName(path) ?? file;
             BuildFileList(true);
         }
-        else
+        else if (_isValidSelectionCallback(path))
         {
-            if (_isValidSelectionCallback(dir))
-            {
-                _onSelectionCallback(dir);
-            }
+            _onSelectionCallback(path);
         }
     }
 

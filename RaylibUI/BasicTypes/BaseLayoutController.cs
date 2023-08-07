@@ -6,14 +6,8 @@ namespace RaylibUI;
 
 public abstract class BaseLayoutController : IControlLayout
 {
-    protected BaseLayoutController()
-    {
-        Borders = new Padding(Styles.Border);
-    }
-    
     private IControl? _focused;
     
-    public Padding Borders { get; }
     public IList<IControl> Controls { get; } = new List<IControl>();
 
     public IControl? Focused

@@ -2,7 +2,6 @@ using System.Drawing;
 using System.Security.AccessControl;
 using Model.Images;
 using Raylib_cs;
-using RaylibUI.Forms;
 using System.Numerics;
 using Civ2engine;
 using Model;
@@ -181,13 +180,13 @@ public class ImageUtils
     /// </summary>
     /// <param name="w"></param> Dialog width
     /// <param name="h"></param> Dialog height
-    public static Texture2D? PaintDialogBase(int w, int h, Padding padding)
+    public static Texture2D? PaintDialogBase(int w, int h, int top, int paddingBtm, int paddingSide)
     {
         // Outer wallpaper
         var image = NewImage(w, h);
-        PaintPanelBorders(ref image,w,h,padding.T, padding.B);
+        PaintPanelBorders(ref image,w,h,top, paddingBtm);
         
-        DrawTiledImage(InnerWallpaper, ref image, h,w,padding.T, padding.B, padding.L);
+        DrawTiledImage(InnerWallpaper, ref image, h,w,top, paddingBtm, paddingSide);
 
         return Raylib.LoadTextureFromImage(image);
   }

@@ -1,6 +1,8 @@
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.IO;
 using Model;
+using Model.InterfaceActions;
 using Raylib_cs;
 using RaylibUI.Forms;
 
@@ -10,47 +12,58 @@ public class MainMenu : BaseScreen
 {
     private readonly IUserInterface _activeInterface;
     private readonly Action _shutdownApp;
+    private readonly Action<Game> _startGame;
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
     private readonly ScreenBackground? _background;
 
-    public MainMenu(IUserInterface activeInterface, Action shutdownApp)
+    public MainMenu(IUserInterface activeInterface, Action shutdownApp, Action<Game> startGame)
     {
         _activeInterface = activeInterface;
         _shutdownApp = shutdownApp;
+        _startGame = startGame;
 
         ImageUtils.SetLook(_activeInterface.Look);
+        _background = CreateBackgroundImage();
 
         _currentAction = activeInterface.GetInitialAction();
-        MakeMenuElements(_currentAction);
-        _background = CreateBackgroundImage();
+        ProcessAction(_currentAction);
     }
 
-    private void MakeMenuElements(IInterfaceAction action)
+    private void ProcessAction(IInterfaceAction action)
     {
         FormManager.Clear();
-        
-        if (action.MenuElement != null)
+        _currentAction = action;
+        switch (action)
         {
-            UpdateDecorations(action.MenuElement);
-
-            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick },
-                optionsCols: action.MenuElement.OptionsCols, 
-                replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
-        
-            ShowDialog(new CivDialog(action.MenuElement.Dialog, action.MenuElement.DialogPos,  HandleButtonClick,
-                optionsCols: action.MenuElement.OptionsCols, 
-                replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
-            
-        }
-
-        if (action.FileInfo != null)
-        {
-            ShowDialog(new FileDialog(action.FileInfo.Title, Settings.Civ2Path, (fileName) =>
+            case StartGame start:
+                _startGame(start.Game);
+                break;
+            case ExitAction:
+                _shutdownApp();
+                break;
+            case MenuAction menuAction:
             {
-                return action.FileInfo.Filters.Any(filter => filter.IsMatch(fileName));
-            }, HandleFileSelection));
+                var menu = menuAction.MenuElement;
+                UpdateDecorations(menu);
 
+                FormManager.Add(new Dialog(menu.Dialog, menu.DialogPos, new[] { HandleButtonClick },
+                    optionsCols: menu.OptionsCols,
+                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
+
+                ShowDialog(new CivDialog(menu.Dialog, menu.DialogPos, HandleButtonClick,
+                    optionsCols: menu.OptionsCols,
+                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
+                break;
+            }
+            case FileAction fileAction:
+                _imagePanels.Clear();
+                
+                ShowDialog(new FileDialog(fileAction.FileInfo.Title, Settings.Civ2Path, (fileName) =>
+                {
+                    return fileAction.FileInfo.Filters.Any(filter => filter.IsMatch(fileName));
+                }, HandleFileSelection));
+                break;
         }
     }
 
@@ -67,7 +80,7 @@ public class MainMenu : BaseScreen
             res = new DialogResult("Cancel", 1);
         }
 
-        NextAct(_activeInterface.ProcessDialog(_currentAction.Name, res));
+        ProcessAction(_activeInterface.ProcessDialog(_currentAction.Name, res));
         return true;
     }
 
@@ -99,23 +112,9 @@ public class MainMenu : BaseScreen
     private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
         IDictionary<string, string>? textBoxValues)
     {
-        if (_currentAction.MenuElement == null) return;
-        NextAct(_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name,
+        ProcessAction(_activeInterface.ProcessDialog(_currentAction.Name,
             new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues)));
 
-    }
-
-    private void NextAct(IInterfaceAction newAction)
-    {
-        if (newAction.ActionType == EventType.Exit)
-        {
-            _shutdownApp();
-        }
-        else
-        {
-            _currentAction = newAction;
-            MakeMenuElements(newAction);
-        }
     }
 
     public override void Draw(bool pulse)

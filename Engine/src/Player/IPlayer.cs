@@ -10,6 +10,7 @@ namespace Civ2engine
 {
     public interface IPlayer
     {
+        Civilization Civilization { get; }
         Tile ActiveTile { get; set; }
         
         Unit ActiveUnit { get; set; }
@@ -27,7 +28,6 @@ namespace Civ2engine
         
         void CityProductionComplete(City city);
         IInterfaceCommands UI { get; }
-        IPlayer SetCiv(Civilization civilization);
         void NotifyImprovementEnabled(TerrainImprovement improvement, int level);
     }   
 

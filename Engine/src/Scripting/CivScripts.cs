@@ -16,12 +16,17 @@ namespace Civ2engine.Scripting
     {
         private readonly Game _game;
 
-        public CivScripts(IInterfaceCommands uInterfaceCommands, StringBuilder log, Game game)
+        public CivScripts(StringBuilder log, Game game)
         {
             _game = game;
-            ui = new UIScripts(uInterfaceCommands, log);
+            ui = new UIScripts(log);
             scen = new ScenarioHooks(game);
             core = new AxxExtensions(game, log);
+        }
+
+        internal void Connect(IInterfaceCommands interfaceCommands)
+        {
+            ui.Connect(interfaceCommands);
         }
         
         public AxxExtensions core { get; }

@@ -13,7 +13,6 @@ namespace RaylibUI
     {
         private string savName = "he_a1770.sav";
 
-        private Game Game => Game.Instance;
         private Map map;
 
         private bool hasCivDir;
@@ -66,7 +65,7 @@ namespace RaylibUI
             sndMenuLoop =  soundman.PlayCIV2DefaultSound("MENULOOP",true);
 
             //play a sound
-            soundman.PlayCIV2DefaultSound("DIVEBOMB");
+            //soundman.PlayCIV2DefaultSound("DIVEBOMB");
 
             FormManager.Initialize();
 
@@ -110,8 +109,9 @@ namespace RaylibUI
             Interfaces = Helpers.LoadInterfaces();
 
             ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
-            return new MainMenu(ActiveInterface,() => _shouldClose= true);
+            return new MainMenu(ActiveInterface,() => _shouldClose= true, StartGame);
         }
+
 
         public IUserInterface ActiveInterface { get; set; }
 

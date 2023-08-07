@@ -1,4 +1,4 @@
-namespace Model;
+namespace Model.InterfaceActions;
 
 public class FileAction : IInterfaceAction
 {
@@ -10,6 +10,5 @@ public class FileAction : IInterfaceAction
 
     public string Name { get; }
     public EventType ActionType => EventType.OpenFile;
-    public MenuElements? MenuElement => null;
-    public OpenFileInfo? FileInfo { get; }
+    public OpenFileInfo FileInfo { get; }
 }

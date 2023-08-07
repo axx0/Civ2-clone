@@ -7,13 +7,17 @@ namespace Civ2engine.Scripting.UI
 {
     public class UIScripts
     {
-        private readonly IInterfaceCommands _uInterfaceCommands;
+        private IInterfaceCommands _uInterfaceCommands;
         private readonly StringBuilder _log;
 
-        public UIScripts(IInterfaceCommands uInterfaceCommands, StringBuilder log)
+        public UIScripts( StringBuilder log)
         {
-            _uInterfaceCommands = uInterfaceCommands;
             _log = log;
+        }
+
+        internal void Connect(IInterfaceCommands interfaceCommands)
+        {
+            _uInterfaceCommands = interfaceCommands;
         }
 
         public void text(string text)

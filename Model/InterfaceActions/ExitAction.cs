@@ -1,4 +1,4 @@
-namespace Model;
+namespace Model.InterfaceActions;
 
 public class ExitAction : IInterfaceAction
 {
@@ -10,6 +10,4 @@ public class ExitAction : IInterfaceAction
 
     public string Name => "Exit";
     public EventType ActionType => EventType.Exit;
-    public MenuElements? MenuElement => null;
-    public OpenFileInfo? FileInfo => null;
 }

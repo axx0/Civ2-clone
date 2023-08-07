@@ -7,6 +7,7 @@ using Raylib_cs;
 using Civ2engine.MapObjects;
 using Civ2engine.Enums;
 using Civ2engine.Units;
+using RaylibUI.Initialization;
 
 namespace RaylibUI
 {
@@ -52,28 +53,29 @@ namespace RaylibUI
 
             //var playerCiv = Game.GetPlayerCiv;
 
-            StartGame();
+            //StartGame();
             //Sounds.PlaySound(GameSounds.MenuOk);
         }
 
         public Texture2D MapTileTextureC2(int xC2, int yC2) => Images.MapTileTexture[(((xC2 + map.XDimMax) % (map.XDimMax)) - yC2 % 2) / 2, yC2];
 
-        public void StartGame()
+        public void StartGame(Game game)
         {
+            _activeScreen = new GameScreen(game);
             //SetupGameModes(Game.Instance);
 
             // Generate map tile graphics
-            Images.MapTileGraphic = new Image[map.XDim, map.YDim];
-            Images.MapTileTexture = new Texture2D[map.XDim, map.YDim];
-            for (var col = 0; col < map.XDim; col++)
-            {
-                for (var row = 0; row < map.YDim; row++)
-                {
-                    Images.MapTileGraphic[col, row] = MakeTileGraphic(map.Tile[col, row], col, row, false, MapImages.Terrains[map.MapIndex]);
-                    Images.MapTileTexture[col, row] = Raylib.LoadTextureFromImage(Images.MapTileGraphic[col, row]);
-                    Raylib.UnloadImage(Images.MapTileGraphic[col, row]);
-                }
-            }
+            // Images.MapTileGraphic = new Image[map.XDim, map.YDim];
+            // Images.MapTileTexture = new Texture2D[map.XDim, map.YDim];
+            // for (var col = 0; col < map.XDim; col++)
+            // {
+            //     for (var row = 0; row < map.YDim; row++)
+            //     {
+            //         Images.MapTileGraphic[col, row] = MakeTileGraphic(map.Tile[col, row], col, row, false, MapImages.Terrains[map.MapIndex]);
+            //         Images.MapTileTexture[col, row] = Raylib.LoadTextureFromImage(Images.MapTileGraphic[col, row]);
+            //         Raylib.UnloadImage(Images.MapTileGraphic[col, row]);
+            //     }
+            // }
         }
 
         public Image MakeTileGraphic(Tile tile, int arrayCol, int row, bool flatEarth, TerrainSet terrainSet)

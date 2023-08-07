@@ -1,6 +1,7 @@
 using System.Numerics;
 using Model;
 using Raylib_cs;
+using RaylibUI.BasicTypes;
 
 namespace RaylibUI;
 
@@ -29,5 +30,3 @@ public interface IControl
     
     bool EventTransparent { get; }
 }
-
-public record Size(int Width, int Height);

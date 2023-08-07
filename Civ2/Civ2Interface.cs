@@ -2,6 +2,7 @@
 using Civ2engine;
 using Model;
 using Model.Images;
+using Model.InterfaceActions;
 using Raylib_cs;
 
 namespace Civ2;
@@ -27,6 +28,7 @@ public abstract class Civ2Interface : IUserInterface
     public virtual void Initialize()
     {
         Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        Labels.UpdateLabels(null);
 
         var handlerInterface = typeof(ICivDialogHandler);
         DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()

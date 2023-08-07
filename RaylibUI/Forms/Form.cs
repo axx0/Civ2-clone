@@ -72,7 +72,8 @@ public abstract class Form : IForm
 
         if (_dialogBase == null)
         {
-            _dialogBase = ImageUtils.PaintDialogBase(Size.width, Size.height, Padding);
+            Padding padding = Padding;
+            _dialogBase = ImageUtils.PaintDialogBase(Size.width, Size.height, padding.T, padding.B, padding.L);
         }
         Raylib.DrawTexture(_dialogBase.Value,_formPosX, _formPosY, Color.WHITE);
 
