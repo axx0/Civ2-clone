@@ -37,6 +37,8 @@ public class MainMenu : BaseScreen
         switch (action)
         {
             case StartGame start:
+                
+                Images.LoadGraphicsAssetsFromFiles(start.RuleSet, start.Game.Rules);
                 _startGame(start.Game);
                 break;
             case ExitAction:

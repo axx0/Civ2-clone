@@ -203,7 +203,14 @@ namespace RaylibUI
 
         private static Dictionary<string, Image> ImageCache = new();
 
-        private const string tempPath = "temp"; 
+        private const string tempPath = "temp";
+
+        public static Image LoadImage(string filename, string[] searchPaths, params string[] extensions)
+        {
+            var path = Utils.GetFilePath(filename, searchPaths, extensions);
+            return Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
+        }
+        
         public static Image ExtractBitmap(IImageSource imageSource)
         {
             if (!Directory.Exists(tempPath))

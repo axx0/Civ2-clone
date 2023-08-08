@@ -31,6 +31,6 @@ public class LoadGame : FileDialogHandler
         
 
         var game = ClassicSaveLoader.LoadSave(ruleSet, savName, RulesParser.ParseRules(ruleSet));
-        return new StartGame(game);
+        return new StartGame(ruleSet,game);
     }
 }

@@ -47,6 +47,7 @@ namespace Civ2engine
             {
                 foreach (var path in paths)
                 {
+                    if(!Directory.Exists(path)) continue;
                     var filePath = Directory.EnumerateFiles(path, filename,
                         new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
                     if (filePath != null)
