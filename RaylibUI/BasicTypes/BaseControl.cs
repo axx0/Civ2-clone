@@ -129,7 +129,13 @@ public abstract class BaseControl : IControl
 
     public virtual void Draw(bool pulse)
     {
-        Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
+        // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
+        // Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
     }
     public abstract Size GetPreferredSize(int width, int height);
+
+    protected Vector2 GetRelativeMousePosition()
+    {
+        return Raylib.GetMousePosition() - _location;
+    }
 }

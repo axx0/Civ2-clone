@@ -7,10 +7,12 @@ namespace RaylibUI;
 
 public class ListBox : BaseControl
 {
-    private int _scrollIndex;
+    private int _scrollIndex = 0;
     private List<ListBoxLabel> _allLabels;
     private int _maxChildWidth;
     private int _labelHeight;
+    private ListBoxScrollBar _scrollBar;
+    private int _rows;
 
     public event EventHandler<ListBoxSelectionEventArgs> ItemSelected; 
 
@@ -28,7 +30,19 @@ public class ListBox : BaseControl
             columns = 1;
         }
 
-        return new Size(columns * _maxChildWidth, 10 * (_labelHeight+1));
+        var rows = 10;
+        var requestedHeight = (_labelHeight + 1) * rows;
+        while (requestedHeight > height/2)
+        {
+            requestedHeight = (_labelHeight + 1) * --rows;
+        }
+
+        if (columns * rows < _allLabels.Count)
+        {
+            requestedHeight += ListBoxScrollBar.DefaultHeight;
+        }
+
+        return new Size(columns * _maxChildWidth +5, requestedHeight);
     }
 
     private void MeasureSizes(int width, int height)
@@ -52,25 +66,51 @@ public class ListBox : BaseControl
 
     public override void OnResize()
     {
-        var actualColumns = Width / _maxChildWidth;
-        var rows = Height / _labelHeight;
-        var totalVisible = actualColumns * rows;
-        if (totalVisible < _allLabels.Count)
+        var actualColumns = Width / _maxChildWidth + 1;
+        _rows = Height / _labelHeight;
+        var totalVisible = actualColumns * _rows;
+        var renderHeight = Height;
+        var requiredColumns = (int)Math.Ceiling(_allLabels.Count / (double)_rows);
+        if (requiredColumns > actualColumns)
         {
-            //TODO: scrolling
+            renderHeight -= ListBoxScrollBar.DefaultHeight;
+            _scrollBar = new ListBoxScrollBar(Controller, actualColumns, requiredColumns, (position) =>
+            {
+                _scrollIndex = position;
+                SetupChildLabels(totalVisible, renderHeight);
+            } )
+            {
+                Bounds = new Rectangle(Location.X + 2, Location.Y + Height - ListBoxScrollBar.DefaultHeight, Width - 4,
+                    ListBoxScrollBar.DefaultHeight)
+            };
+            _scrollBar.OnResize();
         }
 
-        Children = _allLabels.Take(rows).Cast<IControl>().ToList();
+        SetupChildLabels(totalVisible, renderHeight);
 
-        var offset = 0;
-        foreach (var control in Children)
+        base.OnResize();
+    }
+
+    private void SetupChildLabels(int totalVisible, int renderHeight)
+    {
+        var visibleLabels = _allLabels.Skip(_scrollIndex * _rows).Take(totalVisible).Cast<IControl>().ToList();
+
+        var yOffset = 2;
+        var xOffset = 2;
+        foreach (var control in visibleLabels)
         {
-            control.Bounds = new Rectangle(Location.X, Location.Y + offset, _maxChildWidth, _labelHeight);
-            offset += _labelHeight + 1;
+            control.Bounds = new Rectangle(Location.X + xOffset, Location.Y + yOffset, _maxChildWidth, _labelHeight);
+            yOffset += _labelHeight + 1;
+            if (yOffset >= renderHeight)
+            {
+                yOffset = 2;
+                xOffset += _maxChildWidth;
+            }
+
             control.OnResize();
         }
-        
-        base.OnResize();
+
+        Children = visibleLabels.Concat(new[] { _scrollBar }).ToList();
     }
 
     public void SetElements(List<string> list, List<bool> valid, bool refresh)
@@ -92,10 +132,10 @@ public class ListBox : BaseControl
     }
     public override void Draw(bool pulse)
     {
-        var startX = Location.X;
-        var startY = Location.Y;
+        var startX = Location.X + 2;
+        var startY = Location.Y + 2;
         
-        Raylib.DrawRectangle((int)startX, (int)startY, Width, Height, Color.WHITE);
+        Raylib.DrawRectangle((int)startX, (int)startY, Width -4, Height -4, new Color(207,207,207,255));
         base.Draw(pulse);
         
         foreach (var control in Children)

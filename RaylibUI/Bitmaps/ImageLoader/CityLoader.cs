@@ -188,7 +188,7 @@ namespace RaylibUI.ImageLoader
         }
 
 
-        private static readonly Color _flagColour = new (0, 0, 255,255);
+        private static readonly Color FlagColour = new (0, 0, 255,255);
         private static unsafe CityImage? MakeCityImage(Image citiesImage, Color* colorArray, int y, int x, int width, int height)
         {
             int flagX = 0;
@@ -201,7 +201,7 @@ namespace RaylibUI.ImageLoader
                 var colour = colorArray[i+ y* citiesImage.width];
                 if (colour.Equals(borderColour)) continue;
                 
-                if (!colour.Equals(_flagColour))
+                if (!colour.Equals(FlagColour))
                 {
                     sizeX = i - x;
                     if (flagX == 0) flagX = sizeX;
@@ -217,7 +217,7 @@ namespace RaylibUI.ImageLoader
                 var colour = colorArray[x + i*citiesImage.width];
                 if (colour.Equals(borderColour)) continue;
                 
-                if (!colour.Equals(_flagColour))
+                if (!colour.Equals(FlagColour))
                 {
                     sizeY = i - y;
                     if (flagY == 0) flagY = sizeY;

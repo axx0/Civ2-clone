@@ -430,6 +430,41 @@ public class ImageUtils
     }
 
     private static InterfaceStyle Look;
+
+    public static Image[] GetScrollImages(int dim)
+    {
+        var image = NewImage(dim, dim);
+        var color1 = new Color(227, 227, 227, 255);
+        Raylib.ImageDrawLine(ref image, 0,0, image.width -1, 0, color1);
+        Raylib.ImageDrawLine(ref image, 0,0, 0, image.height -1, color1);
+        
+        var color2 = Color.WHITE;
+        Raylib.ImageDrawLine(ref image, 1,1, image.width -2, 1, color2);
+        Raylib.ImageDrawLine(ref image, 1,1, 1, image.height -2, color2);
+
+        var color3 = new Color(240, 240, 240, 255);
+        Raylib.ImageDrawRectangle(ref image, 3,3,image.width -4, image.height - 4, color3);
+
+        var color4 = new Color(160, 160, 160, 255);
+        Raylib.ImageDrawLine(ref image, image.width -2,1, image.width -2, image.height -2, color4);
+        Raylib.ImageDrawLine(ref image, 1, image.height -2, image.width-2, image.height -2, color4);
+        
+        var color5 =new Color(105,105,105,255);
+        Raylib.ImageDrawLine(ref image, 0, image.height -1, image.width -1, image.height -1, color5);
+        Raylib.ImageDrawLine(ref image, image.width -1, 0, image.width -1, image.height -1, color5);
+
+        var left = Raylib.ImageFromImage(image, new Rectangle(0,0,dim, dim));
+        Raylib.ImageDrawPixel(ref left, 6,9,Color.BLACK);
+        Raylib.ImageDrawLine(ref left, 7,8,7,10,Color.BLACK);
+        Raylib.ImageDrawLine(ref left, 8,7,8,11,Color.BLACK);
+        Raylib.ImageDrawLine(ref left, 9,6,9,12,Color.BLACK);
+        var right = Raylib.ImageFromImage(image, new Rectangle(0,0,dim, dim));
+        Raylib.ImageDrawPixel(ref right, dim - 6,9,Color.BLACK);
+        Raylib.ImageDrawLine(ref right, dim-7,8,dim-7,10,Color.BLACK);
+        Raylib.ImageDrawLine(ref right, dim-8,7,dim-8,11,Color.BLACK);
+        Raylib.ImageDrawLine(ref right, dim-9,6,dim-9,12,Color.BLACK);
+        return new[] { left, image, right };
+    }
 }
 
 public static class Fonts
