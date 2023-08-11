@@ -1,3 +1,4 @@
+using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.IO;
 using Model;
@@ -19,7 +20,8 @@ public class LoadGame : FileDialogHandler
         return this;
     }
 
-    protected override IInterfaceAction HandleFileSelection(string fileName)
+    protected override IInterfaceAction HandleFileSelection(string fileName,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers)
     {
         var savDirectory = Path.GetDirectoryName(fileName);
         var ruleSet = new Ruleset
@@ -31,6 +33,8 @@ public class LoadGame : FileDialogHandler
         
 
         var game = ClassicSaveLoader.LoadSave(ruleSet, savName, RulesParser.ParseRules(ruleSet));
-        return new StartGame(ruleSet,game);
+
+        Initialization.Start(game, ruleSet);
+        return civDialogHandlers[LoadOk.Title].Show();
     }
 }

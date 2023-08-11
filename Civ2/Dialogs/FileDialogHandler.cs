@@ -22,13 +22,18 @@ public abstract class FileDialogHandler : ICivDialogHandler
     {
         if (result.SelectedIndex == 0)
         {
-            return HandleFileSelection(result.TextValues?["FileName"]);
+            var fileName = result.TextValues?["FileName"];
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                return HandleFileSelection(fileName, civDialogHandlers);
+            }
         }
 
         return civDialogHandlers[MainMenu.Title].Show();
     }
 
-    protected abstract IInterfaceAction HandleFileSelection(string fileName);
+    protected abstract IInterfaceAction HandleFileSelection(string fileName,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers);
 
     public IInterfaceAction Show()
     {

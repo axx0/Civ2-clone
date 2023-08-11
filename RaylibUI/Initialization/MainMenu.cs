@@ -50,10 +50,12 @@ public class MainMenu : BaseScreen
 
                 FormManager.Add(new Dialog(menu.Dialog, menu.DialogPos, new[] { HandleButtonClick },
                     optionsCols: menu.OptionsCols,
+                    replaceStrings: menu.ReplaceStrings,
                     replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
 
                 ShowDialog(new CivDialog(menu.Dialog, menu.DialogPos, HandleButtonClick,
                     optionsCols: menu.OptionsCols,
+                    replaceStrings: menu.ReplaceStrings,
                     replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
                 break;
             }

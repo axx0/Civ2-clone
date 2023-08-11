@@ -22,7 +22,8 @@ public class LabelControl : BaseControl
 
     public override Size GetPreferredSize(int width, int height)
     {
-        return new Size((int)_textSize.X + Offset, _defaultHeight);
+        var requestedWidth = (int)_textSize.X + Offset + (_alignment == TextAlignment.Center ? 10 : 0);
+        return new Size(requestedWidth, _defaultHeight);
     }
 
     public override void Draw(bool pulse)

@@ -18,7 +18,8 @@ public class LoadMap : FileDialogHandler
         return this;
     }
 
-    protected override IInterfaceAction HandleFileSelection(string fileName)
+    protected override IInterfaceAction HandleFileSelection(string fileName,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers)
     {
         throw new NotImplementedException();
     }

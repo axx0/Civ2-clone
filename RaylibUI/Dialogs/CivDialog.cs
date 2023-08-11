@@ -39,15 +39,14 @@ public class CivDialog : BaseDialog
             IDictionary<string, string>?> handleButtonClick, 
         IList<string>? replaceStrings = null, 
         IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image(), Forms.ListBox? listbox = null) : 
-        base(
-            popupBox.Title, new Point(5, 5)) //actionMenuElement.DialogPos)
+        base(Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers), new Point(5,5))// relatDialogPos)
     {
         if (popupBox.Text?.Count > 0)
         {
             var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
             foreach (var text in ftext)
             {
-                
+                Controls.Add(new LabelControl(this, text.Text, alignment: text.HorizontalAlignment == HorizontalAlignment.Center ? TextAlignment.Center : TextAlignment.Left));
             }
         }
         
@@ -102,7 +101,7 @@ public class CivDialog : BaseDialog
         foreach (var button in popupBox.Button)
         {
             menuBar.AddChild(new Button(this, button,
-                () => handleButtonClick(button, _selectedOption.Index, _checkboxes , 
+                () => handleButtonClick(button, _selectedOption?.Index ?? -1, _checkboxes , 
                     FormatTextBoxReturn())));
         }
 
