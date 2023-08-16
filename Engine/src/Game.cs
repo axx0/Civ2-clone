@@ -203,5 +203,15 @@ namespace Civ2engine
                 }
             }
         }
+
+        public void ConnectPlayer(IPlayer player)
+        {
+            var id = player.Civilization.Id;
+            var currentPlayer = Players[id];
+            player.ActiveTile = currentPlayer.ActiveTile;
+            player.ActiveUnit = currentPlayer.ActiveUnit;
+            Players[id] = player;
+            Script.Connect(player.UI);
+        }
     }
 }

@@ -14,7 +14,6 @@ namespace RaylibUI
 
         private void DrawStuff()
         {
-            //Raylib.ClearBackground(new Raylib_cs.Color(143, 123, 99, 255));
             Raylib.ClearBackground(Color.WHITE);
 
             // DRAW MAP

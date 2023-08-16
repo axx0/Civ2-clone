@@ -8,6 +8,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Enums;
 using Civ2engine.Units;
 using RaylibUI.Initialization;
+using RaylibUI.RunGame;
 
 namespace RaylibUI
 {
@@ -91,36 +92,36 @@ namespace RaylibUI
             var _tilePic = Raylib.ImageCopy(terrainSet.BaseTiles[(int)tile.Type]);
 
             // Dither
-            if (tile.Type != TerrainType.Ocean)
-            {
-                if (flatEarth)
-                {
-                    // Determine type of NW tile
-                    if (col != 0 && row != 0) ApplyDither(_tilePic, map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
-                    // Determine type of NE tile
-                    if (col != Xdim - 1 && (row != 0)) ApplyDither(_tilePic, map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
-                    // Determine type of SW tile
-                    if (col != 0 && (row != Ydim - 1)) ApplyDither(_tilePic, map.TileC2(col - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
-                    // Determine type of SE tile
-                    if (col != Xdim - 1 && (row != Ydim - 1)) ApplyDither(_tilePic, map.TileC2(col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
-                }
-                else // Round earth
-                {
-                    if (row != 0)
-                    {
-                        ApplyDither(_tilePic, map.TileC2((col == 0 ? Xdim : col) - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
-
-                        ApplyDither(_tilePic, map.TileC2(col == Xdim - 1 ? 0 : col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
-                    }
-
-                    if (row != Ydim - 1)
-                    {
-                        ApplyDither(_tilePic, map.TileC2((col == 0 ? Xdim : col) - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
-
-                        ApplyDither(_tilePic, map.TileC2(col == Xdim - 1 ? 0 : col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
-                    }
-                }
-            }
+            // if (tile.Type != TerrainType.Ocean)
+            // {
+            //     if (flatEarth)
+            //     {
+            //         // Determine type of NW tile
+            //         if (col != 0 && row != 0) ApplyDither(_tilePic, map.TileC2(col - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
+            //         // Determine type of NE tile
+            //         if (col != Xdim - 1 && (row != 0)) ApplyDither(_tilePic, map.TileC2(col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
+            //         // Determine type of SW tile
+            //         if (col != 0 && (row != Ydim - 1)) ApplyDither(_tilePic, map.TileC2(col - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
+            //         // Determine type of SE tile
+            //         if (col != Xdim - 1 && (row != Ydim - 1)) ApplyDither(_tilePic, map.TileC2(col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
+            //     }
+            //     else // Round earth
+            //     {
+            //         if (row != 0)
+            //         {
+            //             ApplyDither(_tilePic, map.TileC2((col == 0 ? Xdim : col) - 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[0], 0, 0);
+            //
+            //             ApplyDither(_tilePic, map.TileC2(col == Xdim - 1 ? 0 : col + 1, row - 1).Type, tile.Type, terrainSet.DitherMaps[1], 32, 0);
+            //         }
+            //
+            //         if (row != Ydim - 1)
+            //         {
+            //             ApplyDither(_tilePic, map.TileC2((col == 0 ? Xdim : col) - 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[2], 0, 16);
+            //
+            //             ApplyDither(_tilePic, map.TileC2(col == Xdim - 1 ? 0 : col + 1, row + 1).Type, tile.Type, terrainSet.DitherMaps[3], 32, 16);
+            //         }
+            //     }
+            // }
 
             switch (tile.Type)
             {
@@ -304,16 +305,6 @@ namespace RaylibUI
             //        }
 
             return _tilePic;
-        }
-
-        private void ApplyDither(Image orig_img, TerrainType neighbourType, TerrainType tileType, IReadOnlyList<Image> ditherMap, int offsetX, int offsetY)
-        {
-            if (neighbourType == TerrainType.Ocean)
-            {
-                neighbourType = TerrainType.Grassland;
-            }
-            if (neighbourType == tileType) return;
-            Raylib.ImageDraw(ref orig_img, ditherMap[(int)neighbourType], new Rectangle(0, 0, 32, 16), new Rectangle(offsetX, offsetY, 32, 16), Color.WHITE);
         }
 
         private bool[] IsLandAround(int col, int row, bool flatEarth)

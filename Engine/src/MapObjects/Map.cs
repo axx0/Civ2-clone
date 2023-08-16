@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Civ2engine.Terrains;
 
 namespace Civ2engine.MapObjects
 {
@@ -92,20 +91,25 @@ namespace Civ2engine.MapObjects
         }
 
 
-        public IEnumerable<Tile> DirectNeighbours(Tile candidate)
+        public IEnumerable<Tile> DirectNeighbours(Tile candidate, bool nullForInvalid = false)
         {
             var evenOdd = candidate.Odd;
             var offsets = new List<int[]>
             {
-                new[] {0 + evenOdd, -1},
-                new[] {0 + evenOdd, 1},
-                new[] {-1 + evenOdd, 1},
-                new[] {-1 + evenOdd, -1}
+                new[] {0 + evenOdd, -1},  //0
+                new[] {0 + evenOdd, 1}, //1
+                new[] {-1 + evenOdd, 1}, //2
+                new[] {-1 + evenOdd, -1} //3
+                
+            //     new[] {-1 + evenOdd, -1}, //3
+            // new[] {0 + evenOdd, -1}, //1
+            // new[] {-1 + evenOdd, 1}, //2
+            // new[] {0 + evenOdd, 1}, //0
             };
-            return TilesAround(candidate, offsets);
+            return TilesAround(candidate, offsets, nullForInvalid);
         }
 
-        public IEnumerable<Tile> Neighbours(Tile candidate)
+        public IEnumerable<Tile> Neighbours(Tile candidate, bool nullForInvalid = false)
         {
             var odd = candidate.Odd;
             var offsets = new List<int[]>
@@ -119,7 +123,7 @@ namespace Civ2engine.MapObjects
                 new[] {-1+odd, -1},
                 new[] {0, -2},
             };
-            return TilesAround(candidate, offsets);
+            return TilesAround(candidate, offsets, nullForInvalid);
         }
 
         private IEnumerable<Tile> TilesAround(Tile centre, IEnumerable<int[]> offsets, bool nullForInvalid = false)

@@ -12,8 +12,7 @@ namespace RaylibUI.ImageLoader
 
         public static void LoadUnits(Ruleset ruleset)
         {
-            int _frames = 0;
-            var unitsImage = Raylib.LoadImageAnim(ruleset.Paths[0] + Path.DirectorySeparatorChar + "UNITS.gif", out _frames);
+            var unitsImage = Images.LoadImage("UNITS", ruleset.Paths, "gif");
 
             // Initialize objects
             var units = new List<UnitImage>();

@@ -10,16 +10,16 @@ using RaylibUI.ImageLoader;
 
 namespace RaylibUI
 {
-    public static partial class Images
+    public static class Images
     {
         public static Image[,] MapTileGraphic;
         public static Texture2D[,] MapTileTexture;
 
         public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset, Rules rules)
         {
+            CityLoader.LoadCities(ruleset);
             TerrainLoader.LoadTerrain(ruleset, rules);
             UnitLoader.LoadUnits(ruleset);
-            CityLoader.LoadCities(ruleset);
             //LoadIcons(ruleset);
             //LoadPeopleIcons(ruleset);
             //LoadCityWallpaper(ruleset);

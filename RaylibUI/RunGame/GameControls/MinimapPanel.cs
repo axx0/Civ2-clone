@@ -3,7 +3,7 @@ using Civ2engine.Enums;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
 
-namespace RaylibUI.Initialization.GameControls;
+namespace RaylibUI.RunGame.GameControls;
 
 public class MinimapPanel : BaseControl
 {
