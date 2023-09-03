@@ -12,13 +12,13 @@ public abstract class BaseControl : IControl
     private bool _clickPossible;
     private bool _clickStart;
     private int _height;
-    protected IControlLayout Controller { get; }
+    protected IControlLayout GameScreen { get; }
     
     public bool EventTransparent { get; }
 
-    protected BaseControl(IControlLayout controller, bool eventTransparent = false)
+    protected BaseControl(IControlLayout gameScreen, bool eventTransparent = false)
     {
-        Controller = controller;
+        GameScreen = gameScreen;
         EventTransparent = eventTransparent;
     }
 

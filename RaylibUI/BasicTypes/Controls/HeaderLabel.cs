@@ -15,7 +15,7 @@ public class HeaderLabel : LabelControl
     {
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
         {
-            Controller.Move(moveAmount);
+            GameScreen.Move(moveAmount);
         }
     }
 }

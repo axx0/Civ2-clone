@@ -6,11 +6,11 @@ namespace Civ2engine.MapObjects
 {
     public class Map
     {
-        private readonly bool _flat;
+        public bool Flat { get; }
 
         public Map(bool flat, int index)
         {
-            _flat = flat;
+            Flat = flat;
             MapIndex = index;
         }
         public int MapIndex { get; } = 0;
@@ -144,7 +144,7 @@ namespace Civ2engine.MapObjects
                 }
                 if (x < 0 || x >= XDim)
                 {
-                    if (_flat)
+                    if (Flat)
                     {
                         if (nullForInvalid)
                         {

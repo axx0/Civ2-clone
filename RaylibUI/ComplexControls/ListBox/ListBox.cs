@@ -74,7 +74,7 @@ public class ListBox : BaseControl
         if (requiredColumns > actualColumns)
         {
             renderHeight -= ListBoxScrollBar.DefaultHeight;
-            _scrollBar = new ListBoxScrollBar(Controller, actualColumns, requiredColumns, (position) =>
+            _scrollBar = new ListBoxScrollBar(GameScreen, actualColumns, requiredColumns, (position) =>
             {
                 _scrollIndex = position;
                 SetupChildLabels(totalVisible, renderHeight);
@@ -116,7 +116,7 @@ public class ListBox : BaseControl
     public void SetElements(List<string> list, List<bool> valid, bool refresh)
     {
         _scrollIndex = 0;
-        _allLabels = list.Select((text, index) => new ListBoxLabel(this.Controller, text, this)).ToList();
+        _allLabels = list.Select((text, index) => new ListBoxLabel(this.GameScreen, text, this)).ToList();
         if (refresh)
         {
             var width = Raylib.GetScreenWidth();

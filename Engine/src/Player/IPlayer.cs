@@ -13,7 +13,7 @@ namespace Civ2engine
         Civilization Civilization { get; }
         Tile ActiveTile { get; set; }
         
-        Unit ActiveUnit { get; set; }
+        Unit? ActiveUnit { get; set; }
         
         List<Unit> WaitingList { get; }
 

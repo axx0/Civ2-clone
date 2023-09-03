@@ -20,8 +20,7 @@ namespace RaylibUI
         private bool _shouldClose;
 
 
-        internal Sound soundman;
-        private Sound.SoundData sndMenuLoop;
+        internal readonly Sound Soundman;
         public Main()
         {
             hasCivDir = Settings.LoadConfigSettings();
@@ -31,6 +30,7 @@ namespace RaylibUI
             Raylib.InitWindow(1280, 800, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
             Raylib.InitAudioDevice();
+            Soundman = new Sound();
 
             //========== IMGUI STYLE
             //rlImGui.Setup(true);
@@ -58,11 +58,9 @@ namespace RaylibUI
             //LoadGame(savName);
 
             //============ LOAD SOUNDS
-            var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "DIVEBOMB.WAV");
-            soundman = new Sound();
+            //var sound = Raylib.LoadSound(Settings.Civ2Path + Path.DirectorySeparatorChar + "SOUND" + Path.DirectorySeparatorChar + "DIVEBOMB.WAV");
      
             //prep this for a loop( should split that function out between loops and non loops)
-            sndMenuLoop =  soundman.PlayCIV2DefaultSound("MENULOOP",true);
 
             //play a sound
             //soundman.PlayCIV2DefaultSound("DIVEBOMB");
@@ -74,23 +72,14 @@ namespace RaylibUI
 
             while (!Raylib.WindowShouldClose() && !_shouldClose)
             {
-                if (sndMenuLoop != null)
-                  sndMenuLoop.MusicUpdateCall();
 
-
-                //ToStop Music you would call
-               // sndMenuLoop.Stop();
-
-        // MousePressedAction();
-        // KeyboardAction();
-
-        Raylib.BeginDrawing();
+                Raylib.BeginDrawing();
                 
                 int screenHeight = Raylib.GetScreenHeight();
 
                 _activeScreen.Draw(pulse);
 
-                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Raylib_cs.Color.BLACK);
+                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.BLACK);
 
                 Raylib.EndDrawing();
                 if (counter++ >= 30)
@@ -109,7 +98,7 @@ namespace RaylibUI
             Interfaces = Helpers.LoadInterfaces();
 
             ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
-            return new MainMenu(ActiveInterface,() => _shouldClose= true, StartGame);
+            return new MainMenu(ActiveInterface,() => _shouldClose= true, StartGame, Soundman);
         }
 
 
@@ -119,7 +108,7 @@ namespace RaylibUI
 
         void ShutdownApp()
         {
-            soundman.Dispose();
+            Soundman.Dispose();
             Raylib.CloseWindow();
             Raylib.CloseAudioDevice();
         }

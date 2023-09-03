@@ -16,9 +16,13 @@ public class MainMenu : BaseScreen
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
     private readonly ScreenBackground? _background;
+    
+    
+    private readonly SoundData? sndMenuLoop;
 
-    public MainMenu(IUserInterface activeInterface, Action shutdownApp, Action<Game> startGame)
+    public MainMenu(IUserInterface activeInterface, Action shutdownApp, Action<Game> startGame, Sound soundman)
     {
+        sndMenuLoop =  soundman.PlayCIV2DefaultSound("MENULOOP",true);
         _activeInterface = activeInterface;
         _shutdownApp = shutdownApp;
         _startGame = startGame;
@@ -38,6 +42,7 @@ public class MainMenu : BaseScreen
         {
             case StartGame start:
                 Images.LoadGraphicsAssetsFromFiles(start.RuleSet, start.Game.Rules);
+                sndMenuLoop.Stop();
                 _startGame(start.Game);
                 break;
             case ExitAction:
@@ -122,6 +127,8 @@ public class MainMenu : BaseScreen
 
     public override void Draw(bool pulse)
     {
+        sndMenuLoop.MusicUpdateCall();
+        
         int screenWidth = Raylib.GetScreenWidth();
         int screenHeight = Raylib.GetScreenHeight();
 

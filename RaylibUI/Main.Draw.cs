@@ -17,8 +17,8 @@ namespace RaylibUI
             Raylib.ClearBackground(Color.WHITE);
 
             // DRAW MAP
-            int width = Raylib.GetScreenWidth() / MapTileTextureC2(0, 0).width;
-            int height = 2 * Raylib.GetScreenHeight() / MapTileTextureC2(0, 0).height;
+            int width = Raylib.GetScreenWidth();// MapTileTextureC2(0, 0).width;
+            int height = 2;// * Raylib.GetScreenHeight() / MapTileTextureC2(0, 0).height;
 
             // Center map around active unit in start
             if (Raylib.GetFrameTime() == 0)
@@ -27,8 +27,8 @@ namespace RaylibUI
                 startY = activeUnit.Y - height / 2;
             }
 
-            startX += (int)mouseMapViewIncrement.X;
-            startY += (int)mouseMapViewIncrement.Y;
+            // startX += (int)mouseMapViewIncrement.X;
+            // startY += (int)mouseMapViewIncrement.Y;
 
             for (int _row = -2; _row < height + 2; _row++)
             {
@@ -43,7 +43,7 @@ namespace RaylibUI
                     var yC2 = startY + row;
                     if (xC2 < 0 || yC2 < 0 || xC2 >= map.XDimMax || yC2 >= map.YDim) continue;
 
-                    Raylib.DrawTexture(MapTileTextureC2(xC2, yC2), 32 * col, 16 * row, Color.WHITE);
+                    //Raylib.DrawTexture(MapTileTextureC2(xC2, yC2), 32 * col, 16 * row, Color.WHITE);
 
                     // Units
                     var unitsHere = map.TileC2(xC2, yC2).UnitsHere;

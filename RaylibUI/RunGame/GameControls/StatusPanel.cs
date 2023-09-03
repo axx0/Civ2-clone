@@ -11,7 +11,7 @@ public class StatusPanel : BaseControl
 
     public override Size GetPreferredSize(int width, int height)
     {
-        return new Size(GameScreen.MiniMapWidth, height - GameScreen.MiniMapHeight);
+        return new Size(RunGame.GameScreen.MiniMapWidth, height - RunGame.GameScreen.MiniMapHeight);
     }
 
     public StatusPanel(IControlLayout controller, Game game) : base(controller)

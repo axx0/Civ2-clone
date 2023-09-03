@@ -15,12 +15,13 @@ public class GameScreen : BaseScreen
     private readonly MapControl _mapControl;
     private readonly StatusPanel _statusPanel;
     private readonly IPlayer _player;
+    private readonly IGameMode _activeMode;
 
 
     internal const int MiniMapHeight = 148;
     internal const int MiniMapWidth = 262;
 
-    public GameScreen(Game game)
+    public GameScreen(Game game, Sound soundman)
     {
         Game = game;
 
@@ -37,6 +38,15 @@ public class GameScreen : BaseScreen
         
         _statusPanel = new StatusPanel(this, game);
         Controls.Add(_statusPanel);
+
+        if (_player.ActiveUnit != null)
+        {
+            _activeMode = new MovingPieces(this);
+        }
+        else
+        {
+            _activeMode = new ViewPiece(this);
+        }
     }
 
     public override void Resize(int width, int height)

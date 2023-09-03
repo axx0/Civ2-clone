@@ -167,7 +167,7 @@ public class ImageUtils
         }
     }
 
-    private static Image NewImage(int width, int h)
+    public static Image NewImage(int width, int h)
     {
         var image = Raylib.LoadImage("blank.png");
         

@@ -8,142 +8,162 @@ namespace RaylibUI.ImageLoader
 {
     public static class UnitLoader
     {
-        //private static readonly Color _shadowColour = new Color(51, 51, 51, 255);
+        private static readonly Color _shadowColour = new Color(51, 51, 51, 255);
 
-        public static void LoadUnits(Ruleset ruleset)
+        public static unsafe void LoadUnits(Ruleset ruleset)
         {
             var unitsImage = Images.LoadImage("UNITS", ruleset.Paths, "gif");
 
             // Initialize objects
             var units = new List<UnitImage>();
 
+            var imageColours = Raylib.LoadImageColors(unitsImage);
             //// Define transparent colors
-            //var transparentGray =
-            //    unitsImage.GetPixel(unitsImage.Width - 1, unitsImage.Height - 1); //define transparent back color (gray)
-            //var transparentPink = unitsImage.GetPixel(2, 2); //define transparent back color (pink)
+            var transparentGray = imageColours[(unitsImage.height-1)*unitsImage.width -2];
+            //unitsImage.GetPixel(unitsImage.Width - 1, unitsImage.Height - 1); //define transparent back color (gray)
+            var transparentPink =
+                imageColours[
+                    unitsImage.width * 2 + 2]; //  unitsImage.GetPixel(2, 2); //define transparent back color (pink)
 
-            //var borderColour = unitsImage.GetPixel(0, 0);
-            //var flagColour = borderColour;
-            //for (var i = 0; i < 100; i++)
-            //{
-            //    flagColour = unitsImage.GetPixel(0, i);
-            //    if (flagColour != borderColour) break;
-            //}
+            var borderColour = imageColours[0]; //  unitsImage.GetPixel(0, 0);
+            var flagColour = borderColour;
+            for (var i = 0; i < 100; i++)
+            {
+                flagColour = imageColours[unitsImage.width * i]; // unitsImage.GetPixel(0, i);
+                if (!flagColour.Equals(borderColour)) break;
+            }
 
-            //var borderColours = new List<Color> {borderColour, flagColour};
+            var borderColours = new List<Color> { borderColour, flagColour };
 
-            //var height = 0;
-            //for (var i = 1; i < unitsImage.Height; i++)
-            //{
-            //    if (borderColours.IndexOf(unitsImage.GetPixel(1, i)) == -1) continue;
-            //    height = i;
-            //    break;
-            //}
+            var height = 0;
+            for (var i = 1; i < unitsImage.height; i++)
+            {
+                var colour = imageColours[1 + i * unitsImage.width];
+                if (colour.Equals(borderColour) || colour.Equals(flagColour))
+                {
+                    height = i;
+                    break;
+                }
+            }
 
-            //var width = 0;
+            var width = 0;
 
 
-            //for (var i = 1; i < unitsImage.Width; i++)
-            //{
-            //    if (borderColours.IndexOf(unitsImage.GetPixel(i, 1)) == -1) continue;
-            //    width = i;
-            //    break;
-            //}
+            for (var i = 1; i < unitsImage.width; i++)
+            {
+                var colour = imageColours[i + unitsImage.width];
+                if (colour.Equals(borderColour) || colour.Equals(flagColour))
+                {
+                    width = i;
+                    break;
+                }
+            }
 
-            //MakeSheilds(unitsImage, width, borderColour, transparentGray);
+            MakeSheilds(unitsImage, imageColours, width, borderColour, transparentGray);
+
+
+            Raylib.UnloadImageColors(imageColours);
 
             // Make transparent colors
-            Raylib.ImageColorReplace(ref unitsImage, new Color(135, 83, 135, 255), new Color(135, 83, 135, 0));
-            Raylib.ImageColorReplace(ref unitsImage, new Color(255, 0, 255, 255), new Color(255, 0, 255, 0));
+            Raylib.ImageColorReplace(ref unitsImage, transparentGray, new Color(0, 0, 0, 0));
+            Raylib.ImageColorReplace(ref unitsImage, transparentPink, new Color(0, 0, 0, 0));
+
+            imageColours = Raylib.LoadImageColors(unitsImage);
 
             for (var row = 0; row < 7; row++)
             {
-                for (var col = 0; col <9; col++)
+                var rowIndex = row * unitsImage.width;
+                for (var col = 0; col < 9; col++)
                 {
-                    //var flagX = 0;
-                    //var flagY = 0;
+                    var flagX = 0;
+                    var flagY = 0;
 
-                    //for (var i = col; i < col + width; i++)
-                    //{
-                    //    var colour = unitsImage.GetPixel(i, row);
-                    //    if (colour == borderColour) continue;
-                    //    flagX = i - col - 1;
-                    //    break;
-                    //}
+                    for (var i = col; i < col + width; i++)
+                    {
+                        var colour = imageColours[rowIndex + i]; //  unitsImage.GetPixel(i, row);
+                        if (colour.Equals(borderColour)) continue;
+                        flagX = i - col - 1;
+                        break;
+                    }
 
-                    //for (var i = row; i < row + height; i++)
-                    //{
-                    //    var colour = unitsImage.GetPixel(col, i);
-                    //    if (colour == borderColour) continue;
-                    //    flagY = i - row - 1;
-                    //    break;
-                    //}
+                    for (var i = row; i < row + height; i++)
+                    {
+                        var colour = imageColours[col + i * unitsImage.width]; // unitsImage.GetPixel(col, i);
+                        if (colour.Equals(borderColour)) continue;
+                        flagY = i - row - 1;
+                        break;
+                    }
 
-                    //if (flagX == 0 || flagY == 0)
-                    //{
-                    //    continue;
-                    //}
+                    // if (flagX == 0 || flagY == 0)
+                    // {
+                    //     continue;
+                    // }
 
                     var img = Raylib.ImageFromImage(unitsImage, new Rectangle(1 + col * 65, 1 + row * 49, 64, 48));
                     units.Add(new UnitImage
                     {
-                        Bitmap = img,
-                        Texture = Raylib.LoadTextureFromImage(img),
-                        FlagLoc = new Vector2(0, 0)
+                        Image = img,
+                        FlagLoc = new Vector2(flagX, flagY)
                     });
-                    Raylib.UnloadImage(img);
                 }
             }
 
+            MapImages.UnitRectangle = new Rectangle(0, 0, width, height);
             MapImages.Units = units.ToArray();
+            Raylib.UnloadImageColors(imageColours);
         }
 
-        //private static void MakeSheilds(Bitmap unitsImage, int width, Color borderColour, Color transparentGray)
-        //{
-        //    int lastBorder;
-        //    for (lastBorder = unitsImage.Width - 1; lastBorder > width; lastBorder--)
-        //    {
-        //        if (unitsImage.GetPixel(lastBorder, 0) == borderColour) break;
-        //    }
+        private static unsafe void MakeSheilds(Image unitsImage, Color* colours, int width, Color borderColour,
+            Color transparentGray)
+        {
+            int lastBorder;
+            for (lastBorder = unitsImage.width - 1; lastBorder > width; lastBorder--)
+            {
+                if (colours[lastBorder].Equals(borderColour)) break;
+            }
 
-        //    var shieldWidth = 0;
-        //    for (var i = lastBorder - 1; i >= 0; i--)
-        //    {
-        //        if (unitsImage.GetPixel(i, 1) != borderColour) continue;
-        //        shieldWidth = lastBorder - i;
-        //        break;
-        //    }
+            var shieldWidth = 0;
+            for (var i = lastBorder - 1; i >= 0; i--)
+            {
+                if (!colours[unitsImage.width + i].Equals(borderColour)) continue;
+                shieldWidth = lastBorder - i;
+                break;
+            }
 
-        //    var shieldHeight = 0;
-        //    for (var i = 1; i < unitsImage.Height; i++)
-        //    {
-        //        if (unitsImage.GetPixel(lastBorder - 1, i) != borderColour) continue;
-        //        shieldHeight = i;
-        //        break;
-        //    }
+            var shieldHeight = 0;
+            for (var i = 1; i < unitsImage.height; i++)
+            {
+                if (!colours[lastBorder -1 + i* unitsImage.width].Equals(borderColour)) continue;
+                shieldHeight = i;
+                break;
+            }
 
 
-        //    var unitShield = unitsImage.Clone(new Rectangle(lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1,
-        //        1, shieldWidth - 1, shieldHeight - 1));
-        //    unitShield.SetTransparent(new Color[] { transparentGray });
-        //    var firstColour = unitShield.GetPixel(3, 3);
+            var unitShield = Raylib.ImageFromImage(unitsImage,new Rectangle(lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1,
+                1, shieldWidth - 1, shieldHeight - 1));
+            
+            Raylib.ImageColorReplace(ref unitShield, transparentGray, new Color(0, 0, 0, 0));
 
-        //    Bitmap MakeShield(Color colour)
-        //    {
-        //        var shield = unitShield.Clone();
-        //        shield.ReplaceColors(firstColour, colour);
-        //        return shield;
-        //    }
 
-        //    MapImages.Shields = MapImages.PlayerColours.Select(c=>c.LightColour).Select((Func<Color,Bitmap>) MakeShield).ToArray();
-        //    MapImages.ShieldBack = MapImages.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Bitmap>) MakeShield).ToArray();
-        //    MapImages.ShieldShadow = MakeShield(_shadowColour);
-        //}
+            var firstColour =
+                colours[unitsImage.width * 4 + lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1 + 3];// unitShield.GetPixel(3, 3);
+            var shieldRec = new Rectangle(0, 0, unitShield.width, unitShield.height);
+            Image MakeShield(Color colour)
+            {
+                var shield = Raylib.ImageFromImage(unitShield, shieldRec);// unitShield.Clone();
+                Raylib.ImageColorReplace(ref shield, firstColour, colour);
+                return shield;
+            }
+
+            MapImages.Shields = MapImages.PlayerColours.Select(c=>c.LightColour).Select((Func<Color,Image>) MakeShield).ToArray();
+            MapImages.ShieldBack = MapImages.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Image>) MakeShield).ToArray();
+            MapImages.ShieldShadow = MakeShield(_shadowColour);
+        }
     }
 
     public class UnitImage
     {
-        public Image Bitmap { get; set; }
+        public Image Image { get; set; }
         public Texture2D Texture { get; set; }
         public Vector2 FlagLoc { get; set; }
     }
