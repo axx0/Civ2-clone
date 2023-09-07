@@ -33,6 +33,7 @@ public class MapControl : BaseControl
     private readonly int _halfWidth;
     private readonly int _diagonalCut;
     private readonly int _totalWidth;
+    private readonly int _totalHeight;
     private const int PaddingSide = 11;
     private const int Top = 11;
     private const int PaddingBtm = 11;
@@ -62,6 +63,7 @@ public class MapControl : BaseControl
         _diagonalCut = _halfHeight * _halfWidth;
         _selectedTile = game.ActiveTile;
         _totalWidth = _map.Tile.GetLength(0) * _tileWidth;
+        _totalHeight = _map.Tile.GetLength(1) * _halfHeight + _halfHeight;
         _zoom = 1;
     }
 
@@ -73,12 +75,67 @@ public class MapControl : BaseControl
 
     public override void OnResize()
     {
+        base.OnResize();
         _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide);
-        
+
         _viewWidth = Width - 2 * PaddingSide;
         _viewHeight = Height - Top - PaddingBtm;
-        _offsets = new Vector2(0, 0); //new Vector2( _centreTile.XIndex * _tileWidth + _viewWidth/2f - _tileWidth/2f, _viewHeight/2f - (_centreTile.Y * _tileHeight) /2f );
-        base.OnResize();
+        ShowTile(_selectedTile);
+    }
+
+    private void ShowTile(Tile tile)
+    {
+        bool setOffsets;
+        int offsetY;
+        int offsetX;
+        if (_viewHeight >= _totalHeight)
+        {
+            offsetY = (_totalHeight - _viewHeight) /2;
+            setOffsets = offsetY != (int)_offsets.Y;
+        }
+        else
+        {
+            var tileTop = tile.Y * _halfHeight;
+            var currentOffsetYPos = tileTop - _offsets.Y;
+            offsetY = tileTop - (_viewHeight / 2);
+            if (offsetY < 0)
+            {
+                offsetY = 0;
+            }
+            else if(offsetY > (_totalHeight - _viewHeight))
+            {
+                offsetY = _totalHeight - _viewHeight;
+            }
+            setOffsets = currentOffsetYPos < _tileHeight || currentOffsetYPos + _tileHeight*2 > _viewHeight;
+        }
+
+        if (_map.Flat && _viewWidth >= _totalWidth)
+        {
+            offsetX = (_totalWidth - _viewWidth) /2;
+            setOffsets = setOffsets || offsetX != (int)_offsets.X;
+        }
+        else
+        {
+            var tileLeft = tile.XIndex * _tileWidth + tile.Odd * _halfWidth;
+            offsetX = tileLeft - (_viewWidth / 2);
+            if (_map.Flat)
+            {
+                if (offsetX < 0)
+                {
+                    offsetX = 0;
+                }else if (offsetX > (_totalWidth - _viewWidth))
+                {
+                    offsetX = _totalWidth - _viewWidth;
+                }
+            }
+            var currentOffsetXPos = tileLeft - _offsets.X;
+            setOffsets = setOffsets || currentOffsetXPos < _tileWidth || currentOffsetXPos + _tileWidth*2 > _viewWidth;
+        }
+
+        if (setOffsets)
+        {
+            _offsets = new Vector2(offsetX, offsetY);
+        }
         Redraw();
     }
 
@@ -91,8 +148,7 @@ public class MapControl : BaseControl
         {
             return;
         }
-        var clickedTilePosition = _offsets + clickPosition - new Vector2(PaddingSide,Top);
-        int xRemainder, xaddjust = 0;
+        var clickedTilePosition = clickPosition - new Vector2(PaddingSide,Top) + _offsets;
         var y =Math.DivRem((int)(clickedTilePosition.Y), _halfHeight, out var yRemainder) ;
         var odd = y % 2 == 1;
         var clickX = (int)(odd ? clickedTilePosition.X - _halfWidth : clickedTilePosition.X);
@@ -117,7 +173,7 @@ public class MapControl : BaseControl
                 clickX -= _totalWidth;
             }
         }
-        var x = Math.DivRem(clickX, _tileWidth, out xRemainder);
+        var x = Math.DivRem(clickX, _tileWidth, out var xRemainder);
         
         if (xRemainder < _halfWidth && y > 0)
         {
@@ -152,10 +208,11 @@ public class MapControl : BaseControl
         if (0 <= y && y < _map.Tile.GetLength(1))
         {
             _selectedTile = _map.Tile[x, y];
+            //_offsets = new Vector2(_selectedTile.XIndex * _tileWidth - _viewWidth / 2f,_selectedTile.Y * _halfHeight- _viewHeight / 2f);
             Debug.WriteLine($"Selected: {_selectedTile.X} {_selectedTile.Y} ({_selectedTile.Type})");
         }
         
-        Redraw();
+        ShowTile(_selectedTile);
         base.OnClick();
     }
 
@@ -165,39 +222,41 @@ public class MapControl : BaseControl
         {
             case KeyboardKey.KEY_UP when _selectedTile.Y > 1:
                 _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y - 2];
-                Redraw();
+                ShowTile(_selectedTile);
                 break;
             case KeyboardKey.KEY_DOWN when _selectedTile.Y < _map.Tile.GetLength(1):
                 _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y + 2];
-                Redraw();
+                ShowTile(_selectedTile);
                 break;
-            case KeyboardKey.KEY_LEFT when _selectedTile.XIndex > 0:
-                _selectedTile = _map.Tile[_selectedTile.XIndex-1, _selectedTile.Y];
-                Redraw();
+            case KeyboardKey.KEY_LEFT:
+                _selectedTile =
+                    _map.Tile[_selectedTile.XIndex == 0 ? _map.Tile.GetLength(0) - 1 : _selectedTile.XIndex - 1,
+                        _selectedTile.Y];
+
+                ShowTile(_selectedTile);
                 break;
-            case KeyboardKey.KEY_RIGHT when _selectedTile.XIndex < _map.Tile.GetLength(0):
-                _selectedTile = _map.Tile[_selectedTile.XIndex+1, _selectedTile.Y];
-                Redraw();
-                break;
+            case KeyboardKey.KEY_RIGHT:
+                _selectedTile = _map.Tile[_selectedTile.XIndex >= _map.Tile.GetLength(0) -1 ? 0: _selectedTile.XIndex + 1, _selectedTile.Y];
                 
+                ShowTile(_selectedTile);
+                break;
+
         }
-        
-        Console.WriteLine($"Selected: {_selectedTile.X} {_selectedTile.Y} ({_selectedTile.Type})");
+
+        Debug.WriteLine($"Selected: {_selectedTile.X} {_selectedTile.Y} ({_selectedTile.Type})");
 
         return base.OnKeyPressed(key);
     }
 
     private void Redraw()
     {
-
-
         var imageWidth = _viewWidth;
         var imageHeight = _viewHeight;
         var image = ImageUtils.NewImage(imageWidth, imageHeight);
 
         Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.BLACK);
 
-        var ypos = Math.Min(-_offsets.Y + _tileHeight, 0);
+        var ypos = -_offsets.Y;
 
         var maxWidth = _map.XDim * _tileWidth;
 
@@ -206,7 +265,7 @@ public class MapControl : BaseControl
 
         for (var row = 0; row < _map.YDim; row++)
         {
-            if (ypos >= 0)
+            if (ypos >= -_tileHeight)
             {
                 var xpos = (float)(-_offsets.X + (row % 2 == 1 ? _tileWidth * 1.5 : _tileWidth));
                 if (xpos + maxWidth < _viewWidth)
@@ -230,10 +289,12 @@ public class MapControl : BaseControl
                             }
                         }
 
-                        var tile = _map.Tile[col, row];   if (tile == _selectedTile)
-                       {
-                           activePos =  new Vector2( xpos, ypos);
-                       }
+                        var tile = _map.Tile[col, row];
+                        if (tile == _selectedTile)
+                        {
+                            activePos = new Vector2(xpos, ypos);
+                        }
+
                         //if (tile.Visibility[_currentMapShown])
                         //{
                             Raylib.ImageDraw(ref image, _mapTileTexture[col, row], MapImage.TileRec,
