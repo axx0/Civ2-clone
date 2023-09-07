@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using RaylibUI.ImageLoader;
+﻿
 using Civ2engine.IO;
 using Civ2engine;
 using Civ2engine.Units;
-using RaylibUI.Initialization;
 using RaylibUI.RunGame;
 
 namespace RaylibUI
@@ -56,7 +53,7 @@ namespace RaylibUI
         
         public void StartGame(Game game)
         {
-            _activeScreen = new GameScreen(game, Soundman);
+            _activeScreen = new GameScreen(this, game, Soundman);
         }
 
     }

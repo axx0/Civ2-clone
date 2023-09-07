@@ -19,16 +19,12 @@ public class MapControl : BaseControl
     private Vector2 _offsets;
     private readonly Map _map;
     private readonly int _halfHeight;
-    private int _xStart;
-    private int _yStart;
-
     private Texture2D _mapImage;
     private Tile _selectedTile;
-    private int _zoom;
     private int _viewWidth;
     private int _viewHeight;
-    private int _currentMapShown;
-    private Vector2 _activePosition = new Vector2(0,0);
+    private readonly int _currentMapShown;
+    private Vector2 _activePosition = new (0,0);
     private Texture2D? _activeImage;
     private readonly int _halfWidth;
     private readonly int _diagonalCut;
@@ -64,7 +60,6 @@ public class MapControl : BaseControl
         _selectedTile = game.ActiveTile;
         _totalWidth = _map.Tile.GetLength(0) * _tileWidth;
         _totalHeight = _map.Tile.GetLength(1) * _halfHeight + _halfHeight;
-        _zoom = 1;
     }
 
 
@@ -100,13 +95,17 @@ public class MapControl : BaseControl
             offsetY = tileTop - (_viewHeight / 2);
             if (offsetY < 0)
             {
-                offsetY = 0;
+                offsetY = 0; setOffsets = offsetY != (int)_offsets.Y;
             }
             else if(offsetY > (_totalHeight - _viewHeight))
             {
                 offsetY = _totalHeight - _viewHeight;
+                setOffsets = offsetY != (int)_offsets.Y;
             }
-            setOffsets = currentOffsetYPos < _tileHeight || currentOffsetYPos + _tileHeight*2 > _viewHeight;
+            else
+            {
+                setOffsets = currentOffsetYPos < _tileHeight || currentOffsetYPos + _tileHeight * 2 > _viewHeight;
+            }
         }
 
         if (_map.Flat && _viewWidth >= _totalWidth)
@@ -123,13 +122,25 @@ public class MapControl : BaseControl
                 if (offsetX < 0)
                 {
                     offsetX = 0;
-                }else if (offsetX > (_totalWidth - _viewWidth))
+                    setOffsets = setOffsets || offsetX != (int)_offsets.X;
+                }else if (offsetX > (_totalWidth - _viewWidth + _halfWidth))
                 {
-                    offsetX = _totalWidth - _viewWidth;
+                    offsetX = _totalWidth - _viewWidth + _halfWidth;
+                    setOffsets = setOffsets || offsetX != (int)_offsets.X;
+                }
+                else
+                {
+                    var currentOffsetXPos = tileLeft - _offsets.X;
+                    setOffsets = setOffsets || currentOffsetXPos < _tileWidth ||
+                                 currentOffsetXPos + _tileWidth * 2 > _viewWidth;
                 }
             }
-            var currentOffsetXPos = tileLeft - _offsets.X;
-            setOffsets = setOffsets || currentOffsetXPos < _tileWidth || currentOffsetXPos + _tileWidth*2 > _viewWidth;
+            else
+            {
+                var currentOffsetXPos = tileLeft - _offsets.X;
+                setOffsets = setOffsets || currentOffsetXPos < _tileWidth ||
+                             currentOffsetXPos + _tileWidth * 2 > _viewWidth;
+            }
         }
 
         if (setOffsets)
@@ -185,7 +196,7 @@ public class MapControl : BaseControl
                     x -= 1;
                     if (x < 0)
                     {
-                        x = _map.Tile.GetLength(0) -1;
+                        x = _map.Flat ? 0 : _map.Tile.GetLength(0) -1;
                     }
                 }
             }
@@ -199,7 +210,14 @@ public class MapControl : BaseControl
                     x += 1;
                     if (x == _map.Tile.GetLength(0))
                     {
-                        x = 0;
+                        if (_map.Flat)
+                        {
+                            x -= 1;
+                        }
+                        else
+                        {
+                            x = 0;
+                        }
                     }
                 }
             }
@@ -208,8 +226,6 @@ public class MapControl : BaseControl
         if (0 <= y && y < _map.Tile.GetLength(1))
         {
             _selectedTile = _map.Tile[x, y];
-            //_offsets = new Vector2(_selectedTile.XIndex * _tileWidth - _viewWidth / 2f,_selectedTile.Y * _halfHeight- _viewHeight / 2f);
-            Debug.WriteLine($"Selected: {_selectedTile.X} {_selectedTile.Y} ({_selectedTile.Type})");
         }
         
         ShowTile(_selectedTile);
@@ -242,9 +258,6 @@ public class MapControl : BaseControl
                 break;
 
         }
-
-        Debug.WriteLine($"Selected: {_selectedTile.X} {_selectedTile.Y} ({_selectedTile.Type})");
-
         return base.OnKeyPressed(key);
     }
 
@@ -267,8 +280,8 @@ public class MapControl : BaseControl
         {
             if (ypos >= -_tileHeight)
             {
-                var xpos = (float)(-_offsets.X + (row % 2 == 1 ? _tileWidth * 1.5 : _tileWidth));
-                if (xpos + maxWidth < _viewWidth)
+                var xpos = (float)(-_offsets.X + (row % 2 * _halfWidth));
+                if (!_map.Flat && xpos + maxWidth < _viewWidth)
                 {
                     xpos += maxWidth;
                 }
@@ -359,7 +372,7 @@ public class MapControl : BaseControl
         Raylib.DrawTexture(_mapImage, (int)Location.X + PaddingSide, (int)Location.Y + Top, Color.WHITE);
         if (pulse && _activeImage.HasValue)
         {
-            Raylib.DrawTexture(_activeImage.Value, (int)(Location.X + PaddingSide + _activePosition.X - _tileWidth),
+            Raylib.DrawTexture(_activeImage.Value, (int)(Location.X + PaddingSide + _activePosition.X),
                 (int)(Location.Y + Top + _activePosition.Y), Color.WHITE);
         }
 

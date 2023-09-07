@@ -35,8 +35,7 @@ public class CivDialog : BaseDialog
     }
 
     public CivDialog(PopupBox popupBox, Point relatDialogPos, 
-        Action<string, int, IList<bool>?, 
-            IDictionary<string, string>?> handleButtonClick, 
+        Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick, 
         IList<string>? replaceStrings = null, 
         IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image(), Forms.ListBox? listbox = null) : 
         base(Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers), new Point(5,5))// relatDialogPos)

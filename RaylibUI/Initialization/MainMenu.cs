@@ -1,6 +1,4 @@
-using System.Numerics;
 using Civ2engine;
-using Civ2engine.IO;
 using Model;
 using Model.InterfaceActions;
 using Raylib_cs;
@@ -10,7 +8,7 @@ namespace RaylibUI.Initialization;
 
 public class MainMenu : BaseScreen
 {
-    private readonly IUserInterface _activeInterface;
+    private readonly Main _main;
     private readonly Action _shutdownApp;
     private readonly Action<Game> _startGame;
     private IInterfaceAction _currentAction;
@@ -18,19 +16,19 @@ public class MainMenu : BaseScreen
     private readonly ScreenBackground? _background;
     
     
-    private readonly SoundData? sndMenuLoop;
+    private readonly SoundData? _sndMenuLoop;
 
-    public MainMenu(IUserInterface activeInterface, Action shutdownApp, Action<Game> startGame, Sound soundman)
+    public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager)
     {
-        sndMenuLoop =  soundman.PlayCIV2DefaultSound("MENULOOP",true);
-        _activeInterface = activeInterface;
+        _sndMenuLoop =  soundManager.PlayCIV2DefaultSound("MENULOOP",true);
+        _main = main;
         _shutdownApp = shutdownApp;
         _startGame = startGame;
 
-        ImageUtils.SetLook(_activeInterface.Look);
+        ImageUtils.SetLook(_main.ActiveInterface.Look);
         _background = CreateBackgroundImage();
 
-        _currentAction = activeInterface.GetInitialAction();
+        _currentAction = main.ActiveInterface.GetInitialAction();
         ProcessAction(_currentAction);
     }
 
@@ -42,7 +40,7 @@ public class MainMenu : BaseScreen
         {
             case StartGame start:
                 Images.LoadGraphicsAssetsFromFiles(start.RuleSet, start.Game.Rules);
-                sndMenuLoop.Stop();
+                _sndMenuLoop?.Stop();
                 _startGame(start.Game);
                 break;
             case ExitAction:
@@ -88,7 +86,7 @@ public class MainMenu : BaseScreen
             res = new DialogResult("Cancel", 1);
         }
 
-        ProcessAction(_activeInterface.ProcessDialog(_currentAction.Name, res));
+        ProcessAction(_main.ActiveInterface.ProcessDialog(_currentAction.Name, res));
         return true;
     }
 
@@ -120,17 +118,17 @@ public class MainMenu : BaseScreen
     private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
         IDictionary<string, string>? textBoxValues)
     {
-        ProcessAction(_activeInterface.ProcessDialog(_currentAction.Name,
+        ProcessAction(_main.ActiveInterface.ProcessDialog(_currentAction.Name,
             new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues)));
 
     }
 
     public override void Draw(bool pulse)
     {
-        sndMenuLoop.MusicUpdateCall();
+        _sndMenuLoop?.MusicUpdateCall();
         
-        int screenWidth = Raylib.GetScreenWidth();
-        int screenHeight = Raylib.GetScreenHeight();
+        var screenWidth = Raylib.GetScreenWidth();
+        var screenHeight = Raylib.GetScreenHeight();
 
         if (_background == null)
         {
@@ -153,7 +151,7 @@ public class MainMenu : BaseScreen
 
     public ScreenBackground? CreateBackgroundImage()
     {
-        var backGroundImage = _activeInterface.BackgroundImage;
+        var backGroundImage = _main.ActiveInterface.BackgroundImage;
         if (backGroundImage != null)
         {
             var img = Images.ExtractBitmap(backGroundImage);

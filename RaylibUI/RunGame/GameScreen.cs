@@ -9,6 +9,7 @@ namespace RaylibUI.RunGame;
 
 public class GameScreen : BaseScreen
 {
+    private readonly Main _main;
     public Game Game { get; }
     
     private readonly MinimapPanel _minimapPanel;
@@ -21,8 +22,9 @@ public class GameScreen : BaseScreen
     internal const int MiniMapHeight = 148;
     internal const int MiniMapWidth = 262;
 
-    public GameScreen(Game game, Sound soundman)
+    public GameScreen(Main main, Game game, Sound soundman)
     {
+        _main = main;
         Game = game;
 
         var civ = game.GetPlayerCiv;
