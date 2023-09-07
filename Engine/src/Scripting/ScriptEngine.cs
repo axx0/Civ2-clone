@@ -12,9 +12,10 @@ namespace Civ2engine.Scripting
         private readonly Lua _lua;
         private readonly LuaGlobal _environment;
         private readonly List<string> _scriptPaths;
+        private readonly CivScripts _civScripts;
         private StringBuilder _log { get; }
 
-        public ScriptEngine(IInterfaceCommands uInterfaceCommands, Game game, string[] paths)
+        public ScriptEngine(Game game, string[] paths)
         {
             _scriptPaths = paths.ToList();
             _scriptPaths.Add(Environment.CurrentDirectory + Path.DirectorySeparatorChar + "Scripts"); 
@@ -23,8 +24,14 @@ namespace Civ2engine.Scripting
             dynamic dg = _environment;
             _log = new StringBuilder();
             _log.AppendLine(_environment.Version);
+            _civScripts = new CivScripts(_log, game);
             dg.print = new Action<string>(s => _log.AppendLine(s));
-            dg.civ = new CivScripts(uInterfaceCommands, _log, game);
+            dg.civ = _civScripts;
+        }
+
+        public void Connect(IInterfaceCommands interfaceCommands)
+        {
+            _civScripts.Connect(interfaceCommands);
         }
 
 

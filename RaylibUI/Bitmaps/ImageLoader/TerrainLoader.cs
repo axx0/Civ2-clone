@@ -22,9 +22,8 @@ namespace RaylibUI.ImageLoader
 
         private static TerrainSet LoadTerrain(Ruleset ruleset, int index)
         {
-            int _frames = 0;
-            var tileData = Raylib.LoadImageAnim(ruleset.Paths[0] + Path.DirectorySeparatorChar + $"Terrain{((index * 2) + 1)}.gif", out _frames);
-            var overlayData = Raylib.LoadImageAnim(ruleset.Paths[0] + Path.DirectorySeparatorChar + $"Terrain{((index * 2) + 2)}.gif", out _frames);
+            var tileData = Images.LoadImage($"Terrain{((index * 2) + 1)}.gif", ruleset.Paths);
+            var overlayData = Images.LoadImage($"Terrain{((index * 2) + 2)}.gif", ruleset.Paths);
 
             // Initialize objects
             var terrain = new TerrainSet();
@@ -64,19 +63,19 @@ namespace RaylibUI.ImageLoader
             // 4 small dither tiles (base mask must be B/W)
             var ditherMask = new[]
             {
-                Raylib.ImageFromImage(ditherTile, new Rectangle(0, 0, 32, 16)),
                 Raylib.ImageFromImage(ditherTile, new Rectangle(32, 0, 32, 16)),
+                Raylib.ImageFromImage(ditherTile, new Rectangle(32, 16, 32, 16)),
                 Raylib.ImageFromImage(ditherTile, new Rectangle(0, 16, 32, 16)),
-                Raylib.ImageFromImage(ditherTile, new Rectangle(32, 16, 32, 16))
+                Raylib.ImageFromImage(ditherTile, new Rectangle(0, 0, 32, 16)),
             };
             terrain.DitherMask = ditherMask;
 
             terrain.DitherMaps = new[]
             {
-                BuildDitherMaps(ditherMask[0], terrain.BaseTiles, 0, 0),
-                BuildDitherMaps(ditherMask[1], terrain.BaseTiles, 32, 0),
+                BuildDitherMaps(ditherMask[0], terrain.BaseTiles, 32, 0),
+                BuildDitherMaps(ditherMask[1], terrain.BaseTiles, 32, 16),
                 BuildDitherMaps(ditherMask[2], terrain.BaseTiles, 0, 16),
-                BuildDitherMaps(ditherMask[3], terrain.BaseTiles, 32, 16)
+                BuildDitherMaps(ditherMask[3], terrain.BaseTiles, 0, 0),
             };
 
             // Rivers, Forest, Mountains, Hills
@@ -149,15 +148,15 @@ namespace RaylibUI.ImageLoader
             terrain.ImprovementsMap[ImprovementTypes.Pollution] = new ImprovementGraphic
             { Levels = new[,] { { Raylib.ImageFromImage(tileData, new Rectangle(456, 199, 64, 32)) } } };
 
-            //terrain.ImprovementsMap[ImprovementTypes.Fortress] = new ImprovementGraphic
-            //{ Levels = new[,] { { MapImages.Specials[1] } } };
+            terrain.ImprovementsMap[ImprovementTypes.Fortress] = new ImprovementGraphic
+            { Levels = new[,] { { MapImages.Specials[1] } } };
 
-            //// Airbase
-            //terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
-            //{
-            //    Levels = new[,] { { MapImages.Specials[2] } },
-            //    UnitLevels = new[,] { { MapImages.Specials[3] } }
-            //};
+            // Airbase
+            terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
+            {
+                Levels = new[,] { { MapImages.Specials[2] } },
+                UnitLevels = new[,] { { MapImages.Specials[3] } }
+            };
 
 
             terrain.GrasslandShield = Raylib.ImageFromImage(tileData, new Rectangle(456, 232, 64, 32));
@@ -165,7 +164,7 @@ namespace RaylibUI.ImageLoader
             return terrain;
         }
 
-        private unsafe static Image[] BuildDitherMaps(Image mask, Image[] baseTiles, int offsetX, int offsetY)
+        private static DitherMap BuildDitherMaps(Image mask, Image[] baseTiles, int offsetX, int offsetY)
         {
             var ditherMaps = new Image[10];
             for (var i = 0; i < 10; i++)
@@ -173,32 +172,9 @@ namespace RaylibUI.ImageLoader
                 ditherMaps[i] = Raylib.ImageFromImage(baseTiles[i], new Rectangle(offsetX, offsetY, 32, 16));
                 Raylib.ImageAlphaMask(ref ditherMaps[i], mask);
             }
-            
-            return ditherMaps;
+
+            return new DitherMap { x = offsetX, y = offsetY, Images = ditherMaps };
         }
-
-
-        //private unsafe static Image[] BuildDitherMaps(Image mask, IReadOnlyList<Image> baseTiles, Image blank, int offsetX,
-        //    int offsetY)
-        //{
-        //    var ditherMaps = Enumerable.Range(0, 10).Select((_) => new Image())
-        //        .ToArray();
-        
-        //    for (var col = 0; col < 32; col++)
-        //    {
-        //        for (var row = 0; row < 16; row++)
-        //        {
-        //            if (!Raylib.GetImageColor(mask, col, row).Equals(Color.BLACK)) continue;
-        //            // Only need to set the non transparent pixels since the default is transparent
-        //            for (var i = 0; i < ditherMaps.Length; i++)
-        //            {
-        //                ditherMaps[i].SetPixel(col, row, baseTiles[i].GetPixel(offsetX + col, offsetY + row));
-        //            }
-        //        }
-        //    }
-
-        //    return ditherMaps;
-        //}
     }
 
     public class ImprovementGraphic

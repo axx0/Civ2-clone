@@ -2,14 +2,15 @@ using Civ2.Rules;
 using Civ2engine;
 using Model;
 using Model.Interface;
+using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;
 
-public class EnerName : BaseDialogHandler
+public class EnterName : BaseDialogHandler
 {
     public const string Title = "NAME";
 
-    public EnerName() : base(Title, 0, -0.03)
+    public EnterName() : base(Title, 0, -0.03)
     {
     }
 

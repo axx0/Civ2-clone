@@ -8,7 +8,7 @@ public class FormattedText : Control
     public string Text { get; set; }
     public HorizontalAlignment HorizontalAlignment { get; set; } = HorizontalAlignment.Left;
     public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Top;
-    public Font Font { get; set; } = Raylib.GetFontDefault();
+    public Font Font { get; set; } = Fonts.DefaultFont;
     public int FontSize { get; set; } = 20;
     public Color Color { get; set; } = Color.BLACK;
     public int MaxWidth { get; set; } = -1;

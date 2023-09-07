@@ -2,6 +2,7 @@
 using Civ2engine;
 using Model;
 using Model.Images;
+using Model.InterfaceActions;
 using Raylib_cs;
 
 namespace Civ2;
@@ -16,7 +17,10 @@ public abstract class Civ2Interface : IUserInterface
     public InterfaceStyle Look { get; } = new()
     {
         Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
-        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32))
+        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
+        RadioButtons = new [] { new BitmapStorage("buttons.png", 0,0, 32), new BitmapStorage("buttons.png", 32,0, 32)},
+        
+        Font = "times-new-roman.ttf"
     };
 
     public abstract string Title { get; }
@@ -24,6 +28,7 @@ public abstract class Civ2Interface : IUserInterface
     public virtual void Initialize()
     {
         Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        Labels.UpdateLabels(null);
 
         var handlerInterface = typeof(ICivDialogHandler);
         DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()
@@ -46,12 +51,7 @@ public abstract class Civ2Interface : IUserInterface
 
         return DialogHandlers[dialogName].HandleDialogResult(dialogResult, DialogHandlers);
     }
-
-    public IInterfaceAction ProcessFile(IEnumerable<string> filenames, bool ok)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public IInterfaceAction GetInitialAction()
     {
         return DialogHandlers["MAINMENU"].Show();

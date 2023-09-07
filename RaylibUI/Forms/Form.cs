@@ -21,6 +21,8 @@ public abstract class Form : IForm
     private bool dragging = false;
     protected int _formPosX, _formPosY;
 
+    private Texture2D? _dialogBase;
+
     public void Focus()
     {
         Focused = true;
@@ -68,7 +70,12 @@ public abstract class Form : IForm
             _formPosY += (int)delta.Y;
         }
 
-        ImageUtils.PaintDialogBase(_formPosX, _formPosY, Size.width, Size.height, Padding);
+        if (_dialogBase == null)
+        {
+            Padding padding = Padding;
+            _dialogBase = ImageUtils.PaintDialogBase(Size.width, Size.height, padding.T, padding.B, padding.L);
+        }
+        Raylib.DrawTexture(_dialogBase.Value,_formPosX, _formPosY, Color.WHITE);
 
         // Draw title text
         Title?.Draw(_formPosX + Size.width / 2, _formPosY + Padding.T / 2);

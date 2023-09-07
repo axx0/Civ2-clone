@@ -1,6 +1,9 @@
+using Civ2.Dialogs.FileDialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
+using Civ2engine;
 using Model;
+using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
 
@@ -27,8 +30,12 @@ public class MainMenu : BaseDialogHandler
                     : civDialogHandlers[WorldSizeHandler.Title].Show();
             
             
-            // case 1:
-            //     return new FileAction(new OpenFileInfo{ Filters = })
+             case 1:
+                 return civDialogHandlers[LoadMap.DialogTitle].Show();
+            case 3:
+                return civDialogHandlers[LoadScenario.DialogTitle].Show();
+            case 4:
+                return civDialogHandlers[LoadGame.DialogTitle].Show();
         }
         /*var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
                    mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),

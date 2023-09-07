@@ -27,10 +27,10 @@ public static class CtrlHelpers
                 combinedWord = combinedWord + " " + words[i];
             }
 
-            combinedTextSize = (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), combinedWord, fontSize, 1.0f).X;
+            combinedTextSize = (int)Raylib.MeasureTextEx(Fonts.DefaultFont, combinedWord, fontSize, 1.0f).X;
             if (i != words.Length - 1)
             {
-                combinedTextSizeNext = (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), combinedWord + " " + words[i + 1], fontSize, 1.0f).X;
+                combinedTextSizeNext = (int)Raylib.MeasureTextEx(Fonts.DefaultFont, combinedWord + " " + words[i + 1], fontSize, 1.0f).X;
             }
             else    // Last word
             {
@@ -54,7 +54,7 @@ public static class CtrlHelpers
         int[] wrapped_lines_length = new int[wrapped_lines.Count];
         for (int i = 0; i < wrapped_lines.Count; i++)
         {
-            wrapped_lines_length[i] = (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), wrapped_lines[i], fontSize, 1.0f).X;
+            wrapped_lines_length[i] = (int)Raylib.MeasureTextEx(Fonts.DefaultFont, wrapped_lines[i], fontSize, 1.0f).X;
         }
 
         return wrapped_lines;
@@ -66,7 +66,7 @@ public static class CtrlHelpers
         int height = 0;
         foreach (var line in lines)
         {
-            height += (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), line, fontSize, 1.0f).Y;
+            height += (int)Raylib.MeasureTextEx(Fonts.DefaultFont, line, fontSize, 1.0f).Y;
         }
 
         return height;
@@ -81,8 +81,8 @@ public static class CtrlHelpers
         foreach (var line in lines)
         {
             linePos = new Vector2(pos.X, pos.Y + lineHeight);
-            Raylib.DrawTextEx(Raylib.GetFontDefault(), line, linePos, fontSize, 1.0f, Color.BLACK);
-            lineHeight += (int)Raylib.MeasureTextEx(Raylib.GetFontDefault(), line, fontSize, 1.0f).Y;
+            Raylib.DrawTextEx(Fonts.DefaultFont, line, linePos, fontSize, 1.0f, Color.BLACK);
+            lineHeight += (int)Raylib.MeasureTextEx(Fonts.DefaultFont, line, fontSize, 1.0f).Y;
         }
     }
 }

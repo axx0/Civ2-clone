@@ -1,45 +1,95 @@
-using System.Numerics;
+using Civ2engine;
 using Model;
+using Model.InterfaceActions;
 using Raylib_cs;
 using RaylibUI.Forms;
 
 namespace RaylibUI.Initialization;
 
-public class MainMenu : IScreen
+public class MainMenu : BaseScreen
 {
-    private readonly IUserInterface _activeInterface;
+    private readonly Main _main;
     private readonly Action _shutdownApp;
-    //private readonly List<IForm> _dialogs = new();
+    private readonly Action<Game> _startGame;
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
+    private readonly ScreenBackground? _background;
+    
+    
+    private readonly SoundData? _sndMenuLoop;
 
-    public MainMenu(IUserInterface activeInterface, Action shutdownApp)
+    public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager)
     {
-        _activeInterface = activeInterface;
+        _sndMenuLoop =  soundManager.PlayCIV2DefaultSound("MENULOOP",true);
+        _main = main;
         _shutdownApp = shutdownApp;
+        _startGame = startGame;
 
-        ImageUtils.SetInner(_activeInterface.Look.Inner);
-        ImageUtils.SetOuter(_activeInterface.Look.Outer);
-        ImageUtils.SetInnerTexture();
-        ImageUtils.SetOuterTexture();
+        ImageUtils.SetLook(_main.ActiveInterface.Look);
+        _background = CreateBackgroundImage();
 
-        _currentAction = activeInterface.GetInitialAction();
-        MakeMenuElements(_currentAction);
+        _currentAction = main.ActiveInterface.GetInitialAction();
+        ProcessAction(_currentAction);
     }
 
-    private void MakeMenuElements(IInterfaceAction action)
+    private void ProcessAction(IInterfaceAction action)
     {
-        //_dialogs.Clear();
         FormManager.Clear();
-        
-        if (action.MenuElement != null)
+        _currentAction = action;
+        switch (action)
         {
-            UpdateDecorations(action.MenuElement);
+            case StartGame start:
+                Images.LoadGraphicsAssetsFromFiles(start.RuleSet, start.Game.Rules);
+                _sndMenuLoop?.Stop();
+                _startGame(start.Game);
+                break;
+            case ExitAction:
+                _shutdownApp();
+                break;
+            case MenuAction menuAction:
+            {
+                var menu = menuAction.MenuElement;
+                UpdateDecorations(menu);
 
-            FormManager.Add(new Dialog(action.MenuElement.Dialog, action.MenuElement.DialogPos, new[] { HandleButtonClick }, optionsCols: action.MenuElement.OptionsCols, replaceNumbers: action.MenuElement.ReplaceNumbers, checkboxStates: action.MenuElement.CheckboxStates, textBoxDefs: action.MenuElement.TextBoxes));
+                FormManager.Add(new Dialog(menu.Dialog, menu.DialogPos, new[] { HandleButtonClick },
+                    optionsCols: menu.OptionsCols,
+                    replaceStrings: menu.ReplaceStrings,
+                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
+
+                ShowDialog(new CivDialog(menu.Dialog, menu.DialogPos, HandleButtonClick,
+                    optionsCols: menu.OptionsCols,
+                    replaceStrings: menu.ReplaceStrings,
+                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
+                break;
+            }
+            case FileAction fileAction:
+                _imagePanels.Clear();
+                
+                ShowDialog(new FileDialog(fileAction.FileInfo.Title, Settings.Civ2Path, (fileName) =>
+                {
+                    return fileAction.FileInfo.Filters.Any(filter => filter.IsMatch(fileName));
+                }, HandleFileSelection));
+                break;
         }
     }
-    
+
+    private bool HandleFileSelection(string? fileName)
+    {
+        DialogResult res;
+        if (!string.IsNullOrWhiteSpace(fileName))
+        {
+            res = new DialogResult("Ok", 0,
+                TextValues: new Dictionary<string, string> { { "FileName", fileName } });
+        }
+        else
+        {
+            res = new DialogResult("Cancel", 1);
+        }
+
+        ProcessAction(_main.ActiveInterface.ProcessDialog(_currentAction.Name, res));
+        return true;
+    }
+
     private void UpdateDecorations(MenuElements menu)
     {
         var existingPanels = _imagePanels.ToList();
@@ -63,39 +113,45 @@ public class MainMenu : IScreen
         _imagePanels = newPanels;
     }
 
-    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates, IDictionary<string ,string>? textBoxValues)
+
+
+    private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
+        IDictionary<string, string>? textBoxValues)
     {
-        if (_currentAction.MenuElement == null) return;
-        var act =_activeInterface.ProcessDialog(_currentAction.MenuElement.Dialog.Name, new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues));
-        if (act.ActionType == EventType.Exit)
+        ProcessAction(_main.ActiveInterface.ProcessDialog(_currentAction.Name,
+            new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues)));
+
+    }
+
+    public override void Draw(bool pulse)
+    {
+        _sndMenuLoop?.MusicUpdateCall();
+        
+        var screenWidth = Raylib.GetScreenWidth();
+        var screenHeight = Raylib.GetScreenHeight();
+
+        if (_background == null)
         {
-            _shutdownApp();
+            Raylib.ClearBackground(new Color(143, 123, 99, 255));
         }
         else
         {
-            _currentAction = act;
-            MakeMenuElements(act);
+            Raylib.ClearBackground(_background.background);
+            Raylib.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.width)/2, (screenHeight-_background.CentreImage.height)/2, Color.WHITE);
         }
-    }
-
-    public void Draw(int width, int height)
-    {
-        
         foreach (var panel in _imagePanels)
         {
             panel.Draw();
         }
 
         FormManager.DrawForms();
-        //foreach (var dialog in _dialogs.ToList())
-        //{
-        //    dialog.Draw();
-        //}
+        
+        base.Draw(pulse);
     }
 
-    public ScreenBackground? GetBackground()
+    public ScreenBackground? CreateBackgroundImage()
     {
-        var backGroundImage = _activeInterface.BackgroundImage;
+        var backGroundImage = _main.ActiveInterface.BackgroundImage;
         if (backGroundImage != null)
         {
             var img = Images.ExtractBitmap(backGroundImage);

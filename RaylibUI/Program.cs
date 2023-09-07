@@ -5,6 +5,8 @@
         static void Main(string[] args)
         {
             var main = new Main();
+
+            main.RunLoop();
         }
     }
 }

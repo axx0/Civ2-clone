@@ -19,4 +19,13 @@ public static class Initialization
         return config;
     }
 
+    internal static Game GameInstance = null;
+
+    public static void Start(Game game, Ruleset ruleSet)
+    {
+        GameInstance = game;
+        SelectedRuleSet = ruleSet;
+    }
+
+    public static Ruleset SelectedRuleSet { get; set; }
 }

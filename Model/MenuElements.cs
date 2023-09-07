@@ -14,4 +14,5 @@ public class MenuElements
     public IList<int>? ReplaceNumbers { get; set; }
     public IList<bool>? CheckboxStates { get; set; }
     public int OptionsCols { get; set; } = 1;
+    public List<string>? ReplaceStrings { get; set; }
 }

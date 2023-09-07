@@ -105,7 +105,7 @@ namespace Civ2engine
                 {
                     var terrain = data.MapTerrainType[col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
-                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][(int) terrain], map.ResourceSeed, map)
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][(int) terrain], map.ResourceSeed, map, col)
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],

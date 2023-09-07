@@ -41,7 +41,7 @@ public class Button : Control
         Raylib.DrawLine(x + Width - 1, y + 2, x + Width - 1, y + Height - 1, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + Width - 2, y + 3, x + Width - 2, y + Height - 1, new Color(128, 128, 128, 255));
 
-        var textSize = Raylib.MeasureTextEx(Raylib.GetFontDefault(), Text, 18, 1.0f);
+        var textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, Text, 18, 1.0f);
         Raylib.DrawText(Text, x + Width / 2 - (int)textSize.X / 2, y + Height / 2 - (int)textSize.Y / 2, 18, Color.BLACK);
 
         Vector2 mousePos = Raylib.GetMousePosition();

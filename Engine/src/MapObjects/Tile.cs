@@ -32,6 +32,7 @@ namespace Civ2engine.MapObjects
         }
 
         public Map Map { get; }
+        public int XIndex { get; }
 
         private void SetEffectiveTerrain()
         {
@@ -53,7 +54,7 @@ namespace Civ2engine.MapObjects
 
 
         // Get special resource type based on map seed & tile location
-        public Tile(int x, int y, Terrain terrain, int seed, Map map)
+        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex)
         {
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
@@ -63,6 +64,7 @@ namespace Civ2engine.MapObjects
             Odd = y % 2;
             Terrain = terrain;
             Map = map;
+            XIndex = xIndex;
 
             HasShield = HasSheild();
 

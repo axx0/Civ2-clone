@@ -1,4 +1,4 @@
-namespace Model;
+namespace Model.InterfaceActions;
 
 public class OpenFileInfo
 {

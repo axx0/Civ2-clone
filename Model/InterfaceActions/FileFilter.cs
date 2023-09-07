@@ -1,8 +1,16 @@
-namespace Model;
+namespace Model.InterfaceActions;
 
 public class FileFilter
 {
-    public string Name { get; }
-    
-    public string[] Extensions { get; }
+    private readonly string _extension;
+
+    public FileFilter(string extension)
+    {
+        _extension = extension;
+    }
+
+    public bool IsMatch(string fileName)
+    {
+        return fileName.EndsWith(_extension, StringComparison.InvariantCultureIgnoreCase);
+    }
 }

@@ -10,17 +10,14 @@ using RaylibUI.ImageLoader;
 
 namespace RaylibUI
 {
-    public static partial class Images
+    public static class Images
     {
-        public static Image[,] MapTileGraphic;
-        public static Texture2D[,] MapTileTexture;
-
         public static void LoadGraphicsAssetsFromFiles(Ruleset ruleset, Rules rules)
         {
+            CityLoader.LoadCities(ruleset);
             TerrainLoader.LoadTerrain(ruleset, rules);
             UnitLoader.LoadUnits(ruleset);
-            CityLoader.LoadCities(ruleset);
-            //LoadIcons(ruleset);
+            LoadIcons(ruleset);
             //LoadPeopleIcons(ruleset);
             //LoadCityWallpaper(ruleset);
         }
@@ -46,107 +43,107 @@ namespace RaylibUI
         //    }
         //}
 
-        //public static void LoadIcons(Ruleset path)
-        //{
-        //    using var iconsImage = Common.LoadBitmapFrom("ICONS", path.Paths);
+        public static void LoadIcons(Ruleset ruleset)
+        {
+            var iconsImage = LoadImage("ICONS", ruleset.Paths, "gif", "bmp");
+          
 
-        //    var transparentLightPink = Color.FromArgb(255, 159, 163);
-        //    var transparentPink = Color.FromArgb(255, 0, 255);
+            var transparentLightPink = new Color(255, 159, 163,255);
+            var transparentPink = new Color(255, 0, 255,255);
+            
+            Raylib.ImageColorReplace(ref iconsImage, transparentLightPink, new Color(0,0,0,0));
+            Raylib.ImageColorReplace(ref iconsImage, transparentPink, new Color(0,0,0,0));
 
-        //    // City improvements
-        //    var improvements = new Bitmap[67];
-        //    int count = 1;  //start at 1. 0 is for no improvement.
-        //    for (int row = 0; row < 5; row++)
-        //    {
-        //        for (int col = 0; col < 8; col++)
-        //        {
-        //            improvements[count] = iconsImage.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 1 + row, 36, 20));
-        //            count++;
-        //            if (count == 39) break;
-        //        }
-        //    }
-        //    // WondersIcons
-        //    for (int row = 0; row < 4; row++)
-        //    {
-        //        for (int col = 0; col < 7; col++)
-        //        {
-        //            improvements[count] = iconsImage.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 106 + row, 36, 20));
-        //            count++;
-        //        }
-        //    }
-        //    CityImages.Improvements = improvements;
+            // City improvements
+            // var improvements = new Bitmap[67];
+            // int count = 1;  //start at 1. 0 is for no improvement.
+            // for (int row = 0; row < 5; row++)
+            // {
+            //     for (int col = 0; col < 8; col++)
+            //     {
+            //         improvements[count] = iconsImage.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 1 + row, 36, 20));
+            //         count++;
+            //         if (count == 39) break;
+            //     }
+            // }
+            // // WondersIcons
+            // for (int row = 0; row < 4; row++)
+            // {
+            //     for (int col = 0; col < 7; col++)
+            //     {
+            //         improvements[count] = iconsImage.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 106 + row, 36, 20));
+            //         count++;
+            //     }
+            // }
+            // CityImages.Improvements = improvements;
 
-        //    // Research icons
-        //    var researchIcons = new Bitmap[5, 4];
-        //    for (int row = 0; row < 4; row++)
-        //    {
-        //        for (int col = 0; col < 5; col++)
-        //        {
-        //            researchIcons[col, row] = iconsImage.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 211 + row, 36, 20));
-        //        }
-        //    }
-        //    CityImages.ResearchIcons = researchIcons;
+            // Research icons
+            // var researchIcons = new Bitmap[5, 4];
+            // for (int row = 0; row < 4; row++)
+            // {
+            //     for (int col = 0; col < 5; col++)
+            //     {
+            //         researchIcons[col, row] = iconsImage.Clone(new Rectangle((36 * col) + 343 + col, (20 * row) + 211 + row, 36, 20));
+            //     }
+            // }
+            // CityImages.ResearchIcons = researchIcons;
+            //
+            // CityImages.SellIcon = iconsImage.Clone(new Rectangle(16, 320, 14, 14));
+            // CityImages.SellIcon.SetTransparent(new Color[] { transparentLightPink });
 
-        //    CityImages.SellIcon = iconsImage.Clone(new Rectangle(16, 320, 14, 14));
-        //    CityImages.SellIcon.SetTransparent(new Color[] { transparentLightPink });
+            MapImages.ViewPiece = Raylib.ImageFromImage(iconsImage,new Rectangle(199, 256, 64, 32));
 
-        //    MapImages.ViewPiece = iconsImage.Clone(new Rectangle(199, 256, 64, 32));
-        //    MapImages.ViewPiece.SetTransparent(new Color[] { transparentLightPink, transparentPink });
+            MapImages.GridLines = Raylib.ImageFromImage(iconsImage,new Rectangle(183, 430, 64, 32));
 
-        //    MapImages.GridLines = iconsImage.Clone(new Rectangle(183, 430, 64, 32));
-        //    MapImages.GridLines.SetTransparent(new Color[] { transparentLightPink, transparentPink });
+            MapImages.GridLinesVisible = Raylib.ImageFromImage(iconsImage,new Rectangle(248, 430, 64, 32));
 
-        //    MapImages.GridLinesVisible = iconsImage.Clone(new Rectangle(248, 430, 64, 32));
-        //    MapImages.GridLinesVisible.SetTransparent(new Color[] { transparentLightPink, transparentPink });
+            // Big icons in city resources
+            // CityImages.HungerBig = iconsImage.Clone(new Rectangle(1, 290, 14, 14));
+            // CityImages.HungerBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.ShortageBig = iconsImage.Clone(new Rectangle(16, 290, 14, 14));
+            // CityImages.ShortageBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.CorruptBig = iconsImage.Clone(new Rectangle(31, 290, 14, 14));
+            // CityImages.CorruptBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.FoodBig = iconsImage.Clone(new Rectangle(1, 305, 14, 14));
+            // CityImages.FoodBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.SupportBig = iconsImage.Clone(new Rectangle(16, 305, 14, 14));
+            // CityImages.SupportBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.TradeBig = iconsImage.Clone(new Rectangle(31, 305, 14, 14));
+            // CityImages.TradeBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.LuxBig = iconsImage.Clone(new Rectangle(1, 320, 14, 14));
+            // CityImages.LuxBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.TaxBig = iconsImage.Clone(new Rectangle(16, 320, 14, 14));
+            // CityImages.TaxBig.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.SciBig = iconsImage.Clone(new Rectangle(31, 320, 14, 14));
+            // CityImages.SciBig.SetTransparent(new Color[] { transparentLightPink });
+            //
+            // // Small icons in city resources
+            // CityImages.FoodSmall = iconsImage.Clone(new Rectangle(49, 334, 10, 10));
+            // CityImages.FoodSmall.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.SupportSmall = iconsImage.Clone(new Rectangle(60, 334, 10, 10));
+            // CityImages.SupportSmall.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.TradeSmall = iconsImage.Clone(new Rectangle(71, 334, 10, 10));
+            // CityImages.TradeSmall.SetTransparent(new Color[] { transparentLightPink });
+            //
+            // // Icon for next/previous city (black arrow)
+            // CityImages.NextCity = iconsImage.Clone(new Rectangle(227, 389, 18, 24));
+            // CityImages.NextCity.SetTransparent(new Color[] { transparentLightPink });
+            // CityImages.PrevCity = iconsImage.Clone(new Rectangle(246, 389, 18, 24));
+            // CityImages.PrevCity.SetTransparent(new Color[] { transparentLightPink });
+            //
+            // // City window icons
+            // CityImages.Exit = iconsImage.Clone(new Rectangle(1, 389, 16, 16));
+            // CityImages.ZoomOUT = iconsImage.Clone(new Rectangle(18, 389, 16, 16));
+            // CityImages.ZoomIN = iconsImage.Clone(new Rectangle(35, 389, 16, 16));
 
-        //    // Big icons in city resources
-        //    CityImages.HungerBig = iconsImage.Clone(new Rectangle(1, 290, 14, 14));
-        //    CityImages.HungerBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.ShortageBig = iconsImage.Clone(new Rectangle(16, 290, 14, 14));
-        //    CityImages.ShortageBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.CorruptBig = iconsImage.Clone(new Rectangle(31, 290, 14, 14));
-        //    CityImages.CorruptBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.FoodBig = iconsImage.Clone(new Rectangle(1, 305, 14, 14));
-        //    CityImages.FoodBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.SupportBig = iconsImage.Clone(new Rectangle(16, 305, 14, 14));
-        //    CityImages.SupportBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.TradeBig = iconsImage.Clone(new Rectangle(31, 305, 14, 14));
-        //    CityImages.TradeBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.LuxBig = iconsImage.Clone(new Rectangle(1, 320, 14, 14));
-        //    CityImages.LuxBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.TaxBig = iconsImage.Clone(new Rectangle(16, 320, 14, 14));
-        //    CityImages.TaxBig.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.SciBig = iconsImage.Clone(new Rectangle(31, 320, 14, 14));
-        //    CityImages.SciBig.SetTransparent(new Color[] { transparentLightPink });
-
-        //    // Small icons in city resources
-        //    CityImages.FoodSmall = iconsImage.Clone(new Rectangle(49, 334, 10, 10));
-        //    CityImages.FoodSmall.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.SupportSmall = iconsImage.Clone(new Rectangle(60, 334, 10, 10));
-        //    CityImages.SupportSmall.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.TradeSmall = iconsImage.Clone(new Rectangle(71, 334, 10, 10));
-        //    CityImages.TradeSmall.SetTransparent(new Color[] { transparentLightPink });
-
-        //    // Icon for next/previous city (black arrow)
-        //    CityImages.NextCity = iconsImage.Clone(new Rectangle(227, 389, 18, 24));
-        //    CityImages.NextCity.SetTransparent(new Color[] { transparentLightPink });
-        //    CityImages.PrevCity = iconsImage.Clone(new Rectangle(246, 389, 18, 24));
-        //    CityImages.PrevCity.SetTransparent(new Color[] { transparentLightPink });
-
-        //    // City window icons
-        //    CityImages.Exit = iconsImage.Clone(new Rectangle(1, 389, 16, 16));
-        //    CityImages.ZoomOUT = iconsImage.Clone(new Rectangle(18, 389, 16, 16));
-        //    CityImages.ZoomIN = iconsImage.Clone(new Rectangle(35, 389, 16, 16));
-
-        //    // Battle sprites
-        //    var battleAnim = new Bitmap[8];
-        //    for (int i = 0; i < 8; i++)
-        //    {
-        //        battleAnim[i] = iconsImage.Clone(new Rectangle(1 + 33 * i, 356, 32, 32));
-        //        battleAnim[i].SetTransparent(new Color[] { transparentLightPink });
-        //    }
-        //    MapImages.BattleAnim = battleAnim;
-        //}
+            // Battle sprites
+            var battleAnim = new Image[8];
+            for (int i = 0; i < 8; i++)
+            {
+                battleAnim[i] = Raylib.ImageFromImage(iconsImage,new Rectangle(1 + 33 * i, 356, 32, 32));
+            }
+            MapImages.BattleAnim = battleAnim;
+        }
 
         //public static void LoadPeopleIcons(Ruleset ruleset)
         //{
@@ -203,7 +200,14 @@ namespace RaylibUI
 
         private static Dictionary<string, Image> ImageCache = new();
 
-        private const string tempPath = "temp"; 
+        private const string tempPath = "temp";
+
+        public static Image LoadImage(string filename, string[] searchPaths, params string[] extensions)
+        {
+            var path = Utils.GetFilePath(filename, searchPaths, extensions);
+            return Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
+        }
+        
         public static Image ExtractBitmap(IImageSource imageSource)
         {
             if (!Directory.Exists(tempPath))
@@ -211,7 +215,7 @@ namespace RaylibUI
                 Directory.CreateDirectory(tempPath);
             }
 
-            if (ImageCache.ContainsKey(imageSource.Key)) return ImageCache[imageSource.Key];
+            if (ImageCache.TryGetValue(imageSource.Key, out var bitmap)) return bitmap;
             
             switch (imageSource)
             {
@@ -224,8 +228,8 @@ namespace RaylibUI
                     var sourceKey = $"{bitmapStorage.Filename}-Source";
                     if (!ImageCache.ContainsKey(sourceKey))
                     {
-                        var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, "gif");
-                        ImageCache[sourceKey] = Raylib.LoadImage(path);
+                        var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
+                        ImageCache[sourceKey] = Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
                     }
 
                     var rect = bitmapStorage.Location;

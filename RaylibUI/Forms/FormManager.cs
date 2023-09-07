@@ -27,7 +27,6 @@ public static class FormManager
         // If any dialog present --> disable all panel interactions
         if (Forms.OfType<Dialog>().Any())
         {
-            Forms.OfType<Panel>().ToList().ForEach(f => f.Disable());
             MenuBar.Disable();
 
             // Bring pressed dialog to front and focus on it
@@ -65,7 +64,7 @@ public static class FormManager
 
             // Last panel in the list is focused and drawn in front
             Forms.OfType<Panel>().ToList().ForEach(f => f.UnFocus());
-            Forms.OfType<Panel>().Last().Focus();
+            Forms.OfType<Panel>().LastOrDefault()?.Focus();
 
         }
 

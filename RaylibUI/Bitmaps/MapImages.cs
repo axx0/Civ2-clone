@@ -12,6 +12,8 @@ namespace RaylibUI
         public static PlayerColour[] PlayerColours { get; set; }
         
         public static UnitImage[] Units { get; set; }
+        
+        public static Rectangle UnitRectangle { get; set; }
         public static Image[] Shields { get; set; }
         public static Image[] ShieldBack { get; set; }
         public static Image ShieldShadow { get; set; }

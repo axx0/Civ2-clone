@@ -50,7 +50,7 @@ namespace Civ2engine
 
             if (root.TryGetProperty(nameof(SearchPaths), out var searchPathsElement))
             {
-                var searchPaths = searchPathsElement.EnumerateArray().Select(e => e.GetString()).Where(IsValidRoot)
+                var searchPaths = searchPathsElement.EnumerateArray().Select(e => e.GetString()).Where(IsValidRoot).Concat(new [] {BasePath})
                     .ToArray();
                 if (!string.IsNullOrWhiteSpace(Civ2Path))
                 {
@@ -61,16 +61,17 @@ namespace Civ2engine
                     Civ2Path = searchPaths[0];
                     SearchPaths = searchPaths;
                 }
+                
             }else if (!string.IsNullOrWhiteSpace(Civ2Path))
             {
-                SearchPaths = new[] { Civ2Path };
+                SearchPaths = new[] { Civ2Path, BasePath };
             }
         }
 
-        private static bool IsValidRoot(string? civ2Path)
+        public static bool IsValidRoot(string? civ2Path)
         {
             return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) &&
-                    Utils.FileExists(civ2Path, RulesFile) is not null;
+                   Directory.GetFiles(civ2Path, RulesFile).Length > 0;
         }
 
         private const string RulesFile = "rules.txt";
@@ -87,7 +88,7 @@ namespace Civ2engine
             if (string.IsNullOrWhiteSpace(Civ2Path))
             {
                 Civ2Path = path;
-                SearchPaths = new[] { path };
+                SearchPaths = new[] { path, BasePath };
             }
             else
             {

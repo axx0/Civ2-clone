@@ -13,23 +13,22 @@ namespace Civ2engine
 {
     public partial class Game
     {
-        public static void Create(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset,
-            IPlayer localPlayer)
+        public static Game Create(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
         {
-            _instance = new Game(rules, gameData, objects, ruleset.Paths, localPlayer);
+            _instance = new Game(rules, gameData, objects, ruleset.Paths);
+            return _instance;
         }
 
-        public static void StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations,
-            IPlayer localPlayer)
+        public static void StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations)
         {
-            _instance = new Game(maps, config.Rules, civilizations, new Options(config), config.RuleSet.Paths, (DifficultyType)config.DifficultlyLevel, localPlayer);
+            _instance = new Game(maps, config.Rules, civilizations, new Options(config), config.RuleSet.Paths, (DifficultyType)config.DifficultlyLevel);
             _instance.StartNextTurn();
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
-            string[] gamePaths, DifficultyType difficulty, IPlayer localPlayer)
+            string[] gamePaths, DifficultyType difficulty)
         {
-            Script = new ScriptEngine(localPlayer.UI, this, gamePaths);
+            Script = new ScriptEngine(this, gamePaths);
             _options = options;
             _maps = maps;
             _rules = configRules;
@@ -40,20 +39,7 @@ namespace Civ2engine
 
             CityNames = NameLoader.LoadCityNames(gamePaths);
 
-            Players = civilizations.Select(c =>
-            {
-                var player = c.PlayerType switch
-                {
-                    PlayerType.AI => new AIPlayer(_difficultyLevel),
-                    PlayerType.Local => localPlayer,
-                    PlayerType.Remote => throw new NotSupportedException("Network play not implemented"),
-                    PlayerType.Barbarians =>
-                        //TODO: create seperate barbarian player 
-                        new AIPlayer(_difficultyLevel),
-                    _ => throw new ArgumentOutOfRangeException(nameof(c.PlayerType), c.PlayerType, null)
-                };
-                return player.SetCiv(c);
-            }).ToArray();
+            Players = civilizations.Select(c => new Player(_difficultyLevel, c)).Cast<IPlayer>().ToArray();
 
             TerrainImprovements = TerrainImprovementFunctions.GetStandardImprovements(Rules); 
 
@@ -75,9 +61,8 @@ namespace Civ2engine
             Power.CalculatePowerRatings(this);
         }
 
-        private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths,
-            IPlayer localPlayer) 
-            : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths, gameData.DifficultyLevel, localPlayer)
+        private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 
+            : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths, gameData.DifficultyLevel)
         {
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
@@ -90,21 +75,23 @@ namespace Civ2engine
             GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
             NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;
 
+            var playerCiv = GetPlayerCiv;
+            var activePlayer = Players.FirstOrDefault(p => p.Civilization == playerCiv);
+
             if (objects.ActiveUnit is { Dead: false })
             {
-                localPlayer.ActiveUnit = objects.ActiveUnit;
+                activePlayer.ActiveUnit = objects.ActiveUnit;
             }
             else
             {
-                var playerCiv = GetPlayerCiv;
-                localPlayer.ActiveUnit = playerCiv.Units.FirstOrDefault(u => u.AwaitingOrders);
-                if (localPlayer.ActiveUnit == null)
+                activePlayer.ActiveUnit = playerCiv.Units.FirstOrDefault(u => u.AwaitingOrders);
+                if (activePlayer.ActiveUnit == null)
                 {
-                    localPlayer.ActiveTile = playerCiv.Cities[0].Location;
+                    activePlayer.ActiveTile = playerCiv.Cities[0].Location;
                 }
             }
 
-            _activeCiv = GetPlayerCiv;
+            _activeCiv = playerCiv;
             AllCities.AddRange(objects.Cities);
             
             for (var index = 0; index < _maps.Length; index++)

@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.89.2" />
     <PackageReference Include="NAudio" Version="2.1.0" />
-    <PackageReference Include="Raylib-cs" Version="4.2.0.1" />
+    <PackageReference Include="Raylib-cs" Version="4.5.0.2" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.1.21102.12" />
   </ItemGroup>
 
@@ -27,6 +27,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Remove="IScreen.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +35,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="blank.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SteelGrey.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="stripe.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
