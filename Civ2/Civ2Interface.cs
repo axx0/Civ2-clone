@@ -68,6 +68,45 @@ public abstract class Civ2Interface : IUserInterface
     }
 
     public virtual IImageSource? BackgroundImage => null;
+    public int GetCityIndexForStyle(int cityStyleIndex, City city)
+    {
+        var index = cityStyleIndex switch
+        {
+            4 => city.Size switch
+            {
+                <= 4 => 0,
+                > 4 and <= 7 => 1,
+                > 7 and <= 10 => 2,
+                _ => 3
+            },
+            5 => city.Size switch
+            {
+                <= 4 => 0,
+                > 4 and <= 10 => 1,
+                > 10 and <= 18 => 2,
+                _ => 3
+            },
+            _ => city.Size switch
+            {
+                <= 3 => 0,
+                > 3 and <= 5 => 1,
+                > 5 and <= 7 => 2,
+                _ => 3
+            }
+        };
+
+        if (index < 3 && city.Improvements.Any(i => i.Effects.ContainsKey(Effects.Capital)))
+        {
+            index++;
+        }
+
+        if (city.Improvements.Any(i => i.Effects.ContainsKey(Effects.Walled)))
+        {
+            index += 4;
+        }
+
+        return index;
+    }
 
     public int GetCityIndexForStyle(int cityStyleIndex, City city)
     {
