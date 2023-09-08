@@ -11,7 +11,7 @@ public class ListBox : BaseControl
     private List<ListBoxLabel> _allLabels;
     private int _maxChildWidth;
     private int _labelHeight;
-    private ListBoxScrollBar _scrollBar;
+    private ListBoxScrollBar? _scrollBar;
     private int _rows;
 
     public event EventHandler<ListBoxSelectionEventArgs> ItemSelected; 
@@ -110,7 +110,7 @@ public class ListBox : BaseControl
             control.OnResize();
         }
 
-        Children = visibleLabels.Concat(new[] { _scrollBar }).ToList();
+        Children = _scrollBar != null ? visibleLabels.Concat(new[] { _scrollBar }).ToList() : visibleLabels.ToList();
     }
 
     public void SetElements(List<string> list, List<bool> valid, bool refresh)

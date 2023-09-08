@@ -79,6 +79,8 @@ namespace RaylibUI.ImageLoader
                 break;
             }
 
+            MapImages.CityRectangle = new Rectangle(0, 0, width, height);
+            
             Raylib.UnloadImageColors(imageColours);
 
 
