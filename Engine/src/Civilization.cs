@@ -11,7 +11,7 @@ namespace Civ2engine
     {
         public int Id { get; set; }
         public bool Alive { get; set; }
-        public CityStyleType CityStyle { get; set; }
+        public int CityStyle { get; set; }
 
         private EpochType _epoch;
         public EpochType Epoch

@@ -24,8 +24,8 @@ civ.getImprovement(5).Effects.Add(civ.core.Effects.LuxMultiplier, 50)
 civ.getImprovement(6).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 --Courthouse,               8,  1,    CoL,
 --City Walls,               8,  0,    Mas,
+civ.getImprovement(8).Effects.Add(civ.core.Effects.Walled, 100);
 --Aqueduct,                 8,  2,    Cst,
-
 --Bank,                     12, 3,    Ban,
 civ.getImprovement(10).Effects.Add(civ.core.Effects.TaxMultiplier, 50)
 civ.getImprovement(10).Effects.Add(civ.core.Effects.LuxMultiplier, 50)

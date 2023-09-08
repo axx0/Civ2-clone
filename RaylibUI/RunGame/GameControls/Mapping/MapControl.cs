@@ -10,7 +10,7 @@ namespace RaylibUI.RunGame.GameControls.Mapping;
 public class MapControl : BaseControl
 {
     public override bool CanFocus => true;
-    private readonly IControlLayout _gameScreen;
+    private readonly GameScreen _gameScreen;
     private readonly Game _game;
     private Texture2D? _backgroundImage;
     private readonly Image[,] _mapTileTexture;
@@ -308,14 +308,24 @@ public class MapControl : BaseControl
                             activePos = new Vector2(xpos, ypos);
                         }
 
-                        //if (tile.Visibility[_currentMapShown])
-                        //{
+                        if (tile.Visibility[_currentMapShown])
+                        {
                             Raylib.ImageDraw(ref image, _mapTileTexture[col, row], MapImage.TileRec,
                                 new Rectangle(xpos, ypos, _tileWidth, _tileHeight), Color.WHITE);
-           
-                         
 
-                            if (tile.UnitsHere.Count > 0)
+                            if (tile.CityHere != null)
+                            {
+                                var cityStyleIndex = tile.CityHere.Owner.CityStyle;
+                                var sizeIncrement =
+                                    _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
+                                        tile.CityHere);
+
+                                var cityIndex = cityStyleIndex * 8 + sizeIncrement;
+                                
+                                Raylib.ImageDraw(ref image, MapImages.Cities[cityIndex].Bitmap, MapImages.CityRectangle, new Rectangle(xpos, ypos - _halfHeight, MapImages.CityRectangle.width, MapImages.CityRectangle.height), Color.WHITE);
+
+                            }
+                            else if (tile.UnitsHere.Count > 0)
                             {
                                 var unit = tile.GetTopUnit();
                                 if (unit != activeUnit)
@@ -327,7 +337,7 @@ public class MapControl : BaseControl
                                         unitRectangle, Color.WHITE);
                                 }
                             }
-                        //}
+                        }
                     }
 
                     xpos += _tileWidth;

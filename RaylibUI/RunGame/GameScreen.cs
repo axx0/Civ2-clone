@@ -9,7 +9,7 @@ namespace RaylibUI.RunGame;
 
 public class GameScreen : BaseScreen
 {
-    private readonly Main _main;
+    public Main Main { get; }
     public Game Game { get; }
     
     private readonly MinimapPanel _minimapPanel;
@@ -24,7 +24,7 @@ public class GameScreen : BaseScreen
 
     public GameScreen(Main main, Game game, Sound soundman)
     {
-        _main = main;
+        Main = main;
         Game = game;
 
         var civ = game.GetPlayerCiv;

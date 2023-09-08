@@ -201,7 +201,7 @@ namespace Civ2engine
             {
                 Id = id,
                 Alive = alive,
-                CityStyle = (CityStyleType)style,
+                CityStyle = style,
                 LeaderName = leaderName,
                 LeaderGender = gender,
                 LeaderTitle = (gender == 0) ? gov.TitleMale : gov.TitleFemale,

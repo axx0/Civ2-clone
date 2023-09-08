@@ -24,5 +24,6 @@ namespace RaylibUI
         public static Image[] BattleAnim { get; set; }
         public static Image PanelOuterWallpaper { get; set; }
         public static Image PanelInnerWallpaper { get; set; }
+        public static Rectangle CityRectangle { get; set; }
     }
 }

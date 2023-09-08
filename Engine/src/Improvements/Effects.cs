@@ -12,6 +12,7 @@ namespace Civ2engine.Improvements
         TaxMultiplier = 7,
         LuxMultiplier = 8,
         ScienceMultiplier = 9,
+        Walled = 10,
         
         EliminateIndustrialPollution = 20,
         IndustrialPollutionModifier = 21,
