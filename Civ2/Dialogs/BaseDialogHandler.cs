@@ -28,7 +28,7 @@ public abstract class BaseDialogHandler : ICivDialogHandler
     public MenuElements Dialog { get; private set; }
 
     public abstract IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers);
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface);
 
     public IInterfaceAction Show()
     {

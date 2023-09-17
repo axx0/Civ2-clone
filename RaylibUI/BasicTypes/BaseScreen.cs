@@ -113,4 +113,8 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     
     private int _renderedWidth;
     private int _renderedHeight;
+
+    protected BaseScreen(Main main) : base(main)
+    {
+    }
 }

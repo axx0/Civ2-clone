@@ -10,6 +10,9 @@ namespace RaylibUI;
 
 public class BaseDialog : BaseLayoutController
 {
+    
+    
+    
     private Size _size;
     private Vector2 _location;
     private Texture2D? _backgroundImage;
@@ -19,7 +22,7 @@ public class BaseDialog : BaseLayoutController
 
     private ControlGroup? _buttons;
     
-    protected BaseDialog(string title, Point? position = null) 
+    protected BaseDialog(Main host, string title, Point? position = null): base(host) 
     {
         Position = position ?? new Point(0,0);
         if (!string.IsNullOrWhiteSpace(title))

@@ -43,7 +43,8 @@ public class CustomWorldSize : BaseDialogHandler
         return res;
     }
 
-    public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers)
+    public override IInterfaceAction HandleDialogResult(DialogResult result,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {

@@ -4,14 +4,16 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Model\Model.csproj" />
+      <ProjectReference Include="..\RaylibUtils\RaylibUtils.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Raylib-cs" Version="4.2.0.1" />
+      <PackageReference Include="Raylib-cs" Version="4.5.0.4" />
     </ItemGroup>
 
     <ItemGroup>

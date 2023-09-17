@@ -25,7 +25,7 @@ public class GameScreen : BaseScreen
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
-    public GameScreen(Main main, Game game, Sound soundman)
+    public GameScreen(Main main, Game game, Sound soundman): base(main)
     {
         Main = main;
         Game = game;

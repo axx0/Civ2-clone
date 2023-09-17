@@ -9,11 +9,11 @@ namespace RaylibUI;
 /// </summary>
 public class GameFileLocatorScreen : BaseScreen
 {
-    public GameFileLocatorScreen(Action onSelect)
+    public GameFileLocatorScreen(Main host,Action onSelect) : base(host)
     {
         ImageUtils.InnerWallpaper = Raylib.LoadImage("stripe.png");
         ImageUtils.OuterWallpaper = Raylib.LoadImage("SteelGrey.png");
-        ShowDialog(new FileDialog("Please select Civ 2 data folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Settings.IsValidRoot, (fileName) =>
+        ShowDialog(new FileDialog(host,"Please select Civ 2 data folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Settings.IsValidRoot, (fileName) =>
         {
             if (!Settings.AddPath(fileName)) return false;
             onSelect();

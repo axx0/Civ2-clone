@@ -1,6 +1,7 @@
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Model.ImageSets;
 using Raylib_cs;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;

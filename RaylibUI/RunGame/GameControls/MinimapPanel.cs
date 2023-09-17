@@ -17,7 +17,7 @@ public class MinimapPanel : BaseControl
     private const int Top = 11;
     private const int PaddingBtm = 11;
 
-    public MinimapPanel(GameScreen controller, Game game) : base(controller)
+    public MinimapPanel(IControlLayout controller, Game game) : base(controller)
     {
         _gameScreen = controller;
         _game = game;
@@ -98,7 +98,7 @@ public class MinimapPanel : BaseControl
                 if (!map.MapRevealed && !tile.IsVisible(map.WhichCivsMapShown)) continue;
 
                 var drawColor = tile.CityHere is not null
-                    ? MapImages.PlayerColours[tile.CityHere.Owner.Id].TextColour
+                    ? GameScreen.MainWindow.ActiveInterface.PlayerColours[tile.CityHere.Owner.Id].TextColour
                     : tile.Type == TerrainType.Ocean
                         ? OceanColor
                         : LandColor;

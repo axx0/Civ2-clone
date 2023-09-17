@@ -21,7 +21,7 @@ public class LoadGame : FileDialogHandler
     }
 
     protected override IInterfaceAction HandleFileSelection(string fileName,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         var savDirectory = Path.GetDirectoryName(fileName);
         var ruleSet = new Ruleset
@@ -31,10 +31,11 @@ public class LoadGame : FileDialogHandler
         };
         var savName = Path.GetFileName(fileName);
         
+        Initialization.LoadGraphicsAssets(civ2Interface);
 
         var game = ClassicSaveLoader.LoadSave(ruleSet, savName, RulesParser.ParseRules(ruleSet));
 
-        Initialization.Start(game, ruleSet);
+        Initialization.Start(game);
         return civDialogHandlers[LoadOk.Title].Show();
     }
 }

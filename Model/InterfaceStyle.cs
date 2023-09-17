@@ -9,4 +9,6 @@ public class InterfaceStyle
     
     public IImageSource[] RadioButtons { get; init; }
     public string Font { get; set; }
+    
+    
 }

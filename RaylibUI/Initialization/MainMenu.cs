@@ -8,7 +8,6 @@ namespace RaylibUI.Initialization;
 
 public class MainMenu : BaseScreen
 {
-    private readonly Main _main;
     private readonly Action _shutdownApp;
     private readonly Action<Game> _startGame;
     private IInterfaceAction _currentAction;
@@ -18,14 +17,13 @@ public class MainMenu : BaseScreen
     
     private readonly SoundData? _sndMenuLoop;
 
-    public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager)
+    public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager) : base(main)
     {
         _sndMenuLoop =  soundManager.PlayCIV2DefaultSound("MENULOOP",true);
-        _main = main;
         _shutdownApp = shutdownApp;
         _startGame = startGame;
 
-        ImageUtils.SetLook(_main.ActiveInterface.Look);
+        ImageUtils.SetLook(main.ActiveInterface.Look);
         _background = CreateBackgroundImage();
 
         _currentAction = main.ActiveInterface.GetInitialAction();
@@ -39,7 +37,6 @@ public class MainMenu : BaseScreen
         switch (action)
         {
             case StartGame start:
-                Images.LoadGraphicsAssetsFromFiles(start.RuleSet, start.Game.Rules);
                 _sndMenuLoop?.Stop();
                 _startGame(start.Game);
                 break;
@@ -56,7 +53,7 @@ public class MainMenu : BaseScreen
                     replaceStrings: menu.ReplaceStrings,
                     replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
 
-                ShowDialog(new CivDialog(menu.Dialog, menu.DialogPos, HandleButtonClick,
+                ShowDialog(new CivDialog(MainWindow,menu.Dialog, menu.DialogPos, HandleButtonClick,
                     optionsCols: menu.OptionsCols,
                     replaceStrings: menu.ReplaceStrings,
                     replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
@@ -65,7 +62,7 @@ public class MainMenu : BaseScreen
             case FileAction fileAction:
                 _imagePanels.Clear();
                 
-                ShowDialog(new FileDialog(fileAction.FileInfo.Title, Settings.Civ2Path, (fileName) =>
+                ShowDialog(new FileDialog(MainWindow,fileAction.FileInfo.Title, Settings.Civ2Path, (fileName) =>
                 {
                     return fileAction.FileInfo.Filters.Any(filter => filter.IsMatch(fileName));
                 }, HandleFileSelection));
@@ -86,7 +83,7 @@ public class MainMenu : BaseScreen
             res = new DialogResult("Cancel", 1);
         }
 
-        ProcessAction(_main.ActiveInterface.ProcessDialog(_currentAction.Name, res));
+        ProcessAction(MainWindow.ActiveInterface.ProcessDialog(_currentAction.Name, res));
         return true;
     }
 
@@ -118,7 +115,7 @@ public class MainMenu : BaseScreen
     private void HandleButtonClick(string button, int selectedIndex, IList<bool> checkboxStates,
         IDictionary<string, string>? textBoxValues)
     {
-        ProcessAction(_main.ActiveInterface.ProcessDialog(_currentAction.Name,
+        ProcessAction(MainWindow.ActiveInterface.ProcessDialog(_currentAction.Name,
             new DialogResult(button, selectedIndex, checkboxStates, TextValues: textBoxValues)));
 
     }
@@ -151,7 +148,7 @@ public class MainMenu : BaseScreen
 
     public ScreenBackground? CreateBackgroundImage()
     {
-        var backGroundImage = _main.ActiveInterface.BackgroundImage;
+        var backGroundImage = MainWindow.ActiveInterface.BackgroundImage;
         if (backGroundImage != null)
         {
             var img = Images.ExtractBitmap(backGroundImage);
