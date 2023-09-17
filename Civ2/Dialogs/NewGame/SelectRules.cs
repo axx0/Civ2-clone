@@ -19,14 +19,14 @@ public class SelectRules : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show();
+            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
         if (result.SelectedButton == Labels.Ok && result.SelectedIndex == 1)
         {
-            return civDialogHandlers[AdvancedRules.Title].Show();
+            return civDialogHandlers[AdvancedRules.Title].Show(civ2Interface);
         }
 
-        return civDialogHandlers[SelectGender.Title].Show();
+        return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
     }
 }

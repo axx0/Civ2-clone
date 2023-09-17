@@ -64,11 +64,11 @@ public class CustomTribe2 : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[CustomTribe.Title].Show();
+            return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
         }
 
         // TODO: update data
 
-        return civDialogHandlers[CustomTribe.Title].Show();
+        return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
     }
 }

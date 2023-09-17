@@ -56,7 +56,7 @@ public class MainMenu : BaseScreen
                 ShowDialog(new CivDialog(MainWindow,menu.Dialog, menu.DialogPos, HandleButtonClick,
                     optionsCols: menu.OptionsCols,
                     replaceStrings: menu.ReplaceStrings,
-                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
+                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes, icons: menu.OptionsImages));
                 break;
             }
             case FileAction fileAction:

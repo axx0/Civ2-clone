@@ -34,12 +34,20 @@ public class CivDialog : BaseDialog
         _checkboxes[checkBox.Index] = !_checkboxes[checkBox.Index];
     }
 
-    public CivDialog(Main host, PopupBox popupBox, Point relatDialogPos, 
-        Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick, 
+    public CivDialog(Main host, 
+        PopupBox popupBox, 
+        Point relatDialogPos, 
+        Action<string, int, IList<bool>?, 
+            IDictionary<string, string>?> handleButtonClick, 
         IList<string>? replaceStrings = null, 
-        IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image(), Forms.ListBox? listbox = null) : 
+        IList<int>? replaceNumbers = null, 
+        IList<bool>? checkboxStates = null, 
+        List<TextBoxDefinition>? textBoxDefs = null, 
+        int optionsCols = 1, 
+        Image[]? icons = null, Image image = new Image(), Forms.ListBox? listbox = null) : 
         base(host, Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers), new Point(5,5))// relatDialogPos)
     {
+        List<Texture2D> managedTextures = new List<Texture2D>();
         if (popupBox.Text?.Count > 0)
         {
             var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
@@ -59,10 +67,17 @@ public class CivDialog : BaseDialog
             }
 
             var optionAction = popupBox.Checkbox ? (Action<OptionControl>) TogggleCheckBox : SetSelectedOption;
-            var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
-            var optionControls = popupBox.Options.Select((o, i) =>
-                new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false, images)).ToList();
+            var iconTextures = 
+                 icons?.Select(Raylib.LoadTextureFromImage).ToArray()
+                ?? Array.Empty<Texture2D>();
+            managedTextures.AddRange(iconTextures);
+
+                var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
+
+                var optionControls = popupBox.Options.Select((o, i) =>
+                    new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false, i < iconTextures.Length ? new []{ iconTextures[i]} : images)).ToList();
+            
 
             if (!popupBox.Checkbox)
             {
@@ -100,8 +115,12 @@ public class CivDialog : BaseDialog
         foreach (var button in popupBox.Button)
         {
             menuBar.AddChild(new Button(this, button,
-                () => handleButtonClick(button, _selectedOption?.Index ?? -1, _checkboxes , 
-                    FormatTextBoxReturn())));
+                () =>
+                {
+                    managedTextures.ForEach(Raylib.UnloadTexture);
+                    handleButtonClick(button, _selectedOption?.Index ?? -1, _checkboxes,
+                        FormatTextBoxReturn());
+                }));
         }
 
         Controls.Add(menuBar);

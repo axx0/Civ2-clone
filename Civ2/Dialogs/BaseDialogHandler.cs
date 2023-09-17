@@ -30,7 +30,7 @@ public abstract class BaseDialogHandler : ICivDialogHandler
     public abstract IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface);
 
-    public IInterfaceAction Show()
+    public virtual IInterfaceAction Show(Civ2Interface activeInterface)
     {
         return new MenuAction(Dialog);
     }

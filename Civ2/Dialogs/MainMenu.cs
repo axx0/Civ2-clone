@@ -26,17 +26,17 @@ public class MainMenu : BaseDialogHandler
             case 2:
                 Initialization.ConfigObject.CustomizeWorld = result.SelectedIndex == 2;
                 if (Initialization.RuleSets.Count > 1)
-                    return civDialogHandlers[SelectGameVersionHandler.Title].Show();
+                    return civDialogHandlers[SelectGameVersionHandler.Title].Show(civ2Interface);
                 Initialization.LoadGraphicsAssets(civ2Interface);
-                return civDialogHandlers[WorldSizeHandler.Title].Show();
+                return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
 
 
             case 1:
-                 return civDialogHandlers[LoadMap.DialogTitle].Show();
+                 return civDialogHandlers[LoadMap.DialogTitle].Show(civ2Interface);
             case 3:
-                return civDialogHandlers[LoadScenario.DialogTitle].Show();
+                return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
             case 4:
-                return civDialogHandlers[LoadGame.DialogTitle].Show();
+                return civDialogHandlers[LoadGame.DialogTitle].Show(civ2Interface);
         }
         /*var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
                    mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),

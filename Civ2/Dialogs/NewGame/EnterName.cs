@@ -35,9 +35,9 @@ public class EnterName : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectGender.Title].Show();
+            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 
-        return civDialogHandlers[SelectCityStyle.Title].Show();
+        return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
     }
 }

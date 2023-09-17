@@ -24,16 +24,14 @@ public class SelectCityStyle : BaseDialogHandler
         }
 
         res.Dialog.Dialog.Options ??= Labels.Items[247..251];
-
-        //var citiesDialog = new Civ2dialog(mainForm, citiesPopup,
-//                 icons: new[]
-//                 {
-//                     MapImages.Cities[7].Bitmap,
-//                     MapImages.Cities[15].Bitmap,
-//                     MapImages.Cities[23].Bitmap,
-//                     MapImages.Cities[31].Bitmap
-//                 }) { SelectedIndex = (int)config.PlayerCiv.CityStyle };
+        
         return res;
+    }
+
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
+    {
+        Dialog.OptionsImages = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray();
+        return base.Show(activeInterface);
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
@@ -41,9 +39,9 @@ public class SelectCityStyle : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectGender.Title].Show();
+            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 
-        return civDialogHandlers[MainMenu.Title].Show();
+        return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
     }
 }

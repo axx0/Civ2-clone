@@ -1,5 +1,6 @@
 using Civ2.ImageLoader;
 using Civ2engine;
+using Civ2engine.IO;
 using RaylibUI;
 using RaylibUI.ImageLoader;
 
@@ -32,10 +33,9 @@ public static class Initialization
 
     public static void LoadGraphicsAssets(Civ2Interface civ2Interface)
     {
-        if (ConfigObject.RuleSet == null)
-        {
-            ConfigObject.RuleSet = RuleSets.First();
-        }
+        ConfigObject.RuleSet ??= RuleSets.First();
+        
+        ConfigObject.Rules = RulesParser.ParseRules(ConfigObject.RuleSet);
         
         //TODO: Check is interface already hase initialized images and unload them
 
