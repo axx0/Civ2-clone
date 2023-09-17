@@ -39,20 +39,11 @@ public class CivDialog : BaseDialog
         _checkboxes[checkBox.Index] = !_checkboxes[checkBox.Index];
     }
 
-    public CivDialog(Main host,
-        PopupBox popupBox,
-        Point relatDialogPos,
-        Action<string, int, IList<bool>?,
-            IDictionary<string, string>?> handleButtonClick,
-        IList<string>? replaceStrings = null,
-        IList<int>? replaceNumbers = null,
-        IList<bool>? checkboxStates = null,
-        List<TextBoxDefinition>? textBoxDefs = null,
-        int optionsCols = 1,
-        Image[]? icons = null) :
-        base(host,
-            Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-            new Point(5, 5) // relatDialogPos
+    public CivDialog(Main host, PopupBox popupBox, Point relatDialogPos, 
+        Action<string, int, IList<bool>?, IDictionary<string, string>?> handleButtonClick, 
+        IList<string>? replaceStrings = null, 
+        IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null) :
+        base(host, Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers), new Point(5,5)// relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
         _optionsCols = optionsCols;
