@@ -33,7 +33,7 @@ public class AdvancedRules : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectGender.Title].Show();
+            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.SimplifiedCombat = result.CheckboxReturnStates[0];
@@ -44,9 +44,9 @@ public class AdvancedRules : BaseDialogHandler
 
         if (result.CheckboxReturnStates[3])
         {
-            return civDialogHandlers[SelectStartingYear.Title].Show();
+            return civDialogHandlers[SelectStartingYear.Title].Show(civ2Interface);
         }
 
-        return civDialogHandlers[SelectGender.Title].Show();
+        return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
     }
 }

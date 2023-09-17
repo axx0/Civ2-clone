@@ -18,13 +18,13 @@ public abstract class SimpleSettingsDialog : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show();
+            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
         var popupBox = Dialog.Dialog;
         SetConfigValue(result, popupBox);
 
-        return civDialogHandlers[_next].Show();
+        return civDialogHandlers[_next].Show(civ2Interface);
     }
 
     protected abstract void SetConfigValue(DialogResult result, PopupBox popupBox);

@@ -27,7 +27,7 @@ public class SelectGameVersionHandler : BaseDialogHandler
     {                    
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show();
+            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.RuleSet = Initialization.RuleSets[result.SelectedIndex];
@@ -39,6 +39,6 @@ public class SelectGameVersionHandler : BaseDialogHandler
             Initialization.ConfigObject.RuleSet.QuickStart = true;
         }
 
-        return civDialogHandlers[WorldSizeHandler.Title].Show();
+        return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
     }
 }

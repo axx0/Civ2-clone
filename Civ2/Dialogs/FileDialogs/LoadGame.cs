@@ -30,12 +30,14 @@ public class LoadGame : FileDialogHandler
             Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0]
         };
         var savName = Path.GetFileName(fileName);
+
+        Initialization.ConfigObject.RuleSet = ruleSet;
         
         Initialization.LoadGraphicsAssets(civ2Interface);
 
-        var game = ClassicSaveLoader.LoadSave(ruleSet, savName, RulesParser.ParseRules(ruleSet));
+        var game = ClassicSaveLoader.LoadSave(ruleSet, savName, Initialization.ConfigObject.Rules);
 
         Initialization.Start(game);
-        return civDialogHandlers[LoadOk.Title].Show();
+        return civDialogHandlers[LoadOk.Title].Show(civ2Interface);
     }
 }

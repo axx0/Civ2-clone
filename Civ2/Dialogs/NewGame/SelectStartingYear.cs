@@ -25,11 +25,11 @@ public class SelectStartingYear : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectRules.Title].Show();
+            return civDialogHandlers[SelectRules.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.AcceleratedStartup = result.SelectedIndex;
 
-        return civDialogHandlers[SelectGender.Title].Show();
+        return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
     }
 }

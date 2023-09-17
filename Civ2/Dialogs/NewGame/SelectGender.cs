@@ -18,11 +18,11 @@ public class SelectGender : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[Difficulty.Title].Show();
+            return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.Gender = result.SelectedIndex;
 
-        return civDialogHandlers[SelectTribe.Title].Show();
+        return civDialogHandlers[SelectTribe.Title].Show(civ2Interface);
     }
 }

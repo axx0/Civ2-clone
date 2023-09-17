@@ -27,7 +27,7 @@ public class LoadOk : ICivDialogHandler
         return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
     }
 
-    public IInterfaceAction Show()
+    public IInterfaceAction Show(Civ2Interface activeInterface)
     {
         var game = Initialization.GameInstance;
         var playerCiv = game.GetPlayerCiv;

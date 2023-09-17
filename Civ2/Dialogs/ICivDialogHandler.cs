@@ -11,5 +11,5 @@ public interface ICivDialogHandler
     MenuElements Dialog { get; }
     IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers,
         Civ2Interface activeInterface);
-    IInterfaceAction Show();
+    IInterfaceAction Show(Civ2Interface activeInterface);
 }

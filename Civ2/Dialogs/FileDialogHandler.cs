@@ -30,13 +30,13 @@ public abstract class FileDialogHandler : ICivDialogHandler
             }
         }
 
-        return civDialogHandlers[MainMenu.Title].Show();
+        return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
     }
 
     protected abstract IInterfaceAction HandleFileSelection(string fileName,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface active);
 
-    public IInterfaceAction Show()
+    public IInterfaceAction Show(Civ2Interface activeInterface)
     {
         return new FileAction(new OpenFileInfo
         {
