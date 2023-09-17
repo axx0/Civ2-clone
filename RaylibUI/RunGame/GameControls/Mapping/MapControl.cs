@@ -41,12 +41,14 @@ public class MapControl : BaseControl
         _map = game.CurrentMap;
         var map = _map;
 
+        var terrain = _gameScreen.Main.ActiveInterface.TileSets[_map.MapIndex];
+
         _mapTileTexture = new Image[map.XDim, map.YDim];
         for (var col = 0; col < map.XDim; col++)
         {
             for (var row = 0; row < map.YDim; row++)
             {
-                _mapTileTexture[col, row] = MapImage.MakeTileGraphic(map.Tile[col, row], map, MapImages.Terrains[map.MapIndex], game);
+                _mapTileTexture[col, row] = MapImage.MakeTileGraphic(map.Tile[col, row], map, terrain, game);
             }
         }
 
@@ -263,6 +265,9 @@ public class MapControl : BaseControl
 
     private void Redraw()
     {
+        var activeInterface = _gameScreen.Main.ActiveInterface;
+        var cities = activeInterface.CityImages;
+        
         var imageWidth = _viewWidth;
         var imageHeight = _viewHeight;
         var image = ImageUtils.NewImage(imageWidth, imageHeight);
@@ -320,9 +325,8 @@ public class MapControl : BaseControl
                                     _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                                         tile.CityHere);
 
-                                var cityIndex = cityStyleIndex * 8 + sizeIncrement;
                                 
-                                Raylib.ImageDraw(ref image, MapImages.Cities[cityIndex].Bitmap, MapImages.CityRectangle, new Rectangle(xpos, ypos - _halfHeight, MapImages.CityRectangle.width, MapImages.CityRectangle.height), Color.WHITE);
+                                Raylib.ImageDraw(ref image, cities.Sets[cityStyleIndex][sizeIncrement].Image, cities.CityRectangle, new Rectangle(xpos, ypos - _halfHeight, cities.CityRectangle.width, cities.CityRectangle.height), Color.WHITE);
 
                             }
                             else if (tile.UnitsHere.Count > 0)
@@ -332,8 +336,8 @@ public class MapControl : BaseControl
                                 {
                                     var unitRectangle = new Rectangle(xpos, ypos - _halfHeight, _tileWidth,
                                         _tileHeight + _halfHeight);
-                                    Raylib.ImageDraw(ref image, MapImages.Units[(int)unit.Type].Image,
-                                        MapImages.UnitRectangle,
+                                    Raylib.ImageDraw(ref image, activeInterface.UnitImages.Units[(int)unit.Type].Image,
+                                        activeInterface.UnitImages.UnitRectangle,
                                         unitRectangle, Color.WHITE);
                                 }
                             }
@@ -361,7 +365,7 @@ public class MapControl : BaseControl
             // else
             // {
                 //TODO: flashing tile highlight
-                SetActive(activePos.Value.X, activePos.Value.Y, MapImages.ViewPiece);
+                SetActive(activePos.Value.X, activePos.Value.Y,activeInterface.MapImages.ViewPiece);
             // }
         }
 

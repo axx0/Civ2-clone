@@ -22,7 +22,7 @@ public class GameScreen : BaseScreen
     internal const int MiniMapHeight = 148;
     internal const int MiniMapWidth = 262;
 
-    public GameScreen(Main main, Game game, Sound soundman)
+    public GameScreen(Main main, Game game, Sound soundman): base(main)
     {
         Main = main;
         Game = game;

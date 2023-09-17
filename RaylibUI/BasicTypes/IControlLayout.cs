@@ -6,6 +6,7 @@ namespace RaylibUI;
 
 public interface IControlLayout
 {
+    Main MainWindow { get; }
     IList<IControl> Controls { get; }
     IControl? Focused { get; set; }
     IControl? Hovered { get; set; }

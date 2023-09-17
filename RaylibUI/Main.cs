@@ -42,7 +42,7 @@ namespace RaylibUI
             }
             else
             {
-                _activeScreen = new GameFileLocatorScreen(() =>
+                _activeScreen = new GameFileLocatorScreen(this,() =>
                 {
                     hasCivDir = true;
                     _activeScreen = SetupMainScreen();

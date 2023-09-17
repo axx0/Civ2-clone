@@ -1,22 +1,22 @@
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using Civ2engine;
-using Raylib_cs;
 using System.Numerics;
+using Civ2engine;
+using Civ2engine.Terrains;
+using Model;
+using Model.ImageSets;
+using Raylib_cs;
+using RaylibUI;
+using RayLibUtils;
 
-namespace RaylibUI.ImageLoader
+namespace Civ2.ImageLoader
 {
     public static class CityLoader
     {
-        public static unsafe void LoadCities(Ruleset ruleset)
+        public static unsafe void LoadCities(Ruleset ruleset,
+            CityImageSet cities, Civ2Interface activeInterface)
         {
             // Read file in local directory. If it doesn't exist there, read it in root civ2 directory.
             var citiesImage = Images.LoadImage("CITIES", ruleset.Paths, "gif", "bmp");
 
-            // Initialize objects
-            var cities = new List<CityImage>();
 
             // Load special colours
             var colours = new List<Color>();
@@ -79,10 +79,10 @@ namespace RaylibUI.ImageLoader
                 break;
             }
 
-            MapImages.CityRectangle = new Rectangle(0, 0, width, height);
-            
+
             Raylib.UnloadImageColors(imageColours);
 
+            cities.CityRectangle = new Rectangle(0, 0, width, height);
 
             var transparent = new Color(0, 0, 0, 0);
             Raylib.ImageColorReplace(ref citiesImage, firstTransparent, transparent);
@@ -92,6 +92,8 @@ namespace RaylibUI.ImageLoader
 
             for (var i = firstRow; i < citiesImage.height - firstRow; i++)
             {
+                
+                var set = new List<CityImage>();
                 if (borderColours.IndexOf(imageColours[1 + i * citiesImage.width]) == -1 ||
                     borderColours.IndexOf(imageColours[1 + (i + height) * citiesImage.width]) == -1) continue;
                 //We have a candidate row
@@ -104,12 +106,12 @@ namespace RaylibUI.ImageLoader
                     var cityImage = MakeCityImage(citiesImage, imageColours, i, j, width, height);
                     if (cityImage != null)
                     {
-                        cities.Add(cityImage);
+                        set.Add(cityImage);
                     }
                 }
-            }
 
-            MapImages.Cities = cities.ToArray();
+                cities.Sets.Add(set.ToArray());
+            }
 
             var lastRow = last[max];
             var flagHeight = 0;
@@ -159,7 +161,7 @@ namespace RaylibUI.ImageLoader
                 }
             }
 
-            MapImages.PlayerColours = playerColours.ToArray();
+            activeInterface.PlayerColours = playerColours.ToArray();
 
             var specials = new List<Image>();
             var specialStart = col + 1;
@@ -185,8 +187,24 @@ namespace RaylibUI.ImageLoader
                 }
             }
 
-            MapImages.Specials = specials.ToArray();
+            if (activeInterface.TileSets.Count == 0)
+            {
+                activeInterface.TileSets.Add(new TerrainSet());
+            }
 
+            foreach (var terrain in activeInterface.TileSets)
+            {
+
+                terrain.ImprovementsMap[ImprovementTypes.Fortress] = new ImprovementGraphic
+                    { Levels = new[,] { { specials[1] } } };
+
+                // Airbase
+                terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
+                {
+                    Levels = new[,] { { specials[2] } },
+                    UnitLevels = new[,] { { specials[3] } }
+                };
+            }
 
             Raylib.UnloadImageColors(imageColours);
         }
@@ -197,10 +215,10 @@ namespace RaylibUI.ImageLoader
         private static unsafe CityImage? MakeCityImage(Image citiesImage, Color* colorArray, int y, int x, int width,
             int height)
         {
-            int flagX = 0;
-            int flagY = 0;
-            int sizeX = 0;
-            int sizeY = 0;
+            var flagX = 0;
+            var flagY = 0;
+            var sizeX = 0;
+            var sizeY = 0;
             var borderColour = colorArray[x + y * citiesImage.width];
             for (var i = x; i < x + width; i++)
             {
@@ -244,7 +262,7 @@ namespace RaylibUI.ImageLoader
 
             return new CityImage
             {
-                Bitmap = Raylib.ImageFromImage(citiesImage, new Rectangle(x + 1, y + 1, width - 1, height - 1)),
+                Image = Raylib.ImageFromImage(citiesImage, new Rectangle(x + 1, y + 1, width - 1, height - 1)),
                 FlagLoc = new Vector2(flagX, flagY),
                 SizeLoc = new Vector2(sizeX, sizeY)
             };

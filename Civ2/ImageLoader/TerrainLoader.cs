@@ -1,21 +1,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Civ2;
 using Civ2engine;
 using Civ2engine.Terrains;
+using Model.ImageSets;
 using Raylib_cs;
+using RayLibUtils;
 
 namespace RaylibUI.ImageLoader
 {
     public static class TerrainLoader
     {
-        public static void LoadTerrain(Ruleset ruleset, Rules rules)
+        public static void LoadTerrain(Ruleset ruleset, Civ2Interface active)
         {
-            MapImages.Terrains = new TerrainSet[rules.Maps.Length];
-
-            for (var i = 0; i < MapImages.Terrains.Length; i++)
+            for (var i = 0; i < active.ExpectedMaps; i++)
             {
-                MapImages.Terrains[i] = LoadTerrain(ruleset, i);
+                active.TileSets.Add( LoadTerrain(ruleset, i));
             }
         }
 
@@ -148,17 +149,8 @@ namespace RaylibUI.ImageLoader
             terrain.ImprovementsMap[ImprovementTypes.Pollution] = new ImprovementGraphic
             { Levels = new[,] { { Raylib.ImageFromImage(tileData, new Rectangle(456, 199, 64, 32)) } } };
 
-            terrain.ImprovementsMap[ImprovementTypes.Fortress] = new ImprovementGraphic
-            { Levels = new[,] { { MapImages.Specials[1] } } };
-
-            // Airbase
-            terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
-            {
-                Levels = new[,] { { MapImages.Specials[2] } },
-                UnitLevels = new[,] { { MapImages.Specials[3] } }
-            };
-
-
+            
+            //Note airbase and fortress are now loaded directly by the cities loader
             terrain.GrasslandShield = Raylib.ImageFromImage(tileData, new Rectangle(456, 232, 64, 32));
 
             return terrain;
@@ -175,11 +167,5 @@ namespace RaylibUI.ImageLoader
 
             return new DitherMap { x = offsetX, y = offsetY, Images = ditherMaps };
         }
-    }
-
-    public class ImprovementGraphic
-    {
-        public Image[,] Levels { get; set; }
-        public Image[,] UnitLevels { get; set; }
     }
 }   

@@ -3,8 +3,10 @@ using Civ2engine;
 using Civ2engine.Improvements;
 using Model;
 using Model.Images;
+using Model.ImageSets;
 using Model.InterfaceActions;
 using Raylib_cs;
+using RaylibUI;
 
 namespace Civ2;
 
@@ -19,10 +21,12 @@ public abstract class Civ2Interface : IUserInterface
     {
         Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
         Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
-        RadioButtons = new [] { new BitmapStorage("buttons.png", 0,0, 32), new BitmapStorage("buttons.png", 32,0, 32)},
-        
+        RadioButtons = new IImageSource[]
+            { new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32) },
+
         Font = "times-new-roman.ttf"
     };
+
 
     public abstract string Title { get; }
 
@@ -50,15 +54,16 @@ public abstract class Civ2Interface : IUserInterface
             throw new NotImplementedException(dialogName);
         }
 
-        return DialogHandlers[dialogName].HandleDialogResult(dialogResult, DialogHandlers);
+        return DialogHandlers[dialogName].HandleDialogResult(dialogResult, DialogHandlers, this);
     }
-    
+
     public IInterfaceAction GetInitialAction()
     {
         return DialogHandlers["MAINMENU"].Show();
     }
 
     public virtual IImageSource? BackgroundImage => null;
+
     public int GetCityIndexForStyle(int cityStyleIndex, City city)
     {
         var index = cityStyleIndex switch
@@ -99,5 +104,15 @@ public abstract class Civ2Interface : IUserInterface
         return index;
     }
 
+    public List<TerrainSet> TileSets { get; } = new();
+
+    public CityImageSet CityImages { get; } = new();
+
+    public UnitSet UnitImages { get; } = new();
+
     public Dictionary<string, PopupBox> Dialogs { get; set; }
+    public PlayerColour[] PlayerColours { get; set; }
+    public int ExpectedMaps { get; set; } = 1; //TODO: extract to specific locations because TOT has four 
+    public CommonMapImageSet MapImages { get; } = new();
 }
+

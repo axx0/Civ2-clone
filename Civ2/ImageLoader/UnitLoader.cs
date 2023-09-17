@@ -1,16 +1,16 @@
-using System.Collections.Generic;
-using System.IO;
-using Civ2engine;
-using Raylib_cs;
 using System.Numerics;
+using Civ2engine;
+using Model.ImageSets;
+using Raylib_cs;
+using RayLibUtils;
 
-namespace RaylibUI.ImageLoader
+namespace Civ2.ImageLoader
 {
     public static class UnitLoader
     {
-        private static readonly Color _shadowColour = new Color(51, 51, 51, 255);
+        private static readonly Color ShadowColour = new(51, 51, 51, 255);
 
-        public static unsafe void LoadUnits(Ruleset ruleset)
+        public static unsafe void LoadUnits(Ruleset ruleset, Civ2Interface active)
         {
             var unitsImage = Images.LoadImage("UNITS", ruleset.Paths, "gif");
 
@@ -32,8 +32,6 @@ namespace RaylibUI.ImageLoader
                 flagColour = imageColours[unitsImage.width * i]; // unitsImage.GetPixel(0, i);
                 if (!flagColour.Equals(borderColour)) break;
             }
-
-            var borderColours = new List<Color> { borderColour, flagColour };
 
             var height = 0;
             for (var i = 1; i < unitsImage.height; i++)
@@ -59,7 +57,7 @@ namespace RaylibUI.ImageLoader
                 }
             }
 
-            MakeSheilds(unitsImage, imageColours, width, borderColour, transparentGray);
+            MakeSheilds(unitsImage, imageColours, width, borderColour, transparentGray, active);
 
 
             Raylib.UnloadImageColors(imageColours);
@@ -108,13 +106,13 @@ namespace RaylibUI.ImageLoader
                 }
             }
 
-            MapImages.UnitRectangle = new Rectangle(0, 0, width, height);
-            MapImages.Units = units.ToArray();
+            active.UnitImages.UnitRectangle = new Rectangle(0, 0, width, height);
+            active.UnitImages.Units = units.ToArray();
             Raylib.UnloadImageColors(imageColours);
         }
 
         private static unsafe void MakeSheilds(Image unitsImage, Color* colours, int width, Color borderColour,
-            Color transparentGray)
+            Color transparentGray, Civ2Interface active)
         {
             int lastBorder;
             for (lastBorder = unitsImage.width - 1; lastBorder > width; lastBorder--)
@@ -155,16 +153,11 @@ namespace RaylibUI.ImageLoader
                 return shield;
             }
 
-            MapImages.Shields = MapImages.PlayerColours.Select(c=>c.LightColour).Select((Func<Color,Image>) MakeShield).ToArray();
-            MapImages.ShieldBack = MapImages.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Image>) MakeShield).ToArray();
-            MapImages.ShieldShadow = MakeShield(_shadowColour);
+            active.UnitImages.Shields = active.PlayerColours.Select(c=>c.LightColour).Select((Func<Color,Image>) MakeShield).ToArray();
+            active.UnitImages.ShieldBack = active.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Image>) MakeShield).ToArray();
+            active.UnitImages.ShieldShadow = MakeShield(ShadowColour);
         }
     }
 
-    public class UnitImage
-    {
-        public Image Image { get; set; }
-        public Texture2D Texture { get; set; }
-        public Vector2 FlagLoc { get; set; }
-    }
+
 }
