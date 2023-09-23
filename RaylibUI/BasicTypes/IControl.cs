@@ -25,7 +25,10 @@ public interface IControl
 
     void OnBlur();
     void Draw(bool pulse);
-    Size GetPreferredSize(int width, int height);
+
+    int GetPreferredWidth();
+
+    int GetPreferredHeight();
     void OnResize();
     
     bool EventTransparent { get; }

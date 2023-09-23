@@ -15,11 +15,6 @@ public class MinimapPanel : BaseControl
         _game = game;
         
     }
-
-    public override Size GetPreferredSize(int width, int height)
-    {
-        return new Size(RunGame.GameScreen.MiniMapWidth, RunGame.GameScreen.MiniMapHeight);
-    }
     
     public override void OnResize()
     {

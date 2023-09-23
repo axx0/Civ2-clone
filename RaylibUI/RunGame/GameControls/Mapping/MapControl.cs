@@ -63,12 +63,7 @@ public class MapControl : BaseControl
         _totalWidth = _map.Tile.GetLength(0) * _tileWidth;
         _totalHeight = _map.Tile.GetLength(1) * _halfHeight + _halfHeight;
     }
-
-
-    public override Size GetPreferredSize(int width, int height)
-    {
-        return new Size(width - RunGame.GameScreen.MiniMapWidth, height);
-    }
+    
 
     public override void OnResize()
     {

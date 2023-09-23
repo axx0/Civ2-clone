@@ -24,9 +24,13 @@ public class ListBoxScrollBar : BaseControl
         _positions = requiredColumns - _actualColumns;
     }
 
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredHeight()
     {
-        return new Size(width, DefaultHeight);
+        return DefaultHeight;
+    }
+    public override int GetPreferredWidth()
+    {
+        return -1;
     }
 
     public override void OnResize()

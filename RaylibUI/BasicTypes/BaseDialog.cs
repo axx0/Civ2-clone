@@ -10,9 +10,9 @@ namespace RaylibUI;
 
 public class BaseDialog : BaseLayoutController
 {
-    
-    
-    
+    private readonly int? _requestedWidth;
+
+
     private Size _size;
     private Vector2 _location;
     private Texture2D? _backgroundImage;
@@ -22,8 +22,9 @@ public class BaseDialog : BaseLayoutController
 
     private ControlGroup? _buttons;
     
-    protected BaseDialog(Main host, string title, Point? position = null): base(host) 
+    protected BaseDialog(Main host, string title, Point? position = null, int? requestedWidth = null): base(host) 
     {
+        _requestedWidth = requestedWidth;
         Position = position ?? new Point(0,0);
         if (!string.IsNullOrWhiteSpace(title))
         {
@@ -36,19 +37,22 @@ public class BaseDialog : BaseLayoutController
     public override void Resize(int width, int height)
     {
         var heights = new int[Controls.Count];
-        var maxWidth = 0;
+        var maxWidth = Controls.Max(c=>c.GetPreferredWidth());
+        if (_requestedWidth.HasValue && _requestedWidth.Value > maxWidth)
+        {
+            maxWidth = _requestedWidth.Value;
+        }
         var totalHeight = 0;
         int index;
         for (index = 0; index < Controls.Count; index++)
         {
             var control = Controls[index];
-            var size = control.GetPreferredSize(width, height);
-            if (size.Width > maxWidth )
-            {
-                maxWidth = size.Width;
-            }
-            heights[index] = size.Height;
-            totalHeight += size.Height;
+            control.Width = maxWidth;
+
+            var controlHeight = control.GetPreferredHeight();
+
+            heights[index] = controlHeight;
+            totalHeight += controlHeight;
         }
 
         _location.X = Position.X switch

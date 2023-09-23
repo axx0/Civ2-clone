@@ -132,7 +132,16 @@ public abstract class BaseControl : IControl
         // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
         // Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
     }
-    public abstract Size GetPreferredSize(int width, int height);
+
+    public virtual int GetPreferredWidth()
+    {
+        return -1;
+    }
+
+    public virtual int GetPreferredHeight()
+    {
+        return -1;
+    }
 
     protected Vector2 GetRelativeMousePosition()
     {

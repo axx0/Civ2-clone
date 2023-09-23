@@ -33,10 +33,10 @@ internal class OptionControl : LabelControl
         base.Draw(pulse);
     }
 
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredHeight()
     {
-        var baseSize = base.GetPreferredSize(width, height);
-        return baseSize.Height < _images[0].height ? new Size(baseSize.Width, _images[0].height) : baseSize;
+        var baseHeight = base.GetPreferredHeight();
+        return baseHeight < _images[0].height ? _images[0].height : baseHeight;
     }
 
     public override void OnClick()

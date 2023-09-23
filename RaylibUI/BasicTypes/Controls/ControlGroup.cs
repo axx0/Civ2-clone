@@ -6,7 +6,7 @@ public class ControlGroup : BaseControl
 {
     public override bool CanFocus => false;
     
-    private List<Size> _childSizes;
+    private List<int> _childWidths;
 
     private readonly int _spacing;
     private readonly int _flexElement;
@@ -20,25 +20,15 @@ public class ControlGroup : BaseControl
         Children = new List<IControl>();
     }
 
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredWidth()
     {
-        var childSizes = new List<Size>(Children.Count);
-        var maxHeight = 0;
-        _totalWidth = -_spacing;
-        foreach (var control in Children)
-        {
-            var size = control.GetPreferredSize(width, height);
-            childSizes.Add(size);
-            _totalWidth += size.Width + _spacing;
-            if (size.Height > maxHeight)
-            {
-                maxHeight = size.Height;
-            }
-        }
+        _childWidths = Children.Select(c => c.GetPreferredWidth()).ToList();
+        return _childWidths.Sum() + (_childWidths.Count - 1) * _spacing;
+    }
 
-        _childSizes = childSizes;
-        
-        return new Size(_totalWidth, maxHeight);
+    public override int GetPreferredHeight()
+    {
+        return Children.Max(c => c.GetPreferredHeight());
     }
 
     public override void OnResize()
@@ -50,16 +40,16 @@ public class ControlGroup : BaseControl
             for (int i = 0; i < Children.Count; i++)
             {
                 var child = Children[i];
-                var size = _childSizes[i];
-                var width = i == _flexElement ? size.Width + difference : size.Width;
-                child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, size.Height);
+                var requestedWidth = _childWidths[i];
+                var width = i == _flexElement ? requestedWidth + difference : requestedWidth;
+                child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, Height);
                 offset += width + _spacing;
             }
 
             return;
         }
         var controlWidth = ((Width + _spacing) / Children.Count) - _spacing;
-        var excess = _childSizes.Sum(s => s.Width - controlWidth);
+        var excess = _childWidths.Sum(s => s - controlWidth);
         if (excess > 0)
         {
             controlWidth = (Width - excess + _spacing) / Children.Count - _spacing;
@@ -67,9 +57,8 @@ public class ControlGroup : BaseControl
         for (int index = 0; index < Children.Count; index++)
         {
             var child = Children[index];
-            var size = _childSizes[index];
-            var width = Math.Max(controlWidth, size.Width);
-            child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, size.Height);
+            var width = Math.Max(controlWidth, _childWidths[index]);
+            child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, Height);
             offset += width + _spacing;
         }
     }

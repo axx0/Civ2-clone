@@ -13,6 +13,7 @@ public class ListBox : BaseControl
     private int _labelHeight;
     private ListBoxScrollBar? _scrollBar;
     private int _rows;
+    private int _columns;
 
     public event EventHandler<ListBoxSelectionEventArgs> ItemSelected; 
 
@@ -20,46 +21,53 @@ public class ListBox : BaseControl
     {
     }
 
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredWidth()
     {
-        MeasureSizes(width, height);
+        MeasureSizes();
 
-        var columns = (width / 2 - 22) / (_maxChildWidth + 5);
+        var screenWidth = Raylib.GetScreenWidth();
+        var columns = (screenWidth / 2 - 22) / (_maxChildWidth + 5);
         if (columns < 1)
         {
             columns = 1;
         }
-
+        _columns = columns;
+        return columns * _maxChildWidth + 5;
+    }
+    public override int GetPreferredHeight()
+    {
+        MeasureSizes();
+        
         var rows = 10;
         var requestedHeight = (_labelHeight + 1) * rows;
-        while (requestedHeight > height/2)
+        var screenHeight = Raylib.GetScreenHeight();
+        while (requestedHeight > screenHeight/2)
         {
             requestedHeight = (_labelHeight + 1) * --rows;
         }
 
-        if (columns * rows < _allLabels.Count)
+        if (_columns * rows < _allLabels.Count)
         {
             requestedHeight += ListBoxScrollBar.DefaultHeight;
         }
 
-        return new Size(columns * _maxChildWidth +5, requestedHeight);
+        return requestedHeight;
     }
 
-    private void MeasureSizes(int width, int height)
+    private void MeasureSizes()
     {
-        _maxChildWidth = -4;
+        _maxChildWidth = _allLabels.Max(c=>c.GetPreferredWidth());
         _labelHeight = 0;
+        
         foreach (var l in _allLabels)
         {
-            var size = l.GetPreferredSize(width, height);
-            if (size.Width > _maxChildWidth)
-            {
-                _maxChildWidth = size.Width;
-            }
+            l.Width = _maxChildWidth;
+            var height = l.GetPreferredHeight();
 
-            if (size.Height > _labelHeight)
+
+            if (height > _labelHeight)
             {
-                _labelHeight = size.Height;
+                _labelHeight = height;
             }
         }
     }
@@ -119,9 +127,7 @@ public class ListBox : BaseControl
         _allLabels = list.Select((text, index) => new ListBoxLabel(this.GameScreen, text, this)).ToList();
         if (refresh)
         {
-            var width = Raylib.GetScreenWidth();
-            var height = Raylib.GetScreenHeight();
-            MeasureSizes(width,height);
+            MeasureSizes();
             OnResize();
         }
     }
