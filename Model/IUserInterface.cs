@@ -27,4 +27,5 @@ public interface IUserInterface
     PlayerColour[] PlayerColours { get; }
 
     CommonMapImageSet MapImages { get; }
+    int DefaultDialogWidth { get; }
 }

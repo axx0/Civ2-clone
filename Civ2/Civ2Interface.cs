@@ -33,6 +33,10 @@ public abstract class Civ2Interface : IUserInterface
     public virtual void Initialize()
     {
         Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        foreach (var value in Dialogs.Values)
+        {
+            value.Width = (int)(value.Width * 1.5m);
+        }
         Labels.UpdateLabels(null);
 
         var handlerInterface = typeof(ICivDialogHandler);
@@ -114,5 +118,6 @@ public abstract class Civ2Interface : IUserInterface
     public PlayerColour[] PlayerColours { get; set; }
     public int ExpectedMaps { get; set; } = 1; //TODO: extract to specific locations because TOT has four 
     public CommonMapImageSet MapImages { get; } = new();
+    public int DefaultDialogWidth => 660; // 660=440*1.5
 }
 

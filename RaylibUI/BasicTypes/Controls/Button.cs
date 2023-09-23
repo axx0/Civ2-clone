@@ -54,10 +54,14 @@ public class Button : BaseControl
         base.OnMouseLeave();
     }
 
-
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredHeight()
     {
-        return new Size(Math.Max((int)textSize.X + 10,160), 35);
+        return 35;
+    }
+
+    public override int GetPreferredWidth()
+    {
+        return Math.Max((int)textSize.X + 10, 160);
     }
 
     public override void OnClick()

@@ -66,12 +66,7 @@ public class MapControl : BaseControl
 
         gameScreen.OnMapEvent += MapEventTriggered;
     }
-
-
-    public override Size GetPreferredSize(int width, int height)
-    {
-        return new Size(width - RunGame.GameScreen.MiniMapWidth, height);
-    }
+    
 
     public override void OnResize()
     {

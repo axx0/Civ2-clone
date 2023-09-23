@@ -19,7 +19,7 @@ public class CivDialog : BaseDialog
 
     private void SetSelectedOption(OptionControl newSelection)
     {
-        if(_selectedOption == newSelection) return;
+        if (_selectedOption == newSelection) return;
         _selectedOption?.Clear();
         _selectedOption = newSelection;
     }
@@ -29,23 +29,29 @@ public class CivDialog : BaseDialog
         if (_checkboxes == null || _checkboxes.Count < checkBox.Index)
         {
             var old = _checkboxes ?? new List<bool>();
-            _checkboxes = old.Concat(Enumerable.Repeat(false, checkBox.Index+1)).ToList();
+            _checkboxes = old.Concat(Enumerable.Repeat(false, checkBox.Index + 1)).ToList();
         }
+
         _checkboxes[checkBox.Index] = !_checkboxes[checkBox.Index];
     }
 
-    public CivDialog(Main host, 
-        PopupBox popupBox, 
-        Point relatDialogPos, 
-        Action<string, int, IList<bool>?, 
-            IDictionary<string, string>?> handleButtonClick, 
-        IList<string>? replaceStrings = null, 
-        IList<int>? replaceNumbers = null, 
-        IList<bool>? checkboxStates = null, 
-        List<TextBoxDefinition>? textBoxDefs = null, 
-        int optionsCols = 1, 
-        Image[]? icons = null, Image image = new Image(), Forms.ListBox? listbox = null) : 
-        base(host, Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers), new Point(5,5))// relatDialogPos)
+    public CivDialog(Main host,
+        PopupBox popupBox,
+        Point relatDialogPos,
+        Action<string, int, IList<bool>?,
+            IDictionary<string, string>?> handleButtonClick,
+        IList<string>? replaceStrings = null,
+        IList<int>? replaceNumbers = null,
+        IList<bool>? checkboxStates = null,
+        List<TextBoxDefinition>? textBoxDefs = null,
+        int optionsCols = 1,
+        Image[]? icons = null,
+        Image image = new Image(),
+        Forms.ListBox? listbox = null) :
+        base(host,
+            Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
+            new Point(5, 5) // relatDialogPos
+            , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
         List<Texture2D> managedTextures = new List<Texture2D>();
         if (popupBox.Text?.Count > 0)
@@ -53,10 +59,13 @@ public class CivDialog : BaseDialog
             var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
             foreach (var text in ftext)
             {
-                Controls.Add(new LabelControl(this, text.Text, alignment: text.HorizontalAlignment == HorizontalAlignment.Center ? TextAlignment.Center : TextAlignment.Left));
+                Controls.Add(new LabelControl(this, text.Text,
+                    alignment: text.HorizontalAlignment == HorizontalAlignment.Center
+                        ? TextAlignment.Center
+                        : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left));
             }
         }
-        
+
         _checkboxes = checkboxStates;
         if (popupBox.Options is not null)
         {
@@ -66,24 +75,26 @@ public class CivDialog : BaseDialog
                     Forms.Dialog.ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
             }
 
-            var optionAction = popupBox.Checkbox ? (Action<OptionControl>) TogggleCheckBox : SetSelectedOption;
+            var optionAction = popupBox.Checkbox ? (Action<OptionControl>)TogggleCheckBox : SetSelectedOption;
 
-            var iconTextures = 
-                 icons?.Select(Raylib.LoadTextureFromImage).ToArray()
+            var iconTextures =
+                icons?.Select(Raylib.LoadTextureFromImage).ToArray()
                 ?? Array.Empty<Texture2D>();
             managedTextures.AddRange(iconTextures);
 
-                var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
+            var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
-                var optionControls = popupBox.Options.Select((o, i) =>
-                    new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false, i < iconTextures.Length ? new []{ iconTextures[i]} : images)).ToList();
-            
+            var optionControls = popupBox.Options.Select((o, i) =>
+                new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false,
+                    i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
+
 
             if (!popupBox.Checkbox)
             {
                 optionControls[0].Checked = true;
                 SetSelectedOption(optionControls[0]);
             }
+
             if (optionsCols < 2)
             {
                 optionControls.ForEach(Controls.Add);
@@ -106,6 +117,7 @@ public class CivDialog : BaseDialog
                             optionGroup.AddChild(optionControls[optionIndex]);
                         }
                     }
+
                     Controls.Add(optionGroup);
                 }
             }

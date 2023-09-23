@@ -73,9 +73,14 @@ public class TextBox : BaseControl
         _editMode = false;
     }
 
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredHeight()
     {
-        return new Size(_minWidth, Height);
+        return -1;
+    }
+
+    public override int GetPreferredWidth()
+    {
+        return _minWidth;
     }
 
     public override bool OnKeyPressed(KeyboardKey key)

@@ -470,6 +470,8 @@ public class ImageUtils
 public static class Fonts
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
+
+    public const int FontSize = 20;
     public static void SetFont(Font font)
     {
         DefaultFont = font;

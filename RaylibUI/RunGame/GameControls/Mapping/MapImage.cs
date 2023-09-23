@@ -9,7 +9,7 @@ namespace RaylibUI.RunGame.GameControls.Mapping;
 public static class MapImage
 {
     
-    private static readonly (int, int)[][] _coastMap = {
+    private static readonly (int, int)[][] CoastMap = {
         new[]{ (0,4), (3,1) }, 
         new[]{ (3,2) }, 
         new[]{ (3,4), (1,1) }, 
@@ -48,7 +48,7 @@ public static class MapImage
         {
             //drawCoasts
             var coastIndex = new[] { 0, 0, 0, 0 };
-            foreach (var (neighbour, ind) in neighbours.Zip(_coastMap))
+            foreach (var (neighbour, ind) in neighbours.Zip(CoastMap))
             {
                 if (neighbour != null && neighbour.Type != TerrainType.Ocean)
                 {
