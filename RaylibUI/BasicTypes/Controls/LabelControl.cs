@@ -6,19 +6,21 @@ namespace RaylibUI.BasicTypes.Controls;
 
 public class LabelControl : BaseControl
 {
-    public int Offset { get; protected set; }
+    public int Offset { get; }
     protected readonly string _text;
+    private readonly int _minWidth;
     private readonly TextAlignment _alignment;
     private readonly Vector2 _textSize;
     private readonly int _defaultHeight;
     private readonly bool _wrapText;
     private List<string>? _wrappedText;
 
-    public LabelControl(IControlLayout controller, string text, int offset = 2,
+    public LabelControl(IControlLayout controller, string text, int minWidth = -1, int offset = 2,
         TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false) : base(controller)
     {
         Offset = offset;
         _text = text;
+        _minWidth = minWidth;
         _defaultHeight = defaultHeight;
         _wrapText = wrapText;
         _alignment = alignment;
@@ -31,6 +33,8 @@ public class LabelControl : BaseControl
         {
             return -1;
         }
+
+        if (_minWidth != -1) return _minWidth;
         return (int)_textSize.X + Offset + (_alignment == TextAlignment.Center ? 10 : 0);
     }
 

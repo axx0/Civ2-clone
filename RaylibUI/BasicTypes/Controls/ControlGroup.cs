@@ -4,19 +4,19 @@ namespace RaylibUI.BasicTypes.Controls;
 
 public class ControlGroup : BaseControl
 {
+    internal const int NoFlex = -2;
+    private const int EvenFlex = -1;
     public override bool CanFocus => false;
     
     private List<int> _childWidths;
 
     private readonly int _spacing;
     private readonly int _flexElement;
-    private int _totalWidth;
 
-    public ControlGroup(IControlLayout controller, int spacing = 3, int flexElement = -1) : base(controller, eventTransparent: true)
+    public ControlGroup(IControlLayout controller, int spacing = 3, int flexElement = EvenFlex) : base(controller, eventTransparent: true)
     {
         _spacing = spacing;
         _flexElement = flexElement;
-        _totalWidth = -_spacing;
         Children = new List<IControl>();
     }
 
@@ -34,8 +34,20 @@ public class ControlGroup : BaseControl
     public override void OnResize()
     {
         var offset = 0;
-        var difference = _totalWidth - Width;
-        if (_flexElement != -1)
+        if (_flexElement == NoFlex)
+        {
+            for (int i = 0; i < Children.Count; i++)
+            {
+                var child = Children[i];
+                var requestedWidth = _childWidths[i];
+                child.Bounds = new Rectangle(Location.X + offset, Location.Y, requestedWidth, Height);
+                offset += requestedWidth + _spacing;
+            }
+            return;
+        }
+        var totalWidth = _childWidths.Sum() + (_childWidths.Count - 1) * _spacing;
+        var difference = Width - totalWidth;
+        if (_flexElement != EvenFlex)
         {
             for (int i = 0; i < Children.Count; i++)
             {

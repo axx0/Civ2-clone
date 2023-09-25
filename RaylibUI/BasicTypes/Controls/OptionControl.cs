@@ -11,7 +11,7 @@ internal class OptionControl : LabelControl
     private readonly Texture2D[] _images;
     
 
-    public OptionControl(IControlLayout controller, string text, int index, Action<OptionControl> optionAction, bool isChecked, Texture2D[] images) : base(controller, text, images[0].width)
+    public OptionControl(IControlLayout controller, string text, int index, Action<OptionControl> optionAction, bool isChecked, Texture2D[] images) : base(controller, text, offset: images[0].width)
     {
         Index = index;
         _action = optionAction;

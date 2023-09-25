@@ -52,14 +52,17 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
 
     private void ControlEvents(IControlLayout layoutController)
     {
-        var key = (KeyboardKey) Raylib.GetKeyPressed();
-        while (key > 0)
+        var keys = (KeyboardKey[])Enum.GetValues(typeof(KeyboardKey));
+        for (int i = 0; i < keys.Length; i++)
         {
-            if (layoutController.Focused == null || !layoutController.Focused.OnKeyPressed(key))
+            if (Raylib.IsKeyPressed(keys[i]))
             {
-                layoutController.OnKeyPress(key);
+                var key = keys[i];
+                if (layoutController.Focused == null || !layoutController.Focused.OnKeyPressed(key))
+                {
+                    layoutController.OnKeyPress(key);
+                }
             }
-            key = (KeyboardKey)Raylib.GetKeyPressed();
         }
 
         var mousePos = Raylib.GetMousePosition();
