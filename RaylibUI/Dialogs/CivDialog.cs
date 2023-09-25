@@ -4,6 +4,7 @@ using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
+using RaylibUI.Dialogs;
 using RaylibUI.Forms;
 using Button = RaylibUI.Controls.Button;
 
@@ -45,9 +46,7 @@ public class CivDialog : BaseDialog
         IList<bool>? checkboxStates = null,
         List<TextBoxDefinition>? textBoxDefs = null,
         int optionsCols = 1,
-        Image[]? icons = null,
-        Image image = new Image(),
-        Forms.ListBox? listbox = null) :
+        Image[]? icons = null) :
         base(host,
             Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
             new Point(5, 5) // relatDialogPos
@@ -63,6 +62,22 @@ public class CivDialog : BaseDialog
                     alignment: text.HorizontalAlignment == HorizontalAlignment.Center
                         ? TextAlignment.Center
                         : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left));
+            }
+        }
+
+        if (textBoxDefs is { Count: > 0 })
+        {
+            _textBoxes = new List<LabeledTextBox>();
+            var textBoxLabels = textBoxDefs.Select(t =>
+                Dialog.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
+
+            var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(Fonts.DefaultFont, l, 20, 1.0f).X) +24;
+
+            for (int i = 0; i < textBoxDefs.Count; i++)
+            {
+                var labeledBox = new LabeledTextBox(this, textBoxDefs[i],textBoxLabels[i], labelSize);
+                Controls.Add(labeledBox);
+                _textBoxes.Add(labeledBox);
             }
         }
 
@@ -144,10 +159,4 @@ public class CivDialog : BaseDialog
         return _textBoxes?.Select(box => new { box.Name, Value = box.Text })
             .ToDictionary(k => k.Name, v => v.Value);
     }
-}
-
-internal class LabeledTextBox
-{
-    public string Name { get; set; }
-    public string Text { get; set; }
 }

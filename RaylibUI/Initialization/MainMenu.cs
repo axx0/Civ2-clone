@@ -51,12 +51,16 @@ public class MainMenu : BaseScreen
                 FormManager.Add(new Dialog(menu.Dialog, menu.DialogPos, new[] { HandleButtonClick },
                     optionsCols: menu.OptionsCols,
                     replaceStrings: menu.ReplaceStrings,
-                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes));
+                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates,
+                    textBoxDefs: menu.TextBoxes));
 
-                ShowDialog(new CivDialog(MainWindow,menu.Dialog, menu.DialogPos, HandleButtonClick,
+                ShowDialog(new CivDialog(MainWindow, menu.Dialog, menu.DialogPos, HandleButtonClick,
                     optionsCols: menu.OptionsCols,
                     replaceStrings: menu.ReplaceStrings,
-                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates, textBoxDefs: menu.TextBoxes, icons: menu.OptionsImages));
+                    replaceNumbers: menu.ReplaceNumbers, 
+                    checkboxStates: menu.CheckboxStates,
+                    textBoxDefs: menu.TextBoxes, 
+                    icons: menu.OptionsImages));
                 break;
             }
             case FileAction fileAction:
