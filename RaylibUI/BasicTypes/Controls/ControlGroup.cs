@@ -13,7 +13,7 @@ public class ControlGroup : BaseControl
     private readonly int _spacing;
     private readonly int _flexElement;
 
-    public ControlGroup(IControlLayout controller, int spacing = 3, int flexElement = EvenFlex) : base(controller, eventTransparent: true)
+    public ControlGroup(IControlLayout controller, int spacing = 3, int flexElement = EvenFlex, bool eventTransparent = true) : base(controller, eventTransparent: eventTransparent)
     {
         _spacing = spacing;
         _flexElement = flexElement;

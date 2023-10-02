@@ -43,8 +43,8 @@ public class TextBox : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height -3, Color.WHITE);
-        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y, Width, Height -3, Color.BLACK);
+        Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.WHITE);
+        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.BLACK);
         Raylib.DrawTextEx(Fonts.DefaultFont, _text, Location + TextOffsetV, Styles.BaseFontSize,1.0f, Color.BLACK);
         
         if (_editMode)

@@ -10,12 +10,18 @@ internal class LabeledTextBox : ControlGroup
     public string Name { get; set; }
     public string Text => _textBox.Text;
 
-    public LabeledTextBox(IControlLayout controller, TextBoxDefinition textBoxDef, string textBoxLabel, int labelSize) : base(controller, flexElement: NoFlex)
+    public LabeledTextBox(IControlLayout controller, TextBoxDefinition textBoxDef, string textBoxLabel, int labelSize) : base(controller, flexElement: NoFlex, eventTransparent: false)
     {
         Name = textBoxDef.Name;
-        var label = new LabelControl(controller, textBoxLabel, minWidth: labelSize);
+        var label = new LabelControl(controller, textBoxLabel, eventTransparent: true, minWidth: labelSize);
         Children.Add(label);
         _textBox = new TextBox(controller, textBoxDef.InitialValue, textBoxDef.Width);
         Children.Add(_textBox);
+    }
+
+    public override void OnClick()
+    {
+        Controller.Focused = _textBox;   
+        base.OnClick();
     }
 }

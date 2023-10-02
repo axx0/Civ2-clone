@@ -15,8 +15,8 @@ public class LabelControl : BaseControl
     private readonly bool _wrapText;
     private List<string>? _wrappedText;
 
-    public LabelControl(IControlLayout controller, string text, int minWidth = -1, int offset = 2,
-        TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false) : base(controller)
+    public LabelControl(IControlLayout controller, string text, bool eventTransparent, int minWidth = -1, int offset = 2,
+        TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false) : base(controller, eventTransparent: eventTransparent)
     {
         Offset = offset;
         _text = text;

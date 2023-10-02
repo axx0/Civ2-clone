@@ -6,7 +6,7 @@ public class ListBoxLabel : LabelControl
 {
     private readonly ListBox _listBox;
 
-    public ListBoxLabel(IControlLayout controller, string text, ListBox listBox) : base(controller, text, defaultHeight: 28)
+    public ListBoxLabel(IControlLayout controller, string text, ListBox listBox) : base(controller, text, eventTransparent: false, defaultHeight: 28)
     {
         _listBox = listBox;
     }

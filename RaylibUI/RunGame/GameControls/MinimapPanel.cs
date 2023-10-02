@@ -50,7 +50,7 @@ public class MinimapPanel : BaseControl
                 if (!map.MapRevealed && !tile.IsVisible(map.WhichCivsMapShown)) continue;
 
                 var drawColor = tile.CityHere is not null
-                    ? GameScreen.MainWindow.ActiveInterface.PlayerColours[tile.CityHere.Owner.Id].TextColour
+                    ? Controller.MainWindow.ActiveInterface.PlayerColours[tile.CityHere.Owner.Id].TextColour
                     : tile.Type == TerrainType.Ocean
                         ? OceanColor
                         : LandColor;

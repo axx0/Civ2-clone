@@ -332,7 +332,8 @@ public class ImageUtils
 
     public static Texture2D[] GetOptionImages(bool checkbox)
     {
-        return Look.RadioButtons.Select(Images.ExtractBitmap).Select(Raylib.LoadTextureFromImage).ToArray();
+        var images = checkbox ? Look.CheckBoxes : Look.RadioButtons;
+        return images.Select(Images.ExtractBitmap).Select(Raylib.LoadTextureFromImage).ToArray();
         // unsafe
         // {
         //     var image = NewImage(64, 64);
