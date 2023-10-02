@@ -7,7 +7,7 @@ namespace RaylibUI.Controls;
 public class HeaderLabel : LabelControl
 {
 
-    public HeaderLabel(IControlLayout controller, string title) : base(controller, title,alignment: TextAlignment.Center)
+    public HeaderLabel(IControlLayout controller, string title) : base(controller, title, eventTransparent: false,alignment: TextAlignment.Center)
     {
     }
 
@@ -15,7 +15,7 @@ public class HeaderLabel : LabelControl
     {
         if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
         {
-            GameScreen.Move(moveAmount);
+            Controller.Move(moveAmount);
         }
     }
 }

@@ -12,13 +12,13 @@ public abstract class BaseControl : IControl
     private bool _clickPossible;
     private bool _clickStart;
     private int _height;
-    protected IControlLayout GameScreen { get; }
+    protected IControlLayout Controller { get; }
     
     public bool EventTransparent { get; }
 
-    protected BaseControl(IControlLayout gameScreen, bool eventTransparent = false)
+    protected BaseControl(IControlLayout controller, bool eventTransparent = false)
     {
-        GameScreen = gameScreen;
+        Controller = controller;
         EventTransparent = eventTransparent;
     }
 
@@ -65,7 +65,7 @@ public abstract class BaseControl : IControl
     }
 
     public virtual bool CanFocus => false;
-    public virtual IList<IControl>? Children { get; protected set; } = null;
+    public IList<IControl>? Children { get; protected set; } = null;
 
     public virtual bool OnKeyPressed(KeyboardKey key)
     {

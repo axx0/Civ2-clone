@@ -23,7 +23,8 @@ public abstract class Civ2Interface : IUserInterface
         Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
         RadioButtons = new IImageSource[]
             { new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32) },
-
+        CheckBoxes = new IImageSource[]
+            { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
         Font = "times-new-roman.ttf"
     };
 

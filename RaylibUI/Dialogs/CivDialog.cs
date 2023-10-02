@@ -12,17 +12,20 @@ namespace RaylibUI;
 
 public class CivDialog : BaseDialog
 {
-    private OptionControl _selectedOption = null;
+    private OptionControl? _selectedOption = null;
 
     private IList<bool>? _checkboxes = null;
 
     private IList<LabeledTextBox> _textBoxes;
+    private readonly List<OptionControl>? _optionControls;
+    private readonly int _optionsCols = 1;
 
     private void SetSelectedOption(OptionControl newSelection)
     {
         if (_selectedOption == newSelection) return;
         _selectedOption?.Clear();
         _selectedOption = newSelection;
+        this.Focused = newSelection;
     }
 
     private void TogggleCheckBox(OptionControl checkBox)
@@ -52,13 +55,14 @@ public class CivDialog : BaseDialog
             new Point(5, 5) // relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
+        _optionsCols = optionsCols;
         List<Texture2D> managedTextures = new List<Texture2D>();
         if (popupBox.Text?.Count > 0)
         {
             var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
             foreach (var text in ftext)
             {
-                Controls.Add(new LabelControl(this, text.Text,
+                Controls.Add(new LabelControl(this, text.Text, false,
                     alignment: text.HorizontalAlignment == HorizontalAlignment.Center
                         ? TextAlignment.Center
                         : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left));
@@ -99,24 +103,24 @@ public class CivDialog : BaseDialog
 
             var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
-            var optionControls = popupBox.Options.Select((o, i) =>
+            _optionControls = popupBox.Options.Select((o, i) =>
                 new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false,
                     i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
 
 
             if (!popupBox.Checkbox)
             {
-                optionControls[0].Checked = true;
-                SetSelectedOption(optionControls[0]);
+                _optionControls[0].Checked = true;
+                SetSelectedOption(_optionControls[0]);
             }
 
             if (optionsCols < 2)
             {
-                optionControls.ForEach(Controls.Add);
+                _optionControls.ForEach(Controls.Add);
             }
             else
             {
-                var optionsCount = optionControls.Count;
+                var optionsCount = _optionControls.Count;
                 var rows = optionsCount % optionsCols == 0
                     ? optionsCount / optionsCols
                     : optionsCount / optionsCols + 1;
@@ -127,9 +131,9 @@ public class CivDialog : BaseDialog
                     for (var j = 0; j < optionsCols; j++)
                     {
                         var optionIndex = i + j * rows;
-                        if (optionIndex < optionControls.Count)
+                        if (optionIndex < _optionControls.Count)
                         {
-                            optionGroup.AddChild(optionControls[optionIndex]);
+                            optionGroup.AddChild(_optionControls[optionIndex]);
                         }
                     }
 
@@ -152,6 +156,95 @@ public class CivDialog : BaseDialog
 
         Controls.Add(menuBar);
         SetButtons(menuBar);
+    }
+
+    private KeyboardKey[] _navKays = new[]
+    {
+        KeyboardKey.KEY_UP, KeyboardKey.KEY_DOWN, KeyboardKey.KEY_LEFT,  KeyboardKey.KEY_RIGHT,
+        KeyboardKey.KEY_KP_8, KeyboardKey.KEY_KP_2, KeyboardKey.KEY_KP_4, KeyboardKey.KEY_KP_6,
+    };
+
+    public override void OnKeyPress(KeyboardKey key)
+    {
+        if (_optionControls?.Count > 0)
+        {
+            var keyIndex = Array.IndexOf(_navKays, key);
+            if (keyIndex != -1)
+            {
+                var dir = keyIndex % (_optionsCols > 1 ? 4 : 2);
+                switch (dir)
+                {
+                    case 0:
+                        if (_selectedOption != null && _selectedOption.Index != 0)
+                        {
+                            SetSelectedOption(_optionControls[_selectedOption.Index -1]);
+                        }
+                        else
+                        {
+                            SetSelectedOption(_optionControls[^1]);
+                        }
+                        break;
+                    case 1:
+                        if (_selectedOption != null &&_selectedOption.Index < _optionControls.Count -1)
+                        {
+                            SetSelectedOption(_optionControls[_selectedOption.Index + 1]);
+                        }
+                        else
+                        {
+                            SetSelectedOption(_optionControls[0]);
+                        }
+                        break;
+                    case 3:
+                        if (_selectedOption != null)
+                        {
+                            var rows = GetRows();
+                            var newIndex = _selectedOption.Index + rows;
+                            if (newIndex >= _optionControls.Count)
+                            {
+                                newIndex -= _optionControls.Count;
+                            }
+
+                            SetSelectedOption(_optionControls[newIndex]);
+                        }
+                        else
+                        {
+                            SetSelectedOption(_optionControls[0]);
+                        }
+                        break;
+                    case 2:
+                        if (_selectedOption != null)
+                        {
+                            var rows = GetRows();
+                            var newIndex = _selectedOption.Index - rows;
+                            if (newIndex < 0)
+                            {
+                                newIndex += _optionControls.Count;
+                            }
+
+                            SetSelectedOption(_optionControls[newIndex]);
+                        }
+                        else
+                        {
+                            SetSelectedOption(_optionControls[^1]);
+                        }
+                        break;
+
+
+                }
+            }
+        }
+
+        base.OnKeyPress(key);
+    }
+
+    private int GetRows()
+    {
+        var rows = Math.DivRem(_optionControls.Count, _optionsCols, out var rem);
+        if (rem != 0)
+        {
+            rows++;
+        }
+        return rows;
     }
 
     private IDictionary<string, string>? FormatTextBoxReturn()

@@ -52,16 +52,12 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
 
     private void ControlEvents(IControlLayout layoutController)
     {
-        var keys = (KeyboardKey[])Enum.GetValues(typeof(KeyboardKey));
-        for (int i = 0; i < keys.Length; i++)
+        foreach (var key in _keys)
         {
-            if (Raylib.IsKeyPressed(keys[i]))
+            if (!Raylib.IsKeyPressed(key)) continue;
+            if (layoutController.Focused == null || !layoutController.Focused.OnKeyPressed(key))
             {
-                var key = keys[i];
-                if (layoutController.Focused == null || !layoutController.Focused.OnKeyPressed(key))
-                {
-                    layoutController.OnKeyPress(key);
-                }
+                layoutController.OnKeyPress(key);
             }
         }
 
@@ -116,8 +112,10 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     
     private int _renderedWidth;
     private int _renderedHeight;
+    private readonly KeyboardKey[] _keys;
 
     protected BaseScreen(Main main) : base(main)
     {
+        _keys = (KeyboardKey[])Enum.GetValues(typeof(KeyboardKey));
     }
 }
