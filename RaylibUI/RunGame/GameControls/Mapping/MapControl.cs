@@ -42,7 +42,6 @@ public class MapControl : BaseControl
         _game = game;
         _map = game.CurrentMap;
         var map = _map;
-
         var terrain = _gameScreen.Main.ActiveInterface.TileSets[_map.MapIndex];
         _mapTileTexture = new Image[map.XDim, map.YDim];
         for (var col = 0; col < map.XDim; col++)
