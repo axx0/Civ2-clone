@@ -17,7 +17,7 @@ public class MinimapPanel : BaseControl
     private const int Top = 11;
     private const int PaddingBtm = 11;
 
-    public MinimapPanel(IControlLayout controller, Game game) : base(controller)
+    public MinimapPanel(GameScreen controller, Game game) : base(controller)
     {
         _gameScreen = controller;
         _game = game;
