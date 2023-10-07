@@ -21,32 +21,31 @@ public class SelectTribe : BaseDialogHandler
         {
             res.Dialog.Dialog.Button.Add(Labels.Cancel);
         }
-
-        //TODO: load from rules
-        res.Dialog.Dialog.Options = new[]
-        {
-            "Romans", "Babylonians", "Germans", "Egyptians", "Americans", "Greeks", "Indians",
-            "Russians", "Zulus", "French", "Aztecs", "Chinese", "English", "Mongols",
-            "Celts", "Japanese", "Vikings", "Spanish", "Persians", "Carthaginians", "Sioux",
-        };
+        
         res.Dialog.OptionsCols = 3;
         return res;
     }
 
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
+    {
+        Dialog.Dialog.Options = Initialization.ConfigObject.Rules.Leaders.Select(l => l.Adjective).ToList();
+        return base.Show(activeInterface);
+    }
+
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectGender.Title].Show();
+            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
         else if (result.SelectedButton == Labels.Custom)
         {
-            return civDialogHandlers[CustomTribe.Title].Show();
+            return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
         }
 
         // TODO: make civilizations
 
-        return civDialogHandlers[SelectCityStyle.Title].Show();
+        return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
     }
 }

@@ -46,29 +46,29 @@ namespace RaylibUI
                     //Raylib.DrawTexture(MapTileTextureC2(xC2, yC2), 32 * col, 16 * row, Color.WHITE);
 
                     // Units
-                    var unitsHere = map.TileC2(xC2, yC2).UnitsHere;
-                    if (unitsHere.Count > 0)
-                    {
-                        if (unitsHere.Contains(activeUnit))
-                        {
-                            elapsedTime += Raylib.GetFrameTime();
-                            if (elapsedTime > animationSkip)
-                            {
-                                elapsedTime = 0;    // reset
-                                drawActiveUnit = !drawActiveUnit;
-                            }
-
-                            if (drawActiveUnit)
-                                Raylib.DrawTexture(MapImages.Units[(int)activeUnit.Type].Texture, 32 * col, 16 * (row - 1), Color.WHITE);
-                        }
-                        else 
-                        {
-                            var unit = unitsHere.Last();
-                            if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Last(u => u.Domain == UnitGAS.Sea);   // Show naval unit
-                            if (!unit.IsInCity)
-                                Raylib.DrawTexture(MapImages.Units[(int)unit.Type].Texture, 32 * col, 16 * (row - 1), Color.WHITE);
-                        }
-                    }
+                    // var unitsHere = map.TileC2(xC2, yC2).UnitsHere;
+                    // if (unitsHere.Count > 0)
+                    // {
+                    //     if (unitsHere.Contains(activeUnit))
+                    //     {
+                    //         elapsedTime += Raylib.GetFrameTime();
+                    //         if (elapsedTime > animationSkip)
+                    //         {
+                    //             elapsedTime = 0;    // reset
+                    //             drawActiveUnit = !drawActiveUnit;
+                    //         }
+                    //
+                    //         if (drawActiveUnit)
+                    //             Raylib.DrawTexture(MapImages.Units[(int)activeUnit.Type].Texture, 32 * col, 16 * (row - 1), Color.WHITE);
+                    //     }
+                    //     else 
+                    //     {
+                    //         var unit = unitsHere.Last();
+                    //         if (unitsHere.Any(u => u.Domain == UnitGAS.Sea)) unit = unitsHere.Last(u => u.Domain == UnitGAS.Sea);   // Show naval unit
+                    //         if (!unit.IsInCity)
+                    //             Raylib.DrawTexture(MapImages.Units[(int)unit.Type].Texture, 32 * col, 16 * (row - 1), Color.WHITE);
+                    //     }
+                    // }
 
                     // Cities
                     var city = map.TileC2(xC2, yC2).CityHere;
@@ -134,7 +134,7 @@ namespace RaylibUI
                             cityIndex = (int)style * 8 + sizeStyle;
                         }
 
-                        Raylib.DrawTexture(MapImages.Cities[cityIndex].Texture, 32 * col, 16 * (row - 1), Color.WHITE);
+                        // Raylib.DrawTexture(MapImages.Cities[cityIndex].Texture, 32 * col, 16 * (row - 1), Color.WHITE);
                     }
                 }
             }

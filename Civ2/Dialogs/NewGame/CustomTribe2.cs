@@ -60,15 +60,15 @@ public class CustomTribe2 : BaseDialogHandler
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[CustomTribe.Title].Show();
+            return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
         }
 
         // TODO: update data
 
-        return civDialogHandlers[CustomTribe.Title].Show();
+        return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
     }
 }

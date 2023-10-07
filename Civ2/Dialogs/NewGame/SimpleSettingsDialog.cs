@@ -13,17 +13,18 @@ public abstract class SimpleSettingsDialog : BaseDialogHandler
         _next = next;
     }
 
-    public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers)
+    public override IInterfaceAction HandleDialogResult(DialogResult result,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show();
+            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
         var popupBox = Dialog.Dialog;
         SetConfigValue(result, popupBox);
 
-        return civDialogHandlers[_next].Show();
+        return civDialogHandlers[_next].Show(civ2Interface);
     }
 
     protected abstract void SetConfigValue(DialogResult result, PopupBox popupBox);

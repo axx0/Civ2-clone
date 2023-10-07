@@ -68,6 +68,7 @@ namespace Civ2engine.Scripting
         public Effects TaxMultiplier = Effects.TaxMultiplier;
         public Effects LuxMultiplier = Effects.LuxMultiplier;
         public Effects ScienceMultiplier = Effects.ScienceMultiplier;
+        public Effects Walled = Effects.Walled;
         
         public Effects EliminateIndustrialPollution = Effects.EliminateIndustrialPollution;
         public Effects IndustrialPollutionModifier = Effects.IndustrialPollutionModifier;

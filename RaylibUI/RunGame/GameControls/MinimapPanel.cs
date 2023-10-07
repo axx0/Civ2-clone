@@ -24,11 +24,6 @@ public class MinimapPanel : BaseControl
 
         controller.OnMapEvent += MapEventTriggered;
     }
-
-    public override Size GetPreferredSize(int width, int height)
-    {
-        return new Size(RunGame.GameScreen.MiniMapWidth, RunGame.GameScreen.MiniMapHeight);
-    }
     
     public override void OnResize()
     {
@@ -98,7 +93,7 @@ public class MinimapPanel : BaseControl
                 if (!map.MapRevealed && !tile.IsVisible(map.WhichCivsMapShown)) continue;
 
                 var drawColor = tile.CityHere is not null
-                    ? MapImages.PlayerColours[tile.CityHere.Owner.Id].TextColour
+                    ? Controller.MainWindow.ActiveInterface.PlayerColours[tile.CityHere.Owner.Id].TextColour
                     : tile.Type == TerrainType.Ocean
                         ? OceanColor
                         : LandColor;

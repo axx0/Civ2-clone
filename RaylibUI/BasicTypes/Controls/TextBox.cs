@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Xml;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
 
@@ -17,6 +18,8 @@ public class TextBox : BaseControl
     private bool _editMode = false;
     private int _editWidth;
 
+    private readonly Vector2 TextOffsetV = new Vector2(5,5);
+    
     private const int TextMargin = 5;
 
     public string Text => _text;
@@ -40,9 +43,9 @@ public class TextBox : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.WHITE);
-        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y, Width, Height, Color.BLACK);
-        Raylib.DrawText(_text, (int)Location.X+ 5, (int)Location.Y + 5, Styles.BaseFontSize, Color.BLACK);
+        Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.WHITE);
+        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.BLACK);
+        Raylib.DrawTextEx(Fonts.DefaultFont, _text, Location + TextOffsetV, Styles.BaseFontSize,1.0f, Color.BLACK);
         
         if (_editMode)
         {
@@ -73,9 +76,14 @@ public class TextBox : BaseControl
         _editMode = false;
     }
 
-    public override Size GetPreferredSize(int width, int height)
+    public override int GetPreferredHeight()
     {
-        return new Size(_minWidth, Height);
+        return -1;
+    }
+
+    public override int GetPreferredWidth()
+    {
+        return _minWidth;
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
@@ -141,6 +149,6 @@ public class TextBox : BaseControl
     private void SetEditPosition(int newEditPosition)
     {
         _editPosition = newEditPosition;
-        _editWidth = Raylib.MeasureText(_text.Substring(0,_editPosition), Styles.BaseFontSize);
+        _editWidth = (int)Raylib.MeasureTextEx(Fonts.DefaultFont, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
     }
 }

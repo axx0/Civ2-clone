@@ -18,24 +18,25 @@ public abstract class FileDialogHandler : ICivDialogHandler
     public abstract ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup);
 
     public MenuElements Dialog { get; }
-    public IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers)
+    public IInterfaceAction HandleDialogResult(DialogResult result,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedIndex == 0)
         {
             var fileName = result.TextValues?["FileName"];
             if (!string.IsNullOrWhiteSpace(fileName))
             {
-                return HandleFileSelection(fileName, civDialogHandlers);
+                return HandleFileSelection(fileName, civDialogHandlers, civ2Interface);
             }
         }
 
-        return civDialogHandlers[MainMenu.Title].Show();
+        return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
     }
 
     protected abstract IInterfaceAction HandleFileSelection(string fileName,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers);
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface active);
 
-    public IInterfaceAction Show()
+    public IInterfaceAction Show(Civ2Interface activeInterface)
     {
         return new FileAction(new OpenFileInfo
         {

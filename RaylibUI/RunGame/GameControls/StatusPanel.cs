@@ -8,12 +8,7 @@ public class StatusPanel : BaseControl
 {
     private readonly Game _game;
     private Texture2D? _backgroundImage;
-
-    public override Size GetPreferredSize(int width, int height)
-    {
-        return new Size(RunGame.GameScreen.MiniMapWidth, height - RunGame.GameScreen.MiniMapHeight);
-    }
-
+    
     public StatusPanel(IControlLayout controller, Game game) : base(controller)
     {
         _game = game;

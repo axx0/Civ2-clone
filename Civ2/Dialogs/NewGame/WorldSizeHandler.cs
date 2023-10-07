@@ -15,11 +15,11 @@ public class WorldSizeHandler : BaseDialogHandler
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show();
+            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.WorldSize = result.SelectedIndex switch
@@ -31,10 +31,10 @@ public class WorldSizeHandler : BaseDialogHandler
 
         if (result.SelectedButton == "Custom")
         {
-            return civDialogHandlers[CustomWorldSize.Title].Show();
+            return civDialogHandlers[CustomWorldSize.Title].Show(civ2Interface);
         }
 
         return civDialogHandlers[
-            Initialization.ConfigObject.CustomizeWorld ? CustomisePercentageLand.Title : Difficulty.Title].Show();
+            Initialization.ConfigObject.CustomizeWorld ? CustomisePercentageLand.Title : Difficulty.Title].Show(civ2Interface);
     }
 }

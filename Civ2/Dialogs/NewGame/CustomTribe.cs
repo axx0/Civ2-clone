@@ -47,11 +47,11 @@ public class CustomTribe : BaseDialogHandler
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectGender.Title].Show();
+            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 
         //Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Leader"];
@@ -60,9 +60,9 @@ public class CustomTribe : BaseDialogHandler
 
         if (result.SelectedButton == "Titles")
         {
-            return civDialogHandlers[CustomTribe2.Title].Show();
+            return civDialogHandlers[CustomTribe2.Title].Show(civ2Interface);
         }
 
-        return civDialogHandlers[SelectCityStyle.Title].Show();
+        return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
     }
 }

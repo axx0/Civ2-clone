@@ -1,11 +1,17 @@
 using System.Numerics;
 using Raylib_cs;
-using RaylibUI.Forms;
 
 namespace RaylibUI;
 
 public abstract class BaseLayoutController : IControlLayout
 {
+    public Main MainWindow { get; }
+
+    protected BaseLayoutController(Main main)
+    {
+        this.MainWindow = main;
+    }
+    
     private IControl? _focused;
     
     public IList<IControl> Controls { get; } = new List<IControl>();

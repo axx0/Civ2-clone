@@ -21,12 +21,13 @@ public class LoadOk : ICivDialogHandler
 
     public MenuElements Dialog { get; private set; }
 
-    public IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers)
+    public IInterfaceAction HandleDialogResult(DialogResult result,
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return new StartGame(Initialization.SelectedRuleSet, Initialization.GameInstance);
+        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
     }
 
-    public IInterfaceAction Show()
+    public IInterfaceAction Show(Civ2Interface activeInterface)
     {
         var game = Initialization.GameInstance;
         var playerCiv = game.GetPlayerCiv;

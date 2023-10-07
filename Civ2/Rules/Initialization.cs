@@ -1,4 +1,8 @@
+using Civ2.ImageLoader;
 using Civ2engine;
+using Civ2engine.IO;
+using RaylibUI;
+using RaylibUI.ImageLoader;
 
 namespace Civ2.Rules;
 
@@ -21,11 +25,24 @@ public static class Initialization
 
     internal static Game GameInstance = null;
 
-    public static void Start(Game game, Ruleset ruleSet)
+    public static void Start(Game game)
     {
         GameInstance = game;
-        SelectedRuleSet = ruleSet;
     }
-
-    public static Ruleset SelectedRuleSet { get; set; }
+    
+    public static void LoadGraphicsAssets(Civ2Interface civ2Interface)
+    {
+        ConfigObject.RuleSet ??= RuleSets.First();
+        
+        ConfigObject.Rules = RulesParser.ParseRules(ConfigObject.RuleSet);
+        
+        //TODO: Check is interface already hase initialized images and unload them
+    
+        TerrainLoader.LoadTerrain(ConfigObject.RuleSet, civ2Interface);
+        CityLoader.LoadCities(ConfigObject.RuleSet, civ2Interface.CityImages, civ2Interface);
+        UnitLoader.LoadUnits(ConfigObject.RuleSet, civ2Interface);
+        IconLoader.LoadIcons(ConfigObject.RuleSet, civ2Interface);
+        //LoadPeopleIcons(ruleset);
+        //LoadCityWallpaper(ruleset);
+    }
 }

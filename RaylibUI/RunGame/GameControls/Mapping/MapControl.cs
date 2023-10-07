@@ -42,13 +42,14 @@ public class MapControl : BaseControl
         _game = game;
         _map = game.CurrentMap;
         var map = _map;
-        
+
+        var terrain = _gameScreen.Main.ActiveInterface.TileSets[_map.MapIndex];
         _mapTileTexture = new Image[map.XDim, map.YDim];
         for (var col = 0; col < map.XDim; col++)
         {
             for (var row = 0; row < map.YDim; row++)
             {
-                _mapTileTexture[col, row] = MapImage.MakeTileGraphic(map.Tile[col, row], map, MapImages.Terrains[map.MapIndex], game);
+                _mapTileTexture[col, row] = MapImage.MakeTileGraphic(map.Tile[col, row], map, terrain, game);
             }
         }
 
@@ -65,12 +66,7 @@ public class MapControl : BaseControl
 
         gameScreen.OnMapEvent += MapEventTriggered;
     }
-
-
-    public override Size GetPreferredSize(int width, int height)
-    {
-        return new Size(width - RunGame.GameScreen.MiniMapWidth, height);
-    }
+    
 
     public override void OnResize()
     {
@@ -273,6 +269,9 @@ public class MapControl : BaseControl
 
     private void Redraw()
     {
+        var activeInterface = _gameScreen.Main.ActiveInterface;
+        var cities = activeInterface.CityImages;
+        
         var imageWidth = _viewWidth;
         var imageHeight = _viewHeight;
         var image = ImageUtils.NewImage(imageWidth, imageHeight);
@@ -318,26 +317,35 @@ public class MapControl : BaseControl
                             activePos = new Vector2(xpos, ypos);
                         }
 
-                        //if (tile.Visibility[_currentMapShown])
-                        //{
+                        if (tile.Visibility[_currentMapShown])
+                        {
                             Raylib.ImageDraw(ref image, _mapTileTexture[col, row], MapImage.TileRec,
                                 new Rectangle(xpos, ypos, _tileWidth, _tileHeight), Color.WHITE);
-           
-                         
 
-                            if (tile.UnitsHere.Count > 0)
+                            if (tile.CityHere != null)
+                            {
+                                var cityStyleIndex = tile.CityHere.Owner.CityStyle;
+                                var sizeIncrement =
+                                    _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
+                                        tile.CityHere);
+
+                                
+                                Raylib.ImageDraw(ref image, cities.Sets[cityStyleIndex][sizeIncrement].Image, cities.CityRectangle, new Rectangle(xpos, ypos - _halfHeight, cities.CityRectangle.width, cities.CityRectangle.height), Color.WHITE);
+
+                            }
+                            else if (tile.UnitsHere.Count > 0)
                             {
                                 var unit = tile.GetTopUnit();
                                 if (unit != activeUnit)
                                 {
                                     var unitRectangle = new Rectangle(xpos, ypos - _halfHeight, _tileWidth,
                                         _tileHeight + _halfHeight);
-                                    Raylib.ImageDraw(ref image, MapImages.Units[(int)unit.Type].Image,
-                                        MapImages.UnitRectangle,
+                                    Raylib.ImageDraw(ref image, activeInterface.UnitImages.Units[(int)unit.Type].Image,
+                                        activeInterface.UnitImages.UnitRectangle,
                                         unitRectangle, Color.WHITE);
                                 }
                             }
-                        //}
+                        }
                     }
 
                     xpos += _tileWidth;
@@ -361,7 +369,7 @@ public class MapControl : BaseControl
             // else
             // {
                 //TODO: flashing tile highlight
-                SetActive(activePos.Value.X, activePos.Value.Y, MapImages.ViewPiece);
+                SetActive(activePos.Value.X, activePos.Value.Y,activeInterface.MapImages.ViewPiece);
             // }
         }
 

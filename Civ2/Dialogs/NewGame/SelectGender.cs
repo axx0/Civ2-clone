@@ -14,15 +14,15 @@ public class SelectGender : BaseDialogHandler
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[Difficulty.Title].Show();
+            return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.Gender = result.SelectedIndex;
 
-        return civDialogHandlers[SelectTribe.Title].Show();
+        return civDialogHandlers[SelectTribe.Title].Show(civ2Interface);
     }
 }

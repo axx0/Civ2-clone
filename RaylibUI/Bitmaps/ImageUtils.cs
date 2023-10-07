@@ -332,7 +332,8 @@ public class ImageUtils
 
     public static Texture2D[] GetOptionImages(bool checkbox)
     {
-        return Look.RadioButtons.Select(Images.ExtractBitmap).Select(Raylib.LoadTextureFromImage).ToArray();
+        var images = checkbox ? Look.CheckBoxes : Look.RadioButtons;
+        return images.Select(Images.ExtractBitmap).Select(Raylib.LoadTextureFromImage).ToArray();
         // unsafe
         // {
         //     var image = NewImage(64, 64);
@@ -470,6 +471,8 @@ public class ImageUtils
 public static class Fonts
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
+
+    public const int FontSize = 20;
     public static void SetFont(Font font)
     {
         DefaultFont = font;

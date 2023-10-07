@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Civ2engine.Enums;
+using Model.ImageSets;
 using Raylib_cs;
-using RaylibUI.ImageLoader;
 
 namespace RaylibUI
 {
@@ -45,12 +45,5 @@ namespace RaylibUI
                     throw new ArgumentOutOfRangeException(nameof(terrain), terrain, null);
             }
         }
-    }
-    
-    public struct DitherMap
-    {
-        public int x;
-        public int y;
-        public Image[] Images;
     }
 }

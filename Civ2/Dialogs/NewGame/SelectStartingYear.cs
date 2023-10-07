@@ -21,15 +21,15 @@ public class SelectStartingYear : BaseDialogHandler
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectRules.Title].Show();
+            return civDialogHandlers[SelectRules.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.AcceleratedStartup = result.SelectedIndex;
 
-        return civDialogHandlers[SelectGender.Title].Show();
+        return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
     }
 }

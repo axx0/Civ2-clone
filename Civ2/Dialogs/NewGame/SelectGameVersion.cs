@@ -8,7 +8,7 @@ namespace Civ2.Dialogs.NewGame;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class SelectGameVersionHandler : BaseDialogHandler
 {
-    internal static string Title = "AXX-Select-Game";
+    internal const string Title = "AXX-Select-Game";
 
     public SelectGameVersionHandler() : base(Title) {}
     public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
@@ -23,20 +23,22 @@ public class SelectGameVersionHandler : BaseDialogHandler
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
-        Dictionary<string, ICivDialogHandler> civDialogHandlers)
+        Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {                    
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show();
+            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
         Initialization.ConfigObject.RuleSet = Initialization.RuleSets[result.SelectedIndex];
+        
+        Initialization.LoadGraphicsAssets(civ2Interface);
         
         if (result.SelectedButton == "Quick Start")
         {
             Initialization.ConfigObject.RuleSet.QuickStart = true;
         }
 
-        return civDialogHandlers[WorldSizeHandler.Title].Show();
+        return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
     }
 }

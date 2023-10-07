@@ -16,8 +16,8 @@ public class FileDialog : BaseDialog
     private readonly TextBox textBox;
     private readonly Button okButton;
 
-    public FileDialog(string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
-        Func<string?, bool> onSelectionCallback) : base(title)
+    public FileDialog(Main host, string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
+        Func<string?, bool> onSelectionCallback) : base(host,title)
     {
         _isValidSelectionCallback = isValidSelectionCallback;
         _onSelectionCallback = onSelectionCallback;

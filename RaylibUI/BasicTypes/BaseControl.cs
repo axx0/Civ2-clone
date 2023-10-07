@@ -12,13 +12,13 @@ public abstract class BaseControl : IControl
     private bool _clickPossible;
     private bool _clickStart;
     private int _height;
-    protected IControlLayout GameScreen { get; }
+    protected IControlLayout Controller { get; }
     
     public bool EventTransparent { get; }
 
-    protected BaseControl(IControlLayout gameScreen, bool eventTransparent = false)
+    protected BaseControl(IControlLayout controller, bool eventTransparent = false)
     {
-        GameScreen = gameScreen;
+        Controller = controller;
         EventTransparent = eventTransparent;
     }
 
@@ -65,7 +65,7 @@ public abstract class BaseControl : IControl
     }
 
     public virtual bool CanFocus => false;
-    public virtual IList<IControl>? Children { get; protected set; } = null;
+    public IList<IControl>? Children { get; protected set; } = null;
 
     public virtual bool OnKeyPressed(KeyboardKey key)
     {
@@ -132,7 +132,16 @@ public abstract class BaseControl : IControl
         // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
         // Raylib.DrawRectangleLines((int)_bounds.x, (int)_bounds.y, _width,Height,Color.MAGENTA);
     }
-    public abstract Size GetPreferredSize(int width, int height);
+
+    public virtual int GetPreferredWidth()
+    {
+        return -1;
+    }
+
+    public virtual int GetPreferredHeight()
+    {
+        return -1;
+    }
 
     protected Vector2 GetRelativeMousePosition()
     {

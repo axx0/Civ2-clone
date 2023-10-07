@@ -273,9 +273,9 @@ public class Dialog : Form, IForm
         }
 
         if (popupBox.Width != 0)
-            return (int)Math.Ceiling(Math.Max(width, popupBox.Width * 1.5));
+            return Math.Max(width, popupBox.Width);
         else
-            return (int)Math.Ceiling(Math.Max(width, 660.0));    // 660=440*1.5
+            return Math.Max(width, 660);    // 660=440*1.5
     }
 
     public static IList<FormattedText> GetFormattedTexts(IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
@@ -325,7 +325,7 @@ public class Dialog : Form, IForm
                                    select text).ToList().FirstOrDefault().MeasureWidth();
 
         if (popupbox.Width != 0)
-            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupbox.Width * 1.5));
+            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupbox.Width));
         else
             return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 660.0));    // 660=440*1.5
     }
