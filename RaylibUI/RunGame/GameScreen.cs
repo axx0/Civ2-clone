@@ -1,4 +1,5 @@
 using Civ2engine;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Raylib_cs;
@@ -21,6 +22,8 @@ public class GameScreen : BaseScreen
 
     internal const int MiniMapHeight = 148;
     internal const int MiniMapWidth = 262;
+
+    public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
     public GameScreen(Main main, Game game, Sound soundman): base(main)
     {
@@ -69,5 +72,10 @@ public class GameScreen : BaseScreen
     {
         // var dialogBox = new CivDialog(this, popupBoxList[dialog], replaceStrings);
         // this.ShowDialog(dialogBox, true);
+    }
+
+    public void TriggerMapEvent(MapEventArgs args)
+    {
+        OnMapEvent?.Invoke(this, args);
     }
 }

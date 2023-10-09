@@ -29,8 +29,7 @@ public static class Initialization
     {
         GameInstance = game;
     }
-
-
+    
     public static void LoadGraphicsAssets(Civ2Interface civ2Interface)
     {
         ConfigObject.RuleSet ??= RuleSets.First();
@@ -38,7 +37,7 @@ public static class Initialization
         ConfigObject.Rules = RulesParser.ParseRules(ConfigObject.RuleSet);
         
         //TODO: Check is interface already hase initialized images and unload them
-
+    
         TerrainLoader.LoadTerrain(ConfigObject.RuleSet, civ2Interface);
         CityLoader.LoadCities(ConfigObject.RuleSet, civ2Interface.CityImages, civ2Interface);
         UnitLoader.LoadUnits(ConfigObject.RuleSet, civ2Interface);
@@ -46,6 +45,4 @@ public static class Initialization
         //LoadPeopleIcons(ruleset);
         //LoadCityWallpaper(ruleset);
     }
-    
-    
 }

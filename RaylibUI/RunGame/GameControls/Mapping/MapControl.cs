@@ -1,6 +1,8 @@
 using System.Diagnostics;
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
@@ -42,7 +44,6 @@ public class MapControl : BaseControl
         var map = _map;
 
         var terrain = _gameScreen.Main.ActiveInterface.TileSets[_map.MapIndex];
-
         _mapTileTexture = new Image[map.XDim, map.YDim];
         for (var col = 0; col < map.XDim; col++)
         {
@@ -62,6 +63,8 @@ public class MapControl : BaseControl
         _selectedTile = game.ActiveTile;
         _totalWidth = _map.Tile.GetLength(0) * _tileWidth;
         _totalHeight = _map.Tile.GetLength(1) * _halfHeight + _halfHeight;
+
+        gameScreen.OnMapEvent += MapEventTriggered;
     }
     
 
@@ -144,6 +147,11 @@ public class MapControl : BaseControl
         {
             _offsets = new Vector2(offsetX, offsetY);
         }
+
+        _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged,
+                new[] { (int)_offsets.X / _halfWidth, (int)_offsets.Y / _halfHeight },
+                new[] { _viewWidth / _halfWidth, _viewHeight / _halfHeight }));
+
         Redraw();
     }
 
@@ -226,6 +234,7 @@ public class MapControl : BaseControl
         }
         
         ShowTile(_selectedTile);
+
         base.OnClick();
     }
 
@@ -366,6 +375,19 @@ public class MapControl : BaseControl
 
         _mapImage = Raylib.LoadTextureFromImage(image);
         Raylib.UnloadImage(image);
+    }
+
+    private void MapEventTriggered(object sender, MapEventArgs e)
+    {
+        switch (e.EventType)
+        {
+            case MapEventType.MinimapViewChanged:
+                {
+                    ShowTile(_map.Tile[e.CentrXY[0], e.CentrXY[1]]);
+                    break;
+                }
+            default: break;
+        }
     }
 
     private void SetActive(float valueX, float valueY, Image image)

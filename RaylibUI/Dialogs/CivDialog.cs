@@ -107,7 +107,6 @@ public class CivDialog : BaseDialog
                 new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false,
                     i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
 
-
             if (!popupBox.Checkbox)
             {
                 _optionControls[0].Checked = true;
