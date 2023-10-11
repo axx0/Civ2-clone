@@ -17,7 +17,7 @@ public abstract class BaseDialogHandler : ICivDialogHandler
     public string Name { get; }
     public virtual ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
     {       
-        Dialog = new MenuElements
+        Dialog = new DialogElements
         {
             Dialog = popups[Name],
             DialogPos = DialogPos
@@ -25,7 +25,7 @@ public abstract class BaseDialogHandler : ICivDialogHandler
         return this;
     }
     
-    public MenuElements Dialog { get; private set; }
+    public DialogElements Dialog { get; private set; }
 
     public abstract IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface);

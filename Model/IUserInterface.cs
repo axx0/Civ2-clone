@@ -28,4 +28,5 @@ public interface IUserInterface
 
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }
+    IList<string> GetMenuItems();
 }

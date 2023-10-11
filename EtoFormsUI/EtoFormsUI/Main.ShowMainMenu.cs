@@ -72,11 +72,11 @@ namespace EtoFormsUI
             }
         }
 
-        private List<PicturePanel> UpdatePicturePanels(List<PicturePanel> picturePanels, MenuElements menu)
+        private List<PicturePanel> UpdatePicturePanels(List<PicturePanel> picturePanels, DialogElements dialog)
         {
             var existingPanels = picturePanels.ToList();
             var newPanels = new List<PicturePanel>();
-            foreach (var d in menu.Decorations)
+            foreach (var d in dialog.Decorations)
             {
                 var key = d.Image.Key;
                 var existing = existingPanels.FirstOrDefault(p => p.Key == key);

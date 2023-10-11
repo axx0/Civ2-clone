@@ -426,8 +426,10 @@ public class ImageUtils
         ImageUtils.SetOuter(look.Outer);
 
         Look = look;
-        var fontPath = Utils.GetFilePath(look.Font);
+        var fontPath = Utils.GetFilePath(look.DefaultFont);
         Fonts.SetFont(Raylib.LoadFont(fontPath));
+        var alternative = Utils.GetFilePath(look.AlternativeFont);
+        Fonts.SetAlt(Raylib.LoadFont(alternative));
     }
 
     private static InterfaceStyle Look;
@@ -471,10 +473,16 @@ public class ImageUtils
 public static class Fonts
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
+    public static Font AlternativeFont = Raylib.GetFontDefault();
 
     public const int FontSize = 20;
     public static void SetFont(Font font)
     {
         DefaultFont = font;
+    }
+
+    public static void SetAlt(Font font)
+    {
+        AlternativeFont = font;
     }
 }

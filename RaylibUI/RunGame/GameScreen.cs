@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Civ2engine;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
@@ -18,6 +19,7 @@ public class GameScreen : BaseScreen
     private readonly StatusPanel _statusPanel;
     private readonly IPlayer _player;
     private readonly IGameMode _activeMode;
+    private readonly GameMenu _menu;
 
 
     internal const int MiniMapHeight = 148;
@@ -44,6 +46,9 @@ public class GameScreen : BaseScreen
         _statusPanel = new StatusPanel(this, game);
         Controls.Add(_statusPanel);
 
+        _menu = new GameMenu(this);
+        Controls.Add(_menu);
+
         if (_player.ActiveUnit != null)
         {
             _activeMode = new MovingPieces(this);
@@ -56,10 +61,13 @@ public class GameScreen : BaseScreen
 
     public override void Resize(int width, int height)
     {
+        _menu.GetPreferredWidth();
+        var menuHeight = _menu.GetPreferredHeight();
         var mapWidth = width - MiniMapWidth;
-        _mapControl.Bounds = new Rectangle(0, 0, mapWidth, height);
-        _minimapPanel.Bounds = new Rectangle( mapWidth, 0, MiniMapWidth, MiniMapHeight);
-        _statusPanel.Bounds = new Rectangle(mapWidth, MiniMapHeight, MiniMapWidth, height - MiniMapHeight);
+        _menu.Bounds = new Rectangle(0, 0, width, menuHeight);
+        _mapControl.Bounds = new Rectangle(0, menuHeight, mapWidth, height - menuHeight);
+        _minimapPanel.Bounds = new Rectangle( mapWidth, menuHeight, MiniMapWidth, MiniMapHeight);
+        _statusPanel.Bounds = new Rectangle(mapWidth, MiniMapHeight + menuHeight, MiniMapWidth, height - MiniMapHeight - menuHeight);
         
         base.Resize(width, height);
     }

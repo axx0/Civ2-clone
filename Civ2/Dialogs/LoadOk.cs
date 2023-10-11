@@ -11,7 +11,7 @@ public class LoadOk : ICivDialogHandler
 
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
-    {        Dialog = new MenuElements
+    {        Dialog = new DialogElements
         {
             Dialog = popups[Name],
             DialogPos = new Point(0,0)
@@ -19,7 +19,7 @@ public class LoadOk : ICivDialogHandler
         return this;
     }
 
-    public MenuElements Dialog { get; private set; }
+    public DialogElements Dialog { get; private set; }
 
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
