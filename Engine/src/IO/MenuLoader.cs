@@ -28,6 +28,8 @@ namespace Civ2engine.IO
         {
             return _elements.ContainsKey(section) ? _elements[section] : new List<MenuElement>();
         }
+
+        public static IList<string> Menus => _elements.Keys.ToList();
     }
 
     public record MenuElement(string MenuText, string Shortcut);

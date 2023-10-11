@@ -17,7 +17,7 @@ public abstract class FileDialogHandler : ICivDialogHandler
 
     public abstract ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup);
 
-    public MenuElements Dialog { get; }
+    public DialogElements Dialog { get; }
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {

@@ -7,24 +7,29 @@ namespace RaylibUI.BasicTypes.Controls;
 public class LabelControl : BaseControl
 {
     public int Offset { get; }
-    protected readonly string _text;
+    protected readonly string Text;
+    
     private readonly int _minWidth;
     private readonly TextAlignment _alignment;
     private readonly Vector2 _textSize;
     private readonly int _defaultHeight;
     private readonly bool _wrapText;
+    private readonly int _fontSize;
     private List<string>? _wrappedText;
+    private readonly Font _labelFont;
 
     public LabelControl(IControlLayout controller, string text, bool eventTransparent, int minWidth = -1, int offset = 2,
-        TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false) : base(controller, eventTransparent: eventTransparent)
+        TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false, Font? font = null, int fontSize = 20) : base(controller, eventTransparent: eventTransparent)
     {
         Offset = offset;
-        _text = text;
+        Text = text;
         _minWidth = minWidth;
         _defaultHeight = defaultHeight;
         _wrapText = wrapText;
+        _fontSize = fontSize;
         _alignment = alignment;
-        _textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, text, 20, 1.0f);
+        _labelFont = font ?? Fonts.DefaultFont;
+        _textSize = Raylib.MeasureTextEx(_labelFont, text, _fontSize, 1.0f);
     }
 
     public override int GetPreferredWidth()
@@ -42,7 +47,7 @@ public class LabelControl : BaseControl
     {
         if (!_wrapText) return _defaultHeight;
         
-        _wrappedText = CtrlHelpers.GetWrappedTexts(_text, Width, Fonts.FontSize);
+        _wrappedText = CtrlHelpers.GetWrappedTexts(Text, Width, Fonts.FontSize);
         return (int)(_wrappedText.Count * _textSize.Y) ;
     }
 
@@ -55,7 +60,7 @@ public class LabelControl : BaseControl
             for (var i = 0; i < _wrappedText.Count; i++)
             {
                 var textPosition = new Vector2(Location.X + Offset, y);
-                Raylib.DrawTextEx(Fonts.DefaultFont, _wrappedText[i], textPosition, 20, 1.0f, Color.BLACK);
+                Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition, _fontSize, 1.0f, Color.BLACK);
                 y += unitHeight;
             }
         }
@@ -64,7 +69,7 @@ public class LabelControl : BaseControl
             var textPosition = new Vector2(
                 Location.X + Offset + (_alignment == TextAlignment.Center ? Width / 2f - _textSize.X / 2f : 0),
                 Location.Y + Height / 2f - _textSize.Y / 2f);
-            Raylib.DrawTextEx(Fonts.DefaultFont, _text, textPosition, 20, 1.0f, Color.BLACK);
+            Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, 1.0f, Color.BLACK);
         }
 
         base.Draw(pulse);

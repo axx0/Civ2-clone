@@ -13,6 +13,6 @@ public class ListBoxLabel : LabelControl
 
     public override void OnClick()
     {
-        _listBox.LabelClicked(_text);
+        _listBox.LabelClicked(Text);
     }
 }

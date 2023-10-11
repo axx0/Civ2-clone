@@ -8,6 +8,8 @@ public class InterfaceStyle
     public IImageSource Inner { get; init; }
     
     public IImageSource[] RadioButtons { get; init; }
-    public string Font { get; set; }
-    public IImageSource[] CheckBoxes { get; set; }
+    public string DefaultFont { get; init; }
+
+    public string AlternativeFont { get; init; }
+    public IImageSource[] CheckBoxes { get; init; }
 }
