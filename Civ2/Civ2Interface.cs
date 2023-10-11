@@ -1,6 +1,8 @@
 ﻿using Civ2.Dialogs;
+using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Improvements;
+using Civ2engine.IO;
 using Model;
 using Model.Images;
 using Model.ImageSets;
@@ -25,7 +27,8 @@ public abstract class Civ2Interface : IUserInterface
             { new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32) },
         CheckBoxes = new IImageSource[]
             { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
-        Font = "times-new-roman.ttf"
+        DefaultFont = "times-new-roman.ttf",
+        AlternativeFont = "ARIAL.ttf"
     };
 
 
@@ -120,5 +123,11 @@ public abstract class Civ2Interface : IUserInterface
     public int ExpectedMaps { get; set; } = 1; //TODO: extract to specific locations because TOT has four 
     public CommonMapImageSet MapImages { get; } = new();
     public int DefaultDialogWidth => 660; // 660=440*1.5
+    public IList<string> GetMenuItems()
+    {
+        MenuLoader.LoadMenus(Initialization.ConfigObject.RuleSet);
+
+        return MenuLoader.Menus;
+    }
 }
 

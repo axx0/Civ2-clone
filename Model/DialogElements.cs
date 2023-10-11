@@ -6,7 +6,7 @@ using Raylib_cs;
 
 namespace Model;
 
-public class MenuElements
+public class DialogElements
 {
     public List<Decoration> Decorations { get; } = new();
     public PopupBox Dialog { get; init; }

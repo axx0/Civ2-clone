@@ -45,7 +45,7 @@ public class MainMenu : BaseScreen
                 break;
             case MenuAction menuAction:
             {
-                var menu = menuAction.MenuElement;
+                var menu = menuAction.DialogElement;
                 UpdateDecorations(menu);
 
                 FormManager.Add(new Dialog(menu.Dialog, menu.DialogPos, new[] { HandleButtonClick },
@@ -91,11 +91,11 @@ public class MainMenu : BaseScreen
         return true;
     }
 
-    private void UpdateDecorations(MenuElements menu)
+    private void UpdateDecorations(DialogElements dialog)
     {
         var existingPanels = _imagePanels.ToList();
         var newPanels = new List<ImagePanel>();
-        foreach (var d in menu.Decorations)
+        foreach (var d in dialog.Decorations)
         {
             var key = d.Image.Key;
             var existing = existingPanels.FirstOrDefault(p => p.Key == key);

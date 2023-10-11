@@ -2,13 +2,13 @@ namespace Model.InterfaceActions;
 
 public class MenuAction : IInterfaceAction
 {
-    public MenuAction(MenuElements menu)
+    public MenuAction(DialogElements dialog)
     {
-        MenuElement = menu;
-        Name = menu.Dialog.Name;
+        DialogElement = dialog;
+        Name = dialog.Dialog.Name;
     }
 
     public string Name { get; }
     public EventType ActionType => EventType.Dialog;
-    public MenuElements MenuElement { get; }
+    public DialogElements DialogElement { get; }
 }
