@@ -22,8 +22,8 @@ public class GameScreen : BaseScreen
     private readonly GameMenu _menu;
 
 
-    internal const int MiniMapHeight = 148;
     internal const int MiniMapWidth = 262;
+    internal int MiniMapHeight;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
@@ -31,6 +31,8 @@ public class GameScreen : BaseScreen
     {
         Main = main;
         Game = game;
+
+        MiniMapHeight = Math.Max(100, game.CurrentMap.YDim) + 38 + 11;
 
         var civ = game.GetPlayerCiv;
         _player = new LocalPlayer(this, civ);

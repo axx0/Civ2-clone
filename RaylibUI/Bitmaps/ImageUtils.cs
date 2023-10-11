@@ -180,13 +180,15 @@ public class ImageUtils
     /// </summary>
     /// <param name="w"></param> Dialog width
     /// <param name="h"></param> Dialog height
-    public static Texture2D? PaintDialogBase(int w, int h, int top, int paddingBtm, int paddingSide)
+    public static Texture2D? PaintDialogBase(int w, int h, int top, int paddingBtm, int paddingSide, string? title = null)
     {
         // Outer wallpaper
         var image = NewImage(w, h);
         PaintPanelBorders(ref image,w,h,top, paddingBtm);
         
         DrawTiledImage(InnerWallpaper, ref image, h,w,top, paddingBtm, paddingSide);
+
+        
 
         return Raylib.LoadTextureFromImage(image);
   }
@@ -428,6 +430,8 @@ public class ImageUtils
         Look = look;
         var fontPath = Utils.GetFilePath(look.DefaultFont);
         Fonts.SetFont(Raylib.LoadFont(fontPath));
+        var bold = Utils.GetFilePath(look.BoldFont);
+        Fonts.SetBold(Raylib.LoadFontEx(bold, 26, null, 0));
         var alternative = Utils.GetFilePath(look.AlternativeFont);
         Fonts.SetAlt(Raylib.LoadFont(alternative));
     }
@@ -473,6 +477,7 @@ public class ImageUtils
 public static class Fonts
 {
     public static Font DefaultFont = Raylib.GetFontDefault();
+    public static Font BoldFont = Raylib.GetFontDefault();
     public static Font AlternativeFont = Raylib.GetFontDefault();
 
     public const int FontSize = 20;
@@ -485,4 +490,10 @@ public static class Fonts
     {
         AlternativeFont = font;
     }
+
+    public static void SetBold(Font font)
+    {
+        BoldFont = font;
+    }
+
 }

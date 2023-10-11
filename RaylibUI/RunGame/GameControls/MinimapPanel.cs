@@ -3,8 +3,8 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
+using RaylibUI.Controls;
 using System.Numerics;
-using System.Security.Cryptography;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -14,21 +14,29 @@ public class MinimapPanel : BaseControl
     private readonly GameScreen _gameScreen; 
     private Texture2D? _backgroundImage;
     private const int PaddingSide = 11;
-    private const int Top = 11;
+    private const int Top = 38;
     private const int PaddingBtm = 11;
+    private HeaderLabel _headerLabel;
 
     public MinimapPanel(GameScreen controller, Game game) : base(controller)
     {
         _gameScreen = controller;
         _game = game;
 
+        _headerLabel = new HeaderLabel(controller, "World");
+
         controller.OnMapEvent += MapEventTriggered;
     }
     
     public override void OnResize()
     {
-        _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, 11,11,11);
-        _offset = new[] { ( Width - 2 * _game.CurrentMap.XDim) / 2, ( Height - _game.CurrentMap.YDim) / 2 };
+        _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide);
+        
+        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, Top);
+        _headerLabel.OnResize();
+        
+        _offset = new[] { ( Width - 2 * _game.CurrentMap.XDim) / 2, 
+            Top + ( Height - Top - PaddingBtm - _game.CurrentMap.YDim) / 2 };
         base.OnResize();
     }
 
@@ -80,7 +88,7 @@ public class MinimapPanel : BaseControl
     public override void Draw(bool pulse)
     {
         Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.WHITE);
-        Raylib.DrawRectangle((int)Location.X + 11, (int)Location.Y + 11, Width - 2 * 11, Height - 22, Color.BLACK);
+        Raylib.DrawRectangle((int)Location.X + PaddingSide, (int)Location.Y + Top, Width - 2 * PaddingSide, Height - Top - PaddingBtm, Color.BLACK);
         var map = _game.CurrentMap;
         // Draw map
         for (var row = 0; row < map.YDim; row++)
@@ -107,6 +115,9 @@ public class MinimapPanel : BaseControl
         Raylib.DrawRectangleLines((int)Location.X + _offset[0] + _mapStartXy[0] - GetCenterShift(),
             (int)Location.Y + _offset[1] + _mapStartXy[1],
             _mapDrawSq[0], _mapDrawSq[1], Color.WHITE);
+
+        _headerLabel.Draw(pulse);
+        
         base.Draw(pulse);
     }
 

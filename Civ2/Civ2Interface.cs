@@ -1,4 +1,4 @@
-﻿using Civ2.Dialogs;
+using Civ2.Dialogs;
 using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Improvements;
@@ -28,6 +28,7 @@ public abstract class Civ2Interface : IUserInterface
         CheckBoxes = new IImageSource[]
             { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
         DefaultFont = "times-new-roman.ttf",
+        BoldFont = "times-new-roman-bold.ttf",
         AlternativeFont = "ARIAL.ttf"
     };
 
