@@ -431,7 +431,7 @@ public class ImageUtils
         var fontPath = Utils.GetFilePath(look.DefaultFont);
         Fonts.SetFont(Raylib.LoadFont(fontPath));
         var bold = Utils.GetFilePath(look.BoldFont);
-        Fonts.SetBold(Raylib.LoadFontEx(bold, 26, null, 0));
+        Fonts.SetBold(Raylib.LoadFontEx(bold, 52, null, 0));
         var alternative = Utils.GetFilePath(look.AlternativeFont);
         Fonts.SetAlt(Raylib.LoadFont(alternative));
     }
