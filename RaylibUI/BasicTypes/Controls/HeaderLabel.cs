@@ -7,7 +7,7 @@ namespace RaylibUI.Controls;
 public class HeaderLabel : LabelControl
 {
 
-    public HeaderLabel(IControlLayout controller, string title) : base(controller, title, eventTransparent: false,alignment: TextAlignment.Center)
+    public HeaderLabel(IControlLayout controller, string title) : base(controller, title, eventTransparent: false,alignment: TextAlignment.Center, font: Fonts.BoldFont, fontSize: 26, spacing: 0.0f, colorFront: new Color(135, 135, 135, 255), colorShadow: Color.BLACK, shadowOffset: new Vector2(1, 1))
     {
     }
 

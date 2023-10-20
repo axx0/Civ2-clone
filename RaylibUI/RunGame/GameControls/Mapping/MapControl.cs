@@ -6,6 +6,7 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
+using RaylibUI.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -33,8 +34,9 @@ public class MapControl : BaseControl
     private readonly int _totalWidth;
     private readonly int _totalHeight;
     private const int PaddingSide = 11;
-    private const int Top = 11;
+    private const int Top = 38;
     private const int PaddingBtm = 11;
+    private HeaderLabel _headerLabel;
 
     public MapControl(GameScreen gameScreen, Game game) : base(gameScreen)
     {
@@ -52,6 +54,8 @@ public class MapControl : BaseControl
                 _mapTileTexture[col, row] = MapImage.MakeTileGraphic(map.Tile[col, row], map, terrain, game);
             }
         }
+
+        _headerLabel = new HeaderLabel(gameScreen, $"{_game.GetPlayerCiv.Adjective} Map");
 
         _currentMapShown = _game.GetPlayerCiv.Id;
 
@@ -72,6 +76,9 @@ public class MapControl : BaseControl
     {
         base.OnResize();
         _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide);
+
+        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, Top);
+        _headerLabel.OnResize();
 
         _viewWidth = Width - 2 * PaddingSide;
         _viewHeight = Height - Top - PaddingBtm;
@@ -406,6 +413,8 @@ public class MapControl : BaseControl
             Raylib.DrawTexture(_activeImage.Value, (int)(Location.X + PaddingSide + _activePosition.X),
                 (int)(Location.Y + Top + _activePosition.Y), Color.WHITE);
         }
+
+        _headerLabel.Draw(pulse);
 
         // Raylib.DrawTexture(_mapTileTexture[activeTile.XIndex, activeTile.Y],
         //     (int)Location.X + Width / 2 - _tileWidth / 2, (int)Location.Y + Height / 2 - _tileHeight / 2, Color.WHITE);
