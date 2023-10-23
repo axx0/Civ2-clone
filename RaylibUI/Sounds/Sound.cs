@@ -106,7 +106,7 @@ namespace RaylibUI
 
     public SoundData? PlayCIV2DefaultSound(string soundName, bool loop = false)
     {
-      var pth = Utils.GetFilePath(soundName, Settings.SearchPaths.Select(p=>Path.Combine(p,"SOUND")), "wav");
+      var pth = Utils.GetFilePath(soundName, Settings.SearchPaths.Select(p=>Path.Combine(p,"Sound")), "wav");
 
       return pth != null ? PlaySound(pth, loop) : null;
     }
