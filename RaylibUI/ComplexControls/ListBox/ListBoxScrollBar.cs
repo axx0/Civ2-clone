@@ -22,6 +22,7 @@ public class ListBoxScrollBar : BaseControl
         _images = ImageUtils.GetScrollImages(DefaultHeight).Select(Raylib.LoadTextureFromImage).ToArray();
         _scroolPos = 0;
         _positions = requiredColumns - _actualColumns;
+        Click += OnClick;
     }
 
     public override int GetPreferredHeight()
@@ -39,7 +40,7 @@ public class ListBoxScrollBar : BaseControl
         base.OnResize();
     }
 
-    public override void OnClick()
+    public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
         var pos = GetRelativeMousePosition();
         var breakPoint = _increment * _scroolPos + DefaultHeight;
@@ -58,8 +59,6 @@ public class ListBoxScrollBar : BaseControl
                 _scrollAction(_scroolPos);
             }
         }
-        
-        base.OnClick();
     }
 
     public override void Draw(bool pulse)

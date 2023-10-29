@@ -189,7 +189,7 @@ namespace Civ2.ImageLoader
 
             if (activeInterface.TileSets.Count == 0)
             {
-                activeInterface.TileSets.Add(new TerrainSet());
+                activeInterface.TileSets.Add(new TerrainSet(64,32));
             }
 
             foreach (var terrain in activeInterface.TileSets)

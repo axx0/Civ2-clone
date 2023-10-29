@@ -199,9 +199,9 @@ namespace Civ2engine.MapObjects
 
         public List<Unit> UnitsHere { get; } = new();
 
-        public City CityHere { get; set; }
+        public City? CityHere { get; set; }
 
-        public City WorkedBy
+        public City? WorkedBy
         {
             get => _workedBy;
             set

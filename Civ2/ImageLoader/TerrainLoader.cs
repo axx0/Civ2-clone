@@ -1,14 +1,11 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Civ2;
 using Civ2engine;
 using Civ2engine.Terrains;
 using Model.ImageSets;
 using Raylib_cs;
+using RaylibUI;
 using RayLibUtils;
 
-namespace RaylibUI.ImageLoader
+namespace Civ2.ImageLoader
 {
     public static class TerrainLoader
     {
@@ -27,7 +24,7 @@ namespace RaylibUI.ImageLoader
             var overlayData = Images.LoadImage($"Terrain{((index * 2) + 2)}.gif", ruleset.Paths);
 
             // Initialize objects
-            var terrain = new TerrainSet();
+            var terrain = new TerrainSet(64, 32);
 
             // Get dither tile before making it transparent
             var ditherTile = Raylib.ImageFromImage(tileData, new Rectangle(1, 447, 64, 32));

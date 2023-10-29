@@ -7,15 +7,13 @@ namespace RaylibUI.Controls;
 public class Button : BaseControl
 {
     private readonly string _text;
-    private readonly Action _onClick;
     private readonly Vector2 textSize;
     private bool _hovered;
     public override bool CanFocus => true;
 
-    public Button(IControlLayout controller, string text, Action onClick) : base(controller)
+    public Button(IControlLayout controller, string text) : base(controller)
     {
         _text = text;
-        _onClick = onClick;
         textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, text, Styles.BaseFontSize, 1f);
         Height = (int)(textSize.Y + 10f);
     }
@@ -62,10 +60,5 @@ public class Button : BaseControl
     public override int GetPreferredWidth()
     {
         return Math.Max((int)textSize.X + 10, 160);
-    }
-
-    public override void OnClick()
-    {
-        _onClick();
     }
 }

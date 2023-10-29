@@ -1,12 +1,26 @@
-using System.Collections.Generic;
 using Civ2engine.Enums;
-using Model.ImageSets;
 using Raylib_cs;
+using RaylibUI;
 
-namespace RaylibUI
+namespace Model.ImageSets
 {
     public class TerrainSet
     {
+        public TerrainSet(int tileWidth, int tileHeight)
+        {
+            TileWidth = tileWidth;
+            TileHeight = tileHeight;
+            HalfWidth = tileWidth / 2;
+            HalfHeight = tileHeight / 2;
+            DiagonalCut = HalfHeight * HalfWidth;
+        }
+
+        public int DiagonalCut { get; }
+
+        public int HalfHeight { get; }
+
+        public int HalfWidth { get; }
+
         public Image[] BaseTiles { get; set; }
         public Image[][] Specials { get; set; }
         public Image Blank { get; set; }
@@ -22,6 +36,10 @@ namespace RaylibUI
         public Image[] DitherMask { get; set; }
         
         public Dictionary<int, ImprovementGraphic> ImprovementsMap { get; set; }
+
+        public int TileWidth { get; }
+
+        public int TileHeight { get; }
 
         public Image[] ImagesFor(TerrainType terrain)
         {

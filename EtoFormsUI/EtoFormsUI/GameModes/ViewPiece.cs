@@ -42,8 +42,8 @@ namespace EtoFormsUI.GameModes
 
                 { Keys.Keypad7, () => SetActive(-1, -1) }, { Keys.Keypad8, () => SetActive(0, -2) },
                 { Keys.Keypad9, () => SetActive(1, -1) },
-                { Keys.Keypad1, () => SetActive(1, 1) }, { Keys.Keypad2, () => SetActive(0, 2) },
-                { Keys.Keypad3, () => SetActive(-1, 1) },
+                { Keys.Keypad3, () => SetActive(1, 1) }, { Keys.Keypad2, () => SetActive(0, 2) },
+                { Keys.Keypad1, () => SetActive(-1, 1) },
                 { Keys.Keypad4, () => SetActive(-2, 0) }, { Keys.Keypad6, () => SetActive(2, 0) },
 
                 { Keys.Up, () => SetActive(0, -2) }, { Keys.Down, () => SetActive(0, 2) },

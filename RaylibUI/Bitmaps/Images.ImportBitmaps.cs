@@ -7,7 +7,6 @@ using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Model.Images;
-using RaylibUI.ImageLoader;
 
 namespace RaylibUI
 {

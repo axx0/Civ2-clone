@@ -26,6 +26,7 @@ public class MinimapPanel : BaseControl
         _headerLabel = new HeaderLabel(controller, "World");
 
         controller.OnMapEvent += MapEventTriggered;
+        Click += OnClick;
     }
     
     public override void OnResize()
@@ -40,7 +41,7 @@ public class MinimapPanel : BaseControl
         base.OnResize();
     }
 
-    public override void OnClick()
+    public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
         _gameScreen.Focused = this;
         var clickPosition = GetRelativeMousePosition();
@@ -52,10 +53,10 @@ public class MinimapPanel : BaseControl
 
         var clickedTilePosition = clickPosition - new Vector2(_offset[0],_offset[1]) + new Vector2(GetCenterShift(), 0);
         clickedTilePosition.X = WrapNumber((int)clickedTilePosition.X, 2 * _game.CurrentMap.XDim);
+        _gameScreen.Game.ActiveTile =
+            _gameScreen.Game.CurrentMap.Tile[(int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y];
         _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged,
                 new[] { (int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y }));
-
-        base.OnClick();
     }
 
     private void MapEventTriggered(object sender, MapEventArgs e)
@@ -95,9 +96,9 @@ public class MinimapPanel : BaseControl
         {
             for (var col = 0; col < map.XDim; col++)
             {
-                var col_ = WrapNumber(2 * col + GetCenterShift(), 2 * map.XDim) / 2;
+                var tileX = WrapNumber(2 * col + GetCenterShift(), 2 * map.XDim) / 2;
 
-                var tile = map.Tile[col_, row];
+                var tile = map.Tile[tileX, row];
                 if (!map.MapRevealed && !tile.IsVisible(map.WhichCivsMapShown)) continue;
 
                 var drawColor = tile.CityHere is not null

@@ -100,6 +100,8 @@ namespace RaylibUI
 
         public IList<IUserInterface> Interfaces { get; set; }
 
+        public IScreen ActiveScreen => _activeScreen;
+
         void ShutdownApp()
         {
             Soundman.Dispose();
