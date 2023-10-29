@@ -30,6 +30,7 @@ public class TextBox : BaseControl
         _minWidth = minWidth;
         _acceptAction = acceptAction;
         SetText(initialValue);
+        Click += OnClick;
     }
 
     public void SetText(string initialValue)
@@ -58,7 +59,7 @@ public class TextBox : BaseControl
         base.Draw(pulse);
     }
 
-    public override void OnClick()
+    public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
         if (_controller.Focused != this)
         {

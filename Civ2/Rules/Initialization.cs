@@ -2,7 +2,6 @@ using Civ2.ImageLoader;
 using Civ2engine;
 using Civ2engine.IO;
 using RaylibUI;
-using RaylibUI.ImageLoader;
 
 namespace Civ2.Rules;
 

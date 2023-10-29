@@ -17,11 +17,11 @@ internal class LabeledTextBox : ControlGroup
         Children.Add(label);
         _textBox = new TextBox(controller, textBoxDef.InitialValue, textBoxDef.Width);
         Children.Add(_textBox);
+        Click += OnClick;
     }
 
-    public override void OnClick()
+    public void OnClick(object? sender, MouseEventArgs args)
     {
-        Controller.Focused = _textBox;   
-        base.OnClick();
+        Controller.Focused = _textBox;
     }
 }

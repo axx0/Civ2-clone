@@ -10,7 +10,7 @@ public class FileDialog : BaseDialog
 {
     private const string ParentDirectory = "(Parent Directory)";
     private readonly Func<string, bool> _isValidSelectionCallback;
-    private readonly Func<string, bool> _onSelectionCallback;
+    private readonly Func<string?, bool> _onSelectionCallback;
     private string _currentDirectory;
     private readonly ListBox listBox;
     private readonly TextBox textBox;
@@ -25,23 +25,33 @@ public class FileDialog : BaseDialog
         listBox = new ListBox(this);
         listBox.ItemSelected += ItemSelected;
         textBox = new TextBox(this, baseDirectory, 600, TestSelection);
-        okButton = new Button(this, "Ok", () =>
-        {
-            var path = Path.Combine(_currentDirectory, textBox.Text);
-            if(_isValidSelectionCallback(path))
-            {
-                onSelectionCallback(path);
-            }
-        });
+        okButton = new Button(this, "Ok");
+        okButton.Click += OkClicked;
         Controls.Add(listBox);
         var menuBar = new ControlGroup(this, flexElement: 0);
         menuBar.AddChild(textBox);
         menuBar.AddChild(okButton);
-        menuBar.AddChild(new Button(this, "Cancel", () => onSelectionCallback(null)));
+        var cancelButton = new Button(this, "Cancel");
+        cancelButton.Click += CancelButtonOnClick;
+        menuBar.AddChild(cancelButton);
         Controls.Add(menuBar);
         SetButtons(menuBar);
         
         BuildFileList(false);
+    }
+
+    private void CancelButtonOnClick(object? sender, MouseEventArgs e)
+    {
+        _onSelectionCallback(null);
+    }
+
+    private void OkClicked(object? sender, MouseEventArgs args)
+    {
+        var path = Path.Combine(_currentDirectory, textBox.Text);
+        if (_isValidSelectionCallback(path))
+        {
+            _onSelectionCallback(path);
+        }
     }
 
     private void ItemSelected(object sender, ListBoxSelectionEventArgs args)

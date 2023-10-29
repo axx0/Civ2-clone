@@ -144,13 +144,14 @@ public class CivDialog : BaseDialog
         var menuBar = new ControlGroup(this);
         foreach (var button in popupBox.Button)
         {
-            menuBar.AddChild(new Button(this, button,
-                () =>
+            var actionButton = new Button(this, button);
+            actionButton.Click += (_,_) =>
                 {
                     managedTextures.ForEach(Raylib.UnloadTexture);
                     handleButtonClick(button, _selectedOption?.Index ?? -1, _checkboxes,
                         FormatTextBoxReturn());
-                }));
+                };
+            menuBar.AddChild(actionButton);
         }
 
         Controls.Add(menuBar);

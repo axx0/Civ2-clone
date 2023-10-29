@@ -11,6 +11,7 @@ public abstract class BaseControl : IControl
     private Rectangle _bounds;
     private bool _clickPossible;
     private bool _clickStart;
+    private MouseButton _clickButton;
     private int _height;
     protected IControlLayout Controller { get; }
     
@@ -76,9 +77,9 @@ public abstract class BaseControl : IControl
     {
         if (_clickStart)
         {
-            if (!Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+            if (!Raylib.IsMouseButtonDown(_clickButton))
             {
-                OnClick();
+                Click?.Invoke(this, new MouseEventArgs { Button = _clickButton});
             }   
         }
         if (_clickPossible)
@@ -86,7 +87,17 @@ public abstract class BaseControl : IControl
             _clickStart = Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT);
             if (_clickStart)
             {
-                OnMouseDown();
+                _clickButton = MouseButton.MOUSE_BUTTON_LEFT;
+                MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
+            }
+            else
+            {
+                _clickStart = Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT);
+                if (_clickStart)
+                {
+                    _clickButton = MouseButton.MOUSE_BUTTON_RIGHT;
+                    MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
+                }
             }
         }
     }
@@ -99,7 +110,7 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseEnter()
     {
-        _clickPossible = !Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT);
+        _clickPossible = !Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && !Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON);
         _clickStart = false;
     }
 
@@ -117,15 +128,9 @@ public abstract class BaseControl : IControl
         
     }
 
-    public virtual void OnMouseDown()
-    {
-        
-    }
+    public event EventHandler<MouseEventArgs> MouseDown;
 
-    public virtual void OnClick()
-    {
-        
-    }
+    public event EventHandler<MouseEventArgs> Click;
 
     public virtual void Draw(bool pulse)
     {
@@ -147,4 +152,9 @@ public abstract class BaseControl : IControl
     {
         return Raylib.GetMousePosition() - _location;
     }
+}
+
+public class MouseEventArgs
+{
+    public MouseButton Button { get; set; }
 }

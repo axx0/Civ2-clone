@@ -1,11 +1,10 @@
-using System.Diagnostics;
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Raylib_cs;
-using RaylibUI.BasicTypes;
+using RaylibUI.RunGame.GameControls.Mapping.Views;
 using RaylibUI.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
@@ -16,65 +15,104 @@ public class MapControl : BaseControl
     private readonly GameScreen _gameScreen;
     private readonly Game _game;
     private Texture2D? _backgroundImage;
-    private readonly Image[,] _mapTileTexture;
-    private readonly int _tileWidth;
-    private readonly int _tileHeight;
-    private Vector2 _offsets;
-    private readonly Map _map;
-    private readonly int _halfHeight;
-    private Texture2D _mapImage;
-    private Tile _selectedTile;
     private int _viewWidth;
     private int _viewHeight;
-    private readonly int _currentMapShown;
-    private Vector2 _activePosition = new (0,0);
-    private Texture2D? _activeImage;
-    private readonly int _halfWidth;
-    private readonly int _diagonalCut;
-    private readonly int _totalWidth;
-    private readonly int _totalHeight;
     private const int PaddingSide = 11;
     private const int Top = 38;
     private const int PaddingBtm = 11;
     private HeaderLabel _headerLabel;
+    
+    private readonly Queue<IGameView> _animationQueue = new();
+    private IGameView _currentView;
 
-    public MapControl(GameScreen gameScreen, Game game) : base(gameScreen)
+    public MapControl(GameScreen gameScreen, Game game, Rectangle initialBounds) : base(gameScreen)
     {
+        Bounds = initialBounds;
+        _currentBounds = initialBounds;
         _gameScreen = gameScreen;
         _game = game;
-        _map = game.CurrentMap;
-        var map = _map;
-
-        var terrain = _gameScreen.Main.ActiveInterface.TileSets[_map.MapIndex];
-        _mapTileTexture = new Image[map.XDim, map.YDim];
-        for (var col = 0; col < map.XDim; col++)
-        {
-            for (var row = 0; row < map.YDim; row++)
-            {
-                _mapTileTexture[col, row] = MapImage.MakeTileGraphic(map.Tile[col, row], map, terrain, game);
-            }
-        }
-
+        
         _headerLabel = new HeaderLabel(gameScreen, $"{_game.GetPlayerCiv.Adjective} Map");
+        SetDimensions();
 
-        _currentMapShown = _game.GetPlayerCiv.Id;
-
-        _tileWidth = _mapTileTexture[0, 0].width;
-        _tileHeight = _mapTileTexture[0, 0].height;
-        _halfHeight = _tileHeight / 2;
-        _halfWidth = _tileWidth / 2;
-        _diagonalCut = _halfHeight * _halfWidth;
-        _selectedTile = game.ActiveTile;
-        _totalWidth = _map.Tile.GetLength(0) * _tileWidth;
-        _totalHeight = _map.Tile.GetLength(1) * _halfHeight + _halfHeight;
-
+        _currentView =
+            _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth);
+        
         gameScreen.OnMapEvent += MapEventTriggered;
+        _game.OnUnitEvent += UnitEventHappened;
+        Click += OnClick;
+        MouseDown += OnMouseDown;
+
+        _clickTimer = new Timer(_ => _longHold = true);
     }
     
+    private bool _longHold;
+    private readonly Timer _clickTimer;
+
+    private void OnMouseDown(object? sender, MouseEventArgs e)
+    {
+        var tile = GetTileAtMousePosition();
+        if(tile == null) return;
+        _longHold = false;
+        _clickTimer.Change(500, -1);
+    }
+
+    private void UnitEventHappened(object sender, UnitEventArgs e)
+    {
+        if (!e.Location.Any(_game.CurrentMap.IsCurrentlyVisible))
+        {
+            return;
+        }
+        switch (e.EventType)
+        {
+            // Unit movement animation event was raised
+            case UnitEventType.MoveCommand:
+            {
+                if (e is MovementEventArgs mo)
+                {
+                    _animationQueue.Enqueue(new MoveAnimation(_gameScreen, mo, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth));
+                }
+
+                break;
+            }
+            case UnitEventType.Attack:
+            {
+                if (e is CombatEventArgs combatEventArgs)
+                {
+                    _animationQueue.Enqueue(new AttackAnimation(_gameScreen, combatEventArgs, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth));
+                }
+
+
+                // animationFrames = GetAnimationFrames.UnitAttack(e);
+                // StartAnimation(AnimationType.Attack);
+                break;
+            }
+            // case UnitEventType.StatusUpdate:
+            //     {
+            //         animType = AnimationType.Waiting;
+            //         if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
+            //         UpdateMap();
+            //         break;
+            //     }
+        }
+    }
 
     public override void OnResize()
     {
+        if (Bounds.Equals(_currentBounds)) return;
+        _currentBounds = Bounds;
         base.OnResize();
+
+        SetDimensions();
+        //ShowTile(_selectedTile);
+    }
+
+    private void SetDimensions()
+    {
+        if (_backgroundImage != null)
+        {
+            Raylib.UnloadTexture(_backgroundImage.Value);
+        }
         _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide);
 
         _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, Top);
@@ -82,125 +120,75 @@ public class MapControl : BaseControl
 
         _viewWidth = Width - 2 * PaddingSide;
         _viewHeight = Height - Top - PaddingBtm;
-        ShowTile(_selectedTile);
     }
 
-    private void ShowTile(Tile tile)
+    
+
+    private void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
-        bool setOffsets;
-        int offsetY;
-        int offsetX;
-        if (_viewHeight >= _totalHeight)
+        try
         {
-            offsetY = (_totalHeight - _viewHeight) /2;
-            setOffsets = offsetY != (int)_offsets.Y;
-        }
-        else
-        {
-            var tileTop = tile.Y * _halfHeight;
-            var currentOffsetYPos = tileTop - _offsets.Y;
-            offsetY = tileTop - (_viewHeight / 2);
-            if (offsetY < 0)
+            _clickTimer.Change(-1, -1);
+            _gameScreen.Focused = this;
+            var tile = GetTileAtMousePosition();
+            if (tile == null)
             {
-                offsetY = 0; setOffsets = offsetY != (int)_offsets.Y;
+                return;
             }
-            else if(offsetY > (_totalHeight - _viewHeight))
-            {
-                offsetY = _totalHeight - _viewHeight;
-                setOffsets = offsetY != (int)_offsets.Y;
-            }
-            else
-            {
-                setOffsets = currentOffsetYPos < _tileHeight || currentOffsetYPos + _tileHeight * 2 > _viewHeight;
-            }
-        }
 
-        if (_map.Flat && _viewWidth >= _totalWidth)
-        {
-            offsetX = (_totalWidth - _viewWidth) /2;
-            setOffsets = setOffsets || offsetX != (int)_offsets.X;
-        }
-        else
-        {
-            var tileLeft = tile.XIndex * _tileWidth + tile.Odd * _halfWidth;
-            offsetX = tileLeft - (_viewWidth / 2);
-            if (_map.Flat)
+            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button, _longHold))
             {
-                if (offsetX < 0)
-                {
-                    offsetX = 0;
-                    setOffsets = setOffsets || offsetX != (int)_offsets.X;
-                }else if (offsetX > (_totalWidth - _viewWidth + _halfWidth))
-                {
-                    offsetX = _totalWidth - _viewWidth + _halfWidth;
-                    setOffsets = setOffsets || offsetX != (int)_offsets.X;
-                }
-                else
-                {
-                    var currentOffsetXPos = tileLeft - _offsets.X;
-                    setOffsets = setOffsets || currentOffsetXPos < _tileWidth ||
-                                 currentOffsetXPos + _tileWidth * 2 > _viewWidth;
-                }
-            }
-            else
-            {
-                var currentOffsetXPos = tileLeft - _offsets.X;
-                setOffsets = setOffsets || currentOffsetXPos < _tileWidth ||
-                             currentOffsetXPos + _tileWidth * 2 > _viewWidth;
+                MapViewChange(tile);
             }
         }
-
-        if (setOffsets)
+        finally
         {
-            _offsets = new Vector2(offsetX, offsetY);
+            _longHold = false;
         }
-
-        _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged,
-                new[] { (int)_offsets.X / _halfWidth, (int)_offsets.Y / _halfHeight },
-                new[] { _viewWidth / _halfWidth, _viewHeight / _halfHeight }));
-
-        Redraw();
     }
 
-    public override void OnClick()
+    private Tile? GetTileAtMousePosition()
     {
-        _gameScreen.Focused = this;
         var clickPosition = GetRelativeMousePosition();
         if (clickPosition.X < PaddingSide || clickPosition.X > _viewWidth + PaddingSide || clickPosition.Y < Top ||
             clickPosition.Y > Top + _viewHeight)
         {
-            return;
+            return null;
         }
-        var clickedTilePosition = clickPosition - new Vector2(PaddingSide,Top) + _offsets;
-        var y =Math.DivRem((int)(clickedTilePosition.Y), _halfHeight, out var yRemainder) ;
+
+        var dim = _gameScreen.TileCache.GetDimensions(_game.CurrentMap);
+        var clickedTilePosition = clickPosition - new Vector2(PaddingSide, Top) + _currentView.Offsets;
+        var y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
         var odd = y % 2 == 1;
-        var clickX = (int)(odd ? clickedTilePosition.X - _halfWidth : clickedTilePosition.X);
+        var clickX = (int)(odd ? clickedTilePosition.X - dim.HalfWidth : clickedTilePosition.X);
         if (clickX < 0)
         {
-            if (_map.Flat)
+            if (_game.CurrentMap.Flat)
             {
                 clickX = 0;
             }
             else
             {
-                clickX += _totalWidth;
+                clickX += dim.TotalWidth;
             }
-        }else if (clickX > _totalWidth)
+        }
+        else if (clickX > dim.TotalWidth)
         {
-            if (_map.Flat)
+            if (_game.CurrentMap.Flat)
             {
-                clickX = _totalWidth - 1;
+                clickX = dim.TotalWidth - 1;
             }
             else
             {
-                clickX -= _totalWidth;
+                clickX -= dim.TotalWidth;
             }
         }
-        var x = Math.DivRem(clickX, _tileWidth, out var xRemainder);
-        
-        if (xRemainder < _halfWidth && y > 0)
+
+        var x = Math.DivRem(clickX, dim.TileWidth, out var xRemainder);
+
+        if (xRemainder < dim.HalfWidth && y > 0)
         {
-            if (yRemainder * _halfWidth + xRemainder * _halfHeight < _diagonalCut)
+            if (yRemainder *  dim.HalfWidth + xRemainder *  dim.HalfHeight < dim.DiagonalCut)
             {
                 y -= 1;
                 if (!odd)
@@ -208,21 +196,22 @@ public class MapControl : BaseControl
                     x -= 1;
                     if (x < 0)
                     {
-                        x = _map.Flat ? 0 : _map.Tile.GetLength(0) -1;
+                        x = _game.CurrentMap.Flat ? 0 : _game.CurrentMap.Tile.GetLength(0) - 1;
                     }
                 }
             }
-        }else if (xRemainder > _halfWidth)
+        }
+        else if (xRemainder > dim.HalfWidth)
         {
-            if ((_tileWidth - xRemainder) * _halfHeight + yRemainder * _halfWidth < _diagonalCut)
+            if ((dim.TileWidth - xRemainder) *  dim.HalfHeight + yRemainder *  dim.HalfWidth < dim.DiagonalCut)
             {
                 y -= 1;
                 if (odd)
                 {
                     x += 1;
-                    if (x == _map.Tile.GetLength(0))
+                    if (x == _game.CurrentMap.Tile.GetLength(0))
                     {
-                        if (_map.Flat)
+                        if (_game.CurrentMap.Flat)
                         {
                             x -= 1;
                         }
@@ -235,154 +224,56 @@ public class MapControl : BaseControl
             }
         }
 
-        if (0 <= y && y < _map.Tile.GetLength(1))
+        if (0 <= y && y < _game.CurrentMap.Tile.GetLength(1))
         {
-            _selectedTile = _map.Tile[x, y];
+            return _game.CurrentMap.Tile[x, y];
         }
-        
-        ShowTile(_selectedTile);
 
-        base.OnClick();
+        return null;
     }
 
-    public override bool OnKeyPressed(KeyboardKey key)
+    private void MapViewChange(Tile tile)
     {
-        switch (key)
+        if(_currentView.IsDefault && _currentView.Location != tile)
         {
-            case KeyboardKey.KEY_UP when _selectedTile.Y > 1:
-                _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y - 2];
-                ShowTile(_selectedTile);
-                break;
-            case KeyboardKey.KEY_DOWN when _selectedTile.Y < _map.Tile.GetLength(1):
-                _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y + 2];
-                ShowTile(_selectedTile);
-                break;
-            case KeyboardKey.KEY_LEFT:
-                _selectedTile =
-                    _map.Tile[_selectedTile.XIndex == 0 ? _map.Tile.GetLength(0) - 1 : _selectedTile.XIndex - 1,
-                        _selectedTile.Y];
-
-                ShowTile(_selectedTile);
-                break;
-            case KeyboardKey.KEY_RIGHT:
-                _selectedTile = _map.Tile[_selectedTile.XIndex >= _map.Tile.GetLength(0) -1 ? 0: _selectedTile.XIndex + 1, _selectedTile.Y];
-                
-                ShowTile(_selectedTile);
-                break;
-
+            NextView();
         }
-        return base.OnKeyPressed(key);
+        var dim = _gameScreen.TileCache.GetDimensions(_game.CurrentMap);
+        _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged,
+            new[] { (int)_currentView.Offsets.X / dim.HalfWidth, (int)_currentView.Offsets.Y / dim.HalfHeight },
+            new[] { _viewWidth / dim.HalfWidth, _viewHeight / dim.HalfHeight }));   
     }
 
-    private void Redraw()
-    {
-        var activeInterface = _gameScreen.Main.ActiveInterface;
-        var cities = activeInterface.CityImages;
-        
-        var imageWidth = _viewWidth;
-        var imageHeight = _viewHeight;
-        var image = ImageUtils.NewImage(imageWidth, imageHeight);
+    // public override bool OnKeyPressed(KeyboardKey key)
+    // {
+    //     switch (key)
+    //     {
+    //         case KeyboardKey.KEY_UP when _selectedTile.Y > 1:
+    //             _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y - 2];
+    //             ShowTile(_selectedTile);
+    //             break;
+    //         case KeyboardKey.KEY_DOWN when _selectedTile.Y < _map.Tile.GetLength(1):
+    //             _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y + 2];
+    //             ShowTile(_selectedTile);
+    //             break;
+    //         case KeyboardKey.KEY_LEFT:
+    //             _selectedTile =
+    //                 _map.Tile[_selectedTile.XIndex == 0 ? _map.Tile.GetLength(0) - 1 : _selectedTile.XIndex - 1,
+    //                     _selectedTile.Y];
+    //
+    //             ShowTile(_selectedTile);
+    //             break;
+    //         case KeyboardKey.KEY_RIGHT:
+    //             _selectedTile = _map.Tile[_selectedTile.XIndex >= _map.Tile.GetLength(0) -1 ? 0: _selectedTile.XIndex + 1, _selectedTile.Y];
+    //             
+    //             ShowTile(_selectedTile);
+    //             break;
+    //
+    //     }
+    //     return base.OnKeyPressed(key);
+    // }
 
-        Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.BLACK);
-
-        var ypos = -_offsets.Y;
-
-        var maxWidth = _map.XDim * _tileWidth;
-
-        Vector2? activePos = null;
-        var activeUnit = _game.Players[_currentMapShown].ActiveUnit;
-
-        for (var row = 0; row < _map.YDim; row++)
-        {
-            if (ypos >= -_tileHeight)
-            {
-                var xpos = (float)(-_offsets.X + (row % 2 * _halfWidth));
-                if (!_map.Flat && xpos + maxWidth < _viewWidth)
-                {
-                    xpos += maxWidth;
-                }
-
-                for (var col = 0; col < _map.XDim; col++)
-                {
-                    if (xpos >= -_tileWidth)
-                    {
-                        if (xpos >= imageWidth)
-                        {
-                            if (!_map.Flat)
-                            {
-                                xpos -= maxWidth;
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-
-                        var tile = _map.Tile[col, row];
-                        if (tile == _selectedTile)
-                        {
-                            activePos = new Vector2(xpos, ypos);
-                        }
-
-                        if (tile.Visibility[_currentMapShown])
-                        {
-                            Raylib.ImageDraw(ref image, _mapTileTexture[col, row], MapImage.TileRec,
-                                new Rectangle(xpos, ypos, _tileWidth, _tileHeight), Color.WHITE);
-
-                            if (tile.CityHere != null)
-                            {
-                                var cityStyleIndex = tile.CityHere.Owner.CityStyle;
-                                var sizeIncrement =
-                                    _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
-                                        tile.CityHere);
-
-                                
-                                Raylib.ImageDraw(ref image, cities.Sets[cityStyleIndex][sizeIncrement].Image, cities.CityRectangle, new Rectangle(xpos, ypos - _halfHeight, cities.CityRectangle.width, cities.CityRectangle.height), Color.WHITE);
-
-                            }
-                            else if (tile.UnitsHere.Count > 0)
-                            {
-                                var unit = tile.GetTopUnit();
-                                if (unit != activeUnit)
-                                {
-                                    var unitRectangle = new Rectangle(xpos, ypos - _halfHeight, _tileWidth,
-                                        _tileHeight + _halfHeight);
-                                    Raylib.ImageDraw(ref image, activeInterface.UnitImages.Units[(int)unit.Type].Image,
-                                        activeInterface.UnitImages.UnitRectangle,
-                                        unitRectangle, Color.WHITE);
-                                }
-                            }
-                        }
-                    }
-
-                    xpos += _tileWidth;
-                }
-            }
-
-            ypos += _halfHeight;
-            if (ypos > imageHeight)
-            {
-                break;
-            }
-        }
-
-        if (activePos.HasValue)
-        {
-            // if (activeUnit != null)
-            // {
-            //     SetActive(activePos.Value.X + _tileHeight - MapImages.UnitRectangle.height - xCRop, activePos.Value.Y - yCrop,
-            //         MapImages.Units[(int)activeUnit.Type].Image);
-            // }
-            // else
-            // {
-                //TODO: flashing tile highlight
-                SetActive(activePos.Value.X, activePos.Value.Y,activeInterface.MapImages.ViewPiece);
-            // }
-        }
-
-        _mapImage = Raylib.LoadTextureFromImage(image);
-        Raylib.UnloadImage(image);
-    }
+    
 
     private void MapEventTriggered(object sender, MapEventArgs e)
     {
@@ -390,34 +281,80 @@ public class MapControl : BaseControl
         {
             case MapEventType.MinimapViewChanged:
                 {
-                    ShowTile(_map.Tile[e.CentrXY[0], e.CentrXY[1]]);
+                    //ShowTile(_map.Tile[e.CentrXY[0], e.CentrXY[1]]);
                     break;
                 }
             default: break;
         }
     }
 
-    private void SetActive(float valueX, float valueY, Image image)
-    {
-        _activePosition = new Vector2(valueX, valueY);
-        _activeImage = Raylib.LoadTextureFromImage(image);
-    }
+    private Rectangle _currentBounds;
 
+    private DateTime _animationStart;
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.WHITE);
-
-        Raylib.DrawTexture(_mapImage, (int)Location.X + PaddingSide, (int)Location.Y + Top, Color.WHITE);
-        if (pulse && _activeImage.HasValue)
+        if (_backgroundImage != null)
+            Raylib.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.WHITE);
+        if (_animationStart.AddMilliseconds(_currentView.Interval) < DateTime.Now)
         {
-            Raylib.DrawTexture(_activeImage.Value, (int)(Location.X + PaddingSide + _activePosition.X),
-                (int)(Location.Y + Top + _activePosition.Y), Color.WHITE);
+            if (_currentView.Finished())
+            {
+                NextView();
+            }
+            else
+            {
+                _currentView.Next();
+            }
+
+            _animationStart = DateTime.Now;
         }
+
+        var paddedXLoc = (int)Location.X + PaddingSide;
+
+        var paddedYLoc = (int)Location.Y + Top;
+        Raylib.DrawTexture(_currentView.BaseImage, paddedXLoc, paddedYLoc,
+            Color.WHITE);
+        foreach (var cityDetails in _currentView.Cities)
+        {
+            Raylib.DrawTexture(cityDetails.Image, paddedXLoc + cityDetails.X, paddedYLoc + cityDetails.Y,
+                Color.WHITE);
+            //TODO: Draw city names    
+        }
+
+        foreach (var element in _currentView.Elements)
+        {
+            Raylib.DrawTexture(element.Image, paddedXLoc + element.X, paddedYLoc + element.Y - element.Image.height,
+                Color.WHITE);
+        }
+
+        foreach (var animation in _currentView.CurrentAnimations)
+        {
+            Raylib.DrawTexture(animation.Image, paddedXLoc + animation.X,
+                paddedYLoc + animation.Y - animation.Image.height,
+                Color.WHITE);
+        }
+        // if (pulse && _activeImage.HasValue)
+        // {
+        //     Raylib.DrawTexture(_activeImage.Value, (int)(Location.X + PaddingSide + _activePosition.X),
+        //         (int)(Location.Y + Top + _activePosition.Y), Color.WHITE);
+        // }
 
         _headerLabel.Draw(pulse);
 
         // Raylib.DrawTexture(_mapTileTexture[activeTile.XIndex, activeTile.Y],
         //     (int)Location.X + Width / 2 - _tileWidth / 2, (int)Location.Y + Height / 2 - _tileHeight / 2, Color.WHITE);
 
+    }
+
+    private void NextView()
+    {
+        var nextView = _animationQueue.Count > 0
+            ? _animationQueue.Dequeue()
+            : _gameScreen.ActiveMode.GetDefaultView(_gameScreen, _currentView, _viewHeight, _viewWidth);
+        if (nextView != _currentView)
+        {
+            _currentView.Dispose();
+            _currentView = nextView;
+        }
     }
 }

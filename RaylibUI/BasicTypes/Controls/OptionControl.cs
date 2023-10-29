@@ -18,6 +18,7 @@ internal class OptionControl : LabelControl
         _action = optionAction;
         Checked = isChecked;
         _images = images;
+        Click += OnClick;
     }
 
     public int Index { get; }
@@ -44,9 +45,8 @@ internal class OptionControl : LabelControl
         return baseHeight < _images[0].height ? _images[0].height : baseHeight;
     }
 
-    public override void OnClick()
+    public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
-        base.OnClick();
         _action(this);
         Checked = true;
     }

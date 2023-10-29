@@ -112,7 +112,6 @@ public abstract class Civ2Interface : IUserInterface
 
         return index;
     }
-
     public List<TerrainSet> TileSets { get; } = new();
 
     public CityImageSet CityImages { get; } = new();

@@ -69,7 +69,9 @@ namespace Civ2engine
             set => Players[_activeCiv.Id].ActiveTile = value;
         }
 
-        public Unit ActiveUnit
+        public IPlayer ActivePlayer => Players[_activeCiv.Id];
+
+        public Unit? ActiveUnit
         {
             get => Players[_activeCiv.Id].ActiveUnit;
             set
