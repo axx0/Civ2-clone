@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Xml.Linq;
-using Microsoft.Extensions.Configuration;
 
 namespace Civ2engine
 {
@@ -68,12 +65,13 @@ namespace Civ2engine
             }
         }
 
-        public static bool IsValidRoot(string? civ2Path)
+        public static bool IsValidRoot(string civ2Path)
         {
             try
             {
                 return !string.IsNullOrWhiteSpace(civ2Path) && Directory.Exists(civ2Path) &&
-                       Directory.GetFiles(civ2Path, RulesFile).Length > 0;
+                       (File.Exists(Path.Combine(civ2Path, RulesFile)) ||
+                        File.Exists(Path.Combine(civ2Path, RulesFile.ToUpper())));
             }
             catch
             {
