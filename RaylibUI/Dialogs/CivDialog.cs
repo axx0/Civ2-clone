@@ -23,6 +23,7 @@ public class CivDialog : BaseDialog
     private void SetSelectedOption(OptionControl newSelection)
     {
         if (_selectedOption == newSelection) return;
+        newSelection.Checked = true;
         _selectedOption?.Clear();
         _selectedOption = newSelection;
         this.Focused = newSelection;
@@ -30,13 +31,14 @@ public class CivDialog : BaseDialog
 
     private void TogggleCheckBox(OptionControl checkBox)
     {
+        checkBox.Checked = !checkBox.Checked;
         if (_checkboxes == null || _checkboxes.Count < checkBox.Index)
         {
             var old = _checkboxes ?? new List<bool>();
             _checkboxes = old.Concat(Enumerable.Repeat(false, checkBox.Index + 1)).ToList();
         }
 
-        _checkboxes[checkBox.Index] = !_checkboxes[checkBox.Index];
+        _checkboxes[checkBox.Index] = checkBox.Checked;
     }
 
     public CivDialog(Main host,
@@ -104,9 +106,9 @@ public class CivDialog : BaseDialog
             var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
             _optionControls = popupBox.Options.Select((o, i) =>
-                new OptionControl(this, o, i, optionAction, checkboxStates?[i] ?? false,
+                new OptionControl(this, o, i, checkboxStates?[i] ?? false,
                     i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
-
+            _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
             if (!popupBox.Checkbox)
             {
                 _optionControls[0].Checked = true;
