@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -88,6 +89,16 @@ namespace Civ2engine
                     ActiveUnit = unit;
                 }
             }
+
+            // Create events
+            var events = new List<ScenarioEvent>();
+            for (int i = 0; i < gameData.NumberOfEvents; i++)
+            {
+                events.Add(CreateEvent(gameData.EventTriggerIds[i], gameData.EventActionIds[i],
+                    gameData.EventTriggerParam[i], gameData.EventActionParam[i], gameData.EventStrings));
+            }
+
+            Events = events;
         }
 
         /// <summary>
@@ -178,6 +189,8 @@ namespace Civ2engine
         public List<Civilization> Civilizations { get; set; }
 
         public Map Map { get; set; }
+
+        public List<ScenarioEvent> Events { get; set; }
 
         public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
             int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,
@@ -318,5 +331,203 @@ namespace Civ2engine
             return unit;
         }
 
+        public ScenarioEvent CreateEvent(int triggerId, int[] actionIds, 
+            int[] triggerParam, int[] actionParam, List<string> strings)
+        {
+            ITrigger? trigger = default;
+            switch (triggerId)
+            {
+                case 0:
+                    trigger = new TUnitKilled
+                    {
+                        UnitKilled = (UnitType)triggerParam[1],
+                        AttackerCivId = triggerParam[4],
+                        DefenderCivId = triggerParam[7],
+                        Strings = strings.GetRange(0, 3),
+                    };
+                    strings.RemoveRange(0, 3);
+                    break;
+                case 1:
+                    trigger = new TCityTaken
+                    {
+                        City = Cities.Find(c => c.Name == strings[0]),
+                        AttackerCivId = triggerParam[4],
+                        DefenderCivId = triggerParam[7],
+                        Strings = strings.GetRange(0, 3),
+                    };
+                    strings.RemoveRange(0, 3);
+                    break;
+                case 2:
+                    trigger = new TTurn
+                    {
+                        Turn = triggerParam[9]
+                    };
+                    break;
+                case 3:
+                    trigger = new TTurnInterval
+                    {
+                        Interval = triggerParam[9]
+                    };
+                    break;
+                case 4:
+                    trigger = new TNegotiation
+                    {
+                        TalkerCivId = triggerParam[4],
+                        TalkerType = triggerParam[5],
+                        ListenerCivId = triggerParam[7],
+                        ListenerType = triggerParam[8],
+                        Strings = strings.GetRange(0, 2),
+                    };
+                    strings.RemoveRange(0, 2);
+                    break;
+                case 5:
+                    trigger = new TScenarioLoaded { };
+                    break;
+                case 6:
+                    trigger = new TRandomTurn
+                    {
+                        Denominator = triggerParam[10]
+                    };
+                    break;
+                case 7:
+                    trigger = new TNoSchism
+                    {
+                        CivId = triggerParam[7],
+                        Strings = strings.GetRange(0, 1),
+                    };
+                    strings.RemoveRange(0, 1);
+                    break;
+                case 8:
+                    trigger = new TReceivedTechnology
+                    {
+                        TechnologyId = triggerParam[11],
+                        ReceiverCivId = triggerParam[7],
+                        Strings = strings.GetRange(0, 1)
+                    };
+                    strings.RemoveRange(0, 1);
+                    break;
+                default:
+                    break;
+            }
+
+            var actions = new List<IAction>();
+            for (int i = 0; i < actionIds.Length; i++)
+            {
+                switch (actionIds[i])
+                {
+                    case 0:
+                        List<string> _texts = new();
+                        for (int j = 0; j < 20; j++)
+                        {
+                            if (actionParam[j] != 0)
+                            {
+                                _texts.Add(strings[0]);
+                                strings.RemoveRange(0, 1);
+                            }
+                        }
+                        actions.Add(new AText
+                        {
+                            Strings = new List<string>(_texts)
+                        });
+                        break;
+                    case 1:
+                        actions.Add(new AMoveUnit
+                        {
+                            OwnerCivId = actionParam[21],
+                            UnitMovedId = actionParam[23],
+                            NumberToMove = actionParam[24],
+                            MapCoords = new int[8] { actionParam[25], actionParam[26],
+                                actionParam[27], actionParam[28], actionParam[29], 
+                                actionParam[30], actionParam[31], actionParam[32] },
+                            MapDest = new int[2] { actionParam[33], actionParam[34] },
+                            Strings = strings.GetRange(0, 2),
+                        });
+                        strings.RemoveRange(0, 2);
+                        break;
+                    case 2:
+                        actions.Add(new ACreateUnit
+                        {
+                            OwnerCivId = actionParam[40],
+                            CreatedUnit = (UnitType)actionParam[42],
+                            Locations = new int[10, 2] { { actionParam[43], actionParam[44] }, { actionParam[45], actionParam[46] }, { actionParam[47], actionParam[48] }, { actionParam[49], actionParam[50] }, { actionParam[51], actionParam[52] }, { actionParam[53], actionParam[54] }, { actionParam[55], actionParam[56] }, { actionParam[57], actionParam[58] }, { actionParam[59], actionParam[60] }, { actionParam[61], actionParam[62] } },
+                            Veteran = actionParam[64] == 1,
+                            HomeCity = Cities.Find(c => c.Name == strings[2]),
+                            Strings = strings.GetRange(0, 3)
+                        });
+                        strings.RemoveRange(0, 3);
+                        break;
+                    case 3:
+                        actions.Add(new AChangeMoney
+                        {
+                            ReceiverCivId = actionParam[80],
+                            Amount = actionParam[81],
+                            Strings = strings.GetRange(0, 1)
+                        });
+                        strings.RemoveRange(0, 1);
+                        break;
+                    case 4:
+                        actions.Add(new APlayWAV
+                        {
+                            File = strings.GetRange(0, 1).FirstOrDefault(),
+                            Strings = strings.GetRange(0, 1)
+                        });
+                        strings.RemoveRange(0, 1);
+                        break;
+                    case 5:
+                        actions.Add(new AMakeAggression
+                        {
+                            WhomCivId = actionParam[36],
+                            WhoCivId = actionParam[38],
+                            Strings = strings.GetRange(0, 2)
+                        });
+                        strings.RemoveRange(0, 2);
+                        break;
+                    case 6:
+                        actions.Add(new AJustOnce { });
+                        break;
+                    case 7:
+                        actions.Add(new APlayCDtrack
+                        {
+                            TrackNo = actionParam[84]
+                        });
+                        break;
+                    case 8:
+                        actions.Add(new ADontplayWonders { });
+                        break;
+                    case 9:
+                        actions.Add(new AChangeTerrain
+                        {
+                            TerrainTypeId = actionParam[85],
+                            MapCoords = new int[8] { actionParam[86], actionParam[87],
+                                actionParam[88], actionParam[89], actionParam[90],
+                                actionParam[91], actionParam[92], actionParam[93] }
+                        });
+                        break;
+                    case 10:
+                        actions.Add(new ADestroyCiv
+                        {
+                            CivId = actionParam[94],
+                        });
+                        break;
+                    case 11:
+                        actions.Add(new AGiveTech
+                        {
+                            TechId = actionParam[95],
+                            CivId = actionParam[96],
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            var scenEvent = new ScenarioEvent
+            {
+                Trigger = trigger,
+                Actions = actions,
+            };
+
+            return scenEvent;
+        }
     }
 }

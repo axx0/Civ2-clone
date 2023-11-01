@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Civ2engine.Enums;
 
 namespace Civ2engine
@@ -122,7 +125,7 @@ namespace Civ2engine
             //=========================
             //Civ variables 1 (without barbarians)
             //=========================
-            char[] asciich = new char[23];
+            char[] asciich = new char[24];
             data.CivCityStyle = new byte[8];
             data.CivLeaderName = new string[8];
             data.CivTribeName = new string[8];
@@ -138,17 +141,31 @@ namespace Civ2engine
                 data.CivCityStyle[i + 1] = bytes[584 + 242 * i];    // City style
 
                 // Leader names (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 242 * i + j]);
+                for (int j = 0; j < 24; j++) 
+                {
+                    asciich[j] = Convert.ToChar(bytes[584 + 2 + 242 * i + j]);
+                    if (asciich[j] == 0x0) break;
+                }
                 data.CivLeaderName[i + 1] = new string(asciich);
                 data.CivLeaderName[i + 1] = data.CivLeaderName[i + 1].Replace("\0", string.Empty);  // remove null characters
 
                 // Tribe name (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 23 + 242 * i + j]);
+                asciich = new char[24];
+                for (int j = 0; j < 24; j++)
+                {
+                    asciich[j] = Convert.ToChar(bytes[584 + 2 + 24 + 242 * i + j]);
+                    if (asciich[j] == 0x0) break;
+                }
                 data.CivTribeName[i + 1] = new string(asciich);
                 data.CivTribeName[i + 1] = data.CivTribeName[i + 1].Replace("\0", string.Empty);
 
                 // Adjective (if empty, get the name from RULES.TXT)
-                for (int j = 0; j < 23; j++) asciich[j] = Convert.ToChar(bytes[584 + 2 + 23 + 23 + 242 * i + j]);
+                asciich = new char[24];
+                for (int j = 0; j < 24; j++) 
+                { 
+                    asciich[j] = Convert.ToChar(bytes[584 + 2 + 24 + 24 + 242 * i + j]);
+                    if (asciich[j] == 0x0) break;
+                }
                 data.CivAdjective[i + 1] = new string(asciich);
                 data.CivAdjective[i + 1] = data.CivAdjective[i + 1].Replace("\0", string.Empty);
 
@@ -409,7 +426,7 @@ namespace Civ2engine
             else if (bytes[10] == 44) multipl = 88;   // MGE
             else multipl = 92;   // ToT
 
-            char[] asciichar = new char[15];
+            char[] asciichar = new char[16];
             data.CityXloc = new short[data.NumberOfCities];
             data.CityYloc = new short[data.NumberOfCities];
             data.CityCanBuildCoastal = new bool[data.NumberOfCities];
@@ -472,7 +489,7 @@ namespace Civ2engine
                 data.CityNetTrade[i] = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 30); // Net trade
 
                 // Name
-                for (int j = 0; j < 15; j++) asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
+                for (int j = 0; j < 16; j++) asciichar[j] = Convert.ToChar(bytes[ofsetC + multipl * i + j + 32]);
                 var cityName = new string(asciichar);
                 data.CityName[i] = cityName[..cityName.IndexOf('\0')];
 
@@ -564,6 +581,51 @@ namespace Civ2engine
 
             #endregion
 
+            #region Events
+            //=========================
+            //EVENTS
+            //=========================
+            var offsetE = IndexofStringInByteArray(bytes, "EVNT");
+            if (offsetE != -1)
+            {
+                offsetE += 4;
+                data.NumberOfEvents = BitConverter.ToInt16(bytes, offsetE);
+
+                data.EventTriggerIds = new int[data.NumberOfEvents];
+                data.EventActionIds = new int[data.NumberOfEvents][];
+                data.EventTriggerParam = new int[data.NumberOfEvents][];
+                data.EventActionParam = new int[data.NumberOfEvents][];
+
+                offsetE += 4;
+                multipl = 444;  // no of bytes for each event
+
+                // Read strings
+                data.EventStrings = ReadEventStrings(bytes, offsetE + multipl * data.NumberOfEvents);
+
+                for (int i = 0; i < data.NumberOfEvents; i++)
+                {
+                    data.EventTriggerIds[i] = FindPositionOfBits(BitConverter.ToInt32(bytes, offsetE + multipl * i))[0];
+                    data.EventActionIds[i] = FindPositionOfBits(BitConverter.ToInt32(bytes, offsetE + 4 + multipl * i)).ToArray();
+
+                    // Trigger parameters
+                    var _row = new int[12];
+                    for (int j = 0; j < 12; j++)
+                    {
+                        _row[j] = BitConverter.ToInt32(bytes, offsetE + multipl * i + 8 + 4 * j);
+                    }
+                    data.EventTriggerParam[i] = _row;
+
+                    // Action parameters
+                    _row = new int[97];
+                    for (int j = 0; j < 97; j++)
+                    {
+                        _row[j] = BitConverter.ToInt32(bytes, offsetE + multipl * i + 8 + 4 * 12 + 4 * j);
+                    }
+                    data.EventActionParam[i] = _row;
+                }
+            }
+            #endregion
+
             return data;
         }
 
@@ -571,6 +633,69 @@ namespace Civ2engine
         private static bool GetBit(byte b, int bitNumber)
         {
             return (b & (1 << bitNumber)) != 0;
+        }
+
+        // Find offset of string in byte array
+        private static int IndexofStringInByteArray(byte[] byteArray, string text)
+        {
+            byte[] stringBytes = Encoding.ASCII.GetBytes(text);
+
+            bool found;
+            for (int i = 0; i < byteArray.Length - stringBytes.Length; i++)
+            {
+                found = true;
+                for (int j = 0; j < stringBytes.Length; j++)
+                {
+                    if (byteArray[i + j] != stringBytes[j])
+                        found = false;
+                }
+
+                if (found)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        // Read event strings at end of .sav
+        private static List<string> ReadEventStrings(byte[] byteArray, int begin)
+        {
+            List<string> strings = new();
+
+            if (byteArray.Length == begin) return strings;
+
+            int offset = 0;
+            List<char> chars = new();
+            do
+            {
+                if ((char)byteArray[begin + offset] != '\0')
+                {
+                    chars.Add((char)byteArray[begin + offset]);
+                }
+                else
+                {
+                    strings.Add(string.Concat(chars));
+                    chars.Clear();
+                }
+                offset++;
+            } while (begin + offset < byteArray.Length);
+
+            return strings;
+        }
+
+        // Find position of bits
+        private static List<int> FindPositionOfBits(int n)
+        {
+            var positions = new List<int>();
+            for (int BitToTest = 0; BitToTest < 32; BitToTest++)
+            {
+                if ((n & (1 << BitToTest)) != 0)
+                {
+                    positions.Add(BitToTest);
+                }
+            }
+
+            return positions;
         }
     }
 }

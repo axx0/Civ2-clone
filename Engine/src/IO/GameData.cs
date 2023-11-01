@@ -1,4 +1,5 @@
 ﻿using Civ2engine.Enums;
+using System.Collections.Generic;
 
 namespace Civ2engine
 {
@@ -137,5 +138,13 @@ namespace Civ2engine
         public short[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
         public short Zoom { get; set; }
+        
+        // Events
+        public short NumberOfEvents { get; set; }
+        public int[] EventTriggerIds { get; set; }
+        public int[][] EventActionIds { get; set; }
+        public int[][] EventTriggerParam { get; set; }
+        public int[][] EventActionParam { get; set; }
+        public List<string> EventStrings { get; set; } 
     }
 }
