@@ -8,7 +8,7 @@ namespace Civ2engine.IO
     {
         Rules _rules;
         LoadedGameObjects _gameObjects;
-        List<ScenarioEvent> Scenarios = new List<ScenarioEvent>();
+        List<ScenarioEvent> Scenarios = new ();
 
         private EventsLoader()
         {

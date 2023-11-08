@@ -578,9 +578,42 @@ namespace Civ2engine
 
             // Zoom (=-7(min)...+8(max), 0=std.)
             data.Zoom = BitConverter.ToInt16(bytes, ofsetO + 1429);
+            #endregion
+            #region Scenario
+            //=========================
+            //SCENARIO PARAMS
+            //=========================
+            int ofsetS = ofsetO + 1501;
+
+            data.TotalWar = GetBit(bytes[ofsetS + 0], 0);
+            data.ObjectiveVictory = GetBit(bytes[ofsetS + 0], 1);
+            data.CountWondersAsObjectives = GetBit(bytes[ofsetS + 0], 2);
+            data.ForbidGovernmentSwitching = GetBit(bytes[ofsetS + 0], 4);
+            data.ForbidTechFromConquests = GetBit(bytes[ofsetS + 0], 5);
+            data.ElliminatePollution = GetBit(bytes[ofsetS + 0], 6);
+            data.SpecialWWIIonlyAI = GetBit(bytes[ofsetS + 1], 7);
+
+            // Scenario name (read till first null character)
+            int step = 0;
+            List<char> chars = new();
+            while (bytes[ofsetS + 2 + step] != 0x0)
+            {
+                chars.Add((char)bytes[ofsetS + 2 + step]);
+                step++;
+            }
+            data.ScenarioName = String.Concat(chars);
+
+            data.TechParadigm = BitConverter.ToInt16(bytes, ofsetS + 82);
+            data.TurnYearIncrement = BitConverter.ToInt16(bytes, ofsetS + 84);
+            data.StartingYear = BitConverter.ToInt16(bytes, ofsetS + 86);
+            data.MaxTurns = BitConverter.ToInt16(bytes, ofsetS + 88);
+            data.ObjectiveProtagonist = BitConverter.ToInt16(bytes, ofsetS + 91);
+            data.NoObjectivesDecisiveVictory = BitConverter.ToInt16(bytes, ofsetS + 93);
+            data.NoObjectivesMarginalVictory = BitConverter.ToInt16(bytes, ofsetS + 95);
+            data.NoObjectivesMarginalDefeat = BitConverter.ToInt16(bytes, ofsetS + 97);
+            data.NoObjectivesDecisiveDefeat = BitConverter.ToInt16(bytes, ofsetS + 99);
 
             #endregion
-
             #region Events
             //=========================
             //EVENTS

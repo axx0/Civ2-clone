@@ -338,6 +338,8 @@ public class Dialog : Form, IForm
     /// <param name="replacementNumbers">A list of integers to replace %NUMBER0, %NUMBER1, %NUMBER2, etc.</param>
     public static string ReplacePlaceholders(string text, IList<string> replacementStrings, IList<int> replacementNumbers)
     {
+        if (replacementNumbers == null || replacementStrings == null) return text;
+
         var index = text.IndexOf("%STRING", StringComparison.Ordinal);
         while (index != -1)
         {

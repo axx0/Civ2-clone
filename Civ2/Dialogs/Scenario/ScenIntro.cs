@@ -1,3 +1,4 @@
+using Civ2.Dialogs.Scenario;
 using Civ2.Rules;
 using Civ2engine;
 using Model;
@@ -5,17 +6,17 @@ using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
 
-public class LoadOk : ICivDialogHandler
+public class ScenIntro : ICivDialogHandler
 {
-    public const string Title = "LOADOK";
+    public const string Title = "SCENINTRO";
 
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
-    {   
+    {
         Dialog = new DialogElements
         {
             Dialog = popups[Name],
-            DialogPos = new Point(0,0)
+            DialogPos = new Point(0, 0)
         };
         return this;
     }
@@ -25,20 +26,11 @@ public class LoadOk : ICivDialogHandler
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
+        return civDialogHandlers[ChoseScenCiv.Title].Show(civ2Interface);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        var game = Initialization.GameInstance;
-        var playerCiv = game.GetPlayerCiv;
-    
-        Dialog.ReplaceStrings = new List<string>
-        {
-            playerCiv.LeaderTitle, playerCiv.LeaderName,
-            playerCiv.TribeName, game.GetGameYearString,
-            game.DifficultyLevel.ToString()
-        };
         return new MenuAction(Dialog);
     }
 }

@@ -13,10 +13,10 @@ namespace Civ2engine
             var hydrator = new LoadedGameObjects(rules, gameData);
 
             // If there are no events in .sav read them from EVENTS.TXT (if it exists)
-            if (hydrator.Events.Count == 0 && 
+            if (hydrator.Scenario.Events.Count == 0 && 
                 Directory.EnumerateFiles(ruleset.FolderPath, "events.txt", new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault() != null)
             {
-                hydrator.Events = EventsLoader.LoadEvents(new string[] { ruleset.FolderPath }, rules, hydrator);
+                hydrator.Scenario.Events = EventsLoader.LoadEvents(new string[] { ruleset.FolderPath }, rules, hydrator);
             }
             
             // Make an instance of a new game

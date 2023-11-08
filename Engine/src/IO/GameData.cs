@@ -138,6 +138,25 @@ namespace Civ2engine
         public short[] ActiveCursorXY { get; set; }
         public int[] ClickedXY { get; set; }
         public short Zoom { get; set; }
+
+        // Scenario parameters
+        public bool TotalWar { get; set; }
+        public bool ObjectiveVictory { get; set; }
+        public bool CountWondersAsObjectives { get; set; }
+        public bool ForbidGovernmentSwitching { get; set; }
+        public bool ForbidTechFromConquests { get; set; }
+        public bool ElliminatePollution { get; set; }
+        public bool SpecialWWIIonlyAI { get; set; }
+        public string ScenarioName { get; set; }
+        public short TechParadigm { get; set; }
+        public short TurnYearIncrement { get; set; }
+        public short StartingYear { get; set; }
+        public short MaxTurns { get; set; }
+        public short ObjectiveProtagonist { get; set; }
+        public short NoObjectivesDecisiveVictory { get; set; }
+        public short NoObjectivesMarginalVictory { get; set; }
+        public short NoObjectivesMarginalDefeat { get; set; }
+        public short NoObjectivesDecisiveDefeat { get; set; }
         
         // Events
         public short NumberOfEvents { get; set; }

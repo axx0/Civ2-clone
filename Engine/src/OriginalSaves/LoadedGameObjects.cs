@@ -16,6 +16,7 @@ namespace Civ2engine
     {
         public Unit ActiveUnit { get; }
         private Rules Rules { get; }
+        public Scenario Scenario { get; }
 
         public LoadedGameObjects(Rules rules, GameData gameData)
         {
@@ -90,15 +91,34 @@ namespace Civ2engine
                 }
             }
 
-            // Create events
-            var events = new List<ScenarioEvent>();
+            // Scenario
+            List<ScenarioEvent> events = new ();
             for (int i = 0; i < gameData.NumberOfEvents; i++)
             {
                 events.Add(CreateEvent(gameData.EventTriggerIds[i], gameData.EventActionIds[i],
                     gameData.EventTriggerParam[i], gameData.EventActionParam[i], gameData.EventStrings));
             }
-
-            Events = events;
+            Scenario = new Scenario
+            {
+                Events = events,
+                TotalWar = gameData.TotalWar,
+                ObjectiveVictory = gameData.ObjectiveVictory,
+                CountWondersAsObjectives = gameData.CountWondersAsObjectives,
+                ForbidGovernmentSwitching = gameData.ForbidGovernmentSwitching,
+                ForbidTechFromConquests = gameData.ForbidTechFromConquests,
+                ElliminatePollution = gameData.ElliminatePollution,
+                SpecialWWIIonlyAI = gameData.SpecialWWIIonlyAI,
+                Name = gameData.ScenarioName,
+                TechParadigm = gameData.TechParadigm,
+                TurnYearIncrement = gameData.TurnYearIncrement,
+                StartingYear = gameData.StartingYear,
+                MaxTurns = gameData.MaxTurns,
+                ObjectiveProtagonist = gameData.ObjectiveProtagonist,
+                NoObjectivesDecisiveVictory = gameData.NoObjectivesDecisiveVictory,
+                NoObjectivesMarginalVictory = gameData.NoObjectivesMarginalVictory,
+                NoObjectivesMarginalDefeat = gameData.NoObjectivesMarginalDefeat,
+                NoObjectivesDecisiveDefeat = gameData.NoObjectivesDecisiveDefeat
+            };
         }
 
         /// <summary>
@@ -189,8 +209,6 @@ namespace Civ2engine
         public List<Civilization> Civilizations { get; set; }
 
         public Map Map { get; set; }
-
-        public List<ScenarioEvent> Events { get; set; }
 
         public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
             int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,

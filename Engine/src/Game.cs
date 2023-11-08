@@ -14,8 +14,9 @@ namespace Civ2engine
     {
         private readonly Options _options;
         private readonly Rules _rules;
+        private readonly Scenario _scenarioData;
         private readonly GameVersionType _gameVersion;
-        private readonly DifficultyType _difficultyLevel;
+        private DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         public FastRandom Random { get; set; } = new();
         public List<City> AllCities { get; } = new();
@@ -29,6 +30,7 @@ namespace Civ2engine
 
         public List<Civilization> GetActiveCivs => AllCivilizations.Where(c => c.Alive).ToList();
         public Options Options => _options;
+        public Scenario ScenarioData => _scenarioData;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
 
