@@ -7,18 +7,15 @@ namespace RaylibUI;
 
 internal class OptionControl : LabelControl
 {
-    private readonly Action<OptionControl> _action;
     private readonly Texture2D[] _images;
 
     public override bool CanFocus => true;
 
-    public OptionControl(IControlLayout controller, string text, int index, Action<OptionControl> optionAction, bool isChecked, Texture2D[] images) : base(controller, text, eventTransparent: false, offset: images[0].width)
+    public OptionControl(IControlLayout controller, string text, int index, bool isChecked, Texture2D[] images) : base(controller, text, eventTransparent: false, offset: images[0].width)
     {
         Index = index;
-        _action = optionAction;
         Checked = isChecked;
         _images = images;
-        Click += OnClick;
     }
 
     public int Index { get; }
@@ -43,11 +40,5 @@ internal class OptionControl : LabelControl
     {
         var baseHeight = base.GetPreferredHeight();
         return baseHeight < _images[0].height ? _images[0].height : baseHeight;
-    }
-
-    public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
-    {
-        _action(this);
-        Checked = true;
     }
 }   
