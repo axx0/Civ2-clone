@@ -67,6 +67,8 @@ namespace Civ2engine
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion;
 
+            _scenarioData = objects.Scenario;
+
             TurnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
             _barbarianActivity = gameData.BarbarianActivity;

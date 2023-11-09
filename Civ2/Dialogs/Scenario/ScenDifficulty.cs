@@ -1,21 +1,24 @@
+using Civ2.Dialogs.FileDialogs;
+using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
 using Civ2engine;
+using Civ2engine.Enums;
 using Model;
 using Model.InterfaceActions;
 
-namespace Civ2.Dialogs;
+namespace Civ2.Dialogs.Scenario;
 
-public class LoadOk : ICivDialogHandler
+public class ScenDifficulty : ICivDialogHandler
 {
-    public const string Title = "LOADOK";
+    public const string Title = "SCENDIFFICULTY";
 
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
-    {   
+    {
         Dialog = new DialogElements
         {
             Dialog = popups[Name],
-            DialogPos = new Point(0,0)
+            DialogPos = new Point(0, 0),
         };
         return this;
     }
@@ -25,20 +28,17 @@ public class LoadOk : ICivDialogHandler
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
+        if (result.SelectedButton == Labels.Cancel)
+        {
+            return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
+        }
+        
+        //Game.Instance.DifficultyLevel = (DifficultyType)result.SelectedIndex;
+        return civDialogHandlers[ScenGender.Title].Show(civ2Interface); ;
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        var game = Initialization.GameInstance;
-        var playerCiv = game.GetPlayerCiv;
-    
-        Dialog.ReplaceStrings = new List<string>
-        {
-            playerCiv.LeaderTitle, playerCiv.LeaderName,
-            playerCiv.TribeName, game.GetGameYearString,
-            game.DifficultyLevel.ToString()
-        };
         return new MenuAction(Dialog);
     }
 }
