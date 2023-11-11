@@ -2,6 +2,7 @@
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
+using Raylib_cs;
 using RaylibUI;
 
 namespace Model;
@@ -29,4 +30,12 @@ public interface IUserInterface
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }
     IList<string> GetMenuItems();
+    CityWindowLayout GetCityWindowDefinition();
+}
+
+public class CityWindowLayout
+{
+    public Image Image { get; init; }
+    public int Height { get; init; }
+    public int Width { get; init; }
 }

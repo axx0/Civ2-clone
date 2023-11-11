@@ -178,17 +178,29 @@ public class ImageUtils
     /// <summary>
     /// Paint base screen of a dialog
     /// </summary>
-    /// <param name="w"></param> Dialog width
-    /// <param name="h"></param> Dialog height
-    public static Texture2D? PaintDialogBase(int w, int h, int top, int paddingBtm, int paddingSide, string? title = null)
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="top"></param>
+    /// <param name="paddingBtm"></param>
+    /// <param name="paddingSide"></param>
+    /// <param name="image1"></param>
+    /// Dialog width
+    /// Dialog height
+    public static Texture2D? PaintDialogBase(int width, int height, int top, int paddingBtm, int paddingSide, Image? centerImage = null)
     {
         // Outer wallpaper
-        var image = NewImage(w, h);
-        PaintPanelBorders(ref image,w,h,top, paddingBtm);
-        
-        DrawTiledImage(InnerWallpaper, ref image, h,w,top, paddingBtm, paddingSide);
-
-        
+        var image = NewImage(width, height);
+        PaintPanelBorders(ref image,width,height,top, paddingBtm);
+        if (centerImage != null)
+        {
+            var innerWidth =Math.Min(width - 2*paddingSide, centerImage.Value.width);
+            var innerHeight = Math.Min(height - top - paddingBtm, centerImage.Value.height);
+            Raylib.ImageDraw( ref image, centerImage.Value, new Rectangle(0,0,innerWidth,innerHeight), new Rectangle(paddingSide, top, innerWidth,innerHeight), Color.WHITE);
+        }
+        else
+        {
+            DrawTiledImage(InnerWallpaper, ref image, height, width, top, paddingBtm, paddingSide);
+        }
 
         return Raylib.LoadTextureFromImage(image);
   }

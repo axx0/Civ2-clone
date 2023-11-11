@@ -116,6 +116,8 @@ public class GameScreen : BaseScreen
     public void ShowCityWindow(City city)
     {
         //TODO: City window
+        var cityDialog = new CityWindow(this, city);
+        ShowDialog(cityDialog);
     }
 
     public void TriggerMapEvent(MapEventArgs args)

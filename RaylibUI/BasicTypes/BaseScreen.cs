@@ -95,6 +95,11 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
             control => Raylib.CheckCollisionPointRec(mousePos, control.Bounds));
         layoutController.Hovered?.OnMouseEnter();
     }
+
+    public void CloseDialog(IControlLayout dialog)
+    {
+        _dialogs.Remove(dialog);
+    }
     
 
     protected void ShowDialog(IControlLayout dialog, bool stack = false)

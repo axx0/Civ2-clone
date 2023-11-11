@@ -10,7 +10,7 @@ using Button = RaylibUI.Controls.Button;
 
 namespace RaylibUI;
 
-public class CivDialog : BaseDialog
+public class CivDialog : ResizableDialog
 {
     private OptionControl? _selectedOption = null;
 

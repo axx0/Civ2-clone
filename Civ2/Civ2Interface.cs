@@ -9,6 +9,7 @@ using Model.ImageSets;
 using Model.InterfaceActions;
 using Raylib_cs;
 using RaylibUI;
+using RayLibUtils;
 
 namespace Civ2;
 
@@ -128,6 +129,17 @@ public abstract class Civ2Interface : IUserInterface
         MenuLoader.LoadMenus(Initialization.ConfigObject.RuleSet);
 
         return MenuLoader.Menus;
+    }
+
+    private CityWindowLayout? _cityWindowLayout;
+
+    public CityWindowLayout GetCityWindowDefinition()
+    {
+        if (_cityWindowLayout != null) return _cityWindowLayout;
+
+        var cityImage = Images.LoadImage("city", Initialization.ConfigObject.RuleSet.Paths, "gif");
+        _cityWindowLayout = new CityWindowLayout { Image = cityImage, Height = 420, Width = 640 };
+        return _cityWindowLayout;
     }
 }
 
