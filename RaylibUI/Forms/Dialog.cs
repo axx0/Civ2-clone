@@ -336,24 +336,31 @@ public class Dialog : Form, IForm
     /// <param name="text">Text where replacement takes place.</param>
     /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
     /// <param name="replacementNumbers">A list of integers to replace %NUMBER0, %NUMBER1, %NUMBER2, etc.</param>
-    public static string ReplacePlaceholders(string text, IList<string> replacementStrings, IList<int> replacementNumbers)
+    public static string ReplacePlaceholders(string text, IList<string>? replacementStrings, IList<int>? replacementNumbers)
     {
-        if (replacementNumbers == null || replacementStrings == null) return text;
 
-        var index = text.IndexOf("%STRING", StringComparison.Ordinal);
-        while (index != -1)
+        if (replacementStrings != null)
         {
-            var numericChar = text[index + 7];
-            text = text.Replace("%STRING" + numericChar, replacementStrings[(int)char.GetNumericValue(numericChar)]);
-            index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            var index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            while (index != -1)
+            {
+                var numericChar = text[index + 7];
+                text = text.Replace("%STRING" + numericChar,
+                    replacementStrings[(int)char.GetNumericValue(numericChar)]);
+                index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            }
         }
 
-        index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
-        while (index != -1)
+        if (replacementNumbers != null)
         {
-            var numericChar = text[index + 7];
-            text = text.Replace("%NUMBER" + numericChar, replacementNumbers[(int)char.GetNumericValue(numericChar)].ToString());
-            index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
+            var index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
+            while (index != -1)
+            {
+                var numericChar = text[index + 7];
+                text = text.Replace("%NUMBER" + numericChar,
+                    replacementNumbers[(int)char.GetNumericValue(numericChar)].ToString());
+                index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
+            }
         }
 
         return text;
