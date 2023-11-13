@@ -54,7 +54,7 @@ public class CivDialog : ResizableDialog
         Image[]? icons = null) :
         base(host,
             Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-            new Point(5, 5) // relatDialogPos
+             relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
         _optionsCols = optionsCols;
