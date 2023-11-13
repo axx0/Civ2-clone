@@ -9,6 +9,7 @@ using Color = Raylib_cs.Color;
 using Font = Raylib_cs.Font;
 using Image = Raylib_cs.Image;
 using Rectangle = Raylib_cs.Rectangle;
+using Civ2engine.Units;
 
 namespace RaylibUI;
 
@@ -471,6 +472,45 @@ public class ImageUtils
         Raylib.ImageDrawLine(ref right, dim-8,7,dim-8,11,Color.BLACK);
         Raylib.ImageDrawLine(ref right, dim-9,6,dim-9,12,Color.BLACK);
         return new[] { left, image, right };
+    }
+
+    public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)
+    {
+        int w = (int)active.UnitImages.UnitRectangle.width - 1;
+        int h = (int)active.UnitImages.UnitRectangle.height - 1;
+        var image = NewImage(w, h);
+        var rect = new Rectangle(0, 0, w, h);
+        var flagLoc = active.UnitImages.Units[(int)unit.Type].FlagLoc;
+        var shldSrc = new Rectangle(0, 0, active.UnitImages.ShieldShadow.width, active.UnitImages.ShieldShadow.height);
+        var shldDes = new Rectangle(flagLoc.X, flagLoc.Y, shldSrc.width, shldSrc.height);
+        int stackingDir = (int)active.UnitImages.Units[(int)unit.Type].FlagLoc.X < 32 ? -1 : 1;
+        var shldShadowDes = new Rectangle(flagLoc.X + stackingDir, flagLoc.Y + 1, shldSrc.width, shldSrc.height);
+        if (unit.IsInStack && !noStacking)
+        {
+            var shldStackShadowDes = new Rectangle(flagLoc.X + 5 * stackingDir, flagLoc.Y + 1, shldSrc.width, shldSrc.height);
+            var shldStackDes = new Rectangle(flagLoc.X + 4 * stackingDir, flagLoc.Y, shldSrc.width, shldSrc.height);
+            Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldStackShadowDes, Color.WHITE);
+            Raylib.ImageDraw(ref image, active.UnitImages.ShieldBack[unit.Owner.Id], shldSrc, shldStackDes, Color.WHITE);
+        }
+        Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldShadowDes, Color.WHITE);
+        Raylib.ImageDraw(ref image, GetShieldWithHP(active.UnitImages.Shields[unit.Owner.Id], unit), shldSrc, shldDes, Color.WHITE);
+        Raylib.ImageDraw(ref image, active.UnitImages.Units[(int)unit.Type].Image, rect, rect, Color.WHITE);
+        return image;
+    }
+
+    public static Image GetShieldWithHP(Image shield, Unit unit)
+    {
+        var hpShield = Raylib.ImageFromImage(shield, new Rectangle(0, 0, shield.width, shield.height));
+        var hpBarX = (int)Math.Floor((float)unit.RemainingHitpoints * 12 / unit.HitpointsBase);
+        var hpColor = hpBarX switch
+        {
+            <= 3 => new Color(243, 0, 0, 255),
+            >= 4 and <= 8 => new Color(255, 223, 79, 255),
+            _ => new Color(87, 171, 39, 255)
+        };
+        Raylib.ImageDrawRectangle(ref hpShield, 0, 2, hpBarX, 3, hpColor);
+        Raylib.ImageDrawRectangle(ref hpShield, hpBarX, 2, hpShield.width - hpBarX, 3, Color.BLACK);
+        return hpShield;
     }
 }
 

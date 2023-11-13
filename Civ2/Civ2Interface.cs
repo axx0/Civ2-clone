@@ -8,7 +8,6 @@ using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
 using Raylib_cs;
-using RaylibUI;
 
 namespace Civ2;
 
@@ -129,5 +128,7 @@ public abstract class Civ2Interface : IUserInterface
 
         return MenuLoader.Menus;
     }
+
+    public abstract int UnitsRows { get; }
 }
 

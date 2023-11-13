@@ -1,3 +1,4 @@
+using Civ2.ImageLoader;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Raylib_cs;
@@ -19,17 +20,19 @@ internal class MoveAnimation : BaseGameView
         int noFramesForOneMove = 8;
         int[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
         var map = activeUnit.CurrentLocation.Map;
+        var dim = gameScreen.TileCache.GetDimensions(map);
         for (int frame = 0; frame < noFramesForOneMove; frame++)
         {
             // Draw active unit on top of everything (except if it's city, then don't draw the unit in last frame)
             if (!(frame == noFramesForOneMove - 1 && activeUnit.CurrentLocation.CityHere != null))
             {
-                SetAnimation(new[]
+                SetAnimation(
+                
+                new[]
                 {
-                    new ViewElement
+                    new ViewElement 
                     {
-                        Image = Raylib.LoadTextureFromImage(activeInterface.UnitImages
-                            .Units[(int)activeUnit.Type].Image),
+                        Image = Raylib.LoadTextureFromImage(ImageUtils.GetUnitImage(activeInterface, activeUnit, true)),
                         X = (int)ActivePos.X + unitDrawOffset[0] * map.Xpx / noFramesForOneMove * (frame + 1),
                         Y = (int)ActivePos.Y + unitDrawOffset[1] * map.Ypx / noFramesForOneMove * (frame + 1)
                     }

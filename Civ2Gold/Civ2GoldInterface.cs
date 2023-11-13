@@ -78,4 +78,5 @@ public class Civ2GoldInterface : Civ2Interface
     public override IImageSource BackgroundImage => new BinaryStorage
         { FileName = "Tiles.dll", DataStart = 0xF7454, Length = 0x1389D };
 
+    public override int UnitsRows => 7;
 }
