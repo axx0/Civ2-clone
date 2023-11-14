@@ -55,12 +55,12 @@ public class ResizableDialog : BaseDialog
         SetLocation(width, maxWidth, height, totalHeight);
 
 
-        int left = 11 + (int)_location.X;
-        int top = 11 + (int)_location.Y;
+        int left = 11 + (int)Location.X;
+        int top = 11 + (int)Location.Y;
         index = 0;
         if (_headerLabel != null)
         {
-            _headerLabel.Bounds = new Rectangle(_location.X, _location.Y, maxWidth + 22, heights[0] + 11);
+            _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, maxWidth + 22, heights[0] + 11);
             top += heights[0];
             index = 1;
             _headerLabel.OnResize();
