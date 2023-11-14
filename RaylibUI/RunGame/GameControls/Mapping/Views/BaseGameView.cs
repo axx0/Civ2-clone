@@ -47,6 +47,7 @@ public abstract class BaseGameView : IGameView
         else
         {
 
+            var civilizationId = _gameScreen.Player.Civilization.Id;
             var cityData = new List<CityData>();
             var elements = new List<ViewElement>();
             if (_offsets == Vector2.Zero)
@@ -100,8 +101,8 @@ public abstract class BaseGameView : IGameView
                             {
                                 ActivePos = new Vector2(xpos, ypos+ dim.TileHeight);
                             }
-                            
-                            if (tile.Visibility[_map.MapIndex])
+
+                            if (tile.Visibility[civilizationId])
                             {
                                 Raylib.ImageDraw(ref image, _gameScreen.TileCache.GetTextureForTile(tile),
                                     MapImage.TileRec,

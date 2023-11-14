@@ -10,7 +10,7 @@ using Button = RaylibUI.Controls.Button;
 
 namespace RaylibUI;
 
-public class CivDialog : BaseDialog
+public class CivDialog : ResizableDialog
 {
     private OptionControl? _selectedOption = null;
 
@@ -54,7 +54,7 @@ public class CivDialog : BaseDialog
         Image[]? icons = null) :
         base(host,
             Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-            new Point(5, 5) // relatDialogPos
+             relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
         _optionsCols = optionsCols;

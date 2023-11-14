@@ -32,7 +32,6 @@ public class MainMenu : BaseScreen
 
     private void ProcessAction(IInterfaceAction action)
     {
-        FormManager.Clear();
         _currentAction = action;
         switch (action)
         {
@@ -47,12 +46,6 @@ public class MainMenu : BaseScreen
             {
                 var menu = menuAction.DialogElement;
                 UpdateDecorations(menu);
-
-                FormManager.Add(new Dialog(menu.Dialog, menu.DialogPos, new[] { HandleButtonClick },
-                    optionsCols: menu.OptionsCols,
-                    replaceStrings: menu.ReplaceStrings,
-                    replaceNumbers: menu.ReplaceNumbers, checkboxStates: menu.CheckboxStates,
-                    textBoxDefs: menu.TextBoxes));
 
                 ShowDialog(new CivDialog(MainWindow, menu.Dialog, menu.DialogPos, HandleButtonClick,
                     optionsCols: menu.OptionsCols,
@@ -144,8 +137,6 @@ public class MainMenu : BaseScreen
         {
             panel.Draw();
         }
-
-        FormManager.DrawForms();
         
         base.Draw(pulse);
     }

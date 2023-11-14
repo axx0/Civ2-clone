@@ -55,8 +55,6 @@ namespace RaylibUI
 
             //play a sound
             //soundman.PlayCIV2DefaultSound("DIVEBOMB");
-
-            FormManager.Initialize();
         }
 
         public void RunLoop()
