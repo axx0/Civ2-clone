@@ -1,5 +1,4 @@
 using System.Numerics;
-using Civ2engine;
 using Civ2engine.MapObjects;
 using Raylib_cs;
 
@@ -129,8 +128,7 @@ public abstract class BaseGameView : IGameView
                                     var unit = tile.GetTopUnit();
                                     elements.Add(new ViewElement
                                     {
-                                        Image = Raylib.LoadTextureFromImage(activeInterface.UnitImages
-                                            .Units[(int)unit.Type].Image),
+                                        Image = Raylib.LoadTextureFromImage(ImageUtils.GetUnitImage(activeInterface, unit)),
                                         X = (int)xpos,
                                         Y = (int)ypos + dim.TileHeight
                                     });

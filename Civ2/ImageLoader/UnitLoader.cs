@@ -1,5 +1,6 @@
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.Units;
 using Model.ImageSets;
 using Raylib_cs;
 using RayLibUtils;
@@ -13,7 +14,7 @@ namespace Civ2.ImageLoader
         public static unsafe void LoadUnits(Ruleset ruleset, Civ2Interface active)
         {
             var unitsImage = Images.LoadImage("UNITS", ruleset.Paths, "gif");
-
+            
             // Initialize objects
             var units = new List<UnitImage>();
 
@@ -57,7 +58,7 @@ namespace Civ2.ImageLoader
                 }
             }
 
-            MakeSheilds(unitsImage, imageColours, width, borderColour, transparentGray, active);
+            MakeSheilds(unitsImage, imageColours, width, borderColour, transparentGray, transparentPink, active);
 
 
             Raylib.UnloadImageColors(imageColours);
@@ -68,27 +69,27 @@ namespace Civ2.ImageLoader
 
             imageColours = Raylib.LoadImageColors(unitsImage);
 
-            for (var row = 0; row < 7; row++)
+            for (var row = 0; row < active.UnitsRows; row++)
             {
-                var rowIndex = row * unitsImage.width;
+                var rowIndex = row * height * unitsImage.width;
                 for (var col = 0; col < 9; col++)
                 {
                     var flagX = 0;
                     var flagY = 0;
 
-                    for (var i = col; i < col + width; i++)
+                    for (var i = col * width; i < (col + 1) * width; i++)
                     {
                         var colour = imageColours[rowIndex + i]; //  unitsImage.GetPixel(i, row);
                         if (colour.Equals(borderColour)) continue;
-                        flagX = i - col - 1;
+                        flagX = i - col * width - 1;
                         break;
                     }
 
-                    for (var i = row; i < row + height; i++)
+                    for (var i = row * height; i < (row + 1) * height; i++)
                     {
-                        var colour = imageColours[col + i * unitsImage.width]; // unitsImage.GetPixel(col, i);
+                        var colour = imageColours[col * width + i * unitsImage.width]; // unitsImage.GetPixel(col, i);
                         if (colour.Equals(borderColour)) continue;
-                        flagY = i - row - 1;
+                        flagY = i - row * height - 1;
                         break;
                     }
 
@@ -112,7 +113,7 @@ namespace Civ2.ImageLoader
         }
 
         private static unsafe void MakeSheilds(Image unitsImage, Color* colours, int width, Color borderColour,
-            Color transparentGray, Civ2Interface active)
+            Color transparentGray, Color transparentPink, Civ2Interface active)
         {
             int lastBorder;
             for (lastBorder = unitsImage.width - 1; lastBorder > width; lastBorder--)
@@ -137,13 +138,16 @@ namespace Civ2.ImageLoader
             }
 
 
-            var unitShield = Raylib.ImageFromImage(unitsImage,new Rectangle(lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1,
+            var backShield = Raylib.ImageFromImage(unitsImage,new Rectangle(lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1,
                 1, shieldWidth - 1, shieldHeight - 1));
+            var unitShield = Raylib.ImageFromImage(unitsImage,new Rectangle(597, 30, shieldWidth - 1, shieldHeight - 1));
             
+            Raylib.ImageColorReplace(ref backShield, transparentGray, new Color(0, 0, 0, 0));
             Raylib.ImageColorReplace(ref unitShield, transparentGray, new Color(0, 0, 0, 0));
 
 
-            var firstColour =
+            var firstColour = transparentPink;
+            var firstColourBackShield =
                 colours[unitsImage.width * 4 + lastBorder - shieldWidth * (shieldWidth < shieldHeight ? 2 : 1) + 1 + 3];// unitShield.GetPixel(3, 3);
             var shieldRec = new Rectangle(0, 0, unitShield.width, unitShield.height);
             Image MakeShield(Color colour)
@@ -153,11 +157,18 @@ namespace Civ2.ImageLoader
                 return shield;
             }
 
+            Image MakeBackShield(Color colour)
+            {
+                var shield = Raylib.ImageFromImage(backShield, shieldRec);
+                Raylib.ImageColorReplace(ref shield, firstColourBackShield, colour);
+                return shield;
+            }
+
             active.UnitImages.Shields = active.PlayerColours.Select(c=>c.LightColour).Select((Func<Color,Image>) MakeShield).ToArray();
-            active.UnitImages.ShieldBack = active.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Image>) MakeShield).ToArray();
-            active.UnitImages.ShieldShadow = MakeShield(ShadowColour);
+            active.UnitImages.ShieldBack = active.PlayerColours.Select(c=>c.DarkColour).Select((Func<Color,Image>)MakeBackShield).ToArray();
+            active.UnitImages.ShieldShadow = MakeBackShield(ShadowColour);
         }
+
+
     }
-
-
 }

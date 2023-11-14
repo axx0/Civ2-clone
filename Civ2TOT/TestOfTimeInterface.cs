@@ -10,4 +10,6 @@ namespace TOT;
 public class TestOfTimeInterface : Civ2Interface
 {
     public override string Title => "Test of Time";
+
+    public override int UnitsRows => 9;
 }

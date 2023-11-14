@@ -141,5 +141,7 @@ public abstract class Civ2Interface : IUserInterface
         _cityWindowLayout = new CityWindowLayout { Image = cityImage, Height = 420, Width = 640 };
         return _cityWindowLayout;
     }
+
+    public abstract int UnitsRows { get; }
 }
 
