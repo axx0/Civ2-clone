@@ -6,11 +6,10 @@ namespace RaylibUI;
 
 public abstract class BaseDialog : BaseLayoutController
 {
-    protected Vector2 Location;
     protected Texture2D? BackgroundImage;
     private readonly Point _position;
-
-    protected BaseDialog(Main main, Point? position = null) : base(main)
+    
+    protected BaseDialog(Main main, Point? position = null) : base(main, main.ActiveInterface.DialogPadding)
     {
         _position = position ?? new Point(0,0);
     }
@@ -66,4 +65,6 @@ public abstract class BaseDialog : BaseLayoutController
             control.Draw(pulse);
         }
     }
+    
+    protected int PaddingSide => LayoutPadding.Left + LayoutPadding.Right;
 }

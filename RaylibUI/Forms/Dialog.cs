@@ -29,7 +29,7 @@ public class Dialog : Form, IForm
 
     public Dialog(PopupBox popupBox, Point relatDialogPos, Action<string, int, IList<bool>, IDictionary<string, string>?>[] buttonHandlers, IList<string>? replaceStrings = null, IList<int>? replaceNumbers = null, IList<bool>? checkboxStates = null, List<TextBoxDefinition>? textBoxDefs = null, int optionsCols = 1, Image[]? icons = null, Image image = new Image(), ListBox? listbox = null)
     {
-        Padding = new Padding(11, 11, 38, 46);
+        Padding = new Padding(38, 11, 46, 11);
         _buttonHandlers = buttonHandlers;
         _text = popupBox.Text?.ToList() ?? new List<string>();
 
@@ -100,7 +100,7 @@ public class Dialog : Form, IForm
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
-            _innerSize.width = Title.MeasureWidth() - Padding.L - Padding.R;
+            _innerSize.width = Title.MeasureWidth() - Padding.Left - Padding.Right;
         }
 
         // Determine size of text and based on that determine dialog size (TODO)
@@ -135,11 +135,11 @@ public class Dialog : Form, IForm
         //_listboxShownLines = popupBox.ListboxLines;
         //_listboxHeight = _listboxShownLines * 23 + 2;
         //_innerSize.Height += _listboxHeight;
-        Size = new Size(_innerSize.width + 2 * 2 + Padding.L + Padding.R, _innerSize.height + 2 * 2 + Padding.T + Padding.B);
+        Size = new Size(_innerSize.width + 2 * 2 + Padding.Left + Padding.Right, _innerSize.height + 2 * 2 + Padding.Top + Padding.Bottom);
 
         // Create buttons
         _buttons = new Button[_buttonTexts.Count];
-        _btnWidth = (Size.width - Padding.L - Padding.R - 3 * (_buttons.Length - 1)) / _buttons.Length;
+        _btnWidth = (Size.width - Padding.Left - Padding.Right - 3 * (_buttons.Length - 1)) / _buttons.Length;
         for (int i = 0; i < _buttons.Length; i++)
         {
             _buttons[i] = new Button
@@ -188,8 +188,8 @@ public class Dialog : Form, IForm
         Vector2 mousePos = Raylib.GetMousePosition();
 
         // Draw image
-        int x_offset = _formPosX + Padding.L + 2;
-        int y_offset = _formPosY + Padding.T + 2;
+        int x_offset = _formPosX + Padding.Left + 2;
+        int y_offset = _formPosY + Padding.Top + 2;
         Raylib.DrawTexture(texture, x_offset, y_offset, Color.WHITE);
         if (texture.width > 0)
             x_offset += texture.width + 2;
@@ -204,7 +204,7 @@ public class Dialog : Form, IForm
         int selectedButton = -1;
         for (int i = 0; i < _buttons.Length; i++)
         {
-            _buttons[i].Draw(_formPosX + Padding.L + _btnWidth * i + 3 * i - 2, _formPosY + Size.height - Padding.B + 4);
+            _buttons[i].Draw(_formPosX + Padding.Left + _btnWidth * i + 3 * i - 2, _formPosY + Size.height - Padding.Bottom + 4);
             if (_buttons[i].Pressed)
             {
                 selectedButton = i;

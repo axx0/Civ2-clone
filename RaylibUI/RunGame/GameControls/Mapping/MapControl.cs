@@ -4,6 +4,7 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Raylib_cs;
+using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 using RaylibUI.Controls;
 

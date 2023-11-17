@@ -1,6 +1,8 @@
 using System.Numerics;
+using Model;
 using Raylib_cs;
 using RaylibUI.Controls;
+using RaylibUI.Forms;
 
 namespace RaylibUI;
 
@@ -15,4 +17,8 @@ public interface IControlLayout
     void Draw(bool pulse);
     void Move(Vector2 moveAmount);
     void OnKeyPress(KeyboardKey key);
+    
+    Padding LayoutPadding { get; set; }
+    
+    Vector2 Location { get; }
 }

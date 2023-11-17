@@ -5,6 +5,7 @@ using Raylib_cs;
 using RaylibUI.BasicTypes;
 using RaylibUI.Controls;
 using System.Numerics;
+using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls;
 
