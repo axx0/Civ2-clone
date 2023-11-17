@@ -1,5 +1,7 @@
 using System.Numerics;
+using Model;
 using Raylib_cs;
+using RaylibUI.Forms;
 
 namespace RaylibUI;
 
@@ -7,9 +9,11 @@ public abstract class BaseLayoutController : IControlLayout
 {
     public Main MainWindow { get; }
 
-    protected BaseLayoutController(Main main)
+    protected BaseLayoutController(Main main, Padding layoutPadding)
     {
-        this.MainWindow = main;
+        LayoutPadding = layoutPadding;
+        MainWindow = main;
+        Location = new Vector2(0);
     }
     
     private IControl? _focused;
@@ -58,6 +62,9 @@ public abstract class BaseLayoutController : IControlLayout
             }
         }
     }
+
+    public Padding LayoutPadding { get; set; }
+    public Vector2 Location { get; protected set; }
 
     protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)
     {

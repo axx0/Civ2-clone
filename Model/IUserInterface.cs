@@ -29,6 +29,7 @@ public interface IUserInterface
 
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }
+    Padding DialogPadding { get; }
     IList<string> GetMenuItems();
     CityWindowLayout GetCityWindowDefinition();
 }
@@ -38,4 +39,6 @@ public class CityWindowLayout
     public Image Image { get; init; }
     public int Height { get; init; }
     public int Width { get; init; }
+    public IDictionary<string, Rectangle> Buttons { get; } = new Dictionary<string, Rectangle>();
+    public Rectangle InfoPanel { get; set; }
 }

@@ -6,7 +6,7 @@ using RaylibUI.Controls;
 
 namespace RaylibUI;
 
-public class FileDialog : ResizableDialog
+public class FileDialog : DynamicSizingDialog
 {
     private const string ParentDirectory = "(Parent Directory)";
     private readonly Func<string, bool> _isValidSelectionCallback;

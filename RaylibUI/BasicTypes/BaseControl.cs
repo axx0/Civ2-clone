@@ -65,6 +65,8 @@ public abstract class BaseControl : IControl
         }
     }
 
+    public Rectangle? AbsolutePosition { get; set; }
+
     public virtual bool CanFocus => false;
     public IList<IControl>? Children { get; protected set; } = null;
 
@@ -125,7 +127,13 @@ public abstract class BaseControl : IControl
 
     public virtual void OnResize()
     {
-        
+        if (AbsolutePosition.HasValue)
+        {
+            var absolutePosition = AbsolutePosition.Value;
+            Bounds = new Rectangle(Controller.Location.X + Controller.LayoutPadding.Left + absolutePosition.x,
+                Controller.Location.Y + Controller.LayoutPadding.Top + absolutePosition.y, absolutePosition.width,
+                absolutePosition.height);
+        }
     }
 
     public event EventHandler<MouseEventArgs> MouseDown;

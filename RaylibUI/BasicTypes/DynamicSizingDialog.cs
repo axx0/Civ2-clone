@@ -8,20 +8,20 @@ using Size = RaylibUI.BasicTypes.Size;
 
 namespace RaylibUI;
 
-public class ResizableDialog : BaseDialog
+public class DynamicSizingDialog : BaseDialog
 {
     private readonly int? _requestedWidth;
-
-
+    
     private Size _size;
 
     private readonly HeaderLabel? _headerLabel;
 
     private ControlGroup? _buttons;
 
-    protected ResizableDialog(Main host, string title, Point? position = null, int? requestedWidth = null) : base(host,
+    protected DynamicSizingDialog(Main host, string title, Point? position = null, int? requestedWidth = null) : base(host,
         position)
     {
+        _size = new Size(0, 0);
         _requestedWidth = requestedWidth;
         if (!string.IsNullOrWhiteSpace(title))
         {
@@ -55,12 +55,13 @@ public class ResizableDialog : BaseDialog
         SetLocation(width, maxWidth, height, totalHeight);
 
 
-        int left = 11 + (int)Location.X;
-        int top = 11 + (int)Location.Y;
+        int left = LayoutPadding.Left + (int)Location.X;
+        int top = LayoutPadding.Top + (int)Location.Y;
+        var sidePadding = LayoutPadding.Left + LayoutPadding.Right;
         index = 0;
         if (_headerLabel != null)
         {
-            _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, maxWidth + 22, heights[0] + 11);
+            _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, maxWidth + sidePadding, heights[0] + LayoutPadding.Top);
             top += heights[0];
             index = 1;
             _headerLabel.OnResize();
@@ -80,9 +81,9 @@ public class ResizableDialog : BaseDialog
             _buttons.OnResize();
         }
 
-        _size = new Size(maxWidth + 11 * 2, totalHeight + 22);
+        _size = new Size(maxWidth + sidePadding, totalHeight + LayoutPadding.Top + LayoutPadding.Bottom);
 
-        BackgroundImage = ImageUtils.PaintDialogBase( _size.Width, _size.Height, _headerLabel?.Height ?? 11, 11 + _buttons?.Height ?? 0, 11);
+        BackgroundImage = ImageUtils.PaintDialogBase( _size.Width, _size.Height, _headerLabel?.Height ?? LayoutPadding.Top, LayoutPadding.Bottom + _buttons?.Height ?? 0, LayoutPadding.Left);
     }
     
 

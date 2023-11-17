@@ -1,4 +1,5 @@
 using System.Numerics;
+using Model;
 using Raylib_cs;
 
 namespace RaylibUI;
@@ -119,7 +120,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     private int _renderedHeight;
     private readonly KeyboardKey[] _keys;
 
-    protected BaseScreen(Main main) : base(main)
+    protected BaseScreen(Main main) : base(main, Padding.None)
     {
         _keys = (KeyboardKey[])Enum.GetValues(typeof(KeyboardKey));
     }

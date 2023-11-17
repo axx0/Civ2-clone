@@ -179,15 +179,14 @@ public class ImageUtils
     /// <summary>
     /// Paint base screen of a dialog
     /// </summary>
-    /// <param name="width"></param>
+    /// <param name="width">Width of dialog</param>
     /// <param name="height"></param>
     /// <param name="top"></param>
     /// <param name="paddingBtm"></param>
     /// <param name="paddingSide"></param>
-    /// <param name="image1"></param>
-    /// Dialog width
-    /// Dialog height
-    public static Texture2D? PaintDialogBase(int width, int height, int top, int paddingBtm, int paddingSide, Image? centerImage = null)
+    /// <param name="centerImage">Image to place in centre of dialog</param>
+    /// <param name="noWallpaper">true to not draw inner wallpaper defaults to false</param>
+    public static Texture2D? PaintDialogBase(int width, int height, int top, int paddingBtm, int paddingSide, Image? centerImage = null, bool noWallpaper = false)
     {
         // Outer wallpaper
         var image = NewImage(width, height);
@@ -198,7 +197,7 @@ public class ImageUtils
             var innerHeight = Math.Min(height - top - paddingBtm, centerImage.Value.height);
             Raylib.ImageDraw( ref image, centerImage.Value, new Rectangle(0,0,innerWidth,innerHeight), new Rectangle(paddingSide, top, innerWidth,innerHeight), Color.WHITE);
         }
-        else
+        else if(!noWallpaper)
         {
             DrawTiledImage(InnerWallpaper, ref image, height, width, top, paddingBtm, paddingSide);
         }

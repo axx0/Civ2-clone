@@ -124,6 +124,9 @@ public abstract class Civ2Interface : IUserInterface
     public int ExpectedMaps { get; set; } = 1; //TODO: extract to specific locations because TOT has four 
     public CommonMapImageSet MapImages { get; } = new();
     public int DefaultDialogWidth => 660; // 660=440*1.5
+
+    public Padding DialogPadding { get; } = new(11);
+
     public IList<string> GetMenuItems()
     {
         MenuLoader.LoadMenus(Initialization.ConfigObject.RuleSet);
@@ -137,8 +140,24 @@ public abstract class Civ2Interface : IUserInterface
     {
         if (_cityWindowLayout != null) return _cityWindowLayout;
 
+        float buttonHeight = 24;
+
+        float BuyButtonWidth = 68;
+        int InfoButtonWidth = 57;
+
+
         var cityImage = Images.LoadImage("city", Initialization.ConfigObject.RuleSet.Paths, "gif");
         _cityWindowLayout = new CityWindowLayout { Image = cityImage, Height = 420, Width = 640 };
+        _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, BuyButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Change", new Rectangle(557, 181, BuyButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Info", new Rectangle(459, 364 ,InfoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Map",new Rectangle(517,364, InfoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Rename", new Rectangle(575, 364, InfoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Happy", new Rectangle(459, 389, InfoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("View", new Rectangle(517,389,InfoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Exit", new Rectangle(575, 389, InfoButtonWidth, buttonHeight));
+        
+        _cityWindowLayout.InfoPanel = new Rectangle(197, 216, 233, 198);
         return _cityWindowLayout;
     }
 

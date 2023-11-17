@@ -1,5 +1,6 @@
 ﻿using Raylib_cs;
 using System.Numerics;
+using Model;
 
 namespace RaylibUI.Forms;
 
@@ -10,13 +11,13 @@ public abstract class Form : IForm
     public int X { get; set; } = 0;
     public int Y { get; set; } = 0;
     public Size Size { get; set; }
-    public Padding Padding { get; set; } = new Padding(11, 11, 38, 11);
+    public Padding Padding { get; set; } = new Padding(38, 11, 11);
     public bool Enabled { get; set; } = true;
     public FormattedText Title { get; set; }
     public bool Hover => Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Size.height));
     public bool Focused { get; set; }
     public bool Pressed => Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Size.height));
-    public bool PressedTop => Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Padding.T));
+    public bool PressedTop => Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(X, Y, Size.width, Padding.Top));
 
     private bool dragging = false;
     protected int _formPosX, _formPosY;
@@ -73,11 +74,11 @@ public abstract class Form : IForm
         if (_dialogBase == null)
         {
             Padding padding = Padding;
-            _dialogBase = ImageUtils.PaintDialogBase(Size.width, Size.height, padding.T, padding.B, padding.L);
+            _dialogBase = ImageUtils.PaintDialogBase(Size.width, Size.height, padding.Top, padding.Bottom, padding.Left);
         }
         Raylib.DrawTexture(_dialogBase.Value,_formPosX, _formPosY, Color.WHITE);
 
         // Draw title text
-        Title?.Draw(_formPosX + Size.width / 2, _formPosY + Padding.T / 2);
+        Title?.Draw(_formPosX + Size.width / 2, _formPosY + Padding.Top / 2);
     }
 }
