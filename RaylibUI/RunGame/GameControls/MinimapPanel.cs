@@ -44,10 +44,9 @@ public class MinimapPanel : BaseControl
 
     public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
-        _gameScreen.Focused = this;
         var clickPosition = GetRelativeMousePosition();
-        if (clickPosition.X < _offset[0] || clickPosition.X > Width - _offset[0] 
-            || clickPosition.Y < _offset[1] || clickPosition.Y > Height - _offset[1])
+        if (clickPosition.X < _offset[0] || clickPosition.X > Width + _offset[0] 
+            || clickPosition.Y < _offset[1] || clickPosition.Y > Height + _offset[1])
         {
             return;
         }

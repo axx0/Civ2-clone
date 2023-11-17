@@ -251,7 +251,19 @@ public class MapControl : BaseControl
         {
             case MapEventType.MinimapViewChanged:
                 {
-                    //ShowTile(_map.Tile[e.CentrXY[0], e.CentrXY[1]]);
+                    if (_currentView.IsDefault)
+                    {
+                        if (_gameScreen.ActiveMode != _gameScreen.ViewPiece)
+                        {
+                            _gameScreen.ActiveMode = _gameScreen.ViewPiece;
+                        }
+
+                        if (_gameScreen.Player.ActiveTile != _currentView.Location)
+                        {
+                            MapViewChange(_gameScreen.Player.ActiveTile);
+                        }
+                    }
+
                     break;
                 }
             default: break;
@@ -301,19 +313,10 @@ public class MapControl : BaseControl
                 paddedYLoc + animation.Y - animation.Image.height,
                 Color.WHITE);
         }
-        // if (pulse && _activeImage.HasValue)
-        // {
-        //     Raylib.DrawTexture(_activeImage.Value, (int)(Location.X + PaddingSide + _activePosition.X),
-        //         (int)(Location.Y + Top + _activePosition.Y), Color.WHITE);
-        // }
 
         if (_backgroundImage != null)
             Raylib.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.WHITE);
         _headerLabel.Draw(pulse);
-
-        // Raylib.DrawTexture(_mapTileTexture[activeTile.XIndex, activeTile.Y],
-        //     (int)Location.X + Width / 2 - _tileWidth / 2, (int)Location.Y + Height / 2 - _tileHeight / 2, Color.WHITE);
-
     }
 
     private void NextView()
