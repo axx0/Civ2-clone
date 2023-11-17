@@ -114,7 +114,7 @@ public class MapControl : BaseControl
         {
             Raylib.UnloadTexture(_backgroundImage.Value);
         }
-        _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide);
+        _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide, noWallpaper:true);
 
         _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, Top);
         _headerLabel.OnResize();
@@ -245,37 +245,6 @@ public class MapControl : BaseControl
             new[] { _viewWidth / dim.HalfWidth, _viewHeight / dim.HalfHeight }));   
     }
 
-    // public override bool OnKeyPressed(KeyboardKey key)
-    // {
-    //     switch (key)
-    //     {
-    //         case KeyboardKey.KEY_UP when _selectedTile.Y > 1:
-    //             _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y - 2];
-    //             ShowTile(_selectedTile);
-    //             break;
-    //         case KeyboardKey.KEY_DOWN when _selectedTile.Y < _map.Tile.GetLength(1):
-    //             _selectedTile = _map.Tile[_selectedTile.XIndex, _selectedTile.Y + 2];
-    //             ShowTile(_selectedTile);
-    //             break;
-    //         case KeyboardKey.KEY_LEFT:
-    //             _selectedTile =
-    //                 _map.Tile[_selectedTile.XIndex == 0 ? _map.Tile.GetLength(0) - 1 : _selectedTile.XIndex - 1,
-    //                     _selectedTile.Y];
-    //
-    //             ShowTile(_selectedTile);
-    //             break;
-    //         case KeyboardKey.KEY_RIGHT:
-    //             _selectedTile = _map.Tile[_selectedTile.XIndex >= _map.Tile.GetLength(0) -1 ? 0: _selectedTile.XIndex + 1, _selectedTile.Y];
-    //             
-    //             ShowTile(_selectedTile);
-    //             break;
-    //
-    //     }
-    //     return base.OnKeyPressed(key);
-    // }
-
-    
-
     private void MapEventTriggered(object sender, MapEventArgs e)
     {
         switch (e.EventType)
@@ -294,8 +263,6 @@ public class MapControl : BaseControl
     private DateTime _animationStart;
     public override void Draw(bool pulse)
     {
-        if (_backgroundImage != null)
-            Raylib.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.WHITE);
         if (_animationStart.AddMilliseconds(_currentView.Interval) < DateTime.Now)
         {
             if (_currentView.Finished())
@@ -340,6 +307,8 @@ public class MapControl : BaseControl
         //         (int)(Location.Y + Top + _activePosition.Y), Color.WHITE);
         // }
 
+        if (_backgroundImage != null)
+            Raylib.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.WHITE);
         _headerLabel.Draw(pulse);
 
         // Raylib.DrawTexture(_mapTileTexture[activeTile.XIndex, activeTile.Y],
