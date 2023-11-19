@@ -4,24 +4,24 @@ using Model;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
+using RaylibUI.RunGame.GameControls;
 
 namespace RaylibUI.RunGame;
 
 public class CityWindow : BaseDialog
 {
-    private readonly GameScreen _gameScreen;
-    private readonly City _city;
+    public GameScreen CurrentGameScreen { get; }
     private readonly CityWindowLayout _cityWindowProps;
     private readonly HeaderLabel _headerLabel;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
-        _gameScreen = gameScreen;
-        _city = city;
+        CurrentGameScreen = gameScreen;
+        City = city;
 
         _cityWindowProps = gameScreen.Main.ActiveInterface.GetCityWindowDefinition();
 
-        _headerLabel = new HeaderLabel(this, _city.Name);
+        _headerLabel = new HeaderLabel(this, City.Name);
 
         LayoutPadding = new Padding(LayoutPadding,_headerLabel.GetPreferredHeight());
         
@@ -93,16 +93,24 @@ public class CityWindow : BaseDialog
         };
         exitButton.Click += CloseButtonOnClick;
         Controls.Add(exitButton);
+
+        var tileMap = new CityTileMap(this)
+        {
+            AbsolutePosition = new Rectangle(7, 65, 188, 137)
+        };
+        Controls.Add(tileMap);
+
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
     {
-        _gameScreen.CloseDialog(this);
+        CurrentGameScreen.CloseDialog(this);
     }
 
     public int DialogWidth { get; }
 
     public int DialogHeight { get; }
+    public City City { get; }
 
     public override void Resize(int width, int height)
     {
