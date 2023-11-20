@@ -51,7 +51,7 @@
         public bool WarnChangProductWillCostShields { get; set; }
         public bool ZoomToCityNotDefaultAction { get; set; }
 
-        public bool CheatPenaltyWarning { get; set; }
+        public bool CheatPenaltyWarningDisabled { get; set; }
         public bool Grid { get; set; }
 
         public Options(bool[] optionsArray)
@@ -74,22 +74,22 @@
             AlwaysWaitAtEndOfTurn = optionsArray[15];
             CheatMenu = optionsArray[16];
             WonderMovies = optionsArray[17];
-            DiplomacyScreenGraphics = optionsArray[18];
-            ThroneRoomGraphics = optionsArray[19];
+            ThroneRoomGraphics = optionsArray[18];
+            DiplomacyScreenGraphics = optionsArray[19];
             CivilopediaForAdvances = optionsArray[20];
             HighCouncil = optionsArray[21];
             AnimatedHeralds = optionsArray[22];
-            CheatPenaltyWarning = optionsArray[23];
-            ShowCityImprovementsBuilt = optionsArray[24];
-            WarnWhenCityGrowthHalted = optionsArray[25];
-            ShowInvalidBuildInstructions = optionsArray[26];
-            ShowNonCombatUnitsBuilt = optionsArray[27];
-            AnnounceOrderRestored = optionsArray[28];
-            AnnounceCitiesInDisorder = optionsArray[29];
-            WarnWhenFoodDangerouslyLow = optionsArray[30];
-            AnnounceWeLoveKingDay = optionsArray[31];
-            WarnChangProductWillCostShields = optionsArray[32];
-            WarnWhenPollutionOccurs = optionsArray[33];
+            CheatPenaltyWarningDisabled = optionsArray[23];
+            WarnWhenCityGrowthHalted = optionsArray[24];
+            ShowCityImprovementsBuilt = optionsArray[25];
+            ShowNonCombatUnitsBuilt = optionsArray[26];
+            ShowInvalidBuildInstructions = optionsArray[27];
+            AnnounceCitiesInDisorder = optionsArray[28];
+            AnnounceOrderRestored = optionsArray[29];
+            AnnounceWeLoveKingDay = optionsArray[30];
+            WarnWhenFoodDangerouslyLow = optionsArray[31];
+            WarnWhenPollutionOccurs = optionsArray[32];
+            WarnChangProductWillCostShields = optionsArray[33];
             ZoomToCityNotDefaultAction = optionsArray[34];
         }
     }

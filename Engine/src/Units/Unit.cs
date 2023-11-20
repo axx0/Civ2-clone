@@ -150,7 +150,7 @@ namespace Civ2engine.Units
         public bool Veteran { get; set; }
         public Civilization Owner { get; set; }
         public CommodityType CaravanCommodity { get; set; }
-        public City HomeCity { get; set; }
+        public City? HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
         public int LinkOtherUnitsOnTop { get; set; }
@@ -202,7 +202,7 @@ namespace Civ2engine.Units
         public City CityWithThisUnit => CurrentLocation != null ? CurrentLocation.CityHere: null;
         public List<Unit> CarriedUnits { get; } = new();
 
-        public Tile CurrentLocation
+        public Tile? CurrentLocation
         {
             get => _currentLocation;
             set
