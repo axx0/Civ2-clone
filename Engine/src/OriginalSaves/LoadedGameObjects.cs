@@ -27,7 +27,7 @@ namespace Civ2engine
                 WhichCivsMapShown = gameData.WhichCivsMapShown,
                 Zoom = gameData.Zoom,
                 StartingClickedXY = gameData.ClickedXY,
-                XDim = gameData.MapXdim / 2,
+                XDim = gameData.MapXdim_x2 / 2,
                 YDim = gameData.MapYdim,
                 ResourceSeed = gameData.MapResourceSeed,
                 LocatorXdim = gameData.MapLocatorXdim,
@@ -59,9 +59,10 @@ namespace Civ2engine
             {
                 cities.Add(CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityCanBuildCoastal[i],
                     gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenAdvance[i],
-                    gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i],
-                    gameData.CityCivilDisorder[i], gameData.CityCanBuildShips[i], gameData.CityObjectivex3[i],
-                    gameData.CityObjectivex1[i], gameData.CityOwner[i], gameData.CitySize[i],
+                    gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i], gameData.CityCivilDisorder[i], 
+                    gameData.CityCanBuildHydro[i], gameData.CityCanBuildShips[i], gameData.CityAutobuildMilitaryAdvisor[i],
+                    gameData.CityAutobuildDomesticAdvisor[i], gameData.CityObjectivex1[i], gameData.CityObjectivex3[i],
+                    gameData.CityOwner[i], gameData.CitySize[i],
                     gameData.CityWhoBuiltIt[i], gameData.CityFoodInStorage[i], gameData.CityShieldsProgress[i],
                     gameData.CityNetTrade[i], gameData.CityName[i], gameData.CityDistributionWorkers[i],
                     gameData.CityNoOfSpecialistsx4[i], gameData.CityImprovements[i],
@@ -136,7 +137,7 @@ namespace Civ2engine
                 {
                     var terrain = data.MapTerrainType[col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
-                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][(int) terrain], map.ResourceSeed, map, col)
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col)
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
@@ -249,11 +250,12 @@ namespace Civ2engine
         }
         
         public City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech,
-            bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildShips, bool objectivex3,
-            bool objectivex1, int ownerIndex, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade,
+            bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildHydro, bool canBuildShips,
+            bool autoBuildMilitary, bool autoBuildDomestic, bool objectivex1, bool objectivex3,
+            int ownerIndex, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade,
             string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
-            int activeTradeRoutes, CommodityType[] commoditySupplied, CommodityType[] commodityDemanded,
-            CommodityType[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons,
+            int activeTradeRoutes, int[] commoditySupplied, int[] commodityDemanded,
+            int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons,
             int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens, ProductionOrder[] productionItems)
         {
             var tile = Map.TileC2(x, y);
@@ -268,9 +270,12 @@ namespace Civ2engine
                 ImprovementSold = improvementSold,
                 WeLoveKingDay = weLoveKingDay,
                 CivilDisorder = civilDisorder,
+                CanBuildHydro = canBuildHydro,
                 CanBuildShips = canBuildShips,
-                Objectivex3 = objectivex3,
+                AutobuildMilitaryAdvisor = autoBuildMilitary,
+                AutobuildDomesticAdvisor = autoBuildDomestic,
                 Objectivex1 = objectivex1,
+                Objectivex3 = objectivex3,
                 Owner = owner,
                 Size = size,
                 WhoBuiltIt = Civilizations[whoBuiltIt],
@@ -281,9 +286,9 @@ namespace Civ2engine
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = productionItems[itemInProduction],
                 ActiveTradeRoutes = activeTradeRoutes,
-                CommoditySupplied = commoditySupplied.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
-                CommodityDemanded = commodityDemanded.Where(c=> (int)c < Rules.CaravanCommoditie.Length ).ToArray(),
-                CommodityInRoute = commodityInRoute,
+                CommoditySupplied = commoditySupplied.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => (CommodityType)c).ToArray(),
+                CommodityDemanded = commodityDemanded.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => (CommodityType)c).ToArray(),
+                CommodityInRoute = commodityInRoute.Select(c => (CommodityType)c).ToArray(),
                 TradeRoutePartnerCity = tradeRoutePartnerCity,
                 //Science = science,    //what does this mean???
                 //Tax = tax,
@@ -314,8 +319,8 @@ namespace Civ2engine
             return city;
         }
         
-        public Unit CreateUnit (UnitType type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
-            int movePointsLost, int hitPointsLost, int prevX, int prevY, CommodityType caravanCommodity, OrderType orders,
+        public Unit CreateUnit (int type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
+            int movePointsLost, int hitPointsLost, int prevX, int prevY, int caravanCommodity, int orders,
             int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
             var validTile = Map.IsValidTileC2(x, y);
@@ -324,7 +329,7 @@ namespace Civ2engine
             var unit = new Unit
             {
                 Id = civilization.Units.Count,
-                TypeDefinition = Rules.UnitTypes[(int)type],
+                TypeDefinition = Rules.UnitTypes[type],
                 Dead = dead || !validTile,
                 CurrentLocation = validTile ? Map.TileC2(x,y) : null,
                 X = x,
@@ -336,8 +341,8 @@ namespace Civ2engine
                 Veteran = veteran,
                 Owner = civilization,
                 PrevXY = new[] { prevX, prevY },
-                CaravanCommodity = caravanCommodity,
-                Order = orders,
+                CaravanCommodity = (CommodityType)caravanCommodity,
+                Order = (OrderType)orders,
                 HomeCity = homeCity == 255 ? null : Cities[homeCity],
                 GoToX = goToX,
                 GoToY = goToY,

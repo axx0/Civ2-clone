@@ -19,9 +19,12 @@ namespace Civ2engine
         public bool ImprovementSold { get; set; }
         public bool WeLoveKingDay { get; set; }
         public bool CivilDisorder { get; set; }
+        public bool CanBuildHydro { get; set; }
         public bool CanBuildShips { get; set; }
         public bool Objectivex3 { get; set; }
         public bool Objectivex1 { get; set; }
+        public bool AutobuildDomesticAdvisor { get; set; }
+        public bool AutobuildMilitaryAdvisor { get; set; }
         public Civilization Owner { get; set; }
         public int OwnerId => Owner.Id;
         public int Size { get; set; }

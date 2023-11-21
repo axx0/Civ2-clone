@@ -1,11 +1,10 @@
-﻿using Civ2engine.Enums;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Civ2engine
 {
     public class GameData
     {
-        public GameVersionType GameVersion { get; set; }
+        public byte GameVersion { get; set; }
 
         // Options
         public bool[] OptionsArray { get; set; }
@@ -18,8 +17,8 @@ namespace Civ2engine
         public byte WhichCivsMapShown { get; set; }
         public byte PlayersCivilizationNumberUsed { get; set; }
         public bool MapRevealed { get; set; }
-        public DifficultyType DifficultyLevel { get; set; }
-        public BarbarianActivityType BarbarianActivity { get; set; }
+        public byte DifficultyLevel { get; set; }
+        public byte BarbarianActivity { get; set; }
         public bool[] CivsInPlay { get; set; }
         public byte PollutionAmount { get; set; }
         public byte GlobalTempRiseOccured { get; set; }
@@ -37,6 +36,13 @@ namespace Civ2engine
         public string[] CivLeaderName { get; set; }
         public string[] CivTribeName { get; set; }
         public string[] CivAdjective { get; set; }
+        public string[] CivAnarchyTitle { get; set; }
+        public string[] CivDespotismTitle { get; set; }
+        public string[] CivMonarchyTitle { get; set; }
+        public string[] CivCommunismTitle { get; set; }
+        public string[] CivFundamentalismTitle { get; set; }
+        public string[] CivRepublicTitle { get; set; }
+        public string[] CivDemocracyTitle { get; set; }
 
         // Civ advances & money
         public byte[] RulerGender { get; set; }
@@ -53,13 +59,13 @@ namespace Civ2engine
         public byte[][] CivCasualtiesPerUnitType { get; set; }
 
         // Map data
-        public short MapXdim { get; set; }
+        public short MapXdim_x2 { get; set; }
         public short MapYdim { get; set; }
         public short MapArea { get; set; }
         public short MapResourceSeed { get; set; }
         public short MapLocatorXdim { get; set; }
         public short MapLocatorYdim { get; set; }
-        public TerrainType[,] MapTerrainType { get; set; }
+        public int[,] MapTerrainType { get; set; }
         public bool[,] MapRiverPresent { get; set; }
         public bool[,] MapResourcePresent { get; set; }
         public bool[,] MapUnitPresent { get; set; }
@@ -73,7 +79,7 @@ namespace Civ2engine
         public bool[,] MapFarmlandPresent { get; set; }
         public bool[,] MapAirbasePresent { get; set; }
         public byte[,] MapIslandNo { get; set; }
-        public SpecialType[,] MapSpecialType { get; set; }
+        public int[,] MapSpecialType { get; set; }
         public bool[,][] MapVisibilityCivs { get; set; }
 
         // Units
@@ -84,15 +90,15 @@ namespace Civ2engine
         public bool[] UnitImmobile { get; set; }
         public bool[] UnitGreyStarShield { get; set; }
         public bool[] UnitVeteran { get; set; }
-        public UnitType[] UnitType { get; set; }
+        public byte[] UnitType { get; set; }
         public byte[] UnitCiv { get; set; }
-        public byte[] UnitMovePointsLost { get; set; }
+        public short[] UnitMovePointsLost { get; set; }
         public byte[] UnitHitPointsLost { get; set; }
         public short[] UnitPrevXloc { get; set; }
         public short[] UnitPrevYloc { get; set; }
-        public CommodityType[] UnitCaravanCommodity { get; set; }
-        public OrderType[] UnitOrders { get; set; }
-        public byte[] UnitHomeCity { get; set; }
+        public byte[] UnitCaravanCommodity { get; set; }
+        public byte[] UnitOrders { get; set; }
+        public short[] UnitHomeCity { get; set; }
         public short[] UnitGotoX { get; set; }
         public short[] UnitGotoY { get; set; }
         public short[] UnitLinkOtherUnitsOnTop { get; set; }
@@ -101,15 +107,18 @@ namespace Civ2engine
         // Cities
         public short[] CityXloc { get; set; }
         public short[] CityYloc { get; set; }
-        public bool[] CityCanBuildCoastal { get; set; }
-        public bool[] CityAutobuildMilitaryRule { get; set; }
-        public bool[] CityStolenAdvance { get; set; }
-        public bool[] CityImprovementSold { get; set; }
-        public bool[] CityWeLoveKingDay { get; set; }
         public bool[] CityCivilDisorder { get; set; }
+        public bool[] CityWeLoveKingDay { get; set; }
+        public bool[] CityImprovementSold { get; set; }
+        public bool[] CityStolenAdvance { get; set; }
+        public bool[] CityAutobuildMilitaryRule { get; set; }
+        public bool[] CityCanBuildCoastal { get; set; }
+        public bool[] CityCanBuildHydro { get; set; }
         public bool[] CityCanBuildShips { get; set; }
-        public bool[] CityObjectivex3 { get; set; }
+        public bool[] CityAutobuildMilitaryAdvisor { get; set; }
+        public bool[] CityAutobuildDomesticAdvisor { get; set; }
         public bool[] CityObjectivex1 { get; set; }
+        public bool[] CityObjectivex3 { get; set; }
         public byte[] CityOwner { get; set; }
         public byte[] CitySize { get; set; }
         public byte[] CityWhoBuiltIt { get; set; }
@@ -122,9 +131,9 @@ namespace Civ2engine
         public bool[][] CityImprovements { get; set; }
         public byte[] CityItemInProduction { get; set; }
         public int[] CityActiveTradeRoutes { get; set; }
-        public CommodityType[][] CityCommoditySupplied { get; set; }
-        public CommodityType[][] CityCommodityDemanded { get; set; }
-        public CommodityType[][] CityCommodityInRoute { get; set; }
+        public int[][] CityCommoditySupplied { get; set; }
+        public int[][] CityCommodityDemanded { get; set; }
+        public int[][] CityCommodityInRoute { get; set; }
         public int[][] CityTradeRoutePartnerCity { get; set; }
         public short[] CityScience { get; set; }
         public short[] CityTax { get; set; }

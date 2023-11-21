@@ -62,16 +62,24 @@ namespace Civ2engine
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 
-            : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths, gameData.DifficultyLevel)
+            : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths, (DifficultyType)gameData.DifficultyLevel)
         {
             //_civsInPlay = SAVgameData.CivsInPlay;
-            _gameVersion = gameData.GameVersion;
+            _gameVersion = gameData.GameVersion switch
+            {
+                <= 39 => GameVersionType.CiC,
+                40 => GameVersionType.FW,
+                44 => GameVersionType.MGE,
+                49 => GameVersionType.ToT10,
+                50 => GameVersionType.ToT11,
+                _ => GameVersionType.CiC
+            };
 
             _scenarioData = objects.Scenario;
 
             TurnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
-            _barbarianActivity = gameData.BarbarianActivity;
+            _barbarianActivity = (BarbarianActivityType)gameData.BarbarianActivity;
             PollutionAmount = gameData.PollutionAmount;
             
             GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
