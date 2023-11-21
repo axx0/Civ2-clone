@@ -505,6 +505,12 @@ public class ImageUtils
         }
         Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldShadowDes, Color.WHITE);
         Raylib.ImageDraw(ref image, GetShieldWithHP(active.UnitImages.Shields[unit.Owner.Id], unit), shldSrc, shldDes, Color.WHITE);
+        var shldTxt = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : string.Empty;
+        if ((int)unit.Order == 255) shldTxt = "-";
+        var txtMeasr = Raylib.MeasureTextEx(Fonts.AlternativeFont, shldTxt, 12, 0.0f);
+        var txtLoc = new Vector2(shldDes.x + shldDes.width / 2 - txtMeasr.X / 2 + 1, 
+            shldDes.y + shldDes.height / 2 - txtMeasr.Y / 2 + 3);
+        Raylib.ImageDrawTextEx(ref image, Fonts.AlternativeFont, shldTxt, txtLoc, 12, 0.0f, Color.BLACK);
         Raylib.ImageDraw(ref image, active.UnitImages.Units[(int)unit.Type].Image, rect, rect, Color.WHITE);
         return image;
     }
