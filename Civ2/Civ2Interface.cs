@@ -118,6 +118,8 @@ public abstract class Civ2Interface : IUserInterface
     public CityImageSet CityImages { get; } = new();
 
     public UnitSet UnitImages { get; } = new();
+    
+    
 
     public Dictionary<string, PopupBox> Dialogs { get; set; }
     public PlayerColour[] PlayerColours { get; set; }
@@ -160,6 +162,23 @@ public abstract class Civ2Interface : IUserInterface
         _cityWindowLayout.InfoPanel = new Rectangle(197, 216, 233, 198);
         return _cityWindowLayout;
     }
+
+    private static IList<Color> _resourceTransparentColor = new[]{ new Color(255, 159, 163, 255)};
+    public IList<ResourceImage> ResourceImages { get; } = new List<ResourceImage>
+    {
+        new(name: "Food", 
+            largeImage: new BitmapStorage("ICONS", _resourceTransparentColor, 1, 305, 14),
+            smallImage: new BitmapStorage("ICONS", _resourceTransparentColor,49, 334, 10),
+            lossImage: new BitmapStorage("ICONS", _resourceTransparentColor,1, 290, 14)),
+        new(name: "Shields", 
+            largeImage: new BitmapStorage("ICONS", _resourceTransparentColor,16, 305, 14),
+            smallImage: new BitmapStorage("ICONS", _resourceTransparentColor,60, 334, 10),
+            lossImage: new BitmapStorage("ICONS", _resourceTransparentColor,16, 290, 14)),
+        new(name: "Trade", 
+            largeImage: new BitmapStorage("ICONS",_resourceTransparentColor, 31, 305, 14),
+            smallImage: new BitmapStorage("ICONS",_resourceTransparentColor, 71, 334, 10),
+            lossImage: new BitmapStorage("ICONS",_resourceTransparentColor, 31, 290, 14))
+    };
 
     public abstract int UnitsRows { get; }
 }

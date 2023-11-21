@@ -11,7 +11,7 @@ namespace Civ2engine.MapObjects
 {
     public class Tile : IMapItem
     {
-        private City _workedBy;
+        private City? _workedBy;
         private Terrain _terrain;
         public int X { get; }
         public int Y { get; }

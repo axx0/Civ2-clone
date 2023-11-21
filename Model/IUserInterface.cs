@@ -2,7 +2,6 @@
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
-using Raylib_cs;
 using RaylibUI;
 
 namespace Model;
@@ -32,13 +31,6 @@ public interface IUserInterface
     Padding DialogPadding { get; }
     IList<string> GetMenuItems();
     CityWindowLayout GetCityWindowDefinition();
-}
 
-public class CityWindowLayout
-{
-    public Image Image { get; init; }
-    public int Height { get; init; }
-    public int Width { get; init; }
-    public IDictionary<string, Rectangle> Buttons { get; } = new Dictionary<string, Rectangle>();
-    public Rectangle InfoPanel { get; set; }
+    IList<ResourceImage> ResourceImages { get; }
 }
