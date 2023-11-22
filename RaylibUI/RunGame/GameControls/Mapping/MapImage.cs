@@ -202,7 +202,16 @@ public static class MapImage
                 }
                 else
                 {
-                    Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
+                    if (construct.Improvement is 4 or 10) // fortress & airbase have height 48
+                    {
+                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], 
+                            new Rectangle(0, 16, TileRec.width, TileRec.height), TileRec, Color.WHITE);
+                    }
+                    else
+                    {
+                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
+                    }
+                    
                 }
             }
         }

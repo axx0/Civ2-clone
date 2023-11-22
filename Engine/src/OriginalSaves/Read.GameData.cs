@@ -277,7 +277,7 @@ namespace Civ2engine
 
                 // Terrain type
                 int terrB = ofsetB2 + i * 6 + 0;
-                data.MapTerrainType[x,y] = bytes[terrB] & 0xF;
+                data.MapTerrainType[x, y] = bytes[terrB] & 0xF;
                 data.MapRiverPresent[x, y] = GetBit(bytes[terrB], 7);  // river (1xxx xxxx)
 
                 // Determine if resources are present
@@ -291,13 +291,13 @@ namespace Civ2engine
                 data.MapUnitPresent[x, y] = GetBit(bytes[terrB], 0);
                 data.MapCityPresent[x, y] = GetBit(bytes[terrB], 1);
                 data.MapIrrigationPresent[x, y] = GetBit(bytes[terrB], 2);
-                data.MapMiningPresent[x, y] = GetBit(bytes[terrB], 3);
+                data.MapMiningPresent[x, y] = GetBit(bytes[terrB], 3) && !GetBit(bytes[terrB], 2);
                 data.MapRoadPresent[x, y] = GetBit(bytes[terrB], 4);
                 data.MapRailroadPresent[x, y] = GetBit(bytes[terrB], 4) && GetBit(bytes[terrB], 5);
-                data.MapFortressPresent[x, y] = GetBit(bytes[terrB], 6);
+                data.MapFortressPresent[x, y] = GetBit(bytes[terrB], 6) && !GetBit(bytes[terrB], 1);
                 data.MapPollutionPresent[x, y] = GetBit(bytes[terrB], 7);
                 data.MapFarmlandPresent[x, y] = GetBit(bytes[terrB], 2) && GetBit(bytes[terrB], 3);
-                data.MapAirbasePresent[x, y] = GetBit(bytes[terrB], 3) && GetBit(bytes[terrB], 4);
+                data.MapAirbasePresent[x, y] = GetBit(bytes[terrB], 1) && GetBit(bytes[terrB], 6);
 
                 int intValueB23 = bytes[ofsetB2 + i * 6 + 2];       // TODO: city radius
 
