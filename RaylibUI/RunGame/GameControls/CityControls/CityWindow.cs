@@ -4,31 +4,32 @@ using Model;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
+using RaylibUI.RunGame.GameControls;
 
 namespace RaylibUI.RunGame;
 
 public class CityWindow : BaseDialog
 {
-    private readonly GameScreen _gameScreen;
-    private readonly City _city;
+    public GameScreen CurrentGameScreen { get; }
     private readonly CityWindowLayout _cityWindowProps;
     private readonly HeaderLabel _headerLabel;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
-        _gameScreen = gameScreen;
-        _city = city;
+        CurrentGameScreen = gameScreen;
+        City = city;
 
         _cityWindowProps = gameScreen.Main.ActiveInterface.GetCityWindowDefinition();
 
-        _headerLabel = new HeaderLabel(this, _city.Name);
+        _headerLabel = new HeaderLabel(this, City.Name);
 
-        LayoutPadding = new Padding(LayoutPadding,_headerLabel.GetPreferredHeight());
-        
+        LayoutPadding = new Padding(LayoutPadding, _headerLabel.GetPreferredHeight());
+
         DialogWidth = _cityWindowProps.Width + PaddingSide;
         DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(DialogWidth, DialogHeight, LayoutPadding.Top, LayoutPadding.Bottom, LayoutPadding.Left, _cityWindowProps.Image);
-        
+        BackgroundImage = ImageUtils.PaintDialogBase(DialogWidth, DialogHeight, LayoutPadding.Top, LayoutPadding.Bottom,
+            LayoutPadding.Left, Images.ExtractBitmap(_cityWindowProps.Image));
+
         Controls.Add(_headerLabel);
 
         var infoArea = new CityInfoArea(this)
@@ -36,8 +37,8 @@ public class CityWindow : BaseDialog
             AbsolutePosition = _cityWindowProps.InfoPanel
         };
         Controls.Add(infoArea);
-        
-        var buyButton = new Button(this,Labels.For(LabelIndex.Buy))
+
+        var buyButton = new Button(this, Labels.For(LabelIndex.Buy))
         {
             AbsolutePosition = _cityWindowProps.Buttons["Buy"]
         };
@@ -62,7 +63,7 @@ public class CityWindow : BaseDialog
         };
         mapButton.Click += (_, _) => infoArea.Mode = DisplayMode.SupportMap;
         Controls.Add(mapButton);
-            
+
 
         // Rename button
         var renameButton = new Button(this, Labels.For(LabelIndex.Rename))
@@ -93,16 +94,24 @@ public class CityWindow : BaseDialog
         };
         exitButton.Click += CloseButtonOnClick;
         Controls.Add(exitButton);
+
+        var tileMap = new CityTileMap(this)
+        {
+            AbsolutePosition = _cityWindowProps.TileMap
+        };
+        Controls.Add(tileMap);
+
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
     {
-        _gameScreen.CloseDialog(this);
+        CurrentGameScreen.CloseDialog(this);
     }
 
     public int DialogWidth { get; }
 
     public int DialogHeight { get; }
+    public City City { get; }
 
     public override void Resize(int width, int height)
     {

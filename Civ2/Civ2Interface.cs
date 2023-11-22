@@ -118,6 +118,8 @@ public abstract class Civ2Interface : IUserInterface
     public CityImageSet CityImages { get; } = new();
 
     public UnitSet UnitImages { get; } = new();
+    
+    
 
     public Dictionary<string, PopupBox> Dialogs { get; set; }
     public PlayerColour[] PlayerColours { get; set; }
@@ -144,10 +146,14 @@ public abstract class Civ2Interface : IUserInterface
 
         float BuyButtonWidth = 68;
         int InfoButtonWidth = 57;
+        
+        _cityWindowLayout = new CityWindowLayout(new BitmapStorage("city"))
+        {
+            Height = 420, Width = 640,
+            InfoPanel = new Rectangle(197, 216, 233, 198),
+            TileMap = new Rectangle(7, 65, 188, 137)
+        };
 
-
-        var cityImage = Images.LoadImage("city", Initialization.ConfigObject.RuleSet.Paths, "gif");
-        _cityWindowLayout = new CityWindowLayout { Image = cityImage, Height = 420, Width = 640 };
         _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, BuyButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("Change", new Rectangle(557, 181, BuyButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("Info", new Rectangle(459, 364 ,InfoButtonWidth, buttonHeight));
@@ -157,9 +163,25 @@ public abstract class Civ2Interface : IUserInterface
         _cityWindowLayout.Buttons.Add("View", new Rectangle(517,389,InfoButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("Exit", new Rectangle(575, 389, InfoButtonWidth, buttonHeight));
         
-        _cityWindowLayout.InfoPanel = new Rectangle(197, 216, 233, 198);
         return _cityWindowLayout;
     }
+
+    private static IList<Color> _resourceTransparentColor = new[]{ new Color(255, 159, 163, 255)};
+    public IList<ResourceImage> ResourceImages { get; } = new List<ResourceImage>
+    {
+        new(name: "Food", 
+            largeImage: new BitmapStorage("ICONS", _resourceTransparentColor, 1, 305, 14),
+            smallImage: new BitmapStorage("ICONS", _resourceTransparentColor,49, 334, 10),
+            lossImage: new BitmapStorage("ICONS", _resourceTransparentColor,1, 290, 14)),
+        new(name: "Shields", 
+            largeImage: new BitmapStorage("ICONS", _resourceTransparentColor,16, 305, 14),
+            smallImage: new BitmapStorage("ICONS", _resourceTransparentColor,60, 334, 10),
+            lossImage: new BitmapStorage("ICONS", _resourceTransparentColor,16, 290, 14)),
+        new(name: "Trade", 
+            largeImage: new BitmapStorage("ICONS",_resourceTransparentColor, 31, 305, 14),
+            smallImage: new BitmapStorage("ICONS",_resourceTransparentColor, 71, 334, 10),
+            lossImage: new BitmapStorage("ICONS",_resourceTransparentColor, 31, 290, 14))
+    };
 
     public abstract int UnitsRows { get; }
 }

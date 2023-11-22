@@ -115,7 +115,8 @@ public abstract class BaseGameView : IGameView
                                         _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                                             tile.CityHere);
                                     cityData.Add(new CityData
-                                    {
+                                    {  
+                                        Color = activeInterface.PlayerColours[tile.CityHere.Owner.Id],
                                         Name = tile.CityHere.Name,
                                         Image = Raylib.LoadTextureFromImage(cities.Sets[cityStyleIndex][sizeIncrement]
                                             .Image),

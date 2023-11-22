@@ -26,11 +26,22 @@ public class BitmapStorage : IImageSource
         }
 
         Location = location;
-        
     }
 
     public BitmapStorage(string file, int x, int y, int w, int h = -1) : this(file,
         new Rectangle(x, y, w, h == -1 ? w : h))
     {
     }
+
+    public BitmapStorage(string file, IList<Color> transparencies, int x, int y, int w, int h = -1) : this(file, x, y, w, h)
+    {
+        this.Transparencies = transparencies;
+    }
+
+    public BitmapStorage(string file) : this(file, new Rectangle(0,0,0,0))
+    {
+        
+    }
+
+    public IList<Color>? Transparencies { get; set; }
 }
