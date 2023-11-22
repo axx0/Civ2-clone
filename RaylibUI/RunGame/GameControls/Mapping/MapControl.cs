@@ -297,8 +297,13 @@ public class MapControl : BaseControl
         foreach (var cityDetails in _currentView.Cities)
         {
             Raylib.DrawTexture(cityDetails.Image, paddedXLoc + cityDetails.X, paddedYLoc + cityDetails.Y,
-                Color.WHITE);
-            //TODO: Draw city names    
+                Color.WHITE); 
+            var name = cityDetails.Name;
+            var textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, name, 20, 1);
+            var textPosition = new Vector2(paddedXLoc + cityDetails.X + cityDetails.Image.width / 2f - textSize.X / 2,
+                 paddedYLoc + cityDetails.Y + cityDetails.Image.height - textSize.Y / 2);
+            Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
+            Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition, 20, 1, cityDetails.Color.TextColour);
         }
 
         foreach (var element in _currentView.Elements)
