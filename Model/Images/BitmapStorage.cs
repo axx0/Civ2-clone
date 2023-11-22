@@ -38,5 +38,10 @@ public class BitmapStorage : IImageSource
         this.Transparencies = transparencies;
     }
 
+    public BitmapStorage(string file) : this(file, new Rectangle(0,0,0,0))
+    {
+        
+    }
+
     public IList<Color>? Transparencies { get; set; }
 }

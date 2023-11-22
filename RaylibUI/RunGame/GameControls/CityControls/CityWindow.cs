@@ -23,12 +23,13 @@ public class CityWindow : BaseDialog
 
         _headerLabel = new HeaderLabel(this, City.Name);
 
-        LayoutPadding = new Padding(LayoutPadding,_headerLabel.GetPreferredHeight());
-        
+        LayoutPadding = new Padding(LayoutPadding, _headerLabel.GetPreferredHeight());
+
         DialogWidth = _cityWindowProps.Width + PaddingSide;
         DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(DialogWidth, DialogHeight, LayoutPadding.Top, LayoutPadding.Bottom, LayoutPadding.Left, _cityWindowProps.Image);
-        
+        BackgroundImage = ImageUtils.PaintDialogBase(DialogWidth, DialogHeight, LayoutPadding.Top, LayoutPadding.Bottom,
+            LayoutPadding.Left, Images.ExtractBitmap(_cityWindowProps.Image));
+
         Controls.Add(_headerLabel);
 
         var infoArea = new CityInfoArea(this)
@@ -36,8 +37,8 @@ public class CityWindow : BaseDialog
             AbsolutePosition = _cityWindowProps.InfoPanel
         };
         Controls.Add(infoArea);
-        
-        var buyButton = new Button(this,Labels.For(LabelIndex.Buy))
+
+        var buyButton = new Button(this, Labels.For(LabelIndex.Buy))
         {
             AbsolutePosition = _cityWindowProps.Buttons["Buy"]
         };
@@ -62,7 +63,7 @@ public class CityWindow : BaseDialog
         };
         mapButton.Click += (_, _) => infoArea.Mode = DisplayMode.SupportMap;
         Controls.Add(mapButton);
-            
+
 
         // Rename button
         var renameButton = new Button(this, Labels.For(LabelIndex.Rename))
@@ -96,7 +97,7 @@ public class CityWindow : BaseDialog
 
         var tileMap = new CityTileMap(this)
         {
-            AbsolutePosition = new Rectangle(7, 65, 188, 137)
+            AbsolutePosition = _cityWindowProps.TileMap
         };
         Controls.Add(tileMap);
 
