@@ -111,6 +111,14 @@ public abstract class BaseGameView : IGameView
                                 if (tile.CityHere != null)
                                 {
                                     var cityStyleIndex = tile.CityHere.Owner.CityStyle;
+                                    if (tile.CityHere.Owner.Epoch == Civ2engine.Enums.EpochType.Industrial)
+                                    {
+                                        cityStyleIndex = 4;
+                                    }
+                                    else if (tile.CityHere.Owner.Epoch == Civ2engine.Enums.EpochType.Modern)
+                                    {
+                                        cityStyleIndex = 5;
+                                    }
                                     var sizeIncrement =
                                         _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                                             tile.CityHere);

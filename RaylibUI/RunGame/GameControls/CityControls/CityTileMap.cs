@@ -218,6 +218,14 @@ public class CityTileMap : BaseControl
                 if (tile.CityHere != null)
                 {
                     var cityStyleIndex = tile.CityHere.Owner.CityStyle;
+                    if (tile.CityHere.Owner.Epoch == EpochType.Industrial)
+                    {
+                        cityStyleIndex = 4;
+                    }
+                    else if (tile.CityHere.Owner.Epoch == EpochType.Modern)
+                    {
+                        cityStyleIndex = 5;
+                    }
                     var sizeIncrement =
                         gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                             tile.CityHere);
