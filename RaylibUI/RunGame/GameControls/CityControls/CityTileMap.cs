@@ -1,0 +1,323 @@
+using System.Numerics;
+using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.MapObjects;
+using Raylib_cs;
+using RaylibUI.RunGame.GameControls.Mapping;
+
+namespace RaylibUI.RunGame.GameControls;
+
+public class CityTileMap : BaseControl
+{
+    private readonly CityWindow _cityWindow;
+    private Texture2D? _texture;
+    private float _scaleFactor;
+    private Vector2 _offset;
+    private readonly Vector2 _textDim;
+    private readonly string _text;
+
+    public CityTileMap(CityWindow cityWindow) : base(cityWindow)
+    {
+        _cityWindow = cityWindow;
+        Click += OnClick;
+        _text = Labels.For(LabelIndex.ResourceMap);
+        _textDim = Raylib.MeasureTextEx(Fonts.AlternativeFont, _text, 16, 1);
+    }
+
+    private void OnClick(object? sender, MouseEventArgs e)
+    {
+        var originalClickPos = GetRelativeMousePosition();
+        var removeOffset = originalClickPos - _offset;
+        var restoreScale = removeOffset / _scaleFactor;
+        
+        var city = _cityWindow.City;
+        var gameScreen = _cityWindow.CurrentGameScreen;
+
+        var tileCache = gameScreen.TileCache;
+
+        var dim = tileCache.GetDimensions(city.Location.Map);
+
+        var zeroY = city.Location.Y - 3;
+        var (ydim, yrem )= Math.DivRem((int)restoreScale.Y, dim.HalfHeight);
+        var y = zeroY + ydim;
+        
+        var odd = y % 2 == city.Location.Odd;
+
+        if (odd)
+        {
+            restoreScale.X -= dim.HalfWidth;
+        }
+
+
+        var zeroX = city.Location.XIndex - 1;
+
+        var (xdim, xrem )= Math.DivRem((int)restoreScale.X, dim.TileWidth);
+        var x = zeroX + xdim;
+        
+        if (x < 0)
+        {
+            if (city.Location.Map.Flat)
+            {
+                x = 0;
+            }
+            else
+            {
+                x += dim.TotalWidth;
+            }
+        }
+        else if (x > dim.TotalWidth)
+        {
+            if (city.Location.Map.Flat)
+            {
+                x = dim.TotalWidth - 1;
+            }
+            else
+            {
+                x -= dim.TotalWidth;
+            }
+        }
+
+        if (xrem < dim.HalfWidth && y > 0)
+        {
+            if (yrem *  dim.HalfWidth + xrem *  dim.HalfHeight < dim.DiagonalCut)
+            {
+                y -= 1;
+                if (!odd)
+                {
+                    x -= 1;
+                    if (x < 0)
+                    {
+                        x = city.Location.Map.Flat ? 0 : city.Location.Map.Tile.GetLength(0) - 1;
+                    }
+                }
+            }
+        }
+        else if (xrem > dim.HalfWidth)
+        {
+            if ((dim.TileWidth - xrem) *  dim.HalfHeight + yrem *  dim.HalfWidth < dim.DiagonalCut)
+            {
+                y -= 1;
+                if (odd)
+                {
+                    x += 1;
+                    if (x == city.Location.Map.Tile.GetLength(0))
+                    {
+                        if (city.Location.Map.Flat)
+                        {
+                            x -= 1;
+                        }
+                        else
+                        {
+                            x = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (city.Location.Odd == 0 && y % 2 == 1)
+        {
+            //I don't know why this adjustment is needed, there's probably a bug earlier in the function
+            x -= 1;
+        }
+
+        //If we don't have a valid tile return 
+        if (0 > y || y >= city.Location.Map.Tile.GetLength(1)) return;
+        
+        var tile = city.Location.Map.Tile[x, y];
+        // if the tile is outside the city radius do nothing
+        if (!city.Location.CityRadius().Contains(tile)) return;
+
+        // if there are foreign units here can't use this square
+        if (tile.UnitsHere.Any(u => u.Owner != city.Owner))
+        {
+            // play bad action sound??
+            return;
+        }
+        if (tile.CityHere != null)
+        {
+            if (tile.CityHere != city)
+            {
+                //play bad action sound?
+                return;
+            }
+
+            foreach (var wt in city.WorkedTiles.ToArray())
+            {
+                wt.WorkedBy = null;
+            }
+            city.AutoAddDistributionWorkers();
+                    
+        }else if (tile.WorkedBy != null)
+        {
+            if (tile.WorkedBy != city)
+            {
+                //Play bad action sound?
+                return;
+            }
+            tile.WorkedBy = null;
+        }
+        else
+        {
+            // if equal we still allow since worked tiles include the city centre
+            if (city.WorkedTiles.Count > city.Size)
+            {
+                // Play bad action?
+                return;
+            }
+            tile.WorkedBy = city;
+        }
+        Redraw();
+    }
+
+    public override void Draw(bool pulse)
+    {
+        Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0, _scaleFactor, Color.WHITE);
+
+        Raylib.DrawTextEx(Fonts.AlternativeFont, _text,
+            new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 16, 1,
+            Color.GOLD);
+    }
+
+    public override void OnResize()
+    {
+        base.OnResize();
+        Redraw();
+    }
+
+    private void Redraw()
+    {
+        var city = _cityWindow.City;
+        var gameScreen = _cityWindow.CurrentGameScreen;
+
+        var cities = gameScreen.Main.ActiveInterface.CityImages;
+        var unitsSet = gameScreen.Main.ActiveInterface.UnitImages;
+        var tileCache = gameScreen.TileCache;
+
+        var dim = tileCache.GetDimensions(city.Location.Map);
+        var width = dim.TileWidth * 4;
+        var height = dim.TileHeight * 4;
+        var xcentre = width / 2 - dim.HalfWidth;
+        var ycentre = height / 2 - dim.HalfHeight;
+        var image = ImageUtils.NewImage(width, height);
+
+        var cityData = new List<Element>();
+        var units = new List<Element>();
+        foreach (var tile in city.Location.CityRadius())
+        {
+            if (tile.Visibility[city.Owner.Id])
+            {
+                var tileImage = tileCache.GetTextureForTile(tile);
+                var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;
+                var locationY = ycentre + (tile.Y - city.Location.Y) * dim.HalfHeight;
+                Raylib.ImageDraw(ref image, tileImage,
+                    MapImage.TileRec,
+                    new Rectangle(locationX,
+                        locationY, dim.TileWidth, dim.TileHeight),
+                    Color.WHITE);
+                if (tile.CityHere != null)
+                {
+                    var cityStyleIndex = tile.CityHere.Owner.CityStyle;
+                    var sizeIncrement =
+                        gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
+                            tile.CityHere);
+                    cityData.Add(new Element
+                    {
+                        Image = cities.Sets[cityStyleIndex][sizeIncrement]
+                            .Image,
+                        X = locationX,
+                        Y = locationY - dim.HalfHeight
+                    });
+                }
+                else if (tile.UnitsHere.Any(u => u.Owner != city.Owner))
+                {
+                    units.Add(new Element()
+                    {
+                        Image = ImageUtils.GetUnitImage(gameScreen.Main.ActiveInterface, tile.GetTopUnit()),
+                        X = locationX,
+                        Y = locationY - (int)unitsSet.UnitRectangle.height + dim.TileHeight
+                    });
+                }
+
+                if (tile.WorkedBy != null && tile.WorkedBy != city)
+                {
+                    Raylib.ImageDraw(ref image, gameScreen.Main.ActiveInterface.MapImages.ViewPiece, MapImage.TileRec,
+                        MapImage.TileRec with { x = locationX, y = locationY }, Color.RED);
+                }
+            }
+        }
+
+        //Cities must be drawn after terrain since they sometimes overdraw onto later tiles
+        foreach (var cityDetails in cityData)
+        {
+            Raylib.ImageDraw(ref image, cityDetails.Image, cities.CityRectangle,
+                cities.CityRectangle with { x = cityDetails.X, y = cityDetails.Y },
+                Color.WHITE);
+        }
+
+        foreach (var unitDetails in units)
+        {
+            Raylib.ImageDraw(ref image, unitDetails.Image, unitsSet.UnitRectangle,
+                unitsSet.UnitRectangle with { x = unitDetails.X, y = unitDetails.Y },
+                Color.WHITE);
+        }
+
+        var resources =
+            gameScreen.Main.ActiveInterface.ResourceImages.ToDictionary(k => k.Name,
+                v => Images.ExtractBitmap(v.SmallImage));
+
+        var lowOrganisation = city.Owner.Government <= GovernmentType.Despotism;
+        var totalDrawWidth = dim.TileWidth - 20;
+        var resourceXOffset = 10;
+        var resourceWidth = resources.First().Value.height;
+        var resourceYOffset = dim.HalfHeight - resourceWidth / 2;
+        var resourceRect = new Rectangle(0, 0, resourceWidth, resourceWidth);
+        foreach (var workedTile in city.WorkedTiles)
+        {
+            var food = workedTile.GetFood(lowOrganisation);
+            var shields = workedTile.GetShields(lowOrganisation);
+            var trade = workedTile.GetTrade(city.OrganizationLevel);
+
+            var totalResources = food + shields + trade;
+            if (totalResources > 0)
+            {
+                var locationX = xcentre + (workedTile.X - city.Location.X) * dim.HalfWidth + resourceXOffset;
+                var locationY = ycentre + (workedTile.Y - city.Location.Y) * dim.HalfHeight + resourceYOffset;
+                var spacing = Math.Min(resourceWidth + 1, Math.Max(totalDrawWidth / totalResources, 1));
+                var destRect = resourceRect with { x = locationX, y = locationY };
+                for (var i = 0; i < food; i++)
+                {
+                    Raylib.ImageDraw(ref image, resources["Food"], resourceRect, destRect, Color.WHITE);
+                    destRect.x += spacing;
+                }
+                for (var i = 0; i < shields; i++)
+                {
+                    Raylib.ImageDraw(ref image, resources["Shields"], resourceRect, destRect, Color.WHITE);
+                    destRect.x += spacing;
+                }
+                for (var i = 0; i < trade; i++)
+                {
+                    Raylib.ImageDraw(ref image, resources["Trade"], resourceRect, destRect, Color.WHITE);
+                    destRect.x += spacing;
+                }
+            }
+        }
+
+        if (_texture.HasValue)
+        {
+            Raylib.UnloadTexture(_texture.Value);
+        }
+
+        _texture = Raylib.LoadTextureFromImage(image);
+        _scaleFactor = Width / (float)_texture.Value.width;
+        _offset = new Vector2(0, (Height - height * _scaleFactor) / 2f);
+        Raylib.UnloadImage(image);
+    }
+}
+
+public struct Element
+{
+    public Image Image { get; set; }
+    public int X { get; set; }
+    public int Y { get; set; }
+}

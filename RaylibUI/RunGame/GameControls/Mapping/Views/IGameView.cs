@@ -23,15 +23,3 @@ public interface IGameView : IDisposable
     void Preserve();
     void Next();
 }
-
-public class ViewElement
-{
-    public Texture2D Image { get; init; }
-    public int X { get; init; }
-    public int Y { get; init; }
-}
-
-public class CityData : ViewElement
-{
-    public string Name { get; init; }
-}

@@ -94,8 +94,21 @@ namespace RaylibUI
                         ImageCache[sourceKey] = Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
                     }
 
+                    var sourceImage = ImageCache[sourceKey];
                     var rect = bitmapStorage.Location;
-                    ImageCache[bitmapStorage.Key] = Raylib.ImageFromImage(ImageCache[sourceKey], rect);
+                    if (rect.width == 0)
+                    {
+                        rect = new Rectangle(0, 0, sourceImage.width, sourceImage.height);
+                    }
+                    var image = Raylib.ImageFromImage(ImageCache[sourceKey], rect);
+                    if (bitmapStorage.Transparencies != null)
+                    {
+                        foreach (var transparency in bitmapStorage.Transparencies)
+                        {
+                            Raylib.ImageColorReplace(ref image, transparency, new Color(0,0,0,0));
+                        }
+                    }
+                    ImageCache[bitmapStorage.Key] = image;
                     break;
                 }
                 default:

@@ -53,6 +53,10 @@ public class MinimapPanel : BaseControl
 
         var clickedTilePosition = clickPosition - new Vector2(_offset[0],_offset[1]) + new Vector2(GetCenterShift(), 0);
         clickedTilePosition.X = WrapNumber((int)clickedTilePosition.X, 2 * _game.CurrentMap.XDim);
+        if (clickPosition.Y > _gameScreen.Game.CurrentMap.YDim)
+        {
+            clickPosition.Y = _gameScreen.Game.CurrentMap.YDim-1;
+        }
         _gameScreen.Game.ActiveTile =
             _gameScreen.Game.CurrentMap.Tile[(int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y];
         _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged,
