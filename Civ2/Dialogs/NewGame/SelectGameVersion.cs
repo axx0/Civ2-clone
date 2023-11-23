@@ -8,7 +8,7 @@ namespace Civ2.Dialogs.NewGame;
 // ReSharper disable once ClassNeverInstantiated.Global
 public class SelectGameVersionHandler : BaseDialogHandler
 {
-    internal const string Title = "AXX-Select-Game";
+    public const string Title = "AXX-Select-Game";
 
     public SelectGameVersionHandler() : base(Title) {}
     public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)

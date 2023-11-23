@@ -13,13 +13,13 @@ public class TestOfTimeInterface : Civ2Interface
 {
     public override string Title => "Test of Time";
 
-    public override string InitialMenu => "MAINMENU";//"STARTMENU";
+    public override string InitialMenu => "STARTMENU";
 
     public override void Initialize()
     {
         base.Initialize();
 
-        //DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
+        DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
         DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
         DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(HorzionPic, new Point(0.08, 0.09)));
         DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(CreaturePic, new Point(0.08, 0.09)));

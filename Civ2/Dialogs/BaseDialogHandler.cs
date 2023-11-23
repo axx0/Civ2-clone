@@ -16,12 +16,16 @@ public abstract class BaseDialogHandler : ICivDialogHandler
 
     public string Name { get; }
     public virtual ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
-    {       
-        Dialog = new DialogElements
+    {
+        if (popups.TryGetValue(Name, out var popup))
         {
-            Dialog = popups[Name],
-            DialogPos = DialogPos
-        };
+            Dialog = new DialogElements
+            {
+                Dialog = popup,
+                DialogPos = DialogPos
+            };
+        }
+
         return this;
     }
     
