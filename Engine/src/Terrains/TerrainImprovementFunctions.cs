@@ -289,6 +289,7 @@ namespace Civ2engine.Terrains
                 {
                     Id = ImprovementTypes.Fortress,
                     Layer = 15,
+                    Foreground = true,
                     Levels = new ImprovementLevel[]
                     {
                         new()
@@ -357,7 +358,8 @@ namespace Civ2engine.Terrains
                         .Select(t => new AllowedTerrain
                             { BuildTime = t.MoveCost * 3, TerrainType = (int)t.Type }).ToList()).ToList(),
                     ExclusiveGroup = ImprovementTypes.DefenceGroup,
-                    MaxLevelReachedMessage = "ALREADYAIR"
+                    MaxLevelReachedMessage = "ALREADYAIR",
+                    HideUnits = (int)UnitGAS.Air
                 }
             }.ToDictionary(k=>k.Id);
         }

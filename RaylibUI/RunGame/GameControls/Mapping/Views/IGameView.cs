@@ -9,7 +9,6 @@ public interface IGameView : IDisposable
 {
     Tile Location { get; }
     Texture2D BaseImage { get; }
-    CityData[] Cities { get; set; }
     ViewElement[] Elements { get; }
     IEnumerable<ViewElement> CurrentAnimations { get; }
     int ViewHeight { get; }

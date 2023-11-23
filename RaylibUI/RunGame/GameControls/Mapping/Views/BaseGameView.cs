@@ -37,9 +37,8 @@ public abstract class BaseGameView : IGameView
         if (previousView != null && IsInSameArea(previousView, location, dimensions))
         {
             ActivePos = GetPosForTile(location, dimensions);
-            this.BaseImage = previousView.BaseImage;
-            this.Cities = previousView.Cities;
-            Elements = previousView.Elements.Where(e=>e.X != (int)ActivePos.X || e.Y != (int)ActivePos.Y).ToArray();
+            BaseImage = previousView.BaseImage;
+            Elements = previousView.Elements;
 
             previousView.Preserve();
 
@@ -48,7 +47,6 @@ public abstract class BaseGameView : IGameView
         {
 
             var civilizationId = _gameScreen.Player.Civilization.Id;
-            var cityData = new List<CityData>();
             var elements = new List<ViewElement>();
             if (_offsets == Vector2.Zero)
             {
@@ -104,7 +102,8 @@ public abstract class BaseGameView : IGameView
 
                             if (tile.Visibility[civilizationId])
                             {
-                                Raylib.ImageDraw(ref image, _gameScreen.TileCache.GetTextureForTile(tile),
+                                var tileDetails = _gameScreen.TileCache.GetTileDetails(tile);
+                                Raylib.ImageDraw(ref image, tileDetails.Image,
                                     MapImage.TileRec,
                                     new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight), Color.WHITE);
 
@@ -122,22 +121,74 @@ public abstract class BaseGameView : IGameView
                                     var sizeIncrement =
                                         _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                                             tile.CityHere);
-                                    cityData.Add(new CityData
+                                    elements.Add(new CityData
                                     {  
                                         Color = activeInterface.PlayerColours[tile.CityHere.Owner.Id],
                                         Name = tile.CityHere.Name,
                                         Image = Raylib.LoadTextureFromImage(cities.Sets[cityStyleIndex][sizeIncrement]
                                             .Image),
                                         X = (int)xpos,
-                                        Y = (int)ypos - dim.HalfHeight
+                                        Y = (int)ypos + dim.TileHeight
                                     });
                                 }
-                                else if ( tile.UnitsHere.Count > 0 && !actionTiles.Contains(tile))
+                                else if ( tile.UnitsHere.Count > 0)
                                 {
                                     var unit = tile.GetTopUnit();
+
+                                    if (tileDetails.ForegroundElement is UnitHidingImprovement unitImp)
+                                    {
+                                        unitImp.OwnerId = unit.Owner.Id;
+                                        if (unitImp.UnitDomain == unit.Domain)
+                                        {
+                                            elements.Add(new ViewElement
+                                            {
+                                                Image = Raylib.LoadTextureFromImage(ImageUtils.GetImpImage(activeInterface, unitImp, unitImp.UnitImage)),
+                                                X = (int)xpos,
+                                                Y = (int)ypos + dim.TileHeight
+                                            });
+                                        }
+                                        else
+                                        {
+                                            elements.Add(new ViewElement
+                                            {
+                                                Image = Raylib.LoadTextureFromImage(ImageUtils.GetImpImage(activeInterface, unitImp)),
+                                                X = (int)xpos,
+                                                Y = (int)ypos + dim.TileHeight
+                                            });
+                                            elements.Add(new ViewElement
+                                            {
+                                                Image = Raylib.LoadTextureFromImage(
+                                                    ImageUtils.GetUnitImage(activeInterface, unit)),
+                                                X = (int)xpos,
+                                                Y = (int)ypos + dim.TileHeight
+                                            });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        elements.Add(new ViewElement
+                                        {
+                                            Image = Raylib.LoadTextureFromImage(
+                                                ImageUtils.GetUnitImage(activeInterface, unit)),
+                                            X = (int)xpos,
+                                            Y = (int)ypos + dim.TileHeight
+                                        });
+                                        if (tileDetails.ForegroundElement != null)
+                                        {
+                                            elements.Add(new ViewElement
+                                            {
+                                                Image = Raylib.LoadTextureFromImage(ImageUtils.GetImpImage(activeInterface, tileDetails.ForegroundElement)),
+                                                X = (int)xpos,
+                                                Y = (int)ypos + dim.TileHeight
+                                            });
+                                        }
+                                    }
+                                }
+                                else if (tileDetails.ForegroundElement != null)
+                                {
                                     elements.Add(new ViewElement
                                     {
-                                        Image = Raylib.LoadTextureFromImage(ImageUtils.GetUnitImage(activeInterface, unit)),
+                                        Image = Raylib.LoadTextureFromImage(ImageUtils.GetImpImage(activeInterface, tileDetails.ForegroundElement)),
                                         X = (int)xpos,
                                         Y = (int)ypos + dim.TileHeight
                                     });
@@ -158,7 +209,6 @@ public abstract class BaseGameView : IGameView
 
 
             this.BaseImage = Raylib.LoadTextureFromImage(image);
-            this.Cities = cityData.ToArray();
             this.Elements = elements.ToArray();
 
             Raylib.UnloadImage(image);
@@ -172,7 +222,6 @@ public abstract class BaseGameView : IGameView
     }
 
     public Texture2D BaseImage { get; set; }
-    public CityData[] Cities { get; set; }
 
     private bool IsInSameArea(IGameView previousView, Tile location, MapDimensions dimensions)
     {
@@ -291,10 +340,6 @@ public abstract class BaseGameView : IGameView
         if (!_preserve)
         {
             Raylib.UnloadTexture(BaseImage);
-            foreach (var city in Cities)
-            {
-                Raylib.UnloadTexture(city.Image);
-            }
 
             foreach (var element in Elements)
             {
