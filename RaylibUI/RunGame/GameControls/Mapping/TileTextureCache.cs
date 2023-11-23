@@ -8,10 +8,10 @@ public class TileTextureCache
 {
     private readonly GameScreen _parentScreen;
 
-    private readonly List<Image?[,]> _mapTileTextures = new();
+    private readonly List<TileDetails?[,]> _mapTileTextures = new();
 
-    private readonly List<int> _seenMaps = new List<int>();
-    private readonly List<TerrainSet> _tileSets = new List<TerrainSet>();
+    private readonly List<int> _seenMaps = new();
+    private readonly List<TerrainSet> _tileSets = new();
     private readonly List<MapDimensions> _dimensions = new();
 
     public TileTextureCache(GameScreen parentScreen)
@@ -19,7 +19,7 @@ public class TileTextureCache
         _parentScreen = parentScreen;
     }
 
-    public Image GetTextureForTile(Tile tile)
+    public TileDetails GetTileDetails(Tile tile)
     {
         var mapIndex = _seenMaps.IndexOf(tile.Map.MapIndex);
         if (mapIndex == -1)
@@ -27,10 +27,8 @@ public class TileTextureCache
             mapIndex = SetupMap(tile.Map);
         }
 
-        _mapTileTextures[mapIndex][tile.XIndex, tile.Y] ??=
+        return _mapTileTextures[mapIndex][tile.XIndex, tile.Y] ??=
             MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game);
-
-        return _mapTileTextures[mapIndex][tile.XIndex, tile.Y]!.Value;
     }
 
     private int SetupMap(Map map)
@@ -38,7 +36,7 @@ public class TileTextureCache
         int mapIndex;
         mapIndex = _seenMaps.Count;
         _seenMaps.Add(map.MapIndex);
-        _mapTileTextures.Add(new Image?[map.XDim, map.YDim]);
+        _mapTileTextures.Add(new TileDetails?[map.XDim, map.YDim]);
 
         var tileSet = _parentScreen.Main.ActiveInterface.TileSets[map.MapIndex];
         _tileSets.Add(tileSet);

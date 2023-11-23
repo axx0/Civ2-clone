@@ -207,10 +207,10 @@ public class CityTileMap : BaseControl
         {
             if (tile.Visibility[city.Owner.Id])
             {
-                var tileImage = tileCache.GetTextureForTile(tile);
+                var tileImage = tileCache.GetTileDetails(tile);
                 var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;
                 var locationY = ycentre + (tile.Y - city.Location.Y) * dim.HalfHeight;
-                Raylib.ImageDraw(ref image, tileImage,
+                Raylib.ImageDraw(ref image, tileImage.Image,
                     MapImage.TileRec,
                     new Rectangle(locationX,
                         locationY, dim.TileWidth, dim.TileHeight),

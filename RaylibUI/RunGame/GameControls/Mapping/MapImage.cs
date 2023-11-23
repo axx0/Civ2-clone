@@ -22,7 +22,7 @@ public static class MapImage
 
     public static Rectangle TileRec = new (0, 0, 64, 32);
 
-    internal static Image MakeTileGraphic(Tile tile, Map map,
+    internal static TileDetails MakeTileGraphic(Tile tile, Map map,
         TerrainSet terrainSet, Game game)
     {
         // Define base bitmap for drawing
@@ -142,6 +142,7 @@ public static class MapImage
             .Where(ci => game.TerrainImprovements.ContainsKey(ci.Improvement))
             .OrderBy(ci => game.TerrainImprovements[ci.Improvement].Layer).ToList();
 
+        var tileDetails = new TileDetails { Image = tilePic };
         foreach (var construct in improvements)
         {
             var improvement = game.TerrainImprovements[construct.Improvement];
@@ -196,27 +197,30 @@ public static class MapImage
             }
             else
             {
-                if (tile.IsUnitPresent && graphics.UnitLevels != null)
+                if (improvement.HideUnits != -1)
                 {
-                    Raylib.ImageDraw(ref tilePic, graphics.UnitLevels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
+                    tileDetails.ForegroundElement = new UnitHidingImprovement
+                    {
+                        UnitDomain = (UnitGAS)improvement.HideUnits, 
+                        UnitImage = graphics.UnitLevels[construct.Level, 0],
+                        Image = graphics.Levels[construct.Level, 0],
+                        PlayerReplacementColor = new Color(255,0,0,255)
+                    };
+                }else if (improvement.Foreground)
+                {
+                    tileDetails.ForegroundElement = new ForegroundImprovement
+                    {
+                        Image = graphics.Levels[construct.Level, 0]
+                    };
                 }
                 else
                 {
-                    if (construct.Improvement is 4 or 10) // fortress & airbase have height 48
-                    {
-                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], 
-                            new Rectangle(0, 16, TileRec.width, TileRec.height), TileRec, Color.WHITE);
-                    }
-                    else
-                    {
-                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
-                    }
-                    
+                    Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
                 }
             }
         }
 
-        return tilePic;
+        return tileDetails;
     }
 
     private static void ApplyDither(Image orig_img, TerrainType neighbourType, TerrainType tileType,

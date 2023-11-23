@@ -10,6 +10,7 @@ using Font = Raylib_cs.Font;
 using Image = Raylib_cs.Image;
 using Rectangle = Raylib_cs.Rectangle;
 using Civ2engine.Units;
+using RaylibUI.RunGame.GameControls.Mapping;
 
 namespace RaylibUI;
 
@@ -528,6 +529,15 @@ public class ImageUtils
         Raylib.ImageDrawRectangle(ref hpShield, 0, 2, hpBarX, 3, hpColor);
         Raylib.ImageDrawRectangle(ref hpShield, hpBarX, 2, hpShield.width - hpBarX, 3, Color.BLACK);
         return hpShield;
+    }
+
+    public static Image GetImpImage(IUserInterface activeInterface, ForegroundImprovement imp, Image? baseImage = null)
+    {
+        var image = baseImage ?? imp.Image;
+        if (imp.OwnerId == 0 || imp.PlayerReplacementColor == null) return image;
+        var repImage = Raylib.ImageFromImage(image, new Rectangle(0, 0, image.width, image.height));
+        Raylib.ImageColorReplace(ref repImage, imp.PlayerReplacementColor.Value, activeInterface.PlayerColours[imp.OwnerId].LightColour);
+        return repImage;
     }
 }
 

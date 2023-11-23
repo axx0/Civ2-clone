@@ -18,7 +18,7 @@ namespace Civ2engine
         public IList<ImprovementLevel> Levels { get; set; }
 
         /// <summary>
-        /// True if all cities are considered to have this improvement (once 
+        /// True if all cities are considered to have this improvement (once researched)
         /// </summary>
         public bool AllCitys { get; set; }
 
@@ -70,5 +70,15 @@ namespace Civ2engine
         /// Where this improvement build order should appear in the menu
         /// </summary>
         public int MenuGroup { get; set; }
+        
+        /// <summary>
+        /// True if the improvement should draw over the top of units like a fortress
+        /// </summary>
+        public bool Foreground { get; set; }
+
+        /// <summary>
+        /// If set this improvement wil hide units of the listed Domain
+        /// </summary>
+        public int HideUnits { get; set; } = -1;
     }
 }
