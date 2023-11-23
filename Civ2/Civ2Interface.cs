@@ -154,6 +154,15 @@ public abstract class Civ2Interface : IUserInterface
             TileMap = new Rectangle(7, 65, 188, 137)
         };
 
+        _cityWindowLayout.Resources = new List<ResourceArea>
+        {
+            new ResourceArea
+            {
+                Name = "Food",
+                Bounds = new Rectangle()
+            }
+        };
+
         _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, BuyButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("Change", new Rectangle(557, 181, BuyButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("Info", new Rectangle(459, 364 ,InfoButtonWidth, buttonHeight));
@@ -162,6 +171,7 @@ public abstract class Civ2Interface : IUserInterface
         _cityWindowLayout.Buttons.Add("Happy", new Rectangle(459, 389, InfoButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("View", new Rectangle(517,389,InfoButtonWidth, buttonHeight));
         _cityWindowLayout.Buttons.Add("Exit", new Rectangle(575, 389, InfoButtonWidth, buttonHeight));
+        
         
         return _cityWindowLayout;
     }

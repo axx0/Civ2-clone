@@ -1,6 +1,6 @@
 using Raylib_cs;
 
-namespace RaylibUI.RunGame;
+namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class CityInfoArea : BaseControl
 {

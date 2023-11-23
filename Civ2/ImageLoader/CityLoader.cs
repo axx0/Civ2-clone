@@ -1,7 +1,6 @@
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.Terrains;
-using Model;
 using Model.ImageSets;
 using Raylib_cs;
 using RaylibUI;
@@ -49,8 +48,7 @@ namespace Civ2.ImageLoader
                     }
                 }
             }
-
-
+            
             var borderColour = colours[max];
             var firstRow = first[max];
 

@@ -1,12 +1,10 @@
-using System.Numerics;
 using Civ2engine;
 using Model;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
-using RaylibUI.RunGame.GameControls;
 
-namespace RaylibUI.RunGame;
+namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class CityWindow : BaseDialog
 {
@@ -101,6 +99,10 @@ public class CityWindow : BaseDialog
         };
         Controls.Add(tileMap);
 
+        foreach (var resource in _cityWindowProps.Resources)
+        {
+            Controls.Add(new ResourceProductionBar(this,resource));
+        }
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)

@@ -16,4 +16,11 @@ public class CityWindowLayout
     public IDictionary<string, Rectangle> Buttons { get; } = new Dictionary<string, Rectangle>();
     public Rectangle InfoPanel { get; set; }
     public Rectangle?TileMap { get; set; }
+    public IList<ResourceArea> Resources { get; set; }
+}
+
+public class ResourceArea
+{
+    public string Name { get; set; }
+    public Rectangle Bounds { get; set; }
 }

@@ -122,7 +122,13 @@ namespace RaylibUI
         {
             if (!Files.ContainsKey(filename))
             {
-                Files[filename] = File.ReadAllBytes(Utils.GetFilePath(filename));
+                var path = Utils.GetFilePath(filename);
+                if (string.IsNullOrEmpty(path))
+                {
+                    Console.Error.WriteLine("Failed to load file " + filename + " please check value");
+                    return ImageUtils.NewImage(1, 1);
+                }
+                Files[filename] = File.ReadAllBytes(path);
             }
 
             return ExtractBitmap(Files[filename], start, length, key);

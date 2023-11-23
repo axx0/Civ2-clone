@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls;
+using RaylibUI.RunGame.GameControls.CityControls;
 using RaylibUI.RunGame.GameControls.GameModes;
 using RaylibUI.RunGame.GameControls.Mapping;
 
