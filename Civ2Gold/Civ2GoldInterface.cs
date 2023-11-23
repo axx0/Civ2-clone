@@ -10,6 +10,8 @@ public class Civ2GoldInterface : Civ2Interface
 {
     public override string Title => "Civilization II Multiplayer Gold";
 
+    public override string InitialMenu => "MAINMENU";
+
     public override void Initialize()
     {
         base.Initialize();

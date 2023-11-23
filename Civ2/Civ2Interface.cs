@@ -67,9 +67,11 @@ public abstract class Civ2Interface : IUserInterface
         return DialogHandlers[dialogName].HandleDialogResult(dialogResult, DialogHandlers, this);
     }
 
+    public abstract string InitialMenu { get; }
+
     public IInterfaceAction GetInitialAction()
     {
-        return DialogHandlers["MAINMENU"].Show(this);
+        return DialogHandlers[InitialMenu].Show(this);
     }
 
     public virtual IImageSource? BackgroundImage => null;
