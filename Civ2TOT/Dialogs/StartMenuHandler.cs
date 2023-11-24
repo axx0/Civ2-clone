@@ -24,10 +24,10 @@ public class StartMenuHandler : BaseDialogHandler
         switch (result.SelectedIndex)
         {
             case 0:
-            case 1:
-                if (Initialization.RuleSets.Count > 1)
-                    return civDialogHandlers[SelectGameVersionHandler.Title].Show(civ2Interface);
                 return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
+            default:
+                //TODO: Additional cases
+                break;
         }
 
         return new MenuAction(Dialog);
