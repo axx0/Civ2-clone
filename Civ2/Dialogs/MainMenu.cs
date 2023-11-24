@@ -18,8 +18,9 @@ public class MainMenu : BaseDialogHandler
     {
         if (result.SelectedButton == Dialog.Dialog.Button[1])
         {
-            return ExitAction.Exit;
+            return civ2Interface.InitialMenu != Title ? civ2Interface.GetInitialAction() : ExitAction.Exit;
         }
+
         switch (result.SelectedIndex)
         {
             case 0:
@@ -38,53 +39,6 @@ public class MainMenu : BaseDialogHandler
             case 4:
                 return civDialogHandlers[LoadGame.DialogTitle].Show(civ2Interface);
         }
-        /*var mainMenuDialog = new Civ2dialog(this, popupBoxList["MAINMENU"]);
-                   mainMenuDialog.Location = new Point((int)(Screen.PrimaryScreen.Bounds.Width - mainMenuDialog.Width - 156),
-                                                       (int)(Screen.PrimaryScreen.Bounds.Height - mainMenuDialog.Height - 72));
-                   mainMenuDialog.ShowModal(this);
-       
-                   switch (mainMenuDialog.SelectedIndex)
-                   {
-                       //New Game
-                       case 0:
-                           {
-                               NewGame.Start(this, false);
-                               break;
-                           }
-       
-                       // Start premade
-                       case 1:
-                           {
-                               LocateStartingFiles("Select Map To Load",
-                                   new FileFilter("Save Files (*.mp)", ".mp"), StartPremadeInit);
-                               break;
-                           }
-       
-                       //Customise World
-                       case 2:
-                           {
-                               NewGame.Start(this, true);
-                               break;
-                           }
-       
-                       // Load scenario
-                       case 3:
-                           {
-                               LocateStartingFiles("Select Scenario To Load",
-                                   new FileFilter("Save Files (*.scn)", ".scn"), LoadScenarioInit);
-                               break;
-                           }
-       
-                       // Load game
-                       case 4:
-                           {
-                               LocateStartingFiles("Select Game To Load", new FileFilter("Save Files (*.sav)", ".SAV"),
-                                   LoadGameInitialization
-                               );
-                               break;
-                           }
-                   }break*/
-        
         return new MenuAction(Dialog);
     }
 }
