@@ -5,7 +5,7 @@ using Civ2engine.MapObjects;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping;
 
-namespace RaylibUI.RunGame.GameControls;
+namespace RaylibUI.RunGame.GameControls.CityControls;
 
 public class CityTileMap : BaseControl
 {

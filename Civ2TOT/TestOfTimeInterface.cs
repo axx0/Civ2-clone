@@ -1,4 +1,6 @@
-﻿using Civ2;
+﻿using System.Runtime.Intrinsics.X86;
+using Civ2;
+using Civ2.Dialogs;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
@@ -13,13 +15,13 @@ public class TestOfTimeInterface : Civ2Interface
 {
     public override string Title => "Test of Time";
 
-    public override string InitialMenu => "MAINMENU";//"STARTMENU";
+    public override string InitialMenu => "STARTMENU";
 
     public override void Initialize()
     {
         base.Initialize();
 
-        //DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
+        DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
         DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
         DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(HorzionPic, new Point(0.08, 0.09)));
         DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(CreaturePic, new Point(0.08, 0.09)));
@@ -38,7 +40,12 @@ public class TestOfTimeInterface : Civ2Interface
         DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(RocksPic, new Point(0.08, 0.09)));
         DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(HotplanetPic, new Point(0.08, 0.09)));
         DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(AlienplanetPic, new Point(0.08, 0.09)));
-       
+
+        if (Dialogs.TryGetValue(MainMenu.Title + "2", out var menu2))
+        {
+            var existingDialog = DialogHandlers[MainMenu.Title].Dialog.Dialog;
+            existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
+        }
     }
 
     private static readonly IImageSource ObservatoryPic = new BinaryStorage
