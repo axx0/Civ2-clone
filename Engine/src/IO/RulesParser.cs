@@ -47,7 +47,9 @@ namespace Civ2engine.IO
                 {
                     return;
                 }
-                var allowances = values[i].Split(" ", 2)[0];
+
+                var tabOrSpace = values[i].IndexOfAny("\t ".ToCharArray());
+                var allowances = values[i][..tabOrSpace];
 
                 Rules.Leaders[i].AdvanceGroups =
                     allowances.Select(c => (AdvanceGroupAccess)int.Parse(c.ToString())).ToArray();
