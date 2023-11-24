@@ -1,3 +1,4 @@
+using System.Numerics;
 using Civ2engine;
 using Model;
 using Raylib_cs;
@@ -99,9 +100,19 @@ public class CityWindow : BaseDialog
         };
         Controls.Add(tileMap);
 
-        foreach (var resource in _cityWindowProps.Resources)
+        var titlePosition = _cityWindowProps.Resources.TitlePosition;
+        if (titlePosition != Vector2.Zero)
         {
-            Controls.Add(new ResourceProductionBar(this,resource));
+            var resourceTitle = Labels.For(LabelIndex.CityResources);
+            var resourceTitleSize = Raylib.MeasureTextEx(Fonts.AlternativeFont, resourceTitle, 16, 1);
+            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.GOLD, font: Fonts.AlternativeFont, fontSize: 16)
+            {
+                AbsolutePosition = new Rectangle(titlePosition.X - resourceTitleSize.X / 2 - 10,titlePosition.Y, resourceTitleSize.X + 20, resourceTitleSize.Y )
+            });
+        }
+        foreach (var resource in _cityWindowProps.Resources.Resources)
+        {
+            Controls.Add(new ResourceProductionBar(this, resource));
         }
     }
 
@@ -124,4 +135,12 @@ public class CityWindow : BaseDialog
             control.OnResize();
         }
     }
+
+    public void UpdateProduction()
+    {
+        City.CalculateOutput(City.Owner.Government, CurrentGameScreen.Game);
+        ResourceProductionChanged(this, EventArgs.Empty);
+    }
+
+    public event EventHandler ResourceProductionChanged;
 }

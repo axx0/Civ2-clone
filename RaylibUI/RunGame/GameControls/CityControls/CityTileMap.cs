@@ -167,6 +167,8 @@ public class CityTileMap : BaseControl
             }
             tile.WorkedBy = city;
         }
+
+        _cityWindow.UpdateProduction();
         Redraw();
     }
 

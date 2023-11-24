@@ -1,3 +1,4 @@
+using System.Numerics;
 using Civ2.Dialogs;
 using Civ2.Rules;
 using Civ2engine;
@@ -153,16 +154,48 @@ public abstract class Civ2Interface : IUserInterface
         {
             Height = 420, Width = 640,
             InfoPanel = new Rectangle(197, 216, 233, 198),
-            TileMap = new Rectangle(7, 65, 188, 137)
-        };
-
-        _cityWindowLayout.Resources = new List<ResourceArea>
-        {
-            new ResourceArea
+            TileMap = new Rectangle(7, 65, 188, 137),
+            Resources = new ResourceProduction { 
+                TitlePosition = new Vector2(318, 46),
+                Resources = new List<ResourceArea>
             {
-                Name = "Food",
-                Bounds = new Rectangle()
-            }
+                new ConsumableResourceArea(name: "Food", 
+                    bounds: new Rectangle(199, 75, 238, 16),
+                    consumptionLabel: Labels.For(LabelIndex.Food), 
+                    lossLabel: Labels.For(LabelIndex.Hunger),
+                    surplusLabel: Labels.For(LabelIndex.Surplus)),            
+                new ConsumableResourceArea(name: "Trade", 
+                    bounds: new Rectangle(206, 116, 224, 16),
+                    lossLabel: Labels.For(LabelIndex.Corruption),
+                    consumptionLabel: Labels.For(LabelIndex.Trade)),
+                new ConsumableResourceArea(name: "Shields", 
+                    bounds: new Rectangle(199, 181, 238, 16),
+                    consumptionLabel: Labels.For(LabelIndex.Support), 
+                    lossLabel: Labels.For(LabelIndex.Waste),
+                    surplusLabel:Labels.For(LabelIndex.Production),
+                    labelBelow: true
+                ),
+                new SharedResourceArea(new Rectangle(206, 140, 224, 16), true) { Resources = new List<ResourceInfo>
+                {
+                    new()
+                    {
+                        Name = "Tax",
+                        Label = Labels.For(LabelIndex.Tax),
+                        Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 16, 320, 14)
+                    },
+                    new()
+                    {
+                        Name = "Lux",
+                        Label = Labels.For(LabelIndex.Lux),
+                        Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 1, 320, 14)
+                    },new()
+                    {
+                    Name = "Science",
+                    Label = Labels.For(LabelIndex.Science),
+                    Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 31, 320, 14)
+                }
+                }}
+            }}
         };
 
         _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, BuyButtonWidth, buttonHeight));

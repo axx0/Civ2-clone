@@ -174,5 +174,35 @@ namespace Civ2engine
         public Tile Location { get; init; }
         public List<Tile> WorkedTiles { get; } = new();
         public int Pollution { get; set; }
+
+        public ResourceValues GetConsumableResourceValues(string resourceName)
+        {
+            switch (resourceName)
+            {
+                case "Food":
+                    return SurplusHunger > 0
+                        ? new ResourceValues(consumption: Food, surplus: SurplusHunger, loss: 0)
+                        : new ResourceValues(consumption: Food, surplus: 0, loss: -SurplusHunger);
+                case "Shields":
+                    return new ResourceValues(consumption: Support, surplus: Production, loss: Waste);
+                case "Trade":
+                    return new ResourceValues(consumption: Trade, surplus: 0, loss: Corruption);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        public int GetResourceValues(string name)
+        {
+            return name switch
+            {
+                "Science" => Science,
+                "Lux" => Lux,
+                "Tax" => Tax,
+                "Shields" => Production,
+                "Food" => SurplusHunger,
+                _ => throw new NotSupportedException()
+            };
+        }
     }
 }
