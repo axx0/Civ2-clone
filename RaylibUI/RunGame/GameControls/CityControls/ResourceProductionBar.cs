@@ -42,29 +42,28 @@ public class ResourceProductionBar : BaseControl
             var values = _cityWindow.City.GetConsumableResourceValues(consumableResource.Name);
              _iconWidth = mainImage.width;
 
-            var noSurpluses = string.IsNullOrEmpty(consumableResource.SurplusLabel);
-
             sections.Add(
-                new ProdSection(label: consumableResource.ConsumptionLabel, value: values.Consumption,
+                new ProdSection(label: consumableResource.GetDisplayDetails(values.Consumption, OutputType.Consumption), value: values.Consumption,
                     icon: mainImage));
 
-            if (values.Loss > 0 || noSurpluses)
+            if (values.Loss != 0 || consumableResource.NoSurplus)
             {
                 sections.Add(
-                    new ProdSection(label: consumableResource.LossLabel, value: values.Loss, icon: lossImage));
+                    new ProdSection(label: consumableResource.GetDisplayDetails(values.Loss, OutputType.Loss), value: Math.Abs(values.Loss), icon: lossImage));
             }
 
-            if (values.Surplus > 0 || (values.Loss == 0 && !noSurpluses))
+            if (values.Surplus > 0 || (values.Loss == 0 && !consumableResource.NoSurplus))
             {
-                sections.Add(new ProdSection(label: consumableResource.SurplusLabel, value: values.Surplus,
+                sections.Add(new ProdSection(label: consumableResource.GetDisplayDetails(values.Surplus, OutputType.Surplus), value: values.Surplus,
                     icon: mainImage));
             }
         }else if (_resource is SharedResourceArea sharedResourceArea)
         {
             foreach (var resource in sharedResourceArea.Resources)
             {
-                sections.Add(new ProdSection(label: resource.Label,
-                    value: _cityWindow.City.GetResourceValues(resource.Name),
+                var value = _cityWindow.City.GetResourceValues(resource.Name);
+                sections.Add(new ProdSection(label: resource.GetResourceLabel(value, _cityWindow.City),
+                    value: value,
                     icon: TextureCache.GetImage(resource.Icon)));
             }
 
@@ -99,6 +98,11 @@ public class ResourceProductionBar : BaseControl
     public override void Draw(bool pulse)
     {
         base.Draw(pulse);
+        
+        var textDim = Raylib.MeasureTextEx(Fonts.AlternativeFont, _sections[0].Label, 14, 1);
+        var labely = Location.Y + (_resource.LabelBelow ? Bounds.height : 1-textDim.Y);
+            
+        Raylib.DrawTextEx(Fonts.AlternativeFont, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.WHITE);
         var pos = Location + Vector2.One;
         for (int i = 0; i < _sections[0].Value; i++)
         {
@@ -116,6 +120,9 @@ public class ResourceProductionBar : BaseControl
                 Raylib.DrawTextureEx(_sections[1].Icon, pos,0,1,Color.WHITE);
                 pos.X += _spacing;
             }
+            var midText = _sections[1].Label;
+            var midSize = Raylib.MeasureTextEx(Fonts.AlternativeFont, midText, 14, 1);
+            Raylib.DrawTextEx(Fonts.AlternativeFont, midText, new Vector2(Location.X + Width/2f - midSize.X/2, labely),14,1,Color.WHITE);
 
             final = 2;
         }
@@ -126,6 +133,11 @@ public class ResourceProductionBar : BaseControl
             Raylib.DrawTextureEx(_sections[final].Icon, pos,0,1,Color.WHITE);
             pos.X -= _spacing;
         }
+
+        var finalText = _sections[final].Label;
+        var finalSize = Raylib.MeasureTextEx(Fonts.AlternativeFont, finalText, 14, 1);
+        Raylib.DrawTextEx(Fonts.AlternativeFont, finalText, new Vector2(Location.X + Width - finalSize.X -1, labely),14,1,Color.WHITE);
+
     }
 }
 

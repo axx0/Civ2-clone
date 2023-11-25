@@ -161,18 +161,39 @@ public abstract class Civ2Interface : IUserInterface
             {
                 new ConsumableResourceArea(name: "Food", 
                     bounds: new Rectangle(199, 75, 238, 16),
-                    consumptionLabel: Labels.For(LabelIndex.Food), 
-                    lossLabel: Labels.For(LabelIndex.Hunger),
-                    surplusLabel: Labels.For(LabelIndex.Surplus)),            
+                    getDisplayDetails: (val, type) =>
+                    {
+                        return type switch
+                        {
+                            OutputType.Consumption => Labels.For(LabelIndex.Food),
+                            OutputType.Loss => Labels.For(LabelIndex.Hunger),
+                            OutputType.Surplus => Labels.For(LabelIndex.Surplus),
+                            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                        } + ":" + val;
+                    }),
                 new ConsumableResourceArea(name: "Trade", 
                     bounds: new Rectangle(206, 116, 224, 16),
-                    lossLabel: Labels.For(LabelIndex.Corruption),
-                    consumptionLabel: Labels.For(LabelIndex.Trade)),
+                    getDisplayDetails: (val, type) =>
+                    {
+                        return type switch
+                        {
+                            OutputType.Consumption => Labels.For(LabelIndex.Trade),
+                            OutputType.Loss => Labels.For(LabelIndex.Corruption),
+                            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                        } + ":" + val;
+                    },noSurplus:true),
                 new ConsumableResourceArea(name: "Shields", 
                     bounds: new Rectangle(199, 181, 238, 16),
-                    consumptionLabel: Labels.For(LabelIndex.Support), 
-                    lossLabel: Labels.For(LabelIndex.Waste),
-                    surplusLabel:Labels.For(LabelIndex.Production),
+                    getDisplayDetails: (val, type) =>
+                    {
+                        return type switch
+                        {
+                            OutputType.Consumption => Labels.For(LabelIndex.Support),
+                            OutputType.Loss => val > 0 ? Labels.For(LabelIndex.Waste) : Labels.For(LabelIndex.Shortage),
+                            OutputType.Surplus => Labels.For(LabelIndex.Production),
+                            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                        } + ":" + Math.Abs(val);
+                    },
                     labelBelow: true
                 ),
                 new SharedResourceArea(new Rectangle(206, 140, 224, 16), true) { Resources = new List<ResourceInfo>
@@ -180,18 +201,18 @@ public abstract class Civ2Interface : IUserInterface
                     new()
                     {
                         Name = "Tax",
-                        Label = Labels.For(LabelIndex.Tax),
+                        GetResourceLabel = (val, city) => city.Owner.TaxRate + "% " + Labels.For(LabelIndex.Tax) + ":" + val,
                         Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 16, 320, 14)
                     },
                     new()
                     {
                         Name = "Lux",
-                        Label = Labels.For(LabelIndex.Lux),
+                        GetResourceLabel = (val, city) => city.Owner.LuxRate + "% " + Labels.For(LabelIndex.Lux)+ ":" + val,
                         Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 1, 320, 14)
                     },new()
                     {
                     Name = "Science",
-                    Label = Labels.For(LabelIndex.Science),
+                    GetResourceLabel = (val, city) => city.Owner.LuxRate + "% " +  Labels.For(LabelIndex.Sci)+ ":" + val,
                     Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 31, 320, 14)
                 }
                 }}
