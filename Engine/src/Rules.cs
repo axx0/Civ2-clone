@@ -47,7 +47,7 @@ namespace Civ2engine
 
         public MapParams[] Maps { get; internal set; } = {new() {Type = MapType.Standard}};
 
-        private ProductionOrder[] _items;
+        private ProductionOrder[]? _items;
 
         public ProductionOrder[] ProductionItems
         {

@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.Terrains;
 using Neo.IronLua;
 
 // ReSharper disable UnusedMember.Global
@@ -26,6 +27,9 @@ namespace Civ2engine.Scripting
         
         public UnitDomainMap UnitDomain { get; } = new();
 
+        public ResourceList Resources { get; } = new();
+
+        public TerrainImprovements Improvements { get; } = new();
         public void onCivInit(Func<Civilization, object> action)
         {
             _game.OnCivEvent += (sender, args) =>
@@ -48,7 +52,25 @@ namespace Civ2engine.Scripting
 
         public IDictionary<int, TerrainImprovement> TerrainImprovements => _game.TerrainImprovements;
     }
-    
+
+    public class TerrainImprovements
+    {
+        public int Irrigation = ImprovementTypes.Irrigation;
+        public int Mining = ImprovementTypes.Mining;
+        public int Road = ImprovementTypes.Road;
+        public int Fortress = ImprovementTypes.Fortress;
+        public int Pollution = ImprovementTypes.Pollution;
+        public int Airbase = ImprovementTypes.Airbase;
+    }
+
+    public class ResourceList
+    {
+        public int Food = ImprovementConstants.Food;
+        public int Shields = ImprovementConstants.Shields;
+        public int Trade = ImprovementConstants.Trade;
+    }
+
+
     public class UnitDomainMap
     {
         public int Land = (int)UnitGAS.Ground;

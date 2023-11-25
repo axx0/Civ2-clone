@@ -104,6 +104,31 @@ namespace Civ2engine.MapObjects
 
             food += foodEffects.Where(e => e.Action == ImprovementActions.Add).Sum(e => e.Value);
 
+            var cityImprovements = WorkedBy?.Improvements.SelectMany(ci =>
+                ci.TerrainEffects?.Where(ef =>ef.Resource == ImprovementConstants.Food &&
+                    (!ef.Terrain.HasValue || ef.Terrain.Value == (int)_terrain.Type ) && 
+                    (!ef.Improvement.HasValue 
+                     || Improvements.Any(i => i.Improvement == ef.Improvement && i.Level >= ef.Level))
+                    ) ?? Array.Empty<CityTerrainEffect>())?? Array.Empty<CityTerrainEffect>();
+            foreach (var cityTerrainEffect in cityImprovements.OrderBy(i=>i.Action))
+            {
+                switch (cityTerrainEffect.Action)
+                {
+                    case CityTerrainEffect.Add:
+                        food += cityTerrainEffect.Value;
+                        break;
+                    case CityTerrainEffect.AddExtra:
+                        if (food > 0)
+                        {
+                            food += cityTerrainEffect.Value;
+                        }
+                        break;
+                    case CityTerrainEffect.Multiply:
+                        food *= cityTerrainEffect.Value / 100m;
+                        break;
+                }
+            }
+            
             if (CityHere != null && food < 2)
             {
                 food += 1;

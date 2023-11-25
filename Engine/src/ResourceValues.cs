@@ -2,10 +2,6 @@ namespace Civ2engine;
 
 public class ResourceValues
 {
-    public ResourceValues()
-    {
-    }
-
     public ResourceValues(int consumption, int surplus, int loss)
     {
         Consumption = consumption;
