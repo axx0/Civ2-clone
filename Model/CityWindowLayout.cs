@@ -1,3 +1,4 @@
+using System.Numerics;
 using Model.Images;
 using Raylib_cs;
 
@@ -16,11 +17,13 @@ public class CityWindowLayout
     public IDictionary<string, Rectangle> Buttons { get; } = new Dictionary<string, Rectangle>();
     public Rectangle InfoPanel { get; set; }
     public Rectangle?TileMap { get; set; }
-    public IList<ResourceArea> Resources { get; set; }
+    
+    public ResourceProduction Resources { get; set; }
+    public Rectangle FoodStorage { get; init; }
 }
 
-public class ResourceArea
+public class ResourceProduction
 {
-    public string Name { get; set; }
-    public Rectangle Bounds { get; set; }
+    public Vector2 TitlePosition { get; set; }
+    public IList<ResourceArea> Resources { get; set; }
 }

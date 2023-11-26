@@ -234,22 +234,30 @@ namespace Civ2engine
         {
             city.FoodInStorage = 0;
 
+            
+            var totalStorage = city.GetFoodStorage();
+
+            if (totalStorage == 0) return;
+            
+            var maxFood = (city.Size + 1) * foodRows;
+            city.FoodInStorage += maxFood * totalStorage / 100;
+        }
+
+        public static int GetFoodStorage(this City city)
+        {
             var storageBuildings = city.Improvements
                 .Where(i => i.Effects.ContainsKey(Effects.FoodStorage))
                 .Select(b => b.Effects[Effects.FoodStorage]).ToList();
 
-            if (storageBuildings.Count <= 0) return;
-            
+            if (storageBuildings.Count <= 0) return 0;
+
             var totalStorage = storageBuildings.Sum();
             if (totalStorage is > 100 or < 0)
             {
                 totalStorage = storageBuildings.Where(v => v is >= 0 and <= 100).Max();
             }
 
-            if (totalStorage == 0) return;
-            
-            var maxFood = (city.Size + 1) * foodRows;
-            city.FoodInStorage += maxFood * totalStorage / 100;
+            return totalStorage;
         }
 
         public static void AutoRemoveWorkersDistribution(this City city)

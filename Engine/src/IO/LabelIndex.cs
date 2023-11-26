@@ -768,6 +768,7 @@ namespace Civ2engine
         WeWillAgreeNotToCrushYouIfYouSignTheFollowingTreaty = 838,
         WeWillAgreeNotToCrushYouIfYouDeclareWarOnThe = 839,
         WeWillSignTheFollowingtreaty = 840,
+        // This is where TOT and MPG diverge don't use the higher values without some adjustment
         ButOnlyIfYouSignTheFollowingTreaty = 841,
         ModemDirectConnect = 842,
         AvailableNow = 843,

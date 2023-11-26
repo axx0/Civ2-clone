@@ -1,3 +1,4 @@
+using System.Numerics;
 using Civ2.Dialogs;
 using Civ2.Rules;
 using Civ2engine;
@@ -146,35 +147,100 @@ public abstract class Civ2Interface : IUserInterface
 
         float buttonHeight = 24;
 
-        float BuyButtonWidth = 68;
-        int InfoButtonWidth = 57;
-        
+        const float buyButtonWidth = 68;
+        const int infoButtonWidth = 57;
+
         _cityWindowLayout = new CityWindowLayout(new BitmapStorage("city"))
         {
             Height = 420, Width = 640,
             InfoPanel = new Rectangle(197, 216, 233, 198),
-            TileMap = new Rectangle(7, 65, 188, 137)
-        };
-
-        _cityWindowLayout.Resources = new List<ResourceArea>
-        {
-            new ResourceArea
+            TileMap = new Rectangle(7, 65, 188, 137),
+            FoodStorage = new Rectangle(452, 0, 165, 162),
+            Resources = new ResourceProduction
             {
-                Name = "Food",
-                Bounds = new Rectangle()
+                TitlePosition = new Vector2(318, 46),
+                Resources = new List<ResourceArea>
+                {
+                    new ConsumableResourceArea(name: "Food",
+                        bounds: new Rectangle(199, 75, 238, 16),
+                        getDisplayDetails: (val, type) =>
+                        {
+                            return type switch
+                            {
+                                OutputType.Consumption => Labels.For(LabelIndex.Food),
+                                OutputType.Loss => Labels.For(LabelIndex.Hunger),
+                                OutputType.Surplus => Labels.For(LabelIndex.Surplus),
+                                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                            } + ":" + val;
+                        }),
+                    new ConsumableResourceArea(name: "Trade",
+                        bounds: new Rectangle(206, 116, 224, 16),
+                        getDisplayDetails: (val, type) =>
+                        {
+                            return type switch
+                            {
+                                OutputType.Consumption => Labels.For(LabelIndex.Trade),
+                                OutputType.Loss => Labels.For(LabelIndex.Corruption),
+                                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                            } + ":" + val;
+                        }, noSurplus: true),
+                    new ConsumableResourceArea(name: "Shields",
+                        bounds: new Rectangle(199, 181, 238, 16),
+                        getDisplayDetails: (val, type) =>
+                        {
+                            return type switch
+                            {
+                                OutputType.Consumption => Labels.For(LabelIndex.Support),
+                                OutputType.Loss => val > 0
+                                    ? Labels.For(LabelIndex.Waste)
+                                    : Labels.For(LabelIndex.Shortage),
+                                OutputType.Surplus => Labels.For(LabelIndex.Production),
+                                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                            } + ":" + Math.Abs(val);
+                        },
+                        labelBelow: true
+                    ),
+                    new SharedResourceArea(new Rectangle(206, 140, 224, 16), true)
+                    {
+                        Resources = new List<ResourceInfo>
+                        {
+                            new()
+                            {
+                                Name = "Tax",
+                                GetResourceLabel = (val, city) =>
+                                    city.Owner.TaxRate + "% " + Labels.For(LabelIndex.Tax) + ":" + val,
+                                Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 16, 320, 14)
+                            },
+                            new()
+                            {
+                                Name = "Lux",
+                                GetResourceLabel = (val, city) =>
+                                    city.Owner.LuxRate + "% " + Labels.For(LabelIndex.Lux) + ":" + val,
+                                Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 1, 320, 14)
+                            },
+                            new()
+                            {
+                                Name = "Science",
+                                GetResourceLabel = (val, city) =>
+                                    city.Owner.LuxRate + "% " + Labels.For(LabelIndex.Sci) + ":" + val,
+                                Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 31, 320, 14)
+                            }
+                        }
+                    }
+                }
             }
         };
 
-        _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, BuyButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Change", new Rectangle(557, 181, BuyButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Info", new Rectangle(459, 364 ,InfoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Map",new Rectangle(517,364, InfoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Rename", new Rectangle(575, 364, InfoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Happy", new Rectangle(459, 389, InfoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("View", new Rectangle(517,389,InfoButtonWidth, buttonHeight));
-        _cityWindowLayout.Buttons.Add("Exit", new Rectangle(575, 389, InfoButtonWidth, buttonHeight));
-        
-        
+        _cityWindowLayout.Buttons.Add("Buy", new Rectangle(442, 181, buyButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Change", new Rectangle(557, 181, buyButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Info", new Rectangle(459, 364, infoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Map", new Rectangle(517, 364, infoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Rename", new Rectangle(575, 364, infoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Happy", new Rectangle(459, 389, infoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("View", new Rectangle(517, 389, infoButtonWidth, buttonHeight));
+        _cityWindowLayout.Buttons.Add("Exit", new Rectangle(575, 389, infoButtonWidth, buttonHeight));
+
+
         return _cityWindowLayout;
     }
 
