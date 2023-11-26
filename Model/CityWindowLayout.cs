@@ -19,6 +19,7 @@ public class CityWindowLayout
     public Rectangle?TileMap { get; set; }
     
     public ResourceProduction Resources { get; set; }
+    public Rectangle FoodStorage { get; init; }
 }
 
 public class ResourceProduction

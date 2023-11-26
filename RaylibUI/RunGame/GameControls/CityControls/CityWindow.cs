@@ -114,6 +114,13 @@ public class CityWindow : BaseDialog
         {
             Controls.Add(new ResourceProductionBar(this, resource));
         }
+
+        var foodBox = new FoodStorageBox(this)
+        {
+            AbsolutePosition = _cityWindowProps.FoodStorage
+        };
+        Controls.Add(foodBox);
+
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
