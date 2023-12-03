@@ -4,6 +4,8 @@ using Civ2.Dialogs;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
+using Raylib_cs;
+using RayLibUtils;
 
 namespace TOT;
 
@@ -88,4 +90,12 @@ public class TestOfTimeInterface : Civ2Interface
     { FileName = "Intro.dll", DataStart = 0xCEF38, Length = 0x9130 };
 
     public override int UnitsRows => 9;
+    public override int UnitsPxHeight => 64;
+
+    public override Dictionary<string, List<ImageProps>> UnitPICprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> CitiesPICprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+
 }

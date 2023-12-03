@@ -262,5 +262,11 @@ public abstract class Civ2Interface : IUserInterface
     };
 
     public abstract int UnitsRows { get; }
+    public abstract int UnitsPxHeight { get; }
+    public abstract Dictionary<string, List<ImageProps>> UnitPICprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> CitiesPICprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
 }
 
