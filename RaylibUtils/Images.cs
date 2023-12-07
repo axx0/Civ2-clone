@@ -1,5 +1,6 @@
 ﻿using Civ2engine;
 using Raylib_cs;
+using System.Collections;
 using System.Runtime.InteropServices;
 
 namespace RayLibUtils;
@@ -26,7 +27,7 @@ public static class Images
             int height = BitConverter.ToInt16(bytes, 8);
 
             // Let raylib deal with LZW decompression
-            var _img = Raylib.LoadImage(filename);
+            var _img = Raylib.LoadImageFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
 
             // Get 3 transparent colors from palette
             int[] transparent = new int[3];
@@ -86,7 +87,7 @@ public static class Images
                         // Row
                         for (int col = 0; col < oneProp.Rect.width; col++)
                         {
-                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.y - 1) * 
+                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.y - 1) *
                                         _img.width + (int)oneProp.Rect.x + col));
                             if (color == flag1color)    // units flag (blue)
                             {
@@ -101,7 +102,7 @@ public static class Images
                         // Column
                         for (int row = 0; row < oneProp.Rect.height; row++)
                         {
-                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.y + row) * 
+                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.y + row) *
                                         _img.width + (int)oneProp.Rect.x - 1));
                             if (color == flag1color)
                             {
@@ -118,58 +119,139 @@ public static class Images
 
             Raylib.UnloadImage(_img);
         }
-        // BMP 8bpp
-        else if (System.Text.Encoding.UTF8.GetString(bytes, 0, 2).Equals("BM") && BitConverter.ToInt16(bytes, 28) == 8)
+        // BMP
+        else if (System.Text.Encoding.UTF8.GetString(bytes, 0, 2).Equals("BM"))
         {
             var dataOffset = BitConverter.ToInt16(bytes, 10);
             var width = BitConverter.ToInt32(bytes, 18);
             var height = BitConverter.ToInt32(bytes, 22);
-
-            // Get palette
-            byte[,] palette = new byte[256, 4];
-            for (int i = 0; i < 256; i++)
-            {
-                palette[i, 0] = bytes[54 + 4 * i + 0];  // R
-                palette[i, 1] = bytes[54 + 4 * i + 1];  // G
-                palette[i, 2] = bytes[54 + 4 * i + 2];  // B
-                palette[i, 3] = bytes[54 + 4 * i + 3];  //
-            }
-
-            // Get two flag colors from palette
-            int flag1color = BitConverter.ToInt32(new byte[]
-                {
-                    palette[250, 2],
-                    palette[250, 1],
-                    palette[250, 0],
-                    0xff
-                });
-            int flag2color = BitConverter.ToInt32(new byte[]
-                {
-                    palette[249, 2],
-                    palette[249, 1],
-                    palette[249, 0],
-                    0xff
-                });
-
+            var bpp = BitConverter.ToInt16(bytes, 28);
             var imgData = new byte[4 * width * height];
-            for (int row = 0; row < height; row++)
+            int flag1color = Convert.ToInt32("0x0000FFFF", 16);
+            int flag2color = Convert.ToInt32("0xFF9C00FF", 16);
+
+            switch (bpp)
             {
-                for (int col = 0; col < width; col++)
-                {
-                    var pos = dataOffset + width * (height - 1 - row) + col;
-                    imgData[4 * (width * row + col) + 0] = palette[bytes[pos], 2];
-                    imgData[4 * (width * row + col) + 1] = palette[bytes[pos], 1];
-                    imgData[4 * (width * row + col) + 2] = palette[bytes[pos], 0];
-                    if (bytes[pos] == 253 || bytes[pos] == 254 || bytes[pos] == 255)
+                // 8bpp uses palette
+                case 8:
                     {
-                        imgData[4 * (width * row + col) + 3] = 0;
+                        // Get palette
+                        byte[,] palette = new byte[256, 4];
+                        for (int i = 0; i < 256; i++)
+                        {
+                            palette[i, 0] = bytes[54 + 4 * i + 0];  // R
+                            palette[i, 1] = bytes[54 + 4 * i + 1];  // G
+                            palette[i, 2] = bytes[54 + 4 * i + 2];  // B
+                            palette[i, 3] = bytes[54 + 4 * i + 3];  //
+                        }
+
+                        // Get two flag colors from palette
+                        flag1color = BitConverter.ToInt32(new byte[]
+                        {
+                            palette[250, 2],
+                            palette[250, 1],
+                            palette[250, 0],
+                            0xff
+                        });
+                        flag2color = BitConverter.ToInt32(new byte[]
+                        {
+                            palette[249, 2],
+                            palette[249, 1],
+                            palette[249, 0],
+                            0xff
+                        });
+
+                        for (int row = 0; row < height; row++)
+                        {
+                            for (int col = 0; col < width; col++)
+                            {
+                                var pos = dataOffset + width * (height - 1 - row) + col;
+                                imgData[4 * (width * row + col) + 0] = palette[bytes[pos], 2];
+                                imgData[4 * (width * row + col) + 1] = palette[bytes[pos], 1];
+                                imgData[4 * (width * row + col) + 2] = palette[bytes[pos], 0];
+                                if (bytes[pos] == 253 || bytes[pos] == 254 || bytes[pos] == 255)
+                                {
+                                    imgData[4 * (width * row + col) + 3] = 0;
+                                }
+                                else
+                                {
+                                    imgData[4 * (width * row + col) + 3] = 255;
+                                }
+                            }
+                        }
                     }
-                    else
+                    break;
+
+                // 16+24bpp have no palette
+                case 16:
+                case 24:
                     {
-                        imgData[4 * (width * row + col) + 3] = 255;
+                        for (int row = 0; row < height; row++)
+                        {
+                            for (int col = 0; col < width; col++)
+                            {
+                                if (bpp == 16)
+                                {
+                                    var _15bitrgb = Get15bitRGB(bytes, dataOffset + 
+                                                    2 * width * (height - 1 - row) + 2 * col);
+                                    imgData[4 * (width * row + col) + 0] = (byte)(_15bitrgb[2] * 255 / 31);
+                                    imgData[4 * (width * row + col) + 1] = (byte)(_15bitrgb[1] * 255 / 31);
+                                    imgData[4 * (width * row + col) + 2] = (byte)(_15bitrgb[0] * 255 / 31);
+                                    imgData[4 * (width * row + col) + 3] = 255;
+                                }
+                                else
+                                {
+                                    var _off = dataOffset + 3 * width * (height - 1 - row) + 3 * col;
+                                    imgData[4 * (width * row + col) + 0] = bytes[_off + 2];
+                                    imgData[4 * (width * row + col) + 1] = bytes[_off + 1];
+                                    imgData[4 * (width * row + col) + 2] = bytes[_off + 0];
+                                    imgData[4 * (width * row + col) + 3] = 255;
+                                }
+                            }
+                        }
+
+                        // Make subimages transparent
+                        // Pink + upper-left pixel in rectangle are transparent colors
+                        var transparent1 = new byte[3] { 255, 0, 255 };
+                        var transparent2 = new byte[3];
+                        foreach (var prop in props)
+                        {
+                            for (int i = 0; i < prop.Value.Count; i++)
+                            {
+                                var rect = prop.Value[i].Rect;
+
+                                // 2nd transparent color
+                                transparent2 = new byte[3]
+                                {
+                                    imgData[4 * (width * (int)rect.y + (int)rect.x) + 0],
+                                    imgData[4 * (width * (int)rect.y + (int)rect.x) + 1],
+                                    imgData[4 * (width * (int)rect.y + (int)rect.x) + 2],
+                                };
+
+                                // Make part of image transparent
+                                for (int row = (int)rect.y; row < rect.y + rect.height; row++)
+                                {
+                                    for (int col = (int)rect.x; col < rect.x + rect.width; col++)
+                                    {
+                                        if ((imgData[4 * (width * row + col) + 0] == transparent1[0] &&
+                                             imgData[4 * (width * row + col) + 1] == transparent1[1] &&
+                                             imgData[4 * (width * row + col) + 2] == transparent1[2]) ||
+                                            (imgData[4 * (width * row + col) + 0] == transparent2[0] &&
+                                             imgData[4 * (width * row + col) + 1] == transparent2[1] &&
+                                             imgData[4 * (width * row + col) + 2] == transparent2[2]))
+                                        {
+                                            imgData[4 * (width * row + col) + 3] = 0;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            }
+                    break;
+
+                default: throw new ArgumentOutOfRangeException();
+
+            };
 
             Image _img;
             unsafe
@@ -185,7 +267,7 @@ public static class Images
                         mipmaps = 1
                     };
                 }
-                
+
                 // Get subimages
                 foreach (var prop in props)
                 {
@@ -199,7 +281,7 @@ public static class Images
                         // Row
                         for (int col = 0; col < oneProp.Rect.width; col++)
                         {
-                            var color = BitConverter.ToInt32(imgData, 
+                            var color = BitConverter.ToInt32(imgData,
                                 4 * (((int)oneProp.Rect.y - 1) * _img.width + (int)oneProp.Rect.x + col));
                             if (color == flag1color)    // units flag (blue)
                             {
@@ -233,7 +315,23 @@ public static class Images
         }
         else
         {
-            throw new Exception("Image file type not supported!");
+            throw new Exception($"Image file type for {filename} not supported!");
         }
+    }
+
+    private static int[] Get15bitRGB(byte[] byteArray, int offset)
+    {
+        var a = new BitArray(new byte[] { byteArray[offset + 0] });
+        var b = new BitArray(new byte[] { byteArray[offset + 1] });
+
+        return new int[3]
+        {
+                1 * (a[0] ? 1 : 0) + 2 * (a[1] ? 1 : 0) + 4 * (a[2] ? 1 : 0) +
+                8 * (a[3] ? 1 : 0) + 16 * (a[4] ? 1 : 0),
+                1 * (a[5] ? 1 : 0) + 2 * (a[6] ? 1 : 0) + 4 * (a[7] ? 1 : 0) +
+                8 * (b[0] ? 1 : 0) + 16 * (b[1] ? 1 : 0),
+                1 * (b[2] ? 1 : 0) + 2 * (b[3] ? 1 : 0) + 4 * (b[4] ? 1 : 0) +
+                8 * (b[5] ? 1 : 0) + 16 * (b[6] ? 1 : 0),
+        };
     }
 }
