@@ -8,7 +8,7 @@ public class NoOfCivs : SimpleSettingsDialog
 {
     public const string Title = "ENEMIES";
     
-    public NoOfCivs() : base(Title, Barbarity.Title, -0.085, -0.03)
+    public NoOfCivs() : base(Title, -0.085, -0.03)
     {
     }
 

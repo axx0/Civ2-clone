@@ -8,7 +8,7 @@ public class CustomClimate: SimpleSettingsDialog
 {
     public const string Title = "CUSTOMCLIMATE";
 
-    public CustomClimate() : base(Title, CustomTemp.Title)
+    public CustomClimate() : base(Title)
     {
     }
 

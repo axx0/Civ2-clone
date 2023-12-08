@@ -111,8 +111,8 @@ public class CivDialog : DynamicSizingDialog
             _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
             if (!popupBox.Checkbox)
             {
-                _optionControls[0].Checked = true;
-                SetSelectedOption(_optionControls[0]);
+                _optionControls[popupBox.Default].Checked = true;
+                SetSelectedOption(_optionControls[popupBox.Default]);
             }
 
             if (optionsCols < 2)

@@ -8,7 +8,7 @@ public class Barbarity : SimpleSettingsDialog
 {
     public const string Title = "BARBARITY";
     
-    public Barbarity() : base(Title, SelectRules.Title, 0.085, -0.03)
+    public Barbarity() : base(Title, 0.085, -0.03)
     {
     }
 

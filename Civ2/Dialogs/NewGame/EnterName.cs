@@ -14,20 +14,29 @@ public class EnterName : BaseDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        var res = base.UpdatePopupData(popups);
-        res.Dialog.TextBoxes = new List<TextBoxDefinition>
+        if (Dialog.TextBoxes == null || Dialog.TextBoxes.Count == 0)
         {
-            new()
+            Dialog.TextBoxes = new List<TextBoxDefinition>
             {
-                index = 0, Name = "Name",
-                // TODO: get player civ from config
-                //InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName, Width = 75
-                InitialValue = "Shaka", Width = 400
-            },
-        };
-        return res;
+                new()
+                {
+                    index = 0,
+                    Name = "Name",
+                    InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName,
+                    Width = 400,
+                    Description = Dialog.Dialog.Options?[0] ?? string.Empty
+                },
+            };
+            Dialog.Dialog.Options = null;
+        }
+        else
+        {
+            Dialog.TextBoxes[0].InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName;
+        }
+
+        return base.Show(activeInterface);
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
@@ -36,6 +45,11 @@ public class EnterName : BaseDialogHandler
         if (result.SelectedButton == Labels.Cancel)
         {
             return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
+        }
+
+        if (result.TextValues != null)
+        {
+            Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Name"];
         }
 
         return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);

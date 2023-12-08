@@ -8,7 +8,7 @@ public class CustomTemp: SimpleSettingsDialog
 {
     public const string Title = "CUSTOMTEMP";
 
-    public CustomTemp() : base(Title, CustomAge.Title)
+    public CustomTemp() : base(Title)
     {
     }
 

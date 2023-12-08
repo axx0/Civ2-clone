@@ -8,7 +8,7 @@ public class CustomiseLandform : SimpleSettingsDialog
 {
     public const string Title = "CUSTOMFORM";
 
-    public CustomiseLandform() : base(Title, CustomClimate.Title)
+    public CustomiseLandform() : base(Title)
     {
     }
 

@@ -8,7 +8,7 @@ public class CustomisePercentageLand : SimpleSettingsDialog
 {
     public const string Title = "CUSTOMLAND";
 
-    public CustomisePercentageLand() : base(Title, CustomiseLandform.Title)
+    public CustomisePercentageLand() : base(Title)
     {
     }
 

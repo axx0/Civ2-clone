@@ -39,15 +39,14 @@ public class SelectTribe : BaseDialogHandler
         {
             return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
-        else if (result.SelectedButton == Labels.Custom)
-        {
-            return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
-        }
 
         // Make player civilization
         var tribe = Initialization.ConfigObject.Rules.Leaders[result.SelectedIndex];
-        Initialization.ConfigObject.PlayerCiv = Initialization.MakeCivilization(Initialization.ConfigObject, tribe, true, tribe.Color);
+        Initialization.ConfigObject.PlayerCiv =
+            Initialization.MakeCivilization(Initialization.ConfigObject, tribe, true, tribe.Color);
 
-        return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
+        return result.SelectedButton == Labels.Custom
+            ? civDialogHandlers[CustomTribe.Title].Show(civ2Interface)
+            : civDialogHandlers[EnterName.Title].Show(civ2Interface);
     }
 }

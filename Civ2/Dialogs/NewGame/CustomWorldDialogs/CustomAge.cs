@@ -8,7 +8,7 @@ public class CustomAge: SimpleSettingsDialog
 {
     public const string Title = "CUSTOMAGE";
 
-    public CustomAge() : base(Title, Difficulty.Title)
+    public CustomAge() : base(Title)
     {
     }
 

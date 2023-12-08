@@ -8,7 +8,7 @@ public class Difficulty : SimpleSettingsDialog
 {
     public const string Title = "DIFFICULTY";
     
-    public Difficulty() : base(Title, NoOfCivs.Title, 0.085, -0.03)
+    public Difficulty() : base(Title, 0.085, -0.03)
     {
     }
 
