@@ -12,8 +12,9 @@ public class NoOfCivs : SimpleSettingsDialog
     {
     }
 
-    protected override void SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
     {
-        Initialization.ConfigObject.DifficultlyLevel = result.SelectedIndex;
+        Initialization.ConfigObject.NumberOfCivs = result.SelectedIndex;
+        return Barbarity.Title;
     }
 }

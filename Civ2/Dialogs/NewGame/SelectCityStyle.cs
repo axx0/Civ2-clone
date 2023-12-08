@@ -41,7 +41,17 @@ public class SelectCityStyle : BaseDialogHandler
         {
             return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
+        
+        Initialization.ConfigObject.PlayerCiv.CityStyle = result.SelectedIndex;
 
-        return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
+        Initialization.CompleteConfig();
+
+        if (Initialization.ConfigObject.SelectComputerOpponents && Initialization.ConfigObject.Civilizations.Count <
+            Initialization.ConfigObject.NumberOfCivs)
+        {
+            return civDialogHandlers[SelectOpponent.Title].Show(civ2Interface);
+        }
+
+        return civDialogHandlers[Init.Title].Show(civ2Interface);
     }
 }

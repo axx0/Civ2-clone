@@ -207,7 +207,7 @@ public class CityTileMap : BaseControl
         var units = new List<Element>();
         foreach (var tile in city.Location.CityRadius())
         {
-            if (tile.Visibility[city.Owner.Id])
+            if (tile.IsVisible(city.Owner.Id))
             {
                 var tileImage = tileCache.GetTileDetails(tile);
                 var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;

@@ -137,7 +137,7 @@ namespace Civ2engine
                 {
                     var terrain = data.MapTerrainType[col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
-                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col)
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col, data.MapVisibilityCivs[col,row])
                     {
                         River = data.MapRiverPresent[col, row],
                         Resource = data.MapResourcePresent[col, row],
@@ -146,7 +146,6 @@ namespace Civ2engine
                        
                         
                         Island = data.MapIslandNo[col, row],
-                        Visibility = data.MapVisibilityCivs[col,row],
                         Improvements = improvements 
                     };
                 }

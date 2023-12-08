@@ -17,6 +17,6 @@ namespace Civ2engine
 
         public LeaderTitle[] Titles { get; set; }
         
-        public AdvanceGroupAccess[] AdvanceGroups { get; set; }
+        public AdvanceGroupAccess[]? AdvanceGroups { get; set; }
     }
 }

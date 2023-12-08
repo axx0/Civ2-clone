@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Civ2engine.MapObjects;
 
@@ -36,5 +37,7 @@ namespace Civ2engine
         public int Temperature { get; set; } = 1;
         public int Age { get; set; } = 1;
         public bool CustomizeWorld { get; set; }
+        public List<Civilization> Civilizations { get; set; }
+        public ILookup<int,LeaderDefaults> GroupedTribes { get; set; }
     }
 }

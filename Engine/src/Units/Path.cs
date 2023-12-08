@@ -32,7 +32,7 @@ public class Path
     public static Path CalculatePathBetween(Game game, Tile startTile, Tile endTile, UnitGAS domain, int moveFactor,
         Civilization owner, bool alpine, bool ignoreZoc)
     {
-        if (startTile.Z != endTile.Z || !endTile.Visibility[owner.Id]) return null;
+        if (startTile.Z != endTile.Z || !endTile.IsVisible(owner.Id)) return null;
 
         switch (domain)
         {
@@ -88,7 +88,7 @@ public class Path
 
             foreach (var neighbour in candidate.Tile.Neighbours())
             {
-                if (!neighbour.Visibility[owner.Id] || visited.Contains(neighbour)) continue;
+                if (!neighbour.IsVisible(owner.Id) || visited.Contains(neighbour)) continue;
 
                 var cost = costFunction(candidate.Tile, neighbour);
                 if (cost == NotPossible) continue;
@@ -180,10 +180,10 @@ public class Path
             var tileFrom = unit.CurrentLocation;
             if (MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation))
             {
-                var neighbours = tileTo.Neighbours().Where(n => !n.Visibility[unit.Owner.Id]).ToList();
+                var neighbours = tileTo.Neighbours().Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
                 if (neighbours.Count > 0)
                 {
-                    neighbours.ForEach(n => n.Visibility[unit.Owner.Id] = true);
+                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
                     game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
                 }
                 game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));

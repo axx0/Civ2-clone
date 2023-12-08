@@ -19,10 +19,11 @@ namespace Civ2engine
             return _instance;
         }
 
-        public static void StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations)
+        public static Game StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations)
         {
             _instance = new Game(maps, config.Rules, civilizations, new Options(config), config.RuleSet.Paths, (DifficultyType)config.DifficultlyLevel);
             _instance.StartNextTurn();
+            return _instance;
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,

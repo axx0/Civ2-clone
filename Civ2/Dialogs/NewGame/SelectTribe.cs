@@ -44,7 +44,9 @@ public class SelectTribe : BaseDialogHandler
             return civDialogHandlers[CustomTribe.Title].Show(civ2Interface);
         }
 
-        // TODO: make civilizations
+        // Make player civilization
+        var tribe = Initialization.ConfigObject.Rules.Leaders[result.SelectedIndex];
+        Initialization.ConfigObject.PlayerCiv = Initialization.MakeCivilization(Initialization.ConfigObject, tribe, true, tribe.Color);
 
         return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
     }

@@ -100,7 +100,7 @@ public abstract class BaseGameView : IGameView
                                 ActivePos = new Vector2(xpos, ypos+ dim.TileHeight);
                             }
 
-                            if (tile.Visibility[civilizationId])
+                            if (tile.IsVisible(civilizationId))
                             {
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile);
                                 Raylib.ImageDraw(ref image, tileDetails.Image,
