@@ -4,6 +4,7 @@ using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Forms;
+using Button = RaylibUI.Controls.Button;
 using Size = RaylibUI.BasicTypes.Size;
 
 namespace RaylibUI;
@@ -92,4 +93,8 @@ public class DynamicSizingDialog : BaseDialog
         _buttons = buttons;
     }
 
+    protected bool ButtonExists(string text)
+    {
+        return _buttons?.Children?.OfType<Button>().Any(b => b.Text == text) ?? false;
+    }
 }

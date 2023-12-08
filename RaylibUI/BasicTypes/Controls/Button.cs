@@ -10,6 +10,7 @@ public class Button : BaseControl
     private readonly Vector2 textSize;
     private bool _hovered;
     public override bool CanFocus => true;
+    public string Text => _text;
 
     public Button(IControlLayout controller, string text) : base(controller)
     {
