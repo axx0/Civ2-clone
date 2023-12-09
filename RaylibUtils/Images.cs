@@ -29,51 +29,42 @@ public static class Images
             // Let raylib deal with LZW decompression
             var _img = Raylib.LoadImageFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
 
-            // Get 3 transparent colors from palette
-            int[] transparent = new int[3];
+            // Get 3 transparent colours from palette and replace colours
+            Color[] transparent = new Color[3];
             for (int i = 0; i < 3; i++)
             {
-                transparent[i] = BitConverter.ToInt32(new byte[]
+                transparent[i] = new Color()
                 {
-                    bytes[13 + 3 * (253 + i) + 0],  // palette starts @ offset=13
-                    bytes[13 + 3 * (253 + i) + 1],
-                    bytes[13 + 3 * (253 + i) + 2],
-                    0xff                            // alpha
-                });
+                    a = 0xff,
+                    r = bytes[13 + 3 * (253 + i) + 0],
+                    g = bytes[13 + 3 * (253 + i) + 1],
+                    b = bytes[13 + 3 * (253 + i) + 2],
+                };
+
+                Raylib.ImageColorReplace(ref _img, transparent[i],
+                    new Color(transparent[i].r, transparent[i].g, transparent[i].b, (byte)0));
             }
 
             // Get two flag colors from palette
             int flag1color = BitConverter.ToInt32(new byte[]
-                {
-                    bytes[13 + 3 * 250 + 0],
-                    bytes[13 + 3 * 250 + 1],
-                    bytes[13 + 3 * 250 + 2],
-                    0xff
-                });
+            {
+                bytes[13 + 3 * 250 + 0],
+                bytes[13 + 3 * 250 + 1],
+                bytes[13 + 3 * 250 + 2],
+                0xff
+            });
             int flag2color = BitConverter.ToInt32(new byte[]
-                {
-                    bytes[13 + 3 * 249 + 0],
-                    bytes[13 + 3 * 249 + 1],
-                    bytes[13 + 3 * 249 + 2],
-                    0xff
-                });
+            {
+                bytes[13 + 3 * 249 + 0],
+                bytes[13 + 3 * 249 + 1],
+                bytes[13 + 3 * 249 + 2],
+                0xff
+            });
 
             unsafe
             {
-                // Replace transparent colors in large image
                 IntPtr ptr = (IntPtr)_img.data;
-                for (int row = 0; row < height; row++)
-                {
-                    for (int col = 0; col < width; col++)
-                    {
-                        var color = Marshal.ReadInt32(ptr + 4 * (width * row + col));
-                        if (transparent.Contains(color))
-                        {
-                            Marshal.WriteByte(ptr + 4 * (width * row + col) + 3, 0x00);
-                        }
-                    }
-                }
-
+                
                 // Get subimages
                 foreach (var prop in props)
                 {
