@@ -49,8 +49,11 @@ namespace Civ2.ImageLoader
             }
 
             active.UnitImages.Shields = active.PlayerColours.Select(c => c.LightColour).Select((Func<Color, Image>)MakeShield).ToArray();
-            active.UnitImages.ShieldBack = active.PlayerColours.Select(c => c.DarkColour).Select((Func<Color, Image>)MakeBackShield).ToArray();
-            active.UnitImages.ShieldShadow = MakeBackShield(ShadowColour);
+            if (unitProps.ContainsKey("backShield1"))
+            {
+                active.UnitImages.ShieldBack = active.PlayerColours.Select(c => c.DarkColour).Select((Func<Color, Image>)MakeBackShield).ToArray();
+                active.UnitImages.ShieldShadow = MakeBackShield(ShadowColour);
+            }
         }
     }
 }

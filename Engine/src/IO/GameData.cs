@@ -20,6 +20,7 @@ namespace Civ2engine
         public byte DifficultyLevel { get; set; }
         public byte BarbarianActivity { get; set; }
         public bool[] CivsInPlay { get; set; }
+        public bool[] HumanPlayers { get; set; }
         public byte PollutionAmount { get; set; }
         public byte GlobalTempRiseOccured { get; set; }
         public byte NoOfTurnsOfPeace { get; set; }
@@ -58,6 +59,9 @@ namespace Civ2engine
         public byte[][] CivActiveUnitsPerUnitType { get; set; }
         public byte[][] CivCasualtiesPerUnitType { get; set; }
 
+        // Transporters
+        public short NoTransporters { get; set; }
+
         // Map data
         public short MapXdim_x2 { get; set; }
         public short MapYdim { get; set; }
@@ -65,26 +69,30 @@ namespace Civ2engine
         public short MapResourceSeed { get; set; }
         public short MapLocatorXdim { get; set; }
         public short MapLocatorYdim { get; set; }
-        public int[,] MapTerrainType { get; set; }
-        public bool[,] MapRiverPresent { get; set; }
-        public bool[,] MapResourcePresent { get; set; }
-        public bool[,] MapUnitPresent { get; set; }
-        public bool[,] MapCityPresent { get; set; }
-        public bool[,] MapIrrigationPresent { get; set; }
-        public bool[,] MapMiningPresent { get; set; }
-        public bool[,] MapRoadPresent { get; set; }
-        public bool[,] MapRailroadPresent { get; set; }
-        public bool[,] MapFortressPresent { get; set; }
-        public bool[,] MapPollutionPresent { get; set; }
-        public bool[,] MapFarmlandPresent { get; set; }
-        public bool[,] MapAirbasePresent { get; set; }
-        public byte[,] MapIslandNo { get; set; }
-        public int[,] MapSpecialType { get; set; }
-        public bool[,][] MapVisibilityCivs { get; set; }
+        public short MapNoSecondaryMaps { get; set; }
+        public int[][,] MapTerrainType { get; set; }
+        public bool[][,] MapRiverPresent { get; set; }
+        public bool[][,] MapResourcePresent { get; set; }
+        public bool[][,] MapUnitPresent { get; set; }
+        public bool[][,] MapCityPresent { get; set; }
+        public bool[][,] MapIrrigationPresent { get; set; }
+        public bool[][,] MapMiningPresent { get; set; }
+        public bool[][,] MapRoadPresent { get; set; }
+        public bool[][,] MapRailroadPresent { get; set; }
+        public bool[][,] MapFortressPresent { get; set; }
+        public bool[][,] MapPollutionPresent { get; set; }
+        public bool[][,] MapFarmlandPresent { get; set; }
+        public bool[][,] MapAirbasePresent { get; set; }
+        public bool[][,] MapTransporterPresent { get; set; }
+        public byte[][,] MapIslandNo { get; set; }
+        public int[][,] MapSpecialType { get; set; }
+        public bool[][,,] MapVisibilityCivs { get; set; }
+        public short[] MapSeed { get; set; }
 
         // Units
         public short[] UnitXloc { get; set; }
         public short[] UnitYloc { get; set; }
+        public short[] UnitMap { get; set; }   // TOT only
         public bool[] UnitDead { get; set; }
         public bool[] UnitFirstMove { get; set; }
         public bool[] UnitImmobile { get; set; }
@@ -98,15 +106,17 @@ namespace Civ2engine
         public short[] UnitPrevYloc { get; set; }
         public byte[] UnitCaravanCommodity { get; set; }
         public byte[] UnitOrders { get; set; }
-        public short[] UnitHomeCity { get; set; }
+        public byte[] UnitHomeCity { get; set; }
         public short[] UnitGotoX { get; set; }
         public short[] UnitGotoY { get; set; }
+        public short[] UnitMapNoOfGoto { get; set; }    // TOT only
         public short[] UnitLinkOtherUnitsOnTop { get; set; }
         public short[] UnitLinkOtherUnitsUnder { get; set; }
 
         // Cities
         public short[] CityXloc { get; set; }
         public short[] CityYloc { get; set; }
+        public short[] CityMapNo { get; set; }  // TOT only
         public bool[] CityCivilDisorder { get; set; }
         public bool[] CityWeLoveKingDay { get; set; }
         public bool[] CityImprovementSold { get; set; }
@@ -129,7 +139,7 @@ namespace Civ2engine
         public bool[][] CityDistributionWorkers { get; set; }
         public byte[] CityNoOfSpecialistsx4 { get; set; }
         public bool[][] CityImprovements { get; set; }
-        public byte[] CityItemInProduction { get; set; }
+        public sbyte[] CityItemInProduction { get; set; }
         public int[] CityActiveTradeRoutes { get; set; }
         public int[][] CityCommoditySupplied { get; set; }
         public int[][] CityCommodityDemanded { get; set; }
@@ -155,6 +165,9 @@ namespace Civ2engine
         public bool ForbidGovernmentSwitching { get; set; }
         public bool ForbidTechFromConquests { get; set; }
         public bool ElliminatePollution { get; set; }
+        public bool TerrainAnimationLockout { get; set; }   // TOT only
+        public bool UnitAnimationLockout { get; set; }   // TOT only
+        public bool SPRfileOverride { get; set; }
         public bool SpecialWWIIonlyAI { get; set; }
         public string ScenarioName { get; set; }
         public short TechParadigm { get; set; }
