@@ -30,6 +30,7 @@ public static class CityLoader
                 sets[col] = new CityImage()
                 {
                     Image = cityProps["city"][8 * row + col].Image,
+                    Texture = Raylib.LoadTextureFromImage(cityProps["city"][8 * row + col].Image),
                     FlagLoc = new Vector2(cityProps["city"][8 * row + col].Flag1x,
                                           cityProps["city"][8 * row + col].Flag1y),
                     SizeLoc = new Vector2(cityProps["city"][8 * row + col].Flag2x,
@@ -59,6 +60,7 @@ public static class CityLoader
                 playerColours[col] = new PlayerColour
                 {
                     Normal = cityProps["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(cityProps["flags"][col].Image),
                     TextColour = textColour,
                     LightColour = lightColour,
                     DarkColour = darkColour

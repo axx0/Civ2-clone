@@ -6,7 +6,12 @@ public class BitmapStorage : IImageSource
 {
     public ImageStorage Type => ImageStorage.Bitmap;
     public string Key => $"{Filename}-{Location}";
-    
+
+    public string GetKey(int ownerId = -1)
+    {
+        return $"{Filename}-{Location}";
+    }
+
     public string Filename { get; }
     
     public Rectangle Location { get; }

@@ -7,8 +7,8 @@ using Civ2engine.Units;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.CityControls;
-using RaylibUI.RunGame.GameControls.GameModes;
 using RaylibUI.RunGame.GameControls.Mapping;
+using RaylibUI.RunGame.GameModes;
 
 namespace RaylibUI.RunGame;
 
@@ -26,7 +26,7 @@ public class GameScreen : BaseScreen
 
     public IGameMode ActiveMode
     {
-        get => _activeMode;
+        get => _activeMode ??= ViewPiece;
         set
         {
             if (value.Activate())
@@ -63,7 +63,16 @@ public class GameScreen : BaseScreen
         
         Moving = new MovingPieces(this);
         ViewPiece = new ViewPiece(this);
-        ActiveMode = _player.ActiveUnit is not {MovePoints: > 0} ? ViewPiece : Moving;
+        Processing = new ProcessingMode();
+               
+        if (Game.GetActiveCiv == Game.GetPlayerCiv)
+        {
+            ActiveMode = _player.ActiveUnit is not {MovePoints: > 0} ? ViewPiece : Moving;
+        }
+        else
+        {
+            ActiveMode = Processing;
+        }
         
         var width = Raylib.GetScreenWidth();
         var height = Raylib.GetScreenHeight();
@@ -85,6 +94,37 @@ public class GameScreen : BaseScreen
         _statusPanel = new StatusPanel(this, game);
         Controls.Add(_statusPanel);
     }
+
+    private void GameOnOnMapEvent(object? sender, MapEventArgs e)
+    {
+        switch (e.EventType)
+        {
+            case MapEventType.MapViewChanged:
+                break;
+            case MapEventType.MinimapViewChanged:
+                break;
+            case MapEventType.ToggleBetweenCurrentEntireMapView:
+                break;
+            case MapEventType.ZoomChanged:
+                break;
+            case MapEventType.CenterView:
+                break;
+            case MapEventType.ToggleGrid:
+                break;
+            case MapEventType.UpdateMap:
+                foreach (var tile in e.TilesChanged)
+                {
+                    TileCache.Redraw(tile, _player.Civilization.Id);
+                }
+
+                _mapControl.ForceRedraw = true;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    public ProcessingMode Processing { get; set; }
 
     public override void OnKeyPress(KeyboardKey key)
     {
@@ -160,5 +200,10 @@ public class GameScreen : BaseScreen
         unit.Order = OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated
         ActiveMode = Moving;
         return true;
+    }
+
+    public void ForceRedraw()
+    {
+        _mapControl.ForceRedraw = true;
     }
 }

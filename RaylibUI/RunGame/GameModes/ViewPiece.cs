@@ -1,11 +1,8 @@
-using Civ2engine;
-using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Raylib_cs;
-using RaylibUI.RunGame.GameControls.GameModes;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
-namespace RaylibUI.RunGame;
+namespace RaylibUI.RunGame.GameModes;
 
 public class ViewPiece : IGameMode
 {
@@ -74,9 +71,10 @@ public class ViewPiece : IGameMode
         }
     }
 
-    public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth)
+    public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
+        bool forceRedraw)
     {
-        if (currentView is WaitingView animation)
+        if (!forceRedraw && currentView is WaitingView animation)
         {
             if (animation.ViewWidth == viewWidth && animation.ViewHeight == viewHeight &&
                 animation.Location == gameScreen.Game.ActiveTile)
@@ -87,7 +85,7 @@ public class ViewPiece : IGameMode
             }
         }
 
-        return new WaitingView(gameScreen, currentView, viewHeight, viewWidth);
+        return new WaitingView(gameScreen, currentView, viewHeight, viewWidth, forceRedraw);
     }
 
     public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)

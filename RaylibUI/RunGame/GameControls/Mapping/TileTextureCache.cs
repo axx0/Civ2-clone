@@ -19,7 +19,7 @@ public class TileTextureCache
         _parentScreen = parentScreen;
     }
 
-    public TileDetails GetTileDetails(Tile tile)
+    public TileDetails GetTileDetails(Tile tile, int civilizationId)
     {
         var mapIndex = _seenMaps.IndexOf(tile.Map.MapIndex);
         if (mapIndex == -1)
@@ -28,7 +28,7 @@ public class TileTextureCache
         }
 
         return _mapTileTextures[mapIndex][tile.XIndex, tile.Y] ??=
-            MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game);
+            MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
     }
 
     private int SetupMap(Map map)
@@ -62,5 +62,17 @@ public class TileTextureCache
         }
 
         return _dimensions[mapIndex];
+    }
+
+    public void Redraw(Tile tile, int civilizationId)
+    {
+        var mapIndex = _seenMaps.IndexOf(tile.Map.MapIndex);
+        if (mapIndex == -1)
+        {
+            mapIndex = SetupMap(tile.Map);
+        }
+
+        _mapTileTextures[mapIndex][tile.XIndex, tile.Y] =
+            MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
     }
 }

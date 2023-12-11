@@ -12,7 +12,11 @@ namespace Civ2engine.MapObjects
     public class Tile : IMapItem
     {
         private City? _workedBy;
+
+        public int Owner { get; set; } = -1;
+        
         private Terrain _terrain;
+        
         private bool[] _visibility;
         public int X { get; }
         public int Y { get; }
@@ -253,6 +257,11 @@ namespace Civ2engine.MapObjects
                 {
                     _workedBy.WorkedTiles.Add(this);
                 }
+
+                if (_workedBy != null)
+                {
+                    Owner = _workedBy.OwnerId;
+                }
             }
         }
 
@@ -277,6 +286,46 @@ namespace Civ2engine.MapObjects
         public bool IsVisible(int civId)
         {
             return civId < _visibility.Length && _visibility[civId];
+        }
+        
+        private PlayerTile[]? PlayerKnowledge { get; set; }
+
+        public void UpdatePlayer(int civilizationId)
+        {
+            if (PlayerKnowledge == null || PlayerKnowledge.Length <= civilizationId)
+            {
+                var know = new PlayerTile[civilizationId+1];
+                if (PlayerKnowledge != null)
+                {
+                    for (int i = 0; i < PlayerKnowledge.Length; i++)
+                    {
+                        know[i] = PlayerKnowledge[i];
+                    }
+                }
+                PlayerKnowledge = know;
+            }
+
+            PlayerKnowledge[civilizationId] = new PlayerTile(this);
+        }
+
+        /// <summary>
+        /// Ensure player can see everything visible to them at game start or scenario start
+        ///  This shouln't be called later (need to figure out how to exclude from loaded games)
+        /// </summary>
+        public void UpdateAllPlayers()
+        {
+            PlayerKnowledge = new PlayerTile[_visibility.Length];
+            for (var i = 0; i < _visibility.Length; i++)
+            {
+                if(_visibility[i])
+                {
+                    PlayerKnowledge[i] = new PlayerTile(this);
+                }
+                else
+                {
+                    PlayerKnowledge[i] = new PlayerTile();
+                }
+            }
         }
     }
 }

@@ -131,4 +131,22 @@ public class LocalPlayer : IPlayer
                 UI.ShowDialog(dialogKey);
             }
         }
+
+        public void MapChanged(List<Tile> tiles)
+        {
+            var allTiles = tiles
+                .Concat(tiles.SelectMany(t => t.Map.DirectNeighbours(t).Where(n => n.IsVisible(Civilization.Id))))
+                .Distinct();
+            foreach (var tile in allTiles)
+            {
+                _gameScreen.TileCache.Redraw(tile, Civilization.Id);
+            }
+
+            _gameScreen.ForceRedraw();
+        }
+
+        public void WaitingAtEndOfTurn()
+        {
+            _gameScreen.ActiveMode = _gameScreen.ViewPiece;
+        }
 }

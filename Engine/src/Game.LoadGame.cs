@@ -60,6 +60,8 @@ namespace Civ2engine
             this.SetupTech();
             
             Power.CalculatePowerRatings(this);
+            
+            
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 

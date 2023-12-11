@@ -71,7 +71,7 @@ namespace RaylibUI
 
                 _activeScreen.Draw(pulse);
 
-                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.BLACK);
+                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.MAGENTA);
 
                 Raylib.EndDrawing();
                 if (counter++ >= 30)

@@ -179,12 +179,12 @@ namespace Civ2engine.MapObjects
             this.AdjustFertilityForCity(tile);
         }
 
-        public bool IsCurrentlyVisible(Tile tile)
+        public bool IsCurrentlyVisible(Tile tile, int toWho)
         {
-            return MapRevealed || tile.UnitsHere.Any(u=> u.Owner.Id == WhichCivsMapShown) ||
-                   Neighbours(tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == WhichCivsMapShown)) ||
+            return MapRevealed || tile.UnitsHere.Any(u=> u.Owner.Id == toWho) ||
+                   Neighbours(tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == toWho)) ||
                    CityRadius(tile)
-                       .Any(t => t.CityHere != null && t.CityHere.Owner.Id == WhichCivsMapShown);
+                       .Any(t => t.CityHere != null && t.CityHere.Owner.Id == toWho);
         }
     }
 }

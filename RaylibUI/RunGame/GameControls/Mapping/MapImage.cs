@@ -1,6 +1,7 @@
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Model.Images;
 using Model.ImageSets;
 using Raylib_cs;
 
@@ -8,6 +9,7 @@ namespace RaylibUI.RunGame.GameControls.Mapping;
 
 public static class MapImage
 {
+    private static Color _replacementColour = new (255, 0, 0, 255);
     
     private static readonly (int, int)[][] CoastMap = {
         new[]{ (0,4), (3,1) }, 
@@ -23,7 +25,7 @@ public static class MapImage
     public static Rectangle TileRec = new (0, 0, 64, 32);
 
     internal static TileDetails MakeTileGraphic(Tile tile, Map map,
-        TerrainSet terrainSet, Game game)
+        TerrainSet terrainSet, Game game, int civilizationId)
     {
         // Define base bitmap for drawing
         var tilePic = Raylib.ImageCopy(terrainSet.BaseTiles[(int)tile.Type]);
@@ -40,7 +42,10 @@ public static class MapImage
                 var neighbour = directNeighbours[index];
                 if (neighbour != null)
                 {
-                    ApplyDither(tilePic, neighbour.Type, tile.Type, terrainSet.DitherMaps[index]);
+                    if (neighbour.IsVisible(civilizationId))
+                    {
+                        ApplyDither(tilePic, neighbour.Type, tile.Type, terrainSet.DitherMaps[index]);
+                    }
                 }
             }
         }
@@ -202,21 +207,31 @@ public static class MapImage
                     tileDetails.ForegroundElement = new UnitHidingImprovement
                     {
                         UnitDomain = (UnitGAS)improvement.HideUnits, 
-                        UnitImage = graphics.UnitLevels[construct.Level, 0],
-                        Image = graphics.Levels[construct.Level, 0],
-                        PlayerReplacementColor = new Color(255,0,0,255)
+                        UnitImage = new MemoryStorage(graphics.UnitLevels[construct.Level, 0], improvement.Name, _replacementColour),
+                        Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name, _replacementColour)
                     };
                 }else if (improvement.Foreground)
                 {
                     tileDetails.ForegroundElement = new ForegroundImprovement
                     {
-                        Image = graphics.Levels[construct.Level, 0]
+                        Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name)
                     };
                 }
                 else
                 {
                     Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
                 }
+            }
+        }
+
+        for (var index = 0; index < directNeighbours.Length; index++)
+        {
+            var directNeighbour = directNeighbours[index];
+            if (directNeighbour == null || !directNeighbour.IsVisible(civilizationId))
+            {
+                var ditherMap = terrainSet.DitherMaps[index];
+                Raylib.ImageDraw(ref tilePic, ditherMap.Images[^1], new Rectangle(0, 0, 32, 16),
+                    new Rectangle(ditherMap.x, ditherMap.y, 32, 16), Color.WHITE);
             }
         }
 

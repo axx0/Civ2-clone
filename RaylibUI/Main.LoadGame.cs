@@ -13,6 +13,8 @@ namespace RaylibUI
         
         public void StartGame(Game game)
         {
+            game.UpdatePlayerViewData();
+            
             _activeScreen = new GameScreen(this, game, Soundman);
         }
 

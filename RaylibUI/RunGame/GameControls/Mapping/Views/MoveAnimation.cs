@@ -1,3 +1,4 @@
+using System.Numerics;
 using Civ2.ImageLoader;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
@@ -8,40 +9,29 @@ namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 internal class MoveAnimation : BaseGameView
 {
     public MoveAnimation(GameScreen gameScreen, MovementEventArgs moveEvent, IGameView? previousView, int viewHeight,
-        int viewWidth) : base(gameScreen, moveEvent.Location.First(), previousView, viewHeight, viewWidth, false, 70, moveEvent.Location)
+        int viewWidth, bool forceRedraw) : base(gameScreen, moveEvent.Location.First(), previousView, viewHeight, viewWidth, false, 70, moveEvent.Location, forceRedraw)
     {
-        
-        var dimensions = gameScreen.TileCache.GetDimensions(moveEvent.Unit.CurrentLocation.Map);
-        var relevantPositions = moveEvent.Location.Select(t => GetPosForTile(t, dimensions)).ToList();
-        Elements = Elements.Where(e => relevantPositions.All(pos => (int)pos.X != e.X && (int)pos.Y != e.Y)).ToArray();
-
         var activeInterface = gameScreen.Main.ActiveInterface;
         var activeUnit = moveEvent.Unit;
-        int noFramesForOneMove = 8;
-        int[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
+        var noFramesForOneMove = 8;
+        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
         var map = activeUnit.CurrentLocation.Map;
-        var dim = gameScreen.TileCache.GetDimensions(map);
-        for (int frame = 0; frame < noFramesForOneMove; frame++)
+        var viewElements = new List<IViewElement>();
+        ImageUtils.GetUnitTextures(activeUnit, activeInterface, viewElements,
+            new Vector2(ActivePos.X ,
+                ActivePos.Y ), true);
+        SetAnimation(viewElements);
+        var totalFrames = activeUnit.CurrentLocation.CityHere == null ? noFramesForOneMove : noFramesForOneMove - 1;
+        for (var frame = 1; frame < totalFrames; frame++)
         {
-            // Draw active unit on top of everything (except if it's city, then don't draw the unit in last frame)
-            if (!(frame == noFramesForOneMove - 1 && activeUnit.CurrentLocation.CityHere != null))
-            {
-                SetAnimation(
-                
-                new[]
-                {
-                    new ViewElement 
-                    {
-                        Image = Raylib.LoadTextureFromImage(ImageUtils.GetUnitImage(activeInterface, activeUnit, true)),
-                        X = (int)ActivePos.X + unitDrawOffset[0] * map.Xpx / noFramesForOneMove * (frame + 1),
-                        Y = (int)ActivePos.Y + unitDrawOffset[1] * map.Ypx / noFramesForOneMove * (frame + 1)
-                    }
-                });
-            }
-            else
-            {
-                SetAnimation(Array.Empty<ViewElement>());
-            }
+            var offsetVector = new Vector2(unitDrawOffset[0] * map.Xpx / noFramesForOneMove * frame,
+                +unitDrawOffset[1] * map.Ypx / noFramesForOneMove * frame);
+            SetAnimation(viewElements.Select(ve => ve.CloneForLocation(ve.Location + offsetVector)).ToList());
+        }
+
+        if (totalFrames != noFramesForOneMove)
+        {
+            SetAnimation(Array.Empty<TextureElement>());
         }
     }
 }

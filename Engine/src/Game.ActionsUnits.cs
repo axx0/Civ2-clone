@@ -34,8 +34,9 @@ namespace Civ2engine
             if (nextUnit == null)
             {
                 var anyUnitsMoved = units.Any(u => u.MovePointsLost > 0);
-                if ((!anyUnitsMoved || Options.AlwaysWaitAtEndOfTurn) && _activeCiv.PlayerType != PlayerType.AI)
+                if ((!anyUnitsMoved || Options.AlwaysWaitAtEndOfTurn))
                 {
+                    Players[_activeCiv.Id].WaitingAtEndOfTurn();
                     OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.WaitingAtEndOfTurn, _activeCiv.Id));
                 }
                 else
@@ -208,7 +209,11 @@ namespace Civ2engine
             });
 
             var tiles = new List<Tile> { tile };
-            tiles.AddRange(tile.Map.Neighbours(tile));
+            if (improvement.HasMultiTile)
+            {
+                tiles.AddRange(tile.Map.Neighbours(tile));
+            }
+
             TriggerMapEvent(MapEventType.UpdateMap, tiles);
 
             return units;

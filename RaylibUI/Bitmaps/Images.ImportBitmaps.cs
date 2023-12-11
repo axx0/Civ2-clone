@@ -6,7 +6,9 @@ using Raylib_cs;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
+using Model;
 using Model.Images;
+using RaylibUI.RunGame.GameControls.Mapping;
 
 namespace RaylibUI
 {
@@ -69,24 +71,29 @@ namespace RaylibUI
         private static Dictionary<string, Image> ImageCache = new();
 
         private const string tempPath = "temp";
-        
+
         public static Image ExtractBitmap(IImageSource imageSource)
+        {
+            return ExtractBitmap(imageSource, null);
+        }
+        
+        public static Image ExtractBitmap(IImageSource imageSource, IUserInterface? active, int owner = -1)
         {
             if (!Directory.Exists(tempPath))
             {
                 Directory.CreateDirectory(tempPath);
             }
 
-            if (ImageCache.TryGetValue(imageSource.Key, out var bitmap)) return bitmap;
+            var key = imageSource.GetKey(owner);
+            if (ImageCache.TryGetValue(key, out var bitmap)) return bitmap;
             
             switch (imageSource)
             {
                 case BinaryStorage binarySource:
-                    ImageCache[imageSource.Key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, imageSource.Key);
+                    ImageCache[key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, key);
                     break;
                 case BitmapStorage bitmapStorage:
                 {
-                    
                     var sourceKey = $"{bitmapStorage.Filename}-Source";
                     if (!ImageCache.ContainsKey(sourceKey))
                     {
@@ -111,11 +118,29 @@ namespace RaylibUI
                     ImageCache[bitmapStorage.Key] = image;
                     break;
                 }
+                case MemoryStorage memoryStorage:
+                {
+                    if (owner != -1 && memoryStorage.ReplacementColour != null && active != null)
+                    {
+                        var image = Raylib.ImageFromImage(memoryStorage.Image,
+                            new Rectangle(0, 0, memoryStorage.Image.width, memoryStorage.Image.height));
+                        Raylib.ImageColorReplace(ref image, memoryStorage.ReplacementColour.Value,
+                            memoryStorage.Dark
+                                ? active.PlayerColours[owner].DarkColour
+                                : active.PlayerColours[owner].LightColour);
+                        ImageCache[key] = image;
+                    }
+                    else
+                    {
+                        ImageCache[key] = memoryStorage.Image;
+                    }
+                    break;
+                }
                 default:
                     throw new NotImplementedException("Other image sources not currently implemented");
             }
 
-            return ImageCache[imageSource.Key];
+            return ImageCache[key];
         }
         
         public static Image ExtractBitmap(string filename, int start, int length, string key)

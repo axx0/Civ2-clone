@@ -1,3 +1,5 @@
+using Civ2engine;
+using Model;
 using Model.Images;
 using Raylib_cs;
 
@@ -26,11 +28,17 @@ public static class TextureCache
 
     public static Texture2D GetImage(IImageSource source)
     {
-        if (!Textures.ContainsKey(source.Key))
+        return GetImage(source, null, -1);
+    }
+
+    public static Texture2D GetImage(IImageSource source, IUserInterface activeInterface = null, int civ = -1)
+    {
+        var key = source.GetKey( civ);
+        if (!Textures.ContainsKey(key))
         {
-            var img = Images.ExtractBitmap(source);
-            Textures[source.Key] = Raylib.LoadTextureFromImage(img);
+            var img = Images.ExtractBitmap(source, activeInterface, civ);
+            Textures[key] = Raylib.LoadTextureFromImage(img);
         }
-        return Textures[source.Key];
+        return Textures[key];
     }
 }

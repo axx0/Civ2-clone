@@ -207,9 +207,10 @@ public class CityTileMap : BaseControl
         var units = new List<Element>();
         foreach (var tile in city.Location.CityRadius())
         {
+            // TODO: city.owner should be replaced by the current active user when viewing other peoples cities
             if (tile.IsVisible(city.Owner.Id))
             {
-                var tileImage = tileCache.GetTileDetails(tile);
+                var tileImage = tileCache.GetTileDetails(tile, city.Owner.Id);
                 var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;
                 var locationY = ycentre + (tile.Y - city.Location.Y) * dim.HalfHeight;
                 Raylib.ImageDraw(ref image, tileImage.Image,
@@ -241,12 +242,12 @@ public class CityTileMap : BaseControl
                 }
                 else if (tile.UnitsHere.Any(u => u.Owner != city.Owner))
                 {
-                    units.Add(new Element()
-                    {
-                        Image = ImageUtils.GetUnitImage(gameScreen.Main.ActiveInterface, tile.GetTopUnit()),
-                        X = locationX,
-                        Y = locationY - (int)unitsSet.UnitRectangle.height + dim.TileHeight
-                    });
+                    // units.Add(new Element()
+                    // {
+                    //     Image = ImageUtils.GetUnitImage(gameScreen.Main.ActiveInterface, tile.GetTopUnit()),
+                    //     X = locationX,
+                    //     Y = locationY - (int)unitsSet.UnitRectangle.height + dim.TileHeight
+                    // });
                 }
 
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
