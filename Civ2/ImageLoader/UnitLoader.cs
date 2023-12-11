@@ -46,8 +46,11 @@ namespace Civ2.ImageLoader
             Raylib.ImageColorReplace(ref shadow, ReplacementColour, ShadowColour);
             
             active.UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
-            active.UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
-            active.UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
+            if (unitProps.ContainsKey("backShield1"))
+            {
+                active.UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+                active.UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
+            }
         }
     }
 }

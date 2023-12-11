@@ -135,17 +135,17 @@ namespace Civ2engine
             {
                 for (var row = 0; row < map.YDim; row++)
                 {
-                    var terrain = data.MapTerrainType[col, row];
+                    var terrain = data.MapTerrainType[0][col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
-                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col, data.MapVisibilityCivs[col,row])
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col, Enumerable.Range(0, 8).Select(i => data.MapVisibilityCivs[0][col, row, i]).ToArray())
                     {
-                        River = data.MapRiverPresent[col, row],
-                        Resource = data.MapResourcePresent[col, row],
-                        //UnitPresent = data.MapUnitPresent[col, row],  // you can find this out yourself
-                        //CityPresent = data.MapCityPresent[col, row],  // you can find this out yourself
-                       
-                        
-                        Island = data.MapIslandNo[col, row],
+                        River = data.MapRiverPresent[0][col, row],
+                        Resource = data.MapResourcePresent[0][col, row],
+                        //UnitPresent = data.MapUnitPresent[0][col, row],  // you can find this out yourself
+                        //CityPresent = data.MapCityPresent[0][col, row],  // you can find this out yourself
+
+
+                        Island = data.MapIslandNo[0][col, row],
                         Improvements = improvements 
                     };
                 }
@@ -158,42 +158,42 @@ namespace Civ2engine
         {
             var improvements = new List<ConstructedImprovement>();
 
-            if (data.MapFarmlandPresent[col, row])
+            if (data.MapFarmlandPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement
                     { Improvement = ImprovementTypes.Irrigation, Group = ImprovementTypes.ProductionGroup, Level = 1 });
             }
-            else if (data.MapIrrigationPresent[col, row])
+            else if (data.MapIrrigationPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement
                     { Improvement = ImprovementTypes.Irrigation, Group = ImprovementTypes.ProductionGroup, Level = 0 });
-            }else if (data.MapMiningPresent[col, row])
+            }else if (data.MapMiningPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement
                     { Improvement = ImprovementTypes.Mining, Group = ImprovementTypes.ProductionGroup, Level = 0 });
             }
 
-            if (data.MapRailroadPresent[col, row])
+            if (data.MapRailroadPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement { Improvement = ImprovementTypes.Road, Level = 1 });
             }
-            else if (data.MapRoadPresent[col, row])
+            else if (data.MapRoadPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement { Improvement = ImprovementTypes.Road, Level = 0 });
             }
             
-            if (data.MapFortressPresent[col, row])
+            if (data.MapFortressPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement
                     { Improvement = ImprovementTypes.Fortress, Group = ImprovementTypes.DefenceGroup, Level = 0 });
             }
-            else if (data.MapAirbasePresent[col, row])
+            else if (data.MapAirbasePresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement
                     { Improvement = ImprovementTypes.Airbase, Group = ImprovementTypes.DefenceGroup, Level = 0 });
             }
 
-            if (data.MapPollutionPresent[col, row])
+            if (data.MapPollutionPresent[0][col, row])
             {
                 improvements.Add(new ConstructedImprovement
                 {
@@ -283,7 +283,8 @@ namespace Civ2engine
                 NetTrade = netTrade,
                 Name = name,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
-                ItemInProduction = productionItems[itemInProduction],
+                ItemInProduction = itemInProduction >= 0 ? productionItems[itemInProduction] :
+                        productionItems[Rules.ProductionItems.Where(i => i is UnitProductionOrder).Count() - itemInProduction - 1],
                 ActiveTradeRoutes = activeTradeRoutes,
                 CommoditySupplied = commoditySupplied.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => (CommodityType)c).ToArray(),
                 CommodityDemanded = commodityDemanded.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => (CommodityType)c).ToArray(),
@@ -298,7 +299,7 @@ namespace Civ2engine
                 UnhappyCitizens = unhappyCitizens,
                 Location = tile
             };
-            
+
             owner.Cities.Add(city);
 
             foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers))
