@@ -9,13 +9,14 @@ public interface IGameView : IDisposable
 {
     Tile Location { get; }
     Texture2D BaseImage { get; }
-    ViewElement[] Elements { get; }
-    IEnumerable<ViewElement> CurrentAnimations { get; }
+    IViewElement[] Elements { get; }
+    IEnumerable<IViewElement> CurrentAnimations { get; }
     int ViewHeight { get; }
     int ViewWidth { get; set; }
     Vector2 Offsets { get; }
     bool IsDefault { get;  }
     int Interval { get; }
+    IList<Tile> ActionTiles { get; }
     bool Finished();
 
     void Reset();

@@ -8,4 +8,5 @@ public class PlayerColour
     public Color DarkColour { get; set; }
     public Color TextColour { get; set; }
     public Color LightColour { get; set; }
+    public Texture2D FlagTexture { get; set; }
 }

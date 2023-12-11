@@ -66,7 +66,17 @@ namespace Civ2engine
 
         public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
         {
-            
+            // 
+        }
+
+        public void MapChanged(List<Tile> tiles)
+        {
+            //Does the AI care?
+        }
+
+        public void WaitingAtEndOfTurn()
+        {
+            //What should the AI do??
         }
     }
 }

@@ -7,10 +7,9 @@ using Civ2engine.Units;
 
 namespace Civ2engine.NewGame
 {
-    public class NewGameInitialisation
+    public static class NewGameInitialisation
     {
-        public static void StartNewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations,
-            IPlayer localPlayer)
+        public static Game StartNewGame(GameInitializationConfig config, Map[] maps, IList<Civilization> civilizations)
         {
             var settlerType = config.Rules.UnitTypes[(int) UnitType.Settlers];
 
@@ -32,17 +31,17 @@ namespace Civ2engine.NewGame
                     Veteran = false,
                     X = c.StartLocation.X,
                     Y = c.StartLocation.Y,
+                    CurrentLocation = c.StartLocation,
                     TypeDefinition = settlerType
                 }).ToList();
             units.ForEach(u =>
             {
                 u.Owner.Units.Add(u);
-                u.CurrentLocation = maps[0].TileC2(u.X, u.Y);
             });
 
             maps[0].WhichCivsMapShown = config.PlayerCiv.Id;
 
-            Game.StartNew(maps, config, civilizations);
+            return Game.StartNew(maps, config, civilizations);
         }
 
         private static Tile GetDefaultStart(GameInitializationConfig config, Civilization civilization, Map map)

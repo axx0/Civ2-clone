@@ -137,7 +137,7 @@ namespace Civ2engine
                 {
                     var terrain = data.MapTerrainType[0][col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
-                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col)
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col, Enumerable.Range(0, 8).Select(i => data.MapVisibilityCivs[0][col, row, i]).ToArray())
                     {
                         River = data.MapRiverPresent[0][col, row],
                         Resource = data.MapResourcePresent[0][col, row],
@@ -146,7 +146,6 @@ namespace Civ2engine
 
 
                         Island = data.MapIslandNo[0][col, row],
-                        Visibility = Enumerable.Range(0, 8).Select(i => data.MapVisibilityCivs[0][col, row, i]).ToArray(),
                         Improvements = improvements 
                     };
                 }

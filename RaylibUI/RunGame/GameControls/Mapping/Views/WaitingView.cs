@@ -7,22 +7,18 @@ namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 public class WaitingView : BaseGameView
 {
     public WaitingView(GameScreen gameScreen, IGameView? currentView, int viewHeight,
-        int viewWidth) : base(gameScreen, gameScreen.Game.ActiveTile,
-        currentView, viewHeight, viewWidth, true, 200, Array.Empty<Tile>())
+        int viewWidth, bool forceRedraw) : base(gameScreen, gameScreen.Game.ActiveTile,
+        currentView, viewHeight, viewWidth, true, 200, Array.Empty<Tile>(), forceRedraw)
     {
         var activeInterface = gameScreen.Main.ActiveInterface;
 
-            SetAnimation(new[]
-            {
-                new ViewElement
-                {
-                    Image = Raylib.LoadTextureFromImage(activeInterface.MapImages.ViewPiece),
-                    X = (int)ActivePos.X,
-                    Y = (int)ActivePos.Y
-                }
-            });
-     
+        SetAnimation(new[]
+        {
+            new TextureElement(texture: activeInterface.MapImages.ViewPieceTexture,
+                location: ActivePos, gameScreen.Game.ActiveTile)
+        });
 
-        SetAnimation(Array.Empty<ViewElement>());
+
+        SetAnimation(Array.Empty<TextureElement>());
     }
 }

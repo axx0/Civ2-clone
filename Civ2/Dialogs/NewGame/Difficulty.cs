@@ -8,12 +8,13 @@ public class Difficulty : SimpleSettingsDialog
 {
     public const string Title = "DIFFICULTY";
     
-    public Difficulty() : base(Title, NoOfCivs.Title, 0.085, -0.03)
+    public Difficulty() : base(Title, 0.085, -0.03)
     {
     }
 
-    protected override void SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
     {
-        Initialization.ConfigObject.NumberOfCivs = result.SelectedIndex;
+        Initialization.ConfigObject.DifficultlyLevel = result.SelectedIndex;
+        return Initialization.ConfigObject.NumberOfCivs > 0 ? SelectGender.Title : NoOfCivs.Title;
     }
 }

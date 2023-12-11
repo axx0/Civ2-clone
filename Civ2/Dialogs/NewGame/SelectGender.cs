@@ -21,8 +21,18 @@ public class SelectGender : BaseDialogHandler
             return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
         }
 
-        Initialization.ConfigObject.Gender = result.SelectedIndex;
+        var config = Initialization.ConfigObject;
+        config.Gender = result.SelectedIndex;
+        if (config.RuleSet.QuickStart)
+        {
+            var randomTribe = config.Random.ChooseFrom(config.Rules.Leaders);
+            config.PlayerCiv = Initialization.MakeCivilization(config, randomTribe, true, randomTribe.Color);
+                
+            Initialization.CompleteConfig();
+            return civDialogHandlers[Init.Title].Show(civ2Interface);
+        }
 
+        Initialization.ConfigObject.MapTask = MapGenerator.GenerateMap(Initialization.ConfigObject);
         return civDialogHandlers[SelectTribe.Title].Show(civ2Interface);
     }
 }

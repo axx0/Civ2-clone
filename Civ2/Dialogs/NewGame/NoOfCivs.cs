@@ -8,12 +8,13 @@ public class NoOfCivs : SimpleSettingsDialog
 {
     public const string Title = "ENEMIES";
     
-    public NoOfCivs() : base(Title, Barbarity.Title, -0.085, -0.03)
+    public NoOfCivs() : base(Title, -0.085, -0.03)
     {
     }
 
-    protected override void SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
     {
-        Initialization.ConfigObject.DifficultlyLevel = result.SelectedIndex;
+        Initialization.ConfigObject.NumberOfCivs = result.SelectedIndex;
+        return Barbarity.Title;
     }
 }

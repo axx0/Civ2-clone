@@ -327,10 +327,10 @@ namespace Civ2engine.UnitActions.Move
             if (UnitMoved(game, unit, tileTo, tileFrom))
             {
                 game.ActiveTile = tileTo;
-                var neighbours = game.CurrentMap.Neighbours(tileTo).Where(n => !n.Visibility[unit.Owner.Id]).ToList();
+                var neighbours = game.CurrentMap.Neighbours(tileTo).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
                 if (neighbours.Count > 0)
                 {
-                    neighbours.ForEach(n => n.Visibility[unit.Owner.Id] = true);
+                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
                     game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
                 }
                 

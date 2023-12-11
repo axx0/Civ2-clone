@@ -291,7 +291,7 @@ namespace Civ2engine
             
             var tileValue = new List<double>();
             foreach (var tile in city.Location.CityRadius().Where(t =>
-                         t.WorkedBy == null && t.Visibility[city.OwnerId] &&
+                         t.WorkedBy == null && t.IsVisible(city.OwnerId) &&
                          !t.UnitsHere.Any<Unit>(u => u.Owner != city.Owner && u.AttackBase > 0) && t.CityHere == null))
             {
                 var food = tile.GetFood(lowOrganization) * 1.5 ;

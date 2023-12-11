@@ -90,13 +90,6 @@ namespace EtoFormsUI
                         layout.Add(existing, d.Location.X, d.Location.Y);
                     }
                 }
-                else
-                {
-                    var panel = new PicturePanel(ActiveInterface.Look, Images.ExtractBitmap(d.Image),
-                        d.Image.Key);
-                    layout.Add(panel, d.Location.X, d.Location.Y);
-                    newPanels.Add(panel);
-                }
             }
 
             foreach (var existingPanel in existingPanels)

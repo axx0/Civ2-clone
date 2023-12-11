@@ -18,6 +18,7 @@ public class CivDialog : DynamicSizingDialog
 
     private IList<LabeledTextBox> _textBoxes;
     private readonly List<OptionControl>? _optionControls;
+    private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
     private readonly int _optionsCols = 1;
 
     private void SetSelectedOption(OptionControl newSelection)
@@ -57,8 +58,9 @@ public class CivDialog : DynamicSizingDialog
              relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
+        _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
-        List<Texture2D> managedTextures = new List<Texture2D>();
+        _managedTextures = new List<Texture2D>();
         if (popupBox.Text?.Count > 0)
         {
             var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
@@ -101,7 +103,7 @@ public class CivDialog : DynamicSizingDialog
             var iconTextures =
                 icons?.Select(Raylib.LoadTextureFromImage).ToArray()
                 ?? Array.Empty<Texture2D>();
-            managedTextures.AddRange(iconTextures);
+            _managedTextures.AddRange(iconTextures);
 
             var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
@@ -111,8 +113,8 @@ public class CivDialog : DynamicSizingDialog
             _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
             if (!popupBox.Checkbox)
             {
-                _optionControls[0].Checked = true;
-                SetSelectedOption(_optionControls[0]);
+                _optionControls[popupBox.Default].Checked = true;
+                SetSelectedOption(_optionControls[popupBox.Default]);
             }
 
             if (optionsCols < 2)
@@ -147,17 +149,26 @@ public class CivDialog : DynamicSizingDialog
         foreach (var button in popupBox.Button)
         {
             var actionButton = new Button(this, button);
-            actionButton.Click += (_,_) =>
-                {
-                    managedTextures.ForEach(Raylib.UnloadTexture);
-                    handleButtonClick(button, _selectedOption?.Index ?? -1, _checkboxes,
-                        FormatTextBoxReturn());
-                };
+
+            actionButton.Click += OnActionButtonOnClick;
             menuBar.AddChild(actionButton);
         }
 
         Controls.Add(menuBar);
         SetButtons(menuBar);
+    }
+    
+    private void OnActionButtonOnClick(object? sender, MouseEventArgs mouseEventArgs)
+    {
+        if (sender is not Button button) return;
+
+        CloseDialog(button.Text);
+    }
+
+    private void CloseDialog(string buttonText)
+    {
+        _managedTextures.ForEach(Raylib.UnloadTexture);
+        _handleButtonClick(buttonText, _selectedOption?.Index ?? -1, _checkboxes, FormatTextBoxReturn());
     }
 
     private KeyboardKey[] _navKays = new[]
@@ -166,8 +177,20 @@ public class CivDialog : DynamicSizingDialog
         KeyboardKey.KEY_KP_8, KeyboardKey.KEY_KP_2, KeyboardKey.KEY_KP_4, KeyboardKey.KEY_KP_6,
     };
 
+    private List<Texture2D> _managedTextures;
+
     public override void OnKeyPress(KeyboardKey key)
     {
+        switch (key)
+        {
+            case KeyboardKey.KEY_ENTER when ButtonExists(Labels.Ok):
+                CloseDialog(Labels.Ok);
+                return;
+            case KeyboardKey.KEY_ESCAPE when ButtonExists(Labels.Cancel):
+                CloseDialog(Labels.Cancel);
+                return;
+        }
+
         if (_optionControls?.Count > 0)
         {
             var keyIndex = Array.IndexOf(_navKays, key);
@@ -236,8 +259,12 @@ public class CivDialog : DynamicSizingDialog
             }
         }
 
+       
+
         base.OnKeyPress(key);
     }
+
+ 
 
     private int GetRows()
     {

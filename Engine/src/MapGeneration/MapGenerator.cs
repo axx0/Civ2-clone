@@ -40,10 +40,9 @@ namespace Civ2engine
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
                             var terra = config.TerrainData[index++];
-                            var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed, mainMap,x)
+                            var tile = new Tile(2 * x + odd, y, terrains[0][terra & 0xF], mainMap.ResourceSeed, mainMap,x, new bool[config.NumberOfCivs +1])
                             {
-                                River = terra > 100,
-                                Visibility = new bool[config.NumberOfCivs + 1]
+                                River = terra > 100
                             };
                             if (tile.Type != TerrainType.Ocean)
                             {
@@ -85,10 +84,9 @@ namespace Civ2engine
                         var defaultTerrain = config.FlatWorld || (y > 0 && y < yMax) ? ocean : arctic;
                         for (int x = 0; x < mainMap.Tile.GetLength(0); x++)
                         {
-                            var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed, mainMap, x)
+                            var tile = new Tile(2 * x + odd, y, defaultTerrain, mainMap.ResourceSeed, mainMap, x, new bool[config.NumberOfCivs +1])
                             {
-                                Island = -1,
-                                Visibility = new bool[config.NumberOfCivs + 1]
+                                Island = -1
                             };
                             remainingTiles.Add(tile);
                             mainMap.Tile[x, y] = tile;

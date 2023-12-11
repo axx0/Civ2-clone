@@ -14,36 +14,45 @@ public class CustomTribe : BaseDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        var res = base.UpdatePopupData(popups);
-
-        res.Dialog.TextBoxes = new List<TextBoxDefinition>
+        if (Dialog.TextBoxes == null || Dialog.TextBoxes.Count == 0)
         {
-            new()
+            Dialog.TextBoxes = new List<TextBoxDefinition>
             {
-                index = 0, Name = "Leader", CharLimit = 23,
-                InitialValue = "Montezuma", Width = 300
-            },
-            new()
+                new()
+                {
+                    index = 0, Name = "Leader", CharLimit = 23,
+                    InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName, Width = 300
+                },
+                new()
+                {
+                    index = 1, Name = "Tribe", CharLimit = 23,
+                    InitialValue = Initialization.ConfigObject.PlayerCiv.TribeName, Width = 300
+                },
+                new()
+                {
+                    index = 2, Name = "Adjective", CharLimit = 23,
+                    InitialValue = Initialization.ConfigObject.PlayerCiv.Adjective, Width = 300
+                }
+            };
+             
+            if (Dialog.Dialog.Options is not null)
             {
-                index = 1, Name = "Tribe", CharLimit = 23,
-                InitialValue = "Aztecs", Width = 300
-            },
-            new()
-            {
-                index = 2, Name = "Adjective", CharLimit = 23,
-                InitialValue = "Aztec", Width = 300
+                Dialog.TextBoxes[0].Description = Dialog.Dialog.Options[0];
+                Dialog.TextBoxes[1].Description = Dialog.Dialog.Options[1];
+                Dialog.TextBoxes[2].Description = Dialog.Dialog.Options[2];
+                Dialog.Dialog.Options = null;
             }
-        };
-        if (res.Dialog.Dialog.Options is not null)
-        {
-            res.Dialog.TextBoxes[0].Description = res.Dialog.Dialog.Options[0];
-            res.Dialog.TextBoxes[1].Description = res.Dialog.Dialog.Options[1];
-            res.Dialog.TextBoxes[2].Description = res.Dialog.Dialog.Options[2];
-            res.Dialog.Dialog.Options = null;
         }
-        return res;
+        else
+        {
+            Dialog.TextBoxes[0].InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName;
+            Dialog.TextBoxes[1].InitialValue = Initialization.ConfigObject.PlayerCiv.TribeName;
+            Dialog.TextBoxes[2].InitialValue = Initialization.ConfigObject.PlayerCiv.Adjective;
+        }
+
+        return base.Show(activeInterface);
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
@@ -54,9 +63,12 @@ public class CustomTribe : BaseDialogHandler
             return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 
-        //Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Leader"];
-        //Initialization.ConfigObject.PlayerCiv.TribeName = result.TextValues["Tribe"];
-        //Initialization.ConfigObject.PlayerCiv.Adjective = result.TextValues["Adjective"];
+        if (result.TextValues != null)
+        {
+            Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Leader"];
+            Initialization.ConfigObject.PlayerCiv.TribeName = result.TextValues["Tribe"];
+            Initialization.ConfigObject.PlayerCiv.Adjective = result.TextValues["Adjective"];
+        }
 
         if (result.SelectedButton == "Titles")
         {

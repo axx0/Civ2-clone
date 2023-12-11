@@ -1,10 +1,9 @@
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions.Move;
 using Raylib_cs;
-using RaylibUI.RunGame.GameControls.GameModes;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
-namespace RaylibUI.RunGame;
+namespace RaylibUI.RunGame.GameModes;
 
 public class MovingPieces : IGameMode
 {
@@ -48,9 +47,10 @@ public class MovingPieces : IGameMode
 
     public Dictionary<KeyboardKey,Action> Actions { get; set; }
 
-    public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth)
+    public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
+        bool forceRedraw)
     {
-        if (currentView is UnitReadyView animation)
+        if (!forceRedraw && currentView is UnitReadyView animation)
         {
             if (animation.ViewWidth == viewWidth && animation.ViewHeight == viewHeight && animation.Unit == gameScreen.Player.ActiveUnit)
 
@@ -60,7 +60,7 @@ public class MovingPieces : IGameMode
             }
         }
 
-        return new UnitReadyView(gameScreen, currentView, viewHeight, viewWidth, gameScreen.Player.ActiveUnit);
+        return new UnitReadyView(gameScreen, currentView, viewHeight, viewWidth, gameScreen.Player.ActiveUnit, forceRedraw);
     }
 
     public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)

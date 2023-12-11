@@ -31,6 +31,7 @@ public class SelectCityStyle : BaseDialogHandler
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
         Dialog.OptionsImages = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray();
+        Dialog.Dialog.Default = Initialization.ConfigObject.PlayerCiv.CityStyle;
         return base.Show(activeInterface);
     }
 
@@ -41,7 +42,17 @@ public class SelectCityStyle : BaseDialogHandler
         {
             return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
+        
+        Initialization.ConfigObject.PlayerCiv.CityStyle = result.SelectedIndex;
 
-        return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
+        Initialization.CompleteConfig();
+
+        if (Initialization.ConfigObject.SelectComputerOpponents && Initialization.ConfigObject.Civilizations.Count <
+            Initialization.ConfigObject.NumberOfCivs)
+        {
+            return civDialogHandlers[SelectOpponent.Title].Show(civ2Interface);
+        }
+
+        return civDialogHandlers[Init.Title].Show(civ2Interface);
     }
 }

@@ -12,7 +12,12 @@ namespace Civ2engine.MapObjects
     public class Tile : IMapItem
     {
         private City? _workedBy;
+
+        public int Owner { get; set; } = -1;
+        
         private Terrain _terrain;
+        
+        private bool[] _visibility;
         public int X { get; }
         public int Y { get; }
         
@@ -54,8 +59,9 @@ namespace Civ2engine.MapObjects
 
 
         // Get special resource type based on map seed & tile location
-        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex)
+        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility)
         {
+            _visibility = visibility;
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
             X = x;
@@ -220,7 +226,16 @@ namespace Civ2engine.MapObjects
         public bool IsCityPresent => CityHere != null;
         public int Island { get; set; }
         public decimal Fertility { get; set; } = -1;
-        public bool[] Visibility { get; set; }
+        
+        public void SetVisible(int civId, bool visible = true)
+        {
+            if (_visibility.Length <= civId)
+            {
+                _visibility = _visibility.Concat(Enumerable.Repeat(false, civId - _visibility.Length +1)).ToArray();
+            }
+
+            _visibility[civId] = visible;
+        }
 
         public List<Unit> UnitsHere { get; } = new();
 
@@ -241,6 +256,11 @@ namespace Civ2engine.MapObjects
                 if (_workedBy?.WorkedTiles.Contains(this) == false)
                 {
                     _workedBy.WorkedTiles.Add(this);
+                }
+
+                if (_workedBy != null)
+                {
+                    Owner = _workedBy.OwnerId;
                 }
             }
         }
@@ -265,7 +285,47 @@ namespace Civ2engine.MapObjects
 
         public bool IsVisible(int civId)
         {
-            return civId < Visibility.Length && Visibility[civId];
+            return civId < _visibility.Length && _visibility[civId];
+        }
+        
+        private PlayerTile[]? PlayerKnowledge { get; set; }
+
+        public void UpdatePlayer(int civilizationId)
+        {
+            if (PlayerKnowledge == null || PlayerKnowledge.Length <= civilizationId)
+            {
+                var know = new PlayerTile[civilizationId+1];
+                if (PlayerKnowledge != null)
+                {
+                    for (int i = 0; i < PlayerKnowledge.Length; i++)
+                    {
+                        know[i] = PlayerKnowledge[i];
+                    }
+                }
+                PlayerKnowledge = know;
+            }
+
+            PlayerKnowledge[civilizationId] = new PlayerTile(this);
+        }
+
+        /// <summary>
+        /// Ensure player can see everything visible to them at game start or scenario start
+        ///  This shouln't be called later (need to figure out how to exclude from loaded games)
+        /// </summary>
+        public void UpdateAllPlayers()
+        {
+            PlayerKnowledge = new PlayerTile[_visibility.Length];
+            for (var i = 0; i < _visibility.Length; i++)
+            {
+                if(_visibility[i])
+                {
+                    PlayerKnowledge[i] = new PlayerTile(this);
+                }
+                else
+                {
+                    PlayerKnowledge[i] = new PlayerTile();
+                }
+            }
         }
     }
 }

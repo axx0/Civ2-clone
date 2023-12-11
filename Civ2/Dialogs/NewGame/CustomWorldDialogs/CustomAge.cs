@@ -8,14 +8,15 @@ public class CustomAge: SimpleSettingsDialog
 {
     public const string Title = "CUSTOMAGE";
 
-    public CustomAge() : base(Title, Difficulty.Title)
+    public CustomAge() : base(Title)
     {
     }
 
-    protected override void SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
     {
         Initialization.ConfigObject.Age = result.SelectedButton == popupBox.Button[0]
             ? Initialization.ConfigObject.Random.Next(popupBox.Options.Count)
             : result.SelectedIndex;
+        return Difficulty.Title;
     }
 }

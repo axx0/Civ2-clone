@@ -37,6 +37,12 @@ public class SelectGameVersionHandler : BaseDialogHandler
         if (result.SelectedButton == "Quick Start")
         {
             Initialization.ConfigObject.RuleSet.QuickStart = true;
+            Initialization.ConfigObject.WorldSize = new[] { 50, 80 };
+            Initialization.ConfigObject.NumberOfCivs = civ2Interface.PlayerColours.Length - 1;
+            Initialization.ConfigObject.BarbarianActivity = Initialization.ConfigObject.Random.Next(5);
+            
+            Initialization.ConfigObject.MapTask = MapGenerator.GenerateMap(Initialization.ConfigObject);
+            return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
         }
 
         return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);

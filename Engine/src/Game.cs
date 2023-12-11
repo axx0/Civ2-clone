@@ -134,6 +134,15 @@ namespace Civ2engine
 
         public void TriggerMapEvent(MapEventType eventType, List<Tile> tilesChanged)
         {
+            foreach (var player in Players)
+            {
+                var tiles = tilesChanged.Where(t => t.Map.IsCurrentlyVisible(t, player.Civilization.Id)).ToList();
+                if (tiles.Count > 0)
+                {
+                    tiles.ForEach(t=>t.UpdatePlayer(player.Civilization.Id));
+                    player.MapChanged(tiles);
+                }
+            }   
             OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
                 { TilesChanged = tilesChanged });
         }
@@ -216,6 +225,34 @@ namespace Civ2engine
             player.ActiveUnit = currentPlayer.ActiveUnit;
             Players[id] = player;
             Script.Connect(player.UI);
+        }
+
+        public void UpdatePlayerViewData()
+        {
+            foreach (var map in _maps)
+            {
+                for (int y = 0; y < map.Tile.GetLength(1); y++)
+                {
+                    for (int x = 0; x < map.Tile.GetLength(0); x++)
+                    {
+                        var tile = map.Tile[x, y];
+                        tile.UpdateAllPlayers();
+                        if (tile.Owner == -1)
+                        {
+                            if (tile.IsUnitPresent)
+                            {
+                                tile.Owner = tile.UnitsHere[0].Owner.Id;
+                            }else if (tile.CityHere != null)
+                            {
+                                tile.Owner = tile.CityHere.OwnerId;
+                            }else if (tile.WorkedBy != null)
+                            {
+                                tile.Owner = tile.WorkedBy.OwnerId;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

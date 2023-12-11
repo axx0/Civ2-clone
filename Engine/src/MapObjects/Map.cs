@@ -43,7 +43,7 @@ namespace Civ2engine.MapObjects
             Tile
             [((xC2 + XDimMax) % XDimMax - yC2 % 2) / 2,
                 yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
-        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( (xC2 + XDimMax) % XDimMax - yC2 % 2 ) / 2, yC2].Visibility[civ];   // Returns V
+        public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( (xC2 + XDimMax) % XDimMax - yC2 % 2 ) / 2, yC2].IsVisible(civ);   // Returns V
 
         private int _zoom;
         private int _xDim;
@@ -169,22 +169,22 @@ namespace Civ2engine.MapObjects
 
         public void SetAsStartingLocation(Tile tile, int ownerId)
         {
-            tile.Visibility[ownerId] = true;
+            tile.SetVisible(ownerId);
             
             foreach (var radiusTile in CityRadius(tile))
             {
-                radiusTile.Visibility[ownerId] = true;
+                radiusTile.SetVisible(ownerId);
             }
             
             this.AdjustFertilityForCity(tile);
         }
 
-        public bool IsCurrentlyVisible(Tile tile)
+        public bool IsCurrentlyVisible(Tile tile, int toWho)
         {
-            return MapRevealed || tile.UnitsHere.Any(u=> u.Owner.Id == WhichCivsMapShown) ||
-                   Neighbours(tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == WhichCivsMapShown)) ||
+            return MapRevealed || tile.UnitsHere.Any(u=> u.Owner.Id == toWho) ||
+                   Neighbours(tile).Any(l => l.UnitsHere.Any(u => u.Owner.Id == toWho)) ||
                    CityRadius(tile)
-                       .Any(t => t.CityHere != null && t.CityHere.Owner.Id == WhichCivsMapShown);
+                       .Any(t => t.CityHere != null && t.CityHere.Owner.Id == toWho);
         }
     }
 }

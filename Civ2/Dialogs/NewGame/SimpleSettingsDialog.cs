@@ -6,11 +6,8 @@ namespace Civ2.Dialogs.NewGame;
 
 public abstract class SimpleSettingsDialog : BaseDialogHandler
 {
-    private readonly string _next;
-
-    protected SimpleSettingsDialog(string name, string next, double x = 0, double y = 0) : base(name, x, y)
+    protected SimpleSettingsDialog(string name, double x = 0, double y = 0) : base(name, x, y)
     {
-        _next = next;
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
@@ -22,11 +19,11 @@ public abstract class SimpleSettingsDialog : BaseDialogHandler
         }
 
         var popupBox = Dialog.Dialog;
-        SetConfigValue(result, popupBox);
+        var next = SetConfigValue(result, popupBox);
 
-        return civDialogHandlers[_next].Show(civ2Interface);
+        return civDialogHandlers[next].Show(civ2Interface);
     }
 
-    protected abstract void SetConfigValue(DialogResult result, PopupBox popupBox);
+    protected abstract string SetConfigValue(DialogResult result, PopupBox popupBox);
 
 }

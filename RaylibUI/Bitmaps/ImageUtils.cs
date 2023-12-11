@@ -348,93 +348,9 @@ public class ImageUtils
     public static Texture2D[] GetOptionImages(bool checkbox)
     {
         var images = checkbox ? Look.CheckBoxes : Look.RadioButtons;
-        return images.Select(Images.ExtractBitmap).Select(Raylib.LoadTextureFromImage).ToArray();
-        // unsafe
-        // {
-        //     var image = NewImage(64, 64);
-        //     var x = 16;
-        //     var y = 14;
-        //     Raylib.ImageDrawCircle(ref image, x + 16, y + 16, 16, new Color(128, 128, 128, 255));
-        //     Raylib.ImageDrawCircleLines(&image, x + 18, y + 18, 16, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, x + 2, y + 8, 4, 6, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, x + 6, y + 4, 4, 4, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, x + 12, y + 2, 2, 2, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, x + 22, y + 30, 6, 4, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, x + 28, y + 26, 4, 4, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, x + 32, y + 22, 2, 2, Color.BLACK);
-        //     Raylib.ImageDrawCircleLines(&image, x + 16, y + 16, 16, Color.WHITE);
-        //
-        //     var unselected = Raylib.ImageCopy(image);
-        //     
-        //         Raylib.ImageDrawRectangle(ref image,x + 6, y + 4, 5, 9, new Color( 192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref image, x + 4, y + 6, 9, 5, new Color(192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref image, x + 5, y + 11, 1, 1, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 4, y + 6, 1, 5, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 5, y + 5, 1, 2, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 6, y + 4, 1, 2, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 7, y + 4, 4, 1, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 11, y + 5, 1, 1, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image,x + 11, y + 11, 1, 1, new Color( 192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref image, x + 7, y + 13, 4, 1, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 11, y + 12, 1, 1, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 12, y + 11, 1, 1, Color.WHITE);
-        //         Raylib.ImageDrawRectangle(ref image, x + 13, y + 7, 1, 4, Color.WHITE);
-        //
-        //         Raylib.ImageDrawRectangle(ref unselected, x + 7, y + 4, 4, 10, new Color( 192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref unselected,x + 4, y + 7, 10, 4, new Color( 192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref unselected,x + 6, y + 5, 6, 8, new Color(192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref unselected,x + 5, y + 6, 8, 6, new Color(192, 192, 192, 255));
-        //         Raylib.ImageDrawRectangle(ref unselected, x + 7, y + 6, 4, 6, Color.BLACK);
-        //         Raylib.ImageDrawRectangle(ref unselected, x + 6, y + 7, 6, 4, Color.BLACK);
-        //         return new[] { new TextureDetail(0.5f,Raylib.LoadTextureFromImage(unselected)), new TextureDetail(0.5f,Raylib.LoadTextureFromImage(image)) };
-        // }
-
-        // unsafe
-        // {
-        //     int y = 0;
-        //
-        //     var image = Raylib.LoadImage("blank.png");
-        //     Raylib.ImageResize(ref image, 38, 38);
-        //     Raylib.ImageDrawCircle(ref image, 18, 8, 8, new Color(128, 128, 128, 255));
-        //     Raylib.ImageDrawCircleLines(&image, 8, 8 + y + 8 + 1, 8, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, 1, 4, 2, 3, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, 3, 2, 2, 2, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, 6, 1, 1, 1, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, 11, 15, 3, 2, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, 14, 13, 2, 2, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref image, 16, 11, 1, 1, Color.BLACK);
-        //     //Raylib.DrawCircleLines(8, 8, 8.0f, Color.WHITE);
-        //
-        //     var unselected = Raylib.ImageCopy(image);
-        //
-        //     Raylib.ImageDrawRectangle(ref image, 6, 4, 5, 9, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref image, 4, 6, 9, 5, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref image, 5, 11, 1, 1, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 4, 6, 1, 5, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 5, 5, 1, 2, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 6, 4, 1, 2, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 7, 4, 4, 1, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 11, 5, 1, 1, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 11, 11, 1, 1, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref image, 7, 13, 4, 1, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 11, 12, 1, 1, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 12, 11, 1, 1, Color.WHITE);
-        //     Raylib.ImageDrawRectangle(ref image, 13, 7, 1, 4, Color.WHITE);
-        //
-        //     Raylib.ImageDrawRectangle(ref unselected, 7, 4, 4, 10, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref unselected, 4, 7, 10, 4, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref unselected, 6, 5, 6, 8, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref unselected, 5, 6, 8, 6, new Color(192, 192, 192, 255));
-        //     Raylib.ImageDrawRectangle(ref unselected, 7, 6, 4, 6, Color.BLACK);
-        //     Raylib.ImageDrawRectangle(ref unselected, 6, 7, 6, 4, Color.BLACK);
-        //
-        //
-        //     
-        // }
+        return images.Select(TextureCache.GetImage).ToArray();
     }
     
-    
-
     public static void SetLook(InterfaceStyle look)
     {
         ImageUtils.SetInner(look.Inner);
@@ -486,35 +402,76 @@ public class ImageUtils
         return new[] { left, image, right };
     }
 
-    public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)
+    public static void GetUnitTextures(Unit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
+        bool noStacking = false)
     {
-        int w = (int)active.UnitImages.UnitRectangle.width - 1;
-        int h = (int)active.UnitImages.UnitRectangle.height - 1;
-        var image = NewImage(w, h);
-        var rect = new Rectangle(0, 0, w, h);
+        var heightVector = new Vector2(0, active.UnitImages.UnitRectangle.height);
         var flagLoc = active.UnitImages.Units[(int)unit.Type].FlagLoc;
-        var shldSrc = new Rectangle(0, 0, active.UnitImages.ShieldShadow.width, active.UnitImages.ShieldShadow.height);
-        var shldDes = new Rectangle(flagLoc.X, flagLoc.Y, shldSrc.width, shldSrc.height);
-        int stackingDir = (int)active.UnitImages.Units[(int)unit.Type].FlagLoc.X < 32 ? -1 : 1;
-        var shldShadowDes = new Rectangle(flagLoc.X + stackingDir, flagLoc.Y + 1, shldSrc.width, shldSrc.height);
+
+        var stackingDir = flagLoc.X < active.UnitImages.UnitRectangle.width / 2 ? -1 : 1;
+        var shieldLoc = loc + flagLoc - heightVector;
+        var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+        var tile = unit.CurrentLocation;
         if (unit.IsInStack && !noStacking)
         {
-            var shldStackShadowDes = new Rectangle(flagLoc.X + 5 * stackingDir, flagLoc.Y + 1, shldSrc.width, shldSrc.height);
-            var shldStackDes = new Rectangle(flagLoc.X + 4 * stackingDir, flagLoc.Y, shldSrc.width, shldSrc.height);
-            Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldStackShadowDes, Color.WHITE);
-            Raylib.ImageDraw(ref image, active.UnitImages.ShieldBack[unit.Owner.Id], shldSrc, shldStackDes, Color.WHITE);
+            viewElements.Add(new TextureElement(
+                location: shieldLoc + new Vector2(stackingDir * 5, 1 + shieldTexture.height),
+                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
+                tile: tile));
+            viewElements.Add(new TextureElement(
+                location: shieldLoc + new Vector2(stackingDir * 4, shieldTexture.height),
+                texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
+                tile: tile));
         }
-        Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldShadowDes, Color.WHITE);
-        Raylib.ImageDraw(ref image, GetShieldWithHP(active.UnitImages.Shields[unit.Owner.Id], unit), shldSrc, shldDes, Color.WHITE);
-        var shldTxt = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : string.Empty;
-        if ((int)unit.Order == 255) shldTxt = "-";
-        var txtMeasr = Raylib.MeasureTextEx(Fonts.AlternativeFont, shldTxt, 12, 0.0f);
-        var txtLoc = new Vector2(shldDes.x + shldDes.width / 2 - txtMeasr.X / 2 + 1, 
-            shldDes.y + shldDes.height / 2 - txtMeasr.Y / 2 + 3);
-        Raylib.ImageDrawTextEx(ref image, Fonts.AlternativeFont, shldTxt, txtLoc, 12, 0.0f, Color.BLACK);
-        Raylib.ImageDraw(ref image, active.UnitImages.Units[(int)unit.Type].Image, rect, rect, Color.WHITE);
-        return image;
+
+        viewElements.Add(new TextureElement(location: shieldLoc + new Vector2(stackingDir, 1 + shieldTexture.height),
+            texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile));
+        viewElements.Add(new TextureElement(location: shieldLoc + new Vector2(0, shieldTexture.height),
+            texture: shieldTexture, tile: tile));
+
+        var hpBarX = (int)Math.Floor((float)unit.RemainingHitpoints * 12 / unit.HitpointsBase);
+        var hpColor = hpBarX switch
+        {
+            <= 3 => new Color(243, 0, 0, 255),
+            <= 8 => new Color(255, 223, 79, 255),
+            _ => new Color(87, 171, 39, 255)
+        };
+
+        viewElements.Add(new RectangleElement(location: shieldLoc + new Vector2(0,  2),
+            tile: tile, height: 3, width: hpBarX, color: hpColor));
+        viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Units[(int)unit.Type].Texture,
+            tile: tile));
     }
+
+    // public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)
+    // {
+    //     int w = (int)active.UnitImages.UnitRectangle.width - 1;
+    //     int h = (int)active.UnitImages.UnitRectangle.height - 1;
+    //     var image = NewImage(w, h);
+    //     var rect = new Rectangle(0, 0, w, h);
+    //     var flagLoc = active.UnitImages.Units[(int)unit.Type].FlagLoc;
+    //     var shldSrc = new Rectangle(0, 0, active.UnitImages.ShieldShadow.width, active.UnitImages.ShieldShadow.height);
+    //     var shldDes = new Rectangle(flagLoc.X, flagLoc.Y, shldSrc.width, shldSrc.height);
+    //     int stackingDir = (int)active.UnitImages.Units[(int)unit.Type].FlagLoc.X < 32 ? -1 : 1;
+    //     var shldShadowDes = new Rectangle(flagLoc.X + stackingDir, flagLoc.Y + 1, shldSrc.width, shldSrc.height);
+    //     if (unit.IsInStack && !noStacking)
+    //     {
+    //         var shldStackShadowDes = new Rectangle(flagLoc.X + 5 * stackingDir, flagLoc.Y + 1, shldSrc.width, shldSrc.height);
+    //         var shldStackDes = new Rectangle(flagLoc.X + 4 * stackingDir, flagLoc.Y, shldSrc.width, shldSrc.height);
+    //         Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldStackShadowDes, Color.WHITE);
+    //         Raylib.ImageDraw(ref image, active.UnitImages.ShieldBack[unit.Owner.Id], shldSrc, shldStackDes, Color.WHITE);
+    //     }
+    //     Raylib.ImageDraw(ref image, active.UnitImages.ShieldShadow, shldSrc, shldShadowDes, Color.WHITE);
+    //     Raylib.ImageDraw(ref image, GetShieldWithHP(active.UnitImages.Shields[unit.Owner.Id], unit), shldSrc, shldDes, Color.WHITE);
+    //     var shldTxt = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : string.Empty;
+    //     if ((int)unit.Order == 255) shldTxt = "-";
+    //     var txtMeasr = Raylib.MeasureTextEx(Fonts.AlternativeFont, shldTxt, 12, 0.0f);
+    //     var txtLoc = new Vector2(shldDes.x + shldDes.width / 2 - txtMeasr.X / 2 + 1, 
+    //         shldDes.y + shldDes.height / 2 - txtMeasr.Y / 2 + 3);
+    //     Raylib.ImageDrawTextEx(ref image, Fonts.AlternativeFont, shldTxt, txtLoc, 12, 0.0f, Color.BLACK);
+    //     Raylib.ImageDraw(ref image, active.UnitImages.Units[(int)unit.Type].Image, rect, rect, Color.WHITE);
+    //     return image;
+    // }
 
     public static Image GetShieldWithHP(Image shield, Unit unit)
     {
@@ -531,14 +488,11 @@ public class ImageUtils
         return hpShield;
     }
 
-    public static Image GetImpImage(IUserInterface activeInterface, ForegroundImprovement imp, Image? baseImage = null)
+    public static Texture2D GetImpImage(IUserInterface activeInterface, IImageSource imageSource, int owner)
     {
-        var image = baseImage ?? imp.Image;
-        if (imp.OwnerId == 0 || imp.PlayerReplacementColor == null) return image;
-        var repImage = Raylib.ImageFromImage(image, new Rectangle(0, 0, image.width, image.height));
-        Raylib.ImageColorReplace(ref repImage, imp.PlayerReplacementColor.Value, activeInterface.PlayerColours[imp.OwnerId].LightColour);
-        return repImage;
+        return TextureCache.GetImage(imageSource, activeInterface, owner);
     }
+    
 }
 
 public static class Fonts

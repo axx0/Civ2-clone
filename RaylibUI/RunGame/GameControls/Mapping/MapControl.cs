@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
@@ -37,7 +38,7 @@ public class MapControl : BaseControl
         SetDimensions();
 
         _currentView =
-            _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth);
+            _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth, ForceRedraw);
         
         gameScreen.OnMapEvent += MapEventTriggered;
         _game.OnUnitEvent += UnitEventHappened;
@@ -60,10 +61,6 @@ public class MapControl : BaseControl
 
     private void UnitEventHappened(object sender, UnitEventArgs e)
     {
-        if (!e.Location.Any(_game.CurrentMap.IsCurrentlyVisible))
-        {
-            return;
-        }
         switch (e.EventType)
         {
             // Unit movement animation event was raised
@@ -71,7 +68,7 @@ public class MapControl : BaseControl
             {
                 if (e is MovementEventArgs mo)
                 {
-                    _animationQueue.Enqueue(new MoveAnimation(_gameScreen, mo, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth));
+                    _animationQueue.Enqueue(new MoveAnimation(_gameScreen, mo, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth, ForceRedraw));
                 }
 
                 break;
@@ -80,7 +77,7 @@ public class MapControl : BaseControl
             {
                 if (e is CombatEventArgs combatEventArgs)
                 {
-                    _animationQueue.Enqueue(new AttackAnimation(_gameScreen, combatEventArgs, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth));
+                    _animationQueue.Enqueue(new AttackAnimation(_gameScreen, combatEventArgs, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth, ForceRedraw));
                 }
 
 
@@ -289,21 +286,22 @@ public class MapControl : BaseControl
             _animationStart = DateTime.Now;
         }
 
-        var paddedXLoc = (int)Location.X + PaddingSide;
-
-        var paddedYLoc = (int)Location.Y + Top;
-        Raylib.DrawTexture(_currentView.BaseImage, paddedXLoc, paddedYLoc,
+        var paddedLoc = new Vector2(Location.X + PaddingSide, Location.Y + Top);
+        Raylib.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f,1f,
             Color.WHITE);
 
         var cityDetails = new List<CityData>();
 
         foreach (var element in _currentView.Elements)
         {
-            Raylib.DrawTexture(element.Image, paddedXLoc + element.X, paddedYLoc + element.Y - element.Image.height,
-                Color.WHITE);
             if (element is CityData data)
             {
+                element.Draw(element.Location + paddedLoc);
                 cityDetails.Add(data);
+            }
+            else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile))
+            {
+                element.Draw(element.Location + paddedLoc);
             }
         }
 
@@ -311,21 +309,19 @@ public class MapControl : BaseControl
         {
             var name = cityData.Name;
             var textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, name, 20, 1);
-            var textPosition = new Vector2(paddedXLoc + cityData.X + cityData.Image.width / 2f - textSize.X / 2,
-                paddedYLoc + cityData.Y - textSize.Y / 2);
+            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.width /2f , 0) - textSize /2f;
+
             Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
             Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);
         }
 
         foreach (var animation in _currentView.CurrentAnimations)
         {
-            Raylib.DrawTexture(animation.Image, paddedXLoc + animation.X,
-                paddedYLoc + animation.Y - animation.Image.height,
-                Color.WHITE);
+            animation.Draw(animation.Location + paddedLoc);
         }
 
         if (_backgroundImage != null)
-            Raylib.DrawTexture(_backgroundImage.Value, (int)Location.X, (int)Location.Y, Color.WHITE);
+            Raylib.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.WHITE);
         _headerLabel.Draw(pulse);
     }
 
@@ -333,11 +329,24 @@ public class MapControl : BaseControl
     {
         var nextView = _animationQueue.Count > 0
             ? _animationQueue.Dequeue()
-            : _gameScreen.ActiveMode.GetDefaultView(_gameScreen, _currentView, _viewHeight, _viewWidth);
+            : _gameScreen.ActiveMode.GetDefaultView(_gameScreen, _currentView, _viewHeight, _viewWidth, ForceRedraw);
         if (nextView != _currentView)
         {
             _currentView.Dispose();
             _currentView = nextView;
         }
+    }
+
+    private bool _forceRedraw;
+
+    internal bool ForceRedraw
+    {
+        private get
+        {
+            var s = _forceRedraw;
+            _forceRedraw = false;
+            return s;
+        }
+        set => _forceRedraw = value;
     }
 }

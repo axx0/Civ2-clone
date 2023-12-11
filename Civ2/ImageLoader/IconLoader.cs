@@ -58,6 +58,8 @@ public class IconLoader
 
         active.MapImages.ViewPiece = iconProps["viewPiece"][0].Image;
 
+        active.MapImages.ViewPieceTexture = Raylib.LoadTextureFromImage(active.MapImages.ViewPiece);
+
         active.MapImages.GridLines = iconProps["gridlines"][0].Image;
 
         active.MapImages.GridLinesVisible = iconProps["gridlines,visible"][0].Image;

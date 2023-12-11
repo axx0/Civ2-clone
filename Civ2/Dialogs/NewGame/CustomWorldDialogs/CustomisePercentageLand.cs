@@ -8,15 +8,16 @@ public class CustomisePercentageLand : SimpleSettingsDialog
 {
     public const string Title = "CUSTOMLAND";
 
-    public CustomisePercentageLand() : base(Title, CustomiseLandform.Title)
+    public CustomisePercentageLand() : base(Title)
     {
     }
 
 
-    protected override void SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
     {
         Initialization.ConfigObject.PropLand = result.SelectedButton == popupBox.Button[0]
             ? Initialization.ConfigObject.Random.Next(popupBox.Options.Count)
             : result.SelectedIndex;
+        return CustomiseLandform.Title;
     }
 }

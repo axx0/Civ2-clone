@@ -90,7 +90,7 @@ public class MainMenu : BaseScreen
         var newPanels = new List<ImagePanel>();
         foreach (var d in dialog.Decorations)
         {
-            var key = d.Image.Key;
+            var key = d.Image.GetKey();
             var existing = existingPanels.FirstOrDefault(p => p.Key == key);
             if (existing != null)
             {
@@ -100,7 +100,7 @@ public class MainMenu : BaseScreen
             }
             else
             {
-                var panel = new ImagePanel(d.Image.Key,d.Image,d.Location);
+                var panel = new ImagePanel(key,d.Image,d.Location);
                 newPanels.Add(panel);
             }
         }
@@ -148,7 +148,7 @@ public class MainMenu : BaseScreen
         {
             var img = Images.ExtractBitmap(backGroundImage);
             var colour = Raylib.GetImageColor(img, 0, 0);
-            return new ScreenBackground(colour, TextureCache.GetImage(backGroundImage));
+            return new ScreenBackground(colour, TextureCache.GetImage(backGroundImage, MainWindow.ActiveInterface));
         }
 
         return null;
