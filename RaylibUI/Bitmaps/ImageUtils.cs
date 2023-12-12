@@ -431,6 +431,8 @@ public class ImageUtils
         
         viewElements.Add(new HealthBar(location: shieldLoc + new Vector2(0,  2),
             tile: tile, unit.RemainingHitpoints, unit.HitpointsBase));
+        var sheildText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
+        viewElements.Add(new TextElement(sheildText, shieldLoc + new Vector2(shieldTexture.width /2f, 7), shieldTexture.height - 7,tile ));
         viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Units[(int)unit.Type].Texture,
             tile: tile));
     }
