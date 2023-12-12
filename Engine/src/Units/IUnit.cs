@@ -1,4 +1,5 @@
 ﻿using Civ2engine.Enums;
+using Civ2engine.MapObjects;
 
 namespace Civ2engine.Units
 {
@@ -12,5 +13,7 @@ namespace Civ2engine.Units
         Civilization Owner { get; set; }
 
         bool IsInStack { get; }
+        
+        Tile CurrentLocation { get; }
     }
 }

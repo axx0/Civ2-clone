@@ -7,13 +7,13 @@ namespace Civ2engine.Events
 {
     public class UnitInfo : IUnit
     {
-        public readonly Tile Location;
+        public  Tile CurrentLocation { get; }
 
         public readonly List<int> Hitpoints;
 
         public UnitInfo(Unit unit, List<int> hitpoints)
         {
-            Location = unit.CurrentLocation;
+            CurrentLocation = unit.CurrentLocation;
             HitpointsBase = unit.HitpointsBase;
             RemainingHitpoints = unit.RemainingHitpoints;
             Type = unit.Type;

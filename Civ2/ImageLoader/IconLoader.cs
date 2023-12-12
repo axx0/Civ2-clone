@@ -104,6 +104,7 @@ public class IconLoader
         // CityImages.ZoomIN = iconsImage.Clone(new Rectangle(35, 389, 16, 16));
 
         // Battle sprites
-        active.UnitImages.BattleAnim = iconProps["battleAnim"].Select(s => s.Image).ToArray();
+        active.UnitImages.BattleAnim =
+            iconProps["battleAnim"].Select(s => Raylib.LoadTextureFromImage(s.Image)).ToArray();
     }
 }

@@ -18,7 +18,7 @@ public abstract class BaseGameView : IGameView
     private Vector2 _offsets = Vector2.Zero;
     
     protected readonly Vector2 ActivePos;
-    private MapDimensions _dimensions;
+    protected MapDimensions Dimensions;
 
     public Vector2 Offsets => _offsets;
 
@@ -37,14 +37,15 @@ public abstract class BaseGameView : IGameView
         ViewWidth = viewWidth;
         ViewHeight = viewHeight;
 
-        _dimensions = _gameScreen.TileCache.GetDimensions(location.Map);
+        Dimensions = _gameScreen.TileCache.GetDimensions(location.Map);
         
         var activeInterface = _gameScreen.Main.ActiveInterface;
         var cities = activeInterface.CityImages;
         var civilizationId = _gameScreen.Player.Civilization.Id;
-        if (!forceRedraw && previousView != null && IsInSameArea(previousView, location, _dimensions))
+        // Force redraw should be checked last as IsSameArea will set offsets 
+        if (previousView != null && IsInSameArea(previousView, location, Dimensions) && !forceRedraw)
         {
-            ActivePos = GetPosForTile(location, _dimensions);
+            ActivePos = GetPosForTile(location);
             BaseImage = previousView.BaseImage;
             
             //Update elements where action just happened if any
@@ -52,7 +53,7 @@ public abstract class BaseGameView : IGameView
             var newElements = new List<IViewElement>();
             foreach (var tile in previousAction)
             {
-                var pos = GetPosForTile(tile, _dimensions);
+                var pos = GetPosForTile(tile);
                 
                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
                 CalculateElementsAtTile(tile, newElements, activeInterface,cities,pos,tileDetails);
@@ -66,7 +67,7 @@ public abstract class BaseGameView : IGameView
             var elements = new List<IViewElement>();
             if (_offsets == Vector2.Zero)
             {
-                CalculateOffsets(null, location, _dimensions, force: true);
+                CalculateOffsets(null, location, Dimensions, force: true);
             }
 
 
@@ -219,9 +220,10 @@ public abstract class BaseGameView : IGameView
         }
     }
 
-    protected Vector2 GetPosForTile(Tile tile, MapDimensions dimensions)
+    protected Vector2 GetPosForTile(Tile tile)
     {
-        return new Vector2(tile.XIndex * dimensions.TileWidth + tile.Odd * dimensions.HalfWidth, tile.Y * dimensions.HalfHeight+ dimensions.TileHeight) -
+        return new Vector2(tile.XIndex * Dimensions.TileWidth + tile.Odd * Dimensions.HalfWidth,
+                   tile.Y * Dimensions.HalfHeight + Dimensions.TileHeight) -
                Offsets;
     }
 
