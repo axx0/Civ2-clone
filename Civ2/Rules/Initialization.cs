@@ -39,8 +39,8 @@ public static class Initialization
         //TODO: Check is interface already hase initialized images and unload them
     
         TerrainLoader.LoadTerrain(ConfigObject.RuleSet, civ2Interface);
-        CityLoader.LoadCities(ConfigObject.RuleSet, civ2Interface.CityImages, civ2Interface);
         UnitLoader.LoadUnits(ConfigObject.RuleSet, civ2Interface);
+        CityLoader.LoadCities(ConfigObject.RuleSet, civ2Interface.CityImages, civ2Interface);
         IconLoader.LoadIcons(ConfigObject.RuleSet, civ2Interface);
         //LoadPeopleIcons(ruleset);
         //LoadCityWallpaper(ruleset);

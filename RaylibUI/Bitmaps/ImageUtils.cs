@@ -4,6 +4,7 @@ using Model.Images;
 using Raylib_cs;
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.Enums;
 using Model;
 using Color = Raylib_cs.Color;
 using Font = Raylib_cs.Font;
@@ -435,6 +436,10 @@ public class ImageUtils
         viewElements.Add(new TextElement(sheildText, shieldLoc + new Vector2(shieldTexture.width /2f, 7), shieldTexture.height - 7,tile ));
         viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Units[(int)unit.Type].Texture,
             tile: tile));
+        if (unit.Order == OrderType.Fortified)
+        {
+            viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));
+        }
     }
 
     // public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)

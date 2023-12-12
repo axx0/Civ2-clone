@@ -74,6 +74,8 @@ public static class CityLoader
             active.TileSets.Add(new TerrainSet(64, 32));
         }
 
+        active.UnitImages.Fortify = Raylib.LoadTextureFromImage(cityProps["fortify"][0].Image);
+
         foreach (var terrain in active.TileSets)
         {
 

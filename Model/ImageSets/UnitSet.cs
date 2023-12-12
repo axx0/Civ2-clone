@@ -11,4 +11,5 @@ public class UnitSet
     public IImageSource ShieldBack { get; set; }
     public IImageSource ShieldShadow { get; set; }
     public Texture2D[] BattleAnim { get; set; }
+    public Texture2D Fortify { get; set; }
 }
