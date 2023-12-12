@@ -402,7 +402,7 @@ public class ImageUtils
         return new[] { left, image, right };
     }
 
-    public static void GetUnitTextures(Unit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
+    public static void GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
         var heightVector = new Vector2(0, active.UnitImages.UnitRectangle.height);
@@ -428,17 +428,9 @@ public class ImageUtils
             texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile));
         viewElements.Add(new TextureElement(location: shieldLoc + new Vector2(0, shieldTexture.height),
             texture: shieldTexture, tile: tile));
-
-        var hpBarX = (int)Math.Floor((float)unit.RemainingHitpoints * 12 / unit.HitpointsBase);
-        var hpColor = hpBarX switch
-        {
-            <= 3 => new Color(243, 0, 0, 255),
-            <= 8 => new Color(255, 223, 79, 255),
-            _ => new Color(87, 171, 39, 255)
-        };
-
-        viewElements.Add(new RectangleElement(location: shieldLoc + new Vector2(0,  2),
-            tile: tile, height: 3, width: hpBarX, color: hpColor));
+        
+        viewElements.Add(new HealthBar(location: shieldLoc + new Vector2(0,  2),
+            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase));
         viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Units[(int)unit.Type].Texture,
             tile: tile));
     }
