@@ -147,7 +147,7 @@ public class MovingPieces : IGameMode
 
         var activeUnit = _gameScreen.Player.ActiveUnit;
         var unitDisplay = new UnitDisplay(_gameScreen, activeUnit,
-            new Vector2(bounds.x, bounds.y + _title.Height), _gameScreen.Main.ActiveInterface, bounds.width);
+            new Vector2(bounds.x, bounds.y + _title.Height), _gameScreen.Main.ActiveInterface);
         controls.Add(unitDisplay);
 
         var currentY = bounds.y + controls.Sum(c => c.Height);
@@ -255,7 +255,7 @@ public class MovingPieces : IGameMode
         {
             var unit = unitsOnTile[i];
             var unitImage = new UnitDisplay(_gameScreen, unit,
-                new Vector2(bounds.x, currentY), _gameScreen.Main.ActiveInterface, bounds.width);
+                new Vector2(bounds.x, currentY), _gameScreen.Main.ActiveInterface);
             controls.Add(unitImage);
             currentY += unitImage.Height + 2;
             cityName = (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name;

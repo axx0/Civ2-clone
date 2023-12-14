@@ -403,7 +403,7 @@ public class ImageUtils
         return new[] { left, image, right };
     }
 
-    public static int GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
+    public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
         var heightVector = new Vector2(0, active.UnitImages.UnitRectangle.height);
@@ -442,7 +442,7 @@ public class ImageUtils
             viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));
         }
 
-        return unitTexture.height;
+        return new Vector2(unitTexture.width, unitTexture.height);
     }
 
     // public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)

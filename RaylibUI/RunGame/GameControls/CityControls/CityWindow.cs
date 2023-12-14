@@ -31,10 +31,8 @@ public class CityWindow : BaseDialog
 
         Controls.Add(_headerLabel);
 
-        var infoArea = new CityInfoArea(this)
-        {
-            AbsolutePosition = _cityWindowProps.InfoPanel
-        };
+        var infoArea = new CityInfoArea(this, _cityWindowProps.InfoPanel);
+       
         Controls.Add(infoArea);
 
         var buyButton = new Button(this, Labels.For(LabelIndex.Buy))
@@ -52,7 +50,7 @@ public class CityWindow : BaseDialog
         {
             AbsolutePosition = _cityWindowProps.Buttons["Info"]
         };
-        infoButton.Click += (_, _) => infoArea.Mode = DisplayMode.Info;
+        infoButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Info);
         Controls.Add(infoButton);
 
         // Map button
@@ -60,7 +58,7 @@ public class CityWindow : BaseDialog
         {
             AbsolutePosition = _cityWindowProps.Buttons["Map"]
         };
-        mapButton.Click += (_, _) => infoArea.Mode = DisplayMode.SupportMap;
+        mapButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.SupportMap);
         Controls.Add(mapButton);
 
 
@@ -76,7 +74,7 @@ public class CityWindow : BaseDialog
         {
             AbsolutePosition = _cityWindowProps.Buttons["Happy"]
         };
-        happyButton.Click += (_, _) => infoArea.Mode = DisplayMode.Happiness;
+        happyButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Happiness);
         Controls.Add(happyButton);
 
         // View button
