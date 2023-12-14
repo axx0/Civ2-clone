@@ -24,9 +24,9 @@ namespace Civ2engine.IO
             ).ToList();
         }
 
-        public static List<MenuElement> For(string section)
+        public static IEnumerable<MenuElement> For(string section)
         {
-            return _elements.ContainsKey(section) ? _elements[section] : new List<MenuElement>();
+            return _elements.TryGetValue(section, out var element) ? element : Enumerable.Empty<MenuElement>() ;
         }
 
         public static IList<string> Menus => _elements.Keys.ToList();

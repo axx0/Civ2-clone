@@ -1,5 +1,8 @@
+using System.Numerics;
+using Civ2engine;
 using Civ2engine.MapObjects;
 using Raylib_cs;
+using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
 namespace RaylibUI.RunGame.GameModes;
@@ -7,9 +10,13 @@ namespace RaylibUI.RunGame.GameModes;
 public class ViewPiece : IGameMode
 {
     private readonly GameScreen _gameScreen;
+    private readonly LabelControl _title;
 
     public ViewPiece(GameScreen gameScreen)
     {
+        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), eventTransparent: true,
+            alignment: TextAlignment.Center);
+        
         _gameScreen = gameScreen;
        Actions = new Dictionary<KeyboardKey, Action>
             {
@@ -84,7 +91,7 @@ public class ViewPiece : IGameMode
                 return animation;
             }
         }
-
+        _gameScreen.StatusPanel.Update();
         return new WaitingView(gameScreen, currentView, viewHeight, viewWidth, forceRedraw);
     }
 
@@ -117,5 +124,59 @@ public class ViewPiece : IGameMode
     public bool Activate()
     {
         return true;
+    }
+
+    public void PanelClick()
+    {
+        if (_gameScreen.Player.ActiveUnit is {Dead: false})
+        {
+            _gameScreen.ActiveMode = _gameScreen.Moving;
+        }
+        else
+        {
+            _gameScreen.Game.ChooseNextUnit();
+        }
+    }
+
+    public IList<IControl> GetSidePanelContents(Rectangle bounds)
+    {
+        var res = new List<IControl> { _title };
+        var labelHeight = _title.GetPreferredHeight();
+        _title.Bounds = bounds with { height = labelHeight };
+
+        var currentY = bounds.y + 20;
+
+        // Draw location & tile type on active square
+        var activeTile = _gameScreen.Player.ActiveTile;
+        res.Add(new LabelControl(_gameScreen, $"Loc: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}", true)
+        {
+            Bounds = bounds with { height = labelHeight, y = currentY }
+        });
+        currentY += 20;
+
+        res.Add(new LabelControl(_gameScreen, $"({activeTile.Type})", true)
+        {
+            Bounds = bounds with { height = labelHeight, y = currentY }
+        });
+
+        currentY += 20;
+
+        
+
+        //int count;
+        //for (count = 0; count < Math.Min(_unitsOnThisTile.Count, maxUnitsToDraw); count++)
+        //{
+        //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
+        //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
+        //    Draw.Text(e.Graphics, _unitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
+        //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
+        //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
+        //}
+        //if (count < _unitsOnThisTile.Count)
+        //{
+        //    string _moreUnits = (_unitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
+        //    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
+        //}
+        return res;
     }
 }

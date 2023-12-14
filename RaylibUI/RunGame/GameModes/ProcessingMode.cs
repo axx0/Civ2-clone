@@ -1,18 +1,29 @@
 using System.Diagnostics;
+using Civ2engine;
 using Civ2engine.MapObjects;
 using Raylib_cs;
+using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
 namespace RaylibUI.RunGame.GameModes;
 
 public class ProcessingMode : IGameMode
 {
+    private readonly GameScreen _gameScreen;
+
+    public ProcessingMode(GameScreen gameScreen)
+    {
+        _gameScreen = gameScreen;
+    }
     public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
         bool forceRedraw)
     {
         if (currentView is not StaticView existing)
+        {
+            _gameScreen.StatusPanel.Update();
             return new StaticView(gameScreen, currentView, viewHeight, viewWidth, forceRedraw);
-        
+        }
+
         existing.Reset();
         return existing;
     }
@@ -32,5 +43,15 @@ public class ProcessingMode : IGameMode
         Debug.WriteLine("Processing other turns");
         return true;
         
+    }
+
+    public void PanelClick()
+    {
+        // Do Nothing we can't click the panel on other players turns
+    }
+
+    public IList<IControl> GetSidePanelContents (Rectangle bounds)
+    {
+        return Array.Empty<IControl>();
     }
 }

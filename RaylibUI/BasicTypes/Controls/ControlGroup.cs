@@ -33,6 +33,10 @@ public class ControlGroup : BaseControl
 
     public override void OnResize()
     {
+        if (_childWidths == null || _childWidths.Count == 0)
+        {
+            GetPreferredWidth();
+        }
         var offset = 0;
         if (_flexElement == NoFlex)
         {

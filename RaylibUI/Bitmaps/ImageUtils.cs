@@ -403,7 +403,7 @@ public class ImageUtils
         return new[] { left, image, right };
     }
 
-    public static void GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
+    public static int GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
         var heightVector = new Vector2(0, active.UnitImages.UnitRectangle.height);
@@ -434,12 +434,15 @@ public class ImageUtils
             tile: tile, unit.RemainingHitpoints, unit.HitpointsBase));
         var sheildText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
         viewElements.Add(new TextElement(sheildText, shieldLoc + new Vector2(shieldTexture.width /2f, 7), shieldTexture.height - 7,tile ));
-        viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Units[(int)unit.Type].Texture,
+        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
+        viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
             tile: tile));
         if (unit.Order == OrderType.Fortified)
         {
             viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));
         }
+
+        return unitTexture.height;
     }
 
     // public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)

@@ -11,4 +11,6 @@ public interface IGameMode
     bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick);
     void HandleKeyPress(KeyboardKey key);
     bool Activate();
+    void PanelClick();
+    IList<IControl> GetSidePanelContents(Rectangle bounds);
 }       
