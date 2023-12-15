@@ -13,6 +13,7 @@ namespace Civ2engine
     {
         public int X { get; set; }
         public int Y { get; set; }
+        public int MapIndex { get; set; }
         public bool CanBuildCoastal { get; set; }
         public bool AutobuildMilitaryRule { get; set; }
         public bool StolenTech { get; set; }
@@ -29,6 +30,8 @@ namespace Civ2engine
         public int OwnerId => Owner.Id;
         public int Size { get; set; }
         public Civilization WhoBuiltIt { get; set; }
+        public bool[] WhoKnowsAboutIt { get; set; }
+        public int[] LastSizeRevealedToCivs { get; set; }
         public int FoodInStorage { get; set; }
         public int NetTrade { get; set; }
         public string Name { get; set; }

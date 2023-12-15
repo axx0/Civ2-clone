@@ -160,6 +160,7 @@ namespace Civ2engine.Units
         public int Xreal => (X - Y % 2) / 2;
         public int Y { get; set; }
         public int[] XY => new int[] { X, Y };
+        public int MapIndex { get; set; }
         
         public int MovementCounter { get; set; }
 

@@ -21,20 +21,25 @@ namespace Civ2engine
         public LoadedGameObjects(Rules rules, GameData gameData)
         {
             Rules = rules;
-            Map = new Map(gameData.OptionsArray[3], 0)
+            var maps = new List<Map>();
+            for (int mapNo = 0; mapNo < gameData.MapNoSecondaryMaps + 1; mapNo++)
             {
-                MapRevealed = gameData.MapRevealed,
-                WhichCivsMapShown = gameData.WhichCivsMapShown,
-                Zoom = gameData.Zoom,
-                StartingClickedXY = gameData.ClickedXY,
-                XDim = gameData.MapXdim_x2 / 2,
-                YDim = gameData.MapYdim,
-                ResourceSeed = gameData.MapResourceSeed,
-                LocatorXdim = gameData.MapLocatorXdim,
-                LocatorYdim = gameData.MapLocatorYdim
-            };
-
-            Map.Tile = PopulateTilesFromGameData(gameData, Rules,Map);
+                var _map = new Map(gameData.OptionsArray[3], mapNo)
+                {
+                    MapRevealed = gameData.MapRevealed,
+                    WhichCivsMapShown = gameData.WhichCivsMapShown,
+                    Zoom = gameData.Zoom,
+                    StartingClickedXY = gameData.ClickedXY,
+                    XDim = gameData.MapXdim_x2 / 2,
+                    YDim = gameData.MapYdim,
+                    ResourceSeed = gameData.MapResourceSeed,
+                    LocatorXdim = gameData.MapLocatorXdim,
+                    LocatorYdim = gameData.MapLocatorYdim
+                };
+                _map.Tile = PopulateTilesFromGameData(gameData, Rules, _map);
+                maps.Add(_map);
+            }
+            this.Maps = maps;
             
             // Create all 8 civs (tribes)
             var civs = new List<Civilization>();
@@ -57,13 +62,14 @@ namespace Civ2engine
             var cities = new List<City>();
             for (var i = 0; i < gameData.NumberOfCities; i++)
             {
-                cities.Add(CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityCanBuildCoastal[i],
-                    gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenAdvance[i],
+                cities.Add(CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityMapNo[i], 
+                    gameData.CityCanBuildCoastal[i], gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenAdvance[i],
                     gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i], gameData.CityCivilDisorder[i], 
                     gameData.CityCanBuildHydro[i], gameData.CityCanBuildShips[i], gameData.CityAutobuildMilitaryAdvisor[i],
                     gameData.CityAutobuildDomesticAdvisor[i], gameData.CityObjectivex1[i], gameData.CityObjectivex3[i],
                     gameData.CityOwner[i], gameData.CitySize[i],
-                    gameData.CityWhoBuiltIt[i], gameData.CityFoodInStorage[i], gameData.CityShieldsProgress[i],
+                    gameData.CityWhoBuiltIt[i], gameData.CityWhoKnowsAboutIt[i], gameData.CityLastSizeRevealedToCivs[i],
+                    gameData.CityFoodInStorage[i], gameData.CityShieldsProgress[i],
                     gameData.CityNetTrade[i], gameData.CityName[i], gameData.CityDistributionWorkers[i],
                     gameData.CityNoOfSpecialistsx4[i], gameData.CityImprovements[i],
                     gameData.CityItemInProduction[i], gameData.CityActiveTradeRoutes[i],
@@ -79,8 +85,8 @@ namespace Civ2engine
             // Create units
             for (int i = 0; i < gameData.NumberOfUnits; i++)
             {
-                var unit = CreateUnit(gameData.UnitType[i], gameData.UnitXloc[i], gameData.UnitYloc[i],
-                    gameData.UnitDead[i], gameData.UnitFirstMove[i], gameData.UnitGreyStarShield[i],
+                var unit = CreateUnit(gameData.UnitType[i], gameData.UnitXloc[i], gameData.UnitYloc[i], 
+                    gameData.UnitMap[i], gameData.UnitDead[i], gameData.UnitFirstMove[i], gameData.UnitGreyStarShield[i],
                     gameData.UnitVeteran[i], gameData.UnitCiv[i], gameData.UnitMovePointsLost[i],
                     gameData.UnitHitPointsLost[i], gameData.UnitPrevXloc[i], gameData.UnitPrevYloc[i],
                     gameData.UnitCaravanCommodity[i], gameData.UnitOrders[i], gameData.UnitHomeCity[i],
@@ -135,17 +141,28 @@ namespace Civ2engine
             {
                 for (var row = 0; row < map.YDim; row++)
                 {
-                    var terrain = data.MapTerrainType[0][col, row];
+                    var terrain = data.MapTerrainType[map.MapIndex][col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
-                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col, Enumerable.Range(0, 8).Select(i => data.MapVisibilityCivs[0][col, row, i]).ToArray())
+                    tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col,
+                        Enumerable.Range(0, 8).Select(i => data.MapTileVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapUnitVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapIrrigationVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapMiningVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapRoadVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapRailroadVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapFortressVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapPollutionVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapAirbaseVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapFarmlandVisibility[0][col, row, i]).ToArray(),
+                        Enumerable.Range(0, 8).Select(i => data.MapTransporterVisibility[0][col, row, i]).ToArray())
                     {
-                        River = data.MapRiverPresent[0][col, row],
-                        Resource = data.MapResourcePresent[0][col, row],
-                        //UnitPresent = data.MapUnitPresent[0][col, row],  // you can find this out yourself
-                        //CityPresent = data.MapCityPresent[0][col, row],  // you can find this out yourself
+                        River = data.MapRiverPresent[map.MapIndex][col, row],
+                        Resource = data.MapResourcePresent[map.MapIndex][col, row],
+                        //UnitPresent = data.MapUnitPresent[map.MapIndex][col, row],  // you can find this out yourself
+                        //CityPresent = data.MapCityPresent[map.MapIndex][col, row],  // you can find this out yourself
 
 
-                        Island = data.MapIslandNo[0][col, row],
+                        Island = data.MapIslandNo[map.MapIndex][col, row],
                         Improvements = improvements 
                     };
                 }
@@ -208,7 +225,7 @@ namespace Civ2engine
 
         public List<Civilization> Civilizations { get; set; }
 
-        public Map Map { get; set; }
+        public List<Map> Maps { get; set; }
 
         public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
             int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,
@@ -248,21 +265,23 @@ namespace Civ2engine
             };
         }
         
-        public City CreateCity(int x, int y, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech,
+        public City CreateCity(int x, int y, int mapNo, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech,
             bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildHydro, bool canBuildShips,
             bool autoBuildMilitary, bool autoBuildDomestic, bool objectivex1, bool objectivex3,
-            int ownerIndex, int size, int whoBuiltIt, int foodInStorage, int shieldsProgress, int netTrade,
-            string name, bool[] distributionWorkers, int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
+            int ownerIndex, int size, int whoBuiltIt, bool[] whoKnowsAboutIt, int[] lastSizeRevealedToCivs, 
+            int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, 
+            int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
             int activeTradeRoutes, int[] commoditySupplied, int[] commodityDemanded,
             int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons,
             int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens, ProductionOrder[] productionItems)
         {
-            var tile = Map.TileC2(x, y);
+            var tile = Maps[mapNo].TileC2(x, y);
             var owner = Civilizations[ownerIndex];
             var city = new City
             {
                 X = x,
                 Y = y,
+                MapIndex = mapNo,
                 CanBuildCoastal = canBuildCoastal,
                 AutobuildMilitaryRule = autobuildMilitaryRule,
                 StolenTech = stolenTech,
@@ -278,6 +297,8 @@ namespace Civ2engine
                 Owner = owner,
                 Size = size,
                 WhoBuiltIt = Civilizations[whoBuiltIt],
+                WhoKnowsAboutIt = whoKnowsAboutIt,
+                LastSizeRevealedToCivs = lastSizeRevealedToCivs,
                 FoodInStorage = foodInStorage,
                 ShieldsProgress = shieldsProgress,
                 NetTrade = netTrade,
@@ -302,7 +323,7 @@ namespace Civ2engine
 
             owner.Cities.Add(city);
 
-            foreach (var (first, second) in Map.CityRadius(tile,true).Zip(distributionWorkers))
+            foreach (var (first, second) in Maps[mapNo].CityRadius(tile,true).Zip(distributionWorkers))
             {
                 if (first != null && second)
                 {
@@ -319,11 +340,11 @@ namespace Civ2engine
             return city;
         }
         
-        public Unit CreateUnit (int type, int x, int y, bool dead, bool firstMove, bool greyStarShield, bool veteran, int civId,
-            int movePointsLost, int hitPointsLost, int prevX, int prevY, int caravanCommodity, int orders,
-            int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public Unit CreateUnit (int type, int x, int y, int mapNo, bool dead, bool firstMove, bool greyStarShield, 
+            bool veteran, int civId, int movePointsLost, int hitPointsLost, int prevX, int prevY, int caravanCommodity, 
+            int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
-            var validTile = Map.IsValidTileC2(x, y);
+            var validTile = Maps[mapNo].IsValidTileC2(x, y);
 
             var civilization = Civilizations[civId];
             var unit = new Unit
@@ -331,9 +352,10 @@ namespace Civ2engine
                 Id = civilization.Units.Count,
                 TypeDefinition = Rules.UnitTypes[type],
                 Dead = dead || !validTile,
-                CurrentLocation = validTile ? Map.TileC2(x,y) : null,
+                CurrentLocation = validTile ? Maps[mapNo].TileC2(x,y) : null,
                 X = x,
                 Y = y,
+                MapIndex = mapNo,
                 MovePointsLost = movePointsLost,
                 HitPointsLost = hitPointsLost,
                 FirstMove = firstMove,

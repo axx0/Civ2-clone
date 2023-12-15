@@ -65,7 +65,8 @@ namespace Civ2engine
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 
-            : this(new [] { objects.Map}, rules,objects.Civilizations,new Options(gameData.OptionsArray), rulesetPaths, (DifficultyType)gameData.DifficultyLevel)
+            : this(objects.Maps.ToArray(), rules,objects.Civilizations,new Options(gameData.OptionsArray), 
+                  rulesetPaths, (DifficultyType)gameData.DifficultyLevel)
         {
             //_civsInPlay = SAVgameData.CivsInPlay;
             _gameVersion = gameData.GameVersion switch

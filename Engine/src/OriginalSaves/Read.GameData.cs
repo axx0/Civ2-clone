@@ -27,7 +27,7 @@ namespace Civ2engine
             // TODO: determine if randomizing villages/resources, randomizing player starting locations, select comp. opponents, accelerated sturtup options are selected from SAV file
             int optionsOffset;
             if (data.GameVersion <= 44) optionsOffset = 12;
-            else                        optionsOffset = 652;    // TOT
+            else optionsOffset = 652;    // TOT
 
             data.OptionsArray = new bool[35];
             data.OptionsArray[0] = !GetBit(bytes[optionsOffset + 0], 4);    // Simplified combat on/off 
@@ -127,6 +127,16 @@ namespace Civ2engine
                     data.WonderBuilt[i] = true;
                     data.WonderDestroyed[i] = false;
                 }
+            }
+            #endregion
+            #region Unknown block
+            //=========================
+            //Unknown block
+            //=========================
+            int offsetUB = 962;
+            if (data.GameVersion > 44)  // TOT
+            {
+                data.GameType = bytes[offsetUB + 20];   // Original, fantasy, Scifi
             }
             #endregion
             #region Civ names
@@ -292,8 +302,19 @@ namespace Civ2engine
             if (data.GameVersion > 44) mapSeedLength = 2;   // only appears in TOT
             else mapSeedLength = 0;
 
+            data.MapUnitVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapCityVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapIrrigationVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapMiningVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapRoadVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapRailroadVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapFortressVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapPollutionVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapAirbaseVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapFarmlandVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapTransporterVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
             data.MapTerrainType = new int[data.MapNoSecondaryMaps + 1][,];
-            data.MapVisibilityCivs = new bool[data.MapNoSecondaryMaps + 1][,,];
+            data.MapTileVisibility = new bool[data.MapNoSecondaryMaps + 1][,,];
             data.MapRiverPresent = new bool[data.MapNoSecondaryMaps + 1][,];
             data.MapResourcePresent = new bool[data.MapNoSecondaryMaps + 1][,];
             data.MapUnitPresent = new bool[data.MapNoSecondaryMaps + 1][,];
@@ -312,13 +333,44 @@ namespace Civ2engine
             data.MapSeed = new short[data.MapNoSecondaryMaps + 1];
             for (int mapNo = 0; mapNo < data.MapNoSecondaryMaps + 1; mapNo++)
             {
-                // block 1 - terrain improvements (for 7 civs)
-                //...........
+                // block 1 - terrain improvements that each civ sees (for 7 civs, ignore barbs)
+                data.MapUnitVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapCityVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapIrrigationVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapMiningVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapRoadVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapRailroadVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapFortressVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapPollutionVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapAirbaseVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapFarmlandVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapTransporterVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                for (int civNo = 0; civNo < 7; civNo++)
+                {
+                    for (int i = 0; i < data.MapArea; i++)
+                    {
+                        int x = i % (data.MapXdim_x2 / 2);
+                        int y = i / (data.MapXdim_x2 / 2);
+
+                        int terrA = ofsetB1 + civNo * data.MapXdim_x2 / 2 * data.MapYdim + i;
+                        data.MapUnitVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 0);
+                        data.MapCityVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 1);
+                        data.MapIrrigationVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 2);
+                        data.MapMiningVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 3) && !GetBit(bytes[terrA], 2); ;
+                        data.MapRoadVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 4);
+                        data.MapRailroadVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 4) && GetBit(bytes[terrA], 5);
+                        data.MapFortressVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 6) && !GetBit(bytes[terrA], 1);
+                        data.MapPollutionVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 7);
+                        data.MapAirbaseVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 1) && GetBit(bytes[terrA], 6);
+                        data.MapFarmlandVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 2) && GetBit(bytes[terrA], 3);
+                        data.MapTransporterVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 1) && GetBit(bytes[terrA], 7);
+                    }
+                }
 
                 // block 2 - terrain type
                 int ofsetB2 = ofsetB1 + 7 * data.MapArea;
                 data.MapTerrainType[mapNo] = new int[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapVisibilityCivs[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapTileVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
                 data.MapRiverPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
                 data.MapResourcePresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
                 data.MapUnitPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
@@ -370,7 +422,7 @@ namespace Civ2engine
 
                     // Visibility of squares for all civs (0...red (barbarian), 1...white, 2...green, etc.)
                     for (int civ = 0; civ < 8; civ++)
-                        data.MapVisibilityCivs[mapNo][x, y, civ] = GetBit(bytes[ofsetB2 + i * 6 + 4], civ);
+                        data.MapTileVisibility[mapNo][x, y, civ] = GetBit(bytes[ofsetB2 + i * 6 + 4], civ);
 
                     int intValueB26 = bytes[ofsetB2 + i * 6 + 5];       //?
 
@@ -558,6 +610,8 @@ namespace Civ2engine
             data.CityOwner = new byte[data.NumberOfCities];
             data.CitySize = new byte[data.NumberOfCities];
             data.CityWhoBuiltIt = new byte[data.NumberOfCities];
+            data.CityWhoKnowsAboutIt = new bool[data.NumberOfCities][];
+            data.CityLastSizeRevealedToCivs = new int[data.NumberOfCities][];
             data.CityFoodInStorage = new short[data.NumberOfCities];
             data.CityShieldsProgress = new short[data.NumberOfCities];
             data.CityNetTrade = new short[data.NumberOfCities];
@@ -603,13 +657,23 @@ namespace Civ2engine
                 data.CityOwner[i] = bytes[ofsetC + multipl * i + 8 + totOffset];
                 data.CitySize[i] = bytes[ofsetC + multipl * i + 9 + totOffset];
                 data.CityWhoBuiltIt[i] = bytes[ofsetC + multipl * i + 10 + totOffset];
+                data.CityWhoKnowsAboutIt[i] = new bool[8];
+                data.CityLastSizeRevealedToCivs[i] = new int[8];
+                for (int civId = 0; civId < 8; civId++)
+                {
+                    data.CityWhoKnowsAboutIt[i][civId] = GetBit(bytes[ofsetC + multipl * i + 12 + totOffset], civId);
+                }
+                for (int civId = 0; civId < 8; civId++)
+                {
+                    data.CityLastSizeRevealedToCivs[i][civId] = bytes[ofsetC + multipl * i + 13 + civId + totOffset];
+                }
 
                 // Production squares
                 //???????????????????
 
                 // Specialists
                 //??????????????????
-                
+
                 data.CityFoodInStorage[i] = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 26 + totOffset);
                 data.CityShieldsProgress[i] = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 28 + totOffset);
                 data.CityNetTrade[i] = BitConverter.ToInt16(bytes, ofsetC + multipl * i + 30 + totOffset);

@@ -18,6 +18,16 @@ namespace Civ2engine.MapObjects
         private Terrain _terrain;
         
         private bool[] _visibility;
+        private bool[] _visibilityUnits;
+        private bool[] _visibilityIrrigation;
+        private bool[] _visibilityMining;
+        private bool[] _visibilityRoad;
+        private bool[] _visibilityRailroad;
+        private bool[] _visibilityFortress;
+        private bool[] _visibilityPollution;
+        private bool[] _visibilityAirbase;
+        private bool[] _visibilityFarmland;
+        private bool[] _visibilityTransporter;
         public int X { get; }
         public int Y { get; }
         
@@ -59,9 +69,22 @@ namespace Civ2engine.MapObjects
 
 
         // Get special resource type based on map seed & tile location
-        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility)
+        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility, bool[] visibilityUnits,
+            bool[] visibilityIrrigation, bool[] visibilityMining, bool[] visibilityRoad, bool[] visibilityRailroad, 
+            bool[] visibilityFortress, bool[] visibilityPollution, bool[] visibilityAirbase, bool[] visibilityFarmland, 
+            bool[] visibilityTransporter)
         {
             _visibility = visibility;
+            _visibilityUnits = visibilityUnits;
+            _visibilityIrrigation = visibilityIrrigation;
+            _visibilityMining = visibilityMining;
+            _visibilityRoad = visibilityRoad;
+            _visibilityRailroad = visibilityRailroad;
+            _visibilityFortress = visibilityFortress;
+            _visibilityPollution = visibilityPollution;
+            _visibilityAirbase = visibilityAirbase;
+            _visibilityFarmland = visibilityFarmland;
+            _visibilityTransporter = visibilityTransporter;
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
             X = x;

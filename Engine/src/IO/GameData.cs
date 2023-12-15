@@ -32,6 +32,9 @@ namespace Civ2engine
         public bool[] WonderBuilt { get; set; }
         public bool[] WonderDestroyed { get; set; }
 
+        // Other
+        public byte GameType { get; set; }  // TOT only
+
         // Civ
         public byte[] CivCityStyle { get; set; }
         public string[] CivLeaderName { get; set; }
@@ -70,6 +73,17 @@ namespace Civ2engine
         public short MapLocatorXdim { get; set; }
         public short MapLocatorYdim { get; set; }
         public short MapNoSecondaryMaps { get; set; }
+        public bool[][,,] MapUnitVisibility { get; set; }
+        public bool[][,,] MapCityVisibility { get; set; }
+        public bool[][,,] MapIrrigationVisibility { get; set; }
+        public bool[][,,] MapMiningVisibility { get; set; }
+        public bool[][,,] MapRoadVisibility { get; set; }
+        public bool[][,,] MapRailroadVisibility { get; set; }
+        public bool[][,,] MapFortressVisibility { get; set; }
+        public bool[][,,] MapPollutionVisibility { get; set; }
+        public bool[][,,] MapAirbaseVisibility { get; set; }
+        public bool[][,,] MapFarmlandVisibility { get; set; }
+        public bool[][,,] MapTransporterVisibility { get; set; }    // TOT only
         public int[][,] MapTerrainType { get; set; }
         public bool[][,] MapRiverPresent { get; set; }
         public bool[][,] MapResourcePresent { get; set; }
@@ -86,7 +100,7 @@ namespace Civ2engine
         public bool[][,] MapTransporterPresent { get; set; }
         public byte[][,] MapIslandNo { get; set; }
         public int[][,] MapSpecialType { get; set; }
-        public bool[][,,] MapVisibilityCivs { get; set; }
+        public bool[][,,] MapTileVisibility { get; set; }
         public short[] MapSeed { get; set; }
 
         // Units
@@ -132,6 +146,8 @@ namespace Civ2engine
         public byte[] CityOwner { get; set; }
         public byte[] CitySize { get; set; }
         public byte[] CityWhoBuiltIt { get; set; }
+        public bool[][] CityWhoKnowsAboutIt { get; set; }
+        public int[][] CityLastSizeRevealedToCivs { get; set; }
         public short[] CityFoodInStorage { get; set; }
         public short[] CityShieldsProgress { get; set; }
         public short[] CityNetTrade { get; set; }
