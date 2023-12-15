@@ -1,5 +1,4 @@
 ﻿using Raylib_cs;
-using System.Numerics;
 
 namespace RaylibUI.Forms;
 
@@ -58,31 +57,5 @@ public static class CtrlHelpers
         }
 
         return wrapped_lines;
-    }
-
-    // Return height of lines of text
-    private static int MeasureLinesHeight(List<string> lines, int fontSize)
-    {
-        int height = 0;
-        foreach (var line in lines)
-        {
-            height += (int)Raylib.MeasureTextEx(Fonts.DefaultFont, line, fontSize, 1.0f).Y;
-        }
-
-        return height;
-    }
-
-    public static void DrawWrappedText(string text, Vector2 pos, int width, int fontSize)
-    {
-        var lines = GetWrappedTexts(text, width, fontSize);
-
-        Vector2 linePos;
-        int lineHeight = 0;
-        foreach (var line in lines)
-        {
-            linePos = new Vector2(pos.X, pos.Y + lineHeight);
-            Raylib.DrawTextEx(Fonts.DefaultFont, line, linePos, fontSize, 1.0f, Color.BLACK);
-            lineHeight += (int)Raylib.MeasureTextEx(Fonts.DefaultFont, line, fontSize, 1.0f).Y;
-        }
     }
 }

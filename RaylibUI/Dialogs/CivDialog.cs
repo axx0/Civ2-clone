@@ -54,7 +54,7 @@ public class CivDialog : DynamicSizingDialog
         int optionsCols = 1,
         Image[]? icons = null) :
         base(host,
-            Dialog.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
+            DialogHelper.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
              relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
@@ -63,7 +63,7 @@ public class CivDialog : DynamicSizingDialog
         _managedTextures = new List<Texture2D>();
         if (popupBox.Text?.Count > 0)
         {
-            var ftext = Dialog.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
+            var ftext = DialogHelper.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
             foreach (var text in ftext)
             {
                 Controls.Add(new LabelControl(this, text.Text, false,
@@ -77,7 +77,7 @@ public class CivDialog : DynamicSizingDialog
         {
             _textBoxes = new List<LabeledTextBox>();
             var textBoxLabels = textBoxDefs.Select(t =>
-                Dialog.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
+                DialogHelper.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
 
             var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(Fonts.DefaultFont, l, 20, 1.0f).X) +24;
 
@@ -95,7 +95,7 @@ public class CivDialog : DynamicSizingDialog
             for (int i = 0; i < popupBox.Options.Count; i++)
             {
                 popupBox.Options[i] =
-                    Forms.Dialog.ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
+                    Forms.DialogHelper.ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
             }
 
             var optionAction = popupBox.Checkbox ? (Action<OptionControl>)TogggleCheckBox : SetSelectedOption;

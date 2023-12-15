@@ -4,6 +4,7 @@ using Model.Images;
 using Raylib_cs;
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.Enums;
 using Model;
 using Color = Raylib_cs.Color;
 using Font = Raylib_cs.Font;
@@ -402,7 +403,7 @@ public class ImageUtils
         return new[] { left, image, right };
     }
 
-    public static void GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
+    public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
         var heightVector = new Vector2(0, active.UnitImages.UnitRectangle.height);
@@ -431,8 +432,17 @@ public class ImageUtils
         
         viewElements.Add(new HealthBar(location: shieldLoc + new Vector2(0,  2),
             tile: tile, unit.RemainingHitpoints, unit.HitpointsBase));
-        viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Units[(int)unit.Type].Texture,
+        var sheildText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
+        viewElements.Add(new TextElement(sheildText, shieldLoc + new Vector2(shieldTexture.width /2f, 7), shieldTexture.height - 7,tile ));
+        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
+        viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
             tile: tile));
+        if (unit.Order == OrderType.Fortified)
+        {
+            viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));
+        }
+
+        return new Vector2(unitTexture.width, unitTexture.height);
     }
 
     // public static Image GetUnitImage(IUserInterface active, Unit unit, bool noStacking = false)

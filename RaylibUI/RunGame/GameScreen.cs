@@ -3,7 +3,6 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Civ2engine.Units;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.CityControls;
@@ -21,7 +20,7 @@ public class GameScreen : BaseScreen
     private readonly MinimapPanel _minimapPanel;
     private readonly MapControl _mapControl;
     private readonly StatusPanel _statusPanel;
-    private readonly IPlayer _player;
+    private readonly LocalPlayer _player;
     private readonly GameMenu _menu;
 
     public IGameMode ActiveMode
@@ -38,7 +37,9 @@ public class GameScreen : BaseScreen
 
     public TileTextureCache TileCache { get; }
     
-    public IPlayer Player => _player;
+    public LocalPlayer Player => _player;
+
+    public StatusPanel StatusPanel => _statusPanel;
     public IGameMode Moving { get; }
     public IGameMode ViewPiece { get; }
 
@@ -61,9 +62,10 @@ public class GameScreen : BaseScreen
         _player = new LocalPlayer(this, civ);
         game.ConnectPlayer(_player);
         
+        
         Moving = new MovingPieces(this);
         ViewPiece = new ViewPiece(this);
-        Processing = new ProcessingMode();
+        Processing = new ProcessingMode(this);
                
         if (Game.GetActiveCiv == Game.GetPlayerCiv)
         {
@@ -83,48 +85,19 @@ public class GameScreen : BaseScreen
         var menuHeight = _menu.GetPreferredHeight();
         var mapWidth = width - MiniMapWidth;
         
-        
-        _mapControl = new MapControl(this, game, new Rectangle(0, menuHeight, mapWidth, height - menuHeight));
-        Controls.Add(_mapControl);
-        
-        Controls.Add(_menu);
-        _minimapPanel = new MinimapPanel(this, game);
-        Controls.Add(_minimapPanel);
-        
         _statusPanel = new StatusPanel(this, game);
+        
+        _minimapPanel = new MinimapPanel(this, game);
+        _mapControl = new MapControl(this, game, new Rectangle(0, menuHeight, mapWidth, height - menuHeight));
+        
+        // The order of these is important as MapControl can overdraw so must be drawn first
+        Controls.Add(_mapControl);
+        Controls.Add(_menu);
+        Controls.Add(_minimapPanel);
         Controls.Add(_statusPanel);
     }
 
-    private void GameOnOnMapEvent(object? sender, MapEventArgs e)
-    {
-        switch (e.EventType)
-        {
-            case MapEventType.MapViewChanged:
-                break;
-            case MapEventType.MinimapViewChanged:
-                break;
-            case MapEventType.ToggleBetweenCurrentEntireMapView:
-                break;
-            case MapEventType.ZoomChanged:
-                break;
-            case MapEventType.CenterView:
-                break;
-            case MapEventType.ToggleGrid:
-                break;
-            case MapEventType.UpdateMap:
-                foreach (var tile in e.TilesChanged)
-                {
-                    TileCache.Redraw(tile, _player.Civilization.Id);
-                }
-
-                _mapControl.ForceRedraw = true;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
-
-    public ProcessingMode Processing { get; set; }
+    public ProcessingMode Processing { get; }
 
     public override void OnKeyPress(KeyboardKey key)
     {
@@ -144,10 +117,6 @@ public class GameScreen : BaseScreen
         base.Resize(width, height);
     }
 
-    public void UpdateOrders(Tile activeTile, Unit activeUnit)
-    {
-    }
-    
     public void ShowCityDialog(string dialog, IList<string> replaceStrings)
     {
         // var dialogBox = new CivDialog(this, popupBoxList[dialog], replaceStrings);
