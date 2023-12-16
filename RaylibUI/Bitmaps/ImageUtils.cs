@@ -12,6 +12,7 @@ using Image = Raylib_cs.Image;
 using Rectangle = Raylib_cs.Rectangle;
 using Civ2engine.Units;
 using RaylibUI.RunGame.GameControls.Mapping;
+using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI;
 
@@ -406,34 +407,39 @@ public class ImageUtils
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
-        var heightVector = new Vector2(0, active.UnitImages.UnitRectangle.height);
         var flagLoc = active.UnitImages.Units[(int)unit.Type].FlagLoc;
 
         var stackingDir = flagLoc.X < active.UnitImages.UnitRectangle.width / 2 ? -1 : 1;
-        var shieldLoc = loc + flagLoc - heightVector;
+        var shieldOffset = flagLoc;
+        var shieldLoc = loc + shieldOffset;
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
         var tile = unit.CurrentLocation;
         if (unit.IsInStack && !noStacking)
         {
+            var stackShadowOffset = new Vector2(stackingDir * 5, 1);
             viewElements.Add(new TextureElement(
-                location: shieldLoc + new Vector2(stackingDir * 5, 1 + shieldTexture.height),
+                location: shieldLoc + stackShadowOffset,
                 texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
-                tile: tile));
+                tile: tile, offset: shieldOffset + stackShadowOffset));
+            var stackOffset = new Vector2(stackingDir * 4,0);
             viewElements.Add(new TextureElement(
-                location: shieldLoc + new Vector2(stackingDir * 4, shieldTexture.height),
+                location: shieldLoc + stackOffset,
                 texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
-                tile: tile));
+                tile: tile, offset: shieldOffset + stackOffset));
         }
 
-        viewElements.Add(new TextureElement(location: shieldLoc + new Vector2(stackingDir, 1 + shieldTexture.height),
-            texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile));
-        viewElements.Add(new TextureElement(location: shieldLoc + new Vector2(0, shieldTexture.height),
-            texture: shieldTexture, tile: tile));
+        var shadowOffset = new Vector2(stackingDir, 1);
+        viewElements.Add(new TextureElement(location: shieldLoc + shadowOffset,
+            texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile, offset:shieldOffset + shadowOffset));
+        
+        viewElements.Add(new TextureElement(location: shieldLoc,
+            texture: shieldTexture, tile: tile, offset:shieldOffset));
         
         viewElements.Add(new HealthBar(location: shieldLoc + new Vector2(0,  2),
-            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase));
-        var sheildText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
-        viewElements.Add(new TextElement(sheildText, shieldLoc + new Vector2(shieldTexture.width /2f, 7), shieldTexture.height - 7,tile ));
+            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, offset: shieldOffset with{ Y = shieldOffset.Y +2}));
+        var shieldText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
+        var orderOffset = new Vector2(shieldTexture.width /2f, 7);
+        viewElements.Add(new TextElement(shieldText, shieldLoc + orderOffset, shieldTexture.height - 7,tile, shieldOffset + orderOffset ));
         var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
         viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
             tile: tile));

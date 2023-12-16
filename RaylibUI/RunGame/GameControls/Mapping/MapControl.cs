@@ -309,7 +309,7 @@ public class MapControl : BaseControl
         {
             var name = cityData.Name;
             var textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, name, 20, 1);
-            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.width /2f , 0) - textSize /2f;
+            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.width /2f , cityData.Texture.height) - textSize /2f;
 
             Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
             Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);

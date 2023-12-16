@@ -1,6 +1,7 @@
 using System.Numerics;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
+using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 
@@ -14,18 +15,18 @@ internal class AttackAnimation : BaseGameView
         var activeInterface = gameScreen.Main.ActiveInterface;
 
         var unitAnimations = new List<IViewElement>();
-        ImageUtils.GetUnitTextures(args.Attacker, activeInterface, unitAnimations, ActivePos);
+        var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.height};
+        ImageUtils.GetUnitTextures(args.Attacker, activeInterface, unitAnimations, attackerPos );
         var defPos = GetPosForTile(args.Defender.CurrentLocation);
+        var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.height };
         ImageUtils.GetUnitTextures(args.Defender, activeInterface, unitAnimations,
-            defPos);
+            defenderPos);
         var battleAnimation = activeInterface.UnitImages.BattleAnim;
         var explosion = 0;
         SetAnimation(unitAnimations);
-        var attackerTexture = activeInterface.UnitImages.Units[(int)args.Attacker.Type].Texture;
-        var attackPos = ActivePos + new Vector2(attackerTexture.width /2f- battleAnimation[0].width/2f, attackerTexture.height / -2f+ battleAnimation[0].height /2f);
-        var defenderTexture = activeInterface.UnitImages.Units[(int)args.Defender.Type].Texture;
-
-        defPos += new Vector2(defenderTexture.width /2f - battleAnimation[0].width/2f, defenderTexture.height / -2f + battleAnimation[0].height /2f);
+        var attackPos = ActivePos  + new Vector2(Dimensions.HalfWidth- battleAnimation[0].width/2f, Dimensions.HalfHeight - battleAnimation[0].height /2f);
+        
+        defPos += new Vector2(Dimensions.HalfWidth - battleAnimation[0].width/2f, Dimensions.HalfHeight - battleAnimation[0].height /2f);
         do
         {
             var attackerWins = args.CombatRoundsAttackerWins[explosion];
@@ -50,7 +51,7 @@ internal class AttackAnimation : BaseGameView
         {
             if (a is HealthBar health)
             {
-                return new HealthBar(health.Location, health.Tile, hitpoints[idx++], health.BaseHitpoints);
+                return new HealthBar(health.Location, health.Tile, hitpoints[idx++], health.BaseHitpoints, health.Offset);
             }
 
             return a;

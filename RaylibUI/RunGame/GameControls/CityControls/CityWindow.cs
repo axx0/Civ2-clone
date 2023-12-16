@@ -119,6 +119,9 @@ public class CityWindow : BaseDialog
         };
         Controls.Add(foodBox);
 
+        var supportBox = new UnitSupportBox(this, _cityWindowProps.UnitSupport);
+        Controls.Add(supportBox);
+
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)

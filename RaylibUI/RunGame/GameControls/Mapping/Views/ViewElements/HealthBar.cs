@@ -6,7 +6,7 @@ namespace RaylibUI.RunGame.GameControls.Mapping;
 
 public class HealthBar : RectangleElement
 {
-    public HealthBar(Vector2 location, Tile tile, int remainingHitPoints, int hitPointsBase) : base(location, tile)
+    public HealthBar(Vector2 location, Tile tile, int remainingHitPoints, int hitPointsBase, Vector2 offset) : base(location, tile, offset)
     {
         var hpBarX = (int)Math.Floor((float)remainingHitPoints * 12 / hitPointsBase);
         Color = hpBarX switch

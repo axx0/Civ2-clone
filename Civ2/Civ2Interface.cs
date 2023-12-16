@@ -228,6 +228,12 @@ public abstract class Civ2Interface : IUserInterface
                         }
                     }
                 }
+            },
+            UnitSupport = new UnitSupport
+            {
+                Position = new Rectangle(8,216,181,69),
+                Rows = 2,
+                Columns = 4
             }
         };
 
