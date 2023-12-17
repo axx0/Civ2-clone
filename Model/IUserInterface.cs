@@ -17,7 +17,7 @@ public interface IUserInterface
     IInterfaceAction GetInitialAction();
     
     IImageSource? BackgroundImage { get; }
-    int GetCityIndexForStyle(int cityStyleIndex, City city);
+    int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     
     List<TerrainSet> TileSets { get; }
     

@@ -26,7 +26,7 @@ namespace Civ2engine
             {
                 var _map = new Map(gameData.OptionsArray[3], mapNo)
                 {
-                    MapRevealed = gameData.MapRevealed,
+                    MapRevealed = true, //gameData.MapRevealed, Revealing all maps for testing
                     WhichCivsMapShown = gameData.WhichCivsMapShown,
                     Zoom = gameData.Zoom,
                     StartingClickedXY = gameData.ClickedXY,
@@ -143,6 +143,7 @@ namespace Civ2engine
                 {
                     var terrain = data.MapTerrainType[map.MapIndex][col, row];
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
+                    var playerKnowledge = GetPlayerKnowledgeFrom(data, col, row);
                     tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col,
                         Enumerable.Range(0, 8).Select(i => data.MapTileVisibility[0][col, row, i]).ToArray(),
                         Enumerable.Range(0, 8).Select(i => data.MapUnitVisibility[0][col, row, i]).ToArray(),
@@ -158,6 +159,7 @@ namespace Civ2engine
                     {
                         River = data.MapRiverPresent[map.MapIndex][col, row],
                         Resource = data.MapResourcePresent[map.MapIndex][col, row],
+                        PlayerKnowledge = playerKnowledge,
                         //UnitPresent = data.MapUnitPresent[map.MapIndex][col, row],  // you can find this out yourself
                         //CityPresent = data.MapCityPresent[map.MapIndex][col, row],  // you can find this out yourself
 
@@ -169,6 +171,80 @@ namespace Civ2engine
             }
 
             return tile;
+        }
+
+        private static PlayerTile[] GetPlayerKnowledgeFrom(GameData data, int col, int row)
+        {
+            return Enumerable.Range(0, 8).Select(i => BuildPlayerTileKnowledge(
+                data.MapIrrigationVisibility[0][col, row, i],
+                data.MapMiningVisibility[0][col, row, i],
+                data.MapRoadVisibility[0][col, row, i],
+                data.MapRailroadVisibility[0][col, row, i],
+                data.MapFortressVisibility[0][col, row, i],
+                data.MapPollutionVisibility[0][col, row, i],
+                data.MapAirbaseVisibility[0][col, row, i],
+                data.MapFarmlandVisibility[0][col, row, i],
+                data.MapTransporterVisibility[0][col, row, i])).ToArray();
+        }
+
+        private static PlayerTile BuildPlayerTileKnowledge(
+            bool irrigation, bool mining, bool road, bool railroad, bool fortress,
+            bool pollution, bool airbase, bool farmland, bool transporter)
+        {
+            var tileKnowledge = new PlayerTile();
+            
+            if (farmland)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Irrigation, Group = ImprovementTypes.ProductionGroup, Level = 1 });
+            }
+            else if (irrigation)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Irrigation, Group = ImprovementTypes.ProductionGroup, Level = 0 });
+            }else if (mining)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Mining, Group = ImprovementTypes.ProductionGroup, Level = 0 });
+            }
+            
+            if (railroad)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement { Improvement = ImprovementTypes.Road, Level = 1 });
+            }
+            else if (road)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement { Improvement = ImprovementTypes.Road, Level = 0 });
+            }
+            
+            if (fortress)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Fortress, Group = ImprovementTypes.DefenceGroup, Level = 0 });
+            }
+            else if (airbase)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                    { Improvement = ImprovementTypes.Airbase, Group = ImprovementTypes.DefenceGroup, Level = 0 });
+            }
+            
+            if (pollution)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                {
+                    Improvement = ImprovementTypes.Pollution, Level = 0
+                });
+            }
+            
+            if (transporter)
+            {
+                tileKnowledge.Improvements.Add(new ConstructedImprovement
+                {
+                    Improvement = ImprovementTypes.Transporter, Level = 0
+                });
+            }
+
+            return tileKnowledge;
         }
 
         private static List<ConstructedImprovement> GetImprovementsFrom(GameData data, int col, int row)
@@ -218,6 +294,13 @@ namespace Civ2engine
                 });
             }
 
+            if (data.MapTransporterPresent[0][col, row])
+            {
+                improvements.Add(new ConstructedImprovement
+                {
+                    Improvement = ImprovementTypes.Transporter, Level = 0
+                });
+            }
             return improvements;
         }
 

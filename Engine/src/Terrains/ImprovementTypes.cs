@@ -12,6 +12,9 @@ namespace Civ2engine.Terrains
         public static int Pollution = 9;
         public static int Airbase = 10;
 
+        //TODO: this is not in improvements list yet
+        public static int Transporter = 11;
+
         public static int ProductionGroup = 2;
         public static int DefenceGroup = 3;
     }

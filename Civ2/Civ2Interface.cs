@@ -77,25 +77,25 @@ public abstract class Civ2Interface : IUserInterface
 
     public virtual IImageSource? BackgroundImage => null;
     
-    public int GetCityIndexForStyle(int cityStyleIndex, City city)
+    public int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize)
     {
         var index = cityStyleIndex switch
         {
-            4 => city.Size switch
+            4 => citySize switch
             {
                 <= 4 => 0,
                 > 4 and <= 7 => 1,
                 > 7 and <= 10 => 2,
                 _ => 3
             },
-            5 => city.Size switch
+            5 => citySize switch
             {
                 <= 4 => 0,
                 > 4 and <= 10 => 1,
                 > 10 and <= 18 => 2,
                 _ => 3
             },
-            _ => city.Size switch
+            _ => citySize switch
             {
                 <= 3 => 0,
                 > 3 and <= 5 => 1,

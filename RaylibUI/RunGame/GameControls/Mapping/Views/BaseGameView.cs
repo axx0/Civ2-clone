@@ -59,7 +59,7 @@ public abstract class BaseGameView : IGameView
                 var pos = GetPosForTile(tile);
                 
                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
-                CalculateElementsAtTile(tile, newElements, activeInterface,cities,pos,tileDetails);
+                CalculateElementsAtTile(tile, newElements, activeInterface,cities,pos,tileDetails, civilizationId);
             }
             Elements = previousView.Elements.Where(e=> !previousAction.Contains(e.Tile)).Concat(newElements).ToArray();
             
@@ -126,7 +126,7 @@ public abstract class BaseGameView : IGameView
                                     new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight), Color.WHITE);
 
                                 var posVector = new Vector2(xpos, ypos);
-                                CalculateElementsAtTile(tile, elements, activeInterface, cities, posVector, tileDetails);
+                                CalculateElementsAtTile(tile, elements, activeInterface, cities, posVector, tileDetails, civilizationId);
                             }
                         }
 
@@ -150,12 +150,20 @@ public abstract class BaseGameView : IGameView
     }
 
 
-    private void CalculateElementsAtTile(Tile tile, List<IViewElement> elements, IUserInterface activeInterface, CityImageSet cities,
-        Vector2 posVector, TileDetails tileDetails)
+    private void CalculateElementsAtTile(Tile tile, List<IViewElement> elements, IUserInterface activeInterface,
+        CityImageSet cities,
+        Vector2 posVector, TileDetails tileDetails, int civilizationId)
     {
-        if (tile.CityHere != null)
+        if (tile.PlayerKnowledge == null || tile.PlayerKnowledge.Length < civilizationId ||
+            tile.PlayerKnowledge[civilizationId] == null)
         {
-            var cityStyleIndex = tile.CityHere.Owner.CityStyle;
+            return; //We know nothing of this tile 
+        }
+
+        var playerKnowledge = tile.PlayerKnowledge[civilizationId];
+        if (playerKnowledge.CityHere != null)
+        {
+            var cityStyleIndex = _gameScreen.Game.Players[playerKnowledge.CityHere.OwnerId].Civilization.CityStyle;
             if (tile.CityHere.Owner.Epoch == Civ2engine.Enums.EpochType.Industrial)
             {
                 cityStyleIndex = 4;
@@ -167,24 +175,24 @@ public abstract class BaseGameView : IGameView
 
             var sizeIncrement =
                 _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
-                    tile.CityHere);
+                    tile.CityHere, playerKnowledge.CityHere.Size);
             var cityImage = cities.Sets[cityStyleIndex][sizeIncrement];
             var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - cityImage.Texture.height};
             elements.Add(new CityData(
-                color: activeInterface.PlayerColours[tile.CityHere.Owner.Id],
-                name: tile.CityHere.Name,
+                color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
+                name: playerKnowledge.CityHere.Name,
                 texture: cityImage.Texture,
                 location: cityPos, tile: tile));
             if (tile.UnitsHere.Count > 0)
             {
-                var flagTexture = activeInterface.PlayerColours[tile.CityHere.Owner.Id].FlagTexture;
+                var flagTexture = activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId].FlagTexture;
                 var flagOffset = cityImage.FlagLoc - new Vector2(0, flagTexture.height - 5);
                 elements.Add(new TextureElement(texture: flagTexture,
                     tile: tile, location: cityPos + flagOffset, offset: flagOffset)
                 );
             }
         }
-        else if (tile.UnitsHere.Count > 0)
+        else if ((tile.Map.MapRevealed || tile.Map.IsCurrentlyVisible(tile, civilizationId)) && tile.UnitsHere.Count > 0)
         {
             var unit = tile.GetTopUnit();
 
