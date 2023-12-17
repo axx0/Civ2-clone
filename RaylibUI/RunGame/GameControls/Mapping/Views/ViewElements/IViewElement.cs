@@ -9,7 +9,7 @@ public interface IViewElement
     Tile Tile { get; set; }
     bool IsTerrain { get; }
 
-    void Draw(Vector2 adjustedLocation);
+    void Draw(Vector2 adjustedLocation, float scale = 1f);
 
     IViewElement CloneForLocation(Vector2 newLocation);
 }

@@ -1,4 +1,3 @@
-using System.Numerics;
 using Model.Images;
 using Raylib_cs;
 
@@ -20,10 +19,5 @@ public class CityWindowLayout
     
     public ResourceProduction Resources { get; set; }
     public Rectangle FoodStorage { get; init; }
-}
-
-public class ResourceProduction
-{
-    public Vector2 TitlePosition { get; set; }
-    public IList<ResourceArea> Resources { get; set; }
+    public UnitSupport UnitSupport { get; init; }
 }

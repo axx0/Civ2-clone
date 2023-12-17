@@ -14,8 +14,7 @@ public interface IControl
 
     int Height { get; }
     Rectangle Bounds { get; set; }
-    
-    Rectangle? AbsolutePosition { get; set; }
+
     bool CanFocus { get; }
     IList<IControl>? Children { get; }
 
