@@ -2,7 +2,7 @@ using Civ2engine.Enums;
 
 namespace Civ2engine
 {
-    public class Order
+    public class Orders
     {
         public int Id { get; set; }
         public string Name { get; set; }

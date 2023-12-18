@@ -39,18 +39,24 @@ public class MovingPieces : IGameMode
             {KeyboardKey.KEY_UP, MovementFunctions.TryMoveNorth}, {KeyboardKey.KEY_DOWN, MovementFunctions.TryMoveSouth},
             {KeyboardKey.KEY_LEFT, MovementFunctions.TryMoveWest}, {KeyboardKey.KEY_RIGHT, MovementFunctions.TryMoveEast},
 
-            {KeyboardKey.KEY_SPACE, () =>
-                {
-                    _gameScreen.Game.ActiveUnit?.SkipTurn();
-                    _gameScreen.Game.ChooseNextUnit();
-                }
-            },
-            {KeyboardKey.KEY_S, () =>
-                {
-                    _gameScreen.Game.ActiveUnit?.Sleep();
-                    _gameScreen.Game.ChooseNextUnit();
-                }
-            },
+            { KeyboardKey.KEY_SPACE, () => 
+            _gameScreen.Orders.Find(o => o.ActivationCommand == KeyboardKey.KEY_SPACE).ExecuteCommand() },
+
+            { KeyboardKey.KEY_S, () =>
+            _gameScreen.Orders.Find(o => o.ActivationCommand == KeyboardKey.KEY_S).ExecuteCommand() },
+
+            //{KeyboardKey.KEY_SPACE, () =>
+            //    {
+            //        _gameScreen.Game.ActiveUnit?.SkipTurn();
+            //        _gameScreen.Game.ChooseNextUnit();
+            //    }
+            //},
+            //{KeyboardKey.KEY_S, () =>
+            //    {
+            //        _gameScreen.Game.ActiveUnit?.Sleep();
+            //        _gameScreen.Game.ChooseNextUnit();
+            //    }
+            //},
         };
     }
 

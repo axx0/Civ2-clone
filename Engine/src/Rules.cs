@@ -43,7 +43,7 @@ namespace Civ2engine
         public IList<Terrain[]> Terrains { get; internal set; }
         public Government[] Governments { get; internal set; }
         public LeaderDefaults[] Leaders { get; internal set; }
-        public Order[] Orders { get; internal set; }
+        public Orders[] Orders { get; internal set; }
 
         public MapParams[] Maps { get; internal set; } = {new() {Type = MapType.Standard}};
 

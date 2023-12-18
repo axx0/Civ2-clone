@@ -177,7 +177,7 @@ namespace Civ2engine.IO
             Rules.Orders = values.Select((line, id) =>
             {
                 var parts = line.Split(',', StringSplitOptions.TrimEntries);
-                return new Order
+                return new Orders
                 {
                     Id = id,
                     Name = parts[0],
