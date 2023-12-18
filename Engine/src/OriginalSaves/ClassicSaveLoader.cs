@@ -6,10 +6,8 @@ namespace Civ2engine
 {
     public static class ClassicSaveLoader
     {
-        public static Game LoadSave(Ruleset ruleset, string saveFileName, Rules rules)
+        public static Game LoadSave(GameData gameData, Ruleset ruleset, Rules rules)
         {
-            GameData gameData = Read.ReadSAVFile(ruleset.FolderPath, saveFileName);
-
             var hydrator = new LoadedGameObjects(rules, gameData);
 
             // If there are no events in .sav read them from EVENTS.TXT (if it exists)

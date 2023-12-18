@@ -126,7 +126,7 @@ public abstract class Civ2Interface : IUserInterface
 
     public Dictionary<string, PopupBox> Dialogs { get; set; }
     public PlayerColour[] PlayerColours { get; set; }
-    public int ExpectedMaps { get; set; } = 1; //TODO: extract to specific locations because TOT has four 
+    public int ExpectedMaps { get; set; } = 1;
     public CommonMapImageSet MapImages { get; } = new();
     public int DefaultDialogWidth => 660; // 660=440*1.5
 
@@ -274,5 +274,6 @@ public abstract class Civ2Interface : IUserInterface
     public abstract Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
     public abstract Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
     public abstract Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+    public abstract string? GetFallbackPath(string root, int gameType);
 }
 

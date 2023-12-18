@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.X86;
 using Civ2;
 using Civ2.Dialogs;
+using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
@@ -194,4 +195,23 @@ public class TestOfTimeInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
     public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
 
+    public override string? GetFallbackPath(string root, int gameType)
+    {
+        string? path = null;
+        switch (gameType)
+        {
+            case 0:
+                path = root + Path.DirectorySeparatorChar + "Original";
+                break;
+            case 1:
+                path = root + Path.DirectorySeparatorChar + "Scifi";
+                break;    
+            case 2:
+                path = root + Path.DirectorySeparatorChar + "Fantasy";
+                break;
+            default:
+                break;
+        }
+        return Directory.Exists(path) ? path : null;
+    }
 }

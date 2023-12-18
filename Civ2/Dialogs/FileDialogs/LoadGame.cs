@@ -24,18 +24,24 @@ public class LoadGame : FileDialogHandler
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
         var savDirectory = Path.GetDirectoryName(fileName);
+        var root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
+        var savName = Path.GetFileName(fileName);
+        GameData gameData = Read.ReadSAVFile(savDirectory, savName);
+        var fallbackPath = civ2Interface.GetFallbackPath(root, gameData.GameType);
+
         var ruleSet = new Ruleset
         {
             FolderPath = savDirectory,
-            Root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0]
+            FallbackPath = fallbackPath,
+            Root = root
         };
-        var savName = Path.GetFileName(fileName);
 
         Initialization.ConfigObject.RuleSet = ruleSet;
-        
+
+        civ2Interface.ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
         Initialization.LoadGraphicsAssets(civ2Interface);
 
-        var game = ClassicSaveLoader.LoadSave(ruleSet, savName, Initialization.ConfigObject.Rules);
+        var game = ClassicSaveLoader.LoadSave(gameData, ruleSet, Initialization.ConfigObject.Rules);
 
         Initialization.Start(game);
         return civDialogHandlers[LoadOk.Title].Show(civ2Interface);

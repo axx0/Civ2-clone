@@ -1,4 +1,5 @@
 ﻿using Civ2;
+using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
@@ -187,4 +188,6 @@ public class Civ2GoldInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
     public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
     public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+
+    public override string? GetFallbackPath(string root, int gameType) => null;
 }

@@ -79,6 +79,8 @@ namespace Civ2engine
                 _ => GameVersionType.CiC
             };
 
+            _gameType = (GameType)gameData.GameType;
+
             _scenarioData = objects.Scenario;
 
             TurnNumber = gameData.TurnNumber;

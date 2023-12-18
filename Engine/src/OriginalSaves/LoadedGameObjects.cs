@@ -344,6 +344,7 @@ namespace Civ2engine
             bool veteran, int civId, int movePointsLost, int hitPointsLost, int prevX, int prevY, int caravanCommodity, 
             int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
         {
+            if (mapNo < 0) mapNo = 0;   // avoid dead unit errors
             var validTile = Maps[mapNo].IsValidTileC2(x, y);
 
             var civilization = Civilizations[civId];
