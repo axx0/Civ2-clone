@@ -391,12 +391,12 @@ public class ImageUtils
         Raylib.ImageDrawLine(ref image, 0, image.height -1, image.width -1, image.height -1, color5);
         Raylib.ImageDrawLine(ref image, image.width -1, 0, image.width -1, image.height -1, color5);
 
-        var left = Raylib.ImageFromImage(image, new Rectangle(0,0,dim, dim));
+        var left = Raylib.ImageCopy(image);
         Raylib.ImageDrawPixel(ref left, 6,9,Color.BLACK);
         Raylib.ImageDrawLine(ref left, 7,8,7,10,Color.BLACK);
         Raylib.ImageDrawLine(ref left, 8,7,8,11,Color.BLACK);
         Raylib.ImageDrawLine(ref left, 9,6,9,12,Color.BLACK);
-        var right = Raylib.ImageFromImage(image, new Rectangle(0,0,dim, dim));
+        var right = Raylib.ImageCopy(image);
         Raylib.ImageDrawPixel(ref right, dim - 6,9,Color.BLACK);
         Raylib.ImageDrawLine(ref right, dim-7,8,dim-7,10,Color.BLACK);
         Raylib.ImageDrawLine(ref right, dim-8,7,dim-8,11,Color.BLACK);
@@ -483,7 +483,7 @@ public class ImageUtils
 
     public static Image GetShieldWithHP(Image shield, Unit unit)
     {
-        var hpShield = Raylib.ImageFromImage(shield, new Rectangle(0, 0, shield.width, shield.height));
+        var hpShield = Raylib.ImageCopy(shield);
         var hpBarX = (int)Math.Floor((float)unit.RemainingHitpoints * 12 / unit.HitpointsBase);
         var hpColor = hpBarX switch
         {

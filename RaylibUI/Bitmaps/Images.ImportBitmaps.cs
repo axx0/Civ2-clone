@@ -122,8 +122,7 @@ namespace RaylibUI
                 {
                     if (owner != -1 && memoryStorage.ReplacementColour != null && active != null)
                     {
-                        var image = Raylib.ImageFromImage(memoryStorage.Image,
-                            new Rectangle(0, 0, memoryStorage.Image.width, memoryStorage.Image.height));
+                        var image = Raylib.ImageCopy(memoryStorage.Image);
                         Raylib.ImageColorReplace(ref image, memoryStorage.ReplacementColour.Value,
                             memoryStorage.Dark
                                 ? active.PlayerColours[owner].DarkColour

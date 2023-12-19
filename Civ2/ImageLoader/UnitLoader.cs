@@ -38,11 +38,11 @@ namespace Civ2.ImageLoader
             var shield = unitProps["backShield1"][0].Image;
             var shield2 = unitProps["backShield2"][0].Image;
 
-            var shieldFront = Raylib.ImageFromImage(shield, new Rectangle(0, 0, shield.width, shield.height));
+            var shieldFront = Raylib.ImageCopy(shield);
 
             Raylib.ImageDrawRectangle(ref shieldFront,0,0,shieldFront.width, 7, Color.BLACK);
 
-            var shadow = Raylib.ImageFromImage(shield2, new Rectangle(0, 0, shield.width, shield.height));
+            var shadow = Raylib.ImageCopy(shield2);
             Raylib.ImageColorReplace(ref shadow, ReplacementColour, ShadowColour);
             
             active.UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
