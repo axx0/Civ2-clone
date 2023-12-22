@@ -1,4 +1,5 @@
-﻿using System.Runtime.Intrinsics.X86;
+﻿using System.Numerics;
+using System.Runtime.Intrinsics.X86;
 using Civ2;
 using Civ2.Dialogs;
 using Civ2engine;
@@ -214,4 +215,33 @@ public class TestOfTimeInterface : Civ2Interface
         }
         return Directory.Exists(path) ? path : null;
     }
+
+    public override void GetShieldImages()
+    {
+        Color ReplacementColour = new(255, 0, 255, 0);
+
+        var shield = UnitPICprops["HPshield"][0].Image;
+        var shieldFront = Raylib.ImageCopy(shield);
+
+        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
+        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+    }
+
+    public override Vector2 GetUnitFlagLoc(int id) => new(16, 0);
+    public override Vector2 GetShieldStackingOffset(int stackingDir) => new(-4, 0);
+    public override Vector2 GetHealthbarOffset() => new(10, 4);
+    public override Vector2 GetHPbarSize() => new(20, 2);
+
+    public override Color GetHPbarColour(int hpBarX)
+    {
+        return hpBarX switch
+        {
+            <= 5 => new Color(247, 0, 0, 255),
+            <= 13 => new Color(255, 222, 74, 255),
+            _ => new Color(82, 173, 33, 255)
+        };
+    }
+
+    public override Vector2 GetShieldOrderTextOffset(Texture2D shieldTexture) => new(9 / 2f, 1);
+    public override int GetShieldOrderTextHeight(Texture2D shieldTexture) => shieldTexture.height - 1;
 }

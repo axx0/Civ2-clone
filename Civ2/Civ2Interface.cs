@@ -4,6 +4,7 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Improvements;
 using Civ2engine.IO;
+using Civ2engine.Units;
 using Model;
 using Model.Images;
 using Model.ImageSets;
@@ -275,5 +276,13 @@ public abstract class Civ2Interface : IUserInterface
     public abstract Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
     public abstract Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
     public abstract string? GetFallbackPath(string root, int gameType);
+    public abstract void GetShieldImages();
+    public abstract Vector2 GetUnitFlagLoc(int id);
+    public abstract Vector2 GetShieldStackingOffset(int stackingDir);
+    public abstract Vector2 GetHealthbarOffset();
+    public abstract Vector2 GetHPbarSize();
+    public abstract Color GetHPbarColour(int hpBarX);
+    public abstract Vector2 GetShieldOrderTextOffset(Texture2D shieldTexture);
+    public abstract int GetShieldOrderTextHeight(Texture2D shieldTexture);
 }
 

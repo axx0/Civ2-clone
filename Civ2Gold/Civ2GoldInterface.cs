@@ -1,4 +1,5 @@
-﻿using Civ2;
+﻿using System.Numerics;
+using Civ2;
 using Civ2engine;
 using JetBrains.Annotations;
 using Model;
@@ -190,4 +191,37 @@ public class Civ2GoldInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
 
     public override string? GetFallbackPath(string root, int gameType) => null;
+
+    public override void GetShieldImages()
+    {
+        Color ShadowColour = new(51, 51, 51, 255);
+        Color ReplacementColour = new(255, 0, 0, 255);
+
+        var shield = UnitPICprops["backShield1"][0].Image;
+        var shieldFront = Raylib.ImageCopy(shield);
+        Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.width, 7, Color.BLACK);
+
+        var shadow = UnitPICprops["backShield2"][0].Image;
+        Raylib.ImageColorReplace(ref shadow, ReplacementColour, ShadowColour);
+
+        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
+        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+        UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
+    }
+
+    public override Vector2 GetUnitFlagLoc(int id) => new(UnitPICprops["unit"][id].Flag1x, UnitPICprops["unit"][id].Flag1y);
+    public override Vector2 GetShieldStackingOffset(int stackingDir) => new(stackingDir * 4, 0);
+    public override Vector2 GetHealthbarOffset() => new(0, 2);
+    public override Vector2 GetHPbarSize() => new(12, 3);
+    public override Color GetHPbarColour(int hpBarX)
+    {
+        return hpBarX switch
+        {
+            <= 3 => new Color(243, 0, 0, 255),
+            <= 8 => new Color(255, 223, 79, 255),
+            _ => new Color(87, 171, 39, 255)
+        };
+    }
+    public override Vector2 GetShieldOrderTextOffset(Texture2D shieldTexture) => new(shieldTexture.width / 2f, 7);
+    public override int GetShieldOrderTextHeight(Texture2D shieldTexture) => shieldTexture.height - 7;
 }

@@ -4,6 +4,7 @@ using Model.ImageSets;
 using Model.InterfaceActions;
 using RaylibUI;
 using Raylib_cs;
+using System.Numerics;
 
 namespace Model;
 
@@ -34,4 +35,10 @@ public interface IUserInterface
     CityWindowLayout GetCityWindowDefinition();
 
     IList<ResourceImage> ResourceImages { get; }
+    Vector2 GetShieldStackingOffset(int stackingDir);
+    Vector2 GetHealthbarOffset();
+    Vector2 GetHPbarSize();
+    Color GetHPbarColour(int hpBarX);
+    Vector2 GetShieldOrderTextOffset(Texture2D shieldTexture);
+    int GetShieldOrderTextHeight(Texture2D shieldTexture);
 }

@@ -16,7 +16,7 @@ using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI;
 
-public class ImageUtils
+public static class ImageUtils
 {
     private static Image _innerWallpaper;
     private static Image _outerWallpaper;
@@ -407,39 +407,45 @@ public class ImageUtils
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
-        var flagLoc = active.UnitImages.Units[(int)unit.Type].FlagLoc;
+        var shieldOffset = active.UnitImages.Units[(int)unit.Type].FlagLoc;
 
-        var stackingDir = flagLoc.X < active.UnitImages.UnitRectangle.width / 2 ? -1 : 1;
-        var shieldOffset = flagLoc;
+        var stackingDir = shieldOffset.X < active.UnitImages.UnitRectangle.width / 2 ? -1 : 1;
         var shieldLoc = loc + shieldOffset;
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
         var tile = unit.CurrentLocation;
         if (unit.IsInStack && !noStacking)
         {
-            var stackShadowOffset = new Vector2(stackingDir * 5, 1);
-            viewElements.Add(new TextureElement(
-                location: shieldLoc + stackShadowOffset,
-                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
-                tile: tile, offset: shieldOffset + stackShadowOffset));
-            var stackOffset = new Vector2(stackingDir * 4,0);
+            if (active.UnitImages.ShieldShadow is not null)
+            {
+                var stackShadowOffset = new Vector2(stackingDir * 5, 1);
+                viewElements.Add(new TextureElement(
+                    location: shieldLoc + stackShadowOffset,
+                    texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
+                    tile: tile, offset: shieldOffset + stackShadowOffset));
+            }
+            var stackOffset = active.GetShieldStackingOffset(stackingDir);
             viewElements.Add(new TextureElement(
                 location: shieldLoc + stackOffset,
                 texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
                 tile: tile, offset: shieldOffset + stackOffset));
         }
 
-        var shadowOffset = new Vector2(stackingDir, 1);
-        viewElements.Add(new TextureElement(location: shieldLoc + shadowOffset,
-            texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile, offset:shieldOffset + shadowOffset));
-        
+        if (active.UnitImages.ShieldShadow is not null)
+        {
+            var shadowOffset = new Vector2(stackingDir, 1);
+            viewElements.Add(new TextureElement(location: shieldLoc + shadowOffset,
+                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile, offset: shieldOffset + shadowOffset));
+        }
+
         viewElements.Add(new TextureElement(location: shieldLoc,
             texture: shieldTexture, tile: tile, offset:shieldOffset));
-        
-        viewElements.Add(new HealthBar(location: shieldLoc + new Vector2(0,  2),
-            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, offset: shieldOffset with{ Y = shieldOffset.Y +2}));
+
+        viewElements.Add(new HealthBar(location: shieldLoc + active.GetHealthbarOffset(),
+            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, offset: shieldOffset + active.GetHealthbarOffset(), active));
         var shieldText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
-        var orderOffset = new Vector2(shieldTexture.width /2f, 7);
-        viewElements.Add(new TextElement(shieldText, shieldLoc + orderOffset, shieldTexture.height - 7,tile, shieldOffset + orderOffset ));
+        var orderOffset = active.GetShieldOrderTextOffset(shieldTexture);
+        viewElements.Add(new TextElement(shieldText, shieldLoc + orderOffset, active.GetShieldOrderTextHeight(shieldTexture),
+            tile, shieldOffset + orderOffset ));
         var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
         viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
             tile: tile));
