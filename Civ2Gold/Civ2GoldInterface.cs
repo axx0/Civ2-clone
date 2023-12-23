@@ -1,9 +1,11 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Civ2;
 using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
+using Model.ImageSets;
 using Raylib_cs;
 using RayLibUtils;
 
@@ -209,19 +211,18 @@ public class Civ2GoldInterface : Civ2Interface
         UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
     }
 
-    public override Vector2 GetUnitFlagLoc(int id) => new(UnitPICprops["unit"][id].Flag1x, UnitPICprops["unit"][id].Flag1y);
-    public override Vector2 GetShieldStackingOffset(int stackingDir) => new(stackingDir * 4, 0);
-    public override Vector2 GetHealthbarOffset() => new(0, 2);
-    public override Vector2 GetHPbarSize() => new(12, 3);
-    public override Color GetHPbarColour(int hpBarX)
+    public override UnitShield UnitShield(int unitType) => new()
     {
-        return hpBarX switch
-        {
-            <= 3 => new Color(243, 0, 0, 255),
-            <= 8 => new Color(255, 223, 79, 255),
-            _ => new Color(87, 171, 39, 255)
-        };
-    }
-    public override Vector2 GetShieldOrderTextOffset(Texture2D shieldTexture) => new(shieldTexture.width / 2f, 7);
-    public override int GetShieldOrderTextHeight(Texture2D shieldTexture) => shieldTexture.height - 7;
+        ShieldInFrontOfUnit = false,
+        Offset = UnitImages.Units[unitType].FlagLoc,
+        StackingOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.width / 2 ? -4 : 4, 0),
+        ShadowOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.width / 2 ? -1 : 1, 1),
+        DrawShadow = true,
+        HPbarOffset = new(0, 2),
+        HPbarSize = new(12, 3),
+        HPbarColours = new[] { new Color(243, 0, 0, 255), new Color(255, 223, 79, 255), new Color(87, 171, 39, 255) },
+        HPbarSizeForColours = new[] { 3, 8 },
+        OrderOffset = new(UnitPICprops["backShield1"][0].Image.width / 2f, 7),
+        OrderTextHeight = UnitPICprops["backShield1"][0].Image.height - 7,
+    };
 }

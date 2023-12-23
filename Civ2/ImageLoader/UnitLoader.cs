@@ -25,7 +25,7 @@ namespace Civ2.ImageLoader
                 {
                     Image = unitProps["unit"][i].Image,
                     Texture = Raylib.LoadTextureFromImage(unitProps["unit"][i].Image),
-                    FlagLoc = active.GetUnitFlagLoc(i),
+                    FlagLoc = new Vector2(unitProps["unit"][i].Flag1x, unitProps["unit"][i].Flag1y),
                 };
             }
 

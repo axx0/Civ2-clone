@@ -407,48 +407,67 @@ public static class ImageUtils
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
-        var shieldOffset = active.UnitImages.Units[(int)unit.Type].FlagLoc;
-
-        var stackingDir = shieldOffset.X < active.UnitImages.UnitRectangle.width / 2 ? -1 : 1;
-        var shieldLoc = loc + shieldOffset;
+        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+        
+        var shield = active.UnitShield((int)unit.Type);
+        var shieldLoc = loc + shield.Offset;
+        
         var tile = unit.CurrentLocation;
+
+        if (shield.ShieldInFrontOfUnit)
+        {
+            // Unit
+            viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                tile: tile));
+        }
+
+        // Stacked shield
         if (unit.IsInStack && !noStacking)
         {
-            if (active.UnitImages.ShieldShadow is not null)
+            if (shield.DrawShadow)
             {
-                var stackShadowOffset = new Vector2(stackingDir * 5, 1);
+                var stackShadowOffset = shield.StackingOffset + shield.ShadowOffset;
                 viewElements.Add(new TextureElement(
                     location: shieldLoc + stackShadowOffset,
                     texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
-                    tile: tile, offset: shieldOffset + stackShadowOffset));
+                    tile: tile, offset: shield.Offset + stackShadowOffset));
             }
-            var stackOffset = active.GetShieldStackingOffset(stackingDir);
             viewElements.Add(new TextureElement(
-                location: shieldLoc + stackOffset,
+                location: shieldLoc + shield.StackingOffset,
                 texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
-                tile: tile, offset: shieldOffset + stackOffset));
+                tile: tile, offset: shield.Offset + shield.StackingOffset));
         }
 
-        if (active.UnitImages.ShieldShadow is not null)
+        // Shield shadow
+        if (shield.DrawShadow)
         {
-            var shadowOffset = new Vector2(stackingDir, 1);
-            viewElements.Add(new TextureElement(location: shieldLoc + shadowOffset,
-                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile, offset: shieldOffset + shadowOffset));
+            viewElements.Add(new TextureElement(location: shieldLoc + shield.ShadowOffset,
+                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), 
+                tile: tile, offset: shield.Offset + shield.ShadowOffset));
         }
 
+        // Front shield
         viewElements.Add(new TextureElement(location: shieldLoc,
-            texture: shieldTexture, tile: tile, offset:shieldOffset));
+            texture: shieldTexture, tile: tile, offset:shield.Offset));
 
-        viewElements.Add(new HealthBar(location: shieldLoc + active.GetHealthbarOffset(),
-            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, offset: shieldOffset + active.GetHealthbarOffset(), active));
+        // Health bar
+        viewElements.Add(new HealthBar(location: shieldLoc + shield.HPbarOffset,
+            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, 
+            offset: shield.Offset + shield.HPbarOffset, shield));
+
+        // Orders text
         var shieldText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
-        var orderOffset = active.GetShieldOrderTextOffset(shieldTexture);
-        viewElements.Add(new TextElement(shieldText, shieldLoc + orderOffset, active.GetShieldOrderTextHeight(shieldTexture),
-            tile, shieldOffset + orderOffset ));
-        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
-        viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-            tile: tile));
+        viewElements.Add(new TextElement(shieldText, shieldLoc + shield.OrderOffset, shield.OrderTextHeight,
+            tile, shield.Offset + shield.OrderOffset));
+
+        if (!shield.ShieldInFrontOfUnit)
+        {
+            // Unit
+            viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                tile: tile));
+        }
+
         if (unit.Order == OrderType.Fortified)
         {
             viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));

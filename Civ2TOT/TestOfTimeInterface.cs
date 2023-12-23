@@ -6,6 +6,7 @@ using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
+using Model.ImageSets;
 using Raylib_cs;
 using RayLibUtils;
 
@@ -227,21 +228,17 @@ public class TestOfTimeInterface : Civ2Interface
         UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
     }
 
-    public override Vector2 GetUnitFlagLoc(int id) => new(16, 0);
-    public override Vector2 GetShieldStackingOffset(int stackingDir) => new(-4, 0);
-    public override Vector2 GetHealthbarOffset() => new(10, 4);
-    public override Vector2 GetHPbarSize() => new(20, 2);
-
-    public override Color GetHPbarColour(int hpBarX)
+    public override UnitShield UnitShield(int unitType) => new()
     {
-        return hpBarX switch
-        {
-            <= 5 => new Color(247, 0, 0, 255),
-            <= 13 => new Color(255, 222, 74, 255),
-            _ => new Color(82, 173, 33, 255)
-        };
-    }
-
-    public override Vector2 GetShieldOrderTextOffset(Texture2D shieldTexture) => new(9 / 2f, 1);
-    public override int GetShieldOrderTextHeight(Texture2D shieldTexture) => shieldTexture.height - 1;
+        ShieldInFrontOfUnit = true,
+        Offset = new(16, 0),
+        StackingOffset = new(-4, 0),
+        DrawShadow = false,
+        HPbarOffset = new(10, 4),
+        HPbarSize = new(20, 2),
+        HPbarColours = new[] { new Color(247, 0, 0, 255), new Color(255, 222, 74, 255), new Color(82, 173, 33, 255) },
+        HPbarSizeForColours = new[] { 5, 13 },
+        OrderOffset = new(9 / 2f, 1),
+        OrderTextHeight = UnitPICprops["HPshield"][0].Image.height - 1
+    };
 }
