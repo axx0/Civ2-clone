@@ -211,6 +211,36 @@ public class Civ2GoldInterface : Civ2Interface
         UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
     }
 
+    public override void LoadPlayerColours()
+    {
+        var playerColours = new PlayerColour[9];
+        for (int col = 0; col < 9; col++)
+        {
+            unsafe
+            {
+                var imageColours = Raylib.LoadImageColors(CitiesPICprops["textColors"][col].Image);
+                var textColour = imageColours[0];
+
+                imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][col].Image);
+                var lightColour = imageColours[3 * CitiesPICprops["flags"][col].Image.width + 8];
+
+                imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][9 + col].Image);
+                var darkColour = imageColours[3 * CitiesPICprops["flags"][9 + col].Image.width + 5];
+                Raylib.UnloadImageColors(imageColours);
+
+                playerColours[col] = new PlayerColour
+                {
+                    Normal = CitiesPICprops["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPICprops["flags"][col].Image),
+                    TextColour = textColour,
+                    LightColour = lightColour,
+                    DarkColour = darkColour
+                };
+            }
+        }
+        PlayerColours = playerColours;
+    }
+
     public override UnitShield UnitShield(int unitType) => new()
     {
         ShieldInFrontOfUnit = false,

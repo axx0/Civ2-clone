@@ -65,7 +65,7 @@ public class TestOfTimeInterface : Civ2Interface
         CitiesPICprops = new Dictionary<string, List<ImageProps>>
         {
             { "textColors", Enumerable.Range(0, 9).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 15 * col, 423, 14, 1) }).ToList() },
+                    new ImageProps { Rect = new Rectangle(1 + 15 * col, 421, 14, 3) }).ToList() },
             { "flags", Enumerable.Range(0, 2 * 9).Select(i =>
                     new ImageProps { Rect = new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22) }).ToList() },
             { "fortify", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(143, 423, 64, 48) } } },
@@ -215,6 +215,37 @@ public class TestOfTimeInterface : Civ2Interface
                 break;
         }
         return Directory.Exists(path) ? path : null;
+    }
+
+    public override void LoadPlayerColours()
+    {
+        var playerColours = new PlayerColour[9];
+        for (int col = 0; col < 9; col++)
+        {
+            unsafe
+            {
+                var imageColours = Raylib.LoadImageColors(CitiesPICprops["textColors"][col].Image);
+                var textColour = imageColours[2 * CitiesPICprops["textColors"][col].Image.width + 0];
+                var shieldColour = imageColours[2 * CitiesPICprops["textColors"][col].Image.width + 0];
+                textColour.a = 255; // to avoid any upper-left-pixel transparency issues
+                shieldColour.a = 255;
+                Raylib.UnloadImageColors(imageColours);
+
+                // This is not exact, but a good aproximation what TOT does with shield colours
+                var lightColour = new Color(shieldColour.r / 2, shieldColour.g / 2, shieldColour.b / 2, 255);
+                var darkColour = new Color(shieldColour.r / 4, shieldColour.g / 4, shieldColour.b / 4, 255);
+
+                playerColours[col] = new PlayerColour
+                {
+                    Normal = CitiesPICprops["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPICprops["flags"][col].Image),
+                    TextColour = textColour,
+                    LightColour = lightColour,
+                    DarkColour = darkColour
+                };
+            }
+        }
+        PlayerColours = playerColours;
     }
 
     public override void GetShieldImages()

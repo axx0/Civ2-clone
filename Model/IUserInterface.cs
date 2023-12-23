@@ -19,6 +19,7 @@ public interface IUserInterface
     
     IImageSource? BackgroundImage { get; }
     int GetCityIndexForStyle(int cityStyleIndex, City city);
+    void LoadPlayerColours();
     
     List<TerrainSet> TileSets { get; }
     

@@ -126,6 +126,7 @@ public abstract class Civ2Interface : IUserInterface
     
 
     public Dictionary<string, PopupBox> Dialogs { get; set; }
+    public abstract void LoadPlayerColours();
     public PlayerColour[] PlayerColours { get; set; }
     public int ExpectedMaps { get; set; } = 1;
     public CommonMapImageSet MapImages { get; } = new();
