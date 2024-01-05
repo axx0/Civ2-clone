@@ -86,7 +86,7 @@ namespace Civ2engine
             TurnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
             _barbarianActivity = (BarbarianActivityType)gameData.BarbarianActivity;
-            PollutionAmount = gameData.PollutionAmount;
+            PollutionSkulls = gameData.NoPollutionSkulls;
             
             GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
             NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;

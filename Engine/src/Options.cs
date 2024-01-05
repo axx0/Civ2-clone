@@ -17,8 +17,8 @@
         public bool FlatEarth { get; private set; }
 
         // GAME OPTIONS
-        public bool SoundEffects { get; set; }
         public bool Music { get; set; }
+        public bool SoundEffects { get; set; }
         public bool CheatMenu { get; set; }
         public bool AlwaysWaitAtEndOfTurn { get; set; }
         public bool AutosaveEachTurn { get; set; }
@@ -53,6 +53,9 @@
 
         public bool CheatPenaltyWarningDisabled { get; set; }
         public bool Grid { get; set; }
+        public bool ScoringComplete { get; set; }
+        public bool ScenarioFile { get; set; }
+        public bool ScenarioFlagToggled { get; set; }
 
         public Options(bool[] optionsArray)
         {
@@ -80,17 +83,20 @@
             HighCouncil = optionsArray[21];
             AnimatedHeralds = optionsArray[22];
             CheatPenaltyWarningDisabled = optionsArray[23];
-            WarnWhenCityGrowthHalted = optionsArray[24];
-            ShowCityImprovementsBuilt = optionsArray[25];
-            ShowNonCombatUnitsBuilt = optionsArray[26];
-            ShowInvalidBuildInstructions = optionsArray[27];
-            AnnounceCitiesInDisorder = optionsArray[28];
-            AnnounceOrderRestored = optionsArray[29];
-            AnnounceWeLoveKingDay = optionsArray[30];
-            WarnWhenFoodDangerouslyLow = optionsArray[31];
-            WarnWhenPollutionOccurs = optionsArray[32];
-            WarnChangProductWillCostShields = optionsArray[33];
-            ZoomToCityNotDefaultAction = optionsArray[34];
+            ScoringComplete = optionsArray[24];
+            ScenarioFile = optionsArray[25];
+            ScenarioFlagToggled = optionsArray[26];
+            WarnWhenCityGrowthHalted = optionsArray[27];
+            ShowCityImprovementsBuilt = optionsArray[28];
+            ShowNonCombatUnitsBuilt = optionsArray[29];
+            ShowInvalidBuildInstructions = optionsArray[30];
+            AnnounceCitiesInDisorder = optionsArray[31];
+            AnnounceOrderRestored = optionsArray[32];
+            AnnounceWeLoveKingDay = optionsArray[33];
+            WarnWhenFoodDangerouslyLow = optionsArray[34];
+            WarnWhenPollutionOccurs = optionsArray[35];
+            WarnChangProductWillCostShields = optionsArray[36];
+            ZoomToCityNotDefaultAction = optionsArray[37];
         }
     }
 }

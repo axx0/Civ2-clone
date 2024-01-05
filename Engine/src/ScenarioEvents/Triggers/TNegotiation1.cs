@@ -2,9 +2,16 @@
 
 namespace Civ2engine;
 
-public class TNegotiation : ITrigger
+public class TNegotiation1 : ITrigger
 {
+    /// <summary>
+    /// 0xFE = ANYBODY
+    /// </summary>
     public int TalkerCivId { get; set; }
+
+    /// <summary>
+    /// 0xFE = ANYBODY
+    /// </summary>
     public int ListenerCivId { get; set; }
     public int TalkerType { get; set; }
     public int ListenerType { get; set; }

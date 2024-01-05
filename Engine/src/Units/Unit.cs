@@ -145,8 +145,7 @@ namespace Civ2engine.Units
         public UnitType Type => TypeDefinition.Type;
 
         public OrderType Order { get; set; }
-        public bool FirstMove { get; set; }
-        public bool GreyStarShield { get; set; }
+        public bool MadeFirstMove { get; set; }
         public bool Veteran { get; set; }
         public Civilization Owner { get; set; }
         public CommodityType CaravanCommodity { get; set; }

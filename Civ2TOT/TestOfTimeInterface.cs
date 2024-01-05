@@ -99,7 +99,7 @@ public class TestOfTimeInterface : Civ2Interface
             { "special2", Enumerable.Range(0, 11).Select(row =>
                         new ImageProps { Rect = new Rectangle(196, 1 + 33 * row, 64, 32) }).ToList() },
             { "road", Enumerable.Range(0, 9).Select(col =>
-                        new ImageProps { Rect = new Rectangle(1 + 65 * col, 363, 64, 32) }).ToList() },
+                        new ImageProps { Rect = new Rectangle(1 + 65 * col, 364, 64, 32) }).ToList() },
             { "railroad", Enumerable.Range(0, 9).Select(col =>
                         new ImageProps { Rect = new Rectangle(1 + 65 * col, 397, 64, 32) }).ToList() },
             { "irrigation", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 100, 64, 32) } } },

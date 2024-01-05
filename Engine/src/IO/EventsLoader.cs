@@ -29,16 +29,17 @@ namespace Civ2engine.IO
             if (section != "IF") return;
 
             ITrigger trigger = default;
-            string attackerCiv, defenderCiv, talkerCiv, listenerCiv, receiverCiv = string.Empty;
+            string unitKilled, attackerCiv, defenderCiv, talkerCiv, listenerCiv, receiverCiv = string.Empty;
             int talkerType, listenerType;
             switch (contents[0])
             {
                 case "UNITKILLED":
+                    unitKilled = ReadString(contents, "unit");
                     attackerCiv = ReadString(contents, "attacker");
                     defenderCiv = ReadString(contents, "defender");
                     trigger = new TUnitKilled
                     {
-                        UnitKilled = _rules.UnitTypes.ToList().Find(t => t.Name == ReadString(contents, "unit")).Type,
+                        UnitKilledId = string.Equals(unitKilled, "ANYUNIT", StringComparison.OrdinalIgnoreCase) ? -2 : Int32.Parse(unitKilled),
                         AttackerCivId = string.Equals(attackerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == attackerCiv).Id,
                         DefenderCivId = string.Equals(defenderCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == defenderCiv).Id,
                     };
@@ -92,7 +93,7 @@ namespace Civ2engine.IO
                     {
                         listenerType = 4;
                     }
-                    trigger = new TNegotiation
+                    trigger = new TNegotiation1
                     {
                         TalkerCivId = string.Equals(talkerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == talkerCiv).Id,
                         ListenerCivId = string.Equals(listenerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == listenerCiv).Id,
@@ -172,12 +173,14 @@ namespace Civ2engine.IO
                             civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
                         }
                         number = ReadString(contents, "numbertomove", indx + 1);
+                        var arr = contents[indx + 4].Split(',').Select(val => Int32.Parse(val)).ToArray();
                         action = new AMoveUnit
                         {
                             UnitMovedId = string.Equals(unitMoved, "ANYUNIT", StringComparison.OrdinalIgnoreCase) ? -2 : 
                                 _rules.UnitTypes.ToList().FindIndex(u => u.Name == unitMoved),
                             OwnerCivId = civId,
-                            MapCoords = contents[indx + 4].Split(',').Select(val => Int32.Parse(val)).ToArray(),
+                            MapCoords = new int[4, 2] { { arr[0], arr[1] }, { arr[2], arr[3] },
+                                                        { arr[4], arr[5] }, { arr[6], arr[7] }},
                             MapDest = contents[indx + 6].Split(',').Select(val => Int32.Parse(val)).ToArray(),
                             NumberToMove = string.Equals(number, "ALL", StringComparison.OrdinalIgnoreCase) ? -2 : Int32.Parse(number)
                         };
@@ -208,7 +211,7 @@ namespace Civ2engine.IO
                         }
                         action = new ACreateUnit
                         {
-                            CreatedUnit = _rules.UnitTypes.ToList().Find(t => t.Name == ReadString(contents, "unit", indx + 1)).Type,
+                            CreatedUnitId = Int32.Parse(ReadString(contents, "unit", indx + 1)),
                             OwnerCivId = civId,
                             Veteran = string.Equals(ReadString(contents, "veteran", indx + 1), "yes", StringComparison.Ordinal),
                             HomeCity = _gameObjects.Cities.Find(c => c.Name == ReadString(contents, "homecity", indx + 1)),
@@ -251,7 +254,7 @@ namespace Civ2engine.IO
                         };
                         break;
                     case "JUSTONCE":
-                        action = new AJustOnce { };
+                        //action = new AJustOnce { };
                         break;
                     case "PLAYCDTRACK":
                         action = new APlayCDtrack
@@ -263,10 +266,12 @@ namespace Civ2engine.IO
                         action = new ADontplayWonders { };
                         break;
                     case "CHANGETERRAIN":
+                        var arr1 = contents[indx + 3].Split(',').Select(val => Int32.Parse(val)).ToArray();
                         action = new AChangeTerrain
                         {
                             TerrainTypeId = Int32.Parse(ReadString(contents, "terraintype", indx + 1)),
-                            MapCoords = contents[indx + 3].Split(',').Select(val => Int32.Parse(val)).ToArray(),
+                            MapCoords = new int[4, 2] { { arr1[0], arr1[1] }, { arr1[2], arr1[3] },
+                                                        { arr1[4], arr1[5] }, { arr1[6], arr1[7] }},
                         };
                         break;
                     case "DESTROYACIVILIZATION":

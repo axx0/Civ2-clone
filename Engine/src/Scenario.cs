@@ -5,6 +5,11 @@ namespace Civ2engine;
 public class Scenario
 {
     public List<ScenarioEvent> Events = new ();
+
+    /// <summary>
+    /// 32 flags for 8 civs + for everybody
+    /// </summary>
+    public int[]? Flags { get; set; } = null;
     public bool TotalWar { get; set; }
     public bool ObjectiveVictory { get; set; }
     public bool CountWondersAsObjectives { get; set; }
