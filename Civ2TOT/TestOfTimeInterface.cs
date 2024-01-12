@@ -1,6 +1,7 @@
 ﻿using System.Runtime.Intrinsics.X86;
 using Civ2;
 using Civ2.Dialogs;
+using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;

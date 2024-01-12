@@ -1,9 +1,9 @@
 ﻿using Civ2engine;
+using Civ2engine.IO;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
 using RaylibUI;
-using Raylib_cs;
 
 namespace Model;
 
@@ -30,8 +30,10 @@ public interface IUserInterface
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }
     Padding DialogPadding { get; }
-    IList<string> GetMenuItems();
+    IList<DropdownMenuContents> ConfigureGameCommands(IList<IGameCommand> commands);
+    
     CityWindowLayout GetCityWindowDefinition();
 
     IList<ResourceImage> ResourceImages { get; }
+    PopupBox? GetDialog(string dialogName);
 }

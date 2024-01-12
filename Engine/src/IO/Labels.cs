@@ -3,10 +3,10 @@ namespace Civ2engine
 {
     public static class Labels
     {
-        public static string Ok { get; set; }
-        public static string Cancel { get; set; }
-        public static string Help { get; set; }
-        public static string Custom { get; set; }
+        public static string Ok { get; set; } = "Ok";
+        public static string Cancel { get; set; } = "Cancel";
+        public static string Help { get; set; } = "Help";
+        public static string Custom { get; set; } = "Custom";
 
         public static string[] Items { get; set; }
 

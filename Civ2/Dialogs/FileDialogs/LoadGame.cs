@@ -14,7 +14,7 @@ public class LoadGame : FileDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popup)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popup)
     {
         this.Title = Labels.For(LabelIndex.SelectGameToLoad);
         return this;

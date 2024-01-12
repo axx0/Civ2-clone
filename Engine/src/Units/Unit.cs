@@ -197,7 +197,7 @@ namespace Civ2engine.Units
         public bool IsInStack => CurrentLocation != null && CurrentLocation.UnitsHere.Count > 1;
         public bool IsLastInStack => CurrentLocation != null && CurrentLocation.UnitsHere.Last() == this;
         
-        public Unit InShip { get; set; }
+        public Unit? InShip { get; set; }
 
         public string AttackSound => TypeDefinition.AttackSound;
         public City CityWithThisUnit => CurrentLocation != null ? CurrentLocation.CityHere: null;

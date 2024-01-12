@@ -12,14 +12,14 @@ namespace RaylibUI;
 
 public class CivDialog : DynamicSizingDialog
 {
-    private OptionControl? _selectedOption = null;
+    private OptionControl? _selectedOption;
 
-    private IList<bool>? _checkboxes = null;
+    private IList<bool>? _checkboxes;
 
-    private IList<LabeledTextBox> _textBoxes;
+    private readonly IList<LabeledTextBox> _textBoxes;
     private readonly List<OptionControl>? _optionControls;
     private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
-    private readonly int _optionsCols = 1;
+    private readonly int _optionsCols;
 
     private void SetSelectedOption(OptionControl newSelection)
     {
@@ -171,13 +171,12 @@ public class CivDialog : DynamicSizingDialog
         _handleButtonClick(buttonText, _selectedOption?.Index ?? -1, _checkboxes, FormatTextBoxReturn());
     }
 
-    private KeyboardKey[] _navKays = new[]
-    {
+    private readonly KeyboardKey[] _navKeys = {
         KeyboardKey.KEY_UP, KeyboardKey.KEY_DOWN, KeyboardKey.KEY_LEFT,  KeyboardKey.KEY_RIGHT,
         KeyboardKey.KEY_KP_8, KeyboardKey.KEY_KP_2, KeyboardKey.KEY_KP_4, KeyboardKey.KEY_KP_6,
     };
 
-    private List<Texture2D> _managedTextures;
+    private readonly List<Texture2D> _managedTextures;
 
     public override void OnKeyPress(KeyboardKey key)
     {
@@ -193,7 +192,7 @@ public class CivDialog : DynamicSizingDialog
 
         if (_optionControls?.Count > 0)
         {
-            var keyIndex = Array.IndexOf(_navKays, key);
+            var keyIndex = Array.IndexOf(_navKeys, key);
             if (keyIndex != -1)
             {
                 var dir = keyIndex % (_optionsCols > 1 ? 4 : 2);

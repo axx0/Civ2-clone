@@ -12,7 +12,7 @@ public class Difficulty : SimpleSettingsDialog
     {
     }
 
-    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
     {
         Initialization.ConfigObject.DifficultlyLevel = result.SelectedIndex;
         return Initialization.ConfigObject.NumberOfCivs > 0 ? SelectGender.Title : NoOfCivs.Title;

@@ -13,7 +13,7 @@ public class SelectStartingYear : BaseDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
         var res = base.UpdatePopupData(popups);
         res.Dialog.ReplaceNumbers = new[] { 4000, 3000, 2000 };

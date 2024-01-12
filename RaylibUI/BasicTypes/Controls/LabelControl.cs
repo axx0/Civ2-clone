@@ -36,7 +36,7 @@ public class LabelControl : BaseControl
         _labelFont = font ?? Fonts.DefaultFont;
         _colorFront = colorFront ?? Color.BLACK;
         _colorShadow = colorShadow ?? Color.BLACK;
-        _shadowOffset = shadowOffset ?? new Vector2(0, 0);
+        _shadowOffset = shadowOffset ?? Vector2.Zero;
         _textSize = Raylib.MeasureTextEx(_labelFont, text, _fontSize, _spacing);
     }
 
@@ -47,8 +47,7 @@ public class LabelControl : BaseControl
             return -1;
         }
 
-        if (_minWidth != -1) return _minWidth;
-        return (int)_textSize.X + Offset + (_alignment == TextAlignment.Center ? 10 : 0);
+        return Math.Max(_minWidth, (int)_textSize.X + Offset + (_alignment == TextAlignment.Center ? 10 : 0));
     }
 
     public override int GetPreferredHeight()

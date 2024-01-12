@@ -11,7 +11,7 @@ public class ScenarioLoaded : ICivDialogHandler
     public const string Title = "SCENARIOLOADED";
 
     public string Name { get; } = Title;
-    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
         Dialog = new DialogElements
         {

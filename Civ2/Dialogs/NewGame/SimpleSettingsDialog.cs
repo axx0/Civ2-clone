@@ -24,6 +24,6 @@ public abstract class SimpleSettingsDialog : BaseDialogHandler
         return civDialogHandlers[next].Show(civ2Interface);
     }
 
-    protected abstract string SetConfigValue(DialogResult result, PopupBox popupBox);
+    protected abstract string SetConfigValue(DialogResult result, PopupBox? popupBox);
 
 }

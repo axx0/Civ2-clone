@@ -26,7 +26,7 @@ public class NoOfCivs : SimpleSettingsDialog
         return base.Show(activeInterface);
     }
 
-    protected override string SetConfigValue(DialogResult result, PopupBox popupBox)
+    protected override string SetConfigValue(DialogResult result, PopupBox? popupBox)
     {
         Initialization.ConfigObject.NumberOfCivs = result.SelectedIndex;
         return Barbarity.Title;

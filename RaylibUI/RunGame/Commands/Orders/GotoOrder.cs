@@ -5,6 +5,8 @@ using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
+using Model;
+using Model.Menu;
 using Raylib_cs;
 
 namespace RaylibUI.RunGame.GameModes.Orders;
@@ -12,20 +14,21 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 public class GotoOrder : Order
 {
     private readonly Game _game;
+    private readonly LocalPlayer _player;
 
-    public GotoOrder(GameScreen gameScreen, string defaultLabel, Game game) : 
-        base(gameScreen, KeyboardKey.KEY_G, defaultLabel, 3)
+    public GotoOrder(GameScreen gameScreen) : 
+        base(gameScreen, new Shortcut(KeyboardKey.KEY_G), CommandIds.GotoOrder)
     {
-        _game = game;
+        _game = _gameScreen.Game;
+        _player = _gameScreen.Player;
     }
 
-    public override Order Update(Tile activeTile, Unit activeUnit)
+    public override void Update()
     {
-        SetCommandState(activeUnit != null ? OrderStatus.Active : OrderStatus.Illegal);
-        return this;
+        SetCommandState(_player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
-    protected override void Execute(LocalPlayer player)
+    public override void Action()
     {
         ////_mainForm.CurrentGameMode = new Goto(_game);
         //var popup = _mainForm.popupBoxList["GOTO"];

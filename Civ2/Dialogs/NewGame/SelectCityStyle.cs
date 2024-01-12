@@ -14,7 +14,7 @@ public class SelectCityStyle : BaseDialogHandler
     {
     }
 
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
         var res = base.UpdatePopupData(popups);
 

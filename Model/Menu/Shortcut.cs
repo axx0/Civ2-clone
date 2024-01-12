@@ -1,0 +1,36 @@
+using Raylib_cs;
+
+namespace Model.Menu;
+
+public readonly struct Shortcut
+{
+#pragma warning disable CA2211
+    public static Shortcut None = new (KeyboardKey.KEY_NULL);
+#pragma warning restore CA2211
+
+    public Shortcut(KeyboardKey key, bool shift = false, bool ctrl = false)
+    {
+        Key = key;
+        Shift = shift;
+        Ctrl = ctrl;
+    }
+
+    public KeyboardKey Key { get; }
+    
+    public bool Shift { get; }
+    
+    public bool Ctrl { get; }
+
+    public static Shortcut Parse(string text)
+    {
+        var shortCutElements = text.Split(new[] { '+', '-' });
+        return Enum.TryParse<KeyboardKey>("KEY_" + shortCutElements[^1].ToUpperInvariant(), out var key)
+            ? new Shortcut(key, shortCutElements.Contains("Shift"), shortCutElements.Contains("Ctrl"))
+            : None;
+    }
+
+    public override int GetHashCode()
+    {
+        return (Key, Shift, Ctrl).GetHashCode();
+    }
+}
