@@ -2,7 +2,8 @@
 
 namespace Civ2engine;
 
-public class AJustOnce : IAction
+public class AEndGame : IAction
 {
+    public bool EndScreens { get; set; }
     public List<string> Strings { get; set; }
 }

@@ -1,10 +1,12 @@
-﻿using System.Runtime.Intrinsics.X86;
+﻿using System.Numerics;
+using System.Runtime.Intrinsics.X86;
 using Civ2;
 using Civ2.Dialogs;
 using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
+using Model.ImageSets;
 using Raylib_cs;
 using RayLibUtils;
 
@@ -63,7 +65,7 @@ public class TestOfTimeInterface : Civ2Interface
         CitiesPICprops = new Dictionary<string, List<ImageProps>>
         {
             { "textColors", Enumerable.Range(0, 9).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 15 * col, 423, 14, 1) }).ToList() },
+                    new ImageProps { Rect = new Rectangle(1 + 15 * col, 421, 14, 3) }).ToList() },
             { "flags", Enumerable.Range(0, 2 * 9).Select(i =>
                     new ImageProps { Rect = new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22) }).ToList() },
             { "fortify", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(143, 423, 64, 48) } } },
@@ -97,7 +99,7 @@ public class TestOfTimeInterface : Civ2Interface
             { "special2", Enumerable.Range(0, 11).Select(row =>
                         new ImageProps { Rect = new Rectangle(196, 1 + 33 * row, 64, 32) }).ToList() },
             { "road", Enumerable.Range(0, 9).Select(col =>
-                        new ImageProps { Rect = new Rectangle(1 + 65 * col, 363, 64, 32) }).ToList() },
+                        new ImageProps { Rect = new Rectangle(1 + 65 * col, 364, 64, 32) }).ToList() },
             { "railroad", Enumerable.Range(0, 9).Select(col =>
                         new ImageProps { Rect = new Rectangle(1 + 65 * col, 397, 64, 32) }).ToList() },
             { "irrigation", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 100, 64, 32) } } },
@@ -195,4 +197,79 @@ public class TestOfTimeInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
     public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
 
+    public override string? GetFallbackPath(string root, int gameType)
+    {
+        string? path = null;
+        switch (gameType)
+        {
+            case 0:
+                path = root + Path.DirectorySeparatorChar + "Original";
+                break;
+            case 1:
+                path = root + Path.DirectorySeparatorChar + "Scifi";
+                break;    
+            case 2:
+                path = root + Path.DirectorySeparatorChar + "Fantasy";
+                break;
+            default:
+                break;
+        }
+        return Directory.Exists(path) ? path : null;
+    }
+
+    public override void LoadPlayerColours()
+    {
+        var playerColours = new PlayerColour[9];
+        for (int col = 0; col < 9; col++)
+        {
+            unsafe
+            {
+                var imageColours = Raylib.LoadImageColors(CitiesPICprops["textColors"][col].Image);
+                var textColour = imageColours[2 * CitiesPICprops["textColors"][col].Image.width + 0];
+                var shieldColour = imageColours[2 * CitiesPICprops["textColors"][col].Image.width + 0];
+                textColour.a = 255; // to avoid any upper-left-pixel transparency issues
+                shieldColour.a = 255;
+                Raylib.UnloadImageColors(imageColours);
+
+                // This is not exact, but a good aproximation what TOT does with shield colours
+                var lightColour = new Color(shieldColour.r / 2, shieldColour.g / 2, shieldColour.b / 2, 255);
+                var darkColour = new Color(shieldColour.r / 4, shieldColour.g / 4, shieldColour.b / 4, 255);
+
+                playerColours[col] = new PlayerColour
+                {
+                    Normal = CitiesPICprops["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPICprops["flags"][col].Image),
+                    TextColour = textColour,
+                    LightColour = lightColour,
+                    DarkColour = darkColour
+                };
+            }
+        }
+        PlayerColours = playerColours;
+    }
+
+    public override void GetShieldImages()
+    {
+        Color ReplacementColour = new(255, 0, 255, 0);
+
+        var shield = UnitPICprops["HPshield"][0].Image;
+        var shieldFront = Raylib.ImageCopy(shield);
+
+        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
+        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+    }
+
+    public override UnitShield UnitShield(int unitType) => new()
+    {
+        ShieldInFrontOfUnit = true,
+        Offset = new(16, 0),
+        StackingOffset = new(-4, 0),
+        DrawShadow = false,
+        HPbarOffset = new(10, 4),
+        HPbarSize = new(20, 2),
+        HPbarColours = new[] { new Color(247, 0, 0, 255), new Color(255, 222, 74, 255), new Color(82, 173, 33, 255) },
+        HPbarSizeForColours = new[] { 5, 13 },
+        OrderOffset = new(9 / 2f, 1),
+        OrderTextHeight = UnitPICprops["HPshield"][0].Image.height - 1
+    };
 }

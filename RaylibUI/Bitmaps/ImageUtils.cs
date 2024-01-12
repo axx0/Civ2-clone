@@ -16,7 +16,7 @@ using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI;
 
-public class ImageUtils
+public static class ImageUtils
 {
     private static Image _innerWallpaper;
     private static Image _outerWallpaper;
@@ -391,12 +391,12 @@ public class ImageUtils
         Raylib.ImageDrawLine(ref image, 0, image.height -1, image.width -1, image.height -1, color5);
         Raylib.ImageDrawLine(ref image, image.width -1, 0, image.width -1, image.height -1, color5);
 
-        var left = Raylib.ImageFromImage(image, new Rectangle(0,0,dim, dim));
+        var left = Raylib.ImageCopy(image);
         Raylib.ImageDrawPixel(ref left, 6,9,Color.BLACK);
         Raylib.ImageDrawLine(ref left, 7,8,7,10,Color.BLACK);
         Raylib.ImageDrawLine(ref left, 8,7,8,11,Color.BLACK);
         Raylib.ImageDrawLine(ref left, 9,6,9,12,Color.BLACK);
-        var right = Raylib.ImageFromImage(image, new Rectangle(0,0,dim, dim));
+        var right = Raylib.ImageCopy(image);
         Raylib.ImageDrawPixel(ref right, dim - 6,9,Color.BLACK);
         Raylib.ImageDrawLine(ref right, dim-7,8,dim-7,10,Color.BLACK);
         Raylib.ImageDrawLine(ref right, dim-8,7,dim-8,11,Color.BLACK);
@@ -407,42 +407,67 @@ public class ImageUtils
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
-        var flagLoc = active.UnitImages.Units[(int)unit.Type].FlagLoc;
-
-        var stackingDir = flagLoc.X < active.UnitImages.UnitRectangle.width / 2 ? -1 : 1;
-        var shieldOffset = flagLoc;
-        var shieldLoc = loc + shieldOffset;
+        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
+        
+        var shield = active.UnitShield((int)unit.Type);
+        var shieldLoc = loc + shield.Offset;
+        
         var tile = unit.CurrentLocation;
-        if (unit.IsInStack && !noStacking)
+
+        if (shield.ShieldInFrontOfUnit)
         {
-            var stackShadowOffset = new Vector2(stackingDir * 5, 1);
-            viewElements.Add(new TextureElement(
-                location: shieldLoc + stackShadowOffset,
-                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
-                tile: tile, offset: shieldOffset + stackShadowOffset));
-            var stackOffset = new Vector2(stackingDir * 4,0);
-            viewElements.Add(new TextureElement(
-                location: shieldLoc + stackOffset,
-                texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
-                tile: tile, offset: shieldOffset + stackOffset));
+            // Unit
+            viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                tile: tile));
         }
 
-        var shadowOffset = new Vector2(stackingDir, 1);
-        viewElements.Add(new TextureElement(location: shieldLoc + shadowOffset,
-            texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), tile: tile, offset:shieldOffset + shadowOffset));
-        
+        // Stacked shield
+        if (unit.IsInStack && !noStacking)
+        {
+            if (shield.DrawShadow)
+            {
+                var stackShadowOffset = shield.StackingOffset + shield.ShadowOffset;
+                viewElements.Add(new TextureElement(
+                    location: shieldLoc + stackShadowOffset,
+                    texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
+                    tile: tile, offset: shield.Offset + stackShadowOffset));
+            }
+            viewElements.Add(new TextureElement(
+                location: shieldLoc + shield.StackingOffset,
+                texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
+                tile: tile, offset: shield.Offset + shield.StackingOffset));
+        }
+
+        // Shield shadow
+        if (shield.DrawShadow)
+        {
+            viewElements.Add(new TextureElement(location: shieldLoc + shield.ShadowOffset,
+                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), 
+                tile: tile, offset: shield.Offset + shield.ShadowOffset));
+        }
+
+        // Front shield
         viewElements.Add(new TextureElement(location: shieldLoc,
-            texture: shieldTexture, tile: tile, offset:shieldOffset));
-        
-        viewElements.Add(new HealthBar(location: shieldLoc + new Vector2(0,  2),
-            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, offset: shieldOffset with{ Y = shieldOffset.Y +2}));
+            texture: shieldTexture, tile: tile, offset:shield.Offset));
+
+        // Health bar
+        viewElements.Add(new HealthBar(location: shieldLoc + shield.HPbarOffset,
+            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, 
+            offset: shield.Offset + shield.HPbarOffset, shield));
+
+        // Orders text
         var shieldText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
-        var orderOffset = new Vector2(shieldTexture.width /2f, 7);
-        viewElements.Add(new TextElement(shieldText, shieldLoc + orderOffset, shieldTexture.height - 7,tile, shieldOffset + orderOffset ));
-        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
-        viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-            tile: tile));
+        viewElements.Add(new TextElement(shieldText, shieldLoc + shield.OrderOffset, shield.OrderTextHeight,
+            tile, shield.Offset + shield.OrderOffset));
+
+        if (!shield.ShieldInFrontOfUnit)
+        {
+            // Unit
+            viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
+                tile: tile));
+        }
+
         if (unit.Order == OrderType.Fortified)
         {
             viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));
@@ -483,7 +508,7 @@ public class ImageUtils
 
     public static Image GetShieldWithHP(Image shield, Unit unit)
     {
-        var hpShield = Raylib.ImageFromImage(shield, new Rectangle(0, 0, shield.width, shield.height));
+        var hpShield = Raylib.ImageCopy(shield);
         var hpBarX = (int)Math.Floor((float)unit.RemainingHitpoints * 12 / unit.HitpointsBase);
         var hpColor = hpBarX switch
         {

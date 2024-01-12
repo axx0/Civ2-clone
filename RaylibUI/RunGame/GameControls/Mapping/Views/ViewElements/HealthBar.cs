@@ -1,21 +1,32 @@
 using System.Numerics;
 using Civ2engine.MapObjects;
+using Model;
+using Model.ImageSets;
 using Raylib_cs;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
 public class HealthBar : RectangleElement
 {
-    public HealthBar(Vector2 location, Tile tile, int remainingHitPoints, int hitPointsBase, Vector2 offset) : base(location, tile, offset)
+    public HealthBar(Vector2 location, Tile tile, int remainingHitPoints, int hitPointsBase, Vector2 offset, UnitShield shield) : 
+        base(location, tile, offset)
     {
-        var hpBarX = (int)Math.Floor((float)remainingHitPoints * 12 / hitPointsBase);
-        Color = hpBarX switch
+        var hpBarX = (int)Math.Floor((float)remainingHitPoints * shield.HPbarSize.X / hitPointsBase);
+        
+        if (hpBarX <= shield.HPbarSizeForColours[0])
         {
-            <= 3 => new Color(243, 0, 0, 255),
-            <= 8 => new Color(255, 223, 79, 255),
-            _ => new Color(87, 171, 39, 255)
-        };
-        Size = new Vector2(hpBarX, 3);
+            Color = shield.HPbarColours[0];
+        }
+        else if (hpBarX <= shield.HPbarSizeForColours[1])
+        {
+            Color = shield.HPbarColours[1];
+        }
+        else
+        {
+            Color = shield.HPbarColours[2];
+        }
+        
+        Size = new Vector2(hpBarX, shield.HPbarSize.Y);
         BaseHitpoints = hitPointsBase;
     }
 

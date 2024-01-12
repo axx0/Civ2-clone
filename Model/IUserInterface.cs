@@ -4,6 +4,8 @@ using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
 using RaylibUI;
+using Raylib_cs;
+using System.Numerics;
 
 namespace Model;
 
@@ -18,6 +20,7 @@ public interface IUserInterface
     
     IImageSource? BackgroundImage { get; }
     int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
+    void LoadPlayerColours();
     
     List<TerrainSet> TileSets { get; }
     
@@ -36,4 +39,6 @@ public interface IUserInterface
 
     IList<ResourceImage> ResourceImages { get; }
     PopupBox? GetDialog(string dialogName);
+
+    UnitShield UnitShield(int unitType);
 }

@@ -42,32 +42,7 @@ public static class CityLoader
         }
 
         // Colours
-        var playerColours = new PlayerColour[9];
-        for (int col = 0; col < 9; col++)
-        {
-            unsafe
-            {
-                var imageColours = Raylib.LoadImageColors(cityProps["textColors"][col].Image);
-                var textColour = imageColours[0];
-
-                imageColours = Raylib.LoadImageColors(cityProps["flags"][col].Image);
-                var lightColour = imageColours[3 * cityProps["flags"][col].Image.width + 8];
-
-                imageColours = Raylib.LoadImageColors(cityProps["flags"][9 + col].Image);
-                var darkColour = imageColours[3 * cityProps["flags"][9 + col].Image.width + 5];
-                Raylib.UnloadImageColors(imageColours);
-
-                playerColours[col] = new PlayerColour
-                {
-                    Normal = cityProps["flags"][col].Image,
-                    FlagTexture = Raylib.LoadTextureFromImage(cityProps["flags"][col].Image),
-                    TextColour = textColour,
-                    LightColour = lightColour,
-                    DarkColour = darkColour
-                };
-            }
-        }
-        active.PlayerColours = playerColours;
+        active.LoadPlayerColours();
 
         if (active.TileSets.Count == 0)
         {

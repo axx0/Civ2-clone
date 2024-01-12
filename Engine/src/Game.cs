@@ -16,6 +16,7 @@ namespace Civ2engine
         private readonly Rules _rules;
         private readonly Scenario _scenarioData;
         private readonly GameVersionType _gameVersion;
+        private readonly GameType _gameType;
         private DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         public FastRandom Random { get; set; } = new();
@@ -33,6 +34,7 @@ namespace Civ2engine
         public Scenario ScenarioData => _scenarioData;
         public Rules Rules => _rules;
         public GameVersionType GameVersion => _gameVersion;
+        public GameType GameType => _gameType;
 
         public int TurnNumber { get; private set; }
 
@@ -61,7 +63,7 @@ namespace Civ2engine
         public int TurnNumberForGameYear { get; set; }
         public DifficultyType DifficultyLevel => _difficultyLevel;
         public BarbarianActivityType BarbarianActivity => _barbarianActivity;
-        public int PollutionAmount { get; set; }
+        public int PollutionSkulls { get; set; }
         public int GlobalTempRiseOccured { get; set; }
         public int NoOfTurnsOfPeace { get; set; }
 
@@ -114,6 +116,7 @@ namespace Civ2engine
         public ScriptEngine Script { get; }
 
         public Map CurrentMap => _maps[ActiveTile.Z];
+        public int NoMaps => _maps.Length;
 
         public int TotalMapArea => _maps.Select(m => m.Tile.GetLength(0) * m.Tile.GetLength(1)).Sum();
         internal Dictionary<string, List<string>> CityNames { get; set; }

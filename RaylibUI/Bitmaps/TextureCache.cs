@@ -15,9 +15,7 @@ public static class TextureCache
     {
         if (!Textures.ContainsKey(name))
         {
-            var original = Images.ExtractBitmap(source);
-            var origRect = new Rectangle(0, 0, original.width, original.height);
-            var copy = Raylib.ImageFromImage(original, origRect);
+            var copy = Raylib.ImageCopy(Images.ExtractBitmap(source));
             Raylib.ImageResizeCanvas(ref copy, copy.width + DOUBLE_WIDTH, copy.height + DOUBLE_WIDTH, BORDER_WIDTH, BORDER_WIDTH, Color.WHITE);
             ImageUtils.PaintPanelBorders(ref copy, copy.width, copy.height, BORDER_WIDTH,BORDER_WIDTH);
             Textures[name] = Raylib.LoadTextureFromImage(copy);

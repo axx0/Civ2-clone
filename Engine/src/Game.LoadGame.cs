@@ -79,12 +79,14 @@ namespace Civ2engine
                 _ => GameVersionType.CiC
             };
 
+            _gameType = (GameType)gameData.GameType;
+
             _scenarioData = objects.Scenario;
 
             TurnNumber = gameData.TurnNumber;
             TurnNumberForGameYear = gameData.TurnNumberForGameYear;
             _barbarianActivity = (BarbarianActivityType)gameData.BarbarianActivity;
-            PollutionAmount = gameData.PollutionAmount;
+            PollutionSkulls = gameData.NoPollutionSkulls;
             
             GlobalTempRiseOccured = gameData.GlobalTempRiseOccured;
             NoOfTurnsOfPeace = gameData.NoOfTurnsOfPeace;

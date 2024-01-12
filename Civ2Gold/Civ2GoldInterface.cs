@@ -1,7 +1,11 @@
-﻿using Civ2;
+﻿using System;
+using System.Numerics;
+using Civ2;
+using Civ2engine;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
+using Model.ImageSets;
 using Raylib_cs;
 using RayLibUtils;
 
@@ -189,4 +193,68 @@ public class Civ2GoldInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
     public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
     public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+
+    public override string? GetFallbackPath(string root, int gameType) => null;
+
+    public override void GetShieldImages()
+    {
+        Color ShadowColour = new(51, 51, 51, 255);
+        Color ReplacementColour = new(255, 0, 0, 255);
+
+        var shield = UnitPICprops["backShield1"][0].Image;
+        var shieldFront = Raylib.ImageCopy(shield);
+        Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.width, 7, Color.BLACK);
+
+        var shadow = UnitPICprops["backShield2"][0].Image;
+        Raylib.ImageColorReplace(ref shadow, ReplacementColour, ShadowColour);
+
+        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
+        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+        UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
+    }
+
+    public override void LoadPlayerColours()
+    {
+        var playerColours = new PlayerColour[9];
+        for (int col = 0; col < 9; col++)
+        {
+            unsafe
+            {
+                var imageColours = Raylib.LoadImageColors(CitiesPICprops["textColors"][col].Image);
+                var textColour = imageColours[0];
+
+                imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][col].Image);
+                var lightColour = imageColours[3 * CitiesPICprops["flags"][col].Image.width + 8];
+
+                imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][9 + col].Image);
+                var darkColour = imageColours[3 * CitiesPICprops["flags"][9 + col].Image.width + 5];
+                Raylib.UnloadImageColors(imageColours);
+
+                playerColours[col] = new PlayerColour
+                {
+                    Normal = CitiesPICprops["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPICprops["flags"][col].Image),
+                    TextColour = textColour,
+                    LightColour = lightColour,
+                    DarkColour = darkColour
+                };
+            }
+        }
+        PlayerColours = playerColours;
+    }
+
+    public override UnitShield UnitShield(int unitType) => new()
+    {
+        ShieldInFrontOfUnit = false,
+        Offset = UnitImages.Units[unitType].FlagLoc,
+        StackingOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.width / 2 ? -4 : 4, 0),
+        ShadowOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.width / 2 ? -1 : 1, 1),
+        DrawShadow = true,
+        HPbarOffset = new(0, 2),
+        HPbarSize = new(12, 3),
+        HPbarColours = new[] { new Color(243, 0, 0, 255), new Color(255, 223, 79, 255), new Color(87, 171, 39, 255) },
+        HPbarSizeForColours = new[] { 3, 8 },
+        OrderOffset = new(UnitPICprops["backShield1"][0].Image.width / 2f, 7),
+        OrderTextHeight = UnitPICprops["backShield1"][0].Image.height - 7,
+    };
 }

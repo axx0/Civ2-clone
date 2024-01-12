@@ -2,7 +2,8 @@
 
 namespace Civ2engine;
 
-public class AText : IAction
+public class APlayAVI : IAction
 {
+    public string File { get; set; }
     public List<string> Strings { get; set; }
 }

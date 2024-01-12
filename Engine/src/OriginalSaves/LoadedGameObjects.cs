@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
@@ -50,7 +49,14 @@ namespace Civ2engine
                     gameData.RulerGender[i], gameData.CivMoney[i], gameData.CivNumber[i],
                     gameData.CivResearchProgress[i], gameData.CivResearchingAdvance[i], gameData.CivSciRate[i],
                     gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
-                    gameData.CivAdvances));
+                    gameData.CivPatience[i], gameData.CivTreatyContact, gameData.CivTreatyCeaseFire,
+                    gameData.CivTreatyPeace, gameData.CivTreatyAlliance, gameData.CivTreatyVendetta,
+                    gameData.CivTreatyEmbassy, gameData.CivTreatyWar, gameData.CivAttitudes, gameData.CivAdvances,
+                    gameData.CivLastContact, gameData.CivHasSpaceship[i], gameData.CivSpaceshipEstimatedArrival[i],
+                    gameData.CivSpaceshipLaunchYear[i], gameData.CivSpaceshipStructural[i],
+                    gameData.CivSpaceshipComponentsPropulsion[i], gameData.CivSpaceshipComponentsFuel[i],
+                    gameData.CivSpaceshipModulesHabitation[i], gameData.CivSpaceshipModulesLifeSupport[i],
+                    gameData.CivSpaceshipModulesSolarPanel[i]));
             }
 
             civs[0].PlayerType = PlayerType.Barbarians;
@@ -67,17 +73,15 @@ namespace Civ2engine
                     gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i], gameData.CityCivilDisorder[i], 
                     gameData.CityCanBuildHydro[i], gameData.CityCanBuildShips[i], gameData.CityAutobuildMilitaryAdvisor[i],
                     gameData.CityAutobuildDomesticAdvisor[i], gameData.CityObjectivex1[i], gameData.CityObjectivex3[i],
-                    gameData.CityOwner[i], gameData.CitySize[i],
-                    gameData.CityWhoBuiltIt[i], gameData.CityWhoKnowsAboutIt[i], gameData.CityLastSizeRevealedToCivs[i],
-                    gameData.CityFoodInStorage[i], gameData.CityShieldsProgress[i],
-                    gameData.CityNetTrade[i], gameData.CityName[i], gameData.CityDistributionWorkers[i],
-                    gameData.CityNoOfSpecialistsx4[i], gameData.CityImprovements[i],
-                    gameData.CityItemInProduction[i], gameData.CityActiveTradeRoutes[i],
-                    gameData.CityCommoditySupplied[i], gameData.CityCommodityDemanded[i],
-                    gameData.CityCommodityInRoute[i], gameData.CityTradeRoutePartnerCity[i],
-                    gameData.CityScience[i], gameData.CityTax[i], gameData.CityNoOfTradeIcons[i],
-                    gameData.CityTotalFoodProduction[i], gameData.CityTotalShieldProduction[i],
-                    gameData.CityHappyCitizens[i], gameData.CityUnhappyCitizens[i], rules.ProductionItems));
+                    gameData.CityOwner[i], gameData.CitySize[i], gameData.CityWhoBuiltIt[i], gameData.CityTurnsExpiredSinceCaptured[i],
+                    gameData.CityWhoKnowsAboutIt[i], gameData.CityLastSizeRevealedToCivs[i], gameData.CityFoodInStorage[i],
+                    gameData.CityShieldsProgress[i], gameData.CityNetTrade[i], gameData.CityName[i], gameData.CityDistributionWorkers[i],
+                    gameData.CityNoOfSpecialistsx4[i], gameData.CityImprovements[i], gameData.CityItemInProduction[i], 
+                    gameData.CityActiveTradeRoutes[i], gameData.CityCommoditySupplied[i], gameData.CityCommodityDemanded[i],
+                    gameData.CityCommodityInRoute[i], gameData.CityTradeRoutePartnerCity[i], gameData.CityScience[i], 
+                    gameData.CityTax[i], gameData.CityNoOfTradeIcons[i], gameData.CityTotalFoodProduction[i], 
+                    gameData.CityTotalShieldProduction[i], gameData.CityHappyCitizens[i], gameData.CityUnhappyCitizens[i], 
+                    rules.ProductionItems));
             }
 
             Cities = cities;
@@ -86,28 +90,92 @@ namespace Civ2engine
             for (int i = 0; i < gameData.NumberOfUnits; i++)
             {
                 var unit = CreateUnit(gameData.UnitType[i], gameData.UnitXloc[i], gameData.UnitYloc[i], 
-                    gameData.UnitMap[i], gameData.UnitDead[i], gameData.UnitFirstMove[i], gameData.UnitGreyStarShield[i],
-                    gameData.UnitVeteran[i], gameData.UnitCiv[i], gameData.UnitMovePointsLost[i],
+                    gameData.UnitMap[i], gameData.UnitMadeMoveThisTurn[i], gameData.UnitVeteran[i], 
+                    gameData.UnitWaitOrder[i], gameData.UnitCiv[i], gameData.UnitMovePointsLost[i],
                     gameData.UnitHitPointsLost[i], gameData.UnitPrevXloc[i], gameData.UnitPrevYloc[i],
-                    gameData.UnitCaravanCommodity[i], gameData.UnitOrders[i], gameData.UnitHomeCity[i],
-                    gameData.UnitGotoX[i], gameData.UnitGotoY[i], gameData.UnitLinkOtherUnitsOnTop[i],
-                    gameData.UnitLinkOtherUnitsUnder[i]);
+                    gameData.UnitCounterRoleParameter[i], gameData.UnitOrders[i], gameData.UnitHomeCity[i],
+                    gameData.UnitGotoX[i], gameData.UnitGotoY[i], gameData.UnitMapNoOfGoto[i], 
+                    gameData.UnitLinkOtherUnitsOnTop[i], gameData.UnitLinkOtherUnitsUnder[i],
+                    gameData.UnitAnimation[i], gameData.UnitOrientation[i]);
                 if (i == gameData.SelectedUnitIndex)
                 {
                     ActiveUnit = unit;
                 }
             }
 
+            // Transporters
+            var transporters = new List<Transporter>();
+            for (int i = 0; i < gameData.NoTransporters; i++)
+            {
+                transporters.Add(new Transporter
+                {
+                    X1 = gameData.Transporter1X[i],
+                    Y1 = gameData.Transporter1Y[i],
+                    MapId1 = gameData.Transporter1MapNo[i],
+                    X2 = gameData.Transporter2X[i],
+                    Y2 = gameData.Transporter2Y[i],
+                    MapId2 = gameData.Transporter2MapNo[i],
+                    Look = gameData.TransporterLook[i]
+                });
+            }
+
+            Transporters = transporters;
+
             // Scenario
             List<ScenarioEvent> events = new ();
+            ScenarioEvent _event = new();
+            int[]? _flags = null;
             for (int i = 0; i < gameData.NumberOfEvents; i++)
             {
-                events.Add(CreateEvent(gameData.EventTriggerIds[i], gameData.EventActionIds[i],
-                    gameData.EventTriggerParam[i], gameData.EventActionParam[i], gameData.EventStrings));
+                // @INITFLAG
+                if (gameData.EventModifiers[i][11])
+                {
+                    _flags = new int[9];
+                    for (int j = 0; j <8; j++)
+                    {
+                        _flags[j] = BitConverter.ToInt32(new byte[4] { 
+                            gameData.EventActionParam[i][85 + 4 * j], gameData.EventActionParam[i][86 + 4 * j],
+                            gameData.EventActionParam[i][87 + 4 * j], gameData.EventActionParam[i][88 + 4 * j] });
+                    }
+                    _flags[8] = BitConverter.ToInt32(new byte[4] {
+                        gameData.EventActionParam[i][129], gameData.EventActionParam[i][130],
+                        gameData.EventActionParam[i][131], gameData.EventActionParam[i][132] });
+                }
+                else
+                {
+                    // Second trigger with @AND modifier
+                    if (gameData.EventModifiers[i][30])
+                    {
+                        _event.Trigger2 = CreateScenarioTrigger(gameData.GameVersion, gameData.EventTriggerIds[i],
+                                gameData.EventModifiers[i], gameData.EventTriggerParam[i], gameData.EventStrings);
+                        events.Add(_event);
+                    }
+                    else
+                    {
+                        _event = new ScenarioEvent
+                        {
+                            Trigger = CreateScenarioTrigger(gameData.GameVersion, gameData.EventTriggerIds[i],
+                                gameData.EventModifiers[i], gameData.EventTriggerParam[i], gameData.EventStrings),
+                            Actions = CreateScenarioActions(gameData.GameVersion, gameData.EventActionIds[i],
+                                gameData.EventModifiers[i], gameData.EventActionParam[i], gameData.EventStrings),
+                            Delay = gameData.EventModifiers[i][1] ? 
+                                BitConverter.ToInt16(new byte[2] { gameData.EventActionParam[i][195], gameData.EventActionParam[i][196] }) : null,
+                            JustOnce = gameData.EventActionIds[i].Contains(6),
+                            Continuous = gameData.EventModifiers[i][7]
+                        };
+
+                        // Add event to list unless it's the first trigger with @AND modifier
+                        if (!gameData.EventModifiers[i][28])
+                        {
+                            events.Add(_event);
+                        }
+                    }
+                }
             }
             Scenario = new Scenario
             {
                 Events = events,
+                Flags = _flags == null ? null : _flags,
                 TotalWar = gameData.TotalWar,
                 ObjectiveVictory = gameData.ObjectiveVictory,
                 CountWondersAsObjectives = gameData.CountWondersAsObjectives,
@@ -164,7 +232,7 @@ namespace Civ2engine
                         //CityPresent = data.MapCityPresent[map.MapIndex][col, row],  // you can find this out yourself
 
 
-                        Island = data.MapIslandNo[map.MapIndex][col, row],
+                        Island = data.LandSeaIndex[map.MapIndex][col, row],
                         Improvements = improvements 
                     };
                 }
@@ -306,13 +374,18 @@ namespace Civ2engine
 
         public List<City> Cities { get; set; }
 
+        public List<Transporter> Transporters { get; set; }
+
         public List<Civilization> Civilizations { get; set; }
 
         public List<Map> Maps { get; set; }
 
-        public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, string adjective,
-            int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,
-            int government, int reputation, bool[][] advances)
+        public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, 
+            string adjective, int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,
+            int government, int reputation, int patience, bool[][] contact, bool[][] ceaseFire, bool[][] peace, bool[][] alliance, 
+            bool[][] vendetta, bool[][] embassy, bool[][] war, int[][] attitudes, bool[][] advances, int[][] lastContact, bool hasSpaceship,
+            int ssEstArrival, int ssLaunchYear, int ssStructural, int ssPropulsion, int ssFuel, int ssHabitation, int ssLifeSupport,
+            int ssSolarPanel)
         {
             var tribe = Rules.Leaders[tribeNumber];
             // If leader name string is empty (no manual input), find the name in RULES.TXT (don't search for barbarians)
@@ -351,7 +424,7 @@ namespace Civ2engine
         public City CreateCity(int x, int y, int mapNo, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech,
             bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildHydro, bool canBuildShips,
             bool autoBuildMilitary, bool autoBuildDomestic, bool objectivex1, bool objectivex3,
-            int ownerIndex, int size, int whoBuiltIt, bool[] whoKnowsAboutIt, int[] lastSizeRevealedToCivs, 
+            int ownerIndex, int size, int whoBuiltIt, int turnsExpiredSinceCaptured, bool[] whoKnowsAboutIt, int[] lastSizeRevealedToCivs, 
             int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, 
             int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
             int activeTradeRoutes, int[] commoditySupplied, int[] commodityDemanded,
@@ -423,10 +496,12 @@ namespace Civ2engine
             return city;
         }
         
-        public Unit CreateUnit (int type, int x, int y, int mapNo, bool dead, bool firstMove, bool greyStarShield, 
-            bool veteran, int civId, int movePointsLost, int hitPointsLost, int prevX, int prevY, int caravanCommodity, 
-            int orders, int homeCity, int goToX, int goToY, int linkOtherUnitsOnTop, int linkOtherUnitsUnder)
+        public Unit CreateUnit (int type, int x, int y, int mapNo, bool madeFirstMove, bool veteran, bool wait,
+            int civId, int movePointsLost, int hitPointsLost, int prevX, int prevY, int counterRoleParam, 
+            int orders, int homeCity, int goToX, int goToY, int goToMap, int linkOtherUnitsOnTop, int linkOtherUnitsUnder,
+            int animation, int orientation)
         {
+            if (mapNo < 0) mapNo = 0;   // avoid dead unit errors
             var validTile = Maps[mapNo].IsValidTileC2(x, y);
 
             var civilization = Civilizations[civId];
@@ -434,19 +509,17 @@ namespace Civ2engine
             {
                 Id = civilization.Units.Count,
                 TypeDefinition = Rules.UnitTypes[type],
-                Dead = dead || !validTile,
+                Dead = x < 0 || !validTile,
                 CurrentLocation = validTile ? Maps[mapNo].TileC2(x,y) : null,
                 X = x,
                 Y = y,
                 MapIndex = mapNo,
                 MovePointsLost = movePointsLost,
                 HitPointsLost = hitPointsLost,
-                FirstMove = firstMove,
-                GreyStarShield = greyStarShield,
+                MadeFirstMove = madeFirstMove,
                 Veteran = veteran,
                 Owner = civilization,
                 PrevXY = new[] { prevX, prevY },
-                CaravanCommodity = (CommodityType)caravanCommodity,
                 Order = (OrderType)orders,
                 HomeCity = homeCity == 255 ? null : Cities[homeCity],
                 GoToX = goToX,
@@ -455,89 +528,193 @@ namespace Civ2engine
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
+            if (unit.Type == UnitType.Caravan || unit.Type == UnitType.Freight)
+            {
+                unit.CaravanCommodity = (CommodityType)counterRoleParam;
+            }
+            else if (unit.Type == UnitType.Settlers || unit.Type == UnitType.Engineers)
+            {
+                unit.Counter = counterRoleParam;
+            }
+
             civilization.Units.Add(unit);
             return unit;
         }
 
-        public ScenarioEvent CreateEvent(int triggerId, int[] actionIds, 
-            int[] triggerParam, int[] actionParam, List<string> strings)
+        public ITrigger CreateScenarioTrigger(int version, int triggerId, bool[] modifiers,
+            byte[] triggerParam, List<string> strings)
         {
             ITrigger? trigger = default;
             switch (triggerId)
             {
-                case 0:
+                case 0x1:
                     trigger = new TUnitKilled
                     {
-                        UnitKilled = (UnitType)triggerParam[1],
-                        AttackerCivId = triggerParam[4],
-                        DefenderCivId = triggerParam[7],
+                        UnitKilledId = version <= 44 ? triggerParam[4] : triggerParam[29],
+                        AttackerCivId = triggerParam[16],
+                        DefenderCivId = version <= 44 ? triggerParam[28] : triggerParam[20],
+                        DefenderOnly = modifiers[21],
+                        MapId = modifiers[24] ? 0 :
+                                modifiers[25] ? 1 :
+                                modifiers[26] ? 2 :
+                                modifiers[27] ? 3 : 0,
                         Strings = strings.GetRange(0, 3),
                     };
                     strings.RemoveRange(0, 3);
                     break;
-                case 1:
+
+                case 0x2:
                     trigger = new TCityTaken
                     {
                         City = Cities.Find(c => c.Name == strings[0]),
-                        AttackerCivId = triggerParam[4],
-                        DefenderCivId = triggerParam[7],
+                        AttackerCivId = triggerParam[16],
+                        DefenderCivId = version <= 44 ? triggerParam[28] : triggerParam[20],
+                        IsUnitSpy = modifiers[6],
                         Strings = strings.GetRange(0, 3),
                     };
                     strings.RemoveRange(0, 3);
                     break;
-                case 2:
+
+                case 0x4:
                     trigger = new TTurn
                     {
-                        Turn = triggerParam[9]
+                        Turn = version <= 44 ?
+                                BitConverter.ToInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
+                                BitConverter.ToInt16(new byte[2] { triggerParam[30], triggerParam[31] })
                     };
                     break;
-                case 3:
+
+                case 0x8:
                     trigger = new TTurnInterval
                     {
-                        Interval = triggerParam[9]
+                        Interval = version <= 44 ?
+                                BitConverter.ToInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
+                                BitConverter.ToInt16(new byte[2] { triggerParam[30], triggerParam[31] })
                     };
                     break;
-                case 4:
-                    trigger = new TNegotiation
+
+                case 0x10:
+                    // If all string pointers are 0, it's the second type
+                    if (!(triggerParam[8] == 0 && triggerParam[9] == 0 && triggerParam[10] == 0 && triggerParam[11] == 0
+                        && triggerParam[12] == 0 && triggerParam[13] == 0 && triggerParam[14] == 0 && triggerParam[15] == 0))
                     {
-                        TalkerCivId = triggerParam[4],
-                        TalkerType = triggerParam[5],
-                        ListenerCivId = triggerParam[7],
-                        ListenerType = triggerParam[8],
-                        Strings = strings.GetRange(0, 2),
-                    };
-                    strings.RemoveRange(0, 2);
+                        trigger = new TNegotiation1
+                        {
+                            TalkerCivId = triggerParam[16],
+                            TalkerType = version <= 44 ? triggerParam[20] : triggerParam[8],
+                            ListenerCivId = version <= 44 ? triggerParam[28] : triggerParam[20],
+                            ListenerType = version <= 44 ? triggerParam[32] : triggerParam[12],
+                            Strings = strings.GetRange(0, 2),
+                        };
+                        strings.RemoveRange(0, 2);
+                    }
+                    else
+                    {
+                        trigger = new TNegotiation2
+                        {
+                            TalkerMask = BitConverter.ToInt32(new byte[4] { triggerParam[16], triggerParam[17], triggerParam[18], triggerParam[19] }),
+                            ListenerMask = BitConverter.ToInt32(new byte[4] { triggerParam[20], triggerParam[21], triggerParam[22], triggerParam[23] })
+                        };
+                    }
                     break;
-                case 5:
+
+                case 0x20:
                     trigger = new TScenarioLoaded { };
                     break;
-                case 6:
+
+                case 0x40:
                     trigger = new TRandomTurn
                     {
-                        Denominator = triggerParam[10]
+                        Denominator = version <= 44 ? triggerParam[40] : triggerParam[32]
                     };
                     break;
-                case 7:
+
+                case 0x80:
                     trigger = new TNoSchism
                     {
-                        CivId = triggerParam[7],
+                        CivId = version <= 44 ? triggerParam[28] : triggerParam[20],
                         Strings = strings.GetRange(0, 1),
                     };
                     strings.RemoveRange(0, 1);
                     break;
-                case 8:
+
+                case 0x100:
                     trigger = new TReceivedTechnology
                     {
-                        TechnologyId = triggerParam[11],
-                        ReceiverCivId = triggerParam[7],
+                        TechnologyId = version <= 44 ? triggerParam[44] : triggerParam[36],
+                        ReceiverCivId = version <= 44 ? triggerParam[28] : triggerParam[20],
+                        IsFutureTech = modifiers[8],
                         Strings = strings.GetRange(0, 1)
                     };
                     strings.RemoveRange(0, 1);
                     break;
+
+                case 0x200:
+                    trigger = new TCityProduction
+                    {
+                        BuilderCivId = triggerParam[20],
+                        ImprovementUnitId = triggerParam[37],
+                        Strings = strings.GetRange(0, 1)
+                    };
+                    strings.RemoveRange(0, 1);
+                    break;
+
+                case 0x400:
+                    trigger = new TAlphaCentauriArrival
+                    {
+                        RaceCivId = triggerParam[16],
+                        Size = triggerParam[38],
+                        Strings = strings.GetRange(0, 1)
+                    };
+                    strings.RemoveRange(0, 1);
+                    break;
+
+                case 0x800:
+                    trigger = new TCityDestroyed
+                    {
+                        OwnerId = triggerParam[20],
+                        CityId = triggerParam[28],
+                        Strings = strings.GetRange(0, 2)
+                    };
+                    strings.RemoveRange(0, 2);
+                    break;
+
+                case 0x1000:
+                    trigger = new TBribeUnit
+                    {
+                        WhoCivID = triggerParam[16],
+                        WhomCivId = triggerParam[20],
+                        UnitTypeId = triggerParam[28],
+                        Strings = strings.GetRange(0, 2)
+                    };
+                    strings.RemoveRange(0, 2);
+                    break;
+
+                case 0x2000:
+                    trigger = new CheckFlag
+                    {
+                        State = modifiers[10],
+                        CountUsed = modifiers[15],
+                        TechnologyUsed = modifiers[18],
+                        WhoId = triggerParam[16],
+                        Flag_Mask = BitConverter.ToInt32(new byte[4] { triggerParam[24], triggerParam[25], triggerParam[26], triggerParam[27] }),
+                        TechnologyId = triggerParam[36],
+                        Count_Threshold = triggerParam[38],
+                        Strings = strings.GetRange(0, 1)
+                    };
+                    strings.RemoveRange(0, 1);
+                    break;
+
                 default:
                     break;
             }
 
+            return trigger;
+        }
+
+        public List<IAction> CreateScenarioActions(int version, int[] actionIds, bool[] modifiers,
+            byte[] actionParam, List<string> strings)
+        {
             var actions = new List<IAction>();
             for (int i = 0; i < actionIds.Length; i++)
             {
@@ -545,9 +722,11 @@ namespace Civ2engine
                 {
                     case 0:
                         List<string> _texts = new();
-                        for (int j = 0; j < 20; j++)
+                        for (int j = 0; j < 10; j++)
                         {
-                            if (actionParam[j] != 0)
+                            // One string pointer exists = one line of text
+                            if (actionParam[1 + 4 * j + 0] != 0 || actionParam[1 + 4 * j + 1] != 0 ||
+                                actionParam[1 + 4 * j + 2] != 0 || actionParam[1 + 4 * j + 3] != 0)    // TODO: determine for MGE
                             {
                                 _texts.Add(strings[0]);
                                 strings.RemoveRange(0, 1);
@@ -555,44 +734,147 @@ namespace Civ2engine
                         }
                         actions.Add(new AText
                         {
+                            NoBroadcast = modifiers[22],
                             Strings = new List<string>(_texts)
                         });
                         break;
+
                     case 1:
                         actions.Add(new AMoveUnit
                         {
-                            OwnerCivId = actionParam[21],
-                            UnitMovedId = actionParam[23],
-                            NumberToMove = actionParam[24],
-                            MapCoords = new int[8] { actionParam[25], actionParam[26],
-                                actionParam[27], actionParam[28], actionParam[29], 
-                                actionParam[30], actionParam[31], actionParam[32] },
-                            MapDest = new int[2] { actionParam[33], actionParam[34] },
+                            OwnerCivId = version <= 44 ? actionParam[84] : actionParam[0],
+                            UnitMovedId = version <= 44 ? actionParam[92] : actionParam[197],
+                            MapId = version <= 44 ? 0 : actionParam[198],
+                            NumberToMove = version <= 44 ? actionParam[96] : actionParam[129],
+                            MapCoords = version <= 44 ?
+                                new int[4, 2]
+                                {
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[100], actionParam[101] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[104], actionParam[105] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[108], actionParam[109] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[112], actionParam[113] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[116], actionParam[117] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[120], actionParam[121] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[124], actionParam[125] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[128], actionParam[129] }) }
+                                } : new int[4, 2]
+                                {
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[93], actionParam[94] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[95], actionParam[96] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[97], actionParam[98] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[99], actionParam[100] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[101], actionParam[102] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[103], actionParam[104] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[105], actionParam[106] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[107], actionParam[108] }) }
+                                },
+                            MapDest = version <= 44 ?
+                                new int[2]
+                                {
+                                    BitConverter.ToInt16(new byte[2] { actionParam[132], actionParam[133] }),
+                                    BitConverter.ToInt16(new byte[2] { actionParam[136], actionParam[137] })
+                                } : new int[2]
+                                {
+                                    BitConverter.ToInt16(new byte[2] { actionParam[125], actionParam[126] }),
+                                    BitConverter.ToInt16(new byte[2] { actionParam[127], actionParam[128] })
+                                },
                             Strings = strings.GetRange(0, 2),
                         });
                         strings.RemoveRange(0, 2);
                         break;
+
                     case 2:
                         actions.Add(new ACreateUnit
                         {
-                            OwnerCivId = actionParam[40],
-                            CreatedUnit = (UnitType)actionParam[42],
-                            Locations = new int[10, 2] { { actionParam[43], actionParam[44] }, { actionParam[45], actionParam[46] }, { actionParam[47], actionParam[48] }, { actionParam[49], actionParam[50] }, { actionParam[51], actionParam[52] }, { actionParam[53], actionParam[54] }, { actionParam[55], actionParam[56] }, { actionParam[57], actionParam[58] }, { actionParam[59], actionParam[60] }, { actionParam[61], actionParam[62] } },
-                            Veteran = actionParam[64] == 1,
+                            OwnerCivId = version <= 44 ? actionParam[160] : actionParam[201],
+                            CreatedUnitId = version <= 44 ? actionParam[168] : actionParam[202],
+                            Randomize = modifiers[0],
+                            InCapital = modifiers[2],
+                            Locations = version <= 44 ?
+                            new int[10, 3]
+                            {
+                                { BitConverter.ToInt16(new byte[2] { actionParam[172], actionParam[173] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[176], actionParam[177] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[180], actionParam[181] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[184], actionParam[185] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[188], actionParam[189] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[192], actionParam[193] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[196], actionParam[197] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[200], actionParam[201] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[204], actionParam[205] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[208], actionParam[209] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[212], actionParam[213] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[216], actionParam[217] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[220], actionParam[221] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[224], actionParam[225] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[228], actionParam[229] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[232], actionParam[233] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[236], actionParam[237] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[240], actionParam[241] }),
+                                  0 },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[244], actionParam[245] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[248], actionParam[249] }),
+                                  0 },
+                            } : new int[10, 3]
+                            {
+                                { BitConverter.ToInt16(new byte[2] { actionParam[133], actionParam[134] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[135], actionParam[136] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[137], actionParam[138] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[139], actionParam[140] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[141], actionParam[142] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[143], actionParam[144] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[145], actionParam[146] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[147], actionParam[148] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[149], actionParam[150] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[151], actionParam[152] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[153], actionParam[154] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[155], actionParam[156] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[157], actionParam[158] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[159], actionParam[160] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[161], actionParam[162] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[163], actionParam[164] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[165], actionParam[166] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[167], actionParam[168] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[169], actionParam[170] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[171], actionParam[172] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[173], actionParam[174] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[175], actionParam[176] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[177], actionParam[178] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[179], actionParam[180] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[181], actionParam[182] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[183], actionParam[184] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[185], actionParam[186] }) },
+                                { BitConverter.ToInt16(new byte[2] { actionParam[187], actionParam[188] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[189], actionParam[190] }),
+                                  BitConverter.ToInt16(new byte[2] { actionParam[191], actionParam[192] }) }
+                            },
+                            NoLocations = version <= 44 ? 10 : actionParam[203],    // TODO: where is this read for MGE?
+                            Veteran = version <= 44 ? actionParam[256] == 1 : actionParam[204] == 1,
+                            Count = version <= 44 ? 1 : actionParam[205],    // TODO: where is this read for MGE?
                             HomeCity = Cities.Find(c => c.Name == strings[2]),
                             Strings = strings.GetRange(0, 3)
                         });
                         strings.RemoveRange(0, 3);
                         break;
+
                     case 3:
                         actions.Add(new AChangeMoney
                         {
-                            ReceiverCivId = actionParam[80],
-                            Amount = actionParam[81],
+                            ReceiverCivId = version <= 44 ? actionParam[320] : actionParam[206],
+                            Amount = version <= 44 ? actionParam[324] : actionParam[131],
                             Strings = strings.GetRange(0, 1)
                         });
                         strings.RemoveRange(0, 1);
                         break;
+
                     case 4:
                         actions.Add(new APlayWAV
                         {
@@ -601,61 +883,170 @@ namespace Civ2engine
                         });
                         strings.RemoveRange(0, 1);
                         break;
+
                     case 5:
                         actions.Add(new AMakeAggression
                         {
-                            WhomCivId = actionParam[36],
-                            WhoCivId = actionParam[38],
+                            WhomCivId = version <= 44 ? actionParam[144] : actionParam[199],
+                            WhoCivId = version <= 44 ? actionParam[152] : actionParam[200],
                             Strings = strings.GetRange(0, 2)
                         });
                         strings.RemoveRange(0, 2);
                         break;
-                    case 6:
-                        actions.Add(new AJustOnce { });
-                        break;
+
                     case 7:
                         actions.Add(new APlayCDtrack
                         {
-                            TrackNo = actionParam[84]
+                            TrackNo = version <= 44 ? actionParam[336] : actionParam[207]
                         });
                         break;
+
                     case 8:
                         actions.Add(new ADontplayWonders { });
                         break;
+
                     case 9:
                         actions.Add(new AChangeTerrain
                         {
-                            TerrainTypeId = actionParam[85],
-                            MapCoords = new int[8] { actionParam[86], actionParam[87],
-                                actionParam[88], actionParam[89], actionParam[90],
-                                actionParam[91], actionParam[92], actionParam[93] }
+                            TerrainTypeId = version <= 44 ? actionParam[340] : actionParam[208],
+                            MapCoords = version <= 44 ?
+                                new int[4, 2]
+                                {
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[344], actionParam[345] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[348], actionParam[349] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[352], actionParam[353] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[356], actionParam[357] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[360], actionParam[361] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[364], actionParam[365] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[368], actionParam[369] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[372], actionParam[373] }) }
+                                } : new int[4, 2]
+                                {
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[109], actionParam[110] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[111], actionParam[112] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[113], actionParam[114] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[115], actionParam[116] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[117], actionParam[118] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[119], actionParam[120] }) },
+                                    { BitConverter.ToInt16(new byte[2] { actionParam[121], actionParam[122] }),
+                                      BitConverter.ToInt16(new byte[2] { actionParam[123], actionParam[124] }) }
+                                },
+                            MapId = version <= 44 ? 0 : actionParam[209],
+                            ExceptionMask = version <= 44 ? (short)0 :
+                                BitConverter.ToInt16(new byte[2] { actionParam[193], actionParam[194] })
                         });
                         break;
+
                     case 10:
                         actions.Add(new ADestroyCiv
                         {
-                            CivId = actionParam[94],
+                            CivId = version <= 44 ? actionParam[376] : actionParam[210],
                         });
                         break;
+
                     case 11:
                         actions.Add(new AGiveTech
                         {
-                            TechId = actionParam[95],
-                            CivId = actionParam[96],
+                            TechId = version <= 44 ? actionParam[280] : actionParam[211],
+                            CivId = version <= 44 ? actionParam[384] : actionParam[212],
                         });
                         break;
+
+                    case 12:
+                        actions.Add(new APlayAVI
+                        {
+                            File = strings.GetRange(0, 1).FirstOrDefault(),
+                            Strings = strings.GetRange(0, 1)
+                        });
+                        strings.RemoveRange(0, 1);
+                        break;
+
+                    case 13:
+                        actions.Add(new AEndGameOverride { });
+                        break;
+
+                    case 14:
+                        actions.Add(new AEndGame
+                        {
+                            EndScreens = modifiers[3]
+                        });
+                        break;
+
+                    case 15:
+                        actions.Add(new ABestowImprovement
+                        {
+                            RaceId = actionParam[213],
+                            ImprovementId = actionParam[214],
+                            Randomize = modifiers[0],
+                            Capital = modifiers[4],
+                            Wonders = modifiers[5]
+                        });
+                        break;
+
+                    case 16:
+                        actions.Add(new ATransport
+                        {
+                            UnitId = actionParam[221],
+                            TransportMask = BitConverter.ToInt16(new byte[2] { actionParam[89], actionParam[90] }),
+                            TransportMode = actionParam[92],
+                        });
+                        break;
+
+                    case 17:
+                        actions.Add(new ATakeTechnology
+                        {
+                            TechId = actionParam[211],
+                            WhomId = actionParam[212],
+                            Collapse = actionParam[218] == 1
+                        });
+                        break;
+
+                    case 18:
+                        actions.Add(new AModifyReputation
+                        {
+                            WhoId = actionParam[215],
+                            WhomId = actionParam[216],
+                            Betray = actionParam[217],
+                            Modifier = actionParam[217],
+                        });
+                        break;
+
+                    case 19:
+                        actions.Add(new AEnableTechnology
+                        {
+                            TechnologyId = actionParam[211],
+                            WhomId = actionParam[212],
+                            Value = actionParam[219]
+                        });
+                        break;
+
+                    case 21:
+                        actions.Add(new AFlag
+                        {
+                            State = modifiers[9],
+                            Continuous = modifiers[12],
+                            MaskUsed = modifiers[16],
+                            Flag = actionParam[85],
+                            Mask = BitConverter.ToInt32(new byte[4] { actionParam[85], actionParam[86], actionParam[87], actionParam[88] }),
+                            WhoId = actionParam[220],
+                        });
+                        break;
+
+                    case 22:
+                        actions.Add(new ANegotiator
+                        {
+                            TypeTalker = modifiers[13],
+                            StateSet = modifiers[14],
+                            WhoId = actionParam[222]
+                        });
+                        break;
+
                     default:
                         break;
                 }
             }
 
-            var scenEvent = new ScenarioEvent
-            {
-                Trigger = trigger,
-                Actions = actions,
-            };
-
-            return scenEvent;
+            return actions;
         }
     }
 }

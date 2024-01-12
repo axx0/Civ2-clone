@@ -2,6 +2,8 @@ using System.Numerics;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
+using Model;
+using Model.ImageSets;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 
@@ -30,9 +32,7 @@ internal class AttackAnimation : BaseGameView
         do
         {
             var attackerWins = args.CombatRoundsAttackerWins[explosion];
-
-            unitAnimations = AddJustAnimations(unitAnimations, args.Attacker.Hitpoints[explosion],
-                args.Defender.Hitpoints[explosion]);
+            unitAnimations = AddJustAnimations(unitAnimations, gameScreen.Main.ActiveInterface.UnitShield((int)args.Attacker.Type), args.Attacker.Hitpoints[explosion], args.Defender.Hitpoints[explosion]);
             var expPos = attackerWins ? defPos : attackPos;
             foreach (var battleTexture in battleAnimation)
             {
@@ -44,14 +44,14 @@ internal class AttackAnimation : BaseGameView
         } while (explosion < args.CombatRoundsAttackerWins.Count);
     }
 
-    private List<IViewElement> AddJustAnimations(List<IViewElement> unitAnimations, params int[] hitpoints)
+    private List<IViewElement> AddJustAnimations(List<IViewElement> unitAnimations, UnitShield shield, params int[] hitpoints)
     {
         int idx = 0;
         return unitAnimations.Select(a =>
         {
             if (a is HealthBar health)
             {
-                return new HealthBar(health.Location, health.Tile, hitpoints[idx++], health.BaseHitpoints, health.Offset);
+                return new HealthBar(health.Location, health.Tile, hitpoints[idx++], health.BaseHitpoints, health.Offset, shield);
             }
 
             return a;
