@@ -60,6 +60,7 @@ public class CivDialog : DynamicSizingDialog
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
         _managedTextures = new List<Texture2D>();
+        
         if (popupBox.Text?.Count > 0)
         {
             var ftext = DialogHelper.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
@@ -72,11 +73,23 @@ public class CivDialog : DynamicSizingDialog
             }
         }
 
+        var options = popupBox.Options;
+
         if (textBoxDefs is { Count: > 0 })
         {
+            
             _textBoxes = new List<LabeledTextBox>();
-            var textBoxLabels = textBoxDefs.Select(t =>
-                DialogHelper.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
+            List<string> textBoxLabels;
+            if(textBoxDefs.Any(t=>string.IsNullOrWhiteSpace(t.Description)) && popupBox.Options != null && popupBox.Options.Count == textBoxDefs.Count)
+            {
+                textBoxLabels = new List<string>(popupBox.Options);
+                options = null;
+            }
+            else
+            {
+                textBoxLabels = textBoxDefs.Select(t =>
+                    DialogHelper.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
+            }
 
             var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(Fonts.DefaultFont, l, 20, 1.0f).X) +24;
 
@@ -89,12 +102,12 @@ public class CivDialog : DynamicSizingDialog
         }
 
         _checkboxes = checkboxStates;
-        if (popupBox.Options is not null)
+        if (options is not null)
         {
-            for (int i = 0; i < popupBox.Options.Count; i++)
+            for (int i = 0; i < options.Count; i++)
             {
-                popupBox.Options[i] =
-                    Forms.DialogHelper.ReplacePlaceholders(popupBox.Options[i], replaceStrings, replaceNumbers);
+                options[i] =
+                    Forms.DialogHelper.ReplacePlaceholders(options[i], replaceStrings, replaceNumbers);
             }
 
             var optionAction = popupBox.Checkbox ? (Action<OptionControl>)TogggleCheckBox : SetSelectedOption;
@@ -106,7 +119,7 @@ public class CivDialog : DynamicSizingDialog
 
             var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
 
-            _optionControls = popupBox.Options.Select((o, i) =>
+            _optionControls = options.Select((o, i) =>
                 new OptionControl(this, o, i, checkboxStates?[i] ?? false,
                     i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
             _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
