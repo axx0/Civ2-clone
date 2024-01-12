@@ -57,6 +57,9 @@ public class GameScreen : BaseScreen
     private const int MiniMapWidth = 262;
     private readonly int _miniMapHeight;
     private IGameMode _activeMode;
+    
+    private CivDialog _currentPopupDialog;
+    private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
@@ -208,16 +211,26 @@ public class GameScreen : BaseScreen
 
         return commands;
     }
+    
+    
 
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
         List<TextBoxDefinition>? textBoxes = null)
     {
-        var dialog = MainWindow.ActiveInterface.GetDialog(dialogName);
-        if (dialog != null)
+        var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
+        if (popupBox != null)
         {
-            ShowDialog(new CivDialog(MainWindow, dialog, new Point(0, 0), handleButtonClick, textBoxDefs: textBoxes),
-                stack: true);
+            _popupClicked = handleButtonClick;
+            _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
+                ClosePopup, textBoxDefs: textBoxes);
+            ShowDialog(_currentPopupDialog, stack: true);
         }
+    }
+
+    private void ClosePopup(string arg1, int arg2, IList<bool>? arg3, IDictionary<string, string>? arg4)
+    {
+        CloseDialog(_currentPopupDialog);
+        _popupClicked?.Invoke(arg1, arg2, arg3, arg4);
     }
 }
