@@ -86,7 +86,7 @@ public class BuildCity : Order
 
     private void Build(string button, int selectedIndex, IList<bool>? check, IDictionary<string, string>? textBoxes)
     {
-        if (textBoxes != null && selectedIndex != int.MinValue && textBoxes.TryGetValue(CityName, out var name))
+        if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name))
         {
             CityActions.BuildCity(_player.ActiveTile, _player.ActiveUnit, _gameScreen.Game, name);
         }
