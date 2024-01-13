@@ -18,5 +18,5 @@ public static class CommandIds
     public const string BuildRoadOrder = BuildImprovementOrderNormal + "_ROAD";
     public const string BuildIrrigationOrder = BuildImprovementOrderNormal + "_IRRIGATION";
     public const string BuildMineOrder = BuildImprovementOrderNormal + "_MINE";
-    public const string BuildRoad = BuildImprovementOrderNormal + "_ROAD";
+    public const string EndTurn = "END_PLAYER_TURN";
 }

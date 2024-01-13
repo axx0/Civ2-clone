@@ -209,7 +209,7 @@ public abstract class Civ2Interface : IUserInterface
             {
                 new MenuElement("&Orders", Shortcut.None, KeyboardKey.KEY_O),
                 new MenuElement("&Build New City|b", new Shortcut(KeyboardKey.KEY_B), KeyboardKey.KEY_B, BuildCityOrder, true),
-                new MenuElement("Build &Road|r", new Shortcut(KeyboardKey.KEY_R), KeyboardKey.KEY_R, BuildRoad, omitIfNoCommand: true),
+                new MenuElement("Build &Road|r", new Shortcut(KeyboardKey.KEY_R), KeyboardKey.KEY_R, BuildRoadOrder, omitIfNoCommand: true),
                 new MenuElement("Build &Irrigation|i", new Shortcut(KeyboardKey.KEY_I), KeyboardKey.KEY_I,BuildIrrigationOrder, omitIfNoCommand:true),
                 new MenuElement("Build &Mines|m", new Shortcut(KeyboardKey.KEY_M), KeyboardKey.KEY_M,BuildMineOrder, omitIfNoCommand: true),
                 new MenuElement("Build %STRING0", Shortcut.None, KeyboardKey.KEY_NULL, BuildIrrigationOrder, omitIfNoCommand:true),
@@ -231,7 +231,7 @@ public abstract class Civ2Interface : IUserInterface
                 new MenuElement("&Wait|w", new Shortcut(KeyboardKey.KEY_W), KeyboardKey.KEY_W),
                 new MenuElement("S&kip Turn|SPACE", new Shortcut(KeyboardKey.KEY_SPACE), KeyboardKey.KEY_K),
                 new MenuElement("End Player Tur&n|Ctrl+N", new Shortcut(KeyboardKey.KEY_T, shift: true),
-                    KeyboardKey.KEY_N)
+                    KeyboardKey.KEY_N, EndTurn)
             },
         },
 
