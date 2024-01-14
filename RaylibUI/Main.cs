@@ -86,7 +86,8 @@ namespace RaylibUI
 
         private MainMenu SetupMainScreen()
         {                
-            Labels.UpdateLabels(null); 
+            Labels.UpdateLabels(null);
+            Helpers.LoadFonts();
             Interfaces = Helpers.LoadInterfaces();
 
             ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);

@@ -1,5 +1,6 @@
 using System.Numerics;
 using Model;
+using Model.Interface;
 using Raylib_cs;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
@@ -99,10 +100,10 @@ public class ResourceProductionBar : BaseControl
     {
         base.Draw(pulse);
         
-        var textDim = Raylib.MeasureTextEx(Fonts.AlternativeFont, _sections[0].Label, 14, 1);
+        var textDim = Raylib.MeasureTextEx(Fonts.Arial, _sections[0].Label, 14, 1);
         var labely = Location.Y + (_resource.LabelBelow ? Bounds.height : 1-textDim.Y);
             
-        Raylib.DrawTextEx(Fonts.AlternativeFont, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.WHITE);
+        Raylib.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.WHITE);
         var pos = Location + Vector2.One;
         for (int i = 0; i < _sections[0].Value; i++)
         {
@@ -121,8 +122,8 @@ public class ResourceProductionBar : BaseControl
                 pos.X += _spacing;
             }
             var midText = _sections[1].Label;
-            var midSize = Raylib.MeasureTextEx(Fonts.AlternativeFont, midText, 14, 1);
-            Raylib.DrawTextEx(Fonts.AlternativeFont, midText, new Vector2(Location.X + Width/2f - midSize.X/2, labely),14,1,Color.WHITE);
+            var midSize = Raylib.MeasureTextEx(Fonts.Arial, midText, 14, 1);
+            Raylib.DrawTextEx(Fonts.Arial, midText, new Vector2(Location.X + Width/2f - midSize.X/2, labely),14,1,Color.WHITE);
 
             final = 2;
         }
@@ -135,8 +136,8 @@ public class ResourceProductionBar : BaseControl
         }
 
         var finalText = _sections[final].Label;
-        var finalSize = Raylib.MeasureTextEx(Fonts.AlternativeFont, finalText, 14, 1);
-        Raylib.DrawTextEx(Fonts.AlternativeFont, finalText, new Vector2(Location.X + Width - finalSize.X -1, labely),14,1,Color.WHITE);
+        var finalSize = Raylib.MeasureTextEx(Fonts.Arial, finalText, 14, 1);
+        Raylib.DrawTextEx(Fonts.Arial, finalText, new Vector2(Location.X + Width - finalSize.X -1, labely),14,1,Color.WHITE);
 
     }
 }

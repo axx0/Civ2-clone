@@ -1,6 +1,8 @@
 using System.Reflection;
 using Civ2engine;
 using Model;
+using Model.Interface;
+using Raylib_cs;
 
 namespace RaylibUI.Initialization;
 
@@ -55,5 +57,15 @@ public static class Helpers
 
         selected.Initialize();
         return selected;
+    }
+
+    public static void LoadFonts()
+    {
+        var fontPath = Utils.GetFilePath("times-new-roman.ttf");
+        Fonts.SetTNR(Raylib.LoadFont(fontPath));
+        var bold = Utils.GetFilePath("times-new-roman-bold.ttf");
+        Fonts.SetBold(Raylib.LoadFontEx(bold, 104, null, 0));
+        var alternative = Utils.GetFilePath("ARIAL.ttf");
+        Fonts.SetArial(Raylib.LoadFont(alternative));
     }
 }

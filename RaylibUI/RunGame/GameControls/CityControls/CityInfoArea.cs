@@ -1,6 +1,7 @@
 using System.Numerics;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping;
+using Model;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -8,12 +9,14 @@ public class CityInfoArea : BaseControl
 {
     private readonly CityWindow _cityWindow;
     private CityDisplayMode _mode;
+    private IUserInterface _active; 
 
     public CityInfoArea(CityWindow controller, Rectangle infoPanel) : base(controller, false)
     {
         AbsolutePosition = infoPanel;
         _cityWindow = controller;
         _mode = CityDisplayMode.Info;
+        _active = controller.MainWindow.ActiveInterface;
     }
 
     public override void OnResize()
@@ -34,7 +37,7 @@ public class CityInfoArea : BaseControl
         }
         else
         {
-            Raylib.DrawTextEx(Fonts.DefaultFont,  Mode.ToString(), Location, 20,1,Color.MAGENTA );
+            Raylib.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.MAGENTA );
         }
     }
 

@@ -55,7 +55,7 @@ public class MenuBar
         for (int col = 0; col < Items.Count; col++)
         {
             // Bounds of bar items
-            var textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, Items[col].Text, fontSize, 1.0f);
+            var textSize = new Vector2(0, 0);// Raylib.MeasureTextEx(Fonts.DefaultFont, Items[col].Text, fontSize, 1.0f);
             Items[col].Bounds = new Rectangle(offsetX, 0, textSize.X + 10, textSize.Y);
             offsetX += (int)textSize.X + 10;
 

@@ -20,6 +20,7 @@ public class CivDialog : DynamicSizingDialog
     private readonly List<OptionControl>? _optionControls;
     private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
     private readonly int _optionsCols = 1;
+    private readonly IUserInterface _active;
 
     private void SetSelectedOption(OptionControl newSelection)
     {
@@ -58,6 +59,7 @@ public class CivDialog : DynamicSizingDialog
              relatDialogPos
             , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
+        _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
         _managedTextures = new List<Texture2D>();
@@ -69,7 +71,8 @@ public class CivDialog : DynamicSizingDialog
                 Controls.Add(new LabelControl(this, text.Text, false,
                     alignment: text.HorizontalAlignment == HorizontalAlignment.Center
                         ? TextAlignment.Center
-                        : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left));
+                        : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left,
+                    font: _active.Look.LabelFont, colorFront: _active.Look.LabelColour));
             }
         }
 
@@ -79,7 +82,7 @@ public class CivDialog : DynamicSizingDialog
             var textBoxLabels = textBoxDefs.Select(t =>
                 DialogHelper.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
 
-            var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(Fonts.DefaultFont, l, 20, 1.0f).X) +24;
+            var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(host.ActiveInterface.Look.DefaultFont, l, 20, 1.0f).X) +24;
 
             for (int i = 0; i < textBoxDefs.Count; i++)
             {

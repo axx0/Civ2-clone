@@ -8,6 +8,7 @@ using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 using RaylibUI.Controls;
+using Model;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -19,10 +20,9 @@ public class MapControl : BaseControl
     private Texture2D? _backgroundImage;
     private int _viewWidth;
     private int _viewHeight;
-    private const int PaddingSide = 11;
-    private const int Top = 38;
-    private const int PaddingBtm = 11;
+    private Padding _padding;
     private HeaderLabel _headerLabel;
+    private IUserInterface _active;
     
     private readonly Queue<IGameView> _animationQueue = new();
     private IGameView _currentView;
@@ -33,8 +33,10 @@ public class MapControl : BaseControl
         _currentBounds = initialBounds;
         _gameScreen = gameScreen;
         _game = game;
+        _active = gameScreen.MainWindow.ActiveInterface;
         
-        _headerLabel = new HeaderLabel(gameScreen, $"{_game.GetPlayerCiv.Adjective} Map");
+        _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} Map", fontSize: _active.Look.HeaderLabelFontSizeNormal);
+        _padding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
         SetDimensions();
 
         _currentView =
@@ -111,13 +113,13 @@ public class MapControl : BaseControl
         {
             Raylib.UnloadTexture(_backgroundImage.Value);
         }
-        _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide, noWallpaper:true);
+        _backgroundImage = ImageUtils.PaintDialogBase(_gameScreen.Main.ActiveInterface, Width, Height, _padding, noWallpaper:true);
 
-        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, Top);
+        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
         _headerLabel.OnResize();
 
-        _viewWidth = Width - 2 * PaddingSide;
-        _viewHeight = Height - Top - PaddingBtm;
+        _viewWidth = Width - _padding.Left - _padding.Right;
+        _viewHeight = Height - _padding.Top - _padding.Bottom;
     }
 
     
@@ -148,14 +150,13 @@ public class MapControl : BaseControl
     private Tile? GetTileAtMousePosition()
     {
         var clickPosition = GetRelativeMousePosition();
-        if (clickPosition.X < PaddingSide || clickPosition.X > _viewWidth + PaddingSide || clickPosition.Y < Top ||
-            clickPosition.Y > Top + _viewHeight)
+        if (clickPosition.X < _padding.Left + _padding.Right || clickPosition.X > _viewWidth + _padding.Left + _padding.Right || clickPosition.Y < _padding.Top || clickPosition.Y > _padding.Top + _viewHeight)
         {
             return null;
         }
 
         var dim = _gameScreen.TileCache.GetDimensions(_game.CurrentMap);
-        var clickedTilePosition = clickPosition - new Vector2(PaddingSide, Top) + _currentView.Offsets;
+        var clickedTilePosition = clickPosition - new Vector2(_padding.Left + _padding.Right, _padding.Top) + _currentView.Offsets;
         var y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
         var odd = y % 2 == 1;
         var clickX = (int)(odd ? clickedTilePosition.X - dim.HalfWidth : clickedTilePosition.X);
@@ -286,7 +287,7 @@ public class MapControl : BaseControl
             _animationStart = DateTime.Now;
         }
 
-        var paddedLoc = new Vector2(Location.X + PaddingSide, Location.Y + Top);
+        var paddedLoc = new Vector2(Location.X + _padding.Left, Location.Y + _padding.Top);
         Raylib.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f,1f,
             Color.WHITE);
 
@@ -308,11 +309,11 @@ public class MapControl : BaseControl
         foreach (var cityData in cityDetails)
         {
             var name = cityData.Name;
-            var textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, name, 20, 1);
+            var textSize = Raylib.MeasureTextEx(_active.Look.DefaultFont, name, 20, 1);
             var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.width /2f , cityData.Texture.height) - textSize /2f;
 
-            Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
-            Raylib.DrawTextEx(Fonts.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);
+            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
+            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);
         }
 
         foreach (var animation in _currentView.CurrentAnimations)

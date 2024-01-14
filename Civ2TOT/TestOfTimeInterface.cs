@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Model;
 using Model.Images;
 using Model.ImageSets;
+using Model.Interface;
 using Raylib_cs;
 using RayLibUtils;
 
@@ -21,6 +22,57 @@ public class TestOfTimeInterface : Civ2Interface
     public override string Title => "Test of Time";
 
     public override string InitialMenu => "STARTMENU";
+
+    public override InterfaceStyle Look { get; } = new()
+    {
+        OuterTitleTop = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 94, 58, 28)).ToArray(),
+        OuterThinTop = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 123, 58, 12)).ToArray(),
+        OuterBottom = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 136, 58, 11)).ToArray(),
+        OuterMiddle = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 148, 58, 13)).ToArray(),
+        OuterLeft = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 112 + 12 * col, 168, 11, 29)).ToArray(),
+        OuterRight = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 112 + 13 * col, 198, 12, 29)).ToArray(),
+        OuterTitleTopLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 168, 14, 30),
+        OuterTitleTopRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 168, 14, 30),
+        OuterThinTopLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 199, 14, 14),
+        OuterThinTopRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 199, 14, 14),
+        OuterMiddleLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 214, 14, 18),
+        OuterMiddleRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 214, 14, 18),
+        OuterBottomLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 233, 14, 14),
+        OuterBottomRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 233, 14, 14),
+
+        Inner = new BitmapStorage("dialog.png", new Rectangle(1, 1, 92, 92)),
+
+        RadioButtons = new IImageSource[]
+        { new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 903, 94, 33, 33), 
+          new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 869, 94, 33, 33) },
+        CheckBoxes = new IImageSource[]
+        { new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 805, 94, 29, 29),
+          new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 775, 94, 29, 29) },
+
+        DefaultFont = Fonts.Arial,
+        ButtonFont = Fonts.Arial,
+        ButtonFontSize = 20,
+        ButtonColour = Color.BLACK,
+        HeaderLabelFont = Fonts.Arial,
+        HeaderLabelFontSizeNormal = 20,
+        HeaderLabelShadow = false,
+        HeaderLabelColour = Color.BLACK,
+        LabelFont = Fonts.Arial,
+        LabelColour = Color.LIGHTGRAY,
+        CityWindowFont = Fonts.Arial,
+        CityWindowFontSize = 16
+    };
+
+    public override bool IsButtonInOuterPanel => false;
+
+    public override Padding GetPadding(float headerLabelHeight, bool footer)
+    {
+        int paddingTop = headerLabelHeight != 0 ? 28 : 12;
+
+        return new Padding(paddingTop, bottom: 11, left: 11, right: 12);
+    }
+    public override Padding DialogPadding => new(12, bottom: 11, left: 11, right: 12);
+
 
     public override void Initialize()
     {
@@ -272,4 +324,39 @@ public class TestOfTimeInterface : Civ2Interface
         OrderOffset = new(9 / 2f, 1),
         OrderTextHeight = UnitPICprops["HPshield"][0].Image.height - 1
     };
+
+    public override void DrawBorderWallpaper(Wallpaper wp, ref Image destination, int height, int width, Padding padding)
+    {
+        var top_left = padding.Top == 12 ? wp.OuterThinTopLeft : wp.OuterTitleTopLeft;
+        var top = padding.Top == 12 ? wp.OuterThinTop : wp.OuterTitleTop;
+        var top_right = padding.Top == 12 ? wp.OuterThinTopRight : wp.OuterTitleTopRight;
+
+        // Top border
+        Raylib.ImageDraw(ref destination, top_left, new Rectangle(0, 0, top_left.width, top_left.height), new Rectangle(0, 0, top_left.width, top_left.height), Color.WHITE);
+        var topCols = (width - top_left.width - top_right.width) / top.width + 1;
+        for (int col = 0; col < topCols; col++)
+        {
+            Raylib.ImageDraw(ref destination, top, new Rectangle(0, 0, top.width, top.height), new Rectangle(top_left.width + top.width * col, 0, top.width, top.height), Color.WHITE);
+        }
+        Raylib.ImageDraw(ref destination, top_right, new Rectangle(0, 0, top_right.width, top_right.height), new Rectangle(width - top_right.width, 0, top_right.width, top_right.height), Color.WHITE);
+
+        // Left-right border
+        var sideRows = (height - top_left.height - wp.OuterBottomLeft.height) / wp.OuterLeft.height + 1;
+        for (int row = 0; row < sideRows; row++)
+        {
+            Raylib.ImageDraw(ref destination, wp.OuterLeft, new Rectangle(0, 0, wp.OuterLeft.width, wp.OuterLeft.height), new Rectangle(0, top_left.height + wp.OuterLeft.height * row, wp.OuterLeft.width, wp.OuterLeft.height), Color.WHITE);
+            Raylib.ImageDraw(ref destination, wp.OuterRight, new Rectangle(0, 0, wp.OuterRight.width, wp.OuterRight.height), new Rectangle(width - wp.OuterRight.width, top_right.height + wp.OuterRight.height * row, wp.OuterRight.width, wp.OuterRight.height), Color.WHITE);
+        }
+
+        // Bottom border
+        Raylib.ImageDraw(ref destination, wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.width, wp.OuterBottomLeft.height), new Rectangle(0, height - wp.OuterBottomLeft.height, wp.OuterBottomLeft.width, wp.OuterBottomLeft.height), Color.WHITE);
+        var btmCols = (width - wp.OuterBottomLeft.width - wp.OuterBottomRight.width) / wp.OuterBottom.width + 1;
+        for (int col = 0; col < btmCols; col++)
+        {
+            Raylib.ImageDraw(ref destination, wp.OuterBottom, new Rectangle(0, 0, wp.OuterBottom.width, wp.OuterBottom.height), new Rectangle(wp.OuterBottomLeft.width + wp.OuterBottom.width * col, height - wp.OuterBottom.height, wp.OuterBottom.width, wp.OuterBottom.height), Color.WHITE);
+        }
+        Raylib.ImageDraw(ref destination, wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.width, wp.OuterBottomRight.height), new Rectangle(width - wp.OuterBottomRight.width, height - wp.OuterBottomRight.height, wp.OuterBottomRight.width, wp.OuterBottomRight.height), Color.WHITE);
+    }
+
+    public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding) { }
 }

@@ -8,16 +8,15 @@ namespace RaylibUI;
 public static class TextureCache
 {
     private static readonly Dictionary<string, Texture2D> Textures = new();
-    private const int BORDER_WIDTH = 11;
-    public const int DOUBLE_WIDTH = BORDER_WIDTH * 2;
 
-    public static Texture2D GetBordered(string name, IImageSource source)
+    public static Texture2D GetBordered(IUserInterface active, string name, IImageSource source)
     {
         if (!Textures.ContainsKey(name))
         {
+            var padding = active.GetPadding(0f, false);
             var copy = Raylib.ImageCopy(Images.ExtractBitmap(source));
-            Raylib.ImageResizeCanvas(ref copy, copy.width + DOUBLE_WIDTH, copy.height + DOUBLE_WIDTH, BORDER_WIDTH, BORDER_WIDTH, Color.WHITE);
-            ImageUtils.PaintPanelBorders(ref copy, copy.width, copy.height, BORDER_WIDTH,BORDER_WIDTH);
+            Raylib.ImageResizeCanvas(ref copy, copy.width + padding.Left + padding.Right, copy.height + padding.Left + padding.Right, padding.Left, padding.Top, Color.WHITE);
+            ImageUtils.PaintPanelBorders(active, ref copy, copy.width, copy.height, padding);
             Textures[name] = Raylib.LoadTextureFromImage(copy);
         }
 

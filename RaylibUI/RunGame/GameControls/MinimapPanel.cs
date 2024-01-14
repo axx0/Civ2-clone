@@ -6,25 +6,27 @@ using RaylibUI.BasicTypes;
 using RaylibUI.Controls;
 using System.Numerics;
 using RaylibUI.BasicTypes.Controls;
+using Model;
 
 namespace RaylibUI.RunGame.GameControls;
 
 public class MinimapPanel : BaseControl
 {
     private readonly Game _game;
-    private readonly GameScreen _gameScreen; 
+    private readonly GameScreen _gameScreen;
+    private readonly IUserInterface _active;
+    private readonly HeaderLabel _headerLabel;
     private Texture2D? _backgroundImage;
-    private const int PaddingSide = 11;
-    private const int Top = 38;
-    private const int PaddingBtm = 11;
-    private HeaderLabel _headerLabel;
+    private Padding _padding;
 
     public MinimapPanel(GameScreen controller, Game game) : base(controller)
     {
         _gameScreen = controller;
         _game = game;
+        _active = controller.MainWindow.ActiveInterface;
 
-        _headerLabel = new HeaderLabel(controller, "World");
+        _headerLabel = new HeaderLabel(controller, _active.Look, "World", fontSize: _active.Look.HeaderLabelFontSizeNormal);
+        _padding = controller.Main.ActiveInterface.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
         controller.OnMapEvent += MapEventTriggered;
         Click += OnClick;
@@ -32,13 +34,13 @@ public class MinimapPanel : BaseControl
     
     public override void OnResize()
     {
-        _backgroundImage = ImageUtils.PaintDialogBase(Width, Height, Top, PaddingBtm, PaddingSide);
+        _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, _padding);
         
-        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, Top);
+        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
         _headerLabel.OnResize();
         
-        _offset = new[] { ( Width - 2 * _game.CurrentMap.XDim) / 2, 
-            Top + ( Height - Top - PaddingBtm - _game.CurrentMap.YDim) / 2 };
+        _offset = new[] { ( Width - 2 * _game.CurrentMap.XDim) / 2,
+            _padding.Top + ( Height - _padding.Top - _padding.Bottom - _game.CurrentMap.YDim) / 2 };
         base.OnResize();
     }
 
@@ -93,7 +95,7 @@ public class MinimapPanel : BaseControl
     public override void Draw(bool pulse)
     {
         Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.WHITE);
-        Raylib.DrawRectangle((int)Location.X + PaddingSide, (int)Location.Y + Top, Width - 2 * PaddingSide, Height - Top - PaddingBtm, Color.BLACK);
+        Raylib.DrawRectangle((int)Location.X + _padding.Left, (int)Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom, Color.BLACK);
         var map = _game.CurrentMap;
         // Draw map
         for (var row = 0; row < map.YDim; row++)
@@ -106,7 +108,7 @@ public class MinimapPanel : BaseControl
                 if (!map.MapRevealed && !tile.IsVisible(map.WhichCivsMapShown)) continue;
 
                 var drawColor = tile.CityHere is not null
-                    ? Controller.MainWindow.ActiveInterface.PlayerColours[tile.CityHere.Owner.Id].TextColour
+                    ? _active.PlayerColours[tile.CityHere.Owner.Id].TextColour
                     : tile.Type == TerrainType.Ocean
                         ? OceanColor
                         : LandColor;
@@ -126,13 +128,7 @@ public class MinimapPanel : BaseControl
         base.Draw(pulse);
     }
 
-    private int GetCenterShift()
-    {
-        return _game.CurrentMap.Flat ? 0 : _mapStartXy[0] + _mapDrawSq[0] / 2 - _game.CurrentMap.XDim;
-    }
+    private int GetCenterShift() => _game.CurrentMap.Flat ? 0 : _mapStartXy[0] + _mapDrawSq[0] / 2 - _game.CurrentMap.XDim;
 
-    private int WrapNumber(int number, int range)
-    {
-        return (number % range + range) % range;
-    }
+    private static int WrapNumber(int number, int range) => (number % range + range) % range;
 }

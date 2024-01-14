@@ -112,7 +112,8 @@ namespace RaylibUI
                     {
                         foreach (var transparency in bitmapStorage.Transparencies)
                         {
-                            Raylib.ImageColorReplace(ref image, transparency, new Color(0,0,0,0));
+                            Raylib.ImageColorReplace(ref image, transparency,
+                                new Color(transparency.r, transparency.g, transparency.b, (byte)0));
                         }
                     }
                     ImageCache[bitmapStorage.Key] = image;
