@@ -1,6 +1,7 @@
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.Improvements;
+using Model;
 using Model.Images;
 using Raylib_cs;
 
@@ -14,10 +15,12 @@ public class FoodStorageBox : BaseControl
     private readonly Texture2D _foodIcon;
     private readonly string _text;
     private readonly Vector2 _textDim;
+    private readonly IUserInterface _active;
 
     public FoodStorageBox(CityWindow cityWindow) : base(cityWindow, true)
     {
         _cityWindow = cityWindow;
+        _active = cityWindow.MainWindow.ActiveInterface;
         _pen1 = new Color(75, 155, 35, 255);
         _pen2 = new Color(0, 51, 0, 255);
         _foodIcon = TextureCache.GetImage(_cityWindow.CurrentGameScreen.Main.ActiveInterface.ResourceImages
@@ -25,7 +28,7 @@ public class FoodStorageBox : BaseControl
             .LargeImage);
         
         _text = Labels.For(LabelIndex.FoodStorage);
-        _textDim = Raylib.MeasureTextEx(Fonts.AlternativeFont, _text, 16, 1);
+        _textDim = Raylib.MeasureTextEx(_active.Look.CityWindowFont, _text, _active.Look.CityWindowFontSize, 1);
     }
     
 
@@ -79,8 +82,8 @@ public class FoodStorageBox : BaseControl
             }
         }
         
-        Raylib.DrawTextEx(Fonts.AlternativeFont, _text,
-            new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y), 16, 1,
-            new Color(70,127,47,255));
+        Raylib.DrawTextEx(_active.Look.CityWindowFont, _text,
+            new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y), 
+            _active.Look.CityWindowFontSize, 1, new Color(70,127,47,255));
     }
 }

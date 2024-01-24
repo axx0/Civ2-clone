@@ -11,6 +11,7 @@ using Model;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
+using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
 using RaylibUI;
@@ -27,19 +28,7 @@ public abstract class Civ2Interface : IUserInterface
         return title == Title;
     }
 
-    public InterfaceStyle Look { get; } = new()
-    {
-        Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
-        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
-        RadioButtons = new IImageSource[]
-            { new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32) },
-        CheckBoxes = new IImageSource[]
-            { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
-        DefaultFont = "times-new-roman.ttf",
-        BoldFont = "times-new-roman-bold.ttf",
-        AlternativeFont = "ARIAL.ttf"
-    };
-
+    public abstract InterfaceStyle Look { get; }
 
     public abstract string Title { get; }
 
@@ -135,7 +124,7 @@ public abstract class Civ2Interface : IUserInterface
     public CommonMapImageSet MapImages { get; } = new();
     public int DefaultDialogWidth => 660; // 660=440*1.5
 
-    public Padding DialogPadding { get; } = new(11);
+    public abstract Padding DialogPadding { get; }
 
     
     private CityWindowLayout? _cityWindowLayout;
@@ -550,4 +539,8 @@ public abstract class Civ2Interface : IUserInterface
     public abstract string? GetFallbackPath(string root, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
+    public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding);
+    public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding);
+    public abstract Padding GetPadding(float headerLabelHeight, bool footer);
+    public abstract bool IsButtonInOuterPanel { get; }
 }

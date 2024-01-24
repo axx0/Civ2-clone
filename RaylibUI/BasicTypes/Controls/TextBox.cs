@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Xml;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
+using Model;
 
 namespace RaylibUI.Controls;
 
@@ -13,6 +14,7 @@ public class TextBox : BaseControl
 
     private string _text;
     private readonly IControlLayout _controller;
+    private readonly IUserInterface _active;
     private readonly int _minWidth;
     private readonly Action<string>? _acceptAction;
     private bool _editMode = false;
@@ -29,6 +31,7 @@ public class TextBox : BaseControl
         _controller = controller;
         _minWidth = minWidth;
         _acceptAction = acceptAction;
+        _active = controller.MainWindow.ActiveInterface;
         SetText(initialValue);
         Click += OnClick;
     }
@@ -37,7 +40,7 @@ public class TextBox : BaseControl
     {
         _text = initialValue;
         _editPosition = _text.Length;
-        var size = Raylib.MeasureTextEx(Fonts.DefaultFont, _text, Styles.BaseFontSize, 1.0f);
+        var size = Raylib.MeasureTextEx(_controller.MainWindow.ActiveInterface.Look.DefaultFont, _text, Styles.BaseFontSize, 1.0f);
         _editWidth = (int)size.X;
         Height = (int)(size.Y + TextMargin * 2);
     }
@@ -46,7 +49,7 @@ public class TextBox : BaseControl
     {
         Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.WHITE);
         Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.BLACK);
-        Raylib.DrawTextEx(Fonts.DefaultFont, _text, Location + TextOffsetV, Styles.BaseFontSize,1.0f, Color.BLACK);
+        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + TextOffsetV, Styles.BaseFontSize,1.0f, Color.BLACK);
         
         if (_editMode)
         {
@@ -150,6 +153,6 @@ public class TextBox : BaseControl
     private void SetEditPosition(int newEditPosition)
     {
         _editPosition = newEditPosition;
-        _editWidth = (int)Raylib.MeasureTextEx(Fonts.DefaultFont, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
+        _editWidth = (int)Raylib.MeasureTextEx(_active.Look.DefaultFont, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
     }
 }

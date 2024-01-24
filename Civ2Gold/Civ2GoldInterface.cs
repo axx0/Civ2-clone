@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Model;
 using Model.Images;
 using Model.ImageSets;
+using Model.Interface;
 using Raylib_cs;
 using RayLibUtils;
 
@@ -17,6 +18,46 @@ public class Civ2GoldInterface : Civ2Interface
     public override string Title => "Civilization II Multiplayer Gold";
 
     public override string InitialMenu => "MAINMENU";
+
+    public override InterfaceStyle Look { get; } = new()
+    {
+        Outer = new BitmapStorage("ICONS", new Rectangle(199, 322, 64, 32)),
+        Inner = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
+
+        RadioButtons = new IImageSource[]
+        { new BitmapStorage("buttons.png", 0, 0, 32), new BitmapStorage("buttons.png", 32, 0, 32) },
+        CheckBoxes = new IImageSource[]
+        { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
+        
+        DefaultFont = Fonts.TNR,
+        ButtonFont = Fonts.TNR,
+        ButtonFontSize = 20,
+        ButtonColour = Color.BLACK,
+        HeaderLabelFont = Fonts.TNRbold,
+        HeaderLabelFontSizeNormal = 28,
+        HeaderLabelFontSizeLarge = 34,
+        CityHeaderLabelFontSizeNormal = 18,
+        CityHeaderLabelFontSizeLarge = 28,
+        CityHeaderLabelFontSizeSmall = 16,
+        HeaderLabelShadow = true,
+        HeaderLabelColour = new Color(135, 135, 135, 255),
+        LabelFont = Fonts.TNR,
+        LabelColour = Color.BLACK,
+        CityWindowFont = Fonts.Arial,
+        CityWindowFontSize = 16
+    };
+
+    public override bool IsButtonInOuterPanel => true;
+
+    public override Padding GetPadding(float headerLabelHeight, bool footer)
+    {
+        int paddingTop = headerLabelHeight != 0 ? 7 + Math.Max((int)(-3 + 2 / 9 * headerLabelHeight + headerLabelHeight), (int)headerLabelHeight) : 11;
+        int paddtingBtm = footer ? 46 : 10;
+
+        return new Padding(paddingTop, bottom:paddtingBtm, left:11, right:11);
+    }
+
+    public override Padding DialogPadding => new(11);
 
     public override void Initialize()
     {
@@ -257,4 +298,94 @@ public class Civ2GoldInterface : Civ2Interface
         OrderOffset = new(UnitPICprops["backShield1"][0].Image.width / 2f, 7),
         OrderTextHeight = UnitPICprops["backShield1"][0].Image.height - 7,
     };
+
+    /// <summary>
+    /// Draw outer border wallpaper around panel
+    /// </summary>
+    /// <param name="wallpaper">Wallpaper image to tile onto the border</param>
+    /// <param name="destination">the Image we're rendering to</param>
+    /// <param name="height">final image height</param>
+    /// <param name="width">final image width</param>
+    /// <param name="topWidth">width of top border</param>
+    /// <param name="footerWidth">width of the footer</param>
+    public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding)
+    {
+        int rows = height / wallpaper.Outer.height + 1;
+        var columns = width / wallpaper.Outer.width + 1;
+        var headerSourceRec = new Rectangle { height = padding.Top, width = wallpaper.Outer.width };
+        for (int col = 0; col < columns; col++)
+        {
+            Raylib.ImageDraw(ref destination, wallpaper.Outer, headerSourceRec,
+                new Rectangle(col * wallpaper.Outer.width, 0, wallpaper.Outer.width, padding.Top),
+                Color.WHITE);
+        }
+        var leftSide = new Rectangle { height = wallpaper.Outer.height, width = DialogPadding.Left };
+
+        var rightEdge = width - DialogPadding.Right;
+        var rightOffset = width % wallpaper.Outer.width;
+        var rightSide = new Rectangle { x = rightOffset, height = wallpaper.Outer.height, width = DialogPadding.Right };
+
+        for (int row = 0; row < rows; row++)
+        {
+            Raylib.ImageDraw(ref destination, wallpaper.Outer, leftSide,
+                new Rectangle(0, row * wallpaper.Outer.height, DialogPadding.Left, wallpaper.Outer.height),
+                Color.WHITE);
+            Raylib.ImageDraw(ref destination, wallpaper.Outer, rightSide,
+                new Rectangle(rightEdge, row * wallpaper.Outer.height, DialogPadding.Right, wallpaper.Outer.height),
+                Color.WHITE);
+        }
+
+        var bottomEdge = height - padding.Bottom;
+        var bottomOffset = height % wallpaper.Outer.height;
+        var bottomSource = new Rectangle { y = bottomOffset, height = padding.Bottom, width = wallpaper.Outer.width };
+        for (int col = 0; col < columns; col++)
+        {
+            Raylib.ImageDraw(ref destination, wallpaper.Outer, bottomSource,
+                new Rectangle(col * wallpaper.Outer.width, bottomEdge, wallpaper.Outer.width, padding.Bottom),
+                Color.WHITE);
+        }
+    }
+
+    public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding)
+    {
+        // Outer border
+        var pen1 = new Color(227, 227, 227, 255);
+        var pen2 = new Color(105, 105, 105, 255);
+        var pen3 = new Color(255, 255, 255, 255);
+        var pen4 = new Color(160, 160, 160, 255);
+        var pen5 = new Color(240, 240, 240, 255);
+        var pen6 = new Color(223, 223, 223, 255);
+        var pen7 = new Color(67, 67, 67, 255);
+        Raylib.ImageDrawLine(ref destination, 0, 0, width - 2, 0, pen1); // 1st layer of border
+        Raylib.ImageDrawLine(ref destination, 0, 0, width - 2, 0, pen1);
+        Raylib.ImageDrawLine(ref destination, 0, 0, 0, height - 2, pen1);
+        Raylib.ImageDrawLine(ref destination, width - 1, 0, width - 1, height - 1, pen2);
+        Raylib.ImageDrawLine(ref destination, 0, height - 1, width - 1, height - 1, pen2);
+        Raylib.ImageDrawLine(ref destination, 1, 1, width - 3, 1, pen3); // 2nd layer of border
+        Raylib.ImageDrawLine(ref destination, 1, 1, 1, height - 3, pen3);
+        Raylib.ImageDrawLine(ref destination, width - 2, 1, width - 2, height - 2, pen4);
+        Raylib.ImageDrawLine(ref destination, 1, height - 2, width - 2, height - 2, pen4);
+        Raylib.ImageDrawLine(ref destination, 2, 2, width - 4, 2, pen5); // 3rd layer of border
+        Raylib.ImageDrawLine(ref destination, 2, 2, 2, height - 4, pen5);
+        Raylib.ImageDrawLine(ref destination, width - 3, 2, width - 3, height - 3, pen5);
+        Raylib.ImageDrawLine(ref destination, 2, height - 3, width - 3, height - 3, pen5);
+        Raylib.ImageDrawLine(ref destination, 3, 3, width - 5, 3, pen6); // 4th layer of border
+        Raylib.ImageDrawLine(ref destination, 3, 3, 3, height - 5, pen6);
+        Raylib.ImageDrawLine(ref destination, width - 4, 3, width - 4, height - 4, pen7);
+        Raylib.ImageDrawLine(ref destination, 3, height - 4, width - 4, height - 4, pen7);
+        Raylib.ImageDrawLine(ref destination, 4, 4, width - 6, 4, pen6); // 5th layer of border
+        Raylib.ImageDrawLine(ref destination, 4, 4, 4, height - 6, pen6);
+        Raylib.ImageDrawLine(ref destination, width - 5, 4, width - 5, height - 5, pen7);
+        Raylib.ImageDrawLine(ref destination, 4, height - 5, width - 5, height - 5, pen7);
+
+        // Inner panel
+        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 1, 9 + (width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
+        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 1, 10, height - padding.Bottom - 1, pen7);
+        Raylib.ImageDrawLine(ref destination, width - 11, padding.Top - 1, width - 11, height - padding.Bottom - 1, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, height - padding.Bottom, width - 9 - 1, height - padding.Bottom, pen6);
+        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 2, 9 + (width - 18 - 2), padding.Top - 2, pen7); // 2nd layer of border
+        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 2, 9, height - padding.Bottom, pen7);
+        Raylib.ImageDrawLine(ref destination, width - 10, padding.Top - 2, width - 10, height - padding.Bottom, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, height - padding.Bottom + 1, width - 9 - 1, height - padding.Bottom + 1, pen6);
+    }
 }

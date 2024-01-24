@@ -1,4 +1,5 @@
 using System.Numerics;
+using Civ2Gold;
 using Model;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
@@ -19,16 +20,22 @@ public class DynamicSizingDialog : BaseDialog
 
     private ControlGroup? _buttons;
 
-    protected DynamicSizingDialog(Main host, string title, Point? position = null, int? requestedWidth = null) : base(host,
-        position)
+    private IUserInterface _active;
+
+    protected DynamicSizingDialog(Main host, string title, Point? position = null, int? requestedWidth = null) : 
+        base(host, position)
     {
+        _active = host.ActiveInterface;
+
         _size = new Size(0, 0);
         _requestedWidth = requestedWidth;
         if (!string.IsNullOrWhiteSpace(title))
         {
-            _headerLabel = new HeaderLabel(this, title);
+            _headerLabel = new HeaderLabel(this, _active.Look, title, fontSize: _active.Look.HeaderLabelFontSizeNormal);
             Controls.Add(_headerLabel);
         }
+
+        LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, true);
     }
 
 
@@ -50,7 +57,19 @@ public class DynamicSizingDialog : BaseDialog
             var controlHeight = control.GetPreferredHeight();
 
             heights[index] = controlHeight;
-            totalHeight += controlHeight;
+            if (control.Children?.OfType<Button>().Any() ?? false)
+            {
+                totalHeight += LayoutPadding.Bottom;
+                
+                if (!_active.IsButtonInOuterPanel)
+                {
+                    totalHeight += controlHeight;
+                }
+            }
+            else
+            {
+                totalHeight += controlHeight;
+            }
         }
 
         SetLocation(width, maxWidth, height, totalHeight);
@@ -62,8 +81,7 @@ public class DynamicSizingDialog : BaseDialog
         index = 0;
         if (_headerLabel != null)
         {
-            _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, maxWidth + sidePadding, heights[0] + LayoutPadding.Top);
-            top += heights[0];
+            _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, maxWidth + sidePadding, LayoutPadding.Top);
             index = 1;
             _headerLabel.OnResize();
         }
@@ -82,9 +100,9 @@ public class DynamicSizingDialog : BaseDialog
             _buttons.OnResize();
         }
 
-        _size = new Size(maxWidth + sidePadding, totalHeight + LayoutPadding.Top + LayoutPadding.Bottom);
+        _size = new Size(maxWidth + sidePadding, totalHeight);
 
-        BackgroundImage = ImageUtils.PaintDialogBase( _size.Width, _size.Height, _headerLabel?.Height ?? LayoutPadding.Top, LayoutPadding.Bottom + _buttons?.Height ?? 0, LayoutPadding.Left);
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, _size.Width, _size.Height, LayoutPadding);
     }
     
 

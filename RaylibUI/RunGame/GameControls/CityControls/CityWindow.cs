@@ -12,22 +12,23 @@ public class CityWindow : BaseDialog
     public GameScreen CurrentGameScreen { get; }
     private readonly CityWindowLayout _cityWindowProps;
     private readonly HeaderLabel _headerLabel;
+    private readonly IUserInterface _active;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
         CurrentGameScreen = gameScreen;
         City = city;
+        _active = gameScreen.MainWindow.ActiveInterface;
+        
+        _cityWindowProps = _active.GetCityWindowDefinition();
 
-        _cityWindowProps = gameScreen.Main.ActiveInterface.GetCityWindowDefinition();
+        _headerLabel = new HeaderLabel(this, _active.Look, City.Name, fontSize: _active.Look.CityHeaderLabelFontSizeNormal);
 
-        _headerLabel = new HeaderLabel(this, City.Name);
-
-        LayoutPadding = new Padding(LayoutPadding, _headerLabel.GetPreferredHeight());
+        LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
         DialogWidth = _cityWindowProps.Width + PaddingSide;
         DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(DialogWidth, DialogHeight, LayoutPadding.Top, LayoutPadding.Bottom,
-            LayoutPadding.Left, Images.ExtractBitmap(_cityWindowProps.Image));
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding, Images.ExtractBitmap(_cityWindowProps.Image));
 
         Controls.Add(_headerLabel);
 
@@ -35,18 +36,18 @@ public class CityWindow : BaseDialog
        
         Controls.Add(infoArea);
 
-        var buyButton = new Button(this, Labels.For(LabelIndex.Buy))
+        var buyButton = new Button(this, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Buy"]
         };
         Controls.Add(buyButton);
 
-        var changeButton = new Button(this, Labels.For(LabelIndex.Change))
+        var changeButton = new Button(this, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Change"]
         };
         Controls.Add(changeButton);
-        var infoButton = new Button(this, Labels.For(LabelIndex.Info))
+        var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Info"]
         };
@@ -54,7 +55,7 @@ public class CityWindow : BaseDialog
         Controls.Add(infoButton);
 
         // Map button
-        var mapButton = new Button(this, Labels.For(LabelIndex.Map))
+        var mapButton = new Button(this, Labels.For(LabelIndex.Map), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Map"]
         };
@@ -63,14 +64,14 @@ public class CityWindow : BaseDialog
 
 
         // Rename button
-        var renameButton = new Button(this, Labels.For(LabelIndex.Rename))
+        var renameButton = new Button(this, Labels.For(LabelIndex.Rename), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Rename"]
         };
         Controls.Add(renameButton);
 
         // Happy button
-        var happyButton = new Button(this, Labels.For(LabelIndex.Happy))
+        var happyButton = new Button(this, Labels.For(LabelIndex.Happy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Happy"]
         };
@@ -78,14 +79,14 @@ public class CityWindow : BaseDialog
         Controls.Add(happyButton);
 
         // View button
-        var viewButton = new Button(this, Labels.For(LabelIndex.View))
+        var viewButton = new Button(this, Labels.For(LabelIndex.View), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["View"]
         };
         Controls.Add(viewButton);
 
         // Exit button
-        var exitButton = new Button(this, Labels.For(LabelIndex.Close))
+        var exitButton = new Button(this, Labels.For(LabelIndex.Close), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Exit"]
         };
@@ -102,8 +103,8 @@ public class CityWindow : BaseDialog
         if (titlePosition != Vector2.Zero)
         {
             var resourceTitle = Labels.For(LabelIndex.CityResources);
-            var resourceTitleSize = Raylib.MeasureTextEx(Fonts.AlternativeFont, resourceTitle, 16, 1);
-            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.GOLD, font: Fonts.AlternativeFont, fontSize: 16)
+            var resourceTitleSize = Raylib.MeasureTextEx(_active.Look.CityWindowFont, resourceTitle, _active.Look.CityWindowFontSize, 1);
+            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.GOLD, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
             {
                 AbsolutePosition = new Rectangle(titlePosition.X - resourceTitleSize.X / 2 - 10,titlePosition.Y, resourceTitleSize.X + 20, resourceTitleSize.Y )
             });

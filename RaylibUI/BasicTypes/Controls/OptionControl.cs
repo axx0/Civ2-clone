@@ -11,7 +11,7 @@ internal class OptionControl : LabelControl
 
     public override bool CanFocus => true;
 
-    public OptionControl(IControlLayout controller, string text, int index, bool isChecked, Texture2D[] images) : base(controller, text, eventTransparent: false, offset: images[0].width)
+    public OptionControl(IControlLayout controller, string text, int index, bool isChecked, Texture2D[] images) : base(controller, text, eventTransparent: false, offset: images[0].width, font: controller.MainWindow.ActiveInterface.Look.LabelFont, colorFront: controller.MainWindow.ActiveInterface.Look.LabelColour)
     {
         Index = index;
         Checked = isChecked;

@@ -2,6 +2,7 @@ using System.Numerics;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Model;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping;
 
@@ -15,13 +16,15 @@ public class CityTileMap : BaseControl
     private Vector2 _offset;
     private readonly Vector2 _textDim;
     private readonly string _text;
+    private readonly IUserInterface _active;
 
     public CityTileMap(CityWindow cityWindow) : base(cityWindow)
     {
         _cityWindow = cityWindow;
+        _active = cityWindow.MainWindow.ActiveInterface;
         Click += OnClick;
         _text = Labels.For(LabelIndex.ResourceMap);
-        _textDim = Raylib.MeasureTextEx(Fonts.AlternativeFont, _text, 16, 1);
+        _textDim = Raylib.MeasureTextEx(_active.Look.CityWindowFont, _text, _active.Look.CityWindowFontSize, 1);
     }
 
     private void OnClick(object? sender, MouseEventArgs e)
@@ -176,9 +179,9 @@ public class CityTileMap : BaseControl
     {
         Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0, _scaleFactor, Color.WHITE);
 
-        Raylib.DrawTextEx(Fonts.AlternativeFont, _text,
-            new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 16, 1,
-            Color.GOLD);
+        Raylib.DrawTextEx(_active.Look.CityWindowFont, _text,
+            new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 
+            _active.Look.CityWindowFontSize, 1, Color.GOLD);
     }
 
     public override void OnResize()

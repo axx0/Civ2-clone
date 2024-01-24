@@ -3,6 +3,7 @@ using Civ2engine.IO;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
+using Model.Interface;
 using RaylibUI;
 using Raylib_cs;
 using System.Numerics;
@@ -21,7 +22,9 @@ public interface IUserInterface
     IImageSource? BackgroundImage { get; }
     int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     void LoadPlayerColours();
-    
+
+    Padding GetPadding(float headerLabelHeight, bool footer);
+
     List<TerrainSet> TileSets { get; }
     
     CityImageSet CityImages { get; }
@@ -32,6 +35,7 @@ public interface IUserInterface
 
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }
+    bool IsButtonInOuterPanel { get; }
     Padding DialogPadding { get; }
     IList<DropdownMenuContents> ConfigureGameCommands(IList<IGameCommand> commands);
     
@@ -41,4 +45,6 @@ public interface IUserInterface
     PopupBox? GetDialog(string dialogName);
 
     UnitShield UnitShield(int unitType);
+    void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding);
+    void DrawBorderLines(ref Image destination, int height, int width, Padding padding);
 }

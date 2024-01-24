@@ -8,12 +8,12 @@ public class ImagePanel
 {
     private readonly Texture2D _texture;
 
-    public ImagePanel(string name, IImageSource imageSource, Point location)
+    public ImagePanel(IUserInterface active, string name, IImageSource imageSource, Point location)
     {
         Key = name;
         Location = location;
 
-        _texture = TextureCache.GetBordered(name, imageSource);
+        _texture = TextureCache.GetBordered(active, name, imageSource);
     }
 
     public string Key { get; }

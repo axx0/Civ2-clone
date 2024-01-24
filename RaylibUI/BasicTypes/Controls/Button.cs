@@ -1,4 +1,6 @@
 using System.Numerics;
+using Model;
+using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
 
@@ -8,14 +10,22 @@ public class Button : BaseControl
 {
     private readonly string _text;
     private readonly Vector2 textSize;
+    private readonly Font _font;
+    private readonly int _fontSize;
+    private readonly Color _colour;
+    private readonly IUserInterface _active;
     private bool _hovered;
     public override bool CanFocus => true;
     public string Text => _text;
 
-    public Button(IControlLayout controller, string text) : base(controller)
+    public Button(IControlLayout controller, string text, Font? font = null, int? fontSize = null) : base(controller)
     {
+        _active = controller.MainWindow.ActiveInterface;
         _text = text;
-        textSize = Raylib.MeasureTextEx(Fonts.DefaultFont, text, Styles.BaseFontSize, 1f);
+        _font = font ?? _active.Look.ButtonFont;
+        _fontSize = fontSize ?? _active.Look.ButtonFontSize;
+        _colour = _active.Look.ButtonColour;
+        textSize = Raylib.MeasureTextEx(_font, text, _fontSize, 1f);
         Height = (int)(textSize.Y + 10f);
     }
 
@@ -32,8 +42,9 @@ public class Button : BaseControl
         Raylib.DrawLine(x + 3, y + h - 3, x + w - 2, y + h - 3, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + w - 1, y + 2, x + w - 1, y + h - 1, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + w - 2, y + 3, x + w - 2, y + h - 1, new Color(128, 128, 128, 255));
-        
-        Raylib.DrawText(_text, x + w / 2 - (int)textSize.X / 2, y + h / 2 - (int)textSize.Y / 2, 18, Color.BLACK);
+
+        Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)textSize.X / 2, y + h / 2 - (int)textSize.Y / 2), _fontSize, 1f, _colour);
+
         if (_hovered)
         {
             Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.MAGENTA);

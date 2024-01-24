@@ -1,5 +1,3 @@
-using System.Drawing;
-using System.Security.AccessControl;
 using Model.Images;
 using Raylib_cs;
 using System.Numerics;
@@ -13,6 +11,9 @@ using Rectangle = Raylib_cs.Rectangle;
 using Civ2engine.Units;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
+using Model.ImageSets;
+using Model.Interface;
+using Civ2;
 
 namespace RaylibUI;
 
@@ -20,98 +21,12 @@ public static class ImageUtils
 {
     private static Image _innerWallpaper;
     private static Image _outerWallpaper;
+    private static Image _outerTitleTopWallpaper;
 
-    public static void PaintPanelBorders(ref Image image, int width, int height, int paddingTop, int paddingBtm)
+    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding)
     {
-        DrawBorderImage(OuterWallpaper, ref image, height, width, paddingTop, paddingBtm);
-        // Paint panel borders
-        // Outer border
-        var pen1 = new Color(227, 227, 227, 255);
-        var pen2 = new Color(105, 105, 105, 255);
-        var pen3 = new Color(255, 255, 255, 255);
-        var pen4 = new Color(160, 160, 160, 255);
-        var pen5 = new Color(240, 240, 240, 255);
-        var pen6 = new Color(223, 223, 223, 255);
-        var pen7 = new Color(67, 67, 67, 255);
-        Raylib.ImageDrawLine(ref image,0,0,width -2,0,pen1); // 1st layer of border
-        Raylib.ImageDrawLine(ref image,0, 0, width - 2, 0,pen1);
-        Raylib.ImageDrawLine(ref image,0, 0, 0, height - 2,pen1);
-        Raylib.ImageDrawLine(ref image,width - 1, 0, width - 1, height - 1,pen2);
-        Raylib.ImageDrawLine(ref image,0, height - 1, width - 1, height - 1,pen2);
-        Raylib.ImageDrawLine(ref image,1, 1, width - 3, 1,pen3); // 2nd layer of border
-        Raylib.ImageDrawLine(ref image,1, 1, 1, height - 3,pen3);
-        Raylib.ImageDrawLine(ref image,width - 2, 1, width - 2, height - 2,pen4);
-        Raylib.ImageDrawLine(ref image,1, height - 2, width - 2, height - 2,pen4);
-        Raylib.ImageDrawLine(ref image,2, 2, width - 4, 2,pen5); // 3rd layer of border
-        Raylib.ImageDrawLine(ref image,2, 2, 2, height - 4,pen5);
-        Raylib.ImageDrawLine(ref image,width - 3, 2, width - 3, height - 3,pen5);
-        Raylib.ImageDrawLine(ref image,2, height - 3, width - 3, height - 3,pen5);
-        Raylib.ImageDrawLine(ref image,3, 3, width - 5, 3,pen6); // 4th layer of border
-        Raylib.ImageDrawLine(ref image,3, 3, 3, height - 5,pen6);
-        Raylib.ImageDrawLine(ref image,width - 4, 3, width - 4, height - 4,pen7);
-        Raylib.ImageDrawLine(ref image,3, height - 4, width - 4, height - 4,pen7);
-        Raylib.ImageDrawLine(ref image,4, 4, width - 6, 4,pen6); // 5th layer of border
-        Raylib.ImageDrawLine(ref image,4, 4, 4, height - 6,pen6);
-        Raylib.ImageDrawLine(ref image,width - 5, 4, width - 5, height - 5,pen7);
-        Raylib.ImageDrawLine(ref image,4, height - 5, width - 5, height - 5,pen7);
-
-        // Inner panel
-        Raylib.ImageDrawLine(ref image,9, paddingTop - 1, 9 + (width - 18 - 1), paddingTop - 1,pen7); // 1st layer of border
-        Raylib.ImageDrawLine(ref image,10, paddingTop - 1, 10, height - paddingBtm - 1,pen7);
-        Raylib.ImageDrawLine(ref image,width - 11, paddingTop - 1, width - 11, height - paddingBtm - 1,pen6);
-        Raylib.ImageDrawLine(ref image,9, height - paddingBtm, width - 9 - 1, height - paddingBtm,pen6);
-        Raylib.ImageDrawLine(ref image,10, paddingTop - 2, 9 + (width - 18 - 2), paddingTop - 2,pen7); // 2nd layer of border
-        Raylib.ImageDrawLine(ref image,9, paddingTop - 2, 9, height - paddingBtm,pen7);
-        Raylib.ImageDrawLine(ref image,width - 10, paddingTop - 2, width - 10, height - paddingBtm,pen6);
-        Raylib.ImageDrawLine(ref image,9, height - paddingBtm + 1, width - 9 - 1, height - paddingBtm + 1,pen6);
-
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="source">The source image to tile onto the border</param>
-    /// <param name="destination">the Image we're rendering too</param>
-    /// <param name="height">final image height</param>
-    /// <param name="width">final image width</param>
-    /// <param name="topWidth">width of top border</param>
-    /// <param name="footerWidth">width of the footer</param>
-    public static void DrawBorderImage(Image source,ref Image destination, int height, int width, int topWidth, int footerWidth)
-    {  
-        int rows = height / source.height + 1;
-        var columns = width / source.width + 1;
-        var headerSourceRec = new Rectangle { height = topWidth, width = source.width };
-        for (int col = 0; col < columns; col++)
-        {
-            Raylib.ImageDraw(ref destination, source, headerSourceRec,
-                new Rectangle(col * source.width, 0, source.width, topWidth),
-                Color.WHITE);
-        }
-        var leftSide = new Rectangle { height = source.height, width = 11 };
-
-        var rightEdge = width - 11;
-        var rightOffset = width % source.width;
-        var rightSide = new Rectangle { x = rightOffset, height = source.height, width = 11 };
-        
-        for (int row = 0; row < rows; row++)
-        {
-            Raylib.ImageDraw(ref destination, source, leftSide,
-                new Rectangle(0, row * source.height, 11, source.height),
-                Color.WHITE);
-            Raylib.ImageDraw(ref destination, source, rightSide,
-                new Rectangle(rightEdge, row * source.height, 11, source.height),
-                Color.WHITE);
-        }
-
-        var bottomEdge = height - footerWidth;
-        var bottomOffset = height % source.height;
-        var bottomSource = new Rectangle { y = bottomOffset, height = footerWidth, width = source.width };
-        for (int col = 0; col < columns; col++)
-        {
-            Raylib.ImageDraw(ref destination, source, bottomSource,
-                new Rectangle(col * source.width, bottomEdge, source.width, footerWidth),
-                Color.WHITE);
-        }
+        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding);
+        active.DrawBorderLines(ref image, height, width, padding);
     }
 
     public static void DrawTiledImage(Image source,ref Image destination, int height, int width)
@@ -128,24 +43,24 @@ public static class ImageUtils
         }
     }
     
-    public static void DrawTiledImage(Image source,ref Image destination, int height, int width, int paddingTop, int paddingBtm, int paddingSide)
+    public static void DrawTiledImage(Image source,ref Image destination, int height, int width, Padding padding)
     {
-        var totalColumns = (width - 2 * paddingSide) / source.width;
-        var totalRows = (height - paddingTop - paddingBtm) / source.height;
-        
-        var rightEdge = paddingSide + (source.width * totalColumns);
-        var rightWidth = width - paddingSide - rightEdge;
+        var totalColumns = (width - padding.Left - padding.Right) / source.width;
+        var totalRows = (height - padding.Top - padding.Bottom) / source.height;
+
+        var rightEdge = padding.Left + (source.width * totalColumns);
+        var rightWidth = width - padding.Right - rightEdge;
         var rightSrcRect = new Rectangle { height = source.height, width = rightWidth };
 
         var srcRec = new Rectangle { height = source.height, width = source.width };
         
         for (int row = 0; row < totalRows; row++)
         {
-            var rowPos = source.height * row + paddingTop;
+            var rowPos = source.height * row + padding.Top;
             for (int col = 0; col < totalColumns ; col++)
             {
                 Raylib.ImageDraw(ref destination, source, srcRec,
-                    new Rectangle(col * source.width + paddingSide, rowPos, source.width, source.height),
+                    new Rectangle(col * source.width + padding.Left, rowPos, source.width, source.height),
                     Color.WHITE);
             }
             Raylib.ImageDraw(ref destination, source, rightSrcRect,
@@ -153,15 +68,15 @@ public static class ImageUtils
                 Color.WHITE);
         }
 
-        var bottomEdge = paddingTop + totalRows * source.height;
-        var bottomWidth = height - paddingBtm - bottomEdge;
+        var bottomEdge = padding.Top + totalRows * source.height;
+        var bottomWidth = height - padding.Bottom - bottomEdge;
         if (bottomWidth > 0)
         {
             var bottomSourceRect = new Rectangle { height = bottomWidth, width = source.width };
             for (int col = 0; col < totalColumns; col++)
             {
                 Raylib.ImageDraw(ref destination, source, bottomSourceRect,
-                    new Rectangle(col * source.width + paddingSide, bottomEdge, source.width, bottomWidth),
+                    new Rectangle(col * source.width + padding.Left, bottomEdge, source.width, bottomWidth),
                     Color.WHITE);
             }
             
@@ -184,29 +99,28 @@ public static class ImageUtils
     /// </summary>
     /// <param name="width">Width of dialog</param>
     /// <param name="height"></param>
-    /// <param name="top"></param>
-    /// <param name="paddingBtm"></param>
-    /// <param name="paddingSide"></param>
+    /// <param name="padding"></param>
     /// <param name="centerImage">Image to place in centre of dialog</param>
     /// <param name="noWallpaper">true to not draw inner wallpaper defaults to false</param>
-    public static Texture2D? PaintDialogBase(int width, int height, int top, int paddingBtm, int paddingSide, Image? centerImage = null, bool noWallpaper = false)
+    //public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, int top, int paddingBtm, int paddingSide, Image? centerImage = null, bool noWallpaper = false)
+    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false)
     {
         // Outer wallpaper
         var image = NewImage(width, height);
-        PaintPanelBorders(ref image,width,height,top, paddingBtm);
+        PaintPanelBorders(active, ref image, width, height, padding);
         if (centerImage != null)
         {
-            var innerWidth =Math.Min(width - 2*paddingSide, centerImage.Value.width);
-            var innerHeight = Math.Min(height - top - paddingBtm, centerImage.Value.height);
-            Raylib.ImageDraw( ref image, centerImage.Value, new Rectangle(0,0,innerWidth,innerHeight), new Rectangle(paddingSide, top, innerWidth,innerHeight), Color.WHITE);
+            var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.width);
+            var innerHeight = Math.Min(height - padding.Top - padding.Bottom, centerImage.Value.height);
+            Raylib.ImageDraw( ref image, centerImage.Value, new Rectangle(0,0,innerWidth,innerHeight), new Rectangle(padding.Left, padding.Top, innerWidth,innerHeight), Color.WHITE);
         }
         else if(!noWallpaper)
         {
-            DrawTiledImage(InnerWallpaper, ref image, height, width, top, paddingBtm, paddingSide);
+            DrawTiledImage(Wallpaper.Inner, ref image, height, width, padding);
         }
 
         return Raylib.LoadTextureFromImage(image);
-  }
+    }
 
     public static void PaintRadioButton(int x, int y, bool isSelected)
     {
@@ -314,10 +228,7 @@ public static class ImageUtils
         }
     }
 
-    public static void SetInner(IImageSource inner)
-    {
-        InnerWallpaper = Images.ExtractBitmap(inner);
-    }
+    public static Wallpaper Wallpaper { get; set; }
 
     public static Image InnerWallpaper
     {
@@ -327,11 +238,6 @@ public static class ImageUtils
             _innerWallpaper = value;
             InnerWallpaperTexture = Raylib.LoadTextureFromImage(value);
         }
-    }
-
-    public static void SetOuter(IImageSource outer)
-    {
-        OuterWallpaper = Images.ExtractBitmap(outer);
     }
 
     public static Image OuterWallpaper
@@ -344,8 +250,19 @@ public static class ImageUtils
         }
     }
 
+    public static Image OuterTitleTopWallpaper
+    {
+        get => _outerTitleTopWallpaper;
+        set
+        {
+            _outerTitleTopWallpaper = value;
+            OuterTitleTopWallpaperTexture = Raylib.LoadTextureFromImage(value);
+        }
+    }
+
     public static Texture2D InnerWallpaperTexture { get; private set; }
     public static Texture2D OuterWallpaperTexture { get; private set; }
+    public static Texture2D OuterTitleTopWallpaperTexture { get; private set; }
 
     public static Texture2D[] GetOptionImages(bool checkbox)
     {
@@ -353,18 +270,34 @@ public static class ImageUtils
         return images.Select(TextureCache.GetImage).ToArray();
     }
     
-    public static void SetLook(InterfaceStyle look)
+    public static void SetLook(IUserInterface active)
     {
-        ImageUtils.SetInner(look.Inner);
-        ImageUtils.SetOuter(look.Outer);
+        Wallpaper = new Wallpaper();
+        if (active.Look.Outer is null)
+        {
+            Wallpaper.OuterTitleTop = Images.ExtractBitmap(active.Look.OuterTitleTop[0]);
+            Wallpaper.OuterThinTop = Images.ExtractBitmap(active.Look.OuterThinTop[0]);
+            Wallpaper.OuterBottom = Images.ExtractBitmap(active.Look.OuterBottom[0]);
+            Wallpaper.OuterMiddle = Images.ExtractBitmap(active.Look.OuterMiddle[0]);
+            Wallpaper.OuterLeft = Images.ExtractBitmap(active.Look.OuterLeft[0]);
+            Wallpaper.OuterRight = Images.ExtractBitmap(active.Look.OuterRight[0]);
+            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(active.Look.OuterTitleTopLeft);
+            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(active.Look.OuterTitleTopRight);
+            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(active.Look.OuterThinTopLeft);
+            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(active.Look.OuterThinTopRight);
+            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(active.Look.OuterMiddleLeft);
+            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(active.Look.OuterMiddleRight);
+            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(active.Look.OuterBottomLeft);
+            Wallpaper.OuterBottomRight = Images.ExtractBitmap(active.Look.OuterBottomRight);
+            Wallpaper.Inner = Images.ExtractBitmap(active.Look.Inner);
+        }
+        else
+        {
+            Wallpaper.Outer = Images.ExtractBitmap(active.Look.Outer);
+            Wallpaper.Inner = Images.ExtractBitmap(active.Look.Inner);
+        }
 
-        Look = look;
-        var fontPath = Utils.GetFilePath(look.DefaultFont);
-        Fonts.SetFont(Raylib.LoadFont(fontPath));
-        var bold = Utils.GetFilePath(look.BoldFont);
-        Fonts.SetBold(Raylib.LoadFontEx(bold, 104, null, 0));
-        var alternative = Utils.GetFilePath(look.AlternativeFont);
-        Fonts.SetAlt(Raylib.LoadFont(alternative));
+        Look = active.Look;
     }
 
     private static InterfaceStyle Look;
@@ -526,28 +459,4 @@ public static class ImageUtils
         return TextureCache.GetImage(imageSource, activeInterface, owner);
     }
     
-}
-
-public static class Fonts
-{
-    public static Font DefaultFont = Raylib.GetFontDefault();
-    public static Font BoldFont = Raylib.GetFontDefault();
-    public static Font AlternativeFont = Raylib.GetFontDefault();
-
-    public const int FontSize = 20;
-    public static void SetFont(Font font)
-    {
-        DefaultFont = font;
-    }
-
-    public static void SetAlt(Font font)
-    {
-        AlternativeFont = font;
-    }
-
-    public static void SetBold(Font font)
-    {
-        BoldFont = font;
-    }
-
 }
