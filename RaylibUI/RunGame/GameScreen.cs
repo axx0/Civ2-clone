@@ -8,6 +8,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model;
 using Model.Interface;
+using Model.Menu;
 using Raylib_cs;
 using RaylibUI.RunGame.Commands.Orders;
 using RaylibUI.RunGame.GameControls;
@@ -81,7 +82,7 @@ public class GameScreen : BaseScreen
         _menu = new GameMenu(this, menuElements);
         _menu.GetPreferredWidth();
 
-        Moving = new MovingPieces(this, commands);
+        Moving = new MovingPieces(this);
         ViewPiece = new ViewPiece(this);
         Processing = new ProcessingMode(this);
                
@@ -110,6 +111,38 @@ public class GameScreen : BaseScreen
         Controls.Add(_menu);
         Controls.Add(_minimapPanel);
         Controls.Add(_statusPanel);
+
+        GameCommands = commands.Where(c => c.KeyCombo.Key != KeyboardKey.KEY_NULL).GroupBy(c => c.KeyCombo)
+            .ToDictionary(k => k.Key, MakeCommandSelector);
+    }
+
+    public Dictionary<Shortcut,Action> GameCommands { get; set; }
+
+    private Action MakeCommandSelector(IGrouping<Shortcut, IGameCommand> commandGroup)
+    {
+
+        var commands = commandGroup.ToList();
+
+        return () =>
+        {
+            foreach (var command in commands)
+            {
+                command.Update();
+            }
+
+            var activeCommand = commands.MinBy(c => c.Status);
+
+            if (activeCommand == null || activeCommand.Status == CommandStatus.Invalid) return;
+
+            if (activeCommand.Status <= CommandStatus.Default)
+            {
+                activeCommand.Action();
+            }
+            else
+            {
+                ShowPopup(activeCommand.ErrorDialog);
+            }
+        };
     }
 
     public ProcessingMode Processing { get; }
@@ -121,7 +154,17 @@ public class GameScreen : BaseScreen
             Focused = MenuBar.Children!.First();
             return;
         }
-        ActiveMode.HandleKeyPress(key);
+        var command = new Shortcut(key, Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_SHIFT) ||
+                                        Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT)
+            , Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL) ||
+              Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL)
+        );
+
+        if (!ActiveMode.HandleKeyPress(command) && GameCommands.ContainsKey(command))
+        {
+            GameCommands[command]();
+        }
+        
     }
 
     public override void Resize(int width, int height)

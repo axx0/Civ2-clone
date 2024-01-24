@@ -39,6 +39,11 @@ public abstract class Order : IGameCommand
     protected void SetCommandState(CommandStatus status = CommandStatus.Disabled, string? menuText = null,
         string? errorPopupKeyword = null)
     {
+        if (_gameScreen.ActiveMode != _gameScreen.Moving)
+        {
+            status = CommandStatus.Invalid;
+            menuText = null;
+        }
         if (Command != null)
         {
             Command.MenuText = menuText;

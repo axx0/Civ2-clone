@@ -65,7 +65,7 @@ public class GameMenu : ControlGroup
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangleRec(Bounds, Color.GRAY);
+        Raylib.DrawRectangleRec(Bounds, Color.WHITE);
         base.Draw(pulse);
     }
 }

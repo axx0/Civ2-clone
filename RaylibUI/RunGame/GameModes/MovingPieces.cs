@@ -19,7 +19,7 @@ public class MovingPieces : IGameMode
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
 
-    public MovingPieces(GameScreen gameScreen, IList<IGameCommand> gameCommands)
+    public MovingPieces(GameScreen gameScreen)
     {
         _title = new LabelControl(gameScreen,  Labels.For(LabelIndex.MovingUnits), true, alignment: TextAlignment.Center);
 
@@ -42,33 +42,6 @@ public class MovingPieces : IGameMode
             {new Shortcut(KeyboardKey.KEY_UP), MovementFunctions.TryMoveNorth}, {new Shortcut(KeyboardKey.KEY_DOWN), MovementFunctions.TryMoveSouth},
             {new Shortcut(KeyboardKey.KEY_LEFT), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.KEY_RIGHT), MovementFunctions.TryMoveEast},
         };
-        foreach (var commandGroup in gameCommands.Where(c=>c.KeyCombo.Key != KeyboardKey.KEY_NULL).GroupBy(c=>c.KeyCombo))
-        {
-            var commands = commandGroup.ToList();
-            if (commands is { Count: > 0 })
-            {
-                Actions[commandGroup.Key] = () =>
-                {
-                    foreach (var command in commands)
-                    {
-                        command.Update();
-                    }
-
-                    var activeCommand = commands.MinBy(c => c.Status);
-
-                    if (activeCommand == null) return;
-
-                    if (activeCommand.Status <= CommandStatus.Default)
-                    {
-                        activeCommand.Action();
-                    }
-                    else
-                    {
-                        _gameScreen.ShowPopup(activeCommand.ErrorDialog);
-                    }
-                };
-            }
-        }
     }
 
     public Dictionary<Shortcut, Action> Actions { get; set; }
@@ -130,17 +103,15 @@ public class MovingPieces : IGameMode
         return true;
     }
 
-    public void HandleKeyPress(KeyboardKey key)
+    public bool HandleKeyPress(Shortcut command)
     {
-        var command = new Shortcut(key, Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_SHIFT) ||
-                                        Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT)
-            , Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL) ||
-              Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL)
-        );
         if (Actions.ContainsKey(command))
         {
             Actions[command]();
+            return true;
         }
+
+        return false;
     }
 
     public bool Activate()

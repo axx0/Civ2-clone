@@ -32,6 +32,7 @@ namespace Civ2engine
                 var files = extensions.Select(e => filename + "." + e).ToArray();
                 foreach (var path in paths)
                 {
+                    if(!Directory.Exists(path)) continue;
                     foreach (var file in files)
                     {
                         var filePath = Directory.EnumerateFiles(path, file,
@@ -40,6 +41,7 @@ namespace Civ2engine
                         {
                             return filePath;
                         }
+                        
                     }
                 }
             }
