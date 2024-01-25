@@ -1,4 +1,5 @@
 ﻿using Civ2engine;
+using Civ2engine.IO;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
@@ -19,7 +20,7 @@ public interface IUserInterface
     IInterfaceAction GetInitialAction();
     
     IImageSource? BackgroundImage { get; }
-    int GetCityIndexForStyle(int cityStyleIndex, City city);
+    int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     void LoadPlayerColours();
 
     Padding GetPadding(float headerLabelHeight, bool footer);
@@ -36,10 +37,12 @@ public interface IUserInterface
     int DefaultDialogWidth { get; }
     bool IsButtonInOuterPanel { get; }
     Padding DialogPadding { get; }
-    IList<string> GetMenuItems();
+    IList<DropdownMenuContents> ConfigureGameCommands(IList<IGameCommand> commands);
+    
     CityWindowLayout GetCityWindowDefinition();
 
     IList<ResourceImage> ResourceImages { get; }
+    PopupBox? GetDialog(string dialogName);
 
     UnitShield UnitShield(int unitType);
     void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding);

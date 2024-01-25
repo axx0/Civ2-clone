@@ -10,7 +10,7 @@ namespace Civ2engine
         public FastRandom Random { get; set; } = new (1);
         public Ruleset RuleSet { get; set; }
         
-        public Dictionary<string,PopupBox> PopUps { get; set; }
+        public Dictionary<string, PopupBox?> PopUps { get; set; }
         public int[] WorldSize { get; set; } = { 50, 80 };
         public int DifficultlyLevel { get; set; }
         public int NumberOfCivs { get; set; }

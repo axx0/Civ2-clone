@@ -1,6 +1,7 @@
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.MapObjects;
+using Model.Menu;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
@@ -113,12 +114,15 @@ public class ViewPiece : IGameMode
         return true;
     }
 
-    public void HandleKeyPress(KeyboardKey key)
+    public bool HandleKeyPress(Shortcut key)
     {
-        if (Actions.ContainsKey(key))
+        if (Actions.ContainsKey(key.Key))
         {
-            Actions[key]();
+            Actions[key.Key]();
+            return true;
         }
+
+        return false;
     }
 
     public bool Activate()

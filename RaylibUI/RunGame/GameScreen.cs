@@ -1,14 +1,20 @@
 using System.Runtime.CompilerServices;
+using Civ2.Menu;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
+using Model;
+using Model.Interface;
+using Model.Menu;
 using Raylib_cs;
+using RaylibUI.RunGame.Commands.Orders;
 using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.CityControls;
 using RaylibUI.RunGame.GameControls.Mapping;
+using RaylibUI.RunGame.GameControls.Menu;
 using RaylibUI.RunGame.GameModes;
 using RaylibUI.RunGame.GameModes.Orders;
 
@@ -44,12 +50,17 @@ public class GameScreen : BaseScreen
     public LocalPlayer Player => _player;
 
     public StatusPanel StatusPanel => _statusPanel;
+
+    public GameMenu MenuBar => _menu;
     public IGameMode Moving { get; }
     public IGameMode ViewPiece { get; }
 
     private const int MiniMapWidth = 262;
     private readonly int _miniMapHeight;
     private IGameMode _activeMode;
+    
+    private CivDialog _currentPopupDialog;
+    private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
@@ -66,9 +77,10 @@ public class GameScreen : BaseScreen
         _player = new LocalPlayer(this, civ);
         game.ConnectPlayer(_player);
 
-        _menu = new GameMenu(this);
+        var commands = SetupCommands(game);
+        var menuElements = main.ActiveInterface.ConfigureGameCommands(commands);
+        _menu = new GameMenu(this, menuElements);
         _menu.GetPreferredWidth();
-        SetupOrders(game);
 
         Moving = new MovingPieces(this);
         ViewPiece = new ViewPiece(this);
@@ -99,13 +111,60 @@ public class GameScreen : BaseScreen
         Controls.Add(_menu);
         Controls.Add(_minimapPanel);
         Controls.Add(_statusPanel);
+
+        GameCommands = commands.Where(c => c.KeyCombo.Key != KeyboardKey.KEY_NULL).GroupBy(c => c.KeyCombo)
+            .ToDictionary(k => k.Key, MakeCommandSelector);
+    }
+
+    public Dictionary<Shortcut,Action> GameCommands { get; set; }
+
+    private Action MakeCommandSelector(IGrouping<Shortcut, IGameCommand> commandGroup)
+    {
+
+        var commands = commandGroup.ToList();
+
+        return () =>
+        {
+            foreach (var command in commands)
+            {
+                command.Update();
+            }
+
+            var activeCommand = commands.MinBy(c => c.Status);
+
+            if (activeCommand == null || activeCommand.Status == CommandStatus.Invalid) return;
+
+            if (activeCommand.Status <= CommandStatus.Default)
+            {
+                activeCommand.Action();
+            }
+            else
+            {
+                ShowPopup(activeCommand.ErrorDialog);
+            }
+        };
     }
 
     public ProcessingMode Processing { get; }
 
     public override void OnKeyPress(KeyboardKey key)
     {
-        ActiveMode.HandleKeyPress(key);
+        if (key is KeyboardKey.KEY_LEFT_ALT or KeyboardKey.KEY_RIGHT_ALT)
+        {
+            Focused = MenuBar.Children!.First();
+            return;
+        }
+        var command = new Shortcut(key, Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_SHIFT) ||
+                                        Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT)
+            , Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL) ||
+              Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL)
+        );
+
+        if (!ActiveMode.HandleKeyPress(command) && GameCommands.ContainsKey(command))
+        {
+            GameCommands[command]();
+        }
+        
     }
 
     public override void Resize(int width, int height)
@@ -180,91 +239,41 @@ public class GameScreen : BaseScreen
         _mapControl.ForceRedraw = true;
     }
 
-    private void SetupOrders(Game game)
+    private IList<IGameCommand> SetupCommands(Game game)
     {
+        var commandInterface = typeof(IGameCommand);
+        var improvementCommand = typeof(ImprovementOrder);
+        var args = new object[] { this };
         var improvements = game.TerrainImprovements.Values;
+        var commands = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => t != commandInterface && commandInterface.IsAssignableFrom(t) && !t.IsAbstract &&
+                        t != improvementCommand)
+            .Select(t => Activator.CreateInstance(t, args: args)).OfType<IGameCommand>()
+            .Concat(improvements.Select(i => new ImprovementOrder(i, this, game))).ToList();
 
-        var orderText = MenuLoader.For("ORDERS");
+        return commands;
+    }
+    
+    
 
-        Orders = improvements.Select(i =>
-            new ImprovementOrder(i, this, game, orderText.FirstOrDefault(mi => string.Equals(mi.Shortcut, i.Shortcut, StringComparison.InvariantCultureIgnoreCase)))).Cast<Order>()
-               .ToList();
-
-        Orders.Add(new BuildCity(this, orderText.First(mi => mi.Shortcut == "b").MenuText, game));
-        Orders.Add(new PillageOrder(this, orderText.First(mi => mi.Shortcut == "Shift+P").MenuText, game));
-        Orders.Add(new FortifyOrder(this, orderText.Last(mi => mi.Shortcut == "f").MenuText, game));
-        Orders.Add(new SkipOrder(this, orderText.First(mi => mi.Shortcut == "SPACE").MenuText, game));
-        Orders.Add(new WaitOrder(this, orderText.First(mi => mi.Shortcut == "w").MenuText, game));
-        Orders.Add(new UnloadOrder(this, orderText.First(mi => mi.Shortcut == "u").MenuText));
-        Orders.Add(new SleepOrder(this, orderText.First(mi => mi.Shortcut == "s").MenuText, game));
-        Orders.Add(new GotoOrder(this, orderText.First(mi => mi.Shortcut == "g").MenuText, game));
-
-        UpdateOrders(game.ActiveTile, game.ActiveUnit);
+    public void ShowPopup(string dialogName,
+        Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
+        List<TextBoxDefinition>? textBoxes = null)
+    {
+        var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
+        if (popupBox != null)
+        {
+            _popupClicked = handleButtonClick;
+            _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
+                ClosePopup, textBoxDefs: textBoxes);
+            ShowDialog(_currentPopupDialog, stack: true);
+        }
     }
 
-    public void UpdateOrders(Tile activeTile, Unit activeUnit)
+    private void ClosePopup(string arg1, int arg2, IList<bool>? arg3, IDictionary<string, string>? arg4)
     {
-        //_ordersMenu.Items.Clear();
-        Orders.ForEach(o => o.Update(activeTile, activeUnit));
-        //var groupedOrders = Orders.Select(o => o.Update(activeTile, activeUnit)).GroupBy(o => o.Group);
-
-        //foreach (var groupedOrder in groupedOrders)
-        //{
-        //    if (_ordersMenu.Items.Count > 0)
-        //    {
-        //        _ordersMenu.Items.Add(new SeparatorMenuItem());
-        //    }
-        //    _ordersMenu.Items.AddRange(groupedOrder.OrderBy(o => o.ActivationCommand).Select(o => o.Command));
-        //}
-
-        // &Orders
-        //     &Build New City|b
-        // Build &Road|r
-        // Build &Irrigation|i
-        // Build &Mines|m
-        // Transform to ...|o
-        // Build &Airbase|e
-        // Build &Fortress|f
-        // Automate Settler|k
-        // Clean Up &Pollution|p
-        //     &Pillage|Shift+P
-        //     &Unload|u
-        //     &Go To|g
-        //     &Paradrop|p
-        // Air&lift|l
-        //     &Set &Home City|h
-        //     &Fortify|f
-        //     &Sleep|s
-        //     &Disband|Shift+D
-        //     &Activate Unit|a
-        //     &Wait|w
-        // S&kip Turn|SPACE
-        // End Player Tur&n|Ctrl+N
-
-        // var BuildRoadCommand = new Command { MenuText = "Build Road", Shortcut = Keys.R };
-        // var BuildIrrigationCommand = new Command { MenuText = "Build Irrigation", Shortcut = Keys.I };
-        // var BuildMinesCommand = new Command { MenuText = "Build Mines", Shortcut = Keys.M };
-        //var CleanPollutionCommand = new Command { MenuText = "Clean Up Pollution", Shortcut = Keys.P };
-        //var PillageCommand = new Command { MenuText = "Pillage", Shortcut = Keys.Shift | Keys.P };
-        //var UnloadCommand = new Command { MenuText = "Unload", Shortcut = Keys.U };
-        //var GoToCommand = new Command { MenuText = "Go To", Shortcut = Keys.G };
-        //var ParadropCommand = new Command { MenuText = "Paradrop", Shortcut = Keys.P };
-        //var AirliftCommand = new Command { MenuText = "Airlift", Shortcut = Keys.L };
-        //var GoHomeToNearestCityCommand = new Command { MenuText = "Go Home To Nearest City", Shortcut = Keys.H };
-        //var FortifyCommand = new Command { MenuText = "Fortify", Shortcut = Keys.F };
-        //var SleepCommand = new Command { MenuText = "Sleep", Shortcut = Keys.S };
-        //var DisbandCommand = new Command { MenuText = "Disband", Shortcut = Keys.Shift | Keys.D };
-        //var ActivateUnitCommand = new Command { MenuText = "Activate Unit", Shortcut = Keys.A };
-        // var WaitCommand = new Command { MenuText = "Wait", Shortcut = Keys.W };
-        //var SkipTurnCommand = new Command { MenuText = "Skip Turn", Shortcut = Keys.Space };
-        //var EndPlayerTurn = new Command { MenuText = "End Player Turn", Shortcut = Keys.Control | Keys.N };
-
-        //_ordersMenu.Items.AddRange(new MenuItem[]
-        //{
-        //        new SeparatorMenuItem(), GoToCommand,
-        //        ParadropCommand, AirliftCommand, GoHomeToNearestCityCommand,
-        //        new SeparatorMenuItem(), DisbandCommand, ActivateUnitCommand,
-        //        new SeparatorMenuItem(), EndPlayerTurn
-        //});
+        CloseDialog(_currentPopupDialog);
+        _popupClicked?.Invoke(arg1, arg2, arg3, arg4);
     }
 }

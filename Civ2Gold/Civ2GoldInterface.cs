@@ -222,6 +222,8 @@ public class Civ2GoldInterface : Civ2Interface
     private static readonly IImageSource TemplePic = new BinaryStorage
     { FileName = "Intro.dll", DataStart = 0xAB200, Length = 0xB839 };
 
+    
+
     public override IImageSource BackgroundImage => new BinaryStorage
         { FileName = "Tiles.dll", DataStart = 0xF7454, Length = 0x1389D };
 

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Civ2engine;
 using Civ2engine.MapObjects;
+using Model.Menu;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
@@ -33,16 +34,16 @@ public class ProcessingMode : IGameMode
         return false;
     }
 
-    public void HandleKeyPress(KeyboardKey key)
+    public bool HandleKeyPress(Shortcut key)
     {
-        // Cannot press keys while processing
+        // Cannot press keys while processing return true indicate this key is handled
+        return true;
     }
 
     public bool Activate()
     {
         Debug.WriteLine("Processing other turns");
         return true;
-        
     }
 
     public void PanelClick()

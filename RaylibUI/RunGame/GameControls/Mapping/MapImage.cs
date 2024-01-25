@@ -139,87 +139,101 @@ public static class MapImage
         else if (tile.Special != -1)
         {
             // Draw special resources if they exist
-            Raylib.ImageDraw(ref tilePic, terrainSet.Specials[tile.Special][(int)tile.Type], TileRec, TileRec, Color.WHITE);
+            Raylib.ImageDraw(ref tilePic, terrainSet.Specials[tile.Special][(int)tile.Type], TileRec, TileRec,
+                Color.WHITE);
         }
 
-
-        var improvements = tile.Improvements
-            .Where(ci => game.TerrainImprovements.ContainsKey(ci.Improvement))
-            .OrderBy(ci => game.TerrainImprovements[ci.Improvement].Layer).ToList();
-
+        
         var tileDetails = new TileDetails { Image = tilePic };
-        foreach (var construct in improvements)
+        if (tile.Map.MapRevealed || (tile.PlayerKnowledge != null && tile.PlayerKnowledge.Length > civilizationId &&
+            tile.PlayerKnowledge[civilizationId] != null))
         {
-            var improvement = game.TerrainImprovements[construct.Improvement];
-            var graphics = terrainSet.ImprovementsMap[construct.Improvement];
+            var improvements =
+                (tile.Map.MapRevealed ? tile.Improvements : tile.PlayerKnowledge[civilizationId].Improvements)
+                .Where(ci => game.TerrainImprovements.ContainsKey(ci.Improvement))
+                .OrderBy(ci => game.TerrainImprovements[ci.Improvement].Layer).ToList();
 
-            if (improvement.HasMultiTile)
+            foreach (var construct in improvements)
             {
-                bool hasNeighbours = false;
+                var improvement = game.TerrainImprovements[construct.Improvement];
+                var graphics = terrainSet.ImprovementsMap[construct.Improvement];
 
-                for (int i = 0; i < neighbours.Length; i++)
+                if (improvement.HasMultiTile)
                 {
-                    var neighbour = neighbours[i];
+                    bool hasNeighbours = false;
 
-                    var neighboringImprovement =
-                        neighbour?.Improvements.FirstOrDefault(i =>
-                            i.Improvement == construct.Improvement);
-                    if (neighboringImprovement != null)
+                    for (int i = 0; i < neighbours.Length; i++)
                     {
-                        var index = i + 1;
-                        if (index != -1)
+                        var neighbour = neighbours[i];
+
+                        var neighboringImprovement =
+                            neighbour?.Improvements.FirstOrDefault(i =>
+                                i.Improvement == construct.Improvement);
+                        if (neighboringImprovement != null)
                         {
-                            if (neighboringImprovement.Level < construct.Level)
+                            var index = i + 1;
+                            if (index != -1)
                             {
-                                Raylib.ImageDraw(ref tilePic, graphics.Levels[neighboringImprovement.Level, index], TileRec,
-                                    TileRec, Color.WHITE);
-                            }
-                            else
-                            {
-                                hasNeighbours = true;
-                                Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, index], TileRec, TileRec,
-                                    Color.WHITE);
+                                if (neighboringImprovement.Level < construct.Level)
+                                {
+                                    Raylib.ImageDraw(ref tilePic, graphics.Levels[neighboringImprovement.Level, index],
+                                        TileRec,
+                                        TileRec, Color.WHITE);
+                                }
+                                else
+                                {
+                                    hasNeighbours = true;
+                                    Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, index], TileRec,
+                                        TileRec,
+                                        Color.WHITE);
+                                }
                             }
                         }
                     }
-                }
 
-                if (!hasNeighbours)
-                {
-                    if (tile.CityHere is null)
+                    if (!hasNeighbours)
                     {
-                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
+                        if (tile.CityHere is null)
+                        {
+                            Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
+                                Color.WHITE);
+                        }
                     }
                 }
-            }
-            else if (tile.CityHere is not null)
-            {
-                if (tile.Map.DirectNeighbours(tile)
-                    .Any(t => t.Improvements.Any(i => i.Improvement == construct.Improvement)))
+                else if (tile.PlayerKnowledge[civilizationId].CityHere is not null)
                 {
-                    Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
-                }
-            }
-            else
-            {
-                if (improvement.HideUnits != -1)
-                {
-                    tileDetails.ForegroundElement = new UnitHidingImprovement
+                    if (tile.Map.DirectNeighbours(tile)
+                        .Any(t => t.Improvements.Any(i => i.Improvement == construct.Improvement)))
                     {
-                        UnitDomain = (UnitGAS)improvement.HideUnits, 
-                        UnitImage = new MemoryStorage(graphics.UnitLevels[construct.Level, 0], improvement.Name, _replacementColour),
-                        Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name, _replacementColour)
-                    };
-                }else if (improvement.Foreground)
-                {
-                    tileDetails.ForegroundElement = new ForegroundImprovement
-                    {
-                        Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name)
-                    };
+                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
+                            Color.WHITE);
+                    }
                 }
                 else
                 {
-                    Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec, Color.WHITE);
+                    if (improvement.HideUnits != -1)
+                    {
+                        tileDetails.ForegroundElement = new UnitHidingImprovement
+                        {
+                            UnitDomain = (UnitGAS)improvement.HideUnits,
+                            UnitImage = new MemoryStorage(graphics.UnitLevels[construct.Level, 0], improvement.Name,
+                                _replacementColour),
+                            Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name,
+                                _replacementColour)
+                        };
+                    }
+                    else if (improvement.Foreground)
+                    {
+                        tileDetails.ForegroundElement = new ForegroundImprovement
+                        {
+                            Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name)
+                        };
+                    }
+                    else
+                    {
+                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
+                            Color.WHITE);
+                    }
                 }
             }
         }

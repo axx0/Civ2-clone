@@ -6,8 +6,6 @@ namespace RaylibUI.Forms;
 public class MenuBar
 {
     public List<MenuBarItem> Items { get; set; }
-    public int ActiveMenuId { get; set; } = 0;
-    public bool IsMenuStripVisible { get; set; } = false;
     //public bool Enabled { get; set; } = true;
 
     public MenuBar()

@@ -311,7 +311,7 @@ namespace Civ2engine.MapObjects
             return civId < _visibility.Length && _visibility[civId];
         }
         
-        private PlayerTile[]? PlayerKnowledge { get; set; }
+        public PlayerTile[]? PlayerKnowledge { get; set; }
 
         public void UpdatePlayer(int civilizationId)
         {
@@ -340,11 +340,11 @@ namespace Civ2engine.MapObjects
             PlayerKnowledge = new PlayerTile[_visibility.Length];
             for (var i = 0; i < _visibility.Length; i++)
             {
-                if(_visibility[i])
+                if(this.Map.IsCurrentlyVisible(this, i))
                 {
                     PlayerKnowledge[i] = new PlayerTile(this);
                 }
-                else
+                else if(PlayerKnowledge[i] == null)
                 {
                     PlayerKnowledge[i] = new PlayerTile();
                 }

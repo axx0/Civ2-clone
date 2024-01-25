@@ -15,7 +15,7 @@ public abstract class BaseDialogHandler : ICivDialogHandler
     private Point DialogPos { get; }
 
     public string Name { get; }
-    public virtual ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public virtual ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
         if (popups.TryGetValue(Name, out var popup))
         {

@@ -12,7 +12,7 @@ public class ScenGender : ICivDialogHandler
     public const string Title = "SCENGENDER";
 
     public string Name { get; } = Title;
-    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
         Dialog = new DialogElements
         {

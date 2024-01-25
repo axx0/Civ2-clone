@@ -234,7 +234,7 @@ public class CityTileMap : BaseControl
                     }
                     var sizeIncrement =
                         gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
-                            tile.CityHere);
+                            tile.CityHere, tile.CityHere.Size);
                     cityData.Add(new Element
                     {
                         Image = cities.Sets[cityStyleIndex][sizeIncrement]

@@ -11,7 +11,7 @@ public class SelectGameVersionHandler : BaseDialogHandler
     public const string Title = "AXX-Select-Game";
 
     public SelectGameVersionHandler() : base(Title) {}
-    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox> popups)
+    public override ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
     {
         popups[Name] = new PopupBox
         {

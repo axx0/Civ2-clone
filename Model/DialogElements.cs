@@ -9,7 +9,7 @@ namespace Model;
 public class DialogElements
 {
     public List<Decoration> Decorations { get; } = new();
-    public PopupBox Dialog { get; init; }
+    public PopupBox? Dialog { get; init; }
     public Point DialogPos { get; init; }
     public List<TextBoxDefinition>? TextBoxes { get; set; }
     public ListBoxDefinition? ListBox { get; set; }

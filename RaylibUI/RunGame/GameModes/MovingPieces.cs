@@ -1,8 +1,11 @@
 using System.Numerics;
+using System.Security.Cryptography;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions.Move;
+using Model;
+using Model.Menu;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls;
@@ -21,7 +24,7 @@ public class MovingPieces : IGameMode
         _title = new LabelControl(gameScreen,  Labels.For(LabelIndex.MovingUnits), true, alignment: TextAlignment.Center);
 
         _gameScreen = gameScreen;
-        Actions = new Dictionary<KeyboardKey, Action>
+        Actions = new Dictionary<Shortcut, Action>
         {
             /*{
                 Keys.Enter, () =>
@@ -30,37 +33,18 @@ public class MovingPieces : IGameMode
                 }
             },*/
 
-            {KeyboardKey.KEY_KP_7, MovementFunctions.TryMoveNorthWest}, {KeyboardKey.KEY_KP_8, MovementFunctions.TryMoveNorth},
-            {KeyboardKey.KEY_KP_9, MovementFunctions.TryMoveNorthEast},
-            {KeyboardKey.KEY_KP_1, MovementFunctions.TryMoveSouthWest}, {KeyboardKey.KEY_KP_2, MovementFunctions.TryMoveSouth},
-            {KeyboardKey.KEY_KP_3, MovementFunctions.TryMoveSouthEast},
-            {KeyboardKey.KEY_KP_4, MovementFunctions.TryMoveWest}, {KeyboardKey.KEY_KP_6, MovementFunctions.TryMoveEast},
+            {new Shortcut(KeyboardKey.KEY_KP_7), MovementFunctions.TryMoveNorthWest}, {new Shortcut(KeyboardKey.KEY_KP_8), MovementFunctions.TryMoveNorth},
+            {new Shortcut(KeyboardKey.KEY_KP_9), MovementFunctions.TryMoveNorthEast},
+            {new Shortcut(KeyboardKey.KEY_KP_1), MovementFunctions.TryMoveSouthWest}, {new Shortcut(KeyboardKey.KEY_KP_2), MovementFunctions.TryMoveSouth},
+            {new Shortcut(KeyboardKey.KEY_KP_3), MovementFunctions.TryMoveSouthEast},
+            {new Shortcut(KeyboardKey.KEY_KP_4), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.KEY_KP_6), MovementFunctions.TryMoveEast},
 
-            {KeyboardKey.KEY_UP, MovementFunctions.TryMoveNorth}, {KeyboardKey.KEY_DOWN, MovementFunctions.TryMoveSouth},
-            {KeyboardKey.KEY_LEFT, MovementFunctions.TryMoveWest}, {KeyboardKey.KEY_RIGHT, MovementFunctions.TryMoveEast},
-
-            { KeyboardKey.KEY_SPACE, () => 
-            _gameScreen.Orders.Find(o => o.ActivationCommand == KeyboardKey.KEY_SPACE).ExecuteCommand() },
-
-            { KeyboardKey.KEY_S, () =>
-            _gameScreen.Orders.Find(o => o.ActivationCommand == KeyboardKey.KEY_S).ExecuteCommand() },
-
-            //{KeyboardKey.KEY_SPACE, () =>
-            //    {
-            //        _gameScreen.Game.ActiveUnit?.SkipTurn();
-            //        _gameScreen.Game.ChooseNextUnit();
-            //    }
-            //},
-            //{KeyboardKey.KEY_S, () =>
-            //    {
-            //        _gameScreen.Game.ActiveUnit?.Sleep();
-            //        _gameScreen.Game.ChooseNextUnit();
-            //    }
-            //},
+            {new Shortcut(KeyboardKey.KEY_UP), MovementFunctions.TryMoveNorth}, {new Shortcut(KeyboardKey.KEY_DOWN), MovementFunctions.TryMoveSouth},
+            {new Shortcut(KeyboardKey.KEY_LEFT), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.KEY_RIGHT), MovementFunctions.TryMoveEast},
         };
     }
 
-    public Dictionary<KeyboardKey,Action> Actions { get; set; }
+    public Dictionary<Shortcut, Action> Actions { get; set; }
 
     public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
         bool forceRedraw)
@@ -119,12 +103,15 @@ public class MovingPieces : IGameMode
         return true;
     }
 
-    public void HandleKeyPress(KeyboardKey key)
+    public bool HandleKeyPress(Shortcut command)
     {
-        if (Actions.ContainsKey(key))
+        if (Actions.ContainsKey(command))
         {
-            Actions[key]();
+            Actions[command]();
+            return true;
         }
+
+        return false;
     }
 
     public bool Activate()

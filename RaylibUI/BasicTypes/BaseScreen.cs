@@ -103,7 +103,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     }
     
 
-    protected void ShowDialog(IControlLayout dialog, bool stack = false)
+    public void ShowDialog(IControlLayout dialog, bool stack = false)
     {
         if (!stack)
         {

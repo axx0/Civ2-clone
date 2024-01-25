@@ -7,8 +7,8 @@ public class ControlGroup : BaseControl
     internal const int NoFlex = -2;
     private const int EvenFlex = -1;
     public override bool CanFocus => false;
-    
-    private List<int> _childWidths;
+
+    public List<int> ChildWidths { get; private set; }
 
     private readonly int _spacing;
     private readonly int _flexElement;
@@ -22,8 +22,14 @@ public class ControlGroup : BaseControl
 
     public override int GetPreferredWidth()
     {
-        _childWidths = Children.Select(c => c.GetPreferredWidth()).ToList();
-        return _childWidths.Sum() + (_childWidths.Count - 1) * _spacing;
+        ChildWidths = Children.Select(c => c.GetPreferredWidth()).ToList();
+        return ChildWidths.Sum() + (ChildWidths.Count - 1) * _spacing;
+    }
+
+    public void SetChildWidths(List<int> childWidths)
+    {
+        ChildWidths = childWidths;
+        Width = childWidths.Sum() + childWidths.Count * _spacing - _spacing;
     }
 
     public override int GetPreferredHeight()
@@ -33,7 +39,7 @@ public class ControlGroup : BaseControl
 
     public override void OnResize()
     {
-        if (_childWidths == null || _childWidths.Count == 0)
+        if (ChildWidths == null || ChildWidths.Count == 0)
         {
             GetPreferredWidth();
         }
@@ -43,20 +49,20 @@ public class ControlGroup : BaseControl
             for (int i = 0; i < Children.Count; i++)
             {
                 var child = Children[i];
-                var requestedWidth = _childWidths[i];
+                var requestedWidth = ChildWidths[i];
                 child.Bounds = new Rectangle(Location.X + offset, Location.Y, requestedWidth, Height);
                 offset += requestedWidth + _spacing;
             }
             return;
         }
-        var totalWidth = _childWidths.Sum() + (_childWidths.Count - 1) * _spacing;
+        var totalWidth = ChildWidths.Sum() + (ChildWidths.Count - 1) * _spacing;
         var difference = Width - totalWidth;
         if (_flexElement != EvenFlex)
         {
             for (int i = 0; i < Children.Count; i++)
             {
                 var child = Children[i];
-                var requestedWidth = _childWidths[i];
+                var requestedWidth = ChildWidths[i];
                 var width = i == _flexElement ? requestedWidth + difference : requestedWidth;
                 child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, Height);
                 offset += width + _spacing;
@@ -65,7 +71,7 @@ public class ControlGroup : BaseControl
             return;
         }
         var controlWidth = ((Width + _spacing) / Children.Count) - _spacing;
-        var excess = _childWidths.Sum(s => s - controlWidth);
+        var excess = ChildWidths.Sum(s => s - controlWidth);
         if (excess > 0)
         {
             controlWidth = (Width - excess + _spacing) / Children.Count - _spacing;
@@ -73,7 +79,7 @@ public class ControlGroup : BaseControl
         for (int index = 0; index < Children.Count; index++)
         {
             var child = Children[index];
-            var width = Math.Max(controlWidth, _childWidths[index]);
+            var width = Math.Max(controlWidth, ChildWidths[index]);
             child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, Height);
             offset += width + _spacing;
         }

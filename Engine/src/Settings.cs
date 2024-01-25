@@ -21,7 +21,7 @@ namespace Civ2engine
 
             LoadSettings(settingsFilePath);
 
-            return !string.IsNullOrWhiteSpace(Civ2Path);
+            return !string.IsNullOrWhiteSpace(Civ2Path) && IsValidRoot(Civ2Path);
         }
 
         public static string BasePath => AppDomain.CurrentDomain.BaseDirectory;
