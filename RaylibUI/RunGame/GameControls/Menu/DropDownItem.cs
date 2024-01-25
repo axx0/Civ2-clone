@@ -6,8 +6,9 @@ using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
 
-internal class DropDownItem : LabelControl
+internal class DropDownItem : ControlGroup
 {
+    public const int DropdownSpacing = 15;
     private readonly MenuCommand _command;
     private readonly DropdownMenu _dropdownMenu;
     private readonly int _index;
@@ -16,11 +17,14 @@ internal class DropDownItem : LabelControl
     public KeyboardKey HotKey => _command.HotKey;
 
     public DropDownItem(DropdownMenu dropdownMenu, MenuCommand command, int index) : base(dropdownMenu,
-        command.MenuText, false)
+        DropdownSpacing, NoFlex)
     {
         _command = command;
         _dropdownMenu = dropdownMenu;
         _index = index;
+        var texts = command.MenuText.Split("|");
+        Children.Add(new LabelControl(dropdownMenu, texts[0], true));
+        Children.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true));
     }
 
     public override bool OnKeyPressed(KeyboardKey key)

@@ -14,7 +14,7 @@ public class MenuLabel : LabelControl
     public override bool CanFocus => true;
 
     public MenuLabel(IControlLayout controller, GameMenu gameMenu, DropdownMenuContents contents, int index) :
-        base(controller, contents.Title, false, font: Fonts.AlternativeFont, fontSize: 14)
+        base(controller, contents.Title, false, fontSize: 14)
     {
         Hotkey = contents.HotKey;
         _menuElements = contents;

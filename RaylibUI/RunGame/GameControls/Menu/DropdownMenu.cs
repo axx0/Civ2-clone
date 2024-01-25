@@ -26,25 +26,38 @@ public class DropdownMenu :  BaseDialog
         Location = location;
         _current = menuIndex;
         Controls.Clear();
-        int width = 0;
+        var width = new List<int>{ 20,10};
         foreach (var command in elements)
         {
             command.GameCommand?.Update();
             var dropDownItem = new DropDownItem(this, command,  Controls.Count);
             Controls.Add( dropDownItem);
-            width = Math.Max(width, dropDownItem.GetPreferredWidth());
+            
+            dropDownItem.GetPreferredWidth();
+            var itemWidths = dropDownItem.ChildWidths;
+            if (width[0] < itemWidths[0])
+            {
+                width[0] = itemWidths[0];
+            }
+
+            if (width[1] < itemWidths[1])
+            {
+                width[1] = itemWidths[1];
+            }
         }
 
-        
+        var dropdownWidth = width.Sum() + DropDownItem.DropdownSpacing;
         var currentY = location.Y;
-        foreach (var menuItem in Controls)
+        foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
             var height = menuItem.GetPreferredHeight();
-            menuItem.Bounds = new Rectangle(location.X, currentY, width, height);
+            menuItem.SetChildWidths(width);
+            menuItem.Bounds = new Rectangle(location.X, currentY, dropdownWidth, height);
+            menuItem.OnResize();
             currentY += height;
         }
 
-        Width = width;
+        Width = dropdownWidth;
         Height = currentY - location.Y;
         _gameScreen.ShowDialog(this,true);
         _shown = true;
@@ -150,7 +163,7 @@ public class DropdownMenu :  BaseDialog
     public override void Draw(bool pulse)
     {
         if (!_shown || Controls.Count == 0) return;
-        Raylib.DrawRectangleV(Location, new Vector2(Width, Height), Color.GRAY);
+        Raylib.DrawRectangleV(Location, new Vector2(Width, Height), Color.WHITE);
         foreach (var control in Controls)
         {
             control.Draw(pulse);
