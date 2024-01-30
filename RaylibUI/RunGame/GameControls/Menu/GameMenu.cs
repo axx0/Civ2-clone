@@ -11,13 +11,15 @@ public class GameMenu : ControlGroup
     private readonly List<MenuLabel> _labels;
     public DropdownMenu Dropdown => _dropdownMenu ??= new DropdownMenu(_gameScreen);
 
-    public GameMenu(GameScreen gameScreen, IList<DropdownMenuContents> menus) : base(gameScreen, flexElement: NoFlex)
+    public GameMenu(GameScreen gameScreen, IList<DropdownMenuContents> menus) : base(gameScreen, flexElement: NoFlex, spacing: 12)
     {
         _gameScreen = gameScreen;
-        
+        var look = gameScreen.MainWindow.ActiveInterface.Look;
+
+        var textHeight = (int)Raylib.MeasureTextEx(look.MenuFont, "sample", look.MenuFontSize, 0f).Y;
         _labels = menus.Select((menu, index) =>
                               {
-                                  var menuLabel = new MenuLabel(gameScreen, this, menu, index);
+                                  var menuLabel = new MenuLabel(gameScreen, look, this, menu, index, textHeight);
                   
                                   return menuLabel;
                               })
@@ -66,6 +68,19 @@ public class GameMenu : ControlGroup
     public override void Draw(bool pulse)
     {
         Raylib.DrawRectangleRec(Bounds, Color.WHITE);
+        foreach (var control in Children)
+        {
+            if (control == Controller.Focused)
+            {
+                Raylib.DrawRectangleRec(control.Bounds, new Color(204, 232, 255, 255));
+                Raylib.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(153, 209, 255, 255));
+            }
+            else if (control == Controller.Hovered)
+            {
+                Raylib.DrawRectangleRec(control.Bounds, new Color(229, 243, 255, 255));
+                Raylib.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(204, 232, 255, 255));
+            }
+        }
         base.Draw(pulse);
     }
 }

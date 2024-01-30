@@ -12,10 +12,12 @@ public class DropdownMenu :  BaseDialog
     private bool _shown;
     private readonly GameScreen _gameScreen;
     private int _current = -1;
+    private IUserInterface _active;
 
     public DropdownMenu(GameScreen gameScreen) : base(gameScreen.Main)
     {
         _gameScreen = gameScreen;
+        _active = gameScreen.MainWindow.ActiveInterface;
         MenuBar = gameScreen.MenuBar;
     }
 
@@ -30,7 +32,7 @@ public class DropdownMenu :  BaseDialog
         foreach (var command in elements)
         {
             command.GameCommand?.Update();
-            var dropDownItem = new DropDownItem(this, command,  Controls.Count);
+            var dropDownItem = new DropDownItem(this, _active.Look, command,  Controls.Count);
             Controls.Add( dropDownItem);
             
             dropDownItem.GetPreferredWidth();
@@ -47,18 +49,18 @@ public class DropdownMenu :  BaseDialog
         }
 
         var dropdownWidth = width.Sum() + DropDownItem.DropdownSpacing;
-        var currentY = location.Y;
+        var currentY = location.Y + 3;
         foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
-            var height = menuItem.GetPreferredHeight();
+            var height = menuItem.GetPreferredHeight() + 12;
             menuItem.SetChildWidths(width);
-            menuItem.Bounds = new Rectangle(location.X, currentY, dropdownWidth, height);
+            menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, height);
             menuItem.OnResize();
             currentY += height;
         }
 
-        Width = dropdownWidth;
-        Height = currentY - location.Y;
+        Width = dropdownWidth + 6;
+        Height = currentY - location.Y + 3;
         _gameScreen.ShowDialog(this,true);
         _shown = true;
     }
@@ -163,9 +165,16 @@ public class DropdownMenu :  BaseDialog
     public override void Draw(bool pulse)
     {
         if (!_shown || Controls.Count == 0) return;
-        Raylib.DrawRectangleV(Location, new Vector2(Width, Height), Color.WHITE);
+
+        Raylib.DrawRectangleV(Location, new Vector2(Width, Height), new Color(242, 242, 242, 255));
+        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y, Width, (int)Height, new Color(204, 204, 204, 255));
+        
         foreach (var control in Controls)
         {
+            if (Focused == control)
+            {
+                Raylib.DrawRectangleRec(new Rectangle(control.Location.X, control.Location.Y, control.Width, control.Height), new Color(145, 201, 247, 255));
+            }
             control.Draw(pulse);
         }
     }

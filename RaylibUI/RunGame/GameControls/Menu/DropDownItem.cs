@@ -16,15 +16,16 @@ internal class DropDownItem : ControlGroup
 
     public KeyboardKey HotKey => _command.HotKey;
 
-    public DropDownItem(DropdownMenu dropdownMenu, MenuCommand command, int index) : base(dropdownMenu,
+    public DropDownItem(DropdownMenu dropdownMenu, InterfaceStyle look, MenuCommand command, int index) : base(dropdownMenu,
         DropdownSpacing, NoFlex)
     {
         _command = command;
         _dropdownMenu = dropdownMenu;
         _index = index;
         var texts = command.MenuText.Split("|");
-        Children.Add(new LabelControl(dropdownMenu, texts[0], true));
-        Children.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true));
+        var textHeight = (int)Raylib.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
+        Children.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, font: look.MenuFont, fontSize: look.MenuFontSize, defaultHeight: textHeight));
+        Children.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, font: look.MenuFont, fontSize: look.MenuFontSize, defaultHeight: textHeight));
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
@@ -51,7 +52,7 @@ internal class DropDownItem : ControlGroup
         base.Draw(pulse);
         if (Controller.Focused == this)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.BLACK);
+            //Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.BLACK);
         }
     }
 }

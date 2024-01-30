@@ -13,8 +13,8 @@ public class MenuLabel : LabelControl
 
     public override bool CanFocus => true;
 
-    public MenuLabel(IControlLayout controller, GameMenu gameMenu, DropdownMenuContents contents, int index) :
-        base(controller, contents.Title, false, fontSize: 14)
+    public MenuLabel(IControlLayout controller, InterfaceStyle look, GameMenu gameMenu, DropdownMenuContents contents, int index, int textHeight) :
+        base(controller, contents.Title.Replace("&", ""), false, font: look.MenuFont, fontSize: look.MenuFontSize, defaultHeight: textHeight)
     {
         Hotkey = contents.HotKey;
         _menuElements = contents;
@@ -110,9 +110,9 @@ public class MenuLabel : LabelControl
     public override void Draw(bool pulse)
     {
         base.Draw(pulse);
-        if (Controller.Focused == this)
-        {
-            Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.BLACK);
-        }
+        //if (Controller.Focused == this)
+        //{
+        //    Raylib.DrawRectangleLinesEx(new Rectangle(Location.X + 1, Location.Y + 1, Width - 2, Height - 2), 0.5f, Color.BLACK);
+        //}
     }
 }

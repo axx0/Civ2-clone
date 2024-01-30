@@ -41,4 +41,6 @@ public class InterfaceStyle
     public Color LabelColour { get; init; }
     public Font CityWindowFont { get; init; }
     public int CityWindowFontSize { get; init; }
+    public Font MenuFont { get; init; }
+    public int MenuFontSize { get; init; }
 }
