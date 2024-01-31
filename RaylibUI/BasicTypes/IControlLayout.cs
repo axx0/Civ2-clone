@@ -21,4 +21,5 @@ public interface IControlLayout
     Padding LayoutPadding { get; set; }
     
     Vector2 Location { get; }
+    void MouseOutsideControls(Vector2 mousePos);
 }

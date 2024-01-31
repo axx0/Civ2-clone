@@ -65,6 +65,11 @@ public abstract class BaseLayoutController : IControlLayout
 
     public Padding LayoutPadding { get; set; }
     public Vector2 Location { get; protected set; }
+    
+    public virtual void MouseOutsideControls(Vector2 mousePos)
+    {
+        
+    }
 
     protected static IControl? FindControl(IEnumerable<IControl> controls, Func<IControl, bool> matching)
     {
