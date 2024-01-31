@@ -13,6 +13,8 @@ public class DropdownMenu :  BaseDialog
     private readonly GameScreen _gameScreen;
     private int _current = -1;
     private IUserInterface _active;
+    private bool _clickInMenu;
+    private bool _clickOutSide;
 
     public DropdownMenu(GameScreen gameScreen) : base(gameScreen.Main)
     {
@@ -63,6 +65,53 @@ public class DropdownMenu :  BaseDialog
         Height = currentY - location.Y + 3;
         _gameScreen.ShowDialog(this,true);
         _shown = true;
+        _clickInMenu = false;
+        _clickOutSide = false;
+    }
+    
+    
+
+    public override void MouseOutsideControls(Vector2 mousePos)
+    {
+        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+        {
+            if (Raylib.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
+            {
+                _clickInMenu = true;
+                _clickOutSide = false;
+            }
+            else
+            {
+                _clickOutSide = true;
+                _clickInMenu = false;
+            }
+        }
+        else
+        {
+            if (_clickInMenu)
+            {
+                foreach (var control in MenuBar.Children!.OfType<MenuLabel>())
+                {
+                    if (Raylib.CheckCollisionPointRec(mousePos, control.Bounds))
+                    {
+                        if (control.Index == _current)
+                        {
+                            Hide();
+                        }
+                        else
+                        {
+                            control.Activate();
+                        }
+                        return;
+                    }
+                }
+            }
+
+            if (_clickOutSide)
+            {
+                Hide();
+            }
+        }
     }
 
     public float Height { get; set; }

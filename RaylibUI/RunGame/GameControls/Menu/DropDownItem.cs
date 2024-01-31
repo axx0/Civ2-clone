@@ -17,7 +17,7 @@ internal class DropDownItem : ControlGroup
     public KeyboardKey HotKey => _command.HotKey;
 
     public DropDownItem(DropdownMenu dropdownMenu, InterfaceStyle look, MenuCommand command, int index) : base(dropdownMenu,
-        DropdownSpacing, NoFlex)
+        DropdownSpacing, NoFlex, eventTransparent: false)
     {
         _command = command;
         _dropdownMenu = dropdownMenu;
@@ -26,33 +26,38 @@ internal class DropDownItem : ControlGroup
         var textHeight = (int)Raylib.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
         Children.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, font: look.MenuFont, fontSize: look.MenuFontSize, defaultHeight: textHeight));
         Children.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, font: look.MenuFont, fontSize: look.MenuFontSize, defaultHeight: textHeight));
+        Click += (_, _) => Activate();
     }
 
     public override bool OnKeyPressed(KeyboardKey key)
     {
-        var gameMenu = _dropdownMenu.MenuBar;
         switch (key)
         {
             case KeyboardKey.KEY_ESCAPE:
-                gameMenu.Dropdown.Hide();
+                _dropdownMenu.Hide();
                 return true;
             case KeyboardKey.KEY_ENTER:
-                if (_command is { Enabled: true, GameCommand: not null })
-                {
-                    _command.GameCommand?.Action();
-                    
-                }
+                Activate();
                 return true;
         }
         return base.OnKeyPressed(key);
     }
-    
+
+    private void Activate()
+    {
+        if (_command is { Enabled: true, GameCommand: not null })
+        {
+            _command.GameCommand?.Action();
+            _dropdownMenu.Hide();
+        }
+    }
+
     public override void Draw(bool pulse)
     {
         base.Draw(pulse);
-        if (Controller.Focused == this)
+        if (Controller.Hovered == this)
         {
-            //Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.BLACK);
+            Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.BLACK);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 using Model;
 using Raylib_cs;
@@ -87,6 +88,11 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         else
         {
             FindHovered(layoutController, mousePos);
+        }
+
+        if (layoutController.Hovered == null)
+        {
+            layoutController.MouseOutsideControls(mousePos);
         }
     }
 
