@@ -53,7 +53,7 @@ public class StatusPanel : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.WHITE);
+        Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
         _headerLabel.Draw(pulse);
         base.Draw(pulse);
         if (Children != null)

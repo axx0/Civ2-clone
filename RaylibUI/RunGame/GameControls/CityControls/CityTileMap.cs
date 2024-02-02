@@ -177,11 +177,11 @@ public class CityTileMap : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0, _scaleFactor, Color.WHITE);
+        Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0, _scaleFactor, Color.White);
 
         Raylib.DrawTextEx(_active.Look.CityWindowFont, _text,
             new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 
-            _active.Look.CityWindowFontSize, 1, Color.GOLD);
+            _active.Look.CityWindowFontSize, 1, Color.Gold);
     }
 
     public override void OnResize()
@@ -220,7 +220,7 @@ public class CityTileMap : BaseControl
                     MapImage.TileRec,
                     new Rectangle(locationX,
                         locationY, dim.TileWidth, dim.TileHeight),
-                    Color.WHITE);
+                    Color.White);
                 if (tile.CityHere != null)
                 {
                     var cityStyleIndex = tile.CityHere.Owner.CityStyle;
@@ -256,7 +256,7 @@ public class CityTileMap : BaseControl
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
                 {
                     Raylib.ImageDraw(ref image, gameScreen.Main.ActiveInterface.MapImages.ViewPiece, MapImage.TileRec,
-                        MapImage.TileRec with { X = locationX, Y = locationY }, Color.RED);
+                        MapImage.TileRec with { X = locationX, Y = locationY }, Color.Red);
                 }
             }
         }
@@ -266,14 +266,14 @@ public class CityTileMap : BaseControl
         {
             Raylib.ImageDraw(ref image, cityDetails.Image, cities.CityRectangle,
                 cities.CityRectangle with { X = cityDetails.X, Y = cityDetails.Y },
-                Color.WHITE);
+                Color.White);
         }
 
         foreach (var unitDetails in units)
         {
             Raylib.ImageDraw(ref image, unitDetails.Image, unitsSet.UnitRectangle,
                 unitsSet.UnitRectangle with { X = unitDetails.X, Y = unitDetails.Y },
-                Color.WHITE);
+                Color.White);
         }
 
         var resources =
@@ -301,17 +301,17 @@ public class CityTileMap : BaseControl
                 var destRect = resourceRect with { X = locationX, Y = locationY };
                 for (var i = 0; i < food; i++)
                 {
-                    Raylib.ImageDraw(ref image, resources["Food"], resourceRect, destRect, Color.WHITE);
+                    Raylib.ImageDraw(ref image, resources["Food"], resourceRect, destRect, Color.White);
                     destRect.X += spacing;
                 }
                 for (var i = 0; i < shields; i++)
                 {
-                    Raylib.ImageDraw(ref image, resources["Shields"], resourceRect, destRect, Color.WHITE);
+                    Raylib.ImageDraw(ref image, resources["Shields"], resourceRect, destRect, Color.White);
                     destRect.X += spacing;
                 }
                 for (var i = 0; i < trade; i++)
                 {
-                    Raylib.ImageDraw(ref image, resources["Trade"], resourceRect, destRect, Color.WHITE);
+                    Raylib.ImageDraw(ref image, resources["Trade"], resourceRect, destRect, Color.White);
                     destRect.X += spacing;
                 }
             }

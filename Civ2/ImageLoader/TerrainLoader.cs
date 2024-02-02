@@ -40,9 +40,9 @@ namespace Civ2.ImageLoader
                 gray = imageColours[0];
                 Raylib.UnloadImageColors(imageColours);
             }
-            Raylib.ImageColorReplace(ref ditherTile, Color.BLACK, Color.WHITE);
-            Raylib.ImageColorReplace(ref ditherTile, new Color(255, 0, 255, 0), Color.BLACK);
-            Raylib.ImageColorReplace(ref ditherTile, gray, Color.BLACK);
+            Raylib.ImageColorReplace(ref ditherTile, Color.Black, Color.White);
+            Raylib.ImageColorReplace(ref ditherTile, new Color(255, 0, 255, 0), Color.Black);
+            Raylib.ImageColorReplace(ref ditherTile, gray, Color.Black);
 
             terrain.BaseTiles = tileProps["base1"].Select(t => t.Image).ToArray();
 

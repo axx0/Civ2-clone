@@ -104,7 +104,7 @@ public class CityWindow : BaseDialog
         {
             var resourceTitle = Labels.For(LabelIndex.CityResources);
             var resourceTitleSize = Raylib.MeasureTextEx(_active.Look.CityWindowFont, resourceTitle, _active.Look.CityWindowFontSize, 1);
-            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.GOLD, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
+            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Gold, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
             {
                 AbsolutePosition = new Rectangle(titlePosition.X - resourceTitleSize.X / 2 - 10,titlePosition.Y, resourceTitleSize.X + 20, resourceTitleSize.Y )
             });

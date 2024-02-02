@@ -103,11 +103,11 @@ public class ResourceProductionBar : BaseControl
         var textDim = Raylib.MeasureTextEx(Fonts.Arial, _sections[0].Label, 14, 1);
         var labely = Location.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
             
-        Raylib.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.WHITE);
+        Raylib.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.White);
         var pos = Location + Vector2.One;
         for (int i = 0; i < _sections[0].Value; i++)
         {
-            Raylib.DrawTextureEx(_sections[0].Icon, pos,0,1,Color.WHITE);
+            Raylib.DrawTextureEx(_sections[0].Icon, pos,0,1,Color.White);
             pos.X += _spacing;
         }
 
@@ -118,12 +118,12 @@ public class ResourceProductionBar : BaseControl
             pos.X += _mid;
             for (int i = 0; i < _sections[1].Value; i++)
             {
-                Raylib.DrawTextureEx(_sections[1].Icon, pos,0,1,Color.WHITE);
+                Raylib.DrawTextureEx(_sections[1].Icon, pos,0,1,Color.White);
                 pos.X += _spacing;
             }
             var midText = _sections[1].Label;
             var midSize = Raylib.MeasureTextEx(Fonts.Arial, midText, 14, 1);
-            Raylib.DrawTextEx(Fonts.Arial, midText, new Vector2(Location.X + Width/2f - midSize.X/2, labely),14,1,Color.WHITE);
+            Raylib.DrawTextEx(Fonts.Arial, midText, new Vector2(Location.X + Width/2f - midSize.X/2, labely),14,1,Color.White);
 
             final = 2;
         }
@@ -131,13 +131,13 @@ public class ResourceProductionBar : BaseControl
         pos.X += Width - _iconWidth -2;
         for (int i = 0; i < _sections[final].Value; i++)
         {
-            Raylib.DrawTextureEx(_sections[final].Icon, pos,0,1,Color.WHITE);
+            Raylib.DrawTextureEx(_sections[final].Icon, pos,0,1,Color.White);
             pos.X -= _spacing;
         }
 
         var finalText = _sections[final].Label;
         var finalSize = Raylib.MeasureTextEx(Fonts.Arial, finalText, 14, 1);
-        Raylib.DrawTextEx(Fonts.Arial, finalText, new Vector2(Location.X + Width - finalSize.X -1, labely),14,1,Color.WHITE);
+        Raylib.DrawTextEx(Fonts.Arial, finalText, new Vector2(Location.X + Width - finalSize.X -1, labely),14,1,Color.White);
 
     }
 }

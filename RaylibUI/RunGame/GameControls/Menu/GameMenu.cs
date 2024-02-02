@@ -67,7 +67,7 @@ public class GameMenu : ControlGroup
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangleRec(Bounds, Color.WHITE);
+        Raylib.DrawRectangleRec(Bounds, Color.White);
         foreach (var control in Children)
         {
             if (control == Controller.Focused)

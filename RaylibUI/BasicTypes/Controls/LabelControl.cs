@@ -36,8 +36,8 @@ public class LabelControl : BaseControl
         _spacing = spacing;
         _alignment = alignment;
         _labelFont = font ?? controller.MainWindow.ActiveInterface.Look.LabelFont;
-        _colorFront = colorFront ?? Color.BLACK;
-        _colorShadow = colorShadow ?? Color.BLACK;
+        _colorFront = colorFront ?? Color.Black;
+        _colorShadow = colorShadow ?? Color.Black;
         _shadowOffset = shadowOffset ?? Vector2.Zero;
         TextSize = Raylib.MeasureTextEx(_labelFont, text, _fontSize, _spacing);
         _active = controller.MainWindow.ActiveInterface;

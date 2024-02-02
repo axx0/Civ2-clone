@@ -109,7 +109,7 @@ public class MenuBar
 
             if (mouseOverBarItems[i] && Items[i].Enabled)
             {
-                if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+                if (Raylib.IsMouseButtonPressed(MouseButton.Left))
                 {
                     if (Items[i].Activated)
                     {
@@ -146,7 +146,7 @@ public class MenuBar
             // TODO: item in strip menu is clicked
             //...
             // outside clicked
-            else if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT))
+            else if (Raylib.IsMouseButtonPressed(MouseButton.Left))
             {
                 // Make sure no item is clicked
                 bool clickedOutside = true;
@@ -167,7 +167,7 @@ public class MenuBar
         }
 
         // Draw
-        Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), 15, Color.WHITE);
+        Raylib.DrawRectangle(0, 0, Raylib.GetScreenWidth(), 15, Color.White);
         for (int col = 0; col < Items.Count; col++)
         {
             if (Items[col].Activated)
@@ -193,7 +193,7 @@ public class MenuBar
                         Raylib.DrawRectangleRec(rect, color);
                     }
 
-                    var textStripColor = Items[col].Items[row].Enabled ? Color.BLACK : Color.GRAY;
+                    var textStripColor = Items[col].Items[row].Enabled ? Color.Black : Color.Gray;
 
                     Raylib.DrawText(Items[col].Items[row].Text, (int)Items[col].Bounds.X + 5, (int)Items[col].Bounds.Height + 22 * row + 5, 14, textStripColor);
                     Raylib.DrawText(Items[col].Items[row].KeyShortcut, (int)Items[col].Bounds.X + 160, (int)Items[col].Bounds.Height + 22 * row + 5, 14, textStripColor);
@@ -206,7 +206,7 @@ public class MenuBar
                 Raylib.DrawRectangleLinesEx(Items[col].Bounds, 1.0f, new Color(204, 232, 255, 255));
             }
 
-            var textColor = Items[col].Enabled ? Color.BLACK : Color.GRAY;
+            var textColor = Items[col].Enabled ? Color.Black : Color.Gray;
             Raylib.DrawText(Items[col].Text, (int)Items[col].Bounds.X + 5, 0, 14, textColor);
         }
     }

@@ -33,14 +33,14 @@ public class MovingPieces : IGameMode
                 }
             },*/
 
-            {new Shortcut(KeyboardKey.KEY_KP_7), MovementFunctions.TryMoveNorthWest}, {new Shortcut(KeyboardKey.KEY_KP_8), MovementFunctions.TryMoveNorth},
-            {new Shortcut(KeyboardKey.KEY_KP_9), MovementFunctions.TryMoveNorthEast},
-            {new Shortcut(KeyboardKey.KEY_KP_1), MovementFunctions.TryMoveSouthWest}, {new Shortcut(KeyboardKey.KEY_KP_2), MovementFunctions.TryMoveSouth},
-            {new Shortcut(KeyboardKey.KEY_KP_3), MovementFunctions.TryMoveSouthEast},
-            {new Shortcut(KeyboardKey.KEY_KP_4), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.KEY_KP_6), MovementFunctions.TryMoveEast},
+            {new Shortcut(KeyboardKey.Kp7), MovementFunctions.TryMoveNorthWest}, {new Shortcut(KeyboardKey.Kp8), MovementFunctions.TryMoveNorth},
+            {new Shortcut(KeyboardKey.Kp9), MovementFunctions.TryMoveNorthEast},
+            {new Shortcut(KeyboardKey.Kp1), MovementFunctions.TryMoveSouthWest}, {new Shortcut(KeyboardKey.Kp2), MovementFunctions.TryMoveSouth},
+            {new Shortcut(KeyboardKey.Kp3), MovementFunctions.TryMoveSouthEast},
+            {new Shortcut(KeyboardKey.Kp4), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.Kp6), MovementFunctions.TryMoveEast},
 
-            {new Shortcut(KeyboardKey.KEY_UP), MovementFunctions.TryMoveNorth}, {new Shortcut(KeyboardKey.KEY_DOWN), MovementFunctions.TryMoveSouth},
-            {new Shortcut(KeyboardKey.KEY_LEFT), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.KEY_RIGHT), MovementFunctions.TryMoveEast},
+            {new Shortcut(KeyboardKey.Up), MovementFunctions.TryMoveNorth}, {new Shortcut(KeyboardKey.Down), MovementFunctions.TryMoveSouth},
+            {new Shortcut(KeyboardKey.Left), MovementFunctions.TryMoveWest}, {new Shortcut(KeyboardKey.Right), MovementFunctions.TryMoveEast},
         };
     }
 
@@ -65,7 +65,7 @@ public class MovingPieces : IGameMode
 
     public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)
     {
-        if (mouseButton == MouseButton.MOUSE_BUTTON_LEFT)
+        if (mouseButton == MouseButton.Left)
         {
             //TODO: port GOTO support
             // if (longClick && (e.Modifiers & Keys.Control) != Keys.Control)

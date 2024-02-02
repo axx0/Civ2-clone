@@ -187,8 +187,8 @@ public class CivDialog : DynamicSizingDialog
     }
 
     private readonly KeyboardKey[] _navKeys = {
-        KeyboardKey.KEY_UP, KeyboardKey.KEY_DOWN, KeyboardKey.KEY_LEFT,  KeyboardKey.KEY_RIGHT,
-        KeyboardKey.KEY_KP_8, KeyboardKey.KEY_KP_2, KeyboardKey.KEY_KP_4, KeyboardKey.KEY_KP_6,
+        KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left,  KeyboardKey.Right,
+        KeyboardKey.Kp8, KeyboardKey.Kp2, KeyboardKey.Kp4, KeyboardKey.Kp6,
     };
 
     private readonly List<Texture2D> _managedTextures;
@@ -197,10 +197,10 @@ public class CivDialog : DynamicSizingDialog
     {
         switch (key)
         {
-            case KeyboardKey.KEY_ENTER when ButtonExists(Labels.Ok):
+            case KeyboardKey.Enter when ButtonExists(Labels.Ok):
                 CloseDialog(Labels.Ok);
                 return;
-            case KeyboardKey.KEY_ESCAPE when ButtonExists(Labels.Cancel):
+            case KeyboardKey.Escape when ButtonExists(Labels.Cancel):
                 CloseDialog(Labels.Cancel);
                 return;
         }

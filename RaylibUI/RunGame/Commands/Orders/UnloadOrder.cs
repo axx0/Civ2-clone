@@ -14,7 +14,7 @@ public class UnloadOrder : Order
 {
 
     public UnloadOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_U), CommandIds.UnloadOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.U), CommandIds.UnloadOrder)
     {
     }
 

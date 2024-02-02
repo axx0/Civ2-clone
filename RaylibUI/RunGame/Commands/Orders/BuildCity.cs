@@ -16,7 +16,7 @@ public class BuildCity : Order
     private const string CityName = "CityName";
 
     public BuildCity(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_B), CommandIds.BuildCityOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.B), CommandIds.BuildCityOrder)
     {
         _player = gameScreen.Player;
     }

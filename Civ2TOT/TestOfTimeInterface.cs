@@ -54,13 +54,13 @@ public class TestOfTimeInterface : Civ2Interface
         DefaultFont = Fonts.Arial,
         ButtonFont = Fonts.Arial,
         ButtonFontSize = 20,
-        ButtonColour = Color.BLACK,
+        ButtonColour = Color.Black,
         HeaderLabelFont = Fonts.Arial,
         HeaderLabelFontSizeNormal = 20,
         HeaderLabelShadow = false,
-        HeaderLabelColour = Color.BLACK,
+        HeaderLabelColour = Color.Black,
         LabelFont = Fonts.Arial,
-        LabelColour = Color.LIGHTGRAY,
+        LabelColour = Color.LightGray,
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 16,
         MenuFont = Fonts.Arial,
@@ -211,33 +211,33 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "GAME", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Game", Shortcut.None, KeyboardKey.KEY_G),
-                new MenuElement("Game &Options|Ctrl+O", new Shortcut(KeyboardKey.KEY_O, ctrl: true), KeyboardKey.KEY_O),
-                new MenuElement("Graphic O&ptions|Ctrl+P", new Shortcut(KeyboardKey.KEY_P, ctrl: true),
-                    KeyboardKey.KEY_P),
-                new MenuElement("&City Report Options|Ctrl+E", new Shortcut(KeyboardKey.KEY_E, ctrl: true),
-                    KeyboardKey.KEY_C),
-                new MenuElement("M&ultiplayer Options|Ctrl+Y", new Shortcut(KeyboardKey.KEY_Y, ctrl: true),
-                    KeyboardKey.KEY_U),
-                new MenuElement("&Game Profile", Shortcut.None, KeyboardKey.KEY_G),
-                new MenuElement("Pick &Music", Shortcut.None, KeyboardKey.KEY_M),
-                new MenuElement("&Save Game|Ctrl+S", new Shortcut(KeyboardKey.KEY_S, ctrl: true), KeyboardKey.KEY_S),
-                new MenuElement("&Load Game|Ctrl+L", new Shortcut(KeyboardKey.KEY_L, ctrl: true), KeyboardKey.KEY_L),
-                new MenuElement("&Join Game|Ctrl+J", new Shortcut(KeyboardKey.KEY_J, ctrl: true), KeyboardKey.KEY_J),
-                new MenuElement("Set Pass&word|Ctrl+W", new Shortcut(KeyboardKey.KEY_W, ctrl: true), KeyboardKey.KEY_W),
-                new MenuElement("Change &Timer|Ctrl+T", new Shortcut(KeyboardKey.KEY_T, ctrl: true), KeyboardKey.KEY_T),
-                new MenuElement("&Retire|Ctrl+R", new Shortcut(KeyboardKey.KEY_R, ctrl: true), KeyboardKey.KEY_R),
-                new MenuElement("&Quit|Ctrl+Q", new Shortcut(KeyboardKey.KEY_Q, ctrl: true), KeyboardKey.KEY_Q)
+                new MenuElement("&Game", Shortcut.None, KeyboardKey.G),
+                new MenuElement("Game &Options|Ctrl+O", new Shortcut(KeyboardKey.O, ctrl: true), KeyboardKey.O),
+                new MenuElement("Graphic O&ptions|Ctrl+P", new Shortcut(KeyboardKey.P, ctrl: true),
+                    KeyboardKey.P),
+                new MenuElement("&City Report Options|Ctrl+E", new Shortcut(KeyboardKey.E, ctrl: true),
+                    KeyboardKey.C),
+                new MenuElement("M&ultiplayer Options|Ctrl+Y", new Shortcut(KeyboardKey.Y, ctrl: true),
+                    KeyboardKey.U),
+                new MenuElement("&Game Profile", Shortcut.None, KeyboardKey.G),
+                new MenuElement("Pick &Music", Shortcut.None, KeyboardKey.M),
+                new MenuElement("&Save Game|Ctrl+S", new Shortcut(KeyboardKey.S, ctrl: true), KeyboardKey.S),
+                new MenuElement("&Load Game|Ctrl+L", new Shortcut(KeyboardKey.L, ctrl: true), KeyboardKey.L),
+                new MenuElement("&Join Game|Ctrl+J", new Shortcut(KeyboardKey.J, ctrl: true), KeyboardKey.J),
+                new MenuElement("Set Pass&word|Ctrl+W", new Shortcut(KeyboardKey.W, ctrl: true), KeyboardKey.W),
+                new MenuElement("Change &Timer|Ctrl+T", new Shortcut(KeyboardKey.T, ctrl: true), KeyboardKey.T),
+                new MenuElement("&Retire|Ctrl+R", new Shortcut(KeyboardKey.R, ctrl: true), KeyboardKey.R),
+                new MenuElement("&Quit|Ctrl+Q", new Shortcut(KeyboardKey.Q, ctrl: true), KeyboardKey.Q)
             }
         },
         new MenuDetails
         {
             Key = "KINGDOM", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Kingdom", Shortcut.None, KeyboardKey.KEY_K),
-                new MenuElement("&Tax Rate|Shift+T", new Shortcut(KeyboardKey.KEY_T, shift: true), KeyboardKey.KEY_T),
-                new MenuElement("Find &City|Shift+C", new Shortcut(KeyboardKey.KEY_C, shift: true), KeyboardKey.KEY_C),
-                new MenuElement("&REVOLUTION|Shift+R", new Shortcut(KeyboardKey.KEY_R, shift: true), KeyboardKey.KEY_R)
+                new MenuElement("&Kingdom", Shortcut.None, KeyboardKey.K),
+                new MenuElement("&Tax Rate|Shift+T", new Shortcut(KeyboardKey.T, shift: true), KeyboardKey.T),
+                new MenuElement("Find &City|Shift+C", new Shortcut(KeyboardKey.C, shift: true), KeyboardKey.C),
+                new MenuElement("&REVOLUTION|Shift+R", new Shortcut(KeyboardKey.R, shift: true), KeyboardKey.R)
             }
         },
 
@@ -245,26 +245,26 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "VIEW", Defaults = new List<MenuElement>
             {
-                new MenuElement("&View", Shortcut.None, KeyboardKey.KEY_V),
-                new MenuElement("&Move Pieces|v", new Shortcut(KeyboardKey.KEY_V), KeyboardKey.KEY_M),
-                new MenuElement("&View Pieces|v", new Shortcut(KeyboardKey.KEY_V), KeyboardKey.KEY_V),
-                new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.KEY_Z), KeyboardKey.KEY_I),
-                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.KEY_X), KeyboardKey.KEY_O),
-                new MenuElement("Max Zoom In|Ctrl+Z", new Shortcut(KeyboardKey.KEY_Z, ctrl: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Standard Zoom|Shift+Z", new Shortcut(KeyboardKey.KEY_Z, shift: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Medium Zoom Out|Shift+X", new Shortcut(KeyboardKey.KEY_X, shift: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Max Zoom Out|Ctrl+X", new Shortcut(KeyboardKey.KEY_X, ctrl: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Show Map Grid|Ctrl+G", new Shortcut(KeyboardKey.KEY_G, ctrl: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.KEY_NULL),
-                new MenuElement("Show Hidden Terrain|t", new Shortcut(KeyboardKey.KEY_T), KeyboardKey.KEY_T),
-                new MenuElement("&Center View|c", new Shortcut(KeyboardKey.KEY_C), KeyboardKey.KEY_C),
-                new MenuElement("Map Layout", Shortcut.None, KeyboardKey.KEY_NULL),
-                new MenuElement("City Layout", Shortcut.None, KeyboardKey.KEY_NULL),
+                new MenuElement("&View", Shortcut.None, KeyboardKey.V),
+                new MenuElement("&Move Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.M),
+                new MenuElement("&View Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.V),
+                new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.Z), KeyboardKey.I),
+                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.X), KeyboardKey.O),
+                new MenuElement("Max Zoom In|Ctrl+Z", new Shortcut(KeyboardKey.Z, ctrl: true),
+                    KeyboardKey.Null),
+                new MenuElement("Standard Zoom|Shift+Z", new Shortcut(KeyboardKey.Z, shift: true),
+                    KeyboardKey.Null),
+                new MenuElement("Medium Zoom Out|Shift+X", new Shortcut(KeyboardKey.X, shift: true),
+                    KeyboardKey.Null),
+                new MenuElement("Max Zoom Out|Ctrl+X", new Shortcut(KeyboardKey.X, ctrl: true),
+                    KeyboardKey.Null),
+                new MenuElement("Show Map Grid|Ctrl+G", new Shortcut(KeyboardKey.G, ctrl: true),
+                    KeyboardKey.Null),
+                new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.Null),
+                new MenuElement("Show Hidden Terrain|t", new Shortcut(KeyboardKey.T), KeyboardKey.T),
+                new MenuElement("&Center View|c", new Shortcut(KeyboardKey.C), KeyboardKey.C),
+                new MenuElement("Map Layout", Shortcut.None, KeyboardKey.Null),
+                new MenuElement("City Layout", Shortcut.None, KeyboardKey.Null),
             }
         },
 
@@ -272,33 +272,33 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "@ORDERS", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Orders", Shortcut.None, KeyboardKey.KEY_O),
-                new MenuElement("&Build New City|b", new Shortcut(KeyboardKey.KEY_B), KeyboardKey.KEY_B, BuildCityOrder, true),
-                new MenuElement("Build &Road|r", new Shortcut(KeyboardKey.KEY_R), KeyboardKey.KEY_R, BuildRoadOrder, omitIfNoCommand: true),
-                new MenuElement("Build &Irrigation|i", new Shortcut(KeyboardKey.KEY_I), KeyboardKey.KEY_I,BuildIrrigationOrder, omitIfNoCommand:true),
-                new MenuElement("Build &Mines|m", new Shortcut(KeyboardKey.KEY_M), KeyboardKey.KEY_M,BuildMineOrder, omitIfNoCommand: true),
-                new MenuElement("Build %STRING0", Shortcut.None, KeyboardKey.KEY_NULL, BuildIrrigationOrder, omitIfNoCommand:true),
-                new MenuElement("Transform to ...|o", new Shortcut(KeyboardKey.KEY_O), KeyboardKey.KEY_NULL),
-                new MenuElement("Build &Airbase|e", new Shortcut(KeyboardKey.KEY_E), KeyboardKey.KEY_A),
-                new MenuElement("Build &Teleporter|j", new Shortcut(KeyboardKey.KEY_J), KeyboardKey.KEY_T),
-                new MenuElement("Build &Fortress|f", new Shortcut(KeyboardKey.KEY_F), KeyboardKey.KEY_F),
-                new MenuElement("Automate Settler|k", new Shortcut(KeyboardKey.KEY_K), KeyboardKey.KEY_NULL),
-                new MenuElement("Clean Up &Pollution|p", new Shortcut(KeyboardKey.KEY_P), KeyboardKey.KEY_P),
-                new MenuElement("&Pillage|Shift+P", new Shortcut(KeyboardKey.KEY_P, shift: true), KeyboardKey.KEY_P),
-                new MenuElement("&Unload|u", new Shortcut(KeyboardKey.KEY_U), KeyboardKey.KEY_U),
-                new MenuElement("&Go To|g", new Shortcut(KeyboardKey.KEY_G), KeyboardKey.KEY_G),
-                new MenuElement("&Paradrop|p", new Shortcut(KeyboardKey.KEY_P), KeyboardKey.KEY_P),
-                new MenuElement("Air&lift|l", new Shortcut(KeyboardKey.KEY_L), KeyboardKey.KEY_L),
-                new MenuElement("Teleport|n", new Shortcut(KeyboardKey.KEY_N), KeyboardKey.KEY_NULL),
-                new MenuElement("Set &Home City|h", new Shortcut(KeyboardKey.KEY_H), KeyboardKey.KEY_H),
-                new MenuElement("&Fortify|f", new Shortcut(KeyboardKey.KEY_F), KeyboardKey.KEY_F),
-                new MenuElement("&Sleep|s", new Shortcut(KeyboardKey.KEY_S), KeyboardKey.KEY_S),
-                new MenuElement("&Disband|Shift+D", new Shortcut(KeyboardKey.KEY_D, shift: true), KeyboardKey.KEY_D),
-                new MenuElement("&Activate Unit|a", new Shortcut(KeyboardKey.KEY_A), KeyboardKey.KEY_A),
-                new MenuElement("&Wait|w", new Shortcut(KeyboardKey.KEY_W), KeyboardKey.KEY_W),
-                new MenuElement("S&kip Turn|SPACE", new Shortcut(KeyboardKey.KEY_SPACE), KeyboardKey.KEY_K),
-                new MenuElement("End Player Tur&n|Ctrl+N", new Shortcut(KeyboardKey.KEY_T, shift: true),
-                    KeyboardKey.KEY_N, EndTurn)
+                new MenuElement("&Orders", Shortcut.None, KeyboardKey.O),
+                new MenuElement("&Build New City|b", new Shortcut(KeyboardKey.B), KeyboardKey.B, BuildCityOrder, true),
+                new MenuElement("Build &Road|r", new Shortcut(KeyboardKey.R), KeyboardKey.R, BuildRoadOrder, omitIfNoCommand: true),
+                new MenuElement("Build &Irrigation|i", new Shortcut(KeyboardKey.I), KeyboardKey.I,BuildIrrigationOrder, omitIfNoCommand:true),
+                new MenuElement("Build &Mines|m", new Shortcut(KeyboardKey.M), KeyboardKey.M,BuildMineOrder, omitIfNoCommand: true),
+                new MenuElement("Build %STRING0", Shortcut.None, KeyboardKey.Null, BuildIrrigationOrder, omitIfNoCommand:true),
+                new MenuElement("Transform to ...|o", new Shortcut(KeyboardKey.O), KeyboardKey.Null),
+                new MenuElement("Build &Airbase|e", new Shortcut(KeyboardKey.E), KeyboardKey.A),
+                new MenuElement("Build &Teleporter|j", new Shortcut(KeyboardKey.J), KeyboardKey.T),
+                new MenuElement("Build &Fortress|f", new Shortcut(KeyboardKey.F), KeyboardKey.F),
+                new MenuElement("Automate Settler|k", new Shortcut(KeyboardKey.K), KeyboardKey.Null),
+                new MenuElement("Clean Up &Pollution|p", new Shortcut(KeyboardKey.P), KeyboardKey.P),
+                new MenuElement("&Pillage|Shift+P", new Shortcut(KeyboardKey.P, shift: true), KeyboardKey.P),
+                new MenuElement("&Unload|u", new Shortcut(KeyboardKey.U), KeyboardKey.U),
+                new MenuElement("&Go To|g", new Shortcut(KeyboardKey.G), KeyboardKey.G),
+                new MenuElement("&Paradrop|p", new Shortcut(KeyboardKey.P), KeyboardKey.P),
+                new MenuElement("Air&lift|l", new Shortcut(KeyboardKey.L), KeyboardKey.L),
+                new MenuElement("Teleport|n", new Shortcut(KeyboardKey.N), KeyboardKey.Null),
+                new MenuElement("Set &Home City|h", new Shortcut(KeyboardKey.H), KeyboardKey.H),
+                new MenuElement("&Fortify|f", new Shortcut(KeyboardKey.F), KeyboardKey.F),
+                new MenuElement("&Sleep|s", new Shortcut(KeyboardKey.S), KeyboardKey.S),
+                new MenuElement("&Disband|Shift+D", new Shortcut(KeyboardKey.D, shift: true), KeyboardKey.D),
+                new MenuElement("&Activate Unit|a", new Shortcut(KeyboardKey.A), KeyboardKey.A),
+                new MenuElement("&Wait|w", new Shortcut(KeyboardKey.W), KeyboardKey.W),
+                new MenuElement("S&kip Turn|SPACE", new Shortcut(KeyboardKey.Space), KeyboardKey.K),
+                new MenuElement("End Player Tur&n|Ctrl+N", new Shortcut(KeyboardKey.T, shift: true),
+                    KeyboardKey.N, EndTurn)
             },
         },
 
@@ -306,17 +306,17 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "ADVISORS", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Advisors", Shortcut.None, KeyboardKey.KEY_A),
-                new MenuElement("Chat with &Kings|Ctrl+C", new Shortcut(KeyboardKey.KEY_C, ctrl: true),
-                    KeyboardKey.KEY_K),
-                new MenuElement("&City Status|F1", new Shortcut(KeyboardKey.KEY_F1), KeyboardKey.KEY_C),
-                new MenuElement("&Defense Minister|F2", new Shortcut(KeyboardKey.KEY_F2), KeyboardKey.KEY_D),
-                new MenuElement("&Foreign Minister|F3", new Shortcut(KeyboardKey.KEY_F3), KeyboardKey.KEY_F),
-                new MenuElement("&Attitude Advisor|F4", new Shortcut(KeyboardKey.KEY_F4), KeyboardKey.KEY_A),
-                new MenuElement("&Trade Advisor|F5", new Shortcut(KeyboardKey.KEY_F5), KeyboardKey.KEY_T),
-                new MenuElement("&Science Advisor|F6", new Shortcut(KeyboardKey.KEY_F6), KeyboardKey.KEY_S),
-                new MenuElement("Cas&ualty Timeline|Ctrl-D", new Shortcut(KeyboardKey.KEY_D, ctrl: true),
-                    KeyboardKey.KEY_U)
+                new MenuElement("&Advisors", Shortcut.None, KeyboardKey.A),
+                new MenuElement("Chat with &Kings|Ctrl+C", new Shortcut(KeyboardKey.C, ctrl: true),
+                    KeyboardKey.K),
+                new MenuElement("&City Status|F1", new Shortcut(KeyboardKey.F1), KeyboardKey.C),
+                new MenuElement("&Defense Minister|F2", new Shortcut(KeyboardKey.F2), KeyboardKey.D),
+                new MenuElement("&Foreign Minister|F3", new Shortcut(KeyboardKey.F3), KeyboardKey.F),
+                new MenuElement("&Attitude Advisor|F4", new Shortcut(KeyboardKey.F4), KeyboardKey.A),
+                new MenuElement("&Trade Advisor|F5", new Shortcut(KeyboardKey.F5), KeyboardKey.T),
+                new MenuElement("&Science Advisor|F6", new Shortcut(KeyboardKey.F6), KeyboardKey.S),
+                new MenuElement("Cas&ualty Timeline|Ctrl-D", new Shortcut(KeyboardKey.D, ctrl: true),
+                    KeyboardKey.U)
             }
         },
 
@@ -324,12 +324,12 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "WORLD", Defaults = new List<MenuElement>
             {
-                new MenuElement("&World", Shortcut.None, KeyboardKey.KEY_W),
-                new MenuElement("&Wonders of the World|F7", new Shortcut(KeyboardKey.KEY_F7), KeyboardKey.KEY_W),
-                new MenuElement("&Top 5 Cities|F8", new Shortcut(KeyboardKey.KEY_F8), KeyboardKey.KEY_T),
-                new MenuElement("&Civilization Score|F9", new Shortcut(KeyboardKey.KEY_F9), KeyboardKey.KEY_C),
-                new MenuElement("&Demographics|F11", new Shortcut(KeyboardKey.KEY_F11), KeyboardKey.KEY_D),
-                new MenuElement("&Spaceships|F12", new Shortcut(KeyboardKey.KEY_F12), KeyboardKey.KEY_S)
+                new MenuElement("&World", Shortcut.None, KeyboardKey.W),
+                new MenuElement("&Wonders of the World|F7", new Shortcut(KeyboardKey.F7), KeyboardKey.W),
+                new MenuElement("&Top 5 Cities|F8", new Shortcut(KeyboardKey.F8), KeyboardKey.T),
+                new MenuElement("&Civilization Score|F9", new Shortcut(KeyboardKey.F9), KeyboardKey.C),
+                new MenuElement("&Demographics|F11", new Shortcut(KeyboardKey.F11), KeyboardKey.D),
+                new MenuElement("&Spaceships|F12", new Shortcut(KeyboardKey.F12), KeyboardKey.S)
             }
         },
 
@@ -337,41 +337,41 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "CHEAT", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Cheat", Shortcut.None, KeyboardKey.KEY_C),
-                new MenuElement("Toggle Cheat Mode|Ctrl+K", new Shortcut(KeyboardKey.KEY_K, ctrl: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Create &Unit|Shift+F1", new Shortcut(KeyboardKey.KEY_F1, shift: true),
-                    KeyboardKey.KEY_U),
-                new MenuElement("Reveal &Map|Shift+F2", new Shortcut(KeyboardKey.KEY_F2, shift: true),
-                    KeyboardKey.KEY_M),
-                new MenuElement("Set &Human Player|Shift+F3", new Shortcut(KeyboardKey.KEY_F3, shift: true),
-                    KeyboardKey.KEY_H),
-                new MenuElement("Set Game Year|Shift+F4", new Shortcut(KeyboardKey.KEY_F4, shift: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("&Kill Civilization|Shift+F5", new Shortcut(KeyboardKey.KEY_F5, shift: true),
-                    KeyboardKey.KEY_K),
-                new MenuElement("Te&chnology Advance|Shift+F6", new Shortcut(KeyboardKey.KEY_F6, shift: true),
-                    KeyboardKey.KEY_C),
+                new MenuElement("&Cheat", Shortcut.None, KeyboardKey.C),
+                new MenuElement("Toggle Cheat Mode|Ctrl+K", new Shortcut(KeyboardKey.K, ctrl: true),
+                    KeyboardKey.Null),
+                new MenuElement("Create &Unit|Shift+F1", new Shortcut(KeyboardKey.F1, shift: true),
+                    KeyboardKey.U),
+                new MenuElement("Reveal &Map|Shift+F2", new Shortcut(KeyboardKey.F2, shift: true),
+                    KeyboardKey.M),
+                new MenuElement("Set &Human Player|Shift+F3", new Shortcut(KeyboardKey.F3, shift: true),
+                    KeyboardKey.H),
+                new MenuElement("Set Game Year|Shift+F4", new Shortcut(KeyboardKey.F4, shift: true),
+                    KeyboardKey.Null),
+                new MenuElement("&Kill Civilization|Shift+F5", new Shortcut(KeyboardKey.F5, shift: true),
+                    KeyboardKey.K),
+                new MenuElement("Te&chnology Advance|Shift+F6", new Shortcut(KeyboardKey.F6, shift: true),
+                    KeyboardKey.C),
                 new MenuElement("&Edit Technologies|Ctrl+Shift+F6",
-                    new Shortcut(KeyboardKey.KEY_F6, ctrl: true, shift: true), KeyboardKey.KEY_E),
-                new MenuElement("Force &Government|Shift+F7", new Shortcut(KeyboardKey.KEY_F7, shift: true),
-                    KeyboardKey.KEY_G),
-                new MenuElement("Change &Terrain At Cursor|Shift+F8", new Shortcut(KeyboardKey.KEY_F8, shift: true),
-                    KeyboardKey.KEY_T),
+                    new Shortcut(KeyboardKey.F6, ctrl: true, shift: true), KeyboardKey.E),
+                new MenuElement("Force &Government|Shift+F7", new Shortcut(KeyboardKey.F7, shift: true),
+                    KeyboardKey.G),
+                new MenuElement("Change &Terrain At Cursor|Shift+F8", new Shortcut(KeyboardKey.F8, shift: true),
+                    KeyboardKey.T),
                 new MenuElement("Destro&Y All Units At Cursor|Ctrl+Shift+D",
-                    new Shortcut(KeyboardKey.KEY_D, ctrl: true, shift: true), KeyboardKey.KEY_Y),
-                new MenuElement("Change Money|Shift+F9", new Shortcut(KeyboardKey.KEY_F9, shift: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Edit Unit|Ctrl+Shift+U", new Shortcut(KeyboardKey.KEY_U, ctrl: true, shift: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Edit City|Ctrl+Shift+C", new Shortcut(KeyboardKey.KEY_C, ctrl: true, shift: true),
-                    KeyboardKey.KEY_NULL),
-                new MenuElement("Edit King|Ctrl+Shift+K", new Shortcut(KeyboardKey.KEY_K, ctrl: true, shift: true),
-                    KeyboardKey.KEY_NULL),
+                    new Shortcut(KeyboardKey.D, ctrl: true, shift: true), KeyboardKey.Y),
+                new MenuElement("Change Money|Shift+F9", new Shortcut(KeyboardKey.F9, shift: true),
+                    KeyboardKey.Null),
+                new MenuElement("Edit Unit|Ctrl+Shift+U", new Shortcut(KeyboardKey.U, ctrl: true, shift: true),
+                    KeyboardKey.Null),
+                new MenuElement("Edit City|Ctrl+Shift+C", new Shortcut(KeyboardKey.C, ctrl: true, shift: true),
+                    KeyboardKey.Null),
+                new MenuElement("Edit King|Ctrl+Shift+K", new Shortcut(KeyboardKey.K, ctrl: true, shift: true),
+                    KeyboardKey.Null),
                 new MenuElement("Scenario Parameters|Ctrl+Shift+P",
-                    new Shortcut(KeyboardKey.KEY_P, ctrl: true, shift: true), KeyboardKey.KEY_NULL),
+                    new Shortcut(KeyboardKey.P, ctrl: true, shift: true), KeyboardKey.Null),
                 new MenuElement("Save As Scenario|Ctrl+Shift+S",
-                    new Shortcut(KeyboardKey.KEY_S, ctrl: true, shift: true), KeyboardKey.KEY_NULL)
+                    new Shortcut(KeyboardKey.S, ctrl: true, shift: true), KeyboardKey.Null)
             }
         },
 
@@ -379,15 +379,15 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "MAP", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Map", Shortcut.None, KeyboardKey.KEY_M),
-                new MenuElement("Toggle Cheat Mode|Ctrl+K", new Shortcut(KeyboardKey.KEY_K, ctrl: true),
-                    KeyboardKey.KEY_NULL),
+                new MenuElement("&Map", Shortcut.None, KeyboardKey.M),
+                new MenuElement("Toggle Cheat Mode|Ctrl+K", new Shortcut(KeyboardKey.K, ctrl: true),
+                    KeyboardKey.Null),
                 new MenuElement("&Select Map|Ctrl+Shift+1",
-                    new Shortcut(KeyboardKey.KEY_ONE, ctrl: true, shift: true), KeyboardKey.KEY_S),
+                    new Shortcut(KeyboardKey.One, ctrl: true, shift: true), KeyboardKey.S),
                 new MenuElement("&Import Map|Ctrl+Shift+2",
-                    new Shortcut(KeyboardKey.KEY_TWO, ctrl: true, shift: true), KeyboardKey.KEY_I),
+                    new Shortcut(KeyboardKey.Two, ctrl: true, shift: true), KeyboardKey.I),
                 new MenuElement("&Export Map|Ctrl+Shift+3",
-                    new Shortcut(KeyboardKey.KEY_THREE, ctrl: true, shift: true), KeyboardKey.KEY_E),
+                    new Shortcut(KeyboardKey.Three, ctrl: true, shift: true), KeyboardKey.E),
             }
         },
 
@@ -395,15 +395,15 @@ public class TestOfTimeInterface : Civ2Interface
         {
             Key = "PEDIA", Defaults = new List<MenuElement>
             {
-                new MenuElement("&Civilopedia", Shortcut.None, KeyboardKey.KEY_C),
-                new MenuElement("Civilization &Advances", Shortcut.None, KeyboardKey.KEY_A),
-                new MenuElement("City &Improvements", Shortcut.None, KeyboardKey.KEY_I),
-                new MenuElement("&Wonders of the World", Shortcut.None, KeyboardKey.KEY_W),
-                new MenuElement("Military &Units", Shortcut.None, KeyboardKey.KEY_U),
-                new MenuElement("&Governments", Shortcut.None, KeyboardKey.KEY_G),
-                new MenuElement("&Terrain Types", Shortcut.None, KeyboardKey.KEY_T),
-                new MenuElement("Game &Concepts", Shortcut.None, KeyboardKey.KEY_C),
-                new MenuElement("&About Test of Time", Shortcut.None, KeyboardKey.KEY_A)
+                new MenuElement("&Civilopedia", Shortcut.None, KeyboardKey.C),
+                new MenuElement("Civilization &Advances", Shortcut.None, KeyboardKey.A),
+                new MenuElement("City &Improvements", Shortcut.None, KeyboardKey.I),
+                new MenuElement("&Wonders of the World", Shortcut.None, KeyboardKey.W),
+                new MenuElement("Military &Units", Shortcut.None, KeyboardKey.U),
+                new MenuElement("&Governments", Shortcut.None, KeyboardKey.G),
+                new MenuElement("&Terrain Types", Shortcut.None, KeyboardKey.T),
+                new MenuElement("Game &Concepts", Shortcut.None, KeyboardKey.C),
+                new MenuElement("&About Test of Time", Shortcut.None, KeyboardKey.A)
             }
         }
     };
@@ -539,30 +539,30 @@ public class TestOfTimeInterface : Civ2Interface
         var top_right = padding.Top == 12 ? wp.OuterThinTopRight : wp.OuterTitleTopRight;
 
         // Top border
-        Raylib.ImageDraw(ref destination, top_left, new Rectangle(0, 0, top_left.Width, top_left.Height), new Rectangle(0, 0, top_left.Width, top_left.Height), Color.WHITE);
+        Raylib.ImageDraw(ref destination, top_left, new Rectangle(0, 0, top_left.Width, top_left.Height), new Rectangle(0, 0, top_left.Width, top_left.Height), Color.White);
         var topCols = (Width - top_left.Width - top_right.Width) / top.Width + 1;
         for (int col = 0; col < topCols; col++)
         {
-            Raylib.ImageDraw(ref destination, top, new Rectangle(0, 0, top.Width, top.Height), new Rectangle(top_left.Width + top.Width * col, 0, top.Width, top.Height), Color.WHITE);
+            Raylib.ImageDraw(ref destination, top, new Rectangle(0, 0, top.Width, top.Height), new Rectangle(top_left.Width + top.Width * col, 0, top.Width, top.Height), Color.White);
         }
-        Raylib.ImageDraw(ref destination, top_right, new Rectangle(0, 0, top_right.Width, top_right.Height), new Rectangle(Width - top_right.Width, 0, top_right.Width, top_right.Height), Color.WHITE);
+        Raylib.ImageDraw(ref destination, top_right, new Rectangle(0, 0, top_right.Width, top_right.Height), new Rectangle(Width - top_right.Width, 0, top_right.Width, top_right.Height), Color.White);
 
         // Left-right border
         var sideRows = (Height - top_left.Height - wp.OuterBottomLeft.Height) / wp.OuterLeft.Height + 1;
         for (int row = 0; row < sideRows; row++)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterLeft, new Rectangle(0, 0, wp.OuterLeft.Width, wp.OuterLeft.Height), new Rectangle(0, top_left.Height + wp.OuterLeft.Height * row, wp.OuterLeft.Width, wp.OuterLeft.Height), Color.WHITE);
-            Raylib.ImageDraw(ref destination, wp.OuterRight, new Rectangle(0, 0, wp.OuterRight.Width, wp.OuterRight.Height), new Rectangle(Width - wp.OuterRight.Width, top_right.Height + wp.OuterRight.Height * row, wp.OuterRight.Width, wp.OuterRight.Height), Color.WHITE);
+            Raylib.ImageDraw(ref destination, wp.OuterLeft, new Rectangle(0, 0, wp.OuterLeft.Width, wp.OuterLeft.Height), new Rectangle(0, top_left.Height + wp.OuterLeft.Height * row, wp.OuterLeft.Width, wp.OuterLeft.Height), Color.White);
+            Raylib.ImageDraw(ref destination, wp.OuterRight, new Rectangle(0, 0, wp.OuterRight.Width, wp.OuterRight.Height), new Rectangle(Width - wp.OuterRight.Width, top_right.Height + wp.OuterRight.Height * row, wp.OuterRight.Width, wp.OuterRight.Height), Color.White);
         }
 
         // Bottom border
-        Raylib.ImageDraw(ref destination, wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, Height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.WHITE);
+        Raylib.ImageDraw(ref destination, wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, Height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.White);
         var btmCols = (Width - wp.OuterBottomLeft.Width - wp.OuterBottomRight.Width) / wp.OuterBottom.Width + 1;
         for (int col = 0; col < btmCols; col++)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterBottom, new Rectangle(0, 0, wp.OuterBottom.Width, wp.OuterBottom.Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom.Width * col, Height - wp.OuterBottom.Height, wp.OuterBottom.Width, wp.OuterBottom.Height), Color.WHITE);
+            Raylib.ImageDraw(ref destination, wp.OuterBottom, new Rectangle(0, 0, wp.OuterBottom.Width, wp.OuterBottom.Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom.Width * col, Height - wp.OuterBottom.Height, wp.OuterBottom.Width, wp.OuterBottom.Height), Color.White);
         }
-        Raylib.ImageDraw(ref destination, wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), new Rectangle(Width - wp.OuterBottomRight.Width, Height - wp.OuterBottomRight.Height, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), Color.WHITE);
+        Raylib.ImageDraw(ref destination, wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), new Rectangle(Width - wp.OuterBottomRight.Width, Height - wp.OuterBottomRight.Height, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), Color.White);
     }
 
     public override void DrawBorderLines(ref Image destination, int Height, int Width, Padding padding) { }

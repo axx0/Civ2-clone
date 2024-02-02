@@ -24,8 +24,8 @@ namespace RaylibUI
             var hasCivDir = Settings.LoadConfigSettings();
 
             //========= RAYLIB WINDOW SETTINGS
-            Raylib.SetConfigFlags(ConfigFlags.FLAG_MSAA_4X_HINT | ConfigFlags.FLAG_VSYNC_HINT |
-                                  ConfigFlags.FLAG_WINDOW_RESIZABLE);
+            Raylib.SetConfigFlags(ConfigFlags.Msaa4xHint | ConfigFlags.VSyncHint |
+                                  ConfigFlags.ResizableWindow);
             Raylib.InitWindow(1280, 800, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
             Raylib.InitAudioDevice();
@@ -33,7 +33,7 @@ namespace RaylibUI
 
             //========== IMGUI STYLE
 
-            Raylib.SetExitKey(KeyboardKey.KEY_F12);
+            Raylib.SetExitKey(KeyboardKey.F12);
 
             //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
@@ -71,7 +71,7 @@ namespace RaylibUI
 
                 _activeScreen.Draw(pulse);
 
-                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.MAGENTA);
+                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.Magenta);
 
                 Raylib.EndDrawing();
                 if (counter++ >= 30)

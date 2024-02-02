@@ -63,10 +63,10 @@ public class ListBoxScrollBar : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.WHITE);
-        Raylib.DrawTexture(_images[0], (int)Location.X, (int)Location.Y, Color.WHITE);
-        Raylib.DrawTexture(_images[1], (int)Location.X + _scroolPos * _increment, (int)Location.Y, Color.WHITE);
-        Raylib.DrawTexture(_images[2], (int)Location.X + Width - DefaultHeight, (int)Location.Y, Color.WHITE);
+        Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.White);
+        Raylib.DrawTexture(_images[0], (int)Location.X, (int)Location.Y, Color.White);
+        Raylib.DrawTexture(_images[1], (int)Location.X + _scroolPos * _increment, (int)Location.Y, Color.White);
+        Raylib.DrawTexture(_images[2], (int)Location.X + Width - DefaultHeight, (int)Location.Y, Color.White);
         base.Draw(pulse);
     }
 }

@@ -86,18 +86,18 @@ public abstract class BaseControl : IControl
         }
         if (_clickPossible)
         {
-            _clickStart = Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT);
+            _clickStart = Raylib.IsMouseButtonDown(MouseButton.Left);
             if (_clickStart)
             {
-                _clickButton = MouseButton.MOUSE_BUTTON_LEFT;
+                _clickButton = MouseButton.Left;
                 MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
             }
             else
             {
-                _clickStart = Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_RIGHT);
+                _clickStart = Raylib.IsMouseButtonDown(MouseButton.Right);
                 if (_clickStart)
                 {
-                    _clickButton = MouseButton.MOUSE_BUTTON_RIGHT;
+                    _clickButton = MouseButton.Right;
                     MouseDown?.Invoke(this, new MouseEventArgs { Button = _clickButton});
                 }
             }
@@ -112,7 +112,7 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseEnter()
     {
-        _clickPossible = !Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT) && !Raylib.IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON);
+        _clickPossible = !Raylib.IsMouseButtonDown(MouseButton.Left) && !Raylib.IsMouseButtonDown(MouseButton.Right);
         _clickStart = false;
     }
 
@@ -143,7 +143,7 @@ public abstract class BaseControl : IControl
     public virtual void Draw(bool pulse)
     {
         // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
-        // Raylib.DrawRectangleLines((int)_bounds.X, (int)_bounds.Y, _width,Height,Color.MAGENTA);
+        // Raylib.DrawRectangleLines((int)_bounds.X, (int)_bounds.Y, _width,Height,Color.Magenta);
     }
 
     public virtual int GetPreferredWidth()

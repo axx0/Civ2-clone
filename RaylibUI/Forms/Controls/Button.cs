@@ -21,11 +21,11 @@ public class Button : Control
         {
             switch (KeyPressed)
             {
-                case (int)KeyboardKey.KEY_ENTER or (int)KeyboardKey.KEY_KP_ENTER:
+                case (int)KeyboardKey.Enter or (int)KeyboardKey.KpEnter:
                     if (Text == Labels.Ok)
                         _pressed = true;
                     break;
-                case (int)KeyboardKey.KEY_ESCAPE:
+                case (int)KeyboardKey.Escape:
                     if (Text == Labels.Cancel)
                         _pressed = true;
                     break;
@@ -34,7 +34,7 @@ public class Button : Control
         }
 
         Raylib.DrawRectangleLinesEx(new Rectangle(X, Y, Width, Height), 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawRectangleRec(new Rectangle(X + 1, Y + 1, Width - 2, Height - 2), Color.WHITE);
+        Raylib.DrawRectangleRec(new Rectangle(X + 1, Y + 1, Width - 2, Height - 2), Color.White);
         Raylib.DrawRectangleRec(new Rectangle(X + 3, Y + 3, Width - 6, Height - 6), new Color(192, 192, 192, 255));
         Raylib.DrawLine(X + 2, Y + Height - 2, X + Width - 2, Y + Height - 2, new Color(128, 128, 128, 255));
         Raylib.DrawLine(X + 3, Y + Height - 3, X + Width - 2, Y + Height - 3, new Color(128, 128, 128, 255));
@@ -42,10 +42,10 @@ public class Button : Control
         Raylib.DrawLine(X + Width - 2, Y + 3, X + Width - 2, Y + Height - 1, new Color(128, 128, 128, 255));
 
         //var textSize = Raylib.MeasureTextEx(, Text, 18, 1.0f);
-        //Raylib.DrawText(Text, X + Width / 2 - (int)textSize.X / 2, Y + Height / 2 - (int)textSize.Y / 2, 18, Color.BLACK);
+        //Raylib.DrawText(Text, X + Width / 2 - (int)textSize.X / 2, Y + Height / 2 - (int)textSize.Y / 2, 18, Color.Black);
 
         Vector2 mousePos = Raylib.GetMousePosition();
-        if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(X, Y, Width, Height)) && Enabled)
+        if (Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(X, Y, Width, Height)) && Enabled)
         {
             _pressed = true;
         }

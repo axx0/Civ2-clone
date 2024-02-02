@@ -6,7 +6,7 @@ public class RadioButton : Control
 {
     public string Text { get; set; }
     public bool IsPressed => Enabled && 
-        Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) &&
+        Raylib.IsMouseButtonPressed(MouseButton.Left) &&
         Raylib.CheckCollisionPointRec(Raylib.GetMousePosition(), new Rectangle(_x + 6, _y + 3, _width - 4, 32));
     public bool IsSelected { get; set; }
 
@@ -18,7 +18,7 @@ public class RadioButton : Control
         _width = Width;
 
         ImageUtils.PaintRadioButton(_x + 8, _y + 7, IsSelected);
-        Raylib.DrawText(Text, _x + 38, _y + 5, 20, Color.BLACK);
+        Raylib.DrawText(Text, _x + 38, _y + 5, 20, Color.Black);
 
         if (IsSelected)
         {

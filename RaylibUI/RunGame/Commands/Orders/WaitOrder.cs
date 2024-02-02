@@ -13,7 +13,7 @@ public class WaitOrder : Order
 {
 
     public WaitOrder(GameScreen gameScreen): 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_W), CommandIds.WaitOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.W), CommandIds.WaitOrder)
     {
     }
 

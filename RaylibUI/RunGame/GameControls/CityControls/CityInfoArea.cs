@@ -27,7 +27,7 @@ public class CityInfoArea : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height,Color.MAGENTA);
+        Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height,Color.Magenta);
         if (Children != null)
         {
             foreach (var control in Children)
@@ -37,7 +37,7 @@ public class CityInfoArea : BaseControl
         }
         else
         {
-            Raylib.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.MAGENTA );
+            Raylib.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.Magenta );
         }
     }
 

@@ -34,7 +34,7 @@ public class MenuLabel : LabelControl
     public override void OnMouseEnter()
     {
         base.OnMouseEnter();
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+        if (Raylib.IsMouseButtonDown(MouseButton.Left))
         {
             Activate();
         }
@@ -54,7 +54,7 @@ public class MenuLabel : LabelControl
     public override void OnMouseMove(Vector2 moveAmount)
     {
         base.OnMouseMove(moveAmount);
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+        if (Raylib.IsMouseButtonDown(MouseButton.Left))
         {
             Activate();
         }
@@ -66,24 +66,24 @@ public class MenuLabel : LabelControl
         {
             switch (key)
             {
-                case KeyboardKey.KEY_LEFT:
+                case KeyboardKey.Left:
                     Controller.Focused = this.Index > 0 ? _gameMenu.Children[Index - 1] : _gameMenu.Children[^1];
                     return true;
-                case KeyboardKey.KEY_RIGHT:
+                case KeyboardKey.Right:
                     Controller.Focused = Index < _gameMenu.Children.Count - 1
                         ? _gameMenu.Children[Index + 1]
                         : _gameMenu.Children[0];
                     return true;
-                case KeyboardKey.KEY_ESCAPE:
+                case KeyboardKey.Escape:
                     _gameMenu.Dropdown.Hide();
                     return true;
-                case KeyboardKey.KEY_ENTER:
+                case KeyboardKey.Enter:
                     Activate();
                     return true;
-                case KeyboardKey.KEY_UP:
-                case KeyboardKey.KEY_DOWN:
+                case KeyboardKey.Up:
+                case KeyboardKey.Down:
                     Activate();
-                    Controller.Focused = _gameMenu.Dropdown.Controls[key == KeyboardKey.KEY_UP ? ^1 : 0];
+                    Controller.Focused = _gameMenu.Dropdown.Controls[key == KeyboardKey.Up ? ^1 : 0];
                     return true;
             }
 
@@ -111,7 +111,7 @@ public class MenuLabel : LabelControl
         base.Draw(pulse);
         //if (Controller.Focused == this)
         //{
-        //    Raylib.DrawRectangleLinesEx(new Rectangle(Location.X + 1, Location.Y + 1, Width - 2, Height - 2), 0.5f, Color.BLACK);
+        //    Raylib.DrawRectangleLinesEx(new Rectangle(Location.X + 1, Location.Y + 1, Width - 2, Height - 2), 0.5f, Color.Black);
         //}
     }
 }

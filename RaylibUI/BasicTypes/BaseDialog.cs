@@ -59,7 +59,7 @@ public abstract class BaseDialog : BaseLayoutController
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(BackgroundImage.Value,(int)Location.X, (int)Location.Y, Color.WHITE);
+        Raylib.DrawTexture(BackgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
         foreach (var control in Controls)
         {
             control.Draw(pulse);

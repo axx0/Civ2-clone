@@ -22,7 +22,7 @@ public class ViewPiece : IGameMode
        Actions = new Dictionary<KeyboardKey, Action>
             {
                 {
-                    KeyboardKey.KEY_ENTER, () =>
+                    KeyboardKey.Enter, () =>
                     {
                         if (_gameScreen.Game.ActiveTile.CityHere != null)
                         {
@@ -39,14 +39,14 @@ public class ViewPiece : IGameMode
                     }
                 },
 
-                { KeyboardKey.KEY_KP_7, () => SetActive(-1, -1) }, { KeyboardKey.KEY_KP_8, () => SetActive(0, -2) },
-                { KeyboardKey.KEY_KP_9, () => SetActive(1, -1) },
-                { KeyboardKey.KEY_KP_1, () => SetActive(1, 1) }, { KeyboardKey.KEY_KP_2, () => SetActive(0, 2) },
-                { KeyboardKey.KEY_KP_3, () => SetActive(-1, 1) },
-                { KeyboardKey.KEY_KP_4, () => SetActive(-2, 0) }, { KeyboardKey.KEY_KP_6, () => SetActive(2, 0) },
+                { KeyboardKey.Kp7, () => SetActive(-1, -1) }, { KeyboardKey.Kp8, () => SetActive(0, -2) },
+                { KeyboardKey.Kp9, () => SetActive(1, -1) },
+                { KeyboardKey.Kp1, () => SetActive(1, 1) }, { KeyboardKey.Kp2, () => SetActive(0, 2) },
+                { KeyboardKey.Kp3, () => SetActive(-1, 1) },
+                { KeyboardKey.Kp4, () => SetActive(-2, 0) }, { KeyboardKey.Kp6, () => SetActive(2, 0) },
 
-                { KeyboardKey.KEY_UP, () => SetActive(0, -2) }, { KeyboardKey.KEY_DOWN, () => SetActive(0, 2) },
-                { KeyboardKey.KEY_LEFT, () => SetActive(-2, 0) }, { KeyboardKey.KEY_RIGHT, () => SetActive(2, 0) },
+                { KeyboardKey.Up, () => SetActive(0, -2) }, { KeyboardKey.Down, () => SetActive(0, 2) },
+                { KeyboardKey.Left, () => SetActive(-2, 0) }, { KeyboardKey.Right, () => SetActive(2, 0) },
             };
         }
 
@@ -98,7 +98,7 @@ public class ViewPiece : IGameMode
 
     public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)
     {
-        if (mouseButton == MouseButton.MOUSE_BUTTON_LEFT)
+        if (mouseButton == MouseButton.Left)
         {
             if (tile.CityHere != null)
             {

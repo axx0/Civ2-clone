@@ -50,6 +50,6 @@ public class ImagePanel
             Y = (int)(Raylib.GetScreenHeight() * 0.5 - _texture.Height * 0.5);
         }
 
-        Raylib.DrawTexture(_texture, X, Y, Color.WHITE);
+        Raylib.DrawTexture(_texture, X, Y, Color.White);
     }
 }

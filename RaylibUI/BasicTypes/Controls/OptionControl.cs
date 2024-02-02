@@ -28,11 +28,11 @@ internal class OptionControl : LabelControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_images[Checked || _images.Length == 1 ? 0: 1], (int)Location.X,(int)Location.Y, Color.WHITE);
+        Raylib.DrawTexture(_images[Checked || _images.Length == 1 ? 0: 1], (int)Location.X,(int)Location.Y, Color.White);
         base.Draw(pulse);
         if (Controller.Focused == this)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(Bounds.X + _images[0].Width-1, Bounds.Y + 1, Bounds.Width - _images[0].Width, Bounds.Height -2), 0.5f, Color.BLACK);
+            Raylib.DrawRectangleLinesEx(new Rectangle(Bounds.X + _images[0].Width-1, Bounds.Y + 1, Bounds.Width - _images[0].Width, Bounds.Height -2), 0.5f, Color.Black);
         }
     }
 

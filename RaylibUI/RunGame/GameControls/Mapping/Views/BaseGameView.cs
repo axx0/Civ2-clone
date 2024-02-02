@@ -80,7 +80,7 @@ public abstract class BaseGameView : IGameView
             var map = location.Map;
             var dim = _gameScreen.TileCache.GetDimensions(map);
 
-            Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.BLACK);
+            Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.Black);
 
             var ypos = -_offsets.Y;
 
@@ -123,7 +123,7 @@ public abstract class BaseGameView : IGameView
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
                                 Raylib.ImageDraw(ref image, tileDetails.Image,
                                     MapImage.TileRec,
-                                    new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight), Color.WHITE);
+                                    new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight), Color.White);
 
                                 var posVector = new Vector2(xpos, ypos);
                                 CalculateElementsAtTile(tile, elements, activeInterface, cities, posVector, tileDetails, civilizationId);

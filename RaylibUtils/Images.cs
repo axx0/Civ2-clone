@@ -252,7 +252,7 @@ public static class Images
                     _img = new Image
                     {
                         Data = ptr,
-                        Format = PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+                        Format = PixelFormat.UncompressedR8G8B8A8,
                         Width = Width,
                         Height = Height,
                         Mipmaps = 1

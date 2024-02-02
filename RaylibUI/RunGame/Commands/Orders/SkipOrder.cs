@@ -11,7 +11,7 @@ public class SkipOrder : Order
 {
 
     public SkipOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_SPACE), CommandIds.SkipOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.Space), CommandIds.SkipOrder)
     {
     }
 

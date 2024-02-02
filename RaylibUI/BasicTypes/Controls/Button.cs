@@ -36,7 +36,7 @@ public class Button : BaseControl
         var w = Width;
         var h = Height;
         Raylib.DrawRectangleLinesEx(new Rectangle(X, Y, w, h), 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawRectangleRec(new Rectangle(X + 1, Y + 1, w - 2, h - 2), Color.WHITE);
+        Raylib.DrawRectangleRec(new Rectangle(X + 1, Y + 1, w - 2, h - 2), Color.White);
         Raylib.DrawRectangleRec(new Rectangle(X + 3, Y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
         Raylib.DrawLine(X + 2, Y + h - 2, X + w - 2, Y + h - 2, new Color(128, 128, 128, 255));
         Raylib.DrawLine(X + 3, Y + h - 3, X + w - 2, Y + h - 3, new Color(128, 128, 128, 255));
@@ -47,7 +47,7 @@ public class Button : BaseControl
 
         if (_hovered)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(X, Y, w, h), 0.5f, Color.MAGENTA);
+            Raylib.DrawRectangleLinesEx(new Rectangle(X, Y, w, h), 0.5f, Color.Magenta);
         }
         base.Draw(pulse);
     }

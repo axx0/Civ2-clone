@@ -77,7 +77,7 @@ public class FoodStorageBox : BaseControl
         {
             for (int col = 0; col < foodPerRow && count < foodStore; col++)
             {
-                Raylib.DrawTexture(_foodIcon, (int)posX + spacing * col, (int)Location.Y +  15 + 3 + _foodIcon.Height * row,Color.WHITE);
+                Raylib.DrawTexture(_foodIcon, (int)posX + spacing * col, (int)Location.Y +  15 + 3 + _foodIcon.Height * row,Color.White);
                 count++;
             }
         }

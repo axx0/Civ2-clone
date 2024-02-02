@@ -17,7 +17,7 @@ public class GotoOrder : Order
     private readonly LocalPlayer _player;
 
     public GotoOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_G), CommandIds.GotoOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.G), CommandIds.GotoOrder)
     {
         _game = _gameScreen.Game;
         _player = _gameScreen.Player;

@@ -16,7 +16,7 @@ public class PillageOrder : Order
     private readonly Game _game;
 
     public PillageOrder(GameScreen gameScreen) : 
-        base(gameScreen,  new Shortcut(KeyboardKey.KEY_P, shift:true), CommandIds.PillageOrder)
+        base(gameScreen,  new Shortcut(KeyboardKey.P, shift:true), CommandIds.PillageOrder)
     {
         _game = _gameScreen.Game;
     }

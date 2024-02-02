@@ -10,7 +10,7 @@ public class FormattedText : Control
     public VerticalAlignment VerticalAlignment { get; set; } = VerticalAlignment.Top;
     public Font Font { get; set; }// = Fonts.DefaultFont;
     public int FontSize { get; set; } = 20;
-    public Color Color { get; set; } = Color.BLACK;
+    public Color Color { get; set; } = Color.Black;
     public int MaxWidth { get; set; } = -1;
     public List<string> WrappedText => MaxWidth == -1 ? new List<string>() { Text } : null; // CtrlHelpers.GetWrappedTexts(Text, MaxWidth, FontSize);
 

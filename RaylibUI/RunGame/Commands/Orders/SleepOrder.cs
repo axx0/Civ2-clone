@@ -10,7 +10,7 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 public class SleepOrder : Order
 {
     public SleepOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_S), CommandIds.SleepOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.S), CommandIds.SleepOrder)
     {
     }
 

@@ -33,10 +33,10 @@ internal class DropDownItem : ControlGroup
     {
         switch (key)
         {
-            case KeyboardKey.KEY_ESCAPE:
+            case KeyboardKey.Escape:
                 _dropdownMenu.Hide();
                 return true;
-            case KeyboardKey.KEY_ENTER:
+            case KeyboardKey.Enter:
                 Activate();
                 return true;
         }
@@ -57,7 +57,7 @@ internal class DropDownItem : ControlGroup
         base.Draw(pulse);
         if (Controller.Hovered == this)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.BLACK);
+            Raylib.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.Black);
         }
     }
 }

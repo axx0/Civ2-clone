@@ -73,7 +73,7 @@ public class DropdownMenu :  BaseDialog
 
     public override void MouseOutsideControls(Vector2 mousePos)
     {
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+        if (Raylib.IsMouseButtonDown(MouseButton.Left))
         {
             if (Raylib.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
             {
@@ -124,13 +124,13 @@ public class DropdownMenu :  BaseDialog
     {
         switch (key)
         {
-            case KeyboardKey.KEY_LEFT:
+            case KeyboardKey.Left:
                 MenuBar.Activate(_current - 1);
                 return;
-            case KeyboardKey.KEY_RIGHT:
+            case KeyboardKey.Right:
                 MenuBar.Activate(_current + 1);
                 return;
-            case KeyboardKey.KEY_DOWN:
+            case KeyboardKey.Down:
                 if (Focused == null)
                 {
                     Focused = Controls[0];
@@ -146,7 +146,7 @@ public class DropdownMenu :  BaseDialog
                 }
 
                 return;
-            case KeyboardKey.KEY_UP:
+            case KeyboardKey.Up:
                 if (Focused == null)
                 {
                     Focused = Controls[^1];
