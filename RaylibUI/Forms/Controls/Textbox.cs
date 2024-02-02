@@ -14,15 +14,15 @@ public class Textbox : Control
     public string Value { get; set; }
     public int? MinValue { get; set; } = 0;
 
-    public bool Draw(int x, int y)
+    public bool Draw(int X, int Y)
     {
         bool pressed = false;
 
         Vector2 mousePoint = Raylib.GetMousePosition();
         int textWidth = Raylib.MeasureText(Value, FontSize);
 
-        var cursor = new Rectangle(x + 5 + textWidth + 2, y + 5, 4, 20);
-        var clickBounds = new Rectangle(x, y, Width, Height);
+        var cursor = new Rectangle(X + 5 + textWidth + 2, Y + 5, 4, 20);
+        var clickBounds = new Rectangle(X, Y, Width, Height);
         
         if (EditMode && Enabled)
         {
@@ -42,7 +42,7 @@ public class Textbox : Control
         // DRAW
         Raylib.DrawRectangleRec(clickBounds, Color.WHITE);
         Raylib.DrawRectangleLinesEx(clickBounds, 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawText(Value, x + 5, y + 5, FontSize, Color.BLACK);
+        Raylib.DrawText(Value, X + 5, Y + 5, FontSize, Color.BLACK);
 
         // Cursor
         if (EditMode && Enabled)

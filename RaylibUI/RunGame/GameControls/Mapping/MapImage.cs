@@ -245,7 +245,7 @@ public static class MapImage
             {
                 var ditherMap = terrainSet.DitherMaps[index];
                 Raylib.ImageDraw(ref tilePic, ditherMap.Images[^1], new Rectangle(0, 0, 32, 16),
-                    new Rectangle(ditherMap.x, ditherMap.y, 32, 16), Color.WHITE);
+                    new Rectangle(ditherMap.X, ditherMap.Y, 32, 16), Color.WHITE);
             }
         }
 
@@ -262,6 +262,6 @@ public static class MapImage
 
         if (neighbourType == tileType) return;
         Raylib.ImageDraw(ref orig_img, ditherMap.Images[(int)neighbourType], new Rectangle(0, 0, 32, 16),
-            new Rectangle(ditherMap.x, ditherMap.y, 32, 16), Color.WHITE);
+            new Rectangle(ditherMap.X, ditherMap.Y, 32, 16), Color.WHITE);
     }
 }

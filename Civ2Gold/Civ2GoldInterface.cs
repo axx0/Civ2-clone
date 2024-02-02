@@ -233,7 +233,7 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("&Move Pieces|v", new Shortcut(KeyboardKey.KEY_V), KeyboardKey.KEY_M),
                 new MenuElement("&View Pieces|v", new Shortcut(KeyboardKey.KEY_V), KeyboardKey.KEY_V),
                 new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.KEY_Z), KeyboardKey.KEY_I),
-                new MenuElement("Zoom &Out|x", new Shortcut(KeyboardKey.KEY_X), KeyboardKey.KEY_O),
+                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.KEY_X), KeyboardKey.KEY_O),
                 new MenuElement("Max Zoom In|Ctrl+Z", new Shortcut(KeyboardKey.KEY_Z, ctrl: true),
                     KeyboardKey.KEY_NULL),
                 new MenuElement("Standard Zoom|Shift+Z", new Shortcut(KeyboardKey.KEY_Z, shift: true),
@@ -339,7 +339,7 @@ public class Civ2GoldInterface : Civ2Interface
                     KeyboardKey.KEY_G),
                 new MenuElement("Change &Terrain At Cursor|Shift+F8", new Shortcut(KeyboardKey.KEY_F8, shift: true),
                     KeyboardKey.KEY_T),
-                new MenuElement("Destro&y All Units At Cursor|Ctrl+Shift+D",
+                new MenuElement("Destro&Y All Units At Cursor|Ctrl+Shift+D",
                     new Shortcut(KeyboardKey.KEY_D, ctrl: true, shift: true), KeyboardKey.KEY_Y),
                 new MenuElement("Change Money|Shift+F9", new Shortcut(KeyboardKey.KEY_F9, shift: true),
                     KeyboardKey.KEY_NULL),
@@ -460,7 +460,7 @@ public class Civ2GoldInterface : Civ2Interface
 
         var shield = UnitPICprops["backShield1"][0].Image;
         var shieldFront = Raylib.ImageCopy(shield);
-        Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.width, 7, Color.BLACK);
+        Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.Width, 7, Color.BLACK);
 
         var shadow = UnitPICprops["backShield2"][0].Image;
         Raylib.ImageColorReplace(ref shadow, ReplacementColour, ShadowColour);
@@ -481,10 +481,10 @@ public class Civ2GoldInterface : Civ2Interface
                 var textColour = imageColours[0];
 
                 imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][col].Image);
-                var lightColour = imageColours[3 * CitiesPICprops["flags"][col].Image.width + 8];
+                var lightColour = imageColours[3 * CitiesPICprops["flags"][col].Image.Width + 8];
 
                 imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][9 + col].Image);
-                var darkColour = imageColours[3 * CitiesPICprops["flags"][9 + col].Image.width + 5];
+                var darkColour = imageColours[3 * CitiesPICprops["flags"][9 + col].Image.Width + 5];
                 Raylib.UnloadImageColors(imageColours);
 
                 playerColours[col] = new PlayerColour
@@ -504,15 +504,15 @@ public class Civ2GoldInterface : Civ2Interface
     {
         ShieldInFrontOfUnit = false,
         Offset = UnitImages.Units[unitType].FlagLoc,
-        StackingOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.width / 2 ? -4 : 4, 0),
-        ShadowOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.width / 2 ? -1 : 1, 1),
+        StackingOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.Width / 2 ? -4 : 4, 0),
+        ShadowOffset = new(UnitImages.Units[unitType].FlagLoc.X < UnitImages.UnitRectangle.Width / 2 ? -1 : 1, 1),
         DrawShadow = true,
         HPbarOffset = new(0, 2),
         HPbarSize = new(12, 3),
         HPbarColours = new[] { new Color(243, 0, 0, 255), new Color(255, 223, 79, 255), new Color(87, 171, 39, 255) },
         HPbarSizeForColours = new[] { 3, 8 },
-        OrderOffset = new(UnitPICprops["backShield1"][0].Image.width / 2f, 7),
-        OrderTextHeight = UnitPICprops["backShield1"][0].Image.height - 7,
+        OrderOffset = new(UnitPICprops["backShield1"][0].Image.Width / 2f, 7),
+        OrderTextHeight = UnitPICprops["backShield1"][0].Image.Height - 7,
     };
 
     /// <summary>
@@ -520,49 +520,49 @@ public class Civ2GoldInterface : Civ2Interface
     /// </summary>
     /// <param name="wallpaper">Wallpaper image to tile onto the border</param>
     /// <param name="destination">the Image we're rendering to</param>
-    /// <param name="height">final image height</param>
-    /// <param name="width">final image width</param>
-    /// <param name="topWidth">width of top border</param>
-    /// <param name="footerWidth">width of the footer</param>
-    public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding)
+    /// <param name="Height">final image Height</param>
+    /// <param name="Width">final image Width</param>
+    /// <param name="topWidth">Width of top border</param>
+    /// <param name="footerWidth">Width of the footer</param>
+    public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int Height, int Width, Padding padding)
     {
-        int rows = height / wallpaper.Outer.height + 1;
-        var columns = width / wallpaper.Outer.width + 1;
-        var headerSourceRec = new Rectangle { height = padding.Top, width = wallpaper.Outer.width };
+        int rows = Height / wallpaper.Outer.Height + 1;
+        var columns = Width / wallpaper.Outer.Width + 1;
+        var headerSourceRec = new Rectangle { Height = padding.Top, Width = wallpaper.Outer.Width };
         for (int col = 0; col < columns; col++)
         {
             Raylib.ImageDraw(ref destination, wallpaper.Outer, headerSourceRec,
-                new Rectangle(col * wallpaper.Outer.width, 0, wallpaper.Outer.width, padding.Top),
+                new Rectangle(col * wallpaper.Outer.Width, 0, wallpaper.Outer.Width, padding.Top),
                 Color.WHITE);
         }
-        var leftSide = new Rectangle { height = wallpaper.Outer.height, width = DialogPadding.Left };
+        var leftSide = new Rectangle { Height = wallpaper.Outer.Height, Width = DialogPadding.Left };
 
-        var rightEdge = width - DialogPadding.Right;
-        var rightOffset = width % wallpaper.Outer.width;
-        var rightSide = new Rectangle { x = rightOffset, height = wallpaper.Outer.height, width = DialogPadding.Right };
+        var rightEdge = Width - DialogPadding.Right;
+        var rightOffset = Width % wallpaper.Outer.Width;
+        var rightSide = new Rectangle { X = rightOffset, Height = wallpaper.Outer.Height, Width = DialogPadding.Right };
 
         for (int row = 0; row < rows; row++)
         {
             Raylib.ImageDraw(ref destination, wallpaper.Outer, leftSide,
-                new Rectangle(0, row * wallpaper.Outer.height, DialogPadding.Left, wallpaper.Outer.height),
+                new Rectangle(0, row * wallpaper.Outer.Height, DialogPadding.Left, wallpaper.Outer.Height),
                 Color.WHITE);
             Raylib.ImageDraw(ref destination, wallpaper.Outer, rightSide,
-                new Rectangle(rightEdge, row * wallpaper.Outer.height, DialogPadding.Right, wallpaper.Outer.height),
+                new Rectangle(rightEdge, row * wallpaper.Outer.Height, DialogPadding.Right, wallpaper.Outer.Height),
                 Color.WHITE);
         }
 
-        var bottomEdge = height - padding.Bottom;
-        var bottomOffset = height % wallpaper.Outer.height;
-        var bottomSource = new Rectangle { y = bottomOffset, height = padding.Bottom, width = wallpaper.Outer.width };
+        var bottomEdge = Height - padding.Bottom;
+        var bottomOffset = Height % wallpaper.Outer.Height;
+        var bottomSource = new Rectangle { Y = bottomOffset, Height = padding.Bottom, Width = wallpaper.Outer.Width };
         for (int col = 0; col < columns; col++)
         {
             Raylib.ImageDraw(ref destination, wallpaper.Outer, bottomSource,
-                new Rectangle(col * wallpaper.Outer.width, bottomEdge, wallpaper.Outer.width, padding.Bottom),
+                new Rectangle(col * wallpaper.Outer.Width, bottomEdge, wallpaper.Outer.Width, padding.Bottom),
                 Color.WHITE);
         }
     }
 
-    public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding)
+    public override void DrawBorderLines(ref Image destination, int Height, int Width, Padding padding)
     {
         // Outer border
         var pen1 = new Color(227, 227, 227, 255);
@@ -572,36 +572,36 @@ public class Civ2GoldInterface : Civ2Interface
         var pen5 = new Color(240, 240, 240, 255);
         var pen6 = new Color(223, 223, 223, 255);
         var pen7 = new Color(67, 67, 67, 255);
-        Raylib.ImageDrawLine(ref destination, 0, 0, width - 2, 0, pen1); // 1st layer of border
-        Raylib.ImageDrawLine(ref destination, 0, 0, width - 2, 0, pen1);
-        Raylib.ImageDrawLine(ref destination, 0, 0, 0, height - 2, pen1);
-        Raylib.ImageDrawLine(ref destination, width - 1, 0, width - 1, height - 1, pen2);
-        Raylib.ImageDrawLine(ref destination, 0, height - 1, width - 1, height - 1, pen2);
-        Raylib.ImageDrawLine(ref destination, 1, 1, width - 3, 1, pen3); // 2nd layer of border
-        Raylib.ImageDrawLine(ref destination, 1, 1, 1, height - 3, pen3);
-        Raylib.ImageDrawLine(ref destination, width - 2, 1, width - 2, height - 2, pen4);
-        Raylib.ImageDrawLine(ref destination, 1, height - 2, width - 2, height - 2, pen4);
-        Raylib.ImageDrawLine(ref destination, 2, 2, width - 4, 2, pen5); // 3rd layer of border
-        Raylib.ImageDrawLine(ref destination, 2, 2, 2, height - 4, pen5);
-        Raylib.ImageDrawLine(ref destination, width - 3, 2, width - 3, height - 3, pen5);
-        Raylib.ImageDrawLine(ref destination, 2, height - 3, width - 3, height - 3, pen5);
-        Raylib.ImageDrawLine(ref destination, 3, 3, width - 5, 3, pen6); // 4th layer of border
-        Raylib.ImageDrawLine(ref destination, 3, 3, 3, height - 5, pen6);
-        Raylib.ImageDrawLine(ref destination, width - 4, 3, width - 4, height - 4, pen7);
-        Raylib.ImageDrawLine(ref destination, 3, height - 4, width - 4, height - 4, pen7);
-        Raylib.ImageDrawLine(ref destination, 4, 4, width - 6, 4, pen6); // 5th layer of border
-        Raylib.ImageDrawLine(ref destination, 4, 4, 4, height - 6, pen6);
-        Raylib.ImageDrawLine(ref destination, width - 5, 4, width - 5, height - 5, pen7);
-        Raylib.ImageDrawLine(ref destination, 4, height - 5, width - 5, height - 5, pen7);
+        Raylib.ImageDrawLine(ref destination, 0, 0, Width - 2, 0, pen1); // 1st layer of border
+        Raylib.ImageDrawLine(ref destination, 0, 0, Width - 2, 0, pen1);
+        Raylib.ImageDrawLine(ref destination, 0, 0, 0, Height - 2, pen1);
+        Raylib.ImageDrawLine(ref destination, Width - 1, 0, Width - 1, Height - 1, pen2);
+        Raylib.ImageDrawLine(ref destination, 0, Height - 1, Width - 1, Height - 1, pen2);
+        Raylib.ImageDrawLine(ref destination, 1, 1, Width - 3, 1, pen3); // 2nd layer of border
+        Raylib.ImageDrawLine(ref destination, 1, 1, 1, Height - 3, pen3);
+        Raylib.ImageDrawLine(ref destination, Width - 2, 1, Width - 2, Height - 2, pen4);
+        Raylib.ImageDrawLine(ref destination, 1, Height - 2, Width - 2, Height - 2, pen4);
+        Raylib.ImageDrawLine(ref destination, 2, 2, Width - 4, 2, pen5); // 3rd layer of border
+        Raylib.ImageDrawLine(ref destination, 2, 2, 2, Height - 4, pen5);
+        Raylib.ImageDrawLine(ref destination, Width - 3, 2, Width - 3, Height - 3, pen5);
+        Raylib.ImageDrawLine(ref destination, 2, Height - 3, Width - 3, Height - 3, pen5);
+        Raylib.ImageDrawLine(ref destination, 3, 3, Width - 5, 3, pen6); // 4th layer of border
+        Raylib.ImageDrawLine(ref destination, 3, 3, 3, Height - 5, pen6);
+        Raylib.ImageDrawLine(ref destination, Width - 4, 3, Width - 4, Height - 4, pen7);
+        Raylib.ImageDrawLine(ref destination, 3, Height - 4, Width - 4, Height - 4, pen7);
+        Raylib.ImageDrawLine(ref destination, 4, 4, Width - 6, 4, pen6); // 5th layer of border
+        Raylib.ImageDrawLine(ref destination, 4, 4, 4, Height - 6, pen6);
+        Raylib.ImageDrawLine(ref destination, Width - 5, 4, Width - 5, Height - 5, pen7);
+        Raylib.ImageDrawLine(ref destination, 4, Height - 5, Width - 5, Height - 5, pen7);
 
         // Inner panel
-        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 1, 9 + (width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
-        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 1, 10, height - padding.Bottom - 1, pen7);
-        Raylib.ImageDrawLine(ref destination, width - 11, padding.Top - 1, width - 11, height - padding.Bottom - 1, pen6);
-        Raylib.ImageDrawLine(ref destination, 9, height - padding.Bottom, width - 9 - 1, height - padding.Bottom, pen6);
-        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 2, 9 + (width - 18 - 2), padding.Top - 2, pen7); // 2nd layer of border
-        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 2, 9, height - padding.Bottom, pen7);
-        Raylib.ImageDrawLine(ref destination, width - 10, padding.Top - 2, width - 10, height - padding.Bottom, pen6);
-        Raylib.ImageDrawLine(ref destination, 9, height - padding.Bottom + 1, width - 9 - 1, height - padding.Bottom + 1, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 1, 9 + (Width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
+        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 1, 10, Height - padding.Bottom - 1, pen7);
+        Raylib.ImageDrawLine(ref destination, Width - 11, padding.Top - 1, Width - 11, Height - padding.Bottom - 1, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, Height - padding.Bottom, Width - 9 - 1, Height - padding.Bottom, pen6);
+        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 2, 9 + (Width - 18 - 2), padding.Top - 2, pen7); // 2nd layer of border
+        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 2, 9, Height - padding.Bottom, pen7);
+        Raylib.ImageDrawLine(ref destination, Width - 10, padding.Top - 2, Width - 10, Height - padding.Bottom, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, Height - padding.Bottom + 1, Width - 9 - 1, Height - padding.Bottom + 1, pen6);
     }
 }

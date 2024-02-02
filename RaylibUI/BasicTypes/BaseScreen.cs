@@ -10,14 +10,14 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
     public override void Draw(bool pulse)
     {
         var layoutController = _dialogs.LastOrDefault(this);
-        var width = Raylib.GetScreenWidth();
-        var height = Raylib.GetScreenHeight();
+        var Width = Raylib.GetScreenWidth();
+        var Height = Raylib.GetScreenHeight();
 
-        if (_renderedWidth != width || _renderedHeight != height)
+        if (_renderedWidth != Width || _renderedHeight != Height)
         {
-            _renderedWidth = width;
-            _renderedHeight = height;
-            Resize(width, height);
+            _renderedWidth = Width;
+            _renderedHeight = Height;
+            Resize(Width, Height);
         }
         else
         {
@@ -35,7 +35,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         }
     }
 
-    public override void Resize(int width, int height)
+    public override void Resize(int Width, int Height)
     {
         foreach (var control in Controls)
         {
@@ -44,7 +44,7 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
 
         foreach (var dialog in _dialogs)
         {
-            dialog.Resize(width, height);
+            dialog.Resize(Width, Height);
         }
     }
 

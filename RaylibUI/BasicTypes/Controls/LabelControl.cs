@@ -66,13 +66,13 @@ public class LabelControl : BaseControl
         if (_wrapText && _wrappedText?.Count > 1)
         {
             var unitHeight = Height / _wrappedText.Count;
-            var y = Location.Y + unitHeight / 2f - TextSize.Y / 2f;
+            var Y = Location.Y + unitHeight / 2f - TextSize.Y / 2f;
             for (var i = 0; i < _wrappedText.Count; i++)
             {
-                var textPosition = new Vector2(Location.X + Offset, y);
+                var textPosition = new Vector2(Location.X + Offset, Y);
                 Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition + _shadowOffset, _fontSize, _spacing, _colorShadow);
                 Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition, _fontSize, _spacing, _colorFront);
-                y += unitHeight;
+                Y += unitHeight;
             }
         }
         else
@@ -84,7 +84,7 @@ public class LabelControl : BaseControl
             Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, _colorFront);
         }
 
-        //Raylib.DrawRectangleLines((int)Bounds.x, (int)Bounds.y, (int)Bounds.width, (int)Bounds.height, Color.RED);
+        //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.RED);
 
         base.Draw(pulse);
     }

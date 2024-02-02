@@ -25,7 +25,7 @@ public class RadioButtonList : Control
         _buttons[Selected].IsSelected = true;
     }
 
-    public void Draw(int x, int y, int width)
+    public void Draw(int X, int Y, int Width)
     {
         // Mouse click
         for (int i = 0; i < _buttons.Count; i++)
@@ -56,13 +56,13 @@ public class RadioButtonList : Control
 
         // Draw buttons
         int rowsPerColumn = _texts.Count / _columns;
-        int colWidth = width / _columns;
+        int colWidth = Width / _columns;
         for (int col = 0; col < _columns; col++)
         {
             for (int row = 0; row < rowsPerColumn; row++)
             {
                 int i = row + col * rowsPerColumn;
-                _buttons[i].Draw(x + colWidth * col, y + 32 * row, colWidth);
+                _buttons[i].Draw(X + colWidth * col, Y + 32 * row, colWidth);
             }
         }
     }

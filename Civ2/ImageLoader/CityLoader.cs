@@ -19,7 +19,7 @@ public static class CityLoader
         var cityProps = active.CitiesPICprops;
 
         cities.CityRectangle = new Rectangle(0, 0,
-            cityProps["city"][0].Rect.width, cityProps["city"][0].Rect.height);
+            cityProps["city"][0].Rect.Width, cityProps["city"][0].Rect.Height);
 
         // Cities images
         for (int row = 0; row < 7; row++)

@@ -45,6 +45,6 @@ public interface IUserInterface
     PopupBox? GetDialog(string dialogName);
 
     UnitShield UnitShield(int unitType);
-    void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding);
-    void DrawBorderLines(ref Image destination, int height, int width, Padding padding);
+    void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int Height, int Width, Padding padding);
+    void DrawBorderLines(ref Image destination, int Height, int Width, Padding padding);
 }

@@ -138,7 +138,7 @@ namespace Civ2.ImageLoader
             ditherMaps[^1] = Raylib.ImageFromImage(terrainBlank, sampleRect);
             Raylib.ImageAlphaMask(ref ditherMaps[^1], mask);
 
-            return new DitherMap { x = offsetX, y = offsetY, Images = ditherMaps };
+            return new DitherMap { X = offsetX, Y = offsetY, Images = ditherMaps };
         }
     }
 }   

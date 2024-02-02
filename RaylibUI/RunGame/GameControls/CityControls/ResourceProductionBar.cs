@@ -41,7 +41,7 @@ public class ResourceProductionBar : BaseControl
             var lossImage = TextureCache.GetImage(resourceImage.LossImage);
             
             var values = _cityWindow.City.GetConsumableResourceValues(consumableResource.Name);
-             _iconWidth = mainImage.width;
+             _iconWidth = mainImage.Width;
 
             sections.Add(
                 new ProdSection(label: consumableResource.GetDisplayDetails(values.Consumption, OutputType.Consumption), value: values.Consumption,
@@ -68,7 +68,7 @@ public class ResourceProductionBar : BaseControl
                     icon: TextureCache.GetImage(resource.Icon)));
             }
 
-            _iconWidth = sections[0].Icon.width;
+            _iconWidth = sections[0].Icon.Width;
         }
         else
         {
@@ -101,7 +101,7 @@ public class ResourceProductionBar : BaseControl
         base.Draw(pulse);
         
         var textDim = Raylib.MeasureTextEx(Fonts.Arial, _sections[0].Label, 14, 1);
-        var labely = Location.Y + (_resource.LabelBelow ? Bounds.height : 1-textDim.Y);
+        var labely = Location.Y + (_resource.LabelBelow ? Bounds.Height : 1-textDim.Y);
             
         Raylib.DrawTextEx(Fonts.Arial, _sections[0].Label, new Vector2(Location.X + 1, labely),14,1,Color.WHITE);
         var pos = Location + Vector2.One;

@@ -76,7 +76,6 @@ public class MenuLabel : LabelControl
                     return true;
                 case KeyboardKey.KEY_ESCAPE:
                     _gameMenu.Dropdown.Hide();
-                    Controller.Focused = null;
                     return true;
                 case KeyboardKey.KEY_ENTER:
                     Activate();

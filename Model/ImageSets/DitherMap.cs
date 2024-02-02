@@ -4,7 +4,7 @@ namespace Model.ImageSets;
 
 public struct DitherMap
 {
-    public int x;
-    public int y;
+    public int X;
+    public int Y;
     public Image[] Images;
 }

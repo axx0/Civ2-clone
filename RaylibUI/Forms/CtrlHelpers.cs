@@ -13,7 +13,7 @@ public static class CtrlHelpers
 
         string combinedWord = string.Empty;
         int combinedTextSize, combinedTextSizeNext;
-        // Measure string width by combining words
+        // Measure string Width by combining words
         bool new_line = true;
         for (int i = 0; i < words.Length; i++)
         {

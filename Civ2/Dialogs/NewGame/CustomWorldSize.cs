@@ -51,14 +51,14 @@ public class CustomWorldSize : BaseDialogHandler
             return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
         }
 
-        if (int.TryParse(result.TextValues["Width"], out var width))
+        if (int.TryParse(result.TextValues["Width"], out var Width))
         {
-            Initialization.ConfigObject.WorldSize[0] = width;
+            Initialization.ConfigObject.WorldSize[0] = Width;
         }
 
-        if (int.TryParse(result.TextValues["Height"], out var height))
+        if (int.TryParse(result.TextValues["Height"], out var Height))
         {
-            Initialization.ConfigObject.WorldSize[1] = height;
+            Initialization.ConfigObject.WorldSize[1] = Height;
         }
 
         return civDialogHandlers[

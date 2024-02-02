@@ -33,7 +33,7 @@ public abstract class BaseLayoutController : IControlLayout
     }
 
     public IControl? Hovered { get; set; }
-    public abstract void Resize(int width, int height);
+    public abstract void Resize(int Width, int Height);
     public abstract void Draw(bool pulse);
     public abstract void Move(Vector2 moveAmount);
 

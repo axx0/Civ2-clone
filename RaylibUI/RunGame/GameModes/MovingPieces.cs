@@ -136,14 +136,14 @@ public class MovingPieces : IGameMode
     public IList<IControl> GetSidePanelContents(Rectangle bounds)
     {
         var controls = new List<IControl> { _title };
-        _title.Bounds = bounds with { height = _title.GetPreferredHeight() };
+        _title.Bounds = bounds with { Height = _title.GetPreferredHeight() };
 
         var activeUnit = _gameScreen.Player.ActiveUnit;
         var unitDisplay = new UnitDisplay(_gameScreen, activeUnit,
-            new Vector2(bounds.x, bounds.y + _title.Height), _gameScreen.Main.ActiveInterface);
+            new Vector2(bounds.X, bounds.Y + _title.Height), _gameScreen.Main.ActiveInterface);
         controls.Add(unitDisplay);
 
-        var currentY = bounds.y + controls.Sum(c => c.Height);
+        var currentY = bounds.Y + controls.Sum(c => c.Height);
         
         // Show move points correctly
         var commonMultiplier = _gameScreen.Game.Rules.Cosmic.MovementMultiplier;
@@ -165,7 +165,7 @@ public class MovingPieces : IGameMode
         var labelHeight = 18;
         controls.Add(new LabelControl(_gameScreen, moveText, true)
         {
-            Bounds = bounds with { y = currentY, height = labelHeight }
+            Bounds = bounds with { Y = currentY, Height = labelHeight }
         });
         currentY += labelHeight;
 
@@ -180,7 +180,7 @@ public class MovingPieces : IGameMode
                     new LabelControl(_gameScreen, _gameScreen.Player.Civilization.Adjective, true,
                         alignment: TextAlignment.Center)
                 },
-                Bounds = bounds with { y = currentY, height = labelHeight }
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
             });
         currentY += labelHeight;
 
@@ -188,14 +188,14 @@ public class MovingPieces : IGameMode
         controls.Add(new LabelControl(_gameScreen,
             activeUnit.Veteran ? $"{activeUnit.Name} ({Labels.For(LabelIndex.Veteran)})" : activeUnit.Name, true)
         {
-            Bounds = bounds with { y = currentY, height = labelHeight }
+            Bounds = bounds with { Y = currentY, Height = labelHeight }
         });
         currentY += labelHeight;
 
         var activeTile = _gameScreen.Player.ActiveTile;
         controls.Add(new LabelControl(_gameScreen, $"({activeTile.Name})", true)
         {
-            Bounds = bounds with { y = currentY, height = labelHeight }
+            Bounds = bounds with { Y = currentY, Height = labelHeight }
         });
         currentY += labelHeight;
 
@@ -211,7 +211,7 @@ public class MovingPieces : IGameMode
         {
             controls.Add(new LabelControl(_gameScreen, $"({improvementText})", true)
             {
-                Bounds = bounds with { y = currentY, height = labelHeight }
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
             });
             currentY += labelHeight;
         }
@@ -224,7 +224,7 @@ public class MovingPieces : IGameMode
                     .Select(i => i.Imp.Levels[i.Const.Level].Name));
             controls.Add(new LabelControl(_gameScreen, $"({airbaseText})", true)
             {
-                Bounds = bounds with { y = currentY, height = labelHeight }
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
             });
             currentY += labelHeight;
         }
@@ -237,32 +237,32 @@ public class MovingPieces : IGameMode
         {
             controls.Add(new LabelControl(_gameScreen, $"({pollutionText})", true)
             {
-                Bounds = bounds with { y = currentY, height = labelHeight }
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
             });
             currentY += labelHeight;
         }
 
         var unitsOnTile = activeTile.UnitsHere.Where(u => u != activeUnit).ToList();
-        var remainingSpace = bounds.height - controls.Sum(c => c.Height);
+        var remainingSpace = bounds.Height - controls.Sum(c => c.Height);
         for (int i = 0; i < unitsOnTile.Count && remainingSpace > unitDisplay.Height; i++)
         {
             var unit = unitsOnTile[i];
             var unitImage = new UnitDisplay(_gameScreen, unit,
-                new Vector2(bounds.x, currentY), _gameScreen.Main.ActiveInterface);
+                new Vector2(bounds.X, currentY), _gameScreen.Main.ActiveInterface);
             controls.Add(unitImage);
             currentY += unitImage.Height + 2;
             cityName = (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name;
             controls.Add(new LabelControl(_gameScreen, cityName, true)
             {
-                Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y,bounds.width - 80 , 18)
+                Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y,bounds.Width - 80 , 18)
             });
             controls.Add(new LabelControl(_gameScreen, _gameScreen.Game.Order2string(unit.Order), true)
             {
-                Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y + 18,bounds.width - 80 , 18)
+                Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y + 18,bounds.Width - 80 , 18)
             });
             controls.Add(new LabelControl(_gameScreen, unit.Veteran ? $"{unit.Name} ({Labels.For(LabelIndex.Veteran)})" : unit.Name, true)
             {
-                Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y + 36,bounds.width - 80 , 18)
+                Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y + 36,bounds.Width - 80 , 18)
             });
         }
 

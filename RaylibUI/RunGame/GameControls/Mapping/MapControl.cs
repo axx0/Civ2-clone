@@ -157,8 +157,8 @@ public class MapControl : BaseControl
 
         var dim = _gameScreen.TileCache.GetDimensions(_game.CurrentMap);
         var clickedTilePosition = clickPosition - new Vector2(_padding.Left + _padding.Right, _padding.Top) + _currentView.Offsets;
-        var y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
-        var odd = y % 2 == 1;
+        var Y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
+        var odd = Y % 2 == 1;
         var clickX = (int)(odd ? clickedTilePosition.X - dim.HalfWidth : clickedTilePosition.X);
         if (clickX < 0)
         {
@@ -183,19 +183,19 @@ public class MapControl : BaseControl
             }
         }
 
-        var x = Math.DivRem(clickX, dim.TileWidth, out var xRemainder);
+        var X = Math.DivRem(clickX, dim.TileWidth, out var xRemainder);
 
-        if (xRemainder < dim.HalfWidth && y > 0)
+        if (xRemainder < dim.HalfWidth && Y > 0)
         {
             if (yRemainder *  dim.HalfWidth + xRemainder *  dim.HalfHeight < dim.DiagonalCut)
             {
-                y -= 1;
+                Y -= 1;
                 if (!odd)
                 {
-                    x -= 1;
-                    if (x < 0)
+                    X -= 1;
+                    if (X < 0)
                     {
-                        x = _game.CurrentMap.Flat ? 0 : _game.CurrentMap.Tile.GetLength(0) - 1;
+                        X = _game.CurrentMap.Flat ? 0 : _game.CurrentMap.Tile.GetLength(0) - 1;
                     }
                 }
             }
@@ -204,28 +204,28 @@ public class MapControl : BaseControl
         {
             if ((dim.TileWidth - xRemainder) *  dim.HalfHeight + yRemainder *  dim.HalfWidth < dim.DiagonalCut)
             {
-                y -= 1;
+                Y -= 1;
                 if (odd)
                 {
-                    x += 1;
-                    if (x == _game.CurrentMap.Tile.GetLength(0))
+                    X += 1;
+                    if (X == _game.CurrentMap.Tile.GetLength(0))
                     {
                         if (_game.CurrentMap.Flat)
                         {
-                            x -= 1;
+                            X -= 1;
                         }
                         else
                         {
-                            x = 0;
+                            X = 0;
                         }
                     }
                 }
             }
         }
 
-        if (0 <= y && y < _game.CurrentMap.Tile.GetLength(1))
+        if (0 <= Y && Y < _game.CurrentMap.Tile.GetLength(1))
         {
-            return _game.CurrentMap.Tile[x, y];
+            return _game.CurrentMap.Tile[X, Y];
         }
 
         return null;
@@ -310,7 +310,7 @@ public class MapControl : BaseControl
         {
             var name = cityData.Name;
             var textSize = Raylib.MeasureTextEx(_active.Look.DefaultFont, name, 20, 1);
-            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.width /2f , cityData.Texture.height) - textSize /2f;
+            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width /2f , cityData.Texture.Height) - textSize /2f;
 
             Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
             Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);

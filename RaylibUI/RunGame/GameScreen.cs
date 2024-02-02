@@ -95,16 +95,16 @@ public class GameScreen : BaseScreen
             ActiveMode = Processing;
         }
         
-        var width = Raylib.GetScreenWidth();
-        var height = Raylib.GetScreenHeight();
+        var Width = Raylib.GetScreenWidth();
+        var Height = Raylib.GetScreenHeight();
         
         var menuHeight = _menu.GetPreferredHeight();
-        var mapWidth = width - MiniMapWidth;
+        var mapWidth = Width - MiniMapWidth;
         
         _statusPanel = new StatusPanel(this, game);
         
         _minimapPanel = new MinimapPanel(this, game);
-        _mapControl = new MapControl(this, game, new Rectangle(0, menuHeight, mapWidth, height - menuHeight));
+        _mapControl = new MapControl(this, game, new Rectangle(0, menuHeight, mapWidth, Height - menuHeight));
 
         // The order of these is important as MapControl can overdraw so must be drawn first
         Controls.Add(_mapControl);
@@ -167,17 +167,17 @@ public class GameScreen : BaseScreen
         
     }
 
-    public override void Resize(int width, int height)
+    public override void Resize(int Width, int Height)
     {
         _menu.GetPreferredWidth();
         var menuHeight = _menu.GetPreferredHeight();
-        var mapWidth = width - MiniMapWidth;
-        _menu.Bounds = new Rectangle(0, 0, width, menuHeight);
-        _mapControl.Bounds = new Rectangle(0, menuHeight, mapWidth, height - menuHeight);
+        var mapWidth = Width - MiniMapWidth;
+        _menu.Bounds = new Rectangle(0, 0, Width, menuHeight);
+        _mapControl.Bounds = new Rectangle(0, menuHeight, mapWidth, Height - menuHeight);
         _minimapPanel.Bounds = new Rectangle( mapWidth, menuHeight, MiniMapWidth, _miniMapHeight);
-        _statusPanel.Bounds = new Rectangle(mapWidth, _miniMapHeight + menuHeight, MiniMapWidth, height - _miniMapHeight - menuHeight);
+        _statusPanel.Bounds = new Rectangle(mapWidth, _miniMapHeight + menuHeight, MiniMapWidth, Height - _miniMapHeight - menuHeight);
         
-        base.Resize(width, height);
+        base.Resize(Width, Height);
     }
 
     public void ShowCityDialog(string dialog, IList<string> replaceStrings)

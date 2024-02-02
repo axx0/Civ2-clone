@@ -30,7 +30,7 @@ public class DropdownMenu :  BaseDialog
         Location = location;
         _current = menuIndex;
         Controls.Clear();
-        var width = new List<int>{ 20,10};
+        var childWidths = new List<int>{ 20,10};
         foreach (var command in elements)
         {
             command.GameCommand?.Update();
@@ -39,26 +39,26 @@ public class DropdownMenu :  BaseDialog
             
             dropDownItem.GetPreferredWidth();
             var itemWidths = dropDownItem.ChildWidths;
-            if (width[0] < itemWidths[0])
+            if (childWidths[0] < itemWidths[0])
             {
-                width[0] = itemWidths[0];
+                childWidths[0] = itemWidths[0];
             }
 
-            if (width[1] < itemWidths[1])
+            if (childWidths[1] < itemWidths[1])
             {
-                width[1] = itemWidths[1];
+                childWidths[1] = itemWidths[1];
             }
         }
 
-        var dropdownWidth = width.Sum() + DropDownItem.DropdownSpacing;
+        var dropdownWidth = childWidths.Sum() + DropDownItem.DropdownSpacing;
         var currentY = location.Y + 3;
         foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
-            var height = menuItem.GetPreferredHeight() + 12;
-            menuItem.SetChildWidths(width);
-            menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, height);
+            var Height = menuItem.GetPreferredHeight() + 12;
+            menuItem.SetChildWidths(childWidths);
+            menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, Height);
             menuItem.OnResize();
-            currentY += height;
+            currentY += Height;
         }
 
         Width = dropdownWidth + 6;
@@ -97,6 +97,7 @@ public class DropdownMenu :  BaseDialog
                         if (control.Index == _current)
                         {
                             Hide();
+                            _gameScreen.Focused = control;
                         }
                         else
                         {
@@ -207,7 +208,7 @@ public class DropdownMenu :  BaseDialog
         base.OnKeyPress(key);
     }
 
-    public override void Resize(int width, int height)
+    public override void Resize(int Width, int Height)
     {
     }
 
@@ -232,5 +233,6 @@ public class DropdownMenu :  BaseDialog
     {
         _shown = false;
         _gameScreen.CloseDialog(this);
+        _gameScreen.Focused = null;
     }
 }

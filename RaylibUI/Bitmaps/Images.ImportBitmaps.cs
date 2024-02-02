@@ -103,9 +103,9 @@ namespace RaylibUI
 
                     var sourceImage = ImageCache[sourceKey];
                     var rect = bitmapStorage.Location;
-                    if (rect.width == 0)
+                    if (rect.Width == 0)
                     {
-                        rect = new Rectangle(0, 0, sourceImage.width, sourceImage.height);
+                        rect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
                     }
                     var image = Raylib.ImageFromImage(ImageCache[sourceKey], rect);
                     if (bitmapStorage.Transparencies != null)
@@ -113,7 +113,7 @@ namespace RaylibUI
                         foreach (var transparency in bitmapStorage.Transparencies)
                         {
                             Raylib.ImageColorReplace(ref image, transparency,
-                                new Color(transparency.r, transparency.g, transparency.b, (byte)0));
+                                new Color(transparency.R, transparency.G, transparency.B, (byte)0));
                         }
                     }
                     ImageCache[bitmapStorage.Key] = image;

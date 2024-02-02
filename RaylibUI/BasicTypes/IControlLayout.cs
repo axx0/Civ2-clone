@@ -13,7 +13,7 @@ public interface IControlLayout
     IControl? Focused { get; set; }
     IControl? Hovered { get; set; }
 
-    void Resize(int width, int height);
+    void Resize(int Width, int Height);
     void Draw(bool pulse);
     void Move(Vector2 moveAmount);
     void OnKeyPress(KeyboardKey key);

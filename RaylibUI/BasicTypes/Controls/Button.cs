@@ -31,23 +31,23 @@ public class Button : BaseControl
 
     public override void Draw(bool pulse)
     {
-        var x = (int)Location.X;
-        var y = (int)Location.Y;
+        var X = (int)Location.X;
+        var Y = (int)Location.Y;
         var w = Width;
         var h = Height;
-        Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.WHITE);
-        Raylib.DrawRectangleRec(new Rectangle(x + 3, y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
-        Raylib.DrawLine(x + 2, y + h - 2, x + w - 2, y + h - 2, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + 3, y + h - 3, x + w - 2, y + h - 3, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + w - 1, y + 2, x + w - 1, y + h - 1, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + w - 2, y + 3, x + w - 2, y + h - 1, new Color(128, 128, 128, 255));
+        Raylib.DrawRectangleLinesEx(new Rectangle(X, Y, w, h), 1.0f, new Color(100, 100, 100, 255));
+        Raylib.DrawRectangleRec(new Rectangle(X + 1, Y + 1, w - 2, h - 2), Color.WHITE);
+        Raylib.DrawRectangleRec(new Rectangle(X + 3, Y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
+        Raylib.DrawLine(X + 2, Y + h - 2, X + w - 2, Y + h - 2, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(X + 3, Y + h - 3, X + w - 2, Y + h - 3, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(X + w - 1, Y + 2, X + w - 1, Y + h - 1, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(X + w - 2, Y + 3, X + w - 2, Y + h - 1, new Color(128, 128, 128, 255));
 
-        Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)textSize.X / 2, y + h / 2 - (int)textSize.Y / 2), _fontSize, 1f, _colour);
+        Raylib.DrawTextEx(_font, Text, new Vector2(X + w / 2 - (int)textSize.X / 2, Y + h / 2 - (int)textSize.Y / 2), _fontSize, 1f, _colour);
 
         if (_hovered)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.MAGENTA);
+            Raylib.DrawRectangleLinesEx(new Rectangle(X, Y, w, h), 0.5f, Color.MAGENTA);
         }
         base.Draw(pulse);
     }

@@ -30,11 +30,11 @@ public class UnitSupportBox : BaseControl
             var activeInterface = _cityWindow.CurrentGameScreen.Main.ActiveInterface;
             var unitRec = activeInterface.UnitImages.UnitRectangle; 
             var requireHeight = (Height -4) / (float)_numberOfRows;
-            var scale = requireHeight / unitRec.height;
-            var requiredWidth = (Bounds.width - 15) / _numberOfColumns;
+            var scale = requireHeight / unitRec.Height;
+            var requiredWidth = (Bounds.Width - 15) / _numberOfColumns;
             var row = 0;
-            var location = new Vector2(Bounds.x +2, Bounds.y);
-            var rowLimit = Bounds.x + Bounds.width;
+            var location = new Vector2(Bounds.X +2, Bounds.Y);
+            var rowLimit = Bounds.X + Bounds.Width;
             var children = new List<IControl>();
             for (int i = 0; i < units.Count && row < _numberOfRows; i++)
             {
@@ -43,7 +43,7 @@ public class UnitSupportBox : BaseControl
                 if (location.X + requiredWidth > rowLimit)
                 {
                     row++;
-                    location = new Vector2(Bounds.x, location.Y + requireHeight);
+                    location = new Vector2(Bounds.X, location.Y + requireHeight);
                 }
             }
 

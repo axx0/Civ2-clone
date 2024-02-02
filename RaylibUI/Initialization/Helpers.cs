@@ -29,7 +29,7 @@ public static class Helpers
 
             implementors.AddRange(currentAssembly.GetTypes()
                 .Where(t => t != userInterfaceType && userInterfaceType.IsAssignableFrom(t) && !t.IsAbstract)
-                .Select(x => (IUserInterface)Activator.CreateInstance(x)));
+                .Select(X => (IUserInterface)Activator.CreateInstance(X)));
         }
         return implementors.ToArray();
     }

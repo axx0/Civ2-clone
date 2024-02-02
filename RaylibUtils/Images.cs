@@ -23,8 +23,8 @@ public static class Images
         if (System.Text.Encoding.UTF8.GetString(bytes, 0, 3).Equals("GIF"))
         {
             // Colors are 32bit int uncompressed (4x8 bits = B+G+R+A)
-            int width = BitConverter.ToInt16(bytes, 6);
-            int height = BitConverter.ToInt16(bytes, 8);
+            int Width = BitConverter.ToInt16(bytes, 6);
+            int Height = BitConverter.ToInt16(bytes, 8);
 
             // Let raylib deal with LZW decompression
             var _img = Raylib.LoadImageFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
@@ -35,14 +35,14 @@ public static class Images
             {
                 transparent[i] = new Color()
                 {
-                    a = 0xff,
-                    r = bytes[13 + 3 * (253 + i) + 0],
-                    g = bytes[13 + 3 * (253 + i) + 1],
-                    b = bytes[13 + 3 * (253 + i) + 2],
+                    A = 0xff,
+                    R = bytes[13 + 3 * (253 + i) + 0],
+                    G = bytes[13 + 3 * (253 + i) + 1],
+                    B = bytes[13 + 3 * (253 + i) + 2],
                 };
 
                 Raylib.ImageColorReplace(ref _img, transparent[i],
-                    new Color(transparent[i].r, transparent[i].g, transparent[i].b, (byte)0));
+                    new Color(transparent[i].R, transparent[i].G, transparent[i].B, (byte)0));
             }
 
             // Get two flag colors from palette
@@ -63,7 +63,7 @@ public static class Images
 
             unsafe
             {
-                IntPtr ptr = (IntPtr)_img.data;
+                IntPtr ptr = (IntPtr)_img.Data;
                 
                 // Get subimages
                 foreach (var prop in props)
@@ -76,10 +76,10 @@ public static class Images
 
                         // Get locations of flags (for units, cities)
                         // Row
-                        for (int col = 0; col < oneProp.Rect.width; col++)
+                        for (int col = 0; col < oneProp.Rect.Width; col++)
                         {
-                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.y - 1) *
-                                        _img.width + (int)oneProp.Rect.x + col));
+                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.Y - 1) *
+                                        _img.Width + (int)oneProp.Rect.X + col));
                             if (color == flag1color)    // units flag (blue)
                             {
                                 oneProp.Flag1x = col;
@@ -91,10 +91,10 @@ public static class Images
                         }
 
                         // Column
-                        for (int row = 0; row < oneProp.Rect.height; row++)
+                        for (int row = 0; row < oneProp.Rect.Height; row++)
                         {
-                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.y + row) *
-                                        _img.width + (int)oneProp.Rect.x - 1));
+                            var color = Marshal.ReadInt32(ptr + 4 * (((int)oneProp.Rect.Y + row) *
+                                        _img.Width + (int)oneProp.Rect.X - 1));
                             if (color == flag1color)
                             {
                                 oneProp.Flag1y = row;
@@ -114,10 +114,10 @@ public static class Images
         else if (System.Text.Encoding.UTF8.GetString(bytes, 0, 2).Equals("BM"))
         {
             var dataOffset = BitConverter.ToInt16(bytes, 10);
-            var width = BitConverter.ToInt32(bytes, 18);
-            var height = BitConverter.ToInt32(bytes, 22);
+            var Width = BitConverter.ToInt32(bytes, 18);
+            var Height = BitConverter.ToInt32(bytes, 22);
             var bpp = BitConverter.ToInt16(bytes, 28);
-            var imgData = new byte[4 * width * height];
+            var imgData = new byte[4 * Width * Height];
             int flag1color = Convert.ToInt32("0x0000FFFF", 16);
             int flag2color = Convert.ToInt32("0xFF9C00FF", 16);
 
@@ -152,21 +152,21 @@ public static class Images
                             0xff
                         });
 
-                        for (int row = 0; row < height; row++)
+                        for (int row = 0; row < Height; row++)
                         {
-                            for (int col = 0; col < width; col++)
+                            for (int col = 0; col < Width; col++)
                             {
-                                var pos = dataOffset + width * (height - 1 - row) + col;
-                                imgData[4 * (width * row + col) + 0] = palette[bytes[pos], 2];
-                                imgData[4 * (width * row + col) + 1] = palette[bytes[pos], 1];
-                                imgData[4 * (width * row + col) + 2] = palette[bytes[pos], 0];
+                                var pos = dataOffset + Width * (Height - 1 - row) + col;
+                                imgData[4 * (Width * row + col) + 0] = palette[bytes[pos], 2];
+                                imgData[4 * (Width * row + col) + 1] = palette[bytes[pos], 1];
+                                imgData[4 * (Width * row + col) + 2] = palette[bytes[pos], 0];
                                 if (bytes[pos] == 253 || bytes[pos] == 254 || bytes[pos] == 255)
                                 {
-                                    imgData[4 * (width * row + col) + 3] = 0;
+                                    imgData[4 * (Width * row + col) + 3] = 0;
                                 }
                                 else
                                 {
-                                    imgData[4 * (width * row + col) + 3] = 255;
+                                    imgData[4 * (Width * row + col) + 3] = 255;
                                 }
                             }
                         }
@@ -177,26 +177,26 @@ public static class Images
                 case 16:
                 case 24:
                     {
-                        for (int row = 0; row < height; row++)
+                        for (int row = 0; row < Height; row++)
                         {
-                            for (int col = 0; col < width; col++)
+                            for (int col = 0; col < Width; col++)
                             {
                                 if (bpp == 16)
                                 {
                                     var _15bitrgb = Get15bitRGB(bytes, dataOffset + 
-                                                    2 * width * (height - 1 - row) + 2 * col);
-                                    imgData[4 * (width * row + col) + 0] = (byte)(_15bitrgb[2] * 255 / 31);
-                                    imgData[4 * (width * row + col) + 1] = (byte)(_15bitrgb[1] * 255 / 31);
-                                    imgData[4 * (width * row + col) + 2] = (byte)(_15bitrgb[0] * 255 / 31);
-                                    imgData[4 * (width * row + col) + 3] = 255;
+                                                    2 * Width * (Height - 1 - row) + 2 * col);
+                                    imgData[4 * (Width * row + col) + 0] = (byte)(_15bitrgb[2] * 255 / 31);
+                                    imgData[4 * (Width * row + col) + 1] = (byte)(_15bitrgb[1] * 255 / 31);
+                                    imgData[4 * (Width * row + col) + 2] = (byte)(_15bitrgb[0] * 255 / 31);
+                                    imgData[4 * (Width * row + col) + 3] = 255;
                                 }
                                 else
                                 {
-                                    var _off = dataOffset + 3 * width * (height - 1 - row) + 3 * col;
-                                    imgData[4 * (width * row + col) + 0] = bytes[_off + 2];
-                                    imgData[4 * (width * row + col) + 1] = bytes[_off + 1];
-                                    imgData[4 * (width * row + col) + 2] = bytes[_off + 0];
-                                    imgData[4 * (width * row + col) + 3] = 255;
+                                    var _off = dataOffset + 3 * Width * (Height - 1 - row) + 3 * col;
+                                    imgData[4 * (Width * row + col) + 0] = bytes[_off + 2];
+                                    imgData[4 * (Width * row + col) + 1] = bytes[_off + 1];
+                                    imgData[4 * (Width * row + col) + 2] = bytes[_off + 0];
+                                    imgData[4 * (Width * row + col) + 3] = 255;
                                 }
                             }
                         }
@@ -214,24 +214,24 @@ public static class Images
                                 // 2nd transparent color
                                 transparent2 = new byte[3]
                                 {
-                                    imgData[4 * (width * (int)rect.y + (int)rect.x) + 0],
-                                    imgData[4 * (width * (int)rect.y + (int)rect.x) + 1],
-                                    imgData[4 * (width * (int)rect.y + (int)rect.x) + 2],
+                                    imgData[4 * (Width * (int)rect.Y + (int)rect.X) + 0],
+                                    imgData[4 * (Width * (int)rect.Y + (int)rect.X) + 1],
+                                    imgData[4 * (Width * (int)rect.Y + (int)rect.X) + 2],
                                 };
 
                                 // Make part of image transparent
-                                for (int row = (int)rect.y; row < rect.y + rect.height; row++)
+                                for (int row = (int)rect.Y; row < rect.Y + rect.Height; row++)
                                 {
-                                    for (int col = (int)rect.x; col < rect.x + rect.width; col++)
+                                    for (int col = (int)rect.X; col < rect.X + rect.Width; col++)
                                     {
-                                        if ((imgData[4 * (width * row + col) + 0] == transparent1[0] &&
-                                             imgData[4 * (width * row + col) + 1] == transparent1[1] &&
-                                             imgData[4 * (width * row + col) + 2] == transparent1[2]) ||
-                                            (imgData[4 * (width * row + col) + 0] == transparent2[0] &&
-                                             imgData[4 * (width * row + col) + 1] == transparent2[1] &&
-                                             imgData[4 * (width * row + col) + 2] == transparent2[2]))
+                                        if ((imgData[4 * (Width * row + col) + 0] == transparent1[0] &&
+                                             imgData[4 * (Width * row + col) + 1] == transparent1[1] &&
+                                             imgData[4 * (Width * row + col) + 2] == transparent1[2]) ||
+                                            (imgData[4 * (Width * row + col) + 0] == transparent2[0] &&
+                                             imgData[4 * (Width * row + col) + 1] == transparent2[1] &&
+                                             imgData[4 * (Width * row + col) + 2] == transparent2[2]))
                                         {
-                                            imgData[4 * (width * row + col) + 3] = 0;
+                                            imgData[4 * (Width * row + col) + 3] = 0;
                                         }
                                     }
                                 }
@@ -251,11 +251,11 @@ public static class Images
                 {
                     _img = new Image
                     {
-                        data = ptr,
-                        format = PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
-                        width = width,
-                        height = height,
-                        mipmaps = 1
+                        Data = ptr,
+                        Format = PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8,
+                        Width = Width,
+                        Height = Height,
+                        Mipmaps = 1
                     };
                 }
 
@@ -270,10 +270,10 @@ public static class Images
 
                         // Get locations of flags(for units, cities)
                         // Row
-                        for (int col = 0; col < oneProp.Rect.width; col++)
+                        for (int col = 0; col < oneProp.Rect.Width; col++)
                         {
                             var color = BitConverter.ToInt32(imgData,
-                                4 * (((int)oneProp.Rect.y - 1) * _img.width + (int)oneProp.Rect.x + col));
+                                4 * (((int)oneProp.Rect.Y - 1) * _img.Width + (int)oneProp.Rect.X + col));
                             if (color == flag1color)    // units flag (blue)
                             {
                                 oneProp.Flag1x = col;
@@ -285,10 +285,10 @@ public static class Images
                         }
 
                         // Column
-                        for (int row = 0; row < oneProp.Rect.height; row++)
+                        for (int row = 0; row < oneProp.Rect.Height; row++)
                         {
                             var color = BitConverter.ToInt32(imgData,
-                                4 * (((int)oneProp.Rect.y + row) * _img.width + (int)oneProp.Rect.x - 1));
+                                4 * (((int)oneProp.Rect.Y + row) * _img.Width + (int)oneProp.Rect.X - 1));
                             if (color == flag1color)
                             {
                                 oneProp.Flag1y = row;

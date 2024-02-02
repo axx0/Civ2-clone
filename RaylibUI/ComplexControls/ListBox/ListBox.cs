@@ -62,12 +62,12 @@ public class ListBox : BaseControl
         foreach (var l in _allLabels)
         {
             l.Width = _maxChildWidth;
-            var height = l.GetPreferredHeight();
+            var Height = l.GetPreferredHeight();
 
 
-            if (height > _labelHeight)
+            if (Height > _labelHeight)
             {
-                _labelHeight = height;
+                _labelHeight = Height;
             }
         }
     }

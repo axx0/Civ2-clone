@@ -63,9 +63,9 @@ public class ControlGroup : BaseControl
             {
                 var child = Children[i];
                 var requestedWidth = ChildWidths[i];
-                var width = i == _flexElement ? requestedWidth + difference : requestedWidth;
-                child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, Height);
-                offset += width + _spacing;
+                var Width = i == _flexElement ? requestedWidth + difference : requestedWidth;
+                child.Bounds = new Rectangle(Location.X + offset, Location.Y, Width, Height);
+                offset += Width + _spacing;
             }
 
             return;
@@ -79,9 +79,9 @@ public class ControlGroup : BaseControl
         for (int index = 0; index < Children.Count; index++)
         {
             var child = Children[index];
-            var width = Math.Max(controlWidth, ChildWidths[index]);
-            child.Bounds = new Rectangle(Location.X + offset, Location.Y, width, Height);
-            offset += width + _spacing;
+            var Width = Math.Max(controlWidth, ChildWidths[index]);
+            child.Bounds = new Rectangle(Location.X + offset, Location.Y, Width, Height);
+            offset += Width + _spacing;
         }
     }
 

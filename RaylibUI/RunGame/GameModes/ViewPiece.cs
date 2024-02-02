@@ -146,21 +146,21 @@ public class ViewPiece : IGameMode
     {
         var res = new List<IControl> { _title };
         var labelHeight = _title.GetPreferredHeight();
-        _title.Bounds = bounds with { height = labelHeight };
+        _title.Bounds = bounds with { Height = labelHeight };
 
-        var currentY = bounds.y + 20;
+        var currentY = bounds.Y + 20;
 
         // Draw location & tile type on active square
         var activeTile = _gameScreen.Player.ActiveTile;
         res.Add(new LabelControl(_gameScreen, $"Loc: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}", true)
         {
-            Bounds = bounds with { height = labelHeight, y = currentY }
+            Bounds = bounds with { Height = labelHeight, Y = currentY }
         });
         currentY += 20;
 
         res.Add(new LabelControl(_gameScreen, $"({activeTile.Type})", true)
         {
-            Bounds = bounds with { height = labelHeight, y = currentY }
+            Bounds = bounds with { Height = labelHeight, Y = currentY }
         });
 
         currentY += 20;

@@ -6,10 +6,10 @@ namespace Civ2.Dialogs;
 
 public abstract class BaseDialogHandler : ICivDialogHandler
 {
-    protected BaseDialogHandler(string name, double x = 0, double y = 0)
+    protected BaseDialogHandler(string name, double X = 0, double Y = 0)
     {
         Name = name;
-        DialogPos = new Point(x, y);
+        DialogPos = new Point(X, Y);
     }
 
     private Point DialogPos { get; }

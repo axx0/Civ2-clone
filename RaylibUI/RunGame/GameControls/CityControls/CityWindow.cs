@@ -135,9 +135,9 @@ public class CityWindow : BaseDialog
     public int DialogHeight { get; }
     public City City { get; }
 
-    public override void Resize(int width, int height)
+    public override void Resize(int Width, int Height)
     {
-        SetLocation(width, DialogWidth, height, DialogHeight);
+        SetLocation(Width, DialogWidth, Height, DialogHeight);
         _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, DialogWidth, LayoutPadding.Top);
         foreach (var control in Controls)
         {

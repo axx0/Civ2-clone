@@ -133,7 +133,7 @@ public class MainMenu : BaseScreen
         else
         {
             Raylib.ClearBackground(_background.background);
-            Raylib.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.width)/2, (screenHeight-_background.CentreImage.height)/2, Color.WHITE);
+            Raylib.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.Width)/2, (screenHeight-_background.CentreImage.Height)/2, Color.WHITE);
         }
         foreach (var panel in _imagePanels)
         {

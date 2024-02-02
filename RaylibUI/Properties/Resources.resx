@@ -19,10 +19,10 @@
 		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
 		<data name="Name1">this is my long string</data>
 		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+		<data name="Bitmap1" mimetype="application/X-microsoft.net.object.binary.base64">
 			[base64 mime encoded serialized .NET Framework object]
 		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/X-microsoft.net.object.bytearray.base64">
 			[base64 mime encoded string representing a byte array form of the .NET Framework object]
 		</data>
 
@@ -39,21 +39,21 @@
 		ResXResourceReader how to depersist the object. This is currently not 
 		extensible. For a given mimetype the value must be set accordingly:
 
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		Note - application/X-microsoft.net.object.binary.base64 is the format 
 		that the ResXResourceWriter will generate, however the reader can 
 		read any of the formats listed below.
 
-		mimetype: application/x-microsoft.net.object.binary.base64
+		mimetype: application/X-microsoft.net.object.binary.base64
 		value   : The object must be serialized with 
 			: System.Serialization.Formatters.Binary.BinaryFormatter
 			: and then encoded with base64 encoding.
 
-		mimetype: application/x-microsoft.net.object.soap.base64
+		mimetype: application/X-microsoft.net.object.soap.base64
 		value   : The object must be serialized with 
 			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
 			: and then encoded with base64 encoding.
 
-		mimetype: application/x-microsoft.net.object.bytearray.base64
+		mimetype: application/X-microsoft.net.object.bytearray.base64
 		value   : The object must be serialized into a byte array 
 			: using a System.ComponentModel.TypeConverter
 			: and then encoded with base64 encoding.

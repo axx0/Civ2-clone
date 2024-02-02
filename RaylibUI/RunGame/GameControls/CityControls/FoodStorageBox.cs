@@ -38,13 +38,13 @@ public class FoodStorageBox : BaseControl
     
 
     var foodPerRow = _cityWindow.City.Size + 1;
-        var spacing = _foodIcon.width;
-        var boxWidth = _foodIcon.width * foodPerRow + 6;
+        var spacing = _foodIcon.Width;
+        var boxWidth = _foodIcon.Width * foodPerRow + 6;
         
         if (boxWidth > Width - 10)
         {
-            spacing = (Width - 10 - _foodIcon.width) / (foodPerRow - 1);
-            boxWidth = 10 + foodPerRow  * spacing + _foodIcon.width;
+            spacing = (Width - 10 - _foodIcon.Width) / (foodPerRow - 1);
+            boxWidth = 10 + foodPerRow  * spacing + _foodIcon.Width;
         }
         var posX = Location.X + Width / 2f - boxWidth / 2f;
         var posY = Location.Y + 16;
@@ -77,7 +77,7 @@ public class FoodStorageBox : BaseControl
         {
             for (int col = 0; col < foodPerRow && count < foodStore; col++)
             {
-                Raylib.DrawTexture(_foodIcon, (int)posX + spacing * col, (int)Location.Y +  15 + 3 + _foodIcon.height * row,Color.WHITE);
+                Raylib.DrawTexture(_foodIcon, (int)posX + spacing * col, (int)Location.Y +  15 + 3 + _foodIcon.Height * row,Color.WHITE);
                 count++;
             }
         }

@@ -33,12 +33,12 @@ public class BitmapStorage : IImageSource
         Location = location;
     }
 
-    public BitmapStorage(string file, int x, int y, int w, int h = -1) : this(file,
-        new Rectangle(x, y, w, h == -1 ? w : h))
+    public BitmapStorage(string file, int X, int Y, int w, int h = -1) : this(file,
+        new Rectangle(X, Y, w, h == -1 ? w : h))
     {
     }
 
-    public BitmapStorage(string file, IList<Color> transparencies, int x, int y, int w, int h = -1) : this(file, x, y, w, h)
+    public BitmapStorage(string file, IList<Color> transparencies, int X, int Y, int w, int h = -1) : this(file, X, Y, w, h)
     {
         this.Transparencies = transparencies;
     }

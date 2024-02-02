@@ -11,10 +11,10 @@ public class TextElement : IViewElement
     private readonly int _height;
 
 
-    public TextElement(string text, Vector2 loc, int height, Tile tile, Vector2 offset)
+    public TextElement(string text, Vector2 loc, int Height, Tile tile, Vector2 offset)
     {
         _text = text;
-        _height = height;
+        _height = Height;
         Location = loc;
         Tile = tile;
         Offset = offset;

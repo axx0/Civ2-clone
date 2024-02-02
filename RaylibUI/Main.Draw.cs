@@ -17,22 +17,22 @@ namespace RaylibUI
             Raylib.ClearBackground(Color.WHITE);
 
             // DRAW MAP
-            int width = Raylib.GetScreenWidth();// MapTileTextureC2(0, 0).width;
-            int height = 2;// * Raylib.GetScreenHeight() / MapTileTextureC2(0, 0).height;
+            int Width = Raylib.GetScreenWidth();// MapTileTextureC2(0, 0).Width;
+            int Height = 2;// * Raylib.GetScreenHeight() / MapTileTextureC2(0, 0).Height;
 
             // Center map around active unit in start
             if (Raylib.GetFrameTime() == 0)
             {
-                startX = activeUnit.X - width;
-                startY = activeUnit.Y - height / 2;
+                startX = activeUnit.X - Width;
+                startY = activeUnit.Y - Height / 2;
             }
 
             // startX += (int)mouseMapViewIncrement.X;
             // startY += (int)mouseMapViewIncrement.Y;
 
-            for (int _row = -2; _row < height + 2; _row++)
+            for (int _row = -2; _row < Height + 2; _row++)
             {
-                for (int _col = -2; _col < width; _col++)
+                for (int _col = -2; _col < Width; _col++)
                 {
                     // Determine column index in civ2-style coords
                     int col = 2 * _col + (_row % 2);
@@ -140,9 +140,9 @@ namespace RaylibUI
             }
 
             // City names
-            for (int _row = -2; _row < height + 2; _row++)
+            for (int _row = -2; _row < Height + 2; _row++)
             {
-                for (int _col = -2; _col < width; _col++)
+                for (int _col = -2; _col < Width; _col++)
                 {
                     // Determine column index in civ2-style coords
                     int col = 2 * _col + (_row % 2);

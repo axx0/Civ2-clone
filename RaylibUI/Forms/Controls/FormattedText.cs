@@ -25,32 +25,32 @@ public class FormattedText : Control
 
     public int MeasureHeight() => WrappedText.Sum(text => (int)Raylib.MeasureTextEx(Font, text, FontSize, 1.0f).Y);
 
-    public void Draw(int x, int y)
+    public void Draw(int X, int Y)
     {
-        int height = 0;
+        int Height = 0;
         for (int row = 0; row < WrappedText.Count; row++)
         {
-            int xDraw = x, yDraw = y;
+            int xDraw = X, yDraw = Y;
             if (HorizontalAlignment == HorizontalAlignment.Center)
             {
-                xDraw = x - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X / 2;
+                xDraw = X - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X / 2;
             }
             else if (HorizontalAlignment == HorizontalAlignment.Right)
             {
-                xDraw = x - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X;
+                xDraw = X - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X;
             }
 
             if (VerticalAlignment == VerticalAlignment.Center)
             {
-                yDraw = y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y / 2;
+                yDraw = Y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y / 2;
             }
             else if (VerticalAlignment == VerticalAlignment.Bottom)
             {
-                yDraw = y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
+                yDraw = Y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
             }
 
-            Raylib.DrawTextEx(Font, WrappedText[row], new Vector2(xDraw, yDraw + height), FontSize, 1.0f, Color);
-            height += (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
+            Raylib.DrawTextEx(Font, WrappedText[row], new Vector2(xDraw, yDraw + Height), FontSize, 1.0f, Color);
+            Height += (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
         }
     }
 }

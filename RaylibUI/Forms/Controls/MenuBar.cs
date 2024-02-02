@@ -42,7 +42,7 @@ public class MenuBar
                     new MenuStripItem { Text = "Move Pieces", KeyShortcut = "v" },
                     new MenuStripItem { Text = "View Pieces", KeyShortcut = "v" },
                     new MenuStripItem { Text = "Zoom In", KeyShortcut = "z" },
-                    new MenuStripItem { Text = "Zoom Out", KeyShortcut = "x" },
+                    new MenuStripItem { Text = "Zoom Out", KeyShortcut = "X" },
                 },
             },
         };
@@ -58,10 +58,10 @@ public class MenuBar
             offsetX += (int)textSize.X + 10;
 
             // Bounds of strip items
-            // ! 230 is hardcoded width of stip !
+            // ! 230 is hardcoded Width of stip !
             for (int row = 0; row < Items[col].Items.Length; row++)
             {
-                Items[col].Items[row].Bounds = new Rectangle(Items[col].Bounds.x, Items[col].Bounds.height + 22 * row, 230, 22);
+                Items[col].Items[row].Bounds = new Rectangle(Items[col].Bounds.X, Items[col].Bounds.Height + 22 * row, 230, 22);
             }
         }
     }
@@ -176,17 +176,17 @@ public class MenuBar
                 Raylib.DrawRectangleLinesEx(Items[col].Bounds, 1.0f, new Color(153, 209, 255, 255));
 
                 // Draw strip
-                Raylib.DrawRectangleRec(new Rectangle(Items[col].Bounds.x, Items[col].Bounds.height, 230, Items[col].Items.Length * 22), new Color(242, 242, 242, 255));
-                Raylib.DrawRectangleLinesEx(new Rectangle(Items[col].Bounds.x, Items[col].Bounds.height, 230, Items[col].Items.Length * 22), 1.0f, new Color(204, 204, 204, 255));
+                Raylib.DrawRectangleRec(new Rectangle(Items[col].Bounds.X, Items[col].Bounds.Height, 230, Items[col].Items.Length * 22), new Color(242, 242, 242, 255));
+                Raylib.DrawRectangleLinesEx(new Rectangle(Items[col].Bounds.X, Items[col].Bounds.Height, 230, Items[col].Items.Length * 22), 1.0f, new Color(204, 204, 204, 255));
                 for (int row = 0; row < Items[col].Items.Length; row++)
                 {
                     if (mouseOverStipItems[col][row])
                     {
                         var rect = Items[col].Items[row].Bounds;
-                        rect.x += 2;
-                        rect.y += 2;
-                        rect.width -= 4;
-                        rect.height -= 4;
+                        rect.X += 2;
+                        rect.Y += 2;
+                        rect.Width -= 4;
+                        rect.Height -= 4;
 
                         var color = Items[col].Items[row].Enabled ? new Color(145, 201, 247, 255) : new Color(230, 230, 230, 255);
 
@@ -195,8 +195,8 @@ public class MenuBar
 
                     var textStripColor = Items[col].Items[row].Enabled ? Color.BLACK : Color.GRAY;
 
-                    Raylib.DrawText(Items[col].Items[row].Text, (int)Items[col].Bounds.x + 5, (int)Items[col].Bounds.height + 22 * row + 5, 14, textStripColor);
-                    Raylib.DrawText(Items[col].Items[row].KeyShortcut, (int)Items[col].Bounds.x + 160, (int)Items[col].Bounds.height + 22 * row + 5, 14, textStripColor);
+                    Raylib.DrawText(Items[col].Items[row].Text, (int)Items[col].Bounds.X + 5, (int)Items[col].Bounds.Height + 22 * row + 5, 14, textStripColor);
+                    Raylib.DrawText(Items[col].Items[row].KeyShortcut, (int)Items[col].Bounds.X + 160, (int)Items[col].Bounds.Height + 22 * row + 5, 14, textStripColor);
                 }
             }
             // Hover
@@ -207,7 +207,7 @@ public class MenuBar
             }
 
             var textColor = Items[col].Enabled ? Color.BLACK : Color.GRAY;
-            Raylib.DrawText(Items[col].Text, (int)Items[col].Bounds.x + 5, 0, 14, textColor);
+            Raylib.DrawText(Items[col].Text, (int)Items[col].Bounds.X + 5, 0, 14, textColor);
         }
     }
 }
