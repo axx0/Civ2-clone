@@ -28,7 +28,7 @@ public class LoadScenario : FileDialogHandler
         var scnDirectory = Path.GetDirectoryName(fileName);
         var root = Settings.SearchPaths.FirstOrDefault(p => scnDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
         var scnName = Path.GetFileName(fileName);
-        GameData gameData = Read.ReadSAVFile(scnDirectory, scnName);
+        GameData gameData = Read.ReadSavFile(scnDirectory, scnName);
         var fallbackPath = civ2Interface.GetFallbackPath(root, gameData.GameType);
 
         var ruleSet = new Ruleset

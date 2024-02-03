@@ -6,21 +6,21 @@ namespace RaylibUI.Forms;
 public static class CtrlHelpers
 {
     // Return a list of strings for wrapped text
-    public static List<string> GetWrappedTexts(IUserInterface active, string text, int max_width, int fontSize)
+    public static List<string> GetWrappedTexts(IUserInterface active, string text, int maxWidth, int fontSize)
     {
         string[] words = text.Split();
-        List<string> wrapped_lines = new List<string>();
+        List<string> wrappedLines = new List<string>();
 
         string combinedWord = string.Empty;
         int combinedTextSize, combinedTextSizeNext;
         // Measure string Width by combining words
-        bool new_line = true;
+        bool newLine = true;
         for (int i = 0; i < words.Length; i++)
         {
-            if (new_line)
+            if (newLine)
             {
                 combinedWord = words[i];
-                new_line = false;
+                newLine = false;
             }
             else
             {
@@ -38,25 +38,25 @@ public static class CtrlHelpers
             }
 
 
-            if (combinedTextSize < max_width && combinedTextSizeNext >= max_width)
+            if (combinedTextSize < maxWidth && combinedTextSizeNext >= maxWidth)
             {
-                wrapped_lines.Add(combinedWord);
-                new_line = true;
+                wrappedLines.Add(combinedWord);
+                newLine = true;
             }
 
             // Last line
-            if (combinedTextSize < max_width && i == words.Length - 1)
+            if (combinedTextSize < maxWidth && i == words.Length - 1)
             {
-                wrapped_lines.Add(combinedWord);
+                wrappedLines.Add(combinedWord);
             }
         }
 
-        int[] wrapped_lines_length = new int[wrapped_lines.Count];
-        for (int i = 0; i < wrapped_lines.Count; i++)
+        int[] wrappedLinesLength = new int[wrappedLines.Count];
+        for (int i = 0; i < wrappedLines.Count; i++)
         {
-            wrapped_lines_length[i] = (int)Raylib.MeasureTextEx(active.Look.DefaultFont, wrapped_lines[i], fontSize, 1.0f).X;
+            wrappedLinesLength[i] = (int)Raylib.MeasureTextEx(active.Look.DefaultFont, wrappedLines[i], fontSize, 1.0f).X;
         }
 
-        return wrapped_lines;
+        return wrappedLines;
     }
 }

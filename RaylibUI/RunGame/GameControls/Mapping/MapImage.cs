@@ -57,9 +57,9 @@ public static class MapImage
             {
                 if (neighbour != null && neighbour.Type != TerrainType.Ocean)
                 {
-                    foreach (var (index, valueVARIABLE) in ind)
+                    foreach (var (index, valueVariable) in ind)
                     {
-                        coastIndex[index] += valueVARIABLE;
+                        coastIndex[index] += valueVariable;
                     }
                 }
             }
@@ -215,7 +215,7 @@ public static class MapImage
                     {
                         tileDetails.ForegroundElement = new UnitHidingImprovement
                         {
-                            UnitDomain = (UnitGAS)improvement.HideUnits,
+                            UnitDomain = (UnitGas)improvement.HideUnits,
                             UnitImage = new MemoryStorage(graphics.UnitLevels[construct.Level, 0], improvement.Name,
                                 _replacementColour),
                             Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name,
@@ -252,7 +252,7 @@ public static class MapImage
         return tileDetails;
     }
 
-    private static void ApplyDither(Image orig_img, TerrainType neighbourType, TerrainType tileType,
+    private static void ApplyDither(Image origImg, TerrainType neighbourType, TerrainType tileType,
         DitherMap ditherMap)
     {
         if (neighbourType == TerrainType.Ocean)
@@ -261,7 +261,7 @@ public static class MapImage
         }
 
         if (neighbourType == tileType) return;
-        Raylib.ImageDraw(ref orig_img, ditherMap.Images[(int)neighbourType], new Rectangle(0, 0, 32, 16),
+        Raylib.ImageDraw(ref origImg, ditherMap.Images[(int)neighbourType], new Rectangle(0, 0, 32, 16),
             new Rectangle(ditherMap.X, ditherMap.Y, 32, 16), Color.White);
     }
 }

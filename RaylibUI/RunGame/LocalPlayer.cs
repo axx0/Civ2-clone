@@ -115,7 +115,7 @@ public class LocalPlayer : IPlayer
         // }
     }
 
-    public IInterfaceCommands UI { get; }
+    public IInterfaceCommands Ui { get; }
     public List<Unit> WaitingList { get; } = new();
 
     public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
@@ -123,7 +123,7 @@ public class LocalPlayer : IPlayer
         var dialogKey = improvement.Levels[level].EnabledMessage;
         if (!string.IsNullOrWhiteSpace(dialogKey))
         {
-            UI.ShowDialog(dialogKey);
+            Ui.ShowDialog(dialogKey);
         }
     }
 

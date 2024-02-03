@@ -15,8 +15,8 @@ public static class CityLoader
     public static void LoadCities(Ruleset ruleset, CityImageSet cities, Civ2Interface active)
     {
         var path = Utils.GetFilePath("CITIES", ruleset.Paths, "gif", "bmp");
-        Images.LoadPropertiesFromPIC(path, active.CitiesPICprops);
-        var cityProps = active.CitiesPICprops;
+        Images.LoadPropertiesFromPic(path, active.CitiesPiCprops);
+        var cityProps = active.CitiesPiCprops;
 
         cities.CityRectangle = new Rectangle(0, 0,
             cityProps["city"][0].Rect.Width, cityProps["city"][0].Rect.Height);
@@ -31,10 +31,10 @@ public static class CityLoader
                 {
                     Image = cityProps["city"][8 * row + col].Image,
                     Texture = Raylib.LoadTextureFromImage(cityProps["city"][8 * row + col].Image),
-                    FlagLoc = new Vector2(cityProps["city"][8 * row + col].Flag1x,
-                                          cityProps["city"][8 * row + col].Flag1y),
-                    SizeLoc = new Vector2(cityProps["city"][8 * row + col].Flag2x,
-                                          cityProps["city"][8 * row + col].Flag2y)
+                    FlagLoc = new Vector2(cityProps["city"][8 * row + col].Flag1X,
+                                          cityProps["city"][8 * row + col].Flag1Y),
+                    SizeLoc = new Vector2(cityProps["city"][8 * row + col].Flag2X,
+                                          cityProps["city"][8 * row + col].Flag2Y)
                 };
             }
 

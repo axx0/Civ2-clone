@@ -54,11 +54,11 @@ public class DropdownMenu :  BaseDialog
         var currentY = location.Y + 3;
         foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
-            var Height = menuItem.GetPreferredHeight() + 12;
+            var height = menuItem.GetPreferredHeight() + 12;
             menuItem.SetChildWidths(childWidths);
-            menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, Height);
+            menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, height);
             menuItem.OnResize();
-            currentY += Height;
+            currentY += height;
         }
 
         Width = dropdownWidth + 6;
@@ -208,7 +208,7 @@ public class DropdownMenu :  BaseDialog
         base.OnKeyPress(key);
     }
 
-    public override void Resize(int Width, int Height)
+    public override void Resize(int width, int height)
     {
     }
 

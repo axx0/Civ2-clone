@@ -5,7 +5,7 @@ public class TextBoxDefinition
     /// <summary>
     /// The row of the popup to show on
     /// </summary>
-    public int index { get; set; }
+    public int Index { get; set; }
         
     /// <summary>
     /// Name to identify the value

@@ -31,11 +31,11 @@ public class Civ2GoldInterface : Civ2Interface
         CheckBoxes = new IImageSource[]
         { new BitmapStorage("buttons.png", 0, 32, 32), new BitmapStorage("buttons.png", 32, 32, 32) },
         
-        DefaultFont = Fonts.TNR,
-        ButtonFont = Fonts.TNR,
+        DefaultFont = Fonts.Tnr,
+        ButtonFont = Fonts.Tnr,
         ButtonFontSize = 20,
         ButtonColour = Color.Black,
-        HeaderLabelFont = Fonts.TNRbold,
+        HeaderLabelFont = Fonts.TnRbold,
         HeaderLabelFontSizeNormal = 28,
         HeaderLabelFontSizeLarge = 34,
         CityHeaderLabelFontSizeNormal = 18,
@@ -43,7 +43,7 @@ public class Civ2GoldInterface : Civ2Interface
         CityHeaderLabelFontSizeSmall = 16,
         HeaderLabelShadow = true,
         HeaderLabelColour = new Color(135, 135, 135, 255),
-        LabelFont = Fonts.TNR,
+        LabelFont = Fonts.Tnr,
         LabelColour = Color.Black,
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 16,
@@ -90,7 +90,7 @@ public class Civ2GoldInterface : Civ2Interface
 
 
         // Initialize properties of Units from image
-        UnitPICprops = new Dictionary<string, List<ImageProps>>
+        UnitPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new ImageProps
                         { Rect = new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight) }).ToList() },
@@ -100,7 +100,7 @@ public class Civ2GoldInterface : Civ2Interface
         };
 
         // Initialize properties of Cities from image
-        CitiesPICprops = new Dictionary<string, List<ImageProps>>
+        CitiesPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "textColors", Enumerable.Range(0, 9).Select(col => 
                     new ImageProps { Rect = new Rectangle(1 + 15 * col, 423, 14, 1) }).ToList() },
@@ -123,10 +123,10 @@ public class Civ2GoldInterface : Civ2Interface
                     new ImageProps { Rect = new Rectangle(1 + 65 * col, 347, 64, 48) }).ToList());    // Modern alt.
         props.AddRange(Enumerable.Range(0, 4).Select(col =>
                     new ImageProps { Rect = new Rectangle(333 + 65 * col, 347, 64, 48) }).ToList());
-        CitiesPICprops.Add("city", props);
+        CitiesPiCprops.Add("city", props);
 
         // Initialize properties of Tiles from image
-        TilePICprops = new Dictionary<string, List<ImageProps>>
+        TilePiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "base1", Enumerable.Range(0, 11).Select(row => 
                         new ImageProps { Rect = new Rectangle(1, 1 + 33 * row, 64, 32) }).ToList() },
@@ -151,7 +151,7 @@ public class Civ2GoldInterface : Civ2Interface
         };
 
         // Initialize properties of Overlay tiles from image
-        OverlayPICprops = new Dictionary<string, List<ImageProps>>
+        OverlayPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
                     new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32) }).ToList() },
@@ -174,10 +174,10 @@ public class Civ2GoldInterface : Civ2Interface
             props.Add(new ImageProps { Rect = new Rectangle(1 + 66 * i, 463, 32, 16) });
             props.Add(new ImageProps { Rect = new Rectangle(34 + 66 * i, 463, 32, 16) });
         }
-        OverlayPICprops.Add("coastline", props);
+        OverlayPiCprops.Add("coastline", props);
 
         // Initialize properties of Icons tiles from image
-        IconsPICprops = new Dictionary<string, List<ImageProps>>
+        IconsPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "viewPiece", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(199, 256, 64, 32) } } },
             { "gridlines", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(183, 430, 64, 32) } } },
@@ -445,28 +445,28 @@ public class Civ2GoldInterface : Civ2Interface
 
     public override int UnitsRows => 7;
     public override int UnitsPxHeight => 48;
-    public override Dictionary<string, List<ImageProps>> UnitPICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> CitiesPICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> UnitPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> CitiesPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> TilePiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> OverlayPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> IconsPiCprops { get; set; }
 
     public override string? GetFallbackPath(string root, int gameType) => null;
 
     public override void GetShieldImages()
     {
-        Color ShadowColour = new(51, 51, 51, 255);
-        Color ReplacementColour = new(255, 0, 0, 255);
+        Color shadowColour = new(51, 51, 51, 255);
+        Color replacementColour = new(255, 0, 0, 255);
 
-        var shield = UnitPICprops["backShield1"][0].Image;
+        var shield = UnitPiCprops["backShield1"][0].Image;
         var shieldFront = Raylib.ImageCopy(shield);
         Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.Width, 7, Color.Black);
 
-        var shadow = UnitPICprops["backShield2"][0].Image;
-        Raylib.ImageColorReplace(ref shadow, ReplacementColour, ShadowColour);
+        var shadow = UnitPiCprops["backShield2"][0].Image;
+        Raylib.ImageColorReplace(ref shadow, replacementColour, shadowColour);
 
-        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
-        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
+        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", replacementColour, true);
         UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
     }
 
@@ -477,20 +477,20 @@ public class Civ2GoldInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(CitiesPICprops["textColors"][col].Image);
+                var imageColours = Raylib.LoadImageColors(CitiesPiCprops["textColors"][col].Image);
                 var textColour = imageColours[0];
 
-                imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][col].Image);
-                var lightColour = imageColours[3 * CitiesPICprops["flags"][col].Image.Width + 8];
+                imageColours = Raylib.LoadImageColors(CitiesPiCprops["flags"][col].Image);
+                var lightColour = imageColours[3 * CitiesPiCprops["flags"][col].Image.Width + 8];
 
-                imageColours = Raylib.LoadImageColors(CitiesPICprops["flags"][9 + col].Image);
-                var darkColour = imageColours[3 * CitiesPICprops["flags"][9 + col].Image.Width + 5];
+                imageColours = Raylib.LoadImageColors(CitiesPiCprops["flags"][9 + col].Image);
+                var darkColour = imageColours[3 * CitiesPiCprops["flags"][9 + col].Image.Width + 5];
                 Raylib.UnloadImageColors(imageColours);
 
                 playerColours[col] = new PlayerColour
                 {
-                    Normal = CitiesPICprops["flags"][col].Image,
-                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPICprops["flags"][col].Image),
+                    Normal = CitiesPiCprops["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPiCprops["flags"][col].Image),
                     TextColour = textColour,
                     LightColour = lightColour,
                     DarkColour = darkColour
@@ -511,8 +511,8 @@ public class Civ2GoldInterface : Civ2Interface
         HPbarSize = new(12, 3),
         HPbarColours = new[] { new Color(243, 0, 0, 255), new Color(255, 223, 79, 255), new Color(87, 171, 39, 255) },
         HPbarSizeForColours = new[] { 3, 8 },
-        OrderOffset = new(UnitPICprops["backShield1"][0].Image.Width / 2f, 7),
-        OrderTextHeight = UnitPICprops["backShield1"][0].Image.Height - 7,
+        OrderOffset = new(UnitPiCprops["backShield1"][0].Image.Width / 2f, 7),
+        OrderTextHeight = UnitPiCprops["backShield1"][0].Image.Height - 7,
     };
 
     /// <summary>
@@ -520,14 +520,14 @@ public class Civ2GoldInterface : Civ2Interface
     /// </summary>
     /// <param name="wallpaper">Wallpaper image to tile onto the border</param>
     /// <param name="destination">the Image we're rendering to</param>
-    /// <param name="Height">final image Height</param>
-    /// <param name="Width">final image Width</param>
+    /// <param name="height">final image Height</param>
+    /// <param name="width">final image Width</param>
     /// <param name="topWidth">Width of top border</param>
     /// <param name="footerWidth">Width of the footer</param>
-    public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int Height, int Width, Padding padding)
+    public override void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding)
     {
-        int rows = Height / wallpaper.Outer.Height + 1;
-        var columns = Width / wallpaper.Outer.Width + 1;
+        int rows = height / wallpaper.Outer.Height + 1;
+        var columns = width / wallpaper.Outer.Width + 1;
         var headerSourceRec = new Rectangle { Height = padding.Top, Width = wallpaper.Outer.Width };
         for (int col = 0; col < columns; col++)
         {
@@ -537,8 +537,8 @@ public class Civ2GoldInterface : Civ2Interface
         }
         var leftSide = new Rectangle { Height = wallpaper.Outer.Height, Width = DialogPadding.Left };
 
-        var rightEdge = Width - DialogPadding.Right;
-        var rightOffset = Width % wallpaper.Outer.Width;
+        var rightEdge = width - DialogPadding.Right;
+        var rightOffset = width % wallpaper.Outer.Width;
         var rightSide = new Rectangle { X = rightOffset, Height = wallpaper.Outer.Height, Width = DialogPadding.Right };
 
         for (int row = 0; row < rows; row++)
@@ -551,8 +551,8 @@ public class Civ2GoldInterface : Civ2Interface
                 Color.White);
         }
 
-        var bottomEdge = Height - padding.Bottom;
-        var bottomOffset = Height % wallpaper.Outer.Height;
+        var bottomEdge = height - padding.Bottom;
+        var bottomOffset = height % wallpaper.Outer.Height;
         var bottomSource = new Rectangle { Y = bottomOffset, Height = padding.Bottom, Width = wallpaper.Outer.Width };
         for (int col = 0; col < columns; col++)
         {
@@ -562,7 +562,7 @@ public class Civ2GoldInterface : Civ2Interface
         }
     }
 
-    public override void DrawBorderLines(ref Image destination, int Height, int Width, Padding padding)
+    public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding)
     {
         // Outer border
         var pen1 = new Color(227, 227, 227, 255);
@@ -572,36 +572,36 @@ public class Civ2GoldInterface : Civ2Interface
         var pen5 = new Color(240, 240, 240, 255);
         var pen6 = new Color(223, 223, 223, 255);
         var pen7 = new Color(67, 67, 67, 255);
-        Raylib.ImageDrawLine(ref destination, 0, 0, Width - 2, 0, pen1); // 1st layer of border
-        Raylib.ImageDrawLine(ref destination, 0, 0, Width - 2, 0, pen1);
-        Raylib.ImageDrawLine(ref destination, 0, 0, 0, Height - 2, pen1);
-        Raylib.ImageDrawLine(ref destination, Width - 1, 0, Width - 1, Height - 1, pen2);
-        Raylib.ImageDrawLine(ref destination, 0, Height - 1, Width - 1, Height - 1, pen2);
-        Raylib.ImageDrawLine(ref destination, 1, 1, Width - 3, 1, pen3); // 2nd layer of border
-        Raylib.ImageDrawLine(ref destination, 1, 1, 1, Height - 3, pen3);
-        Raylib.ImageDrawLine(ref destination, Width - 2, 1, Width - 2, Height - 2, pen4);
-        Raylib.ImageDrawLine(ref destination, 1, Height - 2, Width - 2, Height - 2, pen4);
-        Raylib.ImageDrawLine(ref destination, 2, 2, Width - 4, 2, pen5); // 3rd layer of border
-        Raylib.ImageDrawLine(ref destination, 2, 2, 2, Height - 4, pen5);
-        Raylib.ImageDrawLine(ref destination, Width - 3, 2, Width - 3, Height - 3, pen5);
-        Raylib.ImageDrawLine(ref destination, 2, Height - 3, Width - 3, Height - 3, pen5);
-        Raylib.ImageDrawLine(ref destination, 3, 3, Width - 5, 3, pen6); // 4th layer of border
-        Raylib.ImageDrawLine(ref destination, 3, 3, 3, Height - 5, pen6);
-        Raylib.ImageDrawLine(ref destination, Width - 4, 3, Width - 4, Height - 4, pen7);
-        Raylib.ImageDrawLine(ref destination, 3, Height - 4, Width - 4, Height - 4, pen7);
-        Raylib.ImageDrawLine(ref destination, 4, 4, Width - 6, 4, pen6); // 5th layer of border
-        Raylib.ImageDrawLine(ref destination, 4, 4, 4, Height - 6, pen6);
-        Raylib.ImageDrawLine(ref destination, Width - 5, 4, Width - 5, Height - 5, pen7);
-        Raylib.ImageDrawLine(ref destination, 4, Height - 5, Width - 5, Height - 5, pen7);
+        Raylib.ImageDrawLine(ref destination, 0, 0, width - 2, 0, pen1); // 1st layer of border
+        Raylib.ImageDrawLine(ref destination, 0, 0, width - 2, 0, pen1);
+        Raylib.ImageDrawLine(ref destination, 0, 0, 0, height - 2, pen1);
+        Raylib.ImageDrawLine(ref destination, width - 1, 0, width - 1, height - 1, pen2);
+        Raylib.ImageDrawLine(ref destination, 0, height - 1, width - 1, height - 1, pen2);
+        Raylib.ImageDrawLine(ref destination, 1, 1, width - 3, 1, pen3); // 2nd layer of border
+        Raylib.ImageDrawLine(ref destination, 1, 1, 1, height - 3, pen3);
+        Raylib.ImageDrawLine(ref destination, width - 2, 1, width - 2, height - 2, pen4);
+        Raylib.ImageDrawLine(ref destination, 1, height - 2, width - 2, height - 2, pen4);
+        Raylib.ImageDrawLine(ref destination, 2, 2, width - 4, 2, pen5); // 3rd layer of border
+        Raylib.ImageDrawLine(ref destination, 2, 2, 2, height - 4, pen5);
+        Raylib.ImageDrawLine(ref destination, width - 3, 2, width - 3, height - 3, pen5);
+        Raylib.ImageDrawLine(ref destination, 2, height - 3, width - 3, height - 3, pen5);
+        Raylib.ImageDrawLine(ref destination, 3, 3, width - 5, 3, pen6); // 4th layer of border
+        Raylib.ImageDrawLine(ref destination, 3, 3, 3, height - 5, pen6);
+        Raylib.ImageDrawLine(ref destination, width - 4, 3, width - 4, height - 4, pen7);
+        Raylib.ImageDrawLine(ref destination, 3, height - 4, width - 4, height - 4, pen7);
+        Raylib.ImageDrawLine(ref destination, 4, 4, width - 6, 4, pen6); // 5th layer of border
+        Raylib.ImageDrawLine(ref destination, 4, 4, 4, height - 6, pen6);
+        Raylib.ImageDrawLine(ref destination, width - 5, 4, width - 5, height - 5, pen7);
+        Raylib.ImageDrawLine(ref destination, 4, height - 5, width - 5, height - 5, pen7);
 
         // Inner panel
-        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 1, 9 + (Width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
-        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 1, 10, Height - padding.Bottom - 1, pen7);
-        Raylib.ImageDrawLine(ref destination, Width - 11, padding.Top - 1, Width - 11, Height - padding.Bottom - 1, pen6);
-        Raylib.ImageDrawLine(ref destination, 9, Height - padding.Bottom, Width - 9 - 1, Height - padding.Bottom, pen6);
-        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 2, 9 + (Width - 18 - 2), padding.Top - 2, pen7); // 2nd layer of border
-        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 2, 9, Height - padding.Bottom, pen7);
-        Raylib.ImageDrawLine(ref destination, Width - 10, padding.Top - 2, Width - 10, Height - padding.Bottom, pen6);
-        Raylib.ImageDrawLine(ref destination, 9, Height - padding.Bottom + 1, Width - 9 - 1, Height - padding.Bottom + 1, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 1, 9 + (width - 18 - 1), padding.Top - 1, pen7); // 1st layer of border
+        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 1, 10, height - padding.Bottom - 1, pen7);
+        Raylib.ImageDrawLine(ref destination, width - 11, padding.Top - 1, width - 11, height - padding.Bottom - 1, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, height - padding.Bottom, width - 9 - 1, height - padding.Bottom, pen6);
+        Raylib.ImageDrawLine(ref destination, 10, padding.Top - 2, 9 + (width - 18 - 2), padding.Top - 2, pen7); // 2nd layer of border
+        Raylib.ImageDrawLine(ref destination, 9, padding.Top - 2, 9, height - padding.Bottom, pen7);
+        Raylib.ImageDrawLine(ref destination, width - 10, padding.Top - 2, width - 10, height - padding.Bottom, pen6);
+        Raylib.ImageDrawLine(ref destination, 9, height - padding.Bottom + 1, width - 9 - 1, height - padding.Bottom + 1, pen6);
     }
 }

@@ -12,9 +12,9 @@ public class FileDialog : DynamicSizingDialog
     private readonly Func<string, bool> _isValidSelectionCallback;
     private readonly Func<string?, bool> _onSelectionCallback;
     private string _currentDirectory;
-    private readonly ListBox listBox;
-    private readonly TextBox textBox;
-    private readonly Button okButton;
+    private readonly ListBox _listBox;
+    private readonly TextBox _textBox;
+    private readonly Button _okButton;
 
     public FileDialog(Main host, string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
         Func<string?, bool> onSelectionCallback) : base(host,title)
@@ -22,15 +22,15 @@ public class FileDialog : DynamicSizingDialog
         _isValidSelectionCallback = isValidSelectionCallback;
         _onSelectionCallback = onSelectionCallback;
         _currentDirectory = baseDirectory;
-        listBox = new ListBox(this);
-        listBox.ItemSelected += ItemSelected;
-        textBox = new TextBox(this, baseDirectory, 600, TestSelection);
-        okButton = new Button(this, "Ok");
-        okButton.Click += OkClicked;
-        Controls.Add(listBox);
+        _listBox = new ListBox(this);
+        _listBox.ItemSelected += ItemSelected;
+        _textBox = new TextBox(this, baseDirectory, 600, TestSelection);
+        _okButton = new Button(this, "Ok");
+        _okButton.Click += OkClicked;
+        Controls.Add(_listBox);
         var menuBar = new ControlGroup(this, flexElement: 0);
-        menuBar.AddChild(textBox);
-        menuBar.AddChild(okButton);
+        menuBar.AddChild(_textBox);
+        menuBar.AddChild(_okButton);
         var cancelButton = new Button(this, "Cancel");
         cancelButton.Click += CancelButtonOnClick;
         menuBar.AddChild(cancelButton);
@@ -47,7 +47,7 @@ public class FileDialog : DynamicSizingDialog
 
     private void OkClicked(object? sender, MouseEventArgs args)
     {
-        var path = Path.Combine(_currentDirectory, textBox.Text);
+        var path = Path.Combine(_currentDirectory, _textBox.Text);
         if (_isValidSelectionCallback(path))
         {
             _onSelectionCallback(path);
@@ -70,14 +70,14 @@ public class FileDialog : DynamicSizingDialog
 
         var canPath = Path.Combine(_currentDirectory, test);
 
-        if (Directory.Exists(canPath) && (!_isValidSelectionCallback(test) || test == textBox.Text))
+        if (Directory.Exists(canPath) && (!_isValidSelectionCallback(test) || test == _textBox.Text))
         {
             _currentDirectory = canPath;
             
             BuildFileList(true);
             return;
         }
-        textBox.SetText(args.Text);
+        _textBox.SetText(args.Text);
     }
 
     private void TestSelection(string file)
@@ -107,6 +107,6 @@ public class FileDialog : DynamicSizingDialog
 
         list.AddRange(Directory.EnumerateFiles(_currentDirectory).Where(file => _isValidSelectionCallback(file)).Select(Path.GetFileName)!);
 
-        listBox.SetElements(list, valid, refresh);
+        _listBox.SetElements(list, valid, refresh);
     }
 }

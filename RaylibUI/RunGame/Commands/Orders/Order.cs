@@ -10,14 +10,14 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 public abstract class Order : IGameCommand
 {
     public Shortcut KeyCombo { get; set; }
-    protected readonly GameScreen _gameScreen;
+    protected readonly GameScreen GameScreen;
 
     protected Order(GameScreen gameScreen, Shortcut keyCombo, string id, string? name = null)
     {
         KeyCombo = keyCombo;
         Id = id;
         Name = name;
-        _gameScreen = gameScreen;
+        GameScreen = gameScreen;
 
         ErrorDialog = "CANTDO";
     }
@@ -39,7 +39,7 @@ public abstract class Order : IGameCommand
     protected void SetCommandState(CommandStatus status = CommandStatus.Disabled, string? menuText = null,
         string? errorPopupKeyword = null)
     {
-        if (_gameScreen.ActiveMode != _gameScreen.Moving)
+        if (GameScreen.ActiveMode != GameScreen.Moving)
         {
             status = CommandStatus.Invalid;
             menuText = null;

@@ -20,7 +20,7 @@ public class TextBox : BaseControl
     private bool _editMode = false;
     private int _editWidth;
 
-    private readonly Vector2 TextOffsetV = new Vector2(5,5);
+    private readonly Vector2 _textOffsetV = new Vector2(5,5);
     
     private const int TextMargin = 5;
 
@@ -49,7 +49,7 @@ public class TextBox : BaseControl
     {
         Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.White);
         Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.Black);
-        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + TextOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
+        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
         
         if (_editMode)
         {

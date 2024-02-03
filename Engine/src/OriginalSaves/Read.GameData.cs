@@ -10,7 +10,7 @@ namespace Civ2engine
     public class Read
     {
         // READ SAV GAME
-        public static GameData ReadSAVFile(string savPath, string savName)
+        public static GameData ReadSavFile(string savPath, string savName)
         {
             var data = new GameData();
 
@@ -29,16 +29,16 @@ namespace Civ2engine
             //=========================
             if (data.GameVersion > 44)  // TOT only
             {
-                data.UnitTransport_Relationship = new short[80];
-                data.UnitTransport_BuildTransportSiteMask = new short[80];
-                data.UnitTransport_UseTransportSiteMask = new short[80];
-                data.UnitTransport_NativeTransportAbilityMask = new short[80];
+                data.UnitTransportRelationship = new short[80];
+                data.UnitTransportBuildTransportSiteMask = new short[80];
+                data.UnitTransportUseTransportSiteMask = new short[80];
+                data.UnitTransportNativeTransportAbilityMask = new short[80];
                 for (int unitId = 0; unitId < 80; unitId++) // 80=max units
                 {
-                    data.UnitTransport_Relationship[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 0);
-                    data.UnitTransport_BuildTransportSiteMask[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 2);
-                    data.UnitTransport_UseTransportSiteMask[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 4);
-                    data.UnitTransport_NativeTransportAbilityMask[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 6);
+                    data.UnitTransportRelationship[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 0);
+                    data.UnitTransportBuildTransportSiteMask[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 2);
+                    data.UnitTransportUseTransportSiteMask[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 4);
+                    data.UnitTransportNativeTransportAbilityMask[unitId] = BitConverter.ToInt16(bytes, 12 + 8 * unitId + 6);
                 }
             }
             #endregion
@@ -181,10 +181,10 @@ namespace Civ2engine
             //=========================
             //Unknown block
             //=========================
-            int offsetUB = 962;
+            int offsetUb = 962;
             if (data.GameVersion > 44)  // TOT
             {
-                data.GameType = bytes[offsetUB + 20];   // Original, fantasy, Scifi
+                data.GameType = bytes[offsetUb + 20];   // Original, fantasy, Scifi
 
                 // Pollution data (same as before so no use in reading it)
                 // ...
@@ -316,21 +316,21 @@ namespace Civ2engine
                 data.CivTreatyVendetta[civId] = new bool[8];
                 data.CivTreatyEmbassy[civId] = new bool[8];
                 data.CivTreatyWar[civId] = new bool[8];
-                for (int civ2id = 0; civ2id < 8; civ2id++)
+                for (int civ2Id = 0; civ2Id < 8; civ2Id++)
                 {
-                    data.CivTreatyContact[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 0], 0);
-                    data.CivTreatyCeaseFire[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 0], 1);
-                    data.CivTreatyPeace[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 0], 2);
-                    data.CivTreatyAlliance[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 0], 3);
-                    data.CivTreatyVendetta[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 0], 4);
-                    data.CivTreatyEmbassy[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 0], 7);
-                    data.CivTreatyWar[civId][civ2id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2id + 1], 5);
+                    data.CivTreatyContact[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 0], 0);
+                    data.CivTreatyCeaseFire[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 0], 1);
+                    data.CivTreatyPeace[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 0], 2);
+                    data.CivTreatyAlliance[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 0], 3);
+                    data.CivTreatyVendetta[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 0], 4);
+                    data.CivTreatyEmbassy[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 0], 7);
+                    data.CivTreatyWar[civId][civ2Id] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 32 + 4 * civ2Id + 1], 5);
                 }
 
                 // Attitudes
                 data.CivAttitudes[civId] = new int[8];
-                for (int civ2id = 0; civ2id < 8; civ2id++)
-                    data.CivAttitudes[civId][civ2id] = bytes[offsetT + sizeT * civId + offsetExtra + 64 + civ2id];
+                for (int civ2Id = 0; civ2Id < 8; civ2Id++)
+                    data.CivAttitudes[civId][civ2Id] = bytes[offsetT + sizeT * civId + offsetExtra + 64 + civ2Id];
 
                 // Technologies
                 int noTechs = data.GameVersion <= 39 ? 93 : 100;    // CiC has fewer techs in rules.txt
@@ -372,8 +372,8 @@ namespace Civ2engine
 
                 // Last contact with other civs
                 data.CivLastContact[civId] = new int[8];
-                for (int civ2id = 0; civ2id < 8; civ2id++)
-                    data.CivLastContact[civId][civ2id] = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2 * civ2id);
+                for (int civ2Id = 0; civ2Id < 8; civ2Id++)
+                    data.CivLastContact[civId][civ2Id] = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2 * civ2Id);
 
                 // Spaceships
                 data.CivHasSpaceship[civId] = GetBit(bytes[offsetT + sizeT * civId + offsetExtra + 30], 0);
@@ -396,14 +396,14 @@ namespace Civ2engine
             //=========================
             if (data.GameVersion > 44)
             {
-                int offsetGRPS = 29728;
+                int offsetGrps = 29728;
 
                 data.CivsRelationsToAdvancesGroups = new byte[21][];
                 for (int civId = 0; civId < 21; civId++)
                 {
                     data.CivsRelationsToAdvancesGroups[civId] = new byte[8];
                     for (int group = 0; group < 8; group++)
-                        data.CivsRelationsToAdvancesGroups[civId][group] = bytes[offsetGRPS + 8 * civId + group];
+                        data.CivsRelationsToAdvancesGroups[civId][group] = bytes[offsetGrps + 8 * civId + group];
                 }
             }
             #endregion
@@ -413,9 +413,9 @@ namespace Civ2engine
             //=========================
             if (data.GameVersion > 44)
             {
-                int offsetTR = 29896;
+                int offsetTr = 29896;
 
-                data.NoTransporters = BitConverter.ToInt16(bytes, offsetTR + 0);
+                data.NoTransporters = BitConverter.ToInt16(bytes, offsetTr + 0);
                 data.Transporter1X = new short[data.NoTransporters];
                 data.Transporter1Y = new short[data.NoTransporters];
                 data.Transporter1MapNo = new byte[data.NoTransporters];
@@ -425,13 +425,13 @@ namespace Civ2engine
                 data.TransporterLook = new byte[data.NoTransporters];
                 for (int transpId = 0; transpId < data.NoTransporters; transpId++)
                 {
-                    data.Transporter1X[transpId] = BitConverter.ToInt16(bytes, offsetTR + 4 + 14 * transpId + 0);
-                    data.Transporter1Y[transpId] = BitConverter.ToInt16(bytes, offsetTR + 4 + 14 * transpId + 2);
-                    data.Transporter1MapNo[transpId] = bytes[offsetTR + 4 + 14 * transpId + 4];
-                    data.Transporter2X[transpId] = BitConverter.ToInt16(bytes, offsetTR + 4 + 14 * transpId + 6);
-                    data.Transporter2Y[transpId] = BitConverter.ToInt16(bytes, offsetTR + 4 + 14 * transpId + 8);
-                    data.Transporter2MapNo[transpId] = bytes[offsetTR + 4 + 14 * transpId + 10];
-                    data.TransporterLook[transpId] = bytes[offsetTR + 4 + 14 * transpId + 11];
+                    data.Transporter1X[transpId] = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 0);
+                    data.Transporter1Y[transpId] = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 2);
+                    data.Transporter1MapNo[transpId] = bytes[offsetTr + 4 + 14 * transpId + 4];
+                    data.Transporter2X[transpId] = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 6);
+                    data.Transporter2Y[transpId] = BitConverter.ToInt16(bytes, offsetTr + 4 + 14 * transpId + 8);
+                    data.Transporter2MapNo[transpId] = bytes[offsetTr + 4 + 14 * transpId + 10];
+                    data.TransporterLook[transpId] = bytes[offsetTr + 4 + 14 * transpId + 11];
                 }
             }
             #endregion
@@ -444,7 +444,7 @@ namespace Civ2engine
             else if (data.GameVersion <= 44) offsetM = 13702;   // <= MGE
             else offsetM = 29900 + 14 * data.NoTransporters; // TOT
 
-            data.MapXdim_x2 = BitConverter.ToInt16(bytes, offsetM + 0);  // Map X dimension x2
+            data.MapXdimX2 = BitConverter.ToInt16(bytes, offsetM + 0);  // Map X dimension x2
             data.MapYdim = BitConverter.ToInt16(bytes, offsetM + 2);
             data.MapArea = BitConverter.ToInt16(bytes, offsetM + 4);  // Xdim*Ydim/2
             //flatEarth = BitConverter.ToInt16(bytes, offsetM + 6);   // Flat Earth flag (info already given before!!)
@@ -490,25 +490,25 @@ namespace Civ2engine
             for (int mapNo = 0; mapNo < data.MapNoSecondaryMaps + 1; mapNo++)
             {
                 // block 1 - terrain improvements that each civ sees (for 7 civs, ignore barbs)
-                data.MapUnitVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapCityVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapIrrigationVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapMiningVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapRoadVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapRailroadVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapFortressVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapPollutionVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapAirbaseVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapFarmlandVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapTransporterVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
+                data.MapUnitVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapCityVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapIrrigationVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapMiningVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapRoadVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapRailroadVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapFortressVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapPollutionVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapAirbaseVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapFarmlandVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapTransporterVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
                 for (int civNo = 0; civNo < 7; civNo++)
                 {
                     for (int i = 0; i < data.MapArea; i++)
                     {
-                        int x = i % (data.MapXdim_x2 / 2);
-                        int y = i / (data.MapXdim_x2 / 2);
+                        int x = i % (data.MapXdimX2 / 2);
+                        int y = i / (data.MapXdimX2 / 2);
 
-                        int terrA = ofsetB1 + civNo * data.MapXdim_x2 / 2 * data.MapYdim + i;
+                        int terrA = ofsetB1 + civNo * data.MapXdimX2 / 2 * data.MapYdim + i;
                         data.MapUnitVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 0);
                         data.MapCityVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 1);
                         data.MapIrrigationVisibility[mapNo][x, y, civNo + 1] = GetBit(bytes[terrA], 2);
@@ -525,30 +525,30 @@ namespace Civ2engine
 
                 // block 2 - terrain type
                 int ofsetB2 = ofsetB1 + 7 * data.MapArea;
-                data.MapTerrainType[mapNo] = new int[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapRiverPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapResourcePresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapUnitPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapCityPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapIrrigationPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapMiningPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapRoadPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapRailroadPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapFortressPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapPollutionPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapFarmlandPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapAirbasePresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapTransporterPresent[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapTileWithinCityRadiusOwner[mapNo] = new byte[data.MapXdim_x2 / 2, data.MapYdim];
-                data.LandSeaIndex[mapNo] = new byte[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapTileVisibility[mapNo] = new bool[data.MapXdim_x2 / 2, data.MapYdim, 8];
-                data.MapTileFertility[mapNo] = new int[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapTileOwnership[mapNo] = new int[data.MapXdim_x2 / 2, data.MapYdim];
-                data.MapSpecialType[mapNo] = new int[data.MapXdim_x2 / 2, data.MapYdim];
+                data.MapTerrainType[mapNo] = new int[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapRiverPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapResourcePresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapUnitPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapCityPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapIrrigationPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapMiningPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapRoadPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapRailroadPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapFortressPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapPollutionPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapFarmlandPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapAirbasePresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapTransporterPresent[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapTileWithinCityRadiusOwner[mapNo] = new byte[data.MapXdimX2 / 2, data.MapYdim];
+                data.LandSeaIndex[mapNo] = new byte[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapTileVisibility[mapNo] = new bool[data.MapXdimX2 / 2, data.MapYdim, 8];
+                data.MapTileFertility[mapNo] = new int[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapTileOwnership[mapNo] = new int[data.MapXdimX2 / 2, data.MapYdim];
+                data.MapSpecialType[mapNo] = new int[data.MapXdimX2 / 2, data.MapYdim];
                 for (int i = 0; i < data.MapArea; i++)
                 {
-                    int x = i % (data.MapXdim_x2 / 2);
-                    int y = i / (data.MapXdim_x2 / 2);
+                    int x = i % (data.MapXdimX2 / 2);
+                    int y = i / (data.MapXdimX2 / 2);
 
                     // Terrain type
                     int terrB = ofsetB2 + i * 6 + 0;
@@ -614,10 +614,10 @@ namespace Civ2engine
             
 
             // Unknown block 1 (length = MapLocatorXdim*MapLocatorYdim/4)
-            int ofsetUB1 = ofsetB1;
+            int ofsetUb1 = ofsetB1;
 
             // Unknown block 2 (length = 1024 for <=MGE, = 10240 for TOT)
-            int ofsetUB2 = ofsetUB1 + 2 * data.MapLocatorXdim * data.MapLocatorYdim;
+            int ofsetUb2 = ofsetUb1 + 2 * data.MapLocatorXdim * data.MapLocatorYdim;
 
             #endregion
             #region Units
@@ -627,17 +627,17 @@ namespace Civ2engine
             int multipl, ofsetU;
             if (data.GameVersion <= 40)     // <= FW
             {
-                ofsetU = ofsetUB2 + 1024;
+                ofsetU = ofsetUb2 + 1024;
                 multipl = 26;
             }
             else if (data.GameVersion == 44)    // MGE
             {
-                ofsetU = ofsetUB2 + 1024;
+                ofsetU = ofsetUb2 + 1024;
                 multipl = 32;
             }
             else    // TOT
             {
-                ofsetU = ofsetUB2 + 10240;
+                ofsetU = ofsetUb2 + 10240;
                 multipl = 40; 
             }
 
@@ -946,21 +946,21 @@ namespace Civ2engine
             //=========================
             //DATA FOR FINDING NEXT CITY NAME
             //=========================
-            int ofsetTC = ofsetC + multipl * data.NumberOfCities;
+            int ofsetTc = ofsetC + multipl * data.NumberOfCities;
 
             data.CitiesBuiltSofar = new byte[21];
             for (int civId = 0; civId < 21; civId++)
             {
-                data.CitiesBuiltSofar[civId] = bytes[ofsetTC + 3 * civId + 1];
+                data.CitiesBuiltSofar[civId] = bytes[ofsetTc + 3 * civId + 1];
             }
             #endregion
             #region Other info
             //=========================
             //OTHER INFO
             //=========================
-            int ofsetO = ofsetTC + 63;
+            int ofsetO = ofsetTc + 63;
             
-            data.ActiveCursorXY = new short[] { BitConverter.ToInt16(bytes, ofsetO + 0), 
+            data.ActiveCursorXy = new short[] { BitConverter.ToInt16(bytes, ofsetO + 0), 
                                                 BitConverter.ToInt16(bytes, ofsetO + 2) };
 
             int noHumanPlayers = 0;
@@ -969,34 +969,34 @@ namespace Civ2engine
                 var stat = data.HumanPlayers[i] ? 1 : 0;
                 noHumanPlayers += stat;
             }
-            int blockOO = data.GameVersion <= 44 ? 60 * noHumanPlayers + 1302 : 60 * noHumanPlayers + 1314;
+            int blockOo = data.GameVersion <= 44 ? 60 * noHumanPlayers + 1302 : 60 * noHumanPlayers + 1314;
 
             // Clicked tile with your mouse XY position (does not count if you clicked on a city)
-            data.ClickedXY = new int[] { BitConverter.ToInt16(bytes, ofsetO + blockOO + 0), 
-                                         BitConverter.ToInt16(bytes, ofsetO + blockOO + 2) };
+            data.ClickedXy = new int[] { BitConverter.ToInt16(bytes, ofsetO + blockOo + 0), 
+                                         BitConverter.ToInt16(bytes, ofsetO + blockOo + 2) };
 
             // Zoom (=-7(min)...+8(max), 0=std.)
-            data.Zoom = BitConverter.ToInt16(bytes, ofsetO + blockOO + 4);
+            data.Zoom = BitConverter.ToInt16(bytes, ofsetO + blockOo + 4);
             #endregion
             #region Scenario parameters (optional)
             //=========================
             //SCENARIO PARAMS (only present in .scn or derived .sav files)
             //=========================
-            int ofsetS = ofsetO + blockOO + 76;
+            int ofsetS = ofsetO + blockOo + 76;
 
             // How to determine if the file has scenario parameters?
             // More than 340 bytes (length of Destroyed civs block in TOT) have to appear
             // between end of "Other info" block and end of file/start of EVNT block, as scenario
             // params is exactly 100 bytes long
-            bool ScnFileOrDerived = false;
-            var offsetEVNT = IndexofStringInByteArray(bytes, "EVNT");
-            if ((offsetEVNT == -1 && (bytes.Length - ofsetS > 340)) ||
-                (offsetEVNT != -1 && (offsetEVNT - ofsetS > 340)))
+            bool scnFileOrDerived = false;
+            var offsetEvnt = IndexofStringInByteArray(bytes, "EVNT");
+            if ((offsetEvnt == -1 && (bytes.Length - ofsetS > 340)) ||
+                (offsetEvnt != -1 && (offsetEvnt - ofsetS > 340)))
             {
-                ScnFileOrDerived = true;
+                scnFileOrDerived = true;
             }
 
-            if (ScnFileOrDerived)
+            if (scnFileOrDerived)
             {
                 data.TotalWar = GetBit(bytes[ofsetS + 0], 0);
                 data.ObjectiveVictory = GetBit(bytes[ofsetS + 0], 1);
@@ -1006,8 +1006,8 @@ namespace Civ2engine
                 data.ElliminatePollution = GetBit(bytes[ofsetS + 0], 6);
                 data.TerrainAnimationLockout = GetBit(bytes[ofsetS + 0], 7);    // TOT only
                 data.UnitAnimationLockout = GetBit(bytes[ofsetS + 1], 0);    // TOT only
-                data.SPRfileOverride = GetBit(bytes[ofsetS + 1], 1);
-                data.SpecialWWIIonlyAI = GetBit(bytes[ofsetS + 1], 7);
+                data.SpRfileOverride = GetBit(bytes[ofsetS + 1], 1);
+                data.SpecialWwiIonlyAi = GetBit(bytes[ofsetS + 1], 7);
 
                 // Scenario name (read till first null character)
                 int step = 0;
@@ -1184,11 +1184,11 @@ namespace Civ2engine
         private static List<int> FindPositionOfBits(int n)
         {
             var positions = new List<int>();
-            for (int BitToTest = 0; BitToTest < 32; BitToTest++)
+            for (int bitToTest = 0; bitToTest < 32; bitToTest++)
             {
-                if ((n & (1 << BitToTest)) != 0)
+                if ((n & (1 << bitToTest)) != 0)
                 {
-                    positions.Add(BitToTest);
+                    positions.Add(bitToTest);
                 }
             }
 

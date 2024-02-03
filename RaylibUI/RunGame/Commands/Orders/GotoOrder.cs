@@ -19,8 +19,8 @@ public class GotoOrder : Order
     public GotoOrder(GameScreen gameScreen) : 
         base(gameScreen, new Shortcut(KeyboardKey.G), CommandIds.GotoOrder)
     {
-        _game = _gameScreen.Game;
-        _player = _gameScreen.Player;
+        _game = GameScreen.Game;
+        _player = GameScreen.Player;
     }
 
     public override void Update()

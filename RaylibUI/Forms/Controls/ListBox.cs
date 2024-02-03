@@ -22,7 +22,7 @@ public class ListBox : Control
     public int Columns { get; set; }
     public ListboxType Type { get; set; } = ListboxType.Standard;
 
-    public void Draw(int X, int Y, Size size)
+    public void Draw(int x, int y, Size size)
     {
         //// Keys
         //if (Enabled && KeyPressed != 0)

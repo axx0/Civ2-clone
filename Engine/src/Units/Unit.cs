@@ -29,7 +29,7 @@ namespace Civ2engine.Units
         }
 
         public int UntilTech => TypeDefinition.Until;
-        public UnitGAS Domain => TypeDefinition.Domain;
+        public UnitGas Domain => TypeDefinition.Domain;
         public int MaxMovePoints => TypeDefinition.Move;
         public int FuelRange => TypeDefinition.Range;
         public int AttackBase => TypeDefinition.Attack;
@@ -57,58 +57,58 @@ namespace Civ2engine.Units
             if (InShip != null) return 0;
             
             // Base defense factor from RULES
-            decimal DF = DefenseBase;
+            decimal df = DefenseBase;
 
             // Bonus for veteran units
-            if (Veteran) DF *= 1.5m;
+            if (Veteran) df *= 1.5m;
 
             // City walls bonus (applies only to land units)
-            if (tile.CityHere != null && tile.CityHere.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGAS.Ground && !attackingUnit.NegatesCityWalls) DF *= 3;
+            if (tile.CityHere != null && tile.CityHere.ImprovementExists(ImprovementType.CityWalls) && Domain == UnitGas.Ground && !attackingUnit.NegatesCityWalls) df *= 3;
             // Fortress bonus (Applies only to land units. Unit doesn't have to be fortified. Doesn't count if air unit is attacking.)
-            else if (groundDefMultiplier != 0 && Domain == UnitGAS.Ground && attackingUnit.Domain != UnitGAS.Air) DF += DF * groundDefMultiplier / 100;
+            else if (groundDefMultiplier != 0 && Domain == UnitGas.Ground && attackingUnit.Domain != UnitGas.Air) df += df * groundDefMultiplier / 100;
             // Fortified bonus
-            else if (Order == OrderType.Fortified && Domain == UnitGAS.Ground) DF *= 1.5m;
+            else if (Order == OrderType.Fortified && Domain == UnitGas.Ground) df *= 1.5m;
 
             // Helicopters are vulnerable to anti air
-            if (Domain == UnitGAS.Air && FuelRange == 0 && attackingUnit.CanAttackAirUnits)
+            if (Domain == UnitGas.Air && FuelRange == 0 && attackingUnit.CanAttackAirUnits)
             {
-                DF /= 2;
+                df /= 2;
             }
 
             if (tile.CityHere != null)
             {
-                if (Domain == UnitGAS.Air && FuelRange == 1 && attackingUnit.Domain == UnitGAS.Air)
+                if (Domain == UnitGas.Air && FuelRange == 1 && attackingUnit.Domain == UnitGas.Air)
                 {
                     // TODO: Message box about fighters scrambling for defence
                     if (attackingUnit.FuelRange != 1)
                     {
-                        DF *= 4;
+                        df *= 4;
                     }
                     else
                     {
-                        DF *= 2;
+                        df *= 2;
                     }
                 }
                 else
                 {
                     // Effect of SAM batteries (only when attacked from air)
-                    if (tile.CityHere.ImprovementExists(ImprovementType.SAMbattery) &&
-                        attackingUnit.Domain == UnitGAS.Air) DF *= 2;
+                    if (tile.CityHere.ImprovementExists(ImprovementType.SaMbattery) &&
+                        attackingUnit.Domain == UnitGas.Air) df *= 2;
                 }
 
                 // Effect of SDI
-                if (tile.CityHere.ImprovementExists(ImprovementType.SDIdefense) &&
-                    attackingUnit.Type == UnitType.CruiseMsl) DF *= 2;
+                if (tile.CityHere.ImprovementExists(ImprovementType.SdIdefense) &&
+                    attackingUnit.Type == UnitType.CruiseMsl) df *= 2;
 
                 // Effect of coastal fortress
                 if (tile.CityHere.ImprovementExists(ImprovementType.CoastalFort) &&
-                    attackingUnit.Domain == UnitGAS.Sea) DF *= 2;
+                    attackingUnit.Domain == UnitGas.Sea) df *= 2;
             }
 
             // Effect of terrain
-            DF *= tile.Defense;
+            df *= tile.Defense;
 
-            return (int)DF;
+            return (int)df;
         }
 
         public int FirepowerBase => TypeDefinition.Firepwr;
@@ -126,10 +126,10 @@ namespace Civ2engine.Units
         public bool CanCarryAirUnits => TypeDefinition.Flags[7] == '1';  // carrier
         public bool CanMakeParadrops => TypeDefinition.Flags[6] == '1';
         public bool Alpine => TypeDefinition.Flags[5] == '1';    // treats all squares as road
-        public bool X2onDefenseVersusHorse => TypeDefinition.Flags[4] == '1';    // pikemen
+        public bool X2OnDefenseVersusHorse => TypeDefinition.Flags[4] == '1';    // pikemen
         public bool FreeSupportForFundamentalism => TypeDefinition.Flags[3] == '1';    // fanatics
         public bool DestroyedAfterAttacking => TypeDefinition.Flags[2] == '1';    // missiles
-        public bool X2onDefenseVersusAir => TypeDefinition.Flags[1] == '1';    // AEGIS
+        public bool X2OnDefenseVersusAir => TypeDefinition.Flags[1] == '1';    // AEGIS
         public bool UnitCanSpotSubmarines => TypeDefinition.Flags[0] == '1';
 
 
@@ -158,13 +158,13 @@ namespace Civ2engine.Units
         public int X { get; set; }
         public int Xreal => (X - Y % 2) / 2;
         public int Y { get; set; }
-        public int[] XY => new int[] { X, Y };
+        public int[] Xy => new int[] { X, Y };
         public int MapIndex { get; set; }
         
         public int MovementCounter { get; set; }
 
-        public int[] PrevXY { get; set; }   // XY position of unit before it moved
-        public int[] PrevXYpx => new int[] { PrevXY[0] * CurrentLocation.Map.Xpx, PrevXY[1] * CurrentLocation.Map.Ypx };
+        public int[] PrevXy { get; set; }   // XY position of unit before it moved
+        public int[] PrevXYpx => new int[] { PrevXy[0] * CurrentLocation.Map.Xpx, PrevXy[1] * CurrentLocation.Map.Ypx };
 
 
         public bool TurnEnded => MovePoints <= 0 ||
@@ -179,7 +179,7 @@ namespace Civ2engine.Units
         public void SkipTurn()
         {
             MovePointsLost = MaxMovePoints;
-            PrevXY = new[] { X, Y };
+            PrevXy = new[] { X, Y };
         }
 
         public void Fortify()

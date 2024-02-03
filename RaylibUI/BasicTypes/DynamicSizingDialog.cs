@@ -39,7 +39,7 @@ public class DynamicSizingDialog : BaseDialog
     }
 
 
-    public override void Resize(int Width, int Height)
+    public override void Resize(int width, int height)
     {
         var heights = new int[Controls.Count];
         var maxWidth = Controls.Max(c=>c.GetPreferredWidth());
@@ -72,7 +72,7 @@ public class DynamicSizingDialog : BaseDialog
             }
         }
 
-        SetLocation(Width, maxWidth, Height, totalHeight);
+        SetLocation(width, maxWidth, height, totalHeight);
 
 
         int left = LayoutPadding.Left + (int)Location.X;

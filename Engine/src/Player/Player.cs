@@ -62,7 +62,7 @@ namespace Civ2engine
             
         }
 
-        public IInterfaceCommands UI { get; } = null;
+        public IInterfaceCommands Ui { get; } = null;
 
         public void NotifyImprovementEnabled(TerrainImprovement improvement, int level)
         {

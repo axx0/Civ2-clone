@@ -314,7 +314,7 @@ namespace Civ2engine.IO
                     Type = (UnitType) type,
                     Name = text[0],
                     Until = Rules.AdvanceMappings[text[1]],
-                    Domain = (UnitGAS) int.Parse(text[2]),
+                    Domain = (UnitGas) int.Parse(text[2]),
                     Move = Rules.Cosmic.MovementMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
                     Range = int.Parse(text[4]),
                     Attack = int.Parse(text[5].Replace("a", string.Empty)),

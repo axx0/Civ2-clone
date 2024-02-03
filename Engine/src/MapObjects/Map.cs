@@ -55,7 +55,7 @@ namespace Civ2engine.MapObjects
         }
         public int Xpx => 4 * (_zoom + 8);    // Length of 1 map square in X
         public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
-        public int[] StartingClickedXY { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
+        public int[] StartingClickedXy { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
         public List<IslandDetails> Islands { get; set; }
         public double ScaleFactor => XDim * YDim / 4000d;
         

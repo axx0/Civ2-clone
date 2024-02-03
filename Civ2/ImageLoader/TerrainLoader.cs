@@ -20,15 +20,15 @@ namespace Civ2.ImageLoader
         private static TerrainSet LoadTerrain(Ruleset ruleset, int index, Civ2Interface active)
         {
             var path = Utils.GetFilePath($"Terrain{(index * 2) + 1}", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPIC(path, active.TilePICprops);
+            Images.LoadPropertiesFromPic(path, active.TilePiCprops);
             path = Utils.GetFilePath($"Terrain{(index * 2) + 2}", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPIC(path, active.OverlayPICprops);
+            Images.LoadPropertiesFromPic(path, active.OverlayPiCprops);
 
             // Initialize objects
             var terrain = new TerrainSet(64, 32);
 
-            var tileProps = active.TilePICprops;
-            var overlayProps = active.OverlayPICprops;
+            var tileProps = active.TilePiCprops;
+            var overlayProps = active.OverlayPiCprops;
 
             // Get dither tile before making it transparent
             var ditherTile = tileProps["dither"][0].Image;

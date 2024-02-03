@@ -25,12 +25,12 @@ public class CustomWorldSize : BaseDialogHandler
         {
             new()
             {
-                index = 0, Name = "Width", MinValue = 20, CharLimit = 5,
+                Index = 0, Name = "Width", MinValue = 20, CharLimit = 5,
                 InitialValue = Initialization.ConfigObject.WorldSize[0].ToString(), Width = 75
             },
             new()
             {
-                index = 1, Name = "Height", MinValue = 20, CharLimit = 5,
+                Index = 1, Name = "Height", MinValue = 20, CharLimit = 5,
                 InitialValue = Initialization.ConfigObject.WorldSize[1].ToString(), Width = 75
             }
         };
@@ -51,14 +51,14 @@ public class CustomWorldSize : BaseDialogHandler
             return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
         }
 
-        if (int.TryParse(result.TextValues["Width"], out var Width))
+        if (int.TryParse(result.TextValues["Width"], out var width))
         {
-            Initialization.ConfigObject.WorldSize[0] = Width;
+            Initialization.ConfigObject.WorldSize[0] = width;
         }
 
-        if (int.TryParse(result.TextValues["Height"], out var Height))
+        if (int.TryParse(result.TextValues["Height"], out var height))
         {
-            Initialization.ConfigObject.WorldSize[1] = Height;
+            Initialization.ConfigObject.WorldSize[1] = height;
         }
 
         return civDialogHandlers[

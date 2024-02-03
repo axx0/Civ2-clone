@@ -12,10 +12,10 @@ namespace Civ2engine.UnitActions
         {
             return unit.Domain switch
             {
-                UnitGAS.Ground => new UnitActionAssessment(tile.Terrain.Type != TerrainType.Ocean),
-                UnitGAS.Air => new UnitActionAssessment(tile.CityHere is not null || tile.HasAirbase()),
-                UnitGAS.Sea => new UnitActionAssessment(tile.CityHere is not null),
-                UnitGAS.Special => new UnitActionAssessment(true),
+                UnitGas.Ground => new UnitActionAssessment(tile.Terrain.Type != TerrainType.Ocean),
+                UnitGas.Air => new UnitActionAssessment(tile.CityHere is not null || tile.HasAirbase()),
+                UnitGas.Sea => new UnitActionAssessment(tile.CityHere is not null),
+                UnitGas.Special => new UnitActionAssessment(true),
                 _ => new UnitActionAssessment(true)
             };
         }

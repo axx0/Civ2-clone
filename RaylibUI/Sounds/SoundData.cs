@@ -28,7 +28,7 @@ public class SoundData : IDisposable
 
     public void Convert()
     {
-        IsConverted = ConvertAudioPcmU8ToPcmS16LE(PathFull, PathConv);
+        IsConverted = ConvertAudioPcmU8ToPcmS16Le(PathFull, PathConv);
     }
 
     public void Stop()
@@ -87,7 +87,7 @@ public class SoundData : IDisposable
     }
 
 
-    public bool ConvertAudioPcmU8ToPcmS16LE(string inputFilePath, string outputFilePath)
+    public bool ConvertAudioPcmU8ToPcmS16Le(string inputFilePath, string outputFilePath)
     {
         try
         {

@@ -90,7 +90,7 @@ namespace Civ2engine
 
     public enum PlayerType
     {
-        AI,
+        Ai,
         Local,
         Remote,
         Barbarians

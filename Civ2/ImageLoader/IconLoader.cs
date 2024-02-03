@@ -9,8 +9,8 @@ public class IconLoader
     public static void LoadIcons(Ruleset ruleset, Civ2Interface active)
     {
         var path = Utils.GetFilePath("ICONS", ruleset.Paths, "gif", "bmp");
-        Images.LoadPropertiesFromPIC(path, active.IconsPICprops);
-        var iconProps = active.IconsPICprops;
+        Images.LoadPropertiesFromPic(path, active.IconsPiCprops);
+        var iconProps = active.IconsPiCprops;
 
 
         //var transparentLightPink = new Color(255, 159, 163,255);

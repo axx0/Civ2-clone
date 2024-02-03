@@ -6,7 +6,7 @@ namespace Civ2engine.Units
     {
         public string Name { get; set; }
         public int Until { get; set; }
-        public UnitGAS Domain { get; set; }
+        public UnitGas Domain { get; set; }
         public int Move { get; set; }
         public int Range { get; set; }
         public int Attack { get; set; }

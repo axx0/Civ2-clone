@@ -72,8 +72,8 @@ namespace Civ2engine
             _gameVersion = gameData.GameVersion switch
             {
                 <= 39 => GameVersionType.CiC,
-                40 => GameVersionType.FW,
-                44 => GameVersionType.MGE,
+                40 => GameVersionType.Fw,
+                44 => GameVersionType.Mge,
                 49 => GameVersionType.ToT10,
                 50 => GameVersionType.ToT11,
                 _ => GameVersionType.CiC

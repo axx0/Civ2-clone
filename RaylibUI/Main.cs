@@ -11,7 +11,7 @@ namespace RaylibUI
 {
     public partial class Main
     {
-        private Map map;
+        private Map _map;
 
         private IScreen _activeScreen;
         private bool _shouldClose;

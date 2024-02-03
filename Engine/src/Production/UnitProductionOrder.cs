@@ -55,7 +55,7 @@ namespace Civ2engine.Production
 
         public override bool IsValidBuild(City city)
         {
-            return _unitDefinition.Domain != UnitGAS.Sea || city.IsNextToOcean;
+            return _unitDefinition.Domain != UnitGas.Sea || city.IsNextToOcean;
         }
 
         public override string GetDescription()

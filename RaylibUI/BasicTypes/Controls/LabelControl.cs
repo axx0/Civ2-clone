@@ -66,13 +66,13 @@ public class LabelControl : BaseControl
         if (_wrapText && _wrappedText?.Count > 1)
         {
             var unitHeight = Height / _wrappedText.Count;
-            var Y = Location.Y + unitHeight / 2f - TextSize.Y / 2f;
+            var y = Location.Y + unitHeight / 2f - TextSize.Y / 2f;
             for (var i = 0; i < _wrappedText.Count; i++)
             {
-                var textPosition = new Vector2(Location.X + Offset, Y);
+                var textPosition = new Vector2(Location.X + Offset, y);
                 Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition + _shadowOffset, _fontSize, _spacing, _colorShadow);
                 Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition, _fontSize, _spacing, _colorFront);
-                Y += unitHeight;
+                y += unitHeight;
             }
         }
         else

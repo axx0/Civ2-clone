@@ -71,7 +71,7 @@ public class MinimapPanel : BaseControl
         {
             case MapEventType.MapViewChanged:
                 {
-                    _mapStartXy = e.MapStartXY;
+                    _mapStartXy = e.MapStartXy;
                     _mapDrawSq = e.MapDrawSq;
                     break;
                 }

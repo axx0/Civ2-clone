@@ -21,7 +21,7 @@ public class MainMenu : BaseScreen
     {
         _active = main.ActiveInterface;
 
-        _sndMenuLoop =  soundManager.PlayCIV2DefaultSound("MENULOOP",true);
+        _sndMenuLoop =  soundManager.PlayCiv2DefaultSound("MENULOOP",true);
         _shutdownApp = shutdownApp;
         _startGame = startGame;
 
@@ -132,7 +132,7 @@ public class MainMenu : BaseScreen
         }
         else
         {
-            Raylib.ClearBackground(_background.background);
+            Raylib.ClearBackground(_background.Background);
             Raylib.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.Width)/2, (screenHeight-_background.CentreImage.Height)/2, Color.White);
         }
         foreach (var panel in _imagePanels)

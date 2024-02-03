@@ -63,10 +63,10 @@ public class FoodStorageBox : BaseControl
         var storage = _cityWindow.City.GetFoodStorage();
         if (storage > 0)
         {
-            var line_width = boxWidth- 10;
-            var starting_x = posX + 5;
-            var starting_y = posY + lineHeight * storage / 100f;
-            Raylib.DrawLineEx(new Vector2( starting_x, starting_y),new Vector2(starting_x + line_width, starting_y), 1f, _pen1);
+            var lineWidth = boxWidth- 10;
+            var startingX = posX + 5;
+            var startingY = posY + lineHeight * storage / 100f;
+            Raylib.DrawLineEx(new Vector2( startingX, startingY),new Vector2(startingX + lineWidth, startingY), 1f, _pen1);
         }
         
         var foodStore = _cityWindow.City.FoodInStorage;

@@ -11,11 +11,11 @@ public class RadioButton : Control
     public bool IsSelected { get; set; }
 
     private int _x, _y, _width;
-    public void Draw(int X, int Y, int Width)
+    public void Draw(int x, int y, int width)
     {
-        _x = X;
-        _y = Y;
-        _width = Width;
+        _x = x;
+        _y = y;
+        _width = width;
 
         ImageUtils.PaintRadioButton(_x + 8, _y + 7, IsSelected);
         Raylib.DrawText(Text, _x + 38, _y + 5, 20, Color.Black);

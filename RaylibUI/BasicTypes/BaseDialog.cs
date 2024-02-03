@@ -34,7 +34,7 @@ public abstract class BaseDialog : BaseLayoutController
 
     protected void SetLocation(int screenWidth, int dialogWidth, int screenHeight, int dialogHeight)
     {
-        var X = _position.X switch
+        var x = _position.X switch
         {
             0 => (screenWidth - dialogWidth) / 2f,
             < -1 => screenWidth + _position.X - dialogWidth,
@@ -43,7 +43,7 @@ public abstract class BaseDialog : BaseLayoutController
             _ => _position.X * screenWidth
         };
         
-        var Y = _position.Y switch
+        var y = _position.Y switch
         {
             0 => (screenHeight - dialogHeight) / 2f,
             < -1 => screenHeight + _position.Y - dialogHeight,
@@ -52,8 +52,8 @@ public abstract class BaseDialog : BaseLayoutController
             _ => _position.Y * screenHeight
         };
 
-        Location = new Vector2((float)Math.Max(0, Math.Min(screenWidth - dialogWidth, X)),
-            (float)Math.Max(0, Math.Min(screenHeight - dialogHeight, Y)));
+        Location = new Vector2((float)Math.Max(0, Math.Min(screenWidth - dialogWidth, x)),
+            (float)Math.Max(0, Math.Min(screenHeight - dialogHeight, y)));
     }
 
 

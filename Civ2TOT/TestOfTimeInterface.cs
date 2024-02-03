@@ -110,7 +110,7 @@ public class TestOfTimeInterface : Civ2Interface
 
 
         // Initialize properties of Units from image
-        UnitPICprops = new Dictionary<string, List<ImageProps>>
+        UnitPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new ImageProps
                         { Rect = new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight) }).ToList() },
@@ -118,7 +118,7 @@ public class TestOfTimeInterface : Civ2Interface
         };
 
         // Initialize properties of Cities from image
-        CitiesPICprops = new Dictionary<string, List<ImageProps>>
+        CitiesPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "textColors", Enumerable.Range(0, 9).Select(col =>
                     new ImageProps { Rect = new Rectangle(1 + 15 * col, 421, 14, 3) }).ToList() },
@@ -141,10 +141,10 @@ public class TestOfTimeInterface : Civ2Interface
                     new ImageProps { Rect = new Rectangle(1 + 65 * col, 347, 64, 48) }).ToList());    // Modern alt.
         props.AddRange(Enumerable.Range(0, 4).Select(col =>
                     new ImageProps { Rect = new Rectangle(333 + 65 * col, 347, 64, 48) }).ToList());
-        CitiesPICprops.Add("city", props);
+        CitiesPiCprops.Add("city", props);
 
         // Initialize properties of Tiles from image
-        TilePICprops = new Dictionary<string, List<ImageProps>>
+        TilePiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "base1", Enumerable.Range(0, 11).Select(row =>
                         new ImageProps { Rect = new Rectangle(1, 1 + 33 * row, 64, 32) }).ToList() },
@@ -169,7 +169,7 @@ public class TestOfTimeInterface : Civ2Interface
         };
 
         // Initialize properties of Overlay tiles from image
-        OverlayPICprops = new Dictionary<string, List<ImageProps>>
+        OverlayPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
                     new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32) }).ToList() },
@@ -192,10 +192,10 @@ public class TestOfTimeInterface : Civ2Interface
             props.Add(new ImageProps { Rect = new Rectangle(1 + 66 * i, 463, 32, 16) });
             props.Add(new ImageProps { Rect = new Rectangle(34 + 66 * i, 463, 32, 16) });
         }
-        OverlayPICprops.Add("coastline", props);
+        OverlayPiCprops.Add("coastline", props);
 
         // Initialize properties of Icons tiles from image
-        IconsPICprops = new Dictionary<string, List<ImageProps>>
+        IconsPiCprops = new Dictionary<string, List<ImageProps>>
         {
             { "viewPiece", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(199, 256, 64, 32) } } },
             { "gridlines", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(183, 430, 64, 32) } } },
@@ -450,11 +450,11 @@ public class TestOfTimeInterface : Civ2Interface
     public override int UnitsRows => 9;
     public override int UnitsPxHeight => 64;
     
-    public override Dictionary<string, List<ImageProps>> UnitPICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> CitiesPICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> UnitPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> CitiesPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> TilePiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> OverlayPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> IconsPiCprops { get; set; }
 
     public override string? GetFallbackPath(string root, int gameType)
     {
@@ -483,9 +483,9 @@ public class TestOfTimeInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(CitiesPICprops["textColors"][col].Image);
-                var textColour = imageColours[2 * CitiesPICprops["textColors"][col].Image.Width + 0];
-                var shieldColour = imageColours[2 * CitiesPICprops["textColors"][col].Image.Width + 0];
+                var imageColours = Raylib.LoadImageColors(CitiesPiCprops["textColors"][col].Image);
+                var textColour = imageColours[2 * CitiesPiCprops["textColors"][col].Image.Width + 0];
+                var shieldColour = imageColours[2 * CitiesPiCprops["textColors"][col].Image.Width + 0];
                 textColour.A = 255; // to avoid any upper-left-pixel transparency issues
                 shieldColour.A = 255;
                 Raylib.UnloadImageColors(imageColours);
@@ -496,8 +496,8 @@ public class TestOfTimeInterface : Civ2Interface
 
                 playerColours[col] = new PlayerColour
                 {
-                    Normal = CitiesPICprops["flags"][col].Image,
-                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPICprops["flags"][col].Image),
+                    Normal = CitiesPiCprops["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPiCprops["flags"][col].Image),
                     TextColour = textColour,
                     LightColour = lightColour,
                     DarkColour = darkColour
@@ -509,13 +509,13 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override void GetShieldImages()
     {
-        Color ReplacementColour = new(255, 0, 255, 0);
+        Color replacementColour = new(255, 0, 255, 0);
 
-        var shield = UnitPICprops["HPshield"][0].Image;
+        var shield = UnitPiCprops["HPshield"][0].Image;
         var shieldFront = Raylib.ImageCopy(shield);
 
-        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", ReplacementColour);
-        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", ReplacementColour, true);
+        UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
+        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", replacementColour, true);
     }
 
     public override UnitShield UnitShield(int unitType) => new()
@@ -529,41 +529,41 @@ public class TestOfTimeInterface : Civ2Interface
         HPbarColours = new[] { new Color(247, 0, 0, 255), new Color(255, 222, 74, 255), new Color(82, 173, 33, 255) },
         HPbarSizeForColours = new[] { 5, 13 },
         OrderOffset = new(9 / 2f, 1),
-        OrderTextHeight = UnitPICprops["HPshield"][0].Image.Height - 1
+        OrderTextHeight = UnitPiCprops["HPshield"][0].Image.Height - 1
     };
 
-    public override void DrawBorderWallpaper(Wallpaper wp, ref Image destination, int Height, int Width, Padding padding)
+    public override void DrawBorderWallpaper(Wallpaper wp, ref Image destination, int height, int width, Padding padding)
     {
-        var top_left = padding.Top == 12 ? wp.OuterThinTopLeft : wp.OuterTitleTopLeft;
+        var topLeft = padding.Top == 12 ? wp.OuterThinTopLeft : wp.OuterTitleTopLeft;
         var top = padding.Top == 12 ? wp.OuterThinTop : wp.OuterTitleTop;
-        var top_right = padding.Top == 12 ? wp.OuterThinTopRight : wp.OuterTitleTopRight;
+        var topRight = padding.Top == 12 ? wp.OuterThinTopRight : wp.OuterTitleTopRight;
 
         // Top border
-        Raylib.ImageDraw(ref destination, top_left, new Rectangle(0, 0, top_left.Width, top_left.Height), new Rectangle(0, 0, top_left.Width, top_left.Height), Color.White);
-        var topCols = (Width - top_left.Width - top_right.Width) / top.Width + 1;
+        Raylib.ImageDraw(ref destination, topLeft, new Rectangle(0, 0, topLeft.Width, topLeft.Height), new Rectangle(0, 0, topLeft.Width, topLeft.Height), Color.White);
+        var topCols = (width - topLeft.Width - topRight.Width) / top.Width + 1;
         for (int col = 0; col < topCols; col++)
         {
-            Raylib.ImageDraw(ref destination, top, new Rectangle(0, 0, top.Width, top.Height), new Rectangle(top_left.Width + top.Width * col, 0, top.Width, top.Height), Color.White);
+            Raylib.ImageDraw(ref destination, top, new Rectangle(0, 0, top.Width, top.Height), new Rectangle(topLeft.Width + top.Width * col, 0, top.Width, top.Height), Color.White);
         }
-        Raylib.ImageDraw(ref destination, top_right, new Rectangle(0, 0, top_right.Width, top_right.Height), new Rectangle(Width - top_right.Width, 0, top_right.Width, top_right.Height), Color.White);
+        Raylib.ImageDraw(ref destination, topRight, new Rectangle(0, 0, topRight.Width, topRight.Height), new Rectangle(width - topRight.Width, 0, topRight.Width, topRight.Height), Color.White);
 
         // Left-right border
-        var sideRows = (Height - top_left.Height - wp.OuterBottomLeft.Height) / wp.OuterLeft.Height + 1;
+        var sideRows = (height - topLeft.Height - wp.OuterBottomLeft.Height) / wp.OuterLeft.Height + 1;
         for (int row = 0; row < sideRows; row++)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterLeft, new Rectangle(0, 0, wp.OuterLeft.Width, wp.OuterLeft.Height), new Rectangle(0, top_left.Height + wp.OuterLeft.Height * row, wp.OuterLeft.Width, wp.OuterLeft.Height), Color.White);
-            Raylib.ImageDraw(ref destination, wp.OuterRight, new Rectangle(0, 0, wp.OuterRight.Width, wp.OuterRight.Height), new Rectangle(Width - wp.OuterRight.Width, top_right.Height + wp.OuterRight.Height * row, wp.OuterRight.Width, wp.OuterRight.Height), Color.White);
+            Raylib.ImageDraw(ref destination, wp.OuterLeft, new Rectangle(0, 0, wp.OuterLeft.Width, wp.OuterLeft.Height), new Rectangle(0, topLeft.Height + wp.OuterLeft.Height * row, wp.OuterLeft.Width, wp.OuterLeft.Height), Color.White);
+            Raylib.ImageDraw(ref destination, wp.OuterRight, new Rectangle(0, 0, wp.OuterRight.Width, wp.OuterRight.Height), new Rectangle(width - wp.OuterRight.Width, topRight.Height + wp.OuterRight.Height * row, wp.OuterRight.Width, wp.OuterRight.Height), Color.White);
         }
 
         // Bottom border
-        Raylib.ImageDraw(ref destination, wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, Height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.White);
-        var btmCols = (Width - wp.OuterBottomLeft.Width - wp.OuterBottomRight.Width) / wp.OuterBottom.Width + 1;
+        Raylib.ImageDraw(ref destination, wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.White);
+        var btmCols = (width - wp.OuterBottomLeft.Width - wp.OuterBottomRight.Width) / wp.OuterBottom.Width + 1;
         for (int col = 0; col < btmCols; col++)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterBottom, new Rectangle(0, 0, wp.OuterBottom.Width, wp.OuterBottom.Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom.Width * col, Height - wp.OuterBottom.Height, wp.OuterBottom.Width, wp.OuterBottom.Height), Color.White);
+            Raylib.ImageDraw(ref destination, wp.OuterBottom, new Rectangle(0, 0, wp.OuterBottom.Width, wp.OuterBottom.Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom.Width * col, height - wp.OuterBottom.Height, wp.OuterBottom.Width, wp.OuterBottom.Height), Color.White);
         }
-        Raylib.ImageDraw(ref destination, wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), new Rectangle(Width - wp.OuterBottomRight.Width, Height - wp.OuterBottomRight.Height, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), Color.White);
+        Raylib.ImageDraw(ref destination, wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), new Rectangle(width - wp.OuterBottomRight.Width, height - wp.OuterBottomRight.Height, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), Color.White);
     }
 
-    public override void DrawBorderLines(ref Image destination, int Height, int Width, Padding padding) { }
+    public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding) { }
 }

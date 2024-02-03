@@ -16,13 +16,13 @@ public class SleepOrder : Order
 
     public override void Update()
     {
-        SetCommandState(_gameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()
     {
-        var game = _gameScreen.Game;
-        _gameScreen.Player.ActiveUnit?.Sleep();
+        var game = GameScreen.Game;
+        GameScreen.Player.ActiveUnit?.Sleep();
         game.ChooseNextUnit();
     }
 }

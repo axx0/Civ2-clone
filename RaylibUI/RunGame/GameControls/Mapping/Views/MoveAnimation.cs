@@ -14,7 +14,7 @@ internal class MoveAnimation : BaseGameView
         var activeInterface = gameScreen.Main.ActiveInterface;
         var activeUnit = moveEvent.Unit;
         var noFramesForOneMove = 8;
-        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
+        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXy[0], activeUnit.Y - activeUnit.PrevXy[1] };
         var map = activeUnit.CurrentLocation.Map;
         var viewElements = new List<IViewElement>();
         ImageUtils.GetUnitTextures(activeUnit, activeInterface, viewElements,

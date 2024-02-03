@@ -321,16 +321,16 @@ public abstract class Civ2Interface : IUserInterface
 
     public abstract int UnitsRows { get; }
     public abstract int UnitsPxHeight { get; }
-    public abstract Dictionary<string, List<ImageProps>> UnitPICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> CitiesPICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> UnitPiCprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> CitiesPiCprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> TilePiCprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> OverlayPiCprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> IconsPiCprops { get; set; }
     public abstract string? GetFallbackPath(string root, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
-    public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int Height, int Width, Padding padding);
-    public abstract void DrawBorderLines(ref Image destination, int Height, int Width, Padding padding);
+    public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding);
+    public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding);
     public abstract Padding GetPadding(float headerLabelHeight, bool footer);
     public abstract bool IsButtonInOuterPanel { get; }
 }

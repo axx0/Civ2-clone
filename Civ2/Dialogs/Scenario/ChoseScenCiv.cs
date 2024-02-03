@@ -30,7 +30,7 @@ public class ChoseScenCiv : ICivDialogHandler
             return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
         }
 
-        Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).PlayerType = PlayerType.AI;
+        Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).PlayerType = PlayerType.Ai;
         Game.Instance.AllCivilizations[result.SelectedIndex + 1].PlayerType = PlayerType.Local;
         return civDialogHandlers[ScenDifficulty.Title].Show(civ2Interface); ;
     }

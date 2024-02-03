@@ -43,7 +43,7 @@ public class BuildCity : Order
                 SetCommandState(errorPopupKeyword: "CITYATSEA");
             }else if (activeTile.CityHere != null)
             {
-                SetCommandState(activeTile.CityHere.Size < _gameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity) , errorPopupKeyword: "ONLY10");
+                SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity) , errorPopupKeyword: "ONLY10");
             }else if (activeTile.Neighbours().Any(t => t.IsCityPresent))
             {
                 SetCommandState(errorPopupKeyword: "ADJACENTCITY");
@@ -59,23 +59,23 @@ public class BuildCity : Order
     {
         if (_player.ActiveUnit.CurrentLocation.IsCityPresent)
         {
-            _player.ActiveTile.CityHere.GrowCity(_gameScreen.Game);
+            _player.ActiveTile.CityHere.GrowCity(GameScreen.Game);
             var unit = _player.ActiveUnit;
             unit.Dead = true;
             unit.MovePointsLost = unit.MovePoints;
-            _gameScreen.Game.ChooseNextUnit();
+            GameScreen.Game.ChooseNextUnit();
         }
         else
         {
             
-            var name = CityActions.GetCityName(_player.Civilization, _gameScreen.Game);
-            _gameScreen.ShowPopup("NAMECITY", handleButtonClick: Build,
+            var name = CityActions.GetCityName(_player.Civilization, GameScreen.Game);
+            GameScreen.ShowPopup("NAMECITY", handleButtonClick: Build,
                 
                 textBoxes: new List<TextBoxDefinition>
             {
                 new()
                 {
-                    index = 0,
+                    Index = 0,
                     InitialValue = name,
                     Name = CityName,
                     Width = 225
@@ -88,7 +88,7 @@ public class BuildCity : Order
     {
         if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name))
         {
-            CityActions.BuildCity(_player.ActiveTile, _player.ActiveUnit, _gameScreen.Game, name);
+            CityActions.BuildCity(_player.ActiveTile, _player.ActiveUnit, GameScreen.Game, name);
         }
     }
 }

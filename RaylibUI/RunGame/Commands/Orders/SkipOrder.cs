@@ -17,12 +17,12 @@ public class SkipOrder : Order
 
     public override void Update()
     {
-        SetCommandState(_gameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()
     {
-        _gameScreen.Game.ActiveUnit?.SkipTurn();
-        _gameScreen.Game.ChooseNextUnit();
+        GameScreen.Game.ActiveUnit?.SkipTurn();
+        GameScreen.Game.ChooseNextUnit();
     }
 }

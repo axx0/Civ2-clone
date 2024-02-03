@@ -20,7 +20,7 @@ public class UnloadOrder : Order
 
     public override void Update()
     {
-        var activeUnit = _gameScreen.Player.ActiveUnit;
+        var activeUnit = GameScreen.Player.ActiveUnit;
         if (activeUnit == null)
         {
             SetCommandState(CommandStatus.Invalid);
@@ -35,7 +35,7 @@ public class UnloadOrder : Order
 
     public override void Action()
     {
-        var player = _gameScreen.Player;
+        var player = GameScreen.Player;
         Debug.Assert(player.ActiveUnit != null, "player.ActiveUnit != null");
         player.ActiveUnit.CarriedUnits.ForEach(u =>
         {

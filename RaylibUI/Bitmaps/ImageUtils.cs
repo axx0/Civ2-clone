@@ -23,16 +23,16 @@ public static class ImageUtils
     private static Image _outerWallpaper;
     private static Image _outerTitleTopWallpaper;
 
-    public static void PaintPanelBorders(IUserInterface active, ref Image image, int Width, int Height, Padding padding)
+    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding)
     {
-        active.DrawBorderWallpaper(Wallpaper, ref image, Height, Width, padding);
-        active.DrawBorderLines(ref image, Height, Width, padding);
+        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding);
+        active.DrawBorderLines(ref image, height, width, padding);
     }
 
-    public static void DrawTiledImage(Image source,ref Image destination, int Height, int Width)
+    public static void DrawTiledImage(Image source,ref Image destination, int height, int width)
     {  
-        int rows = Height / source.Height + 1;
-        var columns = Width / source.Width + 1;
+        int rows = height / source.Height + 1;
+        var columns = width / source.Width + 1;
         var sourceRec = new Rectangle { Height = source.Height, Width = source.Width };
         for (int row = 0; row < rows; row++)
         {
@@ -43,13 +43,13 @@ public static class ImageUtils
         }
     }
     
-    public static void DrawTiledImage(Image source,ref Image destination, int Height, int Width, Padding padding)
+    public static void DrawTiledImage(Image source,ref Image destination, int height, int width, Padding padding)
     {
-        var totalColumns = (Width - padding.Left - padding.Right) / source.Width;
-        var totalRows = (Height - padding.Top - padding.Bottom) / source.Height;
+        var totalColumns = (width - padding.Left - padding.Right) / source.Width;
+        var totalRows = (height - padding.Top - padding.Bottom) / source.Height;
 
         var rightEdge = padding.Left + (source.Width * totalColumns);
-        var rightWidth = Width - padding.Right - rightEdge;
+        var rightWidth = width - padding.Right - rightEdge;
         var rightSrcRect = new Rectangle { Height = source.Height, Width = rightWidth };
 
         var srcRec = new Rectangle { Height = source.Height, Width = source.Width };
@@ -69,7 +69,7 @@ public static class ImageUtils
         }
 
         var bottomEdge = padding.Top + totalRows * source.Height;
-        var bottomWidth = Height - padding.Bottom - bottomEdge;
+        var bottomWidth = height - padding.Bottom - bottomEdge;
         if (bottomWidth > 0)
         {
             var bottomSourceRect = new Rectangle { Height = bottomWidth, Width = source.Width };
@@ -86,145 +86,145 @@ public static class ImageUtils
         }
     }
 
-    public static Image NewImage(int Width, int h)
+    public static Image NewImage(int width, int h)
     {
         var image = Raylib.LoadImage("blank.png");
         
-        Raylib.ImageResize(ref image, Width, h);
+        Raylib.ImageResize(ref image, width, h);
         return image;
     }
 
     /// <summary>
     /// Paint base screen of a dialog
     /// </summary>
-    /// <param name="Width">Width of dialog</param>
-    /// <param name="Height"></param>
+    /// <param name="width">Width of dialog</param>
+    /// <param name="height"></param>
     /// <param name="padding"></param>
     /// <param name="centerImage">Image to place in centre of dialog</param>
     /// <param name="noWallpaper">true to not draw inner wallpaper defaults to false</param>
     //public static Texture2D? PaintDialogBase(IUserInterface active, int Width, int Height, int top, int paddingBtm, int paddingSide, Image? centerImage = null, bool noWallpaper = false)
-    public static Texture2D? PaintDialogBase(IUserInterface active, int Width, int Height, Padding padding, Image? centerImage = null, bool noWallpaper = false)
+    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false)
     {
         // Outer wallpaper
-        var image = NewImage(Width, Height);
-        PaintPanelBorders(active, ref image, Width, Height, padding);
+        var image = NewImage(width, height);
+        PaintPanelBorders(active, ref image, width, height, padding);
         if (centerImage != null)
         {
-            var innerWidth = Math.Min(Width - padding.Left - padding.Right, centerImage.Value.Width);
-            var innerHeight = Math.Min(Height - padding.Top - padding.Bottom, centerImage.Value.Height);
+            var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
+            var innerHeight = Math.Min(height - padding.Top - padding.Bottom, centerImage.Value.Height);
             Raylib.ImageDraw( ref image, centerImage.Value, new Rectangle(0,0,innerWidth,innerHeight), new Rectangle(padding.Left, padding.Top, innerWidth,innerHeight), Color.White);
         }
         else if(!noWallpaper)
         {
-            DrawTiledImage(Wallpaper.Inner, ref image, Height, Width, padding);
+            DrawTiledImage(Wallpaper.Inner, ref image, height, width, padding);
         }
 
         return Raylib.LoadTextureFromImage(image);
     }
 
-    public static void PaintRadioButton(int X, int Y, bool isSelected)
+    public static void PaintRadioButton(int x, int y, bool isSelected)
     {
-        Raylib.DrawCircle(X + 8, Y + 8, 8.0f, new Color(128, 128, 128, 255));
-        Raylib.DrawCircleLines(X + 8 + 1, Y + 8 + 1, 8.0f, Color.Black);
-        Raylib.DrawRectangle(X + 1, Y + 4, 2, 3, Color.Black);
-        Raylib.DrawRectangle(X + 3, Y + 2, 2, 2, Color.Black);
-        Raylib.DrawRectangle(X + 6, Y + 1, 1, 1, Color.Black);
-        Raylib.DrawRectangle(X + 11, Y + 15, 3, 2, Color.Black);
-        Raylib.DrawRectangle(X + 14, Y + 13, 2, 2, Color.Black);
-        Raylib.DrawRectangle(X + 16, Y + 11, 1, 1, Color.Black);
-        Raylib.DrawCircleLines(X + 8, Y + 8, 8.0f, Color.White);
+        Raylib.DrawCircle(x + 8, y + 8, 8.0f, new Color(128, 128, 128, 255));
+        Raylib.DrawCircleLines(x + 8 + 1, y + 8 + 1, 8.0f, Color.Black);
+        Raylib.DrawRectangle(x + 1, y + 4, 2, 3, Color.Black);
+        Raylib.DrawRectangle(x + 3, y + 2, 2, 2, Color.Black);
+        Raylib.DrawRectangle(x + 6, y + 1, 1, 1, Color.Black);
+        Raylib.DrawRectangle(x + 11, y + 15, 3, 2, Color.Black);
+        Raylib.DrawRectangle(x + 14, y + 13, 2, 2, Color.Black);
+        Raylib.DrawRectangle(x + 16, y + 11, 1, 1, Color.Black);
+        Raylib.DrawCircleLines(x + 8, y + 8, 8.0f, Color.White);
 
         if (!isSelected)
         {
-            Raylib.DrawRectangle(X + 6, Y + 4, 5, 9, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 4, Y + 6, 9, 5, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 5, Y + 11, 1, 1, Color.White);
-            Raylib.DrawRectangle(X + 4, Y + 6, 1, 5, Color.White);
-            Raylib.DrawRectangle(X + 5, Y + 5, 1, 2, Color.White);
-            Raylib.DrawRectangle(X + 6, Y + 4, 1, 2, Color.White);
-            Raylib.DrawRectangle(X + 7, Y + 4, 4, 1, Color.White);
-            Raylib.DrawRectangle(X + 11, Y + 5, 1, 1, Color.White);
-            Raylib.DrawRectangle(X + 11, Y + 11, 1, 1, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 7, Y + 13, 4, 1, Color.White);
-            Raylib.DrawRectangle(X + 11, Y + 12, 1, 1, Color.White);
-            Raylib.DrawRectangle(X + 12, Y + 11, 1, 1, Color.White);
-            Raylib.DrawRectangle(X + 13, Y + 7, 1, 4, Color.White);
+            Raylib.DrawRectangle(x + 6, y + 4, 5, 9, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 4, y + 6, 9, 5, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 5, y + 11, 1, 1, Color.White);
+            Raylib.DrawRectangle(x + 4, y + 6, 1, 5, Color.White);
+            Raylib.DrawRectangle(x + 5, y + 5, 1, 2, Color.White);
+            Raylib.DrawRectangle(x + 6, y + 4, 1, 2, Color.White);
+            Raylib.DrawRectangle(x + 7, y + 4, 4, 1, Color.White);
+            Raylib.DrawRectangle(x + 11, y + 5, 1, 1, Color.White);
+            Raylib.DrawRectangle(x + 11, y + 11, 1, 1, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 7, y + 13, 4, 1, Color.White);
+            Raylib.DrawRectangle(x + 11, y + 12, 1, 1, Color.White);
+            Raylib.DrawRectangle(x + 12, y + 11, 1, 1, Color.White);
+            Raylib.DrawRectangle(x + 13, y + 7, 1, 4, Color.White);
         }
         else
         {
-            Raylib.DrawRectangle(X + 7, Y + 4, 4, 10, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 4, Y + 7, 10, 4, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 6, Y + 5, 6, 8, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 5, Y + 6, 8, 6, new Color(192, 192, 192, 255));
-            Raylib.DrawRectangle(X + 7, Y + 6, 4, 6, Color.Black);
-            Raylib.DrawRectangle(X + 6, Y + 7, 6, 4, Color.Black);
+            Raylib.DrawRectangle(x + 7, y + 4, 4, 10, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 4, y + 7, 10, 4, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 6, y + 5, 6, 8, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 5, y + 6, 8, 6, new Color(192, 192, 192, 255));
+            Raylib.DrawRectangle(x + 7, y + 6, 4, 6, Color.Black);
+            Raylib.DrawRectangle(x + 6, y + 7, 6, 4, Color.Black);
         }
     }
 
-    public static void PaintCheckbox(int X, int Y, bool isChecked)
+    public static void PaintCheckbox(int x, int y, bool isChecked)
     {
-        Raylib.DrawRectangle(X + 3, Y + 2, 15, 17, Color.White);
-        Raylib.DrawRectangle(X + 2, Y + 3, 17, 15, Color.White);
-        Raylib.DrawRectangle(X + 4, Y + 3, 13, 15, new Color(128, 128, 128, 255));
-        Raylib.DrawRectangle(X + 3, Y + 4, 15, 13, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(X + 4, Y + 3, X + 16, Y + 3, Color.Black);
-        Raylib.DrawLine(X + 3, Y + 4, X + 3, Y + 16, Color.Black);
-        Raylib.DrawLine(X + 3, Y + 4, X + 4, Y + 4, Color.Black);
-        Raylib.DrawLine(X + 4, Y + 19, X + 18, Y + 19, Color.Black);
-        Raylib.DrawLine(X + 18, Y + 18, X + 19, Y + 18, Color.Black);
-        Raylib.DrawLine(X + 19, Y + 4, X + 19, Y + 17, Color.Black);
+        Raylib.DrawRectangle(x + 3, y + 2, 15, 17, Color.White);
+        Raylib.DrawRectangle(x + 2, y + 3, 17, 15, Color.White);
+        Raylib.DrawRectangle(x + 4, y + 3, 13, 15, new Color(128, 128, 128, 255));
+        Raylib.DrawRectangle(x + 3, y + 4, 15, 13, new Color(128, 128, 128, 255));
+        Raylib.DrawLine(x + 4, y + 3, x + 16, y + 3, Color.Black);
+        Raylib.DrawLine(x + 3, y + 4, x + 3, y + 16, Color.Black);
+        Raylib.DrawLine(x + 3, y + 4, x + 4, y + 4, Color.Black);
+        Raylib.DrawLine(x + 4, y + 19, x + 18, y + 19, Color.Black);
+        Raylib.DrawLine(x + 18, y + 18, x + 19, y + 18, Color.Black);
+        Raylib.DrawLine(x + 19, y + 4, x + 19, y + 17, Color.Black);
 
         if (isChecked)
         {
-            Raylib.DrawLine(X + 21, Y + 3, X + 25, Y + 3, Color.Black);
-            Raylib.DrawLine(X + 20, Y + 4, X + 23, Y + 4, Color.Black);
-            Raylib.DrawLine(X + 19, Y + 5, X + 21, Y + 5, Color.Black);
-            Raylib.DrawLine(X + 18, Y + 6, X + 20, Y + 6, Color.Black);
-            Raylib.DrawLine(X + 17, Y + 7, X + 19, Y + 7, Color.Black);
-            Raylib.DrawLine(X + 16, Y + 8, X + 18, Y + 8, Color.Black);
-            Raylib.DrawLine(X + 15, Y + 9, X + 17, Y + 9, Color.Black);
-            Raylib.DrawLine(X + 5, Y + 10, X + 6, Y + 10, Color.Black);
-            Raylib.DrawLine(X + 14, Y + 10, X + 16, Y + 10, Color.Black);
-            Raylib.DrawLine(X + 6, Y + 11, X + 7, Y + 11, Color.Black);
-            Raylib.DrawLine(X + 14, Y + 11, X + 16, Y + 11, Color.Black);
-            Raylib.DrawLine(X + 7, Y + 12, X + 8, Y + 12, Color.Black);
-            Raylib.DrawLine(X + 13, Y + 12, X + 15, Y + 12, Color.Black);
-            Raylib.DrawLine(X + 8, Y + 13, X + 14, Y + 13, Color.Black);
-            Raylib.DrawLine(X + 12, Y + 13, X + 15, Y + 13, Color.Black);
-            Raylib.DrawLine(X + 12, Y + 14, X + 14, Y + 14, Color.Black);
-            Raylib.DrawLine(X + 9, Y + 15, X + 12, Y + 15, Color.Black);
-            Raylib.DrawLine(X + 10, Y + 16, X + 12, Y + 16, Color.Black);
-            Raylib.DrawLine(X + 11, Y + 16, X + 11, Y + 17, Color.Black);
-            Raylib.DrawLine(X + 20, Y + 1, X + 22, Y + 1, Color.White);
-            Raylib.DrawLine(X + 19, Y + 2, X + 20, Y + 2, Color.White);
-            Raylib.DrawLine(X + 20, Y + 2, X + 22, Y + 2, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 18, Y + 3, X + 19, Y + 3, Color.White);
-            Raylib.DrawLine(X + 19, Y + 3, X + 20, Y + 3, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 17, Y + 4, X + 18, Y + 4, Color.White);
-            Raylib.DrawLine(X + 18, Y + 4, X + 19, Y + 4, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 16, Y + 5, X + 17, Y + 5, Color.White);
-            Raylib.DrawLine(X + 17, Y + 5, X + 18, Y + 5, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 15, Y + 6, X + 16, Y + 6, Color.White);
-            Raylib.DrawLine(X + 16, Y + 6, X + 17, Y + 6, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 14, Y + 7, X + 15, Y + 7, Color.White);
-            Raylib.DrawLine(X + 15, Y + 7, X + 16, Y + 7, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 4, Y + 8, X + 5, Y + 8, Color.White);
-            Raylib.DrawLine(X + 5, Y + 8, X + 5, Y + 9, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 13, Y + 8, X + 14, Y + 8, Color.White);
-            Raylib.DrawLine(X + 14, Y + 8, X + 15, Y + 8, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 6, Y + 9, X + 6, Y + 10, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 13, Y + 9, X + 14, Y + 9, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 7, Y + 10, X + 7, Y + 11, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 12, Y + 10, X + 13, Y + 10, Color.White);
-            Raylib.DrawLine(X + 13, Y + 10, X + 13, Y + 11, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 8, Y + 11, X + 8, Y + 12, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 11, Y + 11, X + 12, Y + 11, Color.White);
-            Raylib.DrawLine(X + 12, Y + 11, X + 13, Y + 11, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 9, Y + 12, X + 9, Y + 13, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 11, Y + 12, X + 12, Y + 12, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 9, Y + 13, X + 11, Y + 13, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 9, Y + 14, X + 11, Y + 14, new Color(192, 192, 192, 255));
-            Raylib.DrawLine(X + 10, Y + 14, X + 10, Y + 15, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 21, y + 3, x + 25, y + 3, Color.Black);
+            Raylib.DrawLine(x + 20, y + 4, x + 23, y + 4, Color.Black);
+            Raylib.DrawLine(x + 19, y + 5, x + 21, y + 5, Color.Black);
+            Raylib.DrawLine(x + 18, y + 6, x + 20, y + 6, Color.Black);
+            Raylib.DrawLine(x + 17, y + 7, x + 19, y + 7, Color.Black);
+            Raylib.DrawLine(x + 16, y + 8, x + 18, y + 8, Color.Black);
+            Raylib.DrawLine(x + 15, y + 9, x + 17, y + 9, Color.Black);
+            Raylib.DrawLine(x + 5, y + 10, x + 6, y + 10, Color.Black);
+            Raylib.DrawLine(x + 14, y + 10, x + 16, y + 10, Color.Black);
+            Raylib.DrawLine(x + 6, y + 11, x + 7, y + 11, Color.Black);
+            Raylib.DrawLine(x + 14, y + 11, x + 16, y + 11, Color.Black);
+            Raylib.DrawLine(x + 7, y + 12, x + 8, y + 12, Color.Black);
+            Raylib.DrawLine(x + 13, y + 12, x + 15, y + 12, Color.Black);
+            Raylib.DrawLine(x + 8, y + 13, x + 14, y + 13, Color.Black);
+            Raylib.DrawLine(x + 12, y + 13, x + 15, y + 13, Color.Black);
+            Raylib.DrawLine(x + 12, y + 14, x + 14, y + 14, Color.Black);
+            Raylib.DrawLine(x + 9, y + 15, x + 12, y + 15, Color.Black);
+            Raylib.DrawLine(x + 10, y + 16, x + 12, y + 16, Color.Black);
+            Raylib.DrawLine(x + 11, y + 16, x + 11, y + 17, Color.Black);
+            Raylib.DrawLine(x + 20, y + 1, x + 22, y + 1, Color.White);
+            Raylib.DrawLine(x + 19, y + 2, x + 20, y + 2, Color.White);
+            Raylib.DrawLine(x + 20, y + 2, x + 22, y + 2, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 18, y + 3, x + 19, y + 3, Color.White);
+            Raylib.DrawLine(x + 19, y + 3, x + 20, y + 3, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 17, y + 4, x + 18, y + 4, Color.White);
+            Raylib.DrawLine(x + 18, y + 4, x + 19, y + 4, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 16, y + 5, x + 17, y + 5, Color.White);
+            Raylib.DrawLine(x + 17, y + 5, x + 18, y + 5, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 15, y + 6, x + 16, y + 6, Color.White);
+            Raylib.DrawLine(x + 16, y + 6, x + 17, y + 6, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 14, y + 7, x + 15, y + 7, Color.White);
+            Raylib.DrawLine(x + 15, y + 7, x + 16, y + 7, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 4, y + 8, x + 5, y + 8, Color.White);
+            Raylib.DrawLine(x + 5, y + 8, x + 5, y + 9, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 13, y + 8, x + 14, y + 8, Color.White);
+            Raylib.DrawLine(x + 14, y + 8, x + 15, y + 8, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 6, y + 9, x + 6, y + 10, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 13, y + 9, x + 14, y + 9, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 7, y + 10, x + 7, y + 11, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 12, y + 10, x + 13, y + 10, Color.White);
+            Raylib.DrawLine(x + 13, y + 10, x + 13, y + 11, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 8, y + 11, x + 8, y + 12, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 11, y + 11, x + 12, y + 11, Color.White);
+            Raylib.DrawLine(x + 12, y + 11, x + 13, y + 11, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 9, y + 12, x + 9, y + 13, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 11, y + 12, x + 12, y + 12, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 9, y + 13, x + 11, y + 13, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 9, y + 14, x + 11, y + 14, new Color(192, 192, 192, 255));
+            Raylib.DrawLine(x + 10, y + 14, x + 10, y + 15, new Color(192, 192, 192, 255));
         }
     }
 
@@ -266,7 +266,7 @@ public static class ImageUtils
 
     public static Texture2D[] GetOptionImages(bool checkbox)
     {
-        var images = checkbox ? Look.CheckBoxes : Look.RadioButtons;
+        var images = checkbox ? _look.CheckBoxes : _look.RadioButtons;
         return images.Select(TextureCache.GetImage).ToArray();
     }
     
@@ -297,10 +297,10 @@ public static class ImageUtils
             Wallpaper.Inner = Images.ExtractBitmap(active.Look.Inner);
         }
 
-        Look = active.Look;
+        _look = active.Look;
     }
 
-    private static InterfaceStyle Look;
+    private static InterfaceStyle _look;
 
     public static Image[] GetScrollImages(int dim)
     {
@@ -439,7 +439,7 @@ public static class ImageUtils
     //     return image;
     // }
 
-    public static Image GetShieldWithHP(Image shield, Unit unit)
+    public static Image GetShieldWithHp(Image shield, Unit unit)
     {
         var hpShield = Raylib.ImageCopy(shield);
         var hpBarX = (int)Math.Floor((float)unit.RemainingHitpoints * 12 / unit.HitpointsBase);

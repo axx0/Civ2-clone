@@ -9,7 +9,7 @@ public class RectangleElement : IViewElement
     protected Color Color;
     protected Vector2 Size;
 
-    public RectangleElement(Vector2 location, Tile tile, int Width, int Height, Color color, Vector2 offset ) : this(location,tile, new Vector2(Width, Height), color, offset)
+    public RectangleElement(Vector2 location, Tile tile, int width, int height, Color color, Vector2 offset ) : this(location,tile, new Vector2(width, height), color, offset)
     {
         
     }

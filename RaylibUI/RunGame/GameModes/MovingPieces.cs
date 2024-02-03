@@ -256,7 +256,7 @@ public class MovingPieces : IGameMode
             {
                 Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y,bounds.Width - 80 , 18)
             });
-            controls.Add(new LabelControl(_gameScreen, _gameScreen.Game.Order2string(unit.Order), true)
+            controls.Add(new LabelControl(_gameScreen, _gameScreen.Game.Order2String(unit.Order), true)
             {
                 Bounds = new Rectangle(unitImage.Location.X + 80, unitImage.Location.Y + 18,bounds.Width - 80 , 18)
             });

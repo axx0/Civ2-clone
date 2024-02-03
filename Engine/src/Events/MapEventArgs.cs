@@ -10,23 +10,23 @@ namespace Civ2engine.Events
         public MapEventType EventType { get; }
         public List<Tile> TilesChanged { get; set; }
 
-        public int[] CentrXY, MapStartXY, MapDrawSq;
+        public int[] CentrXy, MapStartXy, MapDrawSq;
 
         public MapEventArgs(MapEventType eventType)
         {
             EventType = eventType;
         }
 
-        public MapEventArgs(MapEventType eventType, int[] centrXY)
+        public MapEventArgs(MapEventType eventType, int[] centrXy)
         {
             EventType = eventType;
-            CentrXY = centrXY;
+            CentrXy = centrXy;
         }
 
-        public MapEventArgs(MapEventType eventType, int[] mapStartXY, int[] mapDrawSq)
+        public MapEventArgs(MapEventType eventType, int[] mapStartXy, int[] mapDrawSq)
         {
             EventType = eventType;
-            MapStartXY = mapStartXY;
+            MapStartXy = mapStartXy;
             MapDrawSq = mapDrawSq;
         }
     }

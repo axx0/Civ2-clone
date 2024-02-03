@@ -42,9 +42,9 @@ public class CityTileMap : BaseControl
 
         var zeroY = city.Location.Y - 3;
         var (ydim, yrem )= Math.DivRem((int)restoreScale.Y, dim.HalfHeight);
-        var Y = zeroY + ydim;
+        var y = zeroY + ydim;
         
-        var odd = Y % 2 == city.Location.Odd;
+        var odd = y % 2 == city.Location.Odd;
 
         if (odd)
         {
@@ -55,42 +55,42 @@ public class CityTileMap : BaseControl
         var zeroX = city.Location.XIndex - 1;
 
         var (xdim, xrem )= Math.DivRem((int)restoreScale.X, dim.TileWidth);
-        var X = zeroX + xdim;
+        var x = zeroX + xdim;
         
-        if (X < 0)
+        if (x < 0)
         {
             if (city.Location.Map.Flat)
             {
-                X = 0;
+                x = 0;
             }
             else
             {
-                X += dim.TotalWidth;
+                x += dim.TotalWidth;
             }
         }
-        else if (X > dim.TotalWidth)
+        else if (x > dim.TotalWidth)
         {
             if (city.Location.Map.Flat)
             {
-                X = dim.TotalWidth - 1;
+                x = dim.TotalWidth - 1;
             }
             else
             {
-                X -= dim.TotalWidth;
+                x -= dim.TotalWidth;
             }
         }
 
-        if (xrem < dim.HalfWidth && Y > 0)
+        if (xrem < dim.HalfWidth && y > 0)
         {
             if (yrem *  dim.HalfWidth + xrem *  dim.HalfHeight < dim.DiagonalCut)
             {
-                Y -= 1;
+                y -= 1;
                 if (!odd)
                 {
-                    X -= 1;
-                    if (X < 0)
+                    x -= 1;
+                    if (x < 0)
                     {
-                        X = city.Location.Map.Flat ? 0 : city.Location.Map.Tile.GetLength(0) - 1;
+                        x = city.Location.Map.Flat ? 0 : city.Location.Map.Tile.GetLength(0) - 1;
                     }
                 }
             }
@@ -99,35 +99,35 @@ public class CityTileMap : BaseControl
         {
             if ((dim.TileWidth - xrem) *  dim.HalfHeight + yrem *  dim.HalfWidth < dim.DiagonalCut)
             {
-                Y -= 1;
+                y -= 1;
                 if (odd)
                 {
-                    X += 1;
-                    if (X == city.Location.Map.Tile.GetLength(0))
+                    x += 1;
+                    if (x == city.Location.Map.Tile.GetLength(0))
                     {
                         if (city.Location.Map.Flat)
                         {
-                            X -= 1;
+                            x -= 1;
                         }
                         else
                         {
-                            X = 0;
+                            x = 0;
                         }
                     }
                 }
             }
         }
 
-        if (city.Location.Odd == 0 && Y % 2 == 1)
+        if (city.Location.Odd == 0 && y % 2 == 1)
         {
             //I don't know why this adjustment is needed, there's probably a bug earlier in the function
-            X -= 1;
+            x -= 1;
         }
 
         //If we don't have a valid tile return 
-        if (0 > Y || Y >= city.Location.Map.Tile.GetLength(1)) return;
+        if (0 > y || y >= city.Location.Map.Tile.GetLength(1)) return;
         
-        var tile = city.Location.Map.Tile[X, Y];
+        var tile = city.Location.Map.Tile[x, y];
         // if the tile is outside the city radius do nothing
         if (!city.Location.CityRadius().Contains(tile)) return;
 
@@ -200,11 +200,11 @@ public class CityTileMap : BaseControl
         var tileCache = gameScreen.TileCache;
 
         var dim = tileCache.GetDimensions(city.Location.Map);
-        var Width = dim.TileWidth * 4;
-        var Height = dim.TileHeight * 4;
-        var xcentre = Width / 2 - dim.HalfWidth;
-        var ycentre = Height / 2 - dim.HalfHeight;
-        var image = ImageUtils.NewImage(Width, Height);
+        var width = dim.TileWidth * 4;
+        var height = dim.TileHeight * 4;
+        var xcentre = width / 2 - dim.HalfWidth;
+        var ycentre = height / 2 - dim.HalfHeight;
+        var image = ImageUtils.NewImage(width, height);
 
         var cityData = new List<Element>();
         var units = new List<Element>();
@@ -323,8 +323,8 @@ public class CityTileMap : BaseControl
         }
 
         _texture = Raylib.LoadTextureFromImage(image);
-        _scaleFactor = Width / (float)_texture.Value.Width;
-        _offset = new Vector2(0, (Height - Height * _scaleFactor) / 2f);
+        _scaleFactor = width / (float)_texture.Value.Width;
+        _offset = new Vector2(0, (height - height * _scaleFactor) / 2f);
         Raylib.UnloadImage(image);
     }
 }

@@ -110,7 +110,7 @@ namespace Civ2engine
         public byte[] TransporterLook { get; set; }
 
         // Map data
-        public short MapXdim_x2 { get; set; }
+        public short MapXdimX2 { get; set; }
         public short MapYdim { get; set; }
         public short MapArea { get; set; }
         public short MapResourceSeed { get; set; }
@@ -176,10 +176,10 @@ namespace Civ2engine
         public short[] UnitOrientation { get; set; }  // TOT only
 
         // Unit transport settings (TOT only)
-        public short[] UnitTransport_Relationship { get; set; }    // TOT only
-        public short[] UnitTransport_BuildTransportSiteMask { get; set; }    // TOT only
-        public short[] UnitTransport_UseTransportSiteMask { get; set; }    // TOT only
-        public short[] UnitTransport_NativeTransportAbilityMask { get; set; }    // TOT only
+        public short[] UnitTransportRelationship { get; set; }    // TOT only
+        public short[] UnitTransportBuildTransportSiteMask { get; set; }    // TOT only
+        public short[] UnitTransportUseTransportSiteMask { get; set; }    // TOT only
+        public short[] UnitTransportNativeTransportAbilityMask { get; set; }    // TOT only
 
         // Cities
         public short[] CityXloc { get; set; }
@@ -229,8 +229,8 @@ namespace Civ2engine
         public byte[] CitiesBuiltSofar { get; set; }
 
         // Other data        
-        public short[] ActiveCursorXY { get; set; }
-        public int[] ClickedXY { get; set; }
+        public short[] ActiveCursorXy { get; set; }
+        public int[] ClickedXy { get; set; }
         public short Zoom { get; set; }
 
         // Scenario parameters
@@ -242,8 +242,8 @@ namespace Civ2engine
         public bool ElliminatePollution { get; set; }
         public bool TerrainAnimationLockout { get; set; }   // TOT only
         public bool UnitAnimationLockout { get; set; }   // TOT only
-        public bool SPRfileOverride { get; set; }
-        public bool SpecialWWIIonlyAI { get; set; }
+        public bool SpRfileOverride { get; set; }
+        public bool SpecialWwiIonlyAi { get; set; }
         public string ScenarioName { get; set; }
         public short TechParadigm { get; set; }
         public short TurnYearIncrement { get; set; }

@@ -19,5 +19,5 @@ public class UnitHidingImprovement : ForegroundImprovement
 {
     public IImageSource UnitImage { get; set; }
     
-    public UnitGAS UnitDomain { get; set; }
+    public UnitGas UnitDomain { get; set; }
 }
