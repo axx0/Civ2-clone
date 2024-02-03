@@ -326,11 +326,11 @@ public abstract class Civ2Interface : IUserInterface
     public abstract Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
     public abstract Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
     public abstract Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
-    public abstract string? GetFallbackPath(string root, int gameType);
+    public abstract List<string> GetFallbackPaths(string root, string savDir, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
-    public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding);
-    public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding);
+    public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
+    public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract Padding GetPadding(float headerLabelHeight, bool footer);
     public abstract bool IsButtonInOuterPanel { get; }
 }

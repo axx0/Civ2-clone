@@ -27,12 +27,12 @@ public class LoadGame : FileDialogHandler
         var root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
         var savName = Path.GetFileName(fileName);
         GameData gameData = Read.ReadSavFile(savDirectory, savName);
-        var fallbackPath = civ2Interface.GetFallbackPath(root, gameData.GameType);
+        var fallbackPaths = civ2Interface.GetFallbackPaths(root, savDirectory, gameData.GameType);
 
         var ruleSet = new Ruleset
         {
             FolderPath = savDirectory,
-            FallbackPath = fallbackPath,
+            FallbackPaths = fallbackPaths,
             Root = root
         };
 

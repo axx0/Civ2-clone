@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Civ2engine
 {
     public class Ruleset
@@ -9,7 +11,7 @@ namespace Civ2engine
         /// <summary>
         /// Base folder for TOT game types
         /// </summary>
-        public string? FallbackPath { get; init; }
+        public List<string> FallbackPaths { get; init; }
         
         public string Root { get; init; }
 
@@ -21,28 +23,14 @@ namespace Civ2engine
             {
                 if (_paths == null)
                 {
-                    if (Root == FolderPath)
+                    List<string> _pathsList = new();
+                    _pathsList.Add(FolderPath);
+                    _pathsList.AddRange(FallbackPaths);
+                    if (!_pathsList.Contains(Root))
                     {
-                        if (FallbackPath == null || FallbackPath == FolderPath)
-                        {
-                            _paths = new[] { FolderPath };
-                        }
-                        else
-                        {
-                            _paths = new[] { FolderPath, FallbackPath };
-                        }
+                        _pathsList.Add(Root);
                     }
-                    else
-                    {
-                        if (FallbackPath == null || FallbackPath == FolderPath || FallbackPath == Root)
-                        {
-                            _paths = new[] { FolderPath, Root };
-                        }
-                        else
-                        {
-                            _paths = new[] { FolderPath, FallbackPath, Root };
-                        }
-                    }
+                    _paths = _pathsList.ToArray();
                 }
                 return _paths;
             }

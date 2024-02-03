@@ -23,66 +23,82 @@ public static class ImageUtils
     private static Image _outerWallpaper;
     private static Image _outerTitleTopWallpaper;
 
-    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding)
+    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false)
     {
-        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding);
-        active.DrawBorderLines(ref image, height, width, padding);
+        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel);
+        active.DrawBorderLines(ref image, height, width, padding, statusPanel);
     }
 
-    public static void DrawTiledImage(Image source,ref Image destination, int height, int width)
-    {  
-        int rows = height / source.Height + 1;
-        var columns = width / source.Width + 1;
-        var sourceRec = new Rectangle { Height = source.Height, Width = source.Width };
-        for (int row = 0; row < rows; row++)
-        {
-            for (int col = 0; col < columns; col++)
-            {
-                Raylib.ImageDraw(ref destination, source, sourceRec, new Rectangle(col* source.Width, row* source.Height, source.Width, source.Height), Color.White);
-            }
-        }
-    }
-    
-    public static void DrawTiledImage(Image source,ref Image destination, int height, int width, Padding padding)
+    //public static void DrawTiledImage(Image source, ref Image destination, int height, int width)
+    //{
+    //    int rows = height / source.height + 1;
+    //    var columns = width / source.width + 1;
+    //    var sourceRec = new Rectangle { height = source.height, width = source.width };
+    //    for (int row = 0; row < rows; row++)
+    //    {
+    //        for (int col = 0; col < columns; col++)
+    //        {
+    //            Raylib.ImageDraw(ref destination, source, sourceRec, new Rectangle(col * source.width, row * source.height, source.width, source.height), Color.WHITE);
+    //        }
+    //    }
+    //}
+
+    /// <summary>
+    /// Draw tiles within a rectangle (chose tiles randomly)
+    /// </summary>
+    /// <param name="tiles">Wallpaper tile images</param>
+    /// <param name="dest">Destination image</param>
+    /// <param name="rect">Rectangle within the image where tiles are to be drawn</param>
+    public static void DrawTiledRectangle(Image[] tiles, ref Image dest, Rectangle rect)
     {
-        var totalColumns = (width - padding.Left - padding.Right) / source.Width;
-        var totalRows = (height - padding.Top - padding.Bottom) / source.Height;
+        var rnd = new Random();
+        var len = tiles.Length;
 
-        var rightEdge = padding.Left + (source.Width * totalColumns);
-        var rightWidth = width - padding.Right - rightEdge;
-        var rightSrcRect = new Rectangle { Height = source.Height, Width = rightWidth };
+        var totalColumns = Math.Ceiling(rect.Width / tiles[0].Width);
+        var totalRows = Math.Ceiling(rect.Height / tiles[0].Height);
 
-        var srcRec = new Rectangle { Height = source.Height, Width = source.Width };
-        
         for (int row = 0; row < totalRows; row++)
         {
-            var rowPos = source.Height * row + padding.Top;
-            for (int col = 0; col < totalColumns ; col++)
-            {
-                Raylib.ImageDraw(ref destination, source, srcRec,
-                    new Rectangle(col * source.Width + padding.Left, rowPos, source.Width, source.Height),
-                    Color.White);
-            }
-            Raylib.ImageDraw(ref destination, source, rightSrcRect,
-                new Rectangle(rightEdge, rowPos, rightWidth, source.Height),
-                Color.White);
-        }
-
-        var bottomEdge = padding.Top + totalRows * source.Height;
-        var bottomWidth = height - padding.Bottom - bottomEdge;
-        if (bottomWidth > 0)
-        {
-            var bottomSourceRect = new Rectangle { Height = bottomWidth, Width = source.Width };
             for (int col = 0; col < totalColumns; col++)
             {
-                Raylib.ImageDraw(ref destination, source, bottomSourceRect,
-                    new Rectangle(col * source.Width + padding.Left, bottomEdge, source.Width, bottomWidth),
-                    Color.White);
+                var srcRec = new Rectangle { Height = tiles[0].Height, Width = tiles[0].Width };
+                var destRec = new Rectangle(rect.X + col * tiles[0].Width, rect.Y + row * tiles[0].Height, tiles[0].Width, tiles[0].Height);
+
+                if (col == totalColumns - 1)
+                {
+                    srcRec.Width = rect.Width - tiles[0].Width * col;
+                    destRec.Width = srcRec.Width;
+                }
+
+                if (row == totalRows - 1)
+                {
+                    srcRec.Height = rect.Height - tiles[0].Height * row;
+                    destRec.Height = srcRec.Height;
+                }
+
+                Raylib.ImageDraw(ref dest, tiles[rnd.Next(len)], srcRec, destRec, Color.White);
             }
-            
-            Raylib.ImageDraw(ref destination, source, new Rectangle { Height = bottomWidth, Width = rightWidth},
-                new Rectangle(rightEdge, bottomEdge, rightWidth, bottomWidth),
-                Color.White);
+        }
+    }
+
+
+    public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false)
+    {
+        // MGE uses inner wallpaper from ICONS for all dialogs
+        // TOT uses inner wallpaper from ICONS only for status panel, otherwise uses tiles from dialog image file
+        var tiles = statusPanel && wp.InnerAlt.Width > 0 ? new[] { wp.InnerAlt } : wp.Inner;
+
+        if (!statusPanel)
+        {
+            DrawTiledRectangle(tiles, ref destination,
+                new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
+        }
+        else
+        {
+            DrawTiledRectangle(tiles, ref destination,
+                new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
+            DrawTiledRectangle(tiles, ref destination,
+                new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
         }
     }
 
@@ -102,12 +118,12 @@ public static class ImageUtils
     /// <param name="padding"></param>
     /// <param name="centerImage">Image to place in centre of dialog</param>
     /// <param name="noWallpaper">true to not draw inner wallpaper defaults to false</param>
-    //public static Texture2D? PaintDialogBase(IUserInterface active, int Width, int Height, int top, int paddingBtm, int paddingSide, Image? centerImage = null, bool noWallpaper = false)
-    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false)
+    /// <param name="statusPanel">true to draw status panel-style background</param>
+    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false, bool statusPanel = false)
     {
         // Outer wallpaper
         var image = NewImage(width, height);
-        PaintPanelBorders(active, ref image, width, height, padding);
+        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel);
         if (centerImage != null)
         {
             var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
@@ -116,7 +132,7 @@ public static class ImageUtils
         }
         else if(!noWallpaper)
         {
-            DrawTiledImage(Wallpaper.Inner, ref image, height, width, padding);
+            DrawTiledImage(Wallpaper, ref image, height, width, padding, statusPanel: statusPanel);
         }
 
         return Raylib.LoadTextureFromImage(image);
@@ -275,12 +291,12 @@ public static class ImageUtils
         Wallpaper = new Wallpaper();
         if (active.Look.Outer is null)
         {
-            Wallpaper.OuterTitleTop = Images.ExtractBitmap(active.Look.OuterTitleTop[0]);
-            Wallpaper.OuterThinTop = Images.ExtractBitmap(active.Look.OuterThinTop[0]);
-            Wallpaper.OuterBottom = Images.ExtractBitmap(active.Look.OuterBottom[0]);
-            Wallpaper.OuterMiddle = Images.ExtractBitmap(active.Look.OuterMiddle[0]);
-            Wallpaper.OuterLeft = Images.ExtractBitmap(active.Look.OuterLeft[0]);
-            Wallpaper.OuterRight = Images.ExtractBitmap(active.Look.OuterRight[0]);
+            Wallpaper.OuterTitleTop = active.Look.OuterTitleTop.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterThinTop = active.Look.OuterThinTop.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterBottom = active.Look.OuterBottom.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterMiddle = active.Look.OuterMiddle.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterLeft = active.Look.OuterLeft.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterRight = active.Look.OuterRight.Select(img => Images.ExtractBitmap(img)).ToArray();
             Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(active.Look.OuterTitleTopLeft);
             Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(active.Look.OuterTitleTopRight);
             Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(active.Look.OuterThinTopLeft);
@@ -289,12 +305,13 @@ public static class ImageUtils
             Wallpaper.OuterMiddleRight = Images.ExtractBitmap(active.Look.OuterMiddleRight);
             Wallpaper.OuterBottomLeft = Images.ExtractBitmap(active.Look.OuterBottomLeft);
             Wallpaper.OuterBottomRight = Images.ExtractBitmap(active.Look.OuterBottomRight);
-            Wallpaper.Inner = Images.ExtractBitmap(active.Look.Inner);
+            Wallpaper.Inner = active.Look.Inner.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.InnerAlt = Images.ExtractBitmap(active.Look.InnerAlt);
         }
         else
         {
             Wallpaper.Outer = Images.ExtractBitmap(active.Look.Outer);
-            Wallpaper.Inner = Images.ExtractBitmap(active.Look.Inner);
+            Wallpaper.Inner = new[] { Images.ExtractBitmap(active.Look.Inner[0]) };
         }
 
         _look = active.Look;

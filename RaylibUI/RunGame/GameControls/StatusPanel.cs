@@ -42,7 +42,7 @@ public class StatusPanel : BaseControl
 
     public override void OnResize()
     {
-        _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, _padding);
+        _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, _padding, statusPanel: true);
         
         _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
         _headerLabel.OnResize();

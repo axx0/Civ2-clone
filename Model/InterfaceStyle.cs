@@ -6,7 +6,8 @@ namespace Model;
 public class InterfaceStyle
 {
     public IImageSource? Outer { get; init; }
-    public IImageSource? Inner { get; init; }
+    public IImageSource[]? Inner { get; init; }
+    public IImageSource? InnerAlt { get; init; }    // only used in TOT for status panel wallpaper
     public IImageSource[]? OuterTitleTop { get; init; }  // TOT
     public IImageSource[]? OuterThinTop { get; init; }   // TOT
     public IImageSource[]? OuterBottom { get; init; }   // TOT

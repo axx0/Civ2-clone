@@ -5,13 +5,14 @@ namespace Model.ImageSets;
 public class Wallpaper
 {
     public Image Outer { get; set; }
-    public Image Inner { get; set; }
-    public Image OuterTitleTop { get; set; }
-    public Image OuterThinTop { get; set; }
-    public Image OuterBottom { get; set; }
-    public Image OuterMiddle { get; set; }
-    public Image OuterLeft { get; set; }
-    public Image OuterRight { get; set; }
+    public Image[] Inner { get; set; }
+    public Image InnerAlt { get; set; }
+    public Image[] OuterTitleTop { get; set; }
+    public Image[] OuterThinTop { get; set; }
+    public Image[] OuterBottom { get; set; }
+    public Image[] OuterMiddle { get; set; }
+    public Image[] OuterLeft { get; set; }
+    public Image[] OuterRight { get; set; }
     public Image OuterTitleTopLeft { get; set; }
     public Image OuterTitleTopRight { get; set; }
     public Image OuterThinTopLeft { get; set; }
