@@ -9,7 +9,7 @@ namespace Civ2engine
     /// </summary>
     public class FastRandom
     {
-        public const int maxSeed = 2147483647;
+        public const int MaxSeed = 2147483647;
         
         /// <summary>
         /// This is a long to avoid overflows when multiplying 
@@ -25,24 +25,24 @@ namespace Civ2engine
 
         public FastRandom(int seed)
         {
-            _seed = seed % maxSeed;
+            _seed = seed % MaxSeed;
             if (_seed <= 0)
             {
-                _seed += maxSeed - 1;
+                _seed += MaxSeed - 1;
             }
         }
         
         public int Next()
         {
-            return _seed = (int) ((_seed * MultiplicationConstant) % maxSeed);
+            return _seed = (int) ((_seed * MultiplicationConstant) % MaxSeed);
         }
 
-        public double nextFloat()
+        public double NextFloat()
         {
-            return (Next() - 1.0) / (maxSeed - 1);
+            return (Next() - 1.0) / (MaxSeed - 1);
         }
 
-        public int state()
+        public int State()
         {
             return (int)_seed;
         }

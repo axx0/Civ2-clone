@@ -20,15 +20,15 @@ namespace Civ2.ImageLoader
         private static TerrainSet LoadTerrain(Ruleset ruleset, int index, Civ2Interface active)
         {
             var path = Utils.GetFilePath($"Terrain{(index * 2) + 1}", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPIC(path, active.TilePICprops);
+            Images.LoadPropertiesFromPic(path, active.TilePicProps);
             path = Utils.GetFilePath($"Terrain{(index * 2) + 2}", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPIC(path, active.OverlayPICprops);
+            Images.LoadPropertiesFromPic(path, active.OverlayPicProps);
 
             // Initialize objects
             var terrain = new TerrainSet(64, 32);
 
-            var tileProps = active.TilePICprops;
-            var overlayProps = active.OverlayPICprops;
+            var tileProps = active.TilePicProps;
+            var overlayProps = active.OverlayPicProps;
 
             // Get dither tile before making it transparent
             var ditherTile = tileProps["dither"][0].Image;
@@ -40,9 +40,9 @@ namespace Civ2.ImageLoader
                 gray = imageColours[0];
                 Raylib.UnloadImageColors(imageColours);
             }
-            Raylib.ImageColorReplace(ref ditherTile, Color.BLACK, Color.WHITE);
-            Raylib.ImageColorReplace(ref ditherTile, new Color(255, 0, 255, 0), Color.BLACK);
-            Raylib.ImageColorReplace(ref ditherTile, gray, Color.BLACK);
+            Raylib.ImageColorReplace(ref ditherTile, Color.Black, Color.White);
+            Raylib.ImageColorReplace(ref ditherTile, new Color(255, 0, 255, 0), Color.Black);
+            Raylib.ImageColorReplace(ref ditherTile, gray, Color.Black);
 
             terrain.BaseTiles = tileProps["base1"].Select(t => t.Image).ToArray();
 
@@ -138,7 +138,7 @@ namespace Civ2.ImageLoader
             ditherMaps[^1] = Raylib.ImageFromImage(terrainBlank, sampleRect);
             Raylib.ImageAlphaMask(ref ditherMaps[^1], mask);
 
-            return new DitherMap { x = offsetX, y = offsetY, Images = ditherMaps };
+            return new DitherMap { X = offsetX, Y = offsetY, Images = ditherMaps };
         }
     }
 }   

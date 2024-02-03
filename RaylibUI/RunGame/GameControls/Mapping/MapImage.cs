@@ -57,28 +57,28 @@ public static class MapImage
             {
                 if (neighbour != null && neighbour.Type != TerrainType.Ocean)
                 {
-                    foreach (var (index, valueVARIABLE) in ind)
+                    foreach (var (index, valueVariable) in ind)
                     {
-                        coastIndex[index] += valueVARIABLE;
+                        coastIndex[index] += valueVariable;
                     }
                 }
             }
 
             // NW+N+NE tiles
             Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[0], 0], new Rectangle(0, 0, 32, 16),
-                new Rectangle(16, 0, 32, 16), Color.WHITE);
+                new Rectangle(16, 0, 32, 16), Color.White);
 
             // SW+S+SE tiles
             Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[1], 1], new Rectangle(0, 0, 32, 16),
-                new Rectangle(16, 16, 32, 16), Color.WHITE);
+                new Rectangle(16, 16, 32, 16), Color.White);
 
             // SW+W+NW tiles
             Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[2], 2], new Rectangle(0, 0, 32, 16),
-                new Rectangle(0, 8, 32, 16), Color.WHITE);
+                new Rectangle(0, 8, 32, 16), Color.White);
 
             // NE+E+SE tiles
             Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[3], 3], new Rectangle(0, 0, 32, 16),
-                new Rectangle(32, 8, 32, 16), Color.WHITE);
+                new Rectangle(32, 8, 32, 16), Color.White);
 
             // River mouth
             // If river is next to ocean, draw river mouth on this tile.
@@ -87,7 +87,7 @@ public static class MapImage
                 var neighbour = directNeighbours[index];
                 if (neighbour is { River: true })
                 {
-                    Raylib.ImageDraw(ref tilePic, terrainSet.RiverMouth[index], TileRec, TileRec, Color.WHITE);
+                    Raylib.ImageDraw(ref tilePic, terrainSet.RiverMouth[index], TileRec, TileRec, Color.White);
                 }
             }
         }
@@ -107,7 +107,7 @@ public static class MapImage
             }
 
             Raylib.ImageDraw(ref tilePic, terrainSet.ImagesFor(tile.Type)[index], TileRec,
-                TileRec, Color.WHITE);
+                TileRec, Color.White);
         }
 
         // Draw rivers
@@ -125,7 +125,7 @@ public static class MapImage
                 increment *= 2;
             }
 
-            Raylib.ImageDraw(ref tilePic, terrainSet.River[index], TileRec, TileRec, Color.WHITE);
+            Raylib.ImageDraw(ref tilePic, terrainSet.River[index], TileRec, TileRec, Color.White);
         }
 
         // Draw shield for grasslands
@@ -133,14 +133,14 @@ public static class MapImage
         {
             if (tile.HasShield)
             {
-                Raylib.ImageDraw(ref tilePic, terrainSet.GrasslandShield, TileRec, TileRec, Color.WHITE);
+                Raylib.ImageDraw(ref tilePic, terrainSet.GrasslandShield, TileRec, TileRec, Color.White);
             }
         }
         else if (tile.Special != -1)
         {
             // Draw special resources if they exist
             Raylib.ImageDraw(ref tilePic, terrainSet.Specials[tile.Special][(int)tile.Type], TileRec, TileRec,
-                Color.WHITE);
+                Color.White);
         }
 
         
@@ -178,14 +178,14 @@ public static class MapImage
                                 {
                                     Raylib.ImageDraw(ref tilePic, graphics.Levels[neighboringImprovement.Level, index],
                                         TileRec,
-                                        TileRec, Color.WHITE);
+                                        TileRec, Color.White);
                                 }
                                 else
                                 {
                                     hasNeighbours = true;
                                     Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, index], TileRec,
                                         TileRec,
-                                        Color.WHITE);
+                                        Color.White);
                                 }
                             }
                         }
@@ -196,7 +196,7 @@ public static class MapImage
                         if (tile.CityHere is null)
                         {
                             Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
-                                Color.WHITE);
+                                Color.White);
                         }
                     }
                 }
@@ -206,7 +206,7 @@ public static class MapImage
                         .Any(t => t.Improvements.Any(i => i.Improvement == construct.Improvement)))
                     {
                         Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
-                            Color.WHITE);
+                            Color.White);
                     }
                 }
                 else
@@ -215,7 +215,7 @@ public static class MapImage
                     {
                         tileDetails.ForegroundElement = new UnitHidingImprovement
                         {
-                            UnitDomain = (UnitGAS)improvement.HideUnits,
+                            UnitDomain = (UnitGas)improvement.HideUnits,
                             UnitImage = new MemoryStorage(graphics.UnitLevels[construct.Level, 0], improvement.Name,
                                 _replacementColour),
                             Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name,
@@ -232,7 +232,7 @@ public static class MapImage
                     else
                     {
                         Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
-                            Color.WHITE);
+                            Color.White);
                     }
                 }
             }
@@ -245,14 +245,14 @@ public static class MapImage
             {
                 var ditherMap = terrainSet.DitherMaps[index];
                 Raylib.ImageDraw(ref tilePic, ditherMap.Images[^1], new Rectangle(0, 0, 32, 16),
-                    new Rectangle(ditherMap.x, ditherMap.y, 32, 16), Color.WHITE);
+                    new Rectangle(ditherMap.X, ditherMap.Y, 32, 16), Color.White);
             }
         }
 
         return tileDetails;
     }
 
-    private static void ApplyDither(Image orig_img, TerrainType neighbourType, TerrainType tileType,
+    private static void ApplyDither(Image origImg, TerrainType neighbourType, TerrainType tileType,
         DitherMap ditherMap)
     {
         if (neighbourType == TerrainType.Ocean)
@@ -261,7 +261,7 @@ public static class MapImage
         }
 
         if (neighbourType == tileType) return;
-        Raylib.ImageDraw(ref orig_img, ditherMap.Images[(int)neighbourType], new Rectangle(0, 0, 32, 16),
-            new Rectangle(ditherMap.x, ditherMap.y, 32, 16), Color.WHITE);
+        Raylib.ImageDraw(ref origImg, ditherMap.Images[(int)neighbourType], new Rectangle(0, 0, 32, 16),
+            new Rectangle(ditherMap.X, ditherMap.Y, 32, 16), Color.White);
     }
 }

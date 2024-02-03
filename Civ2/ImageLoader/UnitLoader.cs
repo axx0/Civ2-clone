@@ -13,8 +13,8 @@ namespace Civ2.ImageLoader
         public static void LoadUnits(Ruleset ruleset, Civ2Interface active)
         {
             var path = Utils.GetFilePath("UNITS", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPIC(path, active.UnitPICprops);
-            var unitProps = active.UnitPICprops;
+            Images.LoadPropertiesFromPic(path, active.UnitPicProps);
+            var unitProps = active.UnitPicProps;
 
             // Initialize objects
             var units = new UnitImage[9 * active.UnitsRows];
@@ -25,7 +25,7 @@ namespace Civ2.ImageLoader
                 {
                     Image = unitProps["unit"][i].Image,
                     Texture = Raylib.LoadTextureFromImage(unitProps["unit"][i].Image),
-                    FlagLoc = new Vector2(unitProps["unit"][i].Flag1x, unitProps["unit"][i].Flag1y),
+                    FlagLoc = new Vector2(unitProps["unit"][i].Flag1X, unitProps["unit"][i].Flag1Y),
                 };
             }
 

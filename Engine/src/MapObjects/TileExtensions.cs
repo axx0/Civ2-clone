@@ -26,16 +26,16 @@ namespace Civ2engine.MapObjects
         public static void AddImprovement(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,
             Terrain[] terrains)
         {
-            var Improvements = tile.Improvements;
+            var improvements = tile.Improvements;
             if (improvement.ExclusiveGroup > 0)
             {
-                var previous = Improvements
+                var previous = improvements
                     .Where(i => i.Improvement != improvement.Id && i.Group == improvement.ExclusiveGroup).ToList();
 
                 previous.ForEach(i =>
                 {
                     tile.EffectsList.RemoveAll(e => e.Source == i.Improvement);
-                    Improvements.Remove(i);
+                    improvements.Remove(i);
                 });
             }
 
@@ -48,14 +48,14 @@ namespace Civ2engine.MapObjects
 
             BuildEffects(tile, improvement, terrain, levelToBuild);
 
-            var existing = Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
+            var existing = improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
             if (existing is not null)
             {
                 existing.Level = levelToBuild;
             }
             else
             {
-                Improvements.Add(new ConstructedImprovement
+                improvements.Add(new ConstructedImprovement
                     { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
             }
         }

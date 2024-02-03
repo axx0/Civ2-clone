@@ -74,7 +74,7 @@ namespace Civ2engine.UnitActions
             game.ChooseNextUnit();
         }
 
-        public static void AIBuildCity(Unit unit, Game game)
+        public static void AiBuildCity(Unit unit, Game game)
         {
             BuildCity(unit.CurrentLocation, unit, game, GetCityName(unit.Owner, game));
         }

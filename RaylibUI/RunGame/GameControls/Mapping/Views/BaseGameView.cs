@@ -80,7 +80,7 @@ public abstract class BaseGameView : IGameView
             var map = location.Map;
             var dim = _gameScreen.TileCache.GetDimensions(map);
 
-            Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.BLACK);
+            Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.Black);
 
             var ypos = -_offsets.Y;
 
@@ -123,7 +123,7 @@ public abstract class BaseGameView : IGameView
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
                                 Raylib.ImageDraw(ref image, tileDetails.Image,
                                     MapImage.TileRec,
-                                    new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight), Color.WHITE);
+                                    new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight), Color.White);
 
                                 var posVector = new Vector2(xpos, ypos);
                                 CalculateElementsAtTile(tile, elements, activeInterface, cities, posVector, tileDetails, civilizationId);
@@ -177,7 +177,7 @@ public abstract class BaseGameView : IGameView
                 _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                     tile.CityHere, playerKnowledge.CityHere.Size);
             var cityImage = cities.Sets[cityStyleIndex][sizeIncrement];
-            var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - cityImage.Texture.height};
+            var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - cityImage.Texture.Height};
             elements.Add(new CityData(
                 color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
                 name: playerKnowledge.CityHere.Name,
@@ -186,7 +186,7 @@ public abstract class BaseGameView : IGameView
             if (tile.UnitsHere.Count > 0)
             {
                 var flagTexture = activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId].FlagTexture;
-                var flagOffset = cityImage.FlagLoc - new Vector2(0, flagTexture.height - 5);
+                var flagOffset = cityImage.FlagLoc - new Vector2(0, flagTexture.Height - 5);
                 elements.Add(new TextureElement(texture: flagTexture,
                     tile: tile, location: cityPos + flagOffset, offset: flagOffset)
                 );
@@ -211,7 +211,7 @@ public abstract class BaseGameView : IGameView
                         tile.Owner);
                     elements.Add(new TextureElement(
                         texture: impImage,
-                        location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.height },
+                        location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height },
                         tile: tile, isTerrain: true));
 
                     
@@ -219,7 +219,7 @@ public abstract class BaseGameView : IGameView
                         posVector with
                         {
                             Y = posVector.Y + Dimensions.TileHeight -
-                                activeInterface.UnitImages.UnitRectangle.height
+                                activeInterface.UnitImages.UnitRectangle.Height
                         });
                 }
             }
@@ -229,7 +229,7 @@ public abstract class BaseGameView : IGameView
                     posVector with
                     {
                         Y = posVector.Y + Dimensions.TileHeight -
-                            activeInterface.UnitImages.UnitRectangle.height
+                            activeInterface.UnitImages.UnitRectangle.Height
                     });
                 if (tileDetails.ForegroundElement != null)
                 {
@@ -237,7 +237,7 @@ public abstract class BaseGameView : IGameView
                         tileDetails.ForegroundElement.Image, tile.Owner);
                     elements.Add(new TextureElement(
                         texture: impImage,
-                        location: posVector with{ Y = posVector.Y + Dimensions.TileHeight - impImage.height}, tile: tile, isTerrain: true));
+                        location: posVector with{ Y = posVector.Y + Dimensions.TileHeight - impImage.Height}, tile: tile, isTerrain: true));
                 }
             }
         }
@@ -247,7 +247,7 @@ public abstract class BaseGameView : IGameView
                 tileDetails.ForegroundElement.Image, tile.Owner);
             elements.Add(new TextureElement(
                 texture: impImage,
-                location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.height },
+                location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height },
                 tile: tile, isTerrain: true));
         }
     }

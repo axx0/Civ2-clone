@@ -16,7 +16,7 @@ namespace RaylibUI
     private DateTime _soundLastPlayed = DateTime.Now;
     private bool _soundDataCacheIsInvalid;
     private bool _soundDataCacheUpdating;
-    public readonly ConcurrentBag<SoundData> soundDataCache;
+    public readonly ConcurrentBag<SoundData> SoundDataCache;
 
     private static string _convertedSoundsDir = String.Empty;
     private static readonly object SoundCacheLock = new();
@@ -26,7 +26,7 @@ namespace RaylibUI
       _convertedSoundsDir = Path.Combine(Settings.BasePath, "CONVERTEDSOUNDS");
       if (!Directory.Exists(_convertedSoundsDir))
         Directory.CreateDirectory(_convertedSoundsDir);
-      soundDataCache = ReloadAllExistingConvertedSoundReferences();
+      SoundDataCache = ReloadAllExistingConvertedSoundReferences();
       _soundDataCacheIsRunning = true;
       _cacheSyncThread = new Thread(CacheSyncLoop);
       _cacheSyncThread.Start();
@@ -87,7 +87,7 @@ namespace RaylibUI
       {
         using (StreamWriter writer = new StreamWriter(cachePath))
         {
-          foreach (SoundData soundData in soundDataCache)
+          foreach (SoundData soundData in SoundDataCache)
           {
             string cacheString = soundData.ToCacheString();
             writer.WriteLine(cacheString);
@@ -98,13 +98,13 @@ namespace RaylibUI
 
     public void AddToCache(SoundData soundData)
     {
-      soundDataCache.Add(soundData);
+      SoundDataCache.Add(soundData);
       _soundDataCacheIsInvalid = true;
     }
 
     #endregion
 
-    public SoundData? PlayCIV2DefaultSound(string soundName, bool loop = false)
+    public SoundData? PlayCiv2DefaultSound(string soundName, bool loop = false)
     {
       var pth = Utils.GetFilePath(soundName, Settings.SearchPaths.Select(p=>Path.Combine(p,"Sound")), "wav");
 
@@ -116,7 +116,7 @@ namespace RaylibUI
       if (!File.Exists(soundPath))
         return null;
 
-      var x = soundDataCache.FirstOrDefault(o => o.PathFull == soundPath);
+      var x = SoundDataCache.FirstOrDefault(o => o.PathFull == soundPath);
       if (x == null)
       {
         x = new SoundData(soundPath, _convertedSoundsDir);
@@ -150,7 +150,7 @@ namespace RaylibUI
       _cacheSyncThread.Join();
       SynchronizeCacheReference();
 
-      foreach (var i in soundDataCache)
+      foreach (var i in SoundDataCache)
       {
         i.Dispose();
       }

@@ -28,7 +28,7 @@ public class SoundData : IDisposable
 
     public void Convert()
     {
-        IsConverted = ConvertAudioPcmU8ToPcmS16LE(PathFull, PathConv);
+        IsConverted = ConvertAudioPcmU8ToPcmS16Le(PathFull, PathConv);
     }
 
     public void Stop()
@@ -46,7 +46,7 @@ public class SoundData : IDisposable
             if (File.Exists(PathConv))
             {
                 _rlSound = Raylib.LoadSound(PathConv);
-                _rlSoundLoaded = _rlSound.frameCount > 0;
+                _rlSoundLoaded = _rlSound.FrameCount > 0;
             }
         }
 
@@ -64,13 +64,13 @@ public class SoundData : IDisposable
             if (File.Exists(PathConv))
             {
                 RlMusic = Raylib.LoadMusicStream(PathConv);
-                _rlMusicLoaded = RlMusic.frameCount > 0;
+                _rlMusicLoaded = RlMusic.FrameCount > 0;
             }
         }
 
         if (_rlMusicLoaded)
         {
-            RlMusic.looping = true;
+            RlMusic.Looping = true;
             Raylib.PlayMusicStream(RlMusic);
         }
 
@@ -82,12 +82,12 @@ public class SoundData : IDisposable
     /// </summary>
     public void MusicUpdateCall()
     {
-        if (RlMusic.frameCount > 0)
+        if (RlMusic.FrameCount > 0)
             Raylib.UpdateMusicStream(RlMusic);
     }
 
 
-    public bool ConvertAudioPcmU8ToPcmS16LE(string inputFilePath, string outputFilePath)
+    public bool ConvertAudioPcmU8ToPcmS16Le(string inputFilePath, string outputFilePath)
     {
         try
         {
@@ -129,7 +129,7 @@ public class SoundData : IDisposable
 
     public void Dispose()
     {
-        if (_rlSoundLoaded || _rlSound.frameCount > 0)
+        if (_rlSoundLoaded || _rlSound.FrameCount > 0)
         {
             Stop();
             Raylib.UnloadSound(_rlSound);

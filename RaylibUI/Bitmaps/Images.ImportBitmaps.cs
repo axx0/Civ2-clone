@@ -68,9 +68,9 @@ namespace RaylibUI
         //    return newBmp;
         //}
 
-        private static Dictionary<string, Image> ImageCache = new();
+        private static Dictionary<string, Image> _imageCache = new();
 
-        private const string tempPath = "temp";
+        private const string TempPath = "temp";
 
         public static Image ExtractBitmap(IImageSource imageSource)
         {
@@ -79,44 +79,44 @@ namespace RaylibUI
         
         public static Image ExtractBitmap(IImageSource imageSource, IUserInterface? active, int owner = -1)
         {
-            if (!Directory.Exists(tempPath))
+            if (!Directory.Exists(TempPath))
             {
-                Directory.CreateDirectory(tempPath);
+                Directory.CreateDirectory(TempPath);
             }
 
             var key = imageSource.GetKey(owner);
-            if (ImageCache.TryGetValue(key, out var bitmap)) return bitmap;
+            if (_imageCache.TryGetValue(key, out var bitmap)) return bitmap;
             
             switch (imageSource)
             {
                 case BinaryStorage binarySource:
-                    ImageCache[key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, key);
+                    _imageCache[key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, key);
                     break;
                 case BitmapStorage bitmapStorage:
                 {
                     var sourceKey = $"{bitmapStorage.Filename}-Source";
-                    if (!ImageCache.ContainsKey(sourceKey))
+                    if (!_imageCache.ContainsKey(sourceKey))
                     {
                         var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
-                        ImageCache[sourceKey] = Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
+                        _imageCache[sourceKey] = Raylib.LoadImageFromMemory(Path.GetExtension(path).ToLowerInvariant(), File.ReadAllBytes(path));
                     }
 
-                    var sourceImage = ImageCache[sourceKey];
+                    var sourceImage = _imageCache[sourceKey];
                     var rect = bitmapStorage.Location;
-                    if (rect.width == 0)
+                    if (rect.Width == 0)
                     {
-                        rect = new Rectangle(0, 0, sourceImage.width, sourceImage.height);
+                        rect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
                     }
-                    var image = Raylib.ImageFromImage(ImageCache[sourceKey], rect);
+                    var image = Raylib.ImageFromImage(_imageCache[sourceKey], rect);
                     if (bitmapStorage.Transparencies != null)
                     {
                         foreach (var transparency in bitmapStorage.Transparencies)
                         {
                             Raylib.ImageColorReplace(ref image, transparency,
-                                new Color(transparency.r, transparency.g, transparency.b, (byte)0));
+                                new Color(transparency.R, transparency.G, transparency.B, (byte)0));
                         }
                     }
-                    ImageCache[bitmapStorage.Key] = image;
+                    _imageCache[bitmapStorage.Key] = image;
                     break;
                 }
                 case MemoryStorage memoryStorage:
@@ -128,11 +128,11 @@ namespace RaylibUI
                             memoryStorage.Dark
                                 ? active.PlayerColours[owner].DarkColour
                                 : active.PlayerColours[owner].LightColour);
-                        ImageCache[key] = image;
+                        _imageCache[key] = image;
                     }
                     else
                     {
-                        ImageCache[key] = memoryStorage.Image;
+                        _imageCache[key] = memoryStorage.Image;
                     }
                     break;
                 }
@@ -140,7 +140,7 @@ namespace RaylibUI
                     throw new NotImplementedException("Other image sources not currently implemented");
             }
 
-            return ImageCache[key];
+            return _imageCache[key];
         }
         
         public static Image ExtractBitmap(string filename, int start, int length, string key)
@@ -161,7 +161,7 @@ namespace RaylibUI
 
         public static Dictionary<string, byte[]> Files { get; } = new();
 
-        static byte[] extn = Encoding.ASCII.GetBytes("Gif\0");
+        static byte[] _extn = Encoding.ASCII.GetBytes("Gif\0");
 
         private static Image ExtractBitmap(byte[] byteArray, int start, int length, string key)
         {
@@ -170,7 +170,7 @@ namespace RaylibUI
 
             // Copy GIF bytes in DLL byte array into empty array
             Array.Copy(byteArray, start, newBytesRange, 0, length);
-            var fileName = Path.Combine(tempPath, key + ".gif");
+            var fileName = Path.Combine(TempPath, key + ".gif");
             using (var file = File.Create(fileName))
             {
                 file.Write(newBytesRange);

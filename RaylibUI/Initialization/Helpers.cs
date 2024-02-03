@@ -62,7 +62,7 @@ public static class Helpers
     public static void LoadFonts()
     {
         var fontPath = Utils.GetFilePath("times-new-roman.ttf");
-        Fonts.SetTNR(Raylib.LoadFont(fontPath));
+        Fonts.SetTnr(Raylib.LoadFont(fontPath));
         var bold = Utils.GetFilePath("times-new-roman-bold.ttf");
         Fonts.SetBold(Raylib.LoadFontEx(bold, 104, null, 0));
         var alternative = Utils.GetFilePath("ARIAL.ttf");

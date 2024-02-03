@@ -25,12 +25,12 @@ public class CustomWorldSize : BaseDialogHandler
         {
             new()
             {
-                index = 0, Name = "Width", MinValue = 20, CharLimit = 5,
+                Index = 0, Name = "Width", MinValue = 20, CharLimit = 5,
                 InitialValue = Initialization.ConfigObject.WorldSize[0].ToString(), Width = 75
             },
             new()
             {
-                index = 1, Name = "Height", MinValue = 20, CharLimit = 5,
+                Index = 1, Name = "Height", MinValue = 20, CharLimit = 5,
                 InitialValue = Initialization.ConfigObject.WorldSize[1].ToString(), Width = 75
             }
         };

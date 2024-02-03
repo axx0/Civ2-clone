@@ -7,12 +7,12 @@ public static class Fonts
     /// <summary>
     /// Times new roman
     /// </summary>
-    public static Font TNR { get; set; } = Raylib.GetFontDefault();
+    public static Font Tnr { get; set; } = Raylib.GetFontDefault();
 
     /// <summary>
     /// Bold times new roman font
     /// </summary>
-    public static Font TNRbold { get; set; } = Raylib.GetFontDefault();
+    public static Font TnRbold { get; set; } = Raylib.GetFontDefault();
 
     /// <summary>
     /// Alternative font
@@ -21,9 +21,9 @@ public static class Fonts
 
     public const int FontSize = 20;
 
-    public static void SetTNR(Font font)
+    public static void SetTnr(Font font)
     {
-        TNR = font;
+        Tnr = font;
     }
 
     public static void SetArial(Font font)
@@ -33,7 +33,7 @@ public static class Fonts
 
     public static void SetBold(Font font)
     {
-        TNRbold = font;
+        TnRbold = font;
     }
 }
 

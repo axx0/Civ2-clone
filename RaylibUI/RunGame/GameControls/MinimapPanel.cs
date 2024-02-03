@@ -71,7 +71,7 @@ public class MinimapPanel : BaseControl
         {
             case MapEventType.MapViewChanged:
                 {
-                    _mapStartXy = e.MapStartXY;
+                    _mapStartXy = e.MapStartXy;
                     _mapDrawSq = e.MapDrawSq;
                     break;
                 }
@@ -94,8 +94,8 @@ public class MinimapPanel : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.WHITE);
-        Raylib.DrawRectangle((int)Location.X + _padding.Left, (int)Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom, Color.BLACK);
+        Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        Raylib.DrawRectangle((int)Location.X + _padding.Left, (int)Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom, Color.Black);
         var map = _game.CurrentMap;
         // Draw map
         for (var row = 0; row < map.YDim; row++)
@@ -121,7 +121,7 @@ public class MinimapPanel : BaseControl
         // Draw current view rectangle
         Raylib.DrawRectangleLines((int)Location.X + _offset[0] + _mapStartXy[0] - GetCenterShift(),
             (int)Location.Y + _offset[1] + _mapStartXy[1],
-            _mapDrawSq[0], _mapDrawSq[1], Color.WHITE);
+            _mapDrawSq[0], _mapDrawSq[1], Color.White);
 
         _headerLabel.Draw(pulse);
         

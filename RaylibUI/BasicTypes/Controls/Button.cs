@@ -9,7 +9,7 @@ namespace RaylibUI.Controls;
 public class Button : BaseControl
 {
     private readonly string _text;
-    private readonly Vector2 textSize;
+    private readonly Vector2 _textSize;
     private readonly Font _font;
     private readonly int _fontSize;
     private readonly Color _colour;
@@ -25,8 +25,8 @@ public class Button : BaseControl
         _font = font ?? _active.Look.ButtonFont;
         _fontSize = fontSize ?? _active.Look.ButtonFontSize;
         _colour = _active.Look.ButtonColour;
-        textSize = Raylib.MeasureTextEx(_font, text, _fontSize, 1f);
-        Height = (int)(textSize.Y + 10f);
+        _textSize = Raylib.MeasureTextEx(_font, text, _fontSize, 1f);
+        Height = (int)(_textSize.Y + 10f);
     }
 
     public override void Draw(bool pulse)
@@ -36,18 +36,18 @@ public class Button : BaseControl
         var w = Width;
         var h = Height;
         Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.WHITE);
+        Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.White);
         Raylib.DrawRectangleRec(new Rectangle(x + 3, y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
         Raylib.DrawLine(x + 2, y + h - 2, x + w - 2, y + h - 2, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + 3, y + h - 3, x + w - 2, y + h - 3, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + w - 1, y + 2, x + w - 1, y + h - 1, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + w - 2, y + 3, x + w - 2, y + h - 1, new Color(128, 128, 128, 255));
 
-        Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)textSize.X / 2, y + h / 2 - (int)textSize.Y / 2), _fontSize, 1f, _colour);
+        Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _colour);
 
         if (_hovered)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.MAGENTA);
+            Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
         }
         base.Draw(pulse);
     }
@@ -71,6 +71,6 @@ public class Button : BaseControl
 
     public override int GetPreferredWidth()
     {
-        return Math.Max((int)textSize.X + 10, 160);
+        return Math.Max((int)_textSize.X + 10, 160);
     }
 }

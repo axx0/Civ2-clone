@@ -30,7 +30,7 @@ namespace Civ2engine.Scripting
         public ResourceList Resources { get; } = new();
 
         public TerrainImprovements Improvements { get; } = new();
-        public void onCivInit(Func<Civilization, object> action)
+        public void OnCivInit(Func<Civilization, object> action)
         {
             _game.OnCivEvent += (sender, args) =>
             {
@@ -48,7 +48,7 @@ namespace Civ2engine.Scripting
             };
         }
 
-        public Rules rules => _game.Rules;
+        public Rules Rules => _game.Rules;
 
         public IDictionary<int, TerrainImprovement> TerrainImprovements => _game.TerrainImprovements;
     }
@@ -73,10 +73,10 @@ namespace Civ2engine.Scripting
 
     public class UnitDomainMap
     {
-        public int Land = (int)UnitGAS.Ground;
-        public int Sea = (int)UnitGAS.Sea;
-        public int Air = (int)UnitGAS.Air;
-        public int Special = (int)UnitGAS.Special;
+        public int Land = (int)UnitGas.Ground;
+        public int Sea = (int)UnitGas.Sea;
+        public int Air = (int)UnitGas.Air;
+        public int Special = (int)UnitGas.Special;
     }
 
     public class EffectsMap

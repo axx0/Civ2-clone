@@ -19,7 +19,7 @@ public class CustomTribe2 : BaseDialogHandler
         var male = Initialization.ConfigObject.Gender == 0;
         Dialog.TextBoxes = Initialization.ConfigObject.Rules.Governments.Select((gov, i) => new TextBoxDefinition
         {
-            index = i,
+            Index = i,
             Name = gov.Name, InitialValue = male ? gov.TitleMale : gov.TitleFemale, CharLimit = 23, Width = 300
         }).ToList();
         return base.Show(activeInterface);

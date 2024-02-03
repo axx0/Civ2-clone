@@ -16,7 +16,7 @@ public class FortifyOrder : Order
     private readonly LocalPlayer _player;
 
     public FortifyOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut( KeyboardKey.KEY_F), CommandIds.FortifyOrder)
+        base(gameScreen, new Shortcut( KeyboardKey.F), CommandIds.FortifyOrder)
     {
         _game = gameScreen.Game;
         _player = gameScreen.Player;

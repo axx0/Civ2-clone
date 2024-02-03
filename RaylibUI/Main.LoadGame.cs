@@ -8,7 +8,7 @@ namespace RaylibUI
 {
     public partial class Main
     {
-        private Unit activeUnit;
+        private Unit _activeUnit;
 
         
         public void StartGame(Game game)

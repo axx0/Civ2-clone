@@ -112,7 +112,7 @@ public class GameScreen : BaseScreen
         Controls.Add(_minimapPanel);
         Controls.Add(_statusPanel);
 
-        GameCommands = commands.Where(c => c.KeyCombo.Key != KeyboardKey.KEY_NULL).GroupBy(c => c.KeyCombo)
+        GameCommands = commands.Where(c => c.KeyCombo.Key != KeyboardKey.Null).GroupBy(c => c.KeyCombo)
             .ToDictionary(k => k.Key, MakeCommandSelector);
     }
 
@@ -149,15 +149,15 @@ public class GameScreen : BaseScreen
 
     public override void OnKeyPress(KeyboardKey key)
     {
-        if (key is KeyboardKey.KEY_LEFT_ALT or KeyboardKey.KEY_RIGHT_ALT)
+        if (key is KeyboardKey.LeftAlt or KeyboardKey.RightAlt)
         {
             Focused = MenuBar.Children!.First();
             return;
         }
-        var command = new Shortcut(key, Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_SHIFT) ||
-                                        Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_SHIFT)
-            , Raylib.IsKeyDown(KeyboardKey.KEY_LEFT_CONTROL) ||
-              Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT_CONTROL)
+        var command = new Shortcut(key, Raylib.IsKeyDown(KeyboardKey.RightShift) ||
+                                        Raylib.IsKeyDown(KeyboardKey.LeftShift)
+            , Raylib.IsKeyDown(KeyboardKey.LeftControl) ||
+              Raylib.IsKeyDown(KeyboardKey.RightControl)
         );
 
         if (!ActiveMode.HandleKeyPress(command) && GameCommands.ContainsKey(command))

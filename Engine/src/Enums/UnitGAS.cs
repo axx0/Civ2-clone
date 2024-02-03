@@ -1,6 +1,6 @@
 ﻿namespace Civ2engine.Enums
 {
-    public enum UnitGAS
+    public enum UnitGas
     {
         Ground = 0,
         Air = 1,

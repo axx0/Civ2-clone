@@ -289,7 +289,7 @@ public class MapControl : BaseControl
 
         var paddedLoc = new Vector2(Location.X + _padding.Left, Location.Y + _padding.Top);
         Raylib.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f,1f,
-            Color.WHITE);
+            Color.White);
 
         var cityDetails = new List<CityData>();
 
@@ -310,9 +310,9 @@ public class MapControl : BaseControl
         {
             var name = cityData.Name;
             var textSize = Raylib.MeasureTextEx(_active.Look.DefaultFont, name, 20, 1);
-            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.width /2f , cityData.Texture.height) - textSize /2f;
+            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width /2f , cityData.Texture.Height) - textSize /2f;
 
-            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.BLACK);
+            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.Black);
             Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);
         }
 
@@ -322,7 +322,7 @@ public class MapControl : BaseControl
         }
 
         if (_backgroundImage != null)
-            Raylib.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.WHITE);
+            Raylib.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
         _headerLabel.Draw(pulse);
     }
 

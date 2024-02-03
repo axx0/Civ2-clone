@@ -36,8 +36,8 @@ public class LabelControl : BaseControl
         _spacing = spacing;
         _alignment = alignment;
         _labelFont = font ?? controller.MainWindow.ActiveInterface.Look.LabelFont;
-        _colorFront = colorFront ?? Color.BLACK;
-        _colorShadow = colorShadow ?? Color.BLACK;
+        _colorFront = colorFront ?? Color.Black;
+        _colorShadow = colorShadow ?? Color.Black;
         _shadowOffset = shadowOffset ?? Vector2.Zero;
         TextSize = Raylib.MeasureTextEx(_labelFont, text, _fontSize, _spacing);
         _active = controller.MainWindow.ActiveInterface;
@@ -84,7 +84,7 @@ public class LabelControl : BaseControl
             Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, _colorFront);
         }
 
-        //Raylib.DrawRectangleLines((int)Bounds.x, (int)Bounds.y, (int)Bounds.width, (int)Bounds.height, Color.RED);
+        //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.RED);
 
         base.Draw(pulse);
     }

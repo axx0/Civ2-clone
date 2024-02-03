@@ -38,13 +38,13 @@ public class FoodStorageBox : BaseControl
     
 
     var foodPerRow = _cityWindow.City.Size + 1;
-        var spacing = _foodIcon.width;
-        var boxWidth = _foodIcon.width * foodPerRow + 6;
+        var spacing = _foodIcon.Width;
+        var boxWidth = _foodIcon.Width * foodPerRow + 6;
         
         if (boxWidth > Width - 10)
         {
-            spacing = (Width - 10 - _foodIcon.width) / (foodPerRow - 1);
-            boxWidth = 10 + foodPerRow  * spacing + _foodIcon.width;
+            spacing = (Width - 10 - _foodIcon.Width) / (foodPerRow - 1);
+            boxWidth = 10 + foodPerRow  * spacing + _foodIcon.Width;
         }
         var posX = Location.X + Width / 2f - boxWidth / 2f;
         var posY = Location.Y + 16;
@@ -63,10 +63,10 @@ public class FoodStorageBox : BaseControl
         var storage = _cityWindow.City.GetFoodStorage();
         if (storage > 0)
         {
-            var line_width = boxWidth- 10;
-            var starting_x = posX + 5;
-            var starting_y = posY + lineHeight * storage / 100f;
-            Raylib.DrawLineEx(new Vector2( starting_x, starting_y),new Vector2(starting_x + line_width, starting_y), 1f, _pen1);
+            var lineWidth = boxWidth- 10;
+            var startingX = posX + 5;
+            var startingY = posY + lineHeight * storage / 100f;
+            Raylib.DrawLineEx(new Vector2( startingX, startingY),new Vector2(startingX + lineWidth, startingY), 1f, _pen1);
         }
         
         var foodStore = _cityWindow.City.FoodInStorage;
@@ -77,7 +77,7 @@ public class FoodStorageBox : BaseControl
         {
             for (int col = 0; col < foodPerRow && count < foodStore; col++)
             {
-                Raylib.DrawTexture(_foodIcon, (int)posX + spacing * col, (int)Location.Y +  15 + 3 + _foodIcon.height * row,Color.WHITE);
+                Raylib.DrawTexture(_foodIcon, (int)posX + spacing * col, (int)Location.Y +  15 + 3 + _foodIcon.Height * row,Color.White);
                 count++;
             }
         }

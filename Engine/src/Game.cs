@@ -173,7 +173,7 @@ namespace Civ2engine
                 false);
         }
 
-        public string Order2string(OrderType unitOrder)
+        public string Order2String(OrderType unitOrder)
         {
             var order = Rules.Orders.FirstOrDefault(t => t.Type == unitOrder);
             return order != null ? order.Name : string.Empty;
@@ -227,7 +227,7 @@ namespace Civ2engine
             player.ActiveTile = currentPlayer.ActiveTile;
             player.ActiveUnit = currentPlayer.ActiveUnit;
             Players[id] = player;
-            Script.Connect(player.UI);
+            Script.Connect(player.Ui);
         }
 
         public void UpdatePlayerViewData()

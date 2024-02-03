@@ -5,7 +5,7 @@ namespace Model.Menu;
 public readonly struct Shortcut
 {
 #pragma warning disable CA2211
-    public static Shortcut None = new (KeyboardKey.KEY_NULL);
+    public static Shortcut None = new (KeyboardKey.Null);
 #pragma warning restore CA2211
 
     public Shortcut(KeyboardKey key, bool shift = false, bool ctrl = false)

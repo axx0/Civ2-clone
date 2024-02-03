@@ -17,15 +17,15 @@ namespace ExtensionMethods
         }
 
         // Convert civ2-style XY coordinates to real XY coordinates
-        public static int[] Civ2xy(this int[] coordXY)
+        public static int[] Civ2Xy(this int[] coordXy)
         {
-            return new int[] { (coordXY[0] - coordXY[1] % 2) / 2, coordXY[1] };
+            return new int[] { (coordXy[0] - coordXy[1] % 2) / 2, coordXy[1] };
         }
 
         // Convert real XY coordinates to civ2 XY coordinates
-        public static int[] XYciv2(this int[] coordXY)
+        public static int[] XYciv2(this int[] coordXy)
         {
-            return new int[] { 2 * coordXY[0] + (coordXY[1] % 2), coordXY[1] };
+            return new int[] { 2 * coordXy[0] + (coordXy[1] % 2), coordXy[1] };
         }
 
         // Return position of "i" relative to zoom

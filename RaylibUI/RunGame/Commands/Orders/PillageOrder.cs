@@ -16,15 +16,15 @@ public class PillageOrder : Order
     private readonly Game _game;
 
     public PillageOrder(GameScreen gameScreen) : 
-        base(gameScreen,  new Shortcut(KeyboardKey.KEY_P, shift:true), CommandIds.PillageOrder)
+        base(gameScreen,  new Shortcut(KeyboardKey.P, shift:true), CommandIds.PillageOrder)
     {
-        _game = _gameScreen.Game;
+        _game = GameScreen.Game;
     }
 
     public override void Update()
     {
-        var activeTile = _gameScreen.Player.ActiveTile;
-        var activeUnit = _gameScreen.Player.ActiveUnit;
+        var activeTile = GameScreen.Player.ActiveTile;
+        var activeUnit = GameScreen.Player.ActiveUnit;
         if (activeTile.IsCityPresent)
         {
             SetCommandState(CommandStatus.Invalid);
@@ -35,7 +35,7 @@ public class PillageOrder : Order
         }
         else
         {
-            if (activeTile.Improvements.Count > 0 && activeTile.Improvements.Any(i=> !_gameScreen.Game.TerrainImprovements[i.Improvement].Negative))
+            if (activeTile.Improvements.Count > 0 && activeTile.Improvements.Any(i=> !GameScreen.Game.TerrainImprovements[i.Improvement].Negative))
             {
                 SetCommandState(CommandStatus.Normal);
             }
@@ -48,7 +48,7 @@ public class PillageOrder : Order
 
     public override void Action()
     {
-        var improvements = _gameScreen.Player.ActiveTile.Improvements.Where(i =>
+        var improvements = GameScreen.Player.ActiveTile.Improvements.Where(i =>
             _game.TerrainImprovements.ContainsKey(i.Improvement) &&
             !_game.TerrainImprovements[i.Improvement].Negative).ToList();
         ConstructedImprovement improvementToPillage = null;
@@ -76,7 +76,7 @@ public class PillageOrder : Order
 
     private void Pillage(ConstructedImprovement? improvementToPillage)
     {
-        var player = _gameScreen.Player;
+        var player = GameScreen.Player;
         
         player.ActiveUnit.MovePointsLost += _game.Rules.Cosmic.MovementMultiplier;
             

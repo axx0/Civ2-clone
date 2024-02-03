@@ -11,18 +11,18 @@ public class SkipOrder : Order
 {
 
     public SkipOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_SPACE), CommandIds.SkipOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.Space), CommandIds.SkipOrder)
     {
     }
 
     public override void Update()
     {
-        SetCommandState(_gameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()
     {
-        _gameScreen.Game.ActiveUnit?.SkipTurn();
-        _gameScreen.Game.ChooseNextUnit();
+        GameScreen.Game.ActiveUnit?.SkipTurn();
+        GameScreen.Game.ChooseNextUnit();
     }
 }

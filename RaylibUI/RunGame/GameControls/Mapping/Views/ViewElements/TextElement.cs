@@ -32,7 +32,7 @@ public class TextElement : IViewElement
         
         var size = Raylib.MeasureTextEx(Fonts.Arial, _text, _height * scale, 1);
         Raylib.DrawTextEx(Fonts.Arial, _text, loc - new Vector2(size.X / 2, 0), _height * scale, 1,
-            Color.BLACK);
+            Color.Black);
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)

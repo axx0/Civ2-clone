@@ -39,7 +39,7 @@ public abstract class BaseLayoutController : IControlLayout
 
     public virtual void OnKeyPress(KeyboardKey key)
     {
-        if (key == KeyboardKey.KEY_TAB)
+        if (key == KeyboardKey.Tab)
         {
             if (_focused is null)
             {

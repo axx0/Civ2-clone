@@ -12,7 +12,7 @@ namespace Civ2engine.Advances
     {
         private static AdvanceResearch[] _researched;
 
-        private static int _MapSizeAdjustment;
+        private static int _mapSizeAdjustment;
         
         public static void SetupTech(this Game game)
         {
@@ -29,7 +29,7 @@ namespace Civ2engine.Advances
                 }
             }
 
-            _MapSizeAdjustment = game.TotalMapArea / 1000;
+            _mapSizeAdjustment = game.TotalMapArea / 1000;
             
             ProductionPossibilities.InitializeProductionLists(game.AllCivilizations, game.Rules.ProductionItems);
         }
@@ -126,7 +126,7 @@ namespace Civ2engine.Advances
 
             if (ourAdvances > 20)
             {
-                baseCost += _MapSizeAdjustment;
+                baseCost += _mapSizeAdjustment;
             }
 
             return baseCost * ourAdvances;

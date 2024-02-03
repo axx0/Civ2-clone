@@ -83,7 +83,7 @@ namespace Civ2engine
                     OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
 
 
-                    if (_activeCiv.PlayerType == PlayerType.AI)
+                    if (_activeCiv.PlayerType == PlayerType.Ai)
                     {
                         AiTurn();
                     }
@@ -141,7 +141,7 @@ namespace Civ2engine
                     case AIroleType.Settle:
                         if (currentTile.Fertility == -2)
                         {
-                            CityActions.AIBuildCity(unit, this);
+                            CityActions.AiBuildCity(unit, this);
                         }
                         var cityTile = CurrentMap.CityRadius(currentTile)
                             .FirstOrDefault(t => t.CityHere != null);
@@ -152,7 +152,7 @@ namespace Civ2engine
                                 .FirstOrDefault();
                             if (moreFertile == null)
                             {
-                                CityActions.AIBuildCity(unit, this);
+                                CityActions.AiBuildCity(unit, this);
                             }
                             else
                             {
@@ -161,7 +161,7 @@ namespace Civ2engine
                                     currentTile = moreFertile;
                                     if (unit.MovePoints > 0)
                                     {
-                                        CityActions.AIBuildCity(unit, this);
+                                        CityActions.AiBuildCity(unit, this);
                                     }
                                 }
                             }

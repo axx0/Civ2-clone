@@ -103,7 +103,7 @@ public static class Initialization
             TaxRate = 40,
             TribeName = tribe.Plural,
             Titles = titles,
-            PlayerType = human ? PlayerType.Local : PlayerType.AI,
+            PlayerType = human ? PlayerType.Local : PlayerType.Ai,
             NormalColour = tribe.Color,
             AllowedAdvanceGroups = tribe.AdvanceGroups ?? new [] { AdvanceGroupAccess.CanResearch }
         };

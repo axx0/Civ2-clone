@@ -17,18 +17,18 @@ internal class AttackAnimation : BaseGameView
         var activeInterface = gameScreen.Main.ActiveInterface;
 
         var unitAnimations = new List<IViewElement>();
-        var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.height};
+        var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height};
         ImageUtils.GetUnitTextures(args.Attacker, activeInterface, unitAnimations, attackerPos );
         var defPos = GetPosForTile(args.Defender.CurrentLocation);
-        var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.height };
+        var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height };
         ImageUtils.GetUnitTextures(args.Defender, activeInterface, unitAnimations,
             defenderPos);
         var battleAnimation = activeInterface.UnitImages.BattleAnim;
         var explosion = 0;
         SetAnimation(unitAnimations);
-        var attackPos = ActivePos  + new Vector2(Dimensions.HalfWidth- battleAnimation[0].width/2f, Dimensions.HalfHeight - battleAnimation[0].height /2f);
+        var attackPos = ActivePos  + new Vector2(Dimensions.HalfWidth- battleAnimation[0].Width/2f, Dimensions.HalfHeight - battleAnimation[0].Height /2f);
         
-        defPos += new Vector2(Dimensions.HalfWidth - battleAnimation[0].width/2f, Dimensions.HalfHeight - battleAnimation[0].height /2f);
+        defPos += new Vector2(Dimensions.HalfWidth - battleAnimation[0].Width/2f, Dimensions.HalfHeight - battleAnimation[0].Height /2f);
         do
         {
             var attackerWins = args.CombatRoundsAttackerWins[explosion];

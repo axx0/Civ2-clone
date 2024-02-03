@@ -24,7 +24,7 @@ namespace Civ2.Menu
                     if (idx == -1 || idx >= s.Length - 1 ||
                         !Enum.TryParse<KeyboardKey>("KEY_" + s.Substring(idx + 1, 1).ToUpperInvariant(), out var hotkey))
                     {
-                        hotkey = KeyboardKey.KEY_NULL;
+                        hotkey = KeyboardKey.Null;
                     }
 
                     idx = s.IndexOf("|", StringComparison.Ordinal);

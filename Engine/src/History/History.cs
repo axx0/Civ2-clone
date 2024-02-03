@@ -8,7 +8,7 @@ namespace Civ2engine
     {
         private readonly Game _game;
 
-        private List<HistoryEvent> Events = new();
+        private List<HistoryEvent> _events = new();
         
 
         internal History(Game game)
@@ -19,17 +19,17 @@ namespace Civ2engine
 
         public void AdvanceDiscovered(int advance, int civ)
         {
-            Events.Add(new ResearchEvent(advance, civ, _game));
+            _events.Add(new ResearchEvent(advance, civ, _game));
         }
 
         public void CityBuilt(City city)
         {
-            Events.Add(new CityBuiltEvent(city,_game));
+            _events.Add(new CityBuiltEvent(city,_game));
         }
 
         public int TotalCitiesBuilt(int civId)
         {
-            return Events.Count(e => e.Civ == civId && e.EventType == HistoryEventType.CityBuilt);
+            return _events.Count(e => e.Civ == civId && e.EventType == HistoryEventType.CityBuilt);
         }
     }
 

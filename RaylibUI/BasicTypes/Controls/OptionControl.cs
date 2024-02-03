@@ -11,7 +11,7 @@ internal class OptionControl : LabelControl
 
     public override bool CanFocus => true;
 
-    public OptionControl(IControlLayout controller, string text, int index, bool isChecked, Texture2D[] images) : base(controller, text, eventTransparent: false, offset: images[0].width, font: controller.MainWindow.ActiveInterface.Look.LabelFont, colorFront: controller.MainWindow.ActiveInterface.Look.LabelColour)
+    public OptionControl(IControlLayout controller, string text, int index, bool isChecked, Texture2D[] images) : base(controller, text, eventTransparent: false, offset: images[0].Width, font: controller.MainWindow.ActiveInterface.Look.LabelFont, colorFront: controller.MainWindow.ActiveInterface.Look.LabelColour)
     {
         Index = index;
         Checked = isChecked;
@@ -28,17 +28,17 @@ internal class OptionControl : LabelControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_images[Checked || _images.Length == 1 ? 0: 1], (int)Location.X,(int)Location.Y, Color.WHITE);
+        Raylib.DrawTexture(_images[Checked || _images.Length == 1 ? 0: 1], (int)Location.X,(int)Location.Y, Color.White);
         base.Draw(pulse);
         if (Controller.Focused == this)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(Bounds.x + _images[0].width-1, Bounds.y + 1, Bounds.width - _images[0].width, Bounds.height -2), 0.5f, Color.BLACK);
+            Raylib.DrawRectangleLinesEx(new Rectangle(Bounds.X + _images[0].Width-1, Bounds.Y + 1, Bounds.Width - _images[0].Width, Bounds.Height -2), 0.5f, Color.Black);
         }
     }
 
     public override int GetPreferredHeight()
     {
         var baseHeight = base.GetPreferredHeight();
-        return baseHeight < _images[0].height ? _images[0].height : baseHeight;
+        return baseHeight < _images[0].Height ? _images[0].Height : baseHeight;
     }
 }   

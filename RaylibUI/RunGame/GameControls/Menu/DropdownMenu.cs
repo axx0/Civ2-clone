@@ -30,7 +30,7 @@ public class DropdownMenu :  BaseDialog
         Location = location;
         _current = menuIndex;
         Controls.Clear();
-        var width = new List<int>{ 20,10};
+        var childWidths = new List<int>{ 20,10};
         foreach (var command in elements)
         {
             command.GameCommand?.Update();
@@ -39,23 +39,23 @@ public class DropdownMenu :  BaseDialog
             
             dropDownItem.GetPreferredWidth();
             var itemWidths = dropDownItem.ChildWidths;
-            if (width[0] < itemWidths[0])
+            if (childWidths[0] < itemWidths[0])
             {
-                width[0] = itemWidths[0];
+                childWidths[0] = itemWidths[0];
             }
 
-            if (width[1] < itemWidths[1])
+            if (childWidths[1] < itemWidths[1])
             {
-                width[1] = itemWidths[1];
+                childWidths[1] = itemWidths[1];
             }
         }
 
-        var dropdownWidth = width.Sum() + DropDownItem.DropdownSpacing;
+        var dropdownWidth = childWidths.Sum() + DropDownItem.DropdownSpacing;
         var currentY = location.Y + 3;
         foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
             var height = menuItem.GetPreferredHeight() + 12;
-            menuItem.SetChildWidths(width);
+            menuItem.SetChildWidths(childWidths);
             menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, height);
             menuItem.OnResize();
             currentY += height;
@@ -73,7 +73,7 @@ public class DropdownMenu :  BaseDialog
 
     public override void MouseOutsideControls(Vector2 mousePos)
     {
-        if (Raylib.IsMouseButtonDown(MouseButton.MOUSE_BUTTON_LEFT))
+        if (Raylib.IsMouseButtonDown(MouseButton.Left))
         {
             if (Raylib.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
             {
@@ -97,6 +97,7 @@ public class DropdownMenu :  BaseDialog
                         if (control.Index == _current)
                         {
                             Hide();
+                            _gameScreen.Focused = control;
                         }
                         else
                         {
@@ -123,13 +124,13 @@ public class DropdownMenu :  BaseDialog
     {
         switch (key)
         {
-            case KeyboardKey.KEY_LEFT:
+            case KeyboardKey.Left:
                 MenuBar.Activate(_current - 1);
                 return;
-            case KeyboardKey.KEY_RIGHT:
+            case KeyboardKey.Right:
                 MenuBar.Activate(_current + 1);
                 return;
-            case KeyboardKey.KEY_DOWN:
+            case KeyboardKey.Down:
                 if (Focused == null)
                 {
                     Focused = Controls[0];
@@ -145,7 +146,7 @@ public class DropdownMenu :  BaseDialog
                 }
 
                 return;
-            case KeyboardKey.KEY_UP:
+            case KeyboardKey.Up:
                 if (Focused == null)
                 {
                     Focused = Controls[^1];
@@ -232,5 +233,6 @@ public class DropdownMenu :  BaseDialog
     {
         _shown = false;
         _gameScreen.CloseDialog(this);
+        _gameScreen.Focused = null;
     }
 }

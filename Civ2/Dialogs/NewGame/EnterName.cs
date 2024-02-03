@@ -22,7 +22,7 @@ public class EnterName : BaseDialogHandler
             {
                 new()
                 {
-                    index = 0,
+                    Index = 0,
                     Name = "Name",
                     InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName,
                     Width = 400,

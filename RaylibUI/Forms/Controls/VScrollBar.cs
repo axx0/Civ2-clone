@@ -45,28 +45,28 @@ public class VScrollBar : Control
 
         if (Enabled)
         {
-            _topArrowPressed = Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, Width, 17));
-            _btmArrowPressed = Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + Height - 17, Width, 17));
+            _topArrowPressed = Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y, Width, 17));
+            _btmArrowPressed = Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + Height - 17, Width, 17));
 
             // Is bar (without the slider) pressed?
             if (Value == 0) // slider on top
             {
                 if (Maximum > VisibleItems)
                 {
-                    _barBtmPressed = Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + 2 * 17, Width, Height - 3 * 17));
+                    _barBtmPressed = Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + 2 * 17, Width, Height - 3 * 17));
                 }
             }
             else if (Value == Maximum - VisibleItems) // slider on bottom
             {
-                _barTopPressed = Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + 17, Width, Height - 3 * 17));
+                _barTopPressed = Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + 17, Width, Height - 3 * 17));
             }
             else
             {
-                if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + 17, Width, sliderOffset - 17)))
+                if (Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + 17, Width, sliderOffset - 17)))
                 {
                     _barTopPressed = true;
                 }
-                else if (Raylib.IsMouseButtonPressed(MouseButton.MOUSE_BUTTON_LEFT) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + sliderOffset + 17, Width, Height - sliderOffset - 2 * 17)))
+                else if (Raylib.IsMouseButtonPressed(MouseButton.Left) && Raylib.CheckCollisionPointRec(mousePos, new Rectangle(x, y + sliderOffset + 17, Width, Height - sliderOffset - 2 * 17)))
                 {
                     _barBtmPressed = true;
                 }
@@ -114,10 +114,10 @@ public class VScrollBar : Control
             Raylib.DrawRectangleLines(x, y, Width, 17, new Color(160, 160, 160, 255));
         }
         int offsetArrow = _topArrowPressed ? 1 : 0;
-        Raylib.DrawLine(x + Width / 2 - 3 + offsetArrow, y + 9 + offsetArrow, x + Width / 2 + 4 + offsetArrow, y + 9 + offsetArrow, Color.BLACK);
-        Raylib.DrawLine(x + Width / 2 - 2 + offsetArrow, y + 8 + offsetArrow, x + Width / 2 + 3 + offsetArrow, y + 8 + offsetArrow, Color.BLACK);
-        Raylib.DrawLine(x + Width / 2 - 1 + offsetArrow, y + 7 + offsetArrow, x + Width / 2 + 2 + offsetArrow, y + 7 + offsetArrow, Color.BLACK);
-        Raylib.DrawLine(x + Width / 2 + offsetArrow, y + 6 + offsetArrow, x + Width / 2 + 1 + offsetArrow, y + 6 + offsetArrow, Color.BLACK);
+        Raylib.DrawLine(x + Width / 2 - 3 + offsetArrow, y + 9 + offsetArrow, x + Width / 2 + 4 + offsetArrow, y + 9 + offsetArrow, Color.Black);
+        Raylib.DrawLine(x + Width / 2 - 2 + offsetArrow, y + 8 + offsetArrow, x + Width / 2 + 3 + offsetArrow, y + 8 + offsetArrow, Color.Black);
+        Raylib.DrawLine(x + Width / 2 - 1 + offsetArrow, y + 7 + offsetArrow, x + Width / 2 + 2 + offsetArrow, y + 7 + offsetArrow, Color.Black);
+        Raylib.DrawLine(x + Width / 2 + offsetArrow, y + 6 + offsetArrow, x + Width / 2 + 1 + offsetArrow, y + 6 + offsetArrow, Color.Black);
 
         // Bottom arrow
         if (!_btmArrowPressed)
@@ -132,10 +132,10 @@ public class VScrollBar : Control
             Raylib.DrawLine(x + Width - 1, y + Height - 16, x + Width - 1, y + Height - 1, new Color(160, 160, 160, 255));
         }
         offsetArrow = _btmArrowPressed ? 1 : 0;
-        Raylib.DrawLine(x + Width / 2 - 3 + offsetArrow, y + Height - 10 + offsetArrow, x + Width / 2 + 4 + offsetArrow, y + Height - 10 + offsetArrow, Color.BLACK);
-        Raylib.DrawLine(x + Width / 2 - 2 + offsetArrow, y + Height - 9 + offsetArrow, x + Width / 2 + 3 + offsetArrow, y + Height - 9 + offsetArrow, Color.BLACK);
-        Raylib.DrawLine(x + Width / 2 - 1 + offsetArrow, y + Height - 8 + offsetArrow, x + Width / 2 + 2 + offsetArrow, y + Height - 8 + offsetArrow, Color.BLACK);
-        Raylib.DrawLine(x + Width / 2 + offsetArrow, y + Height - 7 + offsetArrow, x + Width / 2 + 1 + offsetArrow, y + Height - 7 + offsetArrow, Color.BLACK);
+        Raylib.DrawLine(x + Width / 2 - 3 + offsetArrow, y + Height - 10 + offsetArrow, x + Width / 2 + 4 + offsetArrow, y + Height - 10 + offsetArrow, Color.Black);
+        Raylib.DrawLine(x + Width / 2 - 2 + offsetArrow, y + Height - 9 + offsetArrow, x + Width / 2 + 3 + offsetArrow, y + Height - 9 + offsetArrow, Color.Black);
+        Raylib.DrawLine(x + Width / 2 - 1 + offsetArrow, y + Height - 8 + offsetArrow, x + Width / 2 + 2 + offsetArrow, y + Height - 8 + offsetArrow, Color.Black);
+        Raylib.DrawLine(x + Width / 2 + offsetArrow, y + Height - 7 + offsetArrow, x + Width / 2 + 1 + offsetArrow, y + Height - 7 + offsetArrow, Color.Black);
 
         // Slider
         Raylib.DrawLine(x, y + sliderOffset, x + Width - 1, y + sliderOffset, new Color(227, 227, 227, 255));
@@ -149,11 +149,11 @@ public class VScrollBar : Control
 
         if (_barTopPressed)
         {
-            Raylib.DrawRectangle(x, y + 18, Width, sliderOffset - 17, Color.BLACK);
+            Raylib.DrawRectangle(x, y + 18, Width, sliderOffset - 17, Color.Black);
         }
         if (_barBtmPressed)
         {
-            Raylib.DrawRectangle(x, y + sliderOffset + 18, Width, Height - sliderOffset - 2 * 17, Color.BLACK);
+            Raylib.DrawRectangle(x, y + sliderOffset + 18, Width, Height - sliderOffset - 2 * 17, Color.Black);
         }
     }
 }

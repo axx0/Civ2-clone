@@ -29,15 +29,15 @@ public class Path
 
     private const int NotPossible = -1;
 
-    public static Path CalculatePathBetween(Game game, Tile startTile, Tile endTile, UnitGAS domain, int moveFactor,
+    public static Path CalculatePathBetween(Game game, Tile startTile, Tile endTile, UnitGas domain, int moveFactor,
         Civilization owner, bool alpine, bool ignoreZoc)
     {
         if (startTile.Z != endTile.Z || !endTile.IsVisible(owner.Id)) return null;
 
         switch (domain)
         {
-            case UnitGAS.Ground when startTile.Island != endTile.Island && startTile.Neighbours().All(t=>t.Island != endTile.Island):
-            case UnitGAS.Sea when !OnCompatibleSea(startTile, endTile):
+            case UnitGas.Ground when startTile.Island != endTile.Island && startTile.Neighbours().All(t=>t.Island != endTile.Island):
+            case UnitGas.Sea when !OnCompatibleSea(startTile, endTile):
                 return null;
         }
         
@@ -45,12 +45,12 @@ public class Path
         var rules = game.Rules;
         Func<Tile, Tile, int> costFunction = domain switch
         {
-            UnitGAS.Ground => BuildGroundMovementFunction(rules.Cosmic, alpine, moveFactor),
-            UnitGAS.Air => (source, dest) => rules.Cosmic.MovementMultiplier,
-            UnitGAS.Sea => (source, dest) => dest == endTile || dest.Type == TerrainType.Ocean || (dest.CityHere is { } && dest.CityHere.OwnerId == owner.Id)
+            UnitGas.Ground => BuildGroundMovementFunction(rules.Cosmic, alpine, moveFactor),
+            UnitGas.Air => (source, dest) => rules.Cosmic.MovementMultiplier,
+            UnitGas.Sea => (source, dest) => dest == endTile || dest.Type == TerrainType.Ocean || (dest.CityHere is { } && dest.CityHere.OwnerId == owner.Id)
                     ? rules.Cosmic.MovementMultiplier
                     : NotPossible,
-            UnitGAS.Special => (source, dest) => rules.Cosmic.MovementMultiplier,
+            UnitGas.Special => (source, dest) => rules.Cosmic.MovementMultiplier,
             _ => throw new ArgumentOutOfRangeException(nameof(domain), domain, null)
         };
 
@@ -126,7 +126,7 @@ public class Path
         return null;
     }
 
-    private static IEnumerable<Tile> GetInitialCandidates(Tile startTile, bool ignoreZoc, Civilization owner, UnitGAS domain)
+    private static IEnumerable<Tile> GetInitialCandidates(Tile startTile, bool ignoreZoc, Civilization owner, UnitGas domain)
     {
         if (ignoreZoc)
         {

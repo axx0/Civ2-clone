@@ -23,20 +23,20 @@ namespace Civ2engine
             var maps = new List<Map>();
             for (int mapNo = 0; mapNo < gameData.MapNoSecondaryMaps + 1; mapNo++)
             {
-                var _map = new Map(gameData.OptionsArray[3], mapNo)
+                var map = new Map(gameData.OptionsArray[3], mapNo)
                 {
                     MapRevealed = true, //gameData.MapRevealed, Revealing all maps for testing
                     WhichCivsMapShown = gameData.WhichCivsMapShown,
                     Zoom = gameData.Zoom,
-                    StartingClickedXY = gameData.ClickedXY,
-                    XDim = gameData.MapXdim_x2 / 2,
+                    StartingClickedXy = gameData.ClickedXy,
+                    XDim = gameData.MapXdimX2 / 2,
                     YDim = gameData.MapYdim,
                     ResourceSeed = gameData.MapResourceSeed,
                     LocatorXdim = gameData.MapLocatorXdim,
                     LocatorYdim = gameData.MapLocatorYdim
                 };
-                _map.Tile = PopulateTilesFromGameData(gameData, Rules, _map);
-                maps.Add(_map);
+                map.Tile = PopulateTilesFromGameData(gameData, Rules, map);
+                maps.Add(map);
             }
             this.Maps = maps;
             
@@ -123,21 +123,21 @@ namespace Civ2engine
 
             // Scenario
             List<ScenarioEvent> events = new ();
-            ScenarioEvent _event = new();
-            int[]? _flags = null;
+            ScenarioEvent @event = new();
+            int[]? flags = null;
             for (int i = 0; i < gameData.NumberOfEvents; i++)
             {
                 // @INITFLAG
                 if (gameData.EventModifiers[i][11])
                 {
-                    _flags = new int[9];
+                    flags = new int[9];
                     for (int j = 0; j <8; j++)
                     {
-                        _flags[j] = BitConverter.ToInt32(new byte[4] { 
+                        flags[j] = BitConverter.ToInt32(new byte[4] { 
                             gameData.EventActionParam[i][85 + 4 * j], gameData.EventActionParam[i][86 + 4 * j],
                             gameData.EventActionParam[i][87 + 4 * j], gameData.EventActionParam[i][88 + 4 * j] });
                     }
-                    _flags[8] = BitConverter.ToInt32(new byte[4] {
+                    flags[8] = BitConverter.ToInt32(new byte[4] {
                         gameData.EventActionParam[i][129], gameData.EventActionParam[i][130],
                         gameData.EventActionParam[i][131], gameData.EventActionParam[i][132] });
                 }
@@ -146,13 +146,13 @@ namespace Civ2engine
                     // Second trigger with @AND modifier
                     if (gameData.EventModifiers[i][30])
                     {
-                        _event.Trigger2 = CreateScenarioTrigger(gameData.GameVersion, gameData.EventTriggerIds[i],
+                        @event.Trigger2 = CreateScenarioTrigger(gameData.GameVersion, gameData.EventTriggerIds[i],
                                 gameData.EventModifiers[i], gameData.EventTriggerParam[i], gameData.EventStrings);
-                        events.Add(_event);
+                        events.Add(@event);
                     }
                     else
                     {
-                        _event = new ScenarioEvent
+                        @event = new ScenarioEvent
                         {
                             Trigger = CreateScenarioTrigger(gameData.GameVersion, gameData.EventTriggerIds[i],
                                 gameData.EventModifiers[i], gameData.EventTriggerParam[i], gameData.EventStrings),
@@ -167,7 +167,7 @@ namespace Civ2engine
                         // Add event to list unless it's the first trigger with @AND modifier
                         if (!gameData.EventModifiers[i][28])
                         {
-                            events.Add(_event);
+                            events.Add(@event);
                         }
                     }
                 }
@@ -175,14 +175,14 @@ namespace Civ2engine
             Scenario = new Scenario
             {
                 Events = events,
-                Flags = _flags == null ? null : _flags,
+                Flags = flags == null ? null : flags,
                 TotalWar = gameData.TotalWar,
                 ObjectiveVictory = gameData.ObjectiveVictory,
                 CountWondersAsObjectives = gameData.CountWondersAsObjectives,
                 ForbidGovernmentSwitching = gameData.ForbidGovernmentSwitching,
                 ForbidTechFromConquests = gameData.ForbidTechFromConquests,
                 ElliminatePollution = gameData.ElliminatePollution,
-                SpecialWWIIonlyAI = gameData.SpecialWWIIonlyAI,
+                SpecialWwiIonlyAi = gameData.SpecialWwiIonlyAi,
                 Name = gameData.ScenarioName,
                 TechParadigm = gameData.TechParadigm,
                 TurnYearIncrement = gameData.TurnYearIncrement,
@@ -519,7 +519,7 @@ namespace Civ2engine
                 MadeFirstMove = madeFirstMove,
                 Veteran = veteran,
                 Owner = civilization,
-                PrevXY = new[] { prevX, prevY },
+                PrevXy = new[] { prevX, prevY },
                 Order = (OrderType)orders,
                 HomeCity = homeCity == 255 ? null : Cities[homeCity],
                 GoToX = goToX,
@@ -548,7 +548,7 @@ namespace Civ2engine
             switch (triggerId)
             {
                 case 0x1:
-                    trigger = new TUnitKilled
+                    trigger = new UnitKilled
                     {
                         UnitKilledId = version <= 44 ? triggerParam[4] : triggerParam[29],
                         AttackerCivId = triggerParam[16],
@@ -564,7 +564,7 @@ namespace Civ2engine
                     break;
 
                 case 0x2:
-                    trigger = new TCityTaken
+                    trigger = new CityTaken
                     {
                         City = Cities.Find(c => c.Name == strings[0]),
                         AttackerCivId = triggerParam[16],
@@ -576,7 +576,7 @@ namespace Civ2engine
                     break;
 
                 case 0x4:
-                    trigger = new TTurn
+                    trigger = new TurnTrigger()
                     {
                         Turn = version <= 44 ?
                                 BitConverter.ToInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
@@ -585,7 +585,7 @@ namespace Civ2engine
                     break;
 
                 case 0x8:
-                    trigger = new TTurnInterval
+                    trigger = new TurnInterval
                     {
                         Interval = version <= 44 ?
                                 BitConverter.ToInt16(new byte[2] { triggerParam[36], triggerParam[37] }) :
@@ -598,7 +598,7 @@ namespace Civ2engine
                     if (!(triggerParam[8] == 0 && triggerParam[9] == 0 && triggerParam[10] == 0 && triggerParam[11] == 0
                         && triggerParam[12] == 0 && triggerParam[13] == 0 && triggerParam[14] == 0 && triggerParam[15] == 0))
                     {
-                        trigger = new TNegotiation1
+                        trigger = new Negotiation1
                         {
                             TalkerCivId = triggerParam[16],
                             TalkerType = version <= 44 ? triggerParam[20] : triggerParam[8],
@@ -610,7 +610,7 @@ namespace Civ2engine
                     }
                     else
                     {
-                        trigger = new TNegotiation2
+                        trigger = new Negotiation2
                         {
                             TalkerMask = BitConverter.ToInt32(new byte[4] { triggerParam[16], triggerParam[17], triggerParam[18], triggerParam[19] }),
                             ListenerMask = BitConverter.ToInt32(new byte[4] { triggerParam[20], triggerParam[21], triggerParam[22], triggerParam[23] })
@@ -619,18 +619,18 @@ namespace Civ2engine
                     break;
 
                 case 0x20:
-                    trigger = new TScenarioLoaded { };
+                    trigger = new ScenarioLoaded { };
                     break;
 
                 case 0x40:
-                    trigger = new TRandomTurn
+                    trigger = new RandomTurn
                     {
                         Denominator = version <= 44 ? triggerParam[40] : triggerParam[32]
                     };
                     break;
 
                 case 0x80:
-                    trigger = new TNoSchism
+                    trigger = new NoSchism
                     {
                         CivId = version <= 44 ? triggerParam[28] : triggerParam[20],
                         Strings = strings.GetRange(0, 1),
@@ -639,7 +639,7 @@ namespace Civ2engine
                     break;
 
                 case 0x100:
-                    trigger = new TReceivedTechnology
+                    trigger = new ReceivedTechnology
                     {
                         TechnologyId = version <= 44 ? triggerParam[44] : triggerParam[36],
                         ReceiverCivId = version <= 44 ? triggerParam[28] : triggerParam[20],
@@ -650,7 +650,7 @@ namespace Civ2engine
                     break;
 
                 case 0x200:
-                    trigger = new TCityProduction
+                    trigger = new CityProduction
                     {
                         BuilderCivId = triggerParam[20],
                         ImprovementUnitId = triggerParam[37],
@@ -660,7 +660,7 @@ namespace Civ2engine
                     break;
 
                 case 0x400:
-                    trigger = new TAlphaCentauriArrival
+                    trigger = new AlphaCentauriArrival
                     {
                         RaceCivId = triggerParam[16],
                         Size = triggerParam[38],
@@ -670,7 +670,7 @@ namespace Civ2engine
                     break;
 
                 case 0x800:
-                    trigger = new TCityDestroyed
+                    trigger = new CityDestroyed
                     {
                         OwnerId = triggerParam[20],
                         CityId = triggerParam[28],
@@ -680,9 +680,9 @@ namespace Civ2engine
                     break;
 
                 case 0x1000:
-                    trigger = new TBribeUnit
+                    trigger = new BribeUnit
                     {
-                        WhoCivID = triggerParam[16],
+                        WhoCivId = triggerParam[16],
                         WhomCivId = triggerParam[20],
                         UnitTypeId = triggerParam[28],
                         Strings = strings.GetRange(0, 2)
@@ -697,9 +697,9 @@ namespace Civ2engine
                         CountUsed = modifiers[15],
                         TechnologyUsed = modifiers[18],
                         WhoId = triggerParam[16],
-                        Flag_Mask = BitConverter.ToInt32(new byte[4] { triggerParam[24], triggerParam[25], triggerParam[26], triggerParam[27] }),
+                        FlagMask = BitConverter.ToInt32(new byte[4] { triggerParam[24], triggerParam[25], triggerParam[26], triggerParam[27] }),
                         TechnologyId = triggerParam[36],
-                        Count_Threshold = triggerParam[38],
+                        CountThreshold = triggerParam[38],
                         Strings = strings.GetRange(0, 1)
                     };
                     strings.RemoveRange(0, 1);
@@ -712,35 +712,35 @@ namespace Civ2engine
             return trigger;
         }
 
-        public List<IAction> CreateScenarioActions(int version, int[] actionIds, bool[] modifiers,
+        public List<IScenarioAction> CreateScenarioActions(int version, int[] actionIds, bool[] modifiers,
             byte[] actionParam, List<string> strings)
         {
-            var actions = new List<IAction>();
+            var actions = new List<IScenarioAction>();
             for (int i = 0; i < actionIds.Length; i++)
             {
                 switch (actionIds[i])
                 {
                     case 0:
-                        List<string> _texts = new();
+                        List<string> texts = new();
                         for (int j = 0; j < 10; j++)
                         {
                             // One string pointer exists = one line of text
                             if (actionParam[1 + 4 * j + 0] != 0 || actionParam[1 + 4 * j + 1] != 0 ||
                                 actionParam[1 + 4 * j + 2] != 0 || actionParam[1 + 4 * j + 3] != 0)    // TODO: determine for MGE
                             {
-                                _texts.Add(strings[0]);
+                                texts.Add(strings[0]);
                                 strings.RemoveRange(0, 1);
                             }
                         }
-                        actions.Add(new AText
+                        actions.Add(new TextAction
                         {
                             NoBroadcast = modifiers[22],
-                            Strings = new List<string>(_texts)
+                            Strings = new List<string>(texts)
                         });
                         break;
 
                     case 1:
-                        actions.Add(new AMoveUnit
+                        actions.Add(new MoveUnit
                         {
                             OwnerCivId = version <= 44 ? actionParam[84] : actionParam[0],
                             UnitMovedId = version <= 44 ? actionParam[92] : actionParam[197],
@@ -784,7 +784,7 @@ namespace Civ2engine
                         break;
 
                     case 2:
-                        actions.Add(new ACreateUnit
+                        actions.Add(new CreateUnit
                         {
                             OwnerCivId = version <= 44 ? actionParam[160] : actionParam[201],
                             CreatedUnitId = version <= 44 ? actionParam[168] : actionParam[202],
@@ -866,7 +866,7 @@ namespace Civ2engine
                         break;
 
                     case 3:
-                        actions.Add(new AChangeMoney
+                        actions.Add(new ChangeMoney
                         {
                             ReceiverCivId = version <= 44 ? actionParam[320] : actionParam[206],
                             Amount = version <= 44 ? actionParam[324] : actionParam[131],
@@ -876,7 +876,7 @@ namespace Civ2engine
                         break;
 
                     case 4:
-                        actions.Add(new APlayWAV
+                        actions.Add(new PlayWav
                         {
                             File = strings.GetRange(0, 1).FirstOrDefault(),
                             Strings = strings.GetRange(0, 1)
@@ -885,7 +885,7 @@ namespace Civ2engine
                         break;
 
                     case 5:
-                        actions.Add(new AMakeAggression
+                        actions.Add(new MakeAggression
                         {
                             WhomCivId = version <= 44 ? actionParam[144] : actionParam[199],
                             WhoCivId = version <= 44 ? actionParam[152] : actionParam[200],
@@ -895,18 +895,18 @@ namespace Civ2engine
                         break;
 
                     case 7:
-                        actions.Add(new APlayCDtrack
+                        actions.Add(new PlayCDtrack
                         {
                             TrackNo = version <= 44 ? actionParam[336] : actionParam[207]
                         });
                         break;
 
                     case 8:
-                        actions.Add(new ADontplayWonders { });
+                        actions.Add(new DontplayWonders { });
                         break;
 
                     case 9:
-                        actions.Add(new AChangeTerrain
+                        actions.Add(new ChangeTerrain
                         {
                             TerrainTypeId = version <= 44 ? actionParam[340] : actionParam[208],
                             MapCoords = version <= 44 ?
@@ -938,14 +938,14 @@ namespace Civ2engine
                         break;
 
                     case 10:
-                        actions.Add(new ADestroyCiv
+                        actions.Add(new DestroyCiv
                         {
                             CivId = version <= 44 ? actionParam[376] : actionParam[210],
                         });
                         break;
 
                     case 11:
-                        actions.Add(new AGiveTech
+                        actions.Add(new GiveTech
                         {
                             TechId = version <= 44 ? actionParam[280] : actionParam[211],
                             CivId = version <= 44 ? actionParam[384] : actionParam[212],
@@ -953,7 +953,7 @@ namespace Civ2engine
                         break;
 
                     case 12:
-                        actions.Add(new APlayAVI
+                        actions.Add(new PlayAvi
                         {
                             File = strings.GetRange(0, 1).FirstOrDefault(),
                             Strings = strings.GetRange(0, 1)
@@ -962,18 +962,18 @@ namespace Civ2engine
                         break;
 
                     case 13:
-                        actions.Add(new AEndGameOverride { });
+                        actions.Add(new EndGameOverride { });
                         break;
 
                     case 14:
-                        actions.Add(new AEndGame
+                        actions.Add(new EndGame
                         {
                             EndScreens = modifiers[3]
                         });
                         break;
 
                     case 15:
-                        actions.Add(new ABestowImprovement
+                        actions.Add(new BestowImprovement
                         {
                             RaceId = actionParam[213],
                             ImprovementId = actionParam[214],
@@ -984,7 +984,7 @@ namespace Civ2engine
                         break;
 
                     case 16:
-                        actions.Add(new ATransport
+                        actions.Add(new TransportAction
                         {
                             UnitId = actionParam[221],
                             TransportMask = BitConverter.ToInt16(new byte[2] { actionParam[89], actionParam[90] }),
@@ -993,7 +993,7 @@ namespace Civ2engine
                         break;
 
                     case 17:
-                        actions.Add(new ATakeTechnology
+                        actions.Add(new TakeTechnology
                         {
                             TechId = actionParam[211],
                             WhomId = actionParam[212],
@@ -1002,7 +1002,7 @@ namespace Civ2engine
                         break;
 
                     case 18:
-                        actions.Add(new AModifyReputation
+                        actions.Add(new ModifyReputation
                         {
                             WhoId = actionParam[215],
                             WhomId = actionParam[216],
@@ -1012,7 +1012,7 @@ namespace Civ2engine
                         break;
 
                     case 19:
-                        actions.Add(new AEnableTechnology
+                        actions.Add(new EnableTechnology
                         {
                             TechnologyId = actionParam[211],
                             WhomId = actionParam[212],
@@ -1021,7 +1021,7 @@ namespace Civ2engine
                         break;
 
                     case 21:
-                        actions.Add(new AFlag
+                        actions.Add(new FlagAction
                         {
                             State = modifiers[9],
                             Continuous = modifiers[12],
@@ -1033,7 +1033,7 @@ namespace Civ2engine
                         break;
 
                     case 22:
-                        actions.Add(new ANegotiator
+                        actions.Add(new Negotiator
                         {
                             TypeTalker = modifiers[13],
                             StateSet = modifiers[14],

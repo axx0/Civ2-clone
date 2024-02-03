@@ -8,7 +8,7 @@ namespace Civ2engine.IO
     {
         Rules _rules;
         LoadedGameObjects _gameObjects;
-        List<ScenarioEvent> Scenarios = new ();
+        List<ScenarioEvent> _scenarios = new ();
 
         private EventsLoader()
         {
@@ -21,7 +21,7 @@ namespace Civ2engine.IO
             loader._rules = rules;
             loader._gameObjects = objects;
             TextFileParser.ParseFile(filePath, loader);
-            return loader.Scenarios;
+            return loader._scenarios;
         }
 
         public void ProcessSection(string section, List<string> contents)
@@ -37,7 +37,7 @@ namespace Civ2engine.IO
                     unitKilled = ReadString(contents, "unit");
                     attackerCiv = ReadString(contents, "attacker");
                     defenderCiv = ReadString(contents, "defender");
-                    trigger = new TUnitKilled
+                    trigger = new UnitKilled
                     {
                         UnitKilledId = string.Equals(unitKilled, "ANYUNIT", StringComparison.OrdinalIgnoreCase) ? -2 : Int32.Parse(unitKilled),
                         AttackerCivId = string.Equals(attackerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == attackerCiv).Id,
@@ -47,7 +47,7 @@ namespace Civ2engine.IO
                 case "CITYTAKEN":
                     attackerCiv = ReadString(contents, "attacker");
                     defenderCiv = ReadString(contents, "defender");
-                    trigger = new TCityTaken
+                    trigger = new CityTaken
                     {
                         City = _gameObjects.Cities.Find(c => c.Name == ReadString(contents, "city")),
                         AttackerCivId = string.Equals(attackerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == attackerCiv).Id,
@@ -55,13 +55,13 @@ namespace Civ2engine.IO
                     };
                     break;
                 case "TURN":
-                    trigger = new TTurn
+                    trigger = new TurnTrigger
                     {
                         Turn = Int32.Parse(ReadString(contents, "turn"))
                     };
                     break;
                 case "TURNINTERVAL":
-                    trigger = new TTurnInterval
+                    trigger = new TurnInterval
                     {
                         Interval = Int32.Parse(ReadString(contents, "interval"))
                     };
@@ -93,7 +93,7 @@ namespace Civ2engine.IO
                     {
                         listenerType = 4;
                     }
-                    trigger = new TNegotiation1
+                    trigger = new Negotiation1
                     {
                         TalkerCivId = string.Equals(talkerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == talkerCiv).Id,
                         ListenerCivId = string.Equals(listenerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == listenerCiv).Id,
@@ -102,24 +102,24 @@ namespace Civ2engine.IO
                     };
                     break;
                 case "SCENARIOLOADED":
-                    trigger = new TScenarioLoaded { };
+                    trigger = new ScenarioLoaded { };
                     break;
                 case "RANDOMTURN":
-                    trigger = new TRandomTurn 
+                    trigger = new RandomTurn 
                     {
                         Denominator = Int32.Parse(ReadString(contents, "denominator"))
                     };
                     break;
                 case "NOSCHISM":
                     defenderCiv = ReadString(contents, "defender");
-                    trigger = new TNoSchism
+                    trigger = new NoSchism
                     {
                         CivId = string.Equals(defenderCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == defenderCiv).Id,
                     };
                     break;
                 case "RECEIVEDTECHNOLOGY":
                     receiverCiv = ReadString(contents, "receiver");
-                    trigger = new TReceivedTechnology
+                    trigger = new ReceivedTechnology
                     {
                         TechnologyId = Int32.Parse(ReadString(contents, "technology")),
                         ReceiverCivId = string.Equals(receiverCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == receiverCiv).Id,
@@ -129,7 +129,7 @@ namespace Civ2engine.IO
                     break;
             }
 
-            var actions = new List<IAction>();
+            var actions = new List<IScenarioAction>();
             string[] actionList = new string[12] { "TEXT", "MOVEUNIT", "CREATEUNIT",
                 "CHANGEMONEY", "PLAYWAVEFILE", "MAKEAGGRESSION", "JUSTONCE", "PLAYCDTRACK",
                 "DONTPLAYWONDERS", "CHANGETERRAIN", "DESTROYACIVILIZATION", "GIVETECHNOLOGY" };
@@ -138,7 +138,7 @@ namespace Civ2engine.IO
                 var indx = contents.IndexOf(actionName);
                 if (indx == -1) continue;
 
-                IAction? action = default;
+                IScenarioAction? action = default;
                 string unitMoved, civ, number;
                 int civId;
                 switch (actionName)
@@ -150,7 +150,7 @@ namespace Civ2engine.IO
                         {
                             txtList.Add(contents[i]);
                         }
-                        action = new AText
+                        action = new TextAction
                         {
                             Strings = new List<string>(txtList)
                         };
@@ -174,7 +174,7 @@ namespace Civ2engine.IO
                         }
                         number = ReadString(contents, "numbertomove", indx + 1);
                         var arr = contents[indx + 4].Split(',').Select(val => Int32.Parse(val)).ToArray();
-                        action = new AMoveUnit
+                        action = new MoveUnit
                         {
                             UnitMovedId = string.Equals(unitMoved, "ANYUNIT", StringComparison.OrdinalIgnoreCase) ? -2 : 
                                 _rules.UnitTypes.ToList().FindIndex(u => u.Name == unitMoved),
@@ -202,20 +202,20 @@ namespace Civ2engine.IO
                             civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
                         }
                         int locationsNo = contents.IndexOf("endlocations") - contents.IndexOf("locations") - 1;
-                        int[,] ar = new int[locationsNo, 2];
+                        int[,] locations = new int[locationsNo, 2];
                         for (int i = 0; i < locationsNo; i++)
                         {
-                            var _ar = contents[indx + 6 + i].Split(',').Select(val => Int32.Parse(val)).ToArray();
-                            ar[i, 0] = _ar[0];
-                            ar[i, 1] = _ar[1];
+                            var ar = contents[indx + 6 + i].Split(',').Select(val => Int32.Parse(val)).ToArray();
+                            locations[i, 0] = ar[0];
+                            locations[i, 1] = ar[1];
                         }
-                        action = new ACreateUnit
+                        action = new CreateUnit
                         {
                             CreatedUnitId = Int32.Parse(ReadString(contents, "unit", indx + 1)),
                             OwnerCivId = civId,
                             Veteran = string.Equals(ReadString(contents, "veteran", indx + 1), "yes", StringComparison.Ordinal),
                             HomeCity = _gameObjects.Cities.Find(c => c.Name == ReadString(contents, "homecity", indx + 1)),
-                            Locations = ar
+                            Locations = locations
                         };
                         break;
                     case "CHANGEMONEY":
@@ -234,20 +234,20 @@ namespace Civ2engine.IO
                         {
                             civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
                         }
-                        action = new AChangeMoney
+                        action = new ChangeMoney
                         {
                             ReceiverCivId = civId,
                             Amount = Int32.Parse(ReadString(contents, "amount", indx + 1))
                         };
                         break;
                     case "PLAYWAVEFILE":
-                        action = new APlayWAV
+                        action = new PlayWav
                         {
                             File = contents[indx + 1]
                         };
                         break;
                     case "MAKEAGGRESSION":
-                        action = new AMakeAggression
+                        action = new MakeAggression
                         {
                             WhoCivId = _gameObjects.Civilizations.Find(c => c.TribeName == ReadString(contents, "who", indx + 1)).Id,
                             WhomCivId = _gameObjects.Civilizations.Find(c => c.TribeName == ReadString(contents, "whom", indx + 1)).Id,
@@ -257,17 +257,17 @@ namespace Civ2engine.IO
                         //action = new AJustOnce { };
                         break;
                     case "PLAYCDTRACK":
-                        action = new APlayCDtrack
+                        action = new PlayCDtrack
                         {
                             TrackNo = Int32.Parse(contents[indx + 1])
                         };
                         break;
                     case "DONTPLAYWONDERS":
-                        action = new ADontplayWonders { };
+                        action = new DontplayWonders { };
                         break;
                     case "CHANGETERRAIN":
                         var arr1 = contents[indx + 3].Split(',').Select(val => Int32.Parse(val)).ToArray();
-                        action = new AChangeTerrain
+                        action = new ChangeTerrain
                         {
                             TerrainTypeId = Int32.Parse(ReadString(contents, "terraintype", indx + 1)),
                             MapCoords = new int[4, 2] { { arr1[0], arr1[1] }, { arr1[2], arr1[3] },
@@ -290,7 +290,7 @@ namespace Civ2engine.IO
                         {
                             civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
                         }
-                        action = new ADestroyCiv
+                        action = new DestroyCiv
                         {
                             CivId = civId,
                         };
@@ -311,7 +311,7 @@ namespace Civ2engine.IO
                         {
                             civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
                         }
-                        action = new AGiveTech
+                        action = new GiveTech
                         {
                             CivId = civId,
                             TechId = Int32.Parse(ReadString(contents, "technology", indx + 1))
@@ -324,7 +324,7 @@ namespace Civ2engine.IO
                 actions.Add(action);
             }
 
-            Scenarios.Add(new ScenarioEvent
+            _scenarios.Add(new ScenarioEvent
             {
                 Trigger = trigger,
                 Actions = actions

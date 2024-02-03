@@ -24,7 +24,7 @@ public class ScenEnterName : ICivDialogHandler
         {
             new()
             {
-                index = 0, Name = "Name",
+                Index = 0, Name = "Name",
                 Width = 400
             },
         };

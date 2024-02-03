@@ -22,17 +22,17 @@ public class CustomTribe : BaseDialogHandler
             {
                 new()
                 {
-                    index = 0, Name = "Leader", CharLimit = 23,
+                    Index = 0, Name = "Leader", CharLimit = 23,
                     InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName, Width = 300
                 },
                 new()
                 {
-                    index = 1, Name = "Tribe", CharLimit = 23,
+                    Index = 1, Name = "Tribe", CharLimit = 23,
                     InitialValue = Initialization.ConfigObject.PlayerCiv.TribeName, Width = 300
                 },
                 new()
                 {
-                    index = 2, Name = "Adjective", CharLimit = 23,
+                    Index = 2, Name = "Adjective", CharLimit = 23,
                     InitialValue = Initialization.ConfigObject.PlayerCiv.Adjective, Width = 300
                 }
             };

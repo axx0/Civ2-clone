@@ -27,7 +27,7 @@ namespace Civ2engine
         void CantProduce(City city, ProductionOrder newItem);
         
         void CityProductionComplete(City city);
-        IInterfaceCommands UI { get; }
+        IInterfaceCommands Ui { get; }
         void NotifyImprovementEnabled(TerrainImprovement improvement, int level);
         void MapChanged(List<Tile> tiles);
         void WaitingAtEndOfTurn();

@@ -34,7 +34,7 @@ public class TextureElement : IViewElement
             loc,
             0f,
             scale,
-            Color.WHITE);
+            Color.White);
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)

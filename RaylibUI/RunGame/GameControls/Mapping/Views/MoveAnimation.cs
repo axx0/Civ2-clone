@@ -14,11 +14,11 @@ internal class MoveAnimation : BaseGameView
         var activeInterface = gameScreen.Main.ActiveInterface;
         var activeUnit = moveEvent.Unit;
         var noFramesForOneMove = 8;
-        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXY[0], activeUnit.Y - activeUnit.PrevXY[1] };
+        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXy[0], activeUnit.Y - activeUnit.PrevXy[1] };
         var map = activeUnit.CurrentLocation.Map;
         var viewElements = new List<IViewElement>();
         ImageUtils.GetUnitTextures(activeUnit, activeInterface, viewElements,
-            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.height + Dimensions.TileHeight }, true);
+            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height + Dimensions.TileHeight }, true);
         SetAnimation(viewElements);
         var totalFrames = activeUnit.CurrentLocation.CityHere == null ? noFramesForOneMove : noFramesForOneMove - 1;
         for (var frame = 1; frame < totalFrames; frame++)

@@ -13,7 +13,7 @@ namespace Civ2engine.Scripting
         private readonly LuaGlobal _environment;
         private readonly List<string> _scriptPaths;
         private readonly CivScripts _civScripts;
-        private StringBuilder _log { get; }
+        private readonly StringBuilder _log; 
 
         public ScriptEngine(Game game, string[] paths)
         {

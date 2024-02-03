@@ -20,7 +20,7 @@ public class TextBox : BaseControl
     private bool _editMode = false;
     private int _editWidth;
 
-    private readonly Vector2 TextOffsetV = new Vector2(5,5);
+    private readonly Vector2 _textOffsetV = new Vector2(5,5);
     
     private const int TextMargin = 5;
 
@@ -47,15 +47,15 @@ public class TextBox : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.WHITE);
-        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.BLACK);
-        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + TextOffsetV, Styles.BaseFontSize,1.0f, Color.BLACK);
+        Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.White);
+        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.Black);
+        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
         
         if (_editMode)
         {
             if (pulse)
             {
-                Raylib.DrawRectangleRec(new Rectangle(Location.X + 5 + _editWidth + 1, Location.Y + 5, 1, 20), Color.BLACK);
+                Raylib.DrawRectangleRec(new Rectangle(Location.X + 5 + _editWidth + 1, Location.Y + 5, 1, 20), Color.Black);
             }
         }
 
@@ -94,7 +94,7 @@ public class TextBox : BaseControl
     {
         switch (key)
         {
-            case KeyboardKey.KEY_LEFT:
+            case KeyboardKey.Left:
             {
                 if (_editPosition > 0)
                 {
@@ -103,14 +103,14 @@ public class TextBox : BaseControl
 
                 return true;
             }
-            case KeyboardKey.KEY_RIGHT:
+            case KeyboardKey.Right:
                 if (_editPosition < _text.Length)
                 {
                     SetEditPosition(_editPosition + 1);
                 }
 
                 return true;
-            case KeyboardKey.KEY_BACKSPACE:
+            case KeyboardKey.Backspace:
                 if (_editPosition > 0)
                 {
                     SetEditPosition(_editPosition - 1);
@@ -118,16 +118,16 @@ public class TextBox : BaseControl
                 }
 
                 return true;
-            case KeyboardKey.KEY_DELETE:
+            case KeyboardKey.Delete:
                 if (_editPosition < _text.Length)
                 {
                     _text = _text.Remove(_editPosition, 1);
                 }
 
                 return true;
-            case KeyboardKey.KEY_TAB:
+            case KeyboardKey.Tab:
                 return base.OnKeyPressed(key);
-            case KeyboardKey.KEY_ENTER:
+            case KeyboardKey.Enter:
                 if (_acceptAction != null)
                 {
                     _acceptAction(_text);

@@ -26,7 +26,7 @@ public class ImagePanel
         // Panel position on screen
         if (Location.X < 0) // offset from right
         {
-            x = (int)((1 + Location.X) * Raylib.GetScreenWidth()) - _texture.width;
+            x = (int)((1 + Location.X) * Raylib.GetScreenWidth()) - _texture.Width;
         }
         else if (Location.X > 0)
         {
@@ -34,12 +34,12 @@ public class ImagePanel
         }
         else // =0 (center on screen)
         {
-            x = (int)(Raylib.GetScreenWidth() * 0.5 - _texture.width * 0.5);
+            x = (int)(Raylib.GetScreenWidth() * 0.5 - _texture.Width * 0.5);
         }
 
         if (Location.Y < 0)
         {
-            y = (int)((1 + Location.Y) * Raylib.GetScreenHeight()) - _texture.height;
+            y = (int)((1 + Location.Y) * Raylib.GetScreenHeight()) - _texture.Height;
         }
         else if (Location.Y > 0)
         {
@@ -47,9 +47,9 @@ public class ImagePanel
         }
         else
         {
-            y = (int)(Raylib.GetScreenHeight() * 0.5 - _texture.height * 0.5);
+            y = (int)(Raylib.GetScreenHeight() * 0.5 - _texture.Height * 0.5);
         }
 
-        Raylib.DrawTexture(_texture, x, y, Color.WHITE);
+        Raylib.DrawTexture(_texture, x, y, Color.White);
     }
 }

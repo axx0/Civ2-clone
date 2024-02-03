@@ -16,7 +16,7 @@ public class Scenario
     public bool ForbidGovernmentSwitching { get; set; }
     public bool ForbidTechFromConquests { get; set; }
     public bool ElliminatePollution { get; set; }
-    public bool SpecialWWIIonlyAI { get; set; }
+    public bool SpecialWwiIonlyAi { get; set; }
     public string Name { get; set; }
     public int TechParadigm { get; set; }
     public int TurnYearIncrement { get; set; }

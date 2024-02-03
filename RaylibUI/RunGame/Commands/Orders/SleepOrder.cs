@@ -10,19 +10,19 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 public class SleepOrder : Order
 {
     public SleepOrder(GameScreen gameScreen) : 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_S), CommandIds.SleepOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.S), CommandIds.SleepOrder)
     {
     }
 
     public override void Update()
     {
-        SetCommandState(_gameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()
     {
-        var game = _gameScreen.Game;
-        _gameScreen.Player.ActiveUnit?.Sleep();
+        var game = GameScreen.Game;
+        GameScreen.Player.ActiveUnit?.Sleep();
         game.ChooseNextUnit();
     }
 }

@@ -8,7 +8,7 @@ namespace RaylibUI
 {
     public class FilePicker
     {
-        static readonly Dictionary<object, FilePicker> _filePickers = new Dictionary<object, FilePicker>();
+        static readonly Dictionary<object, FilePicker> FilePickers = new Dictionary<object, FilePicker>();
 
         public string RootFolder;
         public string CurrentFolder;
@@ -32,7 +32,7 @@ namespace RaylibUI
                     startingPath = AppContext.BaseDirectory;
             }
 
-            if (!_filePickers.TryGetValue(o, out FilePicker fp))
+            if (!FilePickers.TryGetValue(o, out FilePicker fp))
             {
                 fp = new FilePicker();
                 fp.RootFolder = startingPath;
@@ -49,13 +49,13 @@ namespace RaylibUI
                     fp.AllowedExtensions.AddRange(searchFilter.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries));
                 }
 
-                _filePickers.Add(o, fp);
+                FilePickers.Add(o, fp);
             }
 
             return fp;
         }
 
-        public static void RemoveFilePicker(object o) => _filePickers.Remove(o);
+        public static void RemoveFilePicker(object o) => FilePickers.Remove(o);
 
         public bool Draw()
         {

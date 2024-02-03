@@ -296,8 +296,8 @@ namespace Civ2engine.MapObjects
         {
             var units = pred != null ? UnitsHere.Where(pred) : UnitsHere;
             return (Terrain.Type == TerrainType.Ocean
-                    ? units.OrderByDescending(u => u.Domain == UnitGAS.Sea ? 1 : 0)
-                    : units.OrderByDescending(u => u.Domain == UnitGAS.Sea ? 0 : 1))
+                    ? units.OrderByDescending(u => u.Domain == UnitGas.Sea ? 1 : 0)
+                    : units.OrderByDescending(u => u.Domain == UnitGas.Sea ? 0 : 1))
                 .ThenBy(u => u.AttackBase).First();
         }
 

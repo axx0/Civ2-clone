@@ -167,7 +167,7 @@ public abstract class Civ2Interface : IUserInterface
                     foreach (var gameCommand in comandsList)
                     {
                         menuContent.Commands.Add(new MenuCommand(
-                            baseCommand.MenuText.Replace("%STRING0", gameCommand.Name), KeyboardKey.KEY_NULL,
+                            baseCommand.MenuText.Replace("%STRING0", gameCommand.Name), KeyboardKey.Null,
                             gameCommand.KeyCombo, gameCommand));
                     }
                     continue;
@@ -321,11 +321,11 @@ public abstract class Civ2Interface : IUserInterface
 
     public abstract int UnitsRows { get; }
     public abstract int UnitsPxHeight { get; }
-    public abstract Dictionary<string, List<ImageProps>> UnitPICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> CitiesPICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> TilePICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> OverlayPICprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> IconsPICprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> UnitPicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> CitiesPicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
     public abstract string? GetFallbackPath(string root, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);

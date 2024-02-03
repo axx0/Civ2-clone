@@ -359,7 +359,7 @@ namespace Civ2engine.Terrains
                             { BuildTime = t.MoveCost * 3, TerrainType = (int)t.Type }).ToList()).ToList(),
                     ExclusiveGroup = ImprovementTypes.DefenceGroup,
                     MaxLevelReachedMessage = "ALREADYAIR",
-                    HideUnits = (int)UnitGAS.Air
+                    HideUnits = (int)UnitGas.Air
                 }
             }.ToDictionary(k=>k.Id);
         }

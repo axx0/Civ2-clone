@@ -41,7 +41,7 @@
         Ironclad = 36,
         Destroyer = 37,
         Cruiser = 38,
-        AEGISCruiser = 39,
+        AegisCruiser = 39,
         Battleship = 40,
         Submarine = 41,
         Carrier = 42,

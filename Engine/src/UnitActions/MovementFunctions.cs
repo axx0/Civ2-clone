@@ -159,7 +159,7 @@ namespace Civ2engine.UnitActions.Move
                 Moveto(game, unit, destX, destY);
             }
 
-            if (unit.Domain == UnitGAS.Air && unit.MovePoints == 0)
+            if (unit.Domain == UnitGas.Air && unit.MovePoints == 0)
             {
                 //TODO: Air unit out of fuel check
             }
@@ -183,7 +183,7 @@ namespace Civ2engine.UnitActions.Move
 
             if (tileTo.Type == TerrainType.Ocean)
             {
-                if (unit.Domain == UnitGAS.Ground)
+                if (unit.Domain == UnitGas.Ground)
                 {
                     // Ground units cannot attack into the sea
                     return false;
@@ -198,7 +198,7 @@ namespace Civ2engine.UnitActions.Move
                 }
             }
 
-            if (!unit.CanAttackAirUnits && tileTo.UnitsHere.Any(u => u.Domain == UnitGAS.Air))
+            if (!unit.CanAttackAirUnits && tileTo.UnitsHere.Any(u => u.Domain == UnitGas.Air))
             {
                 game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.CannotAttackAirUnits);
                 return false;
@@ -237,18 +237,18 @@ namespace Civ2engine.UnitActions.Move
             var fpA = attacker.FirepowerBase;
             var fpD = defender.FirepowerBase;
 
-            if (attacker.Domain == UnitGAS.Sea && defender.Domain == UnitGAS.Ground)
+            if (attacker.Domain == UnitGas.Sea && defender.Domain == UnitGas.Ground)
             {
                 // When a sea unit attacks a land unit, both units have their firepower reduced to 1
                 fpA = 1;
                 fpD = 1;
-            }else if (attacker.Domain != UnitGAS.Sea && defender.Domain == UnitGAS.Sea &&
+            }else if (attacker.Domain != UnitGas.Sea && defender.Domain == UnitGas.Sea &&
                       tile.Type != TerrainType.Ocean)
             {
                 // Caught in port (A sea unit’s firepower is reduced to 1 when it is caught in port (or on a land square) by a land or air unit; The attacking air or land unit’s firepower is doubled)
                 fpA *= 2;
                 fpD = 1;
-            }else if (attacker.Domain == UnitGAS.Air && defender.Domain == UnitGAS.Air && defender.FuelRange == 0)
+            }else if (attacker.Domain == UnitGas.Air && defender.Domain == UnitGas.Air && defender.FuelRange == 0)
             {
                 // Helicopters attacked by fighters have firepower reduced to 1
                 fpD = 1;
@@ -320,7 +320,7 @@ namespace Civ2engine.UnitActions.Move
             var tileTo = game.CurrentMap.TileC2(destX, destY);
             if (!unit.IgnoreZonesOfControl && !IsFriendlyTile(tileTo, unit.Owner) && IsNextToEnemy(tileFrom, unit.Owner, unit.Domain) && IsNextToEnemy(tileTo, unit.Owner, unit.Domain))
             {
-                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZOC);
+                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.Zoc);
                 return;
             }
 
@@ -346,7 +346,7 @@ namespace Civ2engine.UnitActions.Move
             var moveCost = cosmicRules.MovementMultiplier;
             switch (unit.Domain)
             {
-                case UnitGAS.Ground:
+                case UnitGas.Ground:
                 {
                     if (tileTo.Type == TerrainType.Ocean)
                     {
@@ -377,7 +377,7 @@ namespace Civ2engine.UnitActions.Move
                     unitMoved = true;
                     break;
                 }
-                case UnitGAS.Sea:
+                case UnitGas.Sea:
                 {
                     if (tileTo.Type != TerrainType.Ocean)
                     {
@@ -403,7 +403,7 @@ namespace Civ2engine.UnitActions.Move
                         {
                             foreach (var unaccountedUnit in tileFrom.UnitsHere
                                 .Where(u => u.InShip == null &&
-                                            u.Domain == UnitGAS.Ground)
+                                            u.Domain == UnitGas.Ground)
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
                                 unaccountedUnit.InShip = unit;
@@ -415,7 +415,7 @@ namespace Civ2engine.UnitActions.Move
                         {
                             foreach (var unaccountedUnit in tileFrom.UnitsHere
                                 .Where(u => u.InShip == null &&
-                                            u.Domain == UnitGAS.Ground && u.Order == OrderType.Sleep)
+                                            u.Domain == UnitGas.Ground && u.Order == OrderType.Sleep)
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
                                 unaccountedUnit.InShip = unit;
@@ -427,7 +427,7 @@ namespace Civ2engine.UnitActions.Move
                     unitMoved = true;
                     break;
                 }
-                case UnitGAS.Air:
+                case UnitGas.Air:
                 {
                     if (unit.InShip != null)
                     {
@@ -454,7 +454,7 @@ namespace Civ2engine.UnitActions.Move
                     unitMoved = true;
                     break;
                 }
-                case UnitGAS.Special:
+                case UnitGas.Special:
                     unitMoved = true;
                     break;
                 default:
@@ -466,7 +466,7 @@ namespace Civ2engine.UnitActions.Move
             {
                 unit.MovePointsLost += moveCost;
                 // Set previous coords
-                unit.PrevXY = new[] { unit.X, unit.Y };
+                unit.PrevXy = new[] { unit.X, unit.Y };
 
                 // Set new coords
                 unit.X = tileTo.X;
@@ -476,7 +476,7 @@ namespace Civ2engine.UnitActions.Move
                 {
                     unit.CarriedUnits.ForEach(u =>
                     {
-                        u.PrevXY = unit.PrevXY;
+                        u.PrevXy = unit.PrevXy;
                         u.X = unit.X;
                         u.Y = unit.Y;
                         u.CurrentLocation = tileTo;
@@ -543,7 +543,7 @@ namespace Civ2engine.UnitActions.Move
                    (tileTo.CityHere != null && tileTo.CityHere.Owner == unitOwner);
         }
 
-        internal static bool IsNextToEnemy(Tile tile, Civilization civ, UnitGAS domain)
+        internal static bool IsNextToEnemy(Tile tile, Civilization civ, UnitGas domain)
         {
             return tile.Neighbours().Any(t => t.UnitsHere.Any(u => u.Owner != civ && u.InShip == null && u.Domain == domain));
         }
@@ -552,8 +552,8 @@ namespace Civ2engine.UnitActions.Move
         {
             var neighbours = unit.Domain switch
             {
-                UnitGAS.Ground => game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold)),
-                UnitGAS.Sea => game.CurrentMap.Neighbours(tile).Where(t=> t.CityHere != null || t.Terrain.Type == TerrainType.Ocean || (t.UnitsHere.Count > 0 && t.UnitsHere[0].Owner != unit.Owner)),
+                UnitGas.Ground => game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold)),
+                UnitGas.Sea => game.CurrentMap.Neighbours(tile).Where(t=> t.CityHere != null || t.Terrain.Type == TerrainType.Ocean || (t.UnitsHere.Count > 0 && t.UnitsHere[0].Owner != unit.Owner)),
                 _ => game.CurrentMap.Neighbours(tile)
             };
             if (unit.IgnoreZonesOfControl || !IsNextToEnemy(tile, unit.Owner, unit.Domain))
@@ -566,7 +566,7 @@ namespace Civ2engine.UnitActions.Move
 
         public static IList<int> GetIslandsFor(Unit unit)
         {
-            if (unit.Domain == UnitGAS.Sea)
+            if (unit.Domain == UnitGas.Sea)
             {
                 return unit.CurrentLocation.Type == TerrainType.Ocean
                     ? new List<int> { unit.CurrentLocation.Island }

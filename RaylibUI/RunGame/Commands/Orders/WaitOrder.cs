@@ -13,19 +13,19 @@ public class WaitOrder : Order
 {
 
     public WaitOrder(GameScreen gameScreen): 
-        base(gameScreen, new Shortcut(KeyboardKey.KEY_W), CommandIds.WaitOrder)
+        base(gameScreen, new Shortcut(KeyboardKey.W), CommandIds.WaitOrder)
     {
     }
 
     public override void Update()
     {
-        SetCommandState(_gameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()
     {
-        Debug.Assert(_gameScreen.Player.ActiveUnit != null, "_gameScreen.Player.ActiveUnit != null");
-        _gameScreen.Player.WaitingList.Add(_gameScreen.Player.ActiveUnit);
-        _gameScreen.Game.ChooseNextUnit();
+        Debug.Assert(GameScreen.Player.ActiveUnit != null, "_gameScreen.Player.ActiveUnit != null");
+        GameScreen.Player.WaitingList.Add(GameScreen.Player.ActiveUnit);
+        GameScreen.Game.ChooseNextUnit();
     }
 }

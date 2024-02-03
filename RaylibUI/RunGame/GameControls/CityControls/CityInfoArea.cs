@@ -27,7 +27,7 @@ public class CityInfoArea : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangleLines((int)Bounds.x, (int)Bounds.y, Width,Height,Color.MAGENTA);
+        Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height,Color.Magenta);
         if (Children != null)
         {
             foreach (var control in Children)
@@ -37,7 +37,7 @@ public class CityInfoArea : BaseControl
         }
         else
         {
-            Raylib.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.MAGENTA );
+            Raylib.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.Magenta );
         }
     }
 
@@ -48,7 +48,7 @@ public class CityInfoArea : BaseControl
     {
         _mode = mode;
         var activeInterface = _cityWindow.CurrentGameScreen.Main.ActiveInterface;
-        var activPos = new Vector2(Bounds.x, Bounds.y);
+        var activPos = new Vector2(Bounds.X, Bounds.Y);
         var children = new List<IControl>();
         if (mode == CityDisplayMode.Info)
         {
@@ -56,9 +56,9 @@ public class CityInfoArea : BaseControl
             {
                 var unitDisplay = new UnitDisplay(_cityWindow, unit, activPos, activeInterface);
                 activPos = activPos with { X = activPos.X + unitDisplay.Width };
-                if (activPos.X + unitDisplay.Width > Bounds.x + Bounds.width)
+                if (activPos.X + unitDisplay.Width > Bounds.X + Bounds.Width)
                 {
-                    activPos = new Vector2(Bounds.x, activPos.Y + unitDisplay.Height);
+                    activPos = new Vector2(Bounds.X, activPos.Y + unitDisplay.Height);
                 }
 
                 children.Add(unitDisplay);
