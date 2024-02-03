@@ -110,7 +110,7 @@ public class TestOfTimeInterface : Civ2Interface
 
 
         // Initialize properties of Units from image
-        UnitPiCprops = new Dictionary<string, List<ImageProps>>
+        UnitPicProps = new Dictionary<string, List<ImageProps>>
         {
             { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new ImageProps
                         { Rect = new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight) }).ToList() },
@@ -118,7 +118,7 @@ public class TestOfTimeInterface : Civ2Interface
         };
 
         // Initialize properties of Cities from image
-        CitiesPiCprops = new Dictionary<string, List<ImageProps>>
+        CitiesPicProps = new Dictionary<string, List<ImageProps>>
         {
             { "textColors", Enumerable.Range(0, 9).Select(col =>
                     new ImageProps { Rect = new Rectangle(1 + 15 * col, 421, 14, 3) }).ToList() },
@@ -141,10 +141,10 @@ public class TestOfTimeInterface : Civ2Interface
                     new ImageProps { Rect = new Rectangle(1 + 65 * col, 347, 64, 48) }).ToList());    // Modern alt.
         props.AddRange(Enumerable.Range(0, 4).Select(col =>
                     new ImageProps { Rect = new Rectangle(333 + 65 * col, 347, 64, 48) }).ToList());
-        CitiesPiCprops.Add("city", props);
+        CitiesPicProps.Add("city", props);
 
         // Initialize properties of Tiles from image
-        TilePiCprops = new Dictionary<string, List<ImageProps>>
+        TilePicProps = new Dictionary<string, List<ImageProps>>
         {
             { "base1", Enumerable.Range(0, 11).Select(row =>
                         new ImageProps { Rect = new Rectangle(1, 1 + 33 * row, 64, 32) }).ToList() },
@@ -169,7 +169,7 @@ public class TestOfTimeInterface : Civ2Interface
         };
 
         // Initialize properties of Overlay tiles from image
-        OverlayPiCprops = new Dictionary<string, List<ImageProps>>
+        OverlayPicProps = new Dictionary<string, List<ImageProps>>
         {
             { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
                     new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32) }).ToList() },
@@ -192,10 +192,10 @@ public class TestOfTimeInterface : Civ2Interface
             props.Add(new ImageProps { Rect = new Rectangle(1 + 66 * i, 463, 32, 16) });
             props.Add(new ImageProps { Rect = new Rectangle(34 + 66 * i, 463, 32, 16) });
         }
-        OverlayPiCprops.Add("coastline", props);
+        OverlayPicProps.Add("coastline", props);
 
         // Initialize properties of Icons tiles from image
-        IconsPiCprops = new Dictionary<string, List<ImageProps>>
+        IconsPicProps = new Dictionary<string, List<ImageProps>>
         {
             { "viewPiece", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(199, 256, 64, 32) } } },
             { "gridlines", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(183, 430, 64, 32) } } },
@@ -450,11 +450,11 @@ public class TestOfTimeInterface : Civ2Interface
     public override int UnitsRows => 9;
     public override int UnitsPxHeight => 64;
     
-    public override Dictionary<string, List<ImageProps>> UnitPiCprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> CitiesPiCprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> TilePiCprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> OverlayPiCprops { get; set; }
-    public override Dictionary<string, List<ImageProps>> IconsPiCprops { get; set; }
+    public override Dictionary<string, List<ImageProps>> UnitPicProps { get; set; }
+    public override Dictionary<string, List<ImageProps>> CitiesPicProps { get; set; }
+    public override Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
+    public override Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
+    public override Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
 
     public override string? GetFallbackPath(string root, int gameType)
     {
@@ -483,9 +483,9 @@ public class TestOfTimeInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(CitiesPiCprops["textColors"][col].Image);
-                var textColour = imageColours[2 * CitiesPiCprops["textColors"][col].Image.Width + 0];
-                var shieldColour = imageColours[2 * CitiesPiCprops["textColors"][col].Image.Width + 0];
+                var imageColours = Raylib.LoadImageColors(CitiesPicProps["textColors"][col].Image);
+                var textColour = imageColours[2 * CitiesPicProps["textColors"][col].Image.Width + 0];
+                var shieldColour = imageColours[2 * CitiesPicProps["textColors"][col].Image.Width + 0];
                 textColour.A = 255; // to avoid any upper-left-pixel transparency issues
                 shieldColour.A = 255;
                 Raylib.UnloadImageColors(imageColours);
@@ -496,8 +496,8 @@ public class TestOfTimeInterface : Civ2Interface
 
                 playerColours[col] = new PlayerColour
                 {
-                    Normal = CitiesPiCprops["flags"][col].Image,
-                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPiCprops["flags"][col].Image),
+                    Normal = CitiesPicProps["flags"][col].Image,
+                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPicProps["flags"][col].Image),
                     TextColour = textColour,
                     LightColour = lightColour,
                     DarkColour = darkColour
@@ -511,7 +511,7 @@ public class TestOfTimeInterface : Civ2Interface
     {
         Color replacementColour = new(255, 0, 255, 0);
 
-        var shield = UnitPiCprops["HPshield"][0].Image;
+        var shield = UnitPicProps["HPshield"][0].Image;
         var shieldFront = Raylib.ImageCopy(shield);
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
@@ -529,7 +529,7 @@ public class TestOfTimeInterface : Civ2Interface
         HPbarColours = new[] { new Color(247, 0, 0, 255), new Color(255, 222, 74, 255), new Color(82, 173, 33, 255) },
         HPbarSizeForColours = new[] { 5, 13 },
         OrderOffset = new(9 / 2f, 1),
-        OrderTextHeight = UnitPiCprops["HPshield"][0].Image.Height - 1
+        OrderTextHeight = UnitPicProps["HPshield"][0].Image.Height - 1
     };
 
     public override void DrawBorderWallpaper(Wallpaper wp, ref Image destination, int height, int width, Padding padding)

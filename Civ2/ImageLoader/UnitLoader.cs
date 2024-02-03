@@ -13,8 +13,8 @@ namespace Civ2.ImageLoader
         public static void LoadUnits(Ruleset ruleset, Civ2Interface active)
         {
             var path = Utils.GetFilePath("UNITS", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPic(path, active.UnitPiCprops);
-            var unitProps = active.UnitPiCprops;
+            Images.LoadPropertiesFromPic(path, active.UnitPicProps);
+            var unitProps = active.UnitPicProps;
 
             // Initialize objects
             var units = new UnitImage[9 * active.UnitsRows];

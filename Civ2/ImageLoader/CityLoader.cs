@@ -15,8 +15,8 @@ public static class CityLoader
     public static void LoadCities(Ruleset ruleset, CityImageSet cities, Civ2Interface active)
     {
         var path = Utils.GetFilePath("CITIES", ruleset.Paths, "gif", "bmp");
-        Images.LoadPropertiesFromPic(path, active.CitiesPiCprops);
-        var cityProps = active.CitiesPiCprops;
+        Images.LoadPropertiesFromPic(path, active.CitiesPicProps);
+        var cityProps = active.CitiesPicProps;
 
         cities.CityRectangle = new Rectangle(0, 0,
             cityProps["city"][0].Rect.Width, cityProps["city"][0].Rect.Height);

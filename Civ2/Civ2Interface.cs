@@ -321,11 +321,11 @@ public abstract class Civ2Interface : IUserInterface
 
     public abstract int UnitsRows { get; }
     public abstract int UnitsPxHeight { get; }
-    public abstract Dictionary<string, List<ImageProps>> UnitPiCprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> CitiesPiCprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> TilePiCprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> OverlayPiCprops { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> IconsPiCprops { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> UnitPicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> CitiesPicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
+    public abstract Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
     public abstract string? GetFallbackPath(string root, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
