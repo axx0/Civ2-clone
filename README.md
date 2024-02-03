@@ -14,7 +14,7 @@ You need the original game with its assets (sounds, images, texts) to run this.
 # Status & goals
 
 Currently you can:
-- Load a .sav game or scenario (TOT is not supported yet)
+- Load a .sav game or scenario
 - Move around the map and minimap
 - Move units
 - Open city window
