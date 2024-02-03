@@ -21,6 +21,8 @@ public class Wallpaper
     public Image OuterMiddleRight { get; set; }
     public Image OuterBottomLeft { get; set; }
     public Image OuterBottomRight { get; set; }
+    public Image[] Button { get; set; }
+    public Image[] ButtonClicked { get; set; }
     public Texture2D OuterTexture { get; set; }
     public Texture2D InnerTexture { get; set; }
 }

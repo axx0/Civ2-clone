@@ -35,13 +35,8 @@ public class Button : BaseControl
         var y = (int)Location.Y;
         var w = Width;
         var h = Height;
-        Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 1.0f, new Color(100, 100, 100, 255));
-        Raylib.DrawRectangleRec(new Rectangle(x + 1, y + 1, w - 2, h - 2), Color.White);
-        Raylib.DrawRectangleRec(new Rectangle(x + 3, y + 3, w - 6, h - 6), new Color(192, 192, 192, 255));
-        Raylib.DrawLine(x + 2, y + h - 2, x + w - 2, y + h - 2, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + 3, y + h - 3, x + w - 2, y + h - 3, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + w - 1, y + 2, x + w - 1, y + h - 1, new Color(128, 128, 128, 255));
-        Raylib.DrawLine(x + w - 2, y + 3, x + w - 2, y + h - 1, new Color(128, 128, 128, 255));
+
+        _active.DrawButton(Texture, x, y, w, h);
 
         Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _colour);
 
@@ -50,6 +45,19 @@ public class Button : BaseControl
             Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
         }
         base.Draw(pulse);
+    }
+
+    private Texture2D _texture;
+    public Texture2D Texture
+    {
+        get
+        {
+            if (_texture.Width == 0 && ImageUtils.Wallpaper.Button is not null)
+            {
+                _texture = ImageUtils.PaintButtonBase(Width, Height);
+            }
+            return _texture;
+        }
     }
 
     public override void OnMouseEnter()

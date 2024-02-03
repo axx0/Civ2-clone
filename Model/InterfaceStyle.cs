@@ -22,7 +22,10 @@ public class InterfaceStyle
     public IImageSource? OuterMiddleRight { get; init; } // TOT
     public IImageSource? OuterBottomLeft { get; init; }  // TOT
     public IImageSource? OuterBottomRight { get; init; }    // TOT
-    
+
+    public IImageSource[]? Button { get; init; }   // TOT
+    public IImageSource[]? ButtonClicked { get; init; }   // TOT
+
     public IImageSource[] RadioButtons { get; init; }
     public IImageSource[] CheckBoxes { get; init; }
 

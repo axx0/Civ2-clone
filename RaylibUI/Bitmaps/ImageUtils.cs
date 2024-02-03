@@ -138,6 +138,23 @@ public static class ImageUtils
         return Raylib.LoadTextureFromImage(image);
     }
 
+    public static Texture2D PaintButtonBase(int width, int height)
+    {
+        var rnd = new Random();
+        var btn = Wallpaper.Button;
+        var len = btn.Length - 2;  // variations of inner texture
+        var cols = Math.Ceiling(width / (double)btn[0].Width);
+
+        var image = NewImage(width, height);
+        Raylib.ImageDraw(ref image, btn[0], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(0, 0, btn[0].Width, btn[0].Height), Color.White);
+        for (int col = 1; col < cols - 1; col++)
+        {
+            Raylib.ImageDraw(ref image, btn[rnd.Next(1, len + 1)], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(btn[0].Width * col, 0, btn[0].Width, btn[0].Height), Color.White);
+        }
+        Raylib.ImageDraw(ref image, btn[^1], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(width - btn[0].Width, 0, btn[0].Width, btn[0].Height), Color.White);
+        return Raylib.LoadTextureFromImage(image);
+    }
+
     public static void PaintRadioButton(int x, int y, bool isSelected)
     {
         Raylib.DrawCircle(x + 8, y + 8, 8.0f, new Color(128, 128, 128, 255));
@@ -289,7 +306,7 @@ public static class ImageUtils
     public static void SetLook(IUserInterface active)
     {
         Wallpaper = new Wallpaper();
-        if (active.Look.Outer is null)
+        if (active.Look.Outer is null)  // TOT
         {
             Wallpaper.OuterTitleTop = active.Look.OuterTitleTop.Select(img => Images.ExtractBitmap(img)).ToArray();
             Wallpaper.OuterThinTop = active.Look.OuterThinTop.Select(img => Images.ExtractBitmap(img)).ToArray();
@@ -307,8 +324,10 @@ public static class ImageUtils
             Wallpaper.OuterBottomRight = Images.ExtractBitmap(active.Look.OuterBottomRight);
             Wallpaper.Inner = active.Look.Inner.Select(img => Images.ExtractBitmap(img)).ToArray();
             Wallpaper.InnerAlt = Images.ExtractBitmap(active.Look.InnerAlt);
+            Wallpaper.Button = active.Look.Button.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.ButtonClicked = active.Look.ButtonClicked.Select(img => Images.ExtractBitmap(img)).ToArray();
         }
-        else
+        else    // MGE
         {
             Wallpaper.Outer = Images.ExtractBitmap(active.Look.Outer);
             Wallpaper.Inner = new[] { Images.ExtractBitmap(active.Look.Inner[0]) };

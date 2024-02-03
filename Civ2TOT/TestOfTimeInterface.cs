@@ -45,6 +45,9 @@ public class TestOfTimeInterface : Civ2Interface
         Inner = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", new Rectangle(1 + 93 * col, 1, 92, 92))).ToArray(),
         InnerAlt = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
 
+        Button = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog.png", new Rectangle(449 + 17 * col, 94, 16, 30))).ToArray(),
+        ButtonClicked = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog.png", new Rectangle(449 + 17 * col, 125, 16, 30))).ToArray(),
+
         RadioButtons = new IImageSource[]
         { new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 903, 94, 33, 33), 
           new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 869, 94, 33, 33) },
@@ -604,4 +607,9 @@ public class TestOfTimeInterface : Civ2Interface
     }
 
     public override void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel) { }
+
+    public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
+    {
+        Raylib.DrawTexture(texture, x, y, Color.White);
+    }
 }

@@ -331,6 +331,7 @@ public abstract class Civ2Interface : IUserInterface
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
+    public abstract void DrawButton(Texture2D texture, int x, int y, int w, int h);
     public abstract Padding GetPadding(float headerLabelHeight, bool footer);
     public abstract bool IsButtonInOuterPanel { get; }
 }
