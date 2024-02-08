@@ -24,16 +24,19 @@ public static class Fonts
     public static void SetTnr(Font font)
     {
         Tnr = font;
+        Raylib.SetTextureFilter(Tnr.Texture, TextureFilter.Bilinear);
     }
 
     public static void SetArial(Font font)
     {
         Arial = font;
+        //Raylib.SetTextureFilter(Arial.Texture, TextureFilter.Point);
     }
 
     public static void SetBold(Font font)
     {
         TnRbold = font;
+        Raylib.SetTextureFilter(TnRbold.Texture, TextureFilter.Bilinear);
     }
 }
 

@@ -1,9 +1,13 @@
 using System.Numerics;
 using Civ2engine;
 using Civ2engine.MapObjects;
+using Civ2engine.Terrains;
+using Model;
 using Model.Menu;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
+using RaylibUI.Forms;
+using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
 namespace RaylibUI.RunGame.GameModes;
@@ -12,12 +16,14 @@ public class ViewPiece : IGameMode
 {
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
+    private readonly InterfaceStyle _look;
 
     public ViewPiece(GameScreen gameScreen)
     {
-        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), eventTransparent: true,
-            alignment: TextAlignment.Center);
-        
+        _look = gameScreen.MainWindow.ActiveInterface.Look;
+
+        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: _look.StatusPanelLabelFontSize, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0), spacing: 0);
+
         _gameScreen = gameScreen;
        Actions = new Dictionary<KeyboardKey, Action>
             {
@@ -144,43 +150,132 @@ public class ViewPiece : IGameMode
 
     public IList<IControl> GetSidePanelContents(Rectangle bounds)
     {
-        var res = new List<IControl> { _title };
-        var labelHeight = _title.GetPreferredHeight();
-        _title.Bounds = bounds with { Height = labelHeight };
+        var controls = new List<IControl> { _title };
+        var startY = bounds.Y + 61;
+        _title.Bounds = bounds with { Y = startY, Height = _title.GetPreferredHeight() };
 
-        var currentY = bounds.Y + 20;
+        var labelHeight = 18;
+        var currentY = startY + 34;
 
         // Draw location & tile type on active square
         var activeTile = _gameScreen.Player.ActiveTile;
-        res.Add(new LabelControl(_gameScreen, $"Loc: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}", true)
+
+        controls.Add(new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Loc)}: ({activeTile.X}, {activeTile.Y}) {activeTile.Island}")
         {
             Bounds = bounds with { Height = labelHeight, Y = currentY }
         });
-        currentY += 20;
+        currentY += labelHeight;
 
-        res.Add(new LabelControl(_gameScreen, $"({activeTile.Type})", true)
+        var terrainName = activeTile.Name;
+        if (activeTile.River)
+        {
+            terrainName = string.Join(", ", terrainName, Labels.For(LabelIndex.River));
+        }
+        controls.Add(new StatusLabel(_gameScreen, $"({terrainName})")
         {
             Bounds = bounds with { Height = labelHeight, Y = currentY }
         });
+        currentY += labelHeight;
 
-        currentY += 20;
+        // Specials on tile?
+        if (_gameScreen.Player.ActiveTile.SpecialsName is not null)
+        {
+            var specials = _gameScreen.Player.ActiveTile.SpecialsName;
+            controls.Add(new StatusLabel(_gameScreen, $"({specials})")
+            {
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
+            });
+            currentY += labelHeight;
+        }
 
-        
+        // If road/railroad/irrigation/farmland/mine present
+        var improvements = activeTile.Improvements.Select(c => new
+        { Imp = _gameScreen.Game.TerrainImprovements[c.Improvement], Const = c }).ToList();
 
-        //int count;
-        //for (count = 0; count < Math.Min(_unitsOnThisTile.Count, maxUnitsToDraw); count++)
-        //{
-        //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), (int)Math.Round(64 * 1.15), (int)Math.Round(48 * 1.15)), 6, 70 + count * 56);
-        //    //e.Graphics.DrawImage(ModifyImage.Resize(Draw.Unit(UnitsOnThisTile[count], false, 0), 0), 6, 70 + count * 56);  // TODO: do this again!!!
-        //    Draw.Text(e.Graphics, _unitsOnThisTile[count].HomeCity.Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 70 + count * 56), _backColor, 1, 1);
-        //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Order.ToString(), _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 88 + count * 56), _backColor, 1, 1); // TODO: give proper conversion of orders to string
-        //    Draw.Text(e.Graphics, _unitsOnThisTile[count].Name, _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(79, 106 + count * 56), _backColor, 1, 1);
-        //}
-        //if (count < _unitsOnThisTile.Count)
-        //{
-        //    string _moreUnits = (_unitsOnThisTile.Count - count == 1) ? "More Unit" : "More Units";
-        //    Draw.Text(e.Graphics, $"({_unitsOnThisTile.Count() - count} {_moreUnits})", _font, StringAlignment.Near, StringAlignment.Near, _frontColor, new Point(5, UnitPanel.Height - 27), _backColor, 1, 1);
-        //}
-        return res;
+        var improvementText = string.Join(", ",
+            improvements.Where(i => i.Imp.ExclusiveGroup != ImprovementTypes.DefenceGroup && !i.Imp.Negative)
+                .Select(i => i.Imp.Levels[i.Const.Level].Name));
+
+        if (!string.IsNullOrWhiteSpace(improvementText) && activeTile.CityHere == null)
+        {
+            controls.Add(new StatusLabel(_gameScreen, $"({improvementText})")
+            {
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
+            });
+            currentY += labelHeight;
+        }
+
+        // If airbase/fortress present
+        if (improvements.Any(i => i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup))
+        {
+            var airbaseText = string.Join(", ",
+                improvements.Where(i => i.Imp.ExclusiveGroup == ImprovementTypes.DefenceGroup)
+                    .Select(i => i.Imp.Levels[i.Const.Level].Name));
+            controls.Add(new StatusLabel(_gameScreen, $"({airbaseText})")
+            {
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
+            });
+            currentY += labelHeight;
+        }
+
+        // If pollution present
+        var pollutionText = string.Join(", ",
+            improvements.Where(i => i.Imp.Negative)
+                .Select(i => i.Imp.Levels[i.Const.Level].Name));
+        if (!string.IsNullOrWhiteSpace(pollutionText))
+        {
+            controls.Add(new StatusLabel(_gameScreen, $"({pollutionText})")
+            {
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
+            });
+            currentY += labelHeight;
+        }
+
+        // Units on tile
+        var offsetX = 7;
+        currentY += 7;
+        var unitsCanBeDisplayed = Math.Floor((bounds.Y + bounds.Height - currentY) / 56);
+        if (activeTile.UnitsHere.Count > unitsCanBeDisplayed)
+        {
+            unitsCanBeDisplayed = Math.Floor((bounds.Y + bounds.Height - currentY - 26) / 56); // Take bottom text into account
+        }
+        else
+        {
+            unitsCanBeDisplayed = activeTile.UnitsHere.Count;
+        }
+        for (int i = 0; i < unitsCanBeDisplayed; i++)
+        {
+            var unit = activeTile.UnitsHere[i];
+            var unitImage = new UnitDisplay(_gameScreen, unit,
+                new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, (float)9 / 8);
+            controls.Add(unitImage);
+            currentY += unitImage.Height + 8;
+            var cityName = (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name;
+            controls.Add(new StatusLabel(_gameScreen, cityName)
+            {
+                Bounds = new Rectangle(unitImage.Bounds.X + unitImage.Width + 2, unitImage.Location.Y, bounds.Width - unitImage.Width, labelHeight)
+            });
+            controls.Add(new StatusLabel(_gameScreen, _gameScreen.Game.Order2String(unit.Order))
+            {
+                Bounds = new Rectangle(unitImage.Bounds.X + unitImage.Width + 2, unitImage.Location.Y + labelHeight, bounds.Width - unitImage.Width, labelHeight)
+            });
+            controls.Add(new StatusLabel(_gameScreen, unit.Veteran ? $"{unit.Name} ({Labels.For(LabelIndex.Veteran)})" : unit.Name)
+            {
+                Bounds = new Rectangle(unitImage.Bounds.X + unitImage.Width + 2, unitImage.Location.Y + 2 * labelHeight, bounds.Width - unitImage.Width, labelHeight)
+            });
+        }
+
+        // If not all units were drawn print a message
+        if (activeTile.UnitsHere.Count > unitsCanBeDisplayed)
+        {
+            var moveText = activeTile.UnitsHere.Count - unitsCanBeDisplayed == 1 ? Labels.For(LabelIndex.Unit) : Labels.For(LabelIndex.Units);
+            controls.Add(new StatusLabel(_gameScreen, $"({activeTile.UnitsHere.Count - unitsCanBeDisplayed} {Labels.For(LabelIndex.More)} {moveText})")
+            {
+                Bounds = bounds with { Y = bounds.Y + bounds.Height - 28, Height = labelHeight }
+            });
+        }
+
+        controls.ForEach(c => c.OnResize());
+        return controls;
     }
 }

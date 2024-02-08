@@ -25,7 +25,7 @@ public class MinimapPanel : BaseControl
         _game = game;
         _active = controller.MainWindow.ActiveInterface;
 
-        _headerLabel = new HeaderLabel(controller, _active.Look, "World", fontSize: _active.Look.HeaderLabelFontSizeNormal);
+        _headerLabel = new HeaderLabel(controller, _active.Look, Labels.For(LabelIndex.World), fontSize: _active.Look.HeaderLabelFontSizeNormal);
         _padding = controller.Main.ActiveInterface.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
         controller.OnMapEvent += MapEventTriggered;

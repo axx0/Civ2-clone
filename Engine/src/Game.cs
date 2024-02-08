@@ -58,7 +58,7 @@ namespace Civ2engine
 
         public string GetGameYearString => GetGameYear < 0
             ? string.Join(" ", new string[] { Math.Abs(GetGameYear).ToString(), "B.C." })
-            : string.Join(" ", new string[] { GetGameYear.ToString(), "A.D." });
+            : string.Join(" ", new string[] { "A.D.", GetGameYear.ToString() });
 
         public int TurnNumberForGameYear { get; set; }
         public DifficultyType DifficultyLevel => _difficultyLevel;
@@ -176,7 +176,7 @@ namespace Civ2engine
         public string Order2String(OrderType unitOrder)
         {
             var order = Rules.Orders.FirstOrDefault(t => t.Type == unitOrder);
-            return order != null ? order.Name : string.Empty;
+            return order != null ? order.Name : Labels.For(LabelIndex.NoOrders);
         }
 
         public void SetImprovementsForCity(City city)

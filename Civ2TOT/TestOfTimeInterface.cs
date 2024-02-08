@@ -68,7 +68,13 @@ public class TestOfTimeInterface : Civ2Interface
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 16,
         MenuFont = Fonts.Arial,
-        MenuFontSize = 14
+        MenuFontSize = 14,
+        StatusPanelLabelFont = Fonts.TnRbold,
+        StatusPanelLabelFontSize = 18,
+        StatusPanelLabelColor = new Color(189, 189, 189, 255),
+        StatusPanelLabelColorShadow = Color.Black,
+        MovingUnitsViewingPiecesLabelColor = new Color(189, 189, 189, 255),
+        MovingUnitsViewingPiecesLabelColorShadow = Color.Black,
     };
 
     public override bool IsButtonInOuterPanel => false;

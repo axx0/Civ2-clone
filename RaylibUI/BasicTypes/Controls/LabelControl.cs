@@ -77,9 +77,17 @@ public class LabelControl : BaseControl
         }
         else
         {
-            var textPosition = new Vector2(
-                Location.X + Offset + (_alignment == TextAlignment.Center ? Width / 2f - TextSize.X / 2f : 0),
-                Location.Y + Height / 2f - TextSize.Y / 2f);
+            var textPosition = new Vector2(Location.X + Offset, Location.Y + Height / 2f - TextSize.Y / 2f);
+
+            if (_alignment == TextAlignment.Center)
+            {
+                textPosition.X += Width / 2f - TextSize.X / 2f;
+            }
+            else if (_alignment == TextAlignment.Right)
+            {
+                textPosition.X += Width - TextSize.X - 2 * Offset;
+            }
+            
             Raylib.DrawTextEx(_labelFont, Text, textPosition + _shadowOffset, _fontSize, _spacing, _colorShadow);
             Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, _colorFront);
         }
@@ -93,5 +101,6 @@ public class LabelControl : BaseControl
 public enum TextAlignment
 {
     Left,
-    Center
+    Center,
+    Right
 }

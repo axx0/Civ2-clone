@@ -120,7 +120,8 @@ namespace Civ2engine.MapObjects
         }
 
         // From RULES.TXT
-        public string Name => EffectiveTerrain.Name;
+        public string Name => _terrain.Name;
+        public string? SpecialsName => Special != -1 && Special < _terrain.Specials.Length ? _terrain.Specials[Special].Name : null;
 
         public int MoveCost => EffectiveTerrain.MoveCost;
         public int Defense => (River ? EffectiveTerrain.Defense + 1 : EffectiveTerrain.Defense) / 2;

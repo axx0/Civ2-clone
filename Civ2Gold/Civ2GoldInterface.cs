@@ -48,7 +48,13 @@ public class Civ2GoldInterface : Civ2Interface
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 16,
         MenuFont = Fonts.Arial,
-        MenuFontSize = 14
+        MenuFontSize = 14,
+        StatusPanelLabelFont = Fonts.TnRbold,
+        StatusPanelLabelFontSize = 18,
+        StatusPanelLabelColor = new Color(51, 51, 51, 255),
+        StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
+        MovingUnitsViewingPiecesLabelColor = Color.White,
+        MovingUnitsViewingPiecesLabelColorShadow = Color.Black,
     };
 
     public override bool IsButtonInOuterPanel => true;
@@ -183,7 +189,9 @@ public class Civ2GoldInterface : Civ2Interface
             { "gridlines", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(183, 430, 64, 32) } } },
             { "gridlines,visible", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(248, 430, 64, 32) } } },
             { "battleAnim", Enumerable.Range(0, 8).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 33 * col, 356, 32, 32) }).ToList() }
+                new ImageProps { Rect = new Rectangle(1 + 33 * col, 356, 32, 32) }).ToList() },
+            { "researchProgress", Enumerable.Range(0, 4).Select(col =>
+                new ImageProps { Rect = new Rectangle(49 + 15 * col, 290, 14, 14) }).ToList() },
         };
     }
 

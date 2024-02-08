@@ -35,7 +35,7 @@ public class MapControl : BaseControl
         _game = game;
         _active = gameScreen.MainWindow.ActiveInterface;
         
-        _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} Map", fontSize: _active.Look.HeaderLabelFontSizeNormal);
+        _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} {Labels.For(LabelIndex.Map)}", fontSize: _active.Look.HeaderLabelFontSizeNormal);
         _padding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
         SetDimensions();
 
