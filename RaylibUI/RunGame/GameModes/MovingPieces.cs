@@ -304,7 +304,7 @@ public class MovingPieces : IGameMode
             moveText = unitsLeftOnTile.Count - unitsCanBeDisplayed == 1 ? Labels.For(LabelIndex.Unit) : Labels.For(LabelIndex.Units);
             controls.Add(new StatusLabel(_gameScreen, $"({unitsLeftOnTile.Count - unitsCanBeDisplayed} {Labels.For(LabelIndex.More)} {moveText})")
             {
-                Bounds = bounds with { Y = bounds.Y + bounds.Height - 28, Height = labelHeight }
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
             });
         }
 

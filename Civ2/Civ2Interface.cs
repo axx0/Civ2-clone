@@ -122,6 +122,7 @@ public abstract class Civ2Interface : IUserInterface
     public PlayerColour[] PlayerColours { get; set; }
     public int ExpectedMaps { get; set; } = 1;
     public CommonMapImageSet MapImages { get; } = new();
+    public MiscImageSet MiscImages { get; } = new();
     public int DefaultDialogWidth => 660; // 660=440*1.5
 
     public abstract Padding DialogPadding { get; }

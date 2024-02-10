@@ -55,6 +55,7 @@ public class Civ2GoldInterface : Civ2Interface
         StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
         MovingUnitsViewingPiecesLabelColor = Color.White,
         MovingUnitsViewingPiecesLabelColorShadow = Color.Black,
+        EndOfTurnColors = new[] { new Color(135, 135, 135, 255), Color.White },
     };
 
     public override bool IsButtonInOuterPanel => true;
@@ -192,6 +193,8 @@ public class Civ2GoldInterface : Civ2Interface
                 new ImageProps { Rect = new Rectangle(1 + 33 * col, 356, 32, 32) }).ToList() },
             { "researchProgress", Enumerable.Range(0, 4).Select(col =>
                 new ImageProps { Rect = new Rectangle(49 + 15 * col, 290, 14, 14) }).ToList() },
+            { "globalWarming", Enumerable.Range(0, 4).Select(col =>
+                new ImageProps { Rect = new Rectangle(49 + 15 * col, 305, 14, 14) }).ToList() },
         };
     }
 

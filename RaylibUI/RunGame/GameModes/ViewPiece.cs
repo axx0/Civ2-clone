@@ -1,5 +1,8 @@
 using System.Numerics;
+using System.Xml.Linq;
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Model;
@@ -17,6 +20,7 @@ public class ViewPiece : IGameMode
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
     private readonly InterfaceStyle _look;
+    private bool _endOfTurn;
 
     public ViewPiece(GameScreen gameScreen)
     {
@@ -25,7 +29,9 @@ public class ViewPiece : IGameMode
         _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: _look.StatusPanelLabelFontSize, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0), spacing: 0);
 
         _gameScreen = gameScreen;
-       Actions = new Dictionary<KeyboardKey, Action>
+        _gameScreen.Game.OnPlayerEvent += PlayerEventTriggered;
+
+        Actions = new Dictionary<KeyboardKey, Action>
             {
                 {
                     KeyboardKey.Enter, () =>
@@ -234,10 +240,12 @@ public class ViewPiece : IGameMode
         // Units on tile
         var offsetX = 7;
         currentY += 7;
-        var unitsCanBeDisplayed = Math.Floor((bounds.Y + bounds.Height - currentY) / 56);
+        var deltaEndTurn = _endOfTurn ? 46 : 0;
+        var unitsCanBeDisplayed = Math.Floor((bounds.Y + bounds.Height - currentY - deltaEndTurn) / 56);
         if (activeTile.UnitsHere.Count > unitsCanBeDisplayed)
         {
-            unitsCanBeDisplayed = Math.Floor((bounds.Y + bounds.Height - currentY - 26) / 56); // Take bottom text into account
+            var delta = 26 + deltaEndTurn;
+            unitsCanBeDisplayed = Math.Floor((bounds.Y + bounds.Height - currentY - delta) / 56); // Take bottom texts into account
         }
         else
         {
@@ -271,11 +279,43 @@ public class ViewPiece : IGameMode
             var moveText = activeTile.UnitsHere.Count - unitsCanBeDisplayed == 1 ? Labels.For(LabelIndex.Unit) : Labels.For(LabelIndex.Units);
             controls.Add(new StatusLabel(_gameScreen, $"({activeTile.UnitsHere.Count - unitsCanBeDisplayed} {Labels.For(LabelIndex.More)} {moveText})")
             {
-                Bounds = bounds with { Y = bounds.Y + bounds.Height - 28, Height = labelHeight }
+                Bounds = bounds with { Y = currentY, Height = labelHeight }
+            });
+        }
+
+        // End of turn message
+        var btmOffset = 31;
+        if (_endOfTurn)
+        {
+            controls.Add(new StatusLabel(_gameScreen, Labels.For(LabelIndex.EndOfTurn), switchColors: _look.EndOfTurnColors, switchTime: 500)
+            {
+                Bounds = bounds with { Y = bounds.Y + bounds.Height - btmOffset - 17, Height = labelHeight }
+            });
+            controls.Add(new StatusLabel(_gameScreen, $"({Labels.For(LabelIndex.PressEnter)})", switchColors: _look.EndOfTurnColors, switchTime: 500)
+            {
+                Bounds = bounds with { Y = bounds.Y + bounds.Height - btmOffset, Height = labelHeight }
             });
         }
 
         controls.ForEach(c => c.OnResize());
         return controls;
+    }
+
+    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
+    {
+        switch (e.EventType)
+        {
+            case PlayerEventType.NewTurn:
+                {
+                    _endOfTurn = false;
+                    break;
+                }
+            case PlayerEventType.WaitingAtEndOfTurn:
+                {
+                    _endOfTurn = true;
+                    break;
+                }
+            default: break;
+        }
     }
 }

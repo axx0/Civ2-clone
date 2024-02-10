@@ -53,4 +53,5 @@ public class InterfaceStyle
     public Color StatusPanelLabelColorShadow { get; init; }
     public Color MovingUnitsViewingPiecesLabelColor { get; init; }
     public Color MovingUnitsViewingPiecesLabelColorShadow { get; init; }
+    public Color[] EndOfTurnColors { get; init; }
 }

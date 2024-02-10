@@ -13,7 +13,7 @@ namespace Civ2engine
 {
     public partial class Game
     {
-        public static event EventHandler<PlayerEventArgs> OnPlayerEvent;
+        public event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
         private void StartNextTurn()
         {

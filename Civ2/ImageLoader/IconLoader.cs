@@ -56,6 +56,9 @@ public class IconLoader
         // CityImages.SellIcon = iconsImage.Clone(new Rectangle(16, 320, 14, 14));
         // CityImages.SellIcon.SetTransparent(new Color[] { transparentLightPink });
 
+        active.MiscImages.ResearchProgressIcon = iconProps["researchProgress"].Select(s => Raylib.LoadTextureFromImage(s.Image)).ToArray();
+        active.MiscImages.GlobalWarmingIcon = iconProps["globalWarming"].Select(s => Raylib.LoadTextureFromImage(s.Image)).ToArray();
+
         active.MapImages.ViewPiece = iconProps["viewPiece"][0].Image;
 
         active.MapImages.ViewPieceTexture = Raylib.LoadTextureFromImage(active.MapImages.ViewPiece);

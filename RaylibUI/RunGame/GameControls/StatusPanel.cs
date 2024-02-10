@@ -1,4 +1,6 @@
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.Terrains;
 using Model;
 using Model.Interface;
@@ -48,17 +50,25 @@ public class StatusPanel : BaseControl
         var yearLabel = new StatusLabel(_gameScreen, _game.GetGameYearString);
         yearLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset + labelHeight, Height = yearLabel.GetPreferredHeight() };
 
-        var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.Science / 10}");
+        var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}");
         goldLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset + 2 * labelHeight, Height = goldLabel.GetPreferredHeight() };
 
         var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", TextAlignment.Right);
         turnsLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset + 2 * labelHeight, Height = turnsLabel.GetPreferredHeight() };
 
-        var _researchIcon = TextureCache.GetImage(_active.ResourceImages
-                    .First(r => r.Name == "Food")
-                    .LargeImage);
+        var iconNo = 0; // TODO: determine one of 4 icons based on current research progress (0...25%, 25...50%, 50...75%, 75...100%)
+        var researchIcon = new TextureDisplay(_gameScreen, _active.MiscImages.ResearchProgressIcon[iconNo], new System.Numerics.Vector2(_internalBounds.X + 119, _internalBounds.Y + 20), scale: 1.5f);
 
-        Children = new List<IControl>() { populLabel, yearLabel, goldLabel, turnsLabel };
+        Children = new List<IControl>() { populLabel, yearLabel, goldLabel, turnsLabel, researchIcon };
+
+        // TODO: find out when global warming icon is shown (it's based on no of skull icons on map)
+        if (true)
+        {
+            iconNo = 0;
+            var warmingIcon = new TextureDisplay(_gameScreen, _active.MiscImages.GlobalWarmingIcon[iconNo], new System.Numerics.Vector2(_internalBounds.X + 150, _internalBounds.Y + 20), scale: 1.5f);
+            Children.Add(warmingIcon);
+        }
+
         foreach (var c in _gameScreen.ActiveMode.GetSidePanelContents(_internalBounds))
         {
             Children.Add(c);
@@ -98,7 +108,7 @@ public class StatusPanel : BaseControl
 
 public class StatusLabel : LabelControl
 {
-    public StatusLabel(IControlLayout layout, string text, TextAlignment alignment = TextAlignment.Left) : base(layout, text, true, fontSize: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFontSize, colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor, colorShadow: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColorShadow, shadowOffset: new System.Numerics.Vector2(1,1), spacing: 0f, alignment: alignment, offset: 8, defaultHeight: 18, font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont)
+    public StatusLabel(IControlLayout layout, string text, TextAlignment alignment = TextAlignment.Left, Color[]? switchColors = null, int switchTime = 0) : base(layout, text, true, fontSize: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFontSize, colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor, colorShadow: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColorShadow, shadowOffset: new System.Numerics.Vector2(1,1), spacing: 0f, alignment: alignment, offset: 8, defaultHeight: 18, font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont, switchColors: switchColors, switchTime: switchTime)
     {
 
     }
