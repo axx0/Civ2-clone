@@ -24,8 +24,11 @@ public class LabelControl : BaseControl
     private readonly Color _colorShadow;
     private readonly Vector2 _shadowOffset;
     private readonly IUserInterface _active;
+    private readonly Timer _timer;
+    private bool _switch;
+    private readonly Color[]? _switchColors;
 
-    public LabelControl(IControlLayout controller, string text, bool eventTransparent, int minWidth = -1, int offset = 2, TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false, Font? font = null, int fontSize = 20, float spacing = 1.0f, Color? colorFront = null, Color? colorShadow = null, Vector2? shadowOffset = null) : base(controller, eventTransparent: eventTransparent)
+    public LabelControl(IControlLayout controller, string text, bool eventTransparent, int minWidth = -1, int offset = 2, TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false, Font? font = null, int fontSize = 20, float spacing = 1.0f, Color? colorFront = null, Color? colorShadow = null, Vector2? shadowOffset = null, Color[]? switchColors = null, int switchTime = 0) : base(controller, eventTransparent: eventTransparent)
     {
         Offset = offset;
         Text = text;
@@ -41,6 +44,8 @@ public class LabelControl : BaseControl
         _shadowOffset = shadowOffset ?? Vector2.Zero;
         TextSize = Raylib.MeasureTextEx(_labelFont, text, _fontSize, _spacing);
         _active = controller.MainWindow.ActiveInterface;
+        _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
+        _switchColors = switchColors;
     }
 
     public override int GetPreferredWidth()
@@ -87,9 +92,20 @@ public class LabelControl : BaseControl
             {
                 textPosition.X += Width - TextSize.X - 2 * Offset;
             }
-            
-            Raylib.DrawTextEx(_labelFont, Text, textPosition + _shadowOffset, _fontSize, _spacing, _colorShadow);
-            Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, _colorFront);
+
+            Color colorFront, colorShadow;
+            if (_switchColors is not null)
+            {
+                colorFront = _switch ? _switchColors[0] : _switchColors[1];
+                colorShadow = Color.Black;
+            }
+            else
+            {
+                colorFront = _colorFront;
+                colorShadow = _colorShadow;
+            }
+            Raylib.DrawTextEx(_labelFont, Text, textPosition + _shadowOffset, _fontSize, _spacing, colorShadow);
+            Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, colorFront);
         }
 
         //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.RED);
