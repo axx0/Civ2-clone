@@ -181,6 +181,8 @@ public abstract class BaseGameView : IGameView
             elements.Add(new CityData(
                 color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
                 name: playerKnowledge.CityHere.Name,
+                size: playerKnowledge.CityHere.Size,
+                sizeRectLoc: cityImage.SizeLoc,
                 texture: cityImage.Texture,
                 location: cityPos, tile: tile));
             if (tile.UnitsHere.Count > 0)
