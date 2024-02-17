@@ -50,6 +50,15 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FOSS art\Improvements\" />
+    <Folder Include="FOSS art\Advances\" />
+    <Folder Include="FOSS art\Other\" />
+    <Folder Include="FOSS art\Terrain\" />
+    <Folder Include="FOSS art\Wonders\" />
+    <Folder Include="FOSS art\Units\" />
+  </ItemGroup>
+
 
 
 </Project>
