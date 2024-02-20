@@ -76,7 +76,7 @@ public abstract class BaseGameView : IGameView
 
             var imageWidth = ViewWidth;
             var imageHeight = ViewHeight;
-            var image = ImageUtils.NewImage(imageWidth, imageHeight);
+            var image = Raylib.GenImageColor(imageWidth, imageHeight, new Color(0, 0, 0, 0));
             var map = location.Map;
             var dim = _gameScreen.TileCache.GetDimensions(map);
 
