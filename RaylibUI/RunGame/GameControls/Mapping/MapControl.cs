@@ -311,7 +311,7 @@ public class MapControl : BaseControl
             }
             else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile))
             {
-                element.Draw(element.Location + paddedLoc);
+                element.Draw(element.Location + paddedLoc, isShaded: element.IsShaded);
             }
         }
 

@@ -6,12 +6,13 @@ namespace RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 public class TextureElement : IViewElement
 {
-    public TextureElement(Texture2D texture, Vector2 location, Tile tile, bool isTerrain = false, Vector2? offset = null)
+    public TextureElement(Texture2D texture, Vector2 location, Tile tile, bool isTerrain = false, bool isShaded = false, Vector2? offset = null)
     {
         Texture = texture;
         Location = location;
         Tile = tile;
         IsTerrain = isTerrain;
+        IsShaded = isShaded;
         Offset = offset ?? Vector2.Zero;
     }
 
@@ -26,15 +27,28 @@ public class TextureElement : IViewElement
     
     public Tile Tile { get; set; }
     public bool IsTerrain { get; }
+    public bool IsShaded { get; }
 
-    public void Draw(Vector2 adjustedLocation, float scale = 1f)
+
+    public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
         var loc = adjustedLocation - Offset + Offset * scale;
+
+        if (isShaded)
+        {
+            Raylib.BeginShaderMode(Shaders.Grayscale);
+        }
+
         Raylib.DrawTextureEx(Texture,
             loc,
             0f,
             scale,
             Color.White);
+
+        if (isShaded)
+        {
+            Raylib.EndShaderMode();
+        }
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)
