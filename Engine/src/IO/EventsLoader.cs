@@ -28,7 +28,7 @@ namespace Civ2engine.IO
         {
             if (section != "IF") return;
 
-            ITrigger trigger = default;
+            ITrigger? trigger = default;
             string unitKilled, attackerCiv, defenderCiv, talkerCiv, listenerCiv, receiverCiv = string.Empty;
             int talkerType, listenerType;
             switch (contents[0])
@@ -39,9 +39,9 @@ namespace Civ2engine.IO
                     defenderCiv = ReadString(contents, "defender");
                     trigger = new UnitKilled
                     {
-                        UnitKilledId = string.Equals(unitKilled, "ANYUNIT", StringComparison.OrdinalIgnoreCase) ? -2 : Int32.Parse(unitKilled),
-                        AttackerCivId = string.Equals(attackerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == attackerCiv).Id,
-                        DefenderCivId = string.Equals(defenderCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == defenderCiv).Id,
+                        UnitKilledId = StringEquals(unitKilled, "ANYUNIT") ? -2 : _rules.UnitTypes.ToList().FindIndex(u => StringEquals(u.Name, unitKilled)),
+                        AttackerCivId = StringEquals(attackerCiv, "ANYBODY") ? 0 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, attackerCiv)).Id,
+                        DefenderCivId = StringEquals(defenderCiv, "ANYBODY") ? 0 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, defenderCiv)).Id,
                     };
                     break;
                 case "CITYTAKEN":
@@ -49,9 +49,9 @@ namespace Civ2engine.IO
                     defenderCiv = ReadString(contents, "defender");
                     trigger = new CityTaken
                     {
-                        City = _gameObjects.Cities.Find(c => c.Name == ReadString(contents, "city")),
-                        AttackerCivId = string.Equals(attackerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == attackerCiv).Id,
-                        DefenderCivId = string.Equals(defenderCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? 0 : _gameObjects.Civilizations.Find(c => c.TribeName == defenderCiv).Id,
+                        City = _gameObjects.Cities.Find(c => StringEquals(c.Name, ReadString(contents, "city"))),
+                        AttackerCivId = StringEquals(attackerCiv, "ANYBODY") ? 0 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, attackerCiv)).Id,
+                        DefenderCivId = StringEquals(defenderCiv, "ANYBODY") ? 0 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, defenderCiv)).Id,
                     };
                     break;
                 case "TURN":
@@ -69,11 +69,11 @@ namespace Civ2engine.IO
                 case "NEGOTIATION":
                     talkerCiv = ReadString(contents, "talker");
                     listenerCiv = ReadString(contents, "listener");
-                    if (string.Equals(ReadString(contents, "talkertype"), "Human", StringComparison.OrdinalIgnoreCase))
+                    if (StringEquals(ReadString(contents, "talkertype"), "Human"))
                     {
                         talkerType = 1;
                     }
-                    else if (string.Equals(ReadString(contents, "talkertype"), "Computer", StringComparison.OrdinalIgnoreCase))
+                    else if (StringEquals(ReadString(contents, "talkertype"), "Computer"))
                     {
                         talkerType = 2;
                     }
@@ -81,11 +81,11 @@ namespace Civ2engine.IO
                     {
                         talkerType = 4;
                     }
-                    if (string.Equals(ReadString(contents, "listenertype"), "Human", StringComparison.OrdinalIgnoreCase))
+                    if (StringEquals(ReadString(contents, "listenertype"), "Human"))
                     {
                         listenerType = 1;
                     }
-                    else if (string.Equals(ReadString(contents, "listenertype"), "Computer", StringComparison.OrdinalIgnoreCase))
+                    else if (StringEquals(ReadString(contents, "listenertype"), "Computer"))
                     {
                         listenerType = 2;
                     }
@@ -95,8 +95,8 @@ namespace Civ2engine.IO
                     }
                     trigger = new Negotiation1
                     {
-                        TalkerCivId = string.Equals(talkerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == talkerCiv).Id,
-                        ListenerCivId = string.Equals(listenerCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == listenerCiv).Id,
+                        TalkerCivId = StringEquals(talkerCiv, "ANYBODY") ? -2 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, talkerCiv)).Id,
+                        ListenerCivId = StringEquals(listenerCiv, "ANYBODY") ? -2 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, listenerCiv)).Id,
                         TalkerType = talkerType,
                         ListenerType = listenerType
                     };
@@ -114,7 +114,7 @@ namespace Civ2engine.IO
                     defenderCiv = ReadString(contents, "defender");
                     trigger = new NoSchism
                     {
-                        CivId = string.Equals(defenderCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == defenderCiv).Id,
+                        CivId = StringEquals(defenderCiv, "ANYBODY") ? -2 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, defenderCiv)).Id,
                     };
                     break;
                 case "RECEIVEDTECHNOLOGY":
@@ -122,7 +122,7 @@ namespace Civ2engine.IO
                     trigger = new ReceivedTechnology
                     {
                         TechnologyId = Int32.Parse(ReadString(contents, "technology")),
-                        ReceiverCivId = string.Equals(receiverCiv, "ANYBODY", StringComparison.OrdinalIgnoreCase) ? -2 : _gameObjects.Civilizations.Find(c => c.TribeName == receiverCiv).Id,
+                        ReceiverCivId = StringEquals(receiverCiv, "ANYBODY") ? -2 : _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, receiverCiv)).Id,
                     };
                     break;
                 default:
@@ -159,47 +159,51 @@ namespace Civ2engine.IO
                         unitMoved = ReadString(contents, "unit", indx + 1);
                         civ = ReadString(contents, "owner", indx + 1);
                         civId = 0;
-                        if (string.Equals(civ, "TRIGGERRECEIVER", StringComparison.OrdinalIgnoreCase) 
-                            || string.Equals(civ, "TRIGGERDEFENDER", StringComparison.OrdinalIgnoreCase))
+                        if (StringEquals(civ, "TRIGGERRECEIVER") 
+                            || StringEquals(civ, "TRIGGERDEFENDER"))
                         {
                             civId = -4;
                         }
-                        else if (string.Equals(civ, "TRIGGERATTACKER", StringComparison.OrdinalIgnoreCase))
+                        else if (StringEquals(civ, "TRIGGERATTACKER"))
                         {
                             civId = -3;
                         }
                         else
                         {
-                            civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
+                            civId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, civ)).Id;
                         }
                         number = ReadString(contents, "numbertomove", indx + 1);
                         var arr = contents[indx + 4].Split(',').Select(val => Int32.Parse(val)).ToArray();
                         action = new MoveUnit
                         {
-                            UnitMovedId = string.Equals(unitMoved, "ANYUNIT", StringComparison.OrdinalIgnoreCase) ? -2 : 
-                                _rules.UnitTypes.ToList().FindIndex(u => u.Name == unitMoved),
+                            UnitMovedId = StringEquals(unitMoved, "ANYUNIT") ? -2 : 
+                                _rules.UnitTypes.ToList().FindIndex(u => StringEquals(u.Name, unitMoved)),
                             OwnerCivId = civId,
                             MapCoords = new int[4, 2] { { arr[0], arr[1] }, { arr[2], arr[3] },
                                                         { arr[4], arr[5] }, { arr[6], arr[7] }},
                             MapDest = contents[indx + 6].Split(',').Select(val => Int32.Parse(val)).ToArray(),
-                            NumberToMove = string.Equals(number, "ALL", StringComparison.OrdinalIgnoreCase) ? -2 : Int32.Parse(number)
+                            NumberToMove = StringEquals(number, "ALL") ? -2 : Int32.Parse(number)
                         };
                         break;
                     case "CREATEUNIT":
                         civ = ReadString(contents, "owner", indx + 1);
                         civId = 0;
-                        if (string.Equals(civ, "TRIGGERRECEIVER", StringComparison.OrdinalIgnoreCase) 
-                            || string.Equals(civ, "TRIGGERDEFENDER", StringComparison.OrdinalIgnoreCase))
+                        if (StringEquals(civ, "TRIGGERRECEIVER") 
+                            || StringEquals(civ, "TRIGGERDEFENDER"))
                         {
                             civId = -4;
                         }
-                        else if (string.Equals(civ, "TRIGGERATTACKER", StringComparison.OrdinalIgnoreCase))
+                        else if (StringEquals(civ, "TRIGGERATTACKER"))
                         {
                             civId = -3;
                         }
+                        else if (StringEquals(civ, "barbarians"))
+                        {
+                            civId = 0;
+                        }
                         else
                         {
-                            civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
+                            civId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, civ)).Id;
                         }
                         int locationsNo = contents.IndexOf("endlocations") - contents.IndexOf("locations") - 1;
                         int[,] locations = new int[locationsNo, 2];
@@ -211,28 +215,28 @@ namespace Civ2engine.IO
                         }
                         action = new CreateUnit
                         {
-                            CreatedUnitId = Int32.Parse(ReadString(contents, "unit", indx + 1)),
+                            CreatedUnitId = _rules.UnitTypes.ToList().FindIndex(u => StringEquals(u.Name, ReadString(contents, "unit", indx + 1))),
                             OwnerCivId = civId,
-                            Veteran = string.Equals(ReadString(contents, "veteran", indx + 1), "yes", StringComparison.Ordinal),
-                            HomeCity = _gameObjects.Cities.Find(c => c.Name == ReadString(contents, "homecity", indx + 1)),
+                            Veteran = StringEquals(ReadString(contents, "veteran", indx + 1), "yes"),
+                            HomeCity = _gameObjects.Cities.Find(c => StringEquals(c.Name, ReadString(contents, "homecity", indx + 1))),
                             Locations = locations
                         };
                         break;
                     case "CHANGEMONEY":
                         civ = ReadString(contents, "receiver", indx + 1);//contents[indx + 1][9..];
                         civId = 0;
-                        if (string.Equals(civ, "TRIGGERRECEIVER", StringComparison.OrdinalIgnoreCase) 
-                            || string.Equals(civ, "TRIGGERDEFENDER", StringComparison.OrdinalIgnoreCase))
+                        if (StringEquals(civ, "TRIGGERRECEIVER") 
+                            || StringEquals(civ, "TRIGGERDEFENDER"))
                         {
                             civId = -4;
                         }
-                        else if (string.Equals(civ, "TRIGGERATTACKER", StringComparison.OrdinalIgnoreCase))
+                        else if (StringEquals(civ, "TRIGGERATTACKER"))
                         {
                             civId = -3;
                         }
                         else
                         {
-                            civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
+                            civId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, civ)).Id;
                         }
                         action = new ChangeMoney
                         {
@@ -249,8 +253,8 @@ namespace Civ2engine.IO
                     case "MAKEAGGRESSION":
                         action = new MakeAggression
                         {
-                            WhoCivId = _gameObjects.Civilizations.Find(c => c.TribeName == ReadString(contents, "who", indx + 1)).Id,
-                            WhomCivId = _gameObjects.Civilizations.Find(c => c.TribeName == ReadString(contents, "whom", indx + 1)).Id,
+                            WhoCivId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, ReadString(contents, "who", indx + 1))).Id,
+                            WhomCivId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, ReadString(contents, "whom", indx + 1))).Id,
                         };
                         break;
                     case "JUSTONCE":
@@ -277,18 +281,18 @@ namespace Civ2engine.IO
                     case "DESTROYACIVILIZATION":
                         civ = ReadString(contents, "whom", indx + 1);
                         civId = 0;
-                        if (string.Equals(civ, "TRIGGERRECEIVER", StringComparison.OrdinalIgnoreCase) 
-                            || string.Equals(civ, "TRIGGERDEFENDER", StringComparison.OrdinalIgnoreCase))
+                        if (StringEquals(civ, "TRIGGERRECEIVER") 
+                            || StringEquals(civ, "TRIGGERDEFENDER"))
                         {
                             civId = -4;
                         }
-                        else if (string.Equals(civ, "TRIGGERATTACKER", StringComparison.OrdinalIgnoreCase))
+                        else if (StringEquals(civ, "TRIGGERATTACKER"))
                         {
                             civId = -3;
                         }
                         else
                         {
-                            civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
+                            civId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, civ)).Id;
                         }
                         action = new DestroyCiv
                         {
@@ -298,8 +302,8 @@ namespace Civ2engine.IO
                     case "GIVETECHNOLOGY":
                         civ = ReadString(contents, "receiver", indx + 1);
                         civId = 0;
-                        if (string.Equals(civ, "TRIGGERRECEIVER", StringComparison.OrdinalIgnoreCase)
-                            || string.Equals(civ, "TRIGGERDEFENDER", StringComparison.OrdinalIgnoreCase))
+                        if (StringEquals(civ, "TRIGGERRECEIVER")
+                            || StringEquals(civ, "TRIGGERDEFENDER"))
                         {
                             civId = -4;
                         }
@@ -309,7 +313,7 @@ namespace Civ2engine.IO
                         }
                         else
                         {
-                            civId = _gameObjects.Civilizations.Find(c => c.TribeName == civ).Id;
+                            civId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, civ)).Id;
                         }
                         action = new GiveTech
                         {
@@ -343,5 +347,7 @@ namespace Civ2engine.IO
 
             return "";
         }
+
+        private bool StringEquals(string s1, string s2) => string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -89,7 +89,7 @@ namespace EtoFormsUI
                 new Point(300, 24), true, true, Color.FromArgb(67, 67, 67), 2, 1);
             Draw.Text(e.Graphics, $"Holy Empire of the {Game.GetActiveCiv.Adjective}", font1, Color.FromArgb(223, 223, 223), 
                 new Point(300, 45), true, true, Color.FromArgb(67, 67, 67), 2, 1);
-            Draw.Text(e.Graphics, $"{Game.GetActiveCiv.LeaderTitle} {Game.GetActiveCiv.LeaderName}: {Game.GetGameYearString}", 
+            Draw.Text(e.Graphics, $"{Game.GetActiveCiv.LeaderTitle} {Game.GetActiveCiv.LeaderName}: {Game.Date.GameYearString}", 
                 font1, Color.FromArgb(223, 223, 223), new Point(300, 66), true, true, Color.FromArgb(67, 67, 67), 2, 1);
 
             if (!showCasualties)

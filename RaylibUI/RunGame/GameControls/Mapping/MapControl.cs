@@ -309,7 +309,7 @@ public class MapControl : BaseControl
                 Raylib.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
                 Raylib.DrawTextEx(Fonts.TnRbold, size, textPosition, 14, 0, Color.Black);
             }
-            else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile))
+            else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile) || element.Tile.IsCityPresent)
             {
                 element.Draw(element.Location + paddedLoc, isShaded: element.IsShaded);
             }

@@ -141,7 +141,6 @@ public abstract class BaseGameView : IGameView
                 }
             }
 
-
             this.BaseImage = Raylib.LoadTextureFromImage(image);
             this.Elements = elements.ToArray();
 

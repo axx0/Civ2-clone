@@ -84,11 +84,7 @@ namespace Civ2engine
             _scenarioData = objects.Scenario;
 
             TurnNumber = gameData.TurnNumber;
-
-            MonthlyTurnIncrement = gameData.TurnYearIncrement < 0;
-            DefaultTurnIncrement = gameData.TurnYearIncrement == 0;
-            TurnYearIncrement = gameData.TurnYearIncrement;
-            StartingYear = gameData.StartingYear == 0 ? -4000 : gameData.StartingYear;
+            Date = new Date(gameData.StartingYear, gameData.TurnYearIncrement, (DifficultyType)gameData.DifficultyLevel);
 
             _barbarianActivity = (BarbarianActivityType)gameData.BarbarianActivity;
             PollutionSkulls = gameData.NoPollutionSkulls;

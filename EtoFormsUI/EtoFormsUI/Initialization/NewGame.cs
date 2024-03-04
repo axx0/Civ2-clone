@@ -68,7 +68,7 @@ namespace EtoFormsUI.Initialization
             MenuLoader.LoadMenus(ruleset);
             CityLoader.LoadCities(ruleset);
             var config = new GameInitializationConfig {RuleSet = ruleset};
-            config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
+            config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root, "game.txt");
             try
             {
                 PopupBox CorrectedPopup(string popupId)
@@ -147,7 +147,7 @@ namespace EtoFormsUI.Initialization
                 MenuLoader.LoadMenus(config.RuleSet);
                 CityLoader.LoadCities(config.RuleSet);
 
-                config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root);
+                config.PopUps = PopupBoxReader.LoadPopupBoxes(config.RuleSet.Root, "game.txt");
 
                 
                 GetWorldSize(mainForm, config);

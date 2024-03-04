@@ -32,6 +32,7 @@ public class StatusPanel : BaseControl
         _headerLabel = new HeaderLabel(gameScreen, _active.Look, Labels.For(LabelIndex.Status), fontSize: _active.Look.HeaderLabelFontSizeNormal);
         _padding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
         Click += OnClick;
+        _game.OnPlayerEvent += PlayerEventTriggered;
     }
 
 
@@ -47,7 +48,7 @@ public class StatusPanel : BaseControl
 
         var labelHeight = 18;
 
-        var yearLabel = new StatusLabel(_gameScreen, _game.GetGameYearString);
+        var yearLabel = new StatusLabel(_gameScreen, _game.Date.GameYearString(_game.TurnNumber));
         yearLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset + labelHeight, Height = yearLabel.GetPreferredHeight() };
 
         var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}");
@@ -69,9 +70,12 @@ public class StatusPanel : BaseControl
             Children.Add(warmingIcon);
         }
 
-        foreach (var c in _gameScreen.ActiveMode.GetSidePanelContents(_internalBounds))
+        if (_game.GetPlayerCiv == _game.GetActiveCiv)
         {
-            Children.Add(c);
+            foreach (var c in _gameScreen.ActiveMode.GetSidePanelContents(_internalBounds))
+            {
+                Children.Add(c);
+            }
         }
     }
 
@@ -102,6 +106,23 @@ public class StatusPanel : BaseControl
             {
                 control.Draw(pulse);
             }
+        }
+
+        // AI turn civ indicator
+        if (_game.GetPlayerCiv != _game.GetActiveCiv)
+            Raylib.DrawRectangleRec(new Rectangle(_internalBounds.X + _internalBounds.Width - 8, _internalBounds.Y + _internalBounds.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
+    }
+
+    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
+    {
+        switch (e.EventType)
+        {
+            case PlayerEventType.NewTurn:
+                {
+                    Update();
+                    break;
+                }
+            default: break;
         }
     }
 }

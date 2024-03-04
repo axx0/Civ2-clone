@@ -47,12 +47,18 @@ public class LoadScenario : FileDialogHandler
 
         Initialization.Start(game);
 
+        // Load custom intro if it exists in txt file
         var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
         if (Directory.EnumerateFiles(scnDirectory, introFile, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault() != null)
         {
-            var popupbox = ScenarioIntroLoader.LoadIntro(new string[] { scnDirectory }, introFile);
+            civDialogHandlers[ScenCustomIntro.Title].UpdatePopupData(new() { 
+                { ScenCustomIntro.Title, 
+                  PopupBoxReader.LoadPopupBoxes(scnDirectory, introFile)["SCENARIO"] } });
+
+            return civDialogHandlers[ScenCustomIntro.Title].Show(civ2Interface);
         }
 
+        // Load default intro
         return civDialogHandlers[ScenarioLoaded.Title].Show(civ2Interface);
     }
 }

@@ -17,7 +17,16 @@ public class ScenDifficulty : ICivDialogHandler
     {
         Dialog = new DialogElements
         {
-            Dialog = popups[Name],
+            Dialog = new PopupBox()
+            {
+                Button = new List<string> { Labels.Ok, Labels.Cancel },
+                Options = new List<string> { Labels.For(LabelIndex.Chieftan) + " (easiest)", Labels.For(LabelIndex.Warlord),
+                        Labels.For(LabelIndex.Prince), Labels.For(LabelIndex.King), Labels.For(LabelIndex.Emperor),
+                        Labels.For(LabelIndex.Deity) + " (toughest)"},
+                Title = "Select " + Labels.For(LabelIndex.Difficulty) + " Level",
+                Name = Title,
+                Width = 320
+            },
             DialogPos = new Point(0, 0),
         };
         return this;

@@ -36,7 +36,7 @@ public class LoadOk : ICivDialogHandler
         Dialog.ReplaceStrings = new List<string>
         {
             playerCiv.LeaderTitle, playerCiv.LeaderName,
-            playerCiv.TribeName, game.GetGameYearString,
+            playerCiv.TribeName, game.Date.GameYearString(game.TurnNumber),
             game.DifficultyLevel.ToString()
         };
         return new MenuAction(Dialog);

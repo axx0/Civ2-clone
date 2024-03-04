@@ -26,7 +26,7 @@ public class ScenarioLoaded : ICivDialogHandler
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return civDialogHandlers[ChoseScenCiv.Title].Show(civ2Interface);
+        return civDialogHandlers[ScenChoseCiv.Title].Show(civ2Interface);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
@@ -36,8 +36,8 @@ public class ScenarioLoaded : ICivDialogHandler
         Dialog.ReplaceNumbers = new List<int> { game.ScenarioData.TechParadigm };
         Dialog.ReplaceStrings = new List<string>
         {
-            game.ScenarioData.Name, game.ScenarioData.StartingYear.ToString(), 
-            game.ScenarioData.MaxTurns.ToString(),
+            game.ScenarioData.Name, game.Date.GameYearString(0),
+            game.Date.GameYearString(game.ScenarioData.MaxTurns),
         };
 
         return new MenuAction(Dialog);

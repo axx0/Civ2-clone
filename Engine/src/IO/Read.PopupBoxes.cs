@@ -5,52 +5,12 @@ namespace Civ2engine
 {
     public class PopupBoxReader : IFileHandler
     {
-        // Read Game.txt
-        public static Dictionary<string, PopupBox?> LoadPopupBoxes(string root)
+        // Read popupbox data from txt file
+        public static Dictionary<string, PopupBox?> LoadPopupBoxes(string root, string fileName)
         {
             var boxes = new Dictionary<string, PopupBox?>();
-            var filePath = Utils.GetFilePath("game.txt", new[] { root });
+            var filePath = Utils.GetFilePath(fileName, new[] { root });
             TextFileParser.ParseFile(filePath, new PopupBoxReader { Boxes = boxes }, true);
-
-            // Add this two manually
-            boxes.Add("SCENCHOSECIV", new PopupBox()
-            {
-                Options = new List<string> { "a", "b" },
-                Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Title = "    ",
-                Name = "SCENCHOSECIV",
-                Width = 457,
-            });
-            boxes.Add("SCENINTRO", new PopupBox()
-            {
-                Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Name = "SCENINTRO",
-                Title = "",
-            });
-            boxes.Add("SCENDIFFICULTY", new PopupBox()
-            {
-                Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Options = new List<string> { "Chieftain (easiest)", "Warlord",
-                "Prince", "King", "Emperor", "Deity (toughest)"},
-                Title = "Select Difficulty Level",
-                Name = "SCENDIFFICULTY",
-                Width = 320
-            });
-            boxes.Add("SCENGENDER", new PopupBox()
-            {
-                Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Options = new List<string> { "Male", "Female" },
-                Title = "Select Gender",
-                Name = "SCENGENDER",
-                Width = 320
-            });
-            boxes.Add("SCENENTERNAME", new PopupBox()
-            {
-                Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Title = "Please enter your name",
-                Name = "SCENENTERNAME",
-                Width = 440
-            });
             return boxes;
         }
 

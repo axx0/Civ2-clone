@@ -72,7 +72,7 @@ public class CivDialog : DynamicSizingDialog
                     alignment: text.HorizontalAlignment == HorizontalAlignment.Center
                         ? TextAlignment.Center
                         : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left,
-                    font: _active.Look.LabelFont, colorFront: _active.Look.LabelColour));
+                    font: _active.Look.LabelFont, colorFront: _active.Look.LabelColour, fontSize: 26));
             }
         }
 

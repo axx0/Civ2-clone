@@ -55,7 +55,7 @@ namespace EtoFormsUI
             var dialog = new Civ2dialog(this, popupBoxList["LOADOK"], new List<string>
                     {
                         playerCiv.LeaderTitle, playerCiv.LeaderName,
-                        playerCiv.TribeName, Game.GetGameYearString,
+                        playerCiv.TribeName, Game.Date.GameYearString,
                         Game.DifficultyLevel.ToString()
                     });
             dialog.ShowModal(this);
