@@ -77,7 +77,7 @@ public class ListBox : BaseControl
         var actualColumns = Width / _maxChildWidth + 1;
         _rows = Height / _labelHeight;
         var totalVisible = actualColumns * _rows;
-        var renderHeight = Height;
+        var renderHeight = Height - 4;
         var requiredColumns = (int)Math.Ceiling(_allLabels.Count / (double)_rows);
         if (requiredColumns > actualColumns)
         {
@@ -108,8 +108,8 @@ public class ListBox : BaseControl
         foreach (var control in visibleLabels)
         {
             control.Bounds = new Rectangle(Location.X + xOffset, Location.Y + yOffset, _maxChildWidth, _labelHeight);
-            yOffset += _labelHeight + 1;
-            if (yOffset >= renderHeight)
+            yOffset += _labelHeight;
+            if (yOffset + _labelHeight >= renderHeight)
             {
                 yOffset = 2;
                 xOffset += _maxChildWidth;

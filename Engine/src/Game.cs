@@ -32,78 +32,9 @@ namespace Civ2engine
         public Scenario ScenarioData => _scenarioData;
         public Rules Rules => _rules;
 
+        public Date Date;
         public int TurnNumber { get; private set; }
 
-        private int _gameYear;
-
-        public int GameYear
-        {
-            get
-            {
-                if (MonthlyTurnIncrement)
-                {
-                    _gameYear = StartingYear + TurnNumber - 1;
-                }
-                else if (DefaultTurnIncrement)
-                {
-                    _gameYear = _difficultyLevel switch
-                    {
-                        DifficultyType.Chieftain or DifficultyType.Warlord => StartingYear + Math.Min(250, TurnNumber - 1) * 20 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 250)) * 10 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 300)) * 5 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 350)) * 2 + Math.Max(0, TurnNumber - 1 - 400),
-                        DifficultyType.Prince => StartingYear + Math.Min(60, TurnNumber - 1) * 50 + Math.Min(40, Math.Max(0, TurnNumber - 1 - 60)) * 25 + Math.Min(150, Math.Max(0, TurnNumber - 1 - 100)) * 10 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 250)) * 5 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 300)) * 2 + Math.Max(0, TurnNumber - 1 - 350),
-                        DifficultyType.King => StartingYear + Math.Min(60, TurnNumber - 1) * 50 + Math.Min(40, Math.Max(0, TurnNumber - 1 - 60)) * 25 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 100)) * 20 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 150)) * 10 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 200)) * 5 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 250)) * 2 + Math.Max(0, TurnNumber - 1 - 300),
-                        _ => StartingYear + Math.Min(60, TurnNumber - 1) * 50 + Math.Min(40, Math.Max(0, TurnNumber - 1 - 60)) * 25 + Math.Min(75, Math.Max(0, TurnNumber - 1 - 100)) * 20 + Math.Min(25, Math.Max(0, TurnNumber - 1 - 175)) * 10 + Math.Min(50, Math.Max(0, TurnNumber - 1 - 200)) * 2 + Math.Max(0, TurnNumber - 1 - 250),
-                    };
-                }
-                else
-                {
-                    _gameYear = StartingYear + (TurnNumber - 1) * TurnYearIncrement;
-                }
-
-                return _gameYear;
-            }
-        }
-
-        public string GetGameYearString 
-        {
-            get
-            {
-                if (MonthlyTurnIncrement)
-                {
-                    int Nmonth, Nyear = Math.DivRem(GameYear, 12, out Nmonth);
-                    if (Nmonth < 0)
-                    {
-                        Nmonth += 12;
-                    }
-                    string month = Nmonth switch
-                    {
-                        0 => Labels.For(LabelIndex.Jan),
-                        1 => Labels.For(LabelIndex.Feb),
-                        2 => Labels.For(LabelIndex.Mar),
-                        3 => Labels.For(LabelIndex.Apr),
-                        4 => Labels.For(LabelIndex.May),
-                        5 => Labels.For(LabelIndex.June),
-                        6 => Labels.For(LabelIndex.July),
-                        7 => Labels.For(LabelIndex.Aug),
-                        8 => Labels.For(LabelIndex.Sept),
-                        9 => Labels.For(LabelIndex.Oct),
-                        10 => Labels.For(LabelIndex.Nov),
-                        _ => Labels.For(LabelIndex.Dec),
-                    };
-                    return string.Join(" ", month, Math.Abs(Nyear));
-                }
-                else
-                {
-                    return GameYear < 0 ? 
-                        string.Join(" ", Math.Abs(GameYear).ToString(), Labels.For(LabelIndex.BC)) : 
-                        string.Join(" ", Labels.For(LabelIndex.AD), GameYear.ToString());
-                }
-            }
-        } 
-
-        public bool MonthlyTurnIncrement { get; set; }
-        public bool DefaultTurnIncrement { get; set; }
-        public int TurnYearIncrement { get; set; }  // Ignore if MonthlyDateIncrement=true
-        public int StartingYear { get; set; }
         public DifficultyType DifficultyLevel => _difficultyLevel;
         public BarbarianActivityType BarbarianActivity => _barbarianActivity;
         public int PollutionSkulls { get; set; }

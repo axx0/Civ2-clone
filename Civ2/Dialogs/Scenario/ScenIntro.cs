@@ -1,5 +1,4 @@
 using Civ2.Dialogs.Scenario;
-using Civ2.Rules;
 using Civ2engine;
 using Model;
 using Model.InterfaceActions;
@@ -15,7 +14,11 @@ public class ScenIntro : ICivDialogHandler
     {
         Dialog = new DialogElements
         {
-            Dialog = popups[Name],
+            Dialog = new PopupBox()
+            {
+                Name = Title,
+                Title = "",
+            },
             DialogPos = new Point(0, 0)
         };
         return this;
@@ -26,7 +29,7 @@ public class ScenIntro : ICivDialogHandler
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return civDialogHandlers[ChoseScenCiv.Title].Show(civ2Interface);
+        return civDialogHandlers[ScenChoseCiv.Title].Show(civ2Interface);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)

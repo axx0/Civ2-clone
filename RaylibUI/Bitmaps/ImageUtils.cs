@@ -102,14 +102,6 @@ public static class ImageUtils
         }
     }
 
-    public static Image NewImage(int width, int h)
-    {
-        var image = Raylib.LoadImage("blank.png");
-        
-        Raylib.ImageResize(ref image, width, h);
-        return image;
-    }
-
     /// <summary>
     /// Paint base screen of a dialog
     /// </summary>
@@ -122,7 +114,7 @@ public static class ImageUtils
     public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false, bool statusPanel = false)
     {
         // Outer wallpaper
-        var image = NewImage(width, height);
+        var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
         PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel);
         if (centerImage != null)
         {
@@ -145,7 +137,7 @@ public static class ImageUtils
         var len = btn.Length - 2;  // variations of inner texture
         var cols = Math.Ceiling(width / (double)btn[0].Width);
 
-        var image = NewImage(width, height);
+        var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
         Raylib.ImageDraw(ref image, btn[0], new Rectangle(0, 0, btn[0].Width, btn[0].Height), new Rectangle(0, 0, btn[0].Width, btn[0].Height), Color.White);
         for (int col = 1; col < cols - 1; col++)
         {
@@ -340,7 +332,7 @@ public static class ImageUtils
 
     public static Image[] GetScrollImages(int dim)
     {
-        var image = NewImage(dim, dim);
+        var image = Raylib.GenImageColor(dim, dim, Color.Black);
         var color1 = new Color(227, 227, 227, 255);
         Raylib.ImageDrawLine(ref image, 0,0, image.Width -1, 0, color1);
         Raylib.ImageDrawLine(ref image, 0,0, 0, image.Height -1, color1);
@@ -388,7 +380,7 @@ public static class ImageUtils
         {
             // Unit
             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-                tile: tile));
+                tile: tile, isShaded: unit.Order == OrderType.Sleep));
         }
 
         // Stacked shield
@@ -434,7 +426,7 @@ public static class ImageUtils
         {
             // Unit
             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-                tile: tile));
+                tile: tile, isShaded: unit.Order == OrderType.Sleep));
         }
 
         if (unit.Order == OrderType.Fortified)

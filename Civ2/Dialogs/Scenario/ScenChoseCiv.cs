@@ -1,16 +1,13 @@
 using Civ2.Dialogs.FileDialogs;
-using Civ2.Dialogs.NewGame;
-using Civ2.Rules;
 using Civ2engine;
-using Civ2engine.Enums;
 using Model;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.Scenario;
 
-public class ScenDifficulty : ICivDialogHandler
+public class ScenChoseCiv : ICivDialogHandler
 {
-    public const string Title = "SCENDIFFICULTY";
+    public const string Title = "SCENCHOSECIV";
 
     public string Name { get; } = Title;
     public ICivDialogHandler UpdatePopupData(Dictionary<string, PopupBox?> popups)
@@ -20,12 +17,9 @@ public class ScenDifficulty : ICivDialogHandler
             Dialog = new PopupBox()
             {
                 Button = new List<string> { Labels.Ok, Labels.Cancel },
-                Options = new List<string> { Labels.For(LabelIndex.Chieftan) + " (easiest)", Labels.For(LabelIndex.Warlord),
-                        Labels.For(LabelIndex.Prince), Labels.For(LabelIndex.King), Labels.For(LabelIndex.Emperor),
-                        Labels.For(LabelIndex.Deity) + " (toughest)"},
-                Title = "Select " + Labels.For(LabelIndex.Difficulty) + " Level",
+                Title = "    ",
                 Name = Title,
-                Width = 320
+                Width = 457,
             },
             DialogPos = new Point(0, 0),
         };
@@ -41,13 +35,15 @@ public class ScenDifficulty : ICivDialogHandler
         {
             return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
         }
-        
-        //Game.Instance.DifficultyLevel = (DifficultyType)result.SelectedIndex;
-        return civDialogHandlers[ScenGender.Title].Show(civ2Interface); ;
+
+        Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).PlayerType = PlayerType.Ai;
+        Game.Instance.AllCivilizations[result.SelectedIndex + 1].PlayerType = PlayerType.Local;
+        return civDialogHandlers[ScenDifficulty.Title].Show(civ2Interface); ;
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
     {
+        Dialog.Dialog.Options = Game.Instance.AllCivilizations.Skip(1).Select(c => c.TribeName + " (" + c.LeaderName + ")").ToList();
         return new MenuAction(Dialog);
     }
 }

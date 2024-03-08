@@ -76,7 +76,7 @@ public abstract class BaseGameView : IGameView
 
             var imageWidth = ViewWidth;
             var imageHeight = ViewHeight;
-            var image = ImageUtils.NewImage(imageWidth, imageHeight);
+            var image = Raylib.GenImageColor(imageWidth, imageHeight, new Color(0, 0, 0, 0));
             var map = location.Map;
             var dim = _gameScreen.TileCache.GetDimensions(map);
 
@@ -141,7 +141,6 @@ public abstract class BaseGameView : IGameView
                 }
             }
 
-
             this.BaseImage = Raylib.LoadTextureFromImage(image);
             this.Elements = elements.ToArray();
 
@@ -181,6 +180,8 @@ public abstract class BaseGameView : IGameView
             elements.Add(new CityData(
                 color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
                 name: playerKnowledge.CityHere.Name,
+                size: playerKnowledge.CityHere.Size,
+                sizeRectLoc: cityImage.SizeLoc,
                 texture: cityImage.Texture,
                 location: cityPos, tile: tile));
             if (tile.UnitsHere.Count > 0)

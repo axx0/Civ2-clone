@@ -37,6 +37,8 @@ namespace RaylibUI
 
             Raylib.SetExitKey(KeyboardKey.F12);
 
+            Shaders.Load();
+
             //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
             {
@@ -121,6 +123,7 @@ namespace RaylibUI
 
         void ShutdownApp()
         {
+            Shaders.Unload();
             Soundman.Dispose();
             Raylib.CloseWindow();
             Raylib.CloseAudioDevice();

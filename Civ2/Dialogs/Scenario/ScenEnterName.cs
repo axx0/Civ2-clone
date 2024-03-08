@@ -17,9 +17,16 @@ public class ScenEnterName : ICivDialogHandler
     {
         Dialog = new DialogElements
         {
-            Dialog = popups[Name],
+            Dialog = new PopupBox()
+            {
+                Button = new List<string> { Labels.Ok, Labels.Cancel },
+                Title = "Please enter your name",
+                Name = Title,
+                Width = 440
+            },
             DialogPos = new Point(0, 0),
         };
+
         Dialog.TextBoxes = new List<TextBoxDefinition>
         {
             new()

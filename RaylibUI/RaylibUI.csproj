@@ -39,7 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="blank.png">
+    <None Update="Shaders\base.vs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Shaders\grayscale.fs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="SteelGrey.png">
@@ -48,6 +51,10 @@
     <None Update="stripe.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="FOSS art\Advances\" />
   </ItemGroup>
 
 

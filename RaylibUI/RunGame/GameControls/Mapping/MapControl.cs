@@ -9,6 +9,7 @@ using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 using RaylibUI.Controls;
 using Model;
+using Model.Interface;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -299,10 +300,18 @@ public class MapControl : BaseControl
             {
                 element.Draw(element.Location + paddedLoc);
                 cityDetails.Add(data);
+
+                var size = data.Size.ToString();
+                var textSize = Raylib.MeasureTextEx(Fonts.TnRbold, size, 14, 0);
+                var citySizeRectLoc = paddedLoc + data.Location + data.SizeRectLoc;
+                var textPosition = citySizeRectLoc;
+                Raylib.DrawRectangle((int)citySizeRectLoc.X, (int)citySizeRectLoc.Y, (int)textSize.X, (int)textSize.Y, data.Color.TextColour);
+                Raylib.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
+                Raylib.DrawTextEx(Fonts.TnRbold, size, textPosition, 14, 0, Color.Black);
             }
-            else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile))
+            else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile) || element.Tile.IsCityPresent)
             {
-                element.Draw(element.Location + paddedLoc);
+                element.Draw(element.Location + paddedLoc, isShaded: element.IsShaded);
             }
         }
 

@@ -364,7 +364,7 @@ namespace EtoFormsUI
             Labels.UpdateLabels(null);
 
             // Load popup boxes info (Game.txt)
-            popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+            popupBoxList = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path, "game.txt");
         }
 
         public IUserInterface ActiveInterface { get; set; }

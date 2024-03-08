@@ -333,8 +333,6 @@ namespace Civ2engine.UnitActions.Move
                     neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
                     game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
                 }
-                
-                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
         }
 
@@ -495,6 +493,11 @@ namespace Civ2engine.UnitActions.Move
                 if (unit.Order != OrderType.GoTo)
                 {
                     unit.Order = OrderType.NoOrders;
+                }
+
+                if (unit.CurrentLocation.IsVisible(game.GetPlayerCiv.Id))
+                {
+                    game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
                 }
             }
 

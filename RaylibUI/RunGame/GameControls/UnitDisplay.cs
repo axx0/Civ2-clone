@@ -35,7 +35,7 @@ public class UnitDisplay : BaseControl
         }
         foreach (var element in _unitTextures)
         {
-            element.Draw(element.Location, scale: _scale);
+            element.Draw(element.Location, scale: _scale, isShaded: element.IsShaded);
         }
         base.Draw(pulse);
     }

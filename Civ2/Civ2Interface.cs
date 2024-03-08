@@ -13,6 +13,9 @@ using Model.Menu;
 using Raylib_cs;
 using RayLibUtils;
 
+using static Model.Menu.CommandIds;
+using Civ2.Dialogs.Scenario;
+
 namespace Civ2;
 
 public abstract class Civ2Interface : IUserInterface
@@ -33,7 +36,15 @@ public abstract class Civ2Interface : IUserInterface
 
     public virtual void Initialize()
     {
-        Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path, "game.txt");
+        // Add popups not in game.txt
+        var extraPopups = new List<string> { "SCENCHOSECIV", "SCENINTRO", "SCENDIFFICULTY",
+                            "SCENGENDER", "SCENENTERNAME", "SCENCUSTOMINTRO" };
+        foreach (var popup in extraPopups)
+        {
+            Dictionary<string, PopupBox?> popup2 = new() { { popup, new PopupBox() } };
+            Dialogs.Add(popup2.Keys.First(), popup2.Values.First());
+        }
         foreach (var value in Dialogs.Values)
         {
             value.Width = (int)(value.Width * 1.5m);

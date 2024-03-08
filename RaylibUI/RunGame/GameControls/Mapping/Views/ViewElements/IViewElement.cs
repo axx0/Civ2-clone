@@ -8,8 +8,9 @@ public interface IViewElement
     Vector2 Location { get; set; }
     Tile Tile { get; set; }
     bool IsTerrain { get; }
+    bool IsShaded { get; }
 
-    void Draw(Vector2 adjustedLocation, float scale = 1f);
+    void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false);
 
     IViewElement CloneForLocation(Vector2 newLocation);
 }

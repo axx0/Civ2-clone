@@ -204,7 +204,7 @@ public class CityTileMap : BaseControl
         var height = dim.TileHeight * 4;
         var xcentre = width / 2 - dim.HalfWidth;
         var ycentre = height / 2 - dim.HalfHeight;
-        var image = ImageUtils.NewImage(width, height);
+        var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
 
         var cityData = new List<Element>();
         var units = new List<Element>();

@@ -25,8 +25,9 @@ public class TextElement : IViewElement
     public Vector2 Location { get; set; }
     public Tile Tile { get; set; }
     public bool IsTerrain => false;
+    public bool IsShaded => false;
 
-    public void Draw(Vector2 adjustedLocation, float scale = 1f)
+    public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
         var loc = adjustedLocation - Offset + Offset * scale;
         
