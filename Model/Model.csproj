@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Engine\Core.csproj" />
+      <PackageReference Include="Raylib-cs" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Raylib-cs" Version="6.0.0" />
+      <ProjectReference Include="..\Engine\Core.csproj" />
     </ItemGroup>
 
 

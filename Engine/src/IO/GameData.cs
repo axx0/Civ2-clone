@@ -42,7 +42,7 @@ namespace Civ2engine
         public bool[] WonderDestroyed { get; set; }
 
         // Other
-        public byte GameType { get; set; }  // TOT only
+        public Dictionary<string, string> ExtendedMetadata { get; } = new();
 
         // Civ
         public byte[] CivCityStyle { get; set; }

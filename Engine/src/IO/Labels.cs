@@ -1,4 +1,6 @@
 
+using Civ2engine.IO;
+
 namespace Civ2engine
 {
     public static class Labels

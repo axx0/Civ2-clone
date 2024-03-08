@@ -42,7 +42,7 @@ public class ScenEnterName : ICivDialogHandler
         }
 
         Game.Instance.GetPlayerCiv.LeaderName = result.TextValues["Name"];
-        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
+        return new StartGame(Initialization.GameInstance);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)

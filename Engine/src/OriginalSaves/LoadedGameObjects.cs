@@ -9,7 +9,7 @@ using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Tile = Civ2engine.MapObjects.Tile;
 
-namespace Civ2engine
+namespace Civ2engine.OriginalSaves
 {
     public class LoadedGameObjects
     {

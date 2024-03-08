@@ -15,8 +15,6 @@ namespace Civ2engine
         private readonly Options _options;
         private readonly Rules _rules;
         private readonly Scenario _scenarioData;
-        private readonly GameVersionType _gameVersion;
-        private readonly GameType _gameType;
         private DifficultyType _difficultyLevel;
         private readonly BarbarianActivityType _barbarianActivity;
         public FastRandom Random { get; set; } = new();
@@ -33,8 +31,6 @@ namespace Civ2engine
         public Options Options => _options;
         public Scenario ScenarioData => _scenarioData;
         public Rules Rules => _rules;
-        public GameVersionType GameVersion => _gameVersion;
-        public GameType GameType => _gameType;
 
         public int TurnNumber { get; private set; }
 

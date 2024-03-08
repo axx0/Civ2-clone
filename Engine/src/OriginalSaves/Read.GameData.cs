@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Linq;
 
-namespace Civ2engine
+namespace Civ2engine.OriginalSaves
 {
     // Read game data from SAV and RULES.txt
     public class Read
     {
+        
+        static string[] scnNames = new []{"Original","SciFi","Fantasy"};
         // READ SAV GAME
         public static GameData ReadSavFile(string savPath, string savName)
         {
@@ -184,7 +185,7 @@ namespace Civ2engine
             int offsetUb = 962;
             if (data.GameVersion > 44)  // TOT
             {
-                data.GameType = bytes[offsetUb + 20];   // Original, fantasy, Scifi
+                data.ExtendedMetadata.Add("TOT-Scenario", scnNames[bytes[offsetUb + 20]]);   // Original, fantasy, Scifi
 
                 // Pollution data (same as before so no use in reading it)
                 // ...

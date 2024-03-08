@@ -2,6 +2,7 @@
 using System.Numerics;
 using Civ2;
 using Civ2engine;
+using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
@@ -59,7 +60,7 @@ public class Civ2GoldInterface : Civ2Interface
     };
 
     public override bool IsButtonInOuterPanel => true;
-
+    
     public override Padding GetPadding(float headerLabelHeight, bool footer)
     {
         int paddingTop = headerLabelHeight != 0 ? 7 + Math.Max((int)(-3 + 2 / 9 * headerLabelHeight + headerLabelHeight), (int)headerLabelHeight) : 11;
@@ -462,8 +463,6 @@ public class Civ2GoldInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
     public override Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
 
-    public override List<string> GetFallbackPaths(string root, string savDir, int gameType) => new();
-
     public override void GetShieldImages()
     {
         Color shadowColour = new(51, 51, 51, 255);
@@ -659,5 +658,52 @@ public class Civ2GoldInterface : Civ2Interface
         Raylib.DrawLine(x + 3, y + h - 3, x + w - 2, y + h - 3, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + w - 1, y + 2, x + w - 1, y + h - 1, new Color(128, 128, 128, 255));
         Raylib.DrawLine(x + w - 2, y + 3, x + w - 2, y + h - 1, new Color(128, 128, 128, 255));
+    }
+    
+    protected override IEnumerable<Ruleset> GenerateRulesets(string path, string title)
+    {
+        var rules = path + Path.DirectorySeparatorChar + "rules.txt";
+        if (File.Exists(rules))
+        {
+            yield return new Ruleset(title, new Dictionary<string, string>
+            {
+                { "Civ2Gold", "Standard" }
+            }, path);
+
+            foreach (var subdirectory in Directory.EnumerateDirectories(path))
+            {
+                var scnRules = Path.Combine(subdirectory, "rules.txt");
+                if (File.Exists(scnRules))
+                {
+
+                    var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
+                    var name = "";
+                    if (File.Exists(game))
+                    {
+                        foreach (var line in File.ReadLines(game))
+                        {
+                            if (!line.StartsWith("@title")) continue;
+                            name = line[7..];
+                            break;
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        name = Path.GetFileName(subdirectory);
+                    }
+
+                    yield return new Ruleset(name, new Dictionary<string, string>
+                    {
+
+                        { "Civ2Gold", "Scenario-" + name }
+                    }, subdirectory, path);
+                }
+            }
+        }
+    }
+
+    public Civ2GoldInterface(IMain main) : base(main)
+    {
     }
 }

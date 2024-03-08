@@ -3,6 +3,8 @@ using System.Runtime.Intrinsics.X86;
 using Civ2;
 using Civ2.Dialogs;
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.IO;
 using JetBrains.Annotations;
 using Model;
 using Model.Images;
@@ -78,6 +80,69 @@ public class TestOfTimeInterface : Civ2Interface
     };
 
     public override bool IsButtonInOuterPanel => false;
+
+    protected override IEnumerable<Ruleset> GenerateRulesets(string path, string title)
+    {
+
+        var extended_original = "Original";
+
+        var other_default_game_modes = new[] { "SciFi", "Fantasy" };
+
+        var originalPath = Path.Combine(path, extended_original);
+
+        var originalERxists = Directory.Exists(originalPath);
+        var rules = path + Path.DirectorySeparatorChar + "rules.txt";
+        if (File.Exists(rules))
+        {
+            yield return new Ruleset(title, new Dictionary<string, string>
+            {
+                { "Test-Of-Time", "Standard" }
+            }, path);
+
+            foreach (var subdirectory in Directory.EnumerateDirectories(path))
+            {
+                var scnRules = Path.Combine(subdirectory, "rules.txt");
+                if (File.Exists(scnRules))
+                {
+
+                    var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
+                    var name = "";
+                    if (File.Exists(game))
+                    {
+                        foreach (var line in File.ReadLines(game))
+                        {
+                            if (!line.StartsWith("@title")) continue;
+                            name = line[7..];
+                            break;
+                        }
+                    }
+
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        name = Path.GetFileName(subdirectory);
+                    }
+
+                    if (originalERxists && other_default_game_modes.Contains(subdirectory))
+                    {
+                        yield return new Ruleset(name, new Dictionary<string, string>
+                        {
+
+                            { "TOT-Scenario", subdirectory }
+                        }, subdirectory, originalPath, path);
+                    }
+                    else
+                    {
+                        yield return new Ruleset(name, new Dictionary<string, string>
+                        {
+
+                            { "TOT-Scenario", subdirectory }
+                        }, subdirectory, path);
+                    }
+                }
+            }
+        }
+    }
+    
 
     public override Padding GetPadding(float headerLabelHeight, bool footer)
     {
@@ -470,47 +535,6 @@ public class TestOfTimeInterface : Civ2Interface
     public override Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
     public override Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
 
-    public override List<string> GetFallbackPaths(string root, string savDir, int gameType)
-    {
-        List<string> paths = new();
-        string path_orig = root + Path.DirectorySeparatorChar + "Original";
-        string path;
-        switch (gameType)
-        {
-            case 0:
-                if (path_orig != savDir && Directory.Exists(path_orig))
-                {
-                    paths.Add(path_orig);
-                }
-                break;
-            case 1:
-                path = root + Path.DirectorySeparatorChar + "Scifi";
-                if (path != savDir && Directory.Exists(path))
-                {
-                    paths.Add(path);
-                }
-                if (Directory.Exists(path_orig))
-                {
-                    paths.Add(path_orig);
-                }
-                break;    
-            case 2:
-                path = root + Path.DirectorySeparatorChar + "Fantasy";
-                if (path != savDir && Directory.Exists(path))
-                {
-                    paths.Add(path);
-                }
-                if (Directory.Exists(path_orig))
-                {
-                    paths.Add(path_orig);
-                }
-                break;
-            default:
-                break;
-        }
-        return paths;
-    }
-
     public override void LoadPlayerColours()
     {
         var playerColours = new PlayerColour[9];
@@ -621,5 +645,9 @@ public class TestOfTimeInterface : Civ2Interface
     public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
     {
         Raylib.DrawTexture(texture, x, y, Color.White);
+    }
+
+    public TestOfTimeInterface(IMain main) : base(main)
+    {
     }
 }

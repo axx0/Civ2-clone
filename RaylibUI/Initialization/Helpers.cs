@@ -1,5 +1,6 @@
 using System.Reflection;
 using Civ2engine;
+using Civ2engine.IO;
 using Model;
 using Model.Interface;
 using Raylib_cs;
@@ -8,7 +9,7 @@ namespace RaylibUI.Initialization;
 
 public static class Helpers
 {
-    public static IList<IUserInterface> LoadInterfaces()
+    public static IList<IUserInterface> LoadInterfaces(IMain main)
     {
         var implementors = new List<IUserInterface>();
         var dir = new DirectoryInfo(Settings.BasePath); 
@@ -29,34 +30,21 @@ public static class Helpers
 
             implementors.AddRange(currentAssembly.GetTypes()
                 .Where(t => t != userInterfaceType && userInterfaceType.IsAssignableFrom(t) && !t.IsAbstract)
-                .Select(x => (IUserInterface)Activator.CreateInstance(x)));
+                .Select(x => (IUserInterface)Activator.CreateInstance(x, main)));
         }
         return implementors.ToArray();
     }
 
-    public static IUserInterface GetInterface(string path, IList<IUserInterface> interfaces)
+    public static IUserInterface GetInterface(string path, IList<IUserInterface> interfaces, Ruleset[] ruleSets)
     {
-        IUserInterface selected;
-        if (interfaces.Count == 1)
+        foreach (var ruleSet in ruleSets)
         {
-            selected = interfaces[0];
+            if (ruleSet.Paths.Contains(path))
+            {
+                return interfaces[ruleSet.InterfaceIndex];
+            }
         }
-        else
-        {
-            var gameTxt = Path.Combine(path, "Game.txt");
-            if (!File.Exists(gameTxt)) return null;
-
-            var title = File.ReadLines(gameTxt)
-                .Where(l => l.StartsWith("@title"))
-                .Select(l => l.Split("=", 2)[1])
-                .FirstOrDefault();
-
-
-            selected = interfaces.FirstOrDefault(userInterface => userInterface.CanDisplay(title)) ?? interfaces[0];
-        }
-
-        selected.Initialize();
-        return selected;
+        return ruleSets.Length > 0 ? interfaces[ruleSets[0].InterfaceIndex] : interfaces[0];
     }
 
     public static void LoadFonts()

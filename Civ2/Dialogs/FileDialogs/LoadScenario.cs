@@ -6,6 +6,7 @@ using Civ2engine.IO;
 using Model;
 using Model.InterfaceActions;
 using System.Text.RegularExpressions;
+using Civ2engine.OriginalSaves;
 
 namespace Civ2.Dialogs.FileDialogs;
 
@@ -29,21 +30,13 @@ public class LoadScenario : FileDialogHandler
         var root = Settings.SearchPaths.FirstOrDefault(p => scnDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
         var scnName = Path.GetFileName(fileName);
         GameData gameData = Read.ReadSavFile(scnDirectory, scnName);
-        var fallbackPaths = civ2Interface.GetFallbackPaths(root, scnDirectory, gameData.GameType);
 
-        var ruleSet = new Ruleset
-        {
-            FolderPath = scnDirectory,
-            FallbackPaths = fallbackPaths,
-            Root = root
-        };
-
-        Initialization.ConfigObject.RuleSet = ruleSet;
-
+        civ2Interface.MainApp.SetActiveRulesetFromFile(root, scnDirectory, gameData.ExtendedMetadata);
+        
         civ2Interface.ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
         Initialization.LoadGraphicsAssets(civ2Interface);
 
-        var game = ClassicSaveLoader.LoadSave(gameData, ruleSet, Initialization.ConfigObject.Rules);
+        var game = ClassicSaveLoader.LoadSave(gameData, civ2Interface.MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
 
         Initialization.Start(game);
 

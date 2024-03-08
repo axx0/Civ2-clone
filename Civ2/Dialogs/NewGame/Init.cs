@@ -25,7 +25,7 @@ public class Init : BaseDialogHandler
             config.PlayerCiv.Id = correctIndex;
         }
         var maps = config.MapTask.Result;
-        Initialization.GameInstance = NewGameInitialisation.StartNewGame(config, maps, config.Civilizations.OrderBy(c=>c.Id).ToList());
+        Initialization.GameInstance = NewGameInitialisation.StartNewGame(config, maps, config.Civilizations.OrderBy(c=>c.Id).ToList(), activeInterface.MainApp.ActiveRuleSet.Paths);
         
         var game = Initialization.GameInstance;
         var playerCiv = game.GetPlayerCiv;
@@ -39,6 +39,6 @@ public class Init : BaseDialogHandler
 
     public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
+        return new StartGame(Initialization.GameInstance);
     }
 }
