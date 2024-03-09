@@ -1,6 +1,8 @@
+
 using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.IO;
+using Civ2engine.OriginalSaves;
 using Model;
 using Model.InterfaceActions;
 
@@ -27,21 +29,13 @@ public class LoadGame : FileDialogHandler
         var root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
         var savName = Path.GetFileName(fileName);
         GameData gameData = Read.ReadSavFile(savDirectory, savName);
-        var fallbackPaths = civ2Interface.GetFallbackPaths(root, savDirectory, gameData.GameType);
 
-        var ruleSet = new Ruleset
-        {
-            FolderPath = savDirectory,
-            FallbackPaths = fallbackPaths,
-            Root = root
-        };
-
-        Initialization.ConfigObject.RuleSet = ruleSet;
+        civ2Interface.MainApp.SetActiveRulesetFromFile(root, savDirectory, gameData.ExtendedMetadata);
 
         civ2Interface.ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
         Initialization.LoadGraphicsAssets(civ2Interface);
 
-        var game = ClassicSaveLoader.LoadSave(gameData, ruleSet, Initialization.ConfigObject.Rules);
+        var game = ClassicSaveLoader.LoadSave(gameData, civ2Interface.MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
 
         Initialization.Start(game);
         return civDialogHandlers[LoadOk.Title].Show(civ2Interface);

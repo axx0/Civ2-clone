@@ -49,4 +49,8 @@ public interface IUserInterface
     void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
     void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
     void DrawButton(Texture2D texture, int x, int y, int w, int h);
+
+    IList<Ruleset> FindRuleSets(string[] searchPaths);
+    
+    IMain MainApp { get; }
 }

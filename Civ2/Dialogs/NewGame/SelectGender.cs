@@ -23,7 +23,7 @@ public class SelectGender : BaseDialogHandler
 
         var config = Initialization.ConfigObject;
         config.Gender = result.SelectedIndex;
-        if (config.RuleSet.QuickStart)
+        if (config.QuickStart)
         {
             var randomTribe = config.Random.ChooseFrom(config.Rules.Leaders);
             config.PlayerCiv = Initialization.MakeCivilization(config, randomTribe, true, randomTribe.Color);

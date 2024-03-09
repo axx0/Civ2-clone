@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.Numerics;
 using Civ2.Dialogs;
 using Civ2.Menu;
@@ -6,15 +5,12 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Improvements;
 using Civ2engine.IO;
-using Civ2engine.Units;
 using Model;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
-using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
-using RaylibUI;
 using RayLibUtils;
 
 using static Model.Menu.CommandIds;
@@ -24,6 +20,11 @@ namespace Civ2;
 
 public abstract class Civ2Interface : IUserInterface
 {
+    protected Civ2Interface(IMain main)
+    {
+        MainApp = main;
+    }
+    
     public bool CanDisplay(string? title)
     {
         return title == Title;
@@ -143,7 +144,7 @@ public abstract class Civ2Interface : IUserInterface
 
     public IList<DropdownMenuContents> ConfigureGameCommands(IList<IGameCommand> commands)
     {
-        MenuLoader.LoadMenus(Initialization.ConfigObject.RuleSet);
+        MenuLoader.LoadMenus(MainApp.ActiveRuleSet);
 
         var menus = new List<DropdownMenuContents>();
         
@@ -336,12 +337,36 @@ public abstract class Civ2Interface : IUserInterface
     public abstract Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
     public abstract Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
     public abstract Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
-    public abstract List<string> GetFallbackPaths(string root, string savDir, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract void DrawButton(Texture2D texture, int x, int y, int w, int h);
+    public IList<Ruleset> FindRuleSets(string[] searchPaths)
+    {
+        var sets = new List<Ruleset>();
+        foreach (var path in searchPaths)
+        {
+            var gameTxt = Path.Combine(path, "Game.txt");
+            if (!File.Exists(gameTxt)) continue;
+            
+            var title = File.ReadLines(gameTxt)
+                .Where(l => l.StartsWith("@title"))
+                .Select(l => l.Split("=", 2)[1])
+                .FirstOrDefault();
+            if (title != null && CanDisplay(title))
+            {
+                sets.AddRange(GenerateRulesets(path, title));
+            }   
+        }
+
+        return sets;
+    }
+
+    public IMain MainApp { get; }
+
+    protected abstract IEnumerable<Ruleset> GenerateRulesets(string path, string title);
+    
     public abstract Padding GetPadding(float headerLabelHeight, bool footer);
     public abstract bool IsButtonInOuterPanel { get; }
 }

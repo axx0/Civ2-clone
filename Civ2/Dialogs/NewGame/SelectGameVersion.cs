@@ -16,10 +16,16 @@ public class SelectGameVersionHandler : BaseDialogHandler
         popups[Name] = new PopupBox
         {
             Name = Title,
-            Title = "Select game version", Options = Initialization.RuleSets.Select(f => f.Name).ToList(),
+            Title = "Select game version", 
             Button = new List<string> {"Quick Start", "OK", Labels.Cancel}
         };
         return base.UpdatePopupData(popups);
+    }
+
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
+    {
+        Dialog.Dialog.Options = activeInterface.MainApp.AllRuleSets.Select(r => r.Name).ToList();
+        return base.Show(activeInterface);
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,
@@ -30,13 +36,14 @@ public class SelectGameVersionHandler : BaseDialogHandler
             return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
-        Initialization.ConfigObject.RuleSet = Initialization.RuleSets[result.SelectedIndex];
+        civ2Interface.MainApp.SetActiveRuleSet(result.SelectedIndex);
+        
         
         Initialization.LoadGraphicsAssets(civ2Interface);
         
         if (result.SelectedButton == "Quick Start")
         {
-            Initialization.ConfigObject.RuleSet.QuickStart = true;
+            Initialization.ConfigObject.QuickStart = true;
             Initialization.ConfigObject.WorldSize = new[] { 50, 80 };
             Initialization.ConfigObject.NumberOfCivs = civ2Interface.PlayerColours.Length - 1;
             Initialization.ConfigObject.BarbarianActivity = Initialization.ConfigObject.Random.Next(5);

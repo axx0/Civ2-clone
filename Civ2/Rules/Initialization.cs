@@ -3,6 +3,7 @@ using Civ2engine;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
+using Model;
 
 namespace Civ2.Rules;
 
@@ -10,9 +11,6 @@ public static class Initialization
 {
     private static GameInitializationConfig? _config;
     public static GameInitializationConfig ConfigObject => _config ??= GetConfig() ;
-
-    private static IList<Ruleset>? _ruleSets;
-    public static IList<Ruleset> RuleSets => _ruleSets ??= Locator.LocateRules(Settings.SearchPaths);
 
     private static GameInitializationConfig GetConfig()
     {
@@ -32,16 +30,14 @@ public static class Initialization
     
     public static void LoadGraphicsAssets(Civ2Interface civ2Interface)
     {
-        ConfigObject.RuleSet ??= RuleSets.First();
-        
-        ConfigObject.Rules = RulesParser.ParseRules(ConfigObject.RuleSet);
+        var ruleSet = civ2Interface.MainApp.ActiveRuleSet;
+        ConfigObject.Rules = RulesParser.ParseRules(ruleSet);
         
         //TODO: Check is interface already hase initialized images and unload them
-    
-        TerrainLoader.LoadTerrain(ConfigObject.RuleSet, civ2Interface);
-        UnitLoader.LoadUnits(ConfigObject.RuleSet, civ2Interface);
-        CityLoader.LoadCities(ConfigObject.RuleSet, civ2Interface.CityImages, civ2Interface);
-        IconLoader.LoadIcons(ConfigObject.RuleSet, civ2Interface);
+        TerrainLoader.LoadTerrain(ruleSet, civ2Interface);
+        UnitLoader.LoadUnits(ruleSet, civ2Interface);
+        CityLoader.LoadCities(ruleSet, civ2Interface.CityImages, civ2Interface);
+        IconLoader.LoadIcons(ruleSet, civ2Interface);
         //LoadPeopleIcons(ruleset);
         //LoadCityWallpaper(ruleset);
     }

@@ -1,7 +1,7 @@
 using System.Numerics;
 using Civ2engine;
-using Civ2engine.Units;
-using Model.Images;
+using Civ2engine.IO;
+using Model;
 using Model.ImageSets;
 using Raylib_cs;
 using RayLibUtils;
