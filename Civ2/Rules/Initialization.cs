@@ -14,7 +14,6 @@ public static class Initialization
 
     private static GameInitializationConfig GetConfig()
     {
-
         //TODO: Load config
         var config = new GameInitializationConfig();
 

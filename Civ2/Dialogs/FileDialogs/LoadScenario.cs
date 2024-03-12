@@ -31,27 +31,8 @@ public class LoadScenario : FileDialogHandler
         var scnName = Path.GetFileName(fileName);
         GameData gameData = Read.ReadSavFile(scnDirectory, scnName);
 
-        civ2Interface.MainApp.SetActiveRulesetFromFile(root, scnDirectory, gameData.ExtendedMetadata);
-        
-        civ2Interface.ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
-        Initialization.LoadGraphicsAssets(civ2Interface);
+        var activeInterface = civ2Interface.MainApp.SetActiveRulesetFromFile(root, scnDirectory, gameData.ExtendedMetadata);
 
-        var game = ClassicSaveLoader.LoadSave(gameData, civ2Interface.MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
-
-        Initialization.Start(game);
-
-        // Load custom intro if it exists in txt file
-        var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
-        if (Directory.EnumerateFiles(scnDirectory, introFile, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault() != null)
-        {
-            civDialogHandlers[ScenCustomIntro.Title].UpdatePopupData(new() { 
-                { ScenCustomIntro.Title, 
-                  PopupBoxReader.LoadPopupBoxes(scnDirectory, introFile)["SCENARIO"] } });
-
-            return civDialogHandlers[ScenCustomIntro.Title].Show(civ2Interface);
-        }
-
-        // Load default intro
-        return civDialogHandlers[ScenarioLoaded.Title].Show(civ2Interface);
+        return activeInterface.HandleLoadScenario(gameData, scnName, scnDirectory);
     }
 }

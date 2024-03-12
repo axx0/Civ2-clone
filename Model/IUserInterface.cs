@@ -53,4 +53,7 @@ public interface IUserInterface
     IList<Ruleset> FindRuleSets(string[] searchPaths);
     
     IMain MainApp { get; }
+    int InterfaceIndex { get; set; }
+    IInterfaceAction HandleLoadGame(GameData gameData);
+    IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory);
 }

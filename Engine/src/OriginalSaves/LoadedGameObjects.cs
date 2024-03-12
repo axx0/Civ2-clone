@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
@@ -68,6 +69,11 @@ namespace Civ2engine.OriginalSaves
             var cities = new List<City>();
             for (var i = 0; i < gameData.NumberOfCities; i++)
             {
+                if (gameData.CityYloc[i] < 1)
+                {
+                    Debug.WriteLine($"Bad city data pos{i} ({gameData.CityXloc[i]},{gameData.CityYloc[i]}: {gameData.CityName[i]}");
+                    continue;
+                }
                 cities.Add(CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityMapNo[i], 
                     gameData.CityCanBuildCoastal[i], gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenAdvance[i],
                     gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i], gameData.CityCivilDisorder[i], 

@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Text.RegularExpressions;
 using Civ2.Dialogs;
 using Civ2.Menu;
 using Civ2.Rules;
@@ -15,6 +16,8 @@ using RayLibUtils;
 
 using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
+using Civ2engine.OriginalSaves;
+using ScenarioLoaded = Civ2.Dialogs.ScenarioLoaded;
 
 namespace Civ2;
 
@@ -36,7 +39,7 @@ public abstract class Civ2Interface : IUserInterface
 
     public virtual void Initialize()
     {
-        Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path, "game.txt");
+        Dialogs = PopupBoxReader.LoadPopupBoxes(MainApp.ActiveRuleSet.Paths, "game.txt");
         // Add popups not in game.txt
         var extraPopups = new List<string> { "SCENCHOSECIV", "SCENINTRO", "SCENDIFFICULTY",
                             "SCENGENDER", "SCENENTERNAME", "SCENCUSTOMINTRO" };
@@ -369,4 +372,47 @@ public abstract class Civ2Interface : IUserInterface
     
     public abstract Padding GetPadding(float headerLabelHeight, bool footer);
     public abstract bool IsButtonInOuterPanel { get; }
+    
+    public int InterfaceIndex { get; set; }
+    public IInterfaceAction HandleLoadGame(GameData gameData)
+    {
+        ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
+        Initialization.LoadGraphicsAssets(this);
+
+        var game = ClassicSaveLoader.LoadSave(gameData, MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
+
+        Initialization.Start(game);
+        return DialogHandlers[LoadOk.Title].Show(this);
+    }
+
+    public IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory)
+    {
+        ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
+        Initialization.LoadGraphicsAssets(this);
+
+        var game = ClassicSaveLoader.LoadSave(gameData, MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
+
+        Initialization.Start(game);
+
+        // Load custom intro if it exists in txt file
+        var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
+        var foundIntroFile = Directory.EnumerateFiles(scnDirectory, introFile, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
+        if (foundIntroFile != null)
+        {
+            var boxes = new Dictionary<string, PopupBox?>();
+            TextFileParser.ParseFile(Path.Combine(scnDirectory, foundIntroFile), new PopupBoxReader { Boxes = boxes }, true);
+            if (boxes.TryGetValue("SCENARIO", out var dialogInfo))
+            {
+                DialogHandlers[ScenCustomIntro.Title].UpdatePopupData(new()
+                {
+                    { ScenCustomIntro.Title, dialogInfo }
+                });
+
+                return DialogHandlers[ScenCustomIntro.Title].Show(this);
+            }
+        }
+
+        // Load default intro
+        return DialogHandlers[ScenarioLoaded.Title].Show(this);
+    }
 }
