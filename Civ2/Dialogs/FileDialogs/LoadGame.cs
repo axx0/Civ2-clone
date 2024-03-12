@@ -30,14 +30,8 @@ public class LoadGame : FileDialogHandler
         var savName = Path.GetFileName(fileName);
         GameData gameData = Read.ReadSavFile(savDirectory, savName);
 
-        civ2Interface.MainApp.SetActiveRulesetFromFile(root, savDirectory, gameData.ExtendedMetadata);
+        var activeInterface = civ2Interface.MainApp.SetActiveRulesetFromFile(root, savDirectory, gameData.ExtendedMetadata);
 
-        civ2Interface.ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
-        Initialization.LoadGraphicsAssets(civ2Interface);
-
-        var game = ClassicSaveLoader.LoadSave(gameData, civ2Interface.MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
-
-        Initialization.Start(game);
-        return civDialogHandlers[LoadOk.Title].Show(civ2Interface);
+        return activeInterface.HandleLoadGame(gameData);
     }
 }

@@ -6,15 +6,15 @@ namespace Civ2engine
     public class PopupBoxReader : IFileHandler
     {
         // Read popupbox data from txt file
-        public static Dictionary<string, PopupBox?> LoadPopupBoxes(string root, string fileName)
+        public static Dictionary<string, PopupBox?> LoadPopupBoxes(string[] paths, string fileName)
         {
             var boxes = new Dictionary<string, PopupBox?>();
-            var filePath = Utils.GetFilePath(fileName, new[] { root });
+            var filePath = Utils.GetFilePath(fileName, paths);
             TextFileParser.ParseFile(filePath, new PopupBoxReader { Boxes = boxes }, true);
             return boxes;
         }
 
-        private Dictionary<string, PopupBox?> Boxes { get; set; }
+        public Dictionary<string, PopupBox?> Boxes { get; set; }
 
         public void ProcessSection(string section, List<string> contents)
         {

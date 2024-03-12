@@ -22,7 +22,6 @@ public class MainMenu : BaseScreen
         _shutdownApp = shutdownApp;
         _startGame = startGame;
 
-        ImageUtils.SetLook(main.ActiveInterface);
         _background = CreateBackgroundImage();
 
         _currentAction = main.ActiveInterface.GetInitialAction();

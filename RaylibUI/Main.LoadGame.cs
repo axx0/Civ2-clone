@@ -2,6 +2,7 @@
 using Civ2engine.IO;
 using Civ2engine;
 using Civ2engine.Units;
+using Model;
 using RaylibUI.RunGame;
 
 namespace RaylibUI
@@ -18,7 +19,7 @@ namespace RaylibUI
             _activeScreen = new GameScreen(this, game, Soundman);
         }
 
-        public Ruleset SetActiveRulesetFromFile(string root, string subDirectory,
+        public IUserInterface SetActiveRulesetFromFile(string root, string subDirectory,
             Dictionary<string, string> extendedMetadata)
         {
             var maxScore = -1;
@@ -46,14 +47,13 @@ namespace RaylibUI
                 }
             }
 
+            ActiveRuleSet = !selected.Paths.Contains(subDirectory) ? new Ruleset(selected, subDirectory) : selected;
             if (selected.InterfaceIndex != Interfaces.IndexOf(ActiveInterface))
             {
                 ActiveInterface = Interfaces[selected.InterfaceIndex];
             }
 
-            ActiveRuleSet = !selected.Paths.Contains(subDirectory) ? new Ruleset(selected, subDirectory) : selected;
-            
-            return selected;
+            return ActiveInterface;
         }
 
         public Ruleset[] AllRuleSets { get; set; }
@@ -62,6 +62,10 @@ namespace RaylibUI
         public void SetActiveRuleSet(int ruleSetIndex)
         {
             ActiveRuleSet = AllRuleSets[ruleSetIndex];
+            if (ActiveRuleSet.InterfaceIndex != Interfaces.IndexOf(ActiveInterface))
+            {
+                ActiveInterface = Interfaces[ActiveRuleSet.InterfaceIndex];
+            }
         }
     }
 }

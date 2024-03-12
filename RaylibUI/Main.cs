@@ -93,9 +93,11 @@ namespace RaylibUI
             Labels.UpdateLabels(null);
             Helpers.LoadFonts();
             Interfaces = Helpers.LoadInterfaces(this);
-            AllRuleSets =  Interfaces.SelectMany((i, idx) =>
+            AllRuleSets =  Interfaces.SelectMany((userInterface, idx) =>
                 {
-                    var sets = i.FindRuleSets(Settings.SearchPaths);
+                    userInterface.InterfaceIndex = idx; 
+                    var sets = userInterface.FindRuleSets(Settings.SearchPaths);
+                    
                     foreach (var ruleset in sets)
                     {
                         ruleset.InterfaceIndex = idx;
@@ -115,7 +117,14 @@ namespace RaylibUI
             private set
             {
                 _activeInterface = value;
+                if (ActiveRuleSet == null)
+                {
+                    ActiveRuleSet =
+                        AllRuleSets.FirstOrDefault(r => r.InterfaceIndex == _activeInterface.InterfaceIndex);
+                }
                 _activeInterface.Initialize();
+                
+                ImageUtils.SetLook(_activeInterface);
             }
         }
 
