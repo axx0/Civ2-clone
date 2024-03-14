@@ -13,19 +13,15 @@ public class MainMenu : BaseScreen
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
     private readonly ScreenBackground? _background;
-    private IUserInterface _active;
     
     private readonly SoundData? _sndMenuLoop;
 
     public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager) : base(main)
     {
-        _active = main.ActiveInterface;
-
         _sndMenuLoop =  soundManager.PlayCiv2DefaultSound("MENULOOP",true);
         _shutdownApp = shutdownApp;
         _startGame = startGame;
 
-        ImageUtils.SetLook(main.ActiveInterface);
         _background = CreateBackgroundImage();
 
         _currentAction = main.ActiveInterface.GetInitialAction();
@@ -102,7 +98,7 @@ public class MainMenu : BaseScreen
             }
             else
             {
-                var panel = new ImagePanel(_active, key, d.Image, d.Location);
+                var panel = new ImagePanel(MainWindow.ActiveInterface, key, d.Image, d.Location);
                 newPanels.Add(panel);
             }
         }

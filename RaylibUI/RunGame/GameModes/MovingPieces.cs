@@ -1,5 +1,7 @@
 using System.Data.Common;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
+using System.Xml.Linq;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;

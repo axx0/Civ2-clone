@@ -6,6 +6,7 @@ using Civ2engine.IO;
 using Model;
 using Model.InterfaceActions;
 using System.Text.RegularExpressions;
+using Civ2engine.OriginalSaves;
 
 namespace Civ2.Dialogs.FileDialogs;
 
@@ -29,30 +30,9 @@ public class LoadScenario : FileDialogHandler
         var root = Settings.SearchPaths.FirstOrDefault(p => scnDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
         var scnName = Path.GetFileName(fileName);
         GameData gameData = Read.ReadSavFile(scnDirectory, scnName);
-        var fallbackPaths = civ2Interface.GetFallbackPaths(root, scnDirectory, gameData.GameType);
 
-        var ruleSet = new Ruleset
-        {
-            FolderPath = scnDirectory,
-            FallbackPaths = fallbackPaths,
-            Root = root
-        };
+        var activeInterface = civ2Interface.MainApp.SetActiveRulesetFromFile(root, scnDirectory, gameData.ExtendedMetadata);
 
-        Initialization.ConfigObject.RuleSet = ruleSet;
-
-        civ2Interface.ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
-        Initialization.LoadGraphicsAssets(civ2Interface);
-
-        var game = ClassicSaveLoader.LoadSave(gameData, ruleSet, Initialization.ConfigObject.Rules);
-
-        Initialization.Start(game);
-
-        var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
-        if (Directory.EnumerateFiles(scnDirectory, introFile, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault() != null)
-        {
-            var popupbox = ScenarioIntroLoader.LoadIntro(new string[] { scnDirectory }, introFile);
-        }
-
-        return civDialogHandlers[ScenarioLoaded.Title].Show(civ2Interface);
+        return activeInterface.HandleLoadScenario(gameData, scnName, scnDirectory);
     }
 }

@@ -1,28 +1,33 @@
-using System.Collections.Specialized;
 using System.Numerics;
+using System.Text.RegularExpressions;
 using Civ2.Dialogs;
 using Civ2.Menu;
 using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Improvements;
 using Civ2engine.IO;
-using Civ2engine.Units;
 using Model;
 using Model.Images;
 using Model.ImageSets;
 using Model.InterfaceActions;
-using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
-using RaylibUI;
 using RayLibUtils;
 
 using static Model.Menu.CommandIds;
+using Civ2.Dialogs.Scenario;
+using Civ2engine.OriginalSaves;
+using ScenarioLoaded = Civ2.Dialogs.ScenarioLoaded;
 
 namespace Civ2;
 
 public abstract class Civ2Interface : IUserInterface
 {
+    protected Civ2Interface(IMain main)
+    {
+        MainApp = main;
+    }
+    
     public bool CanDisplay(string? title)
     {
         return title == Title;
@@ -34,7 +39,15 @@ public abstract class Civ2Interface : IUserInterface
 
     public virtual void Initialize()
     {
-        Dialogs = PopupBoxReader.LoadPopupBoxes(Settings.Civ2Path);
+        Dialogs = PopupBoxReader.LoadPopupBoxes(MainApp.ActiveRuleSet.Paths, "game.txt");
+        // Add popups not in game.txt
+        var extraPopups = new List<string> { "SCENCHOSECIV", "SCENINTRO", "SCENDIFFICULTY",
+                            "SCENGENDER", "SCENENTERNAME", "SCENCUSTOMINTRO" };
+        foreach (var popup in extraPopups)
+        {
+            Dictionary<string, PopupBox?> popup2 = new() { { popup, new PopupBox() } };
+            Dialogs.Add(popup2.Keys.First(), popup2.Values.First());
+        }
         foreach (var value in Dialogs.Values)
         {
             value.Width = (int)(value.Width * 1.5m);
@@ -134,7 +147,7 @@ public abstract class Civ2Interface : IUserInterface
 
     public IList<DropdownMenuContents> ConfigureGameCommands(IList<IGameCommand> commands)
     {
-        MenuLoader.LoadMenus(Initialization.ConfigObject.RuleSet);
+        MenuLoader.LoadMenus(MainApp.ActiveRuleSet);
 
         var menus = new List<DropdownMenuContents>();
         
@@ -327,12 +340,79 @@ public abstract class Civ2Interface : IUserInterface
     public abstract Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
     public abstract Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
     public abstract Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
-    public abstract List<string> GetFallbackPaths(string root, string savDir, int gameType);
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract void DrawBorderLines(ref Image destination, int height, int width, Padding padding, bool statusPanel);
     public abstract void DrawButton(Texture2D texture, int x, int y, int w, int h);
+    public IList<Ruleset> FindRuleSets(string[] searchPaths)
+    {
+        var sets = new List<Ruleset>();
+        foreach (var path in searchPaths)
+        {
+            var gameTxt = Path.Combine(path, "Game.txt");
+            if (!File.Exists(gameTxt)) continue;
+            
+            var title = File.ReadLines(gameTxt)
+                .Where(l => l.StartsWith("@title"))
+                .Select(l => l.Split("=", 2)[1])
+                .FirstOrDefault();
+            if (title != null && CanDisplay(title))
+            {
+                sets.AddRange(GenerateRulesets(path, title));
+            }   
+        }
+
+        return sets;
+    }
+
+    public IMain MainApp { get; }
+
+    protected abstract IEnumerable<Ruleset> GenerateRulesets(string path, string title);
+    
     public abstract Padding GetPadding(float headerLabelHeight, bool footer);
     public abstract bool IsButtonInOuterPanel { get; }
+    
+    public int InterfaceIndex { get; set; }
+    public IInterfaceAction HandleLoadGame(GameData gameData)
+    {
+        ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
+        Initialization.LoadGraphicsAssets(this);
+
+        var game = ClassicSaveLoader.LoadSave(gameData, MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
+
+        Initialization.Start(game);
+        return DialogHandlers[LoadOk.Title].Show(this);
+    }
+
+    public IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory)
+    {
+        ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
+        Initialization.LoadGraphicsAssets(this);
+
+        var game = ClassicSaveLoader.LoadSave(gameData, MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
+
+        Initialization.Start(game);
+
+        // Load custom intro if it exists in txt file
+        var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);
+        var foundIntroFile = Directory.EnumerateFiles(scnDirectory, introFile, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
+        if (foundIntroFile != null)
+        {
+            var boxes = new Dictionary<string, PopupBox?>();
+            TextFileParser.ParseFile(Path.Combine(scnDirectory, foundIntroFile), new PopupBoxReader { Boxes = boxes }, true);
+            if (boxes.TryGetValue("SCENARIO", out var dialogInfo))
+            {
+                DialogHandlers[ScenCustomIntro.Title].UpdatePopupData(new()
+                {
+                    { ScenCustomIntro.Title, dialogInfo }
+                });
+
+                return DialogHandlers[ScenCustomIntro.Title].Show(this);
+            }
+        }
+
+        // Load default intro
+        return DialogHandlers[ScenarioLoaded.Title].Show(this);
+    }
 }

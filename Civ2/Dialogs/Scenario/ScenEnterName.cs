@@ -17,9 +17,16 @@ public class ScenEnterName : ICivDialogHandler
     {
         Dialog = new DialogElements
         {
-            Dialog = popups[Name],
+            Dialog = new PopupBox()
+            {
+                Button = new List<string> { Labels.Ok, Labels.Cancel },
+                Title = "Please enter your name",
+                Name = Title,
+                Width = 440
+            },
             DialogPos = new Point(0, 0),
         };
+
         Dialog.TextBoxes = new List<TextBoxDefinition>
         {
             new()
@@ -42,7 +49,7 @@ public class ScenEnterName : ICivDialogHandler
         }
 
         Game.Instance.GetPlayerCiv.LeaderName = result.TextValues["Name"];
-        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
+        return new StartGame(Initialization.GameInstance);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)

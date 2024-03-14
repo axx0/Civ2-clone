@@ -1,6 +1,7 @@
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Improvements;
+using Civ2engine.Statistics;
 using Civ2engine.Units;
 
 namespace Civ2engine.Production
@@ -28,7 +29,7 @@ namespace Civ2engine.Production
 
             var unit = new Unit
             {
-                Id = city.Owner.Units.Max(u => u.Id) + 1,
+                Id = city.Owner.Units.Any() ? city.Owner.Units.Max(u => u.Id) + 1 : 0,
                 X = city.X,
                 Y = city.Y,
                 HomeCity = city,

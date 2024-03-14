@@ -151,7 +151,7 @@ namespace RaylibUI
                 if (string.IsNullOrEmpty(path))
                 {
                     Console.Error.WriteLine("Failed to load file " + filename + " please check value");
-                    return ImageUtils.NewImage(1, 1);
+                    return Raylib.GenImageColor(1, 1, new Color(0, 0, 0, 0));
                 }
                 Files[filename] = File.ReadAllBytes(path);
             }

@@ -16,7 +16,14 @@ public class ScenGender : ICivDialogHandler
     {
         Dialog = new DialogElements
         {
-            Dialog = popups[Name],
+            Dialog = new PopupBox()
+            {
+                Button = new List<string> { Labels.Ok, Labels.Cancel },
+                Options = new List<string> { Labels.For(LabelIndex.Male), Labels.For(LabelIndex.Female) },
+                Title = "Select Gender",
+                Name = Title,
+                Width = 320
+            },
             DialogPos = new Point(0, 0),
         };
         return this;

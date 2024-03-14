@@ -34,7 +34,8 @@ public class RectangleElement : IViewElement
     public Tile Tile { get; set; }
     public Vector2 Offset { get; }
     public bool IsTerrain => false;
-    public void Draw(Vector2 adjustedLocation, float scale = 1f)
+    public bool IsShaded => false;
+    public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
         
         Raylib.DrawRectangleV( adjustedLocation - Offset + Offset * scale, Size * scale, Color);

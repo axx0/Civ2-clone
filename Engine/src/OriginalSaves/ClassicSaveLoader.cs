@@ -1,8 +1,8 @@
-using Civ2engine.IO;
 using System.IO;
 using System.Linq;
+using Civ2engine.IO;
 
-namespace Civ2engine
+namespace Civ2engine.OriginalSaves
 {
     public static class ClassicSaveLoader
     {

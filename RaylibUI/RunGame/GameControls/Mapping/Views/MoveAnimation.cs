@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Numerics;
 using Civ2.ImageLoader;
 using Civ2engine.Events;

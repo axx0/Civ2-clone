@@ -242,7 +242,7 @@ namespace EtoFormsUI
             if (_city.ImprovementExists(ImprovementType.GreatWall))
                 DrawImprovement(e.Graphics, 64);
 
-            Draw.Text(e.Graphics, $"{_city.Name}: {Game.GetGameYearString}", new Font("Times new roman", 26, FontStyle.Bold), Color.FromArgb(132, 132, 132), new Point(790, 10), false, false, Colors.Black, 1, 1);
+            Draw.Text(e.Graphics, $"{_city.Name}: {Game.Date.GameYearString}", new Font("Times new roman", 26, FontStyle.Bold), Color.FromArgb(132, 132, 132), new Point(790, 10), false, false, Colors.Black, 1, 1);
         }
 
         private void DrawImprovement(Graphics g, int id)

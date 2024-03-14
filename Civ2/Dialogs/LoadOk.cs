@@ -25,7 +25,7 @@ public class LoadOk : ICivDialogHandler
     public IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return new StartGame(Initialization.ConfigObject.RuleSet, Initialization.GameInstance);
+        return new StartGame(Initialization.GameInstance);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
@@ -36,7 +36,7 @@ public class LoadOk : ICivDialogHandler
         Dialog.ReplaceStrings = new List<string>
         {
             playerCiv.LeaderTitle, playerCiv.LeaderName,
-            playerCiv.TribeName, game.GetGameYearString,
+            playerCiv.TribeName, game.Date.GameYearString(game.TurnNumber),
             game.DifficultyLevel.ToString()
         };
         return new MenuAction(Dialog);

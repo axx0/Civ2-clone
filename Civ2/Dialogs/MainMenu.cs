@@ -26,8 +26,9 @@ public class MainMenu : BaseDialogHandler
             case 0:
             case 2:
                 Initialization.ConfigObject.CustomizeWorld = result.SelectedIndex == 2;
-                if (Initialization.RuleSets.Count > 1)
+                if (civ2Interface.MainApp.AllRuleSets.Length > 1)
                     return civDialogHandlers[SelectGameVersionHandler.Title].Show(civ2Interface);
+                civ2Interface.MainApp.SetActiveRuleSet(0);
                 Initialization.LoadGraphicsAssets(civ2Interface);
                 return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
 

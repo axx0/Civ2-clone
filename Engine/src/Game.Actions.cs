@@ -79,9 +79,6 @@ namespace Civ2engine
                 if (_activeCiv.Alive)
                 {
                     TurnBeginning(Players[_activeCiv.Id]);
-                    
-                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
-
 
                     if (_activeCiv.PlayerType == PlayerType.Ai)
                     {
@@ -92,6 +89,8 @@ namespace Civ2engine
                         // Choose next unit
                         ChooseNextUnit();
                     }
+
+                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
 
                 }
                 else if(!Options.DontRestartIfEliminated)

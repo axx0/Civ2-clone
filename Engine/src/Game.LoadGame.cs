@@ -5,6 +5,7 @@ using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
+using Civ2engine.OriginalSaves;
 using Civ2engine.Scripting;
 using Civ2engine.Statistics;
 using Civ2engine.Terrains;
@@ -19,9 +20,10 @@ namespace Civ2engine
             return _instance;
         }
 
-        public static Game StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations)
+        public static Game StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations,
+            string[] paths)
         {
-            _instance = new Game(maps, config.Rules, civilizations, new Options(config), config.RuleSet.Paths, (DifficultyType)config.DifficultlyLevel);
+            _instance = new Game(maps, config.Rules, civilizations, new Options(config), paths, (DifficultyType)config.DifficultlyLevel);
             _instance.StartNextTurn();
             return _instance;
         }
@@ -68,27 +70,10 @@ namespace Civ2engine
             : this(objects.Maps.ToArray(), rules,objects.Civilizations,new Options(gameData.OptionsArray), 
                   rulesetPaths, (DifficultyType)gameData.DifficultyLevel)
         {
-            //_civsInPlay = SAVgameData.CivsInPlay;
-            _gameVersion = gameData.GameVersion switch
-            {
-                <= 39 => GameVersionType.CiC,
-                40 => GameVersionType.Fw,
-                44 => GameVersionType.Mge,
-                49 => GameVersionType.ToT10,
-                50 => GameVersionType.ToT11,
-                _ => GameVersionType.CiC
-            };
-
-            _gameType = (GameType)gameData.GameType;
-
             _scenarioData = objects.Scenario;
 
             TurnNumber = gameData.TurnNumber;
-
-            MonthlyTurnIncrement = gameData.TurnYearIncrement < 0;
-            DefaultTurnIncrement = gameData.TurnYearIncrement == 0;
-            TurnYearIncrement = gameData.TurnYearIncrement;
-            StartingYear = gameData.StartingYear == 0 ? -4000 : gameData.StartingYear;
+            Date = new Date(gameData.StartingYear, gameData.TurnYearIncrement, (DifficultyType)gameData.DifficultyLevel);
 
             _barbarianActivity = (BarbarianActivityType)gameData.BarbarianActivity;
             PollutionSkulls = gameData.NoPollutionSkulls;

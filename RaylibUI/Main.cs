@@ -1,6 +1,7 @@
 ﻿using Raylib_cs;
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
@@ -9,7 +10,7 @@ using JetBrains.Annotations;
 
 namespace RaylibUI
 {
-    public partial class Main
+    public partial class Main : IMain
     {
         private Map _map;
 
@@ -18,6 +19,7 @@ namespace RaylibUI
 
 
         internal readonly Sound Soundman;
+        private IUserInterface _activeInterface;
 
         public Main()
         {
@@ -34,6 +36,8 @@ namespace RaylibUI
             //========== IMGUI STYLE
 
             Raylib.SetExitKey(KeyboardKey.F12);
+
+            Shaders.Load();
 
             //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
@@ -88,21 +92,47 @@ namespace RaylibUI
         {                
             Labels.UpdateLabels(null);
             Helpers.LoadFonts();
-            Interfaces = Helpers.LoadInterfaces();
-
-            ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces);
+            Interfaces = Helpers.LoadInterfaces(this);
+            AllRuleSets =  Interfaces.SelectMany((userInterface, idx) =>
+                {
+                    userInterface.InterfaceIndex = idx; 
+                    var sets = userInterface.FindRuleSets(Settings.SearchPaths);
+                    
+                    foreach (var ruleset in sets)
+                    {
+                        ruleset.InterfaceIndex = idx;
+                    }
+                    return sets;
+                })
+                .ToArray();
+            ActiveInterface = Helpers.GetInterface(Settings.Civ2Path, Interfaces, AllRuleSets);
             return new MainMenu(this,() => _shouldClose= true, StartGame, Soundman);
         }
 
 
-        public IUserInterface ActiveInterface { get; set; }
+
+        public IUserInterface ActiveInterface
+        {
+            get => _activeInterface;
+            private set
+            {
+                _activeInterface = value;
+                if (ActiveRuleSet == null)
+                {
+                    ActiveRuleSet =
+                        AllRuleSets.FirstOrDefault(r => r.InterfaceIndex == _activeInterface.InterfaceIndex);
+                }
+                _activeInterface.Initialize();
+                
+                ImageUtils.SetLook(_activeInterface);
+            }
+        }
 
         public IList<IUserInterface> Interfaces { get; set; }
 
-        public IScreen ActiveScreen => _activeScreen;
-
         void ShutdownApp()
         {
+            Shaders.Unload();
             Soundman.Dispose();
             Raylib.CloseWindow();
             Raylib.CloseAudioDevice();

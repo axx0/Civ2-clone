@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 
 namespace Civ2engine
@@ -8,7 +9,6 @@ namespace Civ2engine
     public class GameInitializationConfig
     {
         public FastRandom Random { get; set; } = new (1);
-        public Ruleset RuleSet { get; set; }
         
         public Dictionary<string, PopupBox?> PopUps { get; set; }
         public int[] WorldSize { get; set; } = { 50, 80 };
@@ -39,5 +39,6 @@ namespace Civ2engine
         public bool CustomizeWorld { get; set; }
         public List<Civilization> Civilizations { get; set; }
         public ILookup<int,LeaderDefaults> GroupedTribes { get; set; }
+        public bool QuickStart { get; set; }
     }
 }
