@@ -8,7 +8,7 @@ namespace Civ2engine
 {
     public class GameInitializationConfig
     {
-        public FastRandom Random { get; set; } = new (1);
+        public FastRandom Random { get; set; } = new (4564234);
         
         public Dictionary<string, PopupBox?> PopUps { get; set; }
         public int[] WorldSize { get; set; } = { 50, 80 };
@@ -40,5 +40,6 @@ namespace Civ2engine
         public List<Civilization> Civilizations { get; set; }
         public ILookup<int,LeaderDefaults> GroupedTribes { get; set; }
         public bool QuickStart { get; set; }
+        public bool IsScenario { get; set; } = false;
     }
 }

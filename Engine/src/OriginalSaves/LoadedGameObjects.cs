@@ -26,7 +26,7 @@ namespace Civ2engine.OriginalSaves
             {
                 var map = new Map(gameData.OptionsArray[3], mapNo)
                 {
-                    MapRevealed = true, //gameData.MapRevealed, Revealing all maps for testing
+                    MapRevealed = gameData.MapRevealed,
                     WhichCivsMapShown = gameData.WhichCivsMapShown,
                     Zoom = gameData.Zoom,
                     StartingClickedXy = gameData.ClickedXy,

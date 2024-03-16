@@ -36,6 +36,11 @@ namespace Civ2engine
         public int TurnNumber { get; private set; }
 
         public DifficultyType DifficultyLevel => _difficultyLevel;
+        public void SetDifficultyLevel(DifficultyType difficultyLevel)
+        {
+            _difficultyLevel = difficultyLevel;
+        }
+
         public BarbarianActivityType BarbarianActivity => _barbarianActivity;
         public int PollutionSkulls { get; set; }
         public int GlobalTempRiseOccured { get; set; }

@@ -52,7 +52,7 @@ namespace Civ2engine
                 else
                 {
                     if (!line.StartsWith('@')) continue;
-                    section = line[1..];
+                    section = line[1..].TrimEnd();
                     reading = true;
                     contents = new List<string>();
                 }

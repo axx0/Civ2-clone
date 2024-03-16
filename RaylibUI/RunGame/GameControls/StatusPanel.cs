@@ -43,6 +43,8 @@ public class StatusPanel : BaseControl
 
         var populText = _game.GetPlayerCiv.Population.ToString("###,###,###",
                     new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " " + Labels.For(LabelIndex.People);
+        if (_game.GetPlayerCiv.Population == 0)
+            populText = "0 " + Labels.For(LabelIndex.People);
         var populLabel = new StatusLabel(_gameScreen, populText);
         populLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset, Height = populLabel.GetPreferredHeight() };
 

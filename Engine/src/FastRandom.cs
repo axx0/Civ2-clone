@@ -49,12 +49,12 @@ namespace Civ2engine
 
         public int Next(int max)
         {
-            return Next() % (max -1);
+            return Next() % (max);
         }
 
         public int Next(int min, int max)
         {
-            return min + Next() % (max - min + 1);
+            return min + Next() % (max - min);
         }
 
         public T ChooseFrom<T>(IList<T> items)

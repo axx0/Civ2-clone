@@ -25,7 +25,7 @@ public class Date
         int gameYear;
         if (_monthlyTurnIncrement)
         {
-            gameYear = StartingYear + turnNo - 2;
+            gameYear = StartingYear + turnNo - 1;
         }
         else if (_defaultTurnIncrement)
         {
@@ -39,7 +39,7 @@ public class Date
         }
         else
         {
-            gameYear = StartingYear + (turnNo - 1) * TurnYearIncrement;
+            gameYear = StartingYear + turnNo * TurnYearIncrement - 1;
         }
         
         return gameYear;

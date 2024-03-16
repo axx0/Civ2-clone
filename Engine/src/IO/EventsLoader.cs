@@ -174,7 +174,7 @@ namespace Civ2engine.IO
                             civId = _gameObjects.Civilizations.Find(c => StringEquals(c.TribeName, civ)).Id;
                         }
                         number = ReadString(contents, "numbertomove", indx + 1);
-                        var arr = contents[indx + 4].Split(',').Select(val => Int32.Parse(val)).ToArray();
+                        var arr = contents[indx + 4].Split(',', '.').Select(val => Int32.Parse(val)).ToArray();
                         action = new MoveUnit
                         {
                             UnitMovedId = StringEquals(unitMoved, "ANYUNIT") ? -2 : 
@@ -182,7 +182,7 @@ namespace Civ2engine.IO
                             OwnerCivId = civId,
                             MapCoords = new int[4, 2] { { arr[0], arr[1] }, { arr[2], arr[3] },
                                                         { arr[4], arr[5] }, { arr[6], arr[7] }},
-                            MapDest = contents[indx + 6].Split(',').Select(val => Int32.Parse(val)).ToArray(),
+                            MapDest = contents[indx + 6].Split(',', '.').Select(val => Int32.Parse(val)).ToArray(),
                             NumberToMove = StringEquals(number, "ALL") ? -2 : Int32.Parse(number)
                         };
                         break;
@@ -210,7 +210,7 @@ namespace Civ2engine.IO
                         int[,] locations = new int[locationsNo, 2];
                         for (int i = 0; i < locationsNo; i++)
                         {
-                            var ar = contents[indx + 6 + i].Split(',').Select(val => Int32.Parse(val)).ToArray();
+                            var ar = contents[indx + 6 + i].Split(',', '.').Select(val => Int32.Parse(val)).ToArray();
                             locations[i, 0] = ar[0];
                             locations[i, 1] = ar[1];
                         }
@@ -271,7 +271,7 @@ namespace Civ2engine.IO
                         action = new DontplayWonders { };
                         break;
                     case "CHANGETERRAIN":
-                        var arr1 = contents[indx + 3].Split(',').Select(val => Int32.Parse(val)).ToArray();
+                        var arr1 = contents[indx + 3].Split(',', '.').Select(val => Int32.Parse(val)).ToArray();
                         action = new ChangeTerrain
                         {
                             TerrainTypeId = Int32.Parse(ReadString(contents, "terraintype", indx + 1)),
