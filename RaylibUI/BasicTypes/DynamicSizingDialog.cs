@@ -29,7 +29,7 @@ public class DynamicSizingDialog : BaseDialog
 
         _size = new Size(0, 0);
         _requestedWidth = requestedWidth;
-        if (!string.IsNullOrWhiteSpace(title))
+        if (!string.IsNullOrEmpty(title))
         {
             _headerLabel = new HeaderLabel(this, _active.Look, title, fontSize: _active.Look.HeaderLabelFontSizeNormal);
             Controls.Add(_headerLabel);

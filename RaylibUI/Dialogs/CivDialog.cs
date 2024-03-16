@@ -6,6 +6,9 @@ using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Dialogs;
 using RaylibUI.Forms;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Reflection.Emit;
 using Button = RaylibUI.Controls.Button;
 
 namespace RaylibUI;
@@ -21,6 +24,7 @@ public class CivDialog : DynamicSizingDialog
     private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
     private readonly int _optionsCols;
     private readonly IUserInterface _active;
+    private readonly Vector2 _innerSize;
 
     private void SetSelectedOption(OptionControl newSelection)
     {
@@ -54,25 +58,22 @@ public class CivDialog : DynamicSizingDialog
         int optionsCols = 1,
         Image[]? icons = null) :
         base(host,
-            DialogHelper.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-             relatDialogPos
-            , requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
+            DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
+             relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
     {
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
         _managedTextures = new List<Texture2D>();
-        
+
         if (popupBox.Text?.Count > 0)
         {
-            var ftext = DialogHelper.GetFormattedTexts(popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
-            foreach (var text in ftext)
+            var textLabels = GetTextLabels(this, popupBox.Text, popupBox.LineStyles, replaceStrings, replaceNumbers);
+            var maxWidth = GetInnerPanelWidthFromText(textLabels, popupBox);
+            foreach (var label in textLabels)
             {
-                Controls.Add(new LabelControl(this, text.Text, false,
-                    alignment: text.HorizontalAlignment == HorizontalAlignment.Center
-                        ? TextAlignment.Center
-                        : TextAlignment.Left, wrapText: text.HorizontalAlignment == HorizontalAlignment.Left,
-                    font: _active.Look.LabelFont, colorFront: _active.Look.LabelColour, fontSize: 26));
+                label.Width = maxWidth;
+                Controls.Add(label);
             }
         }
 
@@ -80,7 +81,6 @@ public class CivDialog : DynamicSizingDialog
 
         if (textBoxDefs is { Count: > 0 })
         {
-            
             _textBoxes = new List<LabeledTextBox>();
             List<string> textBoxLabels;
             if(textBoxDefs.Any(t=>string.IsNullOrWhiteSpace(t.Description)) && popupBox.Options != null && popupBox.Options.Count == textBoxDefs.Count)
@@ -91,7 +91,7 @@ public class CivDialog : DynamicSizingDialog
             else
             {
                 textBoxLabels = textBoxDefs.Select(t =>
-                    DialogHelper.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
+                    DialogUtils.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
             }
 
             var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(host.ActiveInterface.Look.DefaultFont, l, 20, 1.0f).X) +24;
@@ -110,7 +110,7 @@ public class CivDialog : DynamicSizingDialog
             for (int i = 0; i < options.Count; i++)
             {
                 options[i] =
-                    Forms.DialogHelper.ReplacePlaceholders(options[i], replaceStrings, replaceNumbers);
+                    DialogUtils.ReplacePlaceholders(options[i], replaceStrings, replaceNumbers);
             }
 
             var optionAction = popupBox.Checkbox ? (Action<OptionControl>)TogggleCheckBox : SetSelectedOption;
@@ -294,5 +294,55 @@ public class CivDialog : DynamicSizingDialog
     {
         return _textBoxes?.Select(box => new { box.Name, Value = box.Text })
             .ToDictionary(k => k.Name, v => v.Value);
+    }
+
+    private List<LabelControl> GetTextLabels(IControlLayout controller, IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
+    {
+        // Group left-aligned texts
+        int j = 0;
+        while (j < texts.Count - 1)
+        {
+            j++;
+            if (styles[j - 1] == TextStyles.Left && styles[j] == TextStyles.Left)
+            {
+                texts[j] = $"{texts[j - 1]} {texts[j]}";
+                texts.RemoveAt(j - 1);
+                styles.RemoveAt(j - 1);
+                j = 0;
+            }
+        }
+
+        // Replace %STRING, %NUMBER
+        texts = texts.Select(t => DialogUtils.ReplacePlaceholders(t, replaceStrings, replaceNumbers)).ToList();
+        texts = texts.Select(t => t.Replace("_", " ")).ToList();
+
+        // Make labels
+        var labels = new List<LabelControl>();
+        for (int i = 0; i < texts.Count; i++)
+        {
+            labels.Add(new LabelControl(controller,
+                        string.IsNullOrEmpty(texts[i]) && styles[i] == TextStyles.LeftOwnLine ? " " : texts[i],    // Add space if ^ is the only character 
+                        false,
+                        alignment: styles[i] == TextStyles.Centered ? TextAlignment.Center : TextAlignment.Left,
+                        wrapText: styles[i] == TextStyles.Left,
+                        font: _active.Look.LabelFont, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1), fontSize: _active.Look.LabelFontSize));
+        }
+
+        return labels;
+    }
+
+    private static int GetInnerPanelWidthFromText(IList<LabelControl> labels, PopupBox popupbox)
+    {
+        var centredTextMaxWidth = 0.0;
+        if (labels.Where(t => t.Alignment == TextAlignment.Center || (t.Alignment == TextAlignment.Left && !t.WrapText)).Any())
+            centredTextMaxWidth = (from label in labels
+                                   where label.Alignment == TextAlignment.Center || (label.Alignment == TextAlignment.Left && !label.WrapText)
+                                   orderby label.TextSize.X descending
+                                   select label).ToList().FirstOrDefault().TextSize.X;
+
+        if (popupbox.Width != 0)
+            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupbox.Width * 1.5));
+        else
+            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 660.0));    // 660=440*1.5
     }
 }

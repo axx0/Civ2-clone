@@ -10,12 +10,11 @@ public class LabelControl : BaseControl
 {
     public int Offset { get; }
     protected readonly string Text;
-    public readonly Vector2 TextSize;
+    public readonly TextAlignment Alignment;
+    public readonly bool WrapText;
 
     private readonly int _minWidth;
-    private readonly TextAlignment _alignment;
     private readonly int _defaultHeight;
-    private readonly bool _wrapText;
     private readonly int _fontSize;
     private readonly float _spacing;
     private List<string>? _wrappedText;
@@ -32,43 +31,45 @@ public class LabelControl : BaseControl
     {
         Offset = offset;
         Text = text;
+        Alignment = alignment;
+        WrapText = wrapText;
         _minWidth = minWidth;
         _defaultHeight = defaultHeight;
-        _wrapText = wrapText;
         _fontSize = fontSize;
         _spacing = spacing;
-        _alignment = alignment;
         _labelFont = font ?? controller.MainWindow.ActiveInterface.Look.LabelFont;
         _colorFront = colorFront ?? Color.Black;
         _colorShadow = colorShadow ?? Color.Black;
         _shadowOffset = shadowOffset ?? Vector2.Zero;
-        TextSize = Raylib.MeasureTextEx(_labelFont, text, _fontSize, _spacing);
+        
         _active = controller.MainWindow.ActiveInterface;
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;
     }
 
+    public Vector2 TextSize => Raylib.MeasureTextEx(_labelFont, Text, _fontSize, _spacing);
+
     public override int GetPreferredWidth()
     {
-        if (_wrapText)
+        if (WrapText)
         {
-            return -1;
+            return Width;
         }
 
-        return Math.Max(_minWidth, (int)TextSize.X + Offset + (_alignment == TextAlignment.Center ? 10 : 0));
+        return Math.Max(_minWidth, (int)TextSize.X + Offset + (Alignment == TextAlignment.Center ? 10 : 0));
     }
 
     public override int GetPreferredHeight()
     {
-        if (!_wrapText) return _defaultHeight;
+        if (!WrapText) return _defaultHeight;
         
-        _wrappedText = CtrlHelpers.GetWrappedTexts(_active, Text, Width, Fonts.FontSize);
+        _wrappedText = DialogUtils.GetWrappedTexts(_active, Text, Width, _labelFont, _fontSize);
         return (int)(_wrappedText.Count * TextSize.Y) ;
     }
 
     public override void Draw(bool pulse)
     {
-        if (_wrapText && _wrappedText?.Count > 1)
+        if (WrapText && _wrappedText?.Count > 1)
         {
             var unitHeight = Height / _wrappedText.Count;
             var y = Location.Y + unitHeight / 2f - TextSize.Y / 2f;
@@ -84,11 +85,11 @@ public class LabelControl : BaseControl
         {
             var textPosition = new Vector2(Location.X + Offset, Location.Y + Height / 2f - TextSize.Y / 2f);
 
-            if (_alignment == TextAlignment.Center)
+            if (Alignment == TextAlignment.Center)
             {
                 textPosition.X += Width / 2f - TextSize.X / 2f;
             }
-            else if (_alignment == TextAlignment.Right)
+            else if (Alignment == TextAlignment.Right)
             {
                 textPosition.X += Width - TextSize.X - 2 * Offset;
             }
@@ -108,7 +109,7 @@ public class LabelControl : BaseControl
             Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, colorFront);
         }
 
-        //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.RED);
+        Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
 
         base.Draw(pulse);
     }

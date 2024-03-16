@@ -1,25 +1,21 @@
 ﻿using Model;
 using Raylib_cs;
 
-namespace RaylibUI.Forms;
+namespace RaylibUI;
 
-public static class CtrlHelpers
+public static class DialogUtils
 {
     /// <summary>
     /// Returns a list of strings for wrapped text
     /// </summary>
-    /// <param name="active"></param>
-    /// <param name="text"></param>
-    /// <param name="maxWidth"></param>
-    /// <param name="fontSize"></param>
-    /// <returns></returns>
-    public static List<string> GetWrappedTexts(IUserInterface active, string text, int maxWidth, int fontSize)
+    public static List<string> GetWrappedTexts(IUserInterface active, string text, int maxWidth, Font font, int fontSize)
     {
         string[] words = text.Split();
-        List<string> wrappedLines = new List<string>();
+        List<string> wrappedLines = new ();
 
         string combinedWord = string.Empty;
         int combinedTextSize, combinedTextSizeNext;
+
         // Measure string Width by combining words
         bool newLine = true;
         for (int i = 0; i < words.Length; i++)
@@ -65,5 +61,41 @@ public static class CtrlHelpers
         }
 
         return wrappedLines;
+    }
+
+    /// <summary>
+    /// Find occurences of %STRING and %NUMBER in text and replace it with other strings/numbers.
+    /// </summary>
+    /// <param name="text">Text where replacement takes place.</param>
+    /// <param name="replacementStrings">A list of strings to replace %STRING0, %STRING1, %STRING2, etc.</param>
+    /// <param name="replacementNumbers">A list of integers to replace %NUMBER0, %NUMBER1, %NUMBER2, etc.</param>
+    public static string ReplacePlaceholders(string text, IList<string>? replacementStrings, IList<int>? replacementNumbers)
+    {
+
+        if (replacementStrings != null)
+        {
+            var index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            while (index != -1)
+            {
+                var numericChar = text[index + 7];
+                text = text.Replace("%STRING" + numericChar,
+                    replacementStrings[(int)char.GetNumericValue(numericChar)]);
+                index = text.IndexOf("%STRING", StringComparison.Ordinal);
+            }
+        }
+
+        if (replacementNumbers != null)
+        {
+            var index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
+            while (index != -1)
+            {
+                var numericChar = text[index + 7];
+                text = text.Replace("%NUMBER" + numericChar,
+                    replacementNumbers[(int)char.GetNumericValue(numericChar)].ToString());
+                index = text.IndexOf("%NUMBER", StringComparison.Ordinal);
+            }
+        }
+
+        return text;
     }
 }

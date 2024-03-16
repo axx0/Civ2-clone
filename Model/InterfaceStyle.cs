@@ -42,7 +42,9 @@ public class InterfaceStyle
     public bool HeaderLabelShadow { get; init; } 
     public Color HeaderLabelColour { get; init; }
     public Font LabelFont { get; init; }
+    public int LabelFontSize { get; init; }
     public Color LabelColour { get; init; }
+    public Color LabelShadowColour { get; init; }
     public Font CityWindowFont { get; init; }
     public int CityWindowFontSize { get; init; }
     public Font MenuFont { get; init; }
