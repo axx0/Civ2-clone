@@ -118,7 +118,7 @@ public abstract class BaseGameView : IGameView
                                 ActivePos = new Vector2(xpos, ypos);
                             }
 
-                            if (tile.IsVisible(civilizationId))
+                            if (tile.IsVisible(civilizationId) || map.MapRevealed)
                             {
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
                                 Raylib.ImageDraw(ref image, tileDetails.Image,
@@ -204,7 +204,7 @@ public abstract class BaseGameView : IGameView
                     var impImage = ImageUtils.GetImpImage(activeInterface, unitImp.UnitImage,
                         tile.Owner);
                     elements.Add(new TextureElement(
-                        texture: impImage, location: posVector with{ Y = posVector.Y + Dimensions.TileHeight}, tile: tile, isTerrain: true));
+                        texture: impImage, location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height }, tile: tile, isTerrain: true));
                 }
                 else
                 {

@@ -42,7 +42,13 @@ public class MapControl : BaseControl
 
         _currentView =
             _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth, ForceRedraw);
-        
+
+        // Show initial view rectangle in minimap
+        var dim = _gameScreen.TileCache.GetDimensions(_game.CurrentMap);
+        _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged,
+            new[] { (int)_currentView.Offsets.X / dim.HalfWidth, (int)_currentView.Offsets.Y / dim.HalfHeight },
+            new[] { _viewWidth / dim.HalfWidth, _viewHeight / dim.HalfHeight }));
+
         gameScreen.OnMapEvent += MapEventTriggered;
         _game.OnUnitEvent += UnitEventHappened;
         Click += OnClick;

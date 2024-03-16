@@ -105,7 +105,7 @@ public class MinimapPanel : BaseControl
                 var tileX = WrapNumber(2 * col + GetCenterShift(), 2 * map.XDim) / 2;
 
                 var tile = map.Tile[tileX, row];
-                if (!map.MapRevealed && !tile.IsVisible(map.WhichCivsMapShown)) continue;
+                if (!map.MapRevealed && !tile.IsVisible(_game.GetActiveCiv.Id)) continue;
 
                 var drawColor = tile.CityHere is not null
                     ? _active.PlayerColours[tile.CityHere.Owner.Id].TextColour

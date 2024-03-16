@@ -7,6 +7,7 @@ using Model;
 using RaylibUI.Initialization;
 using RaylibUI.Forms;
 using JetBrains.Annotations;
+using System.Diagnostics;
 
 namespace RaylibUI
 {
@@ -33,13 +34,10 @@ namespace RaylibUI
             Raylib.InitAudioDevice();
             Soundman = new Sound();
 
-            //========== IMGUI STYLE
-
             Raylib.SetExitKey(KeyboardKey.F12);
 
             Shaders.Load();
 
-            //============ LOAD REQUIRED SAV GAME DATA
             if (hasCivDir)
             {
                 _activeScreen = SetupMainScreen();
