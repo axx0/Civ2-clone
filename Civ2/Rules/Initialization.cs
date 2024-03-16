@@ -64,6 +64,7 @@ public static class Initialization
             {
                 if (i == ConfigObject.PlayerCiv.Id) continue;
 
+                var contains = ConfigObject.GroupedTribes.Contains(i);
                 var tribes = ConfigObject.GroupedTribes.Contains(i)
                     ? ConfigObject.GroupedTribes[i].ToList()
                     : ConfigObject.Rules.Leaders
@@ -80,7 +81,7 @@ public static class Initialization
     public static Civilization MakeCivilization(GameInitializationConfig config, LeaderDefaults tribe, bool human, int id)
     {
         var titles = config.Rules.Governments.Select((g, i) => GetLeaderTitle(config, tribe, g, i)).ToArray();
-        var gender = human ? config.Gender : tribe.Female ? 1 : 0;
+        var gender = human ? config.Gender : ConfigObject.Random.Next(2);
         return new Civilization
         {
             Adjective = tribe.Adjective,
@@ -90,7 +91,7 @@ public static class Initialization
             Money = 0,
             Advances = new bool[config.Rules.Advances.Length],
             CityStyle = tribe.CityStyle,
-            LeaderGender =gender ,
+            LeaderGender = gender,
             LeaderName = gender == 0 ? tribe.NameMale : tribe.NameFemale,
             LeaderTitle = titles[(int)GovernmentType.Despotism],
             LuxRate = 0,

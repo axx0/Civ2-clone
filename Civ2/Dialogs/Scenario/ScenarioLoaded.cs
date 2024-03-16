@@ -36,7 +36,7 @@ public class ScenarioLoaded : ICivDialogHandler
         Dialog.ReplaceNumbers = new List<int> { game.ScenarioData.TechParadigm };
         Dialog.ReplaceStrings = new List<string>
         {
-            game.ScenarioData.Name, game.Date.GameYearString(0),
+            game.ScenarioData.Name, game.Date.GameYearString(1),
             game.Date.GameYearString(game.ScenarioData.MaxTurns),
         };
 

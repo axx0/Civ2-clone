@@ -36,6 +36,7 @@ public class MainMenu : BaseDialogHandler
             case 1:
                  return civDialogHandlers[LoadMap.DialogTitle].Show(civ2Interface);
             case 3:
+                Initialization.ConfigObject.IsScenario = true;
                 return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
             case 4:
                 return civDialogHandlers[LoadGame.DialogTitle].Show(civ2Interface);

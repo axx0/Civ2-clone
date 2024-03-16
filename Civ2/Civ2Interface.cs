@@ -41,8 +41,7 @@ public abstract class Civ2Interface : IUserInterface
     {
         Dialogs = PopupBoxReader.LoadPopupBoxes(MainApp.ActiveRuleSet.Paths, "game.txt");
         // Add popups not in game.txt
-        var extraPopups = new List<string> { "SCENCHOSECIV", "SCENINTRO", "SCENDIFFICULTY",
-                            "SCENGENDER", "SCENENTERNAME", "SCENCUSTOMINTRO" };
+        var extraPopups = new List<string> { "SCENCHOSECIV", "SCENINTRO", "SCENCUSTOMINTRO" };
         foreach (var popup in extraPopups)
         {
             Dictionary<string, PopupBox?> popup2 = new() { { popup, new PopupBox() } };

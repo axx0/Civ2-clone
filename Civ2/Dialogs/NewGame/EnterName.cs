@@ -24,7 +24,9 @@ public class EnterName : BaseDialogHandler
                 {
                     Index = 0,
                     Name = "Name",
-                    InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName,
+                    InitialValue = Initialization.ConfigObject.IsScenario ?
+                        Game.Instance.GetPlayerCiv.LeaderName : 
+                        Initialization.ConfigObject.PlayerCiv.LeaderName,
                     Width = 400,
                     Description = Dialog.Dialog.Options?[0] ?? string.Empty
                 },
@@ -44,14 +46,25 @@ public class EnterName : BaseDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
+            return Initialization.ConfigObject.IsScenario ?
+                civDialogHandlers[Difficulty.Title].Show(civ2Interface) :
+                civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 
         if (result.TextValues != null)
         {
-            Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Name"];
+            if (Initialization.ConfigObject.IsScenario)
+            {
+                Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).LeaderName = result.TextValues["Name"];
+            }
+            else
+            {
+                Initialization.ConfigObject.PlayerCiv.LeaderName = result.TextValues["Name"];
+            }
         }
-
-        return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
+        
+        return Initialization.ConfigObject.IsScenario ?
+            new StartGame(Initialization.GameInstance) :
+            civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
     }
 }

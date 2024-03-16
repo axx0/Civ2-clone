@@ -27,9 +27,7 @@ public class Init : BaseDialogHandler
         var maps = config.MapTask.Result;
         Initialization.GameInstance = NewGameInitialisation.StartNewGame(config, maps, config.Civilizations.OrderBy(c=>c.Id).ToList(), activeInterface.MainApp.ActiveRuleSet.Paths);
         
-        var game = Initialization.GameInstance;
-        var playerCiv = game.GetPlayerCiv;
-    
+        var playerCiv = Initialization.GameInstance.GetPlayerCiv;
         Dialog.ReplaceStrings = new List<string>
         {   playerCiv.LeaderName,
             playerCiv.TribeName, ""
