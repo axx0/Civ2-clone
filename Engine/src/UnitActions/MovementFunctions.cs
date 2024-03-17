@@ -363,13 +363,23 @@ namespace Civ2engine.UnitActions.Move
                         break;
                     }
 
-                    moveCost *= tileTo.MoveCost;
-                    moveCost = MoveCost(tileTo, tileFrom, moveCost, cosmicRules);
-
-                    // If alpine movement could be less use that
-                    if (cosmicRules.AlpineMovement < moveCost && unit.Alpine)
+                    // Coming from Railroad and going to Railroad
+                    var comingFromRailroad = tileTo.Improvements.Any(e => e is { Improvement: 5, Level: 1 });
+                    var goingToRailroad = unit.CurrentLocation?.Improvements.Any(e => e is { Improvement: 5, Level: 1 }) ?? false;
+                    if (comingFromRailroad && goingToRailroad) 
                     {
-                        moveCost = cosmicRules.AlpineMovement;
+                        moveCost = 0;  
+                    }
+                    else
+                    {
+                        moveCost *= tileTo.MoveCost;
+                        moveCost = MoveCost(tileTo, tileFrom, moveCost, cosmicRules);
+
+                        // If alpine movement could be less use that
+                        if (cosmicRules.AlpineMovement < moveCost && unit.Alpine)
+                        {
+                            moveCost = cosmicRules.AlpineMovement;
+                        }
                     }
 
                     unitMoved = true;
