@@ -9,5 +9,5 @@ public interface IMain
     
     public Ruleset[] AllRuleSets { get; set; }
     Ruleset ActiveRuleSet { get; }
-    void SetActiveRuleSet(int ruleSetIndex);
+    IUserInterface SetActiveRuleSet(int ruleSetIndex);
 }

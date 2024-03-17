@@ -47,9 +47,14 @@ namespace Civ2engine
             return (int)_seed;
         }
 
+        /// <summary>
+        /// Produce a number from 0 to max -1
+        /// </summary>
+        /// <param name="max">The number of values to chose from max is exclusive</param>
+        /// <returns></returns>
         public int Next(int max)
         {
-            return Next() % (max);
+            return Next() % max;
         }
 
         public int Next(int min, int max)

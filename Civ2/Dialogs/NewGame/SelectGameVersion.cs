@@ -36,22 +36,8 @@ public class SelectGameVersionHandler : BaseDialogHandler
             return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
-        civ2Interface.MainApp.SetActiveRuleSet(result.SelectedIndex);
-        
-        
-        Initialization.LoadGraphicsAssets(civ2Interface);
-        
-        if (result.SelectedButton == "Quick Start")
-        {
-            Initialization.ConfigObject.QuickStart = true;
-            Initialization.ConfigObject.WorldSize = new[] { 50, 80 };
-            Initialization.ConfigObject.NumberOfCivs = civ2Interface.PlayerColours.Length - 1;
-            Initialization.ConfigObject.BarbarianActivity = Initialization.ConfigObject.Random.Next(5);
-            
-            Initialization.ConfigObject.MapTask = MapGenerator.GenerateMap(Initialization.ConfigObject);
-            return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
-        }
+        var activeInterface = civ2Interface.MainApp.SetActiveRuleSet(result.SelectedIndex);
 
-        return civDialogHandlers[WorldSizeHandler.Title].Show(civ2Interface);
+        return activeInterface.InitNewGame(result.SelectedButton == "Quick Start");
     }
 }
