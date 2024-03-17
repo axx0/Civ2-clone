@@ -67,6 +67,7 @@ public class TestOfTimeInterface : Civ2Interface
         HeaderLabelColour = Color.Black,
         LabelFont = Fonts.Arial,
         LabelColour = Color.LightGray,
+        LabelFontSize = 25,
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 16,
         MenuFont = Fonts.Arial,
