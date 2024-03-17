@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Text.RegularExpressions;
 using Civ2.Dialogs;
+using Civ2.Dialogs.NewGame;
 using Civ2.Menu;
 using Civ2.Rules;
 using Civ2engine;
@@ -413,5 +414,23 @@ public abstract class Civ2Interface : IUserInterface
 
         // Load default intro
         return DialogHandlers[ScenarioLoaded.Title].Show(this);
+    }
+
+    public IInterfaceAction InitNewGame(bool quickStart)
+    {
+        Initialization.LoadGraphicsAssets(this);
+        
+        if (quickStart)
+        {
+            Initialization.ConfigObject.QuickStart = true;
+            Initialization.ConfigObject.WorldSize = new[] { 50, 80 };
+            Initialization.ConfigObject.NumberOfCivs = this.PlayerColours.Length - 1;
+            Initialization.ConfigObject.BarbarianActivity = Initialization.ConfigObject.Random.Next(5);
+            
+            Initialization.ConfigObject.MapTask = MapGenerator.GenerateMap(Initialization.ConfigObject);
+            return DialogHandlers[Difficulty.Title].Show(this);
+        }
+
+        return DialogHandlers[WorldSizeHandler.Title].Show(this);
     }
 }

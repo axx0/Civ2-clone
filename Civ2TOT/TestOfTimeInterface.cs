@@ -67,6 +67,7 @@ public class TestOfTimeInterface : Civ2Interface
         HeaderLabelColour = Color.Black,
         LabelFont = Fonts.Arial,
         LabelColour = Color.LightGray,
+        LabelFontSize = 25,
         CityWindowFont = Fonts.Arial,
         CityWindowFontSize = 16,
         MenuFont = Fonts.Arial,
@@ -104,7 +105,6 @@ public class TestOfTimeInterface : Civ2Interface
                 var scnRules = Path.Combine(subdirectory, "rules.txt");
                 if (File.Exists(scnRules))
                 {
-
                     var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
                     var name = "";
                     if (File.Exists(game))
@@ -112,7 +112,7 @@ public class TestOfTimeInterface : Civ2Interface
                         foreach (var line in File.ReadLines(game))
                         {
                             if (!line.StartsWith("@title")) continue;
-                            name = line[7..];
+                            name = line[7..] + " - " + Path.GetFileName(subdirectory);
                             break;
                         }
                     }
