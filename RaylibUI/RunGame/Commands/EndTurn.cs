@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Model;
 using Model.Menu;
+using Raylib_cs;
 
 namespace RaylibUI.RunGame.Commands;
 
@@ -14,7 +15,8 @@ public class EndTurn : IGameCommand
     }
 
     public string Id => CommandIds.EndTurn;
-    public Shortcut KeyCombo { get; set; }
+    
+    public Shortcut[] ActivationKeys { get; set; } = { new (KeyboardKey.Enter), new (KeyboardKey.KpEnter)};
     public CommandStatus Status { get; private set; }
 
     public void Update()
@@ -26,7 +28,10 @@ public class EndTurn : IGameCommand
 
     public void Action()
     {
-        _gameScreen.Game.ProcessEndOfTurn();
+        if (_gameScreen.Game.ProcessEndOfTurn())
+        {
+            _gameScreen.Game.ChoseNextCiv();
+        }
     }
 
     public MenuCommand? Command { get; set; }

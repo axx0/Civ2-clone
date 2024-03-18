@@ -12,8 +12,11 @@ public class MenuCommand
         GameCommand = gameCommand;
         
         if (gameCommand == null) return;
-        
-        gameCommand.KeyCombo = shortcut;
+
+        if (!gameCommand.ActivationKeys.Contains(shortcut))
+        {
+            gameCommand.ActivationKeys = new[] { shortcut }.Concat(gameCommand.ActivationKeys).ToArray();
+        }
         gameCommand.Command = this;
     }
     

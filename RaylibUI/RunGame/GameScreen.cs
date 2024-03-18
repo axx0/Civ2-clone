@@ -112,37 +112,48 @@ public class GameScreen : BaseScreen
         Controls.Add(_minimapPanel);
         Controls.Add(_statusPanel);
 
-        GameCommands = commands.Where(c => c.KeyCombo.Key != KeyboardKey.Null).GroupBy(c => c.KeyCombo)
-            .ToDictionary(k => k.Key, MakeCommandSelector);
+        var lookup = new Dictionary<Shortcut, IList<IGameCommand>>();
+        foreach (var command in commands)
+        {
+            foreach (var shortcut in command.ActivationKeys)
+            {
+                if (shortcut.Equals(Shortcut.None)) continue;
+                
+                if (lookup.ContainsKey(shortcut))
+                {
+                        lookup[shortcut].Add(command);
+                }
+                else
+                {
+                    lookup.Add(shortcut, new List<IGameCommand> { command});
+                }
+            }
+        }
+
+        GameCommands = lookup;
     }
 
-    public Dictionary<Shortcut,Action> GameCommands { get; set; }
+    private Dictionary<Shortcut, IList<IGameCommand>> GameCommands { get; }
 
-    private Action MakeCommandSelector(IGrouping<Shortcut, IGameCommand> commandGroup)
+    private void TryExecuteCommand(IList<IGameCommand> commands)
     {
-
-        var commands = commandGroup.ToList();
-
-        return () =>
+        foreach (var command in commands)
         {
-            foreach (var command in commands)
-            {
-                command.Update();
-            }
+            command.Update();
+        }
 
-            var activeCommand = commands.MinBy(c => c.Status);
+        var activeCommand = commands.MinBy(c => c.Status);
 
-            if (activeCommand == null || activeCommand.Status == CommandStatus.Invalid) return;
+        if (activeCommand == null || activeCommand.Status == CommandStatus.Invalid) return;
 
-            if (activeCommand.Status <= CommandStatus.Default)
-            {
-                activeCommand.Action();
-            }
-            else
-            {
-                ShowPopup(activeCommand.ErrorDialog);
-            }
-        };
+        if (activeCommand.Status <= CommandStatus.Default)
+        {
+            activeCommand.Action();
+        }
+        else
+        {
+            ShowPopup(activeCommand.ErrorDialog);
+        }
     }
 
     public ProcessingMode Processing { get; }
@@ -162,7 +173,7 @@ public class GameScreen : BaseScreen
 
         if (!ActiveMode.HandleKeyPress(command) && GameCommands.ContainsKey(command))
         {
-            GameCommands[command]();
+            TryExecuteCommand(GameCommands[command]);
         }
         
     }

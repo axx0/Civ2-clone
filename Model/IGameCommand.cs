@@ -6,7 +6,7 @@ namespace Model;
 public interface IGameCommand
 {
     string Id { get; }
-    Shortcut KeyCombo { get; set; }
+    Shortcut[] ActivationKeys { get; set; }
     CommandStatus Status { get; }
     void Update();
     void Action();

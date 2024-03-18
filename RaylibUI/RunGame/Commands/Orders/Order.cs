@@ -9,12 +9,12 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 
 public abstract class Order : IGameCommand
 {
-    public Shortcut KeyCombo { get; set; }
+    public Shortcut[] ActivationKeys { get; set; }
     protected readonly GameScreen GameScreen;
 
     protected Order(GameScreen gameScreen, Shortcut keyCombo, string id, string? name = null)
     {
-        KeyCombo = keyCombo;
+        ActivationKeys = new[] { keyCombo};
         Id = id;
         Name = name;
         GameScreen = gameScreen;
