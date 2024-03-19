@@ -33,4 +33,28 @@ public readonly struct Shortcut
     {
         return (Key, Shift, Ctrl).GetHashCode();
     }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is Shortcut otherShortcut && otherShortcut.GetHashCode() == GetHashCode();
+    }
+
+    public override string ToString()
+    {
+        if (Ctrl)
+        {
+            if (Shift)
+            {
+                return "Ctrl+Shift+" + Key;
+            }
+            
+            return "Ctrl+" + Key;
+        }
+        if (Shift)
+        {
+
+            return "Shift+" + Key;
+        }
+        return Key.ToString();
+    }
 }

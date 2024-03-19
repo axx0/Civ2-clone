@@ -31,7 +31,7 @@ public class ViewPiece : IGameMode
         _gameScreen = gameScreen;
         _gameScreen.Game.OnPlayerEvent += PlayerEventTriggered;
 
-        Actions = new Dictionary<KeyboardKey, Action>
+        Actions = new Dictionary<KeyboardKey, Func<bool>>
             {
                 {
                     KeyboardKey.Enter, () =>
@@ -39,15 +39,18 @@ public class ViewPiece : IGameMode
                         if (_gameScreen.Game.ActiveTile.CityHere != null)
                         {
                             _gameScreen.ShowCityWindow(_gameScreen.Game.ActiveTile.CityHere);
+                            return true;
                         }
-                        else if (_gameScreen.Game.ActiveTile.UnitsHere.Any(u => u.MovePoints > 0))
+                        if (_gameScreen.Game.ActiveTile.UnitsHere.Any(u => u.MovePoints > 0))
                         {
                             _gameScreen.ActivateUnits(_gameScreen.Game.ActiveTile);
+                            return true;
                         }
                         /*else if (_gameScreen.StatusPanel.WaitingAtEndOfTurn)
                         {
                             main.StatusPanel.End_WaitAtEndOfTurn();
                         }*/
+                        return false;
                     }
                 },
 
@@ -62,9 +65,9 @@ public class ViewPiece : IGameMode
             };
         }
 
-    public Dictionary<KeyboardKey,Action> Actions { get; set; }
+    public Dictionary<KeyboardKey,Func<bool>> Actions { get; set; }
 
-    private void SetActive(int deltaX, int deltaY)
+    private bool SetActive(int deltaX, int deltaY)
     {
         var activeTile = _gameScreen.Game.ActiveTile;
         var newX = activeTile.X + deltaX;
@@ -72,8 +75,9 @@ public class ViewPiece : IGameMode
         if (activeTile.Map.IsValidTileC2(newX, newY))
         {
             _gameScreen.Game.ActiveTile = activeTile.Map.TileC2(newX, newY);
+            return true;
         }
-        else if (!activeTile.Map.Flat && newY >= -1 && newY < activeTile.Map.YDim)
+        if (!activeTile.Map.Flat && newY >= -1 && newY < activeTile.Map.YDim)
         {
             if (newX < 0)
             {
@@ -87,8 +91,11 @@ public class ViewPiece : IGameMode
             if (activeTile.Map.IsValidTileC2(newX, newY))
             {
                 _gameScreen.Game.ActiveTile = activeTile.Map.TileC2(newX, newY);
+                return true;
             }
         }
+
+        return false;
     }
 
     public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
@@ -130,10 +137,8 @@ public class ViewPiece : IGameMode
     {
         if (Actions.ContainsKey(key.Key))
         {
-            Actions[key.Key]();
-            return true;
+            return Actions[key.Key]();
         }
-
         return false;
     }
 
