@@ -100,6 +100,12 @@ namespace Civ2engine
             }
         }
 
+        public void SetHumanPlayer(int civId)
+        {
+            AllCivilizations.ForEach(c => c.PlayerType = PlayerType.Ai);
+            AllCivilizations[civId].PlayerType = PlayerType.Local;
+        }
+
         private void AiTurn()
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())

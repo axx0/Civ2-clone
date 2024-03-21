@@ -390,9 +390,17 @@ public abstract class Civ2Interface : IUserInterface
         ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
         Initialization.LoadGraphicsAssets(this);
 
-        var game = ClassicSaveLoader.LoadSave(gameData, MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
+        var config = Initialization.ConfigObject;
+        config.TechParadigm = gameData.TechParadigm;
+        config.ScenarioName = gameData.ScenarioName;
+        config.CivNames = gameData.CivTribeName;
+        config.LeaderNames = gameData.CivLeaderName;
+        config.StartingYear = gameData.StartingYear;
+        config.TurnYearIncrement = gameData.TurnYearIncrement;
+        config.DifficultyLevel = gameData.DifficultyLevel;
+        config.MaxTurns = gameData.MaxTurns;
 
-        Initialization.Start(game);
+        ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
 
         // Load custom intro if it exists in txt file
         var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);

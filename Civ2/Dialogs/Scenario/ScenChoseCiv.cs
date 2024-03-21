@@ -37,8 +37,7 @@ public class ScenChoseCiv : ICivDialogHandler
             return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
         }
 
-        Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).PlayerType = PlayerType.Ai;
-        Game.Instance.AllCivilizations[result.SelectedIndex + 1].PlayerType = PlayerType.Local;
+        Initialization.ConfigObject.ScenPlayerCivId = result.SelectedIndex + 1;
 
         civDialogHandlers[Difficulty.Title].Dialog.Dialog.Options = new List<string> { 
             Labels.For(LabelIndex.Chieftan) + " (easiest)", Labels.For(LabelIndex.Warlord),
@@ -48,13 +47,13 @@ public class ScenChoseCiv : ICivDialogHandler
         civDialogHandlers[Difficulty.Title].Dialog.Dialog.Button = new List<string> { Labels.Ok, Labels.Cancel };
 
         civDialogHandlers[Difficulty.Title].Dialog.Dialog.Title = $"Select {Labels.For(LabelIndex.Difficulty)} Level";
-        
-        return civDialogHandlers[Difficulty.Title].Show(civ2Interface); ;
+
+        return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.Dialog.Options = Game.Instance.AllCivilizations.Skip(1).Select(c => c.TribeName + " (" + c.LeaderName + ")").ToList();
+        Dialog.Dialog.Options = Enumerable.Range(0, 7).Select(i => $"{Initialization.ConfigObject.CivNames[i + 1]} ({Initialization.ConfigObject.LeaderNames[i + 1]})").ToList();
         return new MenuAction(Dialog);
     }
 }

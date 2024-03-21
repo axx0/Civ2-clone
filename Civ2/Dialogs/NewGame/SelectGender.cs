@@ -28,7 +28,6 @@ public class SelectGender : BaseDialogHandler
 
         if (config.IsScenario)
         {
-            Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).LeaderGender = result.SelectedIndex;
             return civDialogHandlers[EnterName.Title].Show(civ2Interface);
         }
         else
