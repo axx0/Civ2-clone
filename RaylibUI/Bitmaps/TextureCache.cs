@@ -38,4 +38,14 @@ public static class TextureCache
         }
         return Textures[key];
     }
+
+    public static void Clear()
+    {
+        foreach (var texturesValue in Textures.Values)
+        {
+            Raylib.UnloadTexture(texturesValue);
+        }
+        Textures.Clear();
+        Images.ClearCache();
+    }
 }

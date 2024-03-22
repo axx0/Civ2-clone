@@ -21,38 +21,38 @@ public class BuildCity : Order
         _player = gameScreen.Player;
     }
 
-    public override void Update()
+    public override bool Update()
     {
         var activeUnit = _player.ActiveUnit;
         
         if (activeUnit == null)
         {
-            SetCommandState(CommandStatus.Invalid);
+            return SetCommandState(CommandStatus.Invalid);
         }
-        else
+
+        var activeTile = _player.ActiveTile;
+        if (activeUnit.AIrole != AIroleType.Settle)
         {
-            var activeTile = _player.ActiveTile;
-            if (activeUnit.AIrole != AIroleType.Settle)
-            {
-                SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
-            }else if (activeTile.Terrain.Impassable)
-            {
-                SetCommandState();
-            }else if (activeTile.Type == TerrainType.Ocean)
-            {
-                SetCommandState(errorPopupKeyword: "CITYATSEA");
-            }else if (activeTile.CityHere != null)
-            {
-                SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity) , errorPopupKeyword: "ONLY10");
-            }else if (activeTile.Neighbours().Any(t => t.IsCityPresent))
-            {
-                SetCommandState(errorPopupKeyword: "ADJACENTCITY");
-            }
-            else
-            {
-                SetCommandState(CommandStatus.Normal);
-            }
+            return SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
         }
+        if (activeTile.Terrain.Impassable)
+        {
+            return SetCommandState();
+        }
+        if (activeTile.Type == TerrainType.Ocean)
+        {
+            return SetCommandState(errorPopupKeyword: "CITYATSEA");
+        }
+        if (activeTile.CityHere != null)
+        {
+            return SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity) , errorPopupKeyword: "ONLY10");
+        }
+        if (activeTile.Neighbours().Any(t => t.IsCityPresent))
+        {
+            return SetCommandState(errorPopupKeyword: "ADJACENTCITY");
+        }
+
+        return SetCommandState(CommandStatus.Normal);
     }
 
     public override void Action()

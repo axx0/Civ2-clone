@@ -20,4 +20,9 @@ public class GameFileLocatorScreen : BaseScreen
             return true;
         }));
     }
+
+    public override void InterfaceChanged(Sound sound)
+    {
+        throw new NotImplementedException();
+    }
 }

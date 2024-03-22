@@ -21,29 +21,27 @@ public class PillageOrder : Order
         _game = GameScreen.Game;
     }
 
-    public override void Update()
+    public override bool Update()
     {
         var activeTile = GameScreen.Player.ActiveTile;
         var activeUnit = GameScreen.Player.ActiveUnit;
         if (activeTile.IsCityPresent)
         {
-            SetCommandState(CommandStatus.Invalid);
-            
-        }else if (activeUnit == null || activeUnit.AttackBase == 0)
-        {
-            SetCommandState(CommandStatus.Invalid);
+            return SetCommandState(CommandStatus.Invalid);
         }
-        else
+
+        if (activeUnit == null || activeUnit.AttackBase == 0)
         {
-            if (activeTile.Improvements.Count > 0 && activeTile.Improvements.Any(i=> !GameScreen.Game.TerrainImprovements[i.Improvement].Negative))
-            {
-                SetCommandState(CommandStatus.Normal);
-            }
-            else
-            {
-                SetCommandState(CommandStatus.Invalid);
-            }
+            return SetCommandState(CommandStatus.Invalid);
         }
+
+        if (activeTile.Improvements.Count > 0 &&
+            activeTile.Improvements.Any(i => !GameScreen.Game.TerrainImprovements[i.Improvement].Negative))
+        {
+            return SetCommandState(CommandStatus.Normal);
+        }
+
+        return SetCommandState(CommandStatus.Invalid);
     }
 
     public override void Action()

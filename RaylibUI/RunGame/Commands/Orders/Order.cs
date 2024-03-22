@@ -29,14 +29,14 @@ public abstract class Order : IGameCommand
     
     public string Id { get; }
 
-    public abstract void Update();
+    public abstract bool Update();
 
     public abstract void Action();
 
     public CommandStatus Status { get; set; }
 
 
-    protected void SetCommandState(CommandStatus status = CommandStatus.Disabled, string? menuText = null,
+    protected bool SetCommandState(CommandStatus status = CommandStatus.Disabled, string? menuText = null,
         string? errorPopupKeyword = null)
     {
         if (GameScreen.ActiveMode != GameScreen.Moving)
@@ -47,10 +47,11 @@ public abstract class Order : IGameCommand
         if (Command != null)
         {
             Command.MenuText = menuText;
-            Command.Enabled = status <= CommandStatus.Normal;
         }
 
         Status = status;
         ErrorDialog = !string.IsNullOrWhiteSpace(errorPopupKeyword) ? errorPopupKeyword : "CANTDO";
+
+        return Status <= CommandStatus.Normal;
     }
 }

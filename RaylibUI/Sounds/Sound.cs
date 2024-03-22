@@ -21,9 +21,9 @@ namespace RaylibUI
     private static string _convertedSoundsDir = String.Empty;
     private static readonly object SoundCacheLock = new();
 
-    public Sound()
+    public Sound(string activeInterface)
     {
-      _convertedSoundsDir = Path.Combine(Settings.BasePath, "CONVERTEDSOUNDS");
+      _convertedSoundsDir = Path.Combine(Settings.BasePath, "CONVERTEDSOUNDS-" + activeInterface.Replace(" ","").ToUpperInvariant());
       if (!Directory.Exists(_convertedSoundsDir))
         Directory.CreateDirectory(_convertedSoundsDir);
       SoundDataCache = ReloadAllExistingConvertedSoundReferences();
@@ -154,8 +154,6 @@ namespace RaylibUI
       {
         i.Dispose();
       }
-
-
     }
   }
 }
