@@ -182,8 +182,7 @@ public abstract class Civ2Interface : IUserInterface
                     {
                         menuContent.Commands.Add(new MenuCommand(
                             baseCommand.MenuText.Replace(
-                                "%ST                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  RING0",
-                                gameCommand.Name), KeyboardKey.Null,
+                                "%STRING0", gameCommand.Name), KeyboardKey.Null,
                             gameCommand.ActivationKeys[0], gameCommand));
                     }
 
