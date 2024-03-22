@@ -23,7 +23,7 @@ namespace Civ2.Menu
                 {
                     var idx = s.IndexOf("&", StringComparison.Ordinal);
                     if (idx == -1 || idx >= s.Length - 1 ||
-                        !Enum.TryParse<KeyboardKey>("KEY_" + s.Substring(idx + 1, 1).ToUpperInvariant(), out var hotkey))
+                        !Enum.TryParse<KeyboardKey>( s.Substring(idx + 1, 1), true, out var hotkey))
                     {
                         hotkey = KeyboardKey.Null;
                     }

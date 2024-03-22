@@ -19,11 +19,12 @@ public class EndTurn : IGameCommand
     public Shortcut[] ActivationKeys { get; set; } = { new (KeyboardKey.Enter), new (KeyboardKey.KpEnter)};
     public CommandStatus Status { get; private set; }
 
-    public void Update()
+    public bool Update()
     {
         Status = _gameScreen.ActiveMode == _gameScreen.ViewPiece || _gameScreen.ActiveMode == _gameScreen.Moving
             ? CommandStatus.Priority
             : CommandStatus.Disabled;
+        return Status != CommandStatus.Disabled;
     }
 
     public void Action()

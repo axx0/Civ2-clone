@@ -57,7 +57,7 @@ namespace RaylibUI
         }
 
         public Ruleset[] AllRuleSets { get; set; }
-        public Ruleset ActiveRuleSet { get; private set; }
+        public Ruleset? ActiveRuleSet { get; private set; }
 
         public IUserInterface SetActiveRuleSet(int ruleSetIndex)
         {

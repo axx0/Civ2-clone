@@ -23,8 +23,8 @@ public readonly struct Shortcut
 
     public static Shortcut Parse(string text)
     {
-        var shortCutElements = text.Split(new[] { '+', '-' });
-        return Enum.TryParse<KeyboardKey>("KEY_" + shortCutElements[^1].ToUpperInvariant(), out var key)
+        var shortCutElements = text.Split(new[] {'|', '+', '-' }, StringSplitOptions.RemoveEmptyEntries);
+        return Enum.TryParse<KeyboardKey>( shortCutElements[^1], true, out var key)
             ? new Shortcut(key, shortCutElements.Contains("Shift"), shortCutElements.Contains("Ctrl"))
             : None;
     }

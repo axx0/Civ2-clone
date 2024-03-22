@@ -8,7 +8,7 @@ public interface IGameCommand
     string Id { get; }
     Shortcut[] ActivationKeys { get; set; }
     CommandStatus Status { get; }
-    void Update();
+    bool Update();
     void Action();
     
     MenuCommand? Command { get; set; } 

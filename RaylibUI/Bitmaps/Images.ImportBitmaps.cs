@@ -159,6 +159,12 @@ namespace RaylibUI
             return ExtractBitmap(Files[filename], start, length, key);
         }
 
+        public static void ClearCache()
+        {
+            _imageCache.Clear();
+            Files.Clear();
+        }
+
         public static Dictionary<string, byte[]> Files { get; } = new();
 
         static byte[] _extn = Encoding.ASCII.GetBytes("Gif\0");

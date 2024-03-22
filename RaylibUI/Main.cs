@@ -19,7 +19,7 @@ namespace RaylibUI
         private bool _shouldClose;
 
 
-        internal readonly Sound Soundman;
+        private Sound Soundman;
         private IUserInterface _activeInterface;
 
         public Main()
@@ -32,7 +32,6 @@ namespace RaylibUI
             Raylib.InitWindow(1280, 800, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
             Raylib.InitAudioDevice();
-            Soundman = new Sound();
 
             Raylib.SetExitKey(KeyboardKey.F12);
 
@@ -55,8 +54,6 @@ namespace RaylibUI
 
             //prep this for a loop( should split that function out between loops and non loops)
 
-            //play a sound
-            //soundman.PlayCIV2DefaultSound("DIVEBOMB");
         }
 
         public void RunLoop()
@@ -87,8 +84,7 @@ namespace RaylibUI
         }
 
         private MainMenu SetupMainScreen()
-        {                
-            Labels.UpdateLabels(null);
+        {    
             Helpers.LoadFonts();
             Interfaces = Helpers.LoadInterfaces(this);
             AllRuleSets =  Interfaces.SelectMany((userInterface, idx) =>
@@ -114,15 +110,19 @@ namespace RaylibUI
             get => _activeInterface;
             private set
             {
-                _activeInterface = value;
-                if (ActiveRuleSet == null)
-                {
-                    ActiveRuleSet =
-                        AllRuleSets.FirstOrDefault(r => r.InterfaceIndex == _activeInterface.InterfaceIndex);
-                }
-                _activeInterface.Initialize();
+                if(value == _activeInterface) return;
                 
+                _activeInterface = value;
+                
+                ActiveRuleSet ??= AllRuleSets.First(r => r.InterfaceIndex == _activeInterface.InterfaceIndex);
+                
+                _activeInterface.Initialize();
+                TextureCache.Clear();
+                Labels.UpdateLabels(ActiveRuleSet);
                 ImageUtils.SetLook(_activeInterface);
+                Soundman?.Dispose();
+                Soundman = new Sound(_activeInterface.Title);
+                _activeScreen?.InterfaceChanged(Soundman);
             }
         }
 
@@ -131,9 +131,14 @@ namespace RaylibUI
         void ShutdownApp()
         {
             Shaders.Unload();
-            Soundman.Dispose();
+            Soundman?.Dispose();
             Raylib.CloseWindow();
             Raylib.CloseAudioDevice();
+        }
+
+        public void ReloadMain()
+        {
+            _activeScreen = new MainMenu(this,() => _shouldClose= true, StartGame, Soundman);
         }
     }
 }

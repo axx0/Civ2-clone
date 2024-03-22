@@ -25,7 +25,6 @@ public class GameScreen : BaseScreen
     public Main Main { get; }
     public Game Game { get; }
     public Sound Soundman { get; }
-    public List<Order> Orders { get; set; } = new();
 
     private readonly MinimapPanel _minimapPanel;
     private readonly MapControl _mapControl;
@@ -176,6 +175,11 @@ public class GameScreen : BaseScreen
             TryExecuteCommand(GameCommands[command]);
         }
         
+    }
+
+    public override void InterfaceChanged(Sound man)
+    {
+        //Some of the initialization logic should be here.... not sure exactly what currently this shouldn't ce called
     }
 
     public override void Resize(int width, int height)

@@ -13,7 +13,7 @@ public class MenuCommand
         
         if (gameCommand == null) return;
 
-        if (!gameCommand.ActivationKeys.Contains(shortcut))
+        if (!shortcut.Equals(Shortcut.None) && !gameCommand.ActivationKeys.Contains(shortcut))
         {
             gameCommand.ActivationKeys = new[] { shortcut }.Concat(gameCommand.ActivationKeys).ToArray();
         }

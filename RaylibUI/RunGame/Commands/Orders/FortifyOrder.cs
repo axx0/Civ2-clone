@@ -22,22 +22,21 @@ public class FortifyOrder : Order
         _player = gameScreen.Player;
     }
 
-    public override void Update()
+    public override bool Update()
     {
         var activeUnit = _player.ActiveUnit;
         if (activeUnit == null)
         {
-            SetCommandState(CommandStatus.Invalid);
+            return SetCommandState(CommandStatus.Invalid);
         }
-        else if (activeUnit.AIrole == AIroleType.Settle)
+        
+        if (activeUnit.AIrole == AIroleType.Settle)
         {
-            SetCommandState(CommandStatus.Invalid);
+            return SetCommandState(CommandStatus.Invalid);
         }
-        else
-        {
-            var canFortifyHere = UnitFunctions.CanFortifyHere(activeUnit, _player.ActiveTile);
-            SetCommandState(canFortifyHere.Enabled ? CommandStatus.Normal : CommandStatus.Disabled);
-        }
+        
+        var canFortifyHere = UnitFunctions.CanFortifyHere(activeUnit, _player.ActiveTile);
+        return SetCommandState(canFortifyHere.Enabled ? CommandStatus.Normal : CommandStatus.Disabled);
     }
 
     public override void Action()

@@ -29,7 +29,7 @@ namespace Civ2engine
                     contentHandler = (line) =>
                     {
                         if (string.IsNullOrWhiteSpace(line)) return;
-                        //(popupBox.Options ??= new List<string>()).Add(line);
+                        (popupBox.Options ??= new List<string>()).Add(line);
                     };
                     return;
                 }

@@ -2,6 +2,8 @@ namespace Model.Menu;
 
 public static class CommandIds
 {
+    public const string QuitGame = "GAME_QUIT";
+    
     public const string WaitOrder = "UNIT_ORDER_WAIT";
     public const string UnloadOrder = "UNIT_ORDER_UNLOAD";
     public const string SleepOrder = "UNIT_ORDER_SLEEP";
@@ -18,5 +20,6 @@ public static class CommandIds
     public const string BuildRoadOrder = BuildImprovementOrderNormal + "_ROAD";
     public const string BuildIrrigationOrder = BuildImprovementOrderNormal + "_IRRIGATION";
     public const string BuildMineOrder = BuildImprovementOrderNormal + "_MINE";
+    
     public const string EndTurn = "END_PLAYER_TURN";
 }

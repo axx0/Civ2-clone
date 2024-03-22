@@ -15,9 +15,9 @@ public class SkipOrder : Order
     {
     }
 
-    public override void Update()
+    public override bool Update()
     {
-        SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        return SetCommandState(GameScreen.Player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()

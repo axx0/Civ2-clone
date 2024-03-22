@@ -21,22 +21,21 @@ public class ImprovementOrder : Order
         _player = gameScreen.Player;
     }
 
-    public override void Update()
+    public override bool Update()
     {
         if (_player.ActiveUnit == null)
         {
-            SetCommandState(CommandStatus.Invalid);
-            return;
+            return SetCommandState(CommandStatus.Invalid);
         }
 
         if (_player.ActiveUnit.AIrole != AIroleType.Settle)
         {
-            SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
+            return SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
         }
 
         var canBeBuilt = TerrainImprovementFunctions.CanImprovementBeBuiltHere(_player.ActiveTile, _improvement, _player.ActiveUnit.Owner);
 
-        SetCommandState(canBeBuilt.Enabled ? CommandStatus.Normal : CommandStatus.Disabled, canBeBuilt.CommandTitle, canBeBuilt.ErrorPopup);
+        return SetCommandState(canBeBuilt.Enabled ? CommandStatus.Normal : CommandStatus.Disabled, canBeBuilt.CommandTitle, canBeBuilt.ErrorPopup);
     }
 
     public override void Action()

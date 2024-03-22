@@ -35,6 +35,8 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         }
     }
 
+    public abstract void InterfaceChanged(Sound soundManager);
+
     public override void Resize(int width, int height)
     {
         foreach (var control in Controls)

@@ -18,19 +18,18 @@ public class UnloadOrder : Order
     {
     }
 
-    public override void Update()
+    public override bool Update()
     {
         var activeUnit = GameScreen.Player.ActiveUnit;
         if (activeUnit == null)
         {
-            SetCommandState(CommandStatus.Invalid);
+            return SetCommandState(CommandStatus.Invalid);
         }
-        else
-        {
-            SetCommandState(activeUnit.CarriedUnits.Count > 0 && activeUnit.CarriedUnits.Any(u => u.MovePoints > 0)
-                ? CommandStatus.Normal
-                : CommandStatus.Disabled);
-        }
+
+        return SetCommandState(activeUnit.CarriedUnits.Count > 0 && activeUnit.CarriedUnits.Any(u => u.MovePoints > 0)
+            ? CommandStatus.Normal
+            : CommandStatus.Disabled);
+
     }
 
     public override void Action()

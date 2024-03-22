@@ -12,17 +12,16 @@ public class MainMenu : BaseScreen
     private readonly Action<Game> _startGame;
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
-    private readonly ScreenBackground? _background;
+    private ScreenBackground? _background;
     
-    private readonly SoundData? _sndMenuLoop;
+    private SoundData? _sndMenuLoop;
 
     public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager) : base(main)
     {
-        _sndMenuLoop =  soundManager.PlayCiv2DefaultSound("MENULOOP",true);
         _shutdownApp = shutdownApp;
         _startGame = startGame;
 
-        _background = CreateBackgroundImage();
+        InterfaceChanged(soundManager);
 
         _currentAction = main.ActiveInterface.GetInitialAction();
         ProcessAction(_currentAction);
@@ -137,6 +136,14 @@ public class MainMenu : BaseScreen
         }
         
         base.Draw(pulse);
+    }
+
+    public override void InterfaceChanged(Sound soundManager)
+    {
+        _sndMenuLoop?.Stop();
+        _sndMenuLoop = soundManager.PlayCiv2DefaultSound("MENULOOP",true);
+
+        _background = CreateBackgroundImage();
     }
 
     public ScreenBackground? CreateBackgroundImage()

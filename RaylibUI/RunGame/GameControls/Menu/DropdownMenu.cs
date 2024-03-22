@@ -33,7 +33,7 @@ public class DropdownMenu :  BaseDialog
         var childWidths = new List<int>{ 20,10};
         foreach (var command in elements)
         {
-            command.GameCommand?.Update();
+            command.Enabled = command.GameCommand?.Update() ?? false;
             var dropDownItem = new DropDownItem(this, _active.Look, command,  Controls.Count);
             Controls.Add( dropDownItem);
             

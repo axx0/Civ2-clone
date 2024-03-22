@@ -23,9 +23,9 @@ public class GotoOrder : Order
         _player = GameScreen.Player;
     }
 
-    public override void Update()
+    public override bool Update()
     {
-        SetCommandState(_player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
+        return SetCommandState(_player.ActiveUnit != null ? CommandStatus.Normal : CommandStatus.Invalid);
     }
 
     public override void Action()
