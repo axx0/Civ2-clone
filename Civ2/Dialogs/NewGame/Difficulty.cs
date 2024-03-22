@@ -28,15 +28,10 @@ public class Difficulty : BaseDialogHandler
                 civDialogHandlers[MainMenu.Title].Show(civ2Interface);
         }
 
-        if (config.IsScenario)
-        {
-            Game.Instance.SetDifficultyLevel((DifficultyType)result.SelectedIndex);
-            return civDialogHandlers[SelectGender.Title].Show(civ2Interface);
-        }
-        else
-        {
-            config.DifficultlyLevel = result.SelectedIndex; 
-            return civDialogHandlers[NoOfCivs.Title].Show(civ2Interface);
-        }
+        config.DifficultyLevel = result.SelectedIndex;
+
+        return config.IsScenario ?
+            civDialogHandlers[SelectGender.Title].Show(civ2Interface) :
+            civDialogHandlers[NoOfCivs.Title].Show(civ2Interface);
     }
 }

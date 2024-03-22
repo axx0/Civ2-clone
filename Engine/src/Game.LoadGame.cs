@@ -23,7 +23,22 @@ namespace Civ2engine
         public static Game StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations,
             string[] paths)
         {
-            _instance = new Game(maps, config.Rules, civilizations, new Options(config), paths, (DifficultyType)config.DifficultlyLevel);
+            _instance = new Game(maps, config.Rules, civilizations, new Options(config), paths, (DifficultyType)config.DifficultyLevel);
+            _instance.StartNextTurn();
+            return _instance;
+        }
+
+        public static void CreateScenario(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
+        {
+            _instance = new Game(rules, gameData, objects, ruleset.Paths);
+        }
+
+        public static Game UpdateScenarioChoices(GameInitializationConfig config)
+        {
+            _instance.SetHumanPlayer(config.ScenPlayerCivId);
+            _instance.DifficultyLevel = (DifficultyType)config.DifficultyLevel;
+            _instance.GetPlayerCiv.LeaderGender = config.Gender;
+            _instance.GetPlayerCiv.LeaderName = config.LeaderName;
             _instance.StartNextTurn();
             return _instance;
         }

@@ -12,7 +12,7 @@ namespace Civ2engine
         
         public Dictionary<string, PopupBox?> PopUps { get; set; }
         public int[] WorldSize { get; set; } = { 50, 80 };
-        public int DifficultlyLevel { get; set; }
+        public int DifficultyLevel { get; set; }
         public int NumberOfCivs { get; set; }
         public int BarbarianActivity { get; set; }
         public bool SimplifiedCombat { get; set; }
@@ -40,6 +40,17 @@ namespace Civ2engine
         public List<Civilization> Civilizations { get; set; }
         public ILookup<int,LeaderDefaults> GroupedTribes { get; set; }
         public bool QuickStart { get; set; }
+
+        // For scenarios
         public bool IsScenario { get; set; } = false;
+        public int TechParadigm { get; set; }
+        public string ScenarioName { get; set; }
+        public int ScenPlayerCivId { get; set; }
+        public string[] CivNames { get; set; }
+        public string[] LeaderNames { get; set; }
+        public string LeaderName { get; set; }
+        public int StartingYear { get; set; }
+        public int TurnYearIncrement { get; set; }
+        public int MaxTurns { get; set; }
     }
 }

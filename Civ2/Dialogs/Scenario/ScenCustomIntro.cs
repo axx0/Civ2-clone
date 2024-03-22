@@ -1,6 +1,7 @@
 using Civ2.Dialogs.Scenario;
 using Civ2.Rules;
 using Civ2engine;
+using Civ2engine.Enums;
 using Model;
 using Model.InterfaceActions;
 
@@ -38,13 +39,14 @@ public class ScenCustomIntro : ICivDialogHandler
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        var game = Initialization.GameInstance;
+        var config = Initialization.ConfigObject;
+        var date = new Date(config.StartingYear, config.TurnYearIncrement, (DifficultyType)config.DifficultyLevel);
 
-        Dialog.ReplaceNumbers = new List<int> { game.ScenarioData.TechParadigm };
+        Dialog.ReplaceNumbers = new List<int> { config.TechParadigm };
         Dialog.ReplaceStrings = new List<string>
         {
-            game.ScenarioData.Name, game.Date.GameYearString(1),
-            game.Date.GameYearString(game.ScenarioData.MaxTurns),
+            config.ScenarioName, date.GameYearString(1),
+            date.GameYearString(config.MaxTurns),
         };
 
         return new MenuAction(Dialog);

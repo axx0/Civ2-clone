@@ -8,17 +8,34 @@ namespace Civ2engine.OriginalSaves
     {
         public static Game LoadSave(GameData gameData, Ruleset ruleset, Rules rules)
         {
-            var hydrator = new LoadedGameObjects(rules, gameData);
-
-            // If there are no events in .sav read them from EVENTS.TXT (if it exists)
-            if (hydrator.Scenario.Events.Count == 0 &&
-                Directory.EnumerateFiles(ruleset.FolderPath, "events.txt", new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault() != null)
-            {
-                hydrator.Scenario.Events = EventsLoader.LoadEvents(new string[] { ruleset.FolderPath }, rules, hydrator);
-            }
+            var hydrator = LoadGameObjects(gameData, ruleset, rules);
 
             // Make an instance of a new game
             return Game.Create(rules, gameData, hydrator, ruleset);
+        }
+
+        public static void LoadScn(GameData gameData, Ruleset ruleset, Rules rules)
+        {
+            var hydrator = LoadGameObjects(gameData, ruleset, rules);
+
+            Game.CreateScenario(rules, gameData, hydrator, ruleset);
+        }
+
+        /// <summary>
+        /// Make Game objects from .sav/.scn data
+        /// </summary>
+        private static LoadedGameObjects LoadGameObjects(GameData gameData, Ruleset ruleset, Rules rules)
+        {
+            var objects = new LoadedGameObjects(rules, gameData);
+
+            // If there are no events in .sav read them from EVENTS.TXT (if it exists)
+            if (objects.Scenario.Events.Count == 0 &&
+                Directory.EnumerateFiles(ruleset.FolderPath, "events.txt", new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault() != null)
+            {
+                objects.Scenario.Events = EventsLoader.LoadEvents(new string[] { ruleset.FolderPath }, rules, objects);
+            }
+
+            return objects;
         }
     }
 }

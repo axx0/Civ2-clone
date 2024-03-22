@@ -109,7 +109,7 @@ public class LabelControl : BaseControl
             Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, colorFront);
         }
 
-        Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
+        //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
 
         base.Draw(pulse);
     }

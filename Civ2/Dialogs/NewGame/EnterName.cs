@@ -16,6 +16,8 @@ public class EnterName : BaseDialogHandler
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
+        var config = Initialization.ConfigObject;
+
         if (Dialog.TextBoxes == null || Dialog.TextBoxes.Count == 0)
         {
             Dialog.TextBoxes = new List<TextBoxDefinition>
@@ -24,9 +26,9 @@ public class EnterName : BaseDialogHandler
                 {
                     Index = 0,
                     Name = "Name",
-                    InitialValue = Initialization.ConfigObject.IsScenario ?
-                        Game.Instance.GetPlayerCiv.LeaderName : 
-                        Initialization.ConfigObject.PlayerCiv.LeaderName,
+                    InitialValue = config.IsScenario ?
+                        config.LeaderNames[config.ScenPlayerCivId] :
+                        config.PlayerCiv.LeaderName,
                     Width = 400,
                     Description = Dialog.Dialog.Options?[0] ?? string.Empty
                 },
@@ -35,7 +37,7 @@ public class EnterName : BaseDialogHandler
         }
         else
         {
-            Dialog.TextBoxes[0].InitialValue = Initialization.ConfigObject.PlayerCiv.LeaderName;
+            Dialog.TextBoxes[0].InitialValue = config.PlayerCiv.LeaderName;
         }
 
         return base.Show(activeInterface);
@@ -55,7 +57,7 @@ public class EnterName : BaseDialogHandler
         {
             if (Initialization.ConfigObject.IsScenario)
             {
-                Game.Instance.AllCivilizations.Find(c => c.PlayerType == PlayerType.Local).LeaderName = result.TextValues["Name"];
+                Initialization.ConfigObject.LeaderName = result.TextValues["Name"];
             }
             else
             {
@@ -63,8 +65,15 @@ public class EnterName : BaseDialogHandler
             }
         }
         
-        return Initialization.ConfigObject.IsScenario ?
-            new StartGame(Initialization.GameInstance) :
-            civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
+        if (Initialization.ConfigObject.IsScenario)
+        {
+            var game = Game.UpdateScenarioChoices(Initialization.ConfigObject);
+            Initialization.Start(game);
+            return new StartGame(Initialization.GameInstance);
+        }
+        else
+        {
+            return civDialogHandlers[SelectCityStyle.Title].Show(civ2Interface);
+        }
     }
 }
