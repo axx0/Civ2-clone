@@ -323,7 +323,7 @@ public class CityTileMap : BaseControl
         }
 
         _texture = Raylib.LoadTextureFromImage(image);
-        _scaleFactor = width / (float)_texture.Value.Width;
+        _scaleFactor = Width / (float)_texture.Value.Width;
         _offset = new Vector2(0, (height - height * _scaleFactor) / 2f);
         Raylib.UnloadImage(image);
     }
