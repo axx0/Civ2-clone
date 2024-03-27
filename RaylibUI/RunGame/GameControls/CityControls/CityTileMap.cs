@@ -208,10 +208,11 @@ public class CityTileMap : BaseControl
 
         var cityData = new List<Element>();
         var units = new List<Element>();
+        var activeCiv = _cityWindow.CurrentGameScreen.Player.Civilization;
         foreach (var tile in city.Location.CityRadius())
         {
             // TODO: city.owner should be replaced by the current active user when viewing other peoples cities
-            if (tile.IsVisible(city.Owner.Id))
+            if (tile.IsVisible(activeCiv.Id))
             {
                 var tileImage = tileCache.GetTileDetails(tile, city.Owner.Id);
                 var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;
@@ -323,7 +324,7 @@ public class CityTileMap : BaseControl
         }
 
         _texture = Raylib.LoadTextureFromImage(image);
-        _scaleFactor = width / (float)_texture.Value.Width;
+        _scaleFactor = Width / (float)_texture.Value.Width;
         _offset = new Vector2(0, (height - height * _scaleFactor) / 2f);
         Raylib.UnloadImage(image);
     }

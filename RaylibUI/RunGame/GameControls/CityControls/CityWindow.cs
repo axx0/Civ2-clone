@@ -31,6 +31,13 @@ public class CityWindow : BaseDialog
         BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding, Images.ExtractBitmap(_cityWindowProps.Image));
 
         Controls.Add(_headerLabel);
+        
+        //Tile map rendered first because in TOT it renders behind
+        var tileMap = new CityTileMap(this)
+        {
+            AbsolutePosition = _cityWindowProps.TileMap
+        };
+        Controls.Add(tileMap);
 
         var infoArea = new CityInfoArea(this, _cityWindowProps.InfoPanel);
        
@@ -92,12 +99,6 @@ public class CityWindow : BaseDialog
         };
         exitButton.Click += CloseButtonOnClick;
         Controls.Add(exitButton);
-
-        var tileMap = new CityTileMap(this)
-        {
-            AbsolutePosition = _cityWindowProps.TileMap
-        };
-        Controls.Add(tileMap);
 
         var titlePosition = _cityWindowProps.Resources.TitlePosition;
         if (titlePosition != Vector2.Zero)
