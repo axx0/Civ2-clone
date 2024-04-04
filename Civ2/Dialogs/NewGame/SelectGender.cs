@@ -21,7 +21,7 @@ public class SelectGender : BaseDialogHandler
 
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[Difficulty.Title].Show(civ2Interface);
+            return civDialogHandlers[DifficultyHandler.Title].Show(civ2Interface);
         }
 
         config.Gender = result.SelectedIndex;

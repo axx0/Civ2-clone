@@ -49,7 +49,7 @@ public class EnterName : BaseDialogHandler
         if (result.SelectedButton == Labels.Cancel)
         {
             return Initialization.ConfigObject.IsScenario ?
-                civDialogHandlers[Difficulty.Title].Show(civ2Interface) :
+                civDialogHandlers[DifficultyHandler.Title].Show(civ2Interface) :
                 civDialogHandlers[SelectGender.Title].Show(civ2Interface);
         }
 

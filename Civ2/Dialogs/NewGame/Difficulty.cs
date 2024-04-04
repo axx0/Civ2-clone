@@ -8,11 +8,11 @@ using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;
 
-public class Difficulty : BaseDialogHandler
+public class DifficultyHandler : BaseDialogHandler
 {
     public const string Title = "DIFFICULTY";
     
-    public Difficulty() : base(Title, 0.085, -0.03)
+    public DifficultyHandler() : base(Title, 0.085, -0.03)
     {
     }
 

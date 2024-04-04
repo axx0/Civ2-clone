@@ -18,7 +18,6 @@ using RayLibUtils;
 using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
-using ScenarioLoaded = Civ2.Dialogs.ScenarioLoaded;
 
 namespace Civ2;
 
@@ -139,7 +138,6 @@ public abstract class Civ2Interface : IUserInterface
     public int DefaultDialogWidth => 660; // 660=440*1.5
 
     public abstract Padding DialogPadding { get; }
-
     
     private CityWindowLayout? _cityWindowLayout;
 
@@ -423,7 +421,7 @@ public abstract class Civ2Interface : IUserInterface
         }
 
         // Load default intro
-        return DialogHandlers[ScenarioLoaded.Title].Show(this);
+        return DialogHandlers[ScenarioLoadedDialog.Title].Show(this);
     }
 
     public IInterfaceAction InitNewGame(bool quickStart)
@@ -438,7 +436,7 @@ public abstract class Civ2Interface : IUserInterface
             Initialization.ConfigObject.BarbarianActivity = Initialization.ConfigObject.Random.Next(5);
             
             Initialization.ConfigObject.MapTask = MapGenerator.GenerateMap(Initialization.ConfigObject);
-            return DialogHandlers[Difficulty.Title].Show(this);
+            return DialogHandlers[DifficultyHandler.Title].Show(this);
         }
 
         return DialogHandlers[WorldSizeHandler.Title].Show(this);

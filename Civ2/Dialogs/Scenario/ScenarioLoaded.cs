@@ -7,7 +7,7 @@ using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;
 
-public class ScenarioLoaded : ICivDialogHandler
+public class ScenarioLoadedDialog : ICivDialogHandler
 {
     public const string Title = "SCENARIOLOADED";
 
