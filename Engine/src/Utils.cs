@@ -23,7 +23,7 @@ namespace Civ2engine
             if (a == b || b < 1) return a;
             return (a / GreatestCommonFactor(a, b)) * b;
         }
-        public static string GetFilePath(string filename, IEnumerable<string> searchPaths = null, params string[] extensions)
+        public static string? GetFilePath(string filename, IEnumerable<string>? searchPaths = null, params string[] extensions)
         {
             var paths = searchPaths ?? Settings.SearchPaths;
             

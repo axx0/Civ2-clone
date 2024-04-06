@@ -61,6 +61,8 @@ namespace Civ2engine
             Players = civilizations.Select(c => new Player(_difficultyLevel, c)).Cast<IPlayer>().ToArray();
 
             TerrainImprovements = TerrainImprovementFunctions.GetStandardImprovements(Rules); 
+            
+            Script.RunScript("game_setup.lua");
 
             Script.RunScript("tile_improvements.lua");
             

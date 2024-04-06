@@ -54,7 +54,7 @@ public class FileDialog : DynamicSizingDialog
         }
     }
 
-    private void ItemSelected(object sender, ListBoxSelectionEventArgs args)
+    private void ItemSelected(object? sender, ListBoxSelectionEventArgs args)
     {
         var test = args.Text;
         if (test == ParentDirectory)
@@ -107,6 +107,6 @@ public class FileDialog : DynamicSizingDialog
 
         list.AddRange(Directory.EnumerateFiles(_currentDirectory).Where(file => _isValidSelectionCallback(file)).Select(Path.GetFileName)!);
 
-        _listBox.SetElements(list, valid, refresh);
+        _listBox.SetElements(list, refresh, valid);
     }
 }

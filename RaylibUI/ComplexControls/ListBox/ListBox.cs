@@ -7,6 +7,9 @@ namespace RaylibUI;
 
 public class ListBox : BaseControl
 {
+    private readonly int _minEntries;
+    private readonly bool _vertical;
+    private readonly int? _maxColumns;
     private int _scrollIndex = 0;
     private List<ListBoxLabel> _allLabels;
     private int _maxChildWidth;
@@ -15,28 +18,43 @@ public class ListBox : BaseControl
     private int _rows;
     private int _columns;
 
-    public event EventHandler<ListBoxSelectionEventArgs> ItemSelected; 
+    public event EventHandler<ListBoxSelectionEventArgs>? ItemSelected;
 
-    public ListBox(IControlLayout controller) : base(controller)
+    public ListBox(IControlLayout controller, int minEntries = -1, bool vertical = false, int? maxColumns = null,
+        IList<string>? initialEntries = null) : base(controller)
     {
+        _minEntries = minEntries;
+        _vertical = vertical;
+        _maxColumns = maxColumns;
+        _allLabels = MakeLabels(initialEntries ?? Array.Empty<string>());
     }
 
     public override int GetPreferredWidth()
     {
-        MeasureSizes();
+        MeasureWidths();
 
         var screenWidth = Raylib.GetScreenWidth();
+
         var columns = (screenWidth / 2 - 22) / (_maxChildWidth + 5);
         if (columns < 1)
         {
             columns = 1;
         }
+
+        if (_maxColumns < columns)
+        {
+            columns = _maxColumns.Value;
+        }
+
         _columns = columns;
-        return columns * _maxChildWidth + 5;
+
+        var itemSpace = _columns * _maxChildWidth + 5;
+        return _vertical ? ListBoxScrollBar.ScrollBarWidth + itemSpace : itemSpace;
     }
+
     public override int GetPreferredHeight()
     {
-        MeasureSizes();
+        MeasureHeights();
         
         var rows = 10;
         var requestedHeight = (_labelHeight + 1) * rows;
@@ -48,22 +66,25 @@ public class ListBox : BaseControl
 
         if (_columns * rows < _allLabels.Count)
         {
-            requestedHeight += ListBoxScrollBar.DefaultHeight;
+            requestedHeight += ListBoxScrollBar.ScrollBarWidth;
         }
 
         return requestedHeight;
     }
 
-    private void MeasureSizes()
+    private void MeasureWidths()
     {
-        _maxChildWidth = _allLabels.Max(c=>c.GetPreferredWidth());
+        _maxChildWidth = _allLabels.Max(c => c.GetPreferredWidth());
+    }
+
+    private void MeasureHeights()
+    {
         _labelHeight = 0;
         
         foreach (var l in _allLabels)
         {
             l.Width = _maxChildWidth;
             var height = l.GetPreferredHeight();
-
 
             if (height > _labelHeight)
             {
@@ -74,34 +95,48 @@ public class ListBox : BaseControl
 
     public override void OnResize()
     {
-        var actualColumns = Width / _maxChildWidth + 1;
         _rows = Height / _labelHeight;
-        var totalVisible = actualColumns * _rows;
         var renderHeight = Height - 4;
-        var requiredColumns = (int)Math.Ceiling(_allLabels.Count / (double)_rows);
-        if (requiredColumns > actualColumns)
+        var actualColumns = Width / _maxChildWidth + 1;
+        if (_maxColumns < actualColumns)
         {
-            renderHeight -= ListBoxScrollBar.DefaultHeight;
-            _scrollBar = new ListBoxScrollBar(Controller, actualColumns, requiredColumns, (position) =>
-            {
-                _scrollIndex = position;
-                SetupChildLabels(totalVisible, renderHeight);
-            } )
-            {
-                Bounds = new Rectangle(Location.X + 2, Location.Y + Height - ListBoxScrollBar.DefaultHeight, Width - 4,
-                    ListBoxScrollBar.DefaultHeight)
-            };
-            _scrollBar.OnResize();
+            actualColumns = _maxColumns.Value;
         }
 
-        SetupChildLabels(totalVisible, renderHeight);
+        var totalVisible = actualColumns * _rows;
+        if (_vertical)
+        {
+            var requiredRows = (int)Math.Ceiling(_allLabels.Count / (double)actualColumns);
+            if (_rows < requiredRows)
+            {
+                _scrollBar = new ListBoxScrollBar(Controller, requiredRows - _rows,
+                    new Rectangle(Location.X + Width - ListBoxScrollBar.ScrollBarWidth -2, Location.Y +2,
+                        ListBoxScrollBar.ScrollBarWidth, Height - 4),
+                    (position) => { SetupChildLabels(totalVisible, renderHeight, position); });
+            }
+        }
+        else
+        {
+            var requiredColumns = (int)Math.Ceiling(_allLabels.Count / (double)_rows);
+            if (requiredColumns > actualColumns)
+            {
+                renderHeight -= ListBoxScrollBar.ScrollBarWidth;
+                _scrollBar = new ListBoxScrollBar(Controller, requiredColumns - actualColumns,
+                    new Rectangle(Location.X + 2, Location.Y + Height - ListBoxScrollBar.ScrollBarWidth, Width - 4,
+                        ListBoxScrollBar.ScrollBarWidth),
+                    (position) => { SetupChildLabels(totalVisible, renderHeight, position); });
+            }
+        }
+
+        SetupChildLabels(totalVisible, renderHeight, _scrollIndex);
 
         base.OnResize();
     }
 
-    private void SetupChildLabels(int totalVisible, int renderHeight)
+    private void SetupChildLabels(int totalVisible, int renderHeight, int scrollPosition)
     {
-        var visibleLabels = _allLabels.Skip(_scrollIndex * _rows).Take(totalVisible).Cast<IControl>().ToList();
+        var skipAmount = _vertical ? scrollPosition * _columns : scrollPosition * _rows;
+        var visibleLabels = _allLabels.Skip(skipAmount).Take(totalVisible).Cast<IControl>().ToList();
 
         var yOffset = 2;
         var xOffset = 2;
@@ -119,17 +154,34 @@ public class ListBox : BaseControl
         }
 
         Children = _scrollBar != null ? visibleLabels.Concat(new[] { _scrollBar }).ToList() : visibleLabels.ToList();
+        _scrollIndex = scrollPosition;
     }
 
-    public void SetElements(List<string> list, List<bool> valid, bool refresh)
+    public void SetElements(IList<string> list, bool refresh, List<bool>? valid = null, bool scrollToEnd = false)
     {
         _scrollIndex = 0;
-        _allLabels = list.Select((text, index) => new ListBoxLabel(this.Controller, text, this)).ToList();
+        _allLabels = MakeLabels(list);
         if (refresh)
         {
-            MeasureSizes();
+            MeasureWidths();
+            MeasureHeights();
             OnResize();
         }
+
+        if (scrollToEnd && _scrollBar != null)
+        {
+            _scrollBar.ScrollToEnd();
+        }
+    }
+
+    private List<ListBoxLabel> MakeLabels(IList<string> list)
+    {
+        var entries =
+            _minEntries > 0 && list.Count < _minEntries
+                ? list.Concat(Enumerable.Repeat(string.Empty, _minEntries - list.Count))
+                : list;
+
+        return entries.Select(text => new ListBoxLabel(this.Controller, text, this)).ToList();
     }
 
     public void LabelClicked(string text)

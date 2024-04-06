@@ -24,7 +24,6 @@ namespace Civ2engine.Scripting
 
         public EffectsMap Effects { get; } = new();
         
-        
         public UnitDomainMap UnitDomain { get; } = new();
 
         public ResourceList Resources { get; } = new();

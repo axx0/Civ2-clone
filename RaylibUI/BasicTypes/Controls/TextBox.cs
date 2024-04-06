@@ -128,6 +128,7 @@ public class TextBox : BaseControl
             case KeyboardKey.Tab:
                 return base.OnKeyPressed(key);
             case KeyboardKey.Enter:
+            case KeyboardKey.KpEnter:
                 if (_acceptAction != null)
                 {
                     _acceptAction(_text);

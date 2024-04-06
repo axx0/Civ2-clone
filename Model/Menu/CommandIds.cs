@@ -22,4 +22,6 @@ public static class CommandIds
     public const string BuildMineOrder = BuildImprovementOrderNormal + "_MINE";
     
     public const string EndTurn = "END_PLAYER_TURN";
+    
+    public const string OpenLuaConsole = "OPEN_LUA_CONSOLE";
 }

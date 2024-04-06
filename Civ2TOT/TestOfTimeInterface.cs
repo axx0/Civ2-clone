@@ -450,7 +450,8 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("Scenario Parameters|Ctrl+Shift+P",
                     new Shortcut(KeyboardKey.P, ctrl: true, shift: true), KeyboardKey.Null),
                 new MenuElement("Save As Scenario|Ctrl+Shift+S",
-                    new Shortcut(KeyboardKey.S, ctrl: true, shift: true), KeyboardKey.Null)
+                    new Shortcut(KeyboardKey.S, ctrl: true, shift: true), KeyboardKey.Null),
+                new MenuElement("Lua Console|Ctrl+Shift+9", new Shortcut(KeyboardKey.Nine,true,true), KeyboardKey.L, omitIfNoCommand: true, commandId: OpenLuaConsole)
             }
         },
 
