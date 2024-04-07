@@ -392,7 +392,8 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("&Units Editor|Ctrl+Shift+7",
                     new Shortcut(KeyboardKey.Seven, ctrl: true, shift: true), KeyboardKey.U),
                 new MenuElement("&Events Editor|Ctrl+Shift+8",
-                    new Shortcut(KeyboardKey.Eight, ctrl: true, shift: true), KeyboardKey.E)
+                    new Shortcut(KeyboardKey.Eight, ctrl: true, shift: true), KeyboardKey.E),
+                new MenuElement("Lua Console|Ctrl+Shift+9", new Shortcut(KeyboardKey.Nine,true,true), KeyboardKey.L, omitIfNoCommand: true, commandId: OpenLuaConsole)
             }
         },
 

@@ -17,6 +17,6 @@ public class CustomAge: SimpleSettingsDialog
         Initialization.ConfigObject.Age = result.SelectedButton == popupBox.Button[0]
             ? Initialization.ConfigObject.Random.Next(popupBox.Options.Count)
             : result.SelectedIndex;
-        return Difficulty.Title;
+        return DifficultyHandler.Title;
     }
 }

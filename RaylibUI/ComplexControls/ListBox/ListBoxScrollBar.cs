@@ -5,29 +5,34 @@ namespace RaylibUI;
 
 public class ListBoxScrollBar : BaseControl
 {
-    public const int DefaultHeight = 17;
-    private readonly int _actualColumns;
-    private readonly int _requiredColumns;
+    public const int ScrollBarWidth = 17;
     private readonly Action<int> _scrollAction;
     private readonly Texture2D[] _images;
-    private int _scroolPos;
+    private int _scrollPos;
     private readonly int _positions;
     private int _increment;
+    private readonly bool _vertical;
 
-    public ListBoxScrollBar(IControlLayout controller, int actualColumns, int requiredColumns, Action<int> scrollAction) :  base(controller)
+    public ListBoxScrollBar(IControlLayout controller, int positions, Rectangle bounds, Action<int> scrollAction) :  base(controller)
     {
-        _actualColumns = actualColumns;
-        _requiredColumns = requiredColumns;
+        Bounds = bounds;
+        _vertical = bounds.Height > bounds.Width;
         _scrollAction = scrollAction;
-        _images = ImageUtils.GetScrollImages(DefaultHeight).Select(Raylib.LoadTextureFromImage).ToArray();
-        _scroolPos = 0;
-        _positions = requiredColumns - _actualColumns;
+        _images = ImageUtils.GetScrollImages(ScrollBarWidth, _vertical).Select(Raylib.LoadTextureFromImage).ToArray();
+        _scrollPos = 0;
+        _positions = positions;
         Click += OnClick;
+        UpdateIncrement();
+    }
+
+    private void UpdateIncrement()
+    {
+        _increment = ((_vertical ? Height : Width) - 3 * ScrollBarWidth) / _positions;
     }
 
     public override int GetPreferredHeight()
     {
-        return DefaultHeight;
+        return ScrollBarWidth;
     }
     public override int GetPreferredWidth()
     {
@@ -36,27 +41,32 @@ public class ListBoxScrollBar : BaseControl
 
     public override void OnResize()
     {
-        _increment = (Width - 2 * DefaultHeight) / _positions;
+        UpdateIncrement();
         base.OnResize();
     }
 
     public void OnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
         var pos = GetRelativeMousePosition();
-        var breakPoint = _increment * _scroolPos + DefaultHeight;
-        if (pos.X < breakPoint)
+        CalculateScroll(_vertical ? pos.Y : pos.X);
+    }
+
+    private void CalculateScroll(float pos)
+    {
+        var breakPoint = _increment * _scrollPos + ScrollBarWidth;
+        if (pos < breakPoint)
         {
-            if (_scroolPos > 0)
+            if (_scrollPos > 0)
             {
-                _scroolPos--;
-                _scrollAction(_scroolPos);
+                _scrollPos--;
+                _scrollAction(_scrollPos);
             }
-        }else if (pos.X > breakPoint + DefaultHeight)
+        }else if (pos > breakPoint + ScrollBarWidth)
         {
-            if (_scroolPos < _positions)
+            if (_scrollPos < _positions)
             {
-                _scroolPos++;
-                _scrollAction(_scroolPos);
+                _scrollPos++;
+                _scrollAction(_scrollPos);
             }
         }
     }
@@ -65,8 +75,23 @@ public class ListBoxScrollBar : BaseControl
     {
         Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.White);
         Raylib.DrawTexture(_images[0], (int)Location.X, (int)Location.Y, Color.White);
-        Raylib.DrawTexture(_images[1], (int)Location.X + _scroolPos * _increment, (int)Location.Y, Color.White);
-        Raylib.DrawTexture(_images[2], (int)Location.X + Width - DefaultHeight, (int)Location.Y, Color.White);
+        if (_vertical)
+        {
+            Raylib.DrawTexture(_images[1], (int)Location.X, (int)Location.Y + _scrollPos * _increment + ScrollBarWidth, Color.White);
+            Raylib.DrawTexture(_images[2], (int)Location.X, (int)Location.Y + Height - ScrollBarWidth, Color.White);
+        }
+        else
+        {
+            Raylib.DrawTexture(_images[1], (int)Location.X + _scrollPos * _increment+ ScrollBarWidth, (int)Location.Y, Color.White);
+            Raylib.DrawTexture(_images[2], (int)Location.X + Width - ScrollBarWidth, (int)Location.Y, Color.White);
+        }
+
         base.Draw(pulse);
+    }
+
+    public void ScrollToEnd()
+    {
+        _scrollPos = _positions;
+        _scrollAction(_positions);
     }
 }

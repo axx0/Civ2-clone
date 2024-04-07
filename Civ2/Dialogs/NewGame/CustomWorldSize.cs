@@ -62,6 +62,6 @@ public class CustomWorldSize : BaseDialogHandler
         }
 
         return civDialogHandlers[
-                         Initialization.ConfigObject.CustomizeWorld ? CustomisePercentageLand.Title : Difficulty.Title].Show(civ2Interface);
+                         Initialization.ConfigObject.CustomizeWorld ? CustomisePercentageLand.Title : DifficultyHandler.Title].Show(civ2Interface);
     }
 }

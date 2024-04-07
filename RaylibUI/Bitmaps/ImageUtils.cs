@@ -330,7 +330,7 @@ public static class ImageUtils
 
     private static InterfaceStyle _look;
 
-    public static Image[] GetScrollImages(int dim)
+    public static Image[] GetScrollImages(int dim, bool vertical)
     {
         var image = Raylib.GenImageColor(dim, dim, Color.Black);
         var color1 = new Color(227, 227, 227, 255);
@@ -353,15 +353,38 @@ public static class ImageUtils
         Raylib.ImageDrawLine(ref image, image.Width -1, 0, image.Width -1, image.Height -1, color5);
 
         var left = Raylib.ImageCopy(image);
-        Raylib.ImageDrawPixel(ref left, 6,9,Color.Black);
-        Raylib.ImageDrawLine(ref left, 7,8,7,10,Color.Black);
-        Raylib.ImageDrawLine(ref left, 8,7,8,11,Color.Black);
-        Raylib.ImageDrawLine(ref left, 9,6,9,12,Color.Black);
+        if (vertical)
+        {
+            Raylib.ImageDrawPixel(ref left, 9,6,Color.Black);
+            Raylib.ImageDrawLine(ref left, 8,7,10,7,Color.Black);
+            Raylib.ImageDrawLine(ref left, 7,8,11,8,Color.Black);
+            Raylib.ImageDrawLine(ref left, 6,9,12,9,Color.Black);
+            
+        }
+        else
+        {
+            Raylib.ImageDrawPixel(ref left, 6,9,Color.Black);
+            Raylib.ImageDrawLine(ref left, 7,8,7,10,Color.Black);
+            Raylib.ImageDrawLine(ref left, 8,7,8,11,Color.Black);
+            Raylib.ImageDrawLine(ref left, 9,6,9,12,Color.Black);
+            
+        }
         var right = Raylib.ImageCopy(image);
-        Raylib.ImageDrawPixel(ref right, dim - 6,9,Color.Black);
-        Raylib.ImageDrawLine(ref right, dim-7,8,dim-7,10,Color.Black);
-        Raylib.ImageDrawLine(ref right, dim-8,7,dim-8,11,Color.Black);
-        Raylib.ImageDrawLine(ref right, dim-9,6,dim-9,12,Color.Black);
+        if (vertical)
+        {
+            Raylib.ImageDrawPixel(ref right, 9, dim - 6, Color.Black);
+            Raylib.ImageDrawLine(ref right, 8, dim - 7, 10, dim - 7, Color.Black);
+            Raylib.ImageDrawLine(ref right, 7, dim - 8, 11, dim - 8, Color.Black);
+            Raylib.ImageDrawLine(ref right, 6, dim - 9, 12, dim - 9, Color.Black);
+        }
+        else
+        {
+            Raylib.ImageDrawPixel(ref right, dim - 6, 9, Color.Black);
+            Raylib.ImageDrawLine(ref right, dim - 7, 8, dim - 7, 10, Color.Black);
+            Raylib.ImageDrawLine(ref right, dim - 8, 7, dim - 8, 11, Color.Black);
+            Raylib.ImageDrawLine(ref right, dim - 9, 6, dim - 9, 12, Color.Black);
+        }
+
         return new[] { left, image, right };
     }
 
