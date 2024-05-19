@@ -17,7 +17,18 @@ public class BitmapStorage : IImageSource
     public Rectangle Location { get; }
     public string[] Extension { get; }
 
-    public BitmapStorage(string file, Rectangle location)
+    /// <summary>
+    /// Does this image have an extra transparency colour
+    /// defined in upper-left corner pixel?
+    /// </summary>
+    public bool TransparencyPixel { get; }
+
+    /// <summary>
+    /// Search for position of shield (units)/city size flag&box?
+    /// </summary>
+    public bool SearchFlagLoc { get; }
+
+    public BitmapStorage(string file, Rectangle location, bool transparencyPixel = false, bool searchFlagLoc = false)
     {
         if (Path.HasExtension(file))
         {
@@ -27,26 +38,20 @@ public class BitmapStorage : IImageSource
         else
         {
             Filename = file;
-            Extension = new[] { "gif", "bmp" };
+            Extension = new[] { "gif", "bmp", "png" };
         }
 
         Location = location;
+        TransparencyPixel = transparencyPixel;
+        SearchFlagLoc = searchFlagLoc;
     }
 
-    public BitmapStorage(string file, int x, int y, int w, int h = -1) : this(file,
-        new Rectangle(x, y, w, h == -1 ? w : h))
+    public BitmapStorage(string file, int x, int y, int w, int h = -1, bool transparencyPixel = false, bool searchFlagLoc = false) : this(file, new Rectangle(x, y, w, h == -1 ? w : h), transparencyPixel, searchFlagLoc)
     {
-    }
-
-    public BitmapStorage(string file, IList<Color> transparencies, int x, int y, int w, int h = -1) : this(file, x, y, w, h)
-    {
-        this.Transparencies = transparencies;
     }
 
     public BitmapStorage(string file) : this(file, new Rectangle(0,0,0,0))
     {
         
     }
-
-    public IList<Color>? Transparencies { get; set; }
 }

@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Numerics;
-using Civ2.ImageLoader;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Raylib_cs;

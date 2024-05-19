@@ -2,7 +2,7 @@ using Civ2engine;
 using Civ2engine.IO;
 using Model;
 using Raylib_cs;
-using RayLibUtils;
+using RaylibUtils;
 
 namespace Civ2.ImageLoader;
 
@@ -10,9 +10,9 @@ public class IconLoader
 {
     public static void LoadIcons(Ruleset ruleset, Civ2Interface active)
     {
-        var path = Utils.GetFilePath("ICONS", ruleset.Paths, "gif", "bmp");
-        Images.LoadPropertiesFromPic(path, active.IconsPicProps);
-        var iconProps = active.IconsPicProps;
+        //var path = Utils.GetFilePath("ICONS", ruleset.Paths, "gif", "bmp");
+        //Images.LoadPropertiesFromPic(path, active.IconsPicProps);
+        //var iconProps = active.IconsPicProps;
 
 
         //var transparentLightPink = new Color(255, 159, 163,255);
@@ -58,16 +58,9 @@ public class IconLoader
         // CityImages.SellIcon = iconsImage.Clone(new Rectangle(16, 320, 14, 14));
         // CityImages.SellIcon.SetTransparent(new Color[] { transparentLightPink });
 
-        active.MiscImages.ResearchProgressIcon = iconProps["researchProgress"].Select(s => Raylib.LoadTextureFromImage(s.Image)).ToArray();
-        active.MiscImages.GlobalWarmingIcon = iconProps["globalWarming"].Select(s => Raylib.LoadTextureFromImage(s.Image)).ToArray();
-
-        active.MapImages.ViewPiece = iconProps["viewPiece"][0].Image;
-
-        active.MapImages.ViewPieceTexture = Raylib.LoadTextureFromImage(active.MapImages.ViewPiece);
-
-        active.MapImages.GridLines = iconProps["gridlines"][0].Image;
-
-        active.MapImages.GridLinesVisible = iconProps["gridlines,visible"][0].Image;
+        active.MapImages.ViewPiece = active.PicSources["viewPiece"][0];
+        active.MapImages.GridLines = active.PicSources["gridlines"][0];
+        active.MapImages.GridLinesVisible = active.PicSources["gridlines,visible"][0];
 
         // Big icons in city resources
         // CityImages.HungerBig = iconsImage.Clone(new Rectangle(1, 290, 14, 14));
@@ -109,7 +102,6 @@ public class IconLoader
         // CityImages.ZoomIN = iconsImage.Clone(new Rectangle(35, 389, 16, 16));
 
         // Battle sprites
-        active.UnitImages.BattleAnim =
-            iconProps["battleAnim"].Select(s => Raylib.LoadTextureFromImage(s.Image)).ToArray();
+        active.UnitImages.BattleAnim = active.PicSources["battleAnim"];
     }
 }

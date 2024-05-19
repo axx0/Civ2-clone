@@ -1,11 +1,10 @@
-using Raylib_cs;
+using Model.Images;
 
 namespace Model.ImageSets;
 
 public class CommonMapImageSet
 {
-    public Image ViewPiece { get; set; }
-    public Image GridLinesVisible { get; set; }
-    public Image GridLines { get; set; }
-    public Texture2D ViewPieceTexture { get; set; }
+    public IImageSource ViewPiece { get; set; }
+    public IImageSource GridLinesVisible { get; set; }
+    public IImageSource GridLines { get; set; }
 }

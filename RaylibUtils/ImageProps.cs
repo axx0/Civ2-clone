@@ -1,13 +1,12 @@
 ﻿using Raylib_cs;
+using System.Numerics;
 
-namespace RayLibUtils;
+namespace RaylibUtils;
 
 public class ImageProps
 {
     public Image Image { get; set; }
     public Rectangle Rect { get; set; }
-    public int Flag1X { get; set; }
-    public int Flag1Y { get; set; }
-    public int Flag2X { get; set; }
-    public int Flag2Y { get; set; }
+    public Vector2 Flag1 { get; set; }
+    public Vector2 Flag2 { get; set; }
 }

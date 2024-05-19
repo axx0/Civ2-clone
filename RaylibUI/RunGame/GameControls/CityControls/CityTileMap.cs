@@ -5,6 +5,7 @@ using Civ2engine.MapObjects;
 using Model;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping;
+using RaylibUtils;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -238,8 +239,8 @@ public class CityTileMap : BaseControl
                             tile.CityHere, tile.CityHere.Size);
                     cityData.Add(new Element
                     {
-                        Image = cities.Sets[cityStyleIndex][sizeIncrement]
-                            .Image,
+                        Image = Images.ExtractBitmap(cities.Sets[cityStyleIndex][sizeIncrement]
+                            .Image),
                         X = locationX,
                         Y = locationY - dim.HalfHeight
                     });
@@ -256,7 +257,7 @@ public class CityTileMap : BaseControl
 
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
                 {
-                    Raylib.ImageDraw(ref image, gameScreen.Main.ActiveInterface.MapImages.ViewPiece, MapImage.TileRec,
+                    Raylib.ImageDraw(ref image, Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece), MapImage.TileRec,
                         MapImage.TileRec with { X = locationX, Y = locationY }, Color.Red);
                 }
             }

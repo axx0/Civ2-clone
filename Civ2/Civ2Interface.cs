@@ -13,8 +13,7 @@ using Model.ImageSets;
 using Model.InterfaceActions;
 using Model.Menu;
 using Raylib_cs;
-using RayLibUtils;
-
+using RaylibUtils;
 using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
@@ -128,13 +127,12 @@ public abstract class Civ2Interface : IUserInterface
     public CityImageSet CityImages { get; } = new();
 
     public UnitSet UnitImages { get; } = new();
-    
+
     public Dictionary<string, PopupBox?> Dialogs { get; set; }
     public abstract void LoadPlayerColours();
     public PlayerColour[] PlayerColours { get; set; }
     public int ExpectedMaps { get; set; } = 1;
     public CommonMapImageSet MapImages { get; } = new();
-    public MiscImageSet MiscImages { get; } = new();
     public int DefaultDialogWidth => 660; // 660=440*1.5
 
     public abstract Padding DialogPadding { get; }
@@ -270,21 +268,21 @@ public abstract class Civ2Interface : IUserInterface
                                 Name = "Tax",
                                 GetResourceLabel = (val, city) =>
                                     city.Owner.TaxRate + "% " + Labels.For(LabelIndex.Tax) + ":" + val,
-                                Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 16, 320, 14)
+                                Icon = new BitmapStorage("ICONS", 16, 320, 14)
                             },
                             new()
                             {
                                 Name = "Lux",
                                 GetResourceLabel = (val, city) =>
                                     city.Owner.LuxRate + "% " + Labels.For(LabelIndex.Lux) + ":" + val,
-                                Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 1, 320, 14)
+                                Icon = new BitmapStorage("ICONS", 1, 320, 14)
                             },
                             new()
                             {
                                 Name = "Science",
                                 GetResourceLabel = (val, city) =>
                                     city.Owner.LuxRate + "% " + Labels.For(LabelIndex.Sci) + ":" + val,
-                                Icon = new BitmapStorage("ICONS", _resourceTransparentColor, 31, 320, 14)
+                                Icon = new BitmapStorage("ICONS", 31, 320, 14)
                             }
                         }
                     }
@@ -311,21 +309,20 @@ public abstract class Civ2Interface : IUserInterface
         return _cityWindowLayout;
     }
 
-    private static IList<Color> _resourceTransparentColor = new[]{ new Color(255, 159, 163, 255)};
     public IList<ResourceImage> ResourceImages { get; } = new List<ResourceImage>
     {
         new(name: "Food", 
-            largeImage: new BitmapStorage("ICONS", _resourceTransparentColor, 1, 305, 14),
-            smallImage: new BitmapStorage("ICONS", _resourceTransparentColor,49, 334, 10),
-            lossImage: new BitmapStorage("ICONS", _resourceTransparentColor,1, 290, 14)),
+            largeImage: new BitmapStorage("ICONS", 1, 305, 14),
+            smallImage: new BitmapStorage("ICONS",49, 334, 10),
+            lossImage: new BitmapStorage("ICONS",1, 290, 14)),
         new(name: "Shields", 
-            largeImage: new BitmapStorage("ICONS", _resourceTransparentColor,16, 305, 14),
-            smallImage: new BitmapStorage("ICONS", _resourceTransparentColor,60, 334, 10),
-            lossImage: new BitmapStorage("ICONS", _resourceTransparentColor,16, 290, 14)),
+            largeImage: new BitmapStorage("ICONS", 16, 305, 14),
+            smallImage: new BitmapStorage("ICONS", 60, 334, 10),
+            lossImage: new BitmapStorage("ICONS", 16, 290, 14)),
         new(name: "Trade", 
-            largeImage: new BitmapStorage("ICONS",_resourceTransparentColor, 31, 305, 14),
-            smallImage: new BitmapStorage("ICONS",_resourceTransparentColor, 71, 334, 10),
-            lossImage: new BitmapStorage("ICONS",_resourceTransparentColor, 31, 290, 14))
+            largeImage: new BitmapStorage("ICONS", 31, 305, 14),
+            smallImage: new BitmapStorage("ICONS", 71, 334, 10),
+            lossImage: new BitmapStorage("ICONS", 31, 290, 14))
     };
 
     public PopupBox? GetDialog(string dialogName)
@@ -335,11 +332,7 @@ public abstract class Civ2Interface : IUserInterface
 
     public abstract int UnitsRows { get; }
     public abstract int UnitsPxHeight { get; }
-    public abstract Dictionary<string, List<ImageProps>> UnitPicProps { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> CitiesPicProps { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
-    public abstract Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
+    public abstract Dictionary<string, BitmapStorage[]> PicSources { get; set; }
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);

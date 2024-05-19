@@ -2,9 +2,10 @@ using System.Numerics;
 using Civ2engine;
 using Civ2engine.IO;
 using Model;
+using Model.Images;
 using Model.ImageSets;
 using Raylib_cs;
-using RayLibUtils;
+using RaylibUtils;
 
 namespace Civ2.ImageLoader
 {
@@ -12,20 +13,17 @@ namespace Civ2.ImageLoader
     {
         public static void LoadUnits(Ruleset ruleset, Civ2Interface active)
         {
-            var path = Utils.GetFilePath("UNITS", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPic(path, active.UnitPicProps);
-            var unitProps = active.UnitPicProps;
-
             // Initialize objects
             var units = new UnitImage[9 * active.UnitsRows];
 
             for (int i = 0; i < units.Length; i++)
             {
+                var props = Images.ExtractBitmapData(active.PicSources["unit"][i]); // put into cache
+
                 units[i] = new UnitImage
                 {
-                    Image = unitProps["unit"][i].Image,
-                    Texture = Raylib.LoadTextureFromImage(unitProps["unit"][i].Image),
-                    FlagLoc = new Vector2(unitProps["unit"][i].Flag1X, unitProps["unit"][i].Flag1Y),
+                    Image = active.PicSources["unit"][i],
+                    FlagLoc = props.Flag1,
                 };
             }
 

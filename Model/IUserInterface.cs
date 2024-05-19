@@ -34,7 +34,6 @@ public interface IUserInterface
     PlayerColour[] PlayerColours { get; }
 
     CommonMapImageSet MapImages { get; }
-    MiscImageSet MiscImages { get; }
     int DefaultDialogWidth { get; }
     bool IsButtonInOuterPanel { get; }
     Padding DialogPadding { get; }
@@ -42,6 +41,7 @@ public interface IUserInterface
     
     CityWindowLayout GetCityWindowDefinition();
 
+    Dictionary<string, BitmapStorage[]> PicSources { get; }
     IList<ResourceImage> ResourceImages { get; }
     PopupBox? GetDialog(string dialogName);
 

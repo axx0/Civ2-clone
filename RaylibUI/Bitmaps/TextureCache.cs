@@ -2,6 +2,7 @@ using Civ2engine;
 using Model;
 using Model.Images;
 using Raylib_cs;
+using RaylibUtils;
 
 namespace RaylibUI;
 
@@ -33,7 +34,7 @@ public static class TextureCache
         var key = source.GetKey( civ);
         if (!Textures.ContainsKey(key))
         {
-            var img = Images.ExtractBitmap(source, activeInterface, civ);
+            var img = Images.ExtractBitmapData(source, activeInterface, civ).Image;
             Textures[key] = Raylib.LoadTextureFromImage(img);
         }
         return Textures[key];

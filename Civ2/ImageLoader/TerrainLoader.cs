@@ -2,10 +2,12 @@ using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.Terrains;
 using Model;
+using Model.Images;
 using Model.ImageSets;
 using Raylib_cs;
 using RaylibUI;
-using RayLibUtils;
+using RaylibUtils;
+using System.Numerics;
 
 namespace Civ2.ImageLoader
 {
@@ -21,19 +23,11 @@ namespace Civ2.ImageLoader
 
         private static TerrainSet LoadTerrain(Ruleset ruleset, int index, Civ2Interface active)
         {
-            var path = Utils.GetFilePath($"Terrain{(index * 2) + 1}", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPic(path, active.TilePicProps);
-            path = Utils.GetFilePath($"Terrain{(index * 2) + 2}", ruleset.Paths, "gif", "bmp");
-            Images.LoadPropertiesFromPic(path, active.OverlayPicProps);
-
             // Initialize objects
             var terrain = new TerrainSet(64, 32);
 
-            var tileProps = active.TilePicProps;
-            var overlayProps = active.OverlayPicProps;
-
             // Get dither tile before making it transparent
-            var ditherTile = tileProps["dither"][0].Image;
+            var ditherTile = ExtractBitmapWithIndex(active.PicSources["dither"][0], index);
             Color gray;
             unsafe
             {
@@ -46,15 +40,15 @@ namespace Civ2.ImageLoader
             Raylib.ImageColorReplace(ref ditherTile, new Color(255, 0, 255, 0), Color.Black);
             Raylib.ImageColorReplace(ref ditherTile, gray, Color.Black);
 
-            terrain.BaseTiles = tileProps["base1"].Select(t => t.Image).ToArray();
+            terrain.BaseTiles = active.PicSources["base1"].Select(t => ExtractBitmapWithIndex(t, index)).ToArray();
 
             terrain.Specials = new[]
             {
-                tileProps["special1"].Select(s => s.Image).ToArray(),
-                tileProps["special2"].Select(s => s.Image).ToArray(),
+                active.PicSources["special1"].Select(s => ExtractBitmapWithIndex(s, index)).ToArray(),
+                active.PicSources["special2"].Select(s => ExtractBitmapWithIndex(s, index)).ToArray(),
             };
 
-            terrain.Blank = tileProps["blank"][0].Image;
+            terrain.Blank = ExtractBitmapWithIndex(active.PicSources["blank"][0], index);
 
             // 4 small dither tiles (base mask must be B/W)
             terrain.DitherMask = new[]
@@ -73,19 +67,19 @@ namespace Civ2.ImageLoader
                 BuildDitherMaps(terrain.DitherMask[3], terrain.BaseTiles, 0, 0, terrain.Blank),
             };
 
-            terrain.River = overlayProps["river"].Select(r => r.Image).ToArray();
-            terrain.Forest = overlayProps["forest"].Select(r => r.Image).ToArray();
-            terrain.Mountains = overlayProps["mountain"].Select(r => r.Image).ToArray();
-            terrain.Hills = overlayProps["hill"].Select(r => r.Image).ToArray();
-            terrain.RiverMouth = overlayProps["riverMouth"].Select(r => r.Image).ToArray();
+            terrain.River = active.PicSources["river"].Select(r => ExtractBitmapWithIndex(r, index)).ToArray();
+            terrain.Forest = active.PicSources["forest"].Select(r => ExtractBitmapWithIndex(r, index)).ToArray();
+            terrain.Mountains = active.PicSources["mountain"].Select(r => ExtractBitmapWithIndex(r, index)).ToArray();
+            terrain.Hills = active.PicSources["hill"].Select(r => ExtractBitmapWithIndex(r, index)).ToArray();
+            terrain.RiverMouth = active.PicSources["riverMouth"].Select(r => ExtractBitmapWithIndex(r, index)).ToArray();
 
             terrain.Coast = new Image[8, 4];
             for (var i = 0; i < 8; i++)
             {
-                terrain.Coast[i, 0] = overlayProps["coastline"][4 * i + 0].Image; // N
-                terrain.Coast[i, 1] = overlayProps["coastline"][4 * i + 1].Image; // S
-                terrain.Coast[i, 2] = overlayProps["coastline"][4 * i + 2].Image; // W
-                terrain.Coast[i, 3] = overlayProps["coastline"][4 * i + 3].Image; // E
+                terrain.Coast[i, 0] = ExtractBitmapWithIndex(active.PicSources["coastline"][4 * i + 0], index); // N
+                terrain.Coast[i, 1] = ExtractBitmapWithIndex(active.PicSources["coastline"][4 * i + 1], index); // S
+                terrain.Coast[i, 2] = ExtractBitmapWithIndex(active.PicSources["coastline"][4 * i + 2], index); // W
+                terrain.Coast[i, 3] = ExtractBitmapWithIndex(active.PicSources["coastline"][4 * i + 3], index); // E
             }
 
             // Road & railroad
@@ -100,27 +94,27 @@ namespace Civ2.ImageLoader
 
             for (var i = 0; i < 9; i++)
             {
-                roadGraphics.Levels[0, i] = tileProps["road"][i].Image;
-                roadGraphics.Levels[1, i] = tileProps["railroad"][i].Image;
+                roadGraphics.Levels[0, i] = ExtractBitmapWithIndex(active.PicSources["road"][i], index);
+                roadGraphics.Levels[1, i] = ExtractBitmapWithIndex(active.PicSources["railroad"][i], index);
             }
 
             terrain.ImprovementsMap.Add(ImprovementTypes.Irrigation, new ImprovementGraphic
             {
                 Levels = new[,]
                 {
-                    { tileProps["irrigation"][0].Image },
-                    { tileProps["farmland"][0].Image }
+                    { ExtractBitmapWithIndex(active.PicSources["irrigation"][0], index) },
+                    { ExtractBitmapWithIndex(active.PicSources["farmland"][0], index) }
                 }
             });
 
             terrain.ImprovementsMap[ImprovementTypes.Mining] = new ImprovementGraphic
-                { Levels = new[,] { { tileProps["mine"][0].Image } } };
+                { Levels = new[,] { { ExtractBitmapWithIndex(active.PicSources["mine"][0], index) } } };
 
             terrain.ImprovementsMap[ImprovementTypes.Pollution] = new ImprovementGraphic
-                { Levels = new[,] { { tileProps["pollution"][0].Image } } };
+                { Levels = new[,] { { ExtractBitmapWithIndex(active.PicSources["pollution"][0], index) } } };
 
             //Note airbase and fortress are now loaded directly by the cities loader
-            terrain.GrasslandShield = tileProps["shield"][0].Image;
+            terrain.GrasslandShield = ExtractBitmapWithIndex(active.PicSources["shield"][0], index);
 
             return terrain;
         }
@@ -141,6 +135,23 @@ namespace Civ2.ImageLoader
             Raylib.ImageAlphaMask(ref ditherMaps[^1], mask);
 
             return new DitherMap { X = offsetX, Y = offsetY, Images = ditherMaps };
+        }
+
+        /// <summary>
+        /// For TERRAIN3, 4, 5, etc.
+        /// </summary>
+        private static Image ExtractBitmapWithIndex(BitmapStorage storage, int mapIndex)
+        {
+            var file = storage.Filename;
+
+            if (mapIndex != 0)
+            {
+                int.TryParse(file[^1].ToString(), out int currentIndex);
+                int newIndex = mapIndex * 2 + currentIndex;
+                file = $"{file.Remove(file.Length - 1, 1)}{newIndex}";
+            }
+
+            return Images.ExtractBitmap(new BitmapStorage(file, storage.Location, storage.TransparencyPixel, storage.SearchFlagLoc));
         }
     }
 }   

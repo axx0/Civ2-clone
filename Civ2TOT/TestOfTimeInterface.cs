@@ -12,7 +12,7 @@ using Model.ImageSets;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
-using RayLibUtils;
+using RaylibUtils;
 using static Model.Menu.CommandIds;
 
 namespace TOT;
@@ -35,14 +35,14 @@ public class TestOfTimeInterface : Civ2Interface
         OuterMiddle = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 148, 58, 13)).ToArray(),
         OuterLeft = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 112 + 12 * col, 168, 11, 29)).ToArray(),
         OuterRight = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 112 + 13 * col, 198, 12, 29)).ToArray(),
-        OuterTitleTopLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 168, 14, 30),
-        OuterTitleTopRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 168, 14, 30),
-        OuterThinTopLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 199, 14, 14),
-        OuterThinTopRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 199, 14, 14),
-        OuterMiddleLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 214, 14, 18),
-        OuterMiddleRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 214, 14, 18),
-        OuterBottomLeft = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 1, 233, 14, 14),
-        OuterBottomRight = new BitmapStorage("dialog.png", new[] { new Color(255, 0, 255, 255) }, 16, 233, 14, 14),
+        OuterTitleTopLeft = new BitmapStorage("dialog.png", 1, 168, 14, 30),
+        OuterTitleTopRight = new BitmapStorage("dialog.png", 16, 168, 14, 30),
+        OuterThinTopLeft = new BitmapStorage("dialog.png", 1, 199, 14, 14),
+        OuterThinTopRight = new BitmapStorage("dialog.png", 16, 199, 14, 14),
+        OuterMiddleLeft = new BitmapStorage("dialog.png", 1, 214, 14, 18),
+        OuterMiddleRight = new BitmapStorage("dialog.png", 16, 214, 14, 18),
+        OuterBottomLeft = new BitmapStorage("dialog.png", 1, 233, 14, 14),
+        OuterBottomRight = new BitmapStorage("dialog.png", 16, 233, 14, 14),
 
         Inner = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", new Rectangle(1 + 93 * col, 1, 92, 92))).ToArray(),
         InnerAlt = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
@@ -51,11 +51,11 @@ public class TestOfTimeInterface : Civ2Interface
         ButtonClicked = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog.png", new Rectangle(449 + 17 * col, 125, 16, 30))).ToArray(),
 
         RadioButtons = new IImageSource[]
-        { new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 903, 94, 33, 33), 
-          new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 869, 94, 33, 33) },
+        { new BitmapStorage("dialog.png", 903, 94, 33, 33), 
+          new BitmapStorage("dialog.png", 869, 94, 33, 33) },
         CheckBoxes = new IImageSource[]
-        { new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 805, 94, 29, 29),
-          new BitmapStorage("dialog.png", new[]{ new Color(255, 0, 255, 255) }, 775, 94, 29, 29) },
+        { new BitmapStorage("dialog.png", 805, 94, 29, 29),
+          new BitmapStorage("dialog.png", 775, 94, 29, 29) },
 
         DefaultFont = Fonts.Arial,
         ButtonFont = Fonts.Arial,
@@ -183,105 +183,81 @@ public class TestOfTimeInterface : Civ2Interface
             existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
         }
 
-
-        // Initialize properties of Units from image
-        UnitPicProps = new Dictionary<string, List<ImageProps>>
+        PicSources = new Dictionary<string, BitmapStorage[]>
         {
-            { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new ImageProps
-                        { Rect = new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight) }).ToList() },
-            { "HPshield", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(586, 1, 32, 10) } } },
-        };
-
-        // Initialize properties of Cities from image
-        CitiesPicProps = new Dictionary<string, List<ImageProps>>
-        {
-            { "textColors", Enumerable.Range(0, 9).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 15 * col, 421, 14, 3) }).ToList() },
+            { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS", new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), true, true)).ToArray() },
+            { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10)) } },
+            { "textColours", Enumerable.Range(0, 9).Select(col =>
+                    new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 421, 14, 3))).ToArray() },
             { "flags", Enumerable.Range(0, 2 * 9).Select(i =>
-                    new ImageProps { Rect = new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22) }).ToList() },
-            { "fortify", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(143, 423, 64, 48) } } },
-            { "fortress", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(208, 423, 64, 48) } } },
-            { "airbase,empty", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(273, 423, 64, 48) } } },
-            { "airbase,full", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(338, 423, 64, 48) } } },
+                    new BitmapStorage("CITIES", new Rectangle(1 + 15 * (i % 9), 425 + 23 * (i / 9), 14, 22))).ToArray() },
+            { "fortify", new[] { new BitmapStorage("CITIES", new Rectangle(143, 423, 64, 48)) } },
+            { "fortress", new[] { new BitmapStorage("CITIES", new Rectangle(208, 423, 64, 48)) } },
+            { "airbase,empty", new[] { new BitmapStorage("CITIES", new Rectangle(273, 423, 64, 48)) } },
+            { "airbase,full", new[] { new BitmapStorage("CITIES", new Rectangle(338, 423, 64, 48)) } },
+            { "base1", Enumerable.Range(0, 11).Select(row =>
+                        new BitmapStorage("TERRAIN1", new Rectangle(1, 1 + 33 * row, 64, 32))).ToArray() },
+            { "base2", Enumerable.Range(0, 11).Select(row =>
+                        new BitmapStorage("TERRAIN1", new Rectangle(66, 1 + 33 * row, 64, 32))).ToArray() },
+            { "special1", Enumerable.Range(0, 11).Select(row =>
+                        new BitmapStorage("TERRAIN1", new Rectangle(131, 1 + 33 * row, 64, 32))).ToArray() },
+            { "special2", Enumerable.Range(0, 11).Select(row =>
+                        new BitmapStorage("TERRAIN1", new Rectangle(196, 1 + 33 * row, 64, 32))).ToArray() },
+            { "road", Enumerable.Range(0, 9).Select(col =>
+                        new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 363, 64, 32))).ToArray() },
+            { "railroad", Enumerable.Range(0, 9).Select(col =>
+                        new BitmapStorage("TERRAIN1", new Rectangle(1 + 65 * col, 397, 64, 32))).ToArray() },
+            { "irrigation", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 100, 64, 32)) } },
+            { "farmland", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 133, 64, 32)) } },
+            { "mine", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 166, 64, 32)) } },
+            { "pollution", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 199, 64, 32)) } },
+            { "shield", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 232, 64, 32)) } },
+            { "hut", new[] { new BitmapStorage("TERRAIN1", new Rectangle(456, 265, 64, 32)) } },
+            { "dither", new[] { new BitmapStorage("TERRAIN1", new Rectangle(1, 447, 64, 32)) } },
+            { "blank", new[] { new BitmapStorage("TERRAIN1", new Rectangle(131, 447, 64, 32)) } },
+            { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
+                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32))).ToArray() },
+            { "river", Enumerable.Range(0, 2 * 8).Select(i =>
+                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32))).ToArray() },
+            { "forest", Enumerable.Range(0, 2 * 8).Select(i =>
+                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32))).ToArray() },
+            { "mountain", Enumerable.Range(0, 2 * 8).Select(i =>
+                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32))).ToArray() },
+            { "hill", Enumerable.Range(0, 2 * 8).Select(i =>
+                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32))).ToArray() },
+            { "riverMouth", Enumerable.Range(0, 4).Select(col =>
+                    new BitmapStorage("TERRAIN2", new Rectangle(1 + 65 * col, 331, 64, 32))).ToArray() },
+            { "viewPiece", new[] { new BitmapStorage("ICONS", new Rectangle(199, 256, 64, 32)) } },
+            { "gridlines", new[] { new BitmapStorage("ICONS", new Rectangle(183, 430, 64, 32)) } },
+            { "gridlines,visible", new[] { new BitmapStorage("ICONS", new Rectangle(248, 430, 64, 32)) } },
+            { "battleAnim", Enumerable.Range(0, 8).Select(col =>
+                    new BitmapStorage("ICONS", new Rectangle(1 + 33 * col, 356, 32, 32))).ToArray() },
+            { "researchProgress", Enumerable.Range(0, 4).Select(col =>
+                    new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray() },
+            { "globalWarming", Enumerable.Range(0, 4).Select(col =>
+                    new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray() },
         };
-        var props = new List<ImageProps>();
+
+        var src = new BitmapStorage[6 * 8];
         for (int row = 0; row < 6; row++)
         {
-            props.AddRange(Enumerable.Range(0, 4).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48) }).ToList());    // Open cities
-            props.AddRange(Enumerable.Range(0, 4).Select(col =>
-                    new ImageProps { Rect = new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48) }).ToList());  // Walled cities
+            for (int col = 0; col < 4; col++)
+            {
+                src[8 * row + col] = new BitmapStorage("CITIES", new Rectangle(1 + 65 * col, 39 + 49 * row, 64, 48), searchFlagLoc: true);    // Open cities
+                src[8 * row + 4 + col] = new BitmapStorage("CITIES", new Rectangle(334 + 65 * col, 39 + 49 * row, 64, 48), searchFlagLoc: true);    // Walled cities
+            }
         }
-        props.AddRange(Enumerable.Range(0, 4).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * col, 347, 64, 48) }).ToList());    // Modern alt.
-        props.AddRange(Enumerable.Range(0, 4).Select(col =>
-                    new ImageProps { Rect = new Rectangle(333 + 65 * col, 347, 64, 48) }).ToList());
-        CitiesPicProps.Add("city", props);
+        PicSources.Add("city", src);
 
-        // Initialize properties of Tiles from image
-        TilePicProps = new Dictionary<string, List<ImageProps>>
-        {
-            { "base1", Enumerable.Range(0, 11).Select(row =>
-                        new ImageProps { Rect = new Rectangle(1, 1 + 33 * row, 64, 32) }).ToList() },
-            { "base2", Enumerable.Range(0, 11).Select(row =>
-                        new ImageProps { Rect = new Rectangle(66, 1 + 33 * row, 64, 32) }).ToList() },
-            { "special1", Enumerable.Range(0, 11).Select(row =>
-                        new ImageProps { Rect = new Rectangle(131, 1 + 33 * row, 64, 32) }).ToList() },
-            { "special2", Enumerable.Range(0, 11).Select(row =>
-                        new ImageProps { Rect = new Rectangle(196, 1 + 33 * row, 64, 32) }).ToList() },
-            { "road", Enumerable.Range(0, 9).Select(col =>
-                        new ImageProps { Rect = new Rectangle(1 + 65 * col, 364, 64, 32) }).ToList() },
-            { "railroad", Enumerable.Range(0, 9).Select(col =>
-                        new ImageProps { Rect = new Rectangle(1 + 65 * col, 397, 64, 32) }).ToList() },
-            { "irrigation", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 100, 64, 32) } } },
-            { "farmland", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 133, 64, 32) } } },
-            { "mine", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 166, 64, 32) } } },
-            { "pollution", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 199, 64, 32) } } },
-            { "shield", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 232, 64, 32) } } },
-            { "hut", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(456, 265, 64, 32) } } },
-            { "dither", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(1, 447, 64, 32) } } },
-            { "blank", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(131, 447, 64, 32) } } }
-        };
-
-        // Initialize properties of Overlay tiles from image
-        OverlayPicProps = new Dictionary<string, List<ImageProps>>
-        {
-            { "connection", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 1 + 33 * (i / 8), 64, 32) }).ToList() },
-            { "river", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 67 + 33 * (i / 8), 64, 32) }).ToList() },
-            { "forest", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 133 + 33 * (i / 8), 64, 32) }).ToList() },
-            { "mountain", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 199 + 33 * (i / 8), 64, 32) }).ToList() },
-            { "hill", Enumerable.Range(0, 2 * 8).Select(i =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * (i % 8), 265 + 33 * (i / 8), 64, 32) }).ToList() },
-            { "riverMouth", Enumerable.Range(0, 4).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 65 * col, 331, 64, 32) }).ToList() }
-        };
-        props = new List<ImageProps>();
+        src = new BitmapStorage[4 * 8];
         for (int i = 0; i < 8; i++)
         {
-            props.Add(new ImageProps { Rect = new Rectangle(1 + 66 * i, 429, 32, 16) });
-            props.Add(new ImageProps { Rect = new Rectangle(1 + 66 * i, 446, 32, 16) });
-            props.Add(new ImageProps { Rect = new Rectangle(1 + 66 * i, 463, 32, 16) });
-            props.Add(new ImageProps { Rect = new Rectangle(34 + 66 * i, 463, 32, 16) });
+            src[4 * i + 0] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 429, 32, 16));
+            src[4 * i + 1] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 446, 32, 16));
+            src[4 * i + 2] = new BitmapStorage("TERRAIN2", new Rectangle(1 + 66 * i, 463, 32, 16));
+            src[4 * i + 3] = new BitmapStorage("TERRAIN2", new Rectangle(34 + 66 * i, 463, 32, 16));
         }
-        OverlayPicProps.Add("coastline", props);
-
-        // Initialize properties of Icons tiles from image
-        IconsPicProps = new Dictionary<string, List<ImageProps>>
-        {
-            { "viewPiece", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(199, 256, 64, 32) } } },
-            { "gridlines", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(183, 430, 64, 32) } } },
-            { "gridlines,visible", new List<ImageProps> { new ImageProps() { Rect = new Rectangle(248, 430, 64, 32) } } },
-            { "battleAnim", Enumerable.Range(0, 8).Select(col =>
-                    new ImageProps { Rect = new Rectangle(1 + 33 * col, 356, 32, 32) }).ToList() },
-            { "researchProgress", Enumerable.Range(0, 4).Select(col =>
-                new ImageProps { Rect = new Rectangle(49 + 15 * col, 290, 14, 14) }).ToList() },
-            { "globalWarming", Enumerable.Range(0, 4).Select(col =>
-                new ImageProps { Rect = new Rectangle(49 + 15 * col, 305, 14, 14) }).ToList() },
-        };
+        PicSources.Add("coastline", src);
     }
 
     protected override List<MenuDetails> MenuMap { get; } = new List<MenuDetails>
@@ -529,12 +505,8 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override int UnitsRows => 9;
     public override int UnitsPxHeight => 64;
-    
-    public override Dictionary<string, List<ImageProps>> UnitPicProps { get; set; }
-    public override Dictionary<string, List<ImageProps>> CitiesPicProps { get; set; }
-    public override Dictionary<string, List<ImageProps>> TilePicProps { get; set; }
-    public override Dictionary<string, List<ImageProps>> OverlayPicProps { get; set; }
-    public override Dictionary<string, List<ImageProps>> IconsPicProps { get; set; }
+
+    public override Dictionary<string, BitmapStorage[]> PicSources { get; set; }
 
     public override void LoadPlayerColours()
     {
@@ -543,9 +515,9 @@ public class TestOfTimeInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(CitiesPicProps["textColors"][col].Image);
-                var textColour = imageColours[2 * CitiesPicProps["textColors"][col].Image.Width + 0];
-                var shieldColour = imageColours[2 * CitiesPicProps["textColors"][col].Image.Width + 0];
+                var imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["textColors"][col]));
+                var textColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColors"][col]).Width + 0];
+                var shieldColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColors"][col]).Width + 0];
                 textColour.A = 255; // to avoid any upper-left-pixel transparency issues
                 shieldColour.A = 255;
                 Raylib.UnloadImageColors(imageColours);
@@ -556,8 +528,8 @@ public class TestOfTimeInterface : Civ2Interface
 
                 playerColours[col] = new PlayerColour
                 {
-                    Normal = CitiesPicProps["flags"][col].Image,
-                    FlagTexture = Raylib.LoadTextureFromImage(CitiesPicProps["flags"][col].Image),
+                    Normal = Images.ExtractBitmap(PicSources["flags"][col]),
+                    FlagTexture = Raylib.LoadTextureFromImage(Images.ExtractBitmap(PicSources["flags"][col])),
                     TextColour = textColour,
                     LightColour = lightColour,
                     DarkColour = darkColour
@@ -571,7 +543,7 @@ public class TestOfTimeInterface : Civ2Interface
     {
         Color replacementColour = new(255, 0, 255, 0);
 
-        var shield = UnitPicProps["HPshield"][0].Image;
+        var shield = Images.ExtractBitmap(PicSources["HPshield"][0]);
         var shieldFront = Raylib.ImageCopy(shield);
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
@@ -589,7 +561,7 @@ public class TestOfTimeInterface : Civ2Interface
         HPbarColours = new[] { new Color(247, 0, 0, 255), new Color(255, 222, 74, 255), new Color(82, 173, 33, 255) },
         HPbarSizeForColours = new[] { 5, 13 },
         OrderOffset = new(9 / 2f, 1),
-        OrderTextHeight = UnitPicProps["HPshield"][0].Image.Height - 1
+        OrderTextHeight = Images.ExtractBitmap(PicSources["backShield1"][0]).Height - 1
     };
 
     public override void DrawBorderWallpaper(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel)

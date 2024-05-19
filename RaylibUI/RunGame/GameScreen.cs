@@ -1,5 +1,4 @@
 using System.Runtime.CompilerServices;
-using Civ2.Menu;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;

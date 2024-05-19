@@ -23,12 +23,12 @@ internal class AttackAnimation : BaseGameView
         var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height };
         ImageUtils.GetUnitTextures(args.Defender, activeInterface, unitAnimations,
             defenderPos);
-        var battleAnimation = activeInterface.UnitImages.BattleAnim;
         var explosion = 0;
         SetAnimation(unitAnimations);
-        var attackPos = ActivePos  + new Vector2(Dimensions.HalfWidth- battleAnimation[0].Width/2f, Dimensions.HalfHeight - battleAnimation[0].Height /2f);
+        var battleAnimation = activeInterface.UnitImages.BattleAnim.Select(a => TextureCache.GetImage(a)).ToArray();
+        var attackPos = ActivePos  + new Vector2(Dimensions.HalfWidth - battleAnimation[0].Width/2f, Dimensions.HalfHeight - battleAnimation[0].Height /2f);
         
-        defPos += new Vector2(Dimensions.HalfWidth - battleAnimation[0].Width/2f, Dimensions.HalfHeight - battleAnimation[0].Height /2f);
+        defPos += new Vector2(Dimensions.HalfWidth - battleAnimation[0].Width / 2f, Dimensions.HalfHeight - battleAnimation[0].Height /2f);
         do
         {
             var attackerWins = args.CombatRoundsAttackerWins[explosion];

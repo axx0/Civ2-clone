@@ -1,5 +1,3 @@
-using Civ2.Dialogs;
-
 namespace RaylibUI;
 
 public interface IScreen

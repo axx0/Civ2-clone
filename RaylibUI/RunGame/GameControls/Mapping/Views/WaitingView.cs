@@ -15,7 +15,7 @@ public class WaitingView : BaseGameView
 
         SetAnimation(new[]
         {
-            new TextureElement(texture: activeInterface.MapImages.ViewPieceTexture,
+            new TextureElement(texture: TextureCache.GetImage(activeInterface.MapImages.ViewPiece),
                 location: ActivePos, gameScreen.Game.ActiveTile)
         });
 

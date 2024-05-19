@@ -13,7 +13,7 @@ using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 using Model.ImageSets;
 using Model.Interface;
-using Civ2;
+using RaylibUtils;
 
 namespace RaylibUI;
 
@@ -298,34 +298,34 @@ public static class ImageUtils
     public static void SetLook(IUserInterface active)
     {
         Wallpaper = new Wallpaper();
-        if (active.Look.Outer is null)  // TOT
+        _look = active.Look;
+        if (_look.Outer is null)  // TOT
         {
-            Wallpaper.OuterTitleTop = active.Look.OuterTitleTop.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterThinTop = active.Look.OuterThinTop.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterBottom = active.Look.OuterBottom.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterMiddle = active.Look.OuterMiddle.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterLeft = active.Look.OuterLeft.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterRight = active.Look.OuterRight.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(active.Look.OuterTitleTopLeft);
-            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(active.Look.OuterTitleTopRight);
-            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(active.Look.OuterThinTopLeft);
-            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(active.Look.OuterThinTopRight);
-            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(active.Look.OuterMiddleLeft);
-            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(active.Look.OuterMiddleRight);
-            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(active.Look.OuterBottomLeft);
-            Wallpaper.OuterBottomRight = Images.ExtractBitmap(active.Look.OuterBottomRight);
-            Wallpaper.Inner = active.Look.Inner.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.InnerAlt = Images.ExtractBitmap(active.Look.InnerAlt);
-            Wallpaper.Button = active.Look.Button.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.ButtonClicked = active.Look.ButtonClicked.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterTitleTop = _look.OuterTitleTop.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterThinTop = _look.OuterThinTop.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterBottom = _look.OuterBottom.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterMiddle = _look.OuterMiddle.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterLeft = _look.OuterLeft.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterRight = _look.OuterRight.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft);
+            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight);
+            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft);
+            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight);
+            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft);
+            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight);
+            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft);
+            Wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight);
+            Wallpaper.Inner = _look.Inner.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt);
+            Wallpaper.Button = _look.Button.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.ButtonClicked = _look.ButtonClicked.Select(img => Images.ExtractBitmap(img)).ToArray();
         }
         else    // MGE
         {
-            Wallpaper.Outer = Images.ExtractBitmap(active.Look.Outer);
-            Wallpaper.Inner = new[] { Images.ExtractBitmap(active.Look.Inner[0]) };
+            Wallpaper.Outer = Images.ExtractBitmap(_look.Outer);
+            Wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner[0]) };
         }
 
-        _look = active.Look;
     }
 
     private static InterfaceStyle _look;
@@ -391,7 +391,7 @@ public static class ImageUtils
     public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
-        var unitTexture = active.UnitImages.Units[(int)unit.Type].Texture;
+        var unitTexture = TextureCache.GetImage(active.UnitImages.Units[(int)unit.Type].Image);
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
         
         var shield = active.UnitShield((int)unit.Type);
@@ -454,7 +454,7 @@ public static class ImageUtils
 
         if (unit.Order == OrderType.Fortified)
         {
-            viewElements.Add(new TextureElement(location: loc, texture: active.UnitImages.Fortify, tile: tile));
+            viewElements.Add(new TextureElement(location: loc, texture: TextureCache.GetImage(active.UnitImages.Fortify), tile: tile));
         }
 
         return new Vector2(unitTexture.Width, unitTexture.Height);

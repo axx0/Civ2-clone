@@ -3,6 +3,7 @@ using Civ2engine;
 using Model;
 using Model.Interface;
 using Model.InterfaceActions;
+using RaylibUtils;
 
 namespace Civ2.Dialogs.NewGame;
 
@@ -27,7 +28,7 @@ public class SelectCityStyle : BaseDialogHandler
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.OptionsImages = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray();
+        Dialog.OptionsImages = activeInterface.CityImages.Sets.Take(4).Select(i => Images.ExtractBitmap(i.Skip(6).First().Image)).ToArray();
         Dialog.Dialog.Default = Initialization.ConfigObject.PlayerCiv.CityStyle;
         Dialog.Dialog.Options ??= Labels.Items[247..251];
         return base.Show(activeInterface);

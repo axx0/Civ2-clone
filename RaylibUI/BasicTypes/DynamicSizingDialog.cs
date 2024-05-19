@@ -1,5 +1,4 @@
 using System.Numerics;
-using Civ2Gold;
 using Model;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;

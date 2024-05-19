@@ -176,13 +176,13 @@ public abstract class BaseGameView : IGameView
                 _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                     tile.CityHere, playerKnowledge.CityHere.Size);
             var cityImage = cities.Sets[cityStyleIndex][sizeIncrement];
-            var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - cityImage.Texture.Height};
+            var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - TextureCache.GetImage(cityImage.Image).Height};
             elements.Add(new CityData(
                 color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
                 name: playerKnowledge.CityHere.Name,
                 size: playerKnowledge.CityHere.Size,
                 sizeRectLoc: cityImage.SizeLoc,
-                texture: cityImage.Texture,
+                texture: TextureCache.GetImage(cityImage.Image),
                 location: cityPos, tile: tile));
             if (tile.UnitsHere.Count > 0)
             {

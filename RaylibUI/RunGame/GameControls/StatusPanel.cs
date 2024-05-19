@@ -2,6 +2,8 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.Terrains;
+using Civ2;
+using Civ2Gold;
 using Model;
 using Model.Interface;
 using Raylib_cs;
@@ -60,7 +62,7 @@ public class StatusPanel : BaseControl
         turnsLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset + 2 * labelHeight, Height = turnsLabel.GetPreferredHeight() };
 
         var iconNo = 0; // TODO: determine one of 4 icons based on current research progress (0...25%, 25...50%, 50...75%, 75...100%)
-        var researchIcon = new TextureDisplay(_gameScreen, _active.MiscImages.ResearchProgressIcon[iconNo], new System.Numerics.Vector2(_internalBounds.X + 119, _internalBounds.Y + 20), scale: 1.5f);
+        var researchIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["researchProgress"][iconNo]), new System.Numerics.Vector2(_internalBounds.X + 119, _internalBounds.Y + 20), scale: 1.5f);
 
         Children = new List<IControl>() { populLabel, yearLabel, goldLabel, turnsLabel, researchIcon };
 
@@ -68,7 +70,7 @@ public class StatusPanel : BaseControl
         if (true)
         {
             iconNo = 0;
-            var warmingIcon = new TextureDisplay(_gameScreen, _active.MiscImages.GlobalWarmingIcon[iconNo], new System.Numerics.Vector2(_internalBounds.X + 150, _internalBounds.Y + 20), scale: 1.5f);
+            var warmingIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["globalWarming"][iconNo]), new System.Numerics.Vector2(_internalBounds.X + 150, _internalBounds.Y + 20), scale: 1.5f);
             Children.Add(warmingIcon);
         }
 
