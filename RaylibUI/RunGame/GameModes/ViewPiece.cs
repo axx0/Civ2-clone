@@ -260,7 +260,7 @@ public class ViewPiece : IGameMode
         {
             var unit = activeTile.UnitsHere[i];
             var unitImage = new UnitDisplay(_gameScreen, unit,
-                new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, (float)9 / 8);
+                new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(1));
             controls.Add(unitImage);
             currentY += unitImage.Height + 8;
             var cityName = (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name;

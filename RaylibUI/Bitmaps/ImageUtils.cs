@@ -509,5 +509,29 @@ public static class ImageUtils
     {
         return TextureCache.GetImage(imageSource, activeInterface, owner);
     }
-    
+
+    public static int ZoomScale(this int i, int zoom)
+    {
+        return (int)((8.0 + zoom) / 8.0 * i);
+    }
+
+    public static int ZoomScale(this float i, int zoom)
+    {
+        return (int)((8.0 + zoom) / 8.0 * i);
+    }
+
+    public static float ZoomScale(int zoom)
+    {
+        return (float)((8.0 + zoom) / 8.0);
+    }
+
+    public static Rectangle ZoomScale(this Rectangle rect, int zoom)
+    {
+        return new Rectangle(0, 0, rect.Width.ZoomScale(zoom), rect.Height.ZoomScale(zoom));
+    }
+
+    public static Vector2 ZoomScale(this Vector2 coords, int zoom)
+    {
+        return new Vector2(coords.X.ZoomScale(zoom), coords.Y.ZoomScale(zoom));
+    }
 }

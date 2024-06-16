@@ -14,7 +14,7 @@ public class UnitReadyView : BaseGameView
         var activeInterface = gameScreen.Main.ActiveInterface;
 
         var elements = new List<IViewElement>();
-        ImageUtils.GetUnitTextures(unit, activeInterface, elements, ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height});
+        ImageUtils.GetUnitTextures(unit, activeInterface, elements, ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(unit.CurrentLocation.Map.Zoom)});
 
         SetAnimation(elements);
 

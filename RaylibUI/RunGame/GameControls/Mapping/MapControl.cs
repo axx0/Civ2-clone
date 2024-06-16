@@ -19,15 +19,14 @@ public class MapControl : BaseControl
     private readonly GameScreen _gameScreen;
     private readonly Game _game;
     private Texture2D? _backgroundImage;
-    private int _viewWidth;
-    private int _viewHeight;
+    private int _viewWidth,_viewHeight;
     private Padding _padding;
     private HeaderLabel _headerLabel;
     private IUserInterface _active;
     
     private readonly Queue<IGameView> _animationQueue = new();
     private IGameView _currentView;
-
+    
     public MapControl(GameScreen gameScreen, Game game, Rectangle initialBounds) : base(gameScreen)
     {
         Bounds = initialBounds;
@@ -300,40 +299,43 @@ public class MapControl : BaseControl
 
         var cityDetails = new List<CityData>();
 
+        var zoom = _game.CurrentMap.Zoom;
         foreach (var element in _currentView.Elements)
         {
             if (element is CityData data)
             {
-                element.Draw(element.Location + paddedLoc);
+                element.Draw(element.Location + paddedLoc, scale: ImageUtils.ZoomScale(zoom));
                 cityDetails.Add(data);
 
                 var size = data.Size.ToString();
-                var textSize = Raylib.MeasureTextEx(Fonts.TnRbold, size, 14, 0);
-                var citySizeRectLoc = paddedLoc + data.Location + data.SizeRectLoc;
+                var fontSize = 14.ZoomScale(zoom);
+                var textSize = Raylib.MeasureTextEx(Fonts.TnRbold, size, fontSize, 0);
+                var citySizeRectLoc = paddedLoc + data.Location + data.SizeRectLoc.ZoomScale(zoom);
                 var textPosition = citySizeRectLoc;
                 Raylib.DrawRectangle((int)citySizeRectLoc.X, (int)citySizeRectLoc.Y, (int)textSize.X, (int)textSize.Y, data.Color.TextColour);
                 Raylib.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
-                Raylib.DrawTextEx(Fonts.TnRbold, size, textPosition, 14, 0, Color.Black);
+                Raylib.DrawTextEx(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
             }
             else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile) || element.Tile.IsCityPresent)
             {
-                element.Draw(element.Location + paddedLoc, isShaded: element.IsShaded);
+                element.Draw(element.Location + paddedLoc, isShaded: element.IsShaded, scale: ImageUtils.ZoomScale(zoom));
             }
         }
 
         foreach (var cityData in cityDetails)
         {
             var name = cityData.Name;
-            var textSize = Raylib.MeasureTextEx(_active.Look.DefaultFont, name, 20, 1);
-            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width /2f , cityData.Texture.Height) - textSize /2f;
+            var fontSize = 20.ZoomScale(zoom);
+            var textSize = Raylib.MeasureTextEx(_active.Look.DefaultFont, name, fontSize, 1);
+            var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width.ZoomScale(zoom) / 2f , cityData.Texture.Height.ZoomScale(zoom)) - textSize /2f;
 
-            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), 20, 1, Color.Black);
-            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition, 20, 1, cityData.Color.TextColour);
+            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), fontSize, 1, Color.Black);
+            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour);
         }
 
         foreach (var animation in _currentView.CurrentAnimations)
         {
-            animation.Draw(animation.Location + paddedLoc);
+            animation.Draw(animation.Location + paddedLoc, scale: ImageUtils.ZoomScale(zoom));
         }
 
         if (_backgroundImage != null)

@@ -152,7 +152,7 @@ public class MovingPieces : IGameMode
         var offsetX = 7;
         var activeUnit = _gameScreen.Player.ActiveUnit;
         var unitDisplay = new UnitDisplay(_gameScreen, activeUnit,
-            new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, (float)9/8);
+            new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(1));
         controls.Add(unitDisplay);
 
         // Show move points correctly
@@ -282,7 +282,7 @@ public class MovingPieces : IGameMode
         {
             var unit = unitsLeftOnTile[i];
             var unitImage = new UnitDisplay(_gameScreen, unit,
-                new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, (float)9 / 8);
+                new Vector2(bounds.X + offsetX, currentY), _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(1));
             controls.Add(unitImage);
             currentY += unitImage.Height + 8;
             cityName = (unit.HomeCity == null) ? Labels.For(LabelIndex.NONE) : unit.HomeCity.Name;

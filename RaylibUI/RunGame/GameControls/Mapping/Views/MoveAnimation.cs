@@ -18,7 +18,7 @@ internal class MoveAnimation : BaseGameView
         var map = activeUnit.CurrentLocation.Map;
         var viewElements = new List<IViewElement>();
         ImageUtils.GetUnitTextures(activeUnit, activeInterface, viewElements,
-            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height + Dimensions.TileHeight }, true);
+            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight }, true);
         SetAnimation(viewElements);
         var totalFrames = activeUnit.CurrentLocation.CityHere == null ? noFramesForOneMove : noFramesForOneMove - 1;
         for (var frame = 1; frame < totalFrames; frame++)

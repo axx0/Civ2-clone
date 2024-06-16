@@ -42,13 +42,13 @@ public class TileTextureCache
         _tileSets.Add(tileSet);
         _dimensions.Add(new MapDimensions
         {
-            TotalWidth = map.Tile.GetLength(0) * tileSet.TileWidth,
-            TotalHeight = map.Tile.GetLength(1) * tileSet.HalfHeight + tileSet.HalfHeight,
-            HalfHeight = tileSet.HalfHeight,
-            TileHeight = tileSet.TileHeight,
-            TileWidth = tileSet.TileWidth,
-            HalfWidth = tileSet.HalfWidth,
-            DiagonalCut = tileSet.DiagonalCut
+            TotalWidth = map.Tile.GetLength(0) * tileSet.TileWidth.ZoomScale(map.Zoom),
+            TotalHeight = map.Tile.GetLength(1) * tileSet.HalfHeight.ZoomScale(map.Zoom) + tileSet.HalfHeight.ZoomScale(map.Zoom),
+            HalfHeight = tileSet.HalfHeight.ZoomScale(map.Zoom),
+            TileHeight = tileSet.TileHeight.ZoomScale(map.Zoom),
+            TileWidth = tileSet.TileWidth.ZoomScale(map.Zoom),
+            HalfWidth = tileSet.HalfWidth.ZoomScale(map.Zoom),
+            DiagonalCut = tileSet.DiagonalCut.ZoomScale(map.Zoom).ZoomScale(map.Zoom)
         });
         return mapIndex;
     }

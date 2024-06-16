@@ -53,6 +53,6 @@ public class TextureElement : IViewElement
 
     public IViewElement CloneForLocation(Vector2 newLocation)
     {
-        return new TextureElement(Texture, newLocation, Tile, IsTerrain);
+        return new TextureElement(Texture, newLocation, Tile, IsTerrain, offset: Offset);
     }
 }
