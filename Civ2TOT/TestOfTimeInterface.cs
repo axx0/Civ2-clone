@@ -528,8 +528,7 @@ public class TestOfTimeInterface : Civ2Interface
 
                 playerColours[col] = new PlayerColour
                 {
-                    Normal = Images.ExtractBitmap(PicSources["flags"][col]),
-                    FlagTexture = Raylib.LoadTextureFromImage(Images.ExtractBitmap(PicSources["flags"][col])),
+                    Image = PicSources["flags"][col],
                     TextColour = textColour,
                     LightColour = lightColour,
                     DarkColour = darkColour

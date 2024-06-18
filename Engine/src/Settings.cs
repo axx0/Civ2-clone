@@ -15,6 +15,8 @@ namespace Civ2engine
         
         public static string[] SearchPaths { get; private set; }
 
+        public static int TextureFilter { get; private set; }
+
         public static bool LoadConfigSettings()
         {
             var settingsFilePath = Path.Combine(BasePath, SettingsFileName);
@@ -62,6 +64,15 @@ namespace Civ2engine
             }else if (!string.IsNullOrWhiteSpace(Civ2Path))
             {
                 SearchPaths = new[] { Civ2Path, BasePath };
+            }
+
+            if (root.TryGetProperty(nameof(TextureFilter), out var textureFilter))
+            {
+                TextureFilter = textureFilter.GetInt32();
+            }
+            else
+            {
+                TextureFilter = 0;
             }
         }
 

@@ -1,4 +1,5 @@
 using System.Numerics;
+using Civ2engine;
 using Civ2engine.MapObjects;
 using Model;
 using Model.ImageSets;
@@ -131,8 +132,16 @@ public abstract class BaseGameView : IGameView
                                 else
                                 {
                                     var resizedImg = Raylib.ImageCopy(tileDetails.Image);
-                                    Raylib.ImageResizeNN(ref resizedImg, resizedImg.Width.ZoomScale(map.Zoom),
-                                        resizedImg.Height.ZoomScale(map.Zoom));
+                                    if (Settings.TextureFilter == 0)
+                                    {
+                                        Raylib.ImageResizeNN(ref resizedImg, resizedImg.Width.ZoomScale(map.Zoom),
+                                            resizedImg.Height.ZoomScale(map.Zoom));
+                                    }
+                                    else
+                                    {
+                                        Raylib.ImageResize(ref resizedImg, resizedImg.Width.ZoomScale(map.Zoom),
+                                            resizedImg.Height.ZoomScale(map.Zoom));
+                                    }
                                     Raylib.ImageDraw(ref image, resizedImg,
                                         MapImage.TileRec.ZoomScale(map.Zoom),
                                         new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
@@ -200,7 +209,7 @@ public abstract class BaseGameView : IGameView
                 location: cityPos, tile: tile));
             if (tile.UnitsHere.Count > 0)
             {
-                var flagTexture = activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId].FlagTexture;
+                var flagTexture = TextureCache.GetImage(activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId].Image);
                 var flagOffset = cityImage.FlagLoc - new Vector2(0, flagTexture.Height - 5);
                 elements.Add(new TextureElement(texture: flagTexture,
                     tile: tile, location: cityPos + flagOffset, offset: flagOffset)

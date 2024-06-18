@@ -36,6 +36,7 @@ public static class TextureCache
         {
             var img = Images.ExtractBitmapData(source, activeInterface, civ).Image;
             Textures[key] = Raylib.LoadTextureFromImage(img);
+            Raylib.SetTextureFilter(Textures[key], (TextureFilter)Settings.TextureFilter);
         }
         return Textures[key];
     }
