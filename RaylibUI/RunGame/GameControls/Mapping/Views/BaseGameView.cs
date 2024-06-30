@@ -1,5 +1,9 @@
+using System.Diagnostics;
 using System.Numerics;
+using System.Xml.Serialization;
 using Civ2engine;
+using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Model;
 using Model.ImageSets;
@@ -77,14 +81,10 @@ public abstract class BaseGameView : IGameView
 
             var imageWidth = ViewWidth;
             var imageHeight = ViewHeight;
-            var image = Raylib.GenImageColor(imageWidth, imageHeight, new Color(0, 0, 0, 0));
+            var image = Raylib.GenImageColor(imageWidth, imageHeight, Color.Black);
             var map = location.Map;
             var dim = _gameScreen.TileCache.GetDimensions(map);
-
-            Raylib.ImageDrawRectangle(ref image, 0, 0, imageWidth, imageHeight, Color.Black);
-
             var ypos = -_offsets.Y;
-
             var maxWidth = map.XDim * dim.TileWidth;
 
             for (var row = 0; row < map.YDim; row++)
@@ -168,6 +168,10 @@ public abstract class BaseGameView : IGameView
             this.Elements = elements.ToArray();
 
             Raylib.UnloadImage(image);
+
+            gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged,
+                new[] { (int)_offsets.X / dim.HalfWidth, (int)_offsets.Y / dim.HalfHeight },
+                new[] { ViewWidth / dim.HalfWidth, ViewHeight / dim.HalfHeight }));
         }
     }
 
@@ -280,8 +284,7 @@ public abstract class BaseGameView : IGameView
     protected Vector2 GetPosForTile(Tile tile)
     {
         return new Vector2(tile.XIndex * Dimensions.TileWidth + tile.Odd * Dimensions.HalfWidth,
-                   tile.Y * Dimensions.HalfHeight) -
-               Offsets;
+                   tile.Y * Dimensions.HalfHeight) - _offsets;
     }
 
     public Texture2D BaseImage { get; set; }
@@ -300,75 +303,100 @@ public abstract class BaseGameView : IGameView
         {
             _offsets = previousView.Offsets;
         }
-        bool setOffsets;
+        bool setOffsetX, setOffsetY;
+        bool xShift = false;    // true when moving through edge of round earth
         int offsetY;
         int offsetX;
         if (ViewHeight >= dimensions.TotalHeight)
         {
             offsetY = (dimensions.TotalHeight - ViewHeight) /2;
-            setOffsets = offsetY != (int)_offsets.Y;
+            setOffsetY = offsetY != (int)_offsets.Y;
         }
         else
         {
             var tileTop = location.Y * dimensions.HalfHeight;
             offsetY = tileTop - (ViewHeight / 2);
-            if (offsetY < 0)
+            var currentOffsetYPos = tileTop - _offsets.Y;
+
+            setOffsetY = currentOffsetYPos < 0 || currentOffsetYPos + dimensions.TileHeight > ViewHeight;
+
+            if (currentOffsetYPos < 0 && offsetY < 0)
             {
-                offsetY = 0; setOffsets = offsetY != (int)_offsets.Y;
+                offsetY = 0;
+                setOffsetY = offsetY != (int)_offsets.Y;
             }
-            else if(offsetY > (dimensions.TotalHeight - ViewHeight))
+            else if (currentOffsetYPos + dimensions.TileHeight > ViewHeight &&
+                    offsetY + ViewHeight > dimensions.TotalHeight)
             {
                 offsetY = dimensions.TotalHeight - ViewHeight;
-                setOffsets = offsetY != (int)_offsets.Y;
-            }
-            else
-            {
-                var currentOffsetYPos = tileTop - _offsets.Y;
-                setOffsets = currentOffsetYPos < dimensions.TotalHeight || currentOffsetYPos + dimensions.TileHeight * 2 > ViewHeight;
+                setOffsetY = offsetY != (int)_offsets.Y;
             }
         }
 
-        if (location.Map.Flat && ViewWidth >= dimensions.TotalWidth)
+        if (ViewWidth >= dimensions.TotalWidth)
         {
             offsetX = (dimensions.TotalWidth - ViewWidth) /2;
-            setOffsets = setOffsets || offsetX != (int)_offsets.X;
+            setOffsetX = offsetX != (int)_offsets.X;
         }
         else
         {
             var tileLeft = location.XIndex * dimensions.TileWidth + location.Odd * dimensions.HalfWidth;
             offsetX = tileLeft - (ViewWidth / 2);
+            var currentOffsetXPos = tileLeft - _offsets.X;
+
             if (location.Map.Flat)
             {
-                if (offsetX < 0)
+                setOffsetX = currentOffsetXPos < 0 || currentOffsetXPos + dimensions.TileWidth > ViewWidth;
+
+                if (currentOffsetXPos < 0 && offsetX < 0)
                 {
                     offsetX = 0;
-                    setOffsets = setOffsets || offsetX != (int)_offsets.X;
-                }else if (offsetX > (dimensions.TotalWidth - ViewWidth + dimensions.HalfWidth))
-                {
-                    offsetX = dimensions.TotalWidth - ViewWidth + dimensions.HalfWidth;
-                    setOffsets = setOffsets || offsetX != (int)_offsets.X;
+                    setOffsetX = offsetX != (int)_offsets.X;
                 }
-                else
+                else if (currentOffsetXPos + dimensions.TileWidth > ViewWidth &&
+                        offsetX + ViewWidth > dimensions.TotalWidth)
                 {
-                    var currentOffsetXPos = tileLeft - _offsets.X;
-                    setOffsets = setOffsets || currentOffsetXPos < dimensions.TileWidth ||
-                                 currentOffsetXPos +  dimensions.TileWidth * 2 > ViewWidth;
+                    offsetX = dimensions.TotalWidth - ViewWidth;
+                    setOffsetX = offsetX != (int)_offsets.X;
                 }
             }
             else
             {
-                var currentOffsetXPos = tileLeft - _offsets.X;
-                setOffsets = setOffsets || currentOffsetXPos < dimensions.TileWidth ||
-                             currentOffsetXPos + dimensions.TileWidth * 2 > ViewWidth;
+                if (_offsets.X < 0 && tileLeft - _offsets.X > dimensions.TotalWidth)
+                {
+                    offsetX = (int)_offsets.X + dimensions.TotalWidth;
+                    setOffsetX = true;
+                    xShift = true;
+                }
+                else if (_offsets.X > 0 && tileLeft >= 0 && dimensions.TotalWidth - _offsets.X + tileLeft < ViewWidth)
+                {
+                    offsetX = (int)_offsets.X - dimensions.TotalWidth;
+                    setOffsetX = true;
+                    xShift = true;
+                }
+                else
+                {
+                    setOffsetX = currentOffsetXPos < 0 ||
+                                currentOffsetXPos + dimensions.TileWidth > ViewWidth;
+                }
             }
         }
 
-        if (force || setOffsets)
+
+        if (force || setOffsetX)
         {
-            _offsets = new Vector2(offsetX, offsetY);
+            _offsets.X = offsetX;
         }
 
-        return setOffsets;
+        if (force || setOffsetY)
+        {
+            _offsets.Y = offsetY;
+        }
+
+        if (xShift && !setOffsetY)
+            return false;
+
+        return setOffsetX || setOffsetY;
     }
 
     public Tile Location { get; }

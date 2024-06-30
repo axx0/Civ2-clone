@@ -9,13 +9,24 @@ namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 internal class MoveAnimation : BaseGameView
 {
     public MoveAnimation(GameScreen gameScreen, MovementEventArgs moveEvent, IGameView? previousView, int viewHeight,
-        int viewWidth, bool forceRedraw) : base(gameScreen, moveEvent.Location.First(), previousView, viewHeight, viewWidth, false, 70, moveEvent.Location, forceRedraw)
+        int viewWidth, bool forceRedraw) : base(gameScreen, moveEvent.Location.First(), previousView, viewHeight, viewWidth, false, 30, moveEvent.Location, forceRedraw)
     {
         var activeInterface = gameScreen.Main.ActiveInterface;
         var activeUnit = moveEvent.Unit;
         var noFramesForOneMove = 8;
-        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXy[0], activeUnit.Y - activeUnit.PrevXy[1] };
         var map = activeUnit.CurrentLocation.Map;
+        float[] unitDrawOffset = { activeUnit.X - activeUnit.PrevXy[0], activeUnit.Y - activeUnit.PrevXy[1] };
+        if (!map.Flat && Math.Abs(unitDrawOffset[0]) >= map.XDimMax - 2)
+        {
+            if (unitDrawOffset[0] < 0)
+            {
+                unitDrawOffset[0] += map.XDimMax;
+            }
+            else
+            {
+                unitDrawOffset[0] -= map.XDimMax;
+            }
+        }
         var viewElements = new List<IViewElement>();
         ImageUtils.GetUnitTextures(activeUnit, activeInterface, viewElements,
             ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight }, true);
