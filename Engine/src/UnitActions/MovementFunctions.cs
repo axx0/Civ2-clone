@@ -14,9 +14,14 @@ namespace Civ2engine.UnitActions.Move
         public static void TryMoveNorth()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.X > 1)
+            if (instance.ActiveUnit.Y - 2 >= 0)
             {
                 MoveC2(0, -2);
+            }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
             }
 
             CheckForUnitTurnEnded(instance);
@@ -24,20 +29,27 @@ namespace Civ2engine.UnitActions.Move
 
         public static void TryMoveNorthEast()
         {
-            var game = Game.Instance;
-            if (game.ActiveUnit.Y == 0)
+            var instance = Game.Instance;
+            if (instance.ActiveUnit.Y - 1 >= 0 &&
+                ((instance.Options.FlatEarth && instance.ActiveUnit.X + 1 < instance.CurrentMap.XDimMax) ||
+                !instance.Options.FlatEarth))
             {
+                if (!instance.Options.FlatEarth && instance.ActiveUnit.X == instance.CurrentMap.XDimMax - 1)
+                {
+                    MoveC2(-instance.CurrentMap.XDimMax + 2, -1);
+                }
+                else
+                {
+                    MoveC2(1, -1);
+                }
+            }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
                 return;
             }
-            if (game.ActiveUnit.X < game.CurrentMap.XDimMax-2)
-            {
-                MoveC2(1, -1);
-            }else if (!game.Options.FlatEarth)
-            {
-                MoveC2(-game.CurrentMap.XDimMax +2 , -1);
-            }
 
-            CheckForUnitTurnEnded(game);
+            CheckForUnitTurnEnded(instance);
         }
 
         private static void CheckForUnitTurnEnded(Game game)
@@ -51,65 +63,93 @@ namespace Civ2engine.UnitActions.Move
         public static void TryMoveEast()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.X < instance.CurrentMap.XDimMax -2)
+            if (instance.ActiveUnit.X + 2 < instance.CurrentMap.XDimMax)
             {
                 MoveC2(2, 0);
-            }else if (!instance.Options.FlatEarth)
-            {
-                MoveC2(-instance.CurrentMap.XDimMax +2 , 0);
             }
+            else if (!instance.Options.FlatEarth)
+            {
+                MoveC2(-instance.CurrentMap.XDimMax + 2, 0);
+            }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
+            }
+            
             CheckForUnitTurnEnded(instance);
         }
         
         public static void TryMoveSouthEast()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.Y < instance.CurrentMap.YDim - 1)
+            if (instance.ActiveUnit.Y + 1 < instance.CurrentMap.YDim &&
+                ((instance.Options.FlatEarth && instance.ActiveUnit.X + 1 < instance.CurrentMap.XDimMax) ||
+                !instance.Options.FlatEarth))
             {
-                if (instance.ActiveUnit.X < instance.CurrentMap.XDimMax - 1)
-                {
-                    MoveC2(1, 1);
-                }
-                else if (!instance.Options.FlatEarth)
+                if (!instance.Options.FlatEarth && instance.ActiveUnit.X == instance.CurrentMap.XDimMax - 1)
                 {
                     MoveC2(-instance.CurrentMap.XDimMax + 2, 1);
                 }
-
+                else
+                {
+                    MoveC2(1, 1);
+                }
             }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
+            }
+
             CheckForUnitTurnEnded(instance);
         }
         
         public static void TryMoveSouth()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.Y < instance.CurrentMap.YDim-2)
+            if (instance.ActiveUnit.Y + 2 < instance.CurrentMap.YDim)
             {
                 MoveC2(0, 2);
             }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
+            }
+
             CheckForUnitTurnEnded(instance);
         }
 
         public static void TryMoveSouthWest()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.Y < instance.CurrentMap.YDim - 1)
+            if (instance.ActiveUnit.Y + 1 < instance.CurrentMap.YDim &&
+                ((instance.Options.FlatEarth && instance.ActiveUnit.X > 0) ||
+                !instance.Options.FlatEarth))
             {
-                if (instance.ActiveUnit.X > 0)
-                {
-                    MoveC2(-1, 1);
-                }
-                else if (!instance.Options.FlatEarth)
+                if (!instance.Options.FlatEarth && instance.ActiveUnit.X == 0)
                 {
                     MoveC2(instance.CurrentMap.XDimMax - 2, 1);
                 }
+                else
+                {
+                    MoveC2(-1, 1);
+                }
             }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
+            }
+
             CheckForUnitTurnEnded(instance);
         }
 
         public static void TryMoveWest()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.X > 0)
+            if (instance.ActiveUnit.X - 2 >= 0)
             {
                 MoveC2(-2, 0);
             }
@@ -117,23 +157,37 @@ namespace Civ2engine.UnitActions.Move
             {
                 MoveC2(instance.CurrentMap.XDimMax-2, 0);
             }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
+            }
+
             CheckForUnitTurnEnded(instance);
         }
 
         public static void TryMoveNorthWest()
         {
             var instance = Game.Instance;
-            if (instance.ActiveUnit.Y != 0)
+            if (instance.ActiveUnit.Y - 1 >= 0 &&
+                ((instance.Options.FlatEarth && instance.ActiveUnit.X > 0) ||
+                !instance.Options.FlatEarth))
             {
-                if (instance.ActiveUnit.X > 0)
-                {
-                    MoveC2(-1, -1);
-                }
-                else if (!instance.Options.FlatEarth)
+                if (!instance.Options.FlatEarth && instance.ActiveUnit.X == 0)
                 {
                     MoveC2(instance.CurrentMap.XDimMax - 1, -1);
                 }
+                else
+                {
+                    MoveC2(-1, -1);
+                }
             }
+            else
+            {
+                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, instance.ActiveUnit, BlockedReason.EdgeOfMap);
+                return;
+            }
+
             CheckForUnitTurnEnded(instance);
         }
 
