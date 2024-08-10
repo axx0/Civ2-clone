@@ -1,6 +1,7 @@
 ﻿using Civ2engine;
 using Raylib_cs;
 using System.Collections;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Unicode;
 
@@ -53,6 +54,8 @@ public static partial class Images
             var width = BitConverter.ToInt32(bytes, 18);
             var height = BitConverter.ToInt32(bytes, 22);
             bpp = BitConverter.ToInt16(bytes, 28);
+            var size = BitConverter.ToInt32(bytes, 34);
+            var extraBits = size / height - bpp / 8 * width;
             var imgData = new byte[4 * width * height];
             int flag1Color = Convert.ToInt32("0x0000FFFF", 16);
             int flag2Color = Convert.ToInt32("0xFF9C00FF", 16);
@@ -114,10 +117,11 @@ public static partial class Images
                                     imgData[4 * (width * row + col) + 0] = (byte)(_15bitrgb[2] * 255 / 31);
                                     imgData[4 * (width * row + col) + 1] = (byte)(_15bitrgb[1] * 255 / 31);
                                     imgData[4 * (width * row + col) + 2] = (byte)(_15bitrgb[0] * 255 / 31);
+                                    imgData[4 * (width * row + col) + 3] = 255;
                                 }
                                 else
                                 {
-                                    var off = dataOffset + 3 * width * (height - 1 - row) + 3 * col;
+                                    var off = dataOffset + (3 * width + extraBits) * (height - 1 - row) + 3 * col;
                                     imgData[4 * (width * row + col) + 0] = bytes[off + 2];
                                     imgData[4 * (width * row + col) + 1] = bytes[off + 1];
                                     imgData[4 * (width * row + col) + 2] = bytes[off + 0];

@@ -18,7 +18,7 @@ namespace Civ2.ImageLoader
 
             for (int i = 0; i < units.Length; i++)
             {
-                var props = Images.ExtractBitmapData(active.PicSources["unit"][i]); // put into cache
+                var props = Images.ExtractBitmapData(active.PicSources["unit"][i], ruleset.Paths); // put into cache
 
                 units[i] = new UnitImage
                 {

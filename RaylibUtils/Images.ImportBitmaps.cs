@@ -72,17 +72,17 @@ namespace RaylibUtils
 
         private const string TempPath = "temp";
 
-        public static ImageProps ExtractBitmapData(IImageSource imageSource)
+        public static ImageProps ExtractBitmapData(IImageSource imageSource, string[]? searchPaths)
         {
-            return ExtractBitmapData(imageSource, null);
+            return ExtractBitmapData(imageSource, null, searchPaths: searchPaths);
         }
 
-        public static Image ExtractBitmap(IImageSource imageSource)
+        public static Image ExtractBitmap(IImageSource imageSource, string[]? searchPaths = null)
         {
-            return ExtractBitmapData(imageSource, null).Image;
+            return ExtractBitmapData(imageSource, active: null, searchPaths:searchPaths).Image;
         }
 
-        public static ImageProps ExtractBitmapData(IImageSource imageSource, IUserInterface? active, int owner = -1)
+        public static ImageProps ExtractBitmapData(IImageSource imageSource, IUserInterface? active, int owner = -1, string[]? searchPaths = null)
         {
             var imageProps = new ImageProps();
             int flag1X = 0, flag1Y = 0, flag2X = 0, flag2Y = 0;
@@ -110,7 +110,7 @@ namespace RaylibUtils
                         var sourceKey = $"{bitmapStorage.Filename}-Source";
                         if (!_imageCache.ContainsKey(sourceKey))
                         {
-                            var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
+                            var path = Utils.GetFilePath(bitmapStorage.Filename, searchPaths ?? Settings.SearchPaths, bitmapStorage.Extension);
                             var source_img_bpp = Images.LoadImageFromFile(path);
                             _imageCache[sourceKey] = source_img_bpp.Image;
                             _sourceBpp[sourceKey] = source_img_bpp.ColourDepth;

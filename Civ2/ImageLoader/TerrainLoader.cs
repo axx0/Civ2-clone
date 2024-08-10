@@ -13,8 +13,12 @@ namespace Civ2.ImageLoader
 {
     public static class TerrainLoader
     {
+        private static string[] _paths;
+
         public static void LoadTerrain(Ruleset ruleset, Civ2Interface active)
         {
+            _paths = ruleset.Paths;
+
             for (var i = 0; i < active.ExpectedMaps; i++)
             {
                 active.TileSets.Add(LoadTerrain(ruleset, i, active));
@@ -151,7 +155,7 @@ namespace Civ2.ImageLoader
                 file = $"{file.Remove(file.Length - 1, 1)}{newIndex}";
             }
 
-            return Images.ExtractBitmap(new BitmapStorage(file, storage.Location, storage.TransparencyPixel, storage.SearchFlagLoc));
+            return Images.ExtractBitmap(new BitmapStorage(file, storage.Location, storage.TransparencyPixel, storage.SearchFlagLoc), _paths);
         }
     }
 }   
