@@ -32,6 +32,8 @@ public interface IUserInterface
     UnitSet UnitImages { get; }
 
     PlayerColour[] PlayerColours { get; }
+    
+    int ExpectedMaps { get; set; }
 
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }

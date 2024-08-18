@@ -113,7 +113,7 @@ public static partial class Images
                                 if (bpp == 16)
                                 {
                                     var _15bitrgb = Get15BitRgb(bytes, dataOffset +
-                                                    2 * width * (height - 1 - row) + 2 * col);
+                                                    (2 * width + extraBits) * (height - 1 - row) + 2 * col);
                                     imgData[4 * (width * row + col) + 0] = (byte)(_15bitrgb[2] * 255 / 31);
                                     imgData[4 * (width * row + col) + 1] = (byte)(_15bitrgb[1] * 255 / 31);
                                     imgData[4 * (width * row + col) + 2] = (byte)(_15bitrgb[0] * 255 / 31);
@@ -143,11 +143,12 @@ public static partial class Images
 
             };
 
+            Image img2;
             unsafe
             {
                 fixed (byte* ptr = imgData)
                 {
-                    img = new Image
+                    img2 = new Image
                     {
                         Data = ptr,
                         Format = PixelFormat.UncompressedR8G8B8A8,
@@ -157,6 +158,7 @@ public static partial class Images
                     };
                 }
             }
+            img = Raylib.ImageCopy(img2);
         }
         // PNG
         else if (System.Text.Encoding.UTF8.GetString(bytes, 1, 3).Equals("PNG"))

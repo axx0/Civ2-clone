@@ -29,33 +29,33 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override InterfaceStyle Look { get; } = new()
     {
-        OuterTitleTop = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 94, 58, 28)).ToArray(),
-        OuterThinTop = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 123, 58, 12)).ToArray(),
-        OuterBottom = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 136, 58, 11)).ToArray(),
-        OuterMiddle = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 1 + 59 * col, 148, 58, 13)).ToArray(),
-        OuterLeft = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 112 + 12 * col, 168, 11, 29)).ToArray(),
-        OuterRight = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", 112 + 13 * col, 198, 12, 29)).ToArray(),
-        OuterTitleTopLeft = new BitmapStorage("dialog.png", 1, 168, 14, 30),
-        OuterTitleTopRight = new BitmapStorage("dialog.png", 16, 168, 14, 30),
-        OuterThinTopLeft = new BitmapStorage("dialog.png", 1, 199, 14, 14),
-        OuterThinTopRight = new BitmapStorage("dialog.png", 16, 199, 14, 14),
-        OuterMiddleLeft = new BitmapStorage("dialog.png", 1, 214, 14, 18),
-        OuterMiddleRight = new BitmapStorage("dialog.png", 16, 214, 14, 18),
-        OuterBottomLeft = new BitmapStorage("dialog.png", 1, 233, 14, 14),
-        OuterBottomRight = new BitmapStorage("dialog.png", 16, 233, 14, 14),
+        OuterTitleTop = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", 1 + 59 * col, 94, 58, 28)).ToArray(),
+        OuterThinTop = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", 1 + 59 * col, 123, 58, 12)).ToArray(),
+        OuterBottom = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", 1 + 59 * col, 136, 58, 11)).ToArray(),
+        OuterMiddle = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", 1 + 59 * col, 148, 58, 13)).ToArray(),
+        OuterLeft = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", 112 + 12 * col, 168, 11, 29)).ToArray(),
+        OuterRight = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", 112 + 13 * col, 198, 12, 29)).ToArray(),
+        OuterTitleTopLeft = new BitmapStorage("dialog", 1, 168, 14, 30),
+        OuterTitleTopRight = new BitmapStorage("dialog", 16, 168, 14, 30),
+        OuterThinTopLeft = new BitmapStorage("dialog", 1, 199, 14, 14),
+        OuterThinTopRight = new BitmapStorage("dialog", 16, 199, 14, 14),
+        OuterMiddleLeft = new BitmapStorage("dialog", 1, 214, 14, 18),
+        OuterMiddleRight = new BitmapStorage("dialog", 16, 214, 14, 18),
+        OuterBottomLeft = new BitmapStorage("dialog", 1, 233, 14, 14),
+        OuterBottomRight = new BitmapStorage("dialog", 16, 233, 14, 14),
 
-        Inner = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog.png", new Rectangle(1 + 93 * col, 1, 92, 92))).ToArray(),
+        Inner = Enumerable.Range(0, 6).Select(col => new BitmapStorage("dialog", new Rectangle(1 + 93 * col, 1, 92, 92))).ToArray(),
         InnerAlt = new BitmapStorage("ICONS", new Rectangle(298, 190, 32, 32)),
 
-        Button = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog.png", new Rectangle(449 + 17 * col, 94, 16, 30))).ToArray(),
-        ButtonClicked = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog.png", new Rectangle(449 + 17 * col, 125, 16, 30))).ToArray(),
+        Button = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog", new Rectangle(449 + 17 * col, 94, 16, 30))).ToArray(),
+        ButtonClicked = Enumerable.Range(0, 14).Select(col => new BitmapStorage("dialog", new Rectangle(449 + 17 * col, 125, 16, 30))).ToArray(),
 
         RadioButtons = new IImageSource[]
-        { new BitmapStorage("dialog.png", 903, 94, 33, 33), 
-          new BitmapStorage("dialog.png", 869, 94, 33, 33) },
+        { new BitmapStorage("dialog", 903, 94, 33, 33), 
+          new BitmapStorage("dialog", 869, 94, 33, 33) },
         CheckBoxes = new IImageSource[]
-        { new BitmapStorage("dialog.png", 805, 94, 29, 29),
-          new BitmapStorage("dialog.png", 775, 94, 29, 29) },
+        { new BitmapStorage("dialog", 805, 94, 29, 29),
+          new BitmapStorage("dialog", 775, 94, 29, 29) },
 
         DefaultFont = Fonts.Arial,
         ButtonFont = Fonts.Arial,
@@ -85,20 +85,20 @@ public class TestOfTimeInterface : Civ2Interface
     protected override IEnumerable<Ruleset> GenerateRulesets(string path, string title)
     {
 
-        var extended_original = "Original";
+        var original = "Original";
 
         var other_default_game_modes = new[] { "SciFi", "Fantasy" };
 
-        var originalPath = Path.Combine(path, extended_original);
+        var originalPath = Path.Combine(path, original);
 
         var originalERxists = Directory.Exists(originalPath);
-        var rules = path + Path.DirectorySeparatorChar + "rules.txt";
+        var rules = originalPath + Path.DirectorySeparatorChar + "rules.txt";
         if (File.Exists(rules))
         {
             yield return new Ruleset(title, new Dictionary<string, string>
             {
-                { "Test-Of-Time", "Standard" }
-            }, path);
+                { "Test-Of-Time", "Original" }
+            }, originalPath);
 
             foreach (var subdirectory in Directory.EnumerateDirectories(path))
             {
@@ -122,21 +122,22 @@ public class TestOfTimeInterface : Civ2Interface
                         name = Path.GetFileName(subdirectory);
                     }
 
-                    if (originalERxists && other_default_game_modes.Contains(subdirectory))
+                    if (originalERxists && subdirectory.Equals(originalPath))
                     {
-                        yield return new Ruleset(name, new Dictionary<string, string>
-                        {
+                        //yield return new Ruleset(name, new Dictionary<string, string>
+                        //{
 
-                            { "TOT-Scenario", subdirectory }
-                        }, subdirectory, originalPath, path);
+                        //    //{ "TOT-Scenario", subdirectory }
+                        //    { "TOT-Scenario", Path.GetFileName(subdirectory) }
+                        //}, subdirectory, path);
                     }
                     else
                     {
                         yield return new Ruleset(name, new Dictionary<string, string>
                         {
-
-                            { "TOT-Scenario", subdirectory }
-                        }, subdirectory, path);
+                            //{ "TOT-Scenario", subdirectory }
+                            { "TOT-Scenario", Path.GetFileName(subdirectory) }
+                        }, subdirectory, originalPath);
                     }
                 }
             }
@@ -515,9 +516,9 @@ public class TestOfTimeInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["textColours"][col]));
-                var textColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col]).Width + 0];
-                var shieldColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col]).Width + 0];
+                var imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["textColours"][col], this));
+                var textColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
+                var shieldColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
                 textColour.A = 255; // to avoid any upper-left-pixel transparency issues
                 shieldColour.A = 255;
                 Raylib.UnloadImageColors(imageColours);
@@ -533,7 +534,7 @@ public class TestOfTimeInterface : Civ2Interface
                     LightColour = lightColour,
                     DarkColour = darkColour
                 };
-                Images.ExtractBitmap(PicSources["flags"][col]);
+                Images.ExtractBitmap(PicSources["flags"][col], this);
             }
         }
         PlayerColours = playerColours;
@@ -543,7 +544,7 @@ public class TestOfTimeInterface : Civ2Interface
     {
         Color replacementColour = new(255, 0, 255, 0);
 
-        var shield = Images.ExtractBitmap(PicSources["HPshield"][0]);
+        var shield = Images.ExtractBitmap(PicSources["HPshield"][0], this);
         var shieldFront = Raylib.ImageCopy(shield);
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
@@ -561,7 +562,7 @@ public class TestOfTimeInterface : Civ2Interface
         HPbarColours = new[] { new Color(247, 0, 0, 255), new Color(255, 222, 74, 255), new Color(82, 173, 33, 255) },
         HPbarSizeForColours = new[] { 5, 13 },
         OrderOffset = new(9 / 2f, 1),
-        OrderTextHeight = Images.ExtractBitmap(PicSources["HPshield"][0]).Height - 1
+        OrderTextHeight = Images.ExtractBitmap(PicSources["HPshield"][0], this).Height - 1
     };
 
     public override void DrawBorderWallpaper(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel)

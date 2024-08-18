@@ -301,29 +301,29 @@ public static class ImageUtils
         _look = active.Look;
         if (_look.Outer is null)  // TOT
         {
-            Wallpaper.OuterTitleTop = _look.OuterTitleTop.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterThinTop = _look.OuterThinTop.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterBottom = _look.OuterBottom.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterMiddle = _look.OuterMiddle.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterLeft = _look.OuterLeft.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterRight = _look.OuterRight.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft);
-            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight);
-            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft);
-            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight);
-            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft);
-            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight);
-            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft);
-            Wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight);
-            Wallpaper.Inner = _look.Inner.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt);
-            Wallpaper.Button = _look.Button.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.ButtonClicked = _look.ButtonClicked.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterTitleTop = _look.OuterTitleTop.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterThinTop = _look.OuterThinTop.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterBottom = _look.OuterBottom.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterMiddle = _look.OuterMiddle.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterLeft = _look.OuterLeft.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterRight = _look.OuterRight.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft, active);
+            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight, active);
+            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft, active);
+            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight, active);
+            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft, active);
+            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight, active);
+            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft, active);
+            Wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight, active);
+            Wallpaper.Inner = _look.Inner.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt, active);
+            Wallpaper.Button = _look.Button.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.ButtonClicked = _look.ButtonClicked.Select(img => Images.ExtractBitmap(img, active)).ToArray();
         }
         else    // MGE
         {
-            Wallpaper.Outer = Images.ExtractBitmap(_look.Outer);
-            Wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner[0]) };
+            Wallpaper.Outer = Images.ExtractBitmap(_look.Outer, active);
+            Wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner[0], active) };
         }
 
     }

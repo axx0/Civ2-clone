@@ -32,7 +32,7 @@ public static class MapImage
 
         var directNeighbours = map.DirectNeighbours(tile, true).ToArray();
 
-        var neighbours = map.Neighbours(tile, true).ToArray();
+        var neighbours = map.Neighbours(tile, nullForInvalid: true).ToArray();
 
         // Dither
         if (tile.Type != TerrainType.Ocean)
@@ -241,7 +241,7 @@ public static class MapImage
         for (var index = 0; index < directNeighbours.Length; index++)
         {
             var directNeighbour = directNeighbours[index];
-            if (directNeighbour == null || !(directNeighbour.IsVisible(civilizationId) || map.MapRevealed))
+            if (directNeighbour != null && !(directNeighbour.IsVisible(civilizationId) || map.MapRevealed)) // Don't dither edge of map (neighbour=null)
             {
                 var ditherMap = terrainSet.DitherMaps[index];
                 Raylib.ImageDraw(ref tilePic, ditherMap.Images[^1], new Rectangle(0, 0, 32, 16),

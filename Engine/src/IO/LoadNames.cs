@@ -21,7 +21,7 @@ namespace Civ2engine.IO
         }
         public void ProcessSection(string section, List<string> contents)
         {
-            if (contents.Count > 0)
+            if (contents.Count > 0 && !CityNames.ContainsKey(section))  // Skip duplicate entries
             {
                 CityNames.Add(section, contents);
             }

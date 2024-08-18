@@ -53,6 +53,8 @@ namespace RaylibUI
                 ActiveInterface = Interfaces[selected.InterfaceIndex];
             }
 
+            TextureCache.Clear();
+            ImageUtils.SetLook(ActiveInterface);
             return ActiveInterface;
         }
 

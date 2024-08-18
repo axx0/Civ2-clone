@@ -152,7 +152,7 @@ public class MainMenu : BaseScreen
         var backGroundImage = MainWindow.ActiveInterface.BackgroundImage;
         if (backGroundImage != null)
         {
-            var img = Images.ExtractBitmap(backGroundImage);
+            var img = Images.ExtractBitmap(backGroundImage, MainWindow.ActiveInterface);
             var colour = Raylib.GetImageColor(img, 0, 0);
             return new ScreenBackground(colour, TextureCache.GetImage(backGroundImage, MainWindow.ActiveInterface));
         }

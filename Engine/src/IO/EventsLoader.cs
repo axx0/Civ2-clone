@@ -194,7 +194,7 @@ namespace Civ2engine.IO
                         {
                             civId = -4;
                         }
-                        else if (StringEquals(civ, "TRIGGERATTACKER"))
+                        else if (StringEquals(civ, "TRIGGERATTACKER") || !_gameObjects.Civilizations.Any(c => StringEquals(c.TribeName, civ)))
                         {
                             civId = -3;
                         }

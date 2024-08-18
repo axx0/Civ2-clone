@@ -29,7 +29,7 @@ public class CityWindow : BaseDialog
 
         DialogWidth = _cityWindowProps.Width + PaddingSide;
         DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding, Images.ExtractBitmap(_cityWindowProps.Image));
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding, Images.ExtractBitmap(_cityWindowProps.Image, _active));
 
         Controls.Add(_headerLabel);
         
