@@ -381,7 +381,7 @@ namespace Civ2engine.UnitActions.Move
             if (UnitMoved(game, unit, tileTo, tileFrom))
             {
                 game.ActiveTile = tileTo;
-                var neighbours = game.CurrentMap.Neighbours(tileTo).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
+                var neighbours = game.CurrentMap.Neighbours(tileTo, unit.TwoSpaceVisibility).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
                 if (neighbours.Count > 0)
                 {
                     neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));

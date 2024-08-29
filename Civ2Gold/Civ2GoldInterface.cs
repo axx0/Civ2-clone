@@ -53,7 +53,6 @@ public class Civ2GoldInterface : Civ2Interface
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         StatusPanelLabelFont = Fonts.TnRbold,
-        StatusPanelLabelFontSize = 18,
         StatusPanelLabelColor = new Color(51, 51, 51, 255),
         StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
         MovingUnitsViewingPiecesLabelColor = Color.White,

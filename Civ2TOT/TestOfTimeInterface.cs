@@ -73,7 +73,6 @@ public class TestOfTimeInterface : Civ2Interface
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         StatusPanelLabelFont = Fonts.TnRbold,
-        StatusPanelLabelFontSize = 18,
         StatusPanelLabelColor = new Color(189, 189, 189, 255),
         StatusPanelLabelColorShadow = Color.Black,
         MovingUnitsViewingPiecesLabelColor = new Color(189, 189, 189, 255),
@@ -187,7 +186,7 @@ public class TestOfTimeInterface : Civ2Interface
         PicSources = new Dictionary<string, BitmapStorage[]>
         {
             { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS", new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), true, true)).ToArray() },
-            { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10)) } },
+            { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10), true) } },
             { "textColours", Enumerable.Range(0, 9).Select(col =>
                     new BitmapStorage("CITIES", new Rectangle(1 + 15 * col, 421, 14, 3), true)).ToArray() },
             { "flags", Enumerable.Range(0, 2 * 9).Select(i =>
@@ -319,7 +318,7 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Show Hidden Terrain|t", new Shortcut(KeyboardKey.T), KeyboardKey.T),
                 new MenuElement("&Center View|c", new Shortcut(KeyboardKey.C), KeyboardKey.C),
-                new MenuElement("Map Layout", Shortcut.None, KeyboardKey.Null),
+                new MenuElement("Map Layout", Shortcut.None, KeyboardKey.Null, commandId: MapLayoutToggle),
                 new MenuElement("City Layout", Shortcut.None, KeyboardKey.Null),
             }
         },

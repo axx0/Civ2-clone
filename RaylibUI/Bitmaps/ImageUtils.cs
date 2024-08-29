@@ -23,9 +23,9 @@ public static class ImageUtils
     private static Image _outerWallpaper;
     private static Image _outerTitleTopWallpaper;
 
-    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false)
+    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
-        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel);
+        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !ToTStatusPanelLayout);
         active.DrawBorderLines(ref image, height, width, padding, statusPanel);
     }
 
@@ -82,7 +82,7 @@ public static class ImageUtils
     }
 
 
-    public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false)
+    public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
         // MGE uses inner wallpaper from ICONS for all dialogs
         // TOT uses inner wallpaper from ICONS only for status panel, otherwise uses tiles from dialog image file
@@ -95,10 +95,20 @@ public static class ImageUtils
         }
         else
         {
-            DrawTiledRectangle(tiles, ref destination,
-                new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
-            DrawTiledRectangle(tiles, ref destination,
-                new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
+            if (ToTStatusPanelLayout)
+            {
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left, padding.Top, 0.25f * width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left + (0.25f * width - padding.Left - padding.Right) + 8, padding.Top, width - 0.25f * width - 8, height - padding.Top - padding.Bottom));
+            }
+            else
+            {
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
+            }
         }
     }
 
@@ -111,11 +121,11 @@ public static class ImageUtils
     /// <param name="centerImage">Image to place in centre of dialog</param>
     /// <param name="noWallpaper">true to not draw inner wallpaper defaults to false</param>
     /// <param name="statusPanel">true to draw status panel-style background</param>
-    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false, bool statusPanel = false)
+    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
         // Outer wallpaper
         var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
-        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel);
+        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel, ToTStatusPanelLayout: ToTStatusPanelLayout);
         if (centerImage != null)
         {
             var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
@@ -124,7 +134,7 @@ public static class ImageUtils
         }
         else if(!noWallpaper)
         {
-            DrawTiledImage(Wallpaper, ref image, height, width, padding, statusPanel: statusPanel);
+            DrawTiledImage(Wallpaper, ref image, height, width, padding, statusPanel: statusPanel, ToTStatusPanelLayout: ToTStatusPanelLayout);
         }
 
         return Raylib.LoadTextureFromImage(image);

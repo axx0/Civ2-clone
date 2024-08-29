@@ -30,6 +30,7 @@ public class GameScreen : BaseScreen
     private readonly StatusPanel _statusPanel;
     private readonly LocalPlayer _player;
     private readonly GameMenu _menu;
+    private bool _ToTPanelLayout;
 
     public IGameMode ActiveMode
     {
@@ -48,7 +49,7 @@ public class GameScreen : BaseScreen
     public LocalPlayer Player => _player;
 
     public StatusPanel StatusPanel => _statusPanel;
-
+    public bool ToTPanelLayout => _ToTPanelLayout;
     public GameMenu MenuBar => _menu;
     public IGameMode Moving { get; }
     public IGameMode ViewPiece { get; }
@@ -69,6 +70,7 @@ public class GameScreen : BaseScreen
         Game = game;
         Soundman = soundman;
 
+        _ToTPanelLayout = false;
         _miniMapHeight = Math.Max(100, game.CurrentMap.YDim) + 38 + 11;
 
         var civ = game.GetPlayerCiv;
@@ -97,12 +99,18 @@ public class GameScreen : BaseScreen
         var height = Raylib.GetScreenHeight();
         
         var menuHeight = _menu.GetPreferredHeight();
-        var mapWidth = width - MiniMapWidth;
         
         _statusPanel = new StatusPanel(this, game);
-        
         _minimapPanel = new MinimapPanel(this, game);
-        _mapControl = new MapControl(this, game, new Rectangle(0, menuHeight, mapWidth, height - menuHeight));
+
+        var mapWidth = width - MiniMapWidth;
+        var mapRect = new Rectangle(0, menuHeight, mapWidth, height - menuHeight);
+        if (_ToTPanelLayout)
+        {
+            mapWidth = width;
+            mapRect = new Rectangle(0, menuHeight + _miniMapHeight, mapWidth, height - menuHeight - _miniMapHeight);
+        }
+        _mapControl = new MapControl(this, game, mapRect);
 
         // The order of these is important as MapControl can overdraw so must be drawn first
         Controls.Add(_mapControl);
@@ -183,15 +191,29 @@ public class GameScreen : BaseScreen
 
     public override void Resize(int width, int height)
     {
+        GetPanelBounds(width, height);
+        base.Resize(width, height);
+    }
+
+    private void GetPanelBounds(int width, int height)
+    {
         _menu.GetPreferredWidth();
         var menuHeight = _menu.GetPreferredHeight();
         var mapWidth = width - MiniMapWidth;
+        var mapControlRect = new Rectangle(0, menuHeight, mapWidth, height - menuHeight);
+        var minimapRect = new Rectangle(mapWidth, menuHeight, MiniMapWidth, _miniMapHeight);
+        var statusRect = new Rectangle(mapWidth, _miniMapHeight + menuHeight, MiniMapWidth, height - _miniMapHeight - menuHeight);
+        if (_ToTPanelLayout)
+        {
+            mapWidth = width;
+            mapControlRect = new Rectangle(0, menuHeight + _miniMapHeight, mapWidth, height - menuHeight - _miniMapHeight);
+            minimapRect = new Rectangle(mapWidth - MiniMapWidth, menuHeight, MiniMapWidth, _miniMapHeight);
+            statusRect = new Rectangle(0, menuHeight, mapWidth - MiniMapWidth, _miniMapHeight);
+        }
         _menu.Bounds = new Rectangle(0, 0, width, menuHeight);
-        _mapControl.Bounds = new Rectangle(0, menuHeight, mapWidth, height - menuHeight);
-        _minimapPanel.Bounds = new Rectangle( mapWidth, menuHeight, MiniMapWidth, _miniMapHeight);
-        _statusPanel.Bounds = new Rectangle(mapWidth, _miniMapHeight + menuHeight, MiniMapWidth, height - _miniMapHeight - menuHeight);
-        
-        base.Resize(width, height);
+        _mapControl.Bounds = mapControlRect;
+        _minimapPanel.Bounds = minimapRect;
+        _statusPanel.Bounds = statusRect;
     }
 
     public void ShowCityDialog(string dialog, IList<string> replaceStrings)
@@ -289,5 +311,11 @@ public class GameScreen : BaseScreen
     {
         CloseDialog(_currentPopupDialog);
         _popupClicked?.Invoke(arg1, arg2, arg3, arg4);
+    }
+
+    public void ToggleMapLayout()
+    {
+        _ToTPanelLayout = !_ToTPanelLayout;
+        Resize(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
     }
 }

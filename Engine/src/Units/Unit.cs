@@ -117,7 +117,7 @@ namespace Civ2engine.Units
         public int ShipHold => TypeDefinition.Hold;
         public AIroleType AIrole => (AIroleType)TypeDefinition.AIrole;
         public bool TwoSpaceVisibility => TypeDefinition.Flags[14] == '1';
-        public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1';
+        public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1' || Domain == UnitGas.Air || Domain == UnitGas.Sea;
         public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[12] == '1';
         public bool SubmarineAdvantagesDisadvantages => TypeDefinition.Flags[11] == '1';
         public bool CanAttackAirUnits => TypeDefinition.Flags[10] == '1';    // fighter

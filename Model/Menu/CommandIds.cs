@@ -3,6 +3,8 @@ namespace Model.Menu;
 public static class CommandIds
 {
     public const string QuitGame = "GAME_QUIT";
+
+    public const string MapLayoutToggle = "MAP_LAYOUT";
     
     public const string WaitOrder = "UNIT_ORDER_WAIT";
     public const string UnloadOrder = "UNIT_ORDER_UNLOAD";

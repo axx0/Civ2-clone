@@ -113,15 +113,16 @@ namespace Civ2engine
         {
             foreach (var player in Players)
             {
-                var tiles = tilesChanged.Where(t => t.Map.IsCurrentlyVisible(t, player.Civilization.Id)).ToList();
+                //var tiles = tilesChanged.Where(t => t.Map.IsCurrentlyVisible(t, player.Civilization.Id)).ToList();
+                var tiles = tilesChanged;
                 if (tiles.Count > 0)
                 {
                     tiles.ForEach(t=>t.UpdatePlayer(player.Civilization.Id));
                     player.MapChanged(tiles);
                 }
-            }   
+            }
             OnMapEvent?.Invoke(this, new MapEventArgs(eventType)
-                { TilesChanged = tilesChanged });
+            { TilesChanged = tilesChanged });
         }
 
         private double? _maxDistance;
