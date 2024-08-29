@@ -42,5 +42,8 @@ Once you build and run the game, a dialog should automatically open so you can l
 
 # Screenshots
 
-![Clipboard02](https://github.com/axx0/Civ2-clone/assets/21365802/864ab9b4-ce4c-4715-9447-9e913298a971)
+![civ2](https://github.com/user-attachments/assets/48372674-e978-431c-a9ef-2927c0b5e203)
+![tot](https://github.com/user-attachments/assets/0e776c19-be01-4bdc-868b-13e31424bd7f)
+
+
 
