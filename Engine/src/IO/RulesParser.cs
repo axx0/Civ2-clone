@@ -196,6 +196,8 @@ namespace Civ2engine.IO
 
         private void ProcessLeaders(string[] values)
         {
+            values = values[0..21];
+
             Rules.Leaders = values.Select((value) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
@@ -249,13 +251,14 @@ namespace Civ2engine.IO
             foreach (var t in values)
             {
                 var parts = t.Split(';', StringSplitOptions.TrimEntries);
-                if (parts.Length == 1)
+                if (t.Split(',', StringSplitOptions.TrimEntries).Length < 8)
                 {
                     bonus.Add(parts[0]);
                 }
                 else
                 {
-                    mappings.Add(parts[1], terrains.Count);
+                    if (!mappings.ContainsKey(parts[1]))
+                        mappings.Add(parts[1].Substring(0, 3), terrains.Count);
                     terrains.Add(parts[0]);
                 }
             }
@@ -313,7 +316,7 @@ namespace Civ2engine.IO
                 {
                     Type = (UnitType) type,
                     Name = text[0],
-                    Until = Rules.AdvanceMappings[text[1]],
+                    Until = Rules.AdvanceMappings.ContainsKey(text[1]) ? Rules.AdvanceMappings[text[1]] : -1,   // temp
                     Domain = (UnitGas) int.Parse(text[2]),
                     Move = Rules.Cosmic.MovementMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
                     Range = int.Parse(text[4]),
@@ -324,7 +327,7 @@ namespace Civ2engine.IO
                     Cost = int.Parse(text[9]),
                     Hold = int.Parse(text[10]),
                     AIrole = (AIroleType)int.Parse(text[11]),
-                    Prereq = Rules.AdvanceMappings[text[12]],
+                    Prereq = Rules.AdvanceMappings.ContainsKey(text[12]) ? Rules.AdvanceMappings[text[12]] : -1,    // temp
                     Flags = text[13],
                     AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
@@ -380,7 +383,7 @@ namespace Civ2engine.IO
                 if (!values[i].StartsWith("nil"))
                 {
                     Rules.Improvements[firstWonderIndex + i].ExpiresAt =
-                        Rules.AdvanceMappings[values[i].Split(',', 2)[0]];
+                        Rules.AdvanceMappings.ContainsKey(values[i].Split(',', 2)[0]) ? Rules.AdvanceMappings[values[i].Split(',', 2)[0]] : -1; // temp
                 }
             }
         }
@@ -396,7 +399,7 @@ namespace Civ2engine.IO
                     Name = parts[0],
                     Cost = int.Parse(parts[1]),
                     Upkeep = int.Parse(parts[2]),
-                    Prerequisite = Rules.AdvanceMappings[parts[3]]
+                    Prerequisite = Rules.AdvanceMappings.ContainsKey(parts[3]) ? Rules.AdvanceMappings[parts[3]] : -1   // temp
                 };
             }).ToArray();
         }
@@ -482,8 +485,8 @@ namespace Civ2engine.IO
                     Name = text[0],
                     AIvalue = int.Parse(text[1]),
                     Modifier = int.Parse(text[2]),
-                    Prereq1 = Rules.AdvanceMappings[text[3]],
-                    Prereq2 = Rules.AdvanceMappings[text[4]],
+                    Prereq1 = Rules.AdvanceMappings.ContainsKey(text[3]) ? Rules.AdvanceMappings[text[3]] : -1, // temp
+                    Prereq2 = Rules.AdvanceMappings.ContainsKey(text[4]) ? Rules.AdvanceMappings[text[4]] : -1, // temp
                     Epoch = (EpochType) int.Parse(text[5]),
                     KnowledgeCategory = (KnowledgeType) int.Parse((text[6]))
                 };

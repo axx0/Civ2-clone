@@ -37,7 +37,17 @@ public class ScenChoseCiv : ICivDialogHandler
             return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
         }
 
-        Initialization.ConfigObject.ScenPlayerCivId = result.SelectedIndex + 1;
+        var boolPos = new int[Initialization.ConfigObject.CivsInPlay.Count(c => c)];
+        int count = 0;
+        for (int i = 0; i < Initialization.ConfigObject.CivsInPlay.Length; i++)
+        {
+            if (Initialization.ConfigObject.CivsInPlay[i])
+            {
+                boolPos[count] = i;
+                count++;
+            }
+        }
+        Initialization.ConfigObject.ScenPlayerCivId = boolPos[result.SelectedIndex + 1];
 
         var difficultyDialog = civDialogHandlers[DifficultyHandler.Title];
         var popupContent = difficultyDialog.Dialog.Dialog;
@@ -55,7 +65,9 @@ public class ScenChoseCiv : ICivDialogHandler
 
     public IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.Dialog.Options = Enumerable.Range(0, 7).Select(i => $"{Initialization.ConfigObject.CivNames[i + 1]} ({Initialization.ConfigObject.LeaderNames[i + 1]})").ToList();
+        //activeInterface.ScenTitleImage = 
+
+        Dialog.Dialog.Options = Enumerable.Range(0, 7).Where(i => Initialization.ConfigObject.CivsInPlay[i + 1]).Select(i => $"{Initialization.ConfigObject.CivNames[i + 1]} ({Initialization.ConfigObject.LeaderNames[i + 1]})").ToList();
         return new MenuAction(Dialog);
     }
 }

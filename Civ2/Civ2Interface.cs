@@ -82,6 +82,7 @@ public abstract class Civ2Interface : IUserInterface
     }
 
     public virtual IImageSource? BackgroundImage => null;
+    public IImageSource? ScenTitleImage { get; set; } = null;
     
     public int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize)
     {
@@ -387,13 +388,22 @@ public abstract class Civ2Interface : IUserInterface
         config.TechParadigm = gameData.TechParadigm;
         config.ScenarioName = gameData.ScenarioName;
         config.CivNames = gameData.CivTribeName;
+        config.CivGenders = gameData.RulerGender;
         config.LeaderNames = gameData.CivLeaderName;
         config.StartingYear = gameData.StartingYear;
         config.TurnYearIncrement = gameData.TurnYearIncrement;
         config.DifficultyLevel = gameData.DifficultyLevel;
         config.MaxTurns = gameData.MaxTurns;
+        config.CivsInPlay = gameData.CivsInPlay;
 
         ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
+
+        var titleImage = "Title.gif";
+        var foundTitleImage = Directory.EnumerateFiles(scnDirectory, titleImage, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
+        if (foundTitleImage != null)
+        {
+            ScenTitleImage = new BitmapStorage(foundTitleImage);
+        }
 
         // Load custom intro if it exists in txt file
         var introFile = Regex.Replace(scnName, ".scn", ".txt", RegexOptions.IgnoreCase);

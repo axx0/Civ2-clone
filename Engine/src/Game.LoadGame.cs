@@ -39,7 +39,6 @@ namespace Civ2engine
             _instance.DifficultyLevel = (DifficultyType)config.DifficultyLevel;
             _instance.GetPlayerCiv.LeaderGender = config.Gender;
             _instance.GetPlayerCiv.LeaderName = config.LeaderName;
-            _instance.StartNextTurn();
             return _instance;
         }
 

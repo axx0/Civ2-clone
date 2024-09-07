@@ -17,6 +17,12 @@ namespace RaylibUI
             game.UpdatePlayerViewData();
             
             _activeScreen = new GameScreen(this, game, Soundman);
+
+            // For scenarios start with first civ
+            if (game.ActivePlayer.Civilization.PlayerType == PlayerType.Ai)
+            {
+                game.AiTurn();
+            }
         }
 
         public IUserInterface SetActiveRulesetFromFile(string root, string subDirectory,

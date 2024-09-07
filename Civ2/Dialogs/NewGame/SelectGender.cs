@@ -14,6 +14,16 @@ public class SelectGender : BaseDialogHandler
     {
     }
 
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
+    {
+        var config = Initialization.ConfigObject;
+
+        if (config.IsScenario) 
+            Dialog.SelectedOption = config.CivGenders[config.ScenPlayerCivId] == 0 ? 0 : 1;
+
+        return base.Show(activeInterface);
+    }
+
     public override IInterfaceAction HandleDialogResult(DialogResult result,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {

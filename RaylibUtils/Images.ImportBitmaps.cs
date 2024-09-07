@@ -227,7 +227,10 @@ namespace RaylibUtils
 
         public static void ClearCache()
         {
-            _imageCache.Clear();
+            foreach (var image in _imageCache.Where(t => !t.Key.StartsWith("Binary")))
+            {
+                _imageCache.Remove(image.Key);
+            }
             Files.Clear();
         }
 

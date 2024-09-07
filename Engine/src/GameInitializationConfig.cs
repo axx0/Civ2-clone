@@ -47,7 +47,9 @@ namespace Civ2engine
         public string ScenarioName { get; set; }
         public int ScenPlayerCivId { get; set; }
         public string[] CivNames { get; set; }
+        public byte[] CivGenders { get; set; }
         public string[] LeaderNames { get; set; }
+        public bool[] CivsInPlay { get; set; }
         public string LeaderName { get; set; }
         public int StartingYear { get; set; }
         public int TurnYearIncrement { get; set; }

@@ -20,6 +20,7 @@ public interface IUserInterface
     IInterfaceAction GetInitialAction();
     
     IImageSource? BackgroundImage { get; }
+    IImageSource? ScenTitleImage { get; set; }
     int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     void LoadPlayerColours();
 

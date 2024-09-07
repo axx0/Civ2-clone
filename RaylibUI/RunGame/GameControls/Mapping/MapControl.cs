@@ -44,6 +44,7 @@ public class MapControl : BaseControl
 
         gameScreen.OnMapEvent += MapEventTriggered;
         _game.OnUnitEvent += UnitEventTriggered;
+        _game.OnPlayerEvent += PlayerEventTriggered;
         Click += OnClick;
         MouseDown += OnMouseDown;
 
@@ -81,19 +82,27 @@ public class MapControl : BaseControl
                 {
                     _animationQueue.Enqueue(new AttackAnimation(_gameScreen, combatEventArgs, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth, ForceRedraw));
                 }
-
-
-                // animationFrames = GetAnimationFrames.UnitAttack(e);
-                // StartAnimation(AnimationType.Attack);
                 break;
             }
-            // case UnitEventType.StatusUpdate:
-            //     {
-            //         animType = AnimationType.Waiting;
-            //         if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
-            //         UpdateMap();
-            //         break;
-            //     }
+            case UnitEventType.NewUnitActivated:
+            {
+                //animType = AnimationType.Waiting;
+                //if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
+                //UpdateMap();
+                break;
+            }
+        }
+    }
+
+    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
+    {
+        switch (e.EventType)
+        {
+            case PlayerEventType.NewTurn:
+                {
+                    break;
+                }
+            default: break;
         }
     }
 

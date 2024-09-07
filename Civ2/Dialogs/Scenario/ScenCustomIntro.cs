@@ -1,3 +1,4 @@
+using Civ2.Dialogs.FileDialogs;
 using Civ2.Dialogs.Scenario;
 using Civ2.Rules;
 using Civ2engine;
@@ -31,10 +32,11 @@ public class ScenCustomIntro : ICivDialogHandler
     {
         if (result.SelectedButton == Labels.Cancel)
         {
-            return civDialogHandlers[MainMenu.Title].Show(civ2Interface);
+            civ2Interface.ScenTitleImage = null;
+            return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
         }
 
-        return civDialogHandlers[ScenChoseCiv.Title].Show(civ2Interface); ;
+        return civDialogHandlers[ScenChoseCiv.Title].Show(civ2Interface);
     }
 
     public IInterfaceAction Show(Civ2Interface activeInterface)

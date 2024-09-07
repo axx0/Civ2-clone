@@ -296,7 +296,7 @@ namespace Civ2engine.OriginalSaves
                 else if (data.GameVersion <= 44) offsetExtra = 0;    // FW, MGE
                 else offsetExtra = 7;  // TOT
 
-                data.RulerGender[civId] = bytes[offsetT + sizeT * civId + 0]; // 0=male, 2=female
+                data.RulerGender[civId] = bytes[offsetT + sizeT * civId + 1]; // 0=male, 2=female
                 data.CivMoney[civId] = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 2);
                 data.CivNumber[civId] = bytes[offsetT + sizeT * civId + offsetExtra + 6]; // Civ number as per @Leaders table in RULES.TXT
                 data.CivResearchProgress[civId] = BitConverter.ToInt16(bytes, offsetT + sizeT * civId + offsetExtra + 8);

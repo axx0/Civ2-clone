@@ -27,7 +27,7 @@ namespace Civ2engine
 
         public List<Civilization> AllCivilizations { get; } = new();
 
-        public List<Civilization> GetActiveCivs => AllCivilizations.Where(c => c.Alive).ToList();
+        public List<Civilization> ActiveCivs => AllCivilizations.Where(c => c.Alive).ToList();
         public Options Options => _options;
         public Scenario ScenarioData => _scenarioData;
         public Rules Rules => _rules;

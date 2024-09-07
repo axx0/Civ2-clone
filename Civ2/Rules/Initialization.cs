@@ -20,6 +20,8 @@ public static class Initialization
         return config;
     }
 
+    public static GameInitializationConfig ClearInitializationConfig() => _config = null;
+
     internal static Game GameInstance = null;
 
     public static void Start(Game game)
