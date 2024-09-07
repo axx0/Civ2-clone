@@ -3,6 +3,7 @@ using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model.Images;
 using Model.ImageSets;
+using RaylibUtils;
 using Raylib_cs;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
@@ -28,7 +29,7 @@ public static class MapImage
         TerrainSet terrainSet, Game game, int civilizationId)
     {
         // Define base bitmap for drawing
-        var tilePic = Raylib.ImageCopy(terrainSet.BaseTiles[(int)tile.Type]);
+        var tilePic = Raylib.ImageCopy(Images.ExtractBitmap(terrainSet.BaseTiles[(int)tile.Type]));
 
         var directNeighbours = map.DirectNeighbours(tile, true).ToArray();
 
@@ -65,19 +66,19 @@ public static class MapImage
             }
 
             // NW+N+NE tiles
-            Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[0], 0], new Rectangle(0, 0, 32, 16),
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.Coast[coastIndex[0], 0]), new Rectangle(0, 0, 32, 16),
                 new Rectangle(16, 0, 32, 16), Color.White);
 
             // SW+S+SE tiles
-            Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[1], 1], new Rectangle(0, 0, 32, 16),
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.Coast[coastIndex[1], 1]), new Rectangle(0, 0, 32, 16),
                 new Rectangle(16, 16, 32, 16), Color.White);
 
             // SW+W+NW tiles
-            Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[2], 2], new Rectangle(0, 0, 32, 16),
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.Coast[coastIndex[2], 2]), new Rectangle(0, 0, 32, 16),
                 new Rectangle(0, 8, 32, 16), Color.White);
 
             // NE+E+SE tiles
-            Raylib.ImageDraw(ref tilePic, terrainSet.Coast[coastIndex[3], 3], new Rectangle(0, 0, 32, 16),
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.Coast[coastIndex[3], 3]), new Rectangle(0, 0, 32, 16),
                 new Rectangle(32, 8, 32, 16), Color.White);
 
             // River mouth
@@ -87,7 +88,7 @@ public static class MapImage
                 var neighbour = directNeighbours[index];
                 if (neighbour is { River: true })
                 {
-                    Raylib.ImageDraw(ref tilePic, terrainSet.RiverMouth[index], TileRec, TileRec, Color.White);
+                    Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.RiverMouth[index]), TileRec, TileRec, Color.White);
                 }
             }
         }
@@ -106,7 +107,7 @@ public static class MapImage
                 increment *= 2;
             }
 
-            Raylib.ImageDraw(ref tilePic, terrainSet.ImagesFor(tile.Type)[index], TileRec,
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.ImagesFor(tile.Type)[index]), TileRec,
                 TileRec, Color.White);
         }
 
@@ -125,7 +126,7 @@ public static class MapImage
                 increment *= 2;
             }
 
-            Raylib.ImageDraw(ref tilePic, terrainSet.River[index], TileRec, TileRec, Color.White);
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.River[index]), TileRec, TileRec, Color.White);
         }
 
         // Draw shield for grasslands
@@ -133,13 +134,13 @@ public static class MapImage
         {
             if (tile.HasShield)
             {
-                Raylib.ImageDraw(ref tilePic, terrainSet.GrasslandShield, TileRec, TileRec, Color.White);
+                Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.GrasslandShield), TileRec, TileRec, Color.White);
             }
         }
         else if (tile.Special != -1)
         {
             // Draw special resources if they exist
-            Raylib.ImageDraw(ref tilePic, terrainSet.Specials[tile.Special][(int)tile.Type], TileRec, TileRec,
+            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(terrainSet.Specials[tile.Special][(int)tile.Type]), TileRec, TileRec,
                 Color.White);
         }
 
@@ -176,16 +177,14 @@ public static class MapImage
                             {
                                 if (neighboringImprovement.Level < construct.Level)
                                 {
-                                    Raylib.ImageDraw(ref tilePic, graphics.Levels[neighboringImprovement.Level, index],
-                                        TileRec,
-                                        TileRec, Color.White);
+                                    Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(graphics.Levels[neighboringImprovement.Level, index]),
+                                        TileRec, TileRec, Color.White);
                                 }
                                 else
                                 {
                                     hasNeighbours = true;
-                                    Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, index], TileRec,
-                                        TileRec,
-                                        Color.White);
+                                    Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(graphics.Levels[construct.Level, index]), TileRec,
+                                        TileRec, Color.White);
                                 }
                             }
                         }
@@ -195,7 +194,7 @@ public static class MapImage
                     {
                         if (tile.CityHere is null)
                         {
-                            Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
+                            Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(graphics.Levels[construct.Level, 0]), TileRec, TileRec,
                                 Color.White);
                         }
                     }
@@ -205,7 +204,7 @@ public static class MapImage
                     if (tile.Map.DirectNeighbours(tile)
                         .Any(t => t.Improvements.Any(i => i.Improvement == construct.Improvement)))
                     {
-                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
+                        Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(graphics.Levels[construct.Level, 0]), TileRec, TileRec,
                             Color.White);
                     }
                 }
@@ -216,9 +215,9 @@ public static class MapImage
                         tileDetails.ForegroundElement = new UnitHidingImprovement
                         {
                             UnitDomain = (UnitGas)improvement.HideUnits,
-                            UnitImage = new MemoryStorage(graphics.UnitLevels[construct.Level, 0], improvement.Name,
+                            UnitImage = new MemoryStorage(Images.ExtractBitmap(graphics.UnitLevels[construct.Level, 0]), improvement.Name,
                                 _replacementColour),
-                            Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name,
+                            Image = new MemoryStorage(Images.ExtractBitmap(graphics.Levels[construct.Level, 0]), improvement.Name,
                                 _replacementColour)
                         };
                     }
@@ -226,12 +225,12 @@ public static class MapImage
                     {
                         tileDetails.ForegroundElement = new ForegroundImprovement
                         {
-                            Image = new MemoryStorage(graphics.Levels[construct.Level, 0], improvement.Name)
+                            Image = new MemoryStorage(Images.ExtractBitmap(graphics.Levels[construct.Level, 0]), improvement.Name)
                         };
                     }
                     else
                     {
-                        Raylib.ImageDraw(ref tilePic, graphics.Levels[construct.Level, 0], TileRec, TileRec,
+                        Raylib.ImageDraw(ref tilePic, Images.ExtractBitmap(graphics.Levels[construct.Level, 0]), TileRec, TileRec,
                             Color.White);
                     }
                 }

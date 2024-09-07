@@ -49,13 +49,13 @@ public static class CityLoader
         foreach (var terrain in active.TileSets)
         {
             terrain.ImprovementsMap[ImprovementTypes.Fortress] = new ImprovementGraphic
-            { Levels = new[,] { { Images.ExtractBitmap(active.PicSources["fortress"][0], active) } } };
+            { Levels = new[,] { { active.PicSources["fortress"][0] } } };
 
             // airbase
             terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
             {
-                Levels = new[,] { { Images.ExtractBitmap(active.PicSources["airbase,empty"][0], active) } },
-                UnitLevels = new[,] { { Images.ExtractBitmap(active.PicSources["airbase,full"][0], active) } }
+                Levels = new[,] { { active.PicSources["airbase,empty"][0] } },
+                UnitLevels = new[,] { { active.PicSources["airbase,full"][0] } }
             };
         }
     }
