@@ -8,6 +8,8 @@ using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Model.Core.Cities;
+using Model.Core.Mapping;
 using Tile = Civ2engine.MapObjects.Tile;
 
 namespace Civ2engine.OriginalSaves
@@ -67,6 +69,8 @@ namespace Civ2engine.OriginalSaves
 
             // Create cities
             var cities = new List<City>();
+            var productionOrders = ProductionOrder.GetAll(rules);
+            var totalUnitOrders = productionOrders.Count(o => o is UnitProductionOrder);
             for (var i = 0; i < gameData.NumberOfCities; i++)
             {
                 if (gameData.CityYloc[i] < 1)
@@ -87,7 +91,7 @@ namespace Civ2engine.OriginalSaves
                     gameData.CityCommodityInRoute[i], gameData.CityTradeRoutePartnerCity[i], gameData.CityScience[i], 
                     gameData.CityTax[i], gameData.CityNoOfTradeIcons[i], gameData.CityTotalFoodProduction[i], 
                     gameData.CityTotalShieldProduction[i], gameData.CityHappyCitizens[i], gameData.CityUnhappyCitizens[i], 
-                    rules.ProductionItems));
+                    productionOrders, totalUnitOrders));
             }
 
             Cities = cities;
@@ -422,20 +426,23 @@ namespace Civ2engine.OriginalSaves
                 Advances = advances[id],
                 ScienceRate = sciRate * 10,
                 TaxRate = taxRate * 10,
-                Government = (GovernmentType)government,
+                Government = government,
                 AllowedAdvanceGroups = new [] { AdvanceGroupAccess.CanResearch } // Default for MPG < TOT will need to read from file
             };
         }
         
-        public City CreateCity(int x, int y, int mapNo, bool canBuildCoastal, bool autobuildMilitaryRule, bool stolenTech,
+        public City CreateCity(int x, int y, int mapNo, bool canBuildCoastal, bool autobuildMilitaryRule,
+            bool stolenTech,
             bool improvementSold, bool weLoveKingDay, bool civilDisorder, bool canBuildHydro, bool canBuildShips,
             bool autoBuildMilitary, bool autoBuildDomestic, bool objectivex1, bool objectivex3,
-            int ownerIndex, int size, int whoBuiltIt, int turnsExpiredSinceCaptured, bool[] whoKnowsAboutIt, int[] lastSizeRevealedToCivs, 
-            int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers, 
+            int ownerIndex, int size, int whoBuiltIt, int turnsExpiredSinceCaptured, bool[] whoKnowsAboutIt,
+            int[] lastSizeRevealedToCivs,
+            int foodInStorage, int shieldsProgress, int netTrade, string name, bool[] distributionWorkers,
             int noOfSpecialistsx4, bool[] improvements, int itemInProduction,
             int activeTradeRoutes, int[] commoditySupplied, int[] commodityDemanded,
             int[] commodityInRoute, int[] tradeRoutePartnerCity, int science, int tax, int noOfTradeIcons,
-            int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens, ProductionOrder[] productionItems)
+            int totalFoodProduction, int totalShieldProduction, int happyCitizens, int unhappyCitizens,
+            IProductionOrder[] productionItems, int totalUnitOrders)
         {
             var tile = Maps[mapNo].TileC2(x, y);
             var owner = Civilizations[ownerIndex];
@@ -467,11 +474,12 @@ namespace Civ2engine.OriginalSaves
                 Name = name,
                 NoOfSpecialistsx4 = noOfSpecialistsx4,
                 ItemInProduction = itemInProduction >= 0 ? productionItems[itemInProduction] :
-                        productionItems[Rules.ProductionItems.Where(i => i is UnitProductionOrder).Count() - itemInProduction - 1],
+                        productionItems[totalUnitOrders - itemInProduction - 1],
                 ActiveTradeRoutes = activeTradeRoutes,
-                CommoditySupplied = commoditySupplied.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => (CommodityType)c).ToArray(),
-                CommodityDemanded = commodityDemanded.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => (CommodityType)c).ToArray(),
-                CommodityInRoute = commodityInRoute.Select(c => (CommodityType)c).ToArray(),
+                CommoditySupplied = commoditySupplied.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => Rules.CaravanCommoditie[c]).ToArray(),
+                CommodityDemanded = commodityDemanded.Where(c => c < Rules.CaravanCommoditie.Length).Select(c => Rules.CaravanCommoditie[c]).ToArray(),
+                TradeRoutes = commodityInRoute.Zip(tradeRoutePartnerCity).Select(((tuple) => new TradeRoute{ Commodity = Rules.CaravanCommoditie[tuple.First % Rules.CaravanCommoditie.Length], Destination = tuple.Second} )).ToArray(),
+                //CommodityInRoute = commodityInRoute.Select(c => (CommodityType)c).ToArray(),
                 TradeRoutePartnerCity = tradeRoutePartnerCity,
                 //Science = science,    //what does this mean???
                 //Tax = tax,
@@ -526,7 +534,7 @@ namespace Civ2engine.OriginalSaves
                 Veteran = veteran,
                 Owner = civilization,
                 PrevXy = new[] { prevX, prevY },
-                Order = (OrderType)orders,
+                Order = orders,
                 HomeCity = homeCity == 255 ? null : Cities[homeCity],
                 GoToX = goToX,
                 GoToY = goToY,
@@ -534,13 +542,14 @@ namespace Civ2engine.OriginalSaves
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            if (unit.Type == UnitType.Caravan || unit.Type == UnitType.Freight)
+            switch (unit.AIrole)
             {
-                unit.CaravanCommodity = (CommodityType)counterRoleParam;
-            }
-            else if (unit.Type == UnitType.Settlers || unit.Type == UnitType.Engineers)
-            {
-                unit.Counter = counterRoleParam;
+                case AIroleType.Trade:
+                    unit.CaravanCommodity = counterRoleParam;
+                    break;
+                case AIroleType.Settle:
+                    unit.Counter = counterRoleParam;
+                    break;
             }
 
             civilization.Units.Add(unit);

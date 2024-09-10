@@ -102,7 +102,7 @@ public class MovingPieces : IGameMode
         }
         else
         {
-            _gameScreen.Game.ActiveTile = tile;
+            _gameScreen.Game.ActivePlayer.ActiveTile = tile;
             _gameScreen.ActiveMode = _gameScreen.ViewPiece;
         }
 

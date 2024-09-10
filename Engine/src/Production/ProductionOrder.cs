@@ -1,10 +1,14 @@
+using System.Linq;
+using Model.Interface;
+
 namespace Civ2engine.Production
 {
-    public abstract class ProductionOrder
+    public abstract class ProductionOrder : IProductionOrder
     {
-        private readonly bool[] _buildList;
+        private readonly bool[]? _buildList;
 
-        protected ProductionOrder(int cost, ItemType type, int imageIndex, int requiredTech, bool[] buildList = null, int expiresTech = -1)
+        protected ProductionOrder(int cost, ItemType type, int imageIndex, int requiredTech, bool[]? buildList = null,
+            int expiresTech = -1)
         {
             _buildList = buildList;
             Cost = cost;
@@ -40,5 +44,15 @@ namespace Civ2engine.Production
         public abstract bool IsValidBuild(City city);
 
         public abstract string GetDescription();
+        public abstract ListBoxEntry GetBuildListEntry();
+
+        public static IProductionOrder[] GetAll(Rules rules)
+        {
+            return rules.ProductionOrders ??= rules.UnitTypes.Select((u, index) => new UnitProductionOrder(u, index))
+                .Cast<IProductionOrder>()
+                .Concat(rules.Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
+
+        }
+
     }
 }

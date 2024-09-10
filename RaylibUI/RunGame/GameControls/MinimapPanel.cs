@@ -7,19 +7,20 @@ using RaylibUI.Controls;
 using System.Numerics;
 using RaylibUI.BasicTypes.Controls;
 using Model;
+using Model.Core;
 
 namespace RaylibUI.RunGame.GameControls;
 
 public class MinimapPanel : BaseControl
 {
-    private readonly Game _game;
+    private readonly IGame _game;
     private readonly GameScreen _gameScreen;
     private readonly IUserInterface _active;
     private readonly HeaderLabel _headerLabel;
     private Texture2D? _backgroundImage;
     private Padding _padding;
 
-    public MinimapPanel(GameScreen controller, Game game) : base(controller)
+    public MinimapPanel(GameScreen controller, IGame game) : base(controller)
     {
         _gameScreen = controller;
         _game = game;
@@ -59,7 +60,7 @@ public class MinimapPanel : BaseControl
         {
             clickPosition.Y = _gameScreen.Game.CurrentMap.YDim-1;
         }
-        _gameScreen.Game.ActiveTile =
+        _gameScreen.Game.ActivePlayer.ActiveTile =
             _gameScreen.Game.CurrentMap.Tile[(int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y];
         _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged,
                 new[] { (int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y }));

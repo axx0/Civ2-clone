@@ -12,20 +12,21 @@ using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Forms;
 using System.Globalization;
+using Model.Core;
 
 namespace RaylibUI.RunGame.GameControls;
 
 public class StatusPanel : BaseControl
 {
     private readonly GameScreen _gameScreen;
-    private readonly Game _game;
+    private readonly IGame _game;
     private readonly IUserInterface _active;
     private readonly HeaderLabel _headerLabel;
     private Texture2D? _backgroundImage;
     private Rectangle _internalBounds;
     private Padding _padding;
 
-    public StatusPanel(GameScreen gameScreen, Game game) : base(gameScreen)
+    public StatusPanel(GameScreen gameScreen, IGame game) : base(gameScreen)
     {
         _gameScreen = gameScreen;
         _game = game;
@@ -43,10 +44,9 @@ public class StatusPanel : BaseControl
     {
         var yOffset = 1;
 
-        var populText = _game.GetPlayerCiv.Population.ToString("###,###,###",
+        var populText = _game.GetPlayerCiv.Cities.Count == 0 ? "0 " + Labels.For(LabelIndex.People) : _game.GetPlayerCiv.Cities.Sum(c=>c.GetPopulation()).ToString("###,###,###",
                     new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " " + Labels.For(LabelIndex.People);
-        if (_game.GetPlayerCiv.Population == 0)
-            populText = "0 " + Labels.For(LabelIndex.People);
+        
         var populLabel = new StatusLabel(_gameScreen, populText);
         populLabel.Bounds = _internalBounds with { Y = _internalBounds.Y + yOffset, Height = populLabel.GetPreferredHeight() };
 

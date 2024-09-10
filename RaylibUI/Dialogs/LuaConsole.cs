@@ -1,5 +1,6 @@
 using Civ2engine.Scripting;
 using Model;
+using Model.Core;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
@@ -10,7 +11,7 @@ namespace RaylibUI;
 public class LuaConsole : DynamicSizingDialog
 {
     private readonly GameScreen _host;
-    private readonly ScriptEngine _script;
+    private readonly IScriptEngine _script;
     private readonly ListBox _listBox;
     private readonly TextBox _commandBox;
 
@@ -28,7 +29,7 @@ public class LuaConsole : DynamicSizingDialog
         _host = host;
         _script = host.Game.Script;
 
-        _listBox = new ListBox(this, 10, true, 1,_script.Log.Split("\n"));
+        _listBox = new ListBox(this, true, 1,_script.Log.Split("\n"));
         Controls.Add(_listBox);
 
         var defaultButton = new Button(this, "Run Script");

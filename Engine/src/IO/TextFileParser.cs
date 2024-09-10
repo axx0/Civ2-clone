@@ -14,7 +14,7 @@ namespace Civ2engine
             
             string line;
             string section = null;
-            List<string> contents = null;
+            List<string>? contents = null;
             var reading = false;
             while ((line = file.ReadLine()) != null)
             {

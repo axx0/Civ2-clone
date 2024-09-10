@@ -5,7 +5,6 @@ using Civ2.Dialogs.NewGame;
 using Civ2.Menu;
 using Civ2.Rules;
 using Civ2engine;
-using Civ2engine.Improvements;
 using Civ2engine.IO;
 using Model;
 using Model.Images;
@@ -17,6 +16,7 @@ using RaylibUtils;
 using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
+using Model.Constants;
 
 namespace Civ2;
 
@@ -51,7 +51,7 @@ public abstract class Civ2Interface : IUserInterface
             value.Width = (int)(value.Width * 1.5m);
         }
         Labels.UpdateLabels(null);
-
+        
         var handlerInterface = typeof(ICivDialogHandler);
         DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())

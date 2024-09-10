@@ -1,4 +1,6 @@
 using System.Text;
+using Model.Core;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedMember.Global

@@ -1,6 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Enums;
 using Civ2engine.Terrains;
+using Civ2engine.Units;
+using Model.Core;
+using Model.Core.Mapping;
 
 namespace Civ2engine.MapObjects
 {
@@ -83,6 +88,56 @@ namespace Civ2engine.MapObjects
         public static IEnumerable<Tile> Neighbours(this Tile tile)
         {
             return tile.Map.Neighbours(tile);
+        }
+        
+        public static void UpdatePlayer(this Tile tile,int civilizationId)
+        {
+            if (tile.PlayerKnowledge == null || tile.PlayerKnowledge.Length <= civilizationId)
+            {
+                var know = new PlayerTile[civilizationId+1];
+                if (tile.PlayerKnowledge != null)
+                {
+                    for (int i = 0; i < tile.PlayerKnowledge.Length; i++)
+                    {
+                        know[i] = tile.PlayerKnowledge[i];
+                    }
+                }
+                tile.PlayerKnowledge = know;
+            }
+
+            tile.PlayerKnowledge[civilizationId] = new PlayerTile(tile);
+        }
+
+        /// <summary>
+        /// Ensure player can see everything visible to them at game start or scenario start
+        ///  This shouln't be called later (need to figure out how to exclude from loaded games)
+        /// </summary>
+        public static void UpdateAllPlayers(this Tile tile)
+        {
+            var visibility = tile.Visibility;
+            var playerKnowledge = new PlayerTile[visibility.Length];
+            for (var i = 0; i < visibility.Length; i++)
+            {
+                if(tile.Map.IsCurrentlyVisible(tile, i))
+                {
+                    playerKnowledge[i] = new PlayerTile(tile);
+                }
+                else if(playerKnowledge[i] == null)
+                {
+                    playerKnowledge[i] = new PlayerTile();
+                }
+            }
+            tile.PlayerKnowledge = playerKnowledge;
+        }
+        
+        
+        public static Unit GetTopUnit(this Tile tile, Func<Unit, bool>? pred = null)
+        {
+            var units = pred != null ? tile.UnitsHere.Where(pred) : tile.UnitsHere;
+            return (tile.Terrain.Type == TerrainType.Ocean
+                    ? units.OrderByDescending(u => u.Domain == UnitGas.Sea ? 1 : 0)
+                    : units.OrderByDescending(u => u.Domain == UnitGas.Sea ? 0 : 1))
+                .ThenBy(u => u.AttackBase).First();
         }
     }
 }

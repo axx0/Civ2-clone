@@ -9,7 +9,8 @@ namespace RaylibUI.BasicTypes.Controls;
 public class LabelControl : BaseControl
 {
     public int Offset { get; }
-    protected readonly string Text;
+    public string Text { get; }
+    
     public readonly TextAlignment Alignment;
     public readonly bool WrapText;
 
@@ -113,11 +114,4 @@ public class LabelControl : BaseControl
 
         base.Draw(pulse);
     }
-}
-
-public enum TextAlignment
-{
-    Left,
-    Center,
-    Right
 }

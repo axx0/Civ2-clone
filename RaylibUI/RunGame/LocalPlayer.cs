@@ -3,6 +3,8 @@ using Civ2engine.Advances;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Units;
+using Model.Core;
+using Model.Core.Advances;
 
 namespace RaylibUI.RunGame;
 
@@ -39,20 +41,20 @@ public class LocalPlayer : IPlayer
         get { return _activeUnit; }
         set
         {
-            switch (value)
+            if (value == null)
             {
-                case null:
-                    _activeUnit = null;
-                    break;
-                case { TurnEnded: false, Dead: false }:
-                    _activeTile = value.CurrentLocation;
-                    _activeUnit = value;
-                    break;
-                default:
+                _activeUnit = null;
+            }
+            else if (value is { TurnEnded: false, Dead: false } && value.Owner == Civilization)
+            {
+                _activeTile = value.CurrentLocation;
+                _activeUnit = value;
+            }
+            else
+            {
 #if DEBUG
-                    //     throw new NotSupportedException("Tried to set ended unit to active");
+                //     throw new NotSupportedException("Tried to set ended unit to active");
 #endif
-                    break;
             }
         }
     }
@@ -82,7 +84,7 @@ public class LocalPlayer : IPlayer
         throw new NotImplementedException();
     }
 
-    public void SelectNewAdvance(Game game, List<Advance> researchPossibilities)
+    public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
     {
         // var popup = _main.popupBoxList["RESEARCH"];
         // var dialog = new Civ2dialog(_main, popup, new List<string> { "wise men" },
@@ -91,7 +93,7 @@ public class LocalPlayer : IPlayer
         // Civ.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
     }
 
-    public void CantProduce(City city, ProductionOrder newItem)
+    public void CantProduce(City city, IProductionOrder? newItem)
     {
         ShowCityDialog(city, "BADBUILD");
     }

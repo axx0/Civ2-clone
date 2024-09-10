@@ -1,24 +1,24 @@
 using System.Collections.Generic;
 using System.Linq;
-using Civ2engine.Improvements;
+using Model.Constants;
 
 namespace Civ2engine.Production
 {
     public static class ProductionPossibilities
     {
-        private static List<ProductionOrder>[] _availableProducts;
+        private static List<IProductionOrder>[] _availableProducts;
 
-        public static void InitializeProductionLists(IEnumerable<Civilization> civs, ProductionOrder[] possibleOrders)
+        public static void InitializeProductionLists(IEnumerable<Civilization> civs, IProductionOrder[] possibleOrders)
         {
             _availableProducts = civs.Select(c => possibleOrders.Where(o => o.RequiredTech == -1).ToList()).ToArray();
         }
 
-        public static void AddItems(int targetCiv, IEnumerable<ProductionOrder> items)
+        public static void AddItems(int targetCiv, IEnumerable<IProductionOrder> items)
         {
             _availableProducts[targetCiv].AddRange(items);
         }
         
-        public static void RemoveItems(int targetCiv, IEnumerable<ProductionOrder> items)
+        public static void RemoveItems(int targetCiv, IEnumerable<IProductionOrder> items)
         {
             var itemList = items.ToList();
             if (itemList.Count > 0)
@@ -32,20 +32,20 @@ namespace Civ2engine.Production
             return _availableProducts[city.OwnerId].Contains(city.ItemInProduction) && city.ItemInProduction.IsValidBuild(city);
         }
 
-        public static ProductionOrder AutoNext(City city)
+        public static IProductionOrder? AutoNext(City city)
         {
             return _availableProducts[city.OwnerId]
                 .Where(p => p.RequiredTech == city.ItemInProduction.ExpiresTech && p.Type == city.ItemInProduction.Type)
-                .OrderBy(p => p.Cost).FirstOrDefault();
+                .MinBy(p => p.Cost);
         }
 
-        public static Improvement FindByEffect(int targetCiv, Effects effect)
+        public static Improvement? FindByEffect(int targetCiv, Effects effect)
         {
             return _availableProducts[targetCiv].OfType<BuildingProductionOrder>()
                 .Where(p => p.Improvement.Effects.ContainsKey(effect)).Select(o => o.Improvement).FirstOrDefault();
         }
 
-        public static IList<ProductionOrder> GetAllowedProductionOrders(City thisCity)
+        public static IList<IProductionOrder> GetAllowedProductionOrders(City thisCity)
         {
             return _availableProducts[thisCity.OwnerId].Where(i => i.IsValidBuild(thisCity)).ToList();
         }

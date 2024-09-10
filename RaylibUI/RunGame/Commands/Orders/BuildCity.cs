@@ -4,6 +4,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;

@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
+using Model.Core;
 
 namespace Civ2engine
 {
-    public class History
+    public class History : IHistory
     {
         private readonly Game _game;
 
@@ -14,7 +15,6 @@ namespace Civ2engine
         internal History(Game game)
         {
             _game = game;
-            
         }
 
         public void AdvanceDiscovered(int advance, int civ)

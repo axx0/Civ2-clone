@@ -403,7 +403,7 @@ public static class ImageUtils
         {
             // Unit
             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-                tile: tile, isShaded: unit.Order == OrderType.Sleep));
+                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep));
         }
 
         // Stacked shield
@@ -449,10 +449,10 @@ public static class ImageUtils
         {
             // Unit
             viewElements.Add(new TextureElement(location: loc, texture: unitTexture,
-                tile: tile, isShaded: unit.Order == OrderType.Sleep));
+                tile: tile, isShaded: unit.Order == (int)OrderType.Sleep));
         }
 
-        if (unit.Order == OrderType.Fortified)
+        if (unit.Order == (int)OrderType.Fortified)
         {
             viewElements.Add(new TextureElement(location: loc, texture: TextureCache.GetImage(active.UnitImages.Fortify), tile: tile));
         }

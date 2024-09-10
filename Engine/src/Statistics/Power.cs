@@ -12,7 +12,7 @@ namespace Civ2engine.Statistics
         {
             foreach (var civilization in game.AllCivilizations)
             {
-                civilization.PowerRating = civilization.Cities.Count * 2 + civilization.Population;
+                civilization.PowerRating = civilization.Cities.Count * 2 + civilization.Cities.Sum(c=>c.GetPopulation());
             }
 
             foreach (var pair

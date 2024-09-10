@@ -190,11 +190,11 @@ public abstract class BaseGameView : IGameView
         if (playerKnowledge.CityHere != null)
         {
             var cityStyleIndex = _gameScreen.Game.Players[playerKnowledge.CityHere.OwnerId].Civilization.CityStyle;
-            if (tile.CityHere.Owner.Epoch == Civ2engine.Enums.EpochType.Industrial)
+            if (tile.CityHere.Owner.Epoch == (int)Civ2engine.Enums.EpochType.Industrial)
             {
                 cityStyleIndex = 4;
             }
-            else if (tile.CityHere.Owner.Epoch == Civ2engine.Enums.EpochType.Modern)
+            else if (tile.CityHere.Owner.Epoch == (int)Civ2engine.Enums.EpochType.Modern)
             {
                 cityStyleIndex = 5;
             }

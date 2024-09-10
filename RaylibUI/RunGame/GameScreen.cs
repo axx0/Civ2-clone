@@ -6,6 +6,7 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
@@ -22,7 +23,7 @@ namespace RaylibUI.RunGame;
 public class GameScreen : BaseScreen
 {
     public Main Main { get; }
-    public Game Game { get; }
+    public IGame Game { get; }
     public Sound Soundman { get; }
 
     private readonly MinimapPanel _minimapPanel;
@@ -62,7 +63,7 @@ public class GameScreen : BaseScreen
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
-    public GameScreen(Main main, Game game, Sound soundman): base(main)
+    public GameScreen(Main main, IGame game, Sound soundman): base(main)
     {
         TileCache = new TileTextureCache(this);
         Main = main;
@@ -217,7 +218,7 @@ public class GameScreen : BaseScreen
         var unitsHere = tile.UnitsHere;
         if (unitsHere.Count == 0)
         {
-            Game.ActiveTile = tile;
+            Game.ActivePlayer.ActiveTile = tile;
             return true;
         }
 
@@ -243,7 +244,7 @@ public class GameScreen : BaseScreen
             _player.ActiveUnit = unit;
         }
 
-        unit.Order = OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated
+        unit.Order = (int)OrderType.NoOrders; // Always clear order when clicked, no matter if the unit is activated
         ActiveMode = Moving;
         return true;
     }
@@ -253,7 +254,7 @@ public class GameScreen : BaseScreen
         _mapControl.ForceRedraw = true;
     }
 
-    private IList<IGameCommand> SetupCommands(Game game)
+    private IList<IGameCommand> SetupCommands(IGame game)
     {
         var commandInterface = typeof(IGameCommand);
         var improvementCommand = typeof(ImprovementOrder);
@@ -273,14 +274,16 @@ public class GameScreen : BaseScreen
 
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
-        List<TextBoxDefinition>? textBoxes = null)
+        List<TextBoxDefinition>? textBoxes = null, 
+        IList<string>? replaceStrings = null,
+        ListBoxDefinition? listBox = null)
     {
         var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
         if (popupBox != null)
         {
             _popupClicked = handleButtonClick;
             _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
-                ClosePopup, textBoxDefs: textBoxes);
+                ClosePopup, textBoxDefs: textBoxes, replaceStrings: replaceStrings, listBox: listBox);
             ShowDialog(_currentPopupDialog, stack: true);
         }
     }

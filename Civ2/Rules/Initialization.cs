@@ -86,7 +86,7 @@ public static class Initialization
         {
             Adjective = tribe.Adjective,
             Alive = true,
-            Government = GovernmentType.Despotism,
+            Government = (int)GovernmentType.Despotism,
             Id = id,
             Money = 0,
             Advances = new bool[config.Rules.Advances.Length],
@@ -94,7 +94,6 @@ public static class Initialization
             LeaderGender = gender,
             LeaderName = gender == 0 ? tribe.NameMale : tribe.NameFemale,
             LeaderTitle = titles[(int)GovernmentType.Despotism],
-            LuxRate = 0,
             ScienceRate = 60,
             TaxRate = 40,
             TribeName = tribe.Plural,

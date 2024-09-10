@@ -9,6 +9,7 @@ using RaylibUI.Forms;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.Emit;
+using Model.Core;
 using Button = RaylibUI.Controls.Button;
 
 namespace RaylibUI;
@@ -56,6 +57,7 @@ public class CivDialog : DynamicSizingDialog
         IList<bool>? checkboxStates = null,
         List<TextBoxDefinition>? textBoxDefs = null,
         int optionsCols = 1,
+        ListBoxDefinition? listBox = null,
         Image[]? icons = null) :
         base(host,
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
@@ -78,6 +80,11 @@ public class CivDialog : DynamicSizingDialog
         }
 
         var options = popupBox.Options;
+
+        if (listBox is not null)
+        {
+            Controls.Add(new CivDialogListBox(this, listBox));
+        }
 
         if (textBoxDefs is { Count: > 0 })
         {
@@ -296,7 +303,7 @@ public class CivDialog : DynamicSizingDialog
             .ToDictionary(k => k.Name, v => v.Value);
     }
 
-    private List<LabelControl> GetTextLabels(IControlLayout controller, IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
+    private List<LabelControl> GetTextLabels(IControlLayout controller, IList<string>? texts, IList<TextStyles>? styles, IList<string> replaceStrings, IList<int> replaceNumbers)
     {
         // Group left-aligned texts
         int j = 0;

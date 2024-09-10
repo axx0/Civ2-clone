@@ -1,6 +1,8 @@
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.Production;
 using Model;
+using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
@@ -20,41 +22,58 @@ public class CityWindow : BaseDialog
         CurrentGameScreen = gameScreen;
         City = city;
         _active = gameScreen.MainWindow.ActiveInterface;
-        
+
         _cityWindowProps = _active.GetCityWindowDefinition();
 
-        _headerLabel = new HeaderLabel(this, _active.Look, City.Name, fontSize: _active.Look.CityHeaderLabelFontSizeNormal);
+        _headerLabel = new HeaderLabel(this, _active.Look, City.Name,
+            fontSize: _active.Look.CityHeaderLabelFontSizeNormal);
 
         LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
         DialogWidth = _cityWindowProps.Width + PaddingSide;
         DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding, Images.ExtractBitmap(_cityWindowProps.Image));
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding,
+            Images.ExtractBitmap(_cityWindowProps.Image));
 
         Controls.Add(_headerLabel);
-        
+
         //Tile map rendered first because in TOT it renders behind
-        var tileMap = new CityTileMap(this)
+        var tileMap = new CityTileMap(this, gameScreen.Game)
         {
             AbsolutePosition = _cityWindowProps.TileMap
         };
         Controls.Add(tileMap);
 
         var infoArea = new CityInfoArea(this, _cityWindowProps.InfoPanel);
-       
+
         Controls.Add(infoArea);
 
-        var buyButton = new Button(this, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        var buyButton = new Button(this, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont,
+            _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Buy"]
         };
         Controls.Add(buyButton);
 
-        var changeButton = new Button(this, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        var changeButton = new Button(this, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont,
+            _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Change"]
         };
-        Controls.Add(changeButton);
+        changeButton.Click += (_, _) =>
+        {
+            var canProduce = ProductionPossibilities.GetAllowedProductionOrders(city);
+            gameScreen.ShowPopup(
+                "PRODUCTION",
+                replaceStrings: new[] { city.Name },
+                listBox: new ListBoxDefinition
+                {
+                    Vertical = true,
+                    Entries = canProduce.Select(p => p.GetBuildListEntry()).ToList()
+                });
+        };
+
+    Controls.Add(changeButton);
         var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Info"]

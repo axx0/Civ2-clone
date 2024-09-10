@@ -1,5 +1,6 @@
 using System.Linq;
-using Civ2engine.Improvements;
+using Model.Constants;
+using Model.Interface;
 
 namespace Civ2engine.Production
 {
@@ -42,6 +43,11 @@ namespace Civ2engine.Production
         public override string GetDescription()
         {
             return Improvement.Name;
+        }
+
+        public override ListBoxEntry GetBuildListEntry()
+        {
+            return new ListBoxEntry { LeftText = Improvement.Name };
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Civ2engine.IO
             return loader._scenarios;
         }
 
-        public void ProcessSection(string section, List<string> contents)
+        public void ProcessSection(string section, List<string>? contents)
         {
             if (section != "IF") return;
 
@@ -336,7 +336,7 @@ namespace Civ2engine.IO
             });
         }
 
-        private static string ReadString(List<string> strings, string keyword, int startIndex = 1)
+        private static string ReadString(List<string>? strings, string keyword, int startIndex = 1)
         {
             foreach (string s in strings.Skip(startIndex))
             {

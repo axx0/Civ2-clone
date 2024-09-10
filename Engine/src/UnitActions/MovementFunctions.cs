@@ -6,6 +6,7 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Model.Core;
 
 namespace Civ2engine.UnitActions.Move
 {
@@ -411,7 +412,7 @@ namespace Civ2engine.UnitActions.Move
                             moveCost = unit.MovePoints;
                             unit.InShip = availableShip;
                             unitMoved = true;
-                            unit.Order = OrderType.Sleep;
+                            unit.Order = (int)OrderType.Sleep;
                         }
 
                         break;
@@ -448,7 +449,7 @@ namespace Civ2engine.UnitActions.Move
                             //Make landfall
                             unit.CarriedUnits.ForEach(u =>
                             {
-                                u.Order = OrderType.NoOrders;
+                                u.Order = (int)OrderType.NoOrders;
                                 UnitMoved(game, u, tileTo, tileFrom);
                                 u.InShip = null;
                             });
@@ -469,7 +470,7 @@ namespace Civ2engine.UnitActions.Move
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
                                 unaccountedUnit.InShip = unit;
-                                unaccountedUnit.Order = OrderType.Sleep;
+                                unaccountedUnit.Order = (int)OrderType.Sleep;
                                 unit.CarriedUnits.Add(unaccountedUnit);
                             }
                         }
@@ -477,7 +478,7 @@ namespace Civ2engine.UnitActions.Move
                         {
                             foreach (var unaccountedUnit in tileFrom.UnitsHere
                                 .Where(u => u.InShip == null &&
-                                            u.Domain == UnitGas.Ground && u.Order == OrderType.Sleep)
+                                            u.Domain == UnitGas.Ground && u.Order == (int)OrderType.Sleep)
                                 .Take(unit.ShipHold - unit.CarriedUnits.Count))
                             {
                                 unaccountedUnit.InShip = unit;
@@ -547,16 +548,16 @@ namespace Civ2engine.UnitActions.Move
                     {
                         unit.CarriedUnits.ForEach(u =>
                         {
-                            u.Order = OrderType.NoOrders;
+                            u.Order = (int)OrderType.NoOrders;
                             u.InShip = null;
                         });
                         unit.CarriedUnits.Clear();
                     }
                 }
 
-                if (unit.Order != OrderType.GoTo)
+                if (unit.Order != (int)OrderType.GoTo)
                 {
-                    unit.Order = OrderType.NoOrders;
+                    unit.Order = (int)OrderType.NoOrders;
                 }
 
                 if (unit.CurrentLocation.IsVisible(game.GetPlayerCiv.Id))

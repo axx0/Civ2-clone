@@ -1,6 +1,5 @@
 using System.Numerics;
 using Civ2engine;
-using Civ2engine.Improvements;
 using Model;
 using Model.Images;
 using Raylib_cs;

@@ -3,6 +3,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model;
+using Model.Core;
 using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUtils;
@@ -18,14 +19,16 @@ public class CityTileMap : BaseControl
     private readonly Vector2 _textDim;
     private readonly string _text;
     private readonly IUserInterface _active;
+    private readonly int _organizationLevel;
 
-    public CityTileMap(CityWindow cityWindow) : base(cityWindow)
+    public CityTileMap(CityWindow cityWindow, IGame game) : base(cityWindow)
     {
         _cityWindow = cityWindow;
         _active = cityWindow.MainWindow.ActiveInterface;
         Click += OnClick;
         _text = Labels.For(LabelIndex.ResourceMap);
         _textDim = Raylib.MeasureTextEx(_active.Look.CityWindowFont, _text, _active.Look.CityWindowFontSize, 1);
+        _organizationLevel = cityWindow.City.GetOrganizationLevel(game.Rules);
     }
 
     private void OnClick(object? sender, MouseEventArgs e)
@@ -150,7 +153,7 @@ public class CityTileMap : BaseControl
             {
                 wt.WorkedBy = null;
             }
-            city.AutoAddDistributionWorkers();
+            city.AutoAddDistributionWorkers(gameScreen.Game.Rules);
                     
         }else if (tile.WorkedBy != null)
         {
@@ -226,11 +229,11 @@ public class CityTileMap : BaseControl
                 if (tile.CityHere != null)
                 {
                     var cityStyleIndex = tile.CityHere.Owner.CityStyle;
-                    if (tile.CityHere.Owner.Epoch == EpochType.Industrial)
+                    if (tile.CityHere.Owner.Epoch == (int)EpochType.Industrial)
                     {
                         cityStyleIndex = 4;
                     }
-                    else if (tile.CityHere.Owner.Epoch == EpochType.Modern)
+                    else if (tile.CityHere.Owner.Epoch == (int)EpochType.Modern)
                     {
                         cityStyleIndex = 5;
                     }
@@ -282,7 +285,7 @@ public class CityTileMap : BaseControl
             gameScreen.Main.ActiveInterface.ResourceImages.ToDictionary(k => k.Name,
                 v => Images.ExtractBitmap(v.SmallImage));
 
-        var lowOrganisation = city.Owner.Government <= GovernmentType.Despotism;
+        var lowOrganisation = _organizationLevel == 0;
         var totalDrawWidth = dim.TileWidth - 20;
         var resourceXOffset = 10;
         var resourceWidth = resources.First().Value.Height;
@@ -292,7 +295,7 @@ public class CityTileMap : BaseControl
         {
             var food = workedTile.GetFood(lowOrganisation);
             var shields = workedTile.GetShields(lowOrganisation);
-            var trade = workedTile.GetTrade(city.OrganizationLevel);
+            var trade = workedTile.GetTrade(_organizationLevel);
 
             var totalResources = food + shields + trade;
             if (totalResources > 0)

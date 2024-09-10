@@ -36,14 +36,15 @@ public class ViewPiece : IGameMode
                 {
                     KeyboardKey.Enter, () =>
                     {
-                        if (_gameScreen.Game.ActiveTile.CityHere != null)
+                        var playerActiveTile = _gameScreen.Game.ActivePlayer.ActiveTile;
+                        if (playerActiveTile.CityHere != null)
                         {
-                            _gameScreen.ShowCityWindow(_gameScreen.Game.ActiveTile.CityHere);
+                            _gameScreen.ShowCityWindow(playerActiveTile.CityHere);
                             return true;
                         }
-                        if (_gameScreen.Game.ActiveTile.UnitsHere.Any(u => u.MovePoints > 0))
+                        if (playerActiveTile.UnitsHere.Any(u => u.MovePoints > 0))
                         {
-                            _gameScreen.ActivateUnits(_gameScreen.Game.ActiveTile);
+                            _gameScreen.ActivateUnits(playerActiveTile);
                             return true;
                         }
                         /*else if (_gameScreen.StatusPanel.WaitingAtEndOfTurn)
@@ -69,12 +70,12 @@ public class ViewPiece : IGameMode
 
     private bool SetActive(int deltaX, int deltaY)
     {
-        var activeTile = _gameScreen.Game.ActiveTile;
+        var activeTile = _gameScreen.Game.ActivePlayer.ActiveTile;
         var newX = activeTile.X + deltaX;
         var newY = activeTile.Y + deltaY;
         if (activeTile.Map.IsValidTileC2(newX, newY))
         {
-            _gameScreen.Game.ActiveTile = activeTile.Map.TileC2(newX, newY);
+            _gameScreen.Game.ActivePlayer.ActiveTile = activeTile.Map.TileC2(newX, newY);
             return true;
         }
         if (!activeTile.Map.Flat && newY >= -1 && newY < activeTile.Map.YDim)
@@ -90,7 +91,7 @@ public class ViewPiece : IGameMode
 
             if (activeTile.Map.IsValidTileC2(newX, newY))
             {
-                _gameScreen.Game.ActiveTile = activeTile.Map.TileC2(newX, newY);
+                _gameScreen.Game.ActivePlayer.ActiveTile = activeTile.Map.TileC2(newX, newY);
                 return true;
             }
         }
@@ -104,7 +105,7 @@ public class ViewPiece : IGameMode
         if (!forceRedraw && currentView is WaitingView animation)
         {
             if (animation.ViewWidth == viewWidth && animation.ViewHeight == viewHeight &&
-                animation.Location == gameScreen.Game.ActiveTile)
+                animation.Location == gameScreen.Game.ActivePlayer.ActiveTile)
 
             {
                 animation.Reset();
@@ -129,7 +130,7 @@ public class ViewPiece : IGameMode
             }
         }
 
-        _gameScreen.Game.ActiveTile = tile;
+        _gameScreen.Game.ActivePlayer.ActiveTile = tile;
         return true;
     }
 

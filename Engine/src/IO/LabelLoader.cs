@@ -4,7 +4,7 @@ namespace Civ2engine
 {
     public class LabelLoader : IFileHandler
     {
-        public void ProcessSection(string section, List<string> contents)
+        public void ProcessSection(string section, List<string>? contents)
         {
             switch (section)
             {

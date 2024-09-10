@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
-using Civ2engine.Improvements;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Model.Core;
+using Model.Core.Advances;
+using Model.Core.Cities;
 using Path = System.IO.Path;
 
 namespace Civ2engine.IO
@@ -17,8 +19,9 @@ namespace Civ2engine.IO
 
         private readonly Dictionary<string, Action<string[]>> _sectionHandlers = new();
 
-        private RulesParser()
+        private RulesParser(Rules rules)
         {
+            this.Rules = rules; 
             _sectionHandlers.Add("COSMIC", ProcessCosmicRules);
             _sectionHandlers.Add("COSMIC2", ProcessExtraMovementAdjustments);
             _sectionHandlers.Add("CIVILIZE", ProcessTech);
@@ -61,7 +64,7 @@ namespace Civ2engine.IO
             var rules = new Rules();
             _rulesetPaths = ruleset.Paths;
             var filePath = Utils.GetFilePath("RULES.txt", _rulesetPaths);
-            TextFileParser.ParseFile(filePath, new RulesParser {Rules = rules});
+            TextFileParser.ParseFile(filePath, new RulesParser(rules));
             return rules;
         }
 
@@ -166,7 +169,7 @@ namespace Civ2engine.IO
             }
         }
 
-        private IList<OrderType> _orders = new[]
+        private static readonly IList<OrderType> Orders = new[]
         {
             OrderType.Fortify, OrderType.Fortified, OrderType.Sleep, OrderType.BuildFortress, OrderType.BuildRoad,
             OrderType.BuildIrrigation, OrderType.BuildMine, OrderType.Transform, OrderType.CleanPollution,
@@ -182,16 +185,16 @@ namespace Civ2engine.IO
                     Id = id,
                     Name = parts[0],
                     Key = parts[1],
-                    Type = _orders[id]
+                    Type = (int)Orders[id]
                 };
             }).ToArray();
-            Rules.Orders[Rules.Orders.Length - 1].Type = OrderType.GoTo;
+            Rules.Orders[^1].Type = (int)OrderType.GoTo; //if TOT this is a NOOP otherwise it fixes mislabeling as Transport1
         }
 
         private void ProcessGoods(string[] values)
         {
             Rules.CaravanCommoditie =
-                values.Select((value => value.Split(',', StringSplitOptions.TrimEntries)[0])).ToArray();
+                values.Select((value, id) => new Commodity { Id = id, Name = value.Split(',', StringSplitOptions.TrimEntries)[0]}).ToArray();
         }
 
         private void ProcessLeaders(string[] values)
@@ -227,21 +230,53 @@ namespace Civ2engine.IO
             }).ToArray();
         }
 
+        private int SupportFromLevel(int level)
+        {
+            if (level == 0) return -1;
+            if (level == 2) return 0;
+            return _freeSupports[_nextGov++];
+        }
+
+        private int _nextGov;
+        private int[] _freeSupports;
+
         private void ProcessGovernments(string[] values)
         {
-            Rules.Governments = values.Select((value =>
+            _freeSupports = new [] { Rules.Cosmic.MonarchyPaysSupport, Rules.Cosmic.CommunismPaysSupport, Rules.Cosmic.FundamentalismPaysSupport };
+            
+            Rules.Governments = values.Select((value, idx) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
+                var level = Math.Min((int)Math.Floor((idx+1)/3f),2);
                 return new Government
                 {
                     Name = line[0],
                     TitleMale = line[1],
-                    TitleFemale = line[2]
+                    TitleFemale = line[2],
+                    Level = level,
+                    NumberOfFreeUnitsPerCity = SupportFromLevel(level),
+                    UnitTypesAlwaysFree = idx == 4 ? this.Rules.UnitTypes.Where(u=>u.Flags[3] == '1').Select(u=>u.Type).ToArray() : Array.Empty<int>(),
+                    Distance = DefaultDistanceFromIndex(idx),
+                    SettlersConsumption = idx > 2 ? this.Rules.Cosmic.SettlersEatFromCommunism : Rules.Cosmic.SettlersEatTillMonarchy
                 };
-            })).ToArray();
+            }).ToArray();
         }
 
-        private void ProcessTerrain(IEnumerable<string> values)
+        private int DefaultDistanceFromIndex(int idx)
+        {
+            switch (idx)
+            {
+                case 4: //Fundamentalism
+                case 6: //Democracy
+                    return 0;
+                case 3: //Communism
+                    return Rules.Cosmic.CommunismEquivalentPalaceDistance;
+                default:
+                    return -1;
+            }
+        }
+
+        private void ProcessTerrain(IEnumerable<string>? values)
         {
             var terrains = new List<string>();
             var bonus = new List<string>();
@@ -277,11 +312,11 @@ namespace Civ2engine.IO
                     CanIrrigate = mappings[line[6]],
                     IrrigationBonus = int.Parse(line[7]),
                     TurnsToIrrigate = int.Parse(line[8]),
-                    MinGovrnLevelAItoPerformIrrigation = (GovernmentType) int.Parse(line[9]),
+                    MinGovrnLevelAItoPerformIrrigation = int.Parse(line[9]),
                     CanMine = mappings[line[10]],
                     MiningBonus = int.Parse(line[11]),
                     TurnsToMine = int.Parse(line[12]),
-                    MinGovrnLevelAItoPerformMining = (GovernmentType) int.Parse(line[13]),
+                    MinGovrnLevelAItoPerformMining = int.Parse(line[13]),
                     Transform = mappings[line[14]],
                     Impassable = line[15] == "yes",
                     RoadBonus = type <= (int)TerrainType.Grassland ? 1:0, 
@@ -311,7 +346,7 @@ namespace Civ2engine.IO
                 var text = line.Split(',', StringSplitOptions.TrimEntries);
                 var unit = new UnitDefinition
                 {
-                    Type = (UnitType) type,
+                    Type = type,
                     Name = text[0],
                     Until = Rules.AdvanceMappings[text[1]],
                     Domain = (UnitGas) int.Parse(text[2]),
@@ -374,14 +409,16 @@ namespace Civ2engine.IO
 
         private void ProcessEndWonders(string[] values)
         {
-            var firstWonderIndex = Rules.Improvements.First(i => i.Type == ImprovementType.Pyramids).Id;
-            for (var i = 0; i < values.Length; i++)
+            var improvementIndex = Rules.Improvements.Length - 1;
+            for (var i = values.Length - 1; i >= 0 && improvementIndex >=0; i--)
             {
+                Rules.Improvements[improvementIndex].IsWonder = true;
                 if (!values[i].StartsWith("nil"))
                 {
-                    Rules.Improvements[firstWonderIndex + i].ExpiresAt =
+                    Rules.Improvements[improvementIndex].ExpiresAt =
                         Rules.AdvanceMappings[values[i].Split(',', 2)[0]];
                 }
+                improvementIndex--;
             }
         }
 
@@ -392,7 +429,7 @@ namespace Civ2engine.IO
                 var parts = value.Split(',', StringSplitOptions.TrimEntries);
                 return new Improvement
                 {
-                    Type = (ImprovementType) type,
+                    Type = type,
                     Name = parts[0],
                     Cost = int.Parse(parts[1]),
                     Upkeep = int.Parse(parts[2]),
@@ -451,7 +488,7 @@ namespace Civ2engine.IO
 
             if (Rules.Cosmic.MovementMultiplier == commonMultiplier) return;
 
-            if (Rules.UnitTypes != null)
+            if (Rules.UnitTypes is { Length: >0})
             {
                 foreach (var unitType in Rules.UnitTypes)
                 {
@@ -484,14 +521,14 @@ namespace Civ2engine.IO
                     Modifier = int.Parse(text[2]),
                     Prereq1 = Rules.AdvanceMappings[text[3]],
                     Prereq2 = Rules.AdvanceMappings[text[4]],
-                    Epoch = (EpochType) int.Parse(text[5]),
-                    KnowledgeCategory = (KnowledgeType) int.Parse((text[6]))
+                    Epoch =  int.Parse(text[5]),
+                    KnowledgeCategory = int.Parse(text[6])
                 };
             }).ToArray();
         }
 
 
-        public void ProcessSection(string section, List<string> contents)
+        public void ProcessSection(string section, List<string>? contents)
         {
             if (section.StartsWith("TERRAIN"))
             {
@@ -516,8 +553,6 @@ namespace Civ2engine.IO
                 Trade = int.Parse(line[5]),
             };
         }
-
-
     }
 }
 

@@ -3,13 +3,13 @@ using System.Linq;
 using Civ2engine.Units;
 using Civ2engine.Enums;
 using Civ2engine.Advances;
-using Civ2engine.Improvements;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
+using Model.Core;
 
 namespace Civ2engine
 {
-    public partial class Game
+    public partial class Game : IGame
     {
         // Update stats of all cities
         private void CitiesTurn(IPlayer player)
@@ -28,9 +28,9 @@ namespace Civ2engine
 
                 var shields = city.Production;
 
-                var tax = city.Tax;
-
-                var science = city.Science;
+                //TODO: Combine these calls
+                var tax = city.GetTax();
+                var science = city.GetScience();
                 
                 // Change city size
                 if (city.FoodInStorage < 0)
