@@ -5,9 +5,10 @@ using System.Xml.Linq;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
-using Civ2engine.UnitActions.Move;
+using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Menu;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
@@ -30,7 +31,7 @@ public class MovingPieces : IGameMode
 
         _title = new LabelControl(gameScreen, Labels.For(LabelIndex.MovingUnits), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0), spacing: 0);
 
-        Actions = new Dictionary<Shortcut, Action>
+        Actions = new Dictionary<Shortcut, Action<IGame>>
         {
             /*{
                 Keys.Enter, () =>
@@ -50,7 +51,7 @@ public class MovingPieces : IGameMode
         };
     }
 
-    public Dictionary<Shortcut, Action> Actions { get; set; }
+    public Dictionary<Shortcut, Action<IGame>> Actions { get; set; }
 
     public IGameView GetDefaultView(GameScreen gameScreen, IGameView? currentView, int viewHeight, int viewWidth,
         bool forceRedraw)
@@ -113,7 +114,7 @@ public class MovingPieces : IGameMode
     {
         if (Actions.ContainsKey(command))
         {
-            Actions[command]();
+            Actions[command](_gameScreen.Game);
             return true;
         }
 

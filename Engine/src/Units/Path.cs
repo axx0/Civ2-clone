@@ -4,7 +4,7 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Civ2engine.UnitActions.Move;
+using Civ2engine.UnitActions;
 using Model.Core;
 
 namespace Civ2engine.Units;

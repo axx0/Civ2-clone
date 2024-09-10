@@ -7,7 +7,7 @@ namespace Civ2engine.Events
     {
         public BlockedReason Reason { get; set; }
         
-        public MovementBlockedEventArgs(UnitEventType eventType, Unit subjectUnit, BlockedReason reason) : base(eventType, new []{  subjectUnit.CurrentLocation})
+        public MovementBlockedEventArgs(UnitEventType eventType, IUnit subjectUnit, BlockedReason reason) : base(eventType, new []{  subjectUnit.CurrentLocation})
         {
             Reason = reason;
         }

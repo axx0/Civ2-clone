@@ -6,7 +6,6 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Statistics;
 using Civ2engine.UnitActions;
-using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
 using Model.Core;
 
@@ -103,6 +102,7 @@ namespace Civ2engine
         public void SetHumanPlayer(int civId)
         {
             AllCivilizations.ForEach(c => c.PlayerType = PlayerType.Ai);
+            AllCivilizations[0].PlayerType = PlayerType.Barbarians;
             AllCivilizations[civId].PlayerType = PlayerType.Local;
         }
 

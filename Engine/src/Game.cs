@@ -101,7 +101,7 @@ namespace Civ2engine
 
         public IPlayer[] Players { get; }
 
-        public void TriggerUnitEvent(UnitEventType eventType, Unit movedUnit,
+        public void TriggerUnitEvent(UnitEventType eventType, IUnit movedUnit,
             BlockedReason blockedReason = BlockedReason.NotBlocked)
         {
             OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(eventType, movedUnit, blockedReason));

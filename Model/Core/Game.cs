@@ -3,6 +3,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
+using Civ2engine.Units;
 
 namespace Model.Core;
 
@@ -39,4 +40,6 @@ public interface IGame
     
     event EventHandler<UnitEventArgs> OnUnitEvent;
     void AiTurn();
-}
+    void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked);
+    void TriggerUnitEvent(UnitEventArgs combatEventArgs);
+}   
