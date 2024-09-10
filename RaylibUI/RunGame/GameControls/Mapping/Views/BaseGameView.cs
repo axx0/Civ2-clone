@@ -51,7 +51,7 @@ public abstract class BaseGameView : IGameView
         var cities = activeInterface.CityImages;
         var civilizationId = _gameScreen.Player.Civilization.Id;
         // Force redraw should be checked last as IsSameArea will set offsets 
-        if (previousView != null && IsInSameArea(previousView, location, Dimensions) && !forceRedraw)
+        if (previousView != null && IsInSameArea(previousView, location, Dimensions, forceRedraw) && !forceRedraw)
         {
             ActivePos = GetPosForTile(location);
             BaseImage = previousView.BaseImage;
@@ -289,12 +289,12 @@ public abstract class BaseGameView : IGameView
 
     public Texture2D BaseImage { get; set; }
 
-    private bool IsInSameArea(IGameView previousView, Tile location, MapDimensions dimensions)
+    private bool IsInSameArea(IGameView previousView, Tile location, MapDimensions dimensions, bool force = false)
     {
         if (previousView.Location.Map != location.Map) return false;
         if (previousView.ViewHeight != ViewHeight || previousView.ViewWidth != ViewWidth) return false;
 
-        return !CalculateOffsets(previousView, location, dimensions);
+        return !CalculateOffsets(previousView, location, dimensions, force);
     }
 
     private bool CalculateOffsets(IGameView? previousView, Tile location, MapDimensions dimensions, bool force = false)
@@ -320,13 +320,13 @@ public abstract class BaseGameView : IGameView
 
             setOffsetY = currentOffsetYPos < 0 || currentOffsetYPos + dimensions.TileHeight > ViewHeight;
 
-            if (currentOffsetYPos < 0 && offsetY < 0)
+            if (offsetY < 0 && (currentOffsetYPos < 0 || previousView == null || force))
             {
                 offsetY = 0;
                 setOffsetY = offsetY != (int)_offsets.Y;
             }
-            else if (currentOffsetYPos + dimensions.TileHeight > ViewHeight &&
-                    offsetY + ViewHeight > dimensions.TotalHeight)
+            else if (offsetY + ViewHeight > dimensions.TotalHeight && 
+                (currentOffsetYPos + dimensions.TileHeight > ViewHeight || previousView == null || force))
             {
                 offsetY = dimensions.TotalHeight - ViewHeight;
                 setOffsetY = offsetY != (int)_offsets.Y;
@@ -348,13 +348,13 @@ public abstract class BaseGameView : IGameView
             {
                 setOffsetX = currentOffsetXPos < 0 || currentOffsetXPos + dimensions.TileWidth > ViewWidth;
 
-                if (currentOffsetXPos < 0 && offsetX < 0)
+                if (offsetX < 0 && (currentOffsetXPos < 0 || previousView == null || force))
                 {
                     offsetX = 0;
                     setOffsetX = offsetX != (int)_offsets.X;
                 }
-                else if (currentOffsetXPos + dimensions.TileWidth > ViewWidth &&
-                        offsetX + ViewWidth > dimensions.TotalWidth)
+                else if (offsetX + ViewWidth > dimensions.TotalWidth &&
+                    (currentOffsetXPos + dimensions.TileWidth > ViewWidth || previousView == null || force))
                 {
                     offsetX = dimensions.TotalWidth - ViewWidth;
                     setOffsetX = offsetX != (int)_offsets.X;

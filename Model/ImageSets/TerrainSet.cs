@@ -1,4 +1,5 @@
 using Model.Core;
+using Model.Images;
 using Raylib_cs;
 using RaylibUI;
 
@@ -21,18 +22,18 @@ namespace Model.ImageSets
 
         public int HalfWidth { get; }
 
-        public Image[] BaseTiles { get; set; }
-        public Image[][] Specials { get; set; }
-        public Image Blank { get; set; }
+        public IImageSource[] BaseTiles { get; set; }
+        public IImageSource[][] Specials { get; set; }
+        public IImageSource Blank { get; set; }
         public DitherMap[] DitherMaps { get; set; }
-        public Image[] RiverMouth { get; set; }
-        public Image[] River { get; set; }
-        public Image[] Forest { get; set; }
-        public Image[] Mountains { get; set; }
-        public Image[] Hills { get; set; }
-        public Image[,] Coast { get; set; }
-        public Image Pollution { get; set; }
-        public Image GrasslandShield { get; set; }
+        public IImageSource[] RiverMouth { get; set; }
+        public IImageSource[] River { get; set; }
+        public IImageSource[] Forest { get; set; }
+        public IImageSource[] Mountains { get; set; }
+        public IImageSource[] Hills { get; set; }
+        public IImageSource[,] Coast { get; set; }
+        public IImageSource Pollution { get; set; }
+        public IImageSource GrasslandShield { get; set; }
         public Image[] DitherMask { get; set; }
         
         public Dictionary<int, ImprovementGraphic> ImprovementsMap { get; set; }
@@ -41,7 +42,7 @@ namespace Model.ImageSets
 
         public int TileHeight { get; }
 
-        public Image[] ImagesFor(TerrainType terrain)
+        public IImageSource[] ImagesFor(TerrainType terrain)
         {
             switch (terrain)
             {

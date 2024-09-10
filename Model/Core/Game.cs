@@ -38,4 +38,5 @@ public interface IGame
     IPlayer[] Players { get; }
     
     event EventHandler<UnitEventArgs> OnUnitEvent;
+    void AiTurn();
 }

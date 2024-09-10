@@ -44,7 +44,8 @@ public class MapControl : BaseControl
             _gameScreen.ActiveMode.GetDefaultView(gameScreen, null, _viewHeight, _viewWidth, ForceRedraw);
 
         gameScreen.OnMapEvent += MapEventTriggered;
-        _game.OnUnitEvent += UnitEventHappened;
+        _game.OnUnitEvent += UnitEventTriggered;
+        _game.OnPlayerEvent += PlayerEventTriggered;
         Click += OnClick;
         MouseDown += OnMouseDown;
 
@@ -62,7 +63,7 @@ public class MapControl : BaseControl
         _clickTimer.Change(500, -1);
     }
 
-    private void UnitEventHappened(object sender, UnitEventArgs e)
+    private void UnitEventTriggered(object sender, UnitEventArgs e)
     {
         switch (e.EventType)
         {
@@ -82,19 +83,27 @@ public class MapControl : BaseControl
                 {
                     _animationQueue.Enqueue(new AttackAnimation(_gameScreen, combatEventArgs, _animationQueue.LastOrDefault(_currentView), _viewHeight, _viewWidth, ForceRedraw));
                 }
-
-
-                // animationFrames = GetAnimationFrames.UnitAttack(e);
-                // StartAnimation(AnimationType.Attack);
                 break;
             }
-            // case UnitEventType.StatusUpdate:
-            //     {
-            //         animType = AnimationType.Waiting;
-            //         if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
-            //         UpdateMap();
-            //         break;
-            //     }
+            case UnitEventType.NewUnitActivated:
+            {
+                //animType = AnimationType.Waiting;
+                //if (IsActiveSquareOutsideMapView) MapViewChange(Map.ActiveXY);
+                //UpdateMap();
+                break;
+            }
+        }
+    }
+
+    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
+    {
+        switch (e.EventType)
+        {
+            case PlayerEventType.NewTurn:
+                {
+                    break;
+                }
+            default: break;
         }
     }
 
@@ -110,14 +119,26 @@ public class MapControl : BaseControl
 
     private void SetDimensions()
     {
+        if (_gameScreen.ToTPanelLayout)
+        {
+            _padding = _active.GetPadding(0, false);
+        }
+        else
+        {
+            _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
+        }
+
         if (_backgroundImage != null)
         {
             Raylib.UnloadTexture(_backgroundImage.Value);
         }
         _backgroundImage = ImageUtils.PaintDialogBase(_gameScreen.Main.ActiveInterface, Width, Height, _padding, noWallpaper:true);
 
-        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
-        _headerLabel.OnResize();
+        if (!_gameScreen.ToTPanelLayout)
+        {
+            _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
+            _headerLabel.OnResize();
+        }
 
         _viewWidth = Width - _padding.Left - _padding.Right;
         _viewHeight = Height - _padding.Top - _padding.Bottom;
@@ -139,6 +160,7 @@ public class MapControl : BaseControl
 
             if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button, _longHold))
             {
+                _gameScreen.ForceRedraw();
                 MapViewChange(tile);
             }
         }
@@ -331,7 +353,8 @@ public class MapControl : BaseControl
 
         if (_backgroundImage != null)
             Raylib.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
-        _headerLabel.Draw(pulse);
+        if (!_gameScreen.ToTPanelLayout)
+            _headerLabel.Draw(pulse);
     }
 
     private void NextView()

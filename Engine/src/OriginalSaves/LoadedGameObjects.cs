@@ -73,11 +73,12 @@ namespace Civ2engine.OriginalSaves
             var totalUnitOrders = productionOrders.Count(o => o is UnitProductionOrder);
             for (var i = 0; i < gameData.NumberOfCities; i++)
             {
-                if (gameData.CityYloc[i] < 1)
-                {
-                    Debug.WriteLine($"Bad city data pos{i} ({gameData.CityXloc[i]},{gameData.CityYloc[i]}: {gameData.CityName[i]}");
-                    continue;
-                }
+                // Xloc<0 or Yloc<0 => destroyed cities
+                //if (gameData.CityYloc[i] < 1)
+                //{
+                //    Debug.WriteLine($"Bad city data pos{i} ({gameData.CityXloc[i]},{gameData.CityYloc[i]}: {gameData.CityName[i]}");
+                //    continue;
+                //}
                 cities.Add(CreateCity(gameData.CityXloc[i], gameData.CityYloc[i], gameData.CityMapNo[i], 
                     gameData.CityCanBuildCoastal[i], gameData.CityAutobuildMilitaryRule[i], gameData.CityStolenAdvance[i],
                     gameData.CityImprovementSold[i], gameData.CityWeLoveKingDay[i], gameData.CityCivilDisorder[i], 

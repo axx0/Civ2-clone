@@ -1,9 +1,9 @@
-using Raylib_cs;
+using Model.Images;
 
 namespace RaylibUI;
 
 public class ImprovementGraphic
 {
-    public Image[,] Levels { get; set; }
-    public Image[,] UnitLevels { get; set; }
+    public IImageSource[,] Levels { get; set; }
+    public IImageSource[,] UnitLevels { get; set; }
 }

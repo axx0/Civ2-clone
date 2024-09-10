@@ -23,7 +23,7 @@ public class CivDialog : DynamicSizingDialog
     private readonly IList<LabeledTextBox> _textBoxes;
     private readonly List<OptionControl>? _optionControls;
     private readonly Action<string, int, IList<bool>?, IDictionary<string, string>?> _handleButtonClick;
-    private readonly int _optionsCols;
+    private readonly int _optionsCols, _initSelectedOption;
     private readonly IUserInterface _active;
     private readonly Vector2 _innerSize;
 
@@ -57,6 +57,7 @@ public class CivDialog : DynamicSizingDialog
         IList<bool>? checkboxStates = null,
         List<TextBoxDefinition>? textBoxDefs = null,
         int optionsCols = 1,
+        int initSelectedOption = 0,
         ListBoxDefinition? listBox = null,
         Image[]? icons = null) :
         base(host,
@@ -67,6 +68,7 @@ public class CivDialog : DynamicSizingDialog
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
         _managedTextures = new List<Texture2D>();
+        _initSelectedOption = popupBox.Default != 0 ? popupBox.Default : initSelectedOption;
 
         if (popupBox.Text?.Count > 0)
         {
@@ -135,8 +137,8 @@ public class CivDialog : DynamicSizingDialog
             _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
             if (!popupBox.Checkbox)
             {
-                _optionControls[popupBox.Default].Checked = true;
-                SetSelectedOption(_optionControls[popupBox.Default]);
+                _optionControls[_initSelectedOption].Checked = true;
+                SetSelectedOption(_optionControls[_initSelectedOption]);
             }
 
             if (optionsCols < 2)

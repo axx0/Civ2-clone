@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ImGui.NET" Version="1.89.2" />
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Raylib-cs" Version="6.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.1.21102.12" />

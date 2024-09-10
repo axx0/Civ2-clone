@@ -17,6 +17,7 @@ public class DialogElements
     public IList<int>? ReplaceNumbers { get; set; }
     public IList<bool>? CheckboxStates { get; set; }
     public int OptionsCols { get; set; } = 1;
+    public int SelectedOption { get; set; } = 0;
     public List<string>? ReplaceStrings { get; set; }
     public Image[]? OptionsImages { get; set; }
 }

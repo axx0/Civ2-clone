@@ -8,6 +8,7 @@ using Civ2engine.Statistics;
 using Civ2engine.UnitActions;
 using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
+using Model.Core;
 
 namespace Civ2engine
 {
@@ -68,13 +69,13 @@ namespace Civ2engine
 
         public void ChoseNextCiv()
         {
-            if (_activeCiv == AllCivilizations[^1])
+            if (_activeCiv == ActiveCivs[^1])
             {
                 StartNextTurn();
             }
             else
             {
-                _activeCiv = AllCivilizations[_activeCiv.Id + 1];
+                _activeCiv = ActiveCivs[ActiveCivs.FindIndex(civ => civ == _activeCiv) + 1];
 
                 if (_activeCiv.Alive)
                 {
@@ -86,7 +87,6 @@ namespace Civ2engine
                     }
                     else
                     {
-                        // Choose next unit
                         ChooseNextUnit();
                     }
 
@@ -106,7 +106,7 @@ namespace Civ2engine
             AllCivilizations[civId].PlayerType = PlayerType.Local;
         }
 
-        private void AiTurn()
+        public void AiTurn()
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
             {
@@ -144,13 +144,15 @@ namespace Civ2engine
                     case AIroleType.SeaTransport:
                         break;
                     case AIroleType.Settle:
-                        if (currentTile.Fertility == -2)
+                        var cityTile = CurrentMap.CityRadius(currentTile)
+                            .FirstOrDefault(t => t.CityHere != null);
+                        
+                        if (currentTile.Fertility == -2 && cityTile == null && currentTile.Type != TerrainType.Ocean)
                         {
                             CityActions.AiBuildCity(unit, this);
                         }
-                        var cityTile = CurrentMap.CityRadius(currentTile)
-                            .FirstOrDefault(t => t.CityHere != null);
-                        if (cityTile == null)
+                        
+                        if (cityTile == null && currentTile.Type != TerrainType.Ocean)
                         {
                             var moreFertile = MovementFunctions.GetPossibleMoves(this, currentTile, unit)
                                 .Where(n => n.Fertility > currentTile.Fertility).OrderByDescending(n => n.Fertility)

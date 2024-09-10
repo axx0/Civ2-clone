@@ -20,6 +20,7 @@ public interface IUserInterface
     IInterfaceAction GetInitialAction();
     
     IImageSource? BackgroundImage { get; }
+    IImageSource? ScenTitleImage { get; set; }
     int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     void LoadPlayerColours();
 
@@ -32,6 +33,8 @@ public interface IUserInterface
     UnitSet UnitImages { get; }
 
     PlayerColour[] PlayerColours { get; }
+    
+    int ExpectedMaps { get; set; }
 
     CommonMapImageSet MapImages { get; }
     int DefaultDialogWidth { get; }

@@ -4,6 +4,7 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Enums;
 using Model;
+using Model.Interface;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;
@@ -14,6 +15,16 @@ public class DifficultyHandler : BaseDialogHandler
     
     public DifficultyHandler() : base(Title, 0.085, -0.03)
     {
+    }
+
+    public override IInterfaceAction Show(Civ2Interface activeInterface)
+    {
+        var config = Initialization.ConfigObject;
+
+        if (config.IsScenario)
+            Dialog.SelectedOption = config.DifficultyLevel;
+
+        return base.Show(activeInterface);
     }
 
     public override IInterfaceAction HandleDialogResult(DialogResult result,

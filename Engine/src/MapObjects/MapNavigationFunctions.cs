@@ -55,7 +55,8 @@ public static class MapNavigationFunctions
         return TilesAround(map, candidate, offsets, nullForInvalid);
     }
 
-    public static IEnumerable<Tile> Neighbours(this Map map, Tile candidate, bool nullForInvalid = false)
+    public static IEnumerable<Tile> Neighbours(this Map map, Tile candidate, bool twoSpaces = false,
+        bool nullForInvalid = false)
     {
         var odd = candidate.Odd;
         var offsets = new List<int[]>
@@ -69,6 +70,31 @@ public static class MapNavigationFunctions
             new[] { -1 + odd, -1 },
             new[] { 0, -2 },
         };
+
+        if (twoSpaces)
+        {
+            var extraOffsets = new List<int[]>
+            {
+                new[] { odd, -3 },
+                new[] { 1, -2 },
+                new[] { 1 + odd, -1 },
+                new[] { 2, 0 },
+                new[] { 1 + odd, 1 },
+                new[] { 1, 2 },
+                new[] { odd, 3 },
+                new[] { 0, 4 },
+                new[] { odd - 1, 3 },
+                new[] { -1, 2 },
+                new[] { -2 + odd, 1 },
+                new[] { -2, 0 },
+                new[] { -2 + odd, -1 },
+                new[] { -1, -2 },
+                new[] { odd - 1, -3 },
+                new[] { 0, -4 },
+            };
+            offsets.AddRange(extraOffsets);
+        }
+
         return TilesAround(map, candidate, offsets, nullForInvalid);
     }
 

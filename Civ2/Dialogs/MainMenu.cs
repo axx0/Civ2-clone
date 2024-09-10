@@ -25,6 +25,7 @@ public class MainMenu : BaseDialogHandler
         {
             case 0:
             case 2:
+                Initialization.ClearInitializationConfig();
                 Initialization.ConfigObject.CustomizeWorld = result.SelectedIndex == 2;
                 if (civ2Interface.MainApp.AllRuleSets.Length > 1)
                     return civDialogHandlers[SelectGameVersionHandler.Title].Show(civ2Interface);
@@ -34,6 +35,7 @@ public class MainMenu : BaseDialogHandler
             case 1:
                  return civDialogHandlers[LoadMap.DialogTitle].Show(civ2Interface);
             case 3:
+                Initialization.ClearInitializationConfig();
                 Initialization.ConfigObject.IsScenario = true;
                 return civDialogHandlers[LoadScenario.DialogTitle].Show(civ2Interface);
             case 4:

@@ -131,6 +131,8 @@ public class LocalPlayer : IPlayer
 
     public void MapChanged(List<Tile> tiles)
     {
+        var t = tiles.SelectMany(t => t.Map.DirectNeighbours(t));
+
         var allTiles = tiles
             .Concat(tiles.SelectMany(t => t.Map.DirectNeighbours(t).Where(n => n.IsVisible(Civilization.Id))))
             .Distinct();

@@ -72,17 +72,22 @@ namespace RaylibUtils
 
         private const string TempPath = "temp";
 
-        public static ImageProps ExtractBitmapData(IImageSource imageSource)
+        public static ImageProps ExtractBitmapData(IImageSource imageSource, string[]? searchPaths)
         {
-            return ExtractBitmapData(imageSource, null);
+            return ExtractBitmapData(imageSource, null, searchPaths: searchPaths);
+        }
+
+        public static Image ExtractBitmap(IImageSource imageSource, IUserInterface active)
+        {
+            return ExtractBitmapData(imageSource, active).Image;
         }
 
         public static Image ExtractBitmap(IImageSource imageSource)
         {
-            return ExtractBitmapData(imageSource, null).Image;
+            return ExtractBitmapData(imageSource, active: null).Image;
         }
 
-        public static ImageProps ExtractBitmapData(IImageSource imageSource, IUserInterface? active, int owner = -1)
+        public static ImageProps ExtractBitmapData(IImageSource imageSource, IUserInterface? active, int owner = -1, string[]? searchPaths = null)
         {
             var imageProps = new ImageProps();
             int flag1X = 0, flag1Y = 0, flag2X = 0, flag2Y = 0;
@@ -110,7 +115,17 @@ namespace RaylibUtils
                         var sourceKey = $"{bitmapStorage.Filename}-Source";
                         if (!_imageCache.ContainsKey(sourceKey))
                         {
-                            var path = Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
+                            string[] _paths;
+                            if (active != null)
+                            {
+                                _paths = active.MainApp.ActiveRuleSet.Paths;
+                            }
+                            else
+                            {
+                                _paths = searchPaths ?? Settings.SearchPaths;
+                            }
+
+                            var path = Utils.GetFilePath(bitmapStorage.Filename, _paths, bitmapStorage.Extension);
                             var source_img_bpp = Images.LoadImageFromFile(path);
                             _imageCache[sourceKey] = source_img_bpp.Image;
                             _sourceBpp[sourceKey] = source_img_bpp.ColourDepth;
@@ -212,7 +227,10 @@ namespace RaylibUtils
 
         public static void ClearCache()
         {
-            _imageCache.Clear();
+            foreach (var image in _imageCache.Where(t => !t.Key.StartsWith("Binary")))
+            {
+                _imageCache.Remove(image.Key);
+            }
             Files.Clear();
         }
 

@@ -23,9 +23,9 @@ public static class ImageUtils
     private static Image _outerWallpaper;
     private static Image _outerTitleTopWallpaper;
 
-    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false)
+    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
-        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel);
+        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !ToTStatusPanelLayout);
         active.DrawBorderLines(ref image, height, width, padding, statusPanel);
     }
 
@@ -82,7 +82,7 @@ public static class ImageUtils
     }
 
 
-    public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false)
+    public static void DrawTiledImage(Wallpaper wp, ref Image destination, int height, int width, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
         // MGE uses inner wallpaper from ICONS for all dialogs
         // TOT uses inner wallpaper from ICONS only for status panel, otherwise uses tiles from dialog image file
@@ -95,10 +95,20 @@ public static class ImageUtils
         }
         else
         {
-            DrawTiledRectangle(tiles, ref destination,
-                new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
-            DrawTiledRectangle(tiles, ref destination,
-                new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
+            if (ToTStatusPanelLayout)
+            {
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left, padding.Top, 0.25f * width - padding.Left - padding.Right, height - padding.Top - padding.Bottom));
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left + (0.25f * width - padding.Left - padding.Right) + 8, padding.Top, width - 0.25f * width - 8, height - padding.Top - padding.Bottom));
+            }
+            else
+            {
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left, padding.Top, width - padding.Left - padding.Right, 60));
+                DrawTiledRectangle(tiles, ref destination,
+                    new Rectangle(padding.Left, padding.Top + 68, width - padding.Left - padding.Right, height - padding.Top - padding.Bottom - 68));
+            }
         }
     }
 
@@ -111,11 +121,11 @@ public static class ImageUtils
     /// <param name="centerImage">Image to place in centre of dialog</param>
     /// <param name="noWallpaper">true to not draw inner wallpaper defaults to false</param>
     /// <param name="statusPanel">true to draw status panel-style background</param>
-    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false, bool statusPanel = false)
+    public static Texture2D? PaintDialogBase(IUserInterface active, int width, int height, Padding padding, Image? centerImage = null, bool noWallpaper = false, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
         // Outer wallpaper
         var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
-        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel);
+        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel, ToTStatusPanelLayout: ToTStatusPanelLayout);
         if (centerImage != null)
         {
             var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
@@ -124,7 +134,7 @@ public static class ImageUtils
         }
         else if(!noWallpaper)
         {
-            DrawTiledImage(Wallpaper, ref image, height, width, padding, statusPanel: statusPanel);
+            DrawTiledImage(Wallpaper, ref image, height, width, padding, statusPanel: statusPanel, ToTStatusPanelLayout: ToTStatusPanelLayout);
         }
 
         return Raylib.LoadTextureFromImage(image);
@@ -301,29 +311,29 @@ public static class ImageUtils
         _look = active.Look;
         if (_look.Outer is null)  // TOT
         {
-            Wallpaper.OuterTitleTop = _look.OuterTitleTop.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterThinTop = _look.OuterThinTop.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterBottom = _look.OuterBottom.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterMiddle = _look.OuterMiddle.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterLeft = _look.OuterLeft.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterRight = _look.OuterRight.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft);
-            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight);
-            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft);
-            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight);
-            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft);
-            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight);
-            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft);
-            Wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight);
-            Wallpaper.Inner = _look.Inner.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt);
-            Wallpaper.Button = _look.Button.Select(img => Images.ExtractBitmap(img)).ToArray();
-            Wallpaper.ButtonClicked = _look.ButtonClicked.Select(img => Images.ExtractBitmap(img)).ToArray();
+            Wallpaper.OuterTitleTop = _look.OuterTitleTop.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterThinTop = _look.OuterThinTop.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterBottom = _look.OuterBottom.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterMiddle = _look.OuterMiddle.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterLeft = _look.OuterLeft.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterRight = _look.OuterRight.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.OuterTitleTopLeft = Images.ExtractBitmap(_look.OuterTitleTopLeft, active);
+            Wallpaper.OuterTitleTopRight = Images.ExtractBitmap(_look.OuterTitleTopRight, active);
+            Wallpaper.OuterThinTopLeft = Images.ExtractBitmap(_look.OuterThinTopLeft, active);
+            Wallpaper.OuterThinTopRight = Images.ExtractBitmap(_look.OuterThinTopRight, active);
+            Wallpaper.OuterMiddleLeft = Images.ExtractBitmap(_look.OuterMiddleLeft, active);
+            Wallpaper.OuterMiddleRight = Images.ExtractBitmap(_look.OuterMiddleRight, active);
+            Wallpaper.OuterBottomLeft = Images.ExtractBitmap(_look.OuterBottomLeft, active);
+            Wallpaper.OuterBottomRight = Images.ExtractBitmap(_look.OuterBottomRight, active);
+            Wallpaper.Inner = _look.Inner.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.InnerAlt = Images.ExtractBitmap(_look.InnerAlt, active);
+            Wallpaper.Button = _look.Button.Select(img => Images.ExtractBitmap(img, active)).ToArray();
+            Wallpaper.ButtonClicked = _look.ButtonClicked.Select(img => Images.ExtractBitmap(img, active)).ToArray();
         }
         else    // MGE
         {
-            Wallpaper.Outer = Images.ExtractBitmap(_look.Outer);
-            Wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner[0]) };
+            Wallpaper.Outer = Images.ExtractBitmap(_look.Outer, active);
+            Wallpaper.Inner = new[] { Images.ExtractBitmap(_look.Inner[0], active) };
         }
 
     }

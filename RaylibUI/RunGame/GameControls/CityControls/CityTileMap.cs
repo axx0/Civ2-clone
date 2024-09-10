@@ -243,7 +243,7 @@ public class CityTileMap : BaseControl
                     cityData.Add(new Element
                     {
                         Image = Images.ExtractBitmap(cities.Sets[cityStyleIndex][sizeIncrement]
-                            .Image),
+                            .Image, gameScreen.Main.ActiveInterface),
                         X = locationX,
                         Y = locationY - dim.HalfHeight
                     });
@@ -260,8 +260,8 @@ public class CityTileMap : BaseControl
 
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
                 {
-                    Raylib.ImageDraw(ref image, Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece), MapImage.TileRec,
-                        MapImage.TileRec with { X = locationX, Y = locationY }, Color.Red);
+                    Raylib.ImageDraw(ref image, Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active), 
+                        MapImage.TileRec, MapImage.TileRec with { X = locationX, Y = locationY }, Color.Red);
                 }
             }
         }
@@ -283,7 +283,7 @@ public class CityTileMap : BaseControl
 
         var resources =
             gameScreen.Main.ActiveInterface.ResourceImages.ToDictionary(k => k.Name,
-                v => Images.ExtractBitmap(v.SmallImage));
+                v => Images.ExtractBitmap(v.SmallImage, gameScreen.Main.ActiveInterface));
 
         var lowOrganisation = _organizationLevel == 0;
         var totalDrawWidth = dim.TileWidth - 20;

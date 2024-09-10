@@ -236,7 +236,7 @@ namespace EtoFormsUI
             var RevealMapCommand = new Command { MenuText = "Reveal Map", Shortcut = Keys.Shift | Keys.F2 };
             RevealMapCommand.Executed += (sender, e) =>
             {
-                var options = Game.GetActiveCivs.Select(c => c.Adjective).ToList();
+                var options = Game.ActiveCivs.Select(c => c.Adjective).ToList();
                 options.AddRange(new string[] { "Entire Map", "No Special View" });
                 var popupbox = new RevealMapPanel(this, options.ToArray());
                 popupbox.ShowModal(Parent);

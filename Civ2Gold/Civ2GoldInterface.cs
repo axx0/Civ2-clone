@@ -53,7 +53,6 @@ public class Civ2GoldInterface : Civ2Interface
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         StatusPanelLabelFont = Fonts.TnRbold,
-        StatusPanelLabelFontSize = 18,
         StatusPanelLabelColor = new Color(51, 51, 51, 255),
         StatusPanelLabelColorShadow = new Color(191, 191, 191, 255),
         MovingUnitsViewingPiecesLabelColor = Color.White,
@@ -443,11 +442,11 @@ public class Civ2GoldInterface : Civ2Interface
         Color shadowColour = new(51, 51, 51, 255);
         Color replacementColour = new(255, 0, 0, 255);
 
-        var shield = Images.ExtractBitmap(PicSources["backShield1"][0]);
+        var shield = Images.ExtractBitmap(PicSources["backShield1"][0], this);
         var shieldFront = Raylib.ImageCopy(shield);
         Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.Width, 7, Color.Black);
 
-        var shadow = Images.ExtractBitmap(PicSources["backShield2"][0]);
+        var shadow = Images.ExtractBitmap(PicSources["backShield1"][0], this);
         Raylib.ImageColorReplace(ref shadow, replacementColour, shadowColour);
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
@@ -462,14 +461,14 @@ public class Civ2GoldInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["textColours"][col]));
+                var imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["textColours"][col], this));
                 var textColour = imageColours[0];
 
-                imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["flags"][col]));
-                var lightColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][col]).Width + 8];
+                imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["flags"][col], this));
+                var lightColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][col], this).Width + 8];
 
-                imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["flags"][9 + col]));
-                var darkColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][9 + col]).Width + 5];
+                imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["flags"][9 + col], this));
+                var darkColour = imageColours[3 * Images.ExtractBitmap(PicSources["flags"][9 + col], this).Width + 5];
                 Raylib.UnloadImageColors(imageColours);
 
                 playerColours[col] = new PlayerColour
@@ -495,8 +494,8 @@ public class Civ2GoldInterface : Civ2Interface
         HPbarSize = new(12, 3),
         HPbarColours = new[] { new Color(243, 0, 0, 255), new Color(255, 223, 79, 255), new Color(87, 171, 39, 255) },
         HPbarSizeForColours = new[] { 3, 8 },
-        OrderOffset = new(Images.ExtractBitmap(PicSources["backShield1"][0]).Width / 2f, 7),
-        OrderTextHeight = Images.ExtractBitmap(PicSources["backShield1"][0]).Height - 7,
+        OrderOffset = new(Images.ExtractBitmap(PicSources["backShield1"][0], this).Width / 2f, 7),
+        OrderTextHeight = Images.ExtractBitmap(PicSources["backShield1"][0], this).Height - 7,
     };
 
     /// <summary>

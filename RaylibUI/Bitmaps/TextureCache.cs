@@ -43,11 +43,11 @@ public static class TextureCache
 
     public static void Clear()
     {
-        foreach (var texturesValue in Textures.Values)
+        foreach (var texture in Textures.Where(t => !t.Key.StartsWith("Binary")))
         {
-            Raylib.UnloadTexture(texturesValue);
+            Raylib.UnloadTexture(texture.Value);
+            Textures.Remove(texture.Key);
         }
-        Textures.Clear();
         Images.ClearCache();
     }
 }

@@ -22,7 +22,7 @@ public static class CityLoader
             var sets = new CityImage[8];
             for (int col = 0; col < 8; col++)
             {
-                var props = Images.ExtractBitmapData(active.PicSources["city"][8 * row + col]); // put into cache
+                var props = Images.ExtractBitmapData(active.PicSources["city"][8 * row + col], active); // put into cache
                 cities.CityRectangle = new Rectangle(0, 0, props.Image.Width, props.Image.Height);
 
                 sets[col] = new CityImage()
@@ -49,13 +49,13 @@ public static class CityLoader
         foreach (var terrain in active.TileSets)
         {
             terrain.ImprovementsMap[ImprovementTypes.Fortress] = new ImprovementGraphic
-            { Levels = new[,] { { Images.ExtractBitmap(active.PicSources["fortress"][0]) } } };
+            { Levels = new[,] { { active.PicSources["fortress"][0] } } };
 
             // airbase
             terrain.ImprovementsMap[ImprovementTypes.Airbase] = new ImprovementGraphic
             {
-                Levels = new[,] { { Images.ExtractBitmap(active.PicSources["airbase,empty"][0]) } },
-                UnitLevels = new[,] { { Images.ExtractBitmap(active.PicSources["airbase,full"][0]) } }
+                Levels = new[,] { { active.PicSources["airbase,empty"][0] } },
+                UnitLevels = new[,] { { active.PicSources["airbase,full"][0] } }
             };
         }
     }

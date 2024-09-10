@@ -8,7 +8,6 @@ namespace RaylibUI.RunGame.GameControls;
 
 public class UnitDisplay : BaseControl
 {
-    private Vector2 _location;
     private List<IViewElement> _unitTextures;
     private float _scale;
 
@@ -19,7 +18,14 @@ public class UnitDisplay : BaseControl
         _scale = scale;
         _unitTextures = new List<IViewElement>();
         var size = ImageUtils.GetUnitTextures(unit, activeInterface, _unitTextures, location, true);
-        Bounds = new Rectangle(location.X, location.Y, size.X, size.Y);
+        Bounds = new Rectangle(location.X, location.Y, size.X * scale, size.Y * scale);
+    }
+
+    private Vector2 _location;
+    public Vector2 Location
+    {
+        get { return _location; }
+        set { _location = value; }
     }
 
     public override void Draw(bool pulse)
@@ -37,6 +43,9 @@ public class UnitDisplay : BaseControl
         {
             element.Draw(element.Location, scale: _scale, isShaded: element.IsShaded);
         }
+
+        //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
+
         base.Draw(pulse);
     }
 }
