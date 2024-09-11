@@ -396,7 +396,8 @@ public abstract class Civ2Interface : IUserInterface
         config.MaxTurns = gameData.MaxTurns;
         config.CivsInPlay = gameData.CivsInPlay;
 
-        ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
+        var game = ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
+        Initialization.Start(game);
 
         var titleImage = "Title.gif";
         var foundTitleImage = Directory.EnumerateFiles(scnDirectory, titleImage, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();

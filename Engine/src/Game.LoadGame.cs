@@ -27,18 +27,9 @@ namespace Civ2engine
             return instance;
         }
 
-        public static void CreateScenario(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
+        public static Game CreateScenario(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
         {
-            _instance = new Game(rules, gameData, objects, ruleset.Paths);
-        }
-
-        public static Game UpdateScenarioChoices(GameInitializationConfig config)
-        {
-            _instance.SetHumanPlayer(config.ScenPlayerCivId);
-            _instance.DifficultyLevel = config.DifficultyLevel;
-            _instance.GetPlayerCiv.LeaderGender = config.Gender;
-            _instance.GetPlayerCiv.LeaderName = config.LeaderName;
-            return _instance;
+            return new Game(rules, gameData, objects, ruleset.Paths);
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
