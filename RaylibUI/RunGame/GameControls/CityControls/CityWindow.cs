@@ -166,6 +166,15 @@ public class CityWindow : BaseDialog
         }
     }
 
+    public override void OnKeyPress(KeyboardKey key)
+    {
+        if (key == KeyboardKey.Escape)
+        {
+            CurrentGameScreen.CloseDialog(this);
+        }
+        base.OnKeyPress(key);
+    }
+
     public void UpdateProduction()
     {
         City.CalculateOutput(City.Owner.Government, CurrentGameScreen.Game);

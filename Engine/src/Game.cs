@@ -69,7 +69,6 @@ namespace Civ2engine
 
         public Civilization GetActiveCiv => _activeCiv;
         
-        private static Game _instance;
         private readonly Map[] _maps;
 
         public IList<Map> Maps => _maps;
