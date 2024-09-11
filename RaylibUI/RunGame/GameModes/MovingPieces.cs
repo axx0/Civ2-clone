@@ -156,7 +156,7 @@ public class MovingPieces : IGameMode
 
         // Active unit
         var activeUnit = _gameScreen.Player.ActiveUnit;
-        var unitDisplay = new UnitDisplay(_gameScreen, activeUnit,
+        var unitDisplay = new UnitDisplay(_gameScreen, activeUnit, _gameScreen.Game,
             new Vector2(currentX, currentY), _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(unitZoom));
         controls.Add(unitDisplay);
 
@@ -294,7 +294,7 @@ public class MovingPieces : IGameMode
                 unit.Name, fontSize: fontSize);
             nameLabelWidth = nameLabel.TextSize.X;
 
-            unitDisplay = new UnitDisplay(_gameScreen, unit, new Vector2(currentX, currentY), 
+            unitDisplay = new UnitDisplay(_gameScreen, unit, _gameScreen.Game, new Vector2(currentX, currentY), 
                 _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(unitZoom));
 
             var moveText = unitsLeftOnTile.Count - i == 1 ? Labels.For(LabelIndex.Unit) : Labels.For(LabelIndex.Units);

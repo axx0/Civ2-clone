@@ -38,7 +38,7 @@ public class UnitSupportBox : BaseControl
             var children = new List<IControl>();
             for (int i = 0; i < units.Count && row < _numberOfRows; i++)
             {
-                children.Add(new UnitDisplay(_cityWindow, units[i], location,activeInterface, scale ));
+                children.Add(new UnitDisplay(_cityWindow, units[i], _cityWindow.CurrentGameScreen.Game, location,activeInterface, scale ));
                 location = location with { X = location.X + requiredWidth };
                 if (location.X + requiredWidth > rowLimit)
                 {

@@ -9,6 +9,7 @@ using Font = Raylib_cs.Font;
 using Image = Raylib_cs.Image;
 using Rectangle = Raylib_cs.Rectangle;
 using Civ2engine.Units;
+using Model.Core;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 using Model.ImageSets;
@@ -398,7 +399,8 @@ public static class ImageUtils
         return new[] { left, image, right };
     }
 
-    public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, List<IViewElement> viewElements, Vector2 loc,
+    public static Vector2 GetUnitTextures(IUnit unit, IUserInterface active, IGame game,
+        List<IViewElement> viewElements, Vector2 loc,
         bool noStacking = false)
     {
         var unitTexture = TextureCache.GetImage(active.UnitImages.Units[(int)unit.Type].Image);
@@ -451,7 +453,7 @@ public static class ImageUtils
             offset: shield.Offset + shield.HPbarOffset, shield));
 
         // Orders text
-        var shieldText = (int)unit.Order <= 11 ? Game.Instance.Rules.Orders[(int)unit.Order - 1].Key : "-";
+        var shieldText = (int)unit.Order <= 11 ?  game.Rules.Orders[(int)unit.Order - 1].Key : "-";
         viewElements.Add(new TextElement(shieldText, shieldLoc + shield.OrderOffset, shield.OrderTextHeight,
             tile, shield.Offset + shield.OrderOffset));
 

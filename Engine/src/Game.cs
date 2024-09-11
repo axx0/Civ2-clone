@@ -68,26 +68,11 @@ namespace Civ2engine
             _activeCiv; // ActiveCiv can be AI. PlayerCiv is human. They are equal except during enemy turns.
 
         public Civilization GetActiveCiv => _activeCiv;
-
-
-        // Singleton instance of a game
+        
         private static Game _instance;
         private readonly Map[] _maps;
 
         public IList<Map> Maps => _maps;
-
-        public static Game Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    Console.WriteLine("Game instance does not exist!");
-                }
-
-                return _instance;
-            }
-        }
 
         private History? _history;
         public IScriptEngine Script { get; }

@@ -280,7 +280,7 @@ public class ViewPiece : IGameMode
                 unit.Name, fontSize: fontSize);
             var nameLabelWidth = nameLabel.TextSize.X;
 
-            var unitDisplay = new UnitDisplay(_gameScreen, unit, new Vector2(currentX, currentY),
+            var unitDisplay = new UnitDisplay(_gameScreen, unit, _gameScreen.Game, new Vector2(currentX, currentY),
                 _gameScreen.Main.ActiveInterface, ImageUtils.ZoomScale(unitZoom));
 
             var moveText = unitsOnTile.Count - i == 1 ? Labels.For(LabelIndex.Unit) : Labels.For(LabelIndex.Units);
