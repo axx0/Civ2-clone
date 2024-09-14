@@ -1,4 +1,5 @@
 using Civ2engine.Production;
+using Model;
 using Model.Interface;
 
 namespace Civ2engine;
@@ -13,5 +14,5 @@ public interface IProductionOrder
     bool CompleteProduction(City city, Rules rules);
     bool CanBuild(Civilization civilization);
     
-    ListBoxEntry GetBuildListEntry();
+    ListBoxEntry GetBuildListEntry(IUserInterface active, int firstWonderIndex);
 }

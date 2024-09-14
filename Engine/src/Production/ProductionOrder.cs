@@ -1,4 +1,5 @@
 using System.Linq;
+using Model;
 using Model.Interface;
 
 namespace Civ2engine.Production
@@ -44,7 +45,7 @@ namespace Civ2engine.Production
         public abstract bool IsValidBuild(City city);
 
         public abstract string GetDescription();
-        public abstract ListBoxEntry GetBuildListEntry();
+        public abstract ListBoxEntry GetBuildListEntry(IUserInterface active, int rulesFirstWonderIndex);
 
         public static IProductionOrder[] GetAll(Rules rules)
         {

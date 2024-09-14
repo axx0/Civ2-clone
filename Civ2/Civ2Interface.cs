@@ -445,4 +445,25 @@ public abstract class Civ2Interface : IUserInterface
 
         return DialogHandlers[WorldSizeHandler.Title].Show(this);
     }
+
+    public IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex)
+    {
+        var y = 1;
+        var x = 343;
+        var index = improvement.Type;
+        var columns = 8;
+        if (improvement.IsWonder)
+        {
+            y += 105;
+            index -= firstWonderIndex;
+            columns = 7;
+        }
+
+        var (addRows, addColumns) = Math.DivRem(index, columns);
+
+        y += addRows * 21;
+        x += addColumns * 37;
+        
+        return new BitmapStorage("icons", x, y, 36, 20);
+    }
 }

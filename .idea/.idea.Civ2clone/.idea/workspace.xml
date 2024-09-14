@@ -14,195 +14,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Engine/Scripts/units.lua" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Cities/CityResourcesExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/IO/PopupBoxIO.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/MapObjects/MapNavigationFunctions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/MapObjects/PlayerTileExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileResourceExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/CityImprovement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Units/UnitExtensions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Constants/UnitEffect.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Cities/City.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Cities/Commodity.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Cities/TradeRoute.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Game.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/IGameDate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/IHistory.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/IScriptEngine.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Mapping/PlayerTile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/PlayerType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/PopupBox.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/TextStyles.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Events/CivEventArgs.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Events/CivEventType.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Events/UnitInfo.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Interface/ListBoxEntry.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/TextAlignment.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" afterDir="false" />
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Escape closes city window">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenarioLoaded.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenarioLoaded.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Scripts/advances.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/advances.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Scripts/game_setup.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/game_setup.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Scripts/improvements.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/improvements.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/Advance.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/AdvanceFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/AdvanceGroupAccess.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/AdvanceGroupAccess.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/AdvanceResearch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/AdvanceResearch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Advances/AdvancesConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Advances/AdvancesConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityTerrainEffect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/CityTerrainEffect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/Improvement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/City.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Civilization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Civilization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/CosmicRules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/CosmicRules.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Date.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Date.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/AIroleType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/AIroleType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/BlockedReason.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/BlockedReason.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/DifficultyType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/DifficultyType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/MapEventType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/MapEventType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/MapType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/MapType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/OrderType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/OrderType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/PlayerEventType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Events/PlayerEventType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/TerrainType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/TerrainType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/UnitEventType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/UnitEventType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Enums/UnitGAS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/UnitGAS.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/CombatEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/CombatEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/MapEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MapEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/MovementBlockedEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MovementBlockedEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/MovementEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MovementEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/PlayerEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Events/PlayerEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/UnitEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/UnitEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/UnitInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Events/UnitInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/FastRandom.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/FastRandom.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.ActionsCities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.ActionsCities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Government.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Government.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/History/History.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/History/History.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IGovernmentTitles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/IGovernmentTitles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IMapItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Interface/IMapItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Classic/GameData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/IFileHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/IFileHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/LabelLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/LabelLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/LoadNames.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/LoadNames.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/PopupBox.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Read.PopupBoxes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Read.PopupBoxes.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Ruleset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Ruleset.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/ScenarioIntroLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/ScenarioIntroLoader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/IO/TextFileParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/TextFileParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Improvements/Effects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/Effects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/LeaderDefaults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/LeaderDefaults.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/LeaderTitle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/LeaderTitle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapGeneration/MapGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapGeneration/MapGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapGeneration/MapParams.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/MapParams.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapGeneration/TerrainParams.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/TerrainParams.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/ActiveEffect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/ActiveEffect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/CityInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/CityInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Fertility.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Fertility.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/IslandDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/IslandDetails.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Islands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Islands.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/PlayerTile.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Tile.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/NewGame/NewGameInitialisation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/NewGame/NewGameInitialisation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Orders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Orders.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Player/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/Player.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ItemType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Production/ItemType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/Tech.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tech.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UI/Dialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UI/Dialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/UI/UIScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/UI/UIScripts.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Statistics/Power.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Statistics/Power.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/AllowedTerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/AllowedTerrain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ConstructedImprovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ConstructedImprovement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ITerrain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ImprovementActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ImprovementConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ImprovementLevel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementLevel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/ImprovementTypes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/ImprovementTypes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/Special.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/Special.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/TerrainConstants.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainConstants.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/TerrainImprovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainImprovement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/TerrainImprovementAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Terrain/TerrainImprovementAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Terrains/TerrainImprovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Terrains/TerrainImprovementFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/UnitFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/UnitFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/IUnit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/Path.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/Path.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/UnitType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/UnitType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/DialogElements.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/DialogElements.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Interface/ListBoxDefinition.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Interface/ListBoxDefinition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/InterfaceActions/StartGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/InterfaceActions/StartGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Model.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Model.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBoxLabel.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBoxScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBoxSelectionEventArgs.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/DialogHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/DialogHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/FortifyOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/FortifyOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/ImprovementOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/ImprovementOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SkipOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SkipOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/UnloadOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/UnloadOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/StaticView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/StaticView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
@@ -234,52 +58,106 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Dialogs/NewGame/EnterName.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Rules/Initialization.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Date.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/TextFileParser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapGeneration/MapGenerator.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Fertility.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Scripting/AxxExtensions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Scripting/AxxExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveLoader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/UnitActions/MovementFunctions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Units/Path.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Animations/WaitingAnimation.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Terrain.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/CityView/CityViewWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/CityWindow/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/UserInterfaceCommands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Players/Orders/BuildCity.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/DialogElements.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Players/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Events/MovementBlockedEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/ComplexControls/ListBox/ListBox.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Forms/DialogHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Initialization/MainMenu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Bitmaps/ImageUtils.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/UnitSupportBox.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/UnitDisplay.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
@@ -569,6 +447,7 @@
       <workItem from="1721267654108" duration="2833000" />
       <workItem from="1722823817668" duration="64979000" />
       <workItem from="1724906720309" duration="635000" />
+      <workItem from="1726003287262" duration="20728000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -816,7 +695,55 @@
       <option name="project" value="LOCAL" />
       <updated>1712435779463</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="Refactor working">
+      <option name="closed" value="true" />
+      <created>1726003579237</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1726003579237</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Merge latest from AXX">
+      <option name="closed" value="true" />
+      <created>1726004956217</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1726004956217</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Make movement functions move based on unit location data">
+      <option name="closed" value="true" />
+      <created>1726008815256</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1726008815256</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Remove usage of Game.Instance">
+      <option name="closed" value="true" />
+      <created>1726019047195</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1726019047195</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Move Scen initialization from Game object">
+      <option name="closed" value="true" />
+      <created>1726019650729</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1726019650729</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Escape closes city window">
+      <option name="closed" value="true" />
+      <created>1726078778267</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1726078778267</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -839,12 +766,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Game screen showing" />
-    <MESSAGE value="And now we have a minimap" />
-    <MESSAGE value="Scrolling in listbox" />
-    <MESSAGE value="Load OK Dialog" />
-    <MESSAGE value="Map drawing in control" />
-    <MESSAGE value="Map click working no offsets" />
     <MESSAGE value="Tile selection &amp; focus working" />
     <MESSAGE value="Fix issues with display and navigation on flat maps" />
     <MESSAGE value="Moved images sets to interface object" />
@@ -864,7 +785,13 @@
     <MESSAGE value="Fix name ambiguity" />
     <MESSAGE value="Lua console implemented" />
     <MESSAGE value="List box work" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Refactor working" />
+    <MESSAGE value="Merge latest from AXX" />
+    <MESSAGE value="Make movement functions move based on unit location data" />
+    <MESSAGE value="Remove usage of Game.Instance" />
+    <MESSAGE value="Move Scen initialization from Game object" />
+    <MESSAGE value="Escape closes city window" />
+    <option name="LAST_COMMIT_MESSAGE" value="Escape closes city window" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -901,30 +828,30 @@
           <option name="timeStamp" value="103" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs</url>
-          <line>14</line>
-          <properties documentPath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" containingFunctionPresentation="Constructor 'ProductionOrder'">
+          <url>file://$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs</url>
+          <line>50</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" containingFunctionPresentation="Method 'GetBuildListEntry'">
             <startOffsets>
-              <option value="426" />
+              <option value="1428" />
             </startOffsets>
             <endOffsets>
-              <option value="438" />
+              <option value="1569" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="139" />
+          <option name="timeStamp" value="142" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/Main.cs</url>
-          <line>60</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/Main.cs" containingFunctionPresentation="Method 'RunLoop'">
+          <url>file://$PROJECT_DIR$/Engine/src/IO/RulesParser.cs</url>
+          <line>414</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" containingFunctionPresentation="Method 'ProcessEndWonders'">
             <startOffsets>
-              <option value="1533" />
+              <option value="17053" />
             </startOffsets>
             <endOffsets>
-              <option value="1549" />
+              <option value="17106" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="140" />
+          <option name="timeStamp" value="143" />
         </line-breakpoint>
         <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
           <properties exception="System.UnauthorizedAccessException" isInternal="false" displayValue="UnauthorizedAccessException" namespaceName="System">

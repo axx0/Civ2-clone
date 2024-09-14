@@ -1,4 +1,5 @@
 ﻿using Model.Constants;
+using Model.Images;
 
 namespace Civ2engine;
 
@@ -19,6 +20,5 @@ public class Improvement
         
     public Dictionary<Effects,int> Effects { get; } = new ();
     public List<CityTerrainEffect> TerrainEffects { get; set; } = new();
-
-   
+    public IImageSource? Icon { get; set; }
 }

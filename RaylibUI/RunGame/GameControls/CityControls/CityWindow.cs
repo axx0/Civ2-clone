@@ -69,11 +69,11 @@ public class CityWindow : BaseDialog
                 listBox: new ListBoxDefinition
                 {
                     Vertical = true,
-                    Entries = canProduce.Select(p => p.GetBuildListEntry()).ToList()
+                    Entries = canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList()
                 });
         };
-
-    Controls.Add(changeButton);
+        Controls.Add(changeButton);
+        
         var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Info"]

@@ -57,5 +57,7 @@ namespace Civ2engine
             get => _items;
             set => _items = value;
         }
+
+        public int FirstWonderIndex { get; set; }
     }
 }

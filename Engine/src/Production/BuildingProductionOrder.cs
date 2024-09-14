@@ -1,4 +1,5 @@
 using System.Linq;
+using Model;
 using Model.Constants;
 using Model.Interface;
 
@@ -45,9 +46,9 @@ namespace Civ2engine.Production
             return Improvement.Name;
         }
 
-        public override ListBoxEntry GetBuildListEntry()
+        public override ListBoxEntry GetBuildListEntry(IUserInterface active, int firstWonderIndex)
         {
-            return new ListBoxEntry { LeftText = Improvement.Name };
+            return new ListBoxEntry { LeftText = Improvement.Name, Icon = Improvement.Icon ?? active.GetImprovementImage(Improvement,firstWonderIndex) };
         }
     }
 }

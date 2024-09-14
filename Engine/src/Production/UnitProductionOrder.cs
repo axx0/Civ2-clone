@@ -2,6 +2,7 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Statistics;
 using Civ2engine.Units;
+using Model;
 using Model.Constants;
 using Model.Interface;
 
@@ -66,7 +67,7 @@ namespace Civ2engine.Production
             return _unitDefinition.Name;
         }
 
-        public override ListBoxEntry GetBuildListEntry()
+        public override ListBoxEntry GetBuildListEntry(IUserInterface active, int rulesFirstWonderIndex)
         {
             return new ListBoxEntry { LeftText = _unitDefinition.Name };
         }

@@ -415,14 +415,17 @@ namespace Civ2engine.IO
             var improvementIndex = Rules.Improvements.Length - 1;
             for (var i = values.Length - 1; i >= 0 && improvementIndex >=0; i--)
             {
-                Rules.Improvements[improvementIndex].IsWonder = true;
+                var wonder = Rules.Improvements[improvementIndex];
+                wonder.IsWonder = true;
                 if (!values[i].StartsWith("nil"))
                 {
-                    Rules.Improvements[improvementIndex].ExpiresAt =
+                    wonder.ExpiresAt =
                         Rules.AdvanceMappings.ContainsKey(values[i].Split(',', 2)[0]) ? Rules.AdvanceMappings[values[i].Split(',', 2)[0]] : -1; // temp
                 }
                 improvementIndex--;
             }
+
+            Rules.FirstWonderIndex = improvementIndex + 1;
         }
 
         private void ProcessImprovements(string[] values)
@@ -536,9 +539,9 @@ namespace Civ2engine.IO
             if (section.StartsWith("TERRAIN"))
             {
                 ProcessTerrain(contents);
-            }else if (_sectionHandlers.ContainsKey(section))
+            }else if (_sectionHandlers.TryGetValue(section, out var handler))
             {
-                _sectionHandlers[section](contents.ToArray());
+                handler(contents.ToArray());
             }
         }
 
