@@ -71,7 +71,7 @@ public class ScrollBox : BaseControl
             requestedHeight = (_labelHeight + 1) * --rows;
         }
 
-        if (_columns * rows < _allLabels.Count)
+        if (!_vertical && _columns * rows < _allLabels.Count)
         {
             requestedHeight += ScrollBar.ScrollBarWidth;
         }

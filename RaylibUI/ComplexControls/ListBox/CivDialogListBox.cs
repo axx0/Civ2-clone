@@ -5,7 +5,8 @@ namespace RaylibUI;
 
 public class CivDialogListBox : ScrollBox
 {
-    public CivDialogListBox(IControlLayout controller, ListBoxDefinition boxDetails) : base(controller, boxDetails.Vertical, -1,MakeLabels(controller,boxDetails))
+    public CivDialogListBox(IControlLayout controller, ListBoxDefinition boxDetails) : base(controller,
+        boxDetails.Vertical, 1, MakeLabels(controller, boxDetails))
     {
     }
 
@@ -13,7 +14,7 @@ public class CivDialogListBox : ScrollBox
     {
         var hasIcons = false;
         var rightText = false;
-        for (var i = 0; i < boxDetails.Entries.Count; i++)
+        for (var i = 0; i < boxDetails.Entries.Count && (!hasIcons || !rightText); i++)
         {
             var entry = boxDetails.Entries[i];
             if (entry.Icon != null)
@@ -45,8 +46,9 @@ public class CivDialogListBox : ScrollBox
 
 internal class DialogLabel : ControlGroup
 {
-    public DialogLabel(IControlLayout controller, ListBoxEntry entry, int index) : base(controller, flexElement: 1)
+    public DialogLabel(IControlLayout controller, ListBoxEntry entry, int index) : base(controller, flexElement: 1, eventTransparent: false)
     {
-        AddChild(new LabelControl(controller, entry.LeftText, false));
+        AddChild(new IconContainer(controller, entry.Icon, index));
+        AddChild(new LabelControl(controller, entry.LeftText, true));
     }
 }

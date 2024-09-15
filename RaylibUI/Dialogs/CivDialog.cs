@@ -85,7 +85,8 @@ public class CivDialog : DynamicSizingDialog
 
         if (listBox is not null)
         {
-            Controls.Add(new CivDialogListBox(this, listBox));
+            var civDialogListBox = new CivDialogListBox(this, listBox);
+            Controls.Add(civDialogListBox);
         }
 
         if (textBoxDefs is { Count: > 0 })
