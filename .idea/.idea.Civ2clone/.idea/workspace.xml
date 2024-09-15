@@ -14,23 +14,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Improvement and wonder icons">
-      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" afterDir="false" />
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Icons displaying in production menu">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/TextFileParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/TextFileParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Cities/Improvement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Production/IProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/TextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/TextureCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
@@ -73,6 +62,7 @@
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -102,7 +92,9 @@
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveLoader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/LoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/BuildingProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionCabalilities.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -453,7 +445,7 @@
       <workItem from="1721267654108" duration="2833000" />
       <workItem from="1722823817668" duration="64979000" />
       <workItem from="1724906720309" duration="635000" />
-      <workItem from="1726003287262" duration="23769000" />
+      <workItem from="1726003287262" duration="29082000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -757,7 +749,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726310272969</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Icons displaying in production menu">
+      <option name="closed" value="true" />
+      <created>1726361871839</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1726361871839</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -780,7 +780,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fix issues with display and navigation on flat maps" />
     <MESSAGE value="Moved images sets to interface object" />
     <MESSAGE value="Dialog Text Box working" />
     <MESSAGE value="Dialog fixes" />
@@ -805,7 +804,8 @@
     <MESSAGE value="Move Scen initialization from Game object" />
     <MESSAGE value="Escape closes city window" />
     <MESSAGE value="Improvement and wonder icons" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improvement and wonder icons" />
+    <MESSAGE value="Icons displaying in production menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="Icons displaying in production menu" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -842,95 +842,17 @@
           <option name="timeStamp" value="103" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs</url>
-          <line>50</line>
-          <properties documentPath="$PROJECT_DIR$/Engine/src/Production/BuildingProductionOrder.cs" containingFunctionPresentation="Method 'GetBuildListEntry'">
+          <url>file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs</url>
+          <line>67</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" containingFunctionPresentation="Constructor 'Game'">
             <startOffsets>
-              <option value="1428" />
+              <option value="2331" />
             </startOffsets>
             <endOffsets>
-              <option value="1569" />
+              <option value="2348" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="142" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs</url>
-          <line>88</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" containingFunctionPresentation="Constructor 'CivDialog'">
-            <startOffsets>
-              <option value="3152" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3154" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="146" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs</url>
-          <line>14</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" containingFunctionPresentation="Method 'MakeLabels'">
-            <startOffsets>
-              <option value="431" />
-            </startOffsets>
-            <endOffsets>
-              <option value="452" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="147" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs</url>
-          <line>32</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" containingFunctionPresentation="Method 'MakeLabels'">
-            <startOffsets>
-              <option value="905" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1038" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="148" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs</url>
-          <line>121</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" containingFunctionPresentation="Method 'ShowDialog'">
-            <startOffsets>
-              <option value="3248" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3294" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="151" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs</url>
-          <line>42</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" containingFunctionPresentation="Method 'GetPreferredWidth'">
-            <startOffsets>
-              <option value="1174" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1216" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="152" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs</url>
-          <line>90</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" containingFunctionPresentation="Method 'Resize'">
-            <startOffsets>
-              <option value="2730" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2806" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="153" />
+          <option name="timeStamp" value="156" />
         </line-breakpoint>
         <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
           <properties exception="System.UnauthorizedAccessException" isInternal="false" displayValue="UnauthorizedAccessException" namespaceName="System">

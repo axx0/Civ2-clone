@@ -54,7 +54,7 @@ namespace Civ2engine.OriginalSaves
                     gameData.CivTaxRate[i], gameData.CivGovernment[i], gameData.CivReputation[i],
                     gameData.CivPatience[i], gameData.CivTreatyContact, gameData.CivTreatyCeaseFire,
                     gameData.CivTreatyPeace, gameData.CivTreatyAlliance, gameData.CivTreatyVendetta,
-                    gameData.CivTreatyEmbassy, gameData.CivTreatyWar, gameData.CivAttitudes, gameData.CivAdvances,
+                    gameData.CivTreatyEmbassy, gameData.CivTreatyWar, gameData.CivAttitudes, gameData.CivAdvances[i],
                     gameData.CivLastContact, gameData.CivHasSpaceship[i], gameData.CivSpaceshipEstimatedArrival[i],
                     gameData.CivSpaceshipLaunchYear[i], gameData.CivSpaceshipStructural[i],
                     gameData.CivSpaceshipComponentsPropulsion[i], gameData.CivSpaceshipComponentsFuel[i],
@@ -394,7 +394,7 @@ namespace Civ2engine.OriginalSaves
         public Civilization CreateCiv(int id, int whichHumanPlayerIsUsed, bool alive, int style, string leaderName, string tribeName, 
             string adjective, int gender, int money, int tribeNumber, int researchProgress, int researchingAdvance, int sciRate, int taxRate,
             int government, int reputation, int patience, bool[][] contact, bool[][] ceaseFire, bool[][] peace, bool[][] alliance, 
-            bool[][] vendetta, bool[][] embassy, bool[][] war, int[][] attitudes, bool[][] advances, int[][] lastContact, bool hasSpaceship,
+            bool[][] vendetta, bool[][] embassy, bool[][] war, int[][] attitudes, bool[] advances, int[][] lastContact, bool hasSpaceship,
             int ssEstArrival, int ssLaunchYear, int ssStructural, int ssPropulsion, int ssFuel, int ssHabitation, int ssLifeSupport,
             int ssSolarPanel)
         {
@@ -424,7 +424,7 @@ namespace Civ2engine.OriginalSaves
                 Adjective = adjective,
                 Money = money,
                 ReseachingAdvance = researchingAdvance,
-                Advances = advances[id],
+                Advances = advances,
                 ScienceRate = sciRate * 10,
                 TaxRate = taxRate * 10,
                 Government = government,

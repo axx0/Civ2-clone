@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Civ2engine.Advances;
 using Model.Constants;
 
 namespace Civ2engine.Production
@@ -10,7 +11,14 @@ namespace Civ2engine.Production
 
         public static void InitializeProductionLists(IEnumerable<Civilization> civs, IProductionOrder[] possibleOrders)
         {
-            _availableProducts = civs.Select(c => possibleOrders.Where(o => o.RequiredTech == -1).ToList()).ToArray();
+            var orders = possibleOrders
+                .Where(o => o.RequiredTech != AdvancesConstants.No && o.ExpiresTech != AdvancesConstants.No).ToList();
+
+            _availableProducts = civs.Select(c =>
+                    orders.Where(o =>
+                        (o.ExpiresTech == AdvancesConstants.Nil || !c.Advances[o.ExpiresTech]) &&
+                        (o.RequiredTech == AdvancesConstants.Nil || c.Advances[o.RequiredTech])).ToList())
+                .ToArray();
         }
 
         public static void AddItems(int targetCiv, IEnumerable<IProductionOrder> items)

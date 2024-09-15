@@ -458,6 +458,10 @@ public abstract class Civ2Interface : IUserInterface
             index -= firstWonderIndex;
             columns = 7;
         }
+        else
+        {
+            index -= 1; //Remove nothing as it has no image
+        }
 
         var (addRows, addColumns) = Math.DivRem(index, columns);
 

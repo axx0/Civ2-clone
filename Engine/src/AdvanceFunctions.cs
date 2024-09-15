@@ -20,17 +20,6 @@ namespace Civ2engine.Advances
         {
             _researched = game.Rules.Advances.OrderBy(a=>a.Index).Select(a=> new AdvanceResearch()).ToArray();
             
-            foreach (var civilization in game.AllCivilizations)
-            {
-                for (var index = 0; index < civilization.Advances.Length; index++)
-                {
-                    if (civilization.Advances[index])
-                    {
-                        _researched[index].DiscoveredBy = civilization.Id;
-                    }
-                }
-            }
-
             _mapSizeAdjustment = game.TotalMapArea / 1000;
             
             ProductionPossibilities.InitializeProductionLists(game.AllCivilizations, ProductionOrder.GetAll( game.Rules));
@@ -81,8 +70,12 @@ namespace Civ2engine.Advances
             if(civilization.Advances[advanceIndex]) return;
             if(civilization.AllowedAdvanceGroups[game.Rules.Advances[advanceIndex].AdvanceGroup] == AdvanceGroupAccess.Prohibited) return;
 
-            var targetCiv = civilization.Id;
+            ApplyCivAdvance(game, advanceIndex, civilization, research, civilization.Id);
+        }
 
+        private static void ApplyCivAdvance(Game game, int advanceIndex, Civilization civilization, AdvanceResearch research,
+            int targetCiv)
+        {
             if (!research.Discovered)
             {
                 research.DiscoveredBy = targetCiv;
