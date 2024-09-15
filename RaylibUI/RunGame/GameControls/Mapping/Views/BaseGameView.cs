@@ -203,6 +203,7 @@ public abstract class BaseGameView : IGameView
             var sizeIncrement =
                 _gameScreen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex,
                     tile.CityHere, playerKnowledge.CityHere.Size);
+            
             var cityImage = cities.Sets[cityStyleIndex][sizeIncrement];
             var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - TextureCache.GetImage(cityImage.Image).Height.ZoomScale(tile.Map.Zoom) };
             elements.Add(new CityData(

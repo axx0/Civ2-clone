@@ -26,7 +26,7 @@ civ.getTech(5).AddEffect(civ.core.Effects.Epoch, 3)
 --22 - Economics,          4, 1,  Uni, Ban, 2, 1    ; Eco
 --23 - Electricity,        4, 0,  Met, Mag, 2, 4    ; E1
 --24 - Electronics,        4, 1,  E1,  Cor, 3, 4    ; E2
-civ.getTech(38).AddEffect(civ.core.Effects.Epoch, 3)
+civ.getTech(24).AddEffect(civ.core.Effects.Epoch, 3)
 --25 - Engineering,        4, 0,  Whe, Cst, 0, 4    ; Eng
 --26 - Environmentalism,   3, 1,  Rec, SFl, 3, 2    ; Env
 civ.getTech(26).AddEffect(civ.core.Effects.PopulationPollutionModifier, -1)

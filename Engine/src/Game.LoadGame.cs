@@ -64,12 +64,9 @@ namespace Civ2engine
                 OnCivEvent?.Invoke(this, new CivEventArgs(CivEventType.Created, civ));
             });
             
-
             this.SetupTech();
             
             Power.CalculatePowerRatings(this);
-            
-            
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 

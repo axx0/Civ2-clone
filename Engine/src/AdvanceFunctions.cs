@@ -21,6 +21,22 @@ namespace Civ2engine.Advances
             _researched = game.Rules.Advances.OrderBy(a=>a.Index).Select(a=> new AdvanceResearch()).ToArray();
             
             _mapSizeAdjustment = game.TotalMapArea / 1000;
+
+            foreach (var civilization in game.AllCivilizations)
+            {
+                SetEpoch(game, civilization);
+
+                for (var advanceIndex = 0; advanceIndex < game.Rules.Advances.Length; advanceIndex++)
+                {
+                    if (civilization.Advances.Length <= advanceIndex || !civilization.Advances[advanceIndex]) continue;
+
+                    foreach (var effect in game.Rules.Advances[advanceIndex].Effects
+                                 .Where(effect => effect.Key != Effects.EpochTech))
+                    {
+                        civilization.GlobalEffects[effect.Key] = civilization.GlobalEffects.GetValueOrDefault(effect.Key) + effect.Value;
+                    }
+                }
+            }
             
             ProductionPossibilities.InitializeProductionLists(game.AllCivilizations, ProductionOrder.GetAll( game.Rules));
         }
@@ -45,14 +61,11 @@ namespace Civ2engine.Advances
             {
                 if (effect.Key == Effects.EpochTech)
                 {
-                    civilization.Epoch = game.Rules.Advances.Where(a => a.Effects.ContainsKey(Effects.EpochTech))
-                        .GroupBy(a => a.Effects[Effects.EpochTech])
-                        .Where(techs => techs.All(t => civilization.Advances[t.Index])).Select(t => t.Key)
-                        .DefaultIfEmpty(0).Max();
+                    SetEpoch(game, civilization);
                 }
                 else
                 {
-                    civilization.GlobalEffects[effect.Key] -= effect.Value;
+                    civilization.GlobalEffects[effect.Key] = civilization.GlobalEffects.GetValueOrDefault(effect.Key) - effect.Value;
                 }
             }
 
@@ -62,6 +75,14 @@ namespace Civ2engine.Advances
                 allOrders.Where(i => i.RequiredTech == advanceIndex));
             ProductionPossibilities.AddItems(civilization.Id,
                 allOrders.Where(o => o.ExpiresTech == advanceIndex && o.CanBuild(civilization)));
+        }
+
+        private static void SetEpoch(Game game, Civilization civilization)
+        {
+            civilization.Epoch = game.Rules.Advances.Where(a => a.Effects.ContainsKey(Effects.EpochTech))
+                .GroupBy(a => a.Effects[Effects.EpochTech])
+                .Where(techs => techs.All(t => civilization.Advances[t.Index])).Select(t => t.Key)
+                .DefaultIfEmpty(0).Max();
         }
 
         public static void GiveAdvance(this Game game, int advanceIndex, Civilization civilization)
@@ -103,7 +124,7 @@ namespace Civ2engine.Advances
                 }
                 else
                 {
-                    civilization.GlobalEffects[effect.Key] += effect.Value;
+                    civilization.GlobalEffects[effect.Key] = civilization.GlobalEffects.GetValueOrDefault(effect.Key) + effect.Value;
                 }
             }
 
