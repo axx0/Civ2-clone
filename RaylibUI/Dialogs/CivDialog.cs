@@ -1,11 +1,14 @@
 using Civ2engine;
 using Model;
+using Model.Dialog;
+using Model.Images;
 using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Dialogs;
 using RaylibUI.Forms;
+using RaylibUtils;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.Emit;
@@ -57,16 +60,22 @@ public class CivDialog : DynamicSizingDialog
         List<TextBoxDefinition>? textBoxDefs = null,
         int optionsCols = 1,
         int initSelectedOption = 0,
-        Image[]? icons = null) :
+        Image[]? icons = null,
+        DialogImageElements? image = null) :
         base(host,
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-             relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
+             relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth: popupBox.Width)
     {
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
         _managedTextures = new List<Texture2D>();
         _initSelectedOption = popupBox.Default != 0 ? popupBox.Default : initSelectedOption;
+
+        if (image != null)
+        {
+            Controls.Add(new ImageBox(this, image));
+        }
 
         if (popupBox.Text?.Count > 0)
         {

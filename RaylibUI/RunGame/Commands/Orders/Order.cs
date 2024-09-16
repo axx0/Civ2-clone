@@ -1,7 +1,9 @@
 ﻿using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model;
+using Model.Images;
 using Model.Menu;
+using Model.Dialog;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 
@@ -24,6 +26,7 @@ public abstract class Order : IGameCommand
 
     public string ErrorDialog { get; set; }
     public string? Name { get; }
+    public DialogImageElements? ErrorImage { get; set; }
 
     public MenuCommand? Command { get; set; }
     
@@ -37,7 +40,7 @@ public abstract class Order : IGameCommand
 
 
     protected bool SetCommandState(CommandStatus status = CommandStatus.Disabled, string? menuText = null,
-        string? errorPopupKeyword = null)
+        string? errorPopupKeyword = null, DialogImageElements? errorPopupImage = null)
     {
         if (GameScreen.ActiveMode != GameScreen.Moving)
         {
@@ -51,6 +54,7 @@ public abstract class Order : IGameCommand
 
         Status = status;
         ErrorDialog = !string.IsNullOrWhiteSpace(errorPopupKeyword) ? errorPopupKeyword : "CANTDO";
+        ErrorImage = errorPopupImage;
 
         return Status <= CommandStatus.Normal;
     }

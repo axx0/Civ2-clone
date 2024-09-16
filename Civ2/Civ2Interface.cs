@@ -17,6 +17,7 @@ using RaylibUtils;
 using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
+using Model.Dialog;
 
 namespace Civ2;
 

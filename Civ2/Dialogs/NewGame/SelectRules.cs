@@ -1,7 +1,7 @@
 using Civ2.Dialogs.NewGame.CustomWorldDialogs;
 using Civ2.Rules;
 using Civ2engine;
-using Model;
+using Model.Dialog;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs.NewGame;

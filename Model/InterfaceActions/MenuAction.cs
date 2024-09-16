@@ -1,3 +1,5 @@
+using Model.Dialog;
+
 namespace Model.InterfaceActions;
 
 public class MenuAction : IInterfaceAction

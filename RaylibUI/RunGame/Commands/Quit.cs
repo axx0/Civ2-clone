@@ -1,5 +1,7 @@
 using Civ2engine;
 using Model;
+using Model.Dialog;
+using Model.Images;
 using Model.Menu;
 using Raylib_cs;
 
@@ -39,5 +41,6 @@ public class Quit : IGameCommand
 
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
+    public DialogImageElements? ErrorImage { get; } = null;
     public string? Name { get; }
 }

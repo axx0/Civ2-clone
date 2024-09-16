@@ -5,6 +5,7 @@ using Raylib_cs;
 using RaylibUI.Forms;
 using RaylibUtils;
 using Civ2;
+using Model.Dialog;
 
 namespace RaylibUI.Initialization;
 

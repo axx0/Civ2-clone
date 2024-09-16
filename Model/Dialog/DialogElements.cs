@@ -4,7 +4,7 @@ using Model.ImageSets;
 using Model.Interface;
 using Raylib_cs;
 
-namespace Model;
+namespace Model.Dialog;
 
 public class DialogElements
 {

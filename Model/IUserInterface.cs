@@ -7,6 +7,7 @@ using Model.Interface;
 using RaylibUI;
 using Raylib_cs;
 using System.Numerics;
+using Model.Dialog;
 
 namespace Model;
 

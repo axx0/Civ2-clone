@@ -87,6 +87,16 @@ namespace RaylibUtils
             return ExtractBitmapData(imageSource, active: null).Image;
         }
 
+        public static int GetImageWidth(IImageSource? imageSource, float scale = 0) 
+        { 
+            return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource).Width * scale);
+        }
+
+        public static int GetImageHeight(IImageSource? imageSource, float scale = 0)
+        {
+            return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource).Height * scale);
+        }
+
         public static ImageProps ExtractBitmapData(IImageSource imageSource, IUserInterface? active, int owner = -1, string[]? searchPaths = null)
         {
             var imageProps = new ImageProps();

@@ -6,6 +6,8 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model;
+using Model.Dialog;
+using Model.Images;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
@@ -158,7 +160,7 @@ public class GameScreen : BaseScreen
         }
         else
         {
-            ShowPopup(activeCommand.ErrorDialog);
+            ShowPopup(activeCommand.ErrorDialog, dialogImage: activeCommand.ErrorImage);
         }
     }
 
@@ -295,14 +297,14 @@ public class GameScreen : BaseScreen
 
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
-        List<TextBoxDefinition>? textBoxes = null)
+        List<TextBoxDefinition>? textBoxes = null, DialogImageElements? dialogImage = null)
     {
         var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
         if (popupBox != null)
         {
             _popupClicked = handleButtonClick;
             _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
-                ClosePopup, textBoxDefs: textBoxes);
+                ClosePopup, textBoxDefs: textBoxes, image: dialogImage);
             ShowDialog(_currentPopupDialog, stack: true);
         }
     }

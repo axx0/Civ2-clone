@@ -40,66 +40,94 @@ public class DynamicSizingDialog : BaseDialog
 
     public override void Resize(int width, int height)
     {
-        var heights = new int[Controls.Count];
-        var maxWidth = Controls.Max(c=>c.GetPreferredWidth());
+        var heights = new int[Controls.Count];  // height of control
+        var topCtrl = new int[Controls.Count];  // y-distance of control from dialog top
+        var widths = new int[Controls.Count];
+        var leftCtrl = new int[Controls.Count];
+        var maxWidth = Controls.Max(c => c.GetPreferredWidth());
+        var imageBox = Controls.OfType<ImageBox>().FirstOrDefault();
+        var imageWidth = imageBox?.GetPreferredWidth() ?? 0;
+        var imageHeight = imageBox?.GetPreferredHeight() ?? 0;
         if (_requestedWidth.HasValue && _requestedWidth.Value > maxWidth)
         {
             maxWidth = _requestedWidth.Value;
         }
-        var totalHeight = 0;
-        int index;
-        for (index = 0; index < Controls.Count; index++)
+        var imageBoxIndex = 0;
+        for (int index = 0; index < Controls.Count; index++)
         {
             var control = Controls[index];
-            control.Width = maxWidth;
 
+            // Heights
             var controlHeight = control.GetPreferredHeight();
-
             heights[index] = controlHeight;
-            if (control.Children?.OfType<Button>().Any() ?? false)
+            if (index == 0)
             {
-                totalHeight += LayoutPadding.Bottom;
-                
-                if (!_active.IsButtonInOuterPanel)
+                topCtrl[index] = _headerLabel != null ? 0 : LayoutPadding.Top;
+            }
+            else if (index > 0)
+            {
+                if (Controls[index - 1] is ImageBox)
                 {
-                    totalHeight += controlHeight;
+                    topCtrl[index] = topCtrl[index - 1];
+                    imageBoxIndex = index - 1;
                 }
+                else if (imageBox != null && (Controls[index].Children?.OfType<Button>().Any() ?? false))
+                {
+                    var middleControlsHeight = Controls.
+                        Where(c => c is not ImageBox && c is not HeaderLabel && (!c.Children?.OfType<Button>().Any() ?? true)).ToList().
+                        Sum(c => c.GetPreferredHeight());
+                    topCtrl[index] = topCtrl[imageBoxIndex] + Math.Max(heights[imageBoxIndex], middleControlsHeight) + 3;
+                }
+                else
+                {
+                    topCtrl[index] = topCtrl[index - 1] + heights[index - 1];
+                    if (Controls[index].Children?.OfType<Button>().Any() ?? false)
+                    {
+                        topCtrl[index] = topCtrl[index - 1] + heights[index - 1] + 3;
+                    }
+                }
+            }
+
+            // Widths
+            if (Controls[index] is HeaderLabel)
+            {
+                leftCtrl[index] = 0;
+                widths[index] = maxWidth + imageWidth + LayoutPadding.Left + LayoutPadding.Right;
+            }
+            else if (Controls[index] is ImageBox)
+            {
+                leftCtrl[index] = LayoutPadding.Left;
+                widths[index] = control.GetPreferredWidth();
+            }
+            else if (Controls[index].Children?.OfType<Button>().Any() ?? false)
+            {
+                leftCtrl[index] = LayoutPadding.Left - 1;
+                widths[index] = maxWidth + imageWidth + 2;
             }
             else
             {
-                totalHeight += controlHeight;
+                leftCtrl[index] = imageBox != null ? leftCtrl[imageBoxIndex] + widths[imageBoxIndex] : LayoutPadding.Left;
+                widths[index] = maxWidth;
             }
         }
 
-        SetLocation(width, maxWidth, height, totalHeight);
-
-
-        int left = LayoutPadding.Left + (int)Location.X;
-        int top = LayoutPadding.Top + (int)Location.Y;
-        var sidePadding = LayoutPadding.Left + LayoutPadding.Right;
-        index = 0;
-        if (_headerLabel != null)
+        var totalHeight = topCtrl[^1] + LayoutPadding.Bottom;
+        if (_buttons != null)
         {
-            _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, maxWidth + sidePadding, LayoutPadding.Top);
-            index = 1;
-            _headerLabel.OnResize();
+            totalHeight -= 3;
+            if (!_active.IsButtonInOuterPanel)
+                totalHeight += heights[^1];
         }
 
-        var mainControlsCount = _buttons == null ? Controls.Count : Controls.Count - 1;
-        for (; index < mainControlsCount; index++)
+        SetLocation(width, maxWidth + imageWidth, height, totalHeight);
+
+        for (int index = 0; index < Controls.Count; index++)
         {
-            Controls[index].Bounds = new Rectangle(left, top, maxWidth, heights[index]);
-            top += heights[index];
+            Controls[index].Bounds = new Rectangle(Location.X + leftCtrl[index], Location.Y + topCtrl[index], widths[index], heights[index]);
             Controls[index].OnResize();
         }
 
-        if (_buttons != null)
-        {
-            _buttons.Bounds = new Rectangle(left-1, top + 3, maxWidth +2, heights[^1]);
-            _buttons.OnResize();
-        }
-
-        _size = new Size(maxWidth + sidePadding, totalHeight);
+        _size = new Size(maxWidth + imageWidth + LayoutPadding.Left + LayoutPadding.Right, totalHeight);
 
         BackgroundImage = ImageUtils.PaintDialogBase(_active, _size.Width, _size.Height, LayoutPadding);
     }
