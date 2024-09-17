@@ -16,11 +16,15 @@ public class CityWindow : BaseDialog
     private readonly CityWindowLayout _cityWindowProps;
     private readonly HeaderLabel _headerLabel;
     private readonly IUserInterface _active;
+    private readonly IList<IProductionOrder> _canProduce;
+    
+    private LabelControl? _productionLabel;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
         CurrentGameScreen = gameScreen;
         City = city;
+        _canProduce = ProductionPossibilities.GetAllowedProductionOrders(city);
         _active = gameScreen.MainWindow.ActiveInterface;
 
         _cityWindowProps = _active.GetCityWindowDefinition();
@@ -62,17 +66,22 @@ public class CityWindow : BaseDialog
         };
         changeButton.Click += (_, _) =>
         {
-            var canProduce = ProductionPossibilities.GetAllowedProductionOrders(city);
             gameScreen.ShowPopup(
                 "PRODUCTION",
                 replaceStrings: new[] { city.Name },
                 listBox: new ListBoxDefinition
                 {
                     Vertical = true,
-                    Entries = canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList()
-                });
+                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList()
+                }, handleButtonClick: BuildDialogClosed );
         };
         Controls.Add(changeButton);
+
+        var productionSettings = _cityWindowProps.Production;
+        if (productionSettings.Type == "Box")
+        {
+            ChangeProductionDisplay(city, productionSettings);
+        }
         
         var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
@@ -144,6 +153,36 @@ public class CityWindow : BaseDialog
         var supportBox = new UnitSupportBox(this, _cityWindowProps.UnitSupport);
         Controls.Add(supportBox);
 
+    }
+
+    private void ChangeProductionDisplay(City city, SheildProduction productionSettings)
+    {
+        var productionTitlePosition = productionSettings.TitlePosition;
+        
+        var productionTitle = city.ItemInProduction.Title;
+        var productionTitleSize = Raylib.MeasureTextEx(_active.Look.CityWindowFont, productionTitle, _active.Look.CityWindowFontSize, 1);
+        
+        var label = new LabelControl(this, productionTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Blue, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
+        {
+            AbsolutePosition = new Rectangle(productionTitlePosition.X - productionTitleSize.X / 2 - 10, productionTitlePosition.Y, productionTitleSize.X + 20, productionTitleSize.Y )
+        };
+        if (_productionLabel != null)
+        {
+            Controls.Remove(_productionLabel);
+            label.OnResize();
+        }
+        _productionLabel = label;
+        Controls.Add(_productionLabel);
+    }
+
+    private void BuildDialogClosed(string button, int selectedIndex, IList<bool>? chx, IDictionary<string, string>? txt)
+    {
+        if (button == Labels.Ok && selectedIndex != -1 && City.ItemInProduction != _canProduce[selectedIndex])
+        {
+            City.ItemInProduction = _canProduce[selectedIndex];
+            
+            ChangeProductionDisplay(City, _cityWindowProps.Production);
+        }
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)

@@ -18,6 +18,8 @@ namespace Civ2engine.Production
             _unitDefinition = unitDefinition;
         }
 
+        public override string Title => _unitDefinition.Name;
+
         public override bool CompleteProduction(City city, Rules rules)
         {
             if (_unitDefinition.AIrole == AIroleType.Settle && city.Size == 1)

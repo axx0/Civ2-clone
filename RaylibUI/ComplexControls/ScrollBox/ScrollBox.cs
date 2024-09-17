@@ -33,7 +33,11 @@ public class ScrollBox : BaseControl
 
     private void OnControlClick(object? sender, MouseEventArgs args)
     {
-        ItemSelected?.Invoke(sender, new ScrollBoxSelectionEventArgs(args));
+        if (sender is BaseControl control)
+        {
+            ItemSelected?.Invoke(sender,
+                new ScrollBoxSelectionEventArgs(args, _allLabels.IndexOf(control)));
+        }
     }
 
     public override int GetPreferredWidth()

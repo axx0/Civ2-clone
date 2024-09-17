@@ -14,6 +14,8 @@ namespace Civ2engine.Production
 
         public Improvement Improvement { get; }
 
+        public override string Title => Improvement.Name;
+
         public override bool CompleteProduction(City city, Rules rules)
         {
             if (!IsValidBuild(city)) return false;

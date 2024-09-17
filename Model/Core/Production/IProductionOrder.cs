@@ -11,6 +11,7 @@ public interface IProductionOrder
     int ExpiresTech { get; }
     ItemType Type { get; }
     int Cost { get; }
+    string Title { get; }
     bool CompleteProduction(City city, Rules rules);
     bool CanBuild(Civilization civilization);
     

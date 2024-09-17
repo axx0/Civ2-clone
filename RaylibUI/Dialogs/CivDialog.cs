@@ -33,6 +33,7 @@ public class CivDialog : DynamicSizingDialog
         newSelection.Checked = true;
         _selectedOption?.Clear();
         _selectedOption = newSelection;
+        _selectedIndex = newSelection.Index;
         this.Focused = newSelection;
     }
 
@@ -87,6 +88,7 @@ public class CivDialog : DynamicSizingDialog
         {
             var civDialogListBox = new CivDialogListBox(this, listBox);
             Controls.Add(civDialogListBox);
+            civDialogListBox.ItemSelected += ListBoxOnItemSelected;
         }
 
         if (textBoxDefs is { Count: > 0 })
@@ -182,7 +184,12 @@ public class CivDialog : DynamicSizingDialog
         Controls.Add(menuBar);
         SetButtons(menuBar);
     }
-    
+
+    private void ListBoxOnItemSelected(object? sender, ScrollBoxSelectionEventArgs e)
+    {
+        _selectedIndex = e.Index;
+    }
+
     private void OnActionButtonOnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
         if (sender is not Button button) return;
@@ -193,7 +200,7 @@ public class CivDialog : DynamicSizingDialog
     private void CloseDialog(string buttonText)
     {
         _managedTextures.ForEach(Raylib.UnloadTexture);
-        _handleButtonClick(buttonText, _selectedOption?.Index ?? -1, _checkboxes, FormatTextBoxReturn());
+        _handleButtonClick(buttonText, _selectedIndex, _checkboxes, FormatTextBoxReturn());
     }
 
     private readonly KeyboardKey[] _navKeys = {
@@ -202,6 +209,7 @@ public class CivDialog : DynamicSizingDialog
     };
 
     private readonly List<Texture2D> _managedTextures;
+    private int _selectedIndex = -1;
 
     public override void OnKeyPress(KeyboardKey key)
     {
@@ -282,14 +290,9 @@ public class CivDialog : DynamicSizingDialog
                 }
             }
         }
-
-       
-
         base.OnKeyPress(key);
     }
-
- 
-
+    
     private int GetRows()
     {
         var rows = Math.DivRem(_optionControls.Count, _optionsCols, out var rem);

@@ -21,6 +21,7 @@ namespace Civ2engine.Production
 
         public int ExpiresTech { get; }
         public int Cost { get; }
+        public abstract string Title { get; }
         public ItemType Type { get; }
         public int ImageIndex { get; }
         public int RequiredTech { get; }
