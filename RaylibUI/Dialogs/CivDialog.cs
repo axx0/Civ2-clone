@@ -60,7 +60,7 @@ public class CivDialog : DynamicSizingDialog
         List<TextBoxDefinition>? textBoxDefs = null,
         int optionsCols = 1,
         int initSelectedOption = 0,
-        Image[]? icons = null,
+        IImageSource[]? optionsIcons = null,
         DialogImageElements? image = null) :
         base(host,
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
@@ -69,7 +69,6 @@ public class CivDialog : DynamicSizingDialog
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
-        _managedTextures = new List<Texture2D>();
         _initSelectedOption = popupBox.Default != 0 ? popupBox.Default : initSelectedOption;
 
         if (image != null)
@@ -126,16 +125,11 @@ public class CivDialog : DynamicSizingDialog
 
             var optionAction = popupBox.Checkbox ? (Action<OptionControl>)TogggleCheckBox : SetSelectedOption;
 
-            var iconTextures =
-                icons?.Select(Raylib.LoadTextureFromImage).ToArray()
-                ?? Array.Empty<Texture2D>();
-            _managedTextures.AddRange(iconTextures);
-
-            var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
+            var images = popupBox.Checkbox ? _active.Look.CheckBoxes : _active.Look.RadioButtons;
 
             _optionControls = options.Select((o, i) =>
                 new OptionControl(this, o, i, checkboxStates?[i] ?? false,
-                    i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
+                    i < (optionsIcons?.Length ?? 0) ? new[] { optionsIcons[i] } : images)).ToList();
             _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
             if (!popupBox.Checkbox)
             {
@@ -193,7 +187,6 @@ public class CivDialog : DynamicSizingDialog
 
     private void CloseDialog(string buttonText)
     {
-        _managedTextures.ForEach(Raylib.UnloadTexture);
         _handleButtonClick(buttonText, _selectedOption?.Index ?? -1, _checkboxes, FormatTextBoxReturn());
     }
 
@@ -201,8 +194,6 @@ public class CivDialog : DynamicSizingDialog
         KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left,  KeyboardKey.Right,
         KeyboardKey.Kp8, KeyboardKey.Kp2, KeyboardKey.Kp4, KeyboardKey.Kp6,
     };
-
-    private readonly List<Texture2D> _managedTextures;
 
     public override void OnKeyPress(KeyboardKey key)
     {

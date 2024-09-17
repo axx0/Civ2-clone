@@ -54,7 +54,7 @@ public class MainMenu : BaseScreen
                     checkboxStates: menu.CheckboxStates,
                     textBoxDefs: menu.TextBoxes, 
                     initSelectedOption: menu.SelectedOption,
-                    icons: menu.OptionsImages));
+                    optionsIcons: menu.OptionsImages));
                 break;
             }
             case FileAction fileAction:

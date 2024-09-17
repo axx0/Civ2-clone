@@ -87,12 +87,12 @@ namespace RaylibUtils
             return ExtractBitmapData(imageSource, active: null).Image;
         }
 
-        public static int GetImageWidth(IImageSource? imageSource, float scale = 0) 
+        public static int GetImageWidth(IImageSource? imageSource, float scale = 1f) 
         { 
             return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource).Width * scale);
         }
 
-        public static int GetImageHeight(IImageSource? imageSource, float scale = 0)
+        public static int GetImageHeight(IImageSource? imageSource, float scale = 1f)
         {
             return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource).Height * scale);
         }
