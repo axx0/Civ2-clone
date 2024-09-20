@@ -38,7 +38,7 @@ public class UnloadOrder : Order
         Debug.Assert(player.ActiveUnit != null, "player.ActiveUnit != null");
         player.ActiveUnit.CarriedUnits.ForEach(u =>
         {
-            u.Order = OrderType.NoOrders;
+            u.Order = (int)OrderType.NoOrders;
             u.InShip = null;
         });
         var next = player.ActiveUnit.CarriedUnits.FirstOrDefault(u=>u.AwaitingOrders);

@@ -5,7 +5,6 @@ using Civ2.Dialogs.NewGame;
 using Civ2.Menu;
 using Civ2.Rules;
 using Civ2engine;
-using Civ2engine.Improvements;
 using Civ2engine.IO;
 using Model;
 using Model.Images;
@@ -17,6 +16,7 @@ using RaylibUtils;
 using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
+using Model.Constants;
 using Model.Dialog;
 
 namespace Civ2;
@@ -52,7 +52,7 @@ public abstract class Civ2Interface : IUserInterface
             value.Width = (int)(value.Width * 1.5m);
         }
         Labels.UpdateLabels(null);
-
+        
         var handlerInterface = typeof(ICivDialogHandler);
         DialogHandlers = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
@@ -397,7 +397,8 @@ public abstract class Civ2Interface : IUserInterface
         config.MaxTurns = gameData.MaxTurns;
         config.CivsInPlay = gameData.CivsInPlay;
 
-        ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
+        var game = ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
+        Initialization.Start(game);
 
         var titleImage = "Title.gif";
         var foundTitleImage = Directory.EnumerateFiles(scnDirectory, titleImage, new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive }).FirstOrDefault();
@@ -444,5 +445,30 @@ public abstract class Civ2Interface : IUserInterface
         }
 
         return DialogHandlers[WorldSizeHandler.Title].Show(this);
+    }
+
+    public IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex)
+    {
+        var y = 1;
+        var x = 343;
+        var index = improvement.Type;
+        var columns = 8;
+        if (improvement.IsWonder)
+        {
+            y += 105;
+            index -= firstWonderIndex;
+            columns = 7;
+        }
+        else
+        {
+            index -= 1; //Remove nothing as it has no image
+        }
+
+        var (addRows, addColumns) = Math.DivRem(index, columns);
+
+        y += addRows * 21;
+        x += addColumns * 37;
+        
+        return new BitmapStorage("icons", x, y, 36, 20);
     }
 }

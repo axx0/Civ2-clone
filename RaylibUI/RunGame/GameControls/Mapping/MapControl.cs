@@ -9,6 +9,7 @@ using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 using RaylibUI.Controls;
 using Model;
+using Model.Core;
 using Model.Interface;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
@@ -17,7 +18,7 @@ public class MapControl : BaseControl
 {
     public override bool CanFocus => true;
     private readonly GameScreen _gameScreen;
-    private readonly Game _game;
+    private readonly IGame _game;
     private Texture2D? _backgroundImage;
     private int _viewWidth,_viewHeight;
     private Padding _padding;
@@ -27,7 +28,7 @@ public class MapControl : BaseControl
     private readonly Queue<IGameView> _animationQueue = new();
     private IGameView _currentView;
     
-    public MapControl(GameScreen gameScreen, Game game, Rectangle initialBounds) : base(gameScreen)
+    public MapControl(GameScreen gameScreen, IGame game, Rectangle initialBounds) : base(gameScreen)
     {
         Bounds = initialBounds;
         _currentBounds = initialBounds;

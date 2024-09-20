@@ -1,6 +1,9 @@
 using System.Numerics;
 using Civ2engine;
+using Civ2engine.Production;
 using Model;
+using Model.CityWindowModel;
+using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
@@ -14,47 +17,72 @@ public class CityWindow : BaseDialog
     private readonly CityWindowLayout _cityWindowProps;
     private readonly HeaderLabel _headerLabel;
     private readonly IUserInterface _active;
+    private readonly IList<IProductionOrder> _canProduce;
+    
+    private LabelControl? _productionLabel;
+    private ShieldBox? _productionBox;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
         CurrentGameScreen = gameScreen;
         City = city;
+        _canProduce = ProductionPossibilities.GetAllowedProductionOrders(city);
         _active = gameScreen.MainWindow.ActiveInterface;
-        
+
         _cityWindowProps = _active.GetCityWindowDefinition();
 
-        _headerLabel = new HeaderLabel(this, _active.Look, City.Name, fontSize: _active.Look.CityHeaderLabelFontSizeNormal);
+        _headerLabel = new HeaderLabel(this, _active.Look, City.Name,
+            fontSize: _active.Look.CityHeaderLabelFontSizeNormal);
 
         LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
         DialogWidth = _cityWindowProps.Width + PaddingSide;
         DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding, Images.ExtractBitmap(_cityWindowProps.Image, _active));
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding,
+            Images.ExtractBitmap(_cityWindowProps.Image, _active));
 
         Controls.Add(_headerLabel);
-        
+
         //Tile map rendered first because in TOT it renders behind
-        var tileMap = new CityTileMap(this)
+        var tileMap = new CityTileMap(this, gameScreen.Game)
         {
             AbsolutePosition = _cityWindowProps.TileMap
         };
         Controls.Add(tileMap);
 
         var infoArea = new CityInfoArea(this, _cityWindowProps.InfoPanel);
-       
+
         Controls.Add(infoArea);
 
-        var buyButton = new Button(this, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        var buyButton = new Button(this, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont,
+            _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Buy"]
         };
         Controls.Add(buyButton);
 
-        var changeButton = new Button(this, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        var changeButton = new Button(this, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont,
+            _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Change"]
         };
+        changeButton.Click += (_, _) =>
+        {
+            gameScreen.ShowPopup(
+                "PRODUCTION",
+                replaceStrings: new[] { city.Name },
+                listBox: new ListBoxDefinition
+                {
+                    Vertical = true,
+                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList()
+                }, handleButtonClick: BuildDialogClosed );
+        };
         Controls.Add(changeButton);
+
+        var productionSettings = _cityWindowProps.Production;
+        ChangeProductionDisplay(city, productionSettings);
+      
+        
         var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Info"]
@@ -127,6 +155,49 @@ public class CityWindow : BaseDialog
 
     }
 
+    private void ChangeProductionDisplay(City city, ShieldProduction productionSettings)
+    {
+        var productionTitlePosition = productionSettings.TitlePosition;
+        
+        var productionTitle = city.ItemInProduction.Title;
+        var productionTitleSize = Raylib.MeasureTextEx(_active.Look.CityWindowFont, productionTitle, _active.Look.CityWindowFontSize, 1);
+        
+        var label = new LabelControl(this, productionTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Blue, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
+        {
+            AbsolutePosition = new Rectangle(productionTitlePosition.X - productionTitleSize.X / 2 - 10, productionTitlePosition.Y, productionTitleSize.X + 20, productionTitleSize.Y )
+        };
+        if (_productionLabel != null)
+        {
+            Controls.Remove(_productionLabel);
+            label.OnResize();
+        }
+        _productionLabel = label;
+        Controls.Add(_productionLabel);
+        if (productionSettings.Type == "Box")
+        {
+            if (_productionBox == null)
+            {
+                _productionBox = new ShieldBox(this)
+                {
+                    AbsolutePosition = productionSettings.ShieldBox
+                };
+                Controls.Add(_productionBox);
+            }
+
+            _productionBox.UpdateData(city.ItemInProduction);
+        }
+    }
+
+    private void BuildDialogClosed(string button, int selectedIndex, IList<bool>? chx, IDictionary<string, string>? txt)
+    {
+        if (button == Labels.Ok && selectedIndex != -1 && City.ItemInProduction != _canProduce[selectedIndex])
+        {
+            City.ItemInProduction = _canProduce[selectedIndex];
+            
+            ChangeProductionDisplay(City, _cityWindowProps.Production);
+        }
+    }
+
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
     {
         CurrentGameScreen.CloseDialog(this);
@@ -145,6 +216,15 @@ public class CityWindow : BaseDialog
         {
             control.OnResize();
         }
+    }
+
+    public override void OnKeyPress(KeyboardKey key)
+    {
+        if (key == KeyboardKey.Escape)
+        {
+            CurrentGameScreen.CloseDialog(this);
+        }
+        base.OnKeyPress(key);
     }
 
     public void UpdateProduction()

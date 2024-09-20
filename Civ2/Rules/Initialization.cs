@@ -22,7 +22,7 @@ public static class Initialization
 
     public static GameInitializationConfig ClearInitializationConfig() => _config = null;
 
-    internal static Game GameInstance = null;
+    internal static Game GameInstance;
 
     public static void Start(Game game)
     {
@@ -88,7 +88,7 @@ public static class Initialization
         {
             Adjective = tribe.Adjective,
             Alive = true,
-            Government = GovernmentType.Despotism,
+            Government = (int)GovernmentType.Despotism,
             Id = id,
             Money = 0,
             Advances = new bool[config.Rules.Advances.Length],
@@ -96,7 +96,6 @@ public static class Initialization
             LeaderGender = gender,
             LeaderName = gender == 0 ? tribe.NameMale : tribe.NameFemale,
             LeaderTitle = titles[(int)GovernmentType.Despotism],
-            LuxRate = 0,
             ScienceRate = 60,
             TaxRate = 40,
             TribeName = tribe.Plural,
@@ -110,5 +109,17 @@ public static class Initialization
     {
         var govt = tribe.Titles.FirstOrDefault(t=>t.Gov == governmentType) ?? (IGovernmentTitles)gov;
         return config.Gender == 0 ? govt.TitleMale : govt.TitleFemale;
+    }
+
+    public static Game UpdateScenarioChoices()
+    {
+        var config = ConfigObject;
+        var instance = GameInstance;
+        
+        instance.SetHumanPlayer(config.ScenPlayerCivId);
+        instance.DifficultyLevel = config.DifficultyLevel;
+        instance.GetPlayerCiv.LeaderGender = config.Gender;
+        instance.GetPlayerCiv.LeaderName = config.LeaderName;
+        return instance;
     }
 }

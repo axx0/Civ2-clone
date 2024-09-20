@@ -14,69 +14,34 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Ruleset refactor">
-      <change afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenCustomIntro.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Date.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/FOSS art/Advances/advances art.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/FOSS art/Improvements/improvements art.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/FOSS art/Other/other art.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/FOSS art/Terrain/terrain art.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/FOSS art/Units/units art.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/FOSS art/Wonders/wonders art.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/Shaders/Shaders.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/Shaders/base.vs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/Shaders/grayscale.fs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadScenario.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadScenario.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ChoseScenCiv.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenChoseCiv.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenDifficulty.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenDifficulty.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenEnterName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenEnterName.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenGender.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenGender.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenIntro.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenIntro.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenarioLoaded.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/Scenario/ScenarioLoaded.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/dialog.png" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/dialog.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/Read.PopupBoxes.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/Read.PopupBoxes.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Map.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/CityStatusWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/CityStatusWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/DefenseMinisterWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/DefenseMinisterWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/TradeAdvisorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Advisors menu/TradeAdvisorWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/CityView/CityViewWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/CityView/CityViewWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/StatusPanel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/Images.ImportBitmaps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/Images.ImportBitmaps.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/IViewElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/IViewElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/blank.png" beforeDir="false" />
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Change production for city">
+      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/SheildProduction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ShieldProduction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" afterDir="false" />
+    </list>
+    <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
+      <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodyActiveAccount">
+    <option name="activeAccountId" value="VXNlcjo0Nw==" />
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="NewLua" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -87,49 +52,126 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Roaming/JetBrains/Rider2022.1/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/91/662108d0/Control.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$USER_HOME$/AppData/Roaming/JetBrains/Rider2022.1/resharper-host/DecompilerCache/decompiler/366a80928a014fceb5ee4fa47ff98dbeb5400/ad/7521bb79/Bitmap.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/66769cbfeae14a56a4cf5a826836f68d83488/3d/21d97725/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/648fe63694d229452316ad64668c984e3a887be64c28f2142cd9df3e36675e/EnumerableHelpers.Linq.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7ef812d8fc66be8566f28bcd0cfbf14d0ab738ad8c1264c8fbb8d2639051/Rectangle.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c0c138cb4084805dd161ef360107cdffe8ad0cefe3ac8d5e7b89445efbbfcc/LargeArrayBuilder.SpeedOpt.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c6ad457575d35dcbff26c9a5e3fb1d92f1d3c55f25ef6ebf475367b5d8/List.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e8ad7b7a9bb540eb898da96f282c75c1b55600/74/733a02ab/EventHandler`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/134622bcf8ad016d3faf7776eb0457b76a5798c537458aa82651ab2cee6e1/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Dialogs/FileDialogs/LoadScenario.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Dialogs/MainMenu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Civ2/Dialogs/NewGame/SelectGameVersion.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Dialogs/NewGame/EnterName.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Rules/Initialization.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/IO/GameData.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/IO/Ruleset.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Engine/src/MapObjects/Tile.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveLoader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/LoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/LoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/BuildingProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/BuildingProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionCabalilities.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionCabalilities.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/UnitProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Advisors menu/AttitudeAdvisorWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/UnitActions/MovementFunctions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Units/Path.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Animations/WaitingAnimation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Initialization/NewGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Initialization/NewGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Initialization/NewGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/UserInterfaceCommands.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.LoadGameInitialization.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/Initialization/MainMenu.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Players/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Game.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Events/MovementBlockedEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/IUserInterface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Bitmaps/ImageUtils.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/UnitSupportBox.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/UnitDisplay.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -177,6 +219,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="PerforceDirect.Settings">
+    <option name="ENABLED" value="false" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -193,27 +238,31 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.RaylibUI.executor": "Run",
+    ".NET Project.RaylibUI.executor": "Debug",
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "TODO_SCOPE": "All Places",
     "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.5034325",
-    "git-widget-placeholder": "Merging master",
+    "XThreadsFramesViewSplitterKey": "0.40725243",
+    "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.smartKeys_rider",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "rider.external.source.directories": [
-      "C:\\Users\\R-105\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\DecompilerCache",
-      "C:\\Users\\R-105\\AppData\\Roaming\\JetBrains\\Rider2023.3\\resharper-host\\SourcesCache",
-      "C:\\Users\\R-105\\AppData\\Local\\Symbols\\src"
+      "/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
+      "/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
+      "/Users/revans/Library/Application Support/Symbols/src"
     ]
   }
 }]]></component>
@@ -407,6 +456,11 @@
       <workItem from="1708145960589" duration="2624000" />
       <workItem from="1708498300494" duration="14294000" />
       <workItem from="1709624531656" duration="15949000" />
+      <workItem from="1720138243180" duration="14165000" />
+      <workItem from="1721267654108" duration="2833000" />
+      <workItem from="1722823817668" duration="64979000" />
+      <workItem from="1724906720309" duration="635000" />
+      <workItem from="1726003287262" duration="61963000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -638,7 +692,111 @@
       <option name="project" value="LOCAL" />
       <updated>1709883050597</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Fix name ambiguity">
+      <option name="closed" value="true" />
+      <created>1712227556595</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1712227556595</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Lua console implemented">
+      <option name="closed" value="true" />
+      <created>1712435779463</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1712435779463</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Refactor working">
+      <option name="closed" value="true" />
+      <created>1726003579237</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1726003579237</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Merge latest from AXX">
+      <option name="closed" value="true" />
+      <created>1726004956217</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1726004956217</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Make movement functions move based on unit location data">
+      <option name="closed" value="true" />
+      <created>1726008815256</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1726008815256</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Remove usage of Game.Instance">
+      <option name="closed" value="true" />
+      <created>1726019047195</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1726019047195</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Move Scen initialization from Game object">
+      <option name="closed" value="true" />
+      <created>1726019650729</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1726019650729</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Escape closes city window">
+      <option name="closed" value="true" />
+      <created>1726078778267</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1726078778267</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Improvement and wonder icons">
+      <option name="closed" value="true" />
+      <created>1726310272969</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1726310272969</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Icons displaying in production menu">
+      <option name="closed" value="true" />
+      <created>1726361871839</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1726361871839</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Fix initial production lists">
+      <option name="closed" value="true" />
+      <created>1726372672411</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1726372672411</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Set initial Epochs and Global Tech effects">
+      <option name="closed" value="true" />
+      <created>1726381760274</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1726381760274</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Change production for city">
+      <option name="closed" value="true" />
+      <created>1726541549523</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1726541549523</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -661,20 +819,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fix issue where RayLib was failing to detect image type for uppercase file extensions" />
-    <MESSAGE value="Load game dialog showing" />
-    <MESSAGE value="File listbox working (No scrolling or columns)" />
-    <MESSAGE value="Game screen showing" />
-    <MESSAGE value="And now we have a minimap" />
-    <MESSAGE value="Scrolling in listbox" />
-    <MESSAGE value="Load OK Dialog" />
-    <MESSAGE value="Map drawing in control" />
-    <MESSAGE value="Map click working no offsets" />
-    <MESSAGE value="Tile selection &amp; focus working" />
-    <MESSAGE value="Fix issues with display and navigation on flat maps" />
-    <MESSAGE value="Moved images sets to interface object" />
-    <MESSAGE value="Dialog Text Box working" />
-    <MESSAGE value="Dialog fixes" />
     <MESSAGE value="Fix merge errors" />
     <MESSAGE value="Fix checkbox" />
     <MESSAGE value="Basic city screen and some bugfixes" />
@@ -686,7 +830,21 @@
     <MESSAGE value="Rename misnamed elements" />
     <MESSAGE value="Pic Names" />
     <MESSAGE value="Ruleset refactor" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ruleset refactor" />
+    <MESSAGE value="Fix name ambiguity" />
+    <MESSAGE value="Lua console implemented" />
+    <MESSAGE value="List box work" />
+    <MESSAGE value="Refactor working" />
+    <MESSAGE value="Merge latest from AXX" />
+    <MESSAGE value="Make movement functions move based on unit location data" />
+    <MESSAGE value="Remove usage of Game.Instance" />
+    <MESSAGE value="Move Scen initialization from Game object" />
+    <MESSAGE value="Escape closes city window" />
+    <MESSAGE value="Improvement and wonder icons" />
+    <MESSAGE value="Icons displaying in production menu" />
+    <MESSAGE value="Fix initial production lists" />
+    <MESSAGE value="Set initial Epochs and Global Tech effects" />
+    <MESSAGE value="Change production for city" />
+    <option name="LAST_COMMIT_MESSAGE" value="Change production for city" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -695,71 +853,58 @@
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs</url>
           <line>335</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\MapPanel.cs" initialLine="335" containingFunctionPresentation="method 'UnitEventHappened'" />
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\MapPanel.cs" containingFunctionPresentation="method 'UnitEventHappened'" />
           <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs</url>
-          <line>239</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Game.ActionsUnits.cs" initialLine="239" containingFunctionPresentation="method 'Attack'" />
-          <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/IO/RulesParser.cs</url>
-          <line>97</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\IO\RulesParser.cs" initialLine="62" containingFunctionPresentation="method 'ProcessLeaders'" />
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/Settings.cs</url>
-          <line>17</line>
-          <properties documentPath="$PROJECT_DIR$/Engine/src/Settings.cs" initialLine="19" containingFunctionPresentation="method 'LoadConfigSettings'">
-            <startOffsets>
-              <option value="499" />
-            </startOffsets>
-            <endOffsets>
-              <option value="681" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Civ/Dialogs/NewGame/CustomWorldSize.cs</url>
           <line>44</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Civ\Dialogs\NewGame\CustomWorldSize.cs" initialLine="44" containingFunctionPresentation="method 'HandleDialogResult'" />
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Civ\Dialogs\NewGame\CustomWorldSize.cs" containingFunctionPresentation="method 'HandleDialogResult'" />
           <option name="timeStamp" value="89" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs</url>
           <line>52</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\Main.ShowPopupBox.cs" initialLine="52" containingFunctionPresentation="Method 'Playgame'">
-            <startOffsets>
-              <option value="1545" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1579" />
-            </endOffsets>
-          </properties>
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\Main.ShowPopupBox.cs" containingFunctionPresentation="Method 'Playgame'" />
           <option name="timeStamp" value="100" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/RaylibUI/RunGame/GameControls/City/CityWindow.cs</url>
           <line>13</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\RaylibUI\RunGame\CityWindow.cs" initialLine="9" containingFunctionPresentation="Constructor 'CityWindow'" />
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\RaylibUI\RunGame\CityWindow.cs" containingFunctionPresentation="Constructor 'CityWindow'" />
           <option name="timeStamp" value="102" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/OriginalSaves/Read.GameData.cs</url>
           <line>187</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\OriginalSaves\Read.GameData.cs" initialLine="185" containingFunctionPresentation="Method 'ReadSavFile'">
+          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\OriginalSaves\Read.GameData.cs" containingFunctionPresentation="Method 'ReadSavFile'" />
+          <option name="timeStamp" value="103" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs</url>
+          <line>189</line>
+          <properties documentPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" containingFunctionPresentation="Method 'ListBoxOnItemSelected'">
             <startOffsets>
-              <option value="10882" />
+              <option value="6899" />
             </startOffsets>
             <endOffsets>
-              <option value="10956" />
+              <option value="6924" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="103" />
+          <option name="timeStamp" value="163" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs</url>
+          <line>50</line>
+          <properties documentPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" containingFunctionPresentation="Method 'Draw'">
+            <startOffsets>
+              <option value="1617" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1643" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="167" />
         </line-breakpoint>
         <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
           <properties exception="System.UnauthorizedAccessException" isInternal="false" displayValue="UnauthorizedAccessException" namespaceName="System">
@@ -767,15 +912,22 @@
           </properties>
           <option name="timeStamp" value="101" />
         </breakpoint>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="Neo.IronLua.LuaParseException" isInternal="false" displayValue="LuaParseException" namespaceName="Neo.IronLua">
+            <option name="internal" value="false" />
+          </properties>
+          <option name="timeStamp" value="131" />
+        </breakpoint>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.DllNotFoundException" isInternal="false" displayValue="DllNotFoundException" namespaceName="System">
+            <option name="internal" value="false" />
+          </properties>
+          <option name="timeStamp" value="136" />
+        </breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" log-stack="true" type="DotNet Exception Breakpoints" />
       </default-breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="DotNetProject">
-        <watch expression="_selectedTile.Terrain.Name" language="C#" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

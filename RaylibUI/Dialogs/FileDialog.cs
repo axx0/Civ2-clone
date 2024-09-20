@@ -54,30 +54,34 @@ public class FileDialog : DynamicSizingDialog
         }
     }
 
-    private void ItemSelected(object? sender, ListBoxSelectionEventArgs args)
+    private void ItemSelected(object? sender, ScrollBoxSelectionEventArgs args)
     {
-        var test = args.Text;
-        if (test == ParentDirectory)
+        if (sender is LabelControl selectedLabel)
         {
-            var parent = Path.GetDirectoryName(_currentDirectory);
-            if (!string.IsNullOrWhiteSpace(parent))
+            var test = selectedLabel.Text;
+            if (test == ParentDirectory)
             {
-                _currentDirectory = parent;
+                var parent = Path.GetDirectoryName(_currentDirectory);
+                if (!string.IsNullOrWhiteSpace(parent))
+                {
+                    _currentDirectory = parent;
+                    BuildFileList(true);
+                    return;
+                }
+            }
+
+            var canPath = Path.Combine(_currentDirectory, test);
+
+            if (Directory.Exists(canPath) && (!_isValidSelectionCallback(test) || test == _textBox.Text))
+            {
+                _currentDirectory = canPath;
+
                 BuildFileList(true);
                 return;
             }
-        }
 
-        var canPath = Path.Combine(_currentDirectory, test);
-
-        if (Directory.Exists(canPath) && (!_isValidSelectionCallback(test) || test == _textBox.Text))
-        {
-            _currentDirectory = canPath;
-            
-            BuildFileList(true);
-            return;
+            _textBox.SetText(selectedLabel.Text);
         }
-        _textBox.SetText(args.Text);
     }
 
     private void TestSelection(string file)

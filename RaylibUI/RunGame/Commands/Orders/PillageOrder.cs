@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Menu;
 using Raylib_cs;
 
@@ -13,7 +14,7 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 
 public class PillageOrder : Order
 {
-    private readonly Game _game;
+    private readonly IGame _game;
 
     public PillageOrder(GameScreen gameScreen) : 
         base(gameScreen,  new Shortcut(KeyboardKey.P, shift:true), CommandIds.PillageOrder)

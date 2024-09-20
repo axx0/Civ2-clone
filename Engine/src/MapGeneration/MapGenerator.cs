@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Model.Core;
 
 namespace Civ2engine
 {

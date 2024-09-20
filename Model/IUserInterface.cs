@@ -61,4 +61,5 @@ public interface IUserInterface
     IInterfaceAction HandleLoadGame(GameData gameData);
     IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory);
     IInterfaceAction InitNewGame(bool quickStart);
+    IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
 }

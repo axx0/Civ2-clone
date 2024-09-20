@@ -4,6 +4,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
@@ -53,11 +54,11 @@ public class BuildCity : Order
             var city = activeTile.CityHere ?? activeTile.Neighbours().First(t => t.IsCityPresent).CityHere;
 
             var cityStyleIndex = _screen.Game.Players[city.OwnerId].Civilization.CityStyle;
-            if (city.Owner.Epoch == EpochType.Industrial)
+            if (city.Owner.Epoch == (int)EpochType.Industrial)
             {
                 cityStyleIndex = 4;
             }
-            else if (city.Owner.Epoch == EpochType.Modern)
+            else if (city.Owner.Epoch == (int)EpochType.Modern)
             {
                 cityStyleIndex = 5;
             }

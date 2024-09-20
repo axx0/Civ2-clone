@@ -4,7 +4,8 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Civ2engine.UnitActions.Move;
+using Civ2engine.UnitActions;
+using Model.Core;
 
 namespace Civ2engine.Units;
 
@@ -55,13 +56,13 @@ public class Path
         };
 
         var visited = new HashSet<Tile> { startTile };
-        var initialRoute = new Route { Cost = 0, Previous = null, Steps = 0, Tile = startTile, Distance = Utilities.DistanceTo(startTile, endTile, false) };
+        var initialRoute = new Route { Cost = 0, Previous = null, Steps = 0, Tile = startTile, Distance = Utilities.DistanceTo(startTile, endTile) };
         var candidates = new LinkedList<Route>(
             GetInitialCandidates(startTile, ignoreZoc, owner, domain)
                 .Select(t => new Route
                 {
                     Tile = t, Cost = costFunction(startTile, t), Previous = initialRoute, Steps = 1,
-                    Distance = Utilities.DistanceTo(t, endTile, false)
+                    Distance = Utilities.DistanceTo(t, endTile)
                 })
                 .Where(r => r.Cost != NotPossible)
                 .OrderBy(r => r.Cost)
@@ -95,7 +96,7 @@ public class Path
 
                 var route = new Route
                 {
-                    Cost = candidate.Cost + cost, Previous = candidate, Steps = candidate.Steps + 1, Tile = neighbour, Distance = Utilities.DistanceTo(candidate.Tile, endTile, false)
+                    Cost = candidate.Cost + cost, Previous = candidate, Steps = candidate.Steps + 1, Tile = neighbour, Distance = Utilities.DistanceTo(candidate.Tile, endTile)
                 };
                 var nextBest = candidates.First;
                 while (nextBest != null && nextBest.Value.Cost < route.Cost)
@@ -193,7 +194,7 @@ public class Path
 
         if (unit.MovePoints > 0)
         {
-            unit.Order = OrderType.NoOrders;
+            unit.Order = (int)OrderType.NoOrders;
         }
     }
 }

@@ -22,7 +22,7 @@ public class SkipOrder : Order
 
     public override void Action()
     {
-        GameScreen.Game.ActiveUnit?.SkipTurn();
+        GameScreen.Game.ActivePlayer.ActiveUnit?.SkipTurn();
         GameScreen.Game.ChooseNextUnit();
     }
 }

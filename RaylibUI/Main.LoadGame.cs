@@ -3,6 +3,7 @@ using Civ2engine.IO;
 using Civ2engine;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using RaylibUI.RunGame;
 
 namespace RaylibUI
@@ -12,7 +13,7 @@ namespace RaylibUI
         private Unit _activeUnit;
 
         
-        public void StartGame(Game game)
+        public void StartGame(IGame game)
         {
             game.UpdatePlayerViewData();
             

@@ -1,5 +1,6 @@
 using Civ2engine;
 using Model;
+using Model.Core;
 using Model.InterfaceActions;
 using Raylib_cs;
 using RaylibUI.Forms;
@@ -12,14 +13,14 @@ namespace RaylibUI.Initialization;
 public class MainMenu : BaseScreen
 {
     private readonly Action _shutdownApp;
-    private readonly Action<Game> _startGame;
+    private readonly Action<IGame> _startGame;
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
     private ScreenBackground? _background;
     
     private SoundData? _sndMenuLoop;
 
-    public MainMenu(Main main, Action shutdownApp, Action<Game> startGame, Sound soundManager) : base(main)
+    public MainMenu(Main main, Action shutdownApp, Action<IGame> startGame, Sound soundManager) : base(main)
     {
         _shutdownApp = shutdownApp;
         _startGame = startGame;

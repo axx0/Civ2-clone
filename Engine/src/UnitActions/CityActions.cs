@@ -2,30 +2,32 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
-using Civ2engine.Improvements;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Units;
+using Model.Constants;
+using Model.Core;
 
 namespace Civ2engine.UnitActions
 {
     public static class CityActions 
     {
-        public static string GetCityName(Civilization civ , Game game)
+        public static string GetCityName(Civilization civ , IGame game)
         {
             var cityCount = game.History.TotalCitiesBuilt(civ.Id);
             var names = game.CityNames;
             var tribe = civ.TribeName.ToUpperInvariant();
             var civCityList = names[names.ContainsKey(tribe) ? tribe : "EXTRA"];
-            if (cityCount < civCityList.Count)
+            if (cityCount < civCityList?.Count)
             {
                 return civCityList[cityCount];
             }
             return "Dummy Name";
         }
 
-        public static void BuildCity(Tile tile, Unit unit, Game game, string name)
+        public static void BuildCity(Tile tile, Unit unit, IGame game, string name)
         {
+            var initialProduction = ProductionOrder.GetAll(game.Rules).MinBy(i => i.Cost);
             var city = new City
             {
                 Location = tile,
@@ -34,7 +36,7 @@ namespace Civ2engine.UnitActions
                 Y = tile.Y,
                 Owner = unit.Owner,
                 Size = 1,
-                ItemInProduction = game.Rules.ProductionItems.OrderBy(i=>i.Cost).First()
+                ItemInProduction = initialProduction
             };
             tile.WorkedBy = city;
             tile.CityHere = city;
@@ -50,7 +52,7 @@ namespace Civ2engine.UnitActions
                                              i.Effects.ContainsKey(Effects.Capital) &&
                                              city.Owner.AllowedAdvanceGroups[
                                                  game.Rules.Advances[i.Prerequisite].AdvanceGroup] !=
-                                             AdvanceGroupAccess.Prohibited).OrderBy(i => i.Cost).FirstOrDefault();
+                                             AdvanceGroupAccess.Prohibited).MinBy(i => i.Cost);
                 if (capitalImprovement != null)
                 {
                     city.AddImprovement(capitalImprovement);
@@ -58,7 +60,7 @@ namespace Civ2engine.UnitActions
             }
             game.History.CityBuilt(tile.CityHere);
 
-            city.AutoAddDistributionWorkers();
+            city.AutoAddDistributionWorkers(game.Rules);
             city.CalculateOutput(city.Owner.Government, game);
 
             unit.Dead = true;

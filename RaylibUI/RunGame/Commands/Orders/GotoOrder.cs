@@ -3,9 +3,9 @@ using System.Linq;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
-using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Menu;
 using Raylib_cs;
 
@@ -13,7 +13,7 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 
 public class GotoOrder : Order
 {
-    private readonly Game _game;
+    private readonly IGame _game;
     private readonly LocalPlayer _player;
 
     public GotoOrder(GameScreen gameScreen) : 

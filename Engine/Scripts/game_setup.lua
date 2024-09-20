@@ -3,6 +3,5 @@
 ---
 
 
---- Check if custom city image exists
-civ.
---- if true
+-- Check if custom city image exists
+-- if true
