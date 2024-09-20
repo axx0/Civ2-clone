@@ -3,6 +3,7 @@ using Civ2.Rules;
 using Civ2engine;
 using Civ2engine.Enums;
 using Model;
+using Model.Dialog;
 using Model.InterfaceActions;
 
 namespace Civ2.Dialogs;

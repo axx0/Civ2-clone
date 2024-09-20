@@ -4,7 +4,7 @@ using Model.ImageSets;
 using Model.Interface;
 using Raylib_cs;
 
-namespace Model;
+namespace Model.Dialog;
 
 public class DialogElements
 {
@@ -19,5 +19,5 @@ public class DialogElements
     public int OptionsCols { get; set; } = 1;
     public int SelectedOption { get; set; } = 0;
     public List<string>? ReplaceStrings { get; set; }
-    public Image[]? OptionsImages { get; set; }
+    public IImageSource[]? OptionsImages { get; set; }
 }

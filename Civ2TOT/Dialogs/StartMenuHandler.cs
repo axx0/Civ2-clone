@@ -2,7 +2,7 @@ using Civ2;
 using Civ2.Dialogs;
 using Civ2.Dialogs.NewGame;
 using Civ2.Rules;
-using Model;
+using Model.Dialog;
 using Model.InterfaceActions;
 
 namespace TOT.Dialogs;

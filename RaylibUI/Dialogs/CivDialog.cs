@@ -1,11 +1,14 @@
 using Civ2engine;
 using Model;
+using Model.Dialog;
+using Model.Images;
 using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Dialogs;
 using RaylibUI.Forms;
+using RaylibUtils;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.Emit;
@@ -59,17 +62,22 @@ public class CivDialog : DynamicSizingDialog
         List<TextBoxDefinition>? textBoxDefs = null,
         int optionsCols = 1,
         int initSelectedOption = 0,
-        ListBoxDefinition? listBox = null,
-        Image[]? icons = null) :
+        IImageSource[]? optionsIcons = null,
+        DialogImageElements? image = null,
+        ListBoxDefinition? listBox = null) :
         base(host,
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-             relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth : popupBox.Width)
+             relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth: popupBox.Width)
     {
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;
         _optionsCols = optionsCols;
-        _managedTextures = new List<Texture2D>();
         _initSelectedOption = popupBox.Default != 0 ? popupBox.Default : initSelectedOption;
+
+        if (image != null)
+        {
+            Controls.Add(new ImageBox(this, image));
+        }
 
         if (popupBox.Text?.Count > 0)
         {
@@ -127,16 +135,11 @@ public class CivDialog : DynamicSizingDialog
 
             var optionAction = popupBox.Checkbox ? (Action<OptionControl>)TogggleCheckBox : SetSelectedOption;
 
-            var iconTextures =
-                icons?.Select(Raylib.LoadTextureFromImage).ToArray()
-                ?? Array.Empty<Texture2D>();
-            _managedTextures.AddRange(iconTextures);
-
-            var images = ImageUtils.GetOptionImages(popupBox.Checkbox);
+            var images = popupBox.Checkbox ? _active.Look.CheckBoxes : _active.Look.RadioButtons;
 
             _optionControls = options.Select((o, i) =>
                 new OptionControl(this, o, i, checkboxStates?[i] ?? false,
-                    i < iconTextures.Length ? new[] { iconTextures[i] } : images)).ToList();
+                    i < (optionsIcons?.Length ?? 0) ? new[] { optionsIcons[i] } : images)).ToList();
             _optionControls.ForEach(c=>c.Click += (_,_) =>optionAction(c));
             if (!popupBox.Checkbox)
             {
@@ -199,7 +202,6 @@ public class CivDialog : DynamicSizingDialog
 
     private void CloseDialog(string buttonText)
     {
-        _managedTextures.ForEach(Raylib.UnloadTexture);
         _handleButtonClick(buttonText, _selectedIndex, _checkboxes, FormatTextBoxReturn());
     }
 
@@ -208,8 +210,7 @@ public class CivDialog : DynamicSizingDialog
         KeyboardKey.Kp8, KeyboardKey.Kp2, KeyboardKey.Kp4, KeyboardKey.Kp6,
     };
 
-    private readonly List<Texture2D> _managedTextures;
-    private int _selectedIndex = -1;
+     private int _selectedIndex = -1;
 
     public override void OnKeyPress(KeyboardKey key)
     {

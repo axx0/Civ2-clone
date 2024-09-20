@@ -300,12 +300,6 @@ public static class ImageUtils
     public static Texture2D OuterWallpaperTexture { get; private set; }
     public static Texture2D OuterTitleTopWallpaperTexture { get; private set; }
 
-    public static Texture2D[] GetOptionImages(bool checkbox)
-    {
-        var images = checkbox ? _look.CheckBoxes : _look.RadioButtons;
-        return images.Select(TextureCache.GetImage).ToArray();
-    }
-    
     public static void SetLook(IUserInterface active)
     {
         Wallpaper = new Wallpaper();

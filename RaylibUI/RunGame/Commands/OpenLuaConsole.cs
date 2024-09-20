@@ -1,4 +1,6 @@
 using Model;
+using Model.Dialog;
+using Model.Images;
 using Model.Menu;
 using Raylib_cs;
 
@@ -27,5 +29,6 @@ public class OpenLuaConsole : IGameCommand
 
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; }
+    public DialogImageElements? ErrorImage { get; } = null;
     public string? Name { get; }
 }

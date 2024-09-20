@@ -1,6 +1,6 @@
 using Civ2.Rules;
 using Civ2engine.NewGame;
-using Model;
+using Model.Dialog;
 using Model.ImageSets;
 using Model.InterfaceActions;
 

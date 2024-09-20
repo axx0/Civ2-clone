@@ -8,6 +8,7 @@ using Model.Core;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
+using RaylibUtils;
 
 namespace RaylibUI.RunGame.GameModes.Orders;
 
@@ -15,11 +16,15 @@ public class BuildCity : Order
 {
     private readonly LocalPlayer _player;
     private const string CityName = "CityName";
+    private IUserInterface _active;
+    private GameScreen _screen;
 
     public BuildCity(GameScreen gameScreen) : 
         base(gameScreen, new Shortcut(KeyboardKey.B), CommandIds.BuildCityOrder)
     {
+        _screen = gameScreen;
         _player = gameScreen.Player;
+        _active = gameScreen.Main.ActiveInterface;
     }
 
     public override bool Update()
@@ -34,7 +39,7 @@ public class BuildCity : Order
         var activeTile = _player.ActiveTile;
         if (activeUnit.AIrole != AIroleType.Settle)
         {
-            return SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
+            return SetCommandState(errorPopupKeyword: "ONLYSETTLERS", errorPopupImage: new(_active.PicSources["unit"][0], 2));
         }
         if (activeTile.Terrain.Impassable)
         {
@@ -44,13 +49,33 @@ public class BuildCity : Order
         {
             return SetCommandState(errorPopupKeyword: "CITYATSEA");
         }
-        if (activeTile.CityHere != null)
+        if (activeTile.CityHere != null || activeTile.Neighbours().Any(t => t.IsCityPresent))
         {
-            return SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity) , errorPopupKeyword: "ONLY10");
-        }
-        if (activeTile.Neighbours().Any(t => t.IsCityPresent))
-        {
-            return SetCommandState(errorPopupKeyword: "ADJACENTCITY");
+            var city = activeTile.CityHere ?? activeTile.Neighbours().First(t => t.IsCityPresent).CityHere;
+
+            var cityStyleIndex = _screen.Game.Players[city.OwnerId].Civilization.CityStyle;
+            if (city.Owner.Epoch == (int)EpochType.Industrial)
+            {
+                cityStyleIndex = 4;
+            }
+            else if (city.Owner.Epoch == (int)EpochType.Modern)
+            {
+                cityStyleIndex = 5;
+            }
+
+            var sizeIncrement =
+                _screen.Main.ActiveInterface.GetCityIndexForStyle(cityStyleIndex, city, city.Size);
+            var cityImage = _active.CityImages.Sets[cityStyleIndex][sizeIncrement];
+            var flagImage = _screen.Main.ActiveInterface.PlayerColours[city.OwnerId];
+
+            if (activeTile.CityHere != null)
+            {
+                return SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity), errorPopupKeyword: "ONLY10", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image) - 5 } }));
+            }
+            else
+            {
+                return SetCommandState(errorPopupKeyword: "ADJACENTCITY", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image) - 5 } }));
+            }
         }
 
         return SetCommandState(CommandStatus.Normal);
@@ -68,11 +93,9 @@ public class BuildCity : Order
         }
         else
         {
-            
             var name = CityActions.GetCityName(_player.Civilization, GameScreen.Game);
             GameScreen.ShowPopup("NAMECITY", handleButtonClick: Build,
-                
-                textBoxes: new List<TextBoxDefinition>
+            textBoxes: new List<TextBoxDefinition>
             {
                 new()
                 {
