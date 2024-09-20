@@ -1,3 +1,4 @@
+using Model.CityWindowModel;
 using Model.Images;
 using Raylib_cs;
 
@@ -18,7 +19,7 @@ public class CityWindowLayout
     public Rectangle? TileMap { get; set; }
     public ResourceProduction Resources { get; set; }
 
-    public SheildProduction Production { get; set; } = new();
+    public ShieldProduction Production { get; set; } = new();
     public Rectangle FoodStorage { get; init; }
     public UnitSupport UnitSupport { get; init; }
 }

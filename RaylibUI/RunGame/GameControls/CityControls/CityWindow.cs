@@ -2,6 +2,7 @@ using System.Numerics;
 using Civ2engine;
 using Civ2engine.Production;
 using Model;
+using Model.CityWindowModel;
 using Model.Interface;
 using Raylib_cs;
 using RaylibUI.BasicTypes.Controls;
@@ -19,6 +20,7 @@ public class CityWindow : BaseDialog
     private readonly IList<IProductionOrder> _canProduce;
     
     private LabelControl? _productionLabel;
+    private ShieldBox? _productionBox;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
@@ -78,10 +80,8 @@ public class CityWindow : BaseDialog
         Controls.Add(changeButton);
 
         var productionSettings = _cityWindowProps.Production;
-        if (productionSettings.Type == "Box")
-        {
-            ChangeProductionDisplay(city, productionSettings);
-        }
+        ChangeProductionDisplay(city, productionSettings);
+      
         
         var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
@@ -155,7 +155,7 @@ public class CityWindow : BaseDialog
 
     }
 
-    private void ChangeProductionDisplay(City city, SheildProduction productionSettings)
+    private void ChangeProductionDisplay(City city, ShieldProduction productionSettings)
     {
         var productionTitlePosition = productionSettings.TitlePosition;
         
@@ -173,6 +173,19 @@ public class CityWindow : BaseDialog
         }
         _productionLabel = label;
         Controls.Add(_productionLabel);
+        if (productionSettings.Type == "Box")
+        {
+            if (_productionBox == null)
+            {
+                _productionBox = new ShieldBox(this)
+                {
+                    AbsolutePosition = productionSettings.ShieldBox
+                };
+                Controls.Add(_productionBox);
+            }
+
+            _productionBox.UpdateData(city.ItemInProduction);
+        }
     }
 
     private void BuildDialogClosed(string button, int selectedIndex, IList<bool>? chx, IDictionary<string, string>? txt)
