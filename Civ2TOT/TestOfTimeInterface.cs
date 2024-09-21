@@ -464,44 +464,19 @@ public class TestOfTimeInterface : Civ2Interface
         }
     };
 
-    private static readonly IImageSource ObservatoryPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x1E630, Length = 0xACDC };
-
-    private static readonly IImageSource HorzionPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x2390C, Length = 0x58A5 };
-
-    private static readonly IImageSource CreaturePic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x2EBB4, Length = 0x14600 };
-
-    private static readonly IImageSource DuelPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x431B4, Length = 0x177AF };
-
-    private static readonly IImageSource KnightsPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x5A964, Length = 0xEB67 };
-
-    private static readonly IImageSource LabPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x694CC, Length = 0xFC4B };
-
-    private static readonly IImageSource TemplePic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x79118, Length = 0x10EBB };
-
-    private static readonly IImageSource ManorPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x89FD4, Length = 0x13AA8 };
-
-    private static readonly IImageSource BookPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x9DA7C, Length = 0x162AE };
-
-    private static readonly IImageSource AlienplanetPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xB3D2C, Length = 0x988D };
-
-    private static readonly IImageSource RocksPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xBD5BC, Length = 0xBF78 };
-
-    private static readonly IImageSource ShipPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xC9534, Length = 0x5A03 };
-
-    private static readonly IImageSource HotplanetPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xCEF38, Length = 0x9130 };
+    private static readonly IImageSource ObservatoryPic = new BinaryStorage("Intro.dll", 0x1E630, 0xACDC);
+    private static readonly IImageSource HorzionPic = new BinaryStorage("Intro.dll", 0x1E630, 0xACDC);
+    private static readonly IImageSource CreaturePic = new BinaryStorage("Intro.dll", 0x2EBB4, 0x14600);
+    private static readonly IImageSource DuelPic = new BinaryStorage("Intro.dll", 0x431B4, 0x177AF);
+    private static readonly IImageSource KnightsPic = new BinaryStorage("Intro.dll", 0x5A964, 0xEB67);
+    private static readonly IImageSource LabPic = new BinaryStorage("Intro.dll", 0x694CC, 0xFC4B);
+    private static readonly IImageSource TemplePic = new BinaryStorage("Intro.dll", 0x79118, 0x10EBB);
+    private static readonly IImageSource ManorPic = new BinaryStorage("Intro.dll", 0x89FD4, 0x13AA8);
+    private static readonly IImageSource BookPic = new BinaryStorage("Intro.dll", 0x9DA7C, 0x162AE);
+    private static readonly IImageSource AlienplanetPic = new BinaryStorage("Intro.dll", 0xB3D2C, 0x988D);
+    private static readonly IImageSource RocksPic = new BinaryStorage("Intro.dll", 0xBD5BC, 0xBF78);
+    private static readonly IImageSource ShipPic = new BinaryStorage("Intro.dll", 0xC9534, 0x5A03);
+    private static readonly IImageSource HotplanetPic = new BinaryStorage("Intro.dll", 0xCEF38, 0x9130);
 
     public override int UnitsRows => 9;
     public override int UnitsPxHeight => 64;

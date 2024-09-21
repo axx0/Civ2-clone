@@ -70,8 +70,6 @@ namespace RaylibUtils
         private static Dictionary<string, Image> _imageCache = new();
         private static Dictionary<string, int> _sourceBpp = new();
 
-        private const string TempPath = "temp";
-
         public static ImageProps ExtractBitmapData(IImageSource imageSource, string[]? searchPaths)
         {
             return ExtractBitmapData(imageSource, null, searchPaths: searchPaths);
@@ -102,11 +100,6 @@ namespace RaylibUtils
             var imageProps = new ImageProps();
             int flag1X = 0, flag1Y = 0, flag2X = 0, flag2Y = 0;
 
-            if (!Directory.Exists(TempPath))
-            {
-                Directory.CreateDirectory(TempPath);
-            }
-
             var key = imageSource.GetKey(owner);
             if (_imageCache.TryGetValue(key, out var bitmap))
             {
@@ -116,25 +109,34 @@ namespace RaylibUtils
             
             switch (imageSource)
             {
-
                 case BinaryStorage binarySource:
-                    _imageCache[key] = ExtractBitmap(binarySource.FileName, binarySource.DataStart, binarySource.Length, key);
-                    break;
+                    {
+                        var sourceKey = $"Binary-{binarySource.Filename}-{binarySource.DataStart}-Source";
+                        if (!_imageCache.ContainsKey(sourceKey))
+                        {
+                            var path = Utils.GetFilePath(binarySource.Filename);
+                            var source_img_bpp = Images.LoadImageFromFile(path, binarySource.DataStart, binarySource.Length);
+                            _imageCache[sourceKey] = source_img_bpp.Image;
+                            _sourceBpp[sourceKey] = source_img_bpp.ColourDepth;
+                        }
+
+                        var sourceImage = _imageCache[sourceKey];
+                        var rect = binarySource.Location;
+                        if (rect.Width == 0)
+                        {
+                            rect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
+                        }
+                        var image = Raylib.ImageFromImage(sourceImage, rect);
+                        _imageCache[binarySource.Key] = image;
+                        break;
+                    }
                 case BitmapStorage bitmapStorage:
                     {
                         var sourceKey = $"{bitmapStorage.Filename}-Source";
                         if (!_imageCache.ContainsKey(sourceKey))
                         {
-                            string[] _paths;
-                            if (active != null)
-                            {
-                                _paths = active.MainApp.ActiveRuleSet.Paths;
-                            }
-                            else
-                            {
-                                _paths = searchPaths ?? Settings.SearchPaths;
-                            }
-
+                            string[] _paths = active != null ?
+                                active.MainApp.ActiveRuleSet.Paths : searchPaths ?? Settings.SearchPaths;
                             var path = Utils.GetFilePath(bitmapStorage.Filename, _paths, bitmapStorage.Extension);
                             var source_img_bpp = Images.LoadImageFromFile(path);
                             _imageCache[sourceKey] = source_img_bpp.Image;
@@ -219,51 +221,12 @@ namespace RaylibUtils
             return imageProps;
         }
         
-        public static Image ExtractBitmap(string filename, int start, int length, string key)
-        {
-            if (!Files.ContainsKey(filename))
-            {
-                var path = Utils.GetFilePath(filename);
-                if (string.IsNullOrEmpty(path))
-                {
-                    Console.Error.WriteLine("Failed to load file " + filename + " please check value");
-                    return Raylib.GenImageColor(1, 1, new Color(0, 0, 0, 0));
-                }
-                Files[filename] = File.ReadAllBytes(path);
-            }
-
-            return ExtractBitmap(Files[filename], start, length, key);
-        }
-
         public static void ClearCache()
         {
             foreach (var image in _imageCache.Where(t => !t.Key.StartsWith("Binary")))
             {
                 _imageCache.Remove(image.Key);
             }
-            Files.Clear();
-        }
-
-        public static Dictionary<string, byte[]> Files { get; } = new();
-
-        static byte[] _extn = Encoding.ASCII.GetBytes("Gif\0");
-
-        private static Image ExtractBitmap(byte[] byteArray, int start, int length, string key)
-        {
-            // Make empty byte array to hold GIF bytes
-            byte[] newBytesRange = new byte[length];
-
-            // Copy GIF bytes in DLL byte array into empty array
-            Array.Copy(byteArray, start, newBytesRange, 0, length);
-            var fileName = Path.Combine(TempPath, key + ".gif");
-            using (var file = File.Create(fileName))
-            {
-                file.Write(newBytesRange);
-                file.Flush();
-            }
-
-            return Raylib.LoadImage(fileName);
-
         }
     }
 }

@@ -389,49 +389,20 @@ public class Civ2GoldInterface : Civ2Interface
         }
     };
 
-    private static readonly IImageSource SinaiPic = new BinaryStorage
-        { FileName = "Intro.dll", DataStart = 0x1E630, Length = 0x9F78 };
-
-    private static readonly IImageSource StPeterburgPic = new BinaryStorage
-        { FileName = "Intro.dll", DataStart = 0x285A8,  Length = 0x15D04 };
-
-    private static readonly IImageSource IslandPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xDA49C, Length = 0x8980 };
-
-    private static readonly IImageSource DesertPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xD0140, Length = 0xA35A };
-
-    private static readonly IImageSource SnowPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xE2E1C, Length = 0xA925 };
-
-    private static readonly IImageSource CanyonPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xC51B8, Length = 0xAF88 };
-
-    private static readonly IImageSource MingGeneralPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x3E2AC, Length = 0x1D183 };
-
-    private static readonly IImageSource AncientPersonsPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x5B430, Length = 0x15D04 };
-
-    private static readonly IImageSource BarbariansPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x71134, Length = 0x13D5B };
-
-    private static readonly IImageSource GalleyPic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xB6A3C, Length = 0xE77A };
-
-    private static readonly IImageSource PeoplePic1 = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x84E90, Length = 0x129CE };
-
-    private static readonly IImageSource PeoplePic2 = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0x97860, Length = 0x139A0 };
-
-    private static readonly IImageSource TemplePic = new BinaryStorage
-    { FileName = "Intro.dll", DataStart = 0xAB200, Length = 0xB839 };
-
-    
-
-    public override IImageSource BackgroundImage => new BinaryStorage
-        { FileName = "Tiles.dll", DataStart = 0xF7454, Length = 0x1389D };
+    private static readonly IImageSource SinaiPic = new BinaryStorage("Intro.dll", 0x1E630, 0x9F78);
+    private static readonly IImageSource StPeterburgPic = new BinaryStorage("Intro.dll", 0x285A8, 0x15D04);
+    private static readonly IImageSource DesertPic = new BinaryStorage("Intro.dll", 0xD0140, 0xA35A);
+    private static readonly IImageSource SnowPic = new BinaryStorage("Intro.dll", 0xE2E1C, 0xA925);
+    private static readonly IImageSource CanyonPic = new BinaryStorage("Intro.dll", 0xC51B8, 0xAF88);
+    private static readonly IImageSource MingGeneralPic = new BinaryStorage("Intro.dll", 0x3E2AC, 0x1D183);
+    private static readonly IImageSource IslandPic = new BinaryStorage("Intro.dll", 0xDA49C, 0x8980);
+    private static readonly IImageSource AncientPersonsPic = new BinaryStorage("Intro.dll", 0x5B430, 0x15D04);
+    private static readonly IImageSource BarbariansPic = new BinaryStorage("Intro.dll", 0x71134, 0x13D5B);
+    private static readonly IImageSource GalleyPic = new BinaryStorage("Intro.dll", 0xB6A3C, 0xE77A);
+    private static readonly IImageSource PeoplePic1 = new BinaryStorage("Intro.dll", 0x84E90, 0x129CE);
+    private static readonly IImageSource PeoplePic2 = new BinaryStorage("Intro.dll", 0x97860, 0x139A0);
+    private static readonly IImageSource TemplePic = new BinaryStorage("Intro.dll", 0x97860, 0xB839);
+    public override IImageSource BackgroundImage => new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D);
 
     public override int UnitsRows => 7;
     public override int UnitsPxHeight => 48;

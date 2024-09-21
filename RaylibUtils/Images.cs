@@ -1,6 +1,8 @@
 ﻿using Civ2engine;
 using Raylib_cs;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Unicode;
@@ -12,9 +14,18 @@ public static partial class Images
     /// <summary>
     /// Load image from file and make colours transparent
     /// </summary>
-    public static Image_and_bpp LoadImageFromFile(string filename)
+    public static Image_and_bpp LoadImageFromFile(string filename, int dataStart = 0, int length = 0)
     {
-        byte[] bytes = File.ReadAllBytes(filename);
+        byte[] bytes;
+        if (length != 0)
+        {
+            bytes = new byte[length];
+            Array.Copy(File.ReadAllBytes(filename), dataStart, bytes, 0, length);
+        }
+        else
+        {
+            bytes = File.ReadAllBytes(filename);
+        }
         Image img = new();
         int bpp = 0; // colour depth
 
@@ -29,7 +40,7 @@ public static partial class Images
             int height = BitConverter.ToInt16(bytes, 8);
 
             // Let raylib deal with LZW decompression
-            img = Raylib.LoadImageFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
+            img = Raylib.LoadImageFromMemory(".gif", bytes);
 
             // Get 3 transparent colours from palette and replace colours
             Color[] transparent = new Color[3];

@@ -71,7 +71,7 @@ public class CivDialog : DynamicSizingDialog
         _optionsCols = optionsCols;
         _initSelectedOption = popupBox.Default != 0 ? popupBox.Default : initSelectedOption;
 
-        if (image != null)
+        if (image != null && image.Image.All(n => n != null))
         {
             Controls.Add(new ImageBox(this, image));
         }
@@ -343,7 +343,7 @@ public class CivDialog : DynamicSizingDialog
                                    select label).ToList().FirstOrDefault().TextSize.X;
 
         if (popupbox.Width != 0)
-            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupbox.Width * 1.5));
+            return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, popupbox.Width));
         else
             return (int)Math.Ceiling(Math.Max(centredTextMaxWidth, 660.0));    // 660=440*1.5
     }
