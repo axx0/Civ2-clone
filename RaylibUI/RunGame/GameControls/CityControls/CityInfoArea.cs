@@ -54,7 +54,7 @@ public class CityInfoArea : BaseControl
         {
             foreach (var unit in _cityWindow.City.UnitsInCity)
             {
-                var unitDisplay = new UnitDisplay(_cityWindow, unit, activPos, activeInterface);
+                var unitDisplay = new UnitDisplay(_cityWindow, unit, _cityWindow.CurrentGameScreen.Game, activPos, activeInterface);
                 activPos = activPos with { X = activPos.X + unitDisplay.Width };
                 if (activPos.X + unitDisplay.Width > Bounds.X + Bounds.Width)
                 {

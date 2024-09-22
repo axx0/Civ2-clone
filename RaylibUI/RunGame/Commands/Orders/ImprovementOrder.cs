@@ -2,6 +2,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Model;
+using Model.Core;
 using Model.Menu;
 using RaylibUI.RunGame.GameModes.Orders;
 
@@ -10,10 +11,10 @@ namespace RaylibUI.RunGame.Commands.Orders;
 public class ImprovementOrder : Order
 {
     private readonly TerrainImprovement _improvement;
-    private readonly Game _game;
+    private readonly IGame _game;
     private readonly LocalPlayer _player;
 
-    public ImprovementOrder(TerrainImprovement improvement, GameScreen gameScreen, Game game) :
+    public ImprovementOrder(TerrainImprovement improvement, GameScreen gameScreen, IGame game) :
         base(gameScreen, Shortcut.Parse(improvement.Shortcut), GetCommandName(improvement), improvement.Name)
     {
         _improvement = improvement;

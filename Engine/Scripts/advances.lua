@@ -6,6 +6,7 @@
 --4 - Atomic Theory,      4,-1,  ToG, Phy, 2, 3    ; Ato
 --5 - Automobile,         6,-1,  Cmb, Stl, 3, 4    ; Aut
 civ.getTech(5).AddEffect(civ.core.Effects.PopulationPollutionModifier, 1)
+civ.getTech(5).AddEffect(civ.core.Effects.Epoch, 3)
 --6 - Banking,            4, 1,  Tra, Rep, 1, 1    ; Ban
 --7 - Bridge Building,    4, 0,  Iro, Cst, 0, 4    ; Bri
 --8 - Bronze Working,     6,-1,  nil, nil, 0, 4    ; Bro
@@ -25,6 +26,7 @@ civ.getTech(5).AddEffect(civ.core.Effects.PopulationPollutionModifier, 1)
 --22 - Economics,          4, 1,  Uni, Ban, 2, 1    ; Eco
 --23 - Electricity,        4, 0,  Met, Mag, 2, 4    ; E1
 --24 - Electronics,        4, 1,  E1,  Cor, 3, 4    ; E2
+civ.getTech(24).AddEffect(civ.core.Effects.Epoch, 3)
 --25 - Engineering,        4, 0,  Whe, Cst, 0, 4    ; Eng
 --26 - Environmentalism,   3, 1,  Rec, SFl, 3, 2    ; Env
 civ.getTech(26).AddEffect(civ.core.Effects.PopulationPollutionModifier, -1)
@@ -40,7 +42,9 @@ civ.getTech(26).AddEffect(civ.core.Effects.PopulationPollutionModifier, -1)
 --36 - Horseback Riding,   4,-1,  nil, nil, 0, 0    ; Hor
 --37 - Industrialization,  6, 0,  RR,  Ban, 2, 1    ; Ind
 civ.getTech(37).AddEffect(civ.core.Effects.PopulationPollutionModifier, 2)
+civ.getTech(37).AddEffect(civ.core.Effects.Epoch, 2)
 --38 - Invention,          6, 0,  Eng, Lit, 1, 4    ; Inv
+civ.getTech(38).AddEffect(civ.core.Effects.Epoch, 1)
 --39 - Iron Working,       5,-1,  Bro, War, 0, 4    ; Iro
 --40 - Labor Union,        4,-1,  MP,  Gue, 3, 2    ; Lab
 --41 - The Laser,          4, 0,  NP,  MP,  3, 3    ; Las
@@ -64,6 +68,7 @@ civ.getTech(48).AddEffect(civ.core.Effects.PopulationPollutionModifier, 1)
 --58 - Nuclear Fission,    6,-2,  Ato, MP,  3, 3    ; NF
 --59 - Nuclear Power,      3, 0,  NF,  E2,  3, 3    ; NP
 --60 - Philosophy,         6, 1,  Mys, Lit, 1, 2    ; Phi
+civ.getTech(60).AddEffect(civ.core.Effects.Epoch, 1)
 --61 - Physics,            4,-1,  Nav, Lit, 1, 3    ; Phy
 --62 - Plastics,           4, 1,  Ref, SFl, 3, 4    ; Pla
 civ.getTech(62).AddEffect(civ.core.Effects.PopulationPollutionModifier, 1)

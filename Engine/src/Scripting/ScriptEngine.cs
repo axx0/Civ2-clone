@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Model.Core;
 using Neo.IronLua;
 
 namespace Civ2engine.Scripting
 {
-    public class ScriptEngine : IDisposable
+    public class ScriptEngine : IDisposable, IScriptEngine
     {
         private readonly Lua _lua;
         private readonly LuaGlobal _environment;

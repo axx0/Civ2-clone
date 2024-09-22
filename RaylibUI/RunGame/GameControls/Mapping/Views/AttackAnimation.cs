@@ -18,10 +18,10 @@ internal class AttackAnimation : BaseGameView
 
         var unitAnimations = new List<IViewElement>();
         var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height};
-        ImageUtils.GetUnitTextures(args.Attacker, activeInterface, unitAnimations, attackerPos );
+        ImageUtils.GetUnitTextures(args.Attacker, activeInterface, gameScreen.Game, unitAnimations, attackerPos );
         var defPos = GetPosForTile(args.Defender.CurrentLocation);
         var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - activeInterface.UnitImages.UnitRectangle.Height };
-        ImageUtils.GetUnitTextures(args.Defender, activeInterface, unitAnimations,
+        ImageUtils.GetUnitTextures(args.Defender, activeInterface, gameScreen.Game, unitAnimations,
             defenderPos);
         var explosion = 0;
         SetAnimation(unitAnimations);

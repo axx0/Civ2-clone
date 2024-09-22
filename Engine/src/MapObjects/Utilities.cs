@@ -10,8 +10,9 @@ namespace Civ2engine.MapObjects
         /// <param name="startTile"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
-        internal static double DistanceTo(IMapItem startTile, IMapItem tile, bool flatWorld)
+        internal static double DistanceTo(IMapItem startTile, IMapItem tile)
         {
+            //TODO: What about flat worlds?
             return Math.Pow(startTile.X - tile.X, 2) + Math.Pow(startTile.Y - tile.Y, 2);
         }
     }

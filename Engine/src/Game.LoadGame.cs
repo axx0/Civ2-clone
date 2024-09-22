@@ -16,34 +16,24 @@ namespace Civ2engine
     {
         public static Game Create(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
         {
-            _instance = new Game(rules, gameData, objects, ruleset.Paths);
-            return _instance;
+            return new Game(rules, gameData, objects, ruleset.Paths);
         }
 
         public static Game StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations,
             string[] paths)
         {
-            _instance = new Game(maps, config.Rules, civilizations, new Options(config), paths, (DifficultyType)config.DifficultyLevel);
-            _instance.StartNextTurn();
-            return _instance;
+            var instance = new Game(maps, config.Rules, civilizations, new Options(config), paths, config.DifficultyLevel);
+            instance.StartNextTurn();
+            return instance;
         }
 
-        public static void CreateScenario(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
+        public static Game CreateScenario(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
         {
-            _instance = new Game(rules, gameData, objects, ruleset.Paths);
-        }
-
-        public static Game UpdateScenarioChoices(GameInitializationConfig config)
-        {
-            _instance.SetHumanPlayer(config.ScenPlayerCivId);
-            _instance.DifficultyLevel = (DifficultyType)config.DifficultyLevel;
-            _instance.GetPlayerCiv.LeaderGender = config.Gender;
-            _instance.GetPlayerCiv.LeaderName = config.LeaderName;
-            return _instance;
+            return new Game(rules, gameData, objects, ruleset.Paths);
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
-            string[] gamePaths, DifficultyType difficulty)
+            string[] gamePaths, int difficulty)
         {
             Script = new ScriptEngine(this, gamePaths);
             _options = options;
@@ -65,32 +55,28 @@ namespace Civ2engine
 
             Script.RunScript("tile_improvements.lua");
             
-            
-            
             Script.RunScript("improvements.lua");
             Script.RunScript("advances.lua");
+            Script.RunScript("units.lua");
 
             AllCivilizations.ForEach((civ) =>
             {
                 OnCivEvent?.Invoke(this, new CivEventArgs(CivEventType.Created, civ));
             });
             
-
             this.SetupTech();
             
             Power.CalculatePowerRatings(this);
-            
-            
         }
 
         private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 
             : this(objects.Maps.ToArray(), rules,objects.Civilizations,new Options(gameData.OptionsArray), 
-                  rulesetPaths, (DifficultyType)gameData.DifficultyLevel)
+                  rulesetPaths, gameData.DifficultyLevel)
         {
             _scenarioData = objects.Scenario;
 
             TurnNumber = gameData.TurnNumber;
-            Date = new Date(gameData.StartingYear, gameData.TurnYearIncrement, (DifficultyType)gameData.DifficultyLevel);
+            Date = new Date(gameData.StartingYear, gameData.TurnYearIncrement, gameData.DifficultyLevel);
 
             _barbarianActivity = (BarbarianActivityType)gameData.BarbarianActivity;
             PollutionSkulls = gameData.NoPollutionSkulls;
@@ -130,7 +116,7 @@ namespace Civ2engine
 
             foreach (var civilization in AllCivilizations)
             {
-                SetImprovementsForCities(civilization);
+                this.SetImprovementsForCities(civilization);
             }
 
             foreach (var map in _maps)
@@ -155,7 +141,8 @@ namespace Civ2engine
 
             foreach (var city in AllCities)
             {
-                city.SetUnitSupport(Rules.Cosmic);
+                var government = Rules.Governments[city.Owner.Government];
+                city.SetUnitSupport(government);
                 city.CalculateOutput(city.Owner.Government, this);
             }
         }

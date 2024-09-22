@@ -17,7 +17,7 @@ namespace Civ2.Menu
 
         private static IDictionary<string, List<MenuElement>> _elements; 
 
-        public void ProcessSection(string section, List<string> contents)
+        public void ProcessSection(string section, List<string>? contents)
         {
             _elements[section] = contents.Select(s =>
                 {

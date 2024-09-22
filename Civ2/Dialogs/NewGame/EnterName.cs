@@ -69,7 +69,8 @@ public class EnterName : BaseDialogHandler
         
         if (Initialization.ConfigObject.IsScenario)
         {
-            var game = Game.UpdateScenarioChoices(Initialization.ConfigObject);
+            var game = Initialization.UpdateScenarioChoices();
+            
             civ2Interface.ScenTitleImage = null;
             Initialization.Start(game);
             return new StartGame(Initialization.GameInstance);

@@ -12,6 +12,7 @@ using RaylibUtils;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection.Emit;
+using Model.Core;
 using Button = RaylibUI.Controls.Button;
 
 namespace RaylibUI;
@@ -35,6 +36,7 @@ public class CivDialog : DynamicSizingDialog
         newSelection.Checked = true;
         _selectedOption?.Clear();
         _selectedOption = newSelection;
+        _selectedIndex = newSelection.Index;
         this.Focused = newSelection;
     }
 
@@ -61,7 +63,8 @@ public class CivDialog : DynamicSizingDialog
         int optionsCols = 1,
         int initSelectedOption = 0,
         IImageSource[]? optionsIcons = null,
-        DialogImageElements? image = null) :
+        DialogImageElements? image = null,
+        ListBoxDefinition? listBox = null) :
         base(host,
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
              relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth: popupBox.Width)
@@ -88,6 +91,13 @@ public class CivDialog : DynamicSizingDialog
         }
 
         var options = popupBox.Options;
+
+        if (listBox is not null)
+        {
+            var civDialogListBox = new CivDialogListBox(this, listBox);
+            Controls.Add(civDialogListBox);
+            civDialogListBox.ItemSelected += ListBoxOnItemSelected;
+        }
 
         if (textBoxDefs is { Count: > 0 })
         {
@@ -177,7 +187,12 @@ public class CivDialog : DynamicSizingDialog
         Controls.Add(menuBar);
         SetButtons(menuBar);
     }
-    
+
+    private void ListBoxOnItemSelected(object? sender, ScrollBoxSelectionEventArgs e)
+    {
+        _selectedIndex = e.Index;
+    }
+
     private void OnActionButtonOnClick(object? sender, MouseEventArgs mouseEventArgs)
     {
         if (sender is not Button button) return;
@@ -187,13 +202,15 @@ public class CivDialog : DynamicSizingDialog
 
     private void CloseDialog(string buttonText)
     {
-        _handleButtonClick(buttonText, _selectedOption?.Index ?? -1, _checkboxes, FormatTextBoxReturn());
+        _handleButtonClick(buttonText, _selectedIndex, _checkboxes, FormatTextBoxReturn());
     }
 
     private readonly KeyboardKey[] _navKeys = {
         KeyboardKey.Up, KeyboardKey.Down, KeyboardKey.Left,  KeyboardKey.Right,
         KeyboardKey.Kp8, KeyboardKey.Kp2, KeyboardKey.Kp4, KeyboardKey.Kp6,
     };
+
+     private int _selectedIndex = -1;
 
     public override void OnKeyPress(KeyboardKey key)
     {
@@ -274,14 +291,9 @@ public class CivDialog : DynamicSizingDialog
                 }
             }
         }
-
-       
-
         base.OnKeyPress(key);
     }
-
- 
-
+    
     private int GetRows()
     {
         var rows = Math.DivRem(_optionControls.Count, _optionsCols, out var rem);
@@ -298,7 +310,7 @@ public class CivDialog : DynamicSizingDialog
             .ToDictionary(k => k.Name, v => v.Value);
     }
 
-    private List<LabelControl> GetTextLabels(IControlLayout controller, IList<string> texts, IList<TextStyles> styles, IList<string> replaceStrings, IList<int> replaceNumbers)
+    private List<LabelControl> GetTextLabels(IControlLayout controller, IList<string>? texts, IList<TextStyles>? styles, IList<string> replaceStrings, IList<int> replaceNumbers)
     {
         // Group left-aligned texts
         int j = 0;

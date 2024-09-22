@@ -29,7 +29,7 @@ public static class TextureCache
         return GetImage(source, null, -1);
     }
 
-    public static Texture2D GetImage(IImageSource source, IUserInterface activeInterface = null, int civ = -1)
+    public static Texture2D GetImage(IImageSource source, IUserInterface? activeInterface = null, int civ = -1)
     {
         var key = source.GetKey( civ);
         if (!Textures.ContainsKey(key))

@@ -6,8 +6,8 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Statistics;
 using Civ2engine.UnitActions;
-using Civ2engine.UnitActions.Move;
 using Civ2engine.Units;
+using Model.Core;
 
 namespace Civ2engine
 {
@@ -15,7 +15,7 @@ namespace Civ2engine
     {
         public event EventHandler<PlayerEventArgs> OnPlayerEvent;
 
-        private void StartNextTurn()
+        public void StartNextTurn()
         {
             TurnNumber++;
 
@@ -46,7 +46,7 @@ namespace Civ2engine
             {
                 var tile = barbarianGroup.Key;
                 var barbarians = barbarianGroup.ToList();
-                var target = AllCities.OrderBy(c => Utilities.DistanceTo(tile, c, _options.FlatEarth)).FirstOrDefault();
+                var target = AllCities.OrderBy(c => Utilities.DistanceTo(tile, c)).FirstOrDefault();
                 if(target == null) continue;
                 
                 MoveTowards(tile, barbarians, target);
@@ -56,7 +56,7 @@ namespace Civ2engine
         private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
         {
             var destination = MovementFunctions.GetPossibleMoves(this, tile, units[0])
-                .OrderBy(t => Utilities.DistanceTo(t, target, _options.FlatEarth)).FirstOrDefault();
+                .OrderBy(t => Utilities.DistanceTo(t, target)).FirstOrDefault();
             if (destination == null) return;
             
             units.ForEach(b => MovementFunctions.UnitMoved(this, b,  destination, tile));
@@ -102,6 +102,7 @@ namespace Civ2engine
         public void SetHumanPlayer(int civId)
         {
             AllCivilizations.ForEach(c => c.PlayerType = PlayerType.Ai);
+            AllCivilizations[0].PlayerType = PlayerType.Barbarians;
             AllCivilizations[civId].PlayerType = PlayerType.Local;
         }
 
@@ -120,13 +121,13 @@ namespace Civ2engine
                             if (currentTile.UnitsHere.Count(u => u != unit && u.AIrole == AIroleType.Defend) <
                                 2 + currentTile.CityHere.Size / 3)
                             {
-                                if (unit.Order == OrderType.Fortify || unit.Order == OrderType.Fortified)
+                                if (unit.Order == (int)OrderType.Fortify || unit.Order == (int)OrderType.Fortified)
                                 {
-                                    unit.Order = OrderType.Fortified;
+                                    unit.Order = (int)OrderType.Fortified;
                                 }
                                 else
                                 {
-                                    unit.Order = OrderType.Fortify;
+                                    unit.Order = (int)OrderType.Fortify;
                                 }
                                 unit.MovePointsLost = unit.MovePoints;
                             }
@@ -198,7 +199,7 @@ namespace Civ2engine
                         var destination = Random.ChooseFrom(possibleMoves);
                         if (destination.UnitsHere.Count > 0 && destination.UnitsHere[0].Owner != unit.Owner)
                         {
-                            unit.Order = OrderType.NoOrders;
+                            unit.Order = (int)OrderType.NoOrders;
                             MovementFunctions.AttackAtTile(unit, this, destination);
                         }
                         else if (MovementFunctions.UnitMoved(this, unit, destination, currentTile))

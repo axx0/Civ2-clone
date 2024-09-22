@@ -14,11 +14,11 @@ namespace Civ2engine.OriginalSaves
             return Game.Create(rules, gameData, hydrator, ruleset);
         }
 
-        public static void LoadScn(GameData gameData, Ruleset ruleset, Rules rules)
+        public static Game LoadScn(GameData gameData, Ruleset ruleset, Rules rules)
         {
             var hydrator = LoadGameObjects(gameData, ruleset, rules);
 
-            Game.CreateScenario(rules, gameData, hydrator, ruleset);
+            return Game.CreateScenario(rules, gameData, hydrator, ruleset);
         }
 
         /// <summary>

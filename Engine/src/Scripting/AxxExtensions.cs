@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Civ2engine.Enums;
-using Civ2engine.Improvements;
 using Civ2engine.Terrains;
+using Civ2engine.Units;
+using Model.Constants;
 using Neo.IronLua;
 
 // ReSharper disable UnusedMember.Global
@@ -90,10 +91,19 @@ namespace Civ2engine.Scripting
         public Effects LuxMultiplier = Effects.LuxMultiplier;
         public Effects ScienceMultiplier = Effects.ScienceMultiplier;
         public Effects Walled = Effects.Walled;
+        public Effects AirDefence = Effects.AirDefence;
+        public Effects SeaDefence = Effects.SeaDefence;
+        public Effects MissileDefence = Effects.MissileDefence;
+        public Effects ReduceCorruption = Effects.ReduceCorruption;
         
         public Effects EliminateIndustrialPollution = Effects.EliminateIndustrialPollution;
         public Effects IndustrialPollutionModifier = Effects.IndustrialPollutionModifier;
         public Effects EliminatePopulationPollution = Effects.EliminatePopulationPollution;
         public Effects PopulationPollutionModifier = Effects.PopulationPollutionModifier;
+
+        public Effects Epoch = Effects.EpochTech;
+
+        public UnitEffect Partisan = UnitEffect.Partisan;
+        public UnitEffect SdiVulnerable = UnitEffect.SDIVulnerable;
     }
 }

@@ -1,5 +1,7 @@
 using System.Linq;
-using Civ2engine.Improvements;
+using Model;
+using Model.Constants;
+using Model.Interface;
 
 namespace Civ2engine.Production
 {
@@ -11,6 +13,8 @@ namespace Civ2engine.Production
         }
 
         public Improvement Improvement { get; }
+
+        public override string Title => Improvement.Name;
 
         public override bool CompleteProduction(City city, Rules rules)
         {
@@ -42,6 +46,11 @@ namespace Civ2engine.Production
         public override string GetDescription()
         {
             return Improvement.Name;
+        }
+
+        public override ListBoxEntry GetBuildListEntry(IUserInterface active, int firstWonderIndex)
+        {
+            return new ListBoxEntry { LeftText = Improvement.Name, Icon = Improvement.Icon ?? active.GetImprovementImage(Improvement,firstWonderIndex) };
         }
     }
 }

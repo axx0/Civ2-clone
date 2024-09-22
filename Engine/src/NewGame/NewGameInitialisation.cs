@@ -27,7 +27,7 @@ namespace Civ2engine.NewGame
                     Counter = 0,
                     Dead = false,
                     Id = id,
-                    Order = OrderType.NoOrders,
+                    Order = (int)OrderType.NoOrders,
                     Owner = c.Civ,
                     Veteran = false,
                     X = c.StartLocation.X,
@@ -102,10 +102,10 @@ namespace Civ2engine.NewGame
             }
 
             
-            var minDist = Utilities.DistanceTo(config.StartTiles[0], tile, config.FlatWorld);
+            var minDist = Utilities.DistanceTo(config.StartTiles[0], tile);
             for (int i = 1; i < config.StartTiles.Count; i++)
             {
-                var dist = Utilities.DistanceTo(config.StartTiles[i], tile, config.FlatWorld);
+                var dist = Utilities.DistanceTo(config.StartTiles[i], tile);
                 if (dist < minDist)
                 {
                     minDist = dist;

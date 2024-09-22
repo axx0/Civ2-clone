@@ -4,6 +4,7 @@ using System.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Model.Core;
 
 namespace Civ2engine.Terrains
 {

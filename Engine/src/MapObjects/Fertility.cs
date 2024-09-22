@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
+using Model.Core;
 
 namespace Civ2engine.MapObjects
 {

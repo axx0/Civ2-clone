@@ -68,7 +68,7 @@ namespace RaylibUI
 
                 int screenHeight = Raylib.GetScreenHeight();
 
-                _activeScreen.Draw(pulse);
+                 _activeScreen.Draw(pulse);
 
                 Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.Magenta);
 

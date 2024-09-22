@@ -12,13 +12,12 @@ namespace Civ2engine
             
             using var file = new StreamReader(filePath);
             
-            string line;
-            string section = null;
-            List<string> contents = null;
-            var reading = false;
+            string? line;
+            string? section = null;
+            List<string> contents = new();
             while ((line = file.ReadLine()) != null)
             {
-                if (reading)
+                if (section != null)
                 {
                     if (allowBlanks && string.IsNullOrWhiteSpace(line))
                     {
@@ -26,13 +25,13 @@ namespace Civ2engine
                         if (string.IsNullOrWhiteSpace(line) || line.StartsWith(';'))
                         {
                             handler.ProcessSection(section, contents);
-                            reading = false;
+                            section = null;
                         }
                         else if (line.StartsWith('@'))
                         {
                             handler.ProcessSection(section, contents);
                             section = line[1..];
-                            contents = new List<string>();
+                            contents.Clear();
                         }
                         else
                         {
@@ -42,7 +41,7 @@ namespace Civ2engine
                     }else if (string.IsNullOrWhiteSpace(line) || line.StartsWith(';'))
                     {
                         handler.ProcessSection(section, contents);
-                        reading = false;
+                        section = null;
                     }
                     else
                     {
@@ -53,12 +52,11 @@ namespace Civ2engine
                 {
                     if (!line.StartsWith('@')) continue;
                     section = line[1..].TrimEnd();
-                    reading = true;
                     contents = new List<string>();
                 }
             }
 
-            if (reading && contents.Count > 0)
+            if (section != null && contents.Count > 0)
             {
                 handler.ProcessSection(section, contents);
             }

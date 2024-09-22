@@ -1,8 +1,8 @@
 using System;
 using System.Text;
 using System.Threading;
-using Civ2engine.Improvements;
 using Civ2engine.MapObjects;
+using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Scripting.UI;
 using Civ2engine.Units;
 
@@ -46,14 +46,19 @@ namespace Civ2engine.Scripting
             unit.CurrentLocation = tile;
         };
 
-        public Improvement getImprovement(int index)
+        public CityImprovement getImprovement(int index)
         {
-            return _game.Rules.Improvements[index];
+            return new CityImprovement(_game.Rules.Improvements[index]);
         }
 
         public Tech getTech(int index)
         {
             return new Tech(_game.Rules.Advances,index);
+        }
+
+        public UnitType getUnitType(int index)
+        {
+            return new UnitType(_game.Rules.UnitTypes[index]);
         }
     }
 }

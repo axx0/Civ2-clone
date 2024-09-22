@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Civ2engine.IO;
 
 // ReSharper disable UnusedMember.Global
 // ReSharper disable InconsistentNaming

@@ -5,6 +5,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model;
+using Model.Core;
 using Model.Menu;
 using Raylib_cs;
 
@@ -12,7 +13,7 @@ namespace RaylibUI.RunGame.GameModes.Orders;
 
 public class FortifyOrder : Order
 {
-    private readonly Game _game;
+    private readonly IGame _game;
     private readonly LocalPlayer _player;
 
     public FortifyOrder(GameScreen gameScreen) : 
@@ -42,7 +43,7 @@ public class FortifyOrder : Order
     public override void Action()
     {
         Debug.Assert(_player.ActiveUnit != null, "_player.ActiveUnit != null");
-        _player.ActiveUnit.Order = OrderType.Fortify;
+        _player.ActiveUnit.Order = (int)OrderType.Fortify;
         _player.ActiveUnit.MovePointsLost = _player.ActiveUnit.MaxMovePoints;
         _game.ChooseNextUnit();
     }

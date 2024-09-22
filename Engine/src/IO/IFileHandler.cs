@@ -4,5 +4,5 @@ namespace Civ2engine;
 
 public interface IFileHandler
 {
-    void ProcessSection(string section, List<string> contents);
+    void ProcessSection(string section, List<string>? contents);
 }

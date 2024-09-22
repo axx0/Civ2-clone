@@ -3,17 +3,10 @@ namespace Model.Interface;
 public class ListBoxDefinition
 {
     /// <summary>
-    /// List of left-aligned texts
+    /// List of entries for the listbox to display
     /// </summary>
-    public List<string> LeftText { get; set; }
-
-    /// <summary>
-    /// List of right-aligned texts
-    /// </summary>
-    public List<string> RightText { get; set; }
- 
-    /// <summary>
-    /// List of icons left of text
-    /// </summary>
-    //public List<Bitmap> Icons { get; set; }
+    public List<ListBoxEntry> Entries { get; set; }
+    
+    
+    public bool Vertical { get; set; }
 }

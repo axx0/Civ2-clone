@@ -1,6 +1,5 @@
 using System.Numerics;
 using Civ2engine;
-using Civ2engine.Improvements;
 using Model;
 using Model.Images;
 using Raylib_cs;
@@ -36,8 +35,7 @@ public class FoodStorageBox : BaseControl
     {
         base.Draw(pulse);
     
-
-    var foodPerRow = _cityWindow.City.Size + 1;
+        var foodPerRow = _cityWindow.City.Size + 1;
         var spacing = _foodIcon.Width;
         var boxWidth = _foodIcon.Width * foodPerRow + 6;
         

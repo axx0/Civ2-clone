@@ -9,10 +9,4 @@
     <ItemGroup>
       <PackageReference Include="Raylib-cs" Version="6.0.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\Engine\Core.csproj" />
-    </ItemGroup>
-
-
 </Project>

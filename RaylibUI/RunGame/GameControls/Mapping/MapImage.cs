@@ -1,6 +1,7 @@
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Model.Core;
 using Model.Images;
 using Model.ImageSets;
 using RaylibUtils;
@@ -26,7 +27,7 @@ public static class MapImage
     public static Rectangle TileRec = new (0, 0, 64, 32);
 
     internal static TileDetails MakeTileGraphic(Tile tile, Map map,
-        TerrainSet terrainSet, Game game, int civilizationId)
+        TerrainSet terrainSet, IGame game, int civilizationId)
     {
         // Define base bitmap for drawing
         var tilePic = Raylib.ImageCopy(Images.ExtractBitmap(terrainSet.BaseTiles[(int)tile.Type]));

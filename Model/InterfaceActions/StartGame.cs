@@ -1,15 +1,16 @@
 using Civ2engine;
+using Model.Core;
 
 namespace Model.InterfaceActions;
 
 public class StartGame : IInterfaceAction
 {
-    public StartGame(Game game)
+    public StartGame(IGame game)
     {
         Game = game;
     }
 
     public string Name => "StartGame";
     public EventType ActionType => EventType.StartGame;
-    public Game Game { get; }
+    public IGame Game { get; }
 }

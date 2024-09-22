@@ -37,6 +37,11 @@
 
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="src\Improvements\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj" />
   </ItemGroup>
 
 </Project>

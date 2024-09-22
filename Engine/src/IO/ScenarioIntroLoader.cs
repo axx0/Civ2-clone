@@ -21,7 +21,7 @@ namespace Civ2engine.IO
             return loader._box;
         }
 
-        public void ProcessSection(string section, List<string> contents)
+        public void ProcessSection(string section, List<string>? contents)
         {
             var str = contents.FirstOrDefault(s => s.Contains("@width", StringComparison.OrdinalIgnoreCase));
             if (str != null)
