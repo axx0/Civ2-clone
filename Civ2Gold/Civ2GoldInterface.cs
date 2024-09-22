@@ -76,28 +76,7 @@ public class Civ2GoldInterface : Civ2Interface
     {
         base.Initialize();
 
-        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(SinaiPic, new Point(0.08, 0.09)));
-        DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(StPeterburgPic, new Point(0, 0.09)));
-        DialogHandlers["CUSTOMSIZE"].Dialog.Decorations.Add(new Decoration(StPeterburgPic, new Point(0, 0.09)));
-        DialogHandlers["CUSTOMLAND"].Dialog.Decorations.Add(new Decoration(StPeterburgPic, new Point(0, 0.09)));
-        DialogHandlers["CUSTOMFORM"].Dialog.Decorations.Add(new Decoration(IslandPic, new Point(0, 0.09)));
-        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(DesertPic, new Point(0, 0.09)));
-        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(SnowPic, new Point(0, 0.09)));
-        DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(CanyonPic, new Point(0, 0.09)));
-        DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(MingGeneralPic, new Point(-0.08, 0.09)));
-        DialogHandlers["ENEMIES"].Dialog.Decorations.Add(new Decoration(AncientPersonsPic, new Point(0.08, 0.09)));
-        DialogHandlers["BARBARITY"].Dialog.Decorations.Add(new Decoration(BarbariansPic, new Point(-0.08, 0.09)));
-        DialogHandlers["RULES"].Dialog.Decorations.Add(new Decoration(GalleyPic, new Point(0.08, 0.09)));
-        DialogHandlers["ADVANCED"].Dialog.Decorations.Add(new Decoration(GalleyPic, new Point(-0.08, 0.09)));
-        DialogHandlers["ACCELERATED"].Dialog.Decorations.Add(new Decoration(GalleyPic, new Point(0.08, 0.09)));
-        DialogHandlers["GENDER"].Dialog.Decorations.Add(new Decoration(PeoplePic1, new Point(0.0, 0.09)));
-        DialogHandlers["TRIBE"].Dialog.Decorations.Add(new Decoration(PeoplePic2, new Point(0.0, 0.09)));
-        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations.Add(new Decoration(PeoplePic2, new Point(0.0, 0.09)));
-        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations.Add(new Decoration(PeoplePic2, new Point(0.0, 0.09)));
-        DialogHandlers["NAME"].Dialog.Decorations.Add(new Decoration(PeoplePic2, new Point(0.0, 0.09)));
-        DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(TemplePic, new Point(0.08, 0.09)));
-
-        PicSources = new Dictionary<string, BitmapStorage[]>
+        PicSources = new()
         {
             { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS", new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), searchFlagLoc: true)).ToArray() },
             { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(597, 30, 12, 20)) } },
@@ -152,6 +131,22 @@ public class Civ2GoldInterface : Civ2Interface
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray() },
             { "globalWarming", Enumerable.Range(0, 4).Select(col =>
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray() },
+            { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D) } },
+            { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64)) } },
+            { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64)) } },
+            { "sinaiPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0x9F78) } },
+            { "stPeterburgPic", new[]{ new BinaryStorage("Intro.dll", 0x285A8, 0x15D04) } },
+            { "desertPic", new[]{ new BinaryStorage("Intro.dll", 0xD0140, 0xA35A) } },
+            { "snowPic", new[]{ new BinaryStorage("Intro.dll", 0xE2E1C, 0xA925) } },
+            { "canyonPic", new[]{ new BinaryStorage("Intro.dll", 0xC51B8, 0xAF88) } },
+            { "mingGeneralPic", new[]{ new BinaryStorage("Intro.dll", 0x3E2AC, 0x1D183) } },
+            { "islandPic", new[]{ new BinaryStorage("Intro.dll", 0xDA49C, 0x8980) } },
+            { "ancientPersonsPic", new[]{ new BinaryStorage("Intro.dll", 0x5B430, 0x15D04) } },
+            { "barbariansPic", new[]{ new BinaryStorage("Intro.dll", 0x71134, 0x13D5B) } },
+            { "galleyPic", new[]{ new BinaryStorage("Intro.dll", 0xB6A3C, 0xE77A) } },
+            { "peoplePic1", new[]{ new BinaryStorage("Intro.dll", 0x84E90, 0x129CE) } },
+            { "peoplePic2", new[]{ new BinaryStorage("Intro.dll", 0x97860, 0x139A0) } },
+            { "templePic", new[]{ new BinaryStorage("Intro.dll", 0xAB200, 0xB839) } },
         };
 
         var src = new BitmapStorage[6 * 8];
@@ -174,6 +169,28 @@ public class Civ2GoldInterface : Civ2Interface
             src[4 * i + 3] = new BitmapStorage("TERRAIN2", new Rectangle(34 + 66 * i, 463, 32, 16));
         }
         PicSources.Add("coastline", src);
+
+
+        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(PicSources["sinaiPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMSIZE"].Dialog.Decorations.Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMLAND"].Dialog.Decorations.Add(new Decoration(PicSources["stPeterburgPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMFORM"].Dialog.Decorations.Add(new Decoration(PicSources["islandPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(PicSources["desertPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(PicSources["snowPic"][0], new Point(0, 0.09)));
+        DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(PicSources["canyonPic"][0], new Point(0, 0.09)));
+        DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(PicSources["mingGeneralPic"][0], new Point(-0.08, 0.09)));
+        DialogHandlers["ENEMIES"].Dialog.Decorations.Add(new Decoration(PicSources["ancientPersonsPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["BARBARITY"].Dialog.Decorations.Add(new Decoration(PicSources["barbariansPic"][0], new Point(-0.08, 0.09)));
+        DialogHandlers["RULES"].Dialog.Decorations.Add(new Decoration(PicSources["galleyPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ADVANCED"].Dialog.Decorations.Add(new Decoration(PicSources["galleyPic"][0], new Point(-0.08, 0.09)));
+        DialogHandlers["ACCELERATED"].Dialog.Decorations.Add(new Decoration(PicSources["galleyPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["GENDER"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic1"][0], new Point(0.0, 0.09)));
+        DialogHandlers["TRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["NAME"].Dialog.Decorations.Add(new Decoration(PicSources["peoplePic2"][0], new Point(0.0, 0.09)));
+        DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
     }
 
     protected override List<MenuDetails> MenuMap { get; } = new List<MenuDetails>
@@ -389,24 +406,9 @@ public class Civ2GoldInterface : Civ2Interface
         }
     };
 
-    private static readonly IImageSource SinaiPic = new BinaryStorage("Intro.dll", 0x1E630, 0x9F78);
-    private static readonly IImageSource StPeterburgPic = new BinaryStorage("Intro.dll", 0x285A8, 0x15D04);
-    private static readonly IImageSource DesertPic = new BinaryStorage("Intro.dll", 0xD0140, 0xA35A);
-    private static readonly IImageSource SnowPic = new BinaryStorage("Intro.dll", 0xE2E1C, 0xA925);
-    private static readonly IImageSource CanyonPic = new BinaryStorage("Intro.dll", 0xC51B8, 0xAF88);
-    private static readonly IImageSource MingGeneralPic = new BinaryStorage("Intro.dll", 0x3E2AC, 0x1D183);
-    private static readonly IImageSource IslandPic = new BinaryStorage("Intro.dll", 0xDA49C, 0x8980);
-    private static readonly IImageSource AncientPersonsPic = new BinaryStorage("Intro.dll", 0x5B430, 0x15D04);
-    private static readonly IImageSource BarbariansPic = new BinaryStorage("Intro.dll", 0x71134, 0x13D5B);
-    private static readonly IImageSource GalleyPic = new BinaryStorage("Intro.dll", 0xB6A3C, 0xE77A);
-    private static readonly IImageSource PeoplePic1 = new BinaryStorage("Intro.dll", 0x84E90, 0x129CE);
-    private static readonly IImageSource PeoplePic2 = new BinaryStorage("Intro.dll", 0x97860, 0x139A0);
-    private static readonly IImageSource TemplePic = new BinaryStorage("Intro.dll", 0x97860, 0xB839);
-    public override IImageSource BackgroundImage => new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D);
-
     public override int UnitsRows => 7;
     public override int UnitsPxHeight => 48;
-    public override Dictionary<string, BitmapStorage[]> PicSources { get; set; }
+    public override Dictionary<string, IImageSource[]> PicSources { get; set; }
 
     public override void GetShieldImages()
     {

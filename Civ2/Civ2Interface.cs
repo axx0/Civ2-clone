@@ -82,7 +82,6 @@ public abstract class Civ2Interface : IUserInterface
         return DialogHandlers[InitialMenu].Show(this);
     }
 
-    public virtual IImageSource? BackgroundImage => null;
     public IImageSource? ScenTitleImage { get; set; } = null;
     
     public int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize)
@@ -334,7 +333,7 @@ public abstract class Civ2Interface : IUserInterface
 
     public abstract int UnitsRows { get; }
     public abstract int UnitsPxHeight { get; }
-    public abstract Dictionary<string, BitmapStorage[]> PicSources { get; set; }
+    public abstract Dictionary<string, IImageSource[]> PicSources { get; set; }
     public abstract void GetShieldImages();
     public abstract UnitShield UnitShield(int unitType);
     public abstract void DrawBorderWallpaper(Wallpaper wallpaper, ref Image destination, int height, int width, Padding padding, bool statusPanel);

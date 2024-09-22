@@ -20,7 +20,6 @@ public interface IUserInterface
     IInterfaceAction ProcessDialog(string dialogName, DialogResult dialogResult);
     IInterfaceAction GetInitialAction();
     
-    IImageSource? BackgroundImage { get; }
     IImageSource? ScenTitleImage { get; set; }
     int GetCityIndexForStyle(int cityStyleIndex, City city, int citySize);
     void LoadPlayerColours();
@@ -45,7 +44,7 @@ public interface IUserInterface
     
     CityWindowLayout GetCityWindowDefinition();
 
-    Dictionary<string, BitmapStorage[]> PicSources { get; }
+    Dictionary<string, IImageSource[]> PicSources { get; }
     IList<ResourceImage> ResourceImages { get; }
     PopupBox? GetDialog(string dialogName);
 

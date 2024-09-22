@@ -28,7 +28,7 @@ public class Quit : IGameCommand
     public void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        _gameScreen.ShowPopup("REALLYQUIT", DialogClick);
+        _gameScreen.ShowPopup("REALLYQUIT", DialogClick, dialogImage: new(new[] { _gameScreen.Main.ActiveInterface.PicSources["backgroundImageSmall2"][0] }));
     }
 
     private void DialogClick(string button, int option, IList<bool>? _, IDictionary<string, string>? _2)

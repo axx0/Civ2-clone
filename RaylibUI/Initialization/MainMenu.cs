@@ -160,7 +160,7 @@ public class MainMenu : BaseScreen
 
     public ScreenBackground? CreateBackgroundImage()
     {
-        var backGroundImage = MainWindow.ActiveInterface.BackgroundImage;
+        var backGroundImage = MainWindow.ActiveInterface.PicSources["backgroundImage"][0];
         if (backGroundImage != null)
         {
             var img = Images.ExtractBitmap(backGroundImage, MainWindow.ActiveInterface);

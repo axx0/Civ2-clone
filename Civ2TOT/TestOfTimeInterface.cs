@@ -157,33 +157,13 @@ public class TestOfTimeInterface : Civ2Interface
     {
         base.Initialize();
 
-        DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
-        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(ObservatoryPic, new Point(0.08, 0.09)));
-        DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(HorzionPic, new Point(0.08, 0.09)));
-        DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(CreaturePic, new Point(0.08, 0.09)));
-        DialogHandlers["ENEMIES"].Dialog.Decorations.Add(new Decoration(DuelPic, new Point(0.08, 0.09)));
-        DialogHandlers["BARBARITY"].Dialog.Decorations.Add(new Decoration(KnightsPic, new Point(0.08, 0.09)));
-        DialogHandlers["RULES"].Dialog.Decorations.Add(new Decoration(BookPic, new Point(0.08, 0.09)));
-        DialogHandlers["ADVANCED"].Dialog.Decorations.Add(new Decoration(BookPic, new Point(0.08, 0.09)));
-        //DialogHandlers["OPPONENT"].Dialog.Decorations.Add(new Decoration(BookPic, new Point(0.08, 0.09)));
-        DialogHandlers["ACCELERATED"].Dialog.Decorations.Add(new Decoration(BookPic, new Point(0.08, 0.09)));
-        DialogHandlers["GENDER"].Dialog.Decorations.Add(new Decoration(LabPic, new Point(0.08, 0.09)));
-        DialogHandlers["TRIBE"].Dialog.Decorations.Add(new Decoration(TemplePic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations.Add(new Decoration(TemplePic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations.Add(new Decoration(TemplePic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(ManorPic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMFORM"].Dialog.Decorations.Add(new Decoration(ShipPic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(RocksPic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(HotplanetPic, new Point(0.08, 0.09)));
-        DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(AlienplanetPic, new Point(0.08, 0.09)));
-
         if (Dialogs.TryGetValue(MainMenu.Title + "2", out var menu2))
         {
             var existingDialog = DialogHandlers[MainMenu.Title].Dialog.Dialog;
             existingDialog.Options = menu2.Options.Concat(existingDialog.Options.Skip(5)).ToList();
         }
 
-        PicSources = new Dictionary<string, BitmapStorage[]>
+        PicSources = new()
         {
             { "unit", Enumerable.Range(0, 9 * UnitsRows).Select(i => new BitmapStorage("UNITS", new Rectangle(1 + 65 * (i % 9), 1 + (UnitsPxHeight + 1) * (i / 9), 64, UnitsPxHeight), true, true)).ToArray() },
             { "HPshield", new[] { new BitmapStorage("UNITS", new Rectangle(586, 1, 32, 10), true) } },
@@ -236,6 +216,21 @@ public class TestOfTimeInterface : Civ2Interface
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14), true)).ToArray() },
             { "globalWarming", Enumerable.Range(0, 4).Select(col =>
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14), true)).ToArray() },
+            { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0x100740, 0x12702) } },
+            { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(398, 134, 64, 64)) } },
+            { "observatoryPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0xACDC) } },
+            { "horzionPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0xACDC) } },
+            { "creaturePic", new[]{ new BinaryStorage("Intro.dll", 0x2EBB4, 0x14600) } },
+            { "duelPic", new[]{ new BinaryStorage("Intro.dll", 0x431B4, 0x177AF) } },
+            { "knightsPic", new[]{ new BinaryStorage("Intro.dll", 0x5A964, 0xEB67) } },
+            { "labPic", new[]{ new BinaryStorage("Intro.dll", 0x694CC, 0xFC4B) } },
+            { "templePic", new[]{ new BinaryStorage("Intro.dll", 0x79118, 0x10EBB) } },
+            { "manorPic", new[]{ new BinaryStorage("Intro.dll", 0x89FD4, 0x13AA8) } },
+            { "bookPic", new[]{ new BinaryStorage("Intro.dll", 0x9DA7C, 0x162AE) } },
+            { "alienplanetPic", new[]{ new BinaryStorage("Intro.dll", 0xB3D2C, 0x988D) } },
+            { "rocksPic", new[]{ new BinaryStorage("Intro.dll", 0xBD5BC, 0xBF78) } },
+            { "shipPic", new[]{ new BinaryStorage("Intro.dll", 0xC9534, 0x5A03) } },
+            { "hotplanetPic", new[]{ new BinaryStorage("Intro.dll", 0xCEF38, 0x9130) } },
         };
 
         var src = new BitmapStorage[6 * 8];
@@ -258,6 +253,27 @@ public class TestOfTimeInterface : Civ2Interface
             src[4 * i + 3] = new BitmapStorage("TERRAIN2", new Rectangle(34 + 66 * i, 463, 32, 16), true);
         }
         PicSources.Add("coastline", src);
+
+
+        DialogHandlers["STARTMENU"].Dialog.Decorations.Add(new Decoration(PicSources["observatoryPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["MAINMENU"].Dialog.Decorations.Add(new Decoration(PicSources["observatoryPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["SIZEOFMAP"].Dialog.Decorations.Add(new Decoration(PicSources["horzionPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["DIFFICULTY"].Dialog.Decorations.Add(new Decoration(PicSources["creaturePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ENEMIES"].Dialog.Decorations.Add(new Decoration(PicSources["duelPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["BARBARITY"].Dialog.Decorations.Add(new Decoration(PicSources["knightsPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["RULES"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ADVANCED"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
+        //DialogHandlers["OPPONENT"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["ACCELERATED"].Dialog.Decorations.Add(new Decoration(PicSources["bookPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["GENDER"].Dialog.Decorations.Add(new Decoration(PicSources["labPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["TRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMTRIBE"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMTRIBE2"].Dialog.Decorations.Add(new Decoration(PicSources["templePic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMCITY"].Dialog.Decorations.Add(new Decoration(PicSources["manorPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMFORM"].Dialog.Decorations.Add(new Decoration(PicSources["shipPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMCLIMATE"].Dialog.Decorations.Add(new Decoration(PicSources["rocksPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMTEMP"].Dialog.Decorations.Add(new Decoration(PicSources["hotplanetPic"][0], new Point(0.08, 0.09)));
+        DialogHandlers["CUSTOMAGE"].Dialog.Decorations.Add(new Decoration(PicSources["alienplanetPic"][0], new Point(0.08, 0.09)));
     }
 
     protected override List<MenuDetails> MenuMap { get; } = new List<MenuDetails>
@@ -464,24 +480,10 @@ public class TestOfTimeInterface : Civ2Interface
         }
     };
 
-    private static readonly IImageSource ObservatoryPic = new BinaryStorage("Intro.dll", 0x1E630, 0xACDC);
-    private static readonly IImageSource HorzionPic = new BinaryStorage("Intro.dll", 0x1E630, 0xACDC);
-    private static readonly IImageSource CreaturePic = new BinaryStorage("Intro.dll", 0x2EBB4, 0x14600);
-    private static readonly IImageSource DuelPic = new BinaryStorage("Intro.dll", 0x431B4, 0x177AF);
-    private static readonly IImageSource KnightsPic = new BinaryStorage("Intro.dll", 0x5A964, 0xEB67);
-    private static readonly IImageSource LabPic = new BinaryStorage("Intro.dll", 0x694CC, 0xFC4B);
-    private static readonly IImageSource TemplePic = new BinaryStorage("Intro.dll", 0x79118, 0x10EBB);
-    private static readonly IImageSource ManorPic = new BinaryStorage("Intro.dll", 0x89FD4, 0x13AA8);
-    private static readonly IImageSource BookPic = new BinaryStorage("Intro.dll", 0x9DA7C, 0x162AE);
-    private static readonly IImageSource AlienplanetPic = new BinaryStorage("Intro.dll", 0xB3D2C, 0x988D);
-    private static readonly IImageSource RocksPic = new BinaryStorage("Intro.dll", 0xBD5BC, 0xBF78);
-    private static readonly IImageSource ShipPic = new BinaryStorage("Intro.dll", 0xC9534, 0x5A03);
-    private static readonly IImageSource HotplanetPic = new BinaryStorage("Intro.dll", 0xCEF38, 0x9130);
-
     public override int UnitsRows => 9;
     public override int UnitsPxHeight => 64;
 
-    public override Dictionary<string, BitmapStorage[]> PicSources { get; set; }
+    public override Dictionary<string, IImageSource[]> PicSources { get; set; }
 
     public override void LoadPlayerColours()
     {
