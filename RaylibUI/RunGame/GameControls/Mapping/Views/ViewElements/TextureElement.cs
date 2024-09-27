@@ -28,11 +28,10 @@ public class TextureElement : IViewElement
     public Tile Tile { get; set; }
     public bool IsTerrain { get; }
     public bool IsShaded { get; }
-
-
+    
     public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
-        var loc = adjustedLocation - Offset + Offset * scale;
+        var loc = adjustedLocation - Offset + (Offset * scale);
 
         if (isShaded)
         {

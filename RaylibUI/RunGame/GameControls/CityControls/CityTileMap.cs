@@ -21,6 +21,8 @@ public class CityTileMap : BaseControl
     private readonly IUserInterface _active;
     private readonly int _organizationLevel;
 
+    private IList<IViewElement> _viewElements;
+
     public CityTileMap(CityWindow cityWindow, IGame game) : base(cityWindow)
     {
         _cityWindow = cityWindow;
@@ -155,7 +157,8 @@ public class CityTileMap : BaseControl
             }
             city.AutoAddDistributionWorkers(gameScreen.Game.Rules);
                     
-        }else if (tile.WorkedBy != null)
+        }
+        else if (tile.WorkedBy != null)
         {
             if (tile.WorkedBy != city)
             {
@@ -181,8 +184,14 @@ public class CityTileMap : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0, _scaleFactor, Color.White);
+        var adjustedLocation = Location + _offset;
+        Raylib.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
 
+        foreach (var element in _viewElements)
+        {
+            element.Draw(element.Location * _scaleFactor + adjustedLocation, _scaleFactor);
+        }
+        
         Raylib.DrawTextEx(_active.Look.CityWindowFont, _text,
             new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 
             _active.Look.CityWindowFontSize, 1, Color.Gold);
@@ -210,21 +219,23 @@ public class CityTileMap : BaseControl
         var ycentre = height / 2 - dim.HalfHeight;
         var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
 
+        var elements = new List<IViewElement>();
         var cityData = new List<Element>();
-        var units = new List<Element>();
         var activeCiv = _cityWindow.CurrentGameScreen.Player.Civilization;
         foreach (var tile in city.Location.CityRadius())
         {
-            // TODO: city.owner should be replaced by the current active user when viewing other peoples cities
+            // We use the active civ here not the city owner as we may be viewing other players cities
             if (tile.IsVisible(activeCiv.Id))
             {
                 var tileImage = tileCache.GetTileDetails(tile, city.Owner.Id);
                 var locationX = xcentre + (tile.X - city.Location.X) * dim.HalfWidth;
                 var locationY = ycentre + (tile.Y - city.Location.Y) * dim.HalfHeight;
+                var dstRec = new Rectangle(locationX,
+                    locationY, dim.TileWidth, dim.TileHeight);
+                
                 Raylib.ImageDraw(ref image, tileImage.Image,
                     MapImage.TileRec,
-                    new Rectangle(locationX,
-                        locationY, dim.TileWidth, dim.TileHeight),
+                    dstRec,
                     Color.White);
                 if (tile.CityHere != null)
                 {
@@ -244,12 +255,13 @@ public class CityTileMap : BaseControl
                     {
                         Image = Images.ExtractBitmap(cities.Sets[cityStyleIndex][sizeIncrement]
                             .Image, gameScreen.Main.ActiveInterface),
-                        X = locationX,
-                        Y = locationY - dim.HalfHeight
+                        DestRec = dstRec
                     });
                 }
                 else if (tile.UnitsHere.Any(u => u.Owner != city.Owner))
                 {
+                    ImageUtils.GetUnitTextures(tile.GetTopUnit(), _active, _cityWindow.CurrentGameScreen.Game, elements,
+                        new Vector2(locationX, locationY - (int)unitsSet.UnitRectangle.Height + dim.TileHeight), true);
                     // units.Add(new Element()
                     // {
                     //     Image = ImageUtils.GetUnitImage(gameScreen.Main.ActiveInterface, tile.GetTopUnit()),
@@ -260,8 +272,9 @@ public class CityTileMap : BaseControl
 
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
                 {
-                    Raylib.ImageDraw(ref image, Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active), 
-                        MapImage.TileRec, MapImage.TileRec with { X = locationX, Y = locationY }, Color.Red);
+                    Raylib.ImageDraw(ref image,
+                        Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active),
+                        MapImage.TileRec, dstRec, Color.Red);
                 }
             }
         }
@@ -270,16 +283,10 @@ public class CityTileMap : BaseControl
         foreach (var cityDetails in cityData)
         {
             Raylib.ImageDraw(ref image, cityDetails.Image, cities.CityRectangle,
-                cities.CityRectangle with { X = cityDetails.X, Y = cityDetails.Y },
+                cityDetails.DestRec,
                 Color.White);
         }
 
-        foreach (var unitDetails in units)
-        {
-            Raylib.ImageDraw(ref image, unitDetails.Image, unitsSet.UnitRectangle,
-                unitsSet.UnitRectangle with { X = unitDetails.X, Y = unitDetails.Y },
-                Color.White);
-        }
 
         var resources =
             gameScreen.Main.ActiveInterface.ResourceImages.ToDictionary(k => k.Name,
@@ -288,9 +295,10 @@ public class CityTileMap : BaseControl
         var lowOrganisation = _organizationLevel == 0;
         var totalDrawWidth = dim.TileWidth - 20;
         var resourceXOffset = 10;
-        var resourceWidth = resources.First().Value.Height;
-        var resourceYOffset = dim.HalfHeight - resourceWidth / 2;
-        var resourceRect = new Rectangle(0, 0, resourceWidth, resourceWidth);
+        var resourceWidth = resources.First().Value.Width;
+        var resourceHeight = resources.First().Value.Height;
+        var resourceYOffset = dim.HalfHeight - resourceHeight / 2;
+        var resourceRect = new Rectangle(0, 0, resourceWidth, resourceHeight);
         foreach (var workedTile in city.WorkedTiles)
         {
             var food = workedTile.GetFood(lowOrganisation);
@@ -327,16 +335,18 @@ public class CityTileMap : BaseControl
             Raylib.UnloadTexture(_texture.Value);
         }
 
+        _viewElements = elements;
+
         _texture = Raylib.LoadTextureFromImage(image);
         _scaleFactor = Width / (float)_texture.Value.Width;
-        _offset = new Vector2(0, (height - height * _scaleFactor) / 2f);
+        
+        _offset = new Vector2(0, (Height - height * _scaleFactor) / 2f);
         Raylib.UnloadImage(image);
     }
 }
 
 public struct Element
 {
-    public Image Image { get; set; }
-    public int X { get; set; }
-    public int Y { get; set; }
+    public Image Image { get; init; }
+    public Rectangle DestRec { get; init; }
 }
