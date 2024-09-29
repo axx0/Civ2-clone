@@ -10,7 +10,7 @@ public class CivDialogListBox : ScrollBox
     {
     }
 
-    private static IList<BaseControl>? MakeLabels(IControlLayout controller, ListBoxDefinition boxDetails)
+    private static List<ScrollBoxElement> MakeLabels(IControlLayout controller, ListBoxDefinition boxDetails)
     {
         var hasIcons = false;
         var rightText = false;
@@ -30,7 +30,12 @@ public class CivDialogListBox : ScrollBox
 
         if (hasIcons)
         {
-            return boxDetails.Entries.Select((entry, index) => (BaseControl)new DialogLabel(controller, entry, index))
+            return boxDetails.Entries.Select((entry, index) => new ScrollBoxElement(controller,
+                    new IControl[]
+                    {
+                        new IconContainer(controller, entry.Icon, index),
+                        new LabelControl(controller, entry.LeftText ?? "", true)
+                    }, flexElement: 1))
                 .ToList();
         }
 
@@ -39,16 +44,11 @@ public class CivDialogListBox : ScrollBox
 
         }
 
-        return boxDetails.Entries
-            .Select(e => (BaseControl)new LabelControl(controller, e.LeftText ?? string.Empty, false)).ToList();
-    }
-}
-
-internal class DialogLabel : ControlGroup
-{
-    public DialogLabel(IControlLayout controller, ListBoxEntry entry, int index) : base(controller, flexElement: 1, eventTransparent: false)
-    {
-        AddChild(new IconContainer(controller, entry.Icon, index));
-        AddChild(new LabelControl(controller, entry.LeftText, true));
+        return boxDetails.Entries.Select((entry, index) => new ScrollBoxElement(controller,
+                new IControl[]
+                {
+                    new LabelControl(controller, entry.LeftText ?? "", true)
+                } ))
+            .ToList();
     }
 }

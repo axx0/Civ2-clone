@@ -1,7 +1,7 @@
 
 using Raylib_cs;
 using RaylibUI.BasicTypes;
-using RaylibUI.BasicTypes.Controls;
+using RaylibUI.ComplexControls.ScrollBox;
 
 namespace RaylibUI;
 
@@ -10,34 +10,40 @@ public class ScrollBox : BaseControl
     private readonly bool _vertical;
     private readonly int? _maxColumns;
     private int _scrollIndex;
-    private IList<BaseControl> _allLabels;
+    private IList<ScrollBoxElement> _allLabels;
     private int _maxChildWidth;
     private int _labelHeight;
     private ScrollBar? _scrollBar;
     private int _rows;
     private int _columns;
+    private int _requiredColumns;
+
+    public override bool CanFocus => Children?.Any(c => c.CanFocus) ?? false;
 
     public event EventHandler<ScrollBoxSelectionEventArgs>? ItemSelected;
 
     public ScrollBox(IControlLayout controller, bool vertical = false, int? maxColumns = null,
-        IList<BaseControl>? initialEntries = null) : base(controller)
+        IList<ScrollBoxElement>? initialEntries = null) : base(controller)
     {
         _vertical = vertical;
         _maxColumns = maxColumns;
-        _allLabels = initialEntries ?? Array.Empty<BaseControl>();
+        _allLabels = initialEntries ?? Array.Empty<ScrollBoxElement>();
+        ConnectElements();
+    }
+
+    private void ConnectElements()
+    {
         foreach (var control in _allLabels)
         {
-            control.Click += OnControlClick;
+            control.Scroll = Move;
+            control.Selected = Selected;
         }
     }
 
-    private void OnControlClick(object? sender, MouseEventArgs args)
+    private void Selected(ScrollBoxElement control, bool soft)
     {
-        if (sender is BaseControl control)
-        {
-            ItemSelected?.Invoke(sender,
-                new ScrollBoxSelectionEventArgs(args, _allLabels.IndexOf(control)));
-        }
+        ItemSelected?.Invoke(control,
+            new ScrollBoxSelectionEventArgs(control.Text,  _allLabels.IndexOf(control), soft));
     }
 
     public override int GetPreferredWidth()
@@ -117,6 +123,7 @@ public class ScrollBox : BaseControl
         var totalVisible = actualColumns * _rows;
         if (_vertical)
         {
+            _requiredColumns = actualColumns;
             var requiredRows = (int)Math.Ceiling(_allLabels.Count / (double)actualColumns);
             if (_rows < requiredRows)
             {
@@ -128,11 +135,11 @@ public class ScrollBox : BaseControl
         }
         else
         {
-            var requiredColumns = (int)Math.Ceiling(_allLabels.Count / (double)_rows);
-            if (requiredColumns > actualColumns)
+            _requiredColumns = (int)Math.Ceiling(_allLabels.Count / (double)_rows);
+            if (_requiredColumns > actualColumns)
             {
                 renderHeight -= ScrollBar.ScrollBarWidth;
-                _scrollBar = new ScrollBar(Controller, requiredColumns - actualColumns,
+                _scrollBar = new ScrollBar(Controller, _requiredColumns - actualColumns,
                     new Rectangle(Location.X + 2, Location.Y + Height - ScrollBar.ScrollBarWidth, Width - 4,
                         ScrollBar.ScrollBarWidth),
                     (position) => { SetupChildControls(totalVisible, renderHeight, position); });
@@ -176,13 +183,10 @@ public class ScrollBox : BaseControl
     /// <param name="list"></param>
     /// <param name="refresh"></param>
     /// <param name="scrollToEnd"></param>
-    public void SetElements(IList<BaseControl> list, bool refresh, bool scrollToEnd = false)
+    public void SetElements(IList<ScrollBoxElement> list, bool refresh, bool scrollToEnd = false)
     {
         _allLabels = list;
-        foreach (var control in _allLabels)
-        {
-            control.Click += OnControlClick;
-        }
+        ConnectElements();
         _scrollIndex = 0;
         if (refresh)
         {
@@ -195,6 +199,105 @@ public class ScrollBox : BaseControl
         {
             _scrollBar.ScrollToEnd();
         }
+
+        if (Controller.Focused is ScrollBoxElement or null)
+        {
+            Controller.Focused = Children?.First();
+        }
+    }
+
+    public void Move(ScrollType direction)
+    {
+        if (Controller.Focused is not ScrollBoxElement selected) return;
+        
+        var selectedIndex = _allLabels.IndexOf(selected);
+
+        if (selectedIndex == -1) return;
+
+        int nextIndex;
+        switch (direction)
+        {
+            case ScrollType.PreviousRow:
+                nextIndex = selectedIndex - 1;
+                break;
+            case ScrollType.NextRow:
+                nextIndex = selectedIndex + 1;
+                break;
+            case ScrollType.PreviousColumn:
+                if (_requiredColumns > 1)
+                {
+                    if (selectedIndex < _rows)
+                    {
+                        nextIndex = selectedIndex + (_requiredColumns-1) * _rows -1;
+                        if (nextIndex >= _allLabels.Count)
+                        {
+                            nextIndex -= _rows;
+                        }
+                    }
+                    else
+                    {
+                        nextIndex = selectedIndex - _rows;
+                    }
+                }
+                else
+                {
+                    nextIndex = selectedIndex - 1;
+                }
+                break;
+            case ScrollType.NextColumn:
+                if (_requiredColumns > 1)
+                {
+                    nextIndex = selectedIndex + _rows;
+                    if (nextIndex >= _allLabels.Count)
+                    {
+                        nextIndex = selectedIndex % _rows +1;
+                    }
+                }
+                else
+                {
+                    nextIndex = selectedIndex + 1;
+                }
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+        }
+
+        if (nextIndex == -1)
+        {
+            nextIndex = _allLabels.Count - 1;
+        }else if (nextIndex == _allLabels.Count)
+        {
+            nextIndex = 0;
+        }
+        
+        if (!Children!.Contains(_allLabels[nextIndex]))
+        {
+            var increment = _vertical ? _columns : _rows;
+            var currentPosition = _scrollBar!.ScrollPosition;
+            var totalVisible = Children.Count - 1;
+            
+            var scrollPosition = currentPosition;
+            bool loop;
+            do
+            {
+                loop = false;
+                var skipAmount = scrollPosition * increment;
+                if (skipAmount > nextIndex)
+                {
+                    scrollPosition--;
+                    loop = true;
+                }
+                else if (skipAmount + totalVisible <= nextIndex)
+                {
+                    scrollPosition++;
+                    loop = true;
+                }
+            } while (loop);
+            
+            _scrollBar.ScrollTo(scrollPosition);
+        }
+
+        Controller.Focused = _allLabels[nextIndex];
     }
     
     public override void Draw(bool pulse)
@@ -209,6 +312,5 @@ public class ScrollBox : BaseControl
         {
             control.Draw(pulse);
         }
-
     }
 }

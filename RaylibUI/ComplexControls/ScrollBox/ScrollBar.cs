@@ -25,6 +25,8 @@ public class ScrollBar : BaseControl
         UpdateIncrement();
     }
 
+    public int ScrollPosition => _scrollPos;
+
     private void UpdateIncrement()
     {
         _increment = ((_vertical ? Height : Width) - 3 * ScrollBarWidth) / _positions;
@@ -93,5 +95,11 @@ public class ScrollBar : BaseControl
     {
         _scrollPos = _positions;
         _scrollAction(_positions);
+    }
+
+    public void ScrollTo(int scrollPosition)
+    {
+        _scrollPos = scrollPosition;
+        _scrollAction(_scrollPos);
     }
 }

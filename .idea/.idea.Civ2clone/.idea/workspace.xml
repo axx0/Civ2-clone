@@ -14,13 +14,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Change production for city">
-      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" afterDir="false" />
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxElement.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollType.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/SheildProduction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ShieldProduction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
@@ -56,122 +61,28 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/134622bcf8ad016d3faf7776eb0457b76a5798c537458aa82651ab2cee6e1/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e8ad7b7a9bb540eb898da96f282c75c1b55600/_b3ead/IList.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Dialogs/NewGame/EnterName.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Rules/Initialization.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/AdvanceFunctions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/IO/RulesParser.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/MapObjects/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveLoader.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/LoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/LoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/BuildingProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/BuildingProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionCabalilities.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionCabalilities.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/UnitProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/UnitActions/MovementFunctions.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Units/Path.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Animations/WaitingAnimation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/GameModes/MovingPieces.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/Helpers.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Initialization/UserInterfaceCommands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowMainMenu.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Main.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/EtoFormsUI/EtoFormsUI/Players/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Game.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Events/MovementBlockedEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/IUserInterface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/ImageSets/TerrainSet.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/Controls/LabelControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Bitmaps/ImageUtils.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Dialogs/CivDialog.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/UnitSupportBox.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/UnitDisplay.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/MovingPieces.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameModes/ViewPiece.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -460,7 +371,9 @@
       <workItem from="1721267654108" duration="2833000" />
       <workItem from="1722823817668" duration="64979000" />
       <workItem from="1724906720309" duration="635000" />
-      <workItem from="1726003287262" duration="61963000" />
+      <workItem from="1726003287262" duration="78190000" />
+      <workItem from="1727148697165" duration="13852000" />
+      <workItem from="1727485567128" duration="9725000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -796,7 +709,31 @@
       <option name="project" value="LOCAL" />
       <updated>1726541549523</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Shield box">
+      <option name="closed" value="true" />
+      <created>1726799685965</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1726799685965</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Merge axx latest">
+      <option name="closed" value="true" />
+      <created>1726800106116</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1726800106116</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Units in city view">
+      <option name="closed" value="true" />
+      <created>1727426388974</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1727426388974</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -819,9 +756,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Fix merge errors" />
-    <MESSAGE value="Fix checkbox" />
-    <MESSAGE value="Basic city screen and some bugfixes" />
     <MESSAGE value="Game Commands in ViewPiece Mode" />
     <MESSAGE value="merge axx/master into master" />
     <MESSAGE value="Mouse in menus" />
@@ -844,7 +778,10 @@
     <MESSAGE value="Fix initial production lists" />
     <MESSAGE value="Set initial Epochs and Global Tech effects" />
     <MESSAGE value="Change production for city" />
-    <option name="LAST_COMMIT_MESSAGE" value="Change production for city" />
+    <MESSAGE value="Shield box" />
+    <MESSAGE value="Merge axx latest" />
+    <MESSAGE value="Units in city view" />
+    <option name="LAST_COMMIT_MESSAGE" value="Units in city view" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -879,32 +816,6 @@
           <line>187</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\OriginalSaves\Read.GameData.cs" containingFunctionPresentation="Method 'ReadSavFile'" />
           <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs</url>
-          <line>189</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" containingFunctionPresentation="Method 'ListBoxOnItemSelected'">
-            <startOffsets>
-              <option value="6899" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6924" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="163" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs</url>
-          <line>50</line>
-          <properties documentPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" containingFunctionPresentation="Method 'Draw'">
-            <startOffsets>
-              <option value="1617" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1643" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="167" />
         </line-breakpoint>
         <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
           <properties exception="System.UnauthorizedAccessException" isInternal="false" displayValue="UnauthorizedAccessException" namespaceName="System">

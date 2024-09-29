@@ -15,6 +15,7 @@ public class FileDialog : DynamicSizingDialog
     private readonly ListBox _listBox;
     private readonly TextBox _textBox;
     private readonly Button _okButton;
+    private bool _isRoot;
 
     public FileDialog(Main host, string title, string baseDirectory, Func<string, bool> isValidSelectionCallback,
         Func<string?, bool> onSelectionCallback) : base(host,title)
@@ -22,6 +23,7 @@ public class FileDialog : DynamicSizingDialog
         _isValidSelectionCallback = isValidSelectionCallback;
         _onSelectionCallback = onSelectionCallback;
         _currentDirectory = baseDirectory;
+        _isRoot = string.IsNullOrWhiteSpace(Path.GetDirectoryName(_currentDirectory));
         _listBox = new ListBox(this);
         _listBox.ItemSelected += ItemSelected;
         _textBox = new TextBox(this, baseDirectory, 600, TestSelection);
@@ -56,32 +58,33 @@ public class FileDialog : DynamicSizingDialog
 
     private void ItemSelected(object? sender, ScrollBoxSelectionEventArgs args)
     {
-        if (sender is LabelControl selectedLabel)
+        var text = args.Text;
+        if (!args.Soft)
         {
-            var test = selectedLabel.Text;
-            if (test == ParentDirectory)
+            if (text == ParentDirectory)
             {
                 var parent = Path.GetDirectoryName(_currentDirectory);
                 if (!string.IsNullOrWhiteSpace(parent))
                 {
                     _currentDirectory = parent;
+                    _isRoot = string.IsNullOrWhiteSpace(Path.GetDirectoryName(_currentDirectory));
                     BuildFileList(true);
                     return;
                 }
             }
 
-            var canPath = Path.Combine(_currentDirectory, test);
+            var canPath = Path.Combine(_currentDirectory, text);
 
-            if (Directory.Exists(canPath) && (!_isValidSelectionCallback(test) || test == _textBox.Text))
+            if (Directory.Exists(canPath) && (!_isValidSelectionCallback(text) || text == _textBox.Text))
             {
                 _currentDirectory = canPath;
 
                 BuildFileList(true);
                 return;
             }
-
-            _textBox.SetText(selectedLabel.Text);
         }
+
+        _textBox.SetText(Path.Join(_currentDirectory, text));
     }
 
     private void TestSelection(string file)
@@ -100,7 +103,7 @@ public class FileDialog : DynamicSizingDialog
 
     private void BuildFileList(bool refresh)
     {
-        var list = new List<string> { ParentDirectory };
+        var list = _isRoot ? new List<string>() : new List<string> { ParentDirectory };
         var valid = new List<bool>() { false };
         foreach (var directory in Directory.EnumerateDirectories(_currentDirectory))
         {
