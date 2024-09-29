@@ -9,4 +9,5 @@ public class ListBoxDefinition
     
     
     public bool Vertical { get; set; }
+    public int InitialSelection { get; set; }
 }

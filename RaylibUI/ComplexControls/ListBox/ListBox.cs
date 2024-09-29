@@ -12,7 +12,7 @@ public class ListBox : ScrollBox
         IList<string>? initialEntries = null) : base(controller, vertical, maxColumns,
         MakeLabels(controller, initialEntries ?? Array.Empty<string>()))
     {
-        
+
     }
 
     public void SetElements(IList<string> list, bool refresh, List<bool>? valid = null, bool scrollToEnd = false)
@@ -20,8 +20,9 @@ public class ListBox : ScrollBox
         base.SetElements(MakeLabels(Controller, list), refresh, scrollToEnd);
     }
 
-    private static IList<BaseControl> MakeLabels(IControlLayout controller, IList<string> entries)
+    private static IList<ScrollBoxElement> MakeLabels(IControlLayout controller, IList<string> entries)
     {
-        return entries.Select(text => new LabelControl(controller, text,  eventTransparent: false, defaultHeight: 28)).OfType<BaseControl>().ToList();
+        return entries.Select(text => new ScrollBoxElement(controller,
+            new[] { new LabelControl(controller, text, eventTransparent: true, defaultHeight: 28) })).ToList();
     }
 }

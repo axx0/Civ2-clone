@@ -71,7 +71,7 @@ namespace Civ2engine.Production
 
         public override ListBoxEntry GetBuildListEntry(IUserInterface active, int rulesFirstWonderIndex)
         {
-            return new ListBoxEntry { LeftText = _unitDefinition.Name };
+            return new ListBoxEntry { Icon = active.UnitImages.Units[_unitDefinition.Type].Image, LeftText = _unitDefinition.Name };
         }
     }
 }

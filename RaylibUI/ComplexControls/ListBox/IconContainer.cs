@@ -1,3 +1,4 @@
+using System.Numerics;
 using Model.Images;
 using Raylib_cs;
 
@@ -5,31 +6,33 @@ namespace RaylibUI;
 
 public class IconContainer : BaseControl
 {
-    // TODO: read this from Active interface somehow it's tied to tileset
-    private const int IconWidth = 36;
-    private readonly int _isOdd;
+    private readonly int _iconWidth;
     private readonly Texture2D? _texture;
+    private readonly Vector2 _offset;
 
-    public IconContainer(IControlLayout controller, IImageSource? imageSource, int index) : base(controller, true)
+    public IconContainer(IControlLayout controller, IImageSource? imageSource, int index, int iconWidth) : base(controller, true)
     {
+        _iconWidth = iconWidth + 2;
         if (imageSource != null)
         {
             _texture = TextureCache.GetImage(imageSource);
+            _offset = new Vector2(index % 2 * _iconWidth + (_iconWidth - _texture.Value.Width) / 2f,
+                (32 - _texture.Value.Height) / 2f);
         }
-        _isOdd = index % 2;
     }
 
     public override void Draw(bool pulse)
     {
         if (_texture != null)
         {
-            Raylib.DrawTexture(_texture.Value, (int)Location.X + IconWidth * _isOdd, (int)Location.Y, Color.White);
+            Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0f, 1f, Color.White);
         }
+
         base.Draw(pulse);
     }
 
     public override int GetPreferredWidth()
     {
-        return IconWidth * 2;
+        return _iconWidth * 2;
     }
 }

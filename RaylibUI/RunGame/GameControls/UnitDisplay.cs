@@ -9,37 +9,32 @@ namespace RaylibUI.RunGame.GameControls;
 
 public class UnitDisplay : BaseControl
 {
-    private List<IViewElement> _unitTextures;
+    private Vector2 _previousLocation;
+    private readonly List<IViewElement> _unitTextures;
     private float _scale;
 
     public UnitDisplay(IControlLayout controller, Unit unit, IGame game, Vector2 location,
         IUserInterface activeInterface,
         float scale = 1f) : base(controller)
     {
-        _location = location;
+        _previousLocation = location;
         _scale = scale;
         _unitTextures = new List<IViewElement>();
         var size = ImageUtils.GetUnitTextures(unit, activeInterface, game, _unitTextures, location, true);
         Bounds = new Rectangle(location.X, location.Y, size.X * scale, size.Y * scale);
     }
 
-    private Vector2 _location;
-    public Vector2 Location
-    {
-        get { return _location; }
-        set { _location = value; }
-    }
 
     public override void Draw(bool pulse)
     {
-        if (_location != Location)
+        if (_previousLocation != Location)
         {
-            var diff = Location - _location;
+            var diff = Location - _previousLocation;
             foreach (var element in _unitTextures)
             {
                 element.Location += diff;
             }
-            _location = Location;
+            _previousLocation = Location;
         }
         foreach (var element in _unitTextures)
         {

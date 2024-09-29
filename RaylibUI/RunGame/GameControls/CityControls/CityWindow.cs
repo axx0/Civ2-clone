@@ -74,7 +74,8 @@ public class CityWindow : BaseDialog
                 listBox: new ListBoxDefinition
                 {
                     Vertical = true,
-                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList()
+                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList(),
+                    InitialSelection = _canProduce.IndexOf(city.ItemInProduction)
                 }, handleButtonClick: BuildDialogClosed );
         };
         Controls.Add(changeButton);

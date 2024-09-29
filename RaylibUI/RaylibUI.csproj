@@ -28,7 +28,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Remove="IScreen.cs" />
-    <Compile Remove="ComplexControls\ListBox\ListBoxLabel.cs" />
   </ItemGroup>
 
   <ItemGroup>

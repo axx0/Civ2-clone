@@ -2,13 +2,18 @@ namespace RaylibUI;
 
 public class ScrollBoxSelectionEventArgs
 {
+    public string Text { get; }
     public int Index { get; }
     
-    private readonly MouseEventArgs _args;
+    /// <summary>
+    /// Selection by soft means don't make final selection based on this
+    /// </summary>
+    public bool Soft { get; }
 
-    public ScrollBoxSelectionEventArgs(MouseEventArgs args, int index)
+    public ScrollBoxSelectionEventArgs(string text, int index, bool soft)
     {
+        Text = text;
         Index = index;
-        _args = args;
+        Soft = soft;
     }
 }

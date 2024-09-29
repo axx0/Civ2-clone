@@ -27,7 +27,23 @@ public class LabelControl : BaseControl
     private bool _switch;
     private readonly Color[]? _switchColors;
 
-    public LabelControl(IControlLayout controller, string text, bool eventTransparent, int minWidth = -1, int offset = 2, TextAlignment alignment = TextAlignment.Left, int defaultHeight = 32, bool wrapText = false, Font? font = null, int fontSize = 20, float spacing = 1.0f, Color? colorFront = null, Color? colorShadow = null, Vector2? shadowOffset = null, Color[]? switchColors = null, int switchTime = 0) : base(controller, eventTransparent: eventTransparent)
+    public LabelControl(IControlLayout controller, 
+        string text, 
+        bool eventTransparent, 
+        int minWidth = -1,
+        int offset = 2, 
+        TextAlignment alignment = TextAlignment.Left, 
+        int defaultHeight = 32, 
+        bool wrapText = false,
+        Font? font = null, 
+        int fontSize = 20, 
+        float spacing = 1.0f, 
+        Color? colorFront = null, 
+        Color? colorShadow = null,
+        Vector2? shadowOffset = null, 
+        Color[]? switchColors = null, 
+        int switchTime = 0) : base(controller,
+        eventTransparent: eventTransparent)
     {
         Text = text;
         Alignment = alignment;
@@ -41,7 +57,7 @@ public class LabelControl : BaseControl
         _colorFront = colorFront ?? Color.Black;
         _colorShadow = colorShadow ?? Color.Black;
         _shadowOffset = shadowOffset ?? Vector2.Zero;
-        
+
         _active = controller.MainWindow.ActiveInterface;
         _timer = new Timer(_ => _switch = !_switch, null, 0, switchTime);
         _switchColors = switchColors;

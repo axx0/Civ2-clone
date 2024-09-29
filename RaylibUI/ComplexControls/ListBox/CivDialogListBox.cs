@@ -6,20 +6,25 @@ namespace RaylibUI;
 public class CivDialogListBox : ScrollBox
 {
     public CivDialogListBox(IControlLayout controller, ListBoxDefinition boxDetails) : base(controller,
-        boxDetails.Vertical, 1, MakeLabels(controller, boxDetails))
+        boxDetails.Vertical, 1, MakeLabels(controller, boxDetails), initialSelection: boxDetails.InitialSelection)
     {
+        
     }
 
-    private static IList<BaseControl>? MakeLabels(IControlLayout controller, ListBoxDefinition boxDetails)
+    private static List<ScrollBoxElement> MakeLabels(IControlLayout controller, ListBoxDefinition boxDetails)
     {
-        var hasIcons = false;
+        var iconWidth = -1;
         var rightText = false;
-        for (var i = 0; i < boxDetails.Entries.Count && (!hasIcons || !rightText); i++)
+        for (var i = 0; i < boxDetails.Entries.Count; i++)
         {
             var entry = boxDetails.Entries[i];
             if (entry.Icon != null)
             {
-                hasIcons = true;
+                var width = TextureCache.GetImage(entry.Icon).Width;
+                if (width > iconWidth)
+                {
+                    iconWidth = width;
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(entry.RightText))
@@ -28,9 +33,14 @@ public class CivDialogListBox : ScrollBox
             }
         }
 
-        if (hasIcons)
+        if (iconWidth > -1)
         {
-            return boxDetails.Entries.Select((entry, index) => (BaseControl)new DialogLabel(controller, entry, index))
+            return boxDetails.Entries.Select((entry, index) => new ScrollBoxElement(controller,
+                    new IControl[]
+                    {
+                        new IconContainer(controller, entry.Icon, index, iconWidth),
+                        new LabelControl(controller, entry.LeftText ?? "", true)
+                    }, flexElement: 1))
                 .ToList();
         }
 
@@ -39,16 +49,11 @@ public class CivDialogListBox : ScrollBox
 
         }
 
-        return boxDetails.Entries
-            .Select(e => (BaseControl)new LabelControl(controller, e.LeftText ?? string.Empty, false)).ToList();
-    }
-}
-
-internal class DialogLabel : ControlGroup
-{
-    public DialogLabel(IControlLayout controller, ListBoxEntry entry, int index) : base(controller, flexElement: 1, eventTransparent: false)
-    {
-        AddChild(new IconContainer(controller, entry.Icon, index));
-        AddChild(new LabelControl(controller, entry.LeftText, true));
+        return boxDetails.Entries.Select((entry, index) => new ScrollBoxElement(controller,
+                new IControl[]
+                {
+                    new LabelControl(controller, entry.LeftText ?? "", true)
+                } ))
+            .ToList();
     }
 }
