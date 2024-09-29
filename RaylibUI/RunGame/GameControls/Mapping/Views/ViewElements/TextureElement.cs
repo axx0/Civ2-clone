@@ -32,15 +32,13 @@ public class TextureElement : IViewElement
 
     public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
-        var loc = adjustedLocation - Offset + Offset * scale;
-
         if (isShaded)
         {
             Raylib.BeginShaderMode(Shaders.Grayscale);
         }
 
         Raylib.DrawTextureEx(Texture,
-            loc,
+            adjustedLocation + Offset * scale,
             0f,
             scale,
             Color.White);

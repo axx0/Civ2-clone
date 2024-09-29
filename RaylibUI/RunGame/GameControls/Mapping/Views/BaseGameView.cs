@@ -218,7 +218,7 @@ public abstract class BaseGameView : IGameView
                 var flagTexture = TextureCache.GetImage(activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId].Image);
                 var flagOffset = cityImage.FlagLoc - new Vector2(0, flagTexture.Height - 5);
                 elements.Add(new TextureElement(texture: flagTexture,
-                    tile: tile, location: cityPos + flagOffset, offset: flagOffset)
+                    tile: tile, location: cityPos, offset: flagOffset)
                 );
             }
         }

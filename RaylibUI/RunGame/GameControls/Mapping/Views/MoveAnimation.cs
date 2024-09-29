@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Linq;
 using System.Numerics;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
@@ -27,16 +28,41 @@ internal class MoveAnimation : BaseGameView
                 unitDrawOffset[0] -= map.XDimMax;
             }
         }
-        var viewElements = new List<IViewElement>();
-        ImageUtils.GetUnitTextures(activeUnit, activeInterface, gameScreen.Game, viewElements,
+        
+        // Get view elements of units on previous tile of moving unit
+        var viewElementsPrevTileUnits = new List<IViewElement>();
+        var prevTileUnit = map.TileC2(activeUnit.PrevXy[0], activeUnit.PrevXy[1]).UnitsHere.FirstOrDefault();
+        if (prevTileUnit != null)
+        {
+            ImageUtils.GetUnitTextures(prevTileUnit, activeInterface, gameScreen.Game, viewElementsPrevTileUnits,
+                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight });
+        }
+
+        // Get view elements of units on next tile of moving unit
+        var viewElementsNextTileUnits = new List<IViewElement>();
+        var nextTileUnit = activeUnit.CurrentLocation.UnitsHere.Where(u => u != activeUnit).FirstOrDefault();
+        if (nextTileUnit != null)
+        {
+            ImageUtils.GetUnitTextures(nextTileUnit, activeInterface, gameScreen.Game, viewElementsNextTileUnits,
+                new Vector2(unitDrawOffset[0] * map.Xpx, unitDrawOffset[1] * map.Ypx) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight });
+        }
+
+        // Moving unit view elements
+        var viewElementsActiveUnit = new List<IViewElement>();
+        ImageUtils.GetUnitTextures(activeUnit, activeInterface, gameScreen.Game, viewElementsActiveUnit,
             ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight }, true);
-        SetAnimation(viewElements);
+
+        SetAnimation(viewElementsPrevTileUnits.Concat(viewElementsNextTileUnits).Concat(viewElementsActiveUnit).ToList());
+
         var totalFrames = activeUnit.CurrentLocation.CityHere == null ? noFramesForOneMove : noFramesForOneMove - 1;
         for (var frame = 1; frame < totalFrames; frame++)
         {
             var offsetVector = new Vector2(unitDrawOffset[0] * map.Xpx / noFramesForOneMove * frame,
                 +unitDrawOffset[1] * map.Ypx / noFramesForOneMove * frame);
-            SetAnimation(viewElements.Select(ve => ve.CloneForLocation(ve.Location + offsetVector)).ToList());
+            var animPrevUnit = viewElementsPrevTileUnits.Select(ve => ve.CloneForLocation(ve.Location));
+            var animNextUnit = viewElementsNextTileUnits.Select(ve => ve.CloneForLocation(ve.Location));
+            var animActiveUnit = viewElementsActiveUnit.Select(ve => ve.CloneForLocation(ve.Location + offsetVector));
+            SetAnimation(animPrevUnit.Concat(animNextUnit).Concat(animActiveUnit).ToList());
         }
 
         if (totalFrames != noFramesForOneMove)

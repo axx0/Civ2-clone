@@ -131,9 +131,9 @@ public static class ImageUtils
         {
             var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
             var innerHeight = Math.Min(height - padding.Top - padding.Bottom, centerImage.Value.Height);
-            Raylib.ImageDraw( ref image, centerImage.Value, new Rectangle(0,0,innerWidth,innerHeight), new Rectangle(padding.Left, padding.Top, innerWidth,innerHeight), Color.White);
+            Raylib.ImageDraw(ref image, centerImage.Value, new Rectangle(0, 0, innerWidth, innerHeight), new Rectangle(padding.Left, padding.Top, innerWidth, innerHeight), Color.White);
         }
-        else if(!noWallpaper)
+        else if (!noWallpaper)
         {
             DrawTiledImage(Wallpaper, ref image, height, width, padding, statusPanel: statusPanel, ToTStatusPanelLayout: ToTStatusPanelLayout);
         }
@@ -339,40 +339,40 @@ public static class ImageUtils
     {
         var image = Raylib.GenImageColor(dim, dim, Color.Black);
         var color1 = new Color(227, 227, 227, 255);
-        Raylib.ImageDrawLine(ref image, 0,0, image.Width -1, 0, color1);
-        Raylib.ImageDrawLine(ref image, 0,0, 0, image.Height -1, color1);
-        
+        Raylib.ImageDrawLine(ref image, 0, 0, image.Width - 1, 0, color1);
+        Raylib.ImageDrawLine(ref image, 0, 0, 0, image.Height - 1, color1);
+
         var color2 = Color.White;
-        Raylib.ImageDrawLine(ref image, 1,1, image.Width -2, 1, color2);
-        Raylib.ImageDrawLine(ref image, 1,1, 1, image.Height -2, color2);
+        Raylib.ImageDrawLine(ref image, 1, 1, image.Width - 2, 1, color2);
+        Raylib.ImageDrawLine(ref image, 1, 1, 1, image.Height - 2, color2);
 
         var color3 = new Color(240, 240, 240, 255);
-        Raylib.ImageDrawRectangle(ref image, 3,3,image.Width -4, image.Height - 4, color3);
+        Raylib.ImageDrawRectangle(ref image, 3, 3, image.Width - 4, image.Height - 4, color3);
 
         var color4 = new Color(160, 160, 160, 255);
-        Raylib.ImageDrawLine(ref image, image.Width -2,1, image.Width -2, image.Height -2, color4);
-        Raylib.ImageDrawLine(ref image, 1, image.Height -2, image.Width-2, image.Height -2, color4);
-        
-        var color5 =new Color(105,105,105,255);
-        Raylib.ImageDrawLine(ref image, 0, image.Height -1, image.Width -1, image.Height -1, color5);
-        Raylib.ImageDrawLine(ref image, image.Width -1, 0, image.Width -1, image.Height -1, color5);
+        Raylib.ImageDrawLine(ref image, image.Width - 2, 1, image.Width - 2, image.Height - 2, color4);
+        Raylib.ImageDrawLine(ref image, 1, image.Height - 2, image.Width - 2, image.Height - 2, color4);
+
+        var color5 = new Color(105, 105, 105, 255);
+        Raylib.ImageDrawLine(ref image, 0, image.Height - 1, image.Width - 1, image.Height - 1, color5);
+        Raylib.ImageDrawLine(ref image, image.Width - 1, 0, image.Width - 1, image.Height - 1, color5);
 
         var left = Raylib.ImageCopy(image);
         if (vertical)
         {
-            Raylib.ImageDrawPixel(ref left, 9,6,Color.Black);
-            Raylib.ImageDrawLine(ref left, 8,7,10,7,Color.Black);
-            Raylib.ImageDrawLine(ref left, 7,8,11,8,Color.Black);
-            Raylib.ImageDrawLine(ref left, 6,9,12,9,Color.Black);
-            
+            Raylib.ImageDrawPixel(ref left, 9, 6, Color.Black);
+            Raylib.ImageDrawLine(ref left, 8, 7, 10, 7, Color.Black);
+            Raylib.ImageDrawLine(ref left, 7, 8, 11, 8, Color.Black);
+            Raylib.ImageDrawLine(ref left, 6, 9, 12, 9, Color.Black);
+
         }
         else
         {
-            Raylib.ImageDrawPixel(ref left, 6,9,Color.Black);
-            Raylib.ImageDrawLine(ref left, 7,8,7,10,Color.Black);
-            Raylib.ImageDrawLine(ref left, 8,7,8,11,Color.Black);
-            Raylib.ImageDrawLine(ref left, 9,6,9,12,Color.Black);
-            
+            Raylib.ImageDrawPixel(ref left, 6, 9, Color.Black);
+            Raylib.ImageDrawLine(ref left, 7, 8, 7, 10, Color.Black);
+            Raylib.ImageDrawLine(ref left, 8, 7, 8, 11, Color.Black);
+            Raylib.ImageDrawLine(ref left, 9, 6, 9, 12, Color.Black);
+
         }
         var right = Raylib.ImageCopy(image);
         if (vertical)
@@ -399,10 +399,9 @@ public static class ImageUtils
     {
         var unitTexture = TextureCache.GetImage(active.UnitImages.Units[(int)unit.Type].Image);
         var shieldTexture = TextureCache.GetImage(active.UnitImages.Shields, active, unit.Owner.Id);
-        
+
         var shield = active.UnitShield((int)unit.Type);
-        var shieldLoc = loc + shield.Offset;
-        
+
         var tile = unit.CurrentLocation;
 
         if (shield.ShieldInFrontOfUnit)
@@ -419,12 +418,12 @@ public static class ImageUtils
             {
                 var stackShadowOffset = shield.StackingOffset + shield.ShadowOffset;
                 viewElements.Add(new TextureElement(
-                    location: shieldLoc + stackShadowOffset,
+                    location: loc,
                     texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
                     tile: tile, offset: shield.Offset + stackShadowOffset));
             }
             viewElements.Add(new TextureElement(
-                location: shieldLoc + shield.StackingOffset,
+                location: loc,
                 texture: TextureCache.GetImage(active.UnitImages.ShieldBack, active, unit.Owner.Id),
                 tile: tile, offset: shield.Offset + shield.StackingOffset));
         }
@@ -432,23 +431,23 @@ public static class ImageUtils
         // Shield shadow
         if (shield.DrawShadow)
         {
-            viewElements.Add(new TextureElement(location: shieldLoc + shield.ShadowOffset,
-                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id), 
+            viewElements.Add(new TextureElement(location: loc,
+                texture: TextureCache.GetImage(active.UnitImages.ShieldShadow, active, unit.Owner.Id),
                 tile: tile, offset: shield.Offset + shield.ShadowOffset));
         }
 
         // Front shield
-        viewElements.Add(new TextureElement(location: shieldLoc,
-            texture: shieldTexture, tile: tile, offset:shield.Offset));
+        viewElements.Add(new TextureElement(location: loc,
+            texture: shieldTexture, tile: tile, offset: shield.Offset));
 
         // Health bar
-        viewElements.Add(new HealthBar(location: shieldLoc + shield.HPbarOffset,
-            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase, 
+        viewElements.Add(new HealthBar(location: loc,
+            tile: tile, unit.RemainingHitpoints, unit.HitpointsBase,
             offset: shield.Offset + shield.HPbarOffset, shield));
 
         // Orders text
-        var shieldText = (int)unit.Order <= 11 ?  game.Rules.Orders[(int)unit.Order - 1].Key : "-";
-        viewElements.Add(new TextElement(shieldText, shieldLoc + shield.OrderOffset, shield.OrderTextHeight,
+        var shieldText = (int)unit.Order <= 11 ? game.Rules.Orders[(int)unit.Order - 1].Key : "-";
+        viewElements.Add(new TextElement(shieldText, loc, shield.OrderTextHeight,
             tile, shield.Offset + shield.OrderOffset));
 
         if (!shield.ShieldInFrontOfUnit)
