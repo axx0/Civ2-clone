@@ -29,7 +29,7 @@ public class TextElement : IViewElement
 
     public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
-        var loc = adjustedLocation - Offset + Offset * scale;
+        var loc = adjustedLocation + Offset * scale;
         
         var size = Raylib.MeasureTextEx(Fonts.Arial, _text, _height * scale, 1);
         Raylib.DrawTextEx(Fonts.Arial, _text, loc - new Vector2(size.X / 2, 0), _height * scale, 1,

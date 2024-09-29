@@ -417,14 +417,13 @@ public class Civ2GoldInterface : Civ2Interface
 
         var shield = Images.ExtractBitmap(PicSources["backShield1"][0], this);
         var shieldFront = Raylib.ImageCopy(shield);
+        var shieldBack = Raylib.ImageCopy(shield);
         Raylib.ImageDrawRectangle(ref shieldFront, 0, 0, shieldFront.Width, 7, Color.Black);
-
-        var shadow = Images.ExtractBitmap(PicSources["backShield1"][0], this);
-        Raylib.ImageColorReplace(ref shadow, replacementColour, shadowColour);
+        Raylib.ImageColorReplace(ref shield, replacementColour, shadowColour);
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
-        UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", replacementColour, true);
-        UnitImages.ShieldShadow = new MemoryStorage(shadow, "Unit-Shield-Shadow");
+        UnitImages.ShieldBack = new MemoryStorage(shieldBack, "Unit-Shield-Back", replacementColour, true);
+        UnitImages.ShieldShadow = new MemoryStorage(shield, "Unit-Shield-Shadow");
     }
 
     public override void LoadPlayerColours()

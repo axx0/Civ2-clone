@@ -38,7 +38,7 @@ public class RectangleElement : IViewElement
     public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
         
-        Raylib.DrawRectangleV( adjustedLocation - Offset + Offset * scale, Size * scale, Color);
+        Raylib.DrawRectangleV(adjustedLocation + Offset * scale, Size * scale, Color);
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)
