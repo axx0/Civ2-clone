@@ -6,8 +6,9 @@ namespace RaylibUI;
 public class CivDialogListBox : ScrollBox
 {
     public CivDialogListBox(IControlLayout controller, ListBoxDefinition boxDetails) : base(controller,
-        boxDetails.Vertical, 1, MakeLabels(controller, boxDetails))
+        boxDetails.Vertical, 1, MakeLabels(controller, boxDetails), initialSelection: boxDetails.InitialSelection)
     {
+        
     }
 
     private static List<ScrollBoxElement> MakeLabels(IControlLayout controller, ListBoxDefinition boxDetails)

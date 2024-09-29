@@ -9,6 +9,7 @@ public class ScrollBox : BaseControl
 {
     private readonly bool _vertical;
     private readonly int? _maxColumns;
+    private int _initialSelection;
     private int _scrollIndex;
     private IList<ScrollBoxElement> _allLabels;
     private int _maxChildWidth;
@@ -23,10 +24,11 @@ public class ScrollBox : BaseControl
     public event EventHandler<ScrollBoxSelectionEventArgs>? ItemSelected;
 
     public ScrollBox(IControlLayout controller, bool vertical = false, int? maxColumns = null,
-        IList<ScrollBoxElement>? initialEntries = null) : base(controller)
+        IList<ScrollBoxElement>? initialEntries = null, int initialSelection  =-1) : base(controller)
     {
         _vertical = vertical;
         _maxColumns = maxColumns;
+        _initialSelection = initialSelection;
         _allLabels = initialEntries ?? Array.Empty<ScrollBoxElement>();
         ConnectElements();
     }
@@ -173,6 +175,12 @@ public class ScrollBox : BaseControl
 
         Children = _scrollBar != null ? visibleLabels.Concat(new[] { _scrollBar }).ToList() : visibleLabels.ToList();
         _scrollIndex = scrollPosition;
+        if (_initialSelection > -1 && _initialSelection < _allLabels.Count )
+        {
+            var scrollToElement = _initialSelection;
+            _initialSelection = -1;
+            ScrollToIndex(scrollToElement);
+        }
     }
 
     /// <summary>
@@ -200,7 +208,7 @@ public class ScrollBox : BaseControl
             _scrollBar.ScrollToEnd();
         }
 
-        if (Controller.Focused is ScrollBoxElement or null)
+        if (Controller.Focused is ScrollBoxElement && !Children!.Contains(Controller.Focused))
         {
             Controller.Focused = Children?.First();
         }
@@ -270,7 +278,12 @@ public class ScrollBox : BaseControl
             nextIndex = 0;
         }
         
-        if (!Children!.Contains(_allLabels[nextIndex]))
+        ScrollToIndex(nextIndex);
+    }
+
+    public void ScrollToIndex(int indexToShow)
+    {
+        if (!Children!.Contains(_allLabels[indexToShow]))
         {
             var increment = _vertical ? _columns : _rows;
             var currentPosition = _scrollBar!.ScrollPosition;
@@ -282,12 +295,12 @@ public class ScrollBox : BaseControl
             {
                 loop = false;
                 var skipAmount = scrollPosition * increment;
-                if (skipAmount > nextIndex)
+                if (skipAmount > indexToShow)
                 {
                     scrollPosition--;
                     loop = true;
                 }
-                else if (skipAmount + totalVisible <= nextIndex)
+                else if (skipAmount + totalVisible <= indexToShow)
                 {
                     scrollPosition++;
                     loop = true;
@@ -297,9 +310,9 @@ public class ScrollBox : BaseControl
             _scrollBar.ScrollTo(scrollPosition);
         }
 
-        Controller.Focused = _allLabels[nextIndex];
+        Controller.Focused = _allLabels[indexToShow];
     }
-    
+
     public override void Draw(bool pulse)
     {
         var startX = Location.X + 2;
