@@ -13,14 +13,18 @@ public class CivDialogListBox : ScrollBox
 
     private static List<ScrollBoxElement> MakeLabels(IControlLayout controller, ListBoxDefinition boxDetails)
     {
-        var hasIcons = false;
+        var iconWidth = -1;
         var rightText = false;
-        for (var i = 0; i < boxDetails.Entries.Count && (!hasIcons || !rightText); i++)
+        for (var i = 0; i < boxDetails.Entries.Count; i++)
         {
             var entry = boxDetails.Entries[i];
             if (entry.Icon != null)
             {
-                hasIcons = true;
+                var width = TextureCache.GetImage(entry.Icon).Width;
+                if (width > iconWidth)
+                {
+                    iconWidth = width;
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(entry.RightText))
@@ -29,12 +33,12 @@ public class CivDialogListBox : ScrollBox
             }
         }
 
-        if (hasIcons)
+        if (iconWidth > -1)
         {
             return boxDetails.Entries.Select((entry, index) => new ScrollBoxElement(controller,
                     new IControl[]
                     {
-                        new IconContainer(controller, entry.Icon, index),
+                        new IconContainer(controller, entry.Icon, index, iconWidth),
                         new LabelControl(controller, entry.LeftText ?? "", true)
                     }, flexElement: 1))
                 .ToList();

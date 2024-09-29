@@ -14,18 +14,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxElement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Select current production by default">
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxSelectionEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
@@ -82,7 +74,7 @@
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/UnitDisplay.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/ComplexControls/ListBox/CivDialogListBox.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -373,7 +365,7 @@
       <workItem from="1724906720309" duration="635000" />
       <workItem from="1726003287262" duration="78190000" />
       <workItem from="1727148697165" duration="13852000" />
-      <workItem from="1727485567128" duration="9725000" />
+      <workItem from="1727485567128" duration="12287000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -733,7 +725,23 @@
       <option name="project" value="LOCAL" />
       <updated>1727426388974</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Selection in scroll box">
+      <option name="closed" value="true" />
+      <created>1727572818115</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1727572818115</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Select current production by default">
+      <option name="closed" value="true" />
+      <created>1727573591142</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1727573591142</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -756,8 +764,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Game Commands in ViewPiece Mode" />
-    <MESSAGE value="merge axx/master into master" />
     <MESSAGE value="Mouse in menus" />
     <MESSAGE value="Upgrade to RayLib_cs 5" />
     <MESSAGE value="Upgrade to RayLib_cs 6" />
@@ -781,7 +787,9 @@
     <MESSAGE value="Shield box" />
     <MESSAGE value="Merge axx latest" />
     <MESSAGE value="Units in city view" />
-    <option name="LAST_COMMIT_MESSAGE" value="Units in city view" />
+    <MESSAGE value="Selection in scroll box" />
+    <MESSAGE value="Select current production by default" />
+    <option name="LAST_COMMIT_MESSAGE" value="Select current production by default" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
