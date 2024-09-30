@@ -8,6 +8,7 @@ using Model.Core;
 using Model.Interface;
 using Model.Menu;
 using Raylib_cs;
+using RaylibUI.Controls;
 using RaylibUtils;
 
 namespace RaylibUI.RunGame.GameModes.Orders;
@@ -18,6 +19,7 @@ public class BuildCity : Order
     private const string CityName = "CityName";
     private IUserInterface _active;
     private GameScreen _screen;
+    private City _city;
 
     public BuildCity(GameScreen gameScreen) : 
         base(gameScreen, new Shortcut(KeyboardKey.B), CommandIds.BuildCityOrder)
@@ -112,7 +114,20 @@ public class BuildCity : Order
     {
         if (textBoxes != null && button == Labels.Ok && textBoxes.TryGetValue(CityName, out var name))
         {
-            CityActions.BuildCity(_player.ActiveTile, _player.ActiveUnit, GameScreen.Game, name);
+            _city = CityActions.BuildCity(_player.ActiveTile, _player.ActiveUnit, GameScreen.Game, name);
+
+            GameScreen.ShowPopup("FOUNDED", handleButtonClick: OpenCityWindow, 
+                dialogImage: new(new[] { _player.Civilization.Epoch < 2 ? _active.PicSources["cityBuiltAncient"][0] : _active.PicSources["cityBuiltModern"][0] }),
+                replaceStrings: new List<string> { name, GameScreen.Game.Date.GameYearString(GameScreen.Game.TurnNumber) });
+        }
+    }
+
+    private void OpenCityWindow(string button, int selectedIndex, IList<bool>? check, IDictionary<string, string>? textBoxes)
+    {
+        if (button == Labels.Ok)
+        {
+            GameScreen.ShowCityWindow(_city);   // TODO: chose next unit after handling button click
+            GameScreen.Game.ChooseNextUnit();
         }
     }
 }
