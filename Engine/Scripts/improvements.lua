@@ -57,16 +57,20 @@ civ.getImprovement(26).Effects.Add(civ.core.Effects.ScienceMultiplier, 50)
 civ.getImprovement(27).Effects.Add(civ.core.Effects.AirDefence, 100)
 --Coastal Fortress,          8, 1,    Met,
 civ.getImprovement(28).Effects.Add(civ.core.Effects.SeaDefence, 100)
+civ.getImprovement(28).Effects.Add(civ.core.Effects.OceanRequired, 1)
 --Solar Plant,              32, 4,    Env,
 civ.getImprovement(29).Effects.Add(civ.core.Effects.PopulationPollutionModifier, -1)
 civ.getImprovement(29).Effects.Add(civ.core.Effects.EliminateIndustrialPollution, 1)
 --Harbor,                   6,  1,    Sea,
 civ.getImprovement(30).addTerrainEffect({ Resource = civ.core.Resources.Food, Value = 1, Terrain = 10 })
+civ.getImprovement(30).Effects.Add(civ.core.Effects.OceanRequired, 1)
 --Offshore Platform,        16, 3,    Min,
 civ.getImprovement(31).addTerrainEffect({ Resource = civ.core.Resources.Shields, Value = 1, Terrain = 10 })
+civ.getImprovement(31).Effects.Add(civ.core.Effects.OceanRequired, 1)
 --Airport,                  16, 3,    Rad,
 civ.getImprovement(32).Effects.Add(civ.core.Effects.Veteran, civ.core.UnitDomain.Air)
 --Police Station,           6,  2,    Cmn,
 --Port Facility,            8,  3,    Amp,
 civ.getImprovement(34).Effects.Add(civ.core.Effects.Veteran, civ.core.UnitDomain.Sea)
+civ.getImprovement(34).Effects.Add(civ.core.Effects.OceanRequired, 1)
 --Beyond this number TOT and MPG have different improvements!!! need to check which we're in before continuing

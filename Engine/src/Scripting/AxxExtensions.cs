@@ -95,6 +95,8 @@ namespace Civ2engine.Scripting
         public Effects SeaDefence = Effects.SeaDefence;
         public Effects MissileDefence = Effects.MissileDefence;
         public Effects ReduceCorruption = Effects.ReduceCorruption;
+
+        public Effects OceanRequired = Effects.OceanRequired;
         
         public Effects EliminateIndustrialPollution = Effects.EliminateIndustrialPollution;
         public Effects IndustrialPollutionModifier = Effects.IndustrialPollutionModifier;
