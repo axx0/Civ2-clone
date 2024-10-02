@@ -25,7 +25,7 @@ namespace Civ2engine
 
             void TextHandler(string line)
             {
-                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0 && popupBox.Options == null)
+                if (string.IsNullOrWhiteSpace(line) && popupBox.Text?.Count > 0 && popupBox.Options == null && section != "SCENARIO")   // No options in scenario intro text
                 {
                     contentHandler = (line) =>
                     {

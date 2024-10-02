@@ -40,7 +40,7 @@ internal class MoveAnimation : BaseGameView
 
         // Get view elements of units on next tile of moving unit
         var viewElementsNextTileUnits = new List<IViewElement>();
-        var nextTileUnit = activeUnit.CurrentLocation.UnitsHere.Where(u => u != activeUnit).FirstOrDefault();
+        var nextTileUnit = activeUnit.CurrentLocation.UnitsHere.Where(u => u != activeUnit && !activeUnit.CarriedUnits.Contains(u)).FirstOrDefault();
         if (nextTileUnit != null)
         {
             ImageUtils.GetUnitTextures(nextTileUnit, activeInterface, gameScreen.Game, viewElementsNextTileUnits,
