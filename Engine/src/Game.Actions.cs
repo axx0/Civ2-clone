@@ -221,7 +221,7 @@ namespace Civ2engine
             }
 
             // Update all cities
-            CitiesTurn(player);
+            this.CitiesTurn(player);
         }
     }
 }

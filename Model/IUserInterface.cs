@@ -7,6 +7,7 @@ using Model.Interface;
 using RaylibUI;
 using Raylib_cs;
 using System.Numerics;
+using Model.Core.Advances;
 using Model.Dialog;
 
 namespace Model;
@@ -61,4 +62,5 @@ public interface IUserInterface
     IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory);
     IInterfaceAction InitNewGame(bool quickStart);
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
+    IImageSource? GetAdvanceImage(Advance advance);
 }

@@ -5,6 +5,7 @@ using Civ2engine.Production;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Interface;
 
 namespace RaylibUI.RunGame;
 
@@ -86,11 +87,11 @@ public class LocalPlayer : IPlayer
 
     public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
     {
-        // var popup = _main.popupBoxList["RESEARCH"];
-        // var dialog = new Civ2dialog(_main, popup, new List<string> { "wise men" },
-        //     listbox: new ListboxDefinition { LeftText = researchPossibilities.Select(a => a.Name).ToList() });
-        // dialog.ShowModal();
-        // Civ.ReseachingAdvance = researchPossibilities[dialog.SelectedIndex].Index;
+        var activeInterface = _gameScreen.Main.ActiveInterface;
+        _gameScreen.ShowPopup("RESEARCH", (s, i, arg3, arg4) =>
+        {
+            Civilization.ReseachingAdvance = researchPossibilities[i].Index;
+        }, listBox: new ListBoxDefinition { Vertical = false, Entries  =  researchPossibilities.Select(a => new ListBoxEntry { Icon = activeInterface.GetAdvanceImage(a), LeftText = a.Name}).ToList() } );
     }
 
     public void CantProduce(City city, IProductionOrder? newItem)
