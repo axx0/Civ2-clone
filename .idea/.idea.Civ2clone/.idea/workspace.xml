@@ -16,15 +16,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/CivServer/CivServer.csproj" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CivServer/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.ActionsCities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameTurn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
@@ -62,17 +55,18 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e8ad7b7a9bb540eb898da96f282c75c1b55600/_b3ead/IList.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Cities/CityExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/BuildingProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Scripting/AxxExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -85,7 +79,9 @@
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Constants/Effects.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/IUserInterface.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/LocalPlayer.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -150,41 +146,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.CivServer.executor&quot;: &quot;Run&quot;,
-    &quot;.NET Project.RaylibUI.executor&quot;: &quot;Debug&quot;,
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountHistoryMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAccountsIdsRefresh&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyConvertUrlToCodebaseName&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyHistoryLlmMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyMigrateChatHistory-v2&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.CodyProjectSettingsMigration&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ToggleCodyToolWindowAfterMigration&quot;: &quot;true&quot;,
-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.40725243&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.CivServer.executor": "Run",
+    ".NET Project.RaylibUI.executor": "Run",
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.CodyAccountHistoryMigration": "true",
+    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
+    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
+    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
+    "RunOnceActivity.CodyHistoryLlmMigration": "true",
+    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
+    "RunOnceActivity.CodyProjectSettingsMigration": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
+    "TODO_SCOPE": "All Places",
+    "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.40725243",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;rider.external.source.directories&quot;: [
-      &quot;/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache&quot;,
-      &quot;/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache&quot;,
-      &quot;/Users/revans/Library/Application Support/Symbols/src&quot;
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
+      "/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
+      "/Users/revans/Library/Application Support/Symbols/src"
     ]
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.RaylibUI">
     <configuration name="CivServer" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />

@@ -63,4 +63,5 @@ public interface IUserInterface
     IInterfaceAction InitNewGame(bool quickStart);
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
     IImageSource? GetAdvanceImage(Advance advance);
+    string GetScientistName(int civilizationEpoch);
 }

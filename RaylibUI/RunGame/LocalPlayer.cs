@@ -91,7 +91,8 @@ public class LocalPlayer : IPlayer
         _gameScreen.ShowPopup("RESEARCH", (s, i, arg3, arg4) =>
         {
             Civilization.ReseachingAdvance = researchPossibilities[i].Index;
-        }, listBox: new ListBoxDefinition { Vertical = false, Entries  =  researchPossibilities.Select(a => new ListBoxEntry { Icon = activeInterface.GetAdvanceImage(a), LeftText = a.Name}).ToList() } );
+        }, replaceStrings: new string [] { activeInterface.GetScientistName(Civilization.Epoch) },
+            listBox: new ListBoxDefinition { Vertical = false, Entries  =  researchPossibilities.Select(a => new ListBoxEntry { Icon = activeInterface.GetAdvanceImage(a), LeftText = a.Name}).ToList() } );
     }
 
     public void CantProduce(City city, IProductionOrder? newItem)

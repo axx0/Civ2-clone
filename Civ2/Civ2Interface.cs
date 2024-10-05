@@ -479,4 +479,9 @@ public abstract class Civ2Interface : IUserInterface
         
         return new BitmapStorage("icons", x, y, 36, 20);
     }
+
+    public string GetScientistName(int epoch)
+    {
+        return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
+    }
 }
