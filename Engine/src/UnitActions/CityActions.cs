@@ -25,7 +25,7 @@ namespace Civ2engine.UnitActions
             return "Dummy Name";
         }
 
-        public static void BuildCity(Tile tile, Unit unit, IGame game, string name)
+        public static City BuildCity(Tile tile, Unit unit, IGame game, string name)
         {
             var initialProduction = ProductionOrder.GetAll(game.Rules).MinBy(i => i.Cost);
             var city = new City
@@ -73,7 +73,7 @@ namespace Civ2engine.UnitActions
 
             game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> {tile});
 
-            game.ChooseNextUnit();
+            return city;
         }
 
         public static void AiBuildCity(Unit unit, Game game)

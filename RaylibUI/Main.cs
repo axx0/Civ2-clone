@@ -138,6 +138,9 @@ namespace RaylibUI
 
         public void ReloadMain()
         {
+            ActiveRuleSet = AllRuleSets.First(r => r.InterfaceIndex == _activeInterface.InterfaceIndex);
+            TextureCache.Clear();
+            ImageUtils.SetLook(_activeInterface);
             _activeScreen = new MainMenu(this,() => _shouldClose= true, StartGame, Soundman);
         }
     }

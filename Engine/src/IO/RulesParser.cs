@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
@@ -9,6 +11,7 @@ using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
+using Raylib_cs;
 using Path = System.IO.Path;
 
 namespace Civ2engine.IO
@@ -283,20 +286,35 @@ namespace Civ2engine.IO
             var terrains = new List<string>();
             var bonus = new List<string>();
             var mappings = new Dictionary<string, int> {{"yes", -1}, {"no", -2}};
-            foreach (var t in values)
+            for (int row = 0; row < 33; row++)
             {
-                var parts = t.Split(';', StringSplitOptions.TrimEntries);
-                if (t.Split(',', StringSplitOptions.TrimEntries).Length < 8)
-                {
-                    bonus.Add(parts[0]);
-                }
-                else
+                var parts = values.ElementAt(row).Split(';', StringSplitOptions.TrimEntries);
+                if (row < 11)
                 {
                     if (!mappings.ContainsKey(parts[1]))
                         mappings.Add(parts[1].Substring(0, 3), terrains.Count);
                     terrains.Add(parts[0]);
                 }
+                else
+                {
+                    bonus.Add(parts[0]);
+                }
             }
+
+            //foreach (var t in values)
+            //{
+            //    var parts = t.Split(';', StringSplitOptions.TrimEntries);
+            //    if (t.Split(',', StringSplitOptions.TrimEntries).Length < 8)
+            //    {
+            //        bonus.Add(parts[0]);
+            //    }
+            //    else
+            //    {
+            //        if (!mappings.ContainsKey(parts[1]))
+            //            mappings.Add(parts[1].Substring(0, 3), terrains.Count);
+            //        terrains.Add(parts[0]);
+            //    }
+            //}
 
             Rules.Terrains ??= new List<Terrain[]>();
 

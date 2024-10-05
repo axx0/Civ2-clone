@@ -134,6 +134,8 @@ public class Civ2GoldInterface : Civ2Interface
             { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D) } },
             { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64)) } },
             { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64)) } },
+            { "cityBuiltAncient", new[]{ new BinaryStorage("Tiles.dll", 0xDEDA4, 0x46FF) } },
+            { "cityBuiltModern", new[]{ new BinaryStorage("Tiles.dll", 0xE34A4, 0x4A42) } },
             { "sinaiPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0x9F78) } },
             { "stPeterburgPic", new[]{ new BinaryStorage("Intro.dll", 0x285A8, 0x15D04) } },
             { "desertPic", new[]{ new BinaryStorage("Intro.dll", 0xD0140, 0xA35A) } },
