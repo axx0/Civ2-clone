@@ -36,8 +36,11 @@ namespace Civ2engine.Production
         {
             if (!city.ImprovementExists(Improvement.Type))
             {
-                //TODO: Ocean improvements
-                
+                //Ocean improvements can't be built inland
+                if (!city.IsNextToOcean() && Improvement.Effects.ContainsKey(Effects.OceanRequired))
+                {
+                    return false;
+                }
                 return true;
             }
             return false;

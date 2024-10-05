@@ -11,7 +11,7 @@ using Model.Core;
 
 namespace Civ2engine
 {
-    public partial class Game
+    public partial class Game : IGame
     {
         private readonly Options _options;
         private readonly Rules _rules;

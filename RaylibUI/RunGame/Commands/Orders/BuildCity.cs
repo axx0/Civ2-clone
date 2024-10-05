@@ -38,7 +38,7 @@ public class BuildCity : Order
             return SetCommandState(CommandStatus.Invalid);
         }
 
-        var activeTile = _player.ActiveTile;
+        var activeTile = activeUnit.CurrentLocation;
         if (activeUnit.AIrole != AIroleType.Settle)
         {
             return SetCommandState(errorPopupKeyword: "ONLYSETTLERS", errorPopupImage: new(_active.PicSources["unit"][0], 2));

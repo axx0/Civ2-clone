@@ -17,6 +17,7 @@ using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
 using Model.Constants;
+using Model.Core.Advances;
 using Model.Dialog;
 
 namespace Civ2;
@@ -469,5 +470,18 @@ public abstract class Civ2Interface : IUserInterface
         x += addColumns * 37;
         
         return new BitmapStorage("icons", x, y, 36, 20);
+    }
+
+    public IImageSource? GetAdvanceImage(Advance advance)
+    {
+        var x = 343 + (advance.KnowledgeCategory) * 37;
+        var y = 211 + (advance.Epoch) * 21;
+        
+        return new BitmapStorage("icons", x, y, 36, 20);
+    }
+
+    public string GetScientistName(int epoch)
+    {
+        return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
     }
 }

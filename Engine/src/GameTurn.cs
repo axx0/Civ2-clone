@@ -1,28 +1,37 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Civ2engine.Units;
-using Civ2engine.Enums;
-using Civ2engine.Advances;
-using Civ2engine.MapObjects;
+﻿using Civ2engine.Advances;
 using Civ2engine.Production;
-using Model.Core;
 
 namespace Civ2engine
 {
-    public partial class Game : IGame
+    public static class GameTurn
     {
-        // Update stats of all cities
-        private void CitiesTurn(IPlayer player)
+        /// <summary>
+        /// Updates the stats of all cities for the active player's turn.
+        /// </summary>
+        /// <param name="game">The game instance.</param>
+        /// <param name="player">The active player.</param>
+        /// <remarks>
+        /// This method performs the following actions for each city:
+        /// - Updates food storage and city size based on surplus/deficit
+        /// - Handles civil disorder and "We Love the King Day" events
+        /// - Manages production and item completion
+        /// - Collects taxes and pays for city improvements
+        /// - Contributes to research progress
+        /// </remarks>
+        public static void CitiesTurn(this Game game, IPlayer player)
         {
-            var currentScienceCost = AdvanceFunctions.CalculateScienceCost(this, _activeCiv);
+            var activeCiv = game.GetActiveCiv;
+            var currentScienceCost = AdvanceFunctions.CalculateScienceCost(game, activeCiv);
 
-            var foodRows = Rules.Cosmic.RowsFoodBox;
-            var shieldRows = Rules.Cosmic.RowsShieldBox;
+            var rules = game.Rules;
             
-            foreach (var city in _activeCiv.Cities)
+            var foodRows = rules.Cosmic.RowsFoodBox;
+            var shieldRows = rules.Cosmic.RowsShieldBox;
+
+            foreach (var city in activeCiv.Cities)
             {
                 city.ImprovementSold = false;
-                
+
                 // Change food in storage
                 city.FoodInStorage += city.SurplusHunger;
 
@@ -31,19 +40,19 @@ namespace Civ2engine
                 //TODO: Combine these calls
                 var tax = city.GetTax();
                 var science = city.GetScience();
-                
+
                 // Change city size
                 if (city.FoodInStorage < 0)
                 {
                     city.FoodInStorage = 0;
-                    city.ShrinkCity(this);
+                    city.ShrinkCity(game);
                 }
                 else
                 {
                     var maxFood = (city.Size + 1) * foodRows;
                     if (city.FoodInStorage > maxFood)
                     {
-                        city.GrowCity(this);
+                        city.GrowCity(game);
                         city.ResetFoodStorage(foodRows);
                     }
                 }
@@ -102,26 +111,26 @@ namespace Civ2engine
                 }
 
                 city.ShieldsProgress += shields;
-                
-                
+
+
                 if (city.ShieldsProgress >= city.ItemInProduction.Cost * shieldRows)
                 {
-                    if (city.ItemInProduction.CompleteProduction(city, Rules))
+                    if (city.ItemInProduction.CompleteProduction(city, rules))
                     {
                         city.ShieldsProgress = 0;
                         player.CityProductionComplete(city);
                     }
                 }
 
-                _activeCiv.Money += tax;
+                activeCiv.Money += tax;
 
                 foreach (var cityImprovement in city.Improvements)
                 {
                     if (cityImprovement.Upkeep > 0)
                     {
-                        if (_activeCiv.Money >= cityImprovement.Upkeep)
+                        if (activeCiv.Money >= cityImprovement.Upkeep)
                         {
-                            _activeCiv.Money -= cityImprovement.Upkeep;
+                            activeCiv.Money -= cityImprovement.Upkeep;
                         }
                         else
                         {
@@ -134,16 +143,17 @@ namespace Civ2engine
 
                 if (science > 0)
                 {
-                    _activeCiv.Science += science;
-                    if (_activeCiv.ReseachingAdvance < 0)
+                    activeCiv.Science += science;
+                    if (activeCiv.ReseachingAdvance < 0)
                     {
-                        var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(this, _activeCiv);
-                        player.SelectNewAdvance(this, researchPossibilities);
-                        currentScienceCost = AdvanceFunctions.CalculateScienceCost(this, _activeCiv);
-                    }else if (currentScienceCost <= _activeCiv.Science)
+                        var researchPossibilities = AdvanceFunctions.CalculateAvailableResearch(game, activeCiv);
+                        player.SelectNewAdvance(game, researchPossibilities);
+                        currentScienceCost = AdvanceFunctions.CalculateScienceCost(game, activeCiv);
+                    }
+                    else if (currentScienceCost <= activeCiv.Science)
                     {
-                        this.GiveAdvance(_activeCiv.ReseachingAdvance, _activeCiv);
-                        _activeCiv.Science -= currentScienceCost;
+                        game.GiveAdvance(activeCiv.ReseachingAdvance, activeCiv);
+                        activeCiv.Science -= currentScienceCost;
                     }
                 }
             }
