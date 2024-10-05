@@ -65,9 +65,10 @@ public class CivDialog : DynamicSizingDialog
         IImageSource[]? optionsIcons = null,
         DialogImageElements? image = null,
         ListBoxDefinition? listBox = null) :
-        base(host,
+        base(host, 
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-             relatDialogPos, requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth: popupBox.Width)
+            popupBox.X != null || popupBox.Y != null ? new Point(popupBox.X ?? 0 / Raylib.GetScreenWidth(), popupBox.Y ?? 0 / Raylib.GetScreenHeight()) : relatDialogPos,
+            requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth: popupBox.Width)
     {
         _active = host.ActiveInterface;
         _handleButtonClick = handleButtonClick;

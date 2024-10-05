@@ -19,5 +19,6 @@ public class DialogElements
     public int OptionsCols { get; set; } = 1;
     public int SelectedOption { get; set; } = 0;
     public List<string>? ReplaceStrings { get; set; }
-    public IImageSource[]? OptionsImages { get; set; }
+    public IImageSource[]? OptionsIcons { get; set; }
+    public DialogImageElements? Image { get; set; }
 }

@@ -119,7 +119,7 @@ public class DynamicSizingDialog : BaseDialog
                 totalHeight += heights[^1];
         }
 
-        SetLocation(width, maxWidth + imageWidth, height, totalHeight);
+        SetLocation(width, maxWidth + imageWidth + LayoutPadding.Left + LayoutPadding.Right, height, totalHeight);
 
         for (int index = 0; index < Controls.Count; index++)
         {

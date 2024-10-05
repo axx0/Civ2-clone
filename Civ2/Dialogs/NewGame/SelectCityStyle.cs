@@ -28,7 +28,7 @@ public class SelectCityStyle : BaseDialogHandler
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
-        Dialog.OptionsImages = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray();
+        Dialog.OptionsIcons = activeInterface.CityImages.Sets.Take(4).Select(i => i.Skip(6).First().Image).ToArray();
         Dialog.Dialog.Default = Initialization.ConfigObject.PlayerCiv.CityStyle;
         Dialog.Dialog.Options ??= Labels.Items[247..251];
         return base.Show(activeInterface);
