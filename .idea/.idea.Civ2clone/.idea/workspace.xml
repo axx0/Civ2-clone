@@ -15,9 +15,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Add scientist name">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/GameTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameTurn.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/Player.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
@@ -55,6 +57,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e8ad7b7a9bb540eb898da96f282c75c1b55600/_b3ead/IList.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
@@ -471,14 +474,6 @@
       <option name="project" value="LOCAL" />
       <updated>1691487849084</updated>
     </task>
-    <task id="LOCAL-00012" summary="Load OK Dialog">
-      <option name="closed" value="true" />
-      <created>1691794748089</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1691794748089</updated>
-    </task>
     <task id="LOCAL-00013" summary="Map drawing in control">
       <option name="closed" value="true" />
       <created>1692178031642</created>
@@ -783,7 +778,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727676975806</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Add scientist name">
+      <option name="closed" value="true" />
+      <created>1728099122405</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1728099122406</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -806,7 +809,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Upgrade to RayLib_cs 6" />
     <MESSAGE value="Rename misnamed elements" />
     <MESSAGE value="Pic Names" />
     <MESSAGE value="Ruleset refactor" />
@@ -831,7 +833,8 @@
     <MESSAGE value="Select current production by default" />
     <MESSAGE value="Unit images in production box" />
     <MESSAGE value="Don't build ocean improvements inland" />
-    <option name="LAST_COMMIT_MESSAGE" value="Don't build ocean improvements inland" />
+    <MESSAGE value="Add scientist name" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add scientist name" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">

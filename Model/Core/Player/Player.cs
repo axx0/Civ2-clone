@@ -79,5 +79,10 @@ namespace Civ2engine
         {
             //What should the AI do??
         }
+
+        public void NotifyAdvanceResearched(int advance)
+        {
+            // What should the AI do??
+        }
     }
 }

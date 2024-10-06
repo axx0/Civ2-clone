@@ -150,4 +150,15 @@ public class LocalPlayer : IPlayer
     {
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
     }
+
+    public void NotifyAdvanceResearched(int advance)
+    {
+        var activeInterface = _gameScreen.Main.ActiveInterface;
+        _gameScreen.ShowPopup("CIVADVANCE",
+            replaceStrings: new[]
+            {
+                Civilization.Adjective, activeInterface.GetScientistName(Civilization.Epoch),
+                _gameScreen.Game.Rules.Advances[advance].Name
+            });
+    }
 }

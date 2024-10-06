@@ -152,6 +152,7 @@ namespace Civ2engine
                     }
                     else if (currentScienceCost <= activeCiv.Science)
                     {
+                        player.NotifyAdvanceResearched(activeCiv.ReseachingAdvance);
                         game.GiveAdvance(activeCiv.ReseachingAdvance, activeCiv);
                         activeCiv.Science -= currentScienceCost;
                     }
