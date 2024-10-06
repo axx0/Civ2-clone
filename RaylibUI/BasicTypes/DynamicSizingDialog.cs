@@ -30,11 +30,13 @@ public class DynamicSizingDialog : BaseDialog
         _requestedWidth = requestedWidth;
         if (!string.IsNullOrEmpty(title))
         {
-            _headerLabel = new HeaderLabel(this, _active.Look, title, fontSize: _active.Look.HeaderLabelFontSizeNormal);
+            _headerLabel = _active != null ? 
+                new HeaderLabel(this, _active.Look, title, fontSize: _active?.Look.HeaderLabelFontSizeNormal ?? 28) :
+                new HeaderLabel(this, title, 28);
             Controls.Add(_headerLabel);
         }
 
-        LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, true);
+        LayoutPadding = _active?.GetPadding(_headerLabel?.TextSize.Y ?? 0, true) ?? new Padding(28, 11, 11, 11);
     }
 
 
@@ -115,7 +117,7 @@ public class DynamicSizingDialog : BaseDialog
         if (_buttons != null)
         {
             totalHeight -= 3;
-            if (!_active.IsButtonInOuterPanel)
+            if (!_active?.IsButtonInOuterPanel ?? true)
                 totalHeight += heights[^1];
         }
 

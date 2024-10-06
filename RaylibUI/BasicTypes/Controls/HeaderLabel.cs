@@ -13,6 +13,11 @@ public class HeaderLabel : LabelControl
     {
     }
 
+    public HeaderLabel(IControlLayout controller, string title, int fontSize = 0) :
+        base(controller, title, eventTransparent: false, offset: 0, alignment: TextAlignment.Center, font: Fonts.TnRbold, fontSize: fontSize)
+    {
+    }
+
     public override void OnMouseMove(Vector2 moveAmount)
     {
         if (Raylib.IsMouseButtonDown(MouseButton.Left))

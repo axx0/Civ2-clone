@@ -36,6 +36,7 @@ namespace RaylibUI
             Raylib.SetExitKey(KeyboardKey.F12);
 
             Shaders.Load();
+            Helpers.LoadFonts();
 
             if (hasCivDir)
             {
@@ -85,7 +86,7 @@ namespace RaylibUI
 
         private MainMenu SetupMainScreen()
         {    
-            Helpers.LoadFonts();
+            //Helpers.LoadFonts();
             Interfaces = Helpers.LoadInterfaces(this);
             AllRuleSets =  Interfaces.SelectMany((userInterface, idx) =>
                 {

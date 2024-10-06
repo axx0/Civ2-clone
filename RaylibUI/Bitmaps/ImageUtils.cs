@@ -26,8 +26,15 @@ public static class ImageUtils
 
     public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
     {
-        active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !ToTStatusPanelLayout);
-        active.DrawBorderLines(ref image, height, width, padding, statusPanel);
+        if (active == null)
+        {
+            Raylib.ImageDrawRectangle(ref image, 0, 0, width, height, Color.Gray);
+        }
+        else
+        {
+            active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !ToTStatusPanelLayout);
+            active.DrawBorderLines(ref image, height, width, padding, statusPanel);
+        }
     }
 
     //public static void DrawTiledImage(Image source, ref Image destination, int height, int width)
@@ -87,7 +94,7 @@ public static class ImageUtils
     {
         // MGE uses inner wallpaper from ICONS for all dialogs
         // TOT uses inner wallpaper from ICONS only for status panel, otherwise uses tiles from dialog image file
-        var tiles = statusPanel && wp.InnerAlt.Width > 0 ? new[] { wp.InnerAlt } : wp.Inner;
+        var tiles = wp != null ? (statusPanel && wp.InnerAlt.Width > 0 ? new[] { wp.InnerAlt } : wp.Inner) : new[] { InnerWallpaper };
 
         if (!statusPanel)
         {
@@ -144,7 +151,7 @@ public static class ImageUtils
     public static Texture2D PaintButtonBase(int width, int height)
     {
         var rnd = new Random();
-        var btn = Wallpaper.Button;
+        var btn = Wallpaper?.Button ?? new[] { Raylib.GenImageColor(width, height, new Color(192, 192, 192, 255)) };
         var len = btn.Length - 2;  // variations of inner texture
         var cols = Math.Ceiling(width / (double)btn[0].Width);
 
@@ -264,7 +271,7 @@ public static class ImageUtils
         }
     }
 
-    public static Wallpaper Wallpaper { get; set; }
+    public static Wallpaper? Wallpaper { get; set; }
 
     public static Image InnerWallpaper
     {

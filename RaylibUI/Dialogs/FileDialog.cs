@@ -27,13 +27,13 @@ public class FileDialog : DynamicSizingDialog
         _listBox = new ListBox(this);
         _listBox.ItemSelected += ItemSelected;
         _textBox = new TextBox(this, baseDirectory, 600, TestSelection);
-        _okButton = new Button(this, Labels.For(LabelIndex.OK));
+        _okButton = new Button(this, host.ActiveInterface == null ? Labels.Ok : Labels.For(LabelIndex.OK));
         _okButton.Click += OkClicked;
         Controls.Add(_listBox);
         var menuBar = new ControlGroup(this, flexElement: 0);
         menuBar.AddChild(_textBox);
         menuBar.AddChild(_okButton);
-        var cancelButton = new Button(this, Labels.For(LabelIndex.Cancel));
+        var cancelButton = new Button(this, host.ActiveInterface == null ? Labels.Cancel : Labels.For(LabelIndex.Cancel));
         cancelButton.Click += CancelButtonOnClick;
         menuBar.AddChild(cancelButton);
         Controls.Add(menuBar);

@@ -53,7 +53,7 @@ public class LabelControl : BaseControl
         _defaultHeight = defaultHeight;
         _fontSize = fontSize;
         _spacing = spacing;
-        _labelFont = font ?? controller.MainWindow.ActiveInterface.Look.LabelFont;
+        _labelFont = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
         _colorFront = colorFront ?? Color.Black;
         _colorShadow = colorShadow ?? Color.Black;
         _shadowOffset = shadowOffset ?? Vector2.Zero;

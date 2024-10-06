@@ -9,7 +9,7 @@ public abstract class BaseDialog : BaseLayoutController
     protected Texture2D? BackgroundImage;
     private readonly Point _position;
     
-    protected BaseDialog(Main main, Point? position = null) : base(main, main.ActiveInterface.DialogPadding)
+    protected BaseDialog(Main main, Point? position = null) : base(main, main.ActiveInterface?.DialogPadding ?? new Padding(28, 11, 46, 11))
     {
         _position = position ?? new Point(0,0);
     }

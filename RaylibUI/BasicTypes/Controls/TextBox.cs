@@ -3,6 +3,7 @@ using System.Xml;
 using Raylib_cs;
 using RaylibUI.BasicTypes;
 using Model;
+using Model.Interface;
 
 namespace RaylibUI.Controls;
 
@@ -40,7 +41,7 @@ public class TextBox : BaseControl
     {
         _text = initialValue;
         _editPosition = _text.Length;
-        var size = Raylib.MeasureTextEx(_controller.MainWindow.ActiveInterface.Look.DefaultFont, _text, Styles.BaseFontSize, 1.0f);
+        var size = Raylib.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Styles.BaseFontSize, 1.0f);
         _editWidth = (int)size.X;
         Height = (int)(size.Y + TextMargin * 2);
     }
@@ -49,7 +50,7 @@ public class TextBox : BaseControl
     {
         Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.White);
         Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.Black);
-        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
+        Raylib.DrawTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
         
         if (_editMode)
         {
