@@ -1,5 +1,7 @@
 using System.Numerics;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -18,7 +20,7 @@ public class TextureDisplay : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTextureEx(_texture, _location, 0f, _scale, Color.White);
+        Graphics.DrawTextureEx(_texture, _location, 0f, _scale, Color.White);
         base.Draw(pulse);
     }
 }

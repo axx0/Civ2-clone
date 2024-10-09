@@ -2,7 +2,11 @@ using System.Numerics;
 using Civ2engine.IO;
 using Model;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Collision;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
@@ -73,9 +77,9 @@ public class DropdownMenu :  BaseDialog
 
     public override void MouseOutsideControls(Vector2 mousePos)
     {
-        if (Raylib.IsMouseButtonDown(MouseButton.Left))
+        if (Input.IsMouseButtonDown(MouseButton.Left))
         {
-            if (Raylib.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
+            if (ShapeHelper.CheckCollisionPointRec(mousePos, MenuBar.Bounds))
             {
                 _clickInMenu = true;
                 _clickOutSide = false;
@@ -92,7 +96,7 @@ public class DropdownMenu :  BaseDialog
             {
                 foreach (var control in MenuBar.Children!.OfType<MenuLabel>())
                 {
-                    if (Raylib.CheckCollisionPointRec(mousePos, control.Bounds))
+                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
                     {
                         if (control.Index == _current)
                         {
@@ -216,14 +220,14 @@ public class DropdownMenu :  BaseDialog
     {
         if (!_shown || Controls.Count == 0) return;
 
-        Raylib.DrawRectangleV(Location, new Vector2(Width, Height), new Color(242, 242, 242, 255));
-        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y, Width, (int)Height, new Color(204, 204, 204, 255));
+        Graphics.DrawRectangleV(Location, new Vector2(Width, Height), new Color(242, 242, 242, 255));
+        Graphics.DrawRectangleLines((int)Location.X, (int)Location.Y, Width, (int)Height, new Color(204, 204, 204, 255));
         
         foreach (var control in Controls)
         {
             if (Focused == control)
             {
-                Raylib.DrawRectangleRec(new Rectangle(control.Location.X, control.Location.Y, control.Width, control.Height), new Color(145, 201, 247, 255));
+                Graphics.DrawRectangleRec(new Rectangle(control.Location.X, control.Location.Y, control.Width, control.Height), new Color(145, 201, 247, 255));
             }
             control.Draw(pulse);
         }

@@ -1,7 +1,9 @@
 using System.Numerics;
-using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping;
 using Model;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -27,7 +29,7 @@ public class CityInfoArea : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height,Color.Magenta);
+        Graphics.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, Width,Height, Color.Magenta);
         if (Children != null)
         {
             foreach (var control in Children)
@@ -37,7 +39,7 @@ public class CityInfoArea : BaseControl
         }
         else
         {
-            Raylib.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.Magenta );
+            Graphics.DrawTextEx(_active.Look.DefaultFont,  Mode.ToString(), Location, 20,1,Color.Magenta );
         }
     }
 

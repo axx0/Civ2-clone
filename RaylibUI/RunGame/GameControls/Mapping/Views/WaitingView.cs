@@ -1,6 +1,5 @@
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
-using Raylib_cs;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;

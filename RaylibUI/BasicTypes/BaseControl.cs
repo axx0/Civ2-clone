@@ -1,5 +1,6 @@
 using System.Numerics;
-using Raylib_cs;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes;
 
 namespace RaylibUI;
@@ -79,14 +80,14 @@ public abstract class BaseControl : IControl
     {
         if (_clickStart)
         {
-            if (!Raylib.IsMouseButtonDown(_clickButton))
+            if (!Input.IsMouseButtonDown(_clickButton))
             {
                 Click?.Invoke(this, new MouseEventArgs { Button = _clickButton});
             }   
         }
         if (_clickPossible)
         {
-            _clickStart = Raylib.IsMouseButtonDown(MouseButton.Left);
+            _clickStart = Input.IsMouseButtonDown(MouseButton.Left);
             if (_clickStart)
             {
                 _clickButton = MouseButton.Left;
@@ -94,7 +95,7 @@ public abstract class BaseControl : IControl
             }
             else
             {
-                _clickStart = Raylib.IsMouseButtonDown(MouseButton.Right);
+                _clickStart = Input.IsMouseButtonDown(MouseButton.Right);
                 if (_clickStart)
                 {
                     _clickButton = MouseButton.Right;
@@ -112,7 +113,7 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseEnter()
     {
-        _clickPossible = !Raylib.IsMouseButtonDown(MouseButton.Left) && !Raylib.IsMouseButtonDown(MouseButton.Right);
+        _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
         _clickStart = false;
     }
 
@@ -143,7 +144,7 @@ public abstract class BaseControl : IControl
     public virtual void Draw(bool pulse)
     {
         // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
-        // Raylib.DrawRectangleLines((int)_bounds.X, (int)_bounds.Y, _width,Height,Color.Magenta);
+        // Graphics.DrawRectangleLines((int)_bounds.X, (int)_bounds.Y, _width,Height,Color.Magenta);
     }
 
     public virtual int GetPreferredWidth()
@@ -158,7 +159,7 @@ public abstract class BaseControl : IControl
 
     protected Vector2 GetRelativeMousePosition()
     {
-        return Raylib.GetMousePosition() - _location;
+        return Input.GetMousePosition() - _location;
     }
 }
 

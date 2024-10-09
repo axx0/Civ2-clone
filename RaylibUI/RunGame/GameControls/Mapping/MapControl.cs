@@ -4,13 +4,17 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Raylib_cs;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Textures;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 using RaylibUI.Controls;
 using Model;
 using Model.Core;
 using Model.Interface;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Fonts;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -130,7 +134,7 @@ public class MapControl : BaseControl
 
         if (_backgroundImage != null)
         {
-            Raylib.UnloadTexture(_backgroundImage.Value);
+            _backgroundImage.Value.Unload();
         }
         _backgroundImage = ImageUtils.PaintDialogBase(_gameScreen.Main.ActiveInterface, Width, Height, _padding, noWallpaper:true);
 
@@ -307,7 +311,7 @@ public class MapControl : BaseControl
         }
 
         var paddedLoc = new Vector2(Location.X + _padding.Left, Location.Y + _padding.Top);
-        Raylib.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f,1f,
+        Graphics.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f,1f,
             Color.White);
 
         var cityDetails = new List<CityData>();
@@ -322,12 +326,12 @@ public class MapControl : BaseControl
 
                 var size = data.Size.ToString();
                 var fontSize = 14.ZoomScale(zoom);
-                var textSize = Raylib.MeasureTextEx(Fonts.TnRbold, size, fontSize, 0);
+                var textSize = TextManager.MeasureTextEx(Fonts.TnRbold, size, fontSize, 0);
                 var citySizeRectLoc = paddedLoc + data.Location + data.SizeRectLoc.ZoomScale(zoom);
                 var textPosition = citySizeRectLoc;
-                Raylib.DrawRectangle((int)citySizeRectLoc.X, (int)citySizeRectLoc.Y, (int)textSize.X, (int)textSize.Y, data.Color.TextColour);
-                Raylib.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
-                Raylib.DrawTextEx(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
+                Graphics.DrawRectangle((int)citySizeRectLoc.X, (int)citySizeRectLoc.Y, (int)textSize.X, (int)textSize.Y, data.Color.TextColour);
+                Graphics.DrawRectangleLines((int)citySizeRectLoc.X - 1, (int)citySizeRectLoc.Y, (int)textSize.X + 2, (int)textSize.Y, Color.Black);
+                Graphics.DrawTextEx(Fonts.TnRbold, size, textPosition, fontSize, 0, Color.Black);
             }
             else if (element.IsTerrain || !_currentView.ActionTiles.Contains(element.Tile) || element.Tile.IsCityPresent)
             {
@@ -339,11 +343,11 @@ public class MapControl : BaseControl
         {
             var name = cityData.Name;
             var fontSize = 20.ZoomScale(zoom);
-            var textSize = Raylib.MeasureTextEx(_active.Look.DefaultFont, name, fontSize, 1);
+            var textSize = TextManager.MeasureTextEx(_active.Look.DefaultFont, name, fontSize, 1);
             var textPosition = paddedLoc + cityData.Location + new Vector2(cityData.Texture.Width.ZoomScale(zoom) / 2f , cityData.Texture.Height.ZoomScale(zoom)) - textSize /2f;
 
-            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), fontSize, 1, Color.Black);
-            Raylib.DrawTextEx(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour);
+            Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition + new Vector2(1,1), fontSize, 1, Color.Black);
+            Graphics.DrawTextEx(_active.Look.DefaultFont, name, textPosition, fontSize, 1, cityData.Color.TextColour);
         }
 
         foreach (var animation in _currentView.CurrentAnimations)
@@ -352,7 +356,7 @@ public class MapControl : BaseControl
         }
 
         if (_backgroundImage != null)
-            Raylib.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
+            Graphics.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
         if (!_gameScreen.ToTPanelLayout)
             _headerLabel.Draw(pulse);
     }

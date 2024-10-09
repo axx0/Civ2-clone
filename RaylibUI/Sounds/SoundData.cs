@@ -1,14 +1,14 @@
 using System.Security.Cryptography;
 using System.Text;
 using NAudio.Wave;
-using Raylib_cs;
+using Raylib_CSharp.Audio;
 
 namespace RaylibUI;
 
 public class SoundData : IDisposable
 {
     public DateTime? LastPlayed { get; set; }
-    private Raylib_cs.Sound _rlSound;
+    private Raylib_CSharp.Audio.Sound _rlSound;
     private bool _rlSoundLoaded;
     public Music RlMusic;
     private bool _rlMusicLoaded;
@@ -34,9 +34,9 @@ public class SoundData : IDisposable
     public void Stop()
     {
         if (_rlSoundLoaded)
-            Raylib.StopSound(_rlSound);
+            _rlSound.Stop();
         else if (_rlMusicLoaded)
-            Raylib.StopMusicStream(RlMusic);
+            _rlSound.Stop();
     }
 
     public void Play()
@@ -45,14 +45,14 @@ public class SoundData : IDisposable
         {
             if (File.Exists(PathConv))
             {
-                _rlSound = Raylib.LoadSound(PathConv);
+                _rlSound = Raylib_CSharp.Audio.Sound.Load(PathConv);
                 _rlSoundLoaded = _rlSound.FrameCount > 0;
             }
         }
 
         if (_rlSoundLoaded)
         {
-            Raylib.PlaySound(_rlSound);
+            _rlSound.Play();
             LastPlayed = DateTime.Now;
         }
     }
@@ -63,7 +63,7 @@ public class SoundData : IDisposable
         {
             if (File.Exists(PathConv))
             {
-                RlMusic = Raylib.LoadMusicStream(PathConv);
+                RlMusic = Music.Load(PathConv);
                 _rlMusicLoaded = RlMusic.FrameCount > 0;
             }
         }
@@ -71,7 +71,7 @@ public class SoundData : IDisposable
         if (_rlMusicLoaded)
         {
             RlMusic.Looping = true;
-            Raylib.PlayMusicStream(RlMusic);
+            RlMusic.PlayStream();
         }
 
         return RlMusic;
@@ -83,7 +83,7 @@ public class SoundData : IDisposable
     public void MusicUpdateCall()
     {
         if (RlMusic.FrameCount > 0)
-            Raylib.UpdateMusicStream(RlMusic);
+            RlMusic.UpdateStream();
     }
 
 
@@ -132,7 +132,7 @@ public class SoundData : IDisposable
         if (_rlSoundLoaded || _rlSound.FrameCount > 0)
         {
             Stop();
-            Raylib.UnloadSound(_rlSound);
+            _rlSound.Unload();
         }
     }
 

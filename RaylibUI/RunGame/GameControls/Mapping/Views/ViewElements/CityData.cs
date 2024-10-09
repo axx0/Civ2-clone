@@ -1,7 +1,7 @@
 using System.Numerics;
 using Civ2engine.MapObjects;
 using Model.ImageSets;
-using Raylib_cs;
+using Raylib_CSharp.Textures;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Numerics;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
-using Raylib_cs;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;
 

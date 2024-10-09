@@ -1,4 +1,4 @@
-﻿using Raylib_cs;
+﻿using Raylib_CSharp.Shaders;
 
 namespace RaylibUI;
 
@@ -8,7 +8,7 @@ public static class Shaders
 
     public static void Load()
     {
-        Grayscale = Raylib.LoadShader(
+        Grayscale = Shader.Load(
             "Shaders//base.vs",
             "Shaders//grayscale.fs"
         );
@@ -16,6 +16,6 @@ public static class Shaders
 
     public static void Unload()
     {
-        Raylib.UnloadShader(Grayscale);
+        Grayscale.Unload();
     }
 }

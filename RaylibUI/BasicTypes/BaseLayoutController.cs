@@ -1,7 +1,6 @@
 using System.Numerics;
 using Model;
-using Raylib_cs;
-using RaylibUI.Forms;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI;
 

@@ -4,7 +4,7 @@ using Civ2engine.IO;
 using Model;
 using Model.Images;
 using Model.ImageSets;
-using Raylib_cs;
+using Raylib_CSharp.Transformations;
 using RaylibUtils;
 
 namespace Civ2.ImageLoader

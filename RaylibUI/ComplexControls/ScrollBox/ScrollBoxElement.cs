@@ -1,4 +1,6 @@
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.ComplexControls.ScrollBox;
 
@@ -72,7 +74,7 @@ public class ScrollBoxElement : ControlGroup
         base.Draw(pulse);
         if (Controller.Focused == this)
         {
-            Raylib.DrawRectangleLinesEx(Bounds, 0.2f, Color.Gray);
+            Graphics.DrawRectangleLinesEx(Bounds, 0.2f, Color.Gray);
         }
     }
 }

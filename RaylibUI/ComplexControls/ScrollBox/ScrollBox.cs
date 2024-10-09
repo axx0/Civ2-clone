@@ -1,5 +1,8 @@
 
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Windowing;
 using RaylibUI.BasicTypes;
 using RaylibUI.ComplexControls.ScrollBox;
 
@@ -52,7 +55,7 @@ public class ScrollBox : BaseControl
     {
         MeasureWidths();
 
-        var screenWidth = Raylib.GetScreenWidth();
+        var screenWidth = Window.GetScreenWidth();
 
         var columns = (screenWidth / 2 - 22) / (_maxChildWidth + 5);
         if (columns < 1)
@@ -77,7 +80,7 @@ public class ScrollBox : BaseControl
         
         var rows = 10;
         var requestedHeight = (_labelHeight + 1) * rows;
-        var screenHeight = Raylib.GetScreenHeight();
+        var screenHeight = Window.GetScreenHeight();
         while (requestedHeight > screenHeight/2)
         {
             requestedHeight = (_labelHeight + 1) * --rows;
@@ -318,7 +321,7 @@ public class ScrollBox : BaseControl
         var startX = Location.X + 2;
         var startY = Location.Y + 2;
         
-        Raylib.DrawRectangle((int)startX, (int)startY, Width -4, Height -4, new Color(207,207,207,255));
+        Graphics.DrawRectangle((int)startX, (int)startY, Width -4, Height -4, new Color(207,207,207,255));
         base.Draw(pulse);
         
         foreach (var control in Children)

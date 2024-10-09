@@ -1,13 +1,15 @@
 ﻿using System.IO;
 using System.Net.Mime;
 using System.Text;
-using Raylib_cs;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Transformations;
 using Civ2engine;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Model;
 using Model.Images;
 using System.Numerics;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUtils
 {
@@ -126,7 +128,7 @@ namespace RaylibUtils
                         {
                             rect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
                         }
-                        var image = Raylib.ImageFromImage(sourceImage, rect);
+                        var image = Image.FromImage(sourceImage, rect);
                         _imageCache[binarySource.Key] = image;
                         break;
                     }
@@ -149,14 +151,13 @@ namespace RaylibUtils
                         {
                             rect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
                         }
-                        var image = Raylib.ImageFromImage(sourceImage, rect);
+                        var image = Image.FromImage(sourceImage, rect);
 
                         // Upper-left pixel transparency (not for 8bpp gif/bmp)
                         if (_sourceBpp[sourceKey] > 8 && bitmapStorage.TransparencyPixel)
                         {
-                            var transparent = Raylib.GetImageColor(image, 0, 0);
-                            Raylib.ImageColorReplace(ref image, transparent,
-                                new Color(transparent.R, transparent.G, transparent.B, (byte)0));
+                            var transparent = image.GetColor(0, 0);
+                            image.ReplaceColor(transparent, new Color(transparent.R, transparent.G, transparent.B, 0));
                         }
 
                         // Get location of shields/city flags
@@ -166,7 +167,7 @@ namespace RaylibUtils
                             var orangePixel = new Color(255, 155, 0, 255);
                             for (var col = 0; col < rect.Width; col++)
                             {
-                                var pixelColour = Raylib.GetImageColor(sourceImage, (int)rect.X + col, (int)rect.Y - 1);
+                                var pixelColour = sourceImage.GetColor((int)rect.X + col, (int)rect.Y - 1);
                                 if (bluePixel.R == pixelColour.R && bluePixel.G == pixelColour.G && bluePixel.B == pixelColour.B)
                                 {
                                     flag1X = col;
@@ -178,7 +179,7 @@ namespace RaylibUtils
                             }
                             for (var row = 0; row < rect.Height; row++)
                             {
-                                var pixelColour = Raylib.GetImageColor(sourceImage, (int)rect.X - 1, (int)rect.Y + row);
+                                var pixelColour = sourceImage.GetColor((int)rect.X - 1, (int)rect.Y + row);
                                 if (bluePixel.R == pixelColour.R && bluePixel.G == pixelColour.G && bluePixel.B == pixelColour.B)
                                 {
                                     flag1Y = row;
@@ -197,8 +198,8 @@ namespace RaylibUtils
                 {
                     if (owner != -1 && memoryStorage.ReplacementColour != null && active != null)
                     {
-                        var image = Raylib.ImageCopy(memoryStorage.Image);
-                        Raylib.ImageColorReplace(ref image, memoryStorage.ReplacementColour.Value,
+                        var image = memoryStorage.Image.Copy();
+                        image.ReplaceColor(memoryStorage.ReplacementColour.Value,
                             memoryStorage.Dark
                                 ? active.PlayerColours[owner].DarkColour
                                 : active.PlayerColours[owner].LightColour);

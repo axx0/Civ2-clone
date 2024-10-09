@@ -1,7 +1,11 @@
 using System.Numerics;
 using Model;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes;
 
 namespace RaylibUI.Controls;
@@ -32,7 +36,7 @@ public class Button : BaseControl
         }
         _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
         _textColour = _active?.Look.ButtonColour ?? Color.Black;
-        _textSize = Raylib.MeasureTextEx(_font, text, _fontSize, 1f);
+        _textSize = TextManager.MeasureTextEx(_font, text, _fontSize, 1f);
         Height = (int)(_textSize.Y + 10f);
     }
 
@@ -49,14 +53,14 @@ public class Button : BaseControl
         }
         else
         {
-            Raylib.DrawTexture(Texture, x, y, Color.White);
+            Graphics.DrawTexture(Texture, x, y, Color.White);
         }
 
-        Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _textColour);
+        Graphics.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _textColour);
 
         if (_hovered)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
+            Graphics.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
         }
         base.Draw(pulse);
     }

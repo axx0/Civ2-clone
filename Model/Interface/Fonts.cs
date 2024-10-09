@@ -1,4 +1,5 @@
-using Raylib_cs;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Textures;
 
 namespace Model.Interface;
 
@@ -7,24 +8,24 @@ public static class Fonts
     /// <summary>
     /// Times new roman
     /// </summary>
-    public static Font Tnr { get; set; } = Raylib.GetFontDefault();
+    public static Font Tnr { get; set; } = Font.GetDefault();
 
     /// <summary>
     /// Bold times new roman font
     /// </summary>
-    public static Font TnRbold { get; set; } = Raylib.GetFontDefault();
+    public static Font TnRbold { get; set; } = Font.GetDefault();
 
     /// <summary>
     /// Alternative font
     /// </summary>
-    public static Font Arial { get; set; } = Raylib.GetFontDefault();
+    public static Font Arial { get; set; } = Font.GetDefault();
 
     public const int FontSize = 20;
 
     public static void SetTnr(Font font)
     {
         Tnr = font;
-        Raylib.SetTextureFilter(Tnr.Texture, TextureFilter.Bilinear);
+        Tnr.Texture.SetFilter(TextureFilter.Bilinear);
     }
 
     public static void SetArial(Font font)
@@ -36,7 +37,7 @@ public static class Fonts
     public static void SetBold(Font font)
     {
         TnRbold = font;
-        Raylib.SetTextureFilter(TnRbold.Texture, TextureFilter.Bilinear);
+        TnRbold.Texture.SetFilter( TextureFilter.Bilinear);
     }
 }
 

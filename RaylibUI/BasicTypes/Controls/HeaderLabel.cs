@@ -1,7 +1,8 @@
 using System.Numerics;
 using Model;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI.BasicTypes.Controls;
 
@@ -20,7 +21,7 @@ public class HeaderLabel : LabelControl
 
     public override void OnMouseMove(Vector2 moveAmount)
     {
-        if (Raylib.IsMouseButtonDown(MouseButton.Left))
+        if (Input.IsMouseButtonDown(MouseButton.Left))
         {
             Controller.Move(moveAmount);
         }

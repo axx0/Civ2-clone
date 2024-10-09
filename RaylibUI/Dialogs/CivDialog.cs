@@ -3,7 +3,8 @@ using Model;
 using Model.Dialog;
 using Model.Images;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp.Windowing;
+using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.Dialogs;
@@ -14,6 +15,8 @@ using System.Numerics;
 using System.Reflection.Emit;
 using Model.Core;
 using Button = RaylibUI.Controls.Button;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Fonts;
 
 namespace RaylibUI;
 
@@ -67,7 +70,7 @@ public class CivDialog : DynamicSizingDialog
         ListBoxDefinition? listBox = null) :
         base(host, 
             DialogUtils.ReplacePlaceholders(popupBox.Title, replaceStrings, replaceNumbers),
-            popupBox.X != null || popupBox.Y != null ? new Point(popupBox.X ?? 0 / Raylib.GetScreenWidth(), popupBox.Y ?? 0 / Raylib.GetScreenHeight()) : relatDialogPos,
+            popupBox.X != null || popupBox.Y != null ? new Point(popupBox.X ?? 0 / Window.GetScreenWidth(), popupBox.Y ?? 0 / Window.GetScreenHeight()) : relatDialogPos,
             requestedWidth: popupBox.Width == 0 ? host.ActiveInterface.DefaultDialogWidth: popupBox.Width)
     {
         _active = host.ActiveInterface;
@@ -115,7 +118,7 @@ public class CivDialog : DynamicSizingDialog
                     DialogUtils.ReplacePlaceholders(t.Description, replaceStrings, replaceNumbers)).ToList();
             }
 
-            var labelSize = (int)textBoxLabels.Max(l => Raylib.MeasureTextEx(host.ActiveInterface.Look.DefaultFont, l, 20, 1.0f).X) +24;
+            var labelSize = (int)textBoxLabels.Max(l => TextManager.MeasureTextEx(host.ActiveInterface.Look.DefaultFont, l, 20, 1.0f).X) +24;
 
             for (int i = 0; i < textBoxDefs.Count; i++)
             {

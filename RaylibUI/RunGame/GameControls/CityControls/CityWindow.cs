@@ -4,7 +4,10 @@ using Civ2engine.Production;
 using Model;
 using Model.CityWindowModel;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUtils;
@@ -134,7 +137,7 @@ public class CityWindow : BaseDialog
         if (titlePosition != Vector2.Zero)
         {
             var resourceTitle = Labels.For(LabelIndex.CityResources);
-            var resourceTitleSize = Raylib.MeasureTextEx(_active.Look.CityWindowFont, resourceTitle, _active.Look.CityWindowFontSize, 1);
+            var resourceTitleSize = TextManager.MeasureTextEx(_active.Look.CityWindowFont, resourceTitle, _active.Look.CityWindowFontSize, 1);
             Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Gold, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
             {
                 AbsolutePosition = new Rectangle(titlePosition.X - resourceTitleSize.X / 2 - 10,titlePosition.Y, resourceTitleSize.X + 20, resourceTitleSize.Y )
@@ -161,7 +164,7 @@ public class CityWindow : BaseDialog
         var productionTitlePosition = productionSettings.TitlePosition;
         
         var productionTitle = city.ItemInProduction.Title;
-        var productionTitleSize = Raylib.MeasureTextEx(_active.Look.CityWindowFont, productionTitle, _active.Look.CityWindowFontSize, 1);
+        var productionTitleSize = TextManager.MeasureTextEx(_active.Look.CityWindowFont, productionTitle, _active.Look.CityWindowFontSize, 1);
         
         var label = new LabelControl(this, productionTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Blue, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
         {

@@ -1,7 +1,7 @@
 using Civ2engine.Scripting;
 using Model;
 using Model.Core;
-using Raylib_cs;
+using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUI.RunGame;

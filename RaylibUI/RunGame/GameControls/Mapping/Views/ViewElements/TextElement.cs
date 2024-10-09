@@ -1,7 +1,9 @@
 using System.Numerics;
 using Civ2engine.MapObjects;
-using Raylib_cs;
 using Model.Interface;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -31,8 +33,8 @@ public class TextElement : IViewElement
     {
         var loc = adjustedLocation + Offset * scale;
         
-        var size = Raylib.MeasureTextEx(Fonts.Arial, _text, _height * scale, 1);
-        Raylib.DrawTextEx(Fonts.Arial, _text, loc - new Vector2(size.X / 2, 0), _height * scale, 1,
+        var size = TextManager.MeasureTextEx(Fonts.Arial, _text, _height * scale, 1);
+        Graphics.DrawTextEx(Fonts.Arial, _text, loc - new Vector2(size.X / 2, 0), _height * scale, 1,
             Color.Black);
     }
 
