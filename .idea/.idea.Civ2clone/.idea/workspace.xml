@@ -15,12 +15,149 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="Add scientist name">
+    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="City dialog improvements">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/GameTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameTurn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Civ2.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectCityStyle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectCityStyle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/CityLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/CityLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/IconLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/IconLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/TerrainLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/TerrainLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/UnitLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/UnitLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2Gold.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2Gold.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2TOT/Civ2TOT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/Civ2TOT.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2clone.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/EtoFormsUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/EtoFormsUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/ConsumableResourceArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ConsumableResourceArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/ResourceArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ResourceArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/SharedResourceArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/SharedResourceArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/ShieldProduction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ShieldProduction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/PopupBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/PopupBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Dialog/DialogElements.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Dialog/DialogElements.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IGameCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IGameCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/CityImageSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/CityImageSet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/DitherMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/DitherMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/PlayerColour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/PlayerColour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/UnitSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/UnitSet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/UnitShield.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/UnitShield.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/ImageSets/Wallpaper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/Wallpaper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Images/BinaryStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Images/BinaryStorage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Images/BitmapStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Images/BitmapStorage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Images/MemoryStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Images/MemoryStorage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Interface/Fonts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Interface/Fonts.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/InterfaceStyle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/InterfaceStyle.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/DropdownMenuContents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/DropdownMenuContents.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/MenuCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/MenuCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/MenuElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/MenuElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/Shortcut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/Shortcut.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Model.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Model.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/UnitSupport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/UnitSupport.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseLayoutController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseLayoutController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/Button.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/Button.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ControlGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ControlGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ImageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ImageBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/OptionControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/OptionControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/TextBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/TextBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControlLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControlLayout.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/ScreenBackground.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/ScreenBackground.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/TextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/TextureCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/DialogUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/DialogUtils.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/Button.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/Button.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/FormattedText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/FormattedText.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/ListBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBarItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBarItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuStripItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuStripItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/RadioButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/RadioButton.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/VScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/VScrollBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/CtrlHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/CtrlHelpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/DialogHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/DialogHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/ImagePanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/ImagePanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/GameFileLocatorScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/GameFileLocatorScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/Helpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/EndTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/EndTurn.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MapLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MapLayout.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/OpenLuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/OpenLuaConsole.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/FortifyOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/FortifyOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/Order.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/Order.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SkipOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SkipOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SleepOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SleepOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/UnloadOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/UnloadOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/WaitOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/WaitOrder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Quit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Quit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/HealthBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/HealthBar.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropDownItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropDownItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropdownMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropdownMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/GameMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/GameMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/MenuLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/MenuLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/TextureDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/TextureDisplay.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/IGameMode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/IGameMode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ProcessingMode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ProcessingMode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Shaders/Shaders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Shaders/Shaders.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Sounds/SoundData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Sounds/SoundData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Styles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Styles.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUtils/ImageProps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/ImageProps.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUtils/Images.ImportBitmaps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/Images.ImportBitmaps.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUtils/Images.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/Images.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUtils/RaylibUtils.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/RaylibUtils.csproj" afterDir="false" />
     </list>
     <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
       <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
@@ -57,19 +194,16 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e8ad7b7a9bb540eb898da96f282c75c1b55600/_b3ead/IList.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Civ2/Civ2Interface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/appsettings.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.Actions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Game.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/GameTurn.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -82,9 +216,17 @@
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/IUserInterface.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/LocalPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Player/IPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Player/Player.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/BaseControl.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameScreen.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
@@ -167,7 +309,7 @@
     "TODO_SCOPE": "All Places",
     "WebServerToolWindowFactoryState": "false",
     "XThreadsFramesViewSplitterKey": "0.40725243",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "Merging master",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -403,6 +545,8 @@
       <workItem from="1727673365056" duration="7825000" />
       <workItem from="1728066281503" duration="35000" />
       <workItem from="1728066331187" duration="2844000" />
+      <workItem from="1728704835205" duration="12575000" />
+      <workItem from="1729023981087" duration="720000" />
     </task>
     <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
       <created>1620241062181</created>
@@ -473,22 +617,6 @@
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
       <updated>1691487849084</updated>
-    </task>
-    <task id="LOCAL-00013" summary="Map drawing in control">
-      <option name="closed" value="true" />
-      <created>1692178031642</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1692178031642</updated>
-    </task>
-    <task id="LOCAL-00014" summary="Map click working no offsets">
-      <option name="closed" value="true" />
-      <created>1693771794106</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1693771794106</updated>
     </task>
     <task id="LOCAL-00015" summary="Tile selection &amp; focus working">
       <option name="closed" value="true" />
@@ -786,7 +914,23 @@
       <option name="project" value="LOCAL" />
       <updated>1728099122406</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Dialog for advance researched">
+      <option name="closed" value="true" />
+      <created>1728175638526</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1728175638526</updated>
+    </task>
+    <task id="LOCAL-00053" summary="City dialog improvements">
+      <option name="closed" value="true" />
+      <created>1729049422454</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1729049422454</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -809,8 +953,6 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Rename misnamed elements" />
-    <MESSAGE value="Pic Names" />
     <MESSAGE value="Ruleset refactor" />
     <MESSAGE value="Fix name ambiguity" />
     <MESSAGE value="Lua console implemented" />
@@ -834,7 +976,9 @@
     <MESSAGE value="Unit images in production box" />
     <MESSAGE value="Don't build ocean improvements inland" />
     <MESSAGE value="Add scientist name" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add scientist name" />
+    <MESSAGE value="Dialog for advance researched" />
+    <MESSAGE value="City dialog improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="City dialog improvements" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -869,6 +1013,19 @@
           <line>187</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\OriginalSaves\Read.GameData.cs" containingFunctionPresentation="Method 'ReadSavFile'" />
           <option name="timeStamp" value="103" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs</url>
+          <line>617</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" containingFunctionPresentation="Method 'MoveCost'">
+            <startOffsets>
+              <option value="22901" />
+            </startOffsets>
+            <endOffsets>
+              <option value="23070" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="140" />
         </line-breakpoint>
         <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
           <properties exception="System.UnauthorizedAccessException" isInternal="false" displayValue="UnauthorizedAccessException" namespaceName="System">

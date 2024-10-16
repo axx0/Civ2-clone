@@ -7,7 +7,7 @@ using Model;
 using Model.Core;
 using Model.Interface;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Interact;
 using RaylibUI.Controls;
 using RaylibUtils;
 

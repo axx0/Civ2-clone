@@ -2,7 +2,7 @@ using Civ2engine;
 using Model.Images;
 using Model.ImageSets;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp;
 
 namespace Model.Dialog;
 
@@ -19,5 +19,6 @@ public class DialogElements
     public int OptionsCols { get; set; } = 1;
     public int SelectedOption { get; set; } = 0;
     public List<string>? ReplaceStrings { get; set; }
-    public IImageSource[]? OptionsImages { get; set; }
+    public IImageSource[]? OptionsIcons { get; set; }
+    public DialogImageElements? Image { get; set; }
 }

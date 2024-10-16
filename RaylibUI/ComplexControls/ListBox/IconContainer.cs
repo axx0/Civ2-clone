@@ -1,6 +1,8 @@
 using System.Numerics;
 using Model.Images;
-using Raylib_cs;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUI;
 
@@ -25,7 +27,7 @@ public class IconContainer : BaseControl
     {
         if (_texture != null)
         {
-            Raylib.DrawTextureEx(_texture.Value, Location + _offset, 0f, 1f, Color.White);
+            Graphics.DrawTextureEx(_texture.Value, Location + _offset, 0f, 1f, Color.White);
         }
 
         base.Draw(pulse);

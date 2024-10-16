@@ -11,7 +11,8 @@ using Model.Dialog;
 using Model.Images;
 using Model.Interface;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Windowing;
+using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.Commands.Orders;
 using RaylibUI.RunGame.GameControls;
 using RaylibUI.RunGame.GameControls.CityControls;
@@ -19,6 +20,7 @@ using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Menu;
 using RaylibUI.RunGame.GameModes;
 using RaylibUI.RunGame.GameModes.Orders;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame;
 
@@ -98,8 +100,8 @@ public class GameScreen : BaseScreen
             ActiveMode = Processing;
         }
         
-        var width = Raylib.GetScreenWidth();
-        var height = Raylib.GetScreenHeight();
+        var width = Window.GetScreenWidth();
+        var height = Window.GetScreenHeight();
         
         var menuHeight = _menu.GetPreferredHeight();
         
@@ -174,10 +176,10 @@ public class GameScreen : BaseScreen
             Focused = MenuBar.Children!.First();
             return;
         }
-        var command = new Shortcut(key, Raylib.IsKeyDown(KeyboardKey.RightShift) ||
-                                        Raylib.IsKeyDown(KeyboardKey.LeftShift)
-            , Raylib.IsKeyDown(KeyboardKey.LeftControl) ||
-              Raylib.IsKeyDown(KeyboardKey.RightControl)
+        var command = new Shortcut(key, Input.IsKeyDown(KeyboardKey.RightShift) ||
+                                        Input.IsKeyDown(KeyboardKey.LeftShift)
+            , Input.IsKeyDown(KeyboardKey.LeftControl) ||
+              Input.IsKeyDown(KeyboardKey.RightControl)
         );
 
         if (!ActiveMode.HandleKeyPress(command) && GameCommands.ContainsKey(command))
@@ -337,6 +339,6 @@ public class GameScreen : BaseScreen
     public void ToggleMapLayout()
     {
         _ToTPanelLayout = !_ToTPanelLayout;
-        Resize(Raylib.GetScreenWidth(), Raylib.GetScreenHeight());
+        Resize(Window.GetScreenWidth(), Window.GetScreenHeight());
     }
 }

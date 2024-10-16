@@ -1,6 +1,8 @@
 using System.Numerics;
 using Model;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
 
 namespace RaylibUI;
 
@@ -9,7 +11,7 @@ public abstract class BaseDialog : BaseLayoutController
     protected Texture2D? BackgroundImage;
     private readonly Point _position;
     
-    protected BaseDialog(Main main, Point? position = null) : base(main, main.ActiveInterface.DialogPadding)
+    protected BaseDialog(Main main, Point? position = null) : base(main, main.ActiveInterface?.DialogPadding ?? new Padding(28, 11, 46, 11))
     {
         _position = position ?? new Point(0,0);
     }
@@ -59,7 +61,7 @@ public abstract class BaseDialog : BaseLayoutController
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(BackgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        Graphics.DrawTexture(BackgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
         foreach (var control in Controls)
         {
             control.Draw(pulse);

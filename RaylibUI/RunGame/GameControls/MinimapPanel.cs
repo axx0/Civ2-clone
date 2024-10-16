@@ -1,13 +1,16 @@
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Raylib_cs;
 using RaylibUI.BasicTypes;
 using RaylibUI.Controls;
 using System.Numerics;
 using RaylibUI.BasicTypes.Controls;
 using Model;
 using Model.Core;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -95,8 +98,8 @@ public class MinimapPanel : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
-        Raylib.DrawRectangle((int)Location.X + _padding.Left, (int)Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom, Color.Black);
+        Graphics.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        Graphics.DrawRectangle((int)Location.X + _padding.Left, (int)Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom, Color.Black);
         var map = _game.CurrentMap;
         // Draw map
         for (var row = 0; row < map.YDim; row++)
@@ -114,13 +117,13 @@ public class MinimapPanel : BaseControl
                         ? OceanColor
                         : LandColor;
 
-                Raylib.DrawRectangle((int)Location.X + _offset[0] + 2 * col + (row % 2),
+                Graphics.DrawRectangle((int)Location.X + _offset[0] + 2 * col + (row % 2),
                     (int)Location.Y + _offset[1] + row, 2, 1, drawColor);
             }
         }
 
         // Draw current view rectangle
-        Raylib.DrawRectangleLines((int)Location.X + _offset[0] + _mapStartXy[0] - GetCenterShift(),
+        Graphics.DrawRectangleLines((int)Location.X + _offset[0] + _mapStartXy[0] - GetCenterShift(),
             (int)Location.Y + _offset[1] + _mapStartXy[1],
             _mapDrawSq[0], _mapDrawSq[1], Color.White);
 

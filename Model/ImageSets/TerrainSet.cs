@@ -1,6 +1,6 @@
 using Model.Core;
 using Model.Images;
-using Raylib_cs;
+using Raylib_CSharp.Images;
 using RaylibUI;
 
 namespace Model.ImageSets

@@ -1,7 +1,9 @@
 using System.Numerics;
 using Civ2engine;
 using Model;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -51,17 +53,17 @@ public class ShieldBox : BaseControl
         var spacing = _shieldIcon.Width;
         var requiredWidth = shieldsPerRow * spacing;
 
-        Raylib.DrawLineEx(new Vector2( posX, posY),new Vector2(posX + Width, posY), 1f, _pen1);
+        Graphics.DrawLineEx(new Vector2( posX, posY),new Vector2(posX + Width, posY), 1f, _pen1);
         // 2nd horizontal line
         var lineHeight = 6 + lines * _shieldIcon.Height;
         posY = Location.Y + lineHeight;
-        Raylib.DrawLineEx(new Vector2( posX, posY),new Vector2(posX + Width, posY), 1f, _pen2);
+        Graphics.DrawLineEx(new Vector2( posX, posY),new Vector2(posX + Width, posY), 1f, _pen2);
         // 1st vertical line
         posY = Location.Y;
-        Raylib.DrawLineEx(new Vector2( posX, posY),new Vector2(posX , posY + lineHeight), 1f, _pen1);
+        Graphics.DrawLineEx(new Vector2( posX, posY),new Vector2(posX , posY + lineHeight), 1f, _pen1);
         
         // 2nd vertical line
-        Raylib.DrawLineEx(new Vector2( posX + Width, posY),new Vector2(posX + Width, posY + lineHeight), 1f, _pen2);
+        Graphics.DrawLineEx(new Vector2( posX + Width, posY),new Vector2(posX + Width, posY + lineHeight), 1f, _pen2);
         
         if (requiredWidth < drawWidth)
         {
@@ -78,7 +80,7 @@ public class ShieldBox : BaseControl
         {
             for (int col = 0; col < shieldsPerRow && count < shields; col++)
             {
-                Raylib.DrawTexture(_shieldIcon, (int)posX + spacing * col, (int)Location.Y + 3 + _shieldIcon.Height * row,Color.White);
+                Graphics.DrawTexture(_shieldIcon, (int)posX + spacing * col, (int)Location.Y + 3 + _shieldIcon.Height * row,Color.White);
                 count++;
             }
         }

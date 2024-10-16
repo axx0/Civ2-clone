@@ -9,7 +9,7 @@ using Model;
 using Model.Core;
 using Model.Interface;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Interact;
 using Path = Civ2engine.Units.Path;
 
 namespace RaylibUI.RunGame.GameModes.Orders;

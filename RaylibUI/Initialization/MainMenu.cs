@@ -2,11 +2,13 @@ using Civ2engine;
 using Model;
 using Model.Core;
 using Model.InterfaceActions;
-using Raylib_cs;
 using RaylibUI.Forms;
 using RaylibUtils;
 using Civ2;
 using Model.Dialog;
+using Raylib_CSharp.Windowing;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUI.Initialization;
 
@@ -55,7 +57,8 @@ public class MainMenu : BaseScreen
                     checkboxStates: menu.CheckboxStates,
                     textBoxDefs: menu.TextBoxes, 
                     initSelectedOption: menu.SelectedOption,
-                    optionsIcons: menu.OptionsImages));
+                    optionsIcons: menu.OptionsIcons,
+                    image: menu.Image));
                 break;
             }
             case FileAction fileAction:
@@ -123,24 +126,24 @@ public class MainMenu : BaseScreen
     {
         _sndMenuLoop?.MusicUpdateCall();
         
-        var screenWidth = Raylib.GetScreenWidth();
-        var screenHeight = Raylib.GetScreenHeight();
+        var screenWidth = Window.GetScreenWidth();
+        var screenHeight = Window.GetScreenHeight();
 
         var titleImg = MainWindow.ActiveInterface.ScenTitleImage;
         if (titleImg != null)
         {
             var titleTexture = TextureCache.GetImage(titleImg, MainWindow.ActiveInterface);
-            Raylib.ClearBackground(_background.Background);
-            Raylib.DrawTexture(titleTexture, (screenWidth - titleTexture.Width) / 2, (screenHeight - titleTexture.Height) / 2, Color.White);
+            Graphics.ClearBackground(_background.Background);
+            Graphics.DrawTexture(titleTexture, (screenWidth - titleTexture.Width) / 2, (screenHeight - titleTexture.Height) / 2, Color.White);
         }
         else if (_background == null)
         {
-            Raylib.ClearBackground(new Color(143, 123, 99, 255));
+            Graphics.ClearBackground(new Color(143, 123, 99, 255));
         }
         else
         {
-            Raylib.ClearBackground(_background.Background);
-            Raylib.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.Width)/2, (screenHeight-_background.CentreImage.Height)/2, Color.White);
+            Graphics.ClearBackground(_background.Background);
+            Graphics.DrawTexture(_background.CentreImage, (screenWidth- _background.CentreImage.Width)/2, (screenHeight-_background.CentreImage.Height)/2, Color.White);
         }
         foreach (var panel in _imagePanels)
         {
@@ -165,7 +168,7 @@ public class MainMenu : BaseScreen
         if (backGroundImage != null)
         {
             var img = Images.ExtractBitmap(backGroundImage, MainWindow.ActiveInterface);
-            var colour = Raylib.GetImageColor(img, 0, 0);
+            var colour = img.GetColor(0, 0);
             return new ScreenBackground(colour, TextureCache.GetImage(backGroundImage, MainWindow.ActiveInterface));
         }
 

@@ -11,9 +11,14 @@ using Model.Images;
 using Model.ImageSets;
 using Model.Interface;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Textures;
 using RaylibUtils;
 using static Model.Menu.CommandIds;
+using Raylib_CSharp.Rendering;
 
 namespace TOT;
 
@@ -492,16 +497,16 @@ public class TestOfTimeInterface : Civ2Interface
         {
             unsafe
             {
-                var imageColours = Raylib.LoadImageColors(Images.ExtractBitmap(PicSources["textColours"][col], this));
+                var imageColours = Images.ExtractBitmap(PicSources["textColours"][col], this).LoadColors();
                 var textColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
                 var shieldColour = imageColours[2 * Images.ExtractBitmap(PicSources["textColours"][col], this).Width + 0];
                 textColour.A = 255; // to avoid any upper-left-pixel transparency issues
                 shieldColour.A = 255;
-                Raylib.UnloadImageColors(imageColours);
+                Image.UnloadColors(imageColours);
 
                 // This is not exact, but a good aproximation what TOT does with shield colours
-                var lightColour = new Color(shieldColour.R / 2, shieldColour.G / 2, shieldColour.B / 2, 255);
-                var darkColour = new Color(shieldColour.R / 4, shieldColour.G / 4, shieldColour.B / 4, 255);
+                var lightColour = new Color((byte)(shieldColour.R / 2), (byte)(shieldColour.G / 2), (byte)(shieldColour.B / 2), 255);
+                var darkColour = new Color((byte)(shieldColour.R / 4), (byte)(shieldColour.G / 4), (byte)(shieldColour.B / 4), 255);
 
                 playerColours[col] = new PlayerColour
                 {
@@ -521,7 +526,7 @@ public class TestOfTimeInterface : Civ2Interface
         Color replacementColour = new(255, 0, 255, 0);
 
         var shield = Images.ExtractBitmap(PicSources["HPshield"][0], this);
-        var shieldFront = Raylib.ImageCopy(shield);
+        var shieldFront = shield.Copy();
 
         UnitImages.Shields = new MemoryStorage(shieldFront, "Unit-Shield", replacementColour);
         UnitImages.ShieldBack = new MemoryStorage(shield, "Unit-Shield-Back", replacementColour, true);
@@ -551,42 +556,42 @@ public class TestOfTimeInterface : Civ2Interface
         var len = top.Length;
 
         // Top border
-        Raylib.ImageDraw(ref destination, topLeft, new Rectangle(0, 0, topLeft.Width, topLeft.Height), new Rectangle(0, 0, topLeft.Width, topLeft.Height), Color.White);
+        destination.Draw(topLeft, new Rectangle(0, 0, topLeft.Width, topLeft.Height), new Rectangle(0, 0, topLeft.Width, topLeft.Height), Color.White);
         var topCols = (width - topLeft.Width - topRight.Width) / top[0].Width + 1;
         for (int col = 0; col < topCols; col++)
         {
-            Raylib.ImageDraw(ref destination, top[rnd.Next(len)], new Rectangle(0, 0, top[0].Width, top[0].Height), new Rectangle(topLeft.Width + top[0].Width * col, 0, top[0].Width, top[0].Height), Color.White);
+            destination.Draw(top[rnd.Next(len)], new Rectangle(0, 0, top[0].Width, top[0].Height), new Rectangle(topLeft.Width + top[0].Width * col, 0, top[0].Width, top[0].Height), Color.White);
         }
-        Raylib.ImageDraw(ref destination, topRight, new Rectangle(0, 0, topRight.Width, topRight.Height), new Rectangle(width - topRight.Width, 0, topRight.Width, topRight.Height), Color.White);
+        destination.Draw(topRight, new Rectangle(0, 0, topRight.Width, topRight.Height), new Rectangle(width - topRight.Width, 0, topRight.Width, topRight.Height), Color.White);
 
         // Left-right border
         var sideRows = (height - topLeft.Height - wp.OuterBottomLeft.Height) / wp.OuterLeft[0].Height + 1;
         for (int row = 0; row < sideRows; row++)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterLeft[rnd.Next(len)], new Rectangle(0, 0, wp.OuterLeft[0].Width, wp.OuterLeft[0].Height), new Rectangle(0, topLeft.Height + wp.OuterLeft[0].Height * row, wp.OuterLeft[0].Width, wp.OuterLeft[0].Height), Color.White);
-            Raylib.ImageDraw(ref destination, wp.OuterRight[rnd.Next(len)], new Rectangle(0, 0, wp.OuterRight[0].Width, wp.OuterRight[0].Height), new Rectangle(width - wp.OuterRight[0].Width, topRight.Height + wp.OuterRight[0].Height * row, wp.OuterRight[0].Width, wp.OuterRight[0].Height), Color.White);
+            destination.Draw(wp.OuterLeft[rnd.Next(len)], new Rectangle(0, 0, wp.OuterLeft[0].Width, wp.OuterLeft[0].Height), new Rectangle(0, topLeft.Height + wp.OuterLeft[0].Height * row, wp.OuterLeft[0].Width, wp.OuterLeft[0].Height), Color.White);
+            destination.Draw(wp.OuterRight[rnd.Next(len)], new Rectangle(0, 0, wp.OuterRight[0].Width, wp.OuterRight[0].Height), new Rectangle(width - wp.OuterRight[0].Width, topRight.Height + wp.OuterRight[0].Height * row, wp.OuterRight[0].Width, wp.OuterRight[0].Height), Color.White);
         }
 
         // Bottom border
-        Raylib.ImageDraw(ref destination, wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.White);
+        destination.Draw(wp.OuterBottomLeft, new Rectangle(0, 0, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), new Rectangle(0, height - wp.OuterBottomLeft.Height, wp.OuterBottomLeft.Width, wp.OuterBottomLeft.Height), Color.White);
         var btmCols = (width - wp.OuterBottomLeft.Width - wp.OuterBottomRight.Width) / wp.OuterBottom[0].Width + 1;
         for (int col = 0; col < btmCols; col++)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterBottom[rnd.Next(len)], new Rectangle(0, 0, wp.OuterBottom[0].Width, wp.OuterBottom[0].Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom[0].Width * col, height - wp.OuterBottom[0].Height, wp.OuterBottom[0].Width, wp.OuterBottom[0].Height), Color.White);
+            destination.Draw(wp.OuterBottom[rnd.Next(len)], new Rectangle(0, 0, wp.OuterBottom[0].Width, wp.OuterBottom[0].Height), new Rectangle(wp.OuterBottomLeft.Width + wp.OuterBottom[0].Width * col, height - wp.OuterBottom[0].Height, wp.OuterBottom[0].Width, wp.OuterBottom[0].Height), Color.White);
         }
-        Raylib.ImageDraw(ref destination, wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), new Rectangle(width - wp.OuterBottomRight.Width, height - wp.OuterBottomRight.Height, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), Color.White);
+        destination.Draw(wp.OuterBottomRight, new Rectangle(0, 0, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), new Rectangle(width - wp.OuterBottomRight.Width, height - wp.OuterBottomRight.Height, wp.OuterBottomRight.Width, wp.OuterBottomRight.Height), Color.White);
 
         if (statusPanel)
         {
-            Raylib.ImageDraw(ref destination, wp.OuterMiddleLeft, new Rectangle(0, 0, wp.OuterMiddleLeft.Width, wp.OuterMiddleLeft.Height), new Rectangle(0, 85, wp.OuterMiddleLeft.Width, wp.OuterMiddleLeft.Height), Color.White);
+            destination.Draw(wp.OuterMiddleLeft, new Rectangle(0, 0, wp.OuterMiddleLeft.Width, wp.OuterMiddleLeft.Height), new Rectangle(0, 85, wp.OuterMiddleLeft.Width, wp.OuterMiddleLeft.Height), Color.White);
             var mdlCols = (width - wp.OuterMiddleLeft.Width - wp.OuterMiddleRight.Width) / wp.OuterMiddle[0].Width;
             for (int col = 0; col < mdlCols; col++)
             {
-                Raylib.ImageDraw(ref destination, wp.OuterMiddle[rnd.Next(len)], new Rectangle(0, 0, wp.OuterMiddle[0].Width, wp.OuterMiddle[0].Height), new Rectangle(wp.OuterMiddleLeft.Width + wp.OuterMiddle[0].Width * col, 88, wp.OuterMiddle[0].Width, wp.OuterMiddle[0].Height), Color.White);
+                destination.Draw(wp.OuterMiddle[rnd.Next(len)], new Rectangle(0, 0, wp.OuterMiddle[0].Width, wp.OuterMiddle[0].Height), new Rectangle(wp.OuterMiddleLeft.Width + wp.OuterMiddle[0].Width * col, 88, wp.OuterMiddle[0].Width, wp.OuterMiddle[0].Height), Color.White);
             }
             var leftToDraw = width - mdlCols * wp.OuterMiddle[0].Width - wp.OuterMiddleLeft.Width - wp.OuterMiddleRight.Width;
-            Raylib.ImageDraw(ref destination, wp.OuterMiddle[rnd.Next(len)], new Rectangle(0, 0, leftToDraw, wp.OuterMiddle[0].Height), new Rectangle(wp.OuterMiddleLeft.Width + mdlCols * wp.OuterMiddle[0].Width, 88, leftToDraw, wp.OuterMiddle[0].Height), Color.White);
-            Raylib.ImageDraw(ref destination, wp.OuterMiddleRight, new Rectangle(0, 0, wp.OuterMiddleRight.Width, wp.OuterMiddleRight.Height), new Rectangle(width - wp.OuterMiddleRight.Width, 85, wp.OuterMiddleRight.Width, wp.OuterMiddleRight.Height), Color.White);
+            destination.Draw(wp.OuterMiddle[rnd.Next(len)], new Rectangle(0, 0, leftToDraw, wp.OuterMiddle[0].Height), new Rectangle(wp.OuterMiddleLeft.Width + mdlCols * wp.OuterMiddle[0].Width, 88, leftToDraw, wp.OuterMiddle[0].Height), Color.White);
+            destination.Draw(wp.OuterMiddleRight, new Rectangle(0, 0, wp.OuterMiddleRight.Width, wp.OuterMiddleRight.Height), new Rectangle(width - wp.OuterMiddleRight.Width, 85, wp.OuterMiddleRight.Width, wp.OuterMiddleRight.Height), Color.White);
         }
     }
 
@@ -594,7 +599,7 @@ public class TestOfTimeInterface : Civ2Interface
 
     public override void DrawButton(Texture2D texture, int x, int y, int w, int h)
     {
-        Raylib.DrawTexture(texture, x, y, Color.White);
+        Graphics.DrawTexture(texture, x, y, Color.White);
     }
 
     public TestOfTimeInterface(IMain main) : base(main)

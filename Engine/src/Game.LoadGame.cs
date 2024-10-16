@@ -40,7 +40,7 @@ namespace Civ2engine
             _maps = maps;
             _rules = configRules;
             TurnNumber = 0;
-            Date = new Date(0, 1, difficulty);
+            Date = new Date(0, 0, difficulty);
             _difficultyLevel = difficulty;
             
             AllCivilizations.AddRange(civilizations);

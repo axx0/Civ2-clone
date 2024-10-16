@@ -1,5 +1,6 @@
 using Model.Images;
-using Raylib_cs;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Colors;
 
 namespace Model;
 

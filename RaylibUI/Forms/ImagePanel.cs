@@ -1,6 +1,9 @@
 using Model;
 using Model.Images;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Windowing;
 
 namespace RaylibUI.Forms;
 
@@ -26,30 +29,30 @@ public class ImagePanel
         // Panel position on screen
         if (Location.X < 0) // offset from right
         {
-            x = (int)((1 + Location.X) * Raylib.GetScreenWidth()) - _texture.Width;
+            x = (int)((1 + Location.X) * Window.GetScreenWidth()) - _texture.Width;
         }
         else if (Location.X > 0)
         {
-            x = (int)(Location.X * Raylib.GetScreenWidth());
+            x = (int)(Location.X * Window.GetScreenWidth());
         }
         else // =0 (center on screen)
         {
-            x = (int)(Raylib.GetScreenWidth() * 0.5 - _texture.Width * 0.5);
+            x = (int)(Window.GetScreenWidth() * 0.5 - _texture.Width * 0.5);
         }
 
         if (Location.Y < 0)
         {
-            y = (int)((1 + Location.Y) * Raylib.GetScreenHeight()) - _texture.Height;
+            y = (int)((1 + Location.Y) * Window.GetScreenHeight()) - _texture.Height;
         }
         else if (Location.Y > 0)
         {
-            y = (int)(Location.Y * Raylib.GetScreenHeight());
+            y = (int)(Location.Y * Window.GetScreenHeight());
         }
         else
         {
-            y = (int)(Raylib.GetScreenHeight() * 0.5 - _texture.Height * 0.5);
+            y = (int)(Window.GetScreenHeight() * 0.5 - _texture.Height * 0.5);
         }
 
-        Raylib.DrawTexture(_texture, x, y, Color.White);
+        Graphics.DrawTexture(_texture, x, y, Color.White);
     }
 }

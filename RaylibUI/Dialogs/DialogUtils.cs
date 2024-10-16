@@ -1,5 +1,5 @@
 ﻿using Model;
-using Raylib_cs;
+using Raylib_CSharp.Fonts;
 
 namespace RaylibUI;
 
@@ -30,10 +30,10 @@ public static class DialogUtils
                 combinedWord = combinedWord + " " + words[i];
             }
 
-            combinedTextSize = (int)Raylib.MeasureTextEx(active.Look.DefaultFont, combinedWord, fontSize, 1.0f).X;
+            combinedTextSize = (int)TextManager.MeasureTextEx(active.Look.DefaultFont, combinedWord, fontSize, 1.0f).X;
             if (i != words.Length - 1)
             {
-                combinedTextSizeNext = (int)Raylib.MeasureTextEx(active.Look.DefaultFont, combinedWord + " " + words[i + 1], fontSize, 1.0f).X;
+                combinedTextSizeNext = (int)TextManager.MeasureTextEx(active.Look.DefaultFont, combinedWord + " " + words[i + 1], fontSize, 1.0f).X;
             }
             else    // Last word
             {
@@ -57,7 +57,7 @@ public static class DialogUtils
         int[] wrappedLinesLength = new int[wrappedLines.Count];
         for (int i = 0; i < wrappedLines.Count; i++)
         {
-            wrappedLinesLength[i] = (int)Raylib.MeasureTextEx(active.Look.DefaultFont, wrappedLines[i], fontSize, 1.0f).X;
+            wrappedLinesLength[i] = (int)TextManager.MeasureTextEx(active.Look.DefaultFont, wrappedLines[i], fontSize, 1.0f).X;
         }
 
         return wrappedLines;

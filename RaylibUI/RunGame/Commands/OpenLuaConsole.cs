@@ -2,7 +2,7 @@ using Model;
 using Model.Dialog;
 using Model.Images;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 

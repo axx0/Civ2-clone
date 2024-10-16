@@ -4,7 +4,9 @@ using Civ2engine.Terrains;
 using Model;
 using Model.Images;
 using Model.ImageSets;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Transformations;
 using RaylibUI;
 using RaylibUtils;
 using System.Numerics;
@@ -33,13 +35,13 @@ namespace Civ2.ImageLoader
             unsafe
             {
                 // Get the gray colour (it's not always the same in MGE/TOT, unlike pink)
-                var imageColours = Raylib.LoadImageColors(ditherTile);
+                var imageColours = ditherTile.LoadColors();
                 gray = imageColours[0];
-                Raylib.UnloadImageColors(imageColours);
+                Image.UnloadColors(imageColours);
             }
-            Raylib.ImageColorReplace(ref ditherTile, Color.Black, Color.White);
-            Raylib.ImageColorReplace(ref ditherTile, new Color(255, 0, 255, 0), Color.Black);
-            Raylib.ImageColorReplace(ref ditherTile, gray, Color.Black);
+            ditherTile.ReplaceColor(Color.Black, Color.White);
+            ditherTile.ReplaceColor(new Color(255, 0, 255, 0), Color.Black);
+            ditherTile.ReplaceColor(gray, Color.Black);
 
             terrain.BaseTiles = active.PicSources["base1"].Select(t => MapIndexChange((BitmapStorage)t, index, active)).ToArray();
 
@@ -54,10 +56,10 @@ namespace Civ2.ImageLoader
             // 4 small dither tiles (base mask must be B/W)
             terrain.DitherMask = new[]
             {
-                Raylib.ImageFromImage(ditherTile, new Rectangle(32, 0, 32, 16)),
-                Raylib.ImageFromImage(ditherTile, new Rectangle(32, 16, 32, 16)),
-                Raylib.ImageFromImage(ditherTile, new Rectangle(0, 16, 32, 16)),
-                Raylib.ImageFromImage(ditherTile, new Rectangle(0, 0, 32, 16)),
+                Image.FromImage(ditherTile, new Rectangle(32, 0, 32, 16)),
+                Image.FromImage(ditherTile, new Rectangle(32, 16, 32, 16)),
+                Image.FromImage(ditherTile, new Rectangle(0, 16, 32, 16)),
+                Image.FromImage(ditherTile, new Rectangle(0, 0, 32, 16)),
             };
 
             terrain.DitherMaps = new[]
@@ -128,12 +130,12 @@ namespace Civ2.ImageLoader
             var ditherMaps = new Image[totalTiles];
             for (var i = 0; i < baseTiles.Length; i++)
             {
-                ditherMaps[i] = Raylib.ImageFromImage(Images.ExtractBitmap(baseTiles[i]), sampleRect);
-                Raylib.ImageAlphaMask(ref ditherMaps[i], mask);
+                ditherMaps[i] = Image.FromImage(Images.ExtractBitmap(baseTiles[i]), sampleRect);
+                ditherMaps[i].AlphaMask(mask);
             }
 
-            ditherMaps[^1] = Raylib.ImageFromImage(Images.ExtractBitmap(terrainBlank), sampleRect);
-            Raylib.ImageAlphaMask(ref ditherMaps[^1], mask);
+            ditherMaps[^1] = Image.FromImage(Images.ExtractBitmap(terrainBlank), sampleRect);
+            ditherMaps[^1].AlphaMask(mask);
 
             return new DitherMap { X = offsetX, Y = offsetY, Images = ditherMaps };
         }

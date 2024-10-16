@@ -3,7 +3,7 @@ using Civ2engine;
 using Civ2engine.IO;
 using Model;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp.Fonts;
 
 namespace RaylibUI.Initialization;
 
@@ -50,10 +50,10 @@ public static class Helpers
     public static void LoadFonts()
     {
         var tnr = Utils.GetFilePath("times-new-roman.ttf");
-        Fonts.SetTnr(Raylib.LoadFont(tnr));
+        Fonts.SetTnr(Font.Load(tnr));
         var bold = Utils.GetFilePath("times-new-roman-bold.ttf");
-        Fonts.SetBold(Raylib.LoadFontEx(bold, 104, null, 0));
+        Fonts.SetBold(Font.LoadEx(bold, 104, null));
         var alternative = Utils.GetFilePath("ARIAL.ttf");
-        Fonts.SetArial(Raylib.LoadFontEx(alternative, 112, null, 0));
+        Fonts.SetArial(Font.LoadEx(alternative, 112, null));
     }
 }

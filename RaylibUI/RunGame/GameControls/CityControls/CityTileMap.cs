@@ -4,7 +4,12 @@ using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Model;
 using Model.Core;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUtils;
 
@@ -29,7 +34,7 @@ public class CityTileMap : BaseControl
         _active = cityWindow.MainWindow.ActiveInterface;
         Click += OnClick;
         _text = Labels.For(LabelIndex.ResourceMap);
-        _textDim = Raylib.MeasureTextEx(_active.Look.CityWindowFont, _text, _active.Look.CityWindowFontSize, 1);
+        _textDim = TextManager.MeasureTextEx(_active.Look.CityWindowFont, _text, _active.Look.CityWindowFontSize, 1);
         _organizationLevel = cityWindow.City.GetOrganizationLevel(game.Rules);
     }
 
@@ -185,14 +190,14 @@ public class CityTileMap : BaseControl
     public override void Draw(bool pulse)
     {
         var adjustedLocation = Location + _offset;
-        Raylib.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
+        Graphics.DrawTextureEx(_texture.Value, adjustedLocation, 0, _scaleFactor, Color.White);
 
         foreach (var element in _viewElements)
         {
             element.Draw(element.Location * _scaleFactor + adjustedLocation, _scaleFactor);
         }
-        
-        Raylib.DrawTextEx(_active.Look.CityWindowFont, _text,
+
+        Graphics.DrawTextEx(_active.Look.CityWindowFont, _text,
             new Vector2(Location.X + Width / 2f - _textDim.X / 2, Location.Y + Height - _textDim.Y), 
             _active.Look.CityWindowFontSize, 1, Color.Gold);
     }
@@ -217,7 +222,7 @@ public class CityTileMap : BaseControl
         var height = dim.TileHeight * 4;
         var xcentre = width / 2 - dim.HalfWidth;
         var ycentre = height / 2 - dim.HalfHeight;
-        var image = Raylib.GenImageColor(width, height, new Color(0, 0, 0, 0));
+        var image = Image.GenColor(width, height, new Color(0, 0, 0, 0));
 
         var elements = new List<IViewElement>();
         var cityData = new List<Element>();
@@ -233,7 +238,7 @@ public class CityTileMap : BaseControl
                 var dstRec = new Rectangle(locationX,
                     locationY, dim.TileWidth, dim.TileHeight);
                 
-                Raylib.ImageDraw(ref image, tileImage.Image,
+                image.Draw(tileImage.Image,
                     MapImage.TileRec,
                     dstRec,
                     Color.White);
@@ -272,8 +277,7 @@ public class CityTileMap : BaseControl
 
                 if (tile.WorkedBy != null && tile.WorkedBy != city)
                 {
-                    Raylib.ImageDraw(ref image,
-                        Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active),
+                    image.Draw(Images.ExtractBitmap(gameScreen.Main.ActiveInterface.MapImages.ViewPiece, _active),
                         MapImage.TileRec, dstRec, Color.Red);
                 }
             }
@@ -282,7 +286,7 @@ public class CityTileMap : BaseControl
         //Cities must be drawn after terrain since they sometimes overdraw onto later tiles
         foreach (var cityDetails in cityData)
         {
-            Raylib.ImageDraw(ref image, cityDetails.Image, cities.CityRectangle,
+            image.Draw(cityDetails.Image, cities.CityRectangle,
                 cityDetails.DestRec,
                 Color.White);
         }
@@ -314,17 +318,17 @@ public class CityTileMap : BaseControl
                 var destRect = resourceRect with { X = locationX, Y = locationY };
                 for (var i = 0; i < food; i++)
                 {
-                    Raylib.ImageDraw(ref image, resources["Food"], resourceRect, destRect, Color.White);
+                    image.Draw(resources["Food"], resourceRect, destRect, Color.White);
                     destRect.X += spacing;
                 }
                 for (var i = 0; i < shields; i++)
                 {
-                    Raylib.ImageDraw(ref image, resources["Shields"], resourceRect, destRect, Color.White);
+                    image.Draw(resources["Shields"], resourceRect, destRect, Color.White);
                     destRect.X += spacing;
                 }
                 for (var i = 0; i < trade; i++)
                 {
-                    Raylib.ImageDraw(ref image, resources["Trade"], resourceRect, destRect, Color.White);
+                    image.Draw(resources["Trade"], resourceRect, destRect, Color.White);
                     destRect.X += spacing;
                 }
             }
@@ -332,16 +336,16 @@ public class CityTileMap : BaseControl
 
         if (_texture.HasValue)
         {
-            Raylib.UnloadTexture(_texture.Value);
+            _texture.Value.Unload();
         }
 
         _viewElements = elements;
 
-        _texture = Raylib.LoadTextureFromImage(image);
+        _texture = Texture2D.LoadFromImage(image);
         _scaleFactor = Width / (float)_texture.Value.Width;
         
         _offset = new Vector2(0, (Height - height * _scaleFactor) / 2f);
-        Raylib.UnloadImage(image);
+        image.Unload();
     }
 }
 

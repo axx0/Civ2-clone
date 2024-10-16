@@ -1,7 +1,7 @@
 using Model.Dialog;
 using Model.Images;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp;
 
 namespace Model;
 

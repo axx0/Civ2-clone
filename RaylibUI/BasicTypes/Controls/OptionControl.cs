@@ -1,6 +1,8 @@
 using System.Net.Mime;
 using Model.Images;
-using Raylib_cs;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUtils;
@@ -39,11 +41,11 @@ internal class OptionControl : LabelControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawTexture(TextureCache.GetImage(_images[Checked || _images.Length == 1 ? 0: 1]), (int)Location.X,(int)Location.Y, Color.White);
+        Graphics.DrawTexture(TextureCache.GetImage(_images[Checked || _images.Length == 1 ? 0: 1]), (int)Location.X,(int)Location.Y, Color.White);
         base.Draw(pulse);
         if (Controller.Focused == this)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(Bounds.X + _imageWidth - 1, Bounds.Y + 1, Bounds.Width - _imageWidth, Bounds.Height -2), 0.5f, Color.Black);
+            Graphics.DrawRectangleLinesEx(new Rectangle(Bounds.X + _imageWidth - 1, Bounds.Y + 1, Bounds.Width - _imageWidth, Bounds.Height -2), 0.5f, Color.Black);
         }
     }
 

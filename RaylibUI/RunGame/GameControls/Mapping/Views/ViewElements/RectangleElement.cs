@@ -1,6 +1,7 @@
 using System.Numerics;
 using Civ2engine.MapObjects;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -38,7 +39,7 @@ public class RectangleElement : IViewElement
     public void Draw(Vector2 adjustedLocation, float scale = 1f, bool isShaded = false)
     {
         
-        Raylib.DrawRectangleV(adjustedLocation + Offset * scale, Size * scale, Color);
+        Graphics.DrawRectangleV(adjustedLocation + Offset * scale, Size * scale, Color);
     }
 
     public IViewElement CloneForLocation(Vector2 newLocation)

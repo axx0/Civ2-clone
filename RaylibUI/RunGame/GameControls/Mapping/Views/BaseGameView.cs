@@ -7,7 +7,10 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Model;
 using Model.ImageSets;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping.Views.ViewElements;
 
 namespace RaylibUI.RunGame.GameControls.Mapping.Views;
@@ -81,7 +84,7 @@ public abstract class BaseGameView : IGameView
 
             var imageWidth = ViewWidth;
             var imageHeight = ViewHeight;
-            var image = Raylib.GenImageColor(imageWidth, imageHeight, Color.Black);
+            var image = Image.GenColor(imageWidth, imageHeight, Color.Black);
             var map = location.Map;
             var dim = _gameScreen.TileCache.GetDimensions(map);
             var ypos = -_offsets.Y;
@@ -124,26 +127,24 @@ public abstract class BaseGameView : IGameView
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
                                 if (map.Zoom == 0)
                                 {
-                                    Raylib.ImageDraw(ref image, tileDetails.Image,
-                                        MapImage.TileRec,
+                                    image.Draw(tileDetails.Image, MapImage.TileRec,
                                         new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
                                         Color.White);
                                 }
                                 else
                                 {
-                                    var resizedImg = Raylib.ImageCopy(tileDetails.Image);
+                                    var resizedImg = tileDetails.Image.Copy();
                                     if (Settings.TextureFilter == 0)
                                     {
-                                        Raylib.ImageResizeNN(ref resizedImg, resizedImg.Width.ZoomScale(map.Zoom),
+                                        resizedImg.ResizeNN(resizedImg.Width.ZoomScale(map.Zoom),
                                             resizedImg.Height.ZoomScale(map.Zoom));
                                     }
                                     else
                                     {
-                                        Raylib.ImageResize(ref resizedImg, resizedImg.Width.ZoomScale(map.Zoom),
+                                        resizedImg.Resize(resizedImg.Width.ZoomScale(map.Zoom),
                                             resizedImg.Height.ZoomScale(map.Zoom));
                                     }
-                                    Raylib.ImageDraw(ref image, resizedImg,
-                                        MapImage.TileRec.ZoomScale(map.Zoom),
+                                    image.Draw(resizedImg, MapImage.TileRec.ZoomScale(map.Zoom),
                                         new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
                                         Color.White);
                                 }
@@ -164,10 +165,10 @@ public abstract class BaseGameView : IGameView
                 }
             }
 
-            this.BaseImage = Raylib.LoadTextureFromImage(image);
+            this.BaseImage = Texture2D.LoadFromImage(image);
             this.Elements = elements.ToArray();
 
-            Raylib.UnloadImage(image);
+            image.Unload();
 
             gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MapViewChanged,
                 new[] { (int)_offsets.X / dim.HalfWidth, (int)_offsets.Y / dim.HalfHeight },
@@ -432,7 +433,7 @@ public abstract class BaseGameView : IGameView
     {
         if (!_preserve)
         {
-            Raylib.UnloadTexture(BaseImage);
+            BaseImage.Unload();
         }
     }
 

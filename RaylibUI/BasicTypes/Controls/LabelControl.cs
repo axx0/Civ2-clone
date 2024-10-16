@@ -1,8 +1,10 @@
 using System.Numerics;
 using Model;
 using Model.Interface;
-using Raylib_cs;
-using RaylibUI.Forms;
+using Raylib_CSharp;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
 
 namespace RaylibUI.BasicTypes.Controls;
 
@@ -53,7 +55,7 @@ public class LabelControl : BaseControl
         _defaultHeight = defaultHeight;
         _fontSize = fontSize;
         _spacing = spacing;
-        _labelFont = font ?? controller.MainWindow.ActiveInterface.Look.LabelFont;
+        _labelFont = font ?? controller.MainWindow.ActiveInterface?.Look.LabelFont ?? Fonts.Tnr;
         _colorFront = colorFront ?? Color.Black;
         _colorShadow = colorShadow ?? Color.Black;
         _shadowOffset = shadowOffset ?? Vector2.Zero;
@@ -63,7 +65,7 @@ public class LabelControl : BaseControl
         _switchColors = switchColors;
     }
 
-    public Vector2 TextSize => Raylib.MeasureTextEx(_labelFont, Text, _fontSize, _spacing);
+    public Vector2 TextSize => TextManager.MeasureTextEx(_labelFont, Text, _fontSize, _spacing);
 
     public int FontSize
     {
@@ -105,8 +107,8 @@ public class LabelControl : BaseControl
             for (var i = 0; i < _wrappedText.Count; i++)
             {
                 var textPosition = new Vector2(Location.X + _offset, y);
-                Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition + _shadowOffset, _fontSize, _spacing, _colorShadow);
-                Raylib.DrawTextEx(_labelFont, _wrappedText[i], textPosition, _fontSize, _spacing, _colorFront);
+                Graphics.DrawTextEx(_labelFont, _wrappedText[i], textPosition + _shadowOffset, _fontSize, _spacing, _colorShadow);
+                Graphics.DrawTextEx(_labelFont, _wrappedText[i], textPosition, _fontSize, _spacing, _colorFront);
                 y += unitHeight;
             }
         }
@@ -134,11 +136,11 @@ public class LabelControl : BaseControl
                 colorFront = _colorFront;
                 colorShadow = _colorShadow;
             }
-            Raylib.DrawTextEx(_labelFont, Text, textPosition + _shadowOffset, _fontSize, _spacing, colorShadow);
-            Raylib.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, colorFront);
+            Graphics.DrawTextEx(_labelFont, Text, textPosition + _shadowOffset, _fontSize, _spacing, colorShadow);
+            Graphics.DrawTextEx(_labelFont, Text, textPosition, _fontSize, _spacing, colorFront);
         }
 
-        //Raylib.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
+        //Graphics.DrawRectangleLines((int)Bounds.X, (int)Bounds.Y, (int)Bounds.Width, (int)Bounds.Height, Color.Red);
 
         base.Draw(pulse);
     }

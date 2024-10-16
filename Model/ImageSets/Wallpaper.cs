@@ -1,4 +1,5 @@
-using Raylib_cs;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Textures;
 
 namespace Model.ImageSets;
 

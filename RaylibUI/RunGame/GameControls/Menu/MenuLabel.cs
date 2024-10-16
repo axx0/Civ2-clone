@@ -1,6 +1,6 @@
 using System.Numerics;
 using Model;
-using Raylib_cs;
+using Raylib_CSharp.Interact;
 using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
@@ -34,7 +34,7 @@ public class MenuLabel : LabelControl
     public override void OnMouseEnter()
     {
         base.OnMouseEnter();
-        if (Raylib.IsMouseButtonDown(MouseButton.Left))
+        if (Input.IsMouseButtonDown(MouseButton.Left))
         {
             Activate();
         }
@@ -54,7 +54,7 @@ public class MenuLabel : LabelControl
     public override void OnMouseMove(Vector2 moveAmount)
     {
         base.OnMouseMove(moveAmount);
-        if (Raylib.IsMouseButtonDown(MouseButton.Left))
+        if (Input.IsMouseButtonDown(MouseButton.Left))
         {
             Activate();
         }
@@ -111,7 +111,7 @@ public class MenuLabel : LabelControl
         base.Draw(pulse);
         //if (Controller.Focused == this)
         //{
-        //    Raylib.DrawRectangleLinesEx(new Rectangle(Location.X + 1, Location.Y + 1, Width - 2, Height - 2), 0.5f, Color.Black);
+        //    Graphics.DrawRectangleLinesEx(new Rectangle(Location.X + 1, Location.Y + 1, Width - 2, Height - 2), 0.5f, Color.Black);
         //}
     }
 }

@@ -1,6 +1,6 @@
 
 using Civ2engine;
-using Raylib_cs;
+using Raylib_CSharp.Images;
 
 namespace RaylibUI;
 
@@ -11,8 +11,8 @@ public class GameFileLocatorScreen : BaseScreen
 {
     public GameFileLocatorScreen(Main host,Action onSelect) : base(host)
     {
-        ImageUtils.InnerWallpaper = Raylib.LoadImage("stripe.png");
-        ImageUtils.OuterWallpaper = Raylib.LoadImage("SteelGrey.png");
+        ImageUtils.InnerWallpaper = Image.Load("stripe.png");
+        ImageUtils.OuterWallpaper = Image.Load("SteelGrey.png");
         ShowDialog(new FileDialog(host,"Please select Civ 2 data folder", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Settings.IsValidRoot, (fileName) =>
         {
             if (!Settings.AddPath(fileName)) return false;

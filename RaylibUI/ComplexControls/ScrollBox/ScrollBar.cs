@@ -1,4 +1,7 @@
-using Raylib_cs;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
 
 namespace RaylibUI;
@@ -18,7 +21,7 @@ public class ScrollBar : BaseControl
         Bounds = bounds;
         _vertical = bounds.Height > bounds.Width;
         _scrollAction = scrollAction;
-        _images = ImageUtils.GetScrollImages(ScrollBarWidth, _vertical).Select(Raylib.LoadTextureFromImage).ToArray();
+        _images = ImageUtils.GetScrollImages(ScrollBarWidth, _vertical).Select(Texture2D.LoadFromImage).ToArray();
         _scrollPos = 0;
         _positions = positions;
         Click += OnClick;
@@ -75,17 +78,17 @@ public class ScrollBar : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.White);
-        Raylib.DrawTexture(_images[0], (int)Location.X, (int)Location.Y, Color.White);
+        Graphics.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.White);
+        Graphics.DrawTexture(_images[0], (int)Location.X, (int)Location.Y, Color.White);
         if (_vertical)
         {
-            Raylib.DrawTexture(_images[1], (int)Location.X, (int)Location.Y + _scrollPos * _increment + ScrollBarWidth, Color.White);
-            Raylib.DrawTexture(_images[2], (int)Location.X, (int)Location.Y + Height - ScrollBarWidth, Color.White);
+            Graphics.DrawTexture(_images[1], (int)Location.X, (int)Location.Y + _scrollPos * _increment + ScrollBarWidth, Color.White);
+            Graphics.DrawTexture(_images[2], (int)Location.X, (int)Location.Y + Height - ScrollBarWidth, Color.White);
         }
         else
         {
-            Raylib.DrawTexture(_images[1], (int)Location.X + _scrollPos * _increment+ ScrollBarWidth, (int)Location.Y, Color.White);
-            Raylib.DrawTexture(_images[2], (int)Location.X + Width - ScrollBarWidth, (int)Location.Y, Color.White);
+            Graphics.DrawTexture(_images[1], (int)Location.X + _scrollPos * _increment+ ScrollBarWidth, (int)Location.Y, Color.White);
+            Graphics.DrawTexture(_images[2], (int)Location.X + Width - ScrollBarWidth, (int)Location.Y, Color.White);
         }
 
         base.Draw(pulse);

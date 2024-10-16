@@ -1,4 +1,6 @@
-﻿using Raylib_cs;
+﻿using Raylib_CSharp.Colors;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Rendering;
 using System.Numerics;
 
 namespace RaylibUI.Forms;
@@ -16,14 +18,14 @@ public class FormattedText : Control
 
     public int MeasureWidth()
     {
-        return (int)Raylib.MeasureTextEx(Font,
+        return (int)TextManager.MeasureTextEx(Font,
                                          (from text in WrappedText
-                                          orderby Raylib.MeasureTextEx(Font, text, FontSize, 1.0f).X 
+                                          orderby TextManager.MeasureTextEx(Font, text, FontSize, 1.0f).X 
                                           descending select text).ToList().FirstOrDefault(), 
                                          FontSize, 1.0f).X;
     }
 
-    public int MeasureHeight() => WrappedText.Sum(text => (int)Raylib.MeasureTextEx(Font, text, FontSize, 1.0f).Y);
+    public int MeasureHeight() => WrappedText.Sum(text => (int)TextManager.MeasureTextEx(Font, text, FontSize, 1.0f).Y);
 
     public void Draw(int x, int y)
     {
@@ -33,24 +35,24 @@ public class FormattedText : Control
             int xDraw = x, yDraw = y;
             if (HorizontalAlignment == HorizontalAlignment.Center)
             {
-                xDraw = x - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X / 2;
+                xDraw = x - (int)TextManager.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X / 2;
             }
             else if (HorizontalAlignment == HorizontalAlignment.Right)
             {
-                xDraw = x - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X;
+                xDraw = x - (int)TextManager.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).X;
             }
 
             if (VerticalAlignment == VerticalAlignment.Center)
             {
-                yDraw = y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y / 2;
+                yDraw = y - (int)TextManager.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y / 2;
             }
             else if (VerticalAlignment == VerticalAlignment.Bottom)
             {
-                yDraw = y - (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
+                yDraw = y - (int)TextManager.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
             }
 
-            Raylib.DrawTextEx(Font, WrappedText[row], new Vector2(xDraw, yDraw + height), FontSize, 1.0f, Color);
-            height += (int)Raylib.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
+            Graphics.DrawTextEx(Font, WrappedText[row], new Vector2(xDraw, yDraw + height), FontSize, 1.0f, Color);
+            height += (int)TextManager.MeasureTextEx(Font, WrappedText[row], FontSize, 1.0f).Y;
         }
     }
 }

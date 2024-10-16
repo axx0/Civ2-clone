@@ -1,4 +1,5 @@
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
 using Model.Images;
 using RaylibUtils;
 using Model.Dialog;
@@ -32,7 +33,7 @@ public class ImageBox : BaseControl
     {
         for (int i = 0; i < _image.Length; i++)
         {
-            Raylib.DrawTextureEx(TextureCache.GetImage(_image[i]), 
+            Graphics.DrawTextureEx(TextureCache.GetImage(_image[i]), 
                 new System.Numerics.Vector2((int)Location.X + _coords[i, 0] * _scale, (int)Location.Y + _coords[i, 1] * _scale), 
                 0f, _scale, Color.White);
         }

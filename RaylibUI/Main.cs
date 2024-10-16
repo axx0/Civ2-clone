@@ -1,5 +1,4 @@
-﻿using Raylib_cs;
-using System.Numerics;
+﻿using System.Numerics;
 using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.MapObjects;
@@ -8,6 +7,12 @@ using RaylibUI.Initialization;
 using RaylibUI.Forms;
 using JetBrains.Annotations;
 using System.Diagnostics;
+using Raylib_CSharp;
+using Raylib_CSharp.Windowing;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Audio;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUI
 {
@@ -27,15 +32,16 @@ namespace RaylibUI
             var hasCivDir = Settings.LoadConfigSettings();
 
             //========= RAYLIB WINDOW SETTINGS
-            Raylib.SetConfigFlags(ConfigFlags.Msaa4xHint | ConfigFlags.VSyncHint |
+            Raylib.SetConfigFlags(ConfigFlags.Msaa4XHint| ConfigFlags.VSyncHint |
                                   ConfigFlags.ResizableWindow);
-            Raylib.InitWindow(1280, 800, "raylib - civ2");
+            Window.Init(1280, 800, "raylib - civ2");
             //Raylib.SetTargetFPS(60);
-            Raylib.InitAudioDevice();
+            AudioDevice.Init();
 
-            Raylib.SetExitKey(KeyboardKey.F12);
+            Input.SetExitKey(KeyboardKey.F12);
 
             Shaders.Load();
+            Helpers.LoadFonts();
 
             if (hasCivDir)
             {
@@ -61,18 +67,18 @@ namespace RaylibUI
             var counter = 0;
             var pulse = false;
 
-            while (!Raylib.WindowShouldClose() && !_shouldClose)
+            while (!Window.ShouldClose() && !_shouldClose)
             {
 
-                Raylib.BeginDrawing();
+                Graphics.BeginDrawing();
 
-                int screenHeight = Raylib.GetScreenHeight();
+                int screenHeight = Window.GetScreenHeight();
 
                  _activeScreen.Draw(pulse);
 
-                Raylib.DrawText($"{Raylib.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.Magenta);
+                Graphics.DrawText($"{Time.GetFPS()} FPS", 5, screenHeight - 20, 20, Color.Magenta);
 
-                Raylib.EndDrawing();
+                Graphics.EndDrawing();
                 if (counter++ >= 30)
                 {
                     pulse = !pulse;
@@ -85,7 +91,7 @@ namespace RaylibUI
 
         private MainMenu SetupMainScreen()
         {    
-            Helpers.LoadFonts();
+            //Helpers.LoadFonts();
             Interfaces = Helpers.LoadInterfaces(this);
             AllRuleSets =  Interfaces.SelectMany((userInterface, idx) =>
                 {
@@ -132,8 +138,8 @@ namespace RaylibUI
         {
             Shaders.Unload();
             Soundman?.Dispose();
-            Raylib.CloseWindow();
-            Raylib.CloseAudioDevice();
+            Window.Close();
+            AudioDevice.Close();
         }
 
         public void ReloadMain()

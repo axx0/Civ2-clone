@@ -6,7 +6,6 @@ using Civ2;
 using Civ2Gold;
 using Model;
 using Model.Interface;
-using Raylib_cs;
 using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
@@ -14,6 +13,10 @@ using RaylibUI.Forms;
 using System.Globalization;
 using Model.Core;
 using System.Numerics;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Colors;
 
 namespace RaylibUI.RunGame.GameControls;
 
@@ -128,8 +131,8 @@ public class StatusPanel : BaseControl
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.Black);
-        Raylib.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
+        Graphics.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.Black);
+        Graphics.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
         if (!_gameScreen.ToTPanelLayout)
         {
             _headerLabel.Draw(pulse);
@@ -145,7 +148,7 @@ public class StatusPanel : BaseControl
 
         // AI turn civ indicator
         if (_game.GetPlayerCiv != _game.GetActiveCiv)
-            Raylib.DrawRectangleRec(new Rectangle(_unitPanelBounds.X + _unitPanelBounds.Width - 8, _unitPanelBounds.Y + _unitPanelBounds.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
+            Graphics.DrawRectangleRec(new Rectangle(_unitPanelBounds.X + _unitPanelBounds.Width - 8, _unitPanelBounds.Y + _unitPanelBounds.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
     }
 
     private void PlayerEventTriggered(object sender, PlayerEventArgs e)

@@ -1,7 +1,11 @@
 using System.Numerics;
 using Model;
 using Model.Interface;
-using Raylib_cs;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes;
 
 namespace RaylibUI.Controls;
@@ -12,7 +16,7 @@ public class Button : BaseControl
     private readonly Vector2 _textSize;
     private readonly Font _font;
     private readonly int _fontSize;
-    private readonly Color _colour;
+    private readonly Color _textColour;
     private readonly IUserInterface _active;
     private bool _hovered;
     public override bool CanFocus => true;
@@ -22,10 +26,17 @@ public class Button : BaseControl
     {
         _active = controller.MainWindow.ActiveInterface;
         _text = text;
-        _font = font ?? _active.Look.ButtonFont;
-        _fontSize = fontSize ?? _active.Look.ButtonFontSize;
-        _colour = _active.Look.ButtonColour;
-        _textSize = Raylib.MeasureTextEx(_font, text, _fontSize, 1f);
+        if (_active == null)
+        {
+            _font = font ?? Fonts.Tnr;
+        }
+        else
+        {
+            _font = font ?? _active.Look.ButtonFont;
+        }
+        _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
+        _textColour = _active?.Look.ButtonColour ?? Color.Black;
+        _textSize = TextManager.MeasureTextEx(_font, text, _fontSize, 1f);
         Height = (int)(_textSize.Y + 10f);
     }
 
@@ -36,13 +47,20 @@ public class Button : BaseControl
         var w = Width;
         var h = Height;
 
-        _active.DrawButton(Texture, x, y, w, h);
+        if (_active != null)
+        {
+            _active.DrawButton(Texture, x, y, w, h);
+        }
+        else
+        {
+            Graphics.DrawTexture(Texture, x, y, Color.White);
+        }
 
-        Raylib.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _colour);
+        Graphics.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _textColour);
 
         if (_hovered)
         {
-            Raylib.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
+            Graphics.DrawRectangleLinesEx(new Rectangle(x, y, w, h), 0.5f, Color.Magenta);
         }
         base.Draw(pulse);
     }
@@ -52,7 +70,7 @@ public class Button : BaseControl
     {
         get
         {
-            if (_texture.Width == 0 && ImageUtils.Wallpaper.Button is not null)
+            if (_texture.Width == 0)
             {
                 _texture = ImageUtils.PaintButtonBase(Width, Height);
             }

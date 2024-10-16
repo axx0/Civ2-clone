@@ -1,6 +1,7 @@
 using Civ2engine.MapObjects;
 using Model.Menu;
-using Raylib_cs;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
 
 namespace RaylibUI.RunGame.GameModes;

@@ -1,11 +1,13 @@
 ﻿using Civ2engine;
-using Raylib_cs;
+using Raylib_CSharp.Images;
+using Raylib_CSharp.Colors;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Unicode;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RaylibUtils;
 
@@ -40,7 +42,7 @@ public static partial class Images
             int height = BitConverter.ToInt16(bytes, 8);
 
             // Let raylib deal with LZW decompression
-            img = Raylib.LoadImageFromMemory(".gif", bytes);
+            img = Image.LoadFromMemory(".gif", bytes);
 
             // Get 3 transparent colours from palette and replace colours
             Color[] transparent = new Color[3];
@@ -54,8 +56,7 @@ public static partial class Images
                     B = bytes[13 + 3 * (253 + i) + 2],
                 };
 
-                Raylib.ImageColorReplace(ref img, transparent[i],
-                    new Color(transparent[i].R, transparent[i].G, transparent[i].B, (byte)0));
+                img.ReplaceColor(transparent[i], new Color(transparent[i].R, transparent[i].G, transparent[i].B, 0));
             }
         }
         // BMP
@@ -151,17 +152,16 @@ public static partial class Images
                     break;
 
                 default: throw new ArgumentOutOfRangeException();
-
             };
 
-            Image img2;
+            Image img2; 
             unsafe
             {
                 fixed (byte* ptr = imgData)
                 {
                     img2 = new Image
                     {
-                        Data = ptr,
+                        Data = (nint)ptr,
                         Format = PixelFormat.UncompressedR8G8B8A8,
                         Width = width,
                         Height = height,
@@ -169,15 +169,14 @@ public static partial class Images
                     };
                 }
             }
-            img = Raylib.ImageCopy(img2);
+            img = img2.Copy();
         }
         // PNG
         else if (System.Text.Encoding.UTF8.GetString(bytes, 1, 3).Equals("PNG"))
         {
             bpp = 32;
-            img = Raylib.LoadImageFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
-            Raylib.ImageColorReplace(ref img,
-                new Color(255, 0, 255, 255), new Color(255, 0, 255, 0));
+            img = Image.LoadFromMemory(Path.GetExtension(filename).ToLowerInvariant(), bytes);
+            img.ReplaceColor(new Color(255, 0, 255, 255), new Color(255, 0, 255, 0));
         }
 
         return new Image_and_bpp

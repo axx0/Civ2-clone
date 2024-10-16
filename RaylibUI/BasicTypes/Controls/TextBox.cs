@@ -1,8 +1,14 @@
 using System.Numerics;
 using System.Xml;
-using Raylib_cs;
+using Raylib_CSharp;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Colors;
 using RaylibUI.BasicTypes;
 using Model;
+using Model.Interface;
+using Raylib_CSharp.Rendering;
+using Raylib_CSharp.Fonts;
 
 namespace RaylibUI.Controls;
 
@@ -40,22 +46,22 @@ public class TextBox : BaseControl
     {
         _text = initialValue;
         _editPosition = _text.Length;
-        var size = Raylib.MeasureTextEx(_controller.MainWindow.ActiveInterface.Look.DefaultFont, _text, Styles.BaseFontSize, 1.0f);
+        var size = TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Styles.BaseFontSize, 1.0f);
         _editWidth = (int)size.X;
         Height = (int)(size.Y + TextMargin * 2);
     }
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.White);
-        Raylib.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.Black);
-        Raylib.DrawTextEx(_active.Look.DefaultFont, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
+        Graphics.DrawRectangle((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.White);
+        Graphics.DrawRectangleLines((int)Location.X, (int)Location.Y+1, Width, Height -3, Color.Black);
+        Graphics.DrawTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Location + _textOffsetV, Styles.BaseFontSize,1.0f, Color.Black);
         
         if (_editMode)
         {
             if (pulse)
             {
-                Raylib.DrawRectangleRec(new Rectangle(Location.X + 5 + _editWidth + 1, Location.Y + 5, 1, 20), Color.Black);
+                Graphics.DrawRectangleRec(new Rectangle(Location.X + 5 + _editWidth + 1, Location.Y + 5, 1, 20), Color.Black);
             }
         }
 
@@ -137,7 +143,7 @@ public class TextBox : BaseControl
 
                 break;
             default:
-                var charPressed = Raylib.GetCharPressed();
+                var charPressed = Input.GetCharPressed();
                 if (charPressed > 0)
                 {
                     _text = _text.Insert(_editPosition, Convert.ToChar(charPressed).ToString());
@@ -154,6 +160,6 @@ public class TextBox : BaseControl
     private void SetEditPosition(int newEditPosition)
     {
         _editPosition = newEditPosition;
-        _editWidth = (int)Raylib.MeasureTextEx(_active.Look.DefaultFont, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
+        _editWidth = (int)TextManager.MeasureTextEx(_active.Look.DefaultFont, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
     }
 }

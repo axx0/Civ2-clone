@@ -15,6 +15,8 @@ public class Init : BaseDialogHandler
 
     public override IInterfaceAction Show(Civ2Interface activeInterface)
     {
+        Dialog.Image = new(activeInterface.PicSources["backgroundImageSmall1"][0]);
+        
         var config = Initialization.ConfigObject;
         if (config.PlayerCiv.Id >= Initialization.ConfigObject.Civilizations.Count)
         {

@@ -1,5 +1,8 @@
 using Model;
-using Raylib_cs;
+using Raylib_CSharp.Colors;
+using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Interact;
+using Raylib_CSharp.Rendering;
 using RaylibUI.BasicTypes.Controls;
 
 namespace RaylibUI.RunGame.GameControls.Menu;
@@ -16,7 +19,7 @@ public class GameMenu : ControlGroup
         _gameScreen = gameScreen;
         var look = gameScreen.MainWindow.ActiveInterface.Look;
 
-        var textHeight = (int)Raylib.MeasureTextEx(look.MenuFont, "sample", look.MenuFontSize, 0f).Y;
+        var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, "sample", look.MenuFontSize, 0f).Y;
         _labels = menus.Select((menu, index) =>
                               {
                                   var menuLabel = new MenuLabel(gameScreen, look, this, menu, index, textHeight);
@@ -67,18 +70,18 @@ public class GameMenu : ControlGroup
 
     public override void Draw(bool pulse)
     {
-        Raylib.DrawRectangleRec(Bounds, Color.White);
+        Graphics.DrawRectangleRec(Bounds, Color.White);
         foreach (var control in Children)
         {
             if (control == Controller.Focused)
             {
-                Raylib.DrawRectangleRec(control.Bounds, new Color(204, 232, 255, 255));
-                Raylib.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(153, 209, 255, 255));
+                Graphics.DrawRectangleRec(control.Bounds, new Color(204, 232, 255, 255));
+                Graphics.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(153, 209, 255, 255));
             }
             else if (control == Controller.Hovered)
             {
-                Raylib.DrawRectangleRec(control.Bounds, new Color(229, 243, 255, 255));
-                Raylib.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(204, 232, 255, 255));
+                Graphics.DrawRectangleRec(control.Bounds, new Color(229, 243, 255, 255));
+                Graphics.DrawRectangleLinesEx(control.Bounds, 1.0f, new Color(204, 232, 255, 255));
             }
         }
         base.Draw(pulse);
