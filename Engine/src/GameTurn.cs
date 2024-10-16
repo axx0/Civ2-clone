@@ -46,6 +46,11 @@ namespace Civ2engine
                 {
                     city.FoodInStorage = 0;
                     city.ShrinkCity(game);
+                    player.CityDecrease(city);
+                }
+                else if (city.SurplusHunger < 0 && city.FoodInStorage + city.SurplusHunger < 0)
+                {
+                    player.FoodShortage(city);
                 }
                 else
                 {
@@ -136,6 +141,7 @@ namespace Civ2engine
                         {
                             //Sell it !!
                             city.SellImprovement(cityImprovement);
+                            activeCiv.Money += cityImprovement.Cost;
                             player.CantMaintain(city, cityImprovement);
                         }
                     }

@@ -219,15 +219,26 @@ public class GameScreen : BaseScreen
         _statusPanel.Bounds = statusRect;
     }
 
-    public void ShowCityDialog(string dialog, IList<string> replaceStrings)
+    public void ShowCityDialog(string dialog, City city, IList<string>? replaceStrings = null,
+        IList<int>? replaceNumbers = null)
     {
-        // var dialogBox = new CivDialog(this, popupBoxList[dialog], replaceStrings);
-        // this.ShowDialog(dialogBox, true);
+        replaceStrings ??= new List<string>
+            { city.Name, city.ItemInProduction.GetDescription(), city.Owner.Adjective, Labels.For(LabelIndex.builds) };
+        ShowPopup(dialog,
+            handleButtonClick: (s, i, arg3, arg4) =>
+            {
+                if (i == 0)
+                {
+                    ShowCityWindow(city);
+                }
+            },
+            replaceNumbers: replaceNumbers,
+            options: new List<string> { Labels.For(LabelIndex.ZoomToCity), Labels.For(LabelIndex.Continue) },
+            replaceStrings: replaceStrings);
     }
 
     public void ShowCityWindow(City city)
     {
-        //TODO: City window
         var cityDialog = new CityWindow(this, city);
         ShowDialog(cityDialog);
     }
@@ -298,7 +309,9 @@ public class GameScreen : BaseScreen
 
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
-        List<TextBoxDefinition>? textBoxes = null, 
+        IList<int>? replaceNumbers = null,
+        List<string>? options = null,
+        List<TextBoxDefinition>? textBoxes = null,
         DialogImageElements? dialogImage = null,
         IList<string>? replaceStrings = null,
         ListBoxDefinition? listBox = null)
@@ -306,9 +319,11 @@ public class GameScreen : BaseScreen
         var popupBox = MainWindow.ActiveInterface.GetDialog(dialogName);
         if (popupBox != null)
         {
+            popupBox.Options ??= options;
             _popupClicked = handleButtonClick;
             _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
-                ClosePopup, textBoxDefs: textBoxes, image: dialogImage, replaceStrings: replaceStrings, listBox: listBox);
+                ClosePopup, textBoxDefs: textBoxes, image: dialogImage, replaceStrings: replaceStrings,
+                replaceNumbers: replaceNumbers, listBox: listBox);
             ShowDialog(_currentPopupDialog, stack: true);
         }
     }
