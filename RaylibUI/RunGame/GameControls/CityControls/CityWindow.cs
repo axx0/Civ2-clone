@@ -23,6 +23,7 @@ public class CityWindow : BaseDialog
     private readonly IList<IProductionOrder> _canProduce;
     
     private LabelControl? _productionLabel;
+    private IconContainer? _productionIcon;
     private ShieldBox? _productionBox;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
@@ -72,14 +73,12 @@ public class CityWindow : BaseDialog
         changeButton.Click += (_, _) =>
         {
             gameScreen.ShowPopup(
-                "PRODUCTION",
-                replaceStrings: new[] { city.Name },
-                listBox: new ListBoxDefinition
+                "PRODUCTION", handleButtonClick: BuildDialogClosed, replaceStrings: new[] { city.Name }, listBox: new ListBoxDefinition
                 {
                     Vertical = true,
-                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active, gameScreen.Game.Rules.FirstWonderIndex)).ToList(),
+                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active)).ToList(),
                     InitialSelection = _canProduce.IndexOf(city.ItemInProduction)
-                }, handleButtonClick: BuildDialogClosed );
+                });
         };
         Controls.Add(changeButton);
 
@@ -177,6 +176,19 @@ public class CityWindow : BaseDialog
         }
         _productionLabel = label;
         Controls.Add(_productionLabel);
+        
+        var productionIcon = new IconContainer(this, city.ItemInProduction.GetIcon(_active), 0,
+            (int)productionSettings.IconLocation.Width){
+            AbsolutePosition =productionSettings.IconLocation
+        };
+        if (_productionIcon != null)
+        {
+            Controls.Remove(_productionIcon);
+            productionIcon.OnResize();
+        }
+
+        _productionIcon = productionIcon;
+        Controls.Add(productionIcon);
         if (productionSettings.Type == "Box")
         {
             if (_productionBox == null)

@@ -467,24 +467,14 @@ namespace Civ2engine.UnitActions
 
                         break;
                     }
+                    
+                    moveCost *= tileTo.MoveCost;
+                    moveCost = MoveCost(tileTo, tileFrom, moveCost, cosmicRules);
 
-                    // Coming from Railroad and going to Railroad
-                    var comingFromRailroad = tileTo.Improvements.Any(e => e is { Improvement: 5, Level: 1 });
-                    var goingToRailroad = unit.CurrentLocation?.Improvements.Any(e => e is { Improvement: 5, Level: 1 }) ?? false;
-                    if (comingFromRailroad && goingToRailroad) 
+                    // If alpine movement could be less use that
+                    if (cosmicRules.AlpineMovement < moveCost && unit.Alpine)
                     {
-                        moveCost = 0;  
-                    }
-                    else
-                    {
-                        moveCost *= tileTo.MoveCost;
-                        moveCost = MoveCost(tileTo, tileFrom, moveCost, cosmicRules);
-
-                        // If alpine movement could be less use that
-                        if (cosmicRules.AlpineMovement < moveCost && unit.Alpine)
-                        {
-                            moveCost = cosmicRules.AlpineMovement;
-                        }
+                        moveCost = cosmicRules.AlpineMovement;
                     }
 
                     unitMoved = true;
@@ -625,8 +615,8 @@ namespace Civ2engine.UnitActions
                          e.Target == ImprovementConstants.Movement)
                     )
             {
-                var matchingEffect = tileTo.EffectsList.FirstOrDefault(e =>
-                    e.Source == movementEffect.Source && e.Target == ImprovementConstants.Movement);
+                var matchingEffect = tileTo.EffectsList.Where(e =>
+                    e.Source == movementEffect.Source && e.Target == ImprovementConstants.Movement).MinBy(i=>i.Value);
                 if (matchingEffect == null) continue;
 
                 if (matchingEffect.Level < movementEffect.Level)
@@ -686,15 +676,13 @@ namespace Civ2engine.UnitActions
         {
             if (unit.Domain == UnitGas.Sea)
             {
-                return unit.CurrentLocation.Type == TerrainType.Ocean
+                return unit.CurrentLocation!.Type == TerrainType.Ocean
                     ? new List<int> { unit.CurrentLocation.Island }
                     : unit.CurrentLocation.Neighbours().Where(t => t.Type == TerrainType.Ocean).Select(t => t.Island)
                         .Distinct().ToList();
-                
-                
             }
 
-            if (unit.CurrentLocation.Type == TerrainType.Ocean)
+            if (unit.CurrentLocation!.Type == TerrainType.Ocean)
             {
                 return unit.CurrentLocation.Neighbours().Where(n => n.Type != TerrainType.Ocean)
                     .Select(n => n.Island).Distinct().ToList();

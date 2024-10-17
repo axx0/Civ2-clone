@@ -1,5 +1,6 @@
 using System.Linq;
 using Model;
+using Model.Images;
 using Model.Interface;
 
 namespace Civ2engine.Production
@@ -43,16 +44,18 @@ namespace Civ2engine.Production
             return _buildList.Length <= targetCiv.Id || _buildList[targetCiv.Id];
         }
 
+        public abstract IImageSource? GetIcon(IUserInterface activeInterface);
+
         public abstract bool IsValidBuild(City city);
 
         public abstract string GetDescription();
-        public abstract ListBoxEntry GetBuildListEntry(IUserInterface active, int rulesFirstWonderIndex);
+        public abstract ListBoxEntry GetBuildListEntry(IUserInterface active);
 
         public static IProductionOrder[] GetAll(Rules rules)
         {
             return rules.ProductionOrders ??= rules.UnitTypes.Select((u, index) => new UnitProductionOrder(u, index))
                 .Cast<IProductionOrder>()
-                .Concat(rules.Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i)))).ToArray();
+                .Concat(rules.Improvements[1..].Select(((imp, i) => new BuildingProductionOrder(imp, i, rules.FirstWonderIndex)))).ToArray();
 
         }
 

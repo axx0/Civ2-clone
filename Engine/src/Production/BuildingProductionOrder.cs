@@ -1,14 +1,18 @@
 using System.Linq;
 using Model;
 using Model.Constants;
+using Model.Images;
 using Model.Interface;
 
 namespace Civ2engine.Production
 {
     public class BuildingProductionOrder : ProductionOrder
     {
-        public BuildingProductionOrder(Improvement imp, int i) : base(imp.Cost, ItemType.Building, i+1, imp.Prerequisite)
+        private readonly int _firstWonderIndex;
+
+        public BuildingProductionOrder(Improvement imp, int i, int firstWonderIndex) : base(imp.Cost, ItemType.Building, i+1, imp.Prerequisite)
         {
+            _firstWonderIndex = firstWonderIndex;
             Improvement = imp;
         }
 
@@ -32,6 +36,11 @@ namespace Civ2engine.Production
 
         }
 
+        public override IImageSource? GetIcon(IUserInterface activeInterface)
+        {
+            return Improvement.Icon ?? activeInterface.GetImprovementImage(Improvement, _firstWonderIndex);
+        }
+
         public override bool IsValidBuild(City city)
         {
             if (!city.ImprovementExists(Improvement.Type))
@@ -51,9 +60,9 @@ namespace Civ2engine.Production
             return Improvement.Name;
         }
 
-        public override ListBoxEntry GetBuildListEntry(IUserInterface active, int firstWonderIndex)
+        public override ListBoxEntry GetBuildListEntry(IUserInterface active)
         {
-            return new ListBoxEntry { LeftText = Improvement.Name, Icon = Improvement.Icon ?? active.GetImprovementImage(Improvement,firstWonderIndex) };
+            return new ListBoxEntry { LeftText = Improvement.Name, Icon = GetIcon(active) };
         }
     }
 }

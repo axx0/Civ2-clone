@@ -30,7 +30,7 @@ public class Path
 
     private const int NotPossible = -1;
 
-    public static Path CalculatePathBetween(Game game, Tile startTile, Tile endTile, UnitGas domain, int moveFactor,
+    public static Path? CalculatePathBetween(IGame game, Tile startTile, Tile endTile, UnitGas domain, int moveFactor,
         Civilization owner, bool alpine, bool ignoreZoc)
     {
         if (startTile.Z != endTile.Z || !endTile.IsVisible(owner.Id)) return null;
@@ -44,7 +44,7 @@ public class Path
         
 
         var rules = game.Rules;
-        Func<Tile, Tile, int> costFunction = domain switch
+        var costFunction = domain switch
         {
             UnitGas.Ground => BuildGroundMovementFunction(rules.Cosmic, alpine, moveFactor),
             UnitGas.Air => (source, dest) => rules.Cosmic.MovementMultiplier,
@@ -155,8 +155,7 @@ public class Path
         }
 
         return (source, dest) => dest.Type != TerrainType.Ocean
-            ? Math.Min(moveFactor,
-                MovementFunctions.MoveCost(source, dest, cosmic.MovementMultiplier * dest.MoveCost, cosmic))
+            ? Math.Min(moveFactor, MovementFunctions.MoveCost(source, dest, cosmic.MovementMultiplier * dest.MoveCost, cosmic))
             : NotPossible;
     }
 
@@ -172,14 +171,14 @@ public class Path
             .Any(t => t.Type == TerrainType.Ocean && possibleOceans.Contains(t.Island));
     }
 
-    public void Follow(Game game, Unit unit)
+    public void Follow(IGame game, Unit unit)
     {
         int pos = 0;
         do
         {
             var tileTo = Tiles[pos++];
             var tileFrom = unit.CurrentLocation;
-            if (MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation))
+            if (MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation!))
             {
                 var neighbours = tileTo.Neighbours().Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
                 if (neighbours.Count > 0)
@@ -190,7 +189,7 @@ public class Path
                 game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
             }
         } while (unit.MovePoints > 0 && pos < Tiles.Length &&
-                 !MovementFunctions.IsNextToEnemy(unit.CurrentLocation, unit.Owner, unit.Domain));
+                 !MovementFunctions.IsNextToEnemy(unit.CurrentLocation!, unit.Owner, unit.Domain));
 
         if (unit.MovePoints > 0)
         {
