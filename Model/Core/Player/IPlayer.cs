@@ -32,6 +32,9 @@ namespace Civ2engine
         void NotifyImprovementEnabled(TerrainImprovement improvement, int level);
         void MapChanged(List<Tile> tiles);
         void WaitingAtEndOfTurn();
+        void NotifyAdvanceResearched(int advance);
+        void FoodShortage(City city);
+        void CityDecrease(City city);
     }   
 
     public interface IInterfaceCommands

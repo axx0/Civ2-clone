@@ -4,6 +4,7 @@ using Civ2engine.Statistics;
 using Civ2engine.Units;
 using Model;
 using Model.Constants;
+using Model.Images;
 using Model.Interface;
 
 namespace Civ2engine.Production
@@ -59,6 +60,11 @@ namespace Civ2engine.Production
             return true;
         }
 
+        public override IImageSource? GetIcon(IUserInterface activeInterface)
+        {
+            return activeInterface.UnitImages.Units[_unitDefinition.Type].Image;
+        }
+
         public override bool IsValidBuild(City city)
         {
             return _unitDefinition.Domain != UnitGas.Sea || city.IsNextToOcean();
@@ -69,9 +75,9 @@ namespace Civ2engine.Production
             return _unitDefinition.Name;
         }
 
-        public override ListBoxEntry GetBuildListEntry(IUserInterface active, int rulesFirstWonderIndex)
+        public override ListBoxEntry GetBuildListEntry(IUserInterface active)
         {
-            return new ListBoxEntry { Icon = active.UnitImages.Units[_unitDefinition.Type].Image, LeftText = _unitDefinition.Name };
+            return new ListBoxEntry { Icon = GetIcon(active), LeftText = _unitDefinition.Name };
         }
     }
 }

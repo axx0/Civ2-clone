@@ -21,21 +21,9 @@ public class LocalPlayer : IPlayer
 
     public Civilization Civilization { get; }
 
-    public Tile ActiveTile
-    {
-        get => _activeTile;
-        set
-        {
-            if (_activeTile != value)
-            {
-                _activeTile = value;
-            }
-        }
-    }
+    public Tile ActiveTile { get; set; }
 
     private Unit? _activeUnit;
-    
-    private Tile _activeTile;
 
     public Unit? ActiveUnit
     {
@@ -48,7 +36,7 @@ public class LocalPlayer : IPlayer
             }
             else if (value is { TurnEnded: false, Dead: false } && value.Owner == Civilization)
             {
-                _activeTile = value.CurrentLocation;
+                if (value.CurrentLocation != null) ActiveTile = value.CurrentLocation;
                 _activeUnit = value;
             }
             else
@@ -62,61 +50,48 @@ public class LocalPlayer : IPlayer
 
     public void CivilDisorder(City city)
     {
-        _gameScreen.ShowCityDialog("DISORDER", new[] { city.Name });
+        _gameScreen.ShowCityDialog("DISORDER", city);
     }
 
     public void OrderRestored(City city)
     {
-        _gameScreen.ShowCityDialog("RESTORED", new[] { city.Name });
+        _gameScreen.ShowCityDialog("RESTORED", city);
     }
 
     public void WeLoveTheKingStarted(City city)
     {
-        _gameScreen.ShowCityDialog("WELOVEKING", new[] { city.Name, city.Owner.LeaderTitle });
+        _gameScreen.ShowCityDialog("WELOVEKING", city);
     }
 
     public void WeLoveTheKingCanceled(City city)
     {
-        _gameScreen.ShowCityDialog("WEDONTLOVEKING", new[] { city.Name, city.Owner.LeaderTitle });
+        _gameScreen.ShowCityDialog("WEDONTLOVEKING", city);
     }
 
     public void CantMaintain(City city, Improvement cityImprovement)
     {
-        throw new NotImplementedException();
+        _gameScreen.ShowCityDialog("INHOCK", city, new[] { city.Name, cityImprovement.Name },
+            new[] { cityImprovement.Cost });
     }
 
     public void SelectNewAdvance(IGame game, List<Advance> researchPossibilities)
     {
         var activeInterface = _gameScreen.Main.ActiveInterface;
         _gameScreen.ShowPopup("RESEARCH", (s, i, arg3, arg4) =>
-        {
-            Civilization.ReseachingAdvance = researchPossibilities[i].Index;
-        }, replaceStrings: new string [] { activeInterface.GetScientistName(Civilization.Epoch) },
+            {
+                Civilization.ReseachingAdvance = researchPossibilities[i].Index;
+            }, replaceStrings: new string [] { activeInterface.GetScientistName(Civilization.Epoch) },
             listBox: new ListBoxDefinition { Vertical = false, Entries  =  researchPossibilities.Select(a => new ListBoxEntry { Icon = activeInterface.GetAdvanceImage(a), LeftText = a.Name}).ToList() } );
     }
 
     public void CantProduce(City city, IProductionOrder? newItem)
     {
-        ShowCityDialog(city, "BADBUILD");
+        _gameScreen.ShowCityDialog("BADBUILD", city);
     }
 
     public void CityProductionComplete(City city)
     {
-        ShowCityDialog(city, "BUILT");
-    }
-
-    private void ShowCityDialog(City city, string dialogName)
-    {
-        // var popup = _main.popupBoxList[dialogName];
-        // popup.Options ??= new List<string> { Labels.For(LabelIndex.ZoomToCity), Labels.For(LabelIndex.Continue) };
-        // var dialog = new Civ2dialog(_main, popup,
-        //     new List<string>
-        //         { city.Name, city.ItemInProduction.GetDescription(), city.Owner.Adjective, Labels.For(LabelIndex.builds) });
-        // dialog.ShowModal();
-        // if (dialog.SelectedIndex == 0)
-        // {
-        //     _main.mapPanel.ShowCityWindow(city);
-        // }
+        _gameScreen.ShowCityDialog("BUILT", city);
     }
 
     public IInterfaceCommands Ui { get; }
@@ -149,5 +124,26 @@ public class LocalPlayer : IPlayer
     public void WaitingAtEndOfTurn()
     {
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
+    }
+
+    public void NotifyAdvanceResearched(int advance)
+    {
+        var activeInterface = _gameScreen.Main.ActiveInterface;
+        _gameScreen.ShowPopup("CIVADVANCE",
+            replaceStrings: new[]
+            {
+                Civilization.Adjective, activeInterface.GetScientistName(Civilization.Epoch),
+                _gameScreen.Game.Rules.Advances[advance].Name
+            });
+    }
+
+    public void FoodShortage(City city)
+    {
+        _gameScreen.ShowCityDialog("FOODSHORTAGE", city);
+    }
+
+    public void CityDecrease(City city)
+    {
+        _gameScreen.ShowCityDialog("DECREASE", city);
     }
 }

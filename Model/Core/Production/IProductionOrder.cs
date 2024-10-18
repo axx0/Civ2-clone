@@ -1,5 +1,6 @@
 using Civ2engine.Production;
 using Model;
+using Model.Images;
 using Model.Interface;
 
 namespace Civ2engine;
@@ -14,6 +15,9 @@ public interface IProductionOrder
     string Title { get; }
     bool CompleteProduction(City city, Rules rules);
     bool CanBuild(Civilization civilization);
-    
-    ListBoxEntry GetBuildListEntry(IUserInterface active, int firstWonderIndex);
+
+    IImageSource? GetIcon(IUserInterface activeInterface);
+
+    string GetDescription();
+    ListBoxEntry GetBuildListEntry(IUserInterface active);
 }
