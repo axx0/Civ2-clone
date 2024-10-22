@@ -288,11 +288,11 @@ public class TestOfTimeInterface : Civ2Interface
             Key = "GAME", Defaults = new List<MenuElement>
             {
                 new MenuElement("&Game", Shortcut.None, KeyboardKey.G),
-                new MenuElement("Game &Options|Ctrl+O", new Shortcut(KeyboardKey.O, ctrl: true), KeyboardKey.O),
+                new MenuElement("Game &Options|Ctrl+O", new Shortcut(KeyboardKey.O, ctrl: true), KeyboardKey.O, commandId: GameOptions),
                 new MenuElement("Graphic O&ptions|Ctrl+P", new Shortcut(KeyboardKey.P, ctrl: true),
-                    KeyboardKey.P),
+                    KeyboardKey.P, commandId: GraphicOptions),
                 new MenuElement("&City Report Options|Ctrl+E", new Shortcut(KeyboardKey.E, ctrl: true),
-                    KeyboardKey.C),
+                    KeyboardKey.C, commandId: CityReportOptions),
                 new MenuElement("M&ultiplayer Options|Ctrl+Y", new Shortcut(KeyboardKey.Y, ctrl: true),
                     KeyboardKey.U),
                 new MenuElement("&Game Profile", Shortcut.None, KeyboardKey.G),

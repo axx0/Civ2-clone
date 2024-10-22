@@ -15,7 +15,8 @@ public interface IGame
     IDictionary<int,TerrainImprovement> TerrainImprovements { get; }
     Rules Rules { get; }
     Civilization GetActiveCiv { get; }
-    
+    Options Options { get; }
+
     IPlayer ActivePlayer { get; }
     IScriptEngine Script { get; }
     
