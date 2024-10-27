@@ -312,6 +312,7 @@ public class GameScreen : BaseScreen
     public void ShowPopup(string dialogName,
         Action<string, int, IList<bool>?, IDictionary<string, string>?>? handleButtonClick = null,
         IList<int>? replaceNumbers = null,
+        IList<bool>? checkboxStates = null,
         List<string>? options = null,
         List<TextBoxDefinition>? textBoxes = null,
         DialogImageElements? dialogImage = null,
@@ -325,7 +326,7 @@ public class GameScreen : BaseScreen
             _popupClicked = handleButtonClick;
             _currentPopupDialog = new CivDialog(MainWindow, popupBox, new Point(0, 0),
                 ClosePopup, textBoxDefs: textBoxes, image: dialogImage, replaceStrings: replaceStrings,
-                replaceNumbers: replaceNumbers, listBox: listBox);
+                replaceNumbers: replaceNumbers, listBox: listBox, checkboxStates: checkboxStates);
             ShowDialog(_currentPopupDialog, stack: true);
         }
     }
