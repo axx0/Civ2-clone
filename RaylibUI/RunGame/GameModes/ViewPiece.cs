@@ -118,7 +118,7 @@ public class ViewPiece : IGameMode
         return new WaitingView(gameScreen, currentView, viewHeight, viewWidth, forceRedraw);
     }
 
-    public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)
+    public bool MapClicked(Tile tile, MouseButton mouseButton)
     {
         if (mouseButton == MouseButton.Left)
         {
@@ -381,6 +381,16 @@ public class ViewPiece : IGameMode
 
         controls.ForEach(c => c.OnResize());
         return controls;
+    }
+
+    public void MouseDown(Tile tile)
+    {
+        // NO op
+    }
+
+    public void MouseClear()
+    {
+        
     }
 
     private void PlayerEventTriggered(object sender, PlayerEventArgs e)

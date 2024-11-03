@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using Civ2engine;
+using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.UnitActions;
@@ -14,8 +15,8 @@ using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls;
-using RaylibUI.RunGame.GameControls.Mapping;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
+using Path = Civ2engine.Units.Path;
 
 namespace RaylibUI.RunGame.GameModes;
 
@@ -24,6 +25,8 @@ public class MovingPieces : IGameMode
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
     private readonly InterfaceStyle _look;
+    private DateTime? _downTime;
+    private readonly TimeSpan _holdTime = TimeSpan.FromMilliseconds(15);
 
     public MovingPieces(GameScreen gameScreen)
     {
@@ -71,29 +74,29 @@ public class MovingPieces : IGameMode
         return new UnitReadyView(gameScreen, currentView, viewHeight, viewWidth, gameScreen.Player.ActiveUnit, forceRedraw);
     }
 
-    public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)
+    public bool MapClicked(Tile tile, MouseButton mouseButton)
     {
         if (mouseButton == MouseButton.Left)
         {
-            //TODO: port GOTO support
-            // if (longClick && (e.Modifiers & Keys.Control) != Keys.Control)
-            // {
-            //     var unit = _player.ActiveUnit;
-            //     var path = Path.CalculatePathBetween(_game, _player.ActiveTile, clickedXy, unit.Domain, unit.MaxMovePoints,
-            //         unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
-            //     if (path != null)
-            //     {
-            //         unit.GoToX = clickedXy.X;
-            //         unit.GoToY = clickedXy.Y;
-            //         unit.Order = OrderType.GoTo;
-            //         path.Follow(_game, unit);
-            //         if (!unit.AwaitingOrders)
-            //         {
-            //             _game.ChooseNextUnit();
-            //         }
-            //         return false;
-            //     }
-            // }
+            // GOTO support
+            if (_downTime.HasValue && DateTime.Now - _downTime.Value > _holdTime && !(Input.IsKeyDown(KeyboardKey.LeftControl) || Input.IsKeyDown(KeyboardKey.RightControl)))
+            {
+                var unit = _gameScreen.Player.ActiveUnit;
+                var path = Path.CalculatePathBetween(_gameScreen.Game, _gameScreen.Player.ActiveTile, tile, unit.Domain, unit.MaxMovePoints,
+                    unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
+                if (path != null)
+                {
+                    unit.GoToX = tile.X;
+                    unit.GoToY = tile.Y;
+                    unit.Order = (int)OrderType.GoTo;
+                    path.Follow(_gameScreen.Game, unit);
+                    if (!unit.AwaitingOrders)
+                    {
+                        _gameScreen.Game.ChooseNextUnit();
+                    }
+                    return false;
+                }
+            }
             var city = tile.CityHere;
             if (city == null)
             {
@@ -395,5 +398,23 @@ public class MovingPieces : IGameMode
 
         controls.ForEach(c => c.OnResize());
         return controls;
+    }
+
+    
+    private const string GotoCursor = "GOTO_TO";
+    public void MouseDown(Tile tile)
+    {
+        _downTime = DateTime.Now;
+        _gameScreen.Main.Schedule(GotoCursor, _holdTime, () =>
+        {
+            Input.SetMouseCursor(MouseCursor.Crosshair);
+        });
+    }
+
+    public void MouseClear()
+    {
+        _downTime = null;
+        _gameScreen.Main.ClearSchedule(GotoCursor);
+        Input.SetMouseCursor(MouseCursor.Arrow);
     }
 }

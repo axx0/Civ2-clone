@@ -189,7 +189,7 @@ namespace Civ2engine.Advances
                 baseCost += _mapSizeAdjustment;
             }
 
-            return baseCost * ourAdvances;
+            return baseCost * (ourAdvances +1);
 
         }
 

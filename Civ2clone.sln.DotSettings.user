@@ -2,4 +2,4 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Users/revans/.nuget/packages/raylib-cs/4.2.0.1/lib/net6.0/Raylib-cs.dll" /&gt;
 &lt;/AssemblyExplorer&gt;</s:String>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=24718bad_002Db4d0_002D43e9_002Dabfa_002D1176d54ff8ad_0023EtoFormsUI/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	</wpf:ResourceDictionary>
