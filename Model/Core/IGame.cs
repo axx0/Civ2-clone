@@ -13,6 +13,8 @@ public interface IGame
     Map CurrentMap { get;  }
     Civilization GetPlayerCiv { get; }
     IDictionary<int,TerrainImprovement> TerrainImprovements { get; }
+    
+    string[] GamePaths { get; }
     Rules Rules { get; }
     Civilization GetActiveCiv { get; }
     Options Options { get; }

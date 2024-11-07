@@ -120,6 +120,7 @@ namespace Civ2engine
         }
 
         public IDictionary<int, TerrainImprovement> TerrainImprovements { get; set; }
+        public string[] GamePaths { get; set; }
 
         private double ComputeMaxDistance()
         {

@@ -5,6 +5,8 @@ public static class CommandIds
     public const string GameOptions = "GAME_OPTIONS";
     public const string GraphicOptions = "GRAPHIC_OPTIONS";
     public const string CityReportOptions = "CITY_REPORT_OPTIONS";
+    public const string SaveGame = "SAVE_GAME";
+    public const string LoadGame = "LOAD_GAME";
     public const string QuitGame = "GAME_QUIT";
 
     public const string MapLayoutToggle = "MAP_LAYOUT";
