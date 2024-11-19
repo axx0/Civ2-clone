@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Engine\Core.csproj"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaylibUtils", "RaylibUtils\RaylibUtils.csproj", "{987C570F-A83B-4A7E-88D2-9D32B5741FA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CivServer", "CivServer\CivServer.csproj", "{03C77E6C-F012-4343-9D33-F8F627668B75}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,10 +56,6 @@ Global
 		{987C570F-A83B-4A7E-88D2-9D32B5741FA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{987C570F-A83B-4A7E-88D2-9D32B5741FA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{987C570F-A83B-4A7E-88D2-9D32B5741FA0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03C77E6C-F012-4343-9D33-F8F627668B75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03C77E6C-F012-4343-9D33-F8F627668B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03C77E6C-F012-4343-9D33-F8F627668B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03C77E6C-F012-4343-9D33-F8F627668B75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,10 @@
+using System.Data;
+using System.Diagnostics;
+using System.IO.Compression;
+using System.Net;
+using System.Text.Json;
 using Civ2engine;
+using Civ2engine.SaveLoad;
 using Model;
 using Model.Dialog;
 using Model.Menu;
@@ -6,43 +12,58 @@ using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class SaveGame : IGameCommand
+public class SaveGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, CommandIds.SaveGame,
+    [new Shortcut(KeyboardKey.S, ctrl: true)])
 {
-    private readonly GameScreen _gameScreen;
+    private FileDialog? _saveDialog;
 
-    public SaveGame(GameScreen gameScreen)
+    public override void Action()
     {
-        _gameScreen = gameScreen;
+        var suggestedFileName =
+            $"{GameScreen.Game.ActivePlayer.Civilization.LeaderName.Substring(0, 2)}_{GameScreen.Game.Date.GameYearString(GameScreen.Game.TurnNumber, "").Replace(".", "")}.sav"
+                .ToLowerInvariant();
+        _saveDialog = new FileDialog(GameScreen.Main, Labels.For(LabelIndex.SaveFiles),
+            GameScreen.Main.ActiveRuleSet.FolderPath, IsValidSelectionCallback, OnSelectionCallback, suggestedFileName,
+            false);
+        GameScreen.ShowDialog(_saveDialog, true);
     }
-    
-    public string Id => CommandIds.SaveGame;
-    public Shortcut[] ActivationKeys { get; set; } = [new Shortcut(KeyboardKey.S, ctrl: true)];
-    public CommandStatus Status => CommandStatus.Normal;
-    public bool Update()
+
+    bool OnSelectionCallback(string? filePath)
     {
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            if (_saveDialog != null) GameScreen.CloseDialog(_saveDialog);
+            _saveDialog = null;
+            return true;
+        }
+
+        
+        var serializer = new GameSerializer();
+        var game = GameScreen.Game;
+        if (File.Exists(filePath))
+        {
+            //TODO: prompt for overwrite?
+
+            using var saveFile = File.Open(filePath, FileMode.Truncate);
+            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet);
+        }
+        else
+        {
+            using var saveFile = File.Open(filePath, FileMode.CreateNew);
+            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet);
+        }
+
+        GameScreen.ShowPopup("SAVEOK", replaceStrings: new List<string>{ game.ActivePlayer.Civilization.LeaderTitle, game.ActivePlayer.Civilization.LeaderName, game.ActivePlayer.Civilization.TribeName,Path.GetFileName(filePath)}, handleButtonClick: CloseConfirm);
         return true;
     }
 
-    public void Action()
+    private void CloseConfirm(string arg1, int arg2, IList<bool>? arg3, IDictionary<string, string>? arg4)
     {
-        var saveDialog = new FileDialog(_gameScreen.Main, Labels.For(LabelIndex.SaveFiles),
-            _gameScreen.Game.GamePaths.First(), IsValidSelectionCallback, OnSelectionCallback);
-
-       
-
-        _gameScreen.ShowDialog(saveDialog, true);
+        GameScreen.CloseDialog(_saveDialog);
     }
- bool OnSelectionCallback(string? arg)
-        {
-            throw new NotImplementedException();
-        }
+
     private bool IsValidSelectionCallback(string path)
     {
-        return path.EndsWith(".sav");
+        return path.EndsWith(".sav", StringComparison.InvariantCultureIgnoreCase);
     }
-
-    public MenuCommand? Command { get; set; }
-    public string ErrorDialog { get; }
-    public DialogImageElements? ErrorImage { get; }
-    public string? Name { get; }
 }

@@ -29,7 +29,7 @@ public class LoadScenario : FileDialogHandler
         var scnDirectory = Path.GetDirectoryName(fileName);
         var root = Settings.SearchPaths.FirstOrDefault(p => scnDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
         var scnName = Path.GetFileName(fileName);
-        GameData gameData = Read.ReadSavFile(scnDirectory, scnName);
+        GameData gameData = Read.ReadSavFile(File.ReadAllBytes(fileName));
 
         var activeInterface = civ2Interface.MainApp.SetActiveRulesetFromFile(root, scnDirectory, gameData.ExtendedMetadata);
 

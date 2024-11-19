@@ -6,8 +6,8 @@ namespace Civ2engine;
 
 public class Date : IGameDate
 {
-    public readonly int StartingYear;
-    public readonly int TurnYearIncrement;
+    public int StartingYear { get; }
+    public int TurnYearIncrement { get; }
     private readonly bool _monthlyTurnIncrement;
     private readonly bool _defaultTurnIncrement;
     private readonly int _difficulty;
@@ -46,7 +46,7 @@ public class Date : IGameDate
         return gameYear;
     }
 
-    public string GameYearString(int turnNo)
+    public string GameYearString(int turnNo, string separator = " ")
     {
         int gameYear = GameYear(turnNo);
 
@@ -72,13 +72,14 @@ public class Date : IGameDate
                 10 => Labels.For(LabelIndex.Nov),
                 _ => Labels.For(LabelIndex.Dec),
             };
-            return string.Join(" ", month, Math.Abs(Nyear));
+            return string.Join(separator, month, Math.Abs(Nyear));
         }
         else
         {
             return gameYear < 0 ?
-                string.Join(" ", Math.Abs(gameYear).ToString(), Labels.For(LabelIndex.BC)) :
-                string.Join(" ", Labels.For(LabelIndex.AD), gameYear.ToString());
+                string.Join(separator, Math.Abs(gameYear).ToString(), Labels.For(LabelIndex.BC)) :
+                string.Join(separator, Labels.For(LabelIndex.AD), gameYear.ToString());
         }
     }
+
 }

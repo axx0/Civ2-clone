@@ -2,6 +2,10 @@
 {
     public class Options
     {
+        public Options()
+        {
+            
+        }
         public Options(GameInitializationConfig config)
         {
             SimplifiedCombat = config.SimplifiedCombat;

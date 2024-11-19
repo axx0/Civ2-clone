@@ -8,6 +8,7 @@ namespace Civ2engine
 {
     public class Civilization
     {
+        public int TribeId { get; set; }
         public int Id { get; set; }
         public bool Alive { get; set; }
         public int CityStyle { get; set; }

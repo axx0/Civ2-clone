@@ -31,4 +31,9 @@ public static class CommandIds
     public const string EndTurn = "END_PLAYER_TURN";
     
     public const string OpenLuaConsole = "OPEN_LUA_CONSOLE";
+    
+    public const string SaveScenario = "SAVE_SCENARIO";
+    public const string LoadScenario = "LOAD_SCENARIO";
+    public const string SaveMap = "SAVE_MAP";
+    public const string LoadMap = "LOAD_MAP";
 }

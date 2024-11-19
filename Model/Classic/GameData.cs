@@ -2,7 +2,7 @@
 
 namespace Civ2engine
 {
-    public class GameData
+    public class GameData : IGameData
     {
         public byte GameVersion { get; set; }
 
@@ -15,20 +15,20 @@ namespace Civ2engine
         public bool FirstCaravanBuilt { get; set; }
         public bool WasRepublicDemocracyAdopted { get; set; }
         public bool FirstSignificantlyDamagedUnit { get; set; }
-        public short TurnNumber { get; set; }
+        public int TurnNumber { get; set; }
         public short TurnNumberForGameYear { get; set; }
         public short SelectedUnitIndex { get; set; }
         public byte PlayersCivIndex { get; set; }
         public byte WhichCivsMapShown { get; set; }
         public byte PlayersCivilizationNumberUsed { get; set; }
         public bool MapRevealed { get; set; }
-        public byte DifficultyLevel { get; set; }
-        public byte BarbarianActivity { get; set; }
+        public int DifficultyLevel { get; set; }
+        public int BarbarianActivity { get; set; }
         public bool[] CivsInPlay { get; set; }
         public bool[] HumanPlayers { get; set; }
-        public short NoPollutionSkulls { get; set; }
-        public byte GlobalTempRiseOccured { get; set; }
-        public byte NoOfTurnsOfPeace { get; set; }
+        public int NoPollutionSkulls { get; set; }
+        public int GlobalTempRiseOccured { get; set; }
+        public int NoOfTurnsOfPeace { get; set; }
         public short NumberOfUnits { get; set; }
         public short NumberOfCities { get; set; }
 
@@ -246,8 +246,8 @@ namespace Civ2engine
         public bool SpecialWwiIonlyAi { get; set; }
         public string ScenarioName { get; set; }
         public short TechParadigm { get; set; }
-        public short TurnYearIncrement { get; set; }
-        public short StartingYear { get; set; }
+        public int TurnYearIncrement { get; set; }
+        public int StartingYear { get; set; }
         public short MaxTurns { get; set; }
         public short ObjectiveProtagonist { get; set; }
         public short NoObjectivesDecisiveVictory { get; set; }

@@ -91,6 +91,7 @@ public class TestOfTimeInterface : Civ2Interface
 
         var original = "Original";
 
+        // TODO: This method looks really scrambled... why do we no longer look in the root or at these extra folders??? something is wrong here!!
         var other_default_game_modes = new[] { "SciFi", "Fantasy" };
 
         var originalPath = Path.Combine(path, original);

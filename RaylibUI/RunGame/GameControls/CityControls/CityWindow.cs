@@ -137,7 +137,7 @@ public class CityWindow : BaseDialog
         {
             var resourceTitle = Labels.For(LabelIndex.CityResources);
             var resourceTitleSize = TextManager.MeasureTextEx(_active.Look.CityWindowFont, resourceTitle, _active.Look.CityWindowFontSize, 1);
-            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Gold, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
+            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent: true, alignment: TextAlignment.Center, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize, colorFront: Color.Gold)
             {
                 AbsolutePosition = new Rectangle(titlePosition.X - resourceTitleSize.X / 2 - 10,titlePosition.Y, resourceTitleSize.X + 20, resourceTitleSize.Y )
             });
@@ -165,7 +165,7 @@ public class CityWindow : BaseDialog
         var productionTitle = city.ItemInProduction.Title;
         var productionTitleSize = TextManager.MeasureTextEx(_active.Look.CityWindowFont, productionTitle, _active.Look.CityWindowFontSize, 1);
         
-        var label = new LabelControl(this, productionTitle, eventTransparent:true, alignment: TextAlignment.Center, colorFront: Color.Blue, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize)
+        var label = new LabelControl(this, productionTitle, eventTransparent: true, alignment: TextAlignment.Center, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize, colorFront: Color.Blue)
         {
             AbsolutePosition = new Rectangle(productionTitlePosition.X - productionTitleSize.X / 2 - 10, productionTitlePosition.Y, productionTitleSize.X + 20, productionTitleSize.Y )
         };

@@ -14,7 +14,6 @@ public interface IGame
     Civilization GetPlayerCiv { get; }
     IDictionary<int,TerrainImprovement> TerrainImprovements { get; }
     
-    string[] GamePaths { get; }
     Rules Rules { get; }
     Civilization GetActiveCiv { get; }
     Options Options { get; }
@@ -34,15 +33,22 @@ public interface IGame
     void ChoseNextCiv();
     void TriggerMapEvent(MapEventType updateMap, List<Tile> tiles);
     double MaxDistance { get; }
-    int DifficultyLevel { get; }
+    int DifficultyLevel { get; set; }
     IGameDate Date { get; }
     
     int TurnNumber { get; }
     List<City> AllCities { get; }
     IPlayer[] Players { get; }
-    
+    int PollutionSkulls { get; }
+    int GlobalTempRiseOccured { get; }
+    int NoOfTurnsOfPeace { get; }
+    int BarbarianActivity { get; }
+    int NoMaps { get; }
+    List<Civilization> AllCivilizations { get; }
+
     event EventHandler<UnitEventArgs> OnUnitEvent;
     void AiTurn();
     void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked);
     void TriggerUnitEvent(UnitEventArgs combatEventArgs);
+    void SetHumanPlayer(int playerCivId);
 }   

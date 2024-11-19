@@ -29,7 +29,7 @@ public class ViewPiece : IGameMode
         _gameScreen = gameScreen;
         _look = gameScreen.MainWindow.ActiveInterface.Look;
 
-        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0), spacing: 0);
+        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, spacing: 0, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0));
 
         _gameScreen.Game.OnPlayerEvent += PlayerEventTriggered;
 

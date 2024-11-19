@@ -20,8 +20,7 @@ namespace Civ2engine
         public bool CivilDisorder { get; set; }
         public bool CanBuildHydro { get; set; }
         public bool CanBuildShips { get; set; }
-        public bool Objectivex3 { get; set; }
-        public bool Objectivex1 { get; set; }
+        public int Objective { get; set; }
         public bool AutobuildDomesticAdvisor { get; set; }
         public bool AutobuildMilitaryAdvisor { get; set; }
         public Civilization Owner { get; set; }
@@ -36,10 +35,10 @@ namespace Civ2engine
         public int NoOfSpecialistsx4 { get; set; }
         public IProductionOrder ItemInProduction { get; set; }
         public int ActiveTradeRoutes { get; set; }
-        public Commodity[] CommoditySupplied { get; set; }
-        public Commodity[] CommodityDemanded { get; set; }
-        public Commodity[] CommodityInRoute { get; set; }
-        public int[] TradeRoutePartnerCity { get; set; }
+        public Commodity[]? CommoditySupplied { get; set; }
+        public Commodity[]? CommodityDemanded { get; set; }
+        public Commodity[]? CommodityInRoute { get; set; }
+        public int[]? TradeRoutePartnerCity { get; set; }
         
         public TradeRoute[] TradeRoutes { get; set; }
         

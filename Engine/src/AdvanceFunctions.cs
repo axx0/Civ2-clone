@@ -81,7 +81,7 @@ namespace Civ2engine.Advances
         {
             civilization.Epoch = game.Rules.Advances.Where(a => a.Effects.ContainsKey(Effects.EpochTech))
                 .GroupBy(a => a.Effects[Effects.EpochTech])
-                .Where(techs => techs.All(t => civilization.Advances[t.Index])).Select(t => t.Key)
+                .Where(techs => techs.All(t => t.Index < civilization.Advances.Length && civilization.Advances[t.Index])).Select(t => t.Key)
                 .DefaultIfEmpty(0).Max();
         }
 
@@ -156,6 +156,12 @@ namespace Civ2engine.Advances
                 }
             }
 
+            if (civilization.Advances.Length < advanceIndex)
+            {
+                var advances = new bool[game.Rules.Advances.Length];
+                Array.Copy(civilization.Advances, advances.Length, advances, 0, advances.Length);
+                civilization.Advances = advances;
+            }
             civilization.Advances[advanceIndex] = true;
 
             var orders = ProductionOrder.GetAll(game.Rules);
@@ -200,14 +206,14 @@ namespace Civ2engine.Advances
                 return tech == AdvancesConstants.Nil;
             }
 
-            return civ.Advances[tech];
+            return tech < civ.Advances.Length && civ.Advances[tech];
         }
 
         public static List<Advance> CalculateAvailableResearch(Game game, Civilization activeCiv)
         {
             var allAvailable = game.Rules.Advances.Where(a =>
                 activeCiv.AllowedAdvanceGroups[a.AdvanceGroup] == AdvanceGroupAccess.CanResearch &&
-                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq1) && !activeCiv.Advances[a.Index]).ToList();
+                HasTech(activeCiv, a.Prereq1) && HasTech(activeCiv, a.Prereq1) && (activeCiv.Advances.Length < a.Index || !activeCiv.Advances[a.Index])).ToList();
             
             //TODO: cull list based on difficulty
             return allAvailable.ToList();

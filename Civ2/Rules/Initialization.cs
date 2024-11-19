@@ -4,6 +4,7 @@ using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.IO;
 using Model;
+using Model.Core;
 
 namespace Civ2.Rules;
 
@@ -22,9 +23,9 @@ public static class Initialization
 
     public static GameInitializationConfig ClearInitializationConfig() => _config = null;
 
-    internal static Game GameInstance;
+    internal static IGame GameInstance;
 
-    public static void Start(Game game)
+    public static void Start(IGame game)
     {
         GameInstance = game;
     }
@@ -52,11 +53,7 @@ public static class Initialization
 
         var civilizations = new List<Civilization>
         {
-            new()
-            {
-                Adjective = Labels.Items[17], LeaderName = Labels.Items[18], Alive = true, Id = 0,
-                PlayerType = PlayerType.Barbarians, Advances = new bool[ConfigObject.Rules.Advances.Length]
-            },
+            Barbarians.Civilization,
             ConfigObject.PlayerCiv
         };
 
@@ -86,6 +83,7 @@ public static class Initialization
         var gender = human ? config.Gender : ConfigObject.Random.Next(2);
         return new Civilization
         {
+            TribeId = tribe.TribeId,
             Adjective = tribe.Adjective,
             Alive = true,
             Government = (int)GovernmentType.Despotism,
@@ -111,7 +109,7 @@ public static class Initialization
         return config.Gender == 0 ? govt.TitleMale : govt.TitleFemale;
     }
 
-    public static Game UpdateScenarioChoices()
+    public static IGame UpdateScenarioChoices()
     {
         var config = ConfigObject;
         var instance = GameInstance;

@@ -49,7 +49,7 @@ namespace RaylibUI
                 {
                     hasCivDir = true;
                     _activeScreen = SetupMainScreen();
-                });
+                }, ShutdownApp);
             }
 
             //============ LOAD SOUNDS

@@ -11,7 +11,6 @@
   <ItemGroup>
     <PackageReference Include="NAudio" Version="2.1.0" />
     <PackageReference Include="Raylib-CSharp" Version="4.1.9" />
-    <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.1.21102.12" />
   </ItemGroup>
 
   <ItemGroup>

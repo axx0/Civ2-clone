@@ -16,8 +16,8 @@ namespace Civ2engine.Production
 
             _availableProducts = civs.Select(c =>
                     orders.Where(o =>
-                        (o.ExpiresTech == AdvancesConstants.Nil || !c.Advances[o.ExpiresTech]) &&
-                        (o.RequiredTech == AdvancesConstants.Nil || c.Advances[o.RequiredTech])).ToList())
+                        (o.ExpiresTech == AdvancesConstants.Nil || (o.ExpiresTech < c.Advances.Length && !c.Advances[o.ExpiresTech])) &&
+                        (o.RequiredTech == AdvancesConstants.Nil || (o.RequiredTech < c.Advances.Length && c.Advances[o.RequiredTech]))).ToList())
                 .ToArray();
         }
 

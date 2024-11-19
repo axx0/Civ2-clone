@@ -24,13 +24,6 @@ public class LoadGame : FileDialogHandler
     protected override IInterfaceAction HandleFileSelection(string fileName,
         Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        var savDirectory = Path.GetDirectoryName(fileName);
-        var root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
-        var savName = Path.GetFileName(fileName);
-        GameData gameData = Read.ReadSavFile(savDirectory, savName);
-
-        var activeInterface = civ2Interface.MainApp.SetActiveRulesetFromFile(root, savDirectory, gameData.ExtendedMetadata);
-
-        return activeInterface.HandleLoadGame(gameData);
+        return Civ2engine.SaveLoad.LoadGame.LoadFrom(fileName, civ2Interface.MainApp);
     }
 }

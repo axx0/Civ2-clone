@@ -1,46 +1,27 @@
 using Civ2engine;
-using Model;
-using Model.Dialog;
 using Model.Images;
 using Model.Menu;
 using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class Quit : IGameCommand
+public class Quit : AlwaysOnCommand
 {
-    private readonly GameScreen _gameScreen;
-
-    public Quit(GameScreen gameScreen)
+    public Quit(GameScreen gameScreen) : base(gameScreen, CommandIds.QuitGame, [new Shortcut(KeyboardKey.Q, ctrl: true)])
     {
-        _gameScreen = gameScreen;
-    }
-    
-    public string Id => CommandIds.QuitGame;
-    public Shortcut[] ActivationKeys { get; set; } = { new(KeyboardKey.Q, ctrl: true) };
-    public CommandStatus Status => CommandStatus.Normal;
-
-    public bool Update()
-    {
-        return true;
     }
 
-    public void Action()
+    public override void Action()
     {
         // ReSharper disable once StringLiteralTypo
-        _gameScreen.ShowPopup("REALLYQUIT", DialogClick, dialogImage: new(new[] { _gameScreen.Main.ActiveInterface.PicSources["backgroundImageSmall2"][0] }));
+        GameScreen.ShowPopup("REALLYQUIT", DialogClick, dialogImage: new(new[] { GameScreen.Main.ActiveInterface.PicSources["backgroundImageSmall2"][0] }));
     }
 
     private void DialogClick(string button, int option, IList<bool>? _, IDictionary<string, string>? _2)
     {
         if (button == Labels.Ok && option == 1)
         {
-            _gameScreen.Main.ReloadMain();
+            GameScreen.Main.ReloadMain();
         }
     }
-
-    public MenuCommand? Command { get; set; }
-    public string ErrorDialog { get; } = string.Empty;
-    public DialogImageElements? ErrorImage { get; } = null;
-    public string? Name { get; }
 }

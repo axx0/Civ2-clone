@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Drawing;
-using System.Linq;
-using Civ2engine.Advances;
-using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Core;
@@ -65,11 +59,11 @@ namespace Civ2engine.MapObjects
 
         public int Special { get; }
         
-        // Get special resource type based on map seed & tile location
-        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility, bool[] visibilityUnits,
-            bool[] visibilityIrrigation, bool[] visibilityMining, bool[] visibilityRoad, bool[] visibilityRailroad, 
-            bool[] visibilityFortress, bool[] visibilityPollution, bool[] visibilityAirbase, bool[] visibilityFarmland, 
-            bool[] visibilityTransporter)
+        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility,
+            bool[] visibilityUnits,
+            bool[] visibilityIrrigation, bool[] visibilityMining, bool[] visibilityRoad, bool[] visibilityRailroad,
+            bool[] visibilityFortress, bool[] visibilityPollution, bool[] visibilityAirbase, bool[] visibilityFarmland,
+            bool[] visibilityTransporter) : this(x,y,terrain,seed,map,xIndex,visibility)
         {
             _visibility = visibility;
             _visibilityUnits = visibilityUnits;
@@ -82,6 +76,13 @@ namespace Civ2engine.MapObjects
             _visibilityAirbase = visibilityAirbase;
             _visibilityFarmland = visibilityFarmland;
             _visibilityTransporter = visibilityTransporter;
+        }
+
+        // Get special resource type based on map seed & tile location
+        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility)
+        {
+            _visibility = visibility;
+        
             // Courtesy of Civfanatics
             // https://forums.civfanatics.com/threads/is-there-really-no-way-to-do-this-add-resources-on-map.518649/#post-13002282
             X = x;
@@ -185,8 +186,8 @@ namespace Civ2engine.MapObjects
 
         public List<ActiveEffect> EffectsList { get; } = new();
         
-        public PlayerTile[]? PlayerKnowledge { get; set; }
+        public PlayerTile?[] PlayerKnowledge { get; set; }
 
-        public ImmutableArray<bool> Visibility => _visibility.ToImmutableArray();
+        public bool[] Visibility => _visibility;
     }
 }
