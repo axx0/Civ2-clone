@@ -38,7 +38,11 @@ public class MapSerializer
                 {
                     tileEnumerator.MoveNext();
                     var tileData = tileEnumerator.Current;
-                    var tile = new Tile(2 * col + (row % 2), row, rules.Terrains[index][tileData.T], map.ResourceSeed, map, col, tileData.V);
+                    var tile = new Tile(2 * col + (row % 2), row, rules.Terrains[index][tileData.T], map.ResourceSeed,
+                        map, col, tileData.V)
+                    {
+                        Improvements = tileData.I
+                    };
                     map.Tile[col, row] = tile;
                 }
             }

@@ -28,7 +28,13 @@ public class JsonMapData
         {
             for (var row = 0; row < map.YDim; row++)
             {
-                tiles.Add(new TileData {T = (int)map.Tile[col, row].Terrain.Type, V = map.Tile[col, row].Visibility.Clamp()});
+                var tile = map.Tile[col, row];
+                tiles.Add(new TileData
+                {
+                    T = (int)tile.Terrain.Type, 
+                    V = tile.Visibility.Clamp(),
+                    I = tile.Improvements
+                });
             }
         }
 
