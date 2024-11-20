@@ -29,7 +29,7 @@ public class ViewPiece : IGameMode
         _gameScreen = gameScreen;
         _look = gameScreen.MainWindow.ActiveInterface.Look;
 
-        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0), spacing: 0);
+        _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, spacing: 0, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0));
 
         _gameScreen.Game.OnPlayerEvent += PlayerEventTriggered;
 
@@ -118,7 +118,7 @@ public class ViewPiece : IGameMode
         return new WaitingView(gameScreen, currentView, viewHeight, viewWidth, forceRedraw);
     }
 
-    public bool MapClicked(Tile tile, MouseButton mouseButton, bool longClick)
+    public bool MapClicked(Tile tile, MouseButton mouseButton)
     {
         if (mouseButton == MouseButton.Left)
         {
@@ -381,6 +381,16 @@ public class ViewPiece : IGameMode
 
         controls.ForEach(c => c.OnResize());
         return controls;
+    }
+
+    public void MouseDown(Tile tile)
+    {
+        // NO op
+    }
+
+    public void MouseClear()
+    {
+        
     }
 
     private void PlayerEventTriggered(object sender, PlayerEventArgs e)

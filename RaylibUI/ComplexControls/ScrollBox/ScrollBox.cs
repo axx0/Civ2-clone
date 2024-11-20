@@ -96,7 +96,7 @@ public class ScrollBox : BaseControl
 
     private void MeasureWidths()
     {
-        _maxChildWidth = _allLabels.Max(c => c.GetPreferredWidth());
+        _maxChildWidth = _allLabels.Count == 0 ? 0 : _allLabels.Max(c => c.GetPreferredWidth());
     }
 
     private void MeasureHeights()

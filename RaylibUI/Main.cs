@@ -1,12 +1,8 @@
 ﻿using System.Numerics;
 using Civ2engine;
-using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model;
 using RaylibUI.Initialization;
-using RaylibUI.Forms;
-using JetBrains.Annotations;
-using System.Diagnostics;
 using Raylib_CSharp;
 using Raylib_CSharp.Windowing;
 using Raylib_CSharp.Interact;
@@ -53,7 +49,7 @@ namespace RaylibUI
                 {
                     hasCivDir = true;
                     _activeScreen = SetupMainScreen();
-                });
+                }, ShutdownApp);
             }
 
             //============ LOAD SOUNDS
@@ -62,15 +58,30 @@ namespace RaylibUI
 
         }
 
+        private const float pulseTime = 30;
+        
+        private List<TimedEvent> _events = new List<TimedEvent>();
+        
         public void RunLoop()
         {
-            var counter = 0;
+            var counter = pulseTime;
             var pulse = false;
 
             while (!Window.ShouldClose() && !_shouldClose)
             {
-
+                var frameTime = Time.GetFrameTime();
                 Graphics.BeginDrawing();
+
+                for (int i = 0; i < _events.Count; i++)
+                {
+                    _events[i].Remaining -= frameTime;
+                    if (_events[i].Remaining < 0)
+                    {
+                        _events[i].Action();
+                        _events.RemoveAt(i);
+                        i--;
+                    }
+                }
 
                 int screenHeight = Window.GetScreenHeight();
 
@@ -149,5 +160,30 @@ namespace RaylibUI
             ImageUtils.SetLook(_activeInterface);
             _activeScreen = new MainMenu(this,() => _shouldClose= true, StartGame, Soundman);
         }
+
+        public void Schedule(string eventName, TimeSpan delay, Action action)
+        {
+            for (int i = 0; i < _events.Count; i++)
+            {
+                if (_events[i].Name == eventName)
+                {
+                    _events[i] = new TimedEvent(name: eventName, remaining: (float)delay.TotalSeconds, action: action);
+                    return;
+                }
+            }
+            _events.Add(new TimedEvent(name: eventName, remaining: (float)delay.TotalSeconds, action: action));
+        }
+
+        public void ClearSchedule(string eventName)
+        {
+            _events.RemoveAll(e => e.Name == eventName);
+        }
+    }
+
+    internal class TimedEvent(string name, float remaining, Action action)
+    {
+        public float Remaining { get; set; } = remaining;
+        public string Name { get; set; } = name;
+        public Action Action { get; set; } = action;
     }
 }

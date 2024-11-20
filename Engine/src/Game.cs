@@ -37,7 +37,7 @@ namespace Civ2engine
         public int TurnNumber { get; private set; }
 
         public int DifficultyLevel { get; set; }
-        public BarbarianActivityType BarbarianActivity => _barbarianActivity;
+        public int BarbarianActivity => (int)_barbarianActivity;
         public int PollutionSkulls { get; set; }
         public int GlobalTempRiseOccured { get; set; }
         public int NoOfTurnsOfPeace { get; set; }

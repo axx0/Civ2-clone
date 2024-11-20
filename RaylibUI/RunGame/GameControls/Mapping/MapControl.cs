@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Security.Cryptography.X509Certificates;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
@@ -8,13 +7,13 @@ using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Textures;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.RunGame.GameControls.Mapping.Views;
-using RaylibUI.Controls;
 using Model;
 using Model.Core;
 using Model.Interface;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -53,18 +52,13 @@ public class MapControl : BaseControl
         Click += OnClick;
         MouseDown += OnMouseDown;
 
-        _clickTimer = new Timer(_ => _longHold = true);
     }
-    
-    private bool _longHold;
-    private readonly Timer _clickTimer;
 
     private void OnMouseDown(object? sender, MouseEventArgs e)
     {
         var tile = GetTileAtMousePosition();
         if(tile == null) return;
-        _longHold = false;
-        _clickTimer.Change(500, -1);
+        _gameScreen.ActiveMode.MouseDown(tile);
     }
 
     private void UnitEventTriggered(object sender, UnitEventArgs e)
@@ -154,7 +148,6 @@ public class MapControl : BaseControl
     {
         try
         {
-            _clickTimer.Change(-1, -1);
             _gameScreen.Focused = this;
             var tile = GetTileAtMousePosition();
             if (tile == null)
@@ -162,7 +155,7 @@ public class MapControl : BaseControl
                 return;
             }
 
-            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button, _longHold))
+            if (_gameScreen.ActiveMode.MapClicked(tile, mouseEventArgs.Button))
             {
                 _gameScreen.ForceRedraw();
                 MapViewChange(tile);
@@ -170,7 +163,7 @@ public class MapControl : BaseControl
         }
         finally
         {
-            _longHold = false;
+            _gameScreen.ActiveMode.MouseClear();
         }
     }
 

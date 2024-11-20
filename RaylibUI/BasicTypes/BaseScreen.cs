@@ -122,7 +122,10 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         }
 
         _dialogs.Add(dialog);
-        dialog.Resize(_renderedWidth,_renderedHeight);
+        if (_renderedWidth > 0 && _renderedHeight > 0)
+        {
+            dialog.Resize(_renderedWidth, _renderedHeight);
+        }
     }
 
     private readonly List<IControlLayout> _dialogs = new();

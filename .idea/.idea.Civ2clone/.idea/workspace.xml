@@ -15,185 +15,103 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="City dialog improvements">
+    <list default="true" id="56446136-8c41-46ec-83c1-858b387d944b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Engine/src/Barbarians.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/ILoadedGameObjects.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/JsonSaveObjects.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonCityData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonCivData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonGameData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/TileData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/SerializationUtils/UTF8JsonWriterExtensions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Model/Core/IGameData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/AlwaysOnCommand.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/LoadGame.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Civ2.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectCityStyle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/SelectCityStyle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/CityLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/CityLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/IconLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/IconLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/TerrainLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/TerrainLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/ImageLoader/UnitLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/ImageLoader/UnitLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2Gold.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2Gold.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2TOT/Civ2TOT.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/Civ2TOT.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadScenario.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/FileDialogs/LoadScenario.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2clone.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AdvanceFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Date.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Date.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/EventsLoader.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/EtoFormsUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/EtoFormsUI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/CityWindowLayout.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/ConsumableResourceArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ConsumableResourceArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/ResourceArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ResourceArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/SharedResourceArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/SharedResourceArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/CityWindowModel/ShieldProduction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/CityWindowModel/ShieldProduction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/PopupBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/PopupBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Dialog/DialogElements.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Dialog/DialogElements.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/IGameCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IGameCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/MapNavigationFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/MapNavigationFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveLoader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveLoader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/LoadedGameObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveObjects.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.GameData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/ProductionCabalilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Settings.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Classic/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Classic/GameData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Cities/City.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Cities/City.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Civilization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Civilization.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/LeaderDefaults.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/LeaderDefaults.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IGameDate.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IGameDate.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Options.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Options.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/CityImageSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/CityImageSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/DitherMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/DitherMap.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/PlayerColour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/PlayerColour.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/TerrainSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/UnitSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/UnitSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/UnitShield.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/UnitShield.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/ImageSets/Wallpaper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/ImageSets/Wallpaper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Images/BinaryStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Images/BinaryStorage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Images/BitmapStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Images/BitmapStorage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Images/MemoryStorage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Images/MemoryStorage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Interface/Fonts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Interface/Fonts.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/InterfaceStyle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/InterfaceStyle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Menu/DropdownMenuContents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/DropdownMenuContents.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Menu/MenuCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/MenuCommand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Menu/MenuElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/MenuElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Menu/Shortcut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/Shortcut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Model.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Model.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/UnitSupport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/UnitSupport.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseLayoutController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseLayoutController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/CommandIds.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/CommandIds.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/BaseScreen.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/Button.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/Button.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ControlGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ControlGroup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ImageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/ImageBox.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/OptionControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/OptionControl.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/TextBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/TextBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/DynamicSizingDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControlLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/IControlLayout.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/ScreenBackground.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/ScreenBackground.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/TextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/TextureCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/IconContainer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ListBox/ListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBar.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/ComplexControls/ScrollBox/ScrollBoxElement.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/CivDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/DialogUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/DialogUtils.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/FileDialog.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/Button.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/Button.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/FormattedText.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/FormattedText.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/ListBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/ListBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBarItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuBarItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuStripItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/MenuStripItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/RadioButton.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/RadioButton.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/Controls/VScrollBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/Controls/VScrollBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/CtrlHelpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/CtrlHelpers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/DialogHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/DialogHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Forms/ImagePanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Forms/ImagePanel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/GameFileLocatorScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/GameFileLocatorScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/Helpers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/Main.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/EndTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/EndTurn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MapLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MapLayout.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/OpenLuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/OpenLuaConsole.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/FortifyOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/FortifyOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/Order.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/Order.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/PillageOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SkipOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SkipOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SleepOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/SleepOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/UnloadOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/UnloadOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/WaitOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/WaitOrder.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Quit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Quit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveGame.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/FoodStorageBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ResourceProductionBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/ShieldBox.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapImage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileDetails.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/CityData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/HealthBar.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/HealthBar.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/RectangleElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/ViewElements/TextureElement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/WaitingView.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropDownItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropDownItem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropdownMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropdownMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/GameMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/GameMenu.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/MenuLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/MenuLabel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/TextureDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/TextureDisplay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/IGameMode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/IGameMode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/MovingPieces.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ProcessingMode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ProcessingMode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameModes/ViewPiece.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Shaders/Shaders.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Shaders/Shaders.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Sounds/SoundData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Sounds/SoundData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Styles.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Styles.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUtils/ImageProps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/ImageProps.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUtils/Images.ImportBitmaps.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/Images.ImportBitmaps.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUtils/Images.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/Images.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUtils/RaylibUtils.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUtils/RaylibUtils.csproj" afterDir="false" />
-    </list>
-    <list id="2ce98008-02d3-457d-8530-aaf6bce17dbb" name="Don't Update" comment="">
-      <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="CodyActiveAccount">
-    <option name="activeAccountId" value="VXNlcjo0Nw==" />
-  </component>
   <component name="DpaMonitoringSettings">
-    <option name="autoShow" value="false" />
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="NewLua" />
-      </list>
-    </option>
+    <option name="firstShow" value="false" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="civ-axx" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/e8ad7b7a9bb540eb898da96f282c75c1b55600/74/733a02ab/EventHandler`1.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/134622bcf8ad016d3faf7776eb0457b76a5798c537458aa82651ab2cee6e1/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6f4173e3f2ff92a72f37212eed6da880e8cdff70eb932199ec5df31c16b21bfa/StreamReader.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8a7b6228dbb9b33a52ff9a87363787176da4a244b9d3c975fa3e8b1585d29f/ImmutableArray.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e8ad7b7a9bb540eb898da96f282c75c1b55600/_b3ead/IList.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/30d7ac0f7a7a48b7a3c557c4413de4c090c00/3a/a6cb82a7/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/30d7ac0f7a7a48b7a3c557c4413de4c090c00/cd/03329e0a/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/1e/0b90832d/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/23/9a30c93f/JsonConverter`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/2a/97a42c5f/Utf8JsonWriter.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/94125f469e4d403caa9218894df9d5f0191800/79/202d9a9b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/0d/e6bdac62/Array.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/18/54310bb8/BitConverter.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/7d/20e2dcf4/SafeFileHandle.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/8c/217db297/StreamReader.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/b0/c4e925fd/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/bb/fb5eabec/File.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/cd/ded6e3af/FileMode.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/a0741529c8554d199992ef9e50684668d82800/fb/1ad0a4b4/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" root0="FORCE_HIGHLIGHTING" />
@@ -201,9 +119,6 @@
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Game.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Engine/src/GameInitializationConfig.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/GameTurn.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/Production/ProductionOrder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -216,74 +131,13 @@
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Player/IPlayer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Core/Player/Player.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/BasicTypes/BaseControl.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/CityControls/CityWindow.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameScreen.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
-  <component name="IdeDocumentHistory">
-    <changedPaths>
-      <option value="$PROJECT_DIR$/WinFormsUI/Bitmaps/Images.ImportBitmaps.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Images.ImportBitmaps.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/ExtensionMethods.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.Actions.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/HelpConsole.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/Extensions.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/TextFileParser.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/Read.GameData.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/GameData.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Advances/Tech.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/CosmicRules.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Improvements/Improvement.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/GetAnimationFrames.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Enums/UnitType.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Units/UnitType.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Sound.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.ActionsCities.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Unit.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.CityPanel.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/Special.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Units/IUnit.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/Terrain.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Units/Unit.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/Tile.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Terrains/ITerrain.cs" />
-      <option value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Bitmaps/Draw.Terrain.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Map.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/City.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/LeaderDefaults.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/LeaderDefaults.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Advances/Advance.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Game.LoadGame.cs" />
-      <option value="$PROJECT_DIR$/Engine/src/Rules.cs" />
-    </changedPaths>
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
-  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
-  <component name="PerforceDirect.Settings">
-    <option name="ENABLED" value="false" />
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 8
 }</component>
-  <component name="ProjectId" id="1s5LfMErJMB9LIXuqxoyRcfCxmS" />
+  <component name="ProjectId" id="2od9oCIo2OJ1oWmZVtfNrFciGJK" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -293,120 +147,26 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.CivServer.executor": "Run",
-    ".NET Project.RaylibUI.executor": "Run",
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.CodyAccountHistoryMigration": "true",
-    "RunOnceActivity.CodyAccountsIdsRefresh": "true",
-    "RunOnceActivity.CodyAssignOrphanedChatsToActiveAccount": "true",
-    "RunOnceActivity.CodyConvertUrlToCodebaseName": "true",
-    "RunOnceActivity.CodyHistoryLlmMigration": "true",
-    "RunOnceActivity.CodyMigrateChatHistory-v2": "true",
-    "RunOnceActivity.CodyProjectSettingsMigration": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    ".NET Project.RaylibUI.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.ToggleCodyToolWindowAfterMigration": "true",
-    "TODO_SCOPE": "All Places",
-    "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.40725243",
-    "git-widget-placeholder": "Merging master",
-    "ignore.virus.scanning.warn.message": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "XThreadsFramesViewSplitterKey": "0.3898305",
+    "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "settings.editor.selected.configurable": "preferences.lookFeel",
     "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/DecompilerCache",
-      "/Users/revans/Library/Application Support/JetBrains/Rider2024.1/resharper-host/SourcesCache",
-      "/Users/revans/Library/Application Support/Symbols/src"
-    ]
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Project.RaylibUI">
-    <configuration name="CivServer" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
+  <component name="RunManager">
+    <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project" temporary="true">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0/RaylibUI" />
       <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/CivServer/CivServer.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="EtoFormsUI.Gtk" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Gtk/EtoFormsUI.Gtk.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="EtoFormsUI.Mac" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net5.0/EtoFormsUI.Mac.app/Contents/MacOS/EtoFormsUI.Mac" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/bin/Debug/net5.0" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.Mac/EtoFormsUI.Mac.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="0" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net5.0" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="EtoFormsUI.WinForms" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/EtoFormsUI/EtoFormsUI.WinForms/EtoFormsUI.WinForms.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="Unloaded" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net6.0/RaylibUI" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net6.0" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <envs>
-        <env name="PATH" value="$PATH:/opt/homebrew/Cellar/raylib/4.2.0/lib" />
-      </envs>
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
@@ -415,522 +175,30 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net6.0" />
+      <option name="PROJECT_TFM" value="net8.0" />
       <method v="2">
         <option name="Build" />
       </method>
     </configuration>
-    <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net6.0/RaylibUI" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net6.0" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <envs>
-        <env name="PATH" value="$PATH:/opt/homebrew/Cellar/raylib/4.2.0/lib" />
-      </envs>
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="net6.0" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="Scratch" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Scratch/Scratch.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <configuration name="WinFormsUI" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
-      <option name="USE_MONO" value="0" />
-      <option name="RUNTIME_ARGUMENTS" value="" />
-      <option name="PROJECT_PATH" value="$PROJECT_DIR$/WinFormsUI/WinFormsUI.csproj" />
-      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
-      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
-      <option name="PROJECT_KIND" value="DotNetCore" />
-      <option name="PROJECT_TFM" value="" />
-      <method v="2">
-        <option name="Build" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue=".NET Project.CivServer" />
-      <item itemvalue=".NET Project.EtoFormsUI.Gtk" />
-      <item itemvalue=".NET Project.EtoFormsUI.Mac" />
-      <item itemvalue=".NET Project.EtoFormsUI.WinForms" />
-      <item itemvalue=".NET Project.RaylibUI" />
-      <item itemvalue=".NET Project.Scratch" />
-      <item itemvalue=".NET Project.WinFormsUI" />
-    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue=".NET Project.RaylibUI" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="86494dab-091f-41c0-95d0-5eaf4942f5f3" name="Changes" comment="" />
-      <created>1620157608668</created>
+      <changelist id="56446136-8c41-46ec-83c1-858b387d944b" name="Changes" comment="" />
+      <created>1731188758917</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1620157608668</updated>
-      <workItem from="1620157619596" duration="6594000" />
-      <workItem from="1620204601634" duration="1896000" />
-      <workItem from="1620206764861" duration="9348000" />
-      <workItem from="1620250925518" duration="3236000" />
-      <workItem from="1620282025347" duration="45535000" />
-      <workItem from="1674604571437" duration="4139000" />
-      <workItem from="1674625786114" duration="25585000" />
-      <workItem from="1678824766747" duration="8122000" />
-      <workItem from="1678939664424" duration="27789000" />
-      <workItem from="1679965466346" duration="3062000" />
-      <workItem from="1680339000801" duration="47019000" />
-      <workItem from="1681456955236" duration="10421000" />
-      <workItem from="1684272812726" duration="13067000" />
-      <workItem from="1685255689749" duration="9082000" />
-      <workItem from="1686462512090" duration="87000" />
-      <workItem from="1686779538583" duration="2190000" />
-      <workItem from="1687488981723" duration="3237000" />
-      <workItem from="1687944896811" duration="9127000" />
-      <workItem from="1689625877116" duration="48803000" />
-      <workItem from="1690685331708" duration="67176000" />
-      <workItem from="1691610585082" duration="101373000" />
-      <workItem from="1693909145389" duration="10142000" />
-      <workItem from="1694163028506" duration="4048000" />
-      <workItem from="1694648111739" duration="21669000" />
-      <workItem from="1695444610978" duration="28369000" />
-      <workItem from="1696134788864" duration="721000" />
-      <workItem from="1696226382609" duration="2835000" />
-      <workItem from="1696918428110" duration="8506000" />
-      <workItem from="1698618805199" duration="12441000" />
-      <workItem from="1699493633998" duration="3329000" />
-      <workItem from="1702890497002" duration="2371000" />
-      <workItem from="1703360629577" duration="1224000" />
-      <workItem from="1705108251279" duration="5056000" />
-      <workItem from="1705717426138" duration="1797000" />
-      <workItem from="1706086149768" duration="4710000" />
-      <workItem from="1706690278946" duration="15243000" />
-      <workItem from="1708020638440" duration="6250000" />
-      <workItem from="1708145960589" duration="2624000" />
-      <workItem from="1708498300494" duration="14294000" />
-      <workItem from="1709624531656" duration="15949000" />
-      <workItem from="1720138243180" duration="14165000" />
-      <workItem from="1721267654108" duration="2833000" />
-      <workItem from="1722823817668" duration="64979000" />
-      <workItem from="1724906720309" duration="635000" />
-      <workItem from="1726003287262" duration="78190000" />
-      <workItem from="1727148697165" duration="13852000" />
-      <workItem from="1727485567128" duration="15233000" />
-      <workItem from="1727673365056" duration="7825000" />
-      <workItem from="1728066281503" duration="35000" />
-      <workItem from="1728066331187" duration="2844000" />
-      <workItem from="1728704835205" duration="12575000" />
-      <workItem from="1729023981087" duration="720000" />
+      <updated>1731188758917</updated>
+      <workItem from="1731188760753" duration="10629000" />
+      <workItem from="1731330482680" duration="4322000" />
+      <workItem from="1731654766974" duration="64787000" />
+      <workItem from="1731971963441" duration="8245000" />
     </task>
-    <task id="LOCAL-00001" summary="Some unit cleanup and fix an issue where next unit could pick a unit not awaiting orders">
-      <created>1620241062181</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1620241062181</updated>
-    </task>
-    <task id="LOCAL-00002" summary=".idea files and main fix">
-      <created>1620255256213</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1620255256213</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Event based dialogs">
-      <created>1688030548012</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1688030548012</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Options on dialog working">
-      <created>1690357321789</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1690357321789</updated>
-    </task>
-    <task id="LOCAL-00005" summary="ImageUtils">
-      <created>1690794510007</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1690794510007</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Fix issue where RayLib was failing to detect image type for uppercase file extensions">
-      <created>1690795665088</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1690795665088</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Load game dialog showing">
-      <created>1690952698399</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1690952698399</updated>
-    </task>
-    <task id="LOCAL-00008" summary="File listbox working (No scrolling or columns)">
-      <created>1691145995806</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1691145995806</updated>
-    </task>
-    <task id="LOCAL-00009" summary="Game screen showing">
-      <created>1691433039002</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1691433039002</updated>
-    </task>
-    <task id="LOCAL-00010" summary="And now we have a minimap">
-      <created>1691487849084</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1691487849084</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Tile selection &amp; focus working">
-      <option name="closed" value="true" />
-      <created>1694077127582</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1694077127582</updated>
-    </task>
-    <task id="LOCAL-00016" summary="Fix issues with display and navigation on flat maps">
-      <option name="closed" value="true" />
-      <created>1694082606211</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1694082606211</updated>
-    </task>
-    <task id="LOCAL-00017" summary="Moved images sets to interface object">
-      <option name="closed" value="true" />
-      <created>1694933139953</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1694933139953</updated>
-    </task>
-    <task id="LOCAL-00018" summary="Dialog Text Box working">
-      <option name="closed" value="true" />
-      <created>1695608653179</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1695608653179</updated>
-    </task>
-    <task id="LOCAL-00019" summary="Dialog fixes">
-      <option name="closed" value="true" />
-      <created>1696226429290</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1696226429290</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Fix merge errors">
-      <option name="closed" value="true" />
-      <created>1696707075289</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1696707075289</updated>
-    </task>
-    <task id="LOCAL-00021" summary="Fix checkbox">
-      <option name="closed" value="true" />
-      <created>1698619263974</created>
-      <option name="number" value="00021" />
-      <option name="presentableId" value="LOCAL-00021" />
-      <option name="project" value="LOCAL" />
-      <updated>1698619263974</updated>
-    </task>
-    <task id="LOCAL-00022" summary="Basic city screen and some bugfixes">
-      <option name="closed" value="true" />
-      <created>1699723583061</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1699723583061</updated>
-    </task>
-    <task id="LOCAL-00023" summary="Game Commands in ViewPiece Mode">
-      <option name="closed" value="true" />
-      <created>1706087479300</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1706087479300</updated>
-    </task>
-    <task id="LOCAL-00024" summary="merge axx/master into master">
-      <option name="closed" value="true" />
-      <created>1706087930806</created>
-      <option name="number" value="00024" />
-      <option name="presentableId" value="LOCAL-00024" />
-      <option name="project" value="LOCAL" />
-      <updated>1706087930806</updated>
-    </task>
-    <task id="LOCAL-00025" summary="Mouse in menus">
-      <option name="closed" value="true" />
-      <created>1706693450117</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1706693450117</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Upgrade to RayLib_cs 5">
-      <option name="closed" value="true" />
-      <created>1706898187769</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1706898187769</updated>
-    </task>
-    <task id="LOCAL-00027" summary="Upgrade to RayLib_cs 6">
-      <option name="closed" value="true" />
-      <created>1706899270269</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1706899270269</updated>
-    </task>
-    <task id="LOCAL-00028" summary="Rename misnamed elements">
-      <option name="closed" value="true" />
-      <created>1706930041841</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1706930041841</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Pic Names">
-      <option name="closed" value="true" />
-      <created>1706930207095</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1706930207095</updated>
-    </task>
-    <task id="LOCAL-00030" summary="Ruleset refactor">
-      <option name="closed" value="true" />
-      <created>1709883050597</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1709883050597</updated>
-    </task>
-    <task id="LOCAL-00031" summary="Fix name ambiguity">
-      <option name="closed" value="true" />
-      <created>1712227556595</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1712227556595</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Lua console implemented">
-      <option name="closed" value="true" />
-      <created>1712435779463</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1712435779463</updated>
-    </task>
-    <task id="LOCAL-00033" summary="Refactor working">
-      <option name="closed" value="true" />
-      <created>1726003579237</created>
-      <option name="number" value="00033" />
-      <option name="presentableId" value="LOCAL-00033" />
-      <option name="project" value="LOCAL" />
-      <updated>1726003579237</updated>
-    </task>
-    <task id="LOCAL-00034" summary="Merge latest from AXX">
-      <option name="closed" value="true" />
-      <created>1726004956217</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1726004956217</updated>
-    </task>
-    <task id="LOCAL-00035" summary="Make movement functions move based on unit location data">
-      <option name="closed" value="true" />
-      <created>1726008815256</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1726008815256</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Remove usage of Game.Instance">
-      <option name="closed" value="true" />
-      <created>1726019047195</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1726019047195</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Move Scen initialization from Game object">
-      <option name="closed" value="true" />
-      <created>1726019650729</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1726019650729</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Escape closes city window">
-      <option name="closed" value="true" />
-      <created>1726078778267</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1726078778267</updated>
-    </task>
-    <task id="LOCAL-00039" summary="Improvement and wonder icons">
-      <option name="closed" value="true" />
-      <created>1726310272969</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1726310272969</updated>
-    </task>
-    <task id="LOCAL-00040" summary="Icons displaying in production menu">
-      <option name="closed" value="true" />
-      <created>1726361871839</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1726361871839</updated>
-    </task>
-    <task id="LOCAL-00041" summary="Fix initial production lists">
-      <option name="closed" value="true" />
-      <created>1726372672411</created>
-      <option name="number" value="00041" />
-      <option name="presentableId" value="LOCAL-00041" />
-      <option name="project" value="LOCAL" />
-      <updated>1726372672411</updated>
-    </task>
-    <task id="LOCAL-00042" summary="Set initial Epochs and Global Tech effects">
-      <option name="closed" value="true" />
-      <created>1726381760274</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1726381760274</updated>
-    </task>
-    <task id="LOCAL-00043" summary="Change production for city">
-      <option name="closed" value="true" />
-      <created>1726541549523</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1726541549523</updated>
-    </task>
-    <task id="LOCAL-00044" summary="Shield box">
-      <option name="closed" value="true" />
-      <created>1726799685965</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1726799685965</updated>
-    </task>
-    <task id="LOCAL-00045" summary="Merge axx latest">
-      <option name="closed" value="true" />
-      <created>1726800106116</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1726800106116</updated>
-    </task>
-    <task id="LOCAL-00046" summary="Units in city view">
-      <option name="closed" value="true" />
-      <created>1727426388974</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1727426388974</updated>
-    </task>
-    <task id="LOCAL-00047" summary="Selection in scroll box">
-      <option name="closed" value="true" />
-      <created>1727572818115</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1727572818115</updated>
-    </task>
-    <task id="LOCAL-00048" summary="Select current production by default">
-      <option name="closed" value="true" />
-      <created>1727573591142</created>
-      <option name="number" value="00048" />
-      <option name="presentableId" value="LOCAL-00048" />
-      <option name="project" value="LOCAL" />
-      <updated>1727573591142</updated>
-    </task>
-    <task id="LOCAL-00049" summary="Unit images in production box">
-      <option name="closed" value="true" />
-      <created>1727574536029</created>
-      <option name="number" value="00049" />
-      <option name="presentableId" value="LOCAL-00049" />
-      <option name="project" value="LOCAL" />
-      <updated>1727574536029</updated>
-    </task>
-    <task id="LOCAL-00050" summary="Don't build ocean improvements inland">
-      <option name="closed" value="true" />
-      <created>1727676975805</created>
-      <option name="number" value="00050" />
-      <option name="presentableId" value="LOCAL-00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1727676975806</updated>
-    </task>
-    <task id="LOCAL-00051" summary="Add scientist name">
-      <option name="closed" value="true" />
-      <created>1728099122405</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1728099122406</updated>
-    </task>
-    <task id="LOCAL-00052" summary="Dialog for advance researched">
-      <option name="closed" value="true" />
-      <created>1728175638526</created>
-      <option name="number" value="00052" />
-      <option name="presentableId" value="LOCAL-00052" />
-      <option name="project" value="LOCAL" />
-      <updated>1728175638526</updated>
-    </task>
-    <task id="LOCAL-00053" summary="City dialog improvements">
-      <option name="closed" value="true" />
-      <created>1729049422454</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1729049422454</updated>
-    </task>
-    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -951,104 +219,25 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <MESSAGE value="Ruleset refactor" />
-    <MESSAGE value="Fix name ambiguity" />
-    <MESSAGE value="Lua console implemented" />
-    <MESSAGE value="List box work" />
-    <MESSAGE value="Refactor working" />
-    <MESSAGE value="Merge latest from AXX" />
-    <MESSAGE value="Make movement functions move based on unit location data" />
-    <MESSAGE value="Remove usage of Game.Instance" />
-    <MESSAGE value="Move Scen initialization from Game object" />
-    <MESSAGE value="Escape closes city window" />
-    <MESSAGE value="Improvement and wonder icons" />
-    <MESSAGE value="Icons displaying in production menu" />
-    <MESSAGE value="Fix initial production lists" />
-    <MESSAGE value="Set initial Epochs and Global Tech effects" />
-    <MESSAGE value="Change production for city" />
-    <MESSAGE value="Shield box" />
-    <MESSAGE value="Merge axx latest" />
-    <MESSAGE value="Units in city view" />
-    <MESSAGE value="Selection in scroll box" />
-    <MESSAGE value="Select current production by default" />
-    <MESSAGE value="Unit images in production box" />
-    <MESSAGE value="Don't build ocean improvements inland" />
-    <MESSAGE value="Add scientist name" />
-    <MESSAGE value="Dialog for advance researched" />
-    <MESSAGE value="City dialog improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="City dialog improvements" />
-    <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/MapPanel.cs</url>
-          <line>335</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\MapPanel.cs" containingFunctionPresentation="method 'UnitEventHappened'" />
-          <option name="timeStamp" value="45" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Civ/Dialogs/NewGame/CustomWorldSize.cs</url>
-          <line>44</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Civ\Dialogs\NewGame\CustomWorldSize.cs" containingFunctionPresentation="method 'HandleDialogResult'" />
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Main.ShowPopupBox.cs</url>
-          <line>52</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\EtoFormsUI\EtoFormsUI\Main.ShowPopupBox.cs" containingFunctionPresentation="Method 'Playgame'" />
-          <option name="timeStamp" value="100" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/RaylibUI/RunGame/GameControls/City/CityWindow.cs</url>
-          <line>13</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\RaylibUI\RunGame\CityWindow.cs" containingFunctionPresentation="Constructor 'CityWindow'" />
-          <option name="timeStamp" value="102" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/OriginalSaves/Read.GameData.cs</url>
-          <line>187</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\OriginalSaves\Read.GameData.cs" containingFunctionPresentation="Method 'ReadSavFile'" />
-          <option name="timeStamp" value="103" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs</url>
-          <line>617</line>
-          <properties documentPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" containingFunctionPresentation="Method 'MoveCost'">
+          <url>file://$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs</url>
+          <line>104</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" containingFunctionPresentation="Method 'Read'">
             <startOffsets>
-              <option value="22901" />
+              <option value="3956" />
             </startOffsets>
             <endOffsets>
-              <option value="23070" />
+              <option value="4003" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="140" />
+          <option name="timeStamp" value="186" />
         </line-breakpoint>
-        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
-          <properties exception="System.UnauthorizedAccessException" isInternal="false" displayValue="UnauthorizedAccessException" namespaceName="System">
-            <option name="internal" value="false" />
-          </properties>
-          <option name="timeStamp" value="101" />
-        </breakpoint>
-        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
-          <properties exception="Neo.IronLua.LuaParseException" isInternal="false" displayValue="LuaParseException" namespaceName="Neo.IronLua">
-            <option name="internal" value="false" />
-          </properties>
-          <option name="timeStamp" value="131" />
-        </breakpoint>
-        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
-          <properties exception="System.DllNotFoundException" isInternal="false" displayValue="DllNotFoundException" namespaceName="System">
-            <option name="internal" value="false" />
-          </properties>
-          <option name="timeStamp" value="136" />
-        </breakpoint>
       </breakpoints>
-      <default-breakpoints>
-        <breakpoint enabled="true" log-stack="true" type="DotNet Exception Breakpoints" />
-      </default-breakpoints>
     </breakpoint-manager>
   </component>
 </project>

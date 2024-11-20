@@ -8,6 +8,7 @@ using RaylibUI;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Textures;
 using System.Numerics;
+using Model.Core;
 using Model.Core.Advances;
 using Model.Dialog;
 
@@ -59,10 +60,11 @@ public interface IUserInterface
     
     IMain MainApp { get; }
     int InterfaceIndex { get; set; }
-    IInterfaceAction HandleLoadGame(GameData gameData);
+    IInterfaceAction HandleLoadClassicGame(GameData gameData);
     IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory);
     IInterfaceAction InitNewGame(bool quickStart);
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
     IImageSource? GetAdvanceImage(Advance advance);
     string GetScientistName(int civilizationEpoch);
+    IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset);
 }

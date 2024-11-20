@@ -5,7 +5,7 @@ namespace Civ2engine.MapObjects;
 
 public static class MapNavigationFunctions
 {
-    public static IEnumerable<Tile> CityRadius(this Map map, Tile tile, bool nullForInvalid = false)
+    public static IEnumerable<Tile?> CityRadius(this Map map, Tile tile, bool nullForInvalid = false)
     {
         var odd = tile.Odd;
         var offsets = new List<int[]>

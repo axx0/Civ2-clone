@@ -17,7 +17,7 @@ public class Button : BaseControl
     private readonly Font _font;
     private readonly int _fontSize;
     private readonly Color _textColour;
-    private readonly IUserInterface _active;
+    private readonly IUserInterface? _active;
     private bool _hovered;
     public override bool CanFocus => true;
     public string Text => _text;
@@ -26,14 +26,9 @@ public class Button : BaseControl
     {
         _active = controller.MainWindow.ActiveInterface;
         _text = text;
-        if (_active == null)
-        {
-            _font = font ?? Fonts.Tnr;
-        }
-        else
-        {
-            _font = font ?? _active.Look.ButtonFont;
-        }
+        
+        _font = _active == null ? font ?? Fonts.Tnr : font ?? _active.Look.ButtonFont;
+        
         _fontSize = fontSize ?? _active?.Look.ButtonFontSize ?? 20;
         _textColour = _active?.Look.ButtonColour ?? Color.Black;
         _textSize = TextManager.MeasureTextEx(_font, text, _fontSize, 1f);
@@ -56,7 +51,7 @@ public class Button : BaseControl
             Graphics.DrawTexture(Texture, x, y, Color.White);
         }
 
-        Graphics.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, _textColour);
+        Graphics.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, Enabled ? _textColour : Color.Gray);
 
         if (_hovered)
         {
@@ -77,6 +72,8 @@ public class Button : BaseControl
             return _texture;
         }
     }
+
+    public bool Enabled { get; set; } = true;
 
     public override void OnMouseEnter()
     {

@@ -18,11 +18,10 @@ internal class OptionControl : LabelControl
 
     public OptionControl(IControlLayout controller, string text, int index, bool isChecked, IImageSource[] images) : base(
         controller, text, eventTransparent: false, offset: Images.GetImageWidth(images[0]),
-        fontSize: controller.MainWindow.ActiveInterface.Look.LabelFontSize,
         font: controller.MainWindow.ActiveInterface.Look.LabelFont,
+        fontSize: controller.MainWindow.ActiveInterface.Look.LabelFontSize,
         colorFront: controller.MainWindow.ActiveInterface.Look.LabelColour,
-        colorShadow: controller.MainWindow.ActiveInterface.Look.LabelShadowColour,
-        shadowOffset: new System.Numerics.Vector2(1, 1))
+        colorShadow: controller.MainWindow.ActiveInterface.Look.LabelShadowColour, shadowOffset: new System.Numerics.Vector2(1, 1))
     {
         Index = index;
         Checked = isChecked;

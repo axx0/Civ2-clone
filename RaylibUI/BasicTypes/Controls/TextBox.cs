@@ -14,20 +14,22 @@ namespace RaylibUI.Controls;
 
 public class TextBox : BaseControl
 {
+    public event EventHandler<EventArgs> TextChanged; 
     public override bool CanFocus => true;
     
     private int _editPosition = 0;
 
     private string _text;
     private readonly IControlLayout _controller;
-    private readonly IUserInterface _active;
+    private readonly IUserInterface? _active;
     private readonly int _minWidth;
     private readonly Action<string>? _acceptAction;
     private bool _editMode = false;
     private int _editWidth;
 
     private readonly Vector2 _textOffsetV = new Vector2(5,5);
-    
+    private string _focusText;
+
     private const int TextMargin = 5;
 
     public string Text => _text;
@@ -44,11 +46,13 @@ public class TextBox : BaseControl
 
     public void SetText(string initialValue)
     {
+        if(_text == initialValue) return;
         _text = initialValue;
         _editPosition = _text.Length;
         var size = TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text, Styles.BaseFontSize, 1.0f);
         _editWidth = (int)size.X;
         Height = (int)(size.Y + TextMargin * 2);
+        TextChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public override void Draw(bool pulse)
@@ -78,12 +82,17 @@ public class TextBox : BaseControl
 
     public override void OnFocus()
     {
+        _focusText = _text;
         _editMode = true;
     }
 
     public override void OnBlur()
     {
         _editMode = false;
+        if (_text != _focusText)
+        {
+            TextChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public override int GetPreferredHeight()
@@ -160,6 +169,6 @@ public class TextBox : BaseControl
     private void SetEditPosition(int newEditPosition)
     {
         _editPosition = newEditPosition;
-        _editWidth = (int)TextManager.MeasureTextEx(_active.Look.DefaultFont, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
+        _editWidth = (int)TextManager.MeasureTextEx(_active?.Look.DefaultFont ?? Fonts.Tnr, _text.Substring(0,_editPosition), Styles.BaseFontSize, 1).X;
     }
 }

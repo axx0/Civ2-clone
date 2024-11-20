@@ -14,13 +14,13 @@ using Tile = Civ2engine.MapObjects.Tile;
 
 namespace Civ2engine.OriginalSaves
 {
-    public class LoadedGameObjects
+    public class ClassicSaveObjects : ILoadedGameObjects
     {
-        public Unit ActiveUnit { get; }
+        public Unit ActiveUnit { get; } = null!;
         private Rules Rules { get; }
         public Scenario Scenario { get; }
 
-        public LoadedGameObjects(Rules rules, GameData gameData)
+        public ClassicSaveObjects(Rules rules, GameData gameData)
         {
             Rules = rules;
             var maps = new List<Map>();
@@ -414,6 +414,7 @@ namespace Civ2engine.OriginalSaves
             var gov = Rules.Governments[government];
             return new Civilization
             {
+                TribeId = tribeNumber,
                 Id = id,
                 Alive = alive,
                 CityStyle = style,
@@ -428,7 +429,7 @@ namespace Civ2engine.OriginalSaves
                 ScienceRate = sciRate * 10,
                 TaxRate = taxRate * 10,
                 Government = government,
-                AllowedAdvanceGroups = new [] { AdvanceGroupAccess.CanResearch } // Default for MPG < TOT will need to read from file
+                AllowedAdvanceGroups = tribe.AdvanceGroups ?? new [] { AdvanceGroupAccess.CanResearch }
             };
         }
         
@@ -462,8 +463,7 @@ namespace Civ2engine.OriginalSaves
                 CanBuildShips = canBuildShips,
                 AutobuildMilitaryAdvisor = autoBuildMilitary,
                 AutobuildDomesticAdvisor = autoBuildDomestic,
-                Objectivex1 = objectivex1,
-                Objectivex3 = objectivex3,
+                Objective = (objectivex1 ? 1 : 0) + (objectivex3 ? 3 : 0),
                 Owner = owner,
                 Size = size,
                 WhoBuiltIt = Civilizations[whoBuiltIt],

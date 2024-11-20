@@ -343,7 +343,7 @@ public class CivDialog : DynamicSizingDialog
                         false,
                         alignment: styles[i] == TextStyles.Centered ? TextAlignment.Center : TextAlignment.Left,
                         wrapText: styles[i] == TextStyles.Left,
-                        font: _active.Look.LabelFont, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1), fontSize: _active.Look.LabelFontSize));
+                        font: _active.Look.LabelFont, fontSize: _active.Look.LabelFontSize, colorFront: _active.Look.LabelColour, colorShadow: _active.Look.LabelShadowColour, shadowOffset: new Vector2(1, 1)));
         }
 
         return labels;

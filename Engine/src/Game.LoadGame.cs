@@ -9,14 +9,15 @@ using Civ2engine.OriginalSaves;
 using Civ2engine.Scripting;
 using Civ2engine.Statistics;
 using Civ2engine.Terrains;
+using Model.Core;
 
 namespace Civ2engine
 {
     public partial class Game
     {
-        public static Game Create(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
+        public static Game Create(Rules rules, IGameData gameData, ILoadedGameObjects objects, Ruleset ruleset, Options options)
         {
-            return new Game(rules, gameData, objects, ruleset.Paths);
+            return new Game(rules, gameData, objects, ruleset.Paths, options);
         }
 
         public static Game StartNew(Map[] maps, GameInitializationConfig config, IList<Civilization> civilizations,
@@ -25,11 +26,6 @@ namespace Civ2engine
             var instance = new Game(maps, config.Rules, civilizations, new Options(config), paths, config.DifficultyLevel);
             instance.StartNextTurn();
             return instance;
-        }
-
-        public static Game CreateScenario(Rules rules, GameData gameData, LoadedGameObjects objects, Ruleset ruleset)
-        {
-            return new Game(rules, gameData, objects, ruleset.Paths);
         }
 
         private Game(Map[] maps, Rules configRules, IList<Civilization> civilizations, Options options,
@@ -69,8 +65,8 @@ namespace Civ2engine
             Power.CalculatePowerRatings(this);
         }
 
-        private Game(Rules rules, GameData gameData, LoadedGameObjects objects, string[] rulesetPaths) 
-            : this(objects.Maps.ToArray(), rules,objects.Civilizations,new Options(gameData.OptionsArray), 
+        private Game(Rules rules, IGameData gameData, ILoadedGameObjects objects, string[] rulesetPaths, Options options) 
+            : this(objects.Maps.ToArray(), rules,objects.Civilizations,options, 
                   rulesetPaths, gameData.DifficultyLevel)
         {
             _scenarioData = objects.Scenario;

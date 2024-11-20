@@ -1,13 +1,21 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
+using static System.Environment.SpecialFolder;
 
 namespace Civ2engine
 {
     public class Settings
     {
+        
+        
+        private static string SettingsFilePath => Path.Combine(ApplicationDataFolder, SettingsFileName);
+        
+        private static string ApplicationDataFolder => Path.Combine(GetLocalAppDataFolder(), "AxxCiv");
+        
         private const string SettingsFileName = "appsettings.json";
 
         // Game settings from App.config
@@ -19,16 +27,24 @@ namespace Civ2engine
 
         public static bool LoadConfigSettings()
         {
-            var settingsFilePath = Path.Combine(BasePath, SettingsFileName);
+            if (File.Exists(SettingsFilePath))
+            {
+                LoadSettings(SettingsFilePath);
+                if (!string.IsNullOrWhiteSpace(Civ2Path) && IsValidRoot(Civ2Path))
+                {
+                    return true;
+                }
+            }
+            var alternativePath = Path.Combine(BasePath, SettingsFileName);
 
-            LoadSettings(settingsFilePath);
+            LoadSettings(alternativePath);
 
             return !string.IsNullOrWhiteSpace(Civ2Path) && IsValidRoot(Civ2Path);
         }
 
         public static string BasePath => AppDomain.CurrentDomain.BaseDirectory;
 
-        private static void LoadSettings(string settingsFilePath)
+        private static void LoadSettings(string? settingsFilePath)
         {
             if (!File.Exists(settingsFilePath)) return;
 
@@ -101,7 +117,7 @@ namespace Civ2engine
                 path = dir;
             }
 
-            if (string.IsNullOrWhiteSpace(Civ2Path))
+            if (string.IsNullOrWhiteSpace(Civ2Path) || !IsValidRoot(Civ2Path))
             {
                 Civ2Path = path;
                 SearchPaths = new[] { path, BasePath };
@@ -116,7 +132,11 @@ namespace Civ2engine
 
         public static void Save()
         {
-            using var writer = new Utf8JsonWriter(File.OpenWrite(SettingsFileName));
+            if (!Directory.Exists(ApplicationDataFolder))
+            {
+                Directory.CreateDirectory(ApplicationDataFolder);
+            }
+            using var writer = new Utf8JsonWriter(File.OpenWrite(SettingsFilePath));
             writer.WriteStartObject();
             writer.WriteString(nameof(Civ2Path),Civ2Path);
             writer.WriteStartArray(nameof(SearchPaths));
@@ -127,6 +147,22 @@ namespace Civ2engine
             writer.WriteEndArray();
             writer.WriteEndObject();
             writer.Flush();
+        }
+        
+        private static string GetLocalAppDataFolder() {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return Environment.GetEnvironmentVariable("LOCALAPPDATA");
+            }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return Environment.GetEnvironmentVariable("XDG_DATA_HOME") ?? Path.Combine(Environment.GetEnvironmentVariable("HOME"),".local","share");
+            } 
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                return Path.Combine(Environment.GetEnvironmentVariable("HOME"), "Library", "Application Support");
+            }
+            throw new NotImplementedException("Unknown OS Platform");
         }
     }
 }

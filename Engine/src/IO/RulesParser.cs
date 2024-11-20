@@ -204,7 +204,7 @@ namespace Civ2engine.IO
         {
             values = values[0..21];
 
-            Rules.Leaders = values.Select((value) =>
+            Rules.Leaders = values.Select((value,id) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
                 var titles = new List<LeaderTitle>(
@@ -220,6 +220,7 @@ namespace Civ2engine.IO
                 }
                 return new LeaderDefaults()
                 {
+                    TribeId = id,
                     NameMale = line[0],
                     NameFemale = line[1],
                     Female = int.Parse(line[2]) == 1,

@@ -11,13 +11,10 @@ namespace Civ2engine.OriginalSaves
         
         static string[] scnNames = new []{"Original","SciFi","Fantasy"};
         // READ SAV GAME
-        public static GameData ReadSavFile(string savPath, string savName)
+        public static GameData ReadSavFile(Byte[] bytes)
         {
             var data = new GameData();
-
-            // Read every byte from SAV
-            byte[] bytes = File.ReadAllBytes(savPath + Path.DirectorySeparatorChar + savName);
-
+          
             #region Game version
             //=========================
             //GAME VERSION

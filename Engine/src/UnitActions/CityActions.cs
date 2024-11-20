@@ -22,6 +22,7 @@ namespace Civ2engine.UnitActions
             {
                 return civCityList[cityCount];
             }
+            
             return "Dummy Name";
         }
 
@@ -36,7 +37,8 @@ namespace Civ2engine.UnitActions
                 Y = tile.Y,
                 Owner = unit.Owner,
                 Size = 1,
-                ItemInProduction = initialProduction
+                ItemInProduction = initialProduction,
+                WhoBuiltIt = unit.Owner,
             };
             tile.WorkedBy = city;
             tile.CityHere = city;

@@ -20,6 +20,7 @@ using static Model.Menu.CommandIds;
 using Civ2.Dialogs.Scenario;
 using Civ2engine.OriginalSaves;
 using Model.Constants;
+using Model.Core;
 using Model.Core.Advances;
 using Model.Dialog;
 
@@ -34,7 +35,7 @@ public abstract class Civ2Interface : IUserInterface
     
     public bool CanDisplay(string? title)
     {
-        return title == Title;
+        return title != null && title.Contains(Title);
     }
 
     public abstract InterfaceStyle Look { get; }
@@ -372,7 +373,7 @@ public abstract class Civ2Interface : IUserInterface
     public abstract bool IsButtonInOuterPanel { get; }
     
     public int InterfaceIndex { get; set; }
-    public IInterfaceAction HandleLoadGame(GameData gameData)
+    public IInterfaceAction HandleLoadClassicGame(GameData gameData)
     {
         ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
         Initialization.LoadGraphicsAssets(this);
@@ -486,5 +487,16 @@ public abstract class Civ2Interface : IUserInterface
     public string GetScientistName(int epoch)
     {
         return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
+    }
+
+    public IInterfaceAction HandleLoadGame(IGame game, Civ2engine.Rules rules, Ruleset ruleset)
+    {
+        
+        ExpectedMaps = game.NoMaps;
+        Initialization.LoadGraphicsAssets(this);
+        Initialization.LoadGraphicsAssets(this);
+
+        Initialization.Start(game);
+        return DialogHandlers[LoadOk.Title].Show(this);
     }
 }

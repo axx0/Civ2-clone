@@ -8,14 +8,14 @@ namespace Civ2engine.IO
     public class EventsLoader : IFileHandler
     {
         Rules _rules;
-        LoadedGameObjects _gameObjects;
+        ILoadedGameObjects _gameObjects;
         List<ScenarioEvent> _scenarios = new ();
 
         private EventsLoader()
         {
         }
 
-        public static List<ScenarioEvent> LoadEvents(IEnumerable<string> paths, Rules rules, LoadedGameObjects objects)
+        public static List<ScenarioEvent> LoadEvents(IEnumerable<string> paths, Rules rules, ILoadedGameObjects objects)
         {
             var filePath = Utils.GetFilePath("events.txt", paths);
             var loader = new EventsLoader();
