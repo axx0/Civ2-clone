@@ -80,7 +80,7 @@ public class PillageOrder : Order
         player.ActiveUnit.MovePointsLost += _game.Rules.Cosmic.MovementMultiplier;
             
         var improvement = _game.TerrainImprovements[improvementToPillage.Improvement];
-        player.ActiveTile.RemoveImprovement(improvement,improvementToPillage.Level);
+        player.ActiveTile.RemoveImprovement(improvement,improvementToPillage.Level, player.ActiveTile.GetCivsVisibleTo(_game));
         var tiles = new List<Tile> { player.ActiveTile };
         if (improvement.HasMultiTile)
         {

@@ -15,16 +15,6 @@ namespace Civ2engine.MapObjects
         private Terrain _terrain;
         
         private bool[] _visibility;
-        private bool[] _visibilityUnits;
-        private bool[] _visibilityIrrigation;
-        private bool[] _visibilityMining;
-        private bool[] _visibilityRoad;
-        private bool[] _visibilityRailroad;
-        private bool[] _visibilityFortress;
-        private bool[] _visibilityPollution;
-        private bool[] _visibilityAirbase;
-        private bool[] _visibilityFarmland;
-        private bool[] _visibilityTransporter;
         public int X { get; }
         public int Y { get; }
         
@@ -58,25 +48,6 @@ namespace Civ2engine.MapObjects
         public TerrainType Type => Terrain.Type;
 
         public int Special { get; }
-        
-        public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility,
-            bool[] visibilityUnits,
-            bool[] visibilityIrrigation, bool[] visibilityMining, bool[] visibilityRoad, bool[] visibilityRailroad,
-            bool[] visibilityFortress, bool[] visibilityPollution, bool[] visibilityAirbase, bool[] visibilityFarmland,
-            bool[] visibilityTransporter) : this(x,y,terrain,seed,map,xIndex,visibility)
-        {
-            _visibility = visibility;
-            _visibilityUnits = visibilityUnits;
-            _visibilityIrrigation = visibilityIrrigation;
-            _visibilityMining = visibilityMining;
-            _visibilityRoad = visibilityRoad;
-            _visibilityRailroad = visibilityRailroad;
-            _visibilityFortress = visibilityFortress;
-            _visibilityPollution = visibilityPollution;
-            _visibilityAirbase = visibilityAirbase;
-            _visibilityFarmland = visibilityFarmland;
-            _visibilityTransporter = visibilityTransporter;
-        }
 
         // Get special resource type based on map seed & tile location
         public Tile(int x, int y, Terrain terrain, int seed, Map map, int xIndex, bool[] visibility)
@@ -186,7 +157,7 @@ namespace Civ2engine.MapObjects
 
         public List<ActiveEffect> EffectsList { get; } = new();
         
-        public PlayerTile?[] PlayerKnowledge { get; set; }
+        public PlayerTile?[]? PlayerKnowledge { get; set; }
 
         public bool[] Visibility => _visibility;
     }

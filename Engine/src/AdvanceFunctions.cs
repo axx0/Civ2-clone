@@ -149,7 +149,7 @@ namespace Civ2engine.Advances
                         .Select(loc =>
                         {
                             loc.tile.AddImprovement(improvement, loc.terrain, level,
-                                game.Rules.Terrains[loc.tile.Z]);
+                                game.Rules.Terrains[loc.tile.Z], loc.tile.GetCivsVisibleTo(game));
                             return loc.tile;
                         }).ToList();
                     game.TriggerMapEvent(MapEventType.UpdateMap, improvement.HasMultiTile ? locations.Concat(locations.SelectMany(l=> l.Neighbours())).ToList() : locations );

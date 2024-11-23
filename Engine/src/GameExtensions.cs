@@ -41,13 +41,15 @@ public static class GameExtensions
         {
             tile.Improvements.Clear();
             tile.EffectsList.Clear();
+            var visibleTo = tile.PlayerKnowledge.Select(((playerTile, civId) => new { playerTile, civId } ))
+                .Where(arg => arg != null).Select(arg => arg.civId).ToList();
             foreach (var can in improvements)
             {
                 var terrain = can.improvement.AllowedTerrains[tile.Z]
                     .FirstOrDefault(t => t.TerrainType == (int)tile.Type);
                 if (terrain is not null)
                 {
-                    tile.AddImprovement(can.improvement, terrain, can.level, game.Rules.Terrains[tile.Z]);
+                    tile.AddImprovement(can.improvement, terrain, can.level, game.Rules.Terrains[tile.Z], visibleTo);
                 }
             }
         }
@@ -112,13 +114,14 @@ public static class GameExtensions
             return new List<Unit>();
         }
 
+        var visibleTo = tile.GetCivsVisibleTo(game);
         if (improvement.Negative)
         {
-            tile.RemoveImprovement(improvement, levelToBuild);
+            tile.RemoveImprovement(improvement, levelToBuild, visibleTo);
         }
         else
         {
-            tile.AddImprovement(improvement, terrain, levelToBuild, game.Rules.Terrains[tile.Z]);
+            tile.AddImprovement(improvement, terrain, levelToBuild, game.Rules.Terrains[tile.Z], visibleTo);
         }
 
         units.ForEach(u =>

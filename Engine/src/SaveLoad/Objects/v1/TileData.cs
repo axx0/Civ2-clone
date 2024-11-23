@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Civ2engine.Terrains;
+using Model.Core.Mapping;
 
 namespace Civ2engine.SaveLoad;
 
@@ -16,5 +17,6 @@ public class TileData
     public bool[] V { get; set; }
 
     public List<ConstructedImprovement> I { get; set; }
+    public PlayerTile?[]? P { get; set; }
 }
 

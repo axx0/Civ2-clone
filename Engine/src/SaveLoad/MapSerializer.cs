@@ -41,7 +41,8 @@ public class MapSerializer
                     var tile = new Tile(2 * col + (row % 2), row, rules.Terrains[index][tileData.T], map.ResourceSeed,
                         map, col, tileData.V)
                     {
-                        Improvements = tileData.I
+                        Improvements = tileData.I,
+                        PlayerKnowledge = tileData.P
                     };
                     map.Tile[col, row] = tile;
                 }
@@ -52,12 +53,12 @@ public class MapSerializer
         return maps;
     }
 
-    public static void Write(Utf8JsonWriter writer, IList<Map> maps)
+    public static void Write(Utf8JsonWriter writer, IList<Map> maps, bool includePlayerData = true)
     {
         writer.WriteStartArray();
         foreach (var map in maps)
         {
-            writer.WriteNonDefaultFields(new JsonMapData(map));
+            writer.WriteNonDefaultFields(new JsonMapData(map, includePlayerData));
         }
         writer.WriteEndArray();
     }
