@@ -31,8 +31,10 @@ public class JsonMapData
                 var tile = map.Tile[col, row];
                 var tileData = new TileData
                 {
-                    T = (int)tile.Terrain.Type
+                    T = (int)tile.Terrain.Type,
+                    R = tile.River
                 };
+                
                 if (includePlayerData)
                 {
                     tileData.V = tile.Visibility.Clamp();

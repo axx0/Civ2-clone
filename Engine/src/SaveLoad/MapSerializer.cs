@@ -41,6 +41,7 @@ public class MapSerializer
                     var tile = new Tile(2 * col + (row % 2), row, rules.Terrains[index][tileData.T], map.ResourceSeed,
                         map, col, tileData.V)
                     {
+                        River = tileData.R,
                         Improvements = tileData.I,
                         PlayerKnowledge = tileData.P
                     };

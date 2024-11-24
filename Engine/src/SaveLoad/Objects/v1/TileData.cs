@@ -18,5 +18,10 @@ public class TileData
 
     public List<ConstructedImprovement> I { get; set; }
     public PlayerTile?[]? P { get; set; }
+    
+    /// <summary>
+    /// True if the tile has a river
+    /// </summary>
+    public bool R { get; set; }
 }
 
