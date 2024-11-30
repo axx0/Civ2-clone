@@ -24,7 +24,7 @@ public static class ImageUtils
     private static Image _outerWallpaper;
     private static Image _outerTitleTopWallpaper;
 
-    public static void PaintPanelBorders(IUserInterface active, ref Image image, int width, int height, Padding padding, bool statusPanel = false, bool ToTStatusPanelLayout = false)
+    public static void PaintPanelBorders(IUserInterface? active, ref Image image, int width, int height, Padding padding, bool statusPanel = false, bool toTStatusPanelLayout = false)
     {
         if (active == null)
         {
@@ -32,24 +32,10 @@ public static class ImageUtils
         }
         else
         {
-            active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !ToTStatusPanelLayout);
+            active.DrawBorderWallpaper(Wallpaper, ref image, height, width, padding, statusPanel && !toTStatusPanelLayout);
             active.DrawBorderLines(ref image, height, width, padding, statusPanel);
         }
     }
-
-    //public static void DrawTiledImage(Image source, ref Image destination, int height, int width)
-    //{
-    //    int rows = height / source.height + 1;
-    //    var columns = width / source.width + 1;
-    //    var sourceRec = new Rectangle { height = source.height, width = source.width };
-    //    for (int row = 0; row < rows; row++)
-    //    {
-    //        for (int col = 0; col < columns; col++)
-    //        {
-    //            Raylib.ImageDraw(ref destination, source, sourceRec, new Rectangle(col * source.width, row * source.height, source.width, source.height), Color.WHITE);
-    //        }
-    //    }
-    //}
 
     /// <summary>
     /// Draw tiles within a rectangle (chose tiles randomly)
@@ -133,7 +119,7 @@ public static class ImageUtils
     {
         // Outer wallpaper
         var image = Image.GenColor(width, height, new Color(0, 0, 0, 0));
-        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel, ToTStatusPanelLayout: ToTStatusPanelLayout);
+        PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel, toTStatusPanelLayout: ToTStatusPanelLayout);
         if (centerImage != null)
         {
             var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);

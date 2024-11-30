@@ -45,91 +45,160 @@ public static class Utf8JsonWriterExtensions
             var value = info.GetValue(instance);
             if ((defaultValue == null && value != null) || (defaultValue != null && !defaultValue.Equals(value)))
             {
-                writer.WritePropertyName(info.Name);
-                WriteValue(writer, typeCode, value);
+                WriteValue(info.Name, writer, typeCode, value);
             }
         }
         writer.WriteEndObject();
     }
 
-    private static void WriteValue(Utf8JsonWriter writer, TypeCode typeCode, object? value)
+    private static void WriteValue(string name, Utf8JsonWriter writer, TypeCode typeCode, object? value)
     {
         switch (typeCode)
         {
             case TypeCode.Empty:
-                writer.WriteNullValue();
                 break;
             case TypeCode.Object:
                 if (value is IEnumerable enumerable)
                 {
-                    writer.WriteStartArray();
-                    foreach (var element in enumerable)
+                    var enumerator = enumerable.GetEnumerator();
+                    if (enumerator.MoveNext())
                     {
-                        if(element.GetType().IsValueType)
+                        var element = enumerator.Current;
+                        if (element != null)
                         {
-                            WriteValue(writer, Type.GetTypeCode(element.GetType()), element);
-                        }
-                        else
-                        {
-                            writer.WriteStartObject();
-                            writer.WriteObjectContents(element);
+                            if (!string.IsNullOrWhiteSpace(name))
+                            {
+                                writer.WritePropertyName(name);
+                            }
+
+                            writer.WriteStartArray();
+                            WriteValue(string.Empty, writer, Type.GetTypeCode(element.GetType()), element);
+                            while (enumerator.MoveNext())
+                            {
+                                element = enumerator.Current;
+                                if (element != null)
+                                    WriteValue(string.Empty, writer, Type.GetTypeCode(element.GetType()), element);
+                            }
+                            writer.WriteEndArray();
                         }
                     }
-                    writer.WriteEndArray();
                 }
                 else
                 {
+                    if (!string.IsNullOrWhiteSpace(name))
+                    {
+                        writer.WritePropertyName(name);
+                    }
                     writer.WriteStartObject();
                     writer.WriteObjectContents(value);
                 }
 
                 break;
             case TypeCode.DBNull:
-                writer.WriteNullValue();
                 break;
             case TypeCode.Boolean:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteBooleanValue((bool)value);
                 break;
             case TypeCode.Char:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteStringValue(value.ToString());
                 break;
             case TypeCode.SByte:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToSByte(value));
                 break;
             case TypeCode.Byte:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToByte(value));
                 break;
             case TypeCode.Int16:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToInt16(value));
                 break;
             case TypeCode.UInt16:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToUInt16(value));
                 break;
             case TypeCode.Int32:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToInt32(value));
                 break;
             case TypeCode.UInt32:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToUInt32(value));
                 break;
             case TypeCode.Int64:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToInt64(value));
                 break;
             case TypeCode.UInt64:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToUInt64(value));
                 break;
             case TypeCode.Single:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToSingle(value));
                 break;
             case TypeCode.Double:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToDouble(value));
                 break;
             case TypeCode.Decimal:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteNumberValue(Convert.ToDecimal(value));
                 break;
             case TypeCode.DateTime:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteStringValue(value.ToString());
                 break;
             case TypeCode.String:
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    writer.WritePropertyName(name);
+                }
                 writer.WriteStringValue(value.ToString());
                 break;
             default:

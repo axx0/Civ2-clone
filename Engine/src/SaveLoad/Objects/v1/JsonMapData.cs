@@ -11,7 +11,7 @@ public class JsonMapData
     {
         
     }
-    public JsonMapData(Map map, bool includePlayerData)
+    public JsonMapData(Map map, ImprovementEncoder? encoder)
     {
         FlatWorld = map.Flat;
         MapRevealed = map.MapRevealed;
@@ -35,11 +35,10 @@ public class JsonMapData
                     R = tile.River
                 };
                 
-                if (includePlayerData)
+                if (encoder != null)
                 {
-                    tileData.V = tile.Visibility.Clamp();
-                    tileData.I = tile.Improvements;
-                    tileData.P = tile.PlayerKnowledge;
+                    tileData.I = encoder.Encode(tile.Improvements);
+                    tileData.P = encoder.EncodePlayer(tile.PlayerKnowledge, tile.Visibility, tileData.I, tile.CityHere);
                 }
                 tiles.Add(tileData);
             }

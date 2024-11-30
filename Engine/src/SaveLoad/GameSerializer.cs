@@ -18,6 +18,7 @@ namespace Civ2engine.SaveLoad;
 public class GameSerializer
 {
     
+    public static readonly CityInfo? DummyCityHere = new();
     
     public void Write(FileStream saveFile, IGame game, Ruleset ruleset)
     {
@@ -37,8 +38,15 @@ public class GameSerializer
         writer.WriteStartObject("game");
         writer.WriteNonDefaultFields("opts", game.Options);
         writer.WriteNonDefaultFields("data", new JsonGameData(game));
+        var encoder = new ImprovementEncoder(game.TerrainImprovements);
+        writer.WriteStartObject("encoder");
+        foreach (var pair in encoder.EncoderData)
+        {
+            writer.WriteString(pair.Key, pair.Value);
+        }
+        writer.WriteEndObject();
         writer.WritePropertyName("maps");
-        MapSerializer.Write(writer, game.Maps);
+        MapSerializer.Write(writer, game.Maps, encoder);
         writer.WriteStartArray("civs");
         foreach (var civilization in game.AllCivilizations.Skip(1)) // Don't include barbarians at all we know about them
         {
@@ -85,10 +93,14 @@ public class GameSerializer
     {
         var options = JsonSerializer.Deserialize<Options>(gameElement.GetProperty("opts").GetRawText());
         var gameData = JsonSerializer.Deserialize<JsonGameData>(gameElement.GetProperty("data").GetRawText());
-        
+        ImprovementEncoder? improvementEncoder = null;
+        if (gameElement.TryGetProperty("encoder", out var encoderElement))
+        {
+            improvementEncoder = new ImprovementEncoder(encoderElement);
+        }
         var gameObjects = new JsonSaveObjects
         {
-            Maps = MapSerializer.Read(gameElement.GetProperty("maps"), rules),
+            Maps = MapSerializer.Read(gameElement.GetProperty("maps"), rules, improvementEncoder),
             Civilizations = new [] {Barbarians.Civilization}
                 .Concat(gameElement.GetProperty("civs").Deserialize<JsonCivData[]>()
                     .Select((cd,index) => HydrateCiv(cd,index +1, rules))).ToList()
@@ -195,7 +207,18 @@ public class GameSerializer
         };
         
         owner.Cities.Add(city);
-        
+
+        if (tile.PlayerKnowledge != null)
+        {
+            foreach (var playerTile in tile.PlayerKnowledge)
+            {
+                if (playerTile != null && playerTile.CityHere == DummyCityHere)
+                {
+                    playerTile.CityHere = new CityInfo { Name = city.Name, Size = city.Size, OwnerId = city.OwnerId };
+                }
+            }
+        }
+
         if (cityData.CommodityInRoute != null && cityData.TradeRoutePartnerCity != null)
         {
             city.TradeRoutes = cityData.CommodityInRoute.Zip(cityData.TradeRoutePartnerCity).Select(((tuple) =>
@@ -243,12 +266,12 @@ public class GameSerializer
             Adjective = string.IsNullOrWhiteSpace(jsonCivData.Adjective) ? tribe.Adjective : jsonCivData.Adjective,
             Money = jsonCivData.Money,
             ReseachingAdvance = jsonCivData.ResearchingAdvance,
-            Advances = jsonCivData.Advances,
+            Advances = jsonCivData.Advances ?? [],
             ScienceRate = jsonCivData.SciRate,
             PlayerType = jsonCivData.PlayerType,
             TaxRate = jsonCivData.TaxRate,
             Government = jsonCivData.GovernmentId,
-            AllowedAdvanceGroups = tribe.AdvanceGroups ?? new [] { AdvanceGroupAccess.CanResearch }
+            AllowedAdvanceGroups = tribe.AdvanceGroups ?? [AdvanceGroupAccess.CanResearch]
         };
     }
 }
