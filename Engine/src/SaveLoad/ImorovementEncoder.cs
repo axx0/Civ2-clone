@@ -52,8 +52,7 @@ public class ImprovementEncoder
         if (encoded != 0)
         {
             //Encode as base64 and dump the padding 
-            var base64String = Convert.ToBase64String(new[] { encoded }).Replace("=","");
-            return base64String;
+            return Convert.ToBase64String(new[] { encoded }).Replace("=","");
         }
         return null;
     }

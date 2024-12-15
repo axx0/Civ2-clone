@@ -6,11 +6,11 @@ namespace Civ2engine.IO
 {
     public static class MapReader
     {
-        public static MapData Read(Ruleset ruleset, string mapFileName)
+        public static MapData Read(string mapPath)
         {
             var data = new MapData();
             using var reader =
-                new BinaryReader(File.Open(ruleset.FolderPath + Path.DirectorySeparatorChar + mapFileName,
+                new BinaryReader(File.Open(mapPath,
                     FileMode.Open));
 
             data.Width = reader.ReadInt16(); //bytes[0x00000000]; //	Width x 2 (e.g. 100 for a 50 x 80 map)
