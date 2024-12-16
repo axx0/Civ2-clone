@@ -11,7 +11,7 @@ public class JsonMapData
     {
         
     }
-    public JsonMapData(Map map)
+    public JsonMapData(Map map, ImprovementEncoder? encoder)
     {
         FlatWorld = map.Flat;
         MapRevealed = map.MapRevealed;
@@ -29,12 +29,18 @@ public class JsonMapData
             for (var row = 0; row < map.YDim; row++)
             {
                 var tile = map.Tile[col, row];
-                tiles.Add(new TileData
+                var tileData = new TileData
                 {
-                    T = (int)tile.Terrain.Type, 
-                    V = tile.Visibility.Clamp(),
-                    I = tile.Improvements
-                });
+                    T = (int)tile.Terrain.Type,
+                    R = tile.River
+                };
+                
+                if (encoder != null)
+                {
+                    tileData.I = encoder.Encode(tile.Improvements);
+                    tileData.P = encoder.EncodePlayer(tile.PlayerKnowledge, tile.Visibility, tileData.I, tile.CityHere);
+                }
+                tiles.Add(tileData);
             }
         }
 

@@ -21,7 +21,6 @@ public static class LoadGame
         {
             if (fileData[0] == 67) // Classic saves start with the word CIVILIZE so if we see a C treat it as old 
             {
-
                 GameData gameData = Read.ReadSavFile(fileData);
 
                 return mainApp.SetActiveRulesetFromFile(root, savDirectory, gameData.ExtendedMetadata).HandleLoadClassicGame(gameData);

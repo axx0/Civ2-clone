@@ -58,6 +58,6 @@ public class JsonCivData
     public string? TribeName { get; set; }
     public int Money { get; set; }
     public int ResearchingAdvance { get; set; }
-    public bool[] Advances { get; set; }
+    public bool[]? Advances { get; set; }
     public int SciRate { get; set; }
 }

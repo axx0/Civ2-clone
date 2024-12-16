@@ -11,25 +11,63 @@ namespace Civ2engine.MapObjects
 {
     public static class TileExtensions
     {
-        public static void RemoveImprovement(this Tile tile, TerrainImprovement improvement, int levelToRemove)
+        public static void RemoveImprovement(this Tile tile, TerrainImprovement improvement, int levelToRemove,
+            List<int> visibleTo)
         {
             var built = tile.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
-            
+
             if (built == null || built.Level < levelToRemove) return;
-            
+
             tile.EffectsList.RemoveAll(i => i.Source == improvement.Id && i.Level >= levelToRemove);
             if (levelToRemove == 0)
             {
                 tile.Improvements.Remove(built);
+                foreach (var civId in visibleTo)
+                {
+                    tile.PlayerKnowledge?[civId]?.Improvements.RemoveAll(i => i.Improvement == improvement.Id);
+                }
             }
             else
             {
                 built.Level = levelToRemove - 1;
+                foreach (var civId in visibleTo)
+                {
+                    var existing = tile.PlayerKnowledge?[civId]?.Improvements
+                        .FirstOrDefault(i => i.Improvement == improvement.Id);
+                    if (existing != null)
+                    {
+                        existing.Level = levelToRemove - 1;
+                    }
+                }
             }
         }
 
-        public static void AddImprovement(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild,
-            Terrain[] terrains)
+        public static List<int> GetCivsVisibleTo(this Tile tile, IGame game)
+        {
+            if (tile.Map.MapRevealed)
+            {
+                return game.AllCivilizations.Where(c=>c.Alive).Select(c=>c.Id).ToList();
+            }
+            
+            var civs = new List<int>();
+            if (tile.CityHere != null)
+            {
+                civs.Add(tile.CityHere.OwnerId);
+            }
+            else
+            {
+                civs.AddRange(tile.UnitsHere.Select(u=>u.Owner.Id).Distinct());
+            }
+            civs.AddRange(tile.Neighbours().SelectMany(neighbourTile=>neighbourTile.UnitsHere).Where(unit=>!civs.Contains(unit.Owner.Id)).Select(unit => unit.Owner.Id).Distinct());
+            civs.AddRange(tile.CityRadius().Where(radiusTile=> radiusTile.CityHere != null && !civs.Contains(radiusTile.CityHere.Owner.Id)).Select(radiusTile => radiusTile.CityHere.Owner.Id).Distinct());
+            civs.AddRange(tile.SecondRing().SelectMany(outerTile => outerTile.UnitsHere.Where(unit=>unit.TwoSpaceVisibility && !civs.Contains(unit.Owner.Id)).Select(u=>u.Owner.Id)).Distinct());
+            
+            return civs;
+        }
+
+        public static void AddImprovement(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain,
+            int levelToBuild,
+            Terrain[] terrains, IList<int> civsVisibleTo)
         {
             var improvements = tile.Improvements;
             if (improvement.ExclusiveGroup > 0)
@@ -42,6 +80,14 @@ namespace Civ2engine.MapObjects
                     tile.EffectsList.RemoveAll(e => e.Source == i.Improvement);
                     improvements.Remove(i);
                 });
+                foreach (var civId in civsVisibleTo)
+                {
+                    var seenImprovement = tile.PlayerKnowledge![civId]!.Improvements;
+                    foreach (var imp in previous)
+                    {
+                        seenImprovement.Remove(imp);
+                    }
+                }
             }
 
             var transformEffect = terrain.Effects?.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);
@@ -63,6 +109,21 @@ namespace Civ2engine.MapObjects
                 improvements.Add(new ConstructedImprovement
                     { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
             }
+            
+            foreach (var civId in civsVisibleTo)
+            {
+                var seenImprovement = tile.PlayerKnowledge![civId]!.Improvements;
+                var ex = seenImprovement.FirstOrDefault(i => i.Improvement == improvement.Id);
+                if (ex is not null)
+                {
+                    ex.Level = levelToBuild;
+                }
+                else
+                {
+                    seenImprovement.Add(new ConstructedImprovement
+                        { Group = improvement.ExclusiveGroup, Improvement = improvement.Id, Level = levelToBuild });
+                }
+            }
         }
 
         public static void BuildEffects(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain, int levelToBuild)
@@ -83,6 +144,11 @@ namespace Civ2engine.MapObjects
         public static IEnumerable<Tile> CityRadius(this Tile tile, bool nullForInvalid = false)
         {
             return tile.Map.CityRadius(tile, nullForInvalid);
+        }
+
+        public static IEnumerable<Tile> SecondRing(this Tile tile, bool nullForInvalid = false)
+        {
+            return tile.Map.SecondRing(tile, nullForInvalid);
         }
 
         public static IEnumerable<Tile> Neighbours(this Tile tile)
@@ -115,7 +181,25 @@ namespace Civ2engine.MapObjects
         public static void UpdateAllPlayers(this Tile tile)
         {
             var visibility = tile.Visibility;
-            var playerKnowledge = new PlayerTile[visibility.Length];
+            
+            PlayerTile?[] playerKnowledge;
+            if (tile.PlayerKnowledge is not null)
+            {
+                if (tile.PlayerKnowledge.Length < visibility.Length)
+                {
+                    playerKnowledge = new PlayerTile?[visibility.Length];
+                    Array.Copy(tile.PlayerKnowledge, playerKnowledge, tile.PlayerKnowledge.Length);
+                }
+                else
+                {
+                    playerKnowledge = tile.PlayerKnowledge;
+                }
+            }
+            else
+            {
+                playerKnowledge = new PlayerTile?[visibility.Length];
+            }
+
             for (var i = 0; i < visibility.Length; i++)
             {
                 if(tile.Map.IsCurrentlyVisible(tile, i))

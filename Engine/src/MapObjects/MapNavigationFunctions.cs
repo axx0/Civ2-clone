@@ -98,6 +98,33 @@ public static class MapNavigationFunctions
         return TilesAround(map, candidate, offsets, nullForInvalid);
     }
 
+    public static IEnumerable<Tile> SecondRing(this Map map, Tile candidate, bool nullForInvalid = false)
+    {
+        
+        var odd = candidate.Odd;
+        var offsets = new List<int[]>
+        {
+            new[] { odd, -3 },
+            new[] { 1, -2 },
+            new[] { 1 + odd, -1 },
+            new[] { 2, 0 },
+            new[] { 1 + odd, 1 },
+            new[] { 1, 2 },
+            new[] { odd, 3 },
+            new[] { 0, 4 },
+            new[] { odd - 1, 3 },
+            new[] { -1, 2 },
+            new[] { -2 + odd, 1 },
+            new[] { -2, 0 },
+            new[] { -2 + odd, -1 },
+            new[] { -1, -2 },
+            new[] { odd - 1, -3 },
+            new[] { 0, -4 },
+        };
+        
+        return TilesAround(map, candidate, offsets, nullForInvalid);
+    }
+
     private static IEnumerable<Tile> TilesAround(Map map, Tile centre, IEnumerable<int[]> offsets,
         bool nullForInvalid = false)
     {

@@ -224,17 +224,7 @@ namespace Civ2engine.OriginalSaves
                     List<ConstructedImprovement> improvements = GetImprovementsFrom(data, col, row);
                     var playerKnowledge = GetPlayerKnowledgeFrom(data, col, row);
                     tile[col, row] = new Tile(2 * col + (row % 2), row, rules.Terrains[map.MapIndex][terrain], map.ResourceSeed, map, col,
-                        Enumerable.Range(0, 8).Select(i => data.MapTileVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapUnitVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapIrrigationVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapMiningVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapRoadVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapRailroadVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapFortressVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapPollutionVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapAirbaseVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapFarmlandVisibility[0][col, row, i]).ToArray(),
-                        Enumerable.Range(0, 8).Select(i => data.MapTransporterVisibility[0][col, row, i]).ToArray())
+                        Enumerable.Range(0, 8).Select(i => data.MapTileVisibility[0][col, row, i]).ToArray())
                     {
                         River = data.MapRiverPresent[map.MapIndex][col, row],
                         Resource = data.MapResourcePresent[map.MapIndex][col, row],
@@ -491,6 +481,19 @@ namespace Civ2engine.OriginalSaves
                 UnhappyCitizens = unhappyCitizens,
                 Location = tile
             };
+            
+            for (int i = 1; i < 8; i++)
+            {
+                if (whoKnowsAboutIt[i])
+                {
+                    tile.PlayerKnowledge[i].CityHere = new CityInfo
+                    {
+                        Name = name,
+                        OwnerId = ownerIndex,
+                        Size = lastSizeRevealedToCivs[i]
+                    };
+                }
+            }
 
             owner.Cities.Add(city);
 

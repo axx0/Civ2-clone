@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Civ2engine.Terrains;
+using Model.Core.Mapping;
 
 namespace Civ2engine.SaveLoad;
 
@@ -11,10 +12,18 @@ public class TileData
     public int T { get; set; }
 
     /// <summary>
-    /// Visibility of the tile by civs
+    /// I the improvements at the tile
     /// </summary>
-    public bool[] V { get; set; }
-
-    public List<ConstructedImprovement> I { get; set; }
+    public string? I { get; set; }
+    
+    /// <summary>
+    /// The players that can see the tile and what they see A means all
+    /// </summary>
+    public IList<string> P { get; set; }
+    
+    /// <summary>
+    /// True if the tile has a river
+    /// </summary>
+    public bool R { get; set; }
 }
 
