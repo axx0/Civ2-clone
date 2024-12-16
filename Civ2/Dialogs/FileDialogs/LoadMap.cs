@@ -38,7 +38,7 @@ public class LoadMap : FileDialogHandler
             config.FlatWorld = mapData.FlatWorld;
             config.WorldSize = [mapData.Width /2, mapData.Height];
             config.TerrainData = mapData.TerrainData;
-            if (mapData.StartPositions is { Length: > 0 })
+            if (mapData.StartPositions is { Length: > 0 } && mapData.StartPositions.Any(p=> p.First != -1 && p.Second != -1))
             {
                 config.StartPositions = mapData.StartPositions.Select(p => new int[] { p.First, p.Second }).ToArray();
             }
@@ -47,7 +47,7 @@ public class LoadMap : FileDialogHandler
         }
         catch
         {
-            
+            return civDialogHandlers[Failed.Title].Show(civ2Interface);
         }
         
         Initialization.LoadGraphicsAssets(civ2Interface);

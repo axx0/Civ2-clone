@@ -18,11 +18,8 @@ public class RandomiseResourceSeed : SimpleSettingsDialog
             Initialization.ConfigObject.ResourceSeed = 0;
         }
 
-        if (Initialization.ConfigObject.StartPositions.Length > 0)
-        {
-            return StartLoc.StartLocKey;
-        }
-
-        return DifficultyHandler.Title;
+        return Initialization.ConfigObject.StartPositions is { Length: > 0 }
+            ? StartLoc.StartLocKey
+            : DifficultyHandler.Title;
     }
 }

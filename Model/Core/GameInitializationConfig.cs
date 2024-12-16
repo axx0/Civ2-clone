@@ -25,10 +25,11 @@ namespace Civ2engine
         public Rules Rules { get; set; }
         public int? ResourceSeed { get; set; }
         
-        public int[][] StartPositions { get; set; }
-        public byte[] TerrainData { get; set; }
+        public int[][]? StartPositions { get; set; }
+        public byte[]? TerrainData { get; set; }
         public Civilization PlayerCiv { get; set; }
         public Task<Map[]> MapTask { get; set; }
+        
         public bool Started { get; set; }
         public List<Tile> StartTiles { get; } = new();
         public int PropLand { get; set; } = 1;
