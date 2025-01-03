@@ -1,6 +1,6 @@
 # About
 
-Civilization II (original/Multiplayer Gold Edition & Test of Time remake) clone in .NET 6.0 using [C# bindings](https://github.com/ChrisDill/Raylib-cs) of [Raylib](https://www.raylib.com/) for Win/Linux/Mac.
+Civilization II (original/Multiplayer Gold Edition & Test of Time remake) clone in .NET 8.0 using [C# bindings](https://github.com/ChrisDill/Raylib-cs) of [Raylib](https://www.raylib.com/) for Win/Linux/Mac.
 
 Folders:
 - Engine = the Civ2 logic (core) code
@@ -34,7 +34,7 @@ Goals:
 
 # Running the game
 
-Download the .NET 6.0 SDK. The easiest way is to run the game with Visual Studio or VSCode.
+Download the .NET 8.0 SDK. The easiest way is to run the game with Visual Studio or VSCode.
  
 You have to point to RaylibUI folder then build it.
 
