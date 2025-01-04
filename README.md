@@ -1,6 +1,6 @@
 # About
 
-Civilization II (original/Multiplayer Gold Edition & Test of Time remake) clone in .NET 8.0 using [C# bindings](https://github.com/ChrisDill/Raylib-cs) of [Raylib](https://www.raylib.com/) for Win/Linux/Mac.
+Civilization II (original/Multiplayer Gold Edition & Test of Time remake) clone in .NET 8.0 using [C# bindings](https://github.com/MrScautHD/Raylib-CSharp) of [Raylib](https://www.raylib.com/) for Win/Linux/Mac.
 
 Folders:
 - Engine = the Civ2 logic (core) code
