@@ -11,7 +11,7 @@ namespace Civ2engine
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public int MapIndex { get; set; }
+        public int MapIndex { get; set; } = 0;
         public bool CanBuildCoastal { get; set; }
         public bool AutobuildMilitaryRule { get; set; }
         public bool StolenTech { get; set; }
@@ -72,7 +72,7 @@ namespace Civ2engine
         public int Support { get; set; }
         public int Waste { get; set; }
         
-        public Tile Location { get; init; }
+        public Tile Location { get; set; }
         public List<Tile> WorkedTiles { get; } = new();
         public int Pollution { get; set; }
         

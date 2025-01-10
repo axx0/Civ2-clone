@@ -60,11 +60,10 @@ public interface IUserInterface
     
     IMain MainApp { get; }
     int InterfaceIndex { get; set; }
-    IInterfaceAction HandleLoadClassicGame(GameData gameData);
-    IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory);
+    IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset);
+    IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory);
     IInterfaceAction InitNewGame(bool quickStart);
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);
     IImageSource? GetAdvanceImage(Advance advance);
     string GetScientistName(int civilizationEpoch);
-    IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset);
 }

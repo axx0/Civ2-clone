@@ -36,7 +36,7 @@ namespace Civ2engine.Units
         public int AttackBase => TypeDefinition.Attack;
         public int DefenseBase => TypeDefinition.Defense;
         
-        public UnitDefinition TypeDefinition { get; init; }
+        public UnitDefinition TypeDefinition { get; set; }
 
         public int FirepowerBase => TypeDefinition.Firepwr;
 
@@ -79,6 +79,7 @@ namespace Civ2engine.Units
         public City? HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
+        public int GoToMapIndex { get; set; } = 0;
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
