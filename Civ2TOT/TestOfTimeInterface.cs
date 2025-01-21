@@ -223,7 +223,10 @@ public class TestOfTimeInterface : Civ2Interface
             { "globalWarming", Enumerable.Range(0, 4).Select(col =>
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14), true)).ToArray() },
             { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0x100740, 0x12702) } },
+            { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(332, 134, 64, 64)) } },
             { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xF5C44, 0xAAFC, new Rectangle(398, 134, 64, 64)) } },
+            { "cityBuiltAncient", new[]{ new BinaryStorage("Tiles.dll", 0xE3D1C, 0x5A34) } },
+            { "cityBuiltModern", new[]{ new BinaryStorage("Tiles.dll", 0xE9750, 0x5C2D) } },
             { "observatoryPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0xACDC) } },
             { "horzionPic", new[]{ new BinaryStorage("Intro.dll", 0x1E630, 0xACDC) } },
             { "creaturePic", new[]{ new BinaryStorage("Intro.dll", 0x2EBB4, 0x14600) } },

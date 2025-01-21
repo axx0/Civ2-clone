@@ -72,11 +72,11 @@ public class BuildCity : Order
 
             if (activeTile.CityHere != null)
             {
-                return SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity), errorPopupKeyword: "ONLY10", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image) - 5 } }));
+                return SetCommandState(activeTile.CityHere.Size < GameScreen.Game.Rules.Cosmic.ToExceedCitySizeAqueductNeeded ? CommandStatus.Normal : CommandStatus.Disabled, Labels.For(LabelIndex.JoinCity), errorPopupKeyword: "ONLY10", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image, _active) - 5 } }));
             }
             else
             {
-                return SetCommandState(errorPopupKeyword: "ADJACENTCITY", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image) - 5 } }));
+                return SetCommandState(errorPopupKeyword: "ADJACENTCITY", errorPopupImage: new(new[] { cityImage.Image, flagImage.Image }, 2, coords: new int[,] { { 0, 0 }, { (int)cityImage.FlagLoc.X, (int)cityImage.FlagLoc.Y - Images.GetImageHeight(flagImage.Image, _active) - 5 } }));
             }
         }
 
