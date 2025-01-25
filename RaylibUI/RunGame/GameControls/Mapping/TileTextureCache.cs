@@ -1,5 +1,7 @@
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model.ImageSets;
+using RaylibUI.RunGame.Commands;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -41,13 +43,14 @@ public class TileTextureCache
         _tileSets.Add(tileSet);
         _dimensions.Add(new MapDimensions
         {
-            TotalWidth = map.Tile.GetLength(0) * tileSet.TileWidth.ZoomScale(map.Zoom),
-            TotalHeight = map.Tile.GetLength(1) * tileSet.HalfHeight.ZoomScale(map.Zoom) + tileSet.HalfHeight.ZoomScale(map.Zoom),
-            HalfHeight = tileSet.HalfHeight.ZoomScale(map.Zoom),
-            TileHeight = tileSet.TileHeight.ZoomScale(map.Zoom),
-            TileWidth = tileSet.TileWidth.ZoomScale(map.Zoom),
-            HalfWidth = tileSet.HalfWidth.ZoomScale(map.Zoom),
-            DiagonalCut = tileSet.DiagonalCut.ZoomScale(map.Zoom).ZoomScale(map.Zoom)
+            TotalWidth = map.Tile.GetLength(0) * tileSet.TileWidth,
+            TotalHeight = map.Tile.GetLength(1) * tileSet.HalfHeight + tileSet.HalfHeight,
+            HalfHeight = tileSet.HalfHeight,
+            TileHeight = tileSet.TileHeight,
+            TileWidth = tileSet.TileWidth,
+            HalfWidth = tileSet.HalfWidth,
+            DiagonalCut = tileSet.DiagonalCut,
+
         });
         return mapIndex;
     }
@@ -60,7 +63,17 @@ public class TileTextureCache
             mapIndex = SetupMap(map);
         }
 
-        return _dimensions[mapIndex];
+        //return _dimensions[mapIndex];
+        return new MapDimensions
+        {
+            TotalWidth = _dimensions[mapIndex].TotalWidth.ZoomScale(map.Zoom),
+            TotalHeight = _dimensions[mapIndex].TotalHeight.ZoomScale(map.Zoom),
+            HalfHeight = _dimensions[mapIndex].HalfHeight.ZoomScale(map.Zoom),
+            TileHeight = _dimensions[mapIndex].TileHeight.ZoomScale(map.Zoom),
+            TileWidth = _dimensions[mapIndex].TileWidth.ZoomScale(map.Zoom),
+            HalfWidth = _dimensions[mapIndex].HalfWidth.ZoomScale(map.Zoom),
+            DiagonalCut = _dimensions[mapIndex].DiagonalCut.ZoomScale(map.Zoom).ZoomScale(map.Zoom),
+        };
     }
 
     public void Redraw(Tile tile, int civilizationId)
