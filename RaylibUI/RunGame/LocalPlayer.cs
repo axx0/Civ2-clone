@@ -121,7 +121,7 @@ public class LocalPlayer : IPlayer
         _gameScreen.ForceRedraw();
     }
 
-    public void WaitingAtEndOfTurn()
+    public void WaitingAtEndOfTurn(IGame game)
     {
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
     }
@@ -145,5 +145,19 @@ public class LocalPlayer : IPlayer
     public void CityDecrease(City city)
     {
         _gameScreen.ShowCityDialog("DECREASE", city);
+    }
+
+    public void TurnStart(int turnNumber)
+    {
+        _gameScreen.TurnStarting(turnNumber);
+    }
+
+    public void SetUnitActive(Unit? unit, bool move)
+    {
+        ActiveUnit = unit;
+        if (_gameScreen.Game.GetActiveCiv == this.Civilization)
+        {
+            _gameScreen.ActiveMode = _gameScreen.Moving;
+        }
     }
 }

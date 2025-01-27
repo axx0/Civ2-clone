@@ -73,7 +73,7 @@ namespace Civ2engine
             city.Trade = totalTrade - city.Corruption;
             city.Production = totalSheilds - city.Support - city.Waste;
             city.FoodConsumption = city.Size * game.Rules.Cosmic.FoodEatenPerTurn +
-                                   city.SupportedUnits.Count(u => u.AIrole == AIroleType.Settle) *
+                                   city.SupportedUnits.Count(u => u.AiRole == AIroleType.Settle) *
                                    game.Rules.Governments[government].SettlersConsumption;
             city.FoodProduction = totalFood;
             city.SurplusHunger = totalFood - city.FoodConsumption;

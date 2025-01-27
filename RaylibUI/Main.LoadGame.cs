@@ -19,10 +19,14 @@ namespace RaylibUI
             
             _activeScreen = new GameScreen(this, game, Soundman);
 
-            // For scenarios start with first civ
-            if (game.ActivePlayer.Civilization.PlayerType == PlayerType.Ai)
+            if (game.TurnNumber == 0)
             {
-                game.AiTurn();
+                game.StartNextTurn();
+            }
+            else
+            {
+                // If we're not on turn one start with active player
+                game.StartPlayerTurn(game.ActivePlayer);
             }
         }
 

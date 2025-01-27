@@ -32,7 +32,6 @@ namespace Civ2engine
         public bool AnyUnitsAwaitingOrders => Units.Any(unit => unit.AwaitingOrders);
         
         public int LuxRate => 100 - TaxRate - ScienceRate;
-        
 
         public string[] Titles { get; set; }
 

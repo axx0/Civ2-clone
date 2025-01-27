@@ -8,6 +8,7 @@ using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Model.Constants;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;

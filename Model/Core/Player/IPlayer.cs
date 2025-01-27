@@ -13,8 +13,8 @@ namespace Civ2engine
     {
         Civilization Civilization { get; }
         Tile ActiveTile { get; set; }
-        
-        Unit? ActiveUnit { get; set; }
+
+        Unit? ActiveUnit { get; }
         
         List<Unit> WaitingList { get; }
 
@@ -29,12 +29,15 @@ namespace Civ2engine
         
         void CityProductionComplete(City city);
         IInterfaceCommands Ui { get; }
+        
         void NotifyImprovementEnabled(TerrainImprovement improvement, int level);
         void MapChanged(List<Tile> tiles);
-        void WaitingAtEndOfTurn();
+        void WaitingAtEndOfTurn(IGame game);
         void NotifyAdvanceResearched(int advance);
         void FoodShortage(City city);
         void CityDecrease(City city);
+        void TurnStart(int turnNumber);
+        void SetUnitActive(Unit? unit, bool move);
     }   
 
     public interface IInterfaceCommands

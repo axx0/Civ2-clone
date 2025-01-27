@@ -22,7 +22,6 @@ public class ViewPiece : IGameMode
     private readonly GameScreen _gameScreen;
     private readonly LabelControl _title;
     private readonly InterfaceStyle _look;
-    private bool _endOfTurn;
 
     public ViewPiece(GameScreen gameScreen)
     {
@@ -30,8 +29,6 @@ public class ViewPiece : IGameMode
         _look = gameScreen.MainWindow.ActiveInterface.Look;
 
         _title = new LabelControl(gameScreen, Labels.For(LabelIndex.ViewingPieces), true, alignment: TextAlignment.Center, font: _look.StatusPanelLabelFont, fontSize: 18, spacing: 0, colorFront: _look.MovingUnitsViewingPiecesLabelColor, colorShadow: _look.MovingUnitsViewingPiecesLabelColorShadow, shadowOffset: new Vector2(1, 0));
-
-        _gameScreen.Game.OnPlayerEvent += PlayerEventTriggered;
 
         Actions = new Dictionary<KeyboardKey, Func<bool>>
             {
@@ -391,23 +388,5 @@ public class ViewPiece : IGameMode
     public void MouseClear()
     {
         
-    }
-
-    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
-    {
-        switch (e.EventType)
-        {
-            case PlayerEventType.NewTurn:
-                {
-                    _endOfTurn = false;
-                    break;
-                }
-            case PlayerEventType.WaitingAtEndOfTurn:
-                {
-                    _endOfTurn = true;
-                    break;
-                }
-            default: break;
-        }
     }
 }

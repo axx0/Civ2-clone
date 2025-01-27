@@ -47,8 +47,9 @@ public interface IGame
     List<Civilization> AllCivilizations { get; }
 
     event EventHandler<UnitEventArgs> OnUnitEvent;
-    void AiTurn();
     void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked);
     void TriggerUnitEvent(UnitEventArgs combatEventArgs);
     void SetHumanPlayer(int playerCivId);
+    void StartPlayerTurn(IPlayer activePlayer);
+    void StartNextTurn();
 }   

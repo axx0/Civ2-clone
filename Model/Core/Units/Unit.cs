@@ -4,6 +4,7 @@ using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Terrains;
+using Model.Constants;
 using Model.Core.Cities;
 
 namespace Civ2engine.Units
@@ -42,7 +43,7 @@ namespace Civ2engine.Units
 
         public int Cost => TypeDefinition.Cost;
         public int ShipHold => TypeDefinition.Hold;
-        public AIroleType AIrole => TypeDefinition.AIrole;
+        public AIroleType AiRole => TypeDefinition.AIrole;
         public bool TwoSpaceVisibility => TypeDefinition.Flags[14] == '1';
         public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1' || Domain == UnitGas.Air || Domain == UnitGas.Sea;
         public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[12] == '1';
@@ -129,7 +130,7 @@ namespace Civ2engine.Units
         public City CityWithThisUnit => CurrentLocation != null ? CurrentLocation.CityHere: null;
         public List<Unit> CarriedUnits { get; } = new();
 
-        public Tile? CurrentLocation
+        public Tile CurrentLocation
         {
             get => _currentLocation;
             set
@@ -147,7 +148,7 @@ namespace Civ2engine.Units
 
         public bool FreeSupport(int[] typesWithFreeSupport)
         {
-            return AIrole is AIroleType.Diplomacy or AIroleType.Trade || (typesWithFreeSupport.Contains(Type));
+            return AiRole is AIroleType.Diplomacy or AIroleType.Trade || (typesWithFreeSupport.Contains(Type));
         }
 
         public bool NeedsSupport { get; set; } = true;

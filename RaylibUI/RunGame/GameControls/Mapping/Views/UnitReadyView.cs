@@ -17,7 +17,7 @@ public class UnitReadyView : BaseGameView
 
         SetAnimation(elements);
 
-        SetAnimation(Array.Empty<TextureElement>());
+        SetAnimation([]);
     }
 
     public Unit Unit { get; set; }

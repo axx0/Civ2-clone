@@ -65,6 +65,7 @@ public class GameScreen : BaseScreen
     
     private CivDialog _currentPopupDialog;
     private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
+    private int _mapToShow;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
@@ -74,23 +75,25 @@ public class GameScreen : BaseScreen
         Main = main;
         Game = game;
         Soundman = soundman;
-
-        _ToTPanelLayout = false;
-        _miniMapHeight = Math.Max(100, game.CurrentMap.YDim) + 38 + 11;
+        
+        
+        Moving = new MovingPieces(this);
+        ViewPiece = new ViewPiece(this);
+        Processing = new ProcessingMode(this);
 
         var civ = game.GetPlayerCiv;
         _player = new LocalPlayer(this, civ);
+        _mapToShow = _player.Civilization.Id;
         game.ConnectPlayer(_player);
+
+        _ToTPanelLayout = false;
+        _miniMapHeight = Math.Max(100, game.Maps[_player.ActiveTile.Z].YDim) + 38 + 11;
 
         var commands = SetupCommands(game);
         var menuElements = main.ActiveInterface.ConfigureGameCommands(commands);
         _menu = new GameMenu(this, menuElements);
         _menu.GetPreferredWidth();
 
-        Moving = new MovingPieces(this);
-        ViewPiece = new ViewPiece(this);
-        Processing = new ProcessingMode(this);
-               
         if (Game.GetActiveCiv == Game.GetPlayerCiv)
         {
             ActiveMode = _player.ActiveUnit is not {MovePoints: > 0} ? ViewPiece : Moving;
@@ -341,5 +344,10 @@ public class GameScreen : BaseScreen
     {
         _ToTPanelLayout = !_ToTPanelLayout;
         Resize(Window.GetScreenWidth(), Window.GetScreenHeight());
+    }
+
+    public void TurnStarting(int turnNumber)
+    {
+        _statusPanel.Update();
     }
 }

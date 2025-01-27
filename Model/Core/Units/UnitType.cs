@@ -1,4 +1,5 @@
 using Civ2engine.Enums;
+using Model.Constants;
 
 namespace Civ2engine.Units
 {

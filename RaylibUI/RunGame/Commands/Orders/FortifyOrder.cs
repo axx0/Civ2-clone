@@ -5,6 +5,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model;
+using Model.Constants;
 using Model.Core;
 using Model.Menu;
 using Raylib_CSharp.Interact;
@@ -31,13 +32,13 @@ public class FortifyOrder : Order
             return SetCommandState(CommandStatus.Invalid);
         }
         
-        if (activeUnit.AIrole == AIroleType.Settle)
+        if (activeUnit.AiRole == AIroleType.Settle)
         {
             return SetCommandState(CommandStatus.Invalid);
         }
         
         var canFortifyHere = UnitFunctions.CanFortifyHere(activeUnit, _player.ActiveTile);
-        return SetCommandState(canFortifyHere.Enabled ? CommandStatus.Normal : CommandStatus.Disabled);
+        return SetCommandState(canFortifyHere ? CommandStatus.Normal : CommandStatus.Disabled);
     }
 
     public override void Action()

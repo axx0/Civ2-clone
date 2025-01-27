@@ -48,7 +48,6 @@ public class MapControl : BaseControl
 
         gameScreen.OnMapEvent += MapEventTriggered;
         _game.OnUnitEvent += UnitEventTriggered;
-        _game.OnPlayerEvent += PlayerEventTriggered;
         Click += OnClick;
         MouseDown += OnMouseDown;
 
@@ -90,18 +89,6 @@ public class MapControl : BaseControl
                 //UpdateMap();
                 break;
             }
-        }
-    }
-
-    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
-    {
-        switch (e.EventType)
-        {
-            case PlayerEventType.NewTurn:
-                {
-                    break;
-                }
-            default: break;
         }
     }
 

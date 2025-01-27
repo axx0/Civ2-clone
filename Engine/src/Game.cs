@@ -50,20 +50,8 @@ namespace Civ2engine
 
         public IPlayer ActivePlayer => Players[_activeCiv.Id];
 
-        public Unit? ActiveUnit
-        {
-            get => Players[_activeCiv.Id].ActiveUnit;
-            set
-            {
-                var player = Players[_activeCiv.Id];
-                player.ActiveUnit = value;
-                if (player.ActiveUnit == value && value != null)
-                {
-                    TriggerUnitEvent(new ActivationEventArgs(value, true, false));
-                }
-            }
-        }
-
+        private int _activeCivId = -1;
+        
         private Civilization
             _activeCiv; // ActiveCiv can be AI. PlayerCiv is human. They are equal except during enemy turns.
 
@@ -147,7 +135,7 @@ namespace Civ2engine
             var id = player.Civilization.Id;
             var currentPlayer = Players[id];
             player.ActiveTile = currentPlayer.ActiveTile;
-            player.ActiveUnit = currentPlayer.ActiveUnit;
+            player.SetUnitActive(currentPlayer.ActiveUnit, false);
             Players[id] = player;
             Script.Connect(player.Ui);
         }

@@ -66,7 +66,7 @@ internal class MoveAnimation : BaseGameView
 
         if (totalFrames != noFramesForOneMove)
         {
-            SetAnimation(Array.Empty<IViewElement>());
+            SetAnimation([]);
         }
     }
 }

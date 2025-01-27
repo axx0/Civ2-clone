@@ -8,6 +8,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Model.Constants;
 using Model.Core.Cities;
 using Model.Core.Mapping;
 using Tile = Civ2engine.MapObjects.Tile;
@@ -415,6 +416,7 @@ namespace Civ2engine.OriginalSaves
                 Adjective = adjective,
                 Money = money,
                 ReseachingAdvance = researchingAdvance,
+                Science = researchProgress,
                 Advances = advances,
                 ScienceRate = sciRate * 10,
                 TaxRate = taxRate * 10,
@@ -546,7 +548,7 @@ namespace Civ2engine.OriginalSaves
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            switch (unit.AIrole)
+            switch (unit.AiRole)
             {
                 case AIroleType.Trade:
                     unit.CaravanCommodity = counterRoleParam;

@@ -653,16 +653,17 @@ namespace Civ2engine.UnitActions
 
         internal static bool IsNextToEnemy(Tile tile, Civilization civ, UnitGas domain)
         {
-            return tile.Neighbours().Any(t => t.UnitsHere.Any(u => u.Owner != civ && u.InShip == null && u.Domain == domain));
+            return tile.Neighbours().Any(t =>
+                t.UnitsHere.Any(u => u.Owner != civ && u.InShip == null && u.Domain == domain));
         }
 
-        public static IEnumerable<Tile> GetPossibleMoves(Game game, Tile tile, Unit unit)
+        public static IEnumerable<Tile> GetPossibleMoves(Tile tile, Unit unit)
         {
             var neighbours = unit.Domain switch
             {
-                UnitGas.Ground => game.CurrentMap.Neighbours(tile).Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold)),
-                UnitGas.Sea => game.CurrentMap.Neighbours(tile).Where(t=> t.CityHere != null || t.Terrain.Type == TerrainType.Ocean || (t.UnitsHere.Count > 0 && t.UnitsHere[0].Owner != unit.Owner)),
-                _ => game.CurrentMap.Neighbours(tile)
+                UnitGas.Ground => tile.Neighbours().Where(n => n.Type != TerrainType.Ocean || n.UnitsHere.Any(u=> u.Owner == unit.Owner && u.ShipHold > 0 && u.CarriedUnits.Count < u.ShipHold)),
+                UnitGas.Sea => tile.Neighbours().Where(t=> t.CityHere != null || t.Terrain.Type == TerrainType.Ocean || (t.UnitsHere.Count > 0 && t.UnitsHere[0].Owner != unit.Owner)),
+                _ => tile.Neighbours()
             };
             if (unit.IgnoreZonesOfControl || !IsNextToEnemy(tile, unit.Owner, unit.Domain))
             {

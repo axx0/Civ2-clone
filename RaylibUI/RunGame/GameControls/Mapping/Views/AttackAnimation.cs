@@ -36,7 +36,7 @@ internal class AttackAnimation : BaseGameView
             var expPos = attackerWins ? defPos : attackPos;
             foreach (var battleTexture in battleAnimation)
             {
-                SetAnimation(unitAnimations.Concat(new[] { new TextureElement(battleTexture, expPos, Location) })
+                SetAnimation(unitAnimations.Concat([new TextureElement(battleTexture, expPos, Location)])
                     .ToList());
             }
 

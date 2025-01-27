@@ -1,4 +1,4 @@
-﻿namespace Civ2engine.Enums
+﻿namespace Model.Constants
 {
     public enum AIroleType
     {
