@@ -32,7 +32,7 @@ public class FortifyOrder : Order
             return SetCommandState(CommandStatus.Invalid);
         }
         
-        if (activeUnit.AiRole == AIroleType.Settle)
+        if (activeUnit.AiRole == AiRoleType.Settle)
         {
             return SetCommandState(CommandStatus.Invalid);
         }

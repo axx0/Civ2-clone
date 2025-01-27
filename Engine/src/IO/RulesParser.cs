@@ -208,13 +208,12 @@ namespace Civ2engine.IO
             Rules.Leaders = values.Select((value,id) =>
             {
                 var line = value.Split(',', StringSplitOptions.TrimEntries);
-                var titles = new List<LeaderTitle>(
-                );
+                var titles = new List<LeaderTitle>();
                 for(var i = 12; i < line.Length;i+=3)
                 {
                     titles.Add(new LeaderTitle
                     {
-                        Gov = int.Parse(line[i-2]),
+                        Gov = int.TryParse(line[i-2], out int val0) ? val0 : 0,
                         TitleMale = line[i-1],
                         TitleFemale = line[i],
                     });
@@ -225,13 +224,13 @@ namespace Civ2engine.IO
                     NameMale = line[0],
                     NameFemale = line[1],
                     Female = int.Parse(line[2]) == 1,
-                    Color = int.Parse(line[3]),
-                    CityStyle = int.Parse(line[4]),
+                    Color = int.TryParse(line[3], out int val) ? val : 0,
+                    CityStyle = int.TryParse(line[4], out val) ? val : 0,
                     Plural = line[5],
                     Adjective = line[6],
-                    Attack = int.Parse(line[7]),
-                    Expand = int.Parse(line[8]),
-                    Civilize = int.Parse(line[9]),
+                    Attack = int.TryParse(line[7], out val) ? val : 0,
+                    Expand = int.TryParse(line[8], out val) ? val : 0,
+                    Civilize = int.TryParse(line[9], out val) ? val : 0,
                     Titles = titles.ToArray()
                 };
             }).ToArray();
@@ -294,7 +293,7 @@ namespace Civ2engine.IO
                 if (row < 11)
                 {
                     if (!mappings.ContainsKey(parts[1]))
-                        mappings.Add(parts[1].Substring(0, 3), terrains.Count);
+                        mappings.Add(parts[1].Length > 3 ? parts[1][..3] : parts[1], terrains.Count);
                     terrains.Add(parts[0]);
                 }
                 else
@@ -327,19 +326,19 @@ namespace Civ2engine.IO
                 {
                     Type = (TerrainType) type,
                     Name = line[0],
-                    MoveCost = int.Parse(line[1]),
-                    Defense = int.Parse(line[2]),
-                    Food = int.Parse(line[3]),
-                    Shields = int.Parse(line[4]),
-                    Trade = int.Parse(line[5]),
+                    MoveCost = int.TryParse(line[1], out int val) ? val : 1,
+                    Defense = int.TryParse(line[2], out val) ? val : 1,
+                    Food = int.TryParse(line[3], out val) ? val : 0,
+                    Shields = int.TryParse(line[4], out val) ? val : 0,
+                    Trade = int.TryParse(line[5], out val) ? val : 0,
                     CanIrrigate = mappings[line[6]],
-                    IrrigationBonus = int.Parse(line[7]),
-                    TurnsToIrrigate = int.Parse(line[8]),
-                    MinGovrnLevelAItoPerformIrrigation = int.Parse(line[9]),
+                    IrrigationBonus = int.TryParse(line[7], out val) ? val : 0,
+                    TurnsToIrrigate = int.TryParse(line[8], out val) ? val : 0,
+                    MinGovrnLevelAItoPerformIrrigation = int.TryParse(line[9], out val) ? val : 0,
                     CanMine = mappings[line[10]],
-                    MiningBonus = int.Parse(line[11]),
-                    TurnsToMine = int.Parse(line[12]),
-                    MinGovrnLevelAItoPerformMining = int.Parse(line[13]),
+                    MiningBonus = int.TryParse(line[11], out val) ? val : 0,
+                    TurnsToMine = int.TryParse(line[12], out val) ? val : 0,
+                    MinGovrnLevelAItoPerformMining = int.TryParse(line[13], out val) ? val : 0,
                     Transform = mappings[line[14]],
                     Impassable = line[15] == "yes",
                     RoadBonus = type <= (int)TerrainType.Grassland ? 1:0, 
@@ -371,22 +370,22 @@ namespace Civ2engine.IO
                 {
                     Type = type,
                     Name = text[0],
-                    Until = Rules.AdvanceMappings.ContainsKey(text[1]) ? Rules.AdvanceMappings[text[1]] : -1,   // temp
-                    Domain = (UnitGas) int.Parse(text[2]),
-                    Move = Rules.Cosmic.MovementMultiplier * int.Parse(text[3].Replace(".", string.Empty)),
-                    Range = int.Parse(text[4]),
-                    Attack = int.Parse(text[5].Replace("a", string.Empty)),
-                    Defense = int.Parse(text[6].Replace("d", string.Empty)),
-                    Hitp = 10 * int.Parse(text[7].Replace("h", string.Empty)),
-                    Firepwr = int.Parse(text[8].Replace("f", string.Empty)),
-                    Cost = int.Parse(text[9]),
-                    Hold = int.Parse(text[10]),
-                    AIrole = (AIroleType)int.Parse(text[11]),
+                    Until = Rules.AdvanceMappings.TryGetValue(text[1], out int value) ? value : -1,
+                    Domain = (UnitGas) (int.TryParse(text[2], out value) ? value : 0),
+                    Move = Rules.Cosmic.MovementMultiplier * (int.TryParse(text[3].Replace(".", string.Empty), out value) ? value : 0),
+                    Range = int.TryParse(text[4], out value) ? value : 0,
+                    Attack = int.TryParse(text[5].Replace("a", string.Empty), out value) ? value : 0,
+                    Defense = int.TryParse(text[6].Replace("d", string.Empty), out value) ? value : 0,
+                    Hitp = 10 * (int.TryParse(text[7].Replace("h", string.Empty), out value) ? value : 0),
+                    Firepwr = int.TryParse(text[8].Replace("f", string.Empty), out value) ? value : 0,
+                    Cost = int.TryParse(text[9], out value) ? value : 0,
+                    Hold = int.TryParse(text[10], out value) ? value : 0,
+                    AIrole = (AiRoleType)(int.TryParse(text[11], out value) ? value : 0),
                     Prereq = Rules.AdvanceMappings.ContainsKey(text[12]) ? Rules.AdvanceMappings[text[12]] : -1,    // temp
                     Flags = text[13],
                     AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
-                unit.IsSettler = unit.AIrole == AIroleType.Settle;
+                unit.IsSettler = unit.AIrole == AiRoleType.Settle;
                 
                 if (!unit.IsSettler) return unit;
                 
@@ -406,7 +405,6 @@ namespace Civ2engine.IO
         
         private void ProcessAdvancedUnitFlags(string[] values)
         {
-            
             var limit = values.Length < Rules.UnitTypes.Length ? values.Length : Rules.UnitTypes.Length;
             for (int i = 0; i < limit; i++)
             {
@@ -414,7 +412,7 @@ namespace Civ2engine.IO
                 var unit = Rules.UnitTypes[i];
                 unit.CivCanBuild = ReadBitsReversed(line[0]);
                 unit.CanBeOnMap = ReadBitsReversed(line[1]);
-                unit.MinBribe = int.Parse(line[2]);
+                unit.MinBribe = int.TryParse(line[2], out int val) ? val : 0;
                 var extraFlags = ReadBitsReversed(line[6]);
                 unit.Invisible = extraFlags[0];
                 unit.NonDispandable = extraFlags[1];
@@ -457,9 +455,9 @@ namespace Civ2engine.IO
                 {
                     Type = type,
                     Name = parts[0],
-                    Cost = int.Parse(parts[1]),
-                    Upkeep = int.Parse(parts[2]),
-                    Prerequisite = Rules.AdvanceMappings.ContainsKey(parts[3]) ? Rules.AdvanceMappings[parts[3]] : -1   // temp
+                    Cost = int.TryParse(parts[1], out int val) ? val : 1,
+                    Upkeep = int.TryParse(parts[2], out val) ? val : 0,
+                    Prerequisite = Rules.AdvanceMappings.TryGetValue(parts[3], out val) ? val : -1
                 };
             }).ToArray();
         }
@@ -543,12 +541,12 @@ namespace Civ2engine.IO
                 {
                     Index = index,
                     Name = text[0],
-                    AIvalue = int.Parse(text[1]),
-                    Modifier = int.Parse(text[2]),
-                    Prereq1 = Rules.AdvanceMappings.ContainsKey(text[3]) ? Rules.AdvanceMappings[text[3]] : -1, // temp
-                    Prereq2 = Rules.AdvanceMappings.ContainsKey(text[4]) ? Rules.AdvanceMappings[text[4]] : -1, // temp
-                    Epoch =  int.Parse(text[5]),
-                    KnowledgeCategory = int.Parse(text[6])
+                    AIvalue = int.TryParse(text[1], out int val) ? val : 1,
+                    Modifier = int.TryParse(text[2], out val) ? val : 0,
+                    Prereq1 = Rules.AdvanceMappings.TryGetValue(text[3], out val) ? val : -1,
+                    Prereq2 = Rules.AdvanceMappings.TryGetValue(text[4], out val) ? val : -1,
+                    Epoch = int.TryParse(text[5], out val) ? val : 0,
+                    KnowledgeCategory = int.TryParse(text[6], out val) ? val : 0
                 };
             }).ToArray();
         }
@@ -572,11 +570,11 @@ namespace Civ2engine.IO
             return new Special
             {
                 Name = line[0],
-                MoveCost = int.Parse(line[1]),
-                Defense = int.Parse(line[2]),
-                Food = int.Parse(line[3]),
-                Shields = int.Parse(line[4]),
-                Trade = int.Parse(line[5]),
+                MoveCost = int.TryParse(line[1], out int val) ? val : 1,
+                Defense = int.TryParse(line[2], out val) ? val : 1,
+                Food = int.TryParse(line[3], out val) ? val : 0,
+                Shields = int.TryParse(line[4], out val) ? val : 0,
+                Trade = int.TryParse(line[5], out val) ? val : 0,
             };
         }
     }

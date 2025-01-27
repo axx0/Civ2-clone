@@ -13,7 +13,7 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     if unit.AiRole == AiRoleType.Defend then
         if (currentTile.CityHere) then
     
-            --if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AIRoleType.Defend) <
+            --if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AiRoleType.Defend) <
         -- 2 + currentTile.CityHere.Size / 3)
             return "F"
         end

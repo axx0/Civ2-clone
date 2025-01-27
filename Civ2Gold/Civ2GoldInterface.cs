@@ -17,6 +17,7 @@ using Raylib_CSharp.Images;
 using Raylib_CSharp.Rendering;
 using RaylibUtils;
 using static Model.Menu.CommandIds;
+using System.ComponentModel.Design;
 
 namespace Civ2Gold;
 
@@ -245,16 +246,16 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("&View", Shortcut.None, KeyboardKey.V),
                 new MenuElement("&Move Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.M),
                 new MenuElement("&View Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.V),
-                new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.Z), KeyboardKey.I),
-                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.X), KeyboardKey.O),
+                new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.Z), KeyboardKey.I, commandId: ZoomIn),
+                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.X), KeyboardKey.O, commandId: ZoomOut),
                 new MenuElement("Max Zoom In|Ctrl+Z", new Shortcut(KeyboardKey.Z, ctrl: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: MaxZoomIn),
                 new MenuElement("Standard Zoom|Shift+Z", new Shortcut(KeyboardKey.Z, shift: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: StandardZoom),
                 new MenuElement("Medium Zoom Out|Shift+X", new Shortcut(KeyboardKey.X, shift: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: MediumZoomOut),
                 new MenuElement("Max Zoom Out|Ctrl+X", new Shortcut(KeyboardKey.X, ctrl: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: MaxZoomOut),
                 new MenuElement("Show Map Grid|Ctrl+G", new Shortcut(KeyboardKey.G, ctrl: true),
                     KeyboardKey.Null),
                 new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.Null),

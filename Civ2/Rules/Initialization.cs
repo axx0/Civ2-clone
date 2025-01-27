@@ -5,6 +5,7 @@ using Civ2engine.Enums;
 using Civ2engine.IO;
 using Model;
 using Model.Core;
+using RaylibUtils;
 
 namespace Civ2.Rules;
 
@@ -34,8 +35,8 @@ public static class Initialization
     {
         var ruleSet = civ2Interface.MainApp.ActiveRuleSet;
         ConfigObject.Rules = RulesParser.ParseRules(ruleSet);
-        
-        //TODO: Check is interface already hase initialized images and unload them
+
+        Images.ClearCache();
         TerrainLoader.LoadTerrain(ruleSet, civ2Interface);
         UnitLoader.LoadUnits(ruleSet, civ2Interface);
         CityLoader.LoadCities(ruleSet, civ2Interface.CityImages, civ2Interface);

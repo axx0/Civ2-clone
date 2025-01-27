@@ -127,12 +127,12 @@ namespace Civ2engine
                 var currentTile = unit.CurrentLocation;
                 switch (unit.AiRole)
                 {
-                    case AIroleType.Attack:
+                    case AiRoleType.Attack:
                         break;
-                    case AIroleType.Defend:
+                    case AiRoleType.Defend:
                         if (currentTile.CityHere != null)
                         {
-                            if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AIroleType.Defend) <
+                            if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AiRoleType.Defend) <
                                 2 + currentTile.CityHere.Size / 3)
                             {
                                 if (unit.Order == (int)OrderType.Fortify || unit.Order == (int)OrderType.Fortified)
@@ -151,13 +151,13 @@ namespace Civ2engine
                             
                         }
                         break;
-                    case AIroleType.NavalSuperiority:
+                    case AiRoleType.NavalSuperiority:
                         break;
-                    case AIroleType.AirSuperiority:
+                    case AiRoleType.AirSuperiority:
                         break;
-                    case AIroleType.SeaTransport:
+                    case AiRoleType.SeaTransport:
                         break;
-                    case AIroleType.Settle:
+                    case AiRoleType.Settle:
                         var cityTile = CurrentMap.CityRadius(currentTile)
                             .FirstOrDefault(t => t.CityHere != null);
                         
@@ -189,9 +189,9 @@ namespace Civ2engine
                         }
 
                         break;
-                    case AIroleType.Diplomacy:
+                    case AiRoleType.Diplomacy:
                         break;
-                    case AIroleType.Trade:
+                    case AiRoleType.Trade:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();

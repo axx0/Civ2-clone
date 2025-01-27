@@ -5,7 +5,7 @@
         MapViewChanged = 1,
         MinimapViewChanged = 2,
         ToggleBetweenCurrentEntireMapView = 3,
-        ZoomChanged = 4,
+        ZoomChange = 4,
         CenterView = 5,
         ToggleGrid = 6,
         UpdateMap = 8

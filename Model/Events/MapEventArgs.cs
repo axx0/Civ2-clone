@@ -11,6 +11,7 @@ namespace Civ2engine.Events
         public List<Tile> TilesChanged { get; set; }
 
         public int[] CentrXy, MapStartXy, MapDrawSq;
+        public int Zoom;
 
         public MapEventArgs(MapEventType eventType)
         {

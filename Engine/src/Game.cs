@@ -7,6 +7,7 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Scripting;
 using Civ2engine.Units;
+using Model;
 using Model.Core;
 
 namespace Civ2engine

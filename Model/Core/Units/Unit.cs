@@ -37,13 +37,13 @@ namespace Civ2engine.Units
         public int AttackBase => TypeDefinition.Attack;
         public int DefenseBase => TypeDefinition.Defense;
         
-        public UnitDefinition TypeDefinition { get; init; }
+        public UnitDefinition TypeDefinition { get; set; }
 
         public int FirepowerBase => TypeDefinition.Firepwr;
 
         public int Cost => TypeDefinition.Cost;
         public int ShipHold => TypeDefinition.Hold;
-        public AIroleType AiRole => TypeDefinition.AIrole;
+        public AiRoleType AiRole => TypeDefinition.AIrole;
         public bool TwoSpaceVisibility => TypeDefinition.Flags[14] == '1';
         public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1' || Domain == UnitGas.Air || Domain == UnitGas.Sea;
         public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[12] == '1';
@@ -80,6 +80,7 @@ namespace Civ2engine.Units
         public City? HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
+        public int GoToMapIndex { get; set; } = 0;
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
@@ -148,7 +149,7 @@ namespace Civ2engine.Units
 
         public bool FreeSupport(int[] typesWithFreeSupport)
         {
-            return AiRole is AIroleType.Diplomacy or AIroleType.Trade || (typesWithFreeSupport.Contains(Type));
+            return AiRole is AiRoleType.Diplomacy or AiRoleType.Trade || (typesWithFreeSupport.Contains(Type));
         }
 
         public bool NeedsSupport { get; set; } = true;

@@ -267,6 +267,13 @@ public class MapControl : BaseControl
 
                     break;
                 }
+            case MapEventType.ZoomChange:
+                {
+                    _game.CurrentMap.Zoom = e.Zoom;
+                    _gameScreen.ForceRedraw();
+                    NextView();
+                }
+                break;
             default: break;
         }
     }

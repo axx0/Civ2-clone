@@ -17,7 +17,8 @@ public interface IGame
     Rules Rules { get; }
     Civilization GetActiveCiv { get; }
     Options Options { get; }
-
+    Scenario ScenarioData { get; }
+    
     IPlayer ActivePlayer { get; }
     IScriptEngine Script { get; }
     

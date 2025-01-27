@@ -30,7 +30,7 @@ public class ImprovementOrder : Order
             return SetCommandState(CommandStatus.Invalid);
         }
 
-        if (_player.ActiveUnit.AiRole != AIroleType.Settle)
+        if (_player.ActiveUnit.AiRole != AiRoleType.Settle)
         {
             return SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
         }
