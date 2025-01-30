@@ -28,7 +28,7 @@ public class StandardZoom : IGameCommand
 
     public void Action()
     {
-        if (_gameScreen.Game.CurrentMap.Zoom != 0)
+        if (_gameScreen.Zoom != 0)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = 0 });
     }
 

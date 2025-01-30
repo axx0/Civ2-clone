@@ -28,7 +28,7 @@ public class MaxZoomIn : IGameCommand
 
     public void Action()
     {
-        if (_gameScreen.Game.CurrentMap.Zoom < 8)
+        if (_gameScreen.Zoom < 8)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = 8 });
     }
 

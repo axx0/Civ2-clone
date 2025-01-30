@@ -28,7 +28,7 @@ public class MediumZoomOut : IGameCommand
 
     public void Action()
     {
-        if (_gameScreen.Game.CurrentMap.Zoom != -3)
+        if (_gameScreen.Zoom != -3)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = -3 });
     }
 

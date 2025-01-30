@@ -1043,12 +1043,14 @@ public class Read
 
         // Zoom (=-7(min)...+8(max), 0=std.)
         var zoom = BitConverter.ToInt16(bytes, ofsetO + blockOo + 4);
+        
+        
 
         // Update map data
         for (int mapNo = 0; mapNo < noSecondaryMaps + 1; mapNo++)
         {
             objects.Maps[mapNo].StartingClickedXy = clickedXy;
-            objects.Maps[mapNo].Zoom = zoom;
+            // objects.Maps[mapNo].Zoom = zoom;
         }
         #endregion
         #region Scenario parameters (optional)

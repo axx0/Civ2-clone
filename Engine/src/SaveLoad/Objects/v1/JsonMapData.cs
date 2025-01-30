@@ -16,7 +16,6 @@ public class JsonMapData
         FlatWorld = map.Flat;
         MapRevealed = map.MapRevealed;
         WhichCivsMapShown = map.WhichCivsMapShown;
-        Zoom = map.Zoom;
         ClickedXy = map.StartingClickedXy;
         Xdim = map.XDim;
         Ydim = map.YDim;

@@ -49,7 +49,8 @@ public class CityTileMap : BaseControl
 
         var tileCache = gameScreen.TileCache;
 
-        var dim = tileCache.GetDimensions(city.Location.Map);
+        Map map = city.Location.Map;
+        var dim = tileCache.GetDimensions(map, _cityWindow.CurrentGameScreen.Zoom);
 
         var zeroY = city.Location.Y - 3;
         var (ydim, yrem )= Math.DivRem((int)restoreScale.Y, dim.HalfHeight);
@@ -217,7 +218,8 @@ public class CityTileMap : BaseControl
         var unitsSet = gameScreen.Main.ActiveInterface.UnitImages;
         var tileCache = gameScreen.TileCache;
 
-        var dim = tileCache.GetDimensions(city.Location.Map);
+        Map map = city.Location.Map;
+        var dim = tileCache.GetDimensions(map, gameScreen.Zoom);
         var width = dim.TileWidth * 4;
         var height = dim.TileHeight * 4;
         var xcentre = width / 2 - dim.HalfWidth;

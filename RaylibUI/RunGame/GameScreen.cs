@@ -48,7 +48,12 @@ public class GameScreen : BaseScreen
             }
         }
     }
-
+    
+    public int Zoom     // -7 (min) ... 8 (max), 0=std.
+    {
+        get => _zoom;
+        set => _zoom = Math.Max(Math.Min(value, 8), -7);
+    }
     public TileTextureCache TileCache { get; }
     
     public LocalPlayer Player => _player;
@@ -66,6 +71,7 @@ public class GameScreen : BaseScreen
     private CivDialog _currentPopupDialog;
     private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
     private int _mapToShow;
+    private int _zoom;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 

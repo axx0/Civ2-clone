@@ -34,7 +34,7 @@ internal class MoveAnimation : BaseGameView
         if (prevTileUnit != null)
         {
             ImageUtils.GetUnitTextures(prevTileUnit, activeInterface, gameScreen.Game, viewElementsPrevTileUnits,
-                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight });
+                ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight });
         }
 
         // Get view elements of units on next tile of moving unit
@@ -43,21 +43,21 @@ internal class MoveAnimation : BaseGameView
         if (nextTileUnit != null)
         {
             ImageUtils.GetUnitTextures(nextTileUnit, activeInterface, gameScreen.Game, viewElementsNextTileUnits,
-                new Vector2(unitDrawOffset[0] * map.Xpx, unitDrawOffset[1] * map.Ypx) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight });
+                new Vector2(unitDrawOffset[0] * (4 * (gameScreen.Zoom + 8)), unitDrawOffset[1] * (2 * (gameScreen.Zoom + 8))) + ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight });
         }
 
         // Moving unit view elements
         var viewElementsActiveUnit = new List<IViewElement>();
         ImageUtils.GetUnitTextures(activeUnit, activeInterface, gameScreen.Game, viewElementsActiveUnit,
-            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(map.Zoom) + Dimensions.TileHeight }, true);
+            ActivePos with { Y = ActivePos.Y - activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) + Dimensions.TileHeight }, true);
 
         SetAnimation(viewElementsPrevTileUnits.Concat(viewElementsNextTileUnits).Concat(viewElementsActiveUnit).ToList());
 
         var totalFrames = activeUnit.CurrentLocation.CityHere == null ? noFramesForOneMove : noFramesForOneMove - 1;
         for (var frame = 1; frame < totalFrames; frame++)
         {
-            var offsetVector = new Vector2(unitDrawOffset[0] * map.Xpx / noFramesForOneMove * frame,
-                +unitDrawOffset[1] * map.Ypx / noFramesForOneMove * frame);
+            var offsetVector = new Vector2(unitDrawOffset[0] * (4 * (gameScreen.Zoom + 8)) / noFramesForOneMove * frame,
+                +unitDrawOffset[1] * (2 * (gameScreen.Zoom + 8)) / noFramesForOneMove * frame);
             var animPrevUnit = viewElementsPrevTileUnits.Select(ve => ve.CloneForLocation(ve.Location));
             var animNextUnit = viewElementsNextTileUnits.Select(ve => ve.CloneForLocation(ve.Location));
             var animActiveUnit = viewElementsActiveUnit.Select(ve => ve.CloneForLocation(ve.Location + offsetVector));
