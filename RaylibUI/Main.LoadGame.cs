@@ -13,11 +13,11 @@ namespace RaylibUI
         private Unit _activeUnit;
 
         
-        public void StartGame(IGame game)
+        public void StartGame(IGame game, IDictionary<string, string?>? viewData)
         {
             game.UpdatePlayerViewData();
             
-            _activeScreen = new GameScreen(this, game, Soundman);
+            _activeScreen = new GameScreen(this, game, Soundman, viewData);
 
             if (game.TurnNumber == 0)
             {

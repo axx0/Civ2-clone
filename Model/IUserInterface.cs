@@ -60,7 +60,7 @@ public interface IUserInterface
     
     IMain MainApp { get; }
     int InterfaceIndex { get; set; }
-    IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset);
+    IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset, Dictionary<string, string?> viewData);
     IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory);
     IInterfaceAction InitNewGame(bool quickStart);
     IImageSource? GetImprovementImage(Improvement improvement, int firstWonderIndex);

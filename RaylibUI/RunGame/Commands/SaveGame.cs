@@ -40,17 +40,19 @@ public class SaveGame(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comma
         
         var serializer = new GameSerializer();
         var game = GameScreen.Game;
+            
+        var viewData = new Dictionary<string, string> {{ "Zoom", GameScreen.Zoom.ToString() }};
         if (File.Exists(filePath))
         {
             //TODO: prompt for overwrite?
 
             using var saveFile = File.Open(filePath, FileMode.Truncate);
-            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet);
+            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet, viewData);
         }
         else
         {
             using var saveFile = File.Open(filePath, FileMode.CreateNew);
-            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet);
+            serializer.Write(saveFile, game, GameScreen.Main.ActiveRuleSet, viewData);
         }
 
         GameScreen.ShowPopup("SAVEOK", replaceStrings: new List<string>{ game.ActivePlayer.Civilization.LeaderTitle, game.ActivePlayer.Civilization.LeaderName, game.ActivePlayer.Civilization.TribeName,Path.GetFileName(filePath)}, handleButtonClick: CloseConfirm);

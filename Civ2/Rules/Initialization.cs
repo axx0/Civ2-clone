@@ -13,6 +13,7 @@ public static class Initialization
 {
     private static GameInitializationConfig? _config;
     public static GameInitializationConfig ConfigObject => _config ??= GetConfig() ;
+    public static IDictionary<string,string?>? ViewData { get; set; }
 
     private static GameInitializationConfig GetConfig()
     {

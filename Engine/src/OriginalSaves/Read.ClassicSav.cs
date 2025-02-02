@@ -26,7 +26,8 @@ public class Read
 {
     static string[] scnNames = ["Original", "SciFi", "Fantasy"];
     // READ SAV GAME
-    public static IGame ClassicSav(byte[] bytes, Ruleset activeRuleSet, Rules rules)
+    public static IGame ClassicSav(byte[] bytes, Ruleset activeRuleSet, Rules rules,
+        Dictionary<string, string?> viewData)
     {
         ClassicSaveObjects objects = new();
       
@@ -1044,13 +1045,12 @@ public class Read
         // Zoom (=-7(min)...+8(max), 0=std.)
         var zoom = BitConverter.ToInt16(bytes, ofsetO + blockOo + 4);
         
-        
+        viewData.Add("Zoom", zoom.ToString());
 
         // Update map data
         for (int mapNo = 0; mapNo < noSecondaryMaps + 1; mapNo++)
         {
             objects.Maps[mapNo].StartingClickedXy = clickedXy;
-            // objects.Maps[mapNo].Zoom = zoom;
         }
         #endregion
         #region Scenario parameters (optional)

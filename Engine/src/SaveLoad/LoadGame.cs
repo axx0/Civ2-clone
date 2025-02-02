@@ -49,10 +49,11 @@ public static class LoadGame
         var activeInterface = mainApp.SetActiveRulesetFromFile(root, savDirectory, extendedMetadata);
         var rules = RulesParser.ParseRules(activeInterface.MainApp.ActiveRuleSet);
 
+        var viewData = new Dictionary<string, string?>();
         IGame game;
         if (classicSave)
         {
-            game = Read.ClassicSav(fileData, activeInterface.MainApp.ActiveRuleSet, rules);
+            game = Read.ClassicSav(fileData, activeInterface.MainApp.ActiveRuleSet, rules, viewData);
 
             if (string.Equals(Path.GetExtension(path), ".scn", StringComparison.OrdinalIgnoreCase))
             {
@@ -62,9 +63,17 @@ public static class LoadGame
         }
         else
         {
+            
+            if (jsonDocument.RootElement.TryGetProperty("viewData", out var viewDataElement))
+            {
+                foreach (var prop in viewDataElement.EnumerateObject())
+                {
+                    viewData[prop.Name] = prop.Value.GetString();
+                }
+            }
             game = GameSerializer.Read(jsonDocument.RootElement.GetProperty("game"), activeInterface.MainApp.ActiveRuleSet, rules);
         }
 
-        return activeInterface.HandleLoadGame(game, rules, activeInterface.MainApp.ActiveRuleSet);
+        return activeInterface.HandleLoadGame(game, rules, activeInterface.MainApp.ActiveRuleSet, viewData);
     }
 }

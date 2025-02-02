@@ -73,7 +73,7 @@ public class EnterName : BaseDialogHandler
             
             civ2Interface.ScenTitleImage = null;
             Initialization.Start(game);
-            return new StartGame(Initialization.GameInstance);
+            return new StartGame(Initialization.GameInstance, Initialization.ViewData);
         }
         else
         {

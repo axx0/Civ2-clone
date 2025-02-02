@@ -49,7 +49,6 @@ public class JsonMapData
     public bool FlatWorld { get; set; }
     public bool MapRevealed { get; set; }
     public int WhichCivsMapShown { get; set; }
-    public int Zoom { get; set; }
     public int[] ClickedXy { get; set; }
     public int Xdim { get; set; }
     public int Ydim { get; set; }

@@ -39,6 +39,6 @@ public class Init : BaseDialogHandler
 
     public override IInterfaceAction HandleDialogResult(DialogResult result, Dictionary<string, ICivDialogHandler> civDialogHandlers, Civ2Interface civ2Interface)
     {
-        return new StartGame(Initialization.GameInstance);
+        return new StartGame(Initialization.GameInstance, Initialization.ViewData);
     }
 }

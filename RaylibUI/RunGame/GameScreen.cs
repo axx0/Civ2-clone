@@ -75,13 +75,18 @@ public class GameScreen : BaseScreen
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
 
-    public GameScreen(Main main, IGame game, Sound soundman): base(main)
+    public GameScreen(Main main, IGame game, Sound soundman, IDictionary<string, string?>? viewData): base(main)
     {
         TileCache = new TileTextureCache(this);
         Main = main;
         Game = game;
         Soundman = soundman;
-        
+
+        if (viewData != null && viewData.TryGetValue("Zoom", out var value) && int.TryParse(value, out var zoom))
+        {
+            //Use the property to ensure range validation is run
+            Zoom = zoom;
+        }
         
         Moving = new MovingPieces(this);
         ViewPiece = new ViewPiece(this);

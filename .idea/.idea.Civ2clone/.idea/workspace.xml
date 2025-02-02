@@ -15,26 +15,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="56446136-8c41-46ec-83c1-858b387d944b" name="Changes" comment="Merge latest axx master into ai branch">
+    <list default="true" id="56446136-8c41-46ec-83c1-858b387d944b" name="Changes" comment="Move Zoom to GameScreen">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/LoadOk.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/EnterName.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/EnterName.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Dialogs/NewGame/Init.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Rules/Initialization.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Map.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomIn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomIn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomOut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomOut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MediumZoomOut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MediumZoomOut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/StandardZoom.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/StandardZoom.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ZoomIn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ZoomIn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ZoomOut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ZoomOut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityTileMap.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/TileTextureCache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/MoveAnimation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IUserInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IUserInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/InterfaceActions/StartGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/InterfaceActions/StartGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Initialization/MainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/SaveGame.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,6 +86,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ad82f9910d5c82d76b445db10584a60305639dcad2533e08e6c47f85e3b6d83/MethodBaseInvoker.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6780d13016c376c4491c5618b257d84da7eacf747ed2719783e775546b79b/ThrowHelper.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7f8bab2ddd1a86312228e89db53ca668c6a6584aaf9c02761dcd3d728f5fc3e/Number.Parsing.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e747192abb38e2df82cbdb37e721567726f559914a7b81f8b26ba537de632f4/List.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/.vscode/launch.json" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Civ2Interface.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Civ2/Menu/MenuLoader.cs" root0="FORCE_HIGHLIGHTING" />
@@ -101,7 +101,9 @@
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/OriginalSaves/ClassicSaveObjects.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/SaveLoad/GameSerializer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/SaveLoad/ILoadedGameObjects.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Engine/src/SaveLoad/LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/Settings.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" root0="FORCE_HIGHLIGHTING" />
@@ -118,6 +120,11 @@
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/StatusPanel.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Constants/AIroleType.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/revans/personal/Civ2-clone/Model/Constants/AIroleType.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/Model/InterfaceActions/StartGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/Main.LoadGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/Commands/SaveGame.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameControls/Mapping/Views/AttackAnimation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/revans/personal/Civ2-clone/RaylibUI/RunGame/GameScreen.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -134,7 +141,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Project.RaylibUI.executor": "Run",
+    ".NET Project.RaylibUI.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "XThreadsFramesViewSplitterKey": "0.3890625",
@@ -196,7 +203,7 @@
       <workItem from="1734316881021" duration="7595000" />
       <workItem from="1734483367715" duration="6882000" />
       <workItem from="1734901871624" duration="6081000" />
-      <workItem from="1734943897509" duration="70240000" />
+      <workItem from="1734943897509" duration="78974000" />
     </task>
     <task id="LOCAL-00001" summary="Basic Save and Load">
       <option name="closed" value="true" />
@@ -270,7 +277,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737971475601</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Move Zoom to GameScreen">
+      <option name="closed" value="true" />
+      <created>1738197456633</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1738197456633</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -316,7 +331,8 @@
     <MESSAGE value="Fix some edge cases around premade world" />
     <MESSAGE value="Start of AI rework&#10;Now runs from lua script still doesn't do much useful" />
     <MESSAGE value="Merge latest axx master into ai branch" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge latest axx master into ai branch" />
+    <MESSAGE value="Move Zoom to GameScreen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Move Zoom to GameScreen" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
