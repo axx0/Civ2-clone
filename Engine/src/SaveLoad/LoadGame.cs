@@ -16,7 +16,11 @@ public static class LoadGame
     {
         var savDirectory = Path.GetDirectoryName(path);
         var root = Settings.SearchPaths.FirstOrDefault(p => savDirectory.StartsWith(p)) ?? Settings.SearchPaths[0];
+
+        //TODO: File.ReadAllBytes will throw a FileNotFoundException if this file doesn't exist.
+        //So the fileData.Length check is not checking the right thing and the throw statement at the end is not quite right here.
         var fileData = File.ReadAllBytes(path);
+
         if (fileData.Length > 0)
         {
             if (fileData[0] == 67) // Classic saves start with the word CIVILIZE so if we see a C treat it as old 
