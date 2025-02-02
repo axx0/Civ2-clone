@@ -46,8 +46,8 @@ public abstract class BaseGameView : IGameView
         ViewWidth = viewWidth;
         ViewHeight = viewHeight;
 
-        Dimensions = _gameScreen.TileCache.GetDimensions(location.Map);
-        
+        var map = location.Map;
+        Dimensions = _gameScreen.TileCache.GetDimensions(map, gameScreen.Zoom);
         
         var activeInterface = _gameScreen.Main.ActiveInterface;
         
@@ -85,8 +85,7 @@ public abstract class BaseGameView : IGameView
             var imageWidth = ViewWidth;
             var imageHeight = ViewHeight;
             var image = Image.GenColor(imageWidth, imageHeight, Color.Black);
-            var map = location.Map;
-            var dim = _gameScreen.TileCache.GetDimensions(map);
+            var dim = _gameScreen.TileCache.GetDimensions(map, gameScreen.Zoom);
             var ypos = -_offsets.Y;
             var maxWidth = map.XDim * dim.TileWidth;
 
@@ -125,7 +124,7 @@ public abstract class BaseGameView : IGameView
                             if (tile.IsVisible(civilizationId) || map.MapRevealed)
                             {
                                 var tileDetails = _gameScreen.TileCache.GetTileDetails(tile, civilizationId);
-                                if (map.Zoom == 0)
+                                if (gameScreen.Zoom == 0)
                                 {
                                     image.Draw(tileDetails.Image, MapImage.TileRec,
                                         new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
@@ -136,15 +135,15 @@ public abstract class BaseGameView : IGameView
                                     var resizedImg = tileDetails.Image.Copy();
                                     if (Settings.TextureFilter == 0)
                                     {
-                                        resizedImg.ResizeNN(resizedImg.Width.ZoomScale(map.Zoom),
-                                            resizedImg.Height.ZoomScale(map.Zoom));
+                                        resizedImg.ResizeNN(resizedImg.Width.ZoomScale(gameScreen.Zoom),
+                                            resizedImg.Height.ZoomScale(gameScreen.Zoom));
                                     }
                                     else
                                     {
-                                        resizedImg.Resize(resizedImg.Width.ZoomScale(map.Zoom),
-                                            resizedImg.Height.ZoomScale(map.Zoom));
+                                        resizedImg.Resize(resizedImg.Width.ZoomScale(gameScreen.Zoom),
+                                            resizedImg.Height.ZoomScale(gameScreen.Zoom));
                                     }
-                                    image.Draw(resizedImg, MapImage.TileRec.ZoomScale(map.Zoom),
+                                    image.Draw(resizedImg, MapImage.TileRec.ZoomScale(gameScreen.Zoom),
                                         new Rectangle(xpos, ypos, dim.TileWidth, dim.TileHeight),
                                         Color.White);
                                 }
@@ -206,7 +205,7 @@ public abstract class BaseGameView : IGameView
                     tile.CityHere, playerKnowledge.CityHere.Size);
             
             var cityImage = cities.Sets[cityStyleIndex][sizeIncrement];
-            var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - TextureCache.GetImage(cityImage.Image).Height.ZoomScale(tile.Map.Zoom) };
+            var cityPos = posVector with{ Y = posVector.Y + Dimensions.TileHeight - TextureCache.GetImage(cityImage.Image).Height.ZoomScale(gameScreen.Zoom) };
             elements.Add(new CityData(
                 color: activeInterface.PlayerColours[playerKnowledge.CityHere.OwnerId],
                 name: playerKnowledge.CityHere.Name,
@@ -234,7 +233,7 @@ public abstract class BaseGameView : IGameView
                     var impImage = ImageUtils.GetImpImage(activeInterface, unitImp.UnitImage,
                         tile.Owner);
                     elements.Add(new TextureElement(
-                        texture: impImage, location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(tile.Map.Zoom) }, tile: tile, isTerrain: true));
+                        texture: impImage, location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(gameScreen.Zoom) }, tile: tile, isTerrain: true));
                 }
                 else
                 {
@@ -242,7 +241,7 @@ public abstract class BaseGameView : IGameView
                         tile.Owner);
                     elements.Add(new TextureElement(
                         texture: impImage,
-                        location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(tile.Map.Zoom) },
+                        location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(gameScreen.Zoom) },
                         tile: tile, isTerrain: true));
 
                     
@@ -250,7 +249,7 @@ public abstract class BaseGameView : IGameView
                         posVector with
                         {
                             Y = posVector.Y + Dimensions.TileHeight -
-                                activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(tile.Map.Zoom)
+                                activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)
                         });
                 }
             }
@@ -260,7 +259,7 @@ public abstract class BaseGameView : IGameView
                     posVector with
                     {
                         Y = posVector.Y + Dimensions.TileHeight -
-                            activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(tile.Map.Zoom)
+                            activeInterface.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom)
                     });
                 if (tileDetails.ForegroundElement != null)
                 {
@@ -268,7 +267,7 @@ public abstract class BaseGameView : IGameView
                         tileDetails.ForegroundElement.Image, tile.Owner);
                     elements.Add(new TextureElement(
                         texture: impImage,
-                        location: posVector with{ Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(tile.Map.Zoom)
+                        location: posVector with{ Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(gameScreen.Zoom)
                         }, tile: tile, isTerrain: true));
                 }
             }
@@ -279,7 +278,7 @@ public abstract class BaseGameView : IGameView
                 tileDetails.ForegroundElement.Image, tile.Owner);
             elements.Add(new TextureElement(
                 texture: impImage,
-                location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(tile.Map.Zoom) },
+                location: posVector with { Y = posVector.Y + Dimensions.TileHeight - impImage.Height.ZoomScale(gameScreen.Zoom) },
                 tile: tile, isTerrain: true));
         }
     }

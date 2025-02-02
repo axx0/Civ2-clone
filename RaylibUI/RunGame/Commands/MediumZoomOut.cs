@@ -11,12 +11,10 @@ namespace RaylibUI.RunGame.Commands;
 public class MediumZoomOut : IGameCommand
 {
     private readonly GameScreen _gameScreen;
-    private Map _map;
 
     public MediumZoomOut(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
-        _map = gameScreen.Game.CurrentMap;
     }
 
     public string Id => CommandIds.MediumZoomOut;
@@ -30,7 +28,7 @@ public class MediumZoomOut : IGameCommand
 
     public void Action()
     {
-        if (_map.Zoom != -3)
+        if (_gameScreen.Zoom != -3)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = -3 });
     }
 

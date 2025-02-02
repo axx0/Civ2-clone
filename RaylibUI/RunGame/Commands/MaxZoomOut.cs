@@ -11,12 +11,10 @@ namespace RaylibUI.RunGame.Commands;
 public class MaxZoomOut : IGameCommand
 {
     private readonly GameScreen _gameScreen;
-    private Map _map;
 
     public MaxZoomOut(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
-        _map = gameScreen.Game.CurrentMap;
     }
 
     public string Id => CommandIds.MaxZoomOut;
@@ -30,7 +28,7 @@ public class MaxZoomOut : IGameCommand
 
     public void Action()
     {
-        if (_map.Zoom > -7)
+        if (_gameScreen.Zoom > -7)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = -7 });
     }
 

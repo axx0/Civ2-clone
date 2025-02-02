@@ -45,16 +45,8 @@ namespace Civ2engine.MapObjects
                 yC2]; // Accepts tile coords in civ2-style and returns the correct Tile (you can index beyond E/W borders for drawing round world)
         public bool IsTileVisibleC2(int xC2, int yC2, int civ) => MapRevealed || Tile[( (xC2 + XDimMax) % XDimMax - yC2 % 2 ) / 2, yC2].IsVisible(civ);   // Returns V
 
-        private int _zoom;
         private int _xDim;
-
-        public int Zoom     // -7 (min) ... 8 (max), 0=std.
-        {
-            get => _zoom;
-            set => _zoom = Math.Max(Math.Min(value, 8), -7);
-        }
-        public int Xpx => 4 * (_zoom + 8);    // Length of 1 map square in X
-        public int Ypx => 2 * (_zoom + 8);    // Length of 1 map square in Y
+        
         public int[] StartingClickedXy { get; set; }    // Last tile clicked with your mouse on the map. Gives info where the map should be centered (further calculated in MapPanel).
         public List<IslandDetails> Islands { get; set; }
         public double ScaleFactor => XDim * YDim / 4000d;

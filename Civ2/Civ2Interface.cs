@@ -422,11 +422,12 @@ public abstract class Civ2Interface : IUserInterface
         return DialogHandlers[ScenarioLoadedDialog.Title].Show(this);
     }
 
-    public IInterfaceAction HandleLoadGame(IGame game, Civ2engine.Rules rules, Ruleset ruleset)
+    public IInterfaceAction HandleLoadGame(IGame game, Civ2engine.Rules rules, Ruleset ruleset,
+        Dictionary<string, string?> viewData)
     {
         ExpectedMaps = game.NoMaps;
         Initialization.LoadGraphicsAssets(this);
-
+        Initialization.ViewData = viewData;
         Initialization.Start(game);
         return DialogHandlers[LoadOk.Title].Show(this);
     }

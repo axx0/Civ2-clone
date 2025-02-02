@@ -48,7 +48,6 @@ public class MapControl : BaseControl
 
         gameScreen.OnMapEvent += MapEventTriggered;
         _game.OnUnitEvent += UnitEventTriggered;
-        _game.OnPlayerEvent += PlayerEventTriggered;
         Click += OnClick;
         MouseDown += OnMouseDown;
 
@@ -90,18 +89,6 @@ public class MapControl : BaseControl
                 //UpdateMap();
                 break;
             }
-        }
-    }
-
-    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
-    {
-        switch (e.EventType)
-        {
-            case PlayerEventType.NewTurn:
-                {
-                    break;
-                }
-            default: break;
         }
     }
 
@@ -175,7 +162,8 @@ public class MapControl : BaseControl
             return null;
         }
 
-        var dim = _gameScreen.TileCache.GetDimensions(_game.CurrentMap);
+        Map map = _game.CurrentMap;
+        var dim = _gameScreen.TileCache.GetDimensions(map, _gameScreen.Zoom);
         var clickedTilePosition = clickPosition - new Vector2(_padding.Left + _padding.Right, _padding.Top) + _currentView.Offsets;
         var y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
         var odd = y % 2 == 1;
@@ -282,7 +270,7 @@ public class MapControl : BaseControl
                 }
             case MapEventType.ZoomChange:
                 {
-                    _game.CurrentMap.Zoom = e.Zoom;
+                    _gameScreen.Zoom = e.Zoom;
                     _gameScreen.ForceRedraw();
                     NextView();
                 }
@@ -316,7 +304,7 @@ public class MapControl : BaseControl
 
         var cityDetails = new List<CityData>();
 
-        var zoom = _game.CurrentMap.Zoom;
+        var zoom = _gameScreen.Zoom;
         foreach (var element in _currentView.Elements)
         {
             if (element is CityData data)

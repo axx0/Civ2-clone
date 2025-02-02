@@ -4,6 +4,7 @@ using Civ2engine.Enums;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Terrains;
+using Model.Constants;
 using Model.Core.Cities;
 
 namespace Civ2engine.Units
@@ -42,7 +43,7 @@ namespace Civ2engine.Units
 
         public int Cost => TypeDefinition.Cost;
         public int ShipHold => TypeDefinition.Hold;
-        public AIroleType AIrole => TypeDefinition.AIrole;
+        public AiRoleType AiRole => TypeDefinition.AIrole;
         public bool TwoSpaceVisibility => TypeDefinition.Flags[14] == '1';
         public bool IgnoreZonesOfControl => TypeDefinition.Flags[13] == '1' || Domain == UnitGas.Air || Domain == UnitGas.Sea;
         public bool CanMakeAmphibiousAssaults => TypeDefinition.Flags[12] == '1';
@@ -79,21 +80,14 @@ namespace Civ2engine.Units
         public City? HomeCity { get; set; }
         public int GoToX { get; set; }
         public int GoToY { get; set; }
-        public int GoToMapIndex { get; set; } = 0;
         public int LinkOtherUnitsOnTop { get; set; }
         public int LinkOtherUnitsUnder { get; set; }
         public int Counter { get; set; }
         public int X { get; set; }
-        public int Xreal => (X - Y % 2) / 2;
         public int Y { get; set; }
-        public int[] Xy => new int[] { X, Y };
         public int MapIndex { get; set; }
-        
-        public int MovementCounter { get; set; }
 
         public int[] PrevXy { get; set; }   // XY position of unit before it moved
-        public int[] PrevXYpx => new int[] { PrevXy[0] * CurrentLocation.Map.Xpx, PrevXy[1] * CurrentLocation.Map.Ypx };
-
 
         public bool TurnEnded => MovePoints <= 0 ||
                                  Order is (int)OrderType.Fortified or (int)OrderType.Transform or (int)OrderType.Fortify or
@@ -107,12 +101,7 @@ namespace Civ2engine.Units
         public void SkipTurn()
         {
             MovePointsLost = MaxMovePoints;
-            PrevXy = new[] { X, Y };
-        }
-
-        public void Fortify()
-        {
-            Order = (int)OrderType.Fortify;
+            PrevXy = [X, Y];
         }
 
         public void Sleep()
@@ -120,17 +109,14 @@ namespace Civ2engine.Units
             Order = (int)OrderType.Sleep;
         }
 
-        public bool IsInCity => CurrentLocation is {CityHere: not null };
         public bool IsInStack => CurrentLocation is { UnitsHere.Count: > 1 };
-        public bool IsLastInStack => CurrentLocation != null && CurrentLocation.UnitsHere.Last() == this;
-        
+
         public Unit? InShip { get; set; }
 
         public string AttackSound => TypeDefinition.AttackSound;
-        public City CityWithThisUnit => CurrentLocation != null ? CurrentLocation.CityHere: null;
         public List<Unit> CarriedUnits { get; } = new();
 
-        public Tile? CurrentLocation
+        public Tile CurrentLocation
         {
             get => _currentLocation;
             set
@@ -148,7 +134,7 @@ namespace Civ2engine.Units
 
         public bool FreeSupport(int[] typesWithFreeSupport)
         {
-            return AIrole is AIroleType.Diplomacy or AIroleType.Trade || (typesWithFreeSupport.Contains(Type));
+            return AiRole is AiRoleType.Diplomacy or AiRoleType.Trade || (typesWithFreeSupport.Contains(Type));
         }
 
         public bool NeedsSupport { get; set; } = true;

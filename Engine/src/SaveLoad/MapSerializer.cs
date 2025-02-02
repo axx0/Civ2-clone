@@ -26,7 +26,6 @@ public class MapSerializer
             {
                 MapRevealed = mapData.MapRevealed,
                 WhichCivsMapShown = mapData.WhichCivsMapShown,
-                Zoom = mapData.Zoom,
                 StartingClickedXy = mapData.ClickedXy,
                 XDim = mapData.Xdim,
                 YDim = mapData.Ydim,

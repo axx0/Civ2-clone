@@ -55,24 +55,24 @@ public class TileTextureCache
         return mapIndex;
     }
 
-    public MapDimensions GetDimensions(Map map)
+    public MapDimensions GetDimensions(Map map, int zoom)
     {
-        var mapIndex = _seenMaps.IndexOf(map.MapIndex);
-        if (mapIndex == -1)
+        var cacheIndex = _seenMaps.IndexOf(map.MapIndex);
+        if (cacheIndex == -1)
         {
-            mapIndex = SetupMap(map);
+            cacheIndex = SetupMap(map);
         }
 
         //return _dimensions[mapIndex];
         return new MapDimensions
         {
-            TotalWidth = _dimensions[mapIndex].TotalWidth.ZoomScale(map.Zoom),
-            TotalHeight = _dimensions[mapIndex].TotalHeight.ZoomScale(map.Zoom),
-            HalfHeight = _dimensions[mapIndex].HalfHeight.ZoomScale(map.Zoom),
-            TileHeight = _dimensions[mapIndex].TileHeight.ZoomScale(map.Zoom),
-            TileWidth = _dimensions[mapIndex].TileWidth.ZoomScale(map.Zoom),
-            HalfWidth = _dimensions[mapIndex].HalfWidth.ZoomScale(map.Zoom),
-            DiagonalCut = _dimensions[mapIndex].DiagonalCut.ZoomScale(map.Zoom).ZoomScale(map.Zoom),
+            TotalWidth = _dimensions[cacheIndex].TotalWidth.ZoomScale(zoom),
+            TotalHeight = _dimensions[cacheIndex].TotalHeight.ZoomScale(zoom),
+            HalfHeight = _dimensions[cacheIndex].HalfHeight.ZoomScale(zoom),
+            TileHeight = _dimensions[cacheIndex].TileHeight.ZoomScale(zoom),
+            TileWidth = _dimensions[cacheIndex].TileWidth.ZoomScale(zoom),
+            HalfWidth = _dimensions[cacheIndex].HalfWidth.ZoomScale(zoom),
+            DiagonalCut = _dimensions[cacheIndex].DiagonalCut.ZoomScale(zoom).ZoomScale(zoom),
         };
     }
 

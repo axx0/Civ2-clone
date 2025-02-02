@@ -11,12 +11,10 @@ namespace RaylibUI.RunGame.Commands;
 public class ZoomIn : IGameCommand
 {
     private readonly GameScreen _gameScreen;
-    private Map _map;
 
     public ZoomIn(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
-        _map = gameScreen.Game.CurrentMap;
     }
 
     public string Id => CommandIds.ZoomIn;
@@ -30,8 +28,8 @@ public class ZoomIn : IGameCommand
 
     public void Action()
     {
-        if (_map.Zoom < 8)
-            _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _map.Zoom + 1 });
+        if (_gameScreen.Zoom < 8)
+            _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _gameScreen.Zoom + 1 });
     }
 
     public MenuCommand? Command { get; set; }

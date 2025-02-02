@@ -1,15 +1,8 @@
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Events;
-using Civ2engine.Terrains;
-using Civ2;
-using Civ2Gold;
 using Model;
-using Model.Interface;
-using RaylibUI.BasicTypes;
 using RaylibUI.BasicTypes.Controls;
-using RaylibUI.Controls;
-using RaylibUI.Forms;
 using System.Globalization;
 using Model.Core;
 using System.Numerics;
@@ -39,7 +32,6 @@ public class StatusPanel : BaseControl
         _headerLabel = new HeaderLabel(gameScreen, _active.Look, Labels.For(LabelIndex.Status), fontSize: _active.Look.HeaderLabelFontSizeNormal);
         _padding = _active.GetPadding(_headerLabel.TextSize.Y, false);
         Click += OnClick;
-        _game.OnPlayerEvent += PlayerEventTriggered;
     }
 
     public void Update()
@@ -149,19 +141,6 @@ public class StatusPanel : BaseControl
         // AI turn civ indicator
         if (_game.GetPlayerCiv != _game.GetActiveCiv)
             Graphics.DrawRectangleRec(new Rectangle(_unitPanelBounds.X + _unitPanelBounds.Width - 8, _unitPanelBounds.Y + _unitPanelBounds.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
-    }
-
-    private void PlayerEventTriggered(object sender, PlayerEventArgs e)
-    {
-        switch (e.EventType)
-        {
-            case PlayerEventType.NewTurn:
-                {
-                    Update();
-                    break;
-                }
-            default: break;
-        }
     }
 }
 

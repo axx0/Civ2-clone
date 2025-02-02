@@ -12,7 +12,7 @@ namespace Civ2engine.MapObjects
     public static class TileExtensions
     {
         public static void RemoveImprovement(this Tile tile, TerrainImprovement improvement, int levelToRemove,
-            List<int> visibleTo)
+            List<int>? visibleTo)
         {
             var built = tile.Improvements.FirstOrDefault(i => i.Improvement == improvement.Id);
 
@@ -42,7 +42,7 @@ namespace Civ2engine.MapObjects
             }
         }
 
-        public static List<int> GetCivsVisibleTo(this Tile tile, IGame game)
+        public static List<int>? GetCivsVisibleTo(this Tile tile, IGame game)
         {
             if (tile.Map.MapRevealed)
             {
@@ -67,7 +67,7 @@ namespace Civ2engine.MapObjects
 
         public static void AddImprovement(this Tile tile, TerrainImprovement improvement, AllowedTerrain terrain,
             int levelToBuild,
-            Terrain[] terrains, IList<int> civsVisibleTo)
+            Terrain[] terrains, IList<int>? civsVisibleTo)
         {
             var improvements = tile.Improvements;
             if (improvement.ExclusiveGroup > 0)
@@ -75,19 +75,20 @@ namespace Civ2engine.MapObjects
                 var previous = improvements
                     .Where(i => i.Improvement != improvement.Id && i.Group == improvement.ExclusiveGroup).ToList();
 
-                previous.ForEach(i =>
+                previous.ForEach(imp =>
                 {
-                    tile.EffectsList.RemoveAll(e => e.Source == i.Improvement);
-                    improvements.Remove(i);
-                });
-                foreach (var civId in civsVisibleTo)
-                {
-                    var seenImprovement = tile.PlayerKnowledge![civId]!.Improvements;
-                    foreach (var imp in previous)
+                    tile.EffectsList.RemoveAll(e => e.Source == imp.Improvement);
+                    improvements.Remove(imp);
+                    
+                    if (civsVisibleTo == null) return;
+                    
+                    foreach (var civId in civsVisibleTo)
                     {
-                        seenImprovement.Remove(imp);
+                        var seenImprovement = tile.PlayerKnowledge?[civId]?.Improvements;
+
+                        seenImprovement?.RemoveAll(si => si.Improvement == imp.Improvement);
                     }
-                }
+                });
             }
 
             var transformEffect = terrain.Effects?.FirstOrDefault(e => e.Target == ImprovementConstants.Transform);

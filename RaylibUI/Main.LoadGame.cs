@@ -13,16 +13,20 @@ namespace RaylibUI
         private Unit _activeUnit;
 
         
-        public void StartGame(IGame game)
+        public void StartGame(IGame game, IDictionary<string, string?>? viewData)
         {
             game.UpdatePlayerViewData();
             
-            _activeScreen = new GameScreen(this, game, Soundman);
+            _activeScreen = new GameScreen(this, game, Soundman, viewData);
 
-            // For scenarios start with first civ
-            if (game.ActivePlayer.Civilization.PlayerType == PlayerType.Ai)
+            if (game.TurnNumber == 0)
             {
-                game.AiTurn();
+                game.StartNextTurn();
+            }
+            else
+            {
+                // If we're not on turn one start with active player
+                game.StartPlayerTurn(game.ActivePlayer);
             }
         }
 

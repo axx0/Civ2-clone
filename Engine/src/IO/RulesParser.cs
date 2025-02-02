@@ -8,6 +8,7 @@ using Civ2engine.Advances;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
+using Model.Constants;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
@@ -379,12 +380,12 @@ namespace Civ2engine.IO
                     Firepwr = int.TryParse(text[8].Replace("f", string.Empty), out value) ? value : 0,
                     Cost = int.TryParse(text[9], out value) ? value : 0,
                     Hold = int.TryParse(text[10], out value) ? value : 0,
-                    AIrole = (AIroleType)(int.TryParse(text[11], out value) ? value : 0),
+                    AIrole = (AiRoleType)(int.TryParse(text[11], out value) ? value : 0),
                     Prereq = Rules.AdvanceMappings.ContainsKey(text[12]) ? Rules.AdvanceMappings[text[12]] : -1,    // temp
                     Flags = text[13],
                     AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
-                unit.IsSettler = unit.AIrole == AIroleType.Settle;
+                unit.IsSettler = unit.AIrole == AiRoleType.Settle;
                 
                 if (!unit.IsSettler) return unit;
                 

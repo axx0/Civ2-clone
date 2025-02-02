@@ -27,111 +27,117 @@ namespace Civ2engine
             //Look for units on this square or neighbours of this square
             
             var nextUnit = NextUnit(player, units);
-
-            ActiveUnit = nextUnit;
-
+            
             // End turn if no units awaiting orders
             if (nextUnit == null)
             {
                 var anyUnitsMoved = units.Any(u => u.MovePointsLost > 0);
                 if ((!anyUnitsMoved || Options.AlwaysWaitAtEndOfTurn))
                 {
-                    Players[_activeCiv.Id].WaitingAtEndOfTurn();
-                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.WaitingAtEndOfTurn, _activeCiv.Id));
+                    Players[_activeCiv.Id].WaitingAtEndOfTurn(this);
                 }
                 else
                 {
                     if (ProcessEndOfTurn())
                     {
                         ChoseNextCiv();
-                        return;
                     }
-                }
-            }
-        }
-
-        private Unit NextUnit(IPlayer player, List<Unit> units)
-        {
-            Unit nextUnit;
-            if (player.WaitingList is { Count: > 0 })
-            {
-                nextUnit =
-                    ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u)) ??
-                    CurrentMap
-                        .Neighbours(ActiveTile)
-                        .SelectMany(
-                            t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders && !player.WaitingList.Contains(u)))
-                        .FirstOrDefault();
-
-                nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u));
-                if (nextUnit == null && player.WaitingList.Count > 0)
-                {
-                    nextUnit = player.WaitingList[0];
-                    player.WaitingList.Clear();
                 }
             }
             else
             {
-                nextUnit =
-                    ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ??
+                player.SetUnitActive(nextUnit, true);
+                // If the player immediately moved the unit it might be already dead or moved so choose again
+                if (nextUnit.Dead || nextUnit.MovePointsLost == nextUnit.MaxMovePoints)
+                {
+                    ChooseNextUnit();
+                }
+            }
+        }
+
+        private Unit? NextUnit(IPlayer player, List<Unit> units)
+        {
+            if (player.WaitingList is { Count: > 0 })
+            {
+                return
+                    ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u)) ??
                     CurrentMap
                         .Neighbours(ActiveTile)
                         .SelectMany(
-                            t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
-                        .FirstOrDefault();
+                            t => t.UnitsHere.Where(u =>
+                                u.Owner == _activeCiv && u.AwaitingOrders && !player.WaitingList.Contains(u)))
+                        .FirstOrDefault() ??
+                    units.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u)) ??
+                    ResetWaiting(player);
 
-                nextUnit ??= units.FirstOrDefault(u => u.AwaitingOrders);
             }
 
-            return nextUnit;
+            return ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ??
+                   CurrentMap
+                       .Neighbours(ActiveTile)
+                       .SelectMany(
+                           t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
+                       .FirstOrDefault() ?? units.FirstOrDefault(u => u.AwaitingOrders);
+
+        }
+
+        private Unit ResetWaiting(IPlayer player)
+        {
+            var unit = player.WaitingList[0];
+            player.WaitingList.Clear();
+            return unit;
         }
 
         public bool ProcessEndOfTurn()
         {
-            foreach (var unit in _activeCiv.Units.Where(u =>
-                         u.MovePoints > 0 && !_doNothingOrders.Contains(u.Order)))
+            var player = Players[_activeCiv.Id];
+            foreach (var unit in _activeCiv.Units)
             {
-                switch ((OrderType)unit.Order)
+                if (unit is { MovePoints: > 0, CurrentLocation: not null } && !_doNothingOrders.Contains(unit.Order))
                 {
-                    case OrderType.Fortify:
-                        unit.Order = (int)OrderType.Fortified;
-                        unit.MovePointsLost = unit.MovePoints;
-                        break;
-                    case OrderType.GoTo:
-                        if (unit.CurrentLocation.Map.IsValidTileC2(unit.GoToX, unit.GoToY))
-                        {
-                            var tile = unit.CurrentLocation.Map.TileC2(unit.GoToX, unit.GoToY);
-                            var path = Path.CalculatePathBetween(this, unit.CurrentLocation, tile, unit.Domain,
-                                unit.MaxMovePoints, unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
-                            path?.Follow(this, unit);
-                        }
-
-                        if (unit.MovePoints >= 0)
-                        {
-                            ActiveUnit = unit;
-                            return false;
-                        }
-                        break;
-                    default:
+                    switch ((OrderType)unit.Order)
                     {
-                        unit.ProcessOrder();
-                    
-                        if (TerrainImprovements.ContainsKey(unit.Building))
-                        {
-                            ActiveUnit = this.CheckConstruction(unit.CurrentLocation, TerrainImprovements[unit.Building])
-                                .FirstOrDefault(u => u.MovePoints > 0);
-                            if (ActiveUnit != null)
+                        case OrderType.Fortify:
+                            unit.Order = (int)OrderType.Fortified;
+                            unit.MovePointsLost = unit.MovePoints;
+                            break;
+                        case OrderType.GoTo:
+                            if (unit.CurrentLocation.Map.IsValidTileC2(unit.GoToX, unit.GoToY))
                             {
+                                var tile = unit.CurrentLocation.Map.TileC2(unit.GoToX, unit.GoToY);
+                                var path = Path.CalculatePathBetween(this, unit.CurrentLocation, tile, unit.Domain, unit.MaxMovePoints, unit.Owner, unit.Alpine, unit.IgnoreZonesOfControl);
+                                path?.Follow(this, unit);
+                            }
+
+                            if (unit.MovePoints >= 0)
+                            {
+                                player.SetUnitActive(unit, true);
                                 return false;
                             }
-                        }
 
-                        break;
+                            break;
+                        default:
+                        {
+                            unit.ProcessOrder();
+
+                            if (TerrainImprovements.TryGetValue(unit.Building, out var improvement))
+                            {
+                                var activeUnit = this.CheckConstruction(unit.CurrentLocation, improvement)
+                                    .FirstOrDefault(u => u.MovePoints > 0);
+                                if (activeUnit != null)
+                                {
+                                    player.SetUnitActive(activeUnit, true);
+                                    return false;
+                                }
+                            }
+
+                            break;
+                        }
                     }
                 }
             }
 
-            return ActiveUnit == null;
+            return true;
         }
     }
 }

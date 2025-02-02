@@ -8,4 +8,5 @@ public interface IScriptEngine
     string Log { get; }
     void Connect(IInterfaceCommands playerUi);
     void RunScript(string scriptFile);
+    void RunPlayerScript(IPlayer player);
 }

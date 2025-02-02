@@ -11,12 +11,10 @@ namespace RaylibUI.RunGame.Commands;
 public class StandardZoom : IGameCommand
 {
     private readonly GameScreen _gameScreen;
-    private Map _map;
 
     public StandardZoom(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
-        _map = gameScreen.Game.CurrentMap;
     }
 
     public string Id => CommandIds.StandardZoom;
@@ -30,7 +28,7 @@ public class StandardZoom : IGameCommand
 
     public void Action()
     {
-        if (_map.Zoom != 0)
+        if (_gameScreen.Zoom != 0)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = 0 });
     }
 

@@ -4,6 +4,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model;
+using Model.Constants;
 using Model.Core;
 using Model.Interface;
 using Model.Menu;
@@ -39,7 +40,7 @@ public class BuildCity : Order
         }
 
         var activeTile = activeUnit.CurrentLocation;
-        if (activeUnit.AIrole != AIroleType.Settle)
+        if (activeUnit.AiRole != AiRoleType.Settle)
         {
             return SetCommandState(errorPopupKeyword: "ONLYSETTLERS", errorPopupImage: new(_active.PicSources["unit"][0], 2));
         }

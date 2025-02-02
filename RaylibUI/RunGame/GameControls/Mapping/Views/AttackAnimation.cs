@@ -17,10 +17,10 @@ internal class AttackAnimation : BaseGameView
         var game = gameScreen.Game;
 
         var unitAnimations = new List<IViewElement>();
-        var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - active.UnitImages.UnitRectangle.Height.ZoomScale(game.CurrentMap.Zoom) };
+        var attackerPos  = ActivePos with{ Y = ActivePos.Y + Dimensions.TileHeight - active.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) };
         ImageUtils.GetUnitTextures(args.Attacker, active, game, unitAnimations, attackerPos );
         var defPos = GetPosForTile(args.Defender.CurrentLocation);
-        var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - active.UnitImages.UnitRectangle.Height.ZoomScale(game.CurrentMap.Zoom) };
+        var defenderPos = defPos with { Y = defPos.Y + Dimensions.TileHeight - active.UnitImages.UnitRectangle.Height.ZoomScale(gameScreen.Zoom) };
         ImageUtils.GetUnitTextures(args.Defender, active, game, unitAnimations,
             defenderPos);
         var explosion = 0;
@@ -36,7 +36,7 @@ internal class AttackAnimation : BaseGameView
             var expPos = attackerWins ? defPos : attackPos;
             foreach (var battleTexture in battleAnimation)
             {
-                SetAnimation(unitAnimations.Concat(new[] { new TextureElement(battleTexture, expPos, Location) })
+                SetAnimation(unitAnimations.Concat([new TextureElement(battleTexture, expPos, Location)])
                     .ToList());
             }
 

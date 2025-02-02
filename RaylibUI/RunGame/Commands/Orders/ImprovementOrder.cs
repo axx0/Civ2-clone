@@ -2,6 +2,7 @@ using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Terrains;
 using Model;
+using Model.Constants;
 using Model.Core;
 using Model.Menu;
 using RaylibUI.RunGame.GameModes.Orders;
@@ -29,7 +30,7 @@ public class ImprovementOrder : Order
             return SetCommandState(CommandStatus.Invalid);
         }
 
-        if (_player.ActiveUnit.AIrole != AIroleType.Settle)
+        if (_player.ActiveUnit.AiRole != AiRoleType.Settle)
         {
             return SetCommandState(CommandStatus.Invalid, errorPopupKeyword: "ONLYSETTLERS");
         }

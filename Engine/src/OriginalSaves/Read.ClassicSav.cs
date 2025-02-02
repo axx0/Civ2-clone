@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Model.Constants;
 
 namespace Civ2engine.OriginalSaves;
 
@@ -25,7 +26,8 @@ public class Read
 {
     static string[] scnNames = ["Original", "SciFi", "Fantasy"];
     // READ SAV GAME
-    public static IGame ClassicSav(byte[] bytes, Ruleset activeRuleSet, Rules rules)
+    public static IGame ClassicSav(byte[] bytes, Ruleset activeRuleSet, Rules rules,
+        Dictionary<string, string?> viewData)
     {
         ClassicSaveObjects objects = new();
       
@@ -766,12 +768,12 @@ public class Read
                 LinkOtherUnitsUnder = linkOtherUnitsUnder
             };
 
-            switch (unit.AIrole)
+            switch (unit.AiRole)
             {
-                case AIroleType.Trade:
+                case AiRoleType.Trade:
                     unit.CaravanCommodity = counterRoleParameter;
                     break;
-                case AIroleType.Settle:
+                case AiRoleType.Settle:
                     unit.Counter = counterRoleParameter;
                     break;
             }
@@ -1042,12 +1044,13 @@ public class Read
 
         // Zoom (=-7(min)...+8(max), 0=std.)
         var zoom = BitConverter.ToInt16(bytes, ofsetO + blockOo + 4);
+        
+        viewData.Add("Zoom", zoom.ToString());
 
         // Update map data
         for (int mapNo = 0; mapNo < noSecondaryMaps + 1; mapNo++)
         {
             objects.Maps[mapNo].StartingClickedXy = clickedXy;
-            objects.Maps[mapNo].Zoom = zoom;
         }
         #endregion
         #region Scenario parameters (optional)

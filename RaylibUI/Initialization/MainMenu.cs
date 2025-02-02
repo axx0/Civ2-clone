@@ -15,14 +15,14 @@ namespace RaylibUI.Initialization;
 public class MainMenu : BaseScreen
 {
     private readonly Action _shutdownApp;
-    private readonly Action<IGame> _startGame;
+    private readonly Action<IGame, IDictionary<string, string?>?> _startGame;
     private IInterfaceAction _currentAction;
     private List<ImagePanel> _imagePanels = new();
     private ScreenBackground? _background;
     
     private SoundData? _sndMenuLoop;
 
-    public MainMenu(Main main, Action shutdownApp, Action<IGame> startGame, Sound soundManager) : base(main)
+    public MainMenu(Main main, Action shutdownApp, Action<IGame, IDictionary<string, string?>?> startGame, Sound soundManager) : base(main)
     {
         _shutdownApp = shutdownApp;
         _startGame = startGame;
@@ -40,7 +40,7 @@ public class MainMenu : BaseScreen
         {
             case StartGame start:
                 _sndMenuLoop?.Stop();
-                _startGame(start.Game);
+                _startGame(start.Game, start.ViewData);
                 break;
             case ExitAction:
                 _shutdownApp();
