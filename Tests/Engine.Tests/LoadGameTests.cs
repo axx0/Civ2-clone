@@ -41,7 +41,7 @@ public class LoadGameTests
     public void TestLoadClassicGameGivesValue()
     {
         // Arrange
-        // TODO: Should be mocked properly
+        // TODO: Should be mocked properly - this one happens to live on my file system and has the "CIVILISE" identifier.
         var path = "C:\\code\\Civilization_2_2\\saves\\test.sav";
         var mainApp = new MockMainApp();
 
@@ -51,6 +51,17 @@ public class LoadGameTests
         // Assert
         // TODO: Expand and validate the settings load properly from the file.
         Assert.NotNull(result);
+    }
+
+    [Fact]
+    public void TestLoadJsonGameGivesValue()
+    {
+        // Arrange
+
+        // Act
+
+        //Assert
+        Assert.Fail("TODO: Write a test for JSON loading.");
     }
 }
 
