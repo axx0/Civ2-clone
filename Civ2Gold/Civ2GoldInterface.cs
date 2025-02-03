@@ -137,6 +137,8 @@ public class Civ2GoldInterface : Civ2Interface
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray() },
             { "globalWarming", Enumerable.Range(0, 4).Select(col =>
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray() },
+            { "zoomIn", new[] { new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16)) } },
+            { "zoomOut", new[] { new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16)) } },
             { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D) } },
             { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64)) } },
             { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64)) } },

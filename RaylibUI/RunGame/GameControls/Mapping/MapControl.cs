@@ -14,6 +14,8 @@ using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
+using RaylibUI.Controls;
+using Raylib_CSharp.Collision;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -25,9 +27,11 @@ public class MapControl : BaseControl
     private Texture2D? _backgroundImage;
     private int _viewWidth,_viewHeight;
     private Padding _padding;
-    private HeaderLabel _headerLabel;
+    private HeaderLabel? _headerLabel;
     private IUserInterface _active;
-    
+    private Button _zoomInButton, _zoomOutButton;
+    private float _zoomBtnScale;
+
     private readonly Queue<IGameView> _animationQueue = new();
     private IGameView _currentView;
     
@@ -41,6 +45,9 @@ public class MapControl : BaseControl
         
         _headerLabel = new HeaderLabel(gameScreen, _active.Look, $"{_game.GetPlayerCiv.Adjective} {Labels.For(LabelIndex.Map)}", fontSize: _active.Look.HeaderLabelFontSizeNormal);
         _padding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
+        _zoomBtnScale = _padding.Top > 30 ? 1.4f : 1.0f;   // MGE=1.4f, ToT=1.0f
+        _zoomInButton = new Button(Controller, String.Empty, backgroundImage: _active.PicSources["zoomIn"][0], imageScale: _zoomBtnScale);
+        _zoomOutButton = new Button(Controller, String.Empty, backgroundImage: _active.PicSources["zoomOut"][0], imageScale: _zoomBtnScale);
         SetDimensions();
 
         _currentView =
@@ -122,7 +129,11 @@ public class MapControl : BaseControl
         if (!_gameScreen.ToTPanelLayout)
         {
             _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
+            _zoomInButton.Bounds = new Rectangle((int)Location.X + 11, (int)Location.Y + 7, _zoomInButton.GetPreferredWidth(), _zoomInButton.GetPreferredHeight());
+            _zoomOutButton.Bounds = new Rectangle((int)Location.X + 11 + _zoomInButton.GetPreferredWidth() + 2, (int)Location.Y + 7, _zoomOutButton.GetPreferredWidth(), _zoomOutButton.GetPreferredHeight());
             _headerLabel.OnResize();
+            _zoomInButton.OnResize();
+            _zoomOutButton.OnResize();
         }
 
         _viewWidth = Width - _padding.Left - _padding.Right;
@@ -139,6 +150,18 @@ public class MapControl : BaseControl
             var tile = GetTileAtMousePosition();
             if (tile == null)
             {
+                var clickPosition = GetRelativeMousePosition();
+                clickPosition.Y += Location.Y;
+                if (!_gameScreen.ToTPanelLayout && ShapeHelper.CheckCollisionPointRec(clickPosition, _zoomInButton.Bounds))
+                {
+                    if (_gameScreen.Zoom < 8)
+                        _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _gameScreen.Zoom + 1 });
+                }
+                else if (!_gameScreen.ToTPanelLayout && ShapeHelper.CheckCollisionPointRec(clickPosition, _zoomOutButton.Bounds))
+                {
+                    if (_gameScreen.Zoom > -7)
+                        _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _gameScreen.Zoom - 1 });
+                }
                 return;
             }
 
@@ -346,7 +369,11 @@ public class MapControl : BaseControl
         if (_backgroundImage != null)
             Graphics.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
         if (!_gameScreen.ToTPanelLayout)
+        {
             _headerLabel.Draw(pulse);
+            _zoomInButton?.Draw(pulse);
+            _zoomOutButton?.Draw(pulse);
+        }
     }
 
     private void NextView()
