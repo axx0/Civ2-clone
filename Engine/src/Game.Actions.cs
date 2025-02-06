@@ -120,6 +120,7 @@ namespace Civ2engine
             AllCivilizations[civId].PlayerType = PlayerType.Local;
         }
 
+/*
         public void AiTurn()
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
@@ -225,6 +226,7 @@ namespace Civ2engine
             }
             ChoseNextCiv();
         }
+*/
 
         private void TurnBeginning(Civilization activeCiv, IPlayer player)
         {

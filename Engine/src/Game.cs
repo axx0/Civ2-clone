@@ -65,7 +65,6 @@ namespace Civ2engine
         private History? _history;
         public IScriptEngine Script { get; }
 
-        public Map CurrentMap => _maps[ActiveTile.Z];
         public int NoMaps => _maps.Length;
 
         public int TotalMapArea => _maps.Select(m => m.Tile.GetLength(0) * m.Tile.GetLength(1)).Sum();

@@ -87,4 +87,12 @@ public class TileTextureCache
         _mapTileTextures[mapIndex][tile.XIndex, tile.Y] =
             MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
     }
+
+    public void Clear()
+    {
+        _seenMaps.Clear();
+        _mapTileTextures.Clear();
+        _dimensions.Clear();
+        _tileSets.Clear();
+    }
 }

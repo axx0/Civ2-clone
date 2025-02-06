@@ -108,14 +108,14 @@ public class LocalPlayer : IPlayer
 
     public void MapChanged(List<Tile> tiles)
     {
-        var t = tiles.SelectMany(t => t.Map.DirectNeighbours(t));
+        // var t = tiles.SelectMany(t => t.Map.DirectNeighbours(t));
 
         var allTiles = tiles
-            .Concat(tiles.SelectMany(t => t.Map.DirectNeighbours(t).Where(n => n.IsVisible(Civilization.Id))))
+            .Concat(tiles.SelectMany(t => t.Map.DirectNeighbours(t).Where(n => n.IsVisible(_gameScreen.VisibleCivId))))
             .Distinct();
         foreach (var tile in allTiles)
         {
-            _gameScreen.TileCache.Redraw(tile, Civilization.Id);
+            _gameScreen.TileCache.Redraw(tile, _gameScreen.VisibleCivId);
         }
 
         _gameScreen.ForceRedraw();

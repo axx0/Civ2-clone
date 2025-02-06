@@ -20,7 +20,7 @@ public abstract class AlwaysOnCommand(GameScreen gameScreen, string commandId, S
 
     public bool Update()
     {
-        return true;
+        return GameScreen.ActiveMode != GameScreen.Processing;
     }
 
     public abstract void Action();

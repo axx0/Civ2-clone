@@ -185,7 +185,7 @@ public class MapControl : BaseControl
             return null;
         }
 
-        Map map = _game.CurrentMap;
+        var map = _gameScreen.CurrentMap;
         var dim = _gameScreen.TileCache.GetDimensions(map, _gameScreen.Zoom);
         var clickedTilePosition = clickPosition - new Vector2(_padding.Left + _padding.Right, _padding.Top) + _currentView.Offsets;
         var y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
@@ -193,7 +193,7 @@ public class MapControl : BaseControl
         var clickX = (int)(odd ? clickedTilePosition.X - dim.HalfWidth : clickedTilePosition.X);
         if (clickX < 0)
         {
-            if (_game.CurrentMap.Flat)
+            if (map.Flat)
             {
                 clickX = 0;
             }
@@ -204,7 +204,7 @@ public class MapControl : BaseControl
         }
         else if (clickX > dim.TotalWidth)
         {
-            if (_game.CurrentMap.Flat)
+            if (map.Flat)
             {
                 clickX = dim.TotalWidth - 1;
             }
@@ -226,7 +226,7 @@ public class MapControl : BaseControl
                     x -= 1;
                     if (x < 0)
                     {
-                        x = _game.CurrentMap.Flat ? 0 : _game.CurrentMap.Tile.GetLength(0) - 1;
+                        x = map.Flat ? 0 : map.Tile.GetLength(0) - 1;
                     }
                 }
             }
@@ -239,9 +239,9 @@ public class MapControl : BaseControl
                 if (odd)
                 {
                     x += 1;
-                    if (x == _game.CurrentMap.Tile.GetLength(0))
+                    if (x == map.Tile.GetLength(0))
                     {
-                        if (_game.CurrentMap.Flat)
+                        if (map.Flat)
                         {
                             x -= 1;
                         }
@@ -254,9 +254,9 @@ public class MapControl : BaseControl
             }
         }
 
-        if (0 <= y && y < _game.CurrentMap.Tile.GetLength(1))
+        if (0 <= y && y < map.Tile.GetLength(1))
         {
-            return _game.CurrentMap.Tile[x, y];
+            return map.Tile[x, y];
         }
 
         return null;

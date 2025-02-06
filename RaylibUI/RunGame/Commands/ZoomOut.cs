@@ -28,7 +28,7 @@ public class ZoomOut : IGameCommand
 
     public void Action()
     {
-        var map = _gameScreen.Game.CurrentMap;
+        var map = _gameScreen.CurrentMap;
         if (_gameScreen.Zoom > -7)
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _gameScreen.Zoom - 1 });
     }

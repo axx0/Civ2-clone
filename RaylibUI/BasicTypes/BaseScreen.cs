@@ -108,9 +108,12 @@ public abstract class BaseScreen : BaseLayoutController, IScreen
         layoutController.Hovered?.OnMouseEnter();
     }
 
-    public void CloseDialog(IControlLayout dialog)
+    public void CloseDialog(IControlLayout? dialog)
     {
-        _dialogs.Remove(dialog);
+        if (dialog != null)
+        {
+            _dialogs.Remove(dialog);
+        }
     }
     
 

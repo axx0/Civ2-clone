@@ -340,7 +340,7 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("Create &Unit|Shift+F1", new Shortcut(KeyboardKey.F1, shift: true),
                     KeyboardKey.U),
                 new MenuElement("Reveal &Map|Shift+F2", new Shortcut(KeyboardKey.F2, shift: true),
-                    KeyboardKey.M),
+                    KeyboardKey.M, CheatRevealMapCommand),
                 new MenuElement("Set &Human Player|Shift+F3", new Shortcut(KeyboardKey.F3, shift: true),
                     KeyboardKey.H),
                 new MenuElement("Set Game Year|Shift+F4", new Shortcut(KeyboardKey.F4, shift: true),

@@ -42,7 +42,7 @@ namespace Civ2engine
             }
             else
             {
-                distance *= game.CurrentMap.ScaleFactor;
+                distance *= city.Location.Map.ScaleFactor;
                 var gov = (int)(city.WeLoveKingDay ? government + 1 : government);
 
                 var corruptionTenTenFactor = 15d / (4 + gov);
