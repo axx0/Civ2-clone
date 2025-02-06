@@ -61,8 +61,8 @@ namespace Civ2engine
             {
                 return
                     ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders && !player.WaitingList.Contains(u)) ??
-                    CurrentMap
-                        .Neighbours(ActiveTile)
+                    ActiveTile
+                        .Neighbours()
                         .SelectMany(
                             t => t.UnitsHere.Where(u =>
                                 u.Owner == _activeCiv && u.AwaitingOrders && !player.WaitingList.Contains(u)))
@@ -73,8 +73,8 @@ namespace Civ2engine
             }
 
             return ActiveTile.UnitsHere.FirstOrDefault(u => u.AwaitingOrders) ??
-                   CurrentMap
-                       .Neighbours(ActiveTile)
+                   ActiveTile
+                       .Neighbours()
                        .SelectMany(
                            t => t.UnitsHere.Where(u => u.Owner == _activeCiv && u.AwaitingOrders))
                        .FirstOrDefault() ?? units.FirstOrDefault(u => u.AwaitingOrders);

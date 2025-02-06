@@ -70,7 +70,7 @@ public class GameScreen : BaseScreen
     
     private CivDialog _currentPopupDialog;
     private Action<string,int,IList<bool>?,IDictionary<string,string>?>? _popupClicked;
-    private int _mapToShow;
+
     private int _zoom;
 
     public event EventHandler<MapEventArgs>? OnMapEvent = null;
@@ -94,7 +94,7 @@ public class GameScreen : BaseScreen
 
         var civ = game.GetPlayerCiv;
         _player = new LocalPlayer(this, civ);
-        _mapToShow = _player.Civilization.Id;
+        VisibleCivId = _player.Civilization.Id;
         game.ConnectPlayer(_player);
 
         _ToTPanelLayout = false;
@@ -182,6 +182,14 @@ public class GameScreen : BaseScreen
     }
 
     public ProcessingMode Processing { get; }
+    public Map CurrentMap => Player.ActiveTile.Map;
+
+    /// <summary>
+    /// The CivId of the currently displayed map normally the same as the player civId but can be changed via reveal map
+    /// </summary>
+    public int VisibleCivId { get; set; }
+
+    public MapControl MapControl => _mapControl;
 
     public override void OnKeyPress(KeyboardKey key)
     {

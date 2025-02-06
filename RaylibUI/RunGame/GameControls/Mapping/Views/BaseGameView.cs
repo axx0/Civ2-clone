@@ -52,7 +52,7 @@ public abstract class BaseGameView : IGameView
         var activeInterface = _gameScreen.Main.ActiveInterface;
         
         var cities = activeInterface.CityImages;
-        var civilizationId = _gameScreen.Player.Civilization.Id;
+        var civilizationId = _gameScreen.VisibleCivId;
         // Force redraw should be checked last as IsSameArea will set offsets 
         if (previousView != null && IsInSameArea(previousView, location, Dimensions, forceRedraw) && !forceRedraw)
         {

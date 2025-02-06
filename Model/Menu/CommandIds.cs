@@ -42,4 +42,6 @@ public static class CommandIds
     public const string LoadScenario = "LOAD_SCENARIO";
     public const string SaveMap = "SAVE_MAP";
     public const string LoadMap = "LOAD_MAP";
+    
+    public const string CheatRevealMapCommand = "CHEAT_REVEAL_MAP";
 }

@@ -254,7 +254,7 @@ namespace Civ2engine.UnitActions
             var destX = unit.X + deltaX;
             var destY = unit.Y + deltaY;
 
-            var tileTo = game.CurrentMap.TileC2(destX, destY);
+            var tileTo = unit.CurrentLocation.Map.TileC2(destX, destY);
             if (tileTo.UnitsHere.Count > 0 && tileTo.UnitsHere[0].Owner != unit.Owner)
             {
                 if (!AttackAtTile(unit, game, tileTo)) return;
@@ -420,9 +420,10 @@ namespace Civ2engine.UnitActions
         }
 
         private static void Moveto(IGame game, Unit unit, int destX, int destY)
-        {  
-            var tileFrom = game.CurrentMap.TileC2(unit.X, unit.Y);
-            var tileTo = game.CurrentMap.TileC2(destX, destY);
+        {
+            var map = unit.CurrentLocation.Map;
+            var tileFrom =  map.TileC2(unit.X, unit.Y);
+            var tileTo = map.TileC2(destX, destY);
             if (!unit.IgnoreZonesOfControl && !IsFriendlyTile(tileTo, unit.Owner) && IsNextToEnemy(tileFrom, unit.Owner, unit.Domain) && IsNextToEnemy(tileTo, unit.Owner, unit.Domain))
             {
                 game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.Zoc);
@@ -432,7 +433,7 @@ namespace Civ2engine.UnitActions
             if (UnitMoved(game, unit, tileTo, tileFrom))
             {
                 game.ActivePlayer.ActiveTile = tileTo;
-                var neighbours = game.CurrentMap.Neighbours(tileTo, unit.TwoSpaceVisibility).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
+                var neighbours = map.Neighbours(tileTo, unit.TwoSpaceVisibility).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
                 if (neighbours.Count > 0)
                 {
                     neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));

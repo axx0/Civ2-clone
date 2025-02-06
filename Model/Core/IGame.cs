@@ -10,7 +10,6 @@ namespace Model.Core;
 public interface IGame
 {
     FastRandom Random { get;  }
-    Map CurrentMap { get;  }
     Civilization GetPlayerCiv { get; }
     IDictionary<int,TerrainImprovement> TerrainImprovements { get; }
     
