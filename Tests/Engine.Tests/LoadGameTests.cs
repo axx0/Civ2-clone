@@ -15,20 +15,19 @@ namespace Engine.Tests;
 
 public class LoadGameTests
 {
-
     public LoadGameTests()
     {
         // Need to hard code SearchPaths somehow to get the LoadFrom() method to work.
         // This happens to be where I have the game installed on my local.
         // TODO: Mock this properly.
-        Settings.AddPath("C:\\code\\Civilization_2_2");
+        Settings.AddPath("C:\\code\\Civilization_2");
     }
 
     [Fact]
     public void TestLoadFromThrowsExceptionIfPathNotFound()
     {
         // Arrange
-        var path = "C:\\code\\Civilization_2_2\\pathtonowhere.sav";
+        var path = "C:\\code\\Civilization_2\\pathtonowhere.sav";
         var mainApp = new MockMainApp();
 
         // Act
@@ -42,7 +41,7 @@ public class LoadGameTests
     {
         // Arrange
         // TODO: Should be mocked properly - this one happens to live on my file system and has the "CIVILISE" identifier.
-        var path = "C:\\code\\Civilization_2_2\\saves\\test.sav";
+        var path = "C:\\code\\Civilization_2\\saves\\test.sav";
         var mainApp = new MockMainApp();
 
         // Act
