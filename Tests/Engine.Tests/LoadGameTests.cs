@@ -188,7 +188,17 @@ internal class MockInterface : IUserInterface
         return new MockAction();
     }
 
+    public IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset, Dictionary<string, string?> viewData)
+    {
+        return new MockAction();
+    }
+
     public IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory)
     {
         throw new NotImplementedException();
     }
