@@ -21,6 +21,9 @@ public class LoadGameTests
         // This happens to be where I have the game installed on my local.
         // TODO: Mock this properly.
         Settings.AddPath("C:\\code\\Civilization_2");
+        
+        // This is needed so that the Barbarians civ can be initialised in the GameSerializer. JSON save file loading fails if this isn't pre-populated.
+        Labels.UpdateLabels(null);
     }
 
     [Fact]
@@ -40,8 +43,9 @@ public class LoadGameTests
     public void TestLoadClassicGameGivesValue()
     {
         // Arrange
-        // TODO: Should be mocked properly - this one happens to live on my file system and has the "CIVILISE" identifier.
-        var path = "C:\\code\\Civilization_2\\saves\\test.sav";
+        // TODO: Should be mocked properly:
+        // This one happens to live on my file system and has the "CIVILISE" identifier.
+        var path = "C:\\code\\Civilization_2\\saves\\test_classic.sav";
         var mainApp = new MockMainApp();
 
         // Act
@@ -56,11 +60,17 @@ public class LoadGameTests
     public void TestLoadJsonGameGivesValue()
     {
         // Arrange
+         // TODO: Should be mocked properly:
+         // This one happens to live on my file system and is the json version of the "test_classic.sav" file
+        var path = "C:\\code\\Civilization_2\\saves\\test_json.sav";
+        var mainApp = new MockMainApp();
 
         // Act
+        var result = LoadGame.LoadFrom(path, mainApp);
 
-        //Assert
-        Assert.Fail("TODO: Write a test for JSON loading.");
+        // Assert
+        // TODO: Expand and validate the settings load properly from the file.
+        Assert.NotNull(result);
     }
 }
 
@@ -94,7 +104,7 @@ internal class MockInterface : IUserInterface
 
     public IList<ResourceImage> ResourceImages => throw new NotImplementedException();
 
-    public IMain MainApp => throw new NotImplementedException();
+    public IMain MainApp => new MockMainApp();
 
     public int InterfaceIndex { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -175,7 +185,7 @@ internal class MockInterface : IUserInterface
 
     public IInterfaceAction HandleLoadGame(IGame game, Rules rules, Ruleset ruleset)
     {
-        throw new NotImplementedException();
+        return new MockAction();
     }
 
     public IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory)
@@ -185,7 +195,8 @@ internal class MockInterface : IUserInterface
 
     public void Initialize()
     {
-        throw new NotImplementedException();
+        // This should ideally be done here instead of test class ctor.
+        //Labels.UpdateLabels(null);
     }
 
     public IInterfaceAction InitNewGame(bool quickStart)
@@ -224,7 +235,10 @@ internal class MockMainApp : IMain
 
     public Ruleset[] AllRuleSets { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-    public Ruleset ActiveRuleSet => throw new NotImplementedException();
+    public Ruleset ActiveRuleSet => new Ruleset(
+        "mock",
+        new Dictionary<string, string>(),
+        ["C:\\code\\Civilization_2\\saves", "C:\\code\\Civilization_2"]);
 
     public IUserInterface SetActiveRuleSet(int ruleSetIndex)
     {

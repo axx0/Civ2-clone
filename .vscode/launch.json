@@ -8,7 +8,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net6.0/RaylibUI.dll",
+            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net8.0/RaylibUI.dll",
             "args": [],
             "cwd": "${workspaceFolder}/RaylibUI",
             "console": "internalConsole",
@@ -20,7 +20,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net6.0/RaylibUI",
+            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net8.0/RaylibUI",
             "args": [],
             "cwd": "${workspaceFolder}/RaylibUI",
             "console": "internalConsole",
@@ -32,7 +32,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net6.0/RaylibUI.Mac",
+            "program": "${workspaceFolder}/RaylibUI/bin/Debug/net8.0/RaylibUI.Mac",
             "args": [],
             "cwd": "${workspaceFolder}/RaylibUI",
             "console": "internalConsole",
