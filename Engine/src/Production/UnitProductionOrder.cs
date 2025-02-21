@@ -23,7 +23,7 @@ namespace Civ2engine.Production
 
         public override bool CompleteProduction(City city, Rules rules)
         {
-            if (_unitDefinition.AIrole == AIroleType.Settle && city.Size == 1)
+            if (_unitDefinition.AIrole == AiRoleType.Settle && city.Size == 1)
             {
                 return false;
             }
@@ -46,7 +46,7 @@ namespace Civ2engine.Production
             };
             unit.Owner.Units.Add(unit);
 
-            if (_unitDefinition.AIrole == AIroleType.Settle)
+            if (_unitDefinition.AIrole == AiRoleType.Settle)
             {
                 city.Size -= 1;
             }

@@ -1,5 +1,7 @@
+using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Model.ImageSets;
+using RaylibUI.RunGame.Commands;
 
 namespace RaylibUI.RunGame.GameControls.Mapping;
 
@@ -41,26 +43,37 @@ public class TileTextureCache
         _tileSets.Add(tileSet);
         _dimensions.Add(new MapDimensions
         {
-            TotalWidth = map.Tile.GetLength(0) * tileSet.TileWidth.ZoomScale(map.Zoom),
-            TotalHeight = map.Tile.GetLength(1) * tileSet.HalfHeight.ZoomScale(map.Zoom) + tileSet.HalfHeight.ZoomScale(map.Zoom),
-            HalfHeight = tileSet.HalfHeight.ZoomScale(map.Zoom),
-            TileHeight = tileSet.TileHeight.ZoomScale(map.Zoom),
-            TileWidth = tileSet.TileWidth.ZoomScale(map.Zoom),
-            HalfWidth = tileSet.HalfWidth.ZoomScale(map.Zoom),
-            DiagonalCut = tileSet.DiagonalCut.ZoomScale(map.Zoom).ZoomScale(map.Zoom)
+            TotalWidth = map.Tile.GetLength(0) * tileSet.TileWidth,
+            TotalHeight = map.Tile.GetLength(1) * tileSet.HalfHeight + tileSet.HalfHeight,
+            HalfHeight = tileSet.HalfHeight,
+            TileHeight = tileSet.TileHeight,
+            TileWidth = tileSet.TileWidth,
+            HalfWidth = tileSet.HalfWidth,
+            DiagonalCut = tileSet.DiagonalCut,
+
         });
         return mapIndex;
     }
 
-    public MapDimensions GetDimensions(Map map)
+    public MapDimensions GetDimensions(Map map, int zoom)
     {
-        var mapIndex = _seenMaps.IndexOf(map.MapIndex);
-        if (mapIndex == -1)
+        var cacheIndex = _seenMaps.IndexOf(map.MapIndex);
+        if (cacheIndex == -1)
         {
-            mapIndex = SetupMap(map);
+            cacheIndex = SetupMap(map);
         }
 
-        return _dimensions[mapIndex];
+        //return _dimensions[mapIndex];
+        return new MapDimensions
+        {
+            TotalWidth = _dimensions[cacheIndex].TotalWidth.ZoomScale(zoom),
+            TotalHeight = _dimensions[cacheIndex].TotalHeight.ZoomScale(zoom),
+            HalfHeight = _dimensions[cacheIndex].HalfHeight.ZoomScale(zoom),
+            TileHeight = _dimensions[cacheIndex].TileHeight.ZoomScale(zoom),
+            TileWidth = _dimensions[cacheIndex].TileWidth.ZoomScale(zoom),
+            HalfWidth = _dimensions[cacheIndex].HalfWidth.ZoomScale(zoom),
+            DiagonalCut = _dimensions[cacheIndex].DiagonalCut.ZoomScale(zoom).ZoomScale(zoom),
+        };
     }
 
     public void Redraw(Tile tile, int civilizationId)
@@ -73,5 +86,13 @@ public class TileTextureCache
 
         _mapTileTextures[mapIndex][tile.XIndex, tile.Y] =
             MapImage.MakeTileGraphic(tile, tile.Map, _tileSets[mapIndex], _parentScreen.Game, civilizationId);
+    }
+
+    public void Clear()
+    {
+        _seenMaps.Clear();
+        _mapTileTextures.Clear();
+        _dimensions.Clear();
+        _tileSets.Clear();
     }
 }

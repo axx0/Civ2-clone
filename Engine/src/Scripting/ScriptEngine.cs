@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Civ2engine.Scripting.ScriptObjects;
 using Model.Core;
 using Neo.IronLua;
 
@@ -10,6 +11,7 @@ namespace Civ2engine.Scripting
 {
     public class ScriptEngine : IDisposable, IScriptEngine
     {
+        private readonly Game _game;
         private readonly Lua _lua;
         private readonly LuaGlobal _environment;
         private readonly List<string> _scriptPaths;
@@ -18,6 +20,7 @@ namespace Civ2engine.Scripting
 
         public ScriptEngine(Game game, string[] paths)
         {
+            _game = game;
             _scriptPaths = paths.ToList();
             _scriptPaths.Add(Environment.CurrentDirectory + Path.DirectorySeparatorChar + "Scripts"); 
             _lua = new Lua();
@@ -28,6 +31,8 @@ namespace Civ2engine.Scripting
             _civScripts = new CivScripts(_log, game);
             dg.print = new Action<string>(s => _log.AppendLine(s));
             dg.civ = _civScripts;
+            dg.AiEvent = new AiEventMap();
+            dg.AiRoleType = new AiRoleTypeMap();
         }
 
         public void Connect(IInterfaceCommands interfaceCommands)
@@ -73,6 +78,24 @@ namespace Civ2engine.Scripting
             {
                 _log.AppendLine($"Exception running script {scriptFileName}");
                 _log.AppendLine(e.Message);
+            }
+        }
+
+        public void RunPlayerScript(IPlayer player)
+        {
+            if (player is AiPlayer aiPlayer)
+            {
+                aiPlayer.AI = new AiInterface(aiPlayer, _game);
+                var scriptName = aiPlayer.AIScript;
+                if (!scriptName.EndsWith(".lua"))
+                {
+                    scriptName += ".lua";
+                }
+
+                dynamic dg = _environment;
+                dg.ai = aiPlayer.AI;
+                RunScript(scriptName);
+                dg.ai = null;
             }
         }
     }

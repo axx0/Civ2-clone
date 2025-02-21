@@ -1,6 +1,6 @@
-﻿namespace Civ2engine.Enums
+﻿namespace Model.Constants
 {
-    public enum AIroleType
+    public enum AiRoleType
     {
         Attack = 0,
         Defend = 1,

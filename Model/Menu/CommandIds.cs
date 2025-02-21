@@ -9,6 +9,12 @@ public static class CommandIds
     public const string LoadGame = "LOAD_GAME";
     public const string QuitGame = "GAME_QUIT";
 
+    public const string ZoomIn = "ZOOM_IN";
+    public const string ZoomOut = "ZOOM_OUT";
+    public const string MaxZoomIn = "MAX_ZOOM_IN";
+    public const string StandardZoom = "STANDARD_ZOOM";
+    public const string MediumZoomOut = "MEDIUM_ZOOM_OUT";
+    public const string MaxZoomOut = "MAX_ZOOM_OUT";
     public const string MapLayoutToggle = "MAP_LAYOUT";
     
     public const string WaitOrder = "UNIT_ORDER_WAIT";
@@ -36,4 +42,6 @@ public static class CommandIds
     public const string LoadScenario = "LOAD_SCENARIO";
     public const string SaveMap = "SAVE_MAP";
     public const string LoadMap = "LOAD_MAP";
+    
+    public const string CheatRevealMapCommand = "CHEAT_REVEAL_MAP";
 }

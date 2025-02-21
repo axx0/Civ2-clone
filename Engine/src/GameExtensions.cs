@@ -41,8 +41,8 @@ public static class GameExtensions
         {
             tile.Improvements.Clear();
             tile.EffectsList.Clear();
-            var visibleTo = tile.PlayerKnowledge.Select(((playerTile, civId) => new { playerTile, civId } ))
-                .Where(arg => arg != null).Select(arg => arg.civId).ToList();
+            var visibleTo = tile.PlayerKnowledge?.Select(((playerTile, civId) => new { playerTile, civId } ))
+                .Where(arg => arg.playerTile != null).Select(arg => arg.civId).ToList();
             foreach (var can in improvements)
             {
                 var terrain = can.improvement.AllowedTerrains[tile.Z]

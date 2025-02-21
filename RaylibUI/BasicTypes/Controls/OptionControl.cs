@@ -17,7 +17,7 @@ internal class OptionControl : LabelControl
     public override bool CanFocus => true;
 
     public OptionControl(IControlLayout controller, string text, int index, bool isChecked, IImageSource[] images) : base(
-        controller, text, eventTransparent: false, offset: Images.GetImageWidth(images[0]),
+        controller, text, eventTransparent: false, offset: Images.GetImageWidth(images[0], controller.MainWindow.ActiveInterface),
         font: controller.MainWindow.ActiveInterface.Look.LabelFont,
         fontSize: controller.MainWindow.ActiveInterface.Look.LabelFontSize,
         colorFront: controller.MainWindow.ActiveInterface.Look.LabelColour,
@@ -26,8 +26,8 @@ internal class OptionControl : LabelControl
         Index = index;
         Checked = isChecked;
         _images = images;
-        _imageWidth = Images.GetImageWidth(images[0]);
-        _imageHeight = Images.GetImageHeight(images[0]);
+        _imageWidth = Images.GetImageWidth(images[0], controller.MainWindow.ActiveInterface);
+        _imageHeight = Images.GetImageHeight(images[0], controller.MainWindow.ActiveInterface);
     }
 
     public int Index { get; }

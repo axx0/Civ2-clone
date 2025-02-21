@@ -42,7 +42,7 @@ namespace Civ2engine
             }
             else
             {
-                distance *= game.CurrentMap.ScaleFactor;
+                distance *= city.Location.Map.ScaleFactor;
                 var gov = (int)(city.WeLoveKingDay ? government + 1 : government);
 
                 var corruptionTenTenFactor = 15d / (4 + gov);
@@ -73,7 +73,7 @@ namespace Civ2engine
             city.Trade = totalTrade - city.Corruption;
             city.Production = totalSheilds - city.Support - city.Waste;
             city.FoodConsumption = city.Size * game.Rules.Cosmic.FoodEatenPerTurn +
-                                   city.SupportedUnits.Count(u => u.AIrole == AIroleType.Settle) *
+                                   city.SupportedUnits.Count(u => u.AiRole == AiRoleType.Settle) *
                                    game.Rules.Governments[government].SettlersConsumption;
             city.FoodProduction = totalFood;
             city.SurplusHunger = totalFood - city.FoodConsumption;

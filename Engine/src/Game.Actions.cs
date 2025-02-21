@@ -4,10 +4,13 @@ using System.Linq;
 using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
+using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Statistics;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
+using Model.Constants;
 using Model.Core;
+using Neo.IronLua;
 
 namespace Civ2engine
 {
@@ -23,12 +26,12 @@ namespace Civ2engine
             {
                 Power.CalculatePowerRatings(this);
             }
-            
-            ProcessBarbarians();
 
+            _activeCivId = -1;
             ChoseNextCiv();
         }
         
+/*
         private void ProcessBarbarians()
         {
             _activeCiv = AllCivilizations[0];
@@ -52,10 +55,11 @@ namespace Civ2engine
                 MoveTowards(tile, barbarians, target);
             }
         }
+*/
 
         private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
         {
-            var destination = MovementFunctions.GetPossibleMoves(this, tile, units[0])
+            var destination = MovementFunctions.GetPossibleMoves(tile, units[0])
                 .OrderBy(t => Utilities.DistanceTo(t, target)).FirstOrDefault();
             if (destination == null) return;
             
@@ -68,34 +72,44 @@ namespace Civ2engine
 
         public void ChoseNextCiv()
         {
-            if (_activeCiv == ActiveCivs[^1])
+            if (_activeCivId >= AllCivilizations[^1].Id)
             {
                 StartNextTurn();
+                return;
+            }
+
+            _activeCivId++;
+
+            _activeCiv = AllCivilizations[_activeCivId];
+
+            if (_activeCiv.Alive)
+            {
+                var activePlayer = Players[_activeCiv.Id];
+                TurnBeginning(_activeCiv, activePlayer);
+                StartPlayerTurn(activePlayer);
             }
             else
             {
-                _activeCiv = ActiveCivs[ActiveCivs.FindIndex(civ => civ == _activeCiv) + 1];
-
-                if (_activeCiv.Alive)
-                {
-                    TurnBeginning(Players[_activeCiv.Id]);
-
-                    if (_activeCiv.PlayerType == PlayerType.Ai)
-                    {
-                        AiTurn();
-                    }
-                    else
-                    {
-                        ChooseNextUnit();
-                    }
-
-                    OnPlayerEvent?.Invoke(null, new PlayerEventArgs(PlayerEventType.NewTurn, _activeCiv.Id));
-
-                }
-                else if(!Options.DontRestartIfEliminated)
+                if (!Options.DontRestartIfEliminated)
                 {
                     //Look to restart if possible
                 }
+                ChoseNextCiv();
+            }
+        }
+
+        public void StartPlayerTurn(IPlayer activePlayer)
+        {
+            activePlayer.TurnStart(TurnNumber);
+
+            //If there are any units waiting to move goto move them
+            if (_activeCiv.Units.Any(u => u is { MovePointsLost: 0, Order: (int)OrderType.NoOrders }))
+            {
+                ChooseNextUnit();
+            }
+            else
+            {
+                activePlayer.WaitingAtEndOfTurn(this);
             }
         }
 
@@ -106,19 +120,20 @@ namespace Civ2engine
             AllCivilizations[civId].PlayerType = PlayerType.Local;
         }
 
+/*
         public void AiTurn()
         {
             foreach (var unit in _activeCiv.Units.Where(u => !u.Dead).ToList())
             {
                 var currentTile = unit.CurrentLocation;
-                switch (unit.AIrole)
+                switch (unit.AiRole)
                 {
-                    case AIroleType.Attack:
+                    case AiRoleType.Attack:
                         break;
-                    case AIroleType.Defend:
+                    case AiRoleType.Defend:
                         if (currentTile.CityHere != null)
                         {
-                            if (currentTile.UnitsHere.Count(u => u != unit && u.AIrole == AIroleType.Defend) <
+                            if (currentTile.UnitsHere.Count(u => u != unit && u.AiRole == AiRoleType.Defend) <
                                 2 + currentTile.CityHere.Size / 3)
                             {
                                 if (unit.Order == (int)OrderType.Fortify || unit.Order == (int)OrderType.Fortified)
@@ -137,13 +152,13 @@ namespace Civ2engine
                             
                         }
                         break;
-                    case AIroleType.NavalSuperiority:
+                    case AiRoleType.NavalSuperiority:
                         break;
-                    case AIroleType.AirSuperiority:
+                    case AiRoleType.AirSuperiority:
                         break;
-                    case AIroleType.SeaTransport:
+                    case AiRoleType.SeaTransport:
                         break;
-                    case AIroleType.Settle:
+                    case AiRoleType.Settle:
                         var cityTile = CurrentMap.CityRadius(currentTile)
                             .FirstOrDefault(t => t.CityHere != null);
                         
@@ -154,7 +169,7 @@ namespace Civ2engine
                         
                         if (cityTile == null && currentTile.Type != TerrainType.Ocean)
                         {
-                            var moreFertile = MovementFunctions.GetPossibleMoves(this, currentTile, unit)
+                            var moreFertile = MovementFunctions.GetPossibleMoves(currentTile, unit)
                                 .Where(n => n.Fertility > currentTile.Fertility).OrderByDescending(n => n.Fertility)
                                 .FirstOrDefault();
                             if (moreFertile == null)
@@ -175,16 +190,16 @@ namespace Civ2engine
                         }
 
                         break;
-                    case AIroleType.Diplomacy:
+                    case AiRoleType.Diplomacy:
                         break;
-                    case AIroleType.Trade:
+                    case AiRoleType.Trade:
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
                 while (unit.MovePoints > 0)
                 {
-                    var possibleMoves = MovementFunctions.GetPossibleMoves(this, currentTile, unit).ToList();
+                    var possibleMoves = MovementFunctions.GetPossibleMoves(currentTile, unit).ToList();
                     if (unit.AttackBase == 0)
                     {
                         possibleMoves = possibleMoves
@@ -211,11 +226,14 @@ namespace Civ2engine
             }
             ChoseNextCiv();
         }
+*/
 
-        private void TurnBeginning(IPlayer player)
+        private void TurnBeginning(Civilization activeCiv, IPlayer player)
         {
+            // Adjust reputation
+            
             // Reset turns of all units
-            foreach (var unit in GetActiveCiv.Units.Where(n => !n.Dead))
+            foreach (var unit in activeCiv.Units.Where(n => !n.Dead))
             {
                 unit.MovePointsLost = 0;
             }

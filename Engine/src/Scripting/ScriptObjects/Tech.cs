@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Civ2engine.Advances;
-using Civ2engine.Enums;
 using Model.Constants;
 using Model.Core.Advances;
 

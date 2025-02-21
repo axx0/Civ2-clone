@@ -67,6 +67,8 @@ public static partial class Images
             var height = BitConverter.ToInt32(bytes, 22);
             bpp = BitConverter.ToInt16(bytes, 28);
             var size = BitConverter.ToInt32(bytes, 34);
+            if (size == 0)
+                size = bytes.Length - dataOffset;
             var extraBits = size / height - bpp / 8 * width;
             var imgData = new byte[4 * width * height];
             int flag1Color = Convert.ToInt32("0x0000FFFF", 16);

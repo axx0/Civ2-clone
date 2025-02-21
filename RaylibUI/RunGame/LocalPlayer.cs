@@ -108,20 +108,20 @@ public class LocalPlayer : IPlayer
 
     public void MapChanged(List<Tile> tiles)
     {
-        var t = tiles.SelectMany(t => t.Map.DirectNeighbours(t));
+        // var t = tiles.SelectMany(t => t.Map.DirectNeighbours(t));
 
         var allTiles = tiles
-            .Concat(tiles.SelectMany(t => t.Map.DirectNeighbours(t).Where(n => n.IsVisible(Civilization.Id))))
+            .Concat(tiles.SelectMany(t => t.Map.DirectNeighbours(t).Where(n => n.IsVisible(_gameScreen.VisibleCivId))))
             .Distinct();
         foreach (var tile in allTiles)
         {
-            _gameScreen.TileCache.Redraw(tile, Civilization.Id);
+            _gameScreen.TileCache.Redraw(tile, _gameScreen.VisibleCivId);
         }
 
         _gameScreen.ForceRedraw();
     }
 
-    public void WaitingAtEndOfTurn()
+    public void WaitingAtEndOfTurn(IGame game)
     {
         _gameScreen.ActiveMode = _gameScreen.ViewPiece;
     }
@@ -145,5 +145,19 @@ public class LocalPlayer : IPlayer
     public void CityDecrease(City city)
     {
         _gameScreen.ShowCityDialog("DECREASE", city);
+    }
+
+    public void TurnStart(int turnNumber)
+    {
+        _gameScreen.TurnStarting(turnNumber);
+    }
+
+    public void SetUnitActive(Unit? unit, bool move)
+    {
+        ActiveUnit = unit;
+        if (_gameScreen.Game.GetActiveCiv == this.Civilization)
+        {
+            _gameScreen.ActiveMode = _gameScreen.Moving;
+        }
     }
 }

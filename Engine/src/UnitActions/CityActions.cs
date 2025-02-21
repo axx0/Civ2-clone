@@ -70,7 +70,7 @@ namespace Civ2engine.UnitActions
 
             if (tile.Fertility != -2)
             {
-                game.CurrentMap.AdjustFertilityForCity(tile);
+                tile.Map.AdjustFertilityForCity(tile);
             }
 
             game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> {tile});

@@ -373,35 +373,24 @@ public abstract class Civ2Interface : IUserInterface
     public abstract bool IsButtonInOuterPanel { get; }
     
     public int InterfaceIndex { get; set; }
-    public IInterfaceAction HandleLoadClassicGame(GameData gameData)
+
+    public IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory)
     {
-        ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
-        Initialization.LoadGraphicsAssets(this);
-
-        var game = ClassicSaveLoader.LoadSave(gameData, MainApp.ActiveRuleSet, Initialization.ConfigObject.Rules);
-
-        Initialization.Start(game);
-        return DialogHandlers[LoadOk.Title].Show(this);
-    }
-
-    public IInterfaceAction HandleLoadScenario(GameData gameData, string scnName, string scnDirectory)
-    {
-        ExpectedMaps = gameData.MapNoSecondaryMaps + 1;
+        ExpectedMaps = game.NoMaps;
         Initialization.LoadGraphicsAssets(this);
 
         var config = Initialization.ConfigObject;
-        config.TechParadigm = gameData.TechParadigm;
-        config.ScenarioName = gameData.ScenarioName;
-        config.CivNames = gameData.CivTribeName;
-        config.CivGenders = gameData.RulerGender;
-        config.LeaderNames = gameData.CivLeaderName;
-        config.StartingYear = gameData.StartingYear;
-        config.TurnYearIncrement = gameData.TurnYearIncrement;
-        config.DifficultyLevel = gameData.DifficultyLevel;
-        config.MaxTurns = gameData.MaxTurns;
-        config.CivsInPlay = gameData.CivsInPlay;
+        config.TechParadigm = game.ScenarioData.TechParadigm;
+        config.ScenarioName = game.ScenarioData.Name;
+        config.CivNames = game.AllCivilizations.Select(c => c.TribeName).ToArray();
+        config.CivGenders = game.AllCivilizations.Select(c => c.LeaderGender).ToArray();
+        config.LeaderNames = game.AllCivilizations.Select(c => c.LeaderName).ToArray();
+        config.StartingYear = game.ScenarioData.StartingYear;
+        config.TurnYearIncrement = game.ScenarioData.TurnYearIncrement;
+        config.DifficultyLevel = game.DifficultyLevel;
+        config.MaxTurns = game.ScenarioData.MaxTurns;
+        config.CivsInPlay = game.AllCivilizations.Select(c => c.Alive).ToArray(); ;
 
-        var game = ClassicSaveLoader.LoadScn(gameData, MainApp.ActiveRuleSet, config.Rules);
         Initialization.Start(game);
 
         var titleImage = "Title.gif";
@@ -431,6 +420,16 @@ public abstract class Civ2Interface : IUserInterface
 
         // Load default intro
         return DialogHandlers[ScenarioLoadedDialog.Title].Show(this);
+    }
+
+    public IInterfaceAction HandleLoadGame(IGame game, Civ2engine.Rules rules, Ruleset ruleset,
+        Dictionary<string, string?> viewData)
+    {
+        ExpectedMaps = game.NoMaps;
+        Initialization.LoadGraphicsAssets(this);
+        Initialization.ViewData = viewData;
+        Initialization.Start(game);
+        return DialogHandlers[LoadOk.Title].Show(this);
     }
 
     public IInterfaceAction InitNewGame(bool quickStart)
@@ -487,16 +486,5 @@ public abstract class Civ2Interface : IUserInterface
     public string GetScientistName(int epoch)
     {
         return Labels.For(epoch < 3 ? LabelIndex.wisemen : LabelIndex.scientists);
-    }
-
-    public IInterfaceAction HandleLoadGame(IGame game, Civ2engine.Rules rules, Ruleset ruleset)
-    {
-        
-        ExpectedMaps = game.NoMaps;
-        Initialization.LoadGraphicsAssets(this);
-        Initialization.LoadGraphicsAssets(this);
-
-        Initialization.Start(game);
-        return DialogHandlers[LoadOk.Title].Show(this);
     }
 }

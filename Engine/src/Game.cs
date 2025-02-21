@@ -7,6 +7,7 @@ using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Scripting;
 using Civ2engine.Units;
+using Model;
 using Model.Core;
 
 namespace Civ2engine
@@ -50,20 +51,8 @@ namespace Civ2engine
 
         public IPlayer ActivePlayer => Players[_activeCiv.Id];
 
-        public Unit? ActiveUnit
-        {
-            get => Players[_activeCiv.Id].ActiveUnit;
-            set
-            {
-                var player = Players[_activeCiv.Id];
-                player.ActiveUnit = value;
-                if (player.ActiveUnit == value && value != null)
-                {
-                    TriggerUnitEvent(new ActivationEventArgs(value, true, false));
-                }
-            }
-        }
-
+        private int _activeCivId = -1;
+        
         private Civilization
             _activeCiv; // ActiveCiv can be AI. PlayerCiv is human. They are equal except during enemy turns.
 
@@ -76,7 +65,6 @@ namespace Civ2engine
         private History? _history;
         public IScriptEngine Script { get; }
 
-        public Map CurrentMap => _maps[ActiveTile.Z];
         public int NoMaps => _maps.Length;
 
         public int TotalMapArea => _maps.Select(m => m.Tile.GetLength(0) * m.Tile.GetLength(1)).Sum();
@@ -147,7 +135,7 @@ namespace Civ2engine
             var id = player.Civilization.Id;
             var currentPlayer = Players[id];
             player.ActiveTile = currentPlayer.ActiveTile;
-            player.ActiveUnit = currentPlayer.ActiveUnit;
+            player.SetUnitActive(currentPlayer.ActiveUnit, false);
             Players[id] = player;
             Script.Connect(player.Ui);
         }

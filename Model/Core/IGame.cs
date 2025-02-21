@@ -10,14 +10,14 @@ namespace Model.Core;
 public interface IGame
 {
     FastRandom Random { get;  }
-    Map CurrentMap { get;  }
     Civilization GetPlayerCiv { get; }
     IDictionary<int,TerrainImprovement> TerrainImprovements { get; }
     
     Rules Rules { get; }
     Civilization GetActiveCiv { get; }
     Options Options { get; }
-
+    Scenario ScenarioData { get; }
+    
     IPlayer ActivePlayer { get; }
     IScriptEngine Script { get; }
     
@@ -47,8 +47,9 @@ public interface IGame
     List<Civilization> AllCivilizations { get; }
 
     event EventHandler<UnitEventArgs> OnUnitEvent;
-    void AiTurn();
     void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked);
     void TriggerUnitEvent(UnitEventArgs combatEventArgs);
     void SetHumanPlayer(int playerCivId);
+    void StartPlayerTurn(IPlayer activePlayer);
+    void StartNextTurn();
 }   

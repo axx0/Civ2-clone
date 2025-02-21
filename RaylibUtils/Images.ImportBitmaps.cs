@@ -87,14 +87,14 @@ namespace RaylibUtils
             return ExtractBitmapData(imageSource, active: null).Image;
         }
 
-        public static int GetImageWidth(IImageSource? imageSource, float scale = 1f) 
+        public static int GetImageWidth(IImageSource? imageSource, IUserInterface active, float scale = 1f) 
         { 
-            return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource).Width * scale);
+            return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource, active).Width * scale);
         }
 
-        public static int GetImageHeight(IImageSource? imageSource, float scale = 1f)
+        public static int GetImageHeight(IImageSource? imageSource, IUserInterface active, float scale = 1f)
         {
-            return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource).Height * scale);
+            return imageSource == null ? 0 : (int)(ExtractBitmap(imageSource, active).Height * scale);
         }
 
         public static ImageProps ExtractBitmapData(IImageSource imageSource, IUserInterface? active, int owner = -1, string[]? searchPaths = null)
@@ -140,6 +140,7 @@ namespace RaylibUtils
                             string[] _paths = active != null ?
                                 active.MainApp.ActiveRuleSet.Paths : searchPaths ?? Settings.SearchPaths;
                             var path = Utils.GetFilePath(bitmapStorage.Filename, _paths, bitmapStorage.Extension);
+                            path ??= Utils.GetFilePath(bitmapStorage.Filename, Settings.SearchPaths, bitmapStorage.Extension);
                             var source_img_bpp = Images.LoadImageFromFile(path);
                             _imageCache[sourceKey] = source_img_bpp.Image;
                             _sourceBpp[sourceKey] = source_img_bpp.ColourDepth;

@@ -109,6 +109,8 @@ namespace Civ2engine.MapObjects
         
         public static void RenumberOceans(this Map map, IEnumerable<IslandDetails> oceans)
         {
+            if (!oceans.Any()) return;
+
             var orderedOceans = oceans.OrderByDescending(i => i.Tiles.Count).ToList();
 
             orderedOceans[0].Id = 0;

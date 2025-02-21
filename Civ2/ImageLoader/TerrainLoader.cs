@@ -17,6 +17,7 @@ namespace Civ2.ImageLoader
     {
         public static void LoadTerrain(Ruleset ruleset, IUserInterface active)
         {
+            active.TileSets.Clear();
             for (var i = 0; i < active.ExpectedMaps; i++)
             {
                 active.TileSets.Add(LoadTerrain(ruleset, i, active));
@@ -30,11 +31,11 @@ namespace Civ2.ImageLoader
 
             // Get dither tile before making it transparent
             var ditherTile = Images.ExtractBitmap(MapIndexChange((BitmapStorage)active.PicSources["dither"][0], index, active));
-            
+
             Color gray;
             unsafe
             {
-                // Get the gray colour (it's not always the same in MGE/TOT, unlike pink)
+                // Get the gray colour (it's not always the same in MGE/TOT, unlike magenta)
                 var imageColours = ditherTile.LoadColors();
                 gray = imageColours[0];
                 Image.UnloadColors(imageColours);

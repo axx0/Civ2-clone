@@ -43,8 +43,8 @@ public class MinimapPanel : BaseControl
         _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, _padding.Top);
         _headerLabel.OnResize();
         
-        _offset = new[] { ( Width - 2 * _game.CurrentMap.XDim) / 2,
-            _padding.Top + ( Height - _padding.Top - _padding.Bottom - _game.CurrentMap.YDim) / 2 };
+        _offset = new[] { ( Width - 2 * _gameScreen.CurrentMap.XDim) / 2,
+            _padding.Top + ( Height - _padding.Top - _padding.Bottom - _gameScreen.CurrentMap.YDim) / 2 };
         base.OnResize();
     }
 
@@ -57,16 +57,18 @@ public class MinimapPanel : BaseControl
             return;
         }
 
+        var currentMap = _gameScreen.CurrentMap;
         var clickedTilePosition = clickPosition - new Vector2(_offset[0],_offset[1]) + new Vector2(GetCenterShift(), 0);
-        clickedTilePosition.X = WrapNumber((int)clickedTilePosition.X, 2 * _game.CurrentMap.XDim);
-        if (clickPosition.Y > _gameScreen.Game.CurrentMap.YDim)
+        clickedTilePosition.X = WrapNumber((int)clickedTilePosition.X, currentMap.XDim);
+        if (clickPosition.Y > currentMap.YDim)
         {
-            clickPosition.Y = _gameScreen.Game.CurrentMap.YDim-1;
+            clickPosition.Y = currentMap.YDim-1;
         }
+        
         _gameScreen.Game.ActivePlayer.ActiveTile =
-            _gameScreen.Game.CurrentMap.Tile[(int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y];
+            currentMap.Tile[(int)clickedTilePosition.X , (int)clickedTilePosition.Y];
         _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged,
-                new[] { (int)clickedTilePosition.X / 2, (int)clickedTilePosition.Y }));
+                new[] { (int)clickedTilePosition.X, (int)clickedTilePosition.Y }));
     }
 
     private void MapEventTriggered(object sender, MapEventArgs e)
@@ -100,7 +102,7 @@ public class MinimapPanel : BaseControl
     {
         Graphics.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
         Graphics.DrawRectangle((int)Location.X + _padding.Left, (int)Location.Y + _padding.Top, Width - _padding.Left - _padding.Right, Height - _padding.Top - _padding.Bottom, Color.Black);
-        var map = _game.CurrentMap;
+        var map = _gameScreen.CurrentMap;
         // Draw map
         for (var row = 0; row < map.YDim; row++)
         {
@@ -109,7 +111,7 @@ public class MinimapPanel : BaseControl
                 var tileX = WrapNumber(2 * col + GetCenterShift(), 2 * map.XDim) / 2;
 
                 var tile = map.Tile[tileX, row];
-                if (!map.MapRevealed && !tile.IsVisible(_game.GetActiveCiv.Id)) continue;
+                if (!map.MapRevealed && !tile.IsVisible(_gameScreen.VisibleCivId)) continue;
 
                 var drawColor = tile.CityHere is not null
                     ? _active.PlayerColours[tile.CityHere.Owner.Id].TextColour
@@ -132,7 +134,7 @@ public class MinimapPanel : BaseControl
         base.Draw(pulse);
     }
 
-    private int GetCenterShift() => _game.CurrentMap.Flat ? 0 : _mapStartXy[0] + _mapDrawSq[0] / 2 - _game.CurrentMap.XDim;
+    private int GetCenterShift() => _gameScreen.CurrentMap.Flat ? 0 : _mapStartXy[0] + _mapDrawSq[0] / 2 - _gameScreen.CurrentMap.XDim;
 
     private static int WrapNumber(int number, int range) => (number % range + range) % range;
 }

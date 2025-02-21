@@ -17,6 +17,7 @@ using Raylib_CSharp.Images;
 using Raylib_CSharp.Rendering;
 using RaylibUtils;
 using static Model.Menu.CommandIds;
+using System.ComponentModel.Design;
 
 namespace Civ2Gold;
 
@@ -136,6 +137,8 @@ public class Civ2GoldInterface : Civ2Interface
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14))).ToArray() },
             { "globalWarming", Enumerable.Range(0, 4).Select(col =>
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14))).ToArray() },
+            { "zoomIn", new[] { new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16)) } },
+            { "zoomOut", new[] { new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16)) } },
             { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0xF7454, 0x1389D) } },
             { "backgroundImageSmall1", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(332, 134, 64, 64)) } },
             { "backgroundImageSmall2", new[]{ new BinaryStorage("Tiles.dll", 0xED354, 0xA0FD, new Rectangle(398, 134, 64, 64)) } },
@@ -245,16 +248,16 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("&View", Shortcut.None, KeyboardKey.V),
                 new MenuElement("&Move Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.M),
                 new MenuElement("&View Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.V),
-                new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.Z), KeyboardKey.I),
-                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.X), KeyboardKey.O),
+                new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.Z), KeyboardKey.I, commandId: ZoomIn),
+                new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.X), KeyboardKey.O, commandId: ZoomOut),
                 new MenuElement("Max Zoom In|Ctrl+Z", new Shortcut(KeyboardKey.Z, ctrl: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: MaxZoomIn),
                 new MenuElement("Standard Zoom|Shift+Z", new Shortcut(KeyboardKey.Z, shift: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: StandardZoom),
                 new MenuElement("Medium Zoom Out|Shift+X", new Shortcut(KeyboardKey.X, shift: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: MediumZoomOut),
                 new MenuElement("Max Zoom Out|Ctrl+X", new Shortcut(KeyboardKey.X, ctrl: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: MaxZoomOut),
                 new MenuElement("Show Map Grid|Ctrl+G", new Shortcut(KeyboardKey.G, ctrl: true),
                     KeyboardKey.Null),
                 new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.Null),
@@ -337,7 +340,7 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("Create &Unit|Shift+F1", new Shortcut(KeyboardKey.F1, shift: true),
                     KeyboardKey.U),
                 new MenuElement("Reveal &Map|Shift+F2", new Shortcut(KeyboardKey.F2, shift: true),
-                    KeyboardKey.M),
+                    KeyboardKey.M, CheatRevealMapCommand),
                 new MenuElement("Set &Human Player|Shift+F3", new Shortcut(KeyboardKey.F3, shift: true),
                     KeyboardKey.H),
                 new MenuElement("Set Game Year|Shift+F4", new Shortcut(KeyboardKey.F4, shift: true),

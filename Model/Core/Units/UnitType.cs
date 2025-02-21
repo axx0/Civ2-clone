@@ -1,4 +1,5 @@
 using Civ2engine.Enums;
+using Model.Constants;
 
 namespace Civ2engine.Units
 {
@@ -15,7 +16,7 @@ namespace Civ2engine.Units
         public int Firepwr { get; set; }
         public int Cost { get; set; }
         public int Hold { get; set; }
-        public AIroleType AIrole { get; set; }
+        public AiRoleType AIrole { get; set; }
         public int Prereq { get; set; }
         public string Flags { get; set; }
         public int Type { get; set; }

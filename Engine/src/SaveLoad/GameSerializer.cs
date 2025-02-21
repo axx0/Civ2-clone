@@ -20,7 +20,7 @@ public class GameSerializer
     
     public static readonly CityInfo? DummyCityHere = new();
     
-    public void Write(FileStream saveFile, IGame game, Ruleset ruleset)
+    public void Write(FileStream saveFile, IGame game, Ruleset ruleset, Dictionary<string, string> viewData)
     {
         //For debug purposes we write out formatted json, once we're satisfied it works we can minify and gzip it
         // using var compressor = new GZipStream(saveFile, CompressionMode.Compress);
@@ -34,7 +34,12 @@ public class GameSerializer
             writer.WriteString(pair.Key, pair.Value);
         }
         writer.WriteEndObject();
-        
+        writer.WriteStartObject("viewData");
+        foreach (var pair in viewData)
+        {
+            writer.WriteString(pair.Key, pair.Value);
+        }
+        writer.WriteEndObject();
         writer.WriteStartObject("game");
         writer.WriteNonDefaultFields("opts", game.Options);
         writer.WriteNonDefaultFields("data", new JsonGameData(game));
@@ -98,6 +103,7 @@ public class GameSerializer
         {
             improvementEncoder = new ImprovementEncoder(encoderElement);
         }
+     
         var gameObjects = new JsonSaveObjects
         {
             Maps = MapSerializer.Read(gameElement.GetProperty("maps"), rules, improvementEncoder),
