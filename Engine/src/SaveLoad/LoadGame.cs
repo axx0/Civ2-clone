@@ -20,6 +20,8 @@ public static class LoadGame
         var fileData = File.ReadAllBytes(path);
         bool classicSave = fileData[0] == 67;   // Classic saves start with the word CIVILIZE so if we see a C treat it as old 
 
+        //TODO: File.ReadAllBytes above will throw a FileNotFoundException if the sav file doesn't exist.
+        //So the fileData.Length check is not checking the right thing and the throw statement isn't really needed.
         if (fileData.Length == 0)
             throw new FileNotFoundException($"File {path} not found");
 
