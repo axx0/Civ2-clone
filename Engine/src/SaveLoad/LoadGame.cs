@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 using Civ2engine.IO;
-using Civ2engine.OriginalSaves;
+using Civ2engine.src.SaveLoad.SavFile;
 using Model;
-using Model.Core;
 using Model.InterfaceActions;
 
 namespace Civ2engine.SaveLoad;
@@ -33,57 +31,30 @@ public static class LoadGame
 
         var extendedMetadata = new Dictionary<string, string>();
 
-        JsonDocument jsonDocument = null!;
-        if (classicSave)
-        {
-            var scnNames = new string[] { "Original", "SciFi", "Fantasy" };
-            if (fileData[10] > 44)
-            {
-                extendedMetadata.Add("TOT-Scenario", scnNames[fileData[982]]);
-            }
-        }
-        else
-        {
-            // We're in new territory... 
-            jsonDocument = JsonDocument.Parse(fileData);
-
-            var metaData = jsonDocument.RootElement.GetProperty("extendedMetadata");
-            foreach (var meta in metaData.EnumerateObject())
-            {
-                extendedMetadata[meta.Name] = meta.Value.GetString() ?? string.Empty;
-            }
-        }
-
         var savDirectory = Path.GetDirectoryName(path);
         var root = Settings.SearchPaths.FirstOrDefault(savDirectory.StartsWith) ?? Settings.SearchPaths[0];
         var activeInterface = mainApp.SetActiveRulesetFromFile(root, savDirectory, extendedMetadata);
-        var rules = RulesParser.ParseRules(activeInterface.MainApp.ActiveRuleSet);
+        var activeRuleSet = activeInterface.MainApp.ActiveRuleSet;
+        var rules = RulesParser.ParseRules(activeRuleSet);
 
-        var viewData = new Dictionary<string, string?>();
-        IGame game;
         if (classicSave)
         {
-            game = Read.ClassicSav(fileData, activeInterface.MainApp.ActiveRuleSet, rules, viewData);
-
+            var classicSavFile = new ClassicSavFile();
+            var game = classicSavFile.LoadGame(fileData, activeRuleSet, rules);
             if (string.Equals(Path.GetExtension(path), ".scn", StringComparison.OrdinalIgnoreCase))
             {
                 var scnName = Path.GetFileName(path);
                 return activeInterface.HandleLoadScenario(game, scnName, savDirectory);
             }
+            return activeInterface.HandleLoadGame(game, rules, activeRuleSet, classicSavFile.ViewData!);
+
         }
         else
         {
-
-            if (jsonDocument.RootElement.TryGetProperty("viewData", out var viewDataElement))
-            {
-                foreach (var prop in viewDataElement.EnumerateObject())
-                {
-                    viewData[prop.Name] = prop.Value.GetString();
-                }
-            }
-            game = GameSerializer.Read(jsonDocument.RootElement.GetProperty("game"), activeInterface.MainApp.ActiveRuleSet, rules);
+            // We're in new territory... 
+            var jsonSavFile = new JsonSavFile();
+            var game = jsonSavFile.LoadGame(fileData, activeRuleSet, rules);
+            return activeInterface.HandleLoadGame(game, rules, activeRuleSet, jsonSavFile.ViewData!);
         }
-
-        return activeInterface.HandleLoadGame(game, rules, activeInterface.MainApp.ActiveRuleSet, viewData);
     }
 }
