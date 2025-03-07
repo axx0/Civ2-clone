@@ -1,16 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Civ2engine.IO;
+using Civ2engine.SaveLoad.SavFile;
 using Model;
 using Model.Core;
 using Model.InterfaceActions;
-using Civ2engine.src.SaveLoad.SavFile;
-using System.Formats.Tar;
 
-namespace Civ2engine.src.SaveLoad;
+namespace Civ2engine.SaveLoad;
 
-public class GameLoader
+public interface IGameLoader
+{
+    IInterfaceAction LoadGame(IGame game, IUserInterface activeInterface);
+}
+
+public class GameLoader : IGameLoader
 {
     private string path;
     private string savDirectory; // Only needed for when dealing with scenario loading, not used for normal files.

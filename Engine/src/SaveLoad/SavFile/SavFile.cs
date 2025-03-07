@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Civ2engine.IO;
 using Civ2engine.OriginalSaves;
-using Civ2engine.SaveLoad;
 using Model.Core;
 
-namespace Civ2engine.src.SaveLoad.SavFile;
+namespace Civ2engine.SaveLoad.SavFile;
 
 public interface ISavFile
 {

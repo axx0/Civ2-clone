@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Civ2engine.IO;
-using Civ2engine.src.SaveLoad;
-using Civ2engine.src.SaveLoad.SavFile;
+using Civ2engine.SaveLoad.SavFile;
 using Model;
 using Model.InterfaceActions;
 
