@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Civ2engine.IO;
+using Civ2engine.src.SaveLoad;
 using Civ2engine.src.SaveLoad.SavFile;
 using Model;
 using Model.InterfaceActions;
@@ -35,26 +36,22 @@ public static class LoadGame
         var root = Settings.SearchPaths.FirstOrDefault(savDirectory.StartsWith) ?? Settings.SearchPaths[0];
         var activeInterface = mainApp.SetActiveRulesetFromFile(root, savDirectory, extendedMetadata);
         var activeRuleSet = activeInterface.MainApp.ActiveRuleSet;
-        var rules = RulesParser.ParseRules(activeRuleSet);
+        var rules = RulesParser.ParseRules(activeRuleSet);        
 
         if (classicSave)
         {
             var classicSavFile = new ClassicSavFile();
+            var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, classicSavFile);
             var game = classicSavFile.LoadGame(fileData, activeRuleSet, rules);
-            if (string.Equals(Path.GetExtension(path), ".scn", StringComparison.OrdinalIgnoreCase))
-            {
-                var scnName = Path.GetFileName(path);
-                return activeInterface.HandleLoadScenario(game, scnName, savDirectory);
-            }
-            return activeInterface.HandleLoadGame(game, rules, activeRuleSet, classicSavFile.ViewData!);
-
+            return gameLoader.LoadGame(game, savDirectory, activeInterface);
         }
         else
         {
             // We're in new territory... 
             var jsonSavFile = new JsonSavFile();
+            var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, jsonSavFile);
             var game = jsonSavFile.LoadGame(fileData, activeRuleSet, rules);
-            return activeInterface.HandleLoadGame(game, rules, activeRuleSet, jsonSavFile.ViewData!);
+            return gameLoader.LoadGame(game, savDirectory, activeInterface);
         }
     }
 }

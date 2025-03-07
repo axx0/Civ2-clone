@@ -12,7 +12,7 @@ public interface ISavFile
     public IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules);
 }
 
-public abstract class SavFile : ISavFile
+public abstract class SavFileBase : ISavFile
 {    
     protected Dictionary<string, string> viewData = new Dictionary<string, string>();
     public Dictionary<string, string> ViewData => viewData;
@@ -21,7 +21,7 @@ public abstract class SavFile : ISavFile
     public abstract IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules);
 }
 
-public class ClassicSavFile : SavFile
+public class ClassicSavFile : SavFileBase
 {
     public override IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules)
     {
@@ -35,7 +35,7 @@ public class ClassicSavFile : SavFile
     }
 }
 
-public class JsonSavFile : SavFile
+public class JsonSavFile : SavFileBase
 {
     public override IGame LoadGame(byte[] fileData, Ruleset activeRuleSet, Rules rules)
     {
