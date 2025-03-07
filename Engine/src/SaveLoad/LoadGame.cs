@@ -43,7 +43,7 @@ public static class LoadGame
             var classicSavFile = new ClassicSavFile();
             var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, classicSavFile);
             var game = classicSavFile.LoadGame(fileData, activeRuleSet, rules);
-            return gameLoader.LoadGame(game, savDirectory, activeInterface);
+            return gameLoader.LoadGame(game, activeInterface);
         }
         else
         {
@@ -51,7 +51,7 @@ public static class LoadGame
             var jsonSavFile = new JsonSavFile();
             var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, jsonSavFile);
             var game = jsonSavFile.LoadGame(fileData, activeRuleSet, rules);
-            return gameLoader.LoadGame(game, savDirectory, activeInterface);
+            return gameLoader.LoadGame(game, activeInterface);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Civ2engine.src.SaveLoad;
 public class GameLoader
 {
     private string path;
-    private string savDirectory;
+    private string savDirectory; // Only needed for when dealing with scenario loading, not used for normal files.
     private Rules rules;
     private Ruleset activeRuleSet;
     SavFileBase savFile;
@@ -27,14 +27,14 @@ public class GameLoader
         this.savFile = savFile;
     }
 
-    public IInterfaceAction LoadGame(IGame game, string savDirectory, IUserInterface activeInterface)
+    public IInterfaceAction LoadGame(IGame game, IUserInterface activeInterface)
     {
         // TODO: This was only possible for a classic sav file. Was this intentional?
         if (string.Equals(Path.GetExtension(path), ".scn", StringComparison.OrdinalIgnoreCase))
-            {
-                var scnName = Path.GetFileName(path);
-                return activeInterface.HandleLoadScenario(game, scnName, savDirectory);
+        {
+            var scnName = Path.GetFileName(path);
+            return activeInterface.HandleLoadScenario(game, scnName, savDirectory);
         }
-            return activeInterface.HandleLoadGame(game, rules, activeRuleSet, savFile.ViewData!);
+        return activeInterface.HandleLoadGame(game, rules, activeRuleSet, savFile.ViewData!);
     }
 }
