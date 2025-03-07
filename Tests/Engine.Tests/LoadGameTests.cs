@@ -200,7 +200,7 @@ internal class MockInterface : IUserInterface
 
     public IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory)
     {
-        throw new NotImplementedException();
+        return new MockAction();
     }
 
     public void Initialize()
