@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad;
 using Civ2engine.SaveLoad.SavFile;
 using Civ2engine.Units;
+using Engine.Tests.TestFiles;
 using Model;
 using Model.Core;
 using Model.InterfaceActions;
@@ -18,10 +19,13 @@ public class GameLoaderTests
     public void TestLoadGameHandlesScenarioFile()
     {
         // Arrange
-        var path = "C:\\code\\Civilization_2\\saves\\test_scenario.scn";
-        var savDirectory = "C:\\code\\Civilization_2\\saves";
+        var path = TestFileUtils.GetTestFilePath("test_scenario.scn");
+        var savDirectory = TestFileUtils.GetTestFileDirectory();
         var rules = new Rules();
-        var activeRuleSet = new Ruleset("mock", new Dictionary<string, string>(), new[] { "C:\\code\\Civilization_2\\saves", "C:\\code\\Civilization_2" });
+        var activeRuleSet = new Ruleset(
+            "mock",
+            new Dictionary<string, string>(),
+            [savDirectory]);
         var savFile = new MockSavFile();
         var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, savFile);
         var game = new MockGame();
@@ -39,10 +43,13 @@ public class GameLoaderTests
     public void TestLoadGameHandlesNormalFile()
     {
         // Arrange
-        var path = "C:\\code\\Civilization_2\\saves\\test_game.sav";
-        var savDirectory = "C:\\code\\Civilization_2\\saves";
+        var path = TestFileUtils.GetTestFilePath("test_game.sav");
+        var savDirectory = TestFileUtils.GetTestFileDirectory();
         var rules = new Rules();
-        var activeRuleSet = new Ruleset("mock", new Dictionary<string, string>(), new[] { "C:\\code\\Civilization_2\\saves", "C:\\code\\Civilization_2" });
+        var activeRuleSet = new Ruleset(
+            "mock",
+            new Dictionary<string, string>(),
+            [savDirectory]);
         var savFile = new MockSavFile();
         var gameLoader = new GameLoader(path, savDirectory, rules, activeRuleSet, savFile);
         var game = new MockGame();
