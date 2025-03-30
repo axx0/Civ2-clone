@@ -15,6 +15,7 @@ public static class CommandIds
     public const string StandardZoom = "STANDARD_ZOOM";
     public const string MediumZoomOut = "MEDIUM_ZOOM_OUT";
     public const string MaxZoomOut = "MAX_ZOOM_OUT";
+    public const string ShowMapGrid = "SHOW_MAP_GRID";
     public const string MapLayoutToggle = "MAP_LAYOUT";
     
     public const string WaitOrder = "UNIT_ORDER_WAIT";

@@ -124,7 +124,7 @@ public class MapControl : BaseControl
         {
             _backgroundImage.Value.Unload();
         }
-        _backgroundImage = ImageUtils.PaintDialogBase(_gameScreen.Main.ActiveInterface, Width, Height, _padding, noWallpaper:true);
+        _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, _padding, noWallpaper:true);
 
         if (!_gameScreen.ToTPanelLayout)
         {
@@ -187,8 +187,8 @@ public class MapControl : BaseControl
 
         var map = _gameScreen.CurrentMap;
         var dim = _gameScreen.TileCache.GetDimensions(map, _gameScreen.Zoom);
-        var clickedTilePosition = clickPosition - new Vector2(_padding.Left + _padding.Right, _padding.Top) + _currentView.Offsets;
-        var y = Math.DivRem((int)(clickedTilePosition.Y), dim.HalfHeight, out var yRemainder);
+        var clickedTilePosition = clickPosition - new Vector2(_padding.Left, _padding.Top) + _currentView.Offsets;
+        var y = Math.DivRem((int)clickedTilePosition.Y, dim.HalfHeight, out var yRemainder);
         var odd = y % 2 == 1;
         var clickX = (int)(odd ? clickedTilePosition.X - dim.HalfWidth : clickedTilePosition.X);
         if (clickX < 0)
@@ -256,6 +256,7 @@ public class MapControl : BaseControl
 
         if (0 <= y && y < map.Tile.GetLength(1))
         {
+            x = Utils.WrapNumber(2 * x + _currentView.Xshift, 2 * map.XDim) / 2;
             return map.Tile[x, y];
         }
 
@@ -276,6 +277,7 @@ public class MapControl : BaseControl
         {
             case MapEventType.MinimapViewChanged:
                 {
+                    ForceRedraw = true;
                     if (_currentView.IsDefault)
                     {
                         if (_gameScreen.ActiveMode != _gameScreen.ViewPiece)
@@ -322,7 +324,7 @@ public class MapControl : BaseControl
         }
 
         var paddedLoc = new Vector2(Location.X + _padding.Left, Location.Y + _padding.Top);
-        Graphics.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f,1f,
+        Graphics.DrawTextureEx(_currentView.BaseImage, paddedLoc, 0f, 1f,
             Color.White);
 
         var cityDetails = new List<CityData>();
@@ -368,6 +370,7 @@ public class MapControl : BaseControl
 
         if (_backgroundImage != null)
             Graphics.DrawTextureEx(_backgroundImage.Value, Location, 0f, 1f, Color.White);
+
         if (!_gameScreen.ToTPanelLayout)
         {
             _headerLabel.Draw(pulse);

@@ -17,7 +17,7 @@ namespace Civ2engine.MapObjects
         private bool[] _visibility;
         public int X { get; }
         public int Y { get; }
-        
+
         public int Z { get;}
 
         public int Odd { get; }

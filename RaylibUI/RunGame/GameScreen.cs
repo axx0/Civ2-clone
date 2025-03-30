@@ -35,7 +35,7 @@ public class GameScreen : BaseScreen
     private readonly StatusPanel _statusPanel;
     private readonly LocalPlayer _player;
     private readonly GameMenu _menu;
-    private bool _ToTPanelLayout;
+    private bool _ToTPanelLayout, _showGrid;
 
     public IGameMode ActiveMode
     {
@@ -60,6 +60,7 @@ public class GameScreen : BaseScreen
 
     public StatusPanel StatusPanel => _statusPanel;
     public bool ToTPanelLayout => _ToTPanelLayout;
+    public bool ShowGrid => _showGrid;
     public GameMenu MenuBar => _menu;
     public IGameMode Moving { get; }
     public IGameMode ViewPiece { get; }
@@ -98,8 +99,8 @@ public class GameScreen : BaseScreen
         game.ConnectPlayer(_player);
 
         _ToTPanelLayout = false;
-        _miniMapHeight = Math.Max(100, game.Maps[_player.ActiveTile.Z].YDim) + 38 + 11;
-
+        _miniMapHeight = Math.Max(100, CurrentMap.YDim) + 38 + 11;
+        
         var commands = SetupCommands(game);
         var menuElements = main.ActiveInterface.ConfigureGameCommands(commands);
         _menu = new GameMenu(this, menuElements);
@@ -363,6 +364,12 @@ public class GameScreen : BaseScreen
     {
         _ToTPanelLayout = !_ToTPanelLayout;
         Resize(Window.GetScreenWidth(), Window.GetScreenHeight());
+    }
+
+    public void ShowMapGrid()
+    {
+        _showGrid = !_showGrid;
+        ForceRedraw();
     }
 
     public void TurnStarting(int turnNumber)

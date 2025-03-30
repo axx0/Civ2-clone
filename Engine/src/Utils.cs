@@ -7,6 +7,8 @@ namespace Civ2engine
 {
     public static class Utils
     {
+        public static int WrapNumber(int number, int range) => (number % range + range) % range;
+
         public static int GreatestCommonFactor(int a, int b)
         {
             while (b != 0)

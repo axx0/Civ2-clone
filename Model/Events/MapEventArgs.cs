@@ -10,25 +10,12 @@ namespace Civ2engine.Events
         public MapEventType EventType { get; }
         public List<Tile> TilesChanged { get; set; }
 
-        public int[] CentrXy, MapStartXy, MapDrawSq;
-        public int Zoom;
+        public int[] MapStartXy, MapDrawSq;
+        public int Zoom, Xshift;
 
         public MapEventArgs(MapEventType eventType)
         {
             EventType = eventType;
-        }
-
-        public MapEventArgs(MapEventType eventType, int[] centrXy)
-        {
-            EventType = eventType;
-            CentrXy = centrXy;
-        }
-
-        public MapEventArgs(MapEventType eventType, int[] mapStartXy, int[] mapDrawSq)
-        {
-            EventType = eventType;
-            MapStartXy = mapStartXy;
-            MapDrawSq = mapDrawSq;
         }
     }
 }

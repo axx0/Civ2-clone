@@ -259,7 +259,7 @@ public class Civ2GoldInterface : Civ2Interface
                 new MenuElement("Max Zoom Out|Ctrl+X", new Shortcut(KeyboardKey.X, ctrl: true),
                     KeyboardKey.Null, commandId: MaxZoomOut),
                 new MenuElement("Show Map Grid|Ctrl+G", new Shortcut(KeyboardKey.G, ctrl: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: ShowMapGrid),
                 new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Show Hidden Terrain|t", new Shortcut(KeyboardKey.T), KeyboardKey.T),
                 new MenuElement("&Center View|c", new Shortcut(KeyboardKey.C), KeyboardKey.C)
