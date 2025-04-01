@@ -21,7 +21,8 @@ public class LoadGameTests
     {
         // We need to hard code the SearchPaths here for the LoadFrom() method to work properly under test.
         _mockMainApp = new MockMainApp();
-        Settings.AddPath(TestFileUtils.GetTestFilePath("testfile.sav"));
+        var testFileDirectory = TestFileUtils.GetTestFileDirectory();
+        Settings.SearchPaths = [testFileDirectory, testFileDirectory];
         
         // This is also needed so that the Barbarians civ can be initialised in the GameSerializer.
         // JSON save file loading fails if this isn't pre-populated.
