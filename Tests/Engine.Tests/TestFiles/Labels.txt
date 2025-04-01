@@ -1,0 +1,904 @@
+;
+;		labels.txt
+;
+
+@STRINGHEAP
+50000 ; don't change: controls string heap size WFD: Made larger than 16368
+
+@POPUPS
+OK
+Help
+Cancel
+Custom
+
+
+@LABELS
+888
+B.C.
+A.D.
+Civilization II Multiplayer Gold
+Building Sprites
+Map
+Status
+World
+City
+Building World
+Moving Units
+Viewing Pieces
+Loc
+Moves
+Veteran
+NONE
+Barbarians
+Barbarian
+Attila
+River
+Railroad
+Road
+Farmland
+Mining
+Irrigation
+More
+Units
+No Orders
+End of Turn
+Press ENTER
+Village
+People
+City of
+Zoom to City
+Continue
+Population
+Buy
+Change
+Exit
+View
+Info
+Happy
+Map
+Rename
+Food Storage
+Turns
+Turn
+Fortress
+Pollution
+wise men
+scientists
+&Build New City|b
+&Join City|b
+Build &Road|r
+Build &RR Track|r
+Build &Irrigation|i
+Change to %STRING0|i
+Build &Mines|m
+Change to %STRING0|m
+Set &Home City|h
+Go &Home To Nearest City|h
+Transf&orm to %STRING0|o
+&Improve Farmland|i
+Select Unit To Activate
+City Resources
+Food
+Surplus
+Support
+Waste
+Production
+Trade
+Corruption
+Tax
+Lux
+Sci
+Hunger
+Shortage
+Cheat!
+All!
+No Special View
+Entire Map
+No Human Player
+No changes.
+Clear orders.
+Sleep / Board next ship.
+Fortify.
+Move to front.
+Supplies
+Demands
+Wonders
+Taxes
+Luxuries
+Science
+Auto
+Tithes
+develop
+acquire
+from the
+Airbase
+Barbarian uprising
+Major barbarian horde
+Native unrest
+Peasant revolt
+Guerrilla uprising
+Religious fanatics in arms
+Check Intelligence
+he
+she
+"Will you accept %STRING4 instead?"
+demand
+request
+insist, under the terms of our alliance,
+gratefully
+warmly
+cordially
+Offer
+extend our
+sign an
+him
+her
+Select unit to offer
+In Production
+Prerequisites
+Allows
+with
+Unit
+Improvement
+Prerequisite
+Attack Strength
+Defense Strength
+Movement Rate
+Hit Points
+Firepower
+Cost
+First
+Disorder
+Total Cost
+Total Income
+Discoveries
+Unhappy
+Content
+of the
+Allied
+Peace
+Cease Fire
+War
+No Embassy
+Aggressive
+Rational
+Expansionist
+Perfectionist
+Civilized
+Militaristic
+Government
+Capital
+Treasury
+Military
+At
+Contact
+Maintenance
+Expires
+Build Railroad
+Keep moving.
+Establish trade route.
+Help build WONDER.
+Att
+Def
+Move
+Hits
+Power
+Routes
+ADM
+HP
+Lost
+of
+capture
+liberate
+captured
+liberated
+Near
+Support From This City.
+Disband
+or
+commissions
+launches
+discovers
+grants
+completes
+builds
+produces
+Zoom to Home City.
+Activate Unit.
+Activate Unit and Close City Screen.
+Food Supplies
+Diagmotizing Sprites...
+Diagonal Test View
+Advances
+Units
+Cities      
+Structural
+Propulsion
+Fuel
+Habitation
+Life Support
+Solar Panel
+Support
+Energy
+Mass
+Flight Time
+Prob. of Success
+tons
+years
+Launched
+Landed
+Launch
+Civilization POWERgraph
+The
+in
+Civilization
+Arrives in
+and
+Spotless
+Excellent
+Honorable
+Questionable
+Dishonorable
+Poor
+Despicable
+Atrocious
+Pathetic
+Weak
+Inadequate
+Moderate
+Strong
+Mighty
+Supreme
+Fusion Powered!
+Researching
+Free
+Save Files
+Select File Name For Saved Game
+Select Game To Load
+Proceed
+Govts: Overview
+the
+Building
+Unexplored
+Bronze Age Monolith
+Classical Forum
+Far East Pavilion
+Medieval Castle
+Early Industrial
+Modern
+Extra
+Extra
+OK
+Cancel
+Maximum Rate
+How Shall We Distribute The Wealth
+Lock
+Select Map To Load
+Select File Name For Saved Map
+Map Files
+Both
+Tools
+Civilization II Map Editor
+Paint: Shift+LEFT click
+Grab: Shift+RIGHT click
+Add Item:    Shift+LEFT
+Delete Item: Shift+RIGHT
+COASTLINE PROTECT
+AUTOSCROLL
+Painting
+Brush
+World Size
+Special
+Start Cities
+Cursor
+1x1
+3x3
+5x5
+Cross
+City Radius
+?
+Flat
+Round
+Waiting For Players To Join
+Games Available
+Allow In Game
+Reject Player
+Remove From Game
+Start Game
+Want To Play
+Going To Play
+NONE YET
+Join Game
+'s Game
+Waiting
+Setting Up
+Pick Your Portrait
+High Council
+Static View
+Track Friendly Moves
+Track Enemy Moves
+Track All Moves
+Speak Freely
+(Waiting for others...)
+Disband Unit.
+demands
+does not demand
+Parleying with
+We offer
+offer
+Offer Treaty
+Offer Gold
+Offer Tech
+Offer Maps
+Offer D. of War
+Reject Offer
+Withdraw Offer
+Propose This Deal
+Alliance
+Peace Treaty
+Share Maps
+Gold
+Auto Off
+Prev
+Next
+Close
+Empire
+Kingdom
+People's Republic
+Holy Empire
+Republic
+United States
+CITY STATUS
+DEFENSE MINISTER
+FOREIGN MINISTER - Intelligence Report
+ATTITUDE ADVISOR
+TRADE ADVISOR
+SCIENCE ADVISOR
+WONDERS OF THE WORLD
+TOP FIVE CITIES
+Demographics
+CIVILIZATION SCORE
+Statistics          
+Casualties
+active
+in prod
+Carry
+Air
+Air to Air
+See 2
+Ign. ZOC
+Ign. Walls
+Amphibious
+Carry Missiles
+Carry Air
+Paradrop
+All as Road
+x2 vs. Horse
+x2 vs. Air
+Coastal
+Fundamentalism only
+Subs
+City Trade
+Maintenance Costs
+Total Science
+Supply and Demand
+Discoveries Every
+Turns
+Civilization Advances Achieved
+Goal
+The
+Approval Rating:
+Population:
+GNP:
+Mfg. Goods:
+Land Area:
+Literacy:
+Disease:
+Pollution:
+Life Expectancy:
+Family Size:
+Military Service:
+Annual Income:
+Productivity:
+Mtons
+sq. miles
+tons
+years
+yrs
+children
+million
+per capita
+1st
+2nd
+3rd
+4th
+5th
+6th
+7th
+8th
+9th
+Citizens
+Achievements
+Spaceship
+Peace
+Total Score
+Bonus Score
+possible
+CHEAT MODE
+Cheater
+CIVILIZATION RATING
+Looking back on your reign,
+your people forever remember you as . . .
+Scenario Files
+Select File Name For Scenario
+Select Scenario To Load
+SCENARIO
+NOT SCENARIO
+Jan
+Feb
+Mar
+Apr
+May
+June
+July
+Aug
+Sept
+Oct
+Nov
+Dec
+OBJECTIVE
+Total Objectives
+Objectives
+Decisive Victory
+Marginal Victory
+Stalemate
+Marginal Defeat
+Decisive Defeat
+Foreign
+Attitude
+CIVILIZATION II: HALL OF FAME
+to
+Score
+Civilization Rating
+Clear
+Units Supported
+City Improvements
+Citizens
+Resource Map
+Units Present
+Support Map
+Happiness Analysis
+Estimated Arrival
+Conquered in
+Click mouse to continue...
+SCORING COMPLETE
+Terrain Editor
+Units Editor
+City Improvements Editor
+Technological Advances Editor
+Cities Editor
+Events Editor
+Move Cost
+Defense (x50%)
+Food
+Shield
+Trade
+Production
+Irrigation
+Mining
+Produces
+Bonus
+Turns to finish
+Government for AI
+Engineer's Transform Produces
+Shield(s)
+Obsolesence
+Role
+Domain
+Build Cost
+Holds on Ship
+Movement
+Range
+Attack
+Defend
+Hit Points
+Firepower
+Advance
+Benefits
+Epoch
+Category
+AI Value
+Modifier
+Yes
+No
+Nil
+Never
+Edit Icon
+Sounds
+Abilities
+Icon Editor
+Sound Editor
+Naval Superiority
+Air Superiority
+Sea Transport
+Settle
+Diplomacy
+Trade
+Ground
+Air
+Sea
+Expiration advancements for Wonders of the World
+Allow production of
+Prerequisite for
+Ancient
+Renaissance
+Industrial Revolution
+Modern
+Military
+Economic
+Social
+Academic
+Applied
+Stone/Bronze
+Ancient/Classical
+Far East
+Medieval
+Early Industrial
+Modern
+Small
+Medium
+Large
+Extra-Large
+Open
+Walled
+City Style
+City Size
+City Walls
+Battle
+Orders
+Explosion
+Bomb
+Crash
+Sputter
+Sound Files
+Sound File to Copy
+Select Unit Killed
+Select Attacker
+Select Defender
+Select First Party
+Select Second Party
+NOSCHISM Title
+Select Recipient
+Select Technology
+Enter Message Text
+Unit to Move
+Select Owner
+Unit to Create
+Select Aggressor
+Select Victim
+Destroy Whom
+All Items In Use
+Error
+Triggers
+Actions
+Add
+Edit
+Delete
+Insufficient Memory
+Help
+Edit Misc
+Edit River
+Edit Coast
+Male
+Female
+Rational
+Neutral
+Aggressive
+Perfectionist
+Normal
+Expansionist
+Militaristic
+Civilized
+Tribe Adjective
+Expand
+Civilize
+Tribe Editor
+Tribe
+Leader
+City
+Commodities
+Government
+Titles
+Universal Effects Editor
+Import Icon
+Import All
+Files
+Import
+Please select a filename starting with
+Invalid File Format
+File must be either BMP or GIF format
+Double-click on filename to play
+Select Terrain
+Rename Default Values
+Player 1:
+Player 2:
+Player 3:
+Player 4:
+Player 5:
+Player 6:
+Player 7:
+Communication
+Diplomacy
+Trade
+Chat
+Diplomacy
+Trade
+: Please Enter Your Password
+: Please Enter Your New Password
+: Please Verify Password
+Quit Game
+Game:
+Host:
+Status:
+Difficulty:
+Barbarians:
+Civilizations:
+Humans:
+Timer:
+Open Game
+Closed Game
+Chieftan
+Warlord
+Prince
+King
+Emperor
+Deity
+Villages Only
+Roving Bands
+Restless Tribes
+Raging Hordes
+Minutes
+Seconds
+Unlimited
+< Waiting for Games>
+Multiplayer Games
+Available Players
+Accept Player
+Reject Player
+Start Game
+< Waiting for Players>
+^^Requests To Join
+^^Accepted For Play
+Internet (TCP/IP)
+Local Area Network
+(TCP/IP)
+(IPX/SPX)
+Move Cost
+Unit Defense Bonus
+Terrain Type
+Shields
+Effects of Irrigation
+Turns to Irrigate
+Effects of Mining
+Turns to Mine
+(N/A)
+Effect of Engineer Transformation
+Effects of Roads
+Possible Resources
+Civilization Advances
+City Improvements
+Wonders of the World
+Unit Types
+Terrain and Special Resources
+Forms of Government
+Game Concepts
+Airbases
+Airlift
+City Squares
+Civilization Size
+Combat Damage
+Corruption and Waste
+Disband
+Fortify
+Fortress
+Irrigation
+Luxuries
+Mining
+Pillage
+Pollution
+Railroads
+Roads
+Science
+Sentry
+Shields
+Specialists
+Taxes
+Trade
+Trade Routes
+Transforming Terrain
+Veteran Units
+Waste
+(Shield)
+Description
+Normal
+1/3 of a point
+Increase the amount of Food produced in %s Terrain from %d to %d.
+There is no increase in Food production.
+Increase Shields from %d to %d, and
+increases Trade from %d to %d.
+does not increase Trade.
+There is no increase in Shields, and
+no increase in Trade.
+End Chat
+End Negotiations
+Send
+Clear
+Continue
+Never Mind
+Accept Offer
+No Thanks
+Make Counter Offer
+Negotiating with the
+Chat with Kings
+Spy Reports: (From
+)(To
+From
+Anonymous
+To
+Units)
+Unit)
+(Capitol)
+< No Cities Visible >
+< No Units Visible >
+< No New Advances >
+< No Enemies Visible >
+Waiting for %string0 offer...
+Pick an Action:
+Offer Treaty
+Offer Proposal
+Offer Gift
+Barter
+Make Threat
+Remain Anonymous
+Broadcast to All
+Money
+Knowledge
+Military Unit
+Territory
+Maps
+To Declare War
+War Declaration
+Offer Treaty:
+Cease Fire
+Peace Treaty
+Strategic Alliance
+Cancel Current Treaty
+Current Treaty
+Alliance
+Peace
+Open Warfare
+None
+Pick a gift to offer:
+Offer Knowledge
+Offer Money
+Offer Military Unit
+Cede Territory
+Offer Maps
+Pick Advance(s)
+Offer:
+In Exchange For:
+Bribe Request:
+Our Treasury:
+Gold
+Amount to Offer:
+Pick Unit(s)
+Sort By Unit
+Sort By City
+Make proposal:
+Ask to Declare War
+Ask to Share Maps
+Pick maps to share:
+Pick desired maps:
+Entire Map (Cities, Units)
+Terrain and Cities Map
+Terrain Map Only
+Pick Enemy(s)
+To declare war on the:
+Declaring war on the:
+We agree not to attack you
+only if you give us:
+Military Unit(s)
+Pick City(s) to Cede
+Pick City(s) Desired
+Our offer has been transmitted. We await a reply. The offer is echoed below.
+We offer a cease fire.
+We offer a peace treaty.
+We offer a strategic alliance.
+We offer to cancel the current treaty.
+We offer the following proposal:
+Let us exchange maps of our entire territories.
+Let us exchange terrain and city maps.
+Let us exchange terrain maps.
+Let us declare mutual war on the following civilizations:
+We offer the following gifts:
+Advances:
+Units:
+Money:
+Cities and their resident units:
+Your puny civilization makes us laugh!
+We will agree not to crush you if you give us the following:
+We offer a fair and reasonable trade.
+We will give you the following knowledge:
+We will provide you the following funds:
+We will give you the following units:
+We will give you the following cities and their resident units:
+We will provide the following information:
+We will declare war on the following civilizations:
+But only if you give us the following knowledge:
+But only in exchange for the following funds:
+But only in exchange for the following units:
+But only in exchange for the following cities and their resident units:
+But only in exchange for the following information:
+But only if you declare war on the following civilizations:
+and
+Gold
+Maps of our entire territory.
+Maps of your entire territory.
+Maps of our terrain and cities.
+Maps of your terrain and cities.
+Maps of our terrain.
+Maps of your terrain.
+Treaty
+War declaration on the:
+Transmit Offer
+We will agree not to crush you if you sign the following treaty:
+We will agree not to crush you if you declare war on the:
+We will sign the following treaty:
+But only if you sign the following treaty:
+Modem/Direct Connect
+Intercept Chat Messages
+Mute/Send
+Basic Game
+Turn Based
+Simultaneous
+Normal Production
+Double Production
+Normal Moves
+Double Moves
+Joining
+Accept
+Deny
+Go Back
+Hotseat Files
+Select File Name For Hotseat Saved Game
+Select Hotseat Game To Load
+EMAIL Files
+Select File Name For EMAIL Saved Game
+Select EMAIL Game To Load
+Multiplayer Files
+Select File Name For Multiplayer Saved Game
+Select Multiplayer Game To Load
+Tree
+Mute Anonymous
+Dial-Up Networking
+Quit &Hotseat Game|Ctrl+H
+Humans Move Units at the Same Time
+Five (5) Human Players
+Six (6) Human Players
+Seven (7) Human Players
+Casualty Timeline
+Moves
+< Nothing We Need >
+< Nothing They Want >
+Map Size:
+Conceal Unit/City Information
+Reveal Unit/City Information
+Reveal City Origin
+Request City Origin
+Hide City Origin
+Reveal City Info
+Request City Info
+Hide City Info
+Reveal Unit Origins
+Deny Request
+Reveal City Info
