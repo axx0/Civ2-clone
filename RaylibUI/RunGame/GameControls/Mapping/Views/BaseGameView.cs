@@ -105,7 +105,7 @@ public abstract class BaseGameView : IGameView
                 if (ypos >= -dim.TileHeight)
                 {
                     var xpos = -_offsets.X + (row % 2 * dim.HalfWidth);
-                    if (!map.Flat && xpos + dim.TotalWidth < ViewWidth) // offsetX + ViewWidth > TotalWidth
+                    if (!map.Flat && xpos + dim.TotalWidth < ViewWidth)
                     {
                         if (ViewWidth >= dim.TotalWidth)
                         {

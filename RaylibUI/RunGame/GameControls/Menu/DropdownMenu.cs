@@ -19,6 +19,9 @@ public class DropdownMenu :  BaseDialog
     private IUserInterface _active;
     private bool _clickInMenu;
     private bool _clickOutSide;
+    private List<int> _separatorOffsets = [];
+    int _leftOffset = 35;
+    int _rightOffset = 20;
 
     public DropdownMenu(GameScreen gameScreen) : base(gameScreen.Main)
     {
@@ -27,10 +30,14 @@ public class DropdownMenu :  BaseDialog
         MenuBar = gameScreen.MenuBar;
     }
 
+    /// <summary>
+    /// Index of currently selected dropdown menu (-1 = no menu selected)
+    /// </summary>
     public int Current => _shown ? _current : -1;
 
-    public void Show(Vector2 location, int menuIndex, IEnumerable<MenuCommand> elements)
+    public void Show(Vector2 location, int menuIndex, IEnumerable<MenuCommand> elements, int[] separatorRows)
     {
+        _separatorOffsets.Clear();
         Location = location;
         _current = menuIndex;
         Controls.Clear();
@@ -56,16 +63,23 @@ public class DropdownMenu :  BaseDialog
 
         var dropdownWidth = childWidths.Sum() + DropDownItem.DropdownSpacing;
         var currentY = location.Y + 3;
+        int itemNo = 0;
         foreach (var menuItem in Controls.OfType<DropDownItem>())
         {
-            var height = menuItem.GetPreferredHeight() + 12;
+            var height = menuItem.GetPreferredHeight() + 8;
             menuItem.SetChildWidths(childWidths);
-            menuItem.Bounds = new Rectangle(location.X + 3, currentY, dropdownWidth, height);
+            menuItem.Bounds = new Rectangle(location.X + _leftOffset, currentY, dropdownWidth, height);
             menuItem.OnResize();
             currentY += height;
+            if (separatorRows != null && separatorRows.Contains(itemNo))
+            {
+                currentY += 7;
+                _separatorOffsets.Add((int)currentY - 3);
+            }
+            itemNo++;
         }
 
-        Width = dropdownWidth + 6;
+        Width = dropdownWidth + _leftOffset + _rightOffset;
         Height = currentY - location.Y + 3;
         _gameScreen.ShowDialog(this,true);
         _shown = true;
@@ -74,7 +88,7 @@ public class DropdownMenu :  BaseDialog
     }
     
     
-
+    // What happens when mouse is outside the active dropdown menu
     public override void MouseOutsideControls(Vector2 mousePos)
     {
         if (Input.IsMouseButtonDown(MouseButton.Left))
@@ -92,20 +106,17 @@ public class DropdownMenu :  BaseDialog
         }
         else
         {
+            // Hide the active menu if it's clicked
             if (_clickInMenu)
             {
                 foreach (var control in MenuBar.Children!.OfType<MenuLabel>())
                 {
-                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
+                    if (ShapeHelper.CheckCollisionPointRec(mousePos, control!.Bounds))
                     {
                         if (control.Index == _current)
                         {
                             Hide();
-                            _gameScreen.Focused = control;
-                        }
-                        else
-                        {
-                            control.Activate();
+                            //_gameScreen.Focused = control;
                         }
                         return;
                     }
@@ -115,6 +126,20 @@ public class DropdownMenu :  BaseDialog
             if (_clickOutSide)
             {
                 Hide();
+                _gameScreen.Hovered = null;
+            }
+            
+            // Activate another menu if the mouse hovers over it
+            foreach (var control in MenuBar.Children!.OfType<MenuLabel>())
+            {
+                if (ShapeHelper.CheckCollisionPointRec(mousePos, control.Bounds))
+                {
+                    if (control.Index != _current)
+                    {
+                        control.Activate();
+                    }
+                    return;
+                }
             }
         }
     }
@@ -230,6 +255,11 @@ public class DropdownMenu :  BaseDialog
                 Graphics.DrawRectangleRec(new Rectangle(control.Location.X, control.Location.Y, control.Width, control.Height), new Color(145, 201, 247, 255));
             }
             control.Draw(pulse);
+        }
+
+        foreach(var offset in _separatorOffsets)
+        {
+            Graphics.DrawLine((int)Location.X, offset, (int)Location.X + Width, offset, new Color(215, 215, 215, 255));
         }
     }
 

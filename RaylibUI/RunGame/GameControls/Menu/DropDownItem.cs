@@ -12,7 +12,7 @@ namespace RaylibUI.RunGame.GameControls.Menu;
 
 internal class DropDownItem : ControlGroup
 {
-    public const int DropdownSpacing = 15;
+    public const int DropdownSpacing = 35;
     private readonly MenuCommand _command;
     private readonly DropdownMenu _dropdownMenu;
     private readonly int _index;
@@ -29,7 +29,7 @@ internal class DropDownItem : ControlGroup
         var texts = command.MenuText.Split("|");
         var textHeight = (int)TextManager.MeasureTextEx(look.MenuFont, texts[0], look.MenuFontSize, 0f).Y;
         Children.Add(new LabelControl(dropdownMenu, texts[0].Replace("&", ""), true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize));
-        Children.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize));
+        Children.Add(new LabelControl(dropdownMenu, texts.Length > 1 ? texts[1] : string.Empty, true, defaultHeight: textHeight, font: look.MenuFont, fontSize: look.MenuFontSize, alignment: TextAlignment.Right));
         Click += (_, _) => Activate();
     }
 
@@ -58,10 +58,10 @@ internal class DropDownItem : ControlGroup
 
     public override void Draw(bool pulse)
     {
-        base.Draw(pulse);
         if (Controller.Hovered == this)
         {
-            Graphics.DrawRectangleLinesEx(new Rectangle(Location.X +1, Location.Y +1,Width - 2, Height - 2), 0.5f, Color.Black);
+            Graphics.DrawRectangle((int)Location.X + 1, (int)Location.Y + 1, Width - 2, Height - 2, new Color(145, 201, 247, 255));
         }
+        base.Draw(pulse);
     }
 }
