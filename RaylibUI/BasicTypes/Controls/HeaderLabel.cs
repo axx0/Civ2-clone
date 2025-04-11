@@ -10,12 +10,12 @@ public class HeaderLabel : LabelControl
 {
 
     public HeaderLabel(IControlLayout controller, InterfaceStyle look, string title, int fontSize = 0) : 
-        base(controller, title, eventTransparent: false, offset: 0, alignment: TextAlignment.Center, font: look.HeaderLabelFont, fontSize: fontSize, spacing: 0.0f, colorFront: look.HeaderLabelColour, colorShadow: Color.Black, shadowOffset: look.HeaderLabelShadow ? new Vector2(1, 1) : new Vector2(0, 0))
+        base(controller, title, eventTransparent: false, alignment: TextAlignment.Center, font: look.HeaderLabelFont, fontSize: fontSize, spacing: 0.0f, colorFront: look.HeaderLabelColour, colorShadow: Color.Black, shadowOffset: look.HeaderLabelShadow ? new Vector2(1, 1) : new Vector2(0, 0))
     {
     }
 
     public HeaderLabel(IControlLayout controller, string title, int fontSize = 0) :
-        base(controller, title, eventTransparent: false, offset: 0, alignment: TextAlignment.Center, font: Fonts.TnRbold, fontSize: fontSize)
+        base(controller, title, eventTransparent: false, alignment: TextAlignment.Center, font: Fonts.TnRbold, fontSize: fontSize)
     {
     }
 
