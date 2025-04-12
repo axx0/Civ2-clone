@@ -32,6 +32,7 @@ public class MaxZoomIn : IGameCommand
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = 8 });
     }
 
+    public bool Checked => false;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;

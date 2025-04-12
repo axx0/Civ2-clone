@@ -20,8 +20,6 @@ public class DropdownMenu :  BaseDialog
     private bool _clickInMenu;
     private bool _clickOutSide;
     private List<int> _separatorOffsets = [];
-    int _leftOffset = 35;
-    int _rightOffset = 20;
 
     public DropdownMenu(GameScreen gameScreen) : base(gameScreen.Main)
     {
@@ -68,7 +66,7 @@ public class DropdownMenu :  BaseDialog
         {
             var height = menuItem.GetPreferredHeight() + 8;
             menuItem.SetChildWidths(childWidths);
-            menuItem.Bounds = new Rectangle(location.X + _leftOffset, currentY, dropdownWidth, height);
+            menuItem.Bounds = new Rectangle(location.X, currentY, dropdownWidth, height);
             menuItem.OnResize();
             currentY += height;
             if (separatorRows != null && separatorRows.Contains(itemNo))
@@ -79,7 +77,7 @@ public class DropdownMenu :  BaseDialog
             itemNo++;
         }
 
-        Width = dropdownWidth + _leftOffset + _rightOffset;
+        Width = dropdownWidth;
         Height = currentY - location.Y + 3;
         _gameScreen.ShowDialog(this,true);
         _shown = true;

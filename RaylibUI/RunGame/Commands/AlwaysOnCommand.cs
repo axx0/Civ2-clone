@@ -17,6 +17,7 @@ public abstract class AlwaysOnCommand(GameScreen gameScreen, string commandId, S
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;
     public string? Name { get; }
+    public bool Checked => false;
 
     public bool Update()
     {

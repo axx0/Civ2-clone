@@ -32,6 +32,7 @@ public class ZoomIn : IGameCommand
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = _gameScreen.Zoom + 1 });
     }
 
+    public bool Checked => false;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;

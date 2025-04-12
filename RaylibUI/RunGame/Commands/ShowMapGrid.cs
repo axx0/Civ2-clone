@@ -30,6 +30,7 @@ public class ShowMapGrid : IGameCommand
         _gameScreen.ShowMapGrid();
     }
 
+    public bool Checked => _gameScreen.ShowGrid;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;

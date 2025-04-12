@@ -12,6 +12,7 @@ public interface IGameCommand
     CommandStatus Status { get; }
     bool Update();
     void Action();
+    bool Checked { get; }
     
     MenuCommand? Command { get; set; } 
     

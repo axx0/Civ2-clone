@@ -32,6 +32,7 @@ public class MediumZoomOut : IGameCommand
             _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.ZoomChange) { Zoom = -3 });
     }
 
+    public bool Checked => false;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;
