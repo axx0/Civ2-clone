@@ -1,6 +1,7 @@
 ﻿using Civ2engine;
 using Civ2engine.IO;
 using Civ2engine.SaveLoad;
+using Engine.Tests.TestFiles;
 using Model;
 using Model.Core;
 using Model.Core.Advances;
@@ -15,27 +16,28 @@ namespace Engine.Tests;
 
 public class LoadGameTests
 {
+    private readonly IMain _mockMainApp;
     public LoadGameTests()
     {
-        // Need to hard code SearchPaths somehow to get the LoadFrom() method to work.
-        // This happens to be where I have the game installed on my local.
-        // TODO: Mock this properly.
-        Settings.AddPath("C:\\code\\Civilization_2");
+        // We need to hard code the SearchPaths here for the LoadFrom() method to work properly under test.
+        _mockMainApp = new MockMainApp();
+        var testFileDirectory = TestFileUtils.GetTestFileDirectory();
+        Settings.SearchPaths = [testFileDirectory, testFileDirectory];
         
-        // This is needed so that the Barbarians civ can be initialised in the GameSerializer. JSON save file loading fails if this isn't pre-populated.
-        Labels.UpdateLabels(null);
+        // This is also needed so that the Barbarians civ can be initialised in the GameSerializer.
+        // JSON save file loading fails if this isn't pre-populated.
+        Labels.UpdateLabels(_mockMainApp.ActiveRuleSet);
     }
 
     [Fact]
     public void TestLoadFromThrowsExceptionIfPathNotFound()
     {
         // Arrange
-        var path = "C:\\code\\Civilization_2\\pathtonowhere.sav";
-        var mainApp = new MockMainApp();
+        var saveFilePath = TestFileUtils.GetTestFilePath("pathtonowhere.sav");
 
         // Act
         // Assert
-        Assert.Throws<FileNotFoundException>(() => LoadGame.LoadFrom(path, mainApp));
+        Assert.Throws<FileNotFoundException>(() => LoadGame.LoadFrom(saveFilePath, _mockMainApp));
             
     }
 
@@ -43,13 +45,11 @@ public class LoadGameTests
     public void TestLoadClassicGameGivesValue()
     {
         // Arrange
-        // TODO: Should be mocked properly:
-        // This one happens to live on my file system and has the "CIVILISE" identifier.
-        var path = "C:\\code\\Civilization_2\\saves\\test_classic.sav";
-        var mainApp = new MockMainApp();
+        // These are identified by having the "CIVILISE" word at the start of the file.
+        var path = TestFileUtils.GetTestFilePath("test_classic.sav");
 
         // Act
-        var result = LoadGame.LoadFrom(path, mainApp);
+        var result = LoadGame.LoadFrom(path, _mockMainApp);
 
         // Assert
         // TODO: Expand and validate the settings load properly from the file.
@@ -60,18 +60,20 @@ public class LoadGameTests
     public void TestLoadJsonGameGivesValue()
     {
         // Arrange
-         // TODO: Should be mocked properly:
-         // This one happens to live on my file system and is the json version of the "test_classic.sav" file
-        var path = "C:\\code\\Civilization_2\\saves\\test_json.sav";
+         // This is the json version of the "test_classic.sav" file
+        var path = TestFileUtils.GetTestFilePath("test_json.sav");
         var mainApp = new MockMainApp();
 
         // Act
-        var result = LoadGame.LoadFrom(path, mainApp);
+        var result = LoadGame.LoadFrom(path, _mockMainApp);
 
         // Assert
         // TODO: Expand and validate the settings load properly from the file.
         Assert.NotNull(result);
     }
+
+
+
 }
 
 internal class MockInterface : IUserInterface
@@ -200,7 +202,7 @@ internal class MockInterface : IUserInterface
 
     public IInterfaceAction HandleLoadScenario(IGame game, string scnName, string scnDirectory)
     {
-        throw new NotImplementedException();
+        return new MockAction();
     }
 
     public void Initialize()
@@ -248,7 +250,7 @@ internal class MockMainApp : IMain
     public Ruleset ActiveRuleSet => new Ruleset(
         "mock",
         new Dictionary<string, string>(),
-        ["C:\\code\\Civilization_2\\saves", "C:\\code\\Civilization_2"]);
+        [TestFileUtils.GetTestFileDirectory()]);
 
     public IUserInterface SetActiveRuleSet(int ruleSetIndex)
     {

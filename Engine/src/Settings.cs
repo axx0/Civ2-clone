@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
-using static System.Environment.SpecialFolder;
 
 namespace Civ2engine
 {
@@ -21,7 +20,7 @@ namespace Civ2engine
         // Game settings from App.config
         public static string Civ2Path { get; private set; }
         
-        public static string[] SearchPaths { get; private set; }
+        public static string[] SearchPaths { get; internal set; }
 
         public static int TextureFilter { get; private set; }
 
@@ -126,7 +125,7 @@ namespace Civ2engine
             {
                 SearchPaths = SearchPaths.Append(path).ToArray();
             }
-            Save();
+            Save();// This overwrites the appsettings.
             return true;
         }
 
