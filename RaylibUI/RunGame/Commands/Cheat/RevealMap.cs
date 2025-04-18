@@ -31,7 +31,10 @@ public class RevealMap(GameScreen gameScreen) : AlwaysOnCommand(gameScreen, Comm
     {
         if (button == Labels.Ok && (selection != GameScreen.VisibleCivId || GameScreen.CurrentMap.MapRevealed))
         {
-            GameScreen.CurrentMap.MapRevealed = selection > GameScreen.Game.AllCivilizations.Count;
+            foreach (var map in GameScreen.Game.Maps)
+            {
+                map.MapRevealed = selection > GameScreen.Game.AllCivilizations.Count;
+            }
             GameScreen.ActiveMode = GameScreen.ViewPiece;
         
             var civId = selection < GameScreen.Game.AllCivilizations.Count ? selection : GameScreen.Player.Civilization.Id;

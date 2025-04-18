@@ -29,7 +29,7 @@ public class MapLayout : IGameCommand
         _gameScreen.ToggleMapLayout();
     }
 
-    public bool Checked => _gameScreen.ToTPanelLayout;
+    public bool Checked => false;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;
