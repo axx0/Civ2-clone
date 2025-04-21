@@ -222,6 +222,7 @@ public class TestOfTimeInterface : Civ2Interface
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 290, 14, 14), true)).ToArray() },
             { "globalWarming", Enumerable.Range(0, 4).Select(col =>
                     new BitmapStorage("ICONS", new Rectangle(49 + 15 * col, 305, 14, 14), true)).ToArray() },
+            { "close", new[] { new BitmapStorage("ICONS", new Rectangle(1, 389, 16, 16)) } },
             { "zoomIn", new[] { new BitmapStorage("ICONS", new Rectangle(18, 389, 16, 16)) } },
             { "zoomOut", new[] { new BitmapStorage("ICONS", new Rectangle(35, 389, 16, 16)) } },
             { "backgroundImage", new[]{ new BinaryStorage("Tiles.dll", 0x100740, 0x12702) } },
@@ -301,13 +302,17 @@ public class TestOfTimeInterface : Civ2Interface
                     KeyboardKey.C, commandId: CityReportOptions),
                 new MenuElement("M&ultiplayer Options|Ctrl+Y", new Shortcut(KeyboardKey.Y, ctrl: true),
                     KeyboardKey.U),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&Game Profile", Shortcut.None, KeyboardKey.G),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Pick &Music", Shortcut.None, KeyboardKey.M),
                 new MenuElement("&Save Game|Ctrl+S", new Shortcut(KeyboardKey.S, ctrl: true), KeyboardKey.S),
                 new MenuElement("&Load Game|Ctrl+L", new Shortcut(KeyboardKey.L, ctrl: true), KeyboardKey.L),
                 new MenuElement("&Join Game|Ctrl+J", new Shortcut(KeyboardKey.J, ctrl: true), KeyboardKey.J),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Set Pass&word|Ctrl+W", new Shortcut(KeyboardKey.W, ctrl: true), KeyboardKey.W),
                 new MenuElement("Change &Timer|Ctrl+T", new Shortcut(KeyboardKey.T, ctrl: true), KeyboardKey.T),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&Retire|Ctrl+R", new Shortcut(KeyboardKey.R, ctrl: true), KeyboardKey.R),
                 new MenuElement("&Quit|Ctrl+Q", new Shortcut(KeyboardKey.Q, ctrl: true), KeyboardKey.Q, commandId: QuitGame)
             }
@@ -318,7 +323,9 @@ public class TestOfTimeInterface : Civ2Interface
             {
                 new MenuElement("&Kingdom", Shortcut.None, KeyboardKey.K),
                 new MenuElement("&Tax Rate|Shift+T", new Shortcut(KeyboardKey.T, shift: true), KeyboardKey.T),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Find &City|Shift+C", new Shortcut(KeyboardKey.C, shift: true), KeyboardKey.C),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&REVOLUTION|Shift+R", new Shortcut(KeyboardKey.R, shift: true), KeyboardKey.R)
             }
         },
@@ -330,8 +337,10 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("&View", Shortcut.None, KeyboardKey.V),
                 new MenuElement("&Move Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.M),
                 new MenuElement("&View Pieces|v", new Shortcut(KeyboardKey.V), KeyboardKey.V),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Zoom &In|z", new Shortcut(KeyboardKey.Z), KeyboardKey.I, commandId: ZoomIn),
                 new MenuElement("Zoom &Out|X", new Shortcut(KeyboardKey.X), KeyboardKey.O, commandId: ZoomOut),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Max Zoom In|Ctrl+Z", new Shortcut(KeyboardKey.Z, ctrl: true),
                     KeyboardKey.Null, commandId: MaxZoomIn),
                 new MenuElement("Standard Zoom|Shift+Z", new Shortcut(KeyboardKey.Z, shift: true),
@@ -340,14 +349,15 @@ public class TestOfTimeInterface : Civ2Interface
                     KeyboardKey.Null, commandId: MediumZoomOut),
                 new MenuElement("Max Zoom Out|Ctrl+X", new Shortcut(KeyboardKey.X, ctrl: true),
                     KeyboardKey.Null, commandId: MaxZoomOut),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Show Map Grid|Ctrl+G", new Shortcut(KeyboardKey.G, ctrl: true),
-                    KeyboardKey.Null),
+                    KeyboardKey.Null, commandId: ShowMapGrid),
                 new MenuElement("Arrange Windows", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Show Hidden Terrain|t", new Shortcut(KeyboardKey.T), KeyboardKey.T),
                 new MenuElement("&Center View|c", new Shortcut(KeyboardKey.C), KeyboardKey.C),
                 new MenuElement("Map Layout", Shortcut.None, KeyboardKey.Null, commandId: MapLayoutToggle),
                 new MenuElement("City Layout", Shortcut.None, KeyboardKey.Null),
-            }
+            },
         },
 
         new MenuDetails
@@ -391,15 +401,18 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("&Advisors", Shortcut.None, KeyboardKey.A),
                 new MenuElement("Chat with &Kings|Ctrl+C", new Shortcut(KeyboardKey.C, ctrl: true),
                     KeyboardKey.K),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&City Status|F1", new Shortcut(KeyboardKey.F1), KeyboardKey.C),
                 new MenuElement("&Defense Minister|F2", new Shortcut(KeyboardKey.F2), KeyboardKey.D),
                 new MenuElement("&Foreign Minister|F3", new Shortcut(KeyboardKey.F3), KeyboardKey.F),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&Attitude Advisor|F4", new Shortcut(KeyboardKey.F4), KeyboardKey.A),
                 new MenuElement("&Trade Advisor|F5", new Shortcut(KeyboardKey.F5), KeyboardKey.T),
                 new MenuElement("&Science Advisor|F6", new Shortcut(KeyboardKey.F6), KeyboardKey.S),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Cas&ualty Timeline|Ctrl-D", new Shortcut(KeyboardKey.D, ctrl: true),
                     KeyboardKey.U)
-            }
+            },
         },
 
         new MenuDetails
@@ -410,9 +423,10 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("&Wonders of the World|F7", new Shortcut(KeyboardKey.F7), KeyboardKey.W),
                 new MenuElement("&Top 5 Cities|F8", new Shortcut(KeyboardKey.F8), KeyboardKey.T),
                 new MenuElement("&Civilization Score|F9", new Shortcut(KeyboardKey.F9), KeyboardKey.C),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&Demographics|F11", new Shortcut(KeyboardKey.F11), KeyboardKey.D),
                 new MenuElement("&Spaceships|F12", new Shortcut(KeyboardKey.F12), KeyboardKey.S)
-            }
+            },
         },
 
         new MenuDetails
@@ -422,16 +436,19 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("&Cheat", Shortcut.None, KeyboardKey.C),
                 new MenuElement("Toggle Cheat Mode|Ctrl+K", new Shortcut(KeyboardKey.K, ctrl: true),
                     KeyboardKey.Null),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Create &Unit|Shift+F1", new Shortcut(KeyboardKey.F1, shift: true),
                     KeyboardKey.U),
                 new MenuElement("Reveal &Map|Shift+F2", new Shortcut(KeyboardKey.F2, shift: true),
                     KeyboardKey.M, CheatRevealMapCommand),
                 new MenuElement("Set &Human Player|Shift+F3", new Shortcut(KeyboardKey.F3, shift: true),
                     KeyboardKey.H),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Set Game Year|Shift+F4", new Shortcut(KeyboardKey.F4, shift: true),
                     KeyboardKey.Null),
                 new MenuElement("&Kill Civilization|Shift+F5", new Shortcut(KeyboardKey.F5, shift: true),
                     KeyboardKey.K),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Te&chnology Advance|Shift+F6", new Shortcut(KeyboardKey.F6, shift: true),
                     KeyboardKey.C),
                 new MenuElement("&Edit Technologies|Ctrl+Shift+F6",
@@ -444,18 +461,21 @@ public class TestOfTimeInterface : Civ2Interface
                     new Shortcut(KeyboardKey.D, ctrl: true, shift: true), KeyboardKey.Y),
                 new MenuElement("Change Money|Shift+F9", new Shortcut(KeyboardKey.F9, shift: true),
                     KeyboardKey.Null),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Edit Unit|Ctrl+Shift+U", new Shortcut(KeyboardKey.U, ctrl: true, shift: true),
                     KeyboardKey.Null),
                 new MenuElement("Edit City|Ctrl+Shift+C", new Shortcut(KeyboardKey.C, ctrl: true, shift: true),
                     KeyboardKey.Null),
                 new MenuElement("Edit King|Ctrl+Shift+K", new Shortcut(KeyboardKey.K, ctrl: true, shift: true),
                     KeyboardKey.Null),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Scenario Parameters|Ctrl+Shift+P",
                     new Shortcut(KeyboardKey.P, ctrl: true, shift: true), KeyboardKey.Null),
                 new MenuElement("Save As Scenario|Ctrl+Shift+S",
                     new Shortcut(KeyboardKey.S, ctrl: true, shift: true), KeyboardKey.Null),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Lua Console|Ctrl+Shift+9", new Shortcut(KeyboardKey.Nine,true,true), KeyboardKey.L, omitIfNoCommand: true, commandId: OpenLuaConsole)
-            }
+            },
         },
 
         new MenuDetails
@@ -465,6 +485,7 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("&Map", Shortcut.None, KeyboardKey.M),
                 new MenuElement("Toggle Cheat Mode|Ctrl+K", new Shortcut(KeyboardKey.K, ctrl: true),
                     KeyboardKey.Null),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&Select Map|Ctrl+Shift+1",
                     new Shortcut(KeyboardKey.One, ctrl: true, shift: true), KeyboardKey.S),
                 new MenuElement("&Import Map|Ctrl+Shift+2",
@@ -483,11 +504,14 @@ public class TestOfTimeInterface : Civ2Interface
                 new MenuElement("City &Improvements", Shortcut.None, KeyboardKey.I),
                 new MenuElement("&Wonders of the World", Shortcut.None, KeyboardKey.W),
                 new MenuElement("Military &Units", Shortcut.None, KeyboardKey.U),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&Governments", Shortcut.None, KeyboardKey.G),
                 new MenuElement("&Terrain Types", Shortcut.None, KeyboardKey.T),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("Game &Concepts", Shortcut.None, KeyboardKey.C),
+                new MenuElement("-", Shortcut.None, KeyboardKey.Null),
                 new MenuElement("&About Test of Time", Shortcut.None, KeyboardKey.A)
-            }
+            },
         }
     };
 

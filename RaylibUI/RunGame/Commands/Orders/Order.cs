@@ -32,6 +32,8 @@ public abstract class Order : IGameCommand
     
     public string Id { get; }
 
+    public bool Checked => false;
+
     public abstract bool Update();
 
     public abstract void Action();

@@ -14,6 +14,7 @@ public interface IGameView : IDisposable
     int ViewHeight { get; }
     int ViewWidth { get; set; }
     Vector2 Offsets { get; }
+    int Xshift { get; }
     bool IsDefault { get;  }
     int Interval { get; }
     IList<Tile> ActionTiles { get; }

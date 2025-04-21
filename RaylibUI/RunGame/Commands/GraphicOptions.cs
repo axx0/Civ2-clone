@@ -47,6 +47,7 @@ public class GraphicOptions : IGameCommand
         }
     }
 
+    public bool Checked => false;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;

@@ -45,8 +45,9 @@ public class MenuLabel : LabelControl
         if (_gameMenu.Dropdown.Current == Index) return;
 
         Controller.Focused = this;
+        Controller.Hovered = this;
         _gameMenu.Dropdown.Show(Location with { Y = Location.Y + Height }, Index,
-            _menuElements.Commands);
+            _menuElements.Commands, _menuElements.SeparatorRows);
     }
 
     public int Index { get; }
@@ -56,7 +57,7 @@ public class MenuLabel : LabelControl
         base.OnMouseMove(moveAmount);
         if (Input.IsMouseButtonDown(MouseButton.Left))
         {
-            Activate();
+            //Activate();
         }
     }
 

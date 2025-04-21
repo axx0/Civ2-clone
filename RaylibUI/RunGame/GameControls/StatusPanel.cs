@@ -38,25 +38,26 @@ public class StatusPanel : BaseControl
     {
         var yOffset = 1;
 
-        var populText = _game.GetPlayerCiv.Cities.Count == 0 ? "0 " + Labels.For(LabelIndex.People) : _game.GetPlayerCiv.Cities.Sum(c=>c.GetPopulation()).ToString("###,###,###",
-                    new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " " + Labels.For(LabelIndex.People);
+        var populText = _game.GetPlayerCiv.Cities.Count == 0 ? "0 " + Labels.For(LabelIndex.People) : 
+            _game.GetPlayerCiv.Cities.Sum(c=>c.GetPopulation()).ToString("###,###,###", 
+            new NumberFormatInfo() { NumberDecimalSeparator = "," }) + " " + Labels.For(LabelIndex.People);
         
-        var populLabel = new StatusLabel(_gameScreen, populText);
-        populLabel.Offset = 8;
+        var populLabel = new StatusLabel(_gameScreen, populText, alignment: TextAlignment.Right);
+        populLabel.Padding = new(0, 8, 0, 0);
         populLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset, Height = populLabel.GetPreferredHeight() };
 
         var labelHeight = 18;
 
         var yearLabel = new StatusLabel(_gameScreen, _game.Date.GameYearString(_game.TurnNumber));
-        yearLabel.Offset = 8;
+        yearLabel.Padding = new(0, 8, 0, 0);
         yearLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset + labelHeight, Height = yearLabel.GetPreferredHeight() };
 
         var goldLabel = new StatusLabel(_gameScreen, $"{_game.GetPlayerCiv.Money} {Labels.For(LabelIndex.Gold)}  {_game.GetPlayerCiv.TaxRate / 10}.{_game.GetPlayerCiv.LuxRate / 10}.{_game.GetPlayerCiv.ScienceRate / 10}");
-        goldLabel.Offset = 8;
+        goldLabel.Padding = new (0, 8, 0, 0);
         goldLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset + 2 * labelHeight, Height = goldLabel.GetPreferredHeight() };
 
         var turnsLabel = new StatusLabel(_gameScreen, $"{Labels.For(LabelIndex.Turn)} {_game.TurnNumber}", TextAlignment.Right);
-        turnsLabel.Offset = 8;
+        turnsLabel.Padding = new (0, 8, 0, 0);
         turnsLabel.Bounds = _infoPanelBounds with { Y = _infoPanelBounds.Y + yOffset + 2 * labelHeight, Height = turnsLabel.GetPreferredHeight() };
 
         var iconNo = 0; // TODO: determine one of 4 icons based on current research progress (0...25%, 25...50%, 50...75%, 75...100%)
@@ -146,7 +147,7 @@ public class StatusPanel : BaseControl
 
 public class StatusLabel : LabelControl
 {
-    public StatusLabel(IControlLayout layout, string text, TextAlignment alignment = TextAlignment.Left, Color[]? switchColors = null, int switchTime = 0, int fontSize = 18) : base(layout, text, true, offset: 0, alignment: alignment, defaultHeight: 18, font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont, fontSize: fontSize, spacing: 0f, colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor, colorShadow: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColorShadow, shadowOffset: new System.Numerics.Vector2(1,1), switchColors: switchColors, switchTime: switchTime)
+    public StatusLabel(IControlLayout layout, string text, TextAlignment alignment = TextAlignment.Left, Color[]? switchColors = null, int switchTime = 0, int fontSize = 18) : base(layout, text, true, alignment: alignment, defaultHeight: 18, font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont, fontSize: fontSize, spacing: 0f, colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor, colorShadow: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColorShadow, shadowOffset: new System.Numerics.Vector2(1,1), switchColors: switchColors, switchTime: switchTime)
     {
 
     }

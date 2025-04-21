@@ -10,4 +10,6 @@ public class DropdownMenuContents
     public KeyboardKey HotKey { get; set; }
     
     public IList<MenuCommand> Commands { get; set; }
+
+    public int[] SeparatorRows { get; set; }
 }

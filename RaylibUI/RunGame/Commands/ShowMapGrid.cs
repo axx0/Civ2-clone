@@ -3,20 +3,21 @@ using Model;
 using Model.Dialog;
 using Model.Images;
 using Model.Menu;
+using Raylib_CSharp.Interact;
 
 namespace RaylibUI.RunGame.Commands;
 
-public class MapLayout : IGameCommand
+public class ShowMapGrid : IGameCommand
 {
     private readonly GameScreen _gameScreen;
 
-    public MapLayout(GameScreen gameScreen)
+    public ShowMapGrid(GameScreen gameScreen)
     {
         _gameScreen = gameScreen;
     }
     
-    public string Id => CommandIds.MapLayoutToggle;
-    public Shortcut[] ActivationKeys { get; set; } = new[] { Shortcut.None };
+    public string Id => CommandIds.ShowMapGrid;
+    public Shortcut[] ActivationKeys { get; set; } = { new(KeyboardKey.G, ctrl: true) };
     public CommandStatus Status => CommandStatus.Normal;
 
     public bool Update()
@@ -26,10 +27,10 @@ public class MapLayout : IGameCommand
 
     public void Action()
     {
-        _gameScreen.ToggleMapLayout();
+        _gameScreen.ShowMapGrid();
     }
 
-    public bool Checked => false;
+    public bool Checked => _gameScreen.ShowGrid;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; } = string.Empty;
     public DialogImageElements? ErrorImage { get; } = null;

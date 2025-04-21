@@ -156,7 +156,23 @@ public abstract class Civ2Interface : IUserInterface
         var map = MenuMap;
         foreach (var menu in map)
         {
-            var menuContent = new DropdownMenuContents { Commands = new List<MenuCommand>()};
+            // Find rows with separator and remove them
+            List<int> separatorRows = new();
+            for (int i = 0; i < menu.Defaults.Count; i++)
+            {
+                if (menu.Defaults[i].MenuText == "-")
+                {
+                    separatorRows.Add(i);
+                }
+            }
+            for (int i = separatorRows.Count; i-- > 0;)
+            {
+                menu.Defaults.RemoveAt(separatorRows[i]);
+                separatorRows[i] -= i + 2;
+            }
+
+            //separatorRows = new List<int> { 0, 1, 2, 3, 4, 5, 6 };
+            var menuContent = new DropdownMenuContents { Commands = new List<MenuCommand>(), SeparatorRows = separatorRows.ToArray() };
             var loaded = MenuLoader.For(menu.Key);
             if (loaded.Count > 0)
             {

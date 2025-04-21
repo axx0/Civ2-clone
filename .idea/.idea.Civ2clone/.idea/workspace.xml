@@ -16,84 +16,52 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Reveal map working">
-      <change afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TileApi.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Model/Core/IImprovementEncoder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Scripts/units.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/units.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/AiPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AiPlayer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Events/UnitInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Events/UnitInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/GameExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/TileExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/NewGame/NewGameInitialisation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/NewGame/NewGameInitialisation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/ClassicSaveObjects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/OriginalSaves/Read.ClassicSav.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Production/UnitProductionOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/ILoadedGameObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/ILoadedGameObjects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/ImorovementEncoder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/ImorovementEncoder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/JsonSaveObjects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/JsonSaveObjects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/MapSerializer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonMapData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/AxxExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScenarioHooks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScenarioHooks.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tech.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tech.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/AttackAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/AttackAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/BuildCityAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/BuildCityAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CaptureAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CaptureAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/FortifyAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/FortifyAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/FullTurnAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/FullTurnAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MoveAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MoveAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/NothingAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/NothingAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/TileAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/TileAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/UnitAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/UnitAction.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/UnitFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/UnitFunctions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/Path.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/Path.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Units/UnitExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/UnitExtensions.cs" afterDir="false" />
+    <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Barbarians work">
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameLoader.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/SavFile/SavFile.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomIn.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ShowMapGrid.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Engine.Tests/GameLoaderTests.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Engine.Tests/TestFiles/Labels.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Engine.Tests/TestFiles/RULES.TXT" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Engine.Tests/TestFiles/TestFileUtils.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Engine.Tests/TestFiles/test_classic.sav" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Engine.Tests/TestFiles/test_json.sav" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/Civ2Interface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2/MenuDetails.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2/MenuDetails.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2Gold/Civ2GoldInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2TOT/TestOfTimeInterface.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/LoadGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Settings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Settings.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Utils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Utils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Constants/UnitEffect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Constants/UnitEffect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Cities/City.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Cities/City.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Civilization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Civilization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Rules.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/IGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IGame.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Mapping/Tile.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Units/IUnit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/IUnit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/Units/UnitType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/UnitDefinition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Events/CombatEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/CombatEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Events/MovementBlockedEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MovementBlockedEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Events/MovementEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MovementEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Events/UnitEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/UnitEventArgs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Events/UnitInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/UnitInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Bitmaps/ImageUtils.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Main.LoadGame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/CityReportOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/CityReportOptions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomIn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Zoom/MaxZoomIn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MaxZoomOut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Zoom/MaxZoomOut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MediumZoomOut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Zoom/MediumZoomOut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/GotoOrder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/StandardZoom.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Zoom/StandardZoom.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ZoomIn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Zoom/ZoomIn.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/ZoomOut.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Zoom/ZoomOut.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/UnitReadyView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/UnitDisplay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/MapEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MapEventArgs.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/IGameCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/IGameCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/CommandIds.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/CommandIds.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Menu/DropdownMenuContents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Menu/DropdownMenuContents.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/HeaderLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/LabelControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/OptionControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/BasicTypes/Controls/OptionControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/AlwaysOnCommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/AlwaysOnCommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Cheat/RevealMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Cheat/RevealMap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/EndTurn.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/EndTurn.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GameOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GameOptions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GraphicOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/GraphicOptions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MapLayout.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/MapLayout.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/OpenLuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/OpenLuaConsole.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/Order.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/Order.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/BaseGameView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/Views/IGameView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropDownItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropDownItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropdownMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/DropdownMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/MenuLabel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Menu/MenuLabel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/StatusPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Engine.Tests/Engine.Tests.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Engine.Tests/Engine.Tests.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Engine.Tests/LoadGameTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Engine.Tests/LoadGameTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +94,21 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/96178db1709e872c391367fef1b31fca80f9f18119cdf4145a2650ac9f332ac/Array.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9a6b1457cbcf17db31a383ba49ef9bcc786cf3ef77146d997eee499b27a46d/Object.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/bd47ee1ab214a7674f381fb716d273cc4bb64441375b47417e9dcd5ec96f89/ToCollection.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/Engine/src/Scripting/ScriptObjects/AiInterface.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/CityReportOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/CityReportOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/CityReportOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/CityReportOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/CityReportOptions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomIn.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomIn.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomIn.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomIn.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomIn.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomOut.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomOut.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/R-105/source/repos/Civ2-clone/RaylibUI/RunGame/Commands/MaxZoomOut.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProjectColorInfo">{
@@ -140,22 +122,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.RaylibUI.executor&quot;: &quot;Debug&quot;,
-    &quot;Lua Application.Test_test.lua.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.RaylibUI.executor": "Debug",
+    "Lua Application.Test_test.lua.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "Merging master",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.RaylibUI">
     <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project" temporary="true">
       <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0/RaylibUI.exe" />
@@ -219,7 +201,7 @@
       <workItem from="1738490318551" duration="10008000" />
       <workItem from="1739600307023" duration="50723000" />
       <workItem from="1742083626198" duration="51573000" />
-      <workItem from="1744240335569" duration="17197000" />
+      <workItem from="1744240335569" duration="18961000" />
     </task>
     <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
@@ -229,7 +211,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738810703250</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Barbarians work">
+      <option name="closed" value="true" />
+      <created>1745194799584</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745194799584</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -251,19 +241,20 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Reveal map working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Reveal map working" />
+    <MESSAGE value="Barbarians work" />
+    <option name="LAST_COMMIT_MESSAGE" value="Barbarians work" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="lua-line">
           <url>file://$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua</url>
-          <line>90</line>
+          <line>89</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="lua-line">
           <url>file://$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua</url>
-          <line>122</line>
+          <line>121</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="lua-line">

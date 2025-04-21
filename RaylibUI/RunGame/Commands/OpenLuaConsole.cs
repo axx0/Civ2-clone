@@ -27,6 +27,7 @@ public class OpenLuaConsole : IGameCommand
         _gameScreen = gameScreen;
     }
 
+    public bool Checked => false;
     public MenuCommand? Command { get; set; }
     public string ErrorDialog { get; }
     public DialogImageElements? ErrorImage { get; } = null;
