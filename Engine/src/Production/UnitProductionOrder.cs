@@ -4,6 +4,7 @@ using Civ2engine.Statistics;
 using Civ2engine.Units;
 using Model;
 using Model.Constants;
+using Model.Core.Units;
 using Model.Images;
 using Model.Interface;
 

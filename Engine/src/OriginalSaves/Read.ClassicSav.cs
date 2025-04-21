@@ -18,6 +18,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Model.Constants;
+using Model.Core.Units;
 
 namespace Civ2engine.OriginalSaves;
 

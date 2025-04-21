@@ -9,6 +9,7 @@ using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Units;
 using Neo.IronLua;
 
 namespace Civ2engine

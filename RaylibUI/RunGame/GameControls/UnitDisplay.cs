@@ -2,6 +2,7 @@ using System.Numerics;
 using Civ2engine.Units;
 using Model;
 using Model.Core;
+using Model.Core.Units;
 using Raylib_CSharp.Transformations;
 using RaylibUI.RunGame.GameControls.Mapping;
 

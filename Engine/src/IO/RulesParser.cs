@@ -12,6 +12,7 @@ using Model.Constants;
 using Model.Core;
 using Model.Core.Advances;
 using Model.Core.Cities;
+using Model.Core.Units;
 using Raylib_CSharp;
 using Path = System.IO.Path;
 
@@ -44,6 +45,12 @@ namespace Civ2engine.IO
             _sectionHandlers.Add("SOUNDS", ProcessAttackSounds);
             _sectionHandlers.Add("UNITS_ADVANCED", ProcessAdvancedUnitFlags);
             _sectionHandlers.Add("SECONDARY_MAPS", SecondaryMaps);
+            _sectionHandlers.Add("MAP_TRANSPORT_RELATIONSHIPS", ProcessTransportRelationships);
+        }
+
+        private void ProcessTransportRelationships(string[] values)
+        {
+            Rules.MapLinks = values.Select(v=>v.Split(",",StringSplitOptions.TrimEntries).Select(int.Parse).ToArray()).ToList();
         }
 
         private void ProcessTechGroupAssignments(string[] values)
@@ -261,7 +268,7 @@ namespace Civ2engine.IO
                     TitleFemale = line[2],
                     Level = level,
                     NumberOfFreeUnitsPerCity = SupportFromLevel(level),
-                    UnitTypesAlwaysFree = idx == 4 ? this.Rules.UnitTypes.Where(u=>u.Flags[3] == '1').Select(u=>u.Type).ToArray() : Array.Empty<int>(),
+                    UnitTypesAlwaysFree = idx == 4 ? this.Rules.UnitTypes.Where(u=>u.Flags[11]).Select(u=>u.Type).ToArray() : Array.Empty<int>(),
                     Distance = DefaultDistanceFromIndex(idx),
                     SettlersConsumption = idx > 2 ? this.Rules.Cosmic.SettlersEatFromCommunism : Rules.Cosmic.SettlersEatTillMonarchy
                 };
@@ -366,13 +373,15 @@ namespace Civ2engine.IO
             Rules.UnitTypes = values.Select((line, type) =>
             {
                 var text = line.Split(',', StringSplitOptions.TrimEntries);
+                var move = int.TryParse(text[3].Replace(".", string.Empty), out var value) ? value : 0;
                 var unit = new UnitDefinition
                 {
                     Type = type,
                     Name = text[0],
-                    Until = Rules.AdvanceMappings.TryGetValue(text[1], out int value) ? value : -1,
+                    Until = Rules.AdvanceMappings.TryGetValue(text[1], out value) ? value : -1,
                     Domain = (UnitGas) (int.TryParse(text[2], out value) ? value : 0),
-                    Move = Rules.Cosmic.MovementMultiplier * (int.TryParse(text[3].Replace(".", string.Empty), out value) ? value : 0),
+                    Move = Rules.Cosmic.MovementMultiplier * move,
+                    AttackPerTurn = move,
                     Range = int.TryParse(text[4], out value) ? value : 0,
                     Attack = int.TryParse(text[5].Replace("a", string.Empty), out value) ? value : 0,
                     Defense = int.TryParse(text[6].Replace("d", string.Empty), out value) ? value : 0,
@@ -382,7 +391,7 @@ namespace Civ2engine.IO
                     Hold = int.TryParse(text[10], out value) ? value : 0,
                     AIrole = (AiRoleType)(int.TryParse(text[11], out value) ? value : 0),
                     Prereq = Rules.AdvanceMappings.ContainsKey(text[12]) ? Rules.AdvanceMappings[text[12]] : -1,    // temp
-                    Flags = text[13],
+                    Flags = ReadBitsReversed(text[13]),
                     AttackSound = defaultAttackSounds.FirstOrDefault(s=>s.Item1 == type)?.Item2
                 };
                 unit.IsSettler = unit.AIrole == AiRoleType.Settle;
@@ -413,6 +422,9 @@ namespace Civ2engine.IO
                 unit.CivCanBuild = ReadBitsReversed(line[0]);
                 unit.CanBeOnMap = ReadBitsReversed(line[1]);
                 unit.MinBribe = int.TryParse(line[2], out int val) ? val : 0;
+                unit.CanBuildMapLink = ReadBitsReversed(line[3]);
+                unit.CanUseMapLink = ReadBitsReversed(line[4]);
+                unit.CanMoveWithoutLink = ReadBitsReversed(line[5]);
                 var extraFlags = ReadBitsReversed(line[6]);
                 unit.Invisible = extraFlags[0];
                 unit.NonDispandable = extraFlags[1];

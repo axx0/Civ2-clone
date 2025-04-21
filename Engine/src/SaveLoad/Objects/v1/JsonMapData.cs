@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SerializationUtils;
+using Model.Core;
 
 namespace Civ2engine.SaveLoad;
 
@@ -11,7 +12,7 @@ public class JsonMapData
     {
         
     }
-    public JsonMapData(Map map, ImprovementEncoder? encoder)
+    public JsonMapData(Map map, IImprovementEncoder encoder)
     {
         FlatWorld = map.Flat;
         MapRevealed = map.MapRevealed;

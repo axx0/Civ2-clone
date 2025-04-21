@@ -6,6 +6,7 @@ using Civ2engine.IO;
 using Civ2engine.MapObjects;
 using Civ2engine.SaveLoad.SerializationUtils;
 using Civ2engine.Terrains;
+using Model.Core;
 using Model.Core.Mapping;
 
 namespace Civ2engine.SaveLoad;
@@ -68,7 +69,7 @@ public class MapSerializer
         return maps;
     }
 
-    public static void Write(Utf8JsonWriter writer, IList<Map> maps, ImprovementEncoder? improvementEncoder = null)
+    public static void Write(Utf8JsonWriter writer, IList<Map> maps, IImprovementEncoder improvementEncoder = null)
     {
         writer.WriteStartArray();
         foreach (var map in maps)

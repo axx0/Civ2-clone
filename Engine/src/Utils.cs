@@ -63,5 +63,33 @@ namespace Civ2engine
             
             return null;
         }
+
+        public static int ToBitmask(bool[]? bitArray)
+        {
+            var result = 0;
+            if (bitArray == null) return result;
+            
+            for (var i = 0; i < bitArray.Length; i++)
+            {
+                if (bitArray[i]) result |= 1 << i;
+            }
+
+            return result;
+        }
+
+        public static bool[] FromBitmask(int bitmask)
+        {
+            bool[]? bitArray = null;
+            for (int i = 32; i >= 0 ; i--)
+            {
+                if ((bitmask & (1 << i)) == 0) continue;
+                if (bitArray is null)
+                {
+                    bitArray = new bool[i+1];
+                }
+                bitArray[i] = true;
+            }
+            return bitArray;
+        }
     }
 }

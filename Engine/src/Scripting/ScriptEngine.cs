@@ -24,6 +24,7 @@ namespace Civ2engine.Scripting
             _scriptPaths = paths.ToList();
             _scriptPaths.Add(Environment.CurrentDirectory + Path.DirectorySeparatorChar + "Scripts"); 
             _lua = new Lua();
+            
             _environment = _lua.CreateEnvironment();
             dynamic dg = _environment;
             _log = new StringBuilder();
@@ -74,7 +75,7 @@ namespace Civ2engine.Scripting
             {
                 _environment.DoChunk(filePath);
             }
-            catch (Exception e)
+            catch (LuaRuntimeException e)
             {
                 _log.AppendLine($"Exception running script {scriptFileName}");
                 _log.AppendLine(e.Message);
@@ -85,7 +86,7 @@ namespace Civ2engine.Scripting
         {
             if (player is AiPlayer aiPlayer)
             {
-                aiPlayer.AI = new AiInterface(aiPlayer, _game);
+                aiPlayer.AI = new AiInterface(aiPlayer, _game, _log);
                 var scriptName = aiPlayer.AIScript;
                 if (!scriptName.EndsWith(".lua"))
                 {

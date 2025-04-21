@@ -1,6 +1,8 @@
 using System;
 using Civ2engine.Events;
 using Civ2engine.Units;
+using Model.Core.Units;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable InconsistentNaming

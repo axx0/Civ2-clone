@@ -4,6 +4,7 @@ using Civ2engine.Enums;
 using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Units;
+using Model.Core.Units;
 
 namespace Model.Core;
 
@@ -12,7 +13,7 @@ public interface IGame
     FastRandom Random { get;  }
     Civilization GetPlayerCiv { get; }
     IDictionary<int,TerrainImprovement> TerrainImprovements { get; }
-    
+    IImprovementEncoder ImprovementEncoder { get; }
     Rules Rules { get; }
     Civilization GetActiveCiv { get; }
     Options Options { get; }
@@ -52,4 +53,4 @@ public interface IGame
     void SetHumanPlayer(int playerCivId);
     void StartPlayerTurn(IPlayer activePlayer);
     void StartNextTurn();
-}   
+}

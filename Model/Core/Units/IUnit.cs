@@ -1,7 +1,7 @@
-﻿using Civ2engine.Enums;
+﻿using Civ2engine;
 using Civ2engine.MapObjects;
 
-namespace Civ2engine.Units
+namespace Model.Core.Units
 {
     public interface IUnit
     {

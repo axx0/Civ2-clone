@@ -6,6 +6,7 @@ using Civ2engine.Production;
 using Civ2engine.Units;
 using Model.Core;
 using Model.Core.Advances;
+using Model.Core.Units;
 
 namespace Civ2engine
 {

@@ -6,6 +6,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Units;
 using Model.Constants;
 using Model.Core;
+using Model.Core.Units;
 
 namespace Civ2engine
 {

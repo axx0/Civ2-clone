@@ -7,6 +7,7 @@ using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Core.Advances;
 using Model.Core.Cities;
+using Model.Core.Units;
 
 namespace Civ2engine
 {
@@ -59,5 +60,6 @@ namespace Civ2engine
         }
 
         public int FirstWonderIndex { get; set; }
+        public List<int[]> MapLinks { get; set; }
     }
 }

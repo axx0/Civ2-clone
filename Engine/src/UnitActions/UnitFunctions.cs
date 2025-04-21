@@ -5,6 +5,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Core;
+using Model.Core.Units;
 
 namespace Civ2engine.UnitActions
 {
@@ -19,6 +20,17 @@ namespace Civ2engine.UnitActions
                 UnitGas.Sea => tile.CityHere is not null,
                 UnitGas.Special => true,
                 _ => true
+            };
+        }
+
+        public static bool CanEnter(UnitGas domain, Tile tile)
+        {
+            return domain switch
+            {
+                UnitGas.Ground => tile.Terrain.Type != TerrainType.Ocean,
+                UnitGas.Air => true,
+                UnitGas.Sea => tile.Terrain.Type == TerrainType.Ocean || tile.CityHere is not null,
+                UnitGas.Special => true,
             };
         }
     }
