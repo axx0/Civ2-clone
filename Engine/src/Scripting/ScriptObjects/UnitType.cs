@@ -260,5 +260,11 @@ public class UnitType(UnitDefinition unitDefinition, Game game)
         };
     }
 
+
+    public int CombatValue
+    {
+        get => (unitDefinition.Attack + unitDefinition.Defense) * unitDefinition.Firepwr;
+    }
+    
     public Dictionary<UnitEffect, int> Effects => unitDefinition.Effects;
 }

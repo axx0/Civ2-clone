@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.MapObjects;
-using Civ2engine.Terrains;
 using Civ2engine.Units;
 using Model.Core.Units;
 
@@ -157,31 +156,4 @@ public class TileApi(Tile tile, Game game)
     {
         return BaseTile.GetHashCode();
     }
-}
-
-public class TerrainApi(Tile tile)
-{
-}
-
-public class Tribe  
-{
-    public Tribe(Civilization civ)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public int Id { get; set; }
-}
-
-public class BaseTerrain
-{
-    private readonly int _map;
-
-    public BaseTerrain(Terrain terrain, int map)
-    {
-        _map = map;
-        Terrain = terrain;
-    }
-
-    public Terrain Terrain { get; }
 }

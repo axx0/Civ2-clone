@@ -13,30 +13,34 @@ local function make_unit_list(current, offset, comp)
     }
 end
 
-local function standard_comp(first, second)
-    return (first.attack + first.defence) * first.firepower > (second.attack + second.defence) * second.firepower
+function standard_comp(first, second)
+    return first.CombatValue  > second.CombatValue
 end
 
-infantry = make_unit_list(-1, standard_comp)
+infantry = make_unit_list(-1, 1)
 
-cav = make_unit_list(0, standard_comp)
+cav = make_unit_list(0,1)
 
-artillery = make_unit_list(-1, standard_comp)
+artillery = make_unit_list(-1,1)
 
-partisans = make_unit_list(-1, standard_comp)
+partisans = make_unit_list(-1,0)
 
-fanatics = make_unit_list(-1, standard_comp)
+fanatics = make_unit_list(-1,0)
 
-transports = make_unit_list(-1,  function(first, second)
+transports = make_unit_list(-1,1,  function(first, second)
     return first.hold > second.hold
 end)
+
+diplomat = make_unit_list(0,0)
+
 
 local current_unit_index = 0
 
 local function add_unit(listing, unit) 
     local current = listing.max
     listing.max = current +1
-    while current > 0 and listing.comp(listing[current -1], unit) do
+    local comp = listing.comp or standard_comp
+    while current > 0 and comp(listing[current -1], unit) do
         listing[current] = listing[current -1]
         current = current -1
     end
@@ -58,10 +62,12 @@ while unprocessed_unit do
             if unprocessed_unit.move > 1 and unprocessed_unit.move >= unprocessed_unit.hitpoints then
                 --cav
                 add_unit(cav, unprocessed_unit)
-            elseif unprocessed_unit.flags & 32703 == 0 then
+            elseif (unprocessed_unit.flags & 32703) == 0 then
                 --artillery
                 add_unit(artillery, unprocessed_unit)
             end
+        elseif unprocessed_unit.role == 6 then
+            add_unit(diplomat, unprocessed_unit)
         end
     elseif unprocessed_unit.domain == 1 then --SEA
         if unprocessed_unit.hold > 0 then
@@ -75,19 +81,24 @@ while unprocessed_unit do
 end
 
 function check_unit(listing) 
-    local next = listing.current +1 + listing.offset;
+    local next = listing.current + 1 + listing.offset;
     if next < 0 then
         next = 0
     end
     if next == listing.max then
         return
     end
-    
+
 end
 
+function check_units()
+    check_unit(infantry)
+end
 
 ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
     print("Processing Barbarians turn: " .. d.Turn)
+    
+    check_units()
     
     --if its turn 16 or a multiple select a tile
     --if d.Turn % 16 == 0 then
@@ -98,16 +109,20 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
         while not candidate and tries > 0 do
             candidate = a.RandomTile({ global = true})
             
-            --don't spawn on top of another player
-            near_enemy = a.NearestEnemy({ tile= candidate, distance = 3, same_landmass = true})
-
-            if not near_enemy then
-                --don't spawn where there is nothing
-                target = a.NearestEnemy({ tile= candidate, distance = 50, same_landmass = true})
-            end
-            if not target then
+            if(candidate.impassable or (transports.current == -1 and candidate.terrain.isOcean)) then
                 candidate = nil
-                tries = tries -1
+            else
+            --don't spawn on top of another player
+                near_enemy = a.NearestEnemy({ tile= candidate, distance = 3, same_landmass = true})
+    
+                if not near_enemy then
+                    --don't spawn where there is nothing
+                    target = a.NearestEnemy({ tile= candidate, distance = 50, same_landmass = true})
+                end
+                if not target then
+                    candidate = nil
+                    tries = tries -1
+                end
             end
         end
         -- if tile is free

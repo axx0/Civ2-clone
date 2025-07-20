@@ -90,7 +90,7 @@ public class AiInterface
         var tile = args.ContainsKey("tile") ? args["tile"] as TileApi : null;
         if(tile == null) return null;
         
-        var distance = (args.ContainsKey("distance") ? args["distance"] as int? : 1) ?? 1;
+        var distance = (args.ContainsKey("distance") ? Convert.ToInt32(args["distance"]) : 1);
         
         var same_landmass = (args.ContainsKey("same_landmass") ? args["same_landmass"] as bool? : false) ?? false;
 

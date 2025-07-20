@@ -7,6 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Raylib-CSharp" Version="4.1.9" />
+      <PackageReference Include="Raylib-CSharp" Version="5.0.0" />
     </ItemGroup>
 </Project>
