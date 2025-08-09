@@ -55,7 +55,7 @@ public class Civ2GoldInterface : Civ2Interface
         LabelColour = new Color(31, 31, 31, 255),
         LabelShadowColour = new Color(191, 191, 191, 255),
         CityWindowFont = Fonts.Arial,
-        CityWindowFontSize = 16,
+        CityWindowFontSize = 15,
         MenuFont = Fonts.Arial,
         MenuFontSize = 14,
         StatusPanelLabelFont = Fonts.TnRbold,

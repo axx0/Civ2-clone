@@ -41,8 +41,28 @@ public class MinimapPanel : BaseControl
 
         _headerLabel = new HeaderLabel(controller, _active.Look, Labels.For(LabelIndex.World), fontSize: _active.Look.HeaderLabelFontSizeNormal);
         _closeMapButton = new Button(Controller, String.Empty, backgroundImage: _active.PicSources["close"][0]);
+        _closeMapButton.Click += (_, _) =>
+        {
+            _gameScreen.ShowGlobe();
+        };
         _nextMapButton = new Button(Controller, String.Empty, backgroundImage: _active.PicSources["zoomIn"][0]);
+        _nextMapButton.Click += (_, _) =>
+        {
+            _game.ActivePlayer.ActiveTile =
+                _game.Maps[(_gameScreen.CurrentMap.MapIndex + 1) % _game.Maps.Count].TileC2(_game.ActivePlayer.ActiveTile.X, _game.ActivePlayer.ActiveTile.Y);
+            _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged));
+            _map = _gameScreen.CurrentMap;
+        };
         _prevMapButton = new Button(Controller, String.Empty, backgroundImage: _active.PicSources["zoomOut"][0]);
+        _prevMapButton.Click += (_, _) =>
+        {
+            _game.ActivePlayer.ActiveTile =
+                _game.Maps[(_gameScreen.CurrentMap.MapIndex + _game.Maps.Count - 1) % _game.Maps.Count].TileC2(_game.ActivePlayer.ActiveTile.X, _game.ActivePlayer.ActiveTile.Y);
+            _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged));
+            _map = _gameScreen.CurrentMap;
+        };
+
+        Children = new List<IControl>() { _headerLabel, _closeMapButton, _nextMapButton, _prevMapButton };
 
         controller.OnMapEvent += MapEventTriggered;
         Click += OnClick;
@@ -50,13 +70,18 @@ public class MinimapPanel : BaseControl
     
     public override void OnResize()
     {
+        _headerLabel.Visible = !_gameScreen.MinimapGlobe;
+        _prevMapButton.Visible = !_gameScreen.MinimapGlobe && _game.Maps.Count > 1;
+        _nextMapButton.Visible = !_gameScreen.MinimapGlobe && _game.Maps.Count > 1;
+        _closeMapButton.Visible = !_gameScreen.MinimapGlobe && _gameScreen.ToTPanelLayout;
+
         var padding = _active.GetPadding(_gameScreen.MinimapGlobe ? 0 : _headerLabel.TextSize.Y, false);
         _rotationT = DateTime.Now;
         _rotationShift = 0;
 
         _backgroundImage = ImageUtils.PaintDialogBase(_active, Width, Height, padding);
         
-        _headerLabel.Bounds = new Rectangle((int)Location.X, (int)Location.Y, Width, padding.Top);
+        _headerLabel.Bounds = new Rectangle((int)Location.X + 100, (int)Location.Y, Width - 200, padding.Top);
         _headerLabel.OnResize();
         _closeMapButton.Bounds = new Rectangle((int)Location.X + 14, (int)Location.Y + 6, _closeMapButton.GetPreferredWidth(), _closeMapButton.GetPreferredHeight());
         _prevMapButton.Bounds = new Rectangle((int)Location.X + 30, (int)Location.Y + 6, _prevMapButton.GetPreferredWidth(), _prevMapButton.GetPreferredHeight());
@@ -94,27 +119,6 @@ public class MinimapPanel : BaseControl
         }
         else
         {
-            // Clicked buttons
-            if (_gameScreen.ToTPanelLayout && ShapeHelper.CheckCollisionPointRec(Input.GetMousePosition(), _closeMapButton.Bounds))
-            {
-                _gameScreen.ShowGlobe();
-                return;
-            }
-            if (_game.Maps.Count > 1 && ShapeHelper.CheckCollisionPointRec(Input.GetMousePosition(), _nextMapButton.Bounds))
-            {
-                _game.ActivePlayer.ActiveTile = 
-                    _game.Maps[(_gameScreen.CurrentMap.MapIndex + 1) % _game.Maps.Count].TileC2(_game.ActivePlayer.ActiveTile.X, _game.ActivePlayer.ActiveTile.Y);
-                _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged));
-                _map = _gameScreen.CurrentMap;
-            }
-            if (_game.Maps.Count > 1 && ShapeHelper.CheckCollisionPointRec(Input.GetMousePosition(), _prevMapButton.Bounds))
-            {
-                _game.ActivePlayer.ActiveTile =
-                    _game.Maps[(_gameScreen.CurrentMap.MapIndex + _game.Maps.Count - 1) % _game.Maps.Count].TileC2(_game.ActivePlayer.ActiveTile.X, _game.ActivePlayer.ActiveTile.Y);
-                _gameScreen.TriggerMapEvent(new MapEventArgs(MapEventType.MinimapViewChanged));
-                _map = _gameScreen.CurrentMap;
-            }
-
             var padding = _active.GetPadding(_gameScreen.MinimapGlobe ? 0 : _headerLabel.TextSize.Y, false);
             var clickPosition = GetRelativeMousePosition() - new Vector2(padding.Left, padding.Top); // click position relative to drawing area
 
@@ -248,22 +252,6 @@ public class MinimapPanel : BaseControl
             Graphics.DrawRectangleLines((int)_drawArea.X + Math.Max(0, _offset[0] + Utils.WrapNumber(_visibleStartXy[0] - _xShift, 2 * _map.XDim)),
                 (int)_drawArea.Y + Math.Max(0, _offset[1] + _visibleStartXy[1]),
                 Math.Min(_visibleDim[0], 2 * _map.XDim), Math.Min(_visibleDim[1], (int)_drawArea.Height), Color.White);
-        }
-
-        if (!_gameScreen.MinimapGlobe)
-        {
-            _headerLabel.Draw(pulse);
-
-            if (_gameScreen.ToTPanelLayout)
-            {
-                _closeMapButton.Draw(pulse);
-            }
-
-            if (_game.Maps.Count > 1)
-            {
-                _prevMapButton.Draw(pulse);
-                _nextMapButton.Draw(pulse);
-            }
         }
 
         base.Draw(pulse);

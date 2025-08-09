@@ -205,6 +205,7 @@ public class CityTileMap : BaseControl
 
     public override void OnResize()
     {
+        AbsolutePosition = _cityWindow.CityWindowProps.TileMap.ScaleAll(_cityWindow.Scale);
         base.OnResize();
         Redraw();
     }

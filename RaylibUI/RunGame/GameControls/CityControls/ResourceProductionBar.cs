@@ -1,4 +1,3 @@
-using System.Numerics;
 using Civ2engine;
 using Model;
 using Model.Interface;
@@ -6,6 +5,9 @@ using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Textures;
+using Raylib_CSharp.Transformations;
+using RaylibUI.Properties;
+using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
 
@@ -17,18 +19,20 @@ public class ResourceProductionBar : BaseControl
     private int _mid;
     private List<ProdSection> _sections;
     private int _iconWidth;
+    private IUserInterface _active;
 
     public ResourceProductionBar(CityWindow cityWindow, ResourceArea resource) : base(cityWindow)
     {
         _cityWindow = cityWindow;
         _resource = resource;
-        AbsolutePosition = resource.Bounds;
+        _active = cityWindow.MainWindow.ActiveInterface;
         _cityWindow.ResourceProductionChanged += (_, _) => CalculateContents();
-
+        Children = [];
     }
 
     public override void OnResize()
     {
+        AbsolutePosition = _resource.Bounds.ScaleAll(_cityWindow.Scale);
         base.OnResize();
         CalculateContents();
     }

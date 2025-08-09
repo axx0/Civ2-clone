@@ -10,7 +10,7 @@ namespace RaylibUI.BasicTypes.Controls;
 
 public class LabelControl : BaseControl
 {
-    public string Text { get; }
+    public string Text { get; set; }
     
     public readonly TextAlignment Alignment;
     public readonly bool WrapText;
@@ -74,6 +74,8 @@ public class LabelControl : BaseControl
     public Padding Padding { get; set; }
 
 
+
+
     public override int GetPreferredWidth()
     {
         if (WrapText)
@@ -94,6 +96,8 @@ public class LabelControl : BaseControl
 
     public override void Draw(bool pulse)
     {
+        if (!Visible) return;
+
         if (_colorBack != null)
         {
             Graphics.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, _colorBack.Value);

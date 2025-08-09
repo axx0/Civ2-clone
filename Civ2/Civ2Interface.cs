@@ -231,19 +231,27 @@ public abstract class Civ2Interface : IUserInterface
         const float buyButtonWidth = 68;
         const int infoButtonWidth = 57;
 
-        _cityWindowLayout = new CityWindowLayout(new BitmapStorage("city"))
+        _cityWindowLayout = new CityWindowLayout(new BitmapStorage("city", new Rectangle(0, 0, 640, 421)))
         {
-            Height = 420, Width = 640,
-            InfoPanel = new Rectangle(197, 216, 233, 198),
+            Height = 421, Width = 636,
+            InfoPanel = new Rectangle(193, 216, 242, 198),
             TileMap = new Rectangle(7, 65, 188, 137),
-            FoodStorage = new Rectangle(452, 0, 165, 162),
+            FoodStorage = new Rectangle(437, 0, 195, 163),
+            Production = new()
+            {
+                Type = "Box",
+                Box = new Rectangle(437, 165, 195, 191),
+                BuyButtonBounds = new Rectangle(442, 181, buyButtonWidth, buttonHeight),
+                ChangeButtonBounds = new Rectangle(557, 181, buyButtonWidth, buttonHeight),
+                IconLocation = new(97.5f, 18)
+            },
             Resources = new ResourceProduction
             {
-                TitlePosition = new Vector2(318, 46),
+                TitlePosition = new Rectangle(199, 46, 238, 15),
                 Resources = new List<ResourceArea>
                 {
                     new ConsumableResourceArea(name: "Food",
-                        bounds: new Rectangle(199, 75, 238, 16),
+                        bounds: new Rectangle(203, 75, 230, 13),
                         getDisplayDetails: (val, type) =>
                         {
                             return type switch
@@ -312,7 +320,7 @@ public abstract class Civ2Interface : IUserInterface
             },
             UnitSupport = new UnitSupport
             {
-                Position = new Rectangle(8,216,181,69),
+                Position = new Rectangle(7, 215, 181, 69),
                 Rows = 2,
                 Columns = 4
             }

@@ -66,7 +66,7 @@ public class StatusPanel : BaseControl
             researchIconLoc = new Vector2(_infoPanelBounds.X + 7, _infoPanelBounds.Y + 72);
         var researchIcon = new TextureDisplay(_gameScreen, TextureCache.GetImage(_active.PicSources["researchProgress"][iconNo]), researchIconLoc, scale: 1.5f);
 
-        Children = new List<IControl>() { populLabel, yearLabel, goldLabel, turnsLabel, researchIcon };
+        Children = new List<IControl>() { _headerLabel, populLabel, yearLabel, goldLabel, turnsLabel, researchIcon };
 
         // TODO: find out when global warming icon is shown (it's based on no of skull icons on map)
         if (true)
@@ -93,6 +93,8 @@ public class StatusPanel : BaseControl
 
     public override void OnResize()
     {
+        _headerLabel.Visible = !_gameScreen.ToTPanelLayout;
+
         if (_gameScreen.ToTPanelLayout)
         {
             _padding = _active.GetPadding(0, false);
@@ -126,18 +128,8 @@ public class StatusPanel : BaseControl
     {
         Graphics.DrawRectangle((int)Location.X, (int)Location.Y, Width, Height, Color.Black);
         Graphics.DrawTexture(_backgroundImage.Value,(int)Location.X, (int)Location.Y, Color.White);
-        if (!_gameScreen.ToTPanelLayout)
-        {
-            _headerLabel.Draw(pulse);
-        }
+
         base.Draw(pulse);
-        if (Children != null)
-        {
-            foreach (var control in Children)
-            {
-                control.Draw(pulse);
-            }
-        }
 
         // AI turn civ indicator
         if (_game.GetPlayerCiv != _game.GetActiveCiv)
