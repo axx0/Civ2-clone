@@ -207,6 +207,15 @@ public class UnitType(UnitDefinition unitDefinition, Game game)
             : new Tech(game.Rules.Advances, unitDefinition.Prereq);
         set => unitDefinition.Prereq = value?.id ?? AdvancesConstants.Nil;
     }
+
+    /// <summary>
+    /// Returns the id of the prereq tech -1 if no prereq -2 if not buildable
+    /// </summary>
+    public int prereqId
+    {
+        get => unitDefinition.Prereq;
+        set => unitDefinition.Prereq = value;
+    }
     
     /// <summary>
     /// Returns the range of the unit type.

@@ -50,7 +50,7 @@ namespace Civ2engine.IO
 
         private void ProcessTransportRelationships(string[] values)
         {
-            Rules.MapLinks = values.Select(v=>v.Split(",",StringSplitOptions.TrimEntries).Select(int.Parse).ToArray()).ToList();
+            Rules.MapLinks = values.Select(v=> v.Split(";", 2)[0].Split(",", StringSplitOptions.TrimEntries).Select(int.Parse).ToArray()).ToList();
         }
 
         private void ProcessTechGroupAssignments(string[] values)
@@ -270,9 +270,31 @@ namespace Civ2engine.IO
                     NumberOfFreeUnitsPerCity = SupportFromLevel(level),
                     UnitTypesAlwaysFree = idx == 4 ? this.Rules.UnitTypes.Where(u=>u.Flags[11]).Select(u=>u.Type).ToArray() : Array.Empty<int>(),
                     Distance = DefaultDistanceFromIndex(idx),
-                    SettlersConsumption = idx > 2 ? this.Rules.Cosmic.SettlersEatFromCommunism : Rules.Cosmic.SettlersEatTillMonarchy
+                    SettlersConsumption = idx > 2 ? this.Rules.Cosmic.SettlersEatFromCommunism : Rules.Cosmic.SettlersEatTillMonarchy,
+                    MaxRates = BuildTaxRateLimits(idx),
+                    GlobalResourceWastage = idx == 4 ? new Dictionary<string, int> { {"Science", Rules.Cosmic.FundamentalismScienceLost}} : new Dictionary<string, int>()
                 };
             }).ToArray();
+        }
+
+        private static Dictionary<string, int> BuildTaxRateLimits(int idx)
+        {
+            var limit = idx switch
+            {
+                < 2 => 6,
+                3 => 7,
+                6 => 10,
+                _ => 8
+            };
+
+            var sciLimit = idx == 4 ? 5 : limit;
+
+            return new Dictionary<string, int>
+            {
+                { "Tax", limit },
+                { "Science", sciLimit },
+                { "Luxuries", limit },
+            };
         }
 
         private int DefaultDistanceFromIndex(int idx)

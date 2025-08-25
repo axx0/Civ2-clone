@@ -61,7 +61,7 @@ namespace Civ2engine
         private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
         {
             var destination = MovementFunctions.GetPossibleMoves(tile, units[0])
-                .OrderBy(t => Utilities.DistanceTo(t, target)).FirstOrDefault();
+                .MinBy(t => Utilities.DistanceTo(t, target));
             if (destination == null) return;
             
             units.ForEach(b => MovementFunctions.UnitMoved(this, b,  destination, tile));

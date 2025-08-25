@@ -17,6 +17,7 @@ public class AiInterface
 {
     private readonly AiPlayer _player;
     private readonly Game _game;
+    private readonly StringBuilder _log;
 
     private readonly Dictionary<string, Func<AiInterface, LuaTable, object>> _events= new();
     
@@ -26,6 +27,7 @@ public class AiInterface
     {
         _player = player;
         _game = game;
+        _log = log;
     }
     
     public Civilization civ => _player.Civilization;
@@ -39,7 +41,16 @@ public class AiInterface
 
     public object? Call(string eventName, LuaTable args)
     {
-        return HasEvent(eventName) ? _events[eventName](this, args) : null;
+        try
+        {
+            return HasEvent(eventName) ? _events[eventName](this, args) : null;
+        }
+        catch (LuaException e)
+        {
+            _log.AppendLine("Error running: " + eventName);
+            _log.AppendLine(e.Message);
+            return null;
+        }
     }
 
     public void RegisterEvent(string eventName, Func<AiInterface, LuaTable, object> callback)
@@ -135,37 +146,33 @@ public class AiInterface
         return null;
     }
     
-    public List<UnitAction> GetPossibleMoves(Unit unit)
+    public LuaTable GetPossibleMoves(Unit unit)
     {
-        var result = new List<UnitAction>
-        {
-            new NothingAction(unit)
-        };
-        if (unit.CurrentLocation != null)
-        {
-            if (UnitFunctions.CanFortifyHere(unit, unit.CurrentLocation))
-            {
-                result.Add(new FortifyAction(unit));
-            }
+        var result = new LuaTable { new NothingAction(unit) };
 
-            foreach (var possibleMove in MovementFunctions.GetPossibleMoves(unit.CurrentLocation, unit))
-            {
-                if (possibleMove.UnitsHere.Count == 0 || possibleMove.UnitsHere[0].Owner == unit.Owner)
-                {
-                    if (possibleMove.CityHere != null && possibleMove.CityHere.Owner != unit.Owner)
-                    {
-                        result.Add(new CaptureAction(unit, possibleMove.CityHere));
-                    }
-
-                    result.Add(new MoveAction(unit, possibleMove));
-                }
-                else
-                {
-                    result.Add(new AttackAction(unit, possibleMove));
-                }
-            }
+        if (unit.CurrentLocation == null) return result;
+        
+        if (UnitFunctions.CanFortifyHere(unit, unit.CurrentLocation))
+        {
+            result.Add(new FortifyAction(unit));
         }
 
+        foreach (var possibleMove in MovementFunctions.GetPossibleMoves(unit.CurrentLocation, unit))
+        {
+            if (possibleMove.UnitsHere.Count == 0 || possibleMove.UnitsHere[0].Owner == unit.Owner)
+            {
+                if (possibleMove.CityHere != null && possibleMove.CityHere.Owner != unit.Owner)
+                {
+                    result.Add(new CaptureAction(unit, possibleMove.CityHere));
+                }
+
+                result.Add(new MoveAction(unit, possibleMove));
+            }
+            else
+            {
+                result.Add(new AttackAction(unit, possibleMove));
+            }
+        }
         return result;
     }
 }

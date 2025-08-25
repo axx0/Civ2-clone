@@ -38,12 +38,11 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     end
     
     local moves = ai.GetPossibleMoves(unit)
-    local best = moves[1]
     for move in moves do
         move.Priority = ai.Random.Next(50)
         
         -- Here evaluate the move and weigh it up or down
-        if move.Priority > best.Priority then
+        if not best or move.Priority > best.Priority then
             best = move
         end
     end

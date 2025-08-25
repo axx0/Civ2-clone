@@ -42,6 +42,11 @@ namespace Civ2engine
             return (Next() - 1.0) / (MaxSeed - 1);
         }
 
+        public bool NextBool()
+        {
+            return Next() % 2 == 0;
+        }
+
         public int State()
         {
             return (int)_seed;

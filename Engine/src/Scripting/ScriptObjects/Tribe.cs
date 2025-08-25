@@ -2,9 +2,11 @@ namespace Civ2engine.Scripting;
 
 public class Tribe  
 {
+    public Civilization Civ { get; }
+
     public Tribe(Civilization civ)
     {
-        throw new System.NotImplementedException();
+        Civ = civ;
     }
 
     public int Id { get; set; }

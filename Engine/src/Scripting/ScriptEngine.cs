@@ -30,7 +30,10 @@ namespace Civ2engine.Scripting
             _log = new StringBuilder();
             _log.AppendLine(_environment.Version);
             _civScripts = new CivScripts(_log, game);
-            dg.print = new Action<string>(s => _log.AppendLine(s));
+            dg.print = new Action<string>(s =>
+            {
+                _log.AppendLine(s);
+            });
             dg.civ = _civScripts;
             dg.AiEvent = new AiEventMap();
             dg.AiRoleType = new AiRoleTypeMap();

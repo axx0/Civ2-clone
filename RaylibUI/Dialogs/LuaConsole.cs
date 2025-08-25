@@ -20,7 +20,7 @@ public class LuaConsole : DynamicSizingDialog
         if(string.IsNullOrWhiteSpace(command)) return;
         
         _script.Execute(command);
-        _listBox.SetElements( _script.Log.Split('\n'), true, scrollToEnd: true);
+        _listBox.SetElements( _script.Log.Split(Environment.NewLine), true, scrollToEnd: true);
         _commandBox.SetText(string.Empty);
     }
 
@@ -29,7 +29,7 @@ public class LuaConsole : DynamicSizingDialog
         _host = host;
         _script = host.Game.Script;
 
-        _listBox = new ListBox(this, true, 1,_script.Log.Split("\n"));
+        _listBox = new ListBox(this, true, 1,_script.Log.Split(Environment.NewLine));
         Controls.Add(_listBox);
 
         var defaultButton = new Button(this, "Run Script");
