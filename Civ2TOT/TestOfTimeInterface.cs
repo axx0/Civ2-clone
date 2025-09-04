@@ -11,6 +11,7 @@ using Model.Images;
 using Model.ImageSets;
 using Model.Interface;
 using Model.Menu;
+using Model.Utils;
 using Raylib_CSharp.Transformations;
 using Raylib_CSharp.Images;
 using Raylib_CSharp.Colors;
@@ -97,8 +98,8 @@ public class TestOfTimeInterface : Civ2Interface
         var originalPath = Path.Combine(path, original);
 
         var originalERxists = Directory.Exists(originalPath);
-        var rules = originalPath + Path.DirectorySeparatorChar + "rules.txt";
-        if (File.Exists(rules))
+        var rules = FileUtilities.GetFile(path, "rules.txt");
+        if (rules != null)
         {
             yield return new Ruleset(title, new Dictionary<string, string>
             {
@@ -107,12 +108,13 @@ public class TestOfTimeInterface : Civ2Interface
 
             foreach (var subdirectory in Directory.EnumerateDirectories(path))
             {
-                var scnRules = Path.Combine(subdirectory, "rules.txt");
-                if (File.Exists(scnRules))
+                var scnRules = FileUtilities.GetFile(subdirectory, "rules.txt");
+                if (scnRules != null)
                 {
-                    var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
                     var name = "";
-                    if (File.Exists(game))
+                    
+                    var game = FileUtilities.GetFile( subdirectory,"game.txt");
+                    if (game != null)
                     {
                         foreach (var line in File.ReadLines(game))
                         {

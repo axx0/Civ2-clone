@@ -18,6 +18,7 @@ using Raylib_CSharp.Rendering;
 using RaylibUtils;
 using static Model.Menu.CommandIds;
 using System.ComponentModel.Design;
+using Model.Utils;
 
 namespace Civ2Gold;
 
@@ -636,8 +637,8 @@ public class Civ2GoldInterface : Civ2Interface
     
     protected override IEnumerable<Ruleset> GenerateRulesets(string path, string title)
     {
-        var rules = path + Path.DirectorySeparatorChar + "rules.txt";
-        if (File.Exists(rules))
+        var rules = FileUtilities.GetFile(path, "rules.txt");
+        if (rules != null)
         {
             yield return new Ruleset(title, new Dictionary<string, string>
             {
@@ -646,8 +647,8 @@ public class Civ2GoldInterface : Civ2Interface
 
             foreach (var subdirectory in Directory.EnumerateDirectories(path))
             {
-                var scnRules = Path.Combine(subdirectory, "rules.txt");
-                if (File.Exists(scnRules))
+                var scnRules = FileUtilities.GetFile(subdirectory, "rules.txt");
+                if (scnRules != null)
                 {
 
                     var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
