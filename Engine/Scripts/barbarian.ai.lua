@@ -1,7 +1,4 @@
 -- First setup structures 
-
-hordes = {}
-
 -- Current the initial level, offset how are behind or ahead barbarians are
 local function make_unit_list(name, current, offset, comp)
     return {
@@ -112,7 +109,8 @@ function check_units()
 end
 
 function create_at(listing, owner, location)
-    return civ.create_unit(listing.items[listing.current],owner,location)
+    ---@diagnostic disable-next-line: undefined-global
+    return civ.createUnit(listing.items[listing.current],owner,location)
 end
 
 function get_unit_type(ai)
@@ -127,7 +125,8 @@ function get_unit_type(ai)
     end
     return cav
 end 
-
+    
+---@diagnostic disable-next-line: undefined-global
 ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
     print("Processing Barbarians turn: " .. d.Turn)
     
@@ -135,32 +134,32 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
     
     --if its turn 16 or a multiple select a tile
     --if d.Turn % 16 == 0 then
-        candidate = nil
-        target = nil
+        local candidate = nil
+        local target = nil
+        local tries = 3
     
-        tries = 3
-        while not candidate and tries > 0 do
-            candidate = a.RandomTile({ global = true})
-            
-            if(candidate.impassable or (transports.current == -1 and candidate.terrain.isOcean)) then
-                candidate = nil
-            else
-            --don't spawn on top of another player
-                near_enemy = a.NearestEnemy({ tile= candidate, distance = 3, same_landmass = true})
-    
+        while tries > 0 do
+            candidate = a.RandomTile({ global = true })
+            target = nil
+
+            if candidate and not candidate.impassable and not (transports.current == -1 and candidate.terrain.isOcean) then
+                local near_enemy = a.NearestEnemy({ tile = candidate, distance = 3, same_landmass = true })
                 if not near_enemy then
-                    --don't spawn where there is nothing
-                    target = a.NearestEnemy({ tile= candidate, distance = 50, same_landmass = true})
-                end
-                if not target then
-                    candidate = nil
-                    tries = tries -1
+                    target = a.NearestEnemy({ tile = candidate, distance = 50, same_landmass = true })
                 end
             end
+        
+            if target then
+                break
+            end
+        
+            candidate = nil
+            tries = tries - 1
         end
-        -- if tile is free
-        --if candidate then       
-            --spawn a new barbarian horde
+        
+        if candidate then
+            -- target is guaranteed non-nil here by the loop invariant
+            -- ...
             if candidate.terrain.isOcean then                
                 local ship = create_at(transports, a, candidate)
                 local cargo = ship.type.hold
@@ -170,18 +169,19 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
                     cargo = cargo -1
                 end
             else
-               
+                local unit_type = get_unit_type(a)
+                print("Attempting to create " .. unit_type.name .. " item " .. unit_type.current)
+                create_at(unit_type, a, candidate)
+                
+                
             end
-            local idx = infantry.current
-            print("Attempting to create " .. infantry.name .. " item " .. infantry.current)
-            
-            civ.createUnit(infantry.items[idx],a,candidate)
-        --end
+        end
     --end
     
 end)
 
 
+---@diagnostic disable-next-line: undefined-global
 ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     local unit = data.Unit;
     -- is unit in horde ? move with horde
