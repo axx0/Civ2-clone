@@ -16,11 +16,10 @@ namespace RaylibUI.Controls;
 public class Button : BaseControl
 {
     private readonly string _text;
-    private readonly Vector2 _textSize;
+    private Vector2 _textSize;
     private readonly Font _font;
-    private readonly int _fontSize;
+    private int _fontSize;
     private readonly IImageSource? _backgroundImage;
-    private readonly float _imageScale;
     private readonly Color _textColour;
     private readonly IUserInterface? _active;
     private bool _hovered;
@@ -38,11 +37,13 @@ public class Button : BaseControl
         _textSize = TextManager.MeasureTextEx(_font, text, _fontSize, 1f);
         Height = (int)(_textSize.Y + 10f);
         _backgroundImage = backgroundImage;
-        _imageScale = imageScale;
+        Scale = imageScale;
     }
 
     public override void Draw(bool pulse)
     {
+        if (!Visible) return;
+
         var x = (int)Location.X;
         var y = (int)Location.Y;
         var w = Width;
@@ -66,12 +67,22 @@ public class Button : BaseControl
         }
         else
         {
-            Graphics.DrawTextureEx(TextureCache.GetImage(_backgroundImage), new Vector2(x, y), 0.0f, _imageScale, Color.White);
+            Graphics.DrawTextureEx(TextureCache.GetImage(_backgroundImage), new Vector2(x, y), 0.0f, Scale, Color.White);
         }
 
         Graphics.DrawTextEx(_font, Text, new Vector2(x + w / 2 - (int)_textSize.X / 2, y + h / 2 - (int)_textSize.Y / 2), _fontSize, 1f, Enabled ? _textColour : Color.Gray);
 
         base.Draw(pulse);
+    }
+
+    public int FontSize
+    {
+        get { return _fontSize; }
+        set
+        { 
+            _fontSize = value;
+            _textSize = TextManager.MeasureTextEx(_font, _text, _fontSize, 1f);
+        }
     }
 
     private Texture2D _texture;
@@ -89,14 +100,20 @@ public class Button : BaseControl
 
     public bool Enabled { get; set; } = true;
 
+    public float Scale { get; set; }
+
     public override void OnMouseEnter()
     {
+        if (!Visible) return;
+
         _hovered = true;
         base.OnMouseEnter();
     }
 
     public override void OnMouseLeave()
     {
+        if (!Visible) return;
+
         _hovered = false;
         base.OnMouseLeave();
     }
@@ -104,12 +121,12 @@ public class Button : BaseControl
     public override int GetPreferredHeight()
     {
         return _backgroundImage == null ? 35 : 
-            Images.GetImageHeight(_backgroundImage, _active, _imageScale);
+            Images.GetImageHeight(_backgroundImage, _active, Scale);
     }
 
     public override int GetPreferredWidth()
     {
         return _backgroundImage == null ? Math.Max((int)_textSize.X + 10, 160) :
-            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, _imageScale));
+            Math.Max((int)_textSize.X, Images.GetImageWidth(_backgroundImage, _active, Scale));
     }
 }

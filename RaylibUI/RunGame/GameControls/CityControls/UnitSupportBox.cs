@@ -9,19 +9,21 @@ public class UnitSupportBox : BaseControl
     private readonly int _numberOfRows;
     private readonly int _numberOfColumns;
 
-    public UnitSupportBox(CityWindow cityWindow, UnitSupport unitSupport) : base(cityWindow)
+    public UnitSupportBox(CityWindow cityWindow) : base(cityWindow)
     {
         _cityWindow = cityWindow;
-        AbsolutePosition = unitSupport.Position;
-        _numberOfRows = unitSupport.Rows;
-        _numberOfColumns = unitSupport.Columns;
+        _numberOfRows = cityWindow.CityWindowProps.UnitSupport.Rows;
+        _numberOfColumns = cityWindow.CityWindowProps.UnitSupport.Columns;
     }
 
     public override void OnResize()
     {
+        AbsolutePosition = _cityWindow.CityWindowProps.UnitSupport.Position.ScaleAll(_cityWindow.Scale);
         base.OnResize();
+
         Recalculate();
     }
+
     private void Recalculate()
     {
         var units = _cityWindow.City.SupportedUnits;
@@ -49,18 +51,6 @@ public class UnitSupportBox : BaseControl
             }
 
             Children = children;
-        }
-    }
-
-    public override void Draw(bool pulse)
-    {
-        base.Draw(pulse);
-        if (Children != null)
-        {
-            foreach (var control in Children)
-            {
-                control.Draw(pulse);
-            }
         }
     }
 }

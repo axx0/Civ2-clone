@@ -10,35 +10,47 @@ namespace RaylibUI.BasicTypes.Controls;
 public class ImageBox : BaseControl
 {
     private readonly IUserInterface _active;
-    private readonly IImageSource[] _image;
-    private readonly float _scale;
-    private readonly int[,] _coords;
 
-    public ImageBox(IControlLayout controller, DialogImageElements image) : base(controller)
+    public ImageBox(IControlLayout controller, DialogImageElements image) : base(controller, true)
     {
-        _image = image.Image;
-        _scale = image.Scale;
-        _coords = image.Coords;
+        Image = image.Image;
+        Scale = image.Scale;
+        Coords = image.Coords;
         _active = controller.MainWindow.ActiveInterface;
     }
 
+    public ImageBox(IControlLayout controller, IImageSource? image) : base(controller, true)
+    {
+        Image = [image];
+    }
+
+    public IImageSource?[] Image { get; set; }
+    public int[,] Coords { get; set; } = new int[,] { { 0, 0 } };
+    public float Scale { get; set; } = 1.0f;
+
     public override int GetPreferredWidth()
     {
-        return _image.Select(img => Images.GetImageWidth(img, _active, _scale)).Max();
+        return Image.Select(img => Images.GetImageWidth(img, _active, Scale)).Max();
     }
 
     public override int GetPreferredHeight()
     {
-        return _image.Select(img => Images.GetImageHeight(img, _active, _scale)).Max();
+        return Image.Select(img => Images.GetImageHeight(img, _active, Scale)).Max();
     }
 
     public override void Draw(bool pulse)
     {
-        for (int i = 0; i < _image.Length; i++)
+        if (Image != null)
         {
-            Graphics.DrawTextureEx(TextureCache.GetImage(_image[i]), 
-                new System.Numerics.Vector2((int)Location.X + _coords[i, 0] * _scale, (int)Location.Y + _coords[i, 1] * _scale), 
-                0f, _scale, Color.White);
+            for (int i = 0; i < Image.Length; i++)
+            {
+                //Graphics.DrawTextureEx(TextureCache.GetImage(_image[i]),
+                //    new System.Numerics.Vector2((int)Location.X + Coords[i, 0] * Scale, (int)Location.Y + Coords[i, 1] * Scale),
+                //    0f, Scale, Color.White);
+                Graphics.DrawTextureEx(TextureCache.GetImage(Image[i]),
+                    new System.Numerics.Vector2((int)Location.X + Coords[i, 0], (int)Location.Y + Coords[i, 1]),
+                    0f, Scale, Color.White);
+            }
         }
 
         base.Draw(pulse);

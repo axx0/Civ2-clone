@@ -123,9 +123,12 @@ public static class ImageUtils
         PaintPanelBorders(active, ref image, width, height, padding, statusPanel: statusPanel, toTStatusPanelLayout: ToTStatusPanelLayout);
         if (centerImage != null)
         {
-            var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
-            var innerHeight = Math.Min(height - padding.Top - padding.Bottom, centerImage.Value.Height);
+            //var innerWidth = Math.Min(width - padding.Left - padding.Right, centerImage.Value.Width);
+            //var innerHeight = Math.Min(height - padding.Top - padding.Bottom, centerImage.Value.Height);
+            var innerWidth = width - padding.Left - padding.Right;
+            var innerHeight = height - padding.Top - padding.Bottom;
             image.Draw(centerImage.Value, new Rectangle(0, 0, innerWidth, innerHeight), new Rectangle(padding.Left, padding.Top, innerWidth, innerHeight), Color.White);
+            image.Draw(centerImage.Value, new Rectangle(0, 0, centerImage.Value.Width, centerImage.Value.Height), new Rectangle(padding.Left, padding.Top, innerWidth, innerHeight), Color.White);
         }
         else if (!noWallpaper)
         {
@@ -533,4 +536,13 @@ public static class ImageUtils
     {
         return new Vector2(coords.X.ZoomScale(zoom), coords.Y.ZoomScale(zoom));
     }
+
+    /// <summary>
+    /// Scale location & dimensions of a rectangle
+    /// </summary>
+    /// <param name="rect">Rectangle to be scaled</param>
+    /// <param name="scale">Scale factor</param>
+    /// <returns></returns>
+    public static Rectangle ScaleAll(this Rectangle rect, float scale) =>
+        new Rectangle(rect.X * scale, rect.Y * scale, rect.Width * scale, rect.Height * scale);
 }

@@ -14,6 +14,7 @@ public abstract class BaseControl : IControl
     private bool _clickStart;
     private MouseButton _clickButton;
     private int _height;
+    private bool _visible;
     protected IControlLayout Controller { get; }
     
     public bool EventTransparent { get; }
@@ -22,6 +23,7 @@ public abstract class BaseControl : IControl
     {
         Controller = controller;
         EventTransparent = eventTransparent;
+        Visible = true;
     }
 
     public Vector2 Location
@@ -66,6 +68,12 @@ public abstract class BaseControl : IControl
         }
     }
 
+    public bool Visible
+    {
+        get => _visible;
+        set => _visible = value;
+    }
+
     public Rectangle? AbsolutePosition { get; set; }
 
     public virtual bool CanFocus => false;
@@ -78,6 +86,8 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseMove(Vector2 moveAmount)
     {
+        if (!_visible) return;
+
         if (_clickStart)
         {
             if (!Input.IsMouseButtonDown(_clickButton))
@@ -107,12 +117,16 @@ public abstract class BaseControl : IControl
 
     public virtual void OnMouseLeave()
     {
+        if (!_visible) return;
+
         _clickPossible = false;
         _clickStart = false;
     }
 
     public virtual void OnMouseEnter()
     {
+        if (!_visible) return;
+
         _clickPossible = !Input.IsMouseButtonDown(MouseButton.Left) && !Input.IsMouseButtonDown(MouseButton.Right);
         _clickStart = false;
     }
@@ -145,6 +159,11 @@ public abstract class BaseControl : IControl
     {
         // This is used for debugging layout issues by drawing a box around the controls we can see where they think they are suppose to be and which is in the wrong place
         // Graphics.DrawRectangleLines((int)_bounds.X, (int)_bounds.Y, _width,Height,Color.Magenta);
+
+        foreach (var control in Children ?? Enumerable.Empty<IControl>())
+        {
+            control.Draw(pulse);
+        }
     }
 
     public virtual int GetPreferredWidth()

@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Civ2engine;
 using Civ2engine.Production;
 using Model;
@@ -8,6 +9,7 @@ using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
 using Raylib_CSharp.Interact;
 using Raylib_CSharp.Transformations;
+using Raylib_CSharp.Windowing;
 using RaylibUI.BasicTypes.Controls;
 using RaylibUI.Controls;
 using RaylibUtils;
@@ -17,20 +19,20 @@ namespace RaylibUI.RunGame.GameControls.CityControls;
 public class CityWindow : BaseDialog
 {
     public GameScreen CurrentGameScreen { get; }
+    public CityWindowLayout CityWindowProps => _cityWindowProps;
     private readonly CityWindowLayout _cityWindowProps;
     private readonly HeaderLabel _headerLabel;
+    private readonly CityButton _shrinkIcon, _expandIcon, _exitIcon, _infoButton, _mapButton, _renameButton, _happyButton, _viewButton, _exitButton;
     private readonly IUserInterface _active;
-    private readonly IList<IProductionOrder> _canProduce;
-    
-    private LabelControl? _productionLabel;
-    private IconContainer? _productionIcon;
-    private ShieldBox? _productionBox;
+    private float _scale = 1.0f;  // scale city window size (0.5=small, 1=normal, 1.5=large)
+    private const float _scaleMax = 1.5f;
+    private const float _scaleMin = 0.5f;
+    private const float _scaleDelta = 0.5f;
 
     public CityWindow(GameScreen gameScreen, City city) : base(gameScreen.Main)
     {
         CurrentGameScreen = gameScreen;
         City = city;
-        _canProduce = ProductionPossibilities.GetAllowedProductionOrders(city);
         _active = gameScreen.MainWindow.ActiveInterface;
 
         _cityWindowProps = _active.GetCityWindowDefinition();
@@ -40,178 +42,103 @@ public class CityWindow : BaseDialog
 
         LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
 
-        DialogWidth = _cityWindowProps.Width + PaddingSide;
-        DialogHeight = _cityWindowProps.Height + LayoutPadding.Top + LayoutPadding.Bottom;
-        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding,
-            Images.ExtractBitmap(_cityWindowProps.Image, _active));
-
         Controls.Add(_headerLabel);
 
         //Tile map rendered first because in TOT it renders behind
-        var tileMap = new CityTileMap(this, gameScreen.Game)
-        {
-            AbsolutePosition = _cityWindowProps.TileMap
-        };
+        var tileMap = new CityTileMap(this, gameScreen.Game);
         Controls.Add(tileMap);
 
-        var infoArea = new CityInfoArea(this, _cityWindowProps.InfoPanel);
-
+        var infoArea = new CityInfoArea(this);
         Controls.Add(infoArea);
 
-        var buyButton = new Button(this, Labels.For(LabelIndex.Buy), _active.Look.CityWindowFont,
-            _active.Look.CityWindowFontSize)
-        {
-            AbsolutePosition = _cityWindowProps.Buttons["Buy"]
-        };
-        Controls.Add(buyButton);
-
-        var changeButton = new Button(this, Labels.For(LabelIndex.Change), _active.Look.CityWindowFont,
-            _active.Look.CityWindowFontSize)
-        {
-            AbsolutePosition = _cityWindowProps.Buttons["Change"]
-        };
-        changeButton.Click += (_, _) =>
-        {
-            gameScreen.ShowPopup(
-                "PRODUCTION", handleButtonClick: BuildDialogClosed, replaceStrings: new[] { city.Name }, listBox: new ListBoxDefinition
-                {
-                    Vertical = true,
-                    Entries = _canProduce.Select(p => p.GetBuildListEntry(_active)).ToList(),
-                    InitialSelection = _canProduce.IndexOf(city.ItemInProduction)
-                });
-        };
-        Controls.Add(changeButton);
-
-        var productionSettings = _cityWindowProps.Production;
-        ChangeProductionDisplay(city, productionSettings);
-      
-        
-        var infoButton = new Button(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        _infoButton = new CityButton(this, Labels.For(LabelIndex.Info), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Info"]
         };
-        infoButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Info);
-        Controls.Add(infoButton);
+        _infoButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Info);
+        Controls.Add(_infoButton);
 
         // Map button
-        var mapButton = new Button(this, Labels.For(LabelIndex.Map), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        _mapButton = new CityButton(this, Labels.For(LabelIndex.Map), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Map"]
         };
-        mapButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.SupportMap);
-        Controls.Add(mapButton);
-
+        _mapButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.SupportMap);
+        Controls.Add(_mapButton);
 
         // Rename button
-        var renameButton = new Button(this, Labels.For(LabelIndex.Rename), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        _renameButton = new CityButton(this, Labels.For(LabelIndex.Rename), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Rename"]
         };
-        Controls.Add(renameButton);
+        Controls.Add(_renameButton);
 
         // Happy button
-        var happyButton = new Button(this, Labels.For(LabelIndex.Happy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        _happyButton = new CityButton(this, Labels.For(LabelIndex.Happy), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Happy"]
         };
-        happyButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Happiness);
-        Controls.Add(happyButton);
+        _happyButton.Click += (_, _) => infoArea.SetActiveMode(CityDisplayMode.Happiness);
+        Controls.Add(_happyButton);
 
         // View button
-        var viewButton = new Button(this, Labels.For(LabelIndex.View), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        _viewButton = new CityButton(this, Labels.For(LabelIndex.View), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["View"]
         };
-        Controls.Add(viewButton);
+        Controls.Add(_viewButton);
 
         // Exit button
-        var exitButton = new Button(this, Labels.For(LabelIndex.Close), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
+        _exitButton = new CityButton(this, Labels.For(LabelIndex.Close), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize)
         {
             AbsolutePosition = _cityWindowProps.Buttons["Exit"]
         };
-        exitButton.Click += CloseButtonOnClick;
-        Controls.Add(exitButton);
+        _exitButton.Click += CloseButtonOnClick;
+        Controls.Add(_exitButton);
 
-        var titlePosition = _cityWindowProps.Resources.TitlePosition;
-        if (titlePosition != Vector2.Zero)
+        var resourceTitle = Labels.For(LabelIndex.CityResources);
+        Controls.Add(new CityLabel(this, Labels.For(LabelIndex.CityResources), _active.Look.CityWindowFont, _active.Look.CityWindowFontSize,
+            new Color(223, 187, 63, 255), new Color(67, 67, 67, 255))
         {
-            var resourceTitle = Labels.For(LabelIndex.CityResources);
-            var resourceTitleSize = TextManager.MeasureTextEx(_active.Look.CityWindowFont, resourceTitle, _active.Look.CityWindowFontSize, 1);
-            Controls.Add(new LabelControl(this, resourceTitle, eventTransparent: true, alignment: TextAlignment.Center, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize, colorFront: Color.Gold)
-            {
-                AbsolutePosition = new Rectangle(titlePosition.X - resourceTitleSize.X / 2 - 10,titlePosition.Y, resourceTitleSize.X + 20, resourceTitleSize.Y )
-            });
-        }
+            AbsolutePosition = _cityWindowProps.Resources.TitlePosition
+        });
         foreach (var resource in _cityWindowProps.Resources.Resources)
         {
             Controls.Add(new ResourceProductionBar(this, resource));
         }
 
-        var foodBox = new FoodStorageBox(this)
+        Controls.Add(new FoodStorageBox(this));
+        Controls.Add(new ProductionBox(this));
+        Controls.Add(new UnitSupportBox(this));
+
+        var imageW = Images.GetImageWidth(_active.PicSources["zoomIn"][0], _active);
+        var imageH = Images.GetImageHeight(_active.PicSources["zoomIn"][0], _active);
+        _exitIcon = new CityButton(this, String.Empty, backgroundImage: _active.PicSources["close"][0])
         {
-            AbsolutePosition = _cityWindowProps.FoodStorage
+            AbsolutePositionNoPadding = new Rectangle(11, 7, imageW, imageH)
         };
-        Controls.Add(foodBox);
-
-        var supportBox = new UnitSupportBox(this, _cityWindowProps.UnitSupport);
-        Controls.Add(supportBox);
-
-    }
-
-    private void ChangeProductionDisplay(City city, ShieldProduction productionSettings)
-    {
-        var productionTitlePosition = productionSettings.TitlePosition;
-        
-        var productionTitle = city.ItemInProduction.Title;
-        var productionTitleSize = TextManager.MeasureTextEx(_active.Look.CityWindowFont, productionTitle, _active.Look.CityWindowFontSize, 1);
-        
-        var label = new LabelControl(this, productionTitle, eventTransparent: true, alignment: TextAlignment.Center, font: _active.Look.CityWindowFont, fontSize: _active.Look.CityWindowFontSize, colorFront: Color.Blue)
+        _shrinkIcon = new CityButton(this, String.Empty, backgroundImage: _active.PicSources["zoomIn"][0])
         {
-            AbsolutePosition = new Rectangle(productionTitlePosition.X - productionTitleSize.X / 2 - 10, productionTitlePosition.Y, productionTitleSize.X + 20, productionTitleSize.Y )
+            AbsolutePositionNoPadding = new Rectangle(11 + imageW + 2, 7, imageW, imageH)
         };
-        if (_productionLabel != null)
+        _expandIcon = new CityButton(this, String.Empty, backgroundImage: _active.PicSources["zoomOut"][0])
         {
-            Controls.Remove(_productionLabel);
-            label.OnResize();
-        }
-        _productionLabel = label;
-        Controls.Add(_productionLabel);
-        
-        var productionIcon = new IconContainer(this, city.ItemInProduction.GetIcon(_active), 0,
-            (int)productionSettings.IconLocation.Width){
-            AbsolutePosition =productionSettings.IconLocation
+            AbsolutePositionNoPadding = new Rectangle(11 + 2 * imageW + 2 * 2, 7, imageW, imageH)
         };
-        if (_productionIcon != null)
+        _exitIcon.Click += CloseButtonOnClick;
+        _shrinkIcon.Click += (_, _) =>
         {
-            Controls.Remove(_productionIcon);
-            productionIcon.OnResize();
-        }
-
-        _productionIcon = productionIcon;
-        Controls.Add(productionIcon);
-        if (productionSettings.Type == "Box")
+            _scale = Math.Max(_scale - _scaleDelta, _scaleMin);
+            Resize(Window.GetScreenWidth(), Window.GetScreenHeight());
+        };
+        _expandIcon.Click += (_, _) =>
         {
-            if (_productionBox == null)
-            {
-                _productionBox = new ShieldBox(this)
-                {
-                    AbsolutePosition = productionSettings.ShieldBox
-                };
-                Controls.Add(_productionBox);
-            }
-
-            _productionBox.UpdateData(city.ItemInProduction);
-        }
-    }
-
-    private void BuildDialogClosed(string button, int selectedIndex, IList<bool>? chx, IDictionary<string, string>? txt)
-    {
-        if (button == Labels.Ok && selectedIndex != -1 && City.ItemInProduction != _canProduce[selectedIndex])
-        {
-            City.ItemInProduction = _canProduce[selectedIndex];
-            
-            ChangeProductionDisplay(City, _cityWindowProps.Production);
-        }
+            _scale = Math.Min(_scale + _scaleDelta, _scaleMax);
+            Resize(Window.GetScreenWidth(), Window.GetScreenHeight());
+        };
+        Controls.Add(_shrinkIcon);
+        Controls.Add(_expandIcon);
+        Controls.Add(_exitIcon);
     }
 
     private void CloseButtonOnClick(object? sender, MouseEventArgs e)
@@ -219,15 +146,34 @@ public class CityWindow : BaseDialog
         CurrentGameScreen.CloseDialog(this);
     }
 
-    public int DialogWidth { get; }
+    public float Scale => _scale;
 
-    public int DialogHeight { get; }
+    public int DialogWidth
+    {
+        get => (int)(_cityWindowProps.Width * _scale) + PaddingSide;
+        init { }
+    }
+
+    public int DialogHeight
+    {
+        get => (int)(_cityWindowProps.Height * _scale) + LayoutPadding.Top + LayoutPadding.Bottom;
+        init { }
+    }
+
     public City City { get; }
 
     public override void Resize(int width, int height)
     {
+        _headerLabel.FontSize = Math.Max(_active.Look.CityHeaderLabelFontSizeSmall, (int)(_active.Look.CityHeaderLabelFontSizeNormal * _scale));
+
+        LayoutPadding = _active.GetPadding(_headerLabel?.TextSize.Y ?? 0, false);
+
+        BackgroundImage = ImageUtils.PaintDialogBase(_active, DialogWidth, DialogHeight, LayoutPadding,
+            Images.ExtractBitmap(_cityWindowProps.Image, _active));
+        
         SetLocation(width, DialogWidth, height, DialogHeight);
-        _headerLabel.Bounds = new Rectangle(Location.X, Location.Y, DialogWidth, LayoutPadding.Top);
+        _headerLabel.Bounds = new Rectangle(Location.X + 70, Location.Y, DialogWidth - 2 * 70, LayoutPadding.Top);
+        
         foreach (var control in Controls)
         {
             control.OnResize();
