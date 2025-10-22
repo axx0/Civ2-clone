@@ -97,7 +97,7 @@ public class TestOfTimeInterface : Civ2Interface
         var originalPath = Path.Combine(path, original);
 
         var originalERxists = Directory.Exists(originalPath);
-        var rules = originalPath + Path.DirectorySeparatorChar + "rules.txt";
+        var rules = Utils.GetFilePath("rules.txt", [originalPath]);
         if (File.Exists(rules))
         {
             yield return new Ruleset(title, new Dictionary<string, string>
@@ -107,10 +107,10 @@ public class TestOfTimeInterface : Civ2Interface
 
             foreach (var subdirectory in Directory.EnumerateDirectories(path))
             {
-                var scnRules = Path.Combine(subdirectory, "rules.txt");
+                var scnRules = Utils.GetFilePath("rules.txt", [subdirectory]);
                 if (File.Exists(scnRules))
                 {
-                    var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
+                    var game = Utils.GetFilePath("game.txt", [subdirectory]);
                     var name = "";
                     if (File.Exists(game))
                     {
