@@ -636,7 +636,7 @@ public class Civ2GoldInterface : Civ2Interface
     
     protected override IEnumerable<Ruleset> GenerateRulesets(string path, string title)
     {
-        var rules = path + Path.DirectorySeparatorChar + "rules.txt";
+        var rules = Utils.GetFilePath("rules.txt", [path]);
         if (File.Exists(rules))
         {
             yield return new Ruleset(title, new Dictionary<string, string>
@@ -646,11 +646,11 @@ public class Civ2GoldInterface : Civ2Interface
 
             foreach (var subdirectory in Directory.EnumerateDirectories(path))
             {
-                var scnRules = Path.Combine(subdirectory, "rules.txt");
+                var scnRules = Utils.GetFilePath("rules.txt", [subdirectory]);
                 if (File.Exists(scnRules))
                 {
 
-                    var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
+                    var game = Utils.GetFilePath("game.txt", [subdirectory]);
                     var name = "";
                     if (File.Exists(game))
                     {
