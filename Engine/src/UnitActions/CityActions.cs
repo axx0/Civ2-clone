@@ -14,7 +14,7 @@ namespace Civ2engine.UnitActions
     {
         public static string GetCityName(Civilization civ , IGame game)
         {
-            var cityCount = game.History.TotalCitiesBuilt(civ.Id);
+            var cityCount = civ.CitiesBuiltSoFar;
             var names = game.CityNames;
             var tribe = civ.TribeName.ToUpperInvariant();
             var civCityList = names[names.ContainsKey(tribe) ? tribe : "EXTRA"];
@@ -44,6 +44,7 @@ namespace Civ2engine.UnitActions
             tile.CityHere = city;
             game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);
+            unit.Owner.CitiesBuiltSoFar++;
 
             game.SetImprovementsForCity(city);
             
