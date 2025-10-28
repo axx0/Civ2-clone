@@ -14,13 +14,13 @@ namespace Civ2engine.UnitActions
     {
         public static string GetCityName(Civilization civ , IGame game)
         {
-            var cityCount = civ.CitiesBuiltSoFar;
+            var cityCount = game.History.TotalCitiesBuilt(civ.Id);
             var names = game.CityNames;
             var tribe = civ.TribeName.ToUpperInvariant();
             var civCityList = names[names.ContainsKey(tribe) ? tribe : "EXTRA"];
             if (cityCount < civCityList?.Count)
             {
-                return civCityList[cityCount];
+                return civCityList[cityCount + 1];
             }
             
             return "Dummy Name";
@@ -44,7 +44,6 @@ namespace Civ2engine.UnitActions
             tile.CityHere = city;
             game.AllCities.Add(tile.CityHere);
             unit.Owner.Cities.Add(tile.CityHere);
-            unit.Owner.CitiesBuiltSoFar++;
 
             game.SetImprovementsForCity(city);
             

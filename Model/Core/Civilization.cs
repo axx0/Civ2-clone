@@ -40,11 +40,6 @@ namespace Civ2engine
         public int[] CasualtiesPerUnitType { get; set; }
 
         public List<City> Cities { get; } = new();
-        /**
-         * CitiesBuiltSoFar is not necessarily the same as Cities.Count;
-         * it will include cities lost to other civs or destroyed.
-         */
-        public int CitiesBuiltSoFar { get; set; }
 
         public PlayerType PlayerType { get; set; }
         public int PowerRating { get; set; }

@@ -10,7 +10,6 @@ namespace Civ2engine
         private readonly Game _game;
 
         private List<HistoryEvent> _events = new();
-        
 
         internal History(Game game)
         {

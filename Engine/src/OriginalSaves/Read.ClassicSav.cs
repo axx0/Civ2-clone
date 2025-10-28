@@ -1019,7 +1019,6 @@ public class Read
             if (civ.PlayerType != PlayerType.Barbarians)
             {
                 int ofsetTcThisCiv = ofsetTc + 3 * civ.TribeId + 1;
-                civ.CitiesBuiltSoFar = bytes[ofsetTcThisCiv];
             }
         }
         #endregion
