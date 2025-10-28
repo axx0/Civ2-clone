@@ -16,9 +16,9 @@ namespace Civ2engine
             _game = game;
         }
 
-        public void AdvanceDiscovered(int advance, int civ)
+        public void AdvanceDiscovered(int advance, Civilization civ)
         {
-            _events.Add(new ResearchEvent(advance, civ, _game));
+            _events.Add(new ResearchEvent(advance, civ.Id, _game));
         }
 
         public void CityBuilt(City city)
@@ -26,9 +26,9 @@ namespace Civ2engine
             _events.Add(new CityBuiltEvent(city,_game));
         }
 
-        public int TotalCitiesBuilt(int civId)
+        public int TotalCitiesBuilt(Civilization civ)
         {
-            return _events.Count(e => e.Civ == civId && e.EventType == HistoryEventType.CityBuilt);
+            return _events.Count(e => e.Civ == civ.Id && e.EventType == HistoryEventType.CityBuilt);
         }
     }
 

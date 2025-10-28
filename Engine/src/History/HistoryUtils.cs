@@ -27,7 +27,7 @@ public static class HistoryUtils
                 {
                     if (civ.Advances[advanceNumber])
                     {
-                        history.AdvanceDiscovered(advanceNumber, civ.Id);
+                        history.AdvanceDiscovered(advanceNumber, civ);
                     }
                 }
             }

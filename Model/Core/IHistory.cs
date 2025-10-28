@@ -4,7 +4,7 @@ namespace Model.Core;
 
 public interface IHistory
 {
-    int TotalCitiesBuilt(int civId);
+    int TotalCitiesBuilt(Civilization civId);
     void CityBuilt(City city);
-    void AdvanceDiscovered(int advanceIndex, int targetCiv);
+    void AdvanceDiscovered(int advanceIndex, Civilization targetCiv);
 }
