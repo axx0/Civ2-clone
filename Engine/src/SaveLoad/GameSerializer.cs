@@ -169,6 +169,13 @@ public class GameSerializer
             CaravanCommodity = unitData.Commodity,
             Counter = unitData.Counter
         };
+        if (unitData.ExtendedData != null)
+        {
+            foreach (var keyValuePair in unitData.ExtendedData)
+            {
+                unit.ExtendedData[keyValuePair.Key] = keyValuePair.Value;
+            }
+        }
         
         civilization.Units.Add(unit);
         return unit;

@@ -3,7 +3,7 @@ using Model.Core.Units;
 
 namespace Civ2engine.UnitActions;
 
-public class NothingAction(Unit unit) : FullTurnAction(unit)
+public class NothingAction(Unit unit) : FullTurnAction(unit, "Nothing")
 {
     protected override void DoAction()
     {

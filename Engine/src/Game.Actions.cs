@@ -31,45 +31,6 @@ namespace Civ2engine
             _activeCivId = -1;
             ChoseNextCiv();
         }
-        
-/*
-        private void ProcessBarbarians()
-        {
-            _activeCiv = AllCivilizations[0];
-            
-            if(TurnNumber < 16) return;
-            
-            TurnBeginning(Players[0]);
-            
-            //Pick a random tile if valid for barbarians raise horde
-            
-            //Move all barbarians
-            var barbarianGroups = _activeCiv.Units.Where(u => u.Dead == false)
-                .GroupBy(u =>u.CurrentLocation);
-            foreach (var barbarianGroup in barbarianGroups)
-            {
-                var tile = barbarianGroup.Key;
-                var barbarians = barbarianGroup.ToList();
-                var target = AllCities.OrderBy(c => Utilities.DistanceTo(tile, c)).FirstOrDefault();
-                if(target == null) continue;
-                
-                MoveTowards(tile, barbarians, target);
-            }
-        }
-*/
-
-        private void MoveTowards(Tile tile, List<Unit> units, IMapItem target)
-        {
-            var destination = MovementFunctions.GetPossibleMoves(tile, units[0])
-                .MinBy(t => Utilities.DistanceTo(t, target));
-            if (destination == null) return;
-            
-            units.ForEach(b => MovementFunctions.UnitMoved(this, b,  destination, tile));
-            if (units.Any(b => b.MovePoints > 0))
-            {
-                MoveTowards(destination, units.Where(b=>b.MovePoints > 0).ToList(), target);
-            }
-        }
 
         public void ChoseNextCiv()
         {

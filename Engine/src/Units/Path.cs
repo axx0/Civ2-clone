@@ -32,9 +32,9 @@ public class Path
     private const int NotPossible = -1;
 
     public static Path? CalculatePathBetween(IGame game, Tile startTile, Tile endTile, UnitGas domain, int moveFactor,
-        Civilization owner, bool alpine, bool ignoreZoc)
+        Civilization owner, bool alpine, bool ignoreZoc, bool mustBeVisible = true)
     {
-        if (startTile.Z != endTile.Z || !endTile.IsVisible(owner.Id)) return null;
+        if (startTile.Z != endTile.Z || (mustBeVisible && !endTile.IsVisible(owner.Id))) return null;
 
         switch (domain)
         {
@@ -179,16 +179,7 @@ public class Path
         {
             var tileTo = Tiles[pos++];
             var tileFrom = unit.CurrentLocation;
-            if (MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation!))
-            {
-                var neighbours = tileTo.Neighbours().Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
-                if (neighbours.Count > 0)
-                {
-                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
-                    game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
-                }
-                game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
-            }
+            MovementFunctions.UnitMoved(game, unit, tileTo, unit.CurrentLocation);
         } while (unit.MovePoints > 0 && pos < Tiles.Length &&
                  !MovementFunctions.IsNextToEnemy(unit.CurrentLocation!, unit.Owner, unit.Domain));
 

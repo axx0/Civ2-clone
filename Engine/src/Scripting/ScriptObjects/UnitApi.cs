@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Civ2engine;
 using Civ2engine.Enums;
 using Civ2engine.Scripting;
@@ -148,6 +149,8 @@ public class UnitApi
         set => _unit.Veteran = value;
     }
 
+    public Unit BaseUnit => _unit;
+
     // /// <summary>
     // /// Returns the unit visibility mask.
     // /// </summary>
@@ -173,5 +176,67 @@ public class UnitApi
     public void teleport(TileApi tile)
     {
         _unit.CurrentLocation = tile.BaseTile;
+    }
+
+    /// <summary>
+    /// Get value of a custom integer field
+    /// </summary>
+    /// <param name="field">The field name</param>
+    /// <returns>The numeric vale or -1 if not valid</returns>
+    public int GetNum(string field)
+    {
+        if (_unit.ExtendedData.TryGetValue(field, out var value) && int.TryParse(value, out var numeric))
+        {
+            return numeric;
+        }
+        return -1;
+    }
+    
+    /// <summary>
+    /// Set the value of a custom integer field
+    ///
+    /// This is useful for AI scripts that need to track custom state or counters for units.
+    /// </summary>
+    /// <param name="field">The field name</param>
+    /// <param name="value">The numeric value to set</param>
+    public void SetNum(string field, int value)
+    {
+        if (value == -1)
+        {
+            _unit.ExtendedData.Remove(field);
+        }
+        else
+        {
+            _unit.ExtendedData[field] = value.ToString();
+        }
+    }
+    
+    /// <summary>
+    /// Get value of a custom string field
+    /// </summary>
+    /// <param name="field">The field name</param>
+    /// <returns>The string value or null if not found</returns>
+    public string? GetString(string field)
+    {
+        return _unit.ExtendedData.GetValueOrDefault(field);
+    }
+
+    /// <summary>
+    /// Set the value of a custom string field
+    ///
+    /// This is useful for AI scripts that need to track custom string data for units.
+    /// </summary>
+    /// <param name="field">The field name</param>
+    /// <param name="value">The string value to set, or null to remove the field</param>
+    public void SetString(string field, string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            _unit.ExtendedData.Remove(field);
+        }
+        else
+        {
+            _unit.ExtendedData[field] = value;
+        }
     }
 }

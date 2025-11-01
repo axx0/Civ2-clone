@@ -3,7 +3,7 @@
 local function make_unit_list(name, current, offset, comp)
     return {
         name = name,
-        current = current,  -- explicitly name the field
+        current = current,
         comp = comp,
         offset = offset,
         max = 0,
@@ -29,7 +29,7 @@ transports = make_unit_list("ship",0,1,  function(first, second)
     return first.hold > second.hold
 end)
 
-diplomat = make_unit_list("dip",0,0)
+diplomats = make_unit_list("dip",0,0)
 
 
 local current_unit_index = 0
@@ -68,7 +68,7 @@ while unprocessed_unit do
                     add_unit(artillery, unprocessed_unit)
                 end
             elseif unprocessed_unit.role == 6 then
-                add_unit(diplomat, unprocessed_unit)
+                add_unit(diplomats, unprocessed_unit)
             end
         elseif unprocessed_unit.domain == 2 then --SEA
             if unprocessed_unit.role == 4 then
@@ -82,7 +82,10 @@ while unprocessed_unit do
     unprocessed_unit = civ.getUnitType(current_unit_index)
 end
 
-function check_unit(listing)    
+print("Units processed")
+
+function check_unit(listing)
+    print("Checking " .. listing.name)
     local next = listing.current + 1 + listing.offset;
     if next < 0 then
         next = 0
@@ -99,7 +102,13 @@ function check_unit(listing)
     end    
 end
 
+print("Unit parse successful")
+
+diplomat = -1
+
 function check_units()
+    print("Clearing" .. diplomat)
+    diplomat = -1
     check_unit(infantry)
     check_unit(cav)
     check_unit(artillery)
@@ -108,9 +117,13 @@ function check_units()
     check_unit(transports)
 end
 
-function create_at(listing, owner, location)
-    ---@diagnostic disable-next-line: undefined-global
-    return civ.createUnit(listing.items[listing.current],owner,location)
+hordes = {}
+
+function create_at(listing, owner, location, horde)
+    local u = civ.createUnit(listing.items[listing.current],owner,location)
+    u.SetNum("horde", horde)
+    hordes[horde].count = hordes[horde].count + 1 
+    return u
 end
 
 function get_unit_type(ai)
@@ -125,20 +138,48 @@ function get_unit_type(ai)
     end
     return cav
 end 
+
+function get_free_horde()
+    print("Finding horde")
+    for i = 1, #hordes do
+        if hordes[i].count == 0 then
+            print("Reusing exhausted horde" .. i)
+            return i
+        end
+    end
+    table.insert(hordes, {})
+    return #hordes
+end
+
+unit_type_counter = {}
     
----@diagnostic disable-next-line: undefined-global
+function move_hordes(ai)
+    for i = 1, #hordes do
+        if hordes[i].count > 0 then
+            if hordes[i].target == nil or hordes[i].target == hordes[i].location then
+                hordes[i].target = ai.NearestEnemy({ tile = hordes[i].location, distance = 50, same_landmass = true })
+            end
+            if hordes[i].target then
+                hordes[i].location = ai.LocationTowards(hordes[i])
+            end
+        end
+    end
+end
+
 ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
     print("Processing Barbarians turn: " .. d.Turn)
-    
+
     check_units()
+    
     
     --if its turn 16 or a multiple select a tile
     --if d.Turn % 16 == 0 then
-        local candidate = nil
-        local target = nil
+        local candidate
+        local target
         local tries = 3
     
         while tries > 0 do
+            print("Finding spawn" .. tries)
             candidate = a.RandomTile({ global = true })
             target = nil
 
@@ -159,32 +200,148 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
         
         if candidate then
             -- target is guaranteed non-nil here by the loop invariant
-            -- ...
+            local horde = get_free_horde()   
+            
+            hordes[horde] = {
+                target = target,
+                location = candidate,
+                count = 0,
+                speed = 1
+            }
+            
             if candidate.terrain.isOcean then                
-                local ship = create_at(transports, a, candidate)
+                local ship = create_at(transports, a, candidate, horde)
                 local cargo = ship.type.hold
                 local cargo_type = get_unit_type(a)
-                while cargo > 0 do
-                    create_at(cargo_type, a, candidate)
+                while cargo > 1 do
+                    create_at(cargo_type, a, candidate, horde)
                     cargo = cargo -1
                 end
+                -- if we have a leader type put them last on the boat otherwise just fill it up
+                if diplomats.current ~= -1 then
+                    create_at(diplomats, a, candidate, horde)
+                else
+                    create_at(cargo_type, a, candidate, horde)
+                end
+                hordes[horde].speed = ship.type.move
             else
                 local unit_type = get_unit_type(a)
                 print("Attempting to create " .. unit_type.name .. " item " .. unit_type.current)
-                create_at(unit_type, a, candidate)
-                
-                
+                local first_unit = create_at(unit_type, a, candidate, horde)
+                hordes[horde].speed = first_unit.type.move
+                if diplomats.current ~= -1 then
+                    create_at(diplomats, a, candidate, horde)
+                end
             end
         end
     --end
-    
+
+    move_hordes(a)
 end)
 
+ai.RegisterEvent(AiEvent.Units_Lost, function(ai, data)
+    for _, unit in ipairs(data.Units) do
+        local horde = unit:GetNum("horde")
+        if horde >= 0 then
+            print("Unit from horde " .. horde .. " was lost")
+            -- Update horde tracking, send reinforcements, etc.
+            hordes[horde].count = hordes[horde].count - 1
+        end
+    end
 
----@diagnostic disable-next-line: undefined-global
+    -- If we know what killed them
+    if data.By then
+        print("Killed by: " .. data.By.type.name)
+    end
+end)
+
 ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     local unit = data.Unit;
-    -- is unit in horde ? move with horde
+    print("Finding orders for " .. unit.type.name)
+    -- Move leaders last and to nearest friendly unit
+    if unit.AiRole == AiRoleType.Diplomacy then
+        if diplomat == unit.id then
+            diplomat = -2
+        end
+        if diplomat == -2 then
+            friend = ai.NearestFriend({ tile = unit.location, distance = unit.type.move, unit_type= unit.type.id })
+            if friend then
+                return friend
+            end
+            -- TODO: Run away from enemies if no friends around
+            return nil
+        end
     
-    --collect new horde 
+        if diplomat == -1 then
+            diplomat = unit.id
+        end
+        return "w"
+    end
+    -- is unit not in a horde, find one
+    local horde = unit:GetNum("horde")
+    if not horde then
+        friend = ai.NearestFriend({ tile = unit.location, distance = 5, in_horde= true})
+        if friend then
+            -- Loop over units at the friend tile to find one with a horde set
+            for _, friend_unit in pairs(friend.units) do
+                local horde_id = friend_unit:GetNum("horde")
+                if horde_id > 0 then
+                    print("Found unit from horde " .. horde_id .. " at friend location")
+                    horde = horde_id
+                    break
+                end
+            end
+        else
+            --collect new horde 
+            horde = get_free_horde()
+            hordes[horde] = {
+                location = unit.location,
+                target = a.NearestEnemy({ tile = unit.location, distance = 50, same_landmass = true }),
+                speed = unit.type.move,
+                count = 0
+            }
+        end
+        unit:SetNum("horde", horde)
+        hordes[horde].count = hordes[horde].count + 1
+    end
+    
+    local moves = ai.GetPossibleMoves(unit)
+
+    -- Weight moves based on type
+    local best_move
+    
+    local current_dist = ai.Distance(unit.location, hordes[horde].location)
+
+    for _, move in ipairs(moves) do
+
+        -- Weight by move type
+        if move.Type == "Attack" then
+            move.Priority = 1000  -- Prioritize attacks
+        elseif move.Type == "Unload" then
+            if move.Tile.landmass == hordes[horde].target.landmass then
+                move.Priority = 2000
+            end
+        elseif move.Type == "Move" then
+            move.Priority = 500   -- Regular movement
+        elseif move.Type == "Fortify" then
+            move.Priority = 100   -- Low priority for fortifying
+        end
+
+        -- Additional weighting factors can be added here
+        -- For example, prefer moves toward target
+        if move.tile and hordes[horde] and hordes[horde].location then
+            local move_dist = ai.Distance(move.tile, hordes[horde].location)
+            if move_dist < current_dist then
+                move.Priority = move.Priority + 200
+            elseif move_dist > current_dist then
+                move.Priority = move.Priority - 100
+            end
+        end
+
+        if not best_move or move.Priority > best_move.Priority then
+            best_move = move
+        end
+    end
+
+    return best_move
 end)

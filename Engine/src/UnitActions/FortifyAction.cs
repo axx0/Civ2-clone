@@ -4,7 +4,7 @@ using Model.Core.Units;
 
 namespace Civ2engine.UnitActions;
 
-public class FortifyAction(Unit unit) : FullTurnAction(unit)
+public class FortifyAction(Unit unit) : FullTurnAction(unit, "Fortify")
 {
     protected override void DoAction()
     {

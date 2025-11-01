@@ -152,5 +152,7 @@ namespace Model.Core.Units
 
         public int Building { get; set; }
         public int AttacksSpent { get; set; }
+
+        public Dictionary<string, string> ExtendedData { get;} = new();
     }
 }

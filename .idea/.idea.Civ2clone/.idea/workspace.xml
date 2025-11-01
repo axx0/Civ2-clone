@@ -17,25 +17,50 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38862fe7-8760-4eef-9f9f-5fdba728b888" name="Changes" comment="Merge axx/master into master">
-      <change afterPath="$PROJECT_DIR$/Engine/src/Scripting/CosmicScripts.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/CityApi.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitApi.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/UnitActions/InvasionAction.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Engine/src/UnitActions/UnloadAction.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Civ2clone/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" beforeDir="false" afterPath="$PROJECT_DIR$/Civ2clone.sln.DotSettings.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/barbarian.ai.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/Scripts/default.ai.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/default.ai.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/Scripts/emmy.meta.lua" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Scripts/emmy.meta.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/AiPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/AiPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Cities/CityExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.Actions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/IO/RulesParser.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.ActionsUnits.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Game.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/GameSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/SaveLoad/Objects/v1/JsonUnitData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScenarioHooks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScenarioHooks.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiEventMap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiEventMap.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tribe.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/Tribe.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitType.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/CosmicRules.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/CosmicRules.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Model/Core/GameRules/Government.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/GameRules/Government.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TileApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/TileApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitApi.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/UnitApi.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/AttackAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/AttackAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/BuildCityAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/BuildCityAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CaptureAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CaptureAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/CityActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/FortifyAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/FortifyAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/FullTurnAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/FullTurnAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MoveAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MoveAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/MovementFunctions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/NothingAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/NothingAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/TileAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/TileAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/UnitActions/UnitAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/UnitActions/UnitAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/src/Units/Path.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/src/Units/Path.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/IGame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/IGame.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Player/IPlayer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Core/Units/Unit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Model/Events/MovementBlockedEventArgs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/Events/MovementBlockedEventArgs.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Model/FastRandom.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Model/FastRandom.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/Dialogs/LuaConsole.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/Commands/Orders/BuildCity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/CityControls/CityInfoArea.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/Mapping/MapControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameControls/MinimapPanel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/GameScreen.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/RaylibUI/RunGame/LocalPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Engine.Tests/GameLoaderTests.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Engine.Tests/GameLoaderTests.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,20 +85,36 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;reubene&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/reubene/Civ2-clone.git&quot;,
+    &quot;accountId&quot;: &quot;1baa7eee-0ba4-4195-a953-0234ac6c4afe&quot;
+  }
+}</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/bf5e279d9239bfef5bb1b8d6212f1b971c434606/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/201911d3553943f282f236e3223ec8d747800/2b/2a6c935e/LuaValue.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/201911d3553943f282f236e3223ec8d747800/d8/417f1676/LuaTable.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/35679f8d5c7a44edbd723c1017c1db6850800/44/eeea7569/Parser.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/35679f8d5c7a44edbd723c1017c1db6850800/d4/b00e204a/LuaTable.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1b81cb3be224213a6a73519b6e340a628d9a1fb8629c351a186a26f6376669/List.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/543b2b10d185c457cefef8a2bf68248d4a2e7e9fce27dc5349fa22869643f0/Aggregate.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7107522deb0c52b277e342ebf329969f0622a144e19e6874a66a843ee4fecbf/UpdateDelegates.Generated.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/8e1d8b1898e68b78b98a28b765909f5e8fe77f501fc13d7575127219d3148/Select.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/de8a243f75215d958afa80cf80a41b4981a44efea7db93bffcdaf7bd6ba378c0/Number.Parsing.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/5094e71058416d72278f32a6913f67a9c664bd46c296c5cce3ee63993dde3f/Type.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/59e69cdfed13efa8a6d7821335c5f5d1dd7e4dc2d09a23eec71b142e6f9967/Dictionary.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7e333a9f3297ba553cccfd3b7c3f1f96125b23d09f883e4d6e66d531559a4c/Type.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9ee76fb4aded5e9da6e66cc2dcb127fac08d3ec5ac84fc6db9d4ee1d2e38/Monitor.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/af2458e7257b5b828a3a5f22d9533d9ed4c80a93bc0c707a319d91b5a4ba76/Contains.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/baf2eef7c7bbea3742b74ee71fe7168c3a8c2269a1ce22d51333175656840/RuntimeType.CoreCLR.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d1f2e4f6ccefb370a4a4a3c83e7934fabe9dd3e179625b382fbe5368e13dc8/LambdaExpression.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d87f2bfadfb6fc1a7b25db06f4f86aa8ad19c1ad89551d92a1e46761215c/CallSiteBinder.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d89a846232fe82cda12166589bc1d39e48ca8819a15feac340c16b13e545c7d8/UpdateDelegates.Generated.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/db4201f9bc9b51d63752f4912cefbd3a7c01d1a49431b6f406e2eb59ad97b96/DynamicILGenerator.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/EtoFormsUI/EtoFormsUI/Templates/Civ2dialog.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -85,22 +126,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;.NET Project.RaylibUI.executor&quot;: &quot;Run&quot;,
-    &quot;Lua Application.Test_test.lua.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    ".NET Project.RaylibUI.executor": "Debug",
+    "Lua Application.Test_test.lua.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.sourceCode.C#",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Project.RaylibUI">
     <configuration name="RaylibUI" type="DotNetProject" factoryName=".NET Project" temporary="true">
       <option name="EXE_PATH" value="$PROJECT_DIR$/RaylibUI/bin/Debug/net8.0/RaylibUI.exe" />
@@ -111,10 +154,10 @@
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
       <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
       <option name="AUTO_ATTACH_CHILDREN" value="0" />
-      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/RaylibUI/RaylibUI.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -147,6 +190,8 @@
     </configuration>
     <list>
       <item itemvalue=".NET Project.RaylibUI" />
+      <item itemvalue="Lua Application.Test_test.lua" />
+      <item itemvalue="Lua Application.barbarian.ai.lua" />
     </list>
     <recent_temporary>
       <list>
@@ -173,6 +218,15 @@
       <workItem from="1753003349706" duration="6972000" />
       <workItem from="1755481484746" duration="6654000" />
       <workItem from="1756143833816" duration="2050000" />
+      <workItem from="1757239619996" duration="1182000" />
+      <workItem from="1757243291951" duration="3281000" />
+      <workItem from="1757300589840" duration="12490000" />
+      <workItem from="1760424212029" duration="27714000" />
+      <workItem from="1761302626992" duration="66000" />
+      <workItem from="1761303210335" duration="88000" />
+      <workItem from="1761303764223" duration="636000" />
+      <workItem from="1761360338634" duration="7770000" />
+      <workItem from="1761462186424" duration="30081000" />
     </task>
     <task id="LOCAL-00001" summary="Reveal map working">
       <option name="closed" value="true" />
@@ -228,19 +282,6 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs</url>
-          <line>147</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\ScriptObjects\AiInterface.cs" containingFunctionPresentation="Method 'NearestEnemy'">
-            <startOffsets>
-              <option value="4806" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4818" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptEngine.cs</url>
           <line>84</line>
           <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\ScriptEngine.cs" containingFunctionPresentation="Method 'RunScript'">
@@ -252,19 +293,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs</url>
-          <line>49</line>
-          <properties documentPath="C:\Users\R-105\source\repos\Civ2-clone\Engine\src\Scripting\ScriptObjects\AiInterface.cs" containingFunctionPresentation="Method 'Call'">
-            <startOffsets>
-              <option value="1240" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1287" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Engine/src/Scripting/CivScripts.cs</url>
@@ -291,6 +319,45 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs</url>
+          <line>391</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" containingFunctionPresentation="Method 'Distance'">
+            <startOffsets>
+              <option value="15805" />
+            </startOffsets>
+            <endOffsets>
+              <option value="15864" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs</url>
+          <line>373</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/Scripting/ScriptObjects/AiInterface.cs" containingFunctionPresentation="Method 'LocationTowards'">
+            <startOffsets>
+              <option value="15021" />
+            </startOffsets>
+            <endOffsets>
+              <option value="15096" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="41" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs</url>
+          <line>14</line>
+          <properties documentPath="$PROJECT_DIR$/Engine/src/MapObjects/Utilities.cs" containingFunctionPresentation="Method 'DistanceTo'">
+            <startOffsets>
+              <option value="409" />
+            </startOffsets>
+            <endOffsets>
+              <option value="430" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="42" />
         </line-breakpoint>
         <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
           <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />

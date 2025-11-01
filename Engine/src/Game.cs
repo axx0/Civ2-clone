@@ -74,17 +74,7 @@ namespace Civ2engine
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
 
         public IPlayer[] Players { get; }
-
-        public void TriggerUnitEvent(UnitEventType eventType, IUnit movedUnit,
-            BlockedReason blockedReason = BlockedReason.NotBlocked)
-        {
-            OnUnitEvent?.Invoke(this, new MovementBlockedEventArgs(eventType, movedUnit, blockedReason));
-        }
-
-        public void TriggerUnitEvent(UnitEventArgs args)
-        {
-            OnUnitEvent?.Invoke(this, args);
-        }
+        
 
         public void TriggerMapEvent(MapEventType eventType, List<Tile> tilesChanged)
         {

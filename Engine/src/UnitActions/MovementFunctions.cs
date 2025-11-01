@@ -28,7 +28,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -58,7 +58,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -98,7 +98,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
             
@@ -128,7 +128,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -151,7 +151,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -181,7 +181,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -208,7 +208,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -238,7 +238,7 @@ namespace Civ2engine.UnitActions
             }
             else
             {
-                instance.TriggerUnitEvent(UnitEventType.MovementBlocked, activeUnit, BlockedReason.EdgeOfMap);
+                instance.Players[activeUnit.Owner.Id].MoveBlocked(activeUnit, BlockedReason.EdgeOfMap);
                 return;
             }
 
@@ -275,7 +275,7 @@ namespace Civ2engine.UnitActions
         {
             if (unit.AttackBase == 0)
             {
-                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.ZeroAttackStrength);
+                game.Players[unit.Owner.Id].MoveBlocked(unit, BlockedReason.ZeroAttackStrength);
                 return false;
             }
 
@@ -306,7 +306,7 @@ namespace Civ2engine.UnitActions
 
             if (!unit.CanAttackAirUnits && tileTo.UnitsHere.Any(u => u.Domain == UnitGas.Air))
             {
-                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.CannotAttackAirUnits);
+                game.Players[unit.Owner.Id].MoveBlocked(unit, BlockedReason.CannotAttackAirUnits);
                 return false;
             }
 
@@ -387,7 +387,17 @@ namespace Civ2engine.UnitActions
 
             var attackerWinsBattle = defender.RemainingHitpoints <= 0;
 
-            game.TriggerUnitEvent(new CombatEventArgs(UnitEventType.Attack, attacker, defender, combatRoundsAttackerWins, attackerHitpoints, defenderHitpoints));
+
+            var combatEventArgs = new CombatEventArgs(UnitEventType.Attack, attacker, defender, combatRoundsAttackerWins, attackerHitpoints, defenderHitpoints);
+
+            for (int civId = 0; civId < tile.Visibility.Length; civId++)
+            {
+                if (tile.Visibility[civId] && tile.Map.IsCurrentlyVisible(tile, civId))
+                {
+                    var player = game.Players[civId];
+                    player.CombatHappened(combatEventArgs);
+                }
+            }
             
             if (attackerWinsBattle)
             {
@@ -395,6 +405,7 @@ namespace Civ2engine.UnitActions
                 // Defender loses - kill all units on the tile (except if on city & if in fortress/airbase)
                 if (tile.CityHere != null || tile.EffectsList.Any(e=>e.Target == ImprovementConstants.NoStackElimination))
                 {
+                    game.Players[defender.Owner.Id].UnitLost(defender, attacker);
                     defender.Dead = true;
                     //_casualties.Add(defender);
                     //_units.Remove(defender);
@@ -409,11 +420,14 @@ namespace Civ2engine.UnitActions
                         //_casualties.Add(unit);
                         //_units.Remove(unit);
                     }
+                    game.Players[defender.Owner.Id].UnitsLost(deadUnits, attacker);
                 }
             }
             else
             {
+                
                 attacker.Dead = true;
+                game.Players[attacker.Owner.Id].UnitLost(attacker, defender);
                 //_casualties.Add(attacker);
                 //_units.Remove(attacker);
             }
@@ -427,7 +441,7 @@ namespace Civ2engine.UnitActions
             var tileTo = map.TileC2(destX, destY);
             if (!unit.IgnoreZonesOfControl && !IsFriendlyTile(tileTo, unit.Owner) && IsNextToEnemy(tileFrom, unit.Owner, unit.Domain) && IsNextToEnemy(tileTo, unit.Owner, unit.Domain))
             {
-                game.TriggerUnitEvent(UnitEventType.MovementBlocked, unit, BlockedReason.Zoc);
+                game.Players[unit.Owner.Id].MoveBlocked(unit, BlockedReason.Zoc);
                 return;
             }
 
@@ -571,7 +585,7 @@ namespace Civ2engine.UnitActions
             {
                 unit.MovePointsLost += moveCost;
                 // Set previous coords
-                unit.PrevXy = new[] { unit.X, unit.Y };
+                unit.PrevXy = [unit.X, unit.Y];
 
                 // Set new coords
                 unit.X = tileTo.X;
@@ -601,10 +615,21 @@ namespace Civ2engine.UnitActions
                 {
                     unit.Order = (int)OrderType.NoOrders;
                 }
-
-                if (unit.CurrentLocation.IsVisible(game.GetPlayerCiv.Id))
+                
+                game.ActivePlayer.ActiveTile = tileTo;
+                var neighbours = tileTo.Map.Neighbours(tileTo, unit.TwoSpaceVisibility).Where(n => !n.IsVisible(unit.Owner.Id)).ToList();
+                if (neighbours.Count > 0)
                 {
-                    game.TriggerUnitEvent(new MovementEventArgs(unit, tileFrom, tileTo));
+                    neighbours.ForEach(n => n.SetVisible(unit.Owner.Id));
+                    game.TriggerMapEvent(MapEventType.UpdateMap, neighbours);
+                }
+
+                for (var civId = 0; civId < unit.CurrentLocation.Visibility.Length; civId++)
+                {
+                    if (unit.CurrentLocation.Visibility[civId])
+                    {
+                        game.Players[civId].UnitMoved(unit, tileTo, tileFrom);
+                    }
                 }
             }
 

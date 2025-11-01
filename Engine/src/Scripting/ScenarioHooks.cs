@@ -1,5 +1,6 @@
 using System;
 using Civ2engine.Events;
+using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Units;
 using Model.Core.Units;
 
@@ -9,51 +10,44 @@ using Model.Core.Units;
 
 namespace Civ2engine.Scripting
 {
-    public class ScenarioHooks
+    public class ScenarioHooks(Game game)
     {
-        private readonly Game _game;
-
-        public ScenarioHooks(Game game)
-        {
-            _game = game;
-        }
-
         #region onActivateUnit
-        public void onActivateUnit(Func<Unit, bool, bool, object> activateHook)
+        public void onActivateUnit(Func<UnitApi, bool, bool, object> activateHook)
         {
-            _game.OnUnitEvent += (_, args) =>
+            game.OnUnitEvent += (_, args) =>
             {
                 if (args is ActivationEventArgs activationArgs)
                 {
-                    activateHook(activationArgs.Unit, activationArgs.UserInitiated, activationArgs.Reactivation);
+                    activateHook(new UnitApi(activationArgs.Unit, game), activationArgs.UserInitiated, activationArgs.Reactivation);
                 }
             };
         }
         
-        public void onActivateUnit(Func<Unit, bool, object> activateHook)
+        public void onActivateUnit(Func<UnitApi, bool, object> activateHook)
         {
-            _game.OnUnitEvent += (_, args) =>
+            game.OnUnitEvent += (_, args) =>
             {
                 if (args is ActivationEventArgs activationArgs)
                 {
-                    activateHook(activationArgs.Unit, activationArgs.UserInitiated);
+                    activateHook(new UnitApi(activationArgs.Unit, game), activationArgs.UserInitiated);
                 }
             };
         }
         
-        public void onActivateUnit(Func<Unit, object> activateHook)
+        public void onActivateUnit(Func<UnitApi, object> activateHook)
         {
-            _game.OnUnitEvent += (_, args) =>
+            game.OnUnitEvent += (_, args) =>
             {
                 if (args is ActivationEventArgs activationArgs)
                 {
-                    activateHook(activationArgs.Unit);
+                    activateHook(new UnitApi(activationArgs.Unit, game));
                 }
             };
         }
         public void onActivateUnit(Func<object> activateHook)
         {
-            _game.OnUnitEvent += (_, args) =>
+            game.OnUnitEvent += (_, args) =>
             {
                 if (args is ActivationEventArgs)
                 {
@@ -62,6 +56,5 @@ namespace Civ2engine.Scripting
             };
         }
         #endregion
-      
     }
 }

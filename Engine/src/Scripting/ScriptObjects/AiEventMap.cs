@@ -9,4 +9,5 @@ public class AiEventMap
     public string Turn_End = AiEvent.TurnEnd;
     public string Unit_Orders_Needed = AiEvent.UnitOrdersNeeded;
     public string Research_Complete = AiEvent.ResearchComplete;
+    public string Units_Lost = AiEvent.UnitsLost;
 }

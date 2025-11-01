@@ -27,8 +27,9 @@ namespace Civ2engine.UnitActions
             return "Dummy Name";
         }
 
-        public static City BuildCity(Tile tile, Unit unit, IGame game, string name)
+        public static City BuildCity(Unit unit, IGame game, string name)
         {
+            var tile = unit.CurrentLocation;
             var initialProduction = ProductionOrder.GetAll(game.Rules).MinBy(i => i.Cost);
             var city = new City
             {
@@ -38,7 +39,7 @@ namespace Civ2engine.UnitActions
                 Y = tile.Y,
                 Owner = unit.Owner,
                 Size = 1,
-                ItemInProduction = initialProduction,
+                ItemInProduction = initialProduction!,
                 WhoBuiltIt = unit.Owner,
             };
             tile.WorkedBy = city;
@@ -77,11 +78,6 @@ namespace Civ2engine.UnitActions
             game.TriggerMapEvent(MapEventType.UpdateMap, new List<Tile> {tile});
 
             return city;
-        }
-
-        public static void AiBuildCity(Unit unit, Game game)
-        {
-            BuildCity(unit.CurrentLocation, unit, game, GetCityName(unit.Owner, game));
         }
     }
 }

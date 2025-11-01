@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Civ2engine.MapObjects;
+using Civ2engine.Scripting.ScriptObjects;
 using Civ2engine.Units;
 using Model.Core.Units;
 
@@ -142,6 +143,11 @@ public class TileApi(Tile tile, Game game)
     /// Returns the `z` coordinate of the tile (map number).
     /// </summary>
     public int z => tile.Z;
+
+    public int UnitsOfType(UnitApi unit)
+    {
+        return tile.UnitsHere.Count(u => u.Type == unit.BaseUnit.Type);
+    }
 
     public override bool Equals(object? obj)
     {

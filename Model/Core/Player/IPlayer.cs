@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Civ2engine.Advances;
+using Civ2engine.Enums;
+using Civ2engine.Events;
 using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Units;
@@ -38,7 +40,39 @@ namespace Civ2engine
         void FoodShortage(City city);
         void CityDecrease(City city);
         void TurnStart(int turnNumber);
+
+        /// <summary>
+        /// Set current unit as active unit, and move it if the move parameter is true.
+        ///  If the unit parameter is null, set ActiveUnit to null.
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <param name="move"></param>
+        /// <returns></returns>
         void SetUnitActive(Unit? unit, bool move);
+        void UnitLost(Unit unit, Unit? killedBy);
+        
+        void UnitsLost(List<Unit> deadUnits, Unit? killedBy);
+        
+        /// <summary>
+        /// Called to notify the player that a unit has moved.
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <param name="tileTo"></param>
+        /// <param name="tileFrom"></param>
+        void UnitMoved(Unit unit, Tile tileTo, Tile tileFrom);
+
+        /// <summary>
+        /// Called when a combat happens between two units that we can see, not necessarily our units
+        /// </summary>
+        /// <param name="combatEventArgs"></param>
+        void CombatHappened(CombatEventArgs combatEventArgs);
+        
+        /// <summary>
+        /// Called when a move order can't be followed and has been canceled. 
+        /// </summary>
+        /// <param name="unit"></param>
+        /// <param name="blockedReason"></param>
+        void MoveBlocked(Unit unit, BlockedReason blockedReason);
     }   
 
     public interface IInterfaceCommands

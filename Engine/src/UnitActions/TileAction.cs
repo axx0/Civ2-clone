@@ -4,7 +4,7 @@ using Model.Core.Units;
 
 namespace Civ2engine.UnitActions;
 
-public abstract class TileAction(Unit unit, Tile tile) : UnitAction(unit)
+public abstract class TileAction(Unit unit, Tile tile, string type) : UnitAction(unit, type)
 {
     public Tile Tile { get; } = tile;
 }

@@ -32,7 +32,7 @@ public class MinimapPanel : BaseControl
     private DateTime _rotationT;
     private int _rotationShift = 0;
 
-    public MinimapPanel(GameScreen controller, IGame game) : base(controller)
+    public MinimapPanel(GameScreen controller, IGame game, LocalPlayer player) : base(controller)
     {
         _gameScreen = controller;
         _game = game;

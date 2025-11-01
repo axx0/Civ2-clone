@@ -111,7 +111,6 @@ internal class MockGame : IGame
     public int NoMaps => throw new NotImplementedException();
     public List<Civilization> AllCivilizations => throw new NotImplementedException();
     public void TriggerUnitEvent(UnitEventType eventType, IUnit triggerUnit, BlockedReason reason = BlockedReason.NotBlocked) => throw new NotImplementedException();
-    public void TriggerUnitEvent(UnitEventArgs combatEventArgs) => throw new NotImplementedException();
     public void SetHumanPlayer(int playerCivId) => throw new NotImplementedException();
     public void StartPlayerTurn(IPlayer activePlayer) => throw new NotImplementedException();
     public void StartNextTurn() => throw new NotImplementedException();

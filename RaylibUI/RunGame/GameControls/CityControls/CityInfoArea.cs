@@ -1,15 +1,11 @@
 using Civ2engine;
-using Civ2engine.MapObjects;
-using Civ2engine.Units;
 using Model;
 using Model.Core;
 using Raylib_CSharp.Colors;
 using Raylib_CSharp.Fonts;
-using Raylib_CSharp.Geometry;
 using Raylib_CSharp.Rendering;
 using Raylib_CSharp.Transformations;
 using RaylibUI.BasicTypes.Controls;
-using RaylibUI.RunGame.GameControls.Mapping;
 using System.Numerics;
 
 namespace RaylibUI.RunGame.GameControls.CityControls;
@@ -155,7 +151,7 @@ public class CityInfoArea : BaseControl
                 }
             }
             // Mark supported units (omit those in the city)
-            foreach (Unit unit in _city.SupportedUnits.Where(u => u.X != _city.X && u.Y != _city.Y))
+            foreach (var unit in _city.SupportedUnits.Where(u => u.X != _city.X && u.Y != _city.Y))
             {
                 Graphics.DrawRectangleRec(new Rectangle(drawingOffsetX + sqW * unit.X, drawingOffsetY + sqH * unit.Y, sqW, sqH), new Color(159, 159, 159, 255));
             }
