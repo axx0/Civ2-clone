@@ -20,7 +20,7 @@ namespace Civ2engine.UnitActions
             var civCityList = names[names.ContainsKey(tribe) ? tribe : "EXTRA"];
             if (cityCount < civCityList?.Count)
             {
-                return civCityList[cityCount + 1];
+                return civCityList[cityCount];
             }
             
             return "Dummy Name";
