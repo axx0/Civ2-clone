@@ -7,11 +7,11 @@ namespace Civ2engine
 {
     public class History : IHistory
     {
-        private readonly Game _game;
+        private readonly IGame _game;
 
         private List<HistoryEvent> _events = new();
 
-        internal History(Game game)
+        internal History(IGame game)
         {
             _game = game;
         }
@@ -34,7 +34,7 @@ namespace Civ2engine
 
     public class CityBuiltEvent : HistoryEvent
     {
-        public CityBuiltEvent(City city, Game game) : base(HistoryEventType.CityBuilt, city.Owner.Id, game)
+        public CityBuiltEvent(City city, IGame game) : base(HistoryEventType.CityBuilt, city.Owner.Id, game)
         {
             X = city.X;
             Y = city.Y;
@@ -52,7 +52,7 @@ namespace Civ2engine
     {
         public int Advance { get; }
 
-        public ResearchEvent(int advance, int civ, Game game) : base(HistoryEventType.AdvanceDiscovered, civ, game)
+        public ResearchEvent(int advance, int civ, IGame game) : base(HistoryEventType.AdvanceDiscovered, civ, game)
         {
             Advance = advance;
         }
@@ -64,7 +64,7 @@ namespace Civ2engine
         public int Civ { get; }
 
         public int Turn { get; }
-        protected HistoryEvent(HistoryEventType eventType, int civ, Game game)
+        protected HistoryEvent(HistoryEventType eventType, int civ, IGame game)
         {
             EventType = eventType;
             Civ = civ;
