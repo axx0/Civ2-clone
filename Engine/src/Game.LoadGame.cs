@@ -101,7 +101,24 @@ namespace Civ2engine
 
             _activeCiv = playerCiv;
             AllCities.AddRange(objects.Cities);
-            
+            if (gameData.CitiesBuiltSoFar == null)
+            {
+                foreach (Civilization civ in AllCivilizations)
+                {
+                    CitiesBuiltSoFar[civ] = 0;
+                }
+            } else {
+                for (int tribeN = 0; tribeN < gameData.CitiesBuiltSoFar.Length; tribeN++)
+                {
+                    byte citiesBuilt = gameData.CitiesBuiltSoFar[tribeN];
+                    Civilization? civ = AllCivilizations.Find(civ => civ.TribeId == tribeN);
+                    if (civ != null)
+                    {
+                        CitiesBuiltSoFar[civ] = citiesBuilt;
+                    }
+                }
+            }
+
             for (var index = 0; index < _maps.Length; index++)
             {
                 var map = _maps[index];

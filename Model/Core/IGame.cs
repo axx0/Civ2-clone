@@ -24,6 +24,8 @@ public interface IGame
     IList<Map> Maps { get; }
     IHistory History { get; }
     Dictionary<string, List<string>?> CityNames { get; }
+    Dictionary<Civilization, byte> CitiesBuiltSoFar { get; }
+
     void ConnectPlayer(IPlayer player);
     string Order2String(int unitOrder);
     

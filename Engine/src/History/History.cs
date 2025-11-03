@@ -25,11 +25,6 @@ namespace Civ2engine
         {
             _events.Add(new CityBuiltEvent(city,_game));
         }
-
-        public int TotalCitiesBuilt(Civilization civ)
-        {
-            return _events.Count(e => e.Civ == civ.Id && e.EventType == HistoryEventType.CityBuilt);
-        }
     }
 
     public class CityBuiltEvent : HistoryEvent

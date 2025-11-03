@@ -86,6 +86,7 @@ internal class MockGame : IGame
     public IList<Map> Maps => throw new NotImplementedException();
     public IHistory History => throw new NotImplementedException();
     public Dictionary<string, List<string>?> CityNames => throw new NotImplementedException();
+    public Dictionary<Civilization, byte> CitiesBuiltSoFar => throw new NotImplementedException();
 
     public event EventHandler<PlayerEventArgs> OnPlayerEvent;
     public event EventHandler<UnitEventArgs> OnUnitEvent;

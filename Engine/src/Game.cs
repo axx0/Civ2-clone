@@ -69,6 +69,7 @@ namespace Civ2engine
 
         public int TotalMapArea => _maps.Select(m => m.Tile.GetLength(0) * m.Tile.GetLength(1)).Sum();
         public Dictionary<string, List<string>?> CityNames { get; set; }
+        public Dictionary<Civilization, byte> CitiesBuiltSoFar { get; } = new Dictionary<Civilization, byte>();
         public Civilization GetPlayerCiv => AllCivilizations.FirstOrDefault(c => c.PlayerType == PlayerType.Local);
 
         public IPlayer[] Players { get; }
