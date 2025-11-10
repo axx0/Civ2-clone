@@ -43,9 +43,9 @@ namespace Civ2engine.MapObjects
 
                 var edgeSet = new HashSet<Tile> {aTile};
                 allTiles.Remove(aTile);
-                while (edgeSet.Count > 0)
+                var current = edgeSet.FirstOrDefault();
+                while (current != null)
                 {
-                    var current = edgeSet.FirstOrDefault();
                     edgeSet.Remove(current);
                     foreach (var tile in map.Neighbours(current).Where(t => comparator(t) && allTiles.Contains(t)))
                     {
@@ -53,6 +53,7 @@ namespace Civ2engine.MapObjects
                         allTiles.Remove(tile);
                         island.Tiles.Add(tile);
                     }
+                    current = edgeSet.FirstOrDefault();
                 }
             }
 
@@ -75,31 +76,28 @@ namespace Civ2engine.MapObjects
             }
         }
 
-        public static void RenumberOceans(this Map map, List<Tile> oceanTiles)
+        public static void RenumberOceans(this Map map, HashSet<Tile> oceanTiles)
         {
-            var allTiles = new HashSet<Tile>(oceanTiles);
-
             var oceans = new List<IslandDetails>();
-            while (allTiles.Count > 0)
+            while (oceanTiles.Count > 0)
             {
-                var aTile = allTiles.FirstOrDefault();
+                var aTile = oceanTiles.First();
                 var island = new IslandDetails
                 {
                     Tiles = {aTile}
                 };
                 oceans.Add(island);
-                    
 
                 var edgeSet = new HashSet<Tile> {aTile};
-                allTiles.Remove(aTile);
+                oceanTiles.Remove(aTile);
                 while (edgeSet.Count > 0)
                 {
-                    var current = edgeSet.FirstOrDefault();
+                    var current = edgeSet.First();
                     edgeSet.Remove(current);
-                    foreach (var tile in map.Neighbours(current).Where(t => allTiles.Contains(t)))
+                    foreach (var tile in map.Neighbours(current).Where(oceanTiles.Contains))
                     {
                         edgeSet.Add(tile);
-                        allTiles.Remove(tile);
+                        oceanTiles.Remove(tile);
                         island.Tiles.Add(tile);
                     }
                 }
@@ -107,9 +105,9 @@ namespace Civ2engine.MapObjects
             map.RenumberOceans(oceans);
         }
         
-        public static void RenumberOceans(this Map map, IEnumerable<IslandDetails> oceans)
+        public static void RenumberOceans(this Map map, IList<IslandDetails> oceans)
         {
-            if (!oceans.Any()) return;
+            if (oceans.Count == 0) return;
 
             var orderedOceans = oceans.OrderByDescending(i => i.Tiles.Count).ToList();
 

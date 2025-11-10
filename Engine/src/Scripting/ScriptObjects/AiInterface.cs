@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Civ2engine.Enums;
 using Civ2engine.MapObjects;
+using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Constants;
@@ -313,14 +314,14 @@ public class AiInterface(AiPlayer player, Game game, StringBuilder log)
     {
         var unit = unittoMove.BaseUnit;
         // Start with the "do nothing" action
-        var result = new LuaTable { new NothingAction(unit) };
+        var result = new LuaTable { new NothingAction(unit, game) };
 
         if (unit.CurrentLocation == null) return result;
         
         // Add fortify option if applicable
         if (UnitFunctions.CanFortifyHere(unit, unit.CurrentLocation))
         {
-            result.Add(new FortifyAction(unit));
+            result.Add(new FortifyAction(unit, game));
         }
         
         // Add build city option if applicable
@@ -373,7 +374,7 @@ public class AiInterface(AiPlayer player, Game game, StringBuilder log)
     {
         var target = args.ContainsKey("target") ? args["target"] as TileApi : null;
         var location = args.ContainsKey("location") ? args["location"] as TileApi : null;
-        var speed = args.ContainsKey("speed") ? Convert.ToInt32(args["speed"]) : 1;
+        var speed = args.ContainsKey("speed") ? Convert.ToInt32(args["speed"]) / game.Rules.Cosmic.MovementMultiplier : 1;
         if (target == null || location == null) return null;
 
         var path = Path.CalculatePathBetween(game, location.BaseTile, target.BaseTile,

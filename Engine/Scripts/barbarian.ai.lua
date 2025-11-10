@@ -154,13 +154,17 @@ end
 unit_type_counter = {}
     
 function move_hordes(ai)
-    for i = 1, #hordes do
+    for i = 1, #hordes do        
         if hordes[i].count > 0 then
+            print("Moving horde " .. i)
             if hordes[i].target == nil or hordes[i].target == hordes[i].location then
                 hordes[i].target = ai.NearestEnemy({ tile = hordes[i].location, distance = 50, same_landmass = true })
-            end
+            end            
             if hordes[i].target then
+                print("From " .. hordes[i].location.x .. "-" .. hordes[i].location.y)
                 hordes[i].location = ai.LocationTowards(hordes[i])
+                print("To " .. hordes[i].location.x .. "-" .. hordes[i].location.y)
+                print("Target " .. hordes[i].target.x .. "-" .. hordes[i].target.y)
             end
         end
     end
@@ -171,9 +175,8 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
 
     check_units()
     
-    
     --if its turn 16 or a multiple select a tile
-    --if d.Turn % 16 == 0 then
+    if d.Turn % 16 == 0 then
         local candidate
         local target
         local tries = 3
@@ -234,7 +237,7 @@ ai.RegisterEvent(AiEvent.Turn_Start, function(a,d)
                 end
             end
         end
-    --end
+    end
 
     move_hordes(a)
 end)
@@ -259,7 +262,7 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     local unit = data.Unit;
     print("Finding orders for " .. unit.type.name)
     -- Move leaders last and to nearest friendly unit
-    if unit.AiRole == AiRoleType.Diplomacy then
+    if unit.type.role == AiRoleType.Diplomacy then
         if diplomat == unit.id then
             diplomat = -2
         end
@@ -310,21 +313,24 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
     -- Weight moves based on type
     local best_move
     
-    local current_dist = ai.Distance(unit.location, hordes[horde].location)
+    local hLoc = hordes[horde].location
+    local current_dist = ai.Distance(unit.location, hLoc)
+    
+    print("Current dist " .. current_dist .. " from " .. hLoc.x .. "-" .. hLoc.y .. " " .. hLoc.landmass)
 
     for _, move in ipairs(moves) do
 
         -- Weight by move type
-        if move.Type == "Attack" then
-            move.Priority = 1000  -- Prioritize attacks
-        elseif move.Type == "Unload" then
-            if move.Tile.landmass == hordes[horde].target.landmass then
-                move.Priority = 2000
+        if move.actionType == "Attack" then
+            move.priority = 1000  -- Prioritize attacks
+        elseif move.actionType == "Unload" then
+            if move.tile.landmass == hordes[horde].target.landmass then
+                move.priority = 2000
             end
-        elseif move.Type == "Move" then
-            move.Priority = 500   -- Regular movement
-        elseif move.Type == "Fortify" then
-            move.Priority = 100   -- Low priority for fortifying
+        elseif move.actionType == "Move" then
+            move.priority = 500   -- Regular movement
+        elseif move.actionType == "Fortify" then
+            move.priority = 100   -- Low priority for fortifying
         end
 
         -- Additional weighting factors can be added here
@@ -332,16 +338,21 @@ ai.RegisterEvent(AiEvent.Unit_Orders_Needed, function(ai, data)
         if move.tile and hordes[horde] and hordes[horde].location then
             local move_dist = ai.Distance(move.tile, hordes[horde].location)
             if move_dist < current_dist then
-                move.Priority = move.Priority + 200
+                move.priority = move.priority + 200
             elseif move_dist > current_dist then
-                move.Priority = move.Priority - 100
+                move.priority = move.priority - 100
             end
         end
 
-        if not best_move or move.Priority > best_move.Priority then
+        print("Final priority for " .. move.actionType .. ": " .. move.priority .. " " .. move.tile.x .. "-" .. move.tile.y .. " " .. move.tile.landmass)
+        if not best_move or move.priority > best_move.priority then
+            print("New best")
             best_move = move
         end
     end
 
+    if best_move and best_move.tile then
+        print("Selected " .. best_move.actionType .. " to tile " .. best_move.tile.x .. "-" .. best_move.tile.y)
+    end
     return best_move
 end)

@@ -371,10 +371,10 @@ namespace Civ2engine.IO
                     Transform = mappings[line[14]],
                     Impassable = line[15] == "yes",
                     RoadBonus = type <= (int)TerrainType.Grassland ? 1:0, 
-                    Specials = new[]
-                    {
+                    Specials =
+                    [
                         MakeSpecial(bonus[type]), MakeSpecial(bonus[type + terrains.Count])
-                    }
+                    ]
                 };
             }).ToArray());
         }

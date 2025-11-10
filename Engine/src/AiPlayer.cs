@@ -7,6 +7,7 @@ using Civ2engine.MapObjects;
 using Civ2engine.Production;
 using Civ2engine.Scripting;
 using Civ2engine.Scripting.ScriptObjects;
+using Civ2engine.Scripting.UnitActions;
 using Civ2engine.UnitActions;
 using Civ2engine.Units;
 using Model.Core;
@@ -142,13 +143,13 @@ namespace Civ2engine
                         UnitAction luaAction => luaAction,
                         TileApi tile => TileToAction(tile.BaseTile, unit),
                         "B" or "b" => new BuildCityAction(unit, _game),
-                        "F" or "f" => new FortifyAction(unit),
+                        "F" or "f" => new FortifyAction(unit, _game),
                         "W" or "w" => new WaitAction(unit, _game, this),
                         _ => action
                     };
                 }
 
-                action ??= new NothingAction(unit);
+                action ??= new NothingAction(unit, _game);
                 action.Execute();
             }
         }
@@ -199,7 +200,7 @@ namespace Civ2engine
         {
             if (tile == unit.CurrentLocation)
             {
-                return new NothingAction(unit);
+                return new NothingAction(unit, _game);
             }
 
             if (!unit.CurrentLocation.Neighbours().Contains(tile))

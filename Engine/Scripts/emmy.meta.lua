@@ -60,9 +60,6 @@
 ---@field owner Tribe
 ---@field type UnitType
 ---@field veteran boolean
----@field Name string
----@field CurrentLocation TileApi
----@field AiRole number
 ---@field activate fun()
 ---@field teleport fun(tile: TileApi)
 ---@field GetNum fun(field: string): number
@@ -216,9 +213,9 @@ _G.AiEvent = _G.AiEvent
 ---@field By Unit|nil
 
 ---@class AiUnitAction
----@field Type string
----@field Priority number
----@field Tile Tile|nil
+---@field type string
+---@field priority number
+---@field tile Tile|nil
 
 ---@class Ai
 ---@field Random FastRandom

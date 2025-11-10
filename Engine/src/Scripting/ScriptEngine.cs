@@ -32,6 +32,7 @@ namespace Civ2engine.Scripting
             _civScripts = new CivScripts(_log, game);
             dg.print = new Action<string>(s =>
             {
+                Console.WriteLine(s);
                 _log.AppendLine(s);
             });
             dg.civ = _civScripts;

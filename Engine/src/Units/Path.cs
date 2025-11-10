@@ -90,7 +90,7 @@ public class Path
 
             foreach (var neighbour in candidate.Tile.Neighbours())
             {
-                if (!neighbour.IsVisible(owner.Id) || visited.Contains(neighbour)) continue;
+                if (mustBeVisible && !neighbour.IsVisible(owner.Id) || visited.Contains(neighbour)) continue;
 
                 var cost = costFunction(candidate.Tile, neighbour);
                 if (cost == NotPossible) continue;

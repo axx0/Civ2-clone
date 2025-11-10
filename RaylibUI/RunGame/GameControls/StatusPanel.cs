@@ -136,11 +136,3 @@ public class StatusPanel : BaseControl
             Graphics.DrawRectangleRec(new Rectangle(_unitPanelBounds.X + _unitPanelBounds.Width - 8, _unitPanelBounds.Y + _unitPanelBounds.Height - 6, 8, 6), _active.PlayerColours[_game.GetActiveCiv.Id].LightColour);
     }
 }
-
-public class StatusLabel : LabelControl
-{
-    public StatusLabel(IControlLayout layout, string text, TextAlignment alignment = TextAlignment.Left, Color[]? switchColors = null, int switchTime = 0, int fontSize = 18) : base(layout, text, true, alignment: alignment, defaultHeight: 18, font: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelFont, fontSize: fontSize, spacing: 0f, colorFront: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColor, colorShadow: layout.MainWindow.ActiveInterface.Look.StatusPanelLabelColorShadow, shadowOffset: new System.Numerics.Vector2(1,1), switchColors: switchColors, switchTime: switchTime)
-    {
-
-    }
-}
