@@ -253,8 +253,15 @@ public class GameSerializer
         
         tile.CityHere = city;
 
-        for (var improvementNo = 0; improvementNo < cityData.Improvements.Length && improvementNo < rules.Improvements.Length -1; improvementNo++)
-            if (cityData.Improvements[improvementNo]) city.AddImprovement(rules.Improvements[improvementNo+1]);
+        if (cityData.Improvements != null)
+        {
+            for (var improvementNo = 0;
+                 improvementNo < cityData.Improvements.Length && improvementNo < rules.Improvements.Length - 1;
+                 improvementNo++)
+                if (cityData.Improvements[improvementNo])
+                    city.AddImprovement(rules.Improvements[improvementNo + 1]);
+        }
+
         return city;
     }
 

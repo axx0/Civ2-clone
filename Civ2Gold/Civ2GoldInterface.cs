@@ -651,7 +651,7 @@ public class Civ2GoldInterface : Civ2Interface
                 if (scnRules != null)
                 {
 
-                    var game = subdirectory + Path.DirectorySeparatorChar + "game.txt";
+                    var game = Utils.GetFilePath("game.txt", [subdirectory]);
                     var name = "";
                     if (File.Exists(game))
                     {

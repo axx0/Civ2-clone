@@ -41,7 +41,7 @@ namespace Civ2engine
         public int[] CasualtiesPerUnitType { get; set; }
 
         public List<City> Cities { get; } = new();
-        
+
         public PlayerType PlayerType { get; set; }
         public int PowerRating { get; set; }
         public int PowerRank { get; set; }

@@ -1015,11 +1015,12 @@ public class Read
         //DATA FOR FINDING NEXT CITY NAME
         //=========================
         int ofsetTc = ofsetC + multipl * numberOfCities;
-
-        var citiesBuiltSofar = new byte[21];
-        for (int civId = 0; civId < 21; civId++)
+        foreach (Civilization civ in objects.Civilizations)
         {
-            citiesBuiltSofar[civId] = bytes[ofsetTc + 3 * civId + 1];
+            if (civ.PlayerType != PlayerType.Barbarians)
+            {
+                int ofsetTcThisCiv = ofsetTc + 3 * civ.TribeId + 1;
+            }
         }
         #endregion
         #region Other info

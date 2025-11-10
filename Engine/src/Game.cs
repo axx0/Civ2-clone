@@ -26,7 +26,7 @@ namespace Civ2engine
 
         public IHistory History
         {
-            get { return _history ??= new History(this); }
+            get { return _history ??= HistoryUtils.ReconstructHistory(this); }
         }
 
         public List<Civilization> AllCivilizations { get; } = new();
@@ -122,9 +122,7 @@ namespace Civ2engine
             var order = Rules.Orders.FirstOrDefault(t => t.Type == unitOrder);
             return order != null ? order.Name : Labels.For(LabelIndex.NoOrders);
         }
-
         
-
         public void ConnectPlayer(IPlayer player)
         {
             var id = player.Civilization.Id;
